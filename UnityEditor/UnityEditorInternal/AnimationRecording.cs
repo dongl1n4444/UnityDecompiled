@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 namespace UnityEditorInternal
 {
 	internal class AnimationRecording
@@ -10,33 +11,41 @@ namespace UnityEditorInternal
 		{
 			for (int i = 0; i < modifications.Length; i++)
 			{
-				EditorCurveBinding editorCurveBinding;
-				if (AnimationUtility.PropertyModificationToEditorCurveBinding(modifications[i].propertyModification, root, out editorCurveBinding) != null)
+				if (modifications[i].currentValue == null || !(modifications[i].currentValue.target is Animator))
 				{
-					return true;
+					EditorCurveBinding editorCurveBinding;
+					if (AnimationUtility.PropertyModificationToEditorCurveBinding(modifications[i].previousValue, root, out editorCurveBinding) != null)
+					{
+						return true;
+					}
 				}
 			}
 			return false;
 		}
+
 		private static PropertyModification FindPropertyModification(GameObject root, UndoPropertyModification[] modifications, EditorCurveBinding binding)
 		{
 			for (int i = 0; i < modifications.Length; i++)
 			{
-				EditorCurveBinding lhs;
-				AnimationUtility.PropertyModificationToEditorCurveBinding(modifications[i].propertyModification, root, out lhs);
-				if (lhs == binding)
+				if (modifications[i].currentValue == null || !(modifications[i].currentValue.target is Animator))
 				{
-					return modifications[i].propertyModification;
+					EditorCurveBinding lhs;
+					AnimationUtility.PropertyModificationToEditorCurveBinding(modifications[i].previousValue, root, out lhs);
+					if (lhs == binding)
+					{
+						return modifications[i].previousValue;
+					}
 				}
 			}
 			return null;
 		}
+
 		public static UndoPropertyModification[] Process(AnimationWindowState state, UndoPropertyModification[] modifications)
 		{
-			GameObject rootGameObject = state.m_RootGameObject;
-			AnimationClip activeAnimationClip = state.m_ActiveAnimationClip;
-			Animator component = rootGameObject.GetComponent<Animator>();
-			if (!AnimationRecording.HasAnyRecordableModifications(rootGameObject, modifications))
+			GameObject activeRootGameObject = state.activeRootGameObject;
+			AnimationClip activeAnimationClip = state.activeAnimationClip;
+			Animator component = activeRootGameObject.GetComponent<Animator>();
+			if (!AnimationRecording.HasAnyRecordableModifications(activeRootGameObject, modifications))
 			{
 				return modifications;
 			}
@@ -44,28 +53,28 @@ namespace UnityEditorInternal
 			for (int i = 0; i < modifications.Length; i++)
 			{
 				EditorCurveBinding binding = default(EditorCurveBinding);
-				PropertyModification propertyModification = modifications[i].propertyModification;
-				Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(propertyModification, rootGameObject, out binding);
-				if (type != null)
+				PropertyModification previousValue = modifications[i].previousValue;
+				Type type = AnimationUtility.PropertyModificationToEditorCurveBinding(previousValue, activeRootGameObject, out binding);
+				if (type != null && type != typeof(Animator))
 				{
-					if (component != null && component.isHuman && binding.type == typeof(Transform) && component.IsBoneTransform(propertyModification.target as Transform))
+					if (component != null && component.isHuman && binding.type == typeof(Transform) && component.IsBoneTransform(previousValue.target as Transform))
 					{
-						Debug.LogWarning("Keyframing for humanoid rig is not supported!", propertyModification.target as Transform);
+						Debug.LogWarning("Keyframing for humanoid rig is not supported!", previousValue.target as Transform);
 					}
 					else
 					{
-						AnimationMode.AddPropertyModification(binding, propertyModification, modifications[i].keepPrefabOverride);
+						AnimationMode.AddPropertyModification(binding, previousValue, modifications[i].keepPrefabOverride);
 						EditorCurveBinding[] array = RotationCurveInterpolation.RemapAnimationBindingForAddKey(binding, activeAnimationClip);
 						if (array != null)
 						{
 							for (int j = 0; j < array.Length; j++)
 							{
-								AnimationRecording.AddKey(state, array[j], type, AnimationRecording.FindPropertyModification(rootGameObject, modifications, array[j]));
+								AnimationRecording.AddKey(state, array[j], type, AnimationRecording.FindPropertyModification(activeRootGameObject, modifications, array[j]));
 							}
 						}
 						else
 						{
-							AnimationRecording.AddKey(state, binding, type, propertyModification);
+							AnimationRecording.AddKey(state, binding, type, previousValue);
 						}
 					}
 				}
@@ -76,6 +85,7 @@ namespace UnityEditorInternal
 			}
 			return list.ToArray();
 		}
+
 		private static bool ValueFromPropertyModification(PropertyModification modification, EditorCurveBinding binding, out object outObject)
 		{
 			if (modification == null)
@@ -97,22 +107,26 @@ namespace UnityEditorInternal
 			outObject = null;
 			return false;
 		}
+
 		private static void AddKey(AnimationWindowState state, EditorCurveBinding binding, Type type, PropertyModification modification)
 		{
-			GameObject rootGameObject = state.m_RootGameObject;
-			AnimationClip activeAnimationClip = state.m_ActiveAnimationClip;
+			GameObject activeRootGameObject = state.activeRootGameObject;
+			AnimationClip activeAnimationClip = state.activeAnimationClip;
 			AnimationWindowCurve animationWindowCurve = new AnimationWindowCurve(activeAnimationClip, binding, type);
-			object currentValue = AnimationWindowUtility.GetCurrentValue(rootGameObject, binding);
-			object value = null;
-			if (animationWindowCurve.length == 0 && state.m_Frame != 0)
+			object currentValue = CurveBindingUtility.GetCurrentValue(activeRootGameObject, binding);
+			if (animationWindowCurve.length == 0)
 			{
+				object value = null;
 				if (!AnimationRecording.ValueFromPropertyModification(modification, binding, out value))
 				{
 					value = currentValue;
 				}
-				AnimationWindowUtility.AddKeyframeToCurve(animationWindowCurve, value, type, AnimationKeyTime.Frame(0, activeAnimationClip.frameRate));
+				if (state.frame != 0)
+				{
+					AnimationWindowUtility.AddKeyframeToCurve(animationWindowCurve, value, type, AnimationKeyTime.Frame(0, activeAnimationClip.frameRate));
+				}
 			}
-			AnimationWindowUtility.AddKeyframeToCurve(animationWindowCurve, currentValue, type, AnimationKeyTime.Frame(state.m_Frame, activeAnimationClip.frameRate));
+			AnimationWindowUtility.AddKeyframeToCurve(animationWindowCurve, currentValue, type, AnimationKeyTime.Frame(state.frame, activeAnimationClip.frameRate));
 			state.SaveCurve(animationWindowCurve);
 		}
 	}

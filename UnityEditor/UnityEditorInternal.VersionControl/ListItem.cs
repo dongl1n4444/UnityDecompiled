@@ -2,26 +2,43 @@ using System;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
+
 namespace UnityEditorInternal.VersionControl
 {
 	public class ListItem
 	{
 		private ListItem parent;
+
 		private ListItem firstChild;
+
 		private ListItem lastChild;
+
 		private ListItem prev;
+
 		private ListItem next;
+
 		private Texture icon;
+
 		private string name;
+
 		private int indent;
+
 		private bool expanded;
+
 		private bool exclusive;
+
 		private bool dummy;
+
 		private bool hidden;
+
 		private bool accept;
+
 		private object item;
+
 		private string[] actions;
+
 		private int identifier;
+
 		public Texture Icon
 		{
 			get
@@ -38,6 +55,7 @@ namespace UnityEditorInternal.VersionControl
 				this.icon = value;
 			}
 		}
+
 		public int Identifier
 		{
 			get
@@ -45,6 +63,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.identifier;
 			}
 		}
+
 		public string Name
 		{
 			get
@@ -56,6 +75,7 @@ namespace UnityEditorInternal.VersionControl
 				this.name = value;
 			}
 		}
+
 		public int Indent
 		{
 			get
@@ -67,6 +87,7 @@ namespace UnityEditorInternal.VersionControl
 				this.SetIntent(this, value);
 			}
 		}
+
 		public object Item
 		{
 			get
@@ -78,6 +99,7 @@ namespace UnityEditorInternal.VersionControl
 				this.item = value;
 			}
 		}
+
 		public Asset Asset
 		{
 			get
@@ -89,6 +111,7 @@ namespace UnityEditorInternal.VersionControl
 				this.item = value;
 			}
 		}
+
 		public ChangeSet Change
 		{
 			get
@@ -100,6 +123,7 @@ namespace UnityEditorInternal.VersionControl
 				this.item = value;
 			}
 		}
+
 		public bool Expanded
 		{
 			get
@@ -111,6 +135,7 @@ namespace UnityEditorInternal.VersionControl
 				this.expanded = value;
 			}
 		}
+
 		public bool Exclusive
 		{
 			get
@@ -122,6 +147,7 @@ namespace UnityEditorInternal.VersionControl
 				this.exclusive = value;
 			}
 		}
+
 		public bool Dummy
 		{
 			get
@@ -133,6 +159,7 @@ namespace UnityEditorInternal.VersionControl
 				this.dummy = value;
 			}
 		}
+
 		public bool Hidden
 		{
 			get
@@ -144,6 +171,7 @@ namespace UnityEditorInternal.VersionControl
 				this.hidden = value;
 			}
 		}
+
 		public bool HasChildren
 		{
 			get
@@ -151,6 +179,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.FirstChild != null;
 			}
 		}
+
 		public bool HasActions
 		{
 			get
@@ -158,6 +187,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.actions != null && this.actions.Length != 0;
 			}
 		}
+
 		public string[] Actions
 		{
 			get
@@ -169,6 +199,7 @@ namespace UnityEditorInternal.VersionControl
 				this.actions = value;
 			}
 		}
+
 		public bool CanExpand
 		{
 			get
@@ -176,6 +207,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.item is ChangeSet || this.HasChildren;
 			}
 		}
+
 		public bool CanAccept
 		{
 			get
@@ -187,6 +219,7 @@ namespace UnityEditorInternal.VersionControl
 				this.accept = value;
 			}
 		}
+
 		public int OpenCount
 		{
 			get
@@ -207,6 +240,7 @@ namespace UnityEditorInternal.VersionControl
 				return num;
 			}
 		}
+
 		public int ChildCount
 		{
 			get
@@ -219,6 +253,7 @@ namespace UnityEditorInternal.VersionControl
 				return num;
 			}
 		}
+
 		public ListItem Parent
 		{
 			get
@@ -226,6 +261,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.parent;
 			}
 		}
+
 		public ListItem FirstChild
 		{
 			get
@@ -233,6 +269,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.firstChild;
 			}
 		}
+
 		public ListItem LastChild
 		{
 			get
@@ -240,6 +277,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.lastChild;
 			}
 		}
+
 		public ListItem Prev
 		{
 			get
@@ -247,6 +285,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.prev;
 			}
 		}
+
 		public ListItem Next
 		{
 			get
@@ -254,6 +293,7 @@ namespace UnityEditorInternal.VersionControl
 				return this.next;
 			}
 		}
+
 		public ListItem PrevOpen
 		{
 			get
@@ -272,6 +312,7 @@ namespace UnityEditorInternal.VersionControl
 				return null;
 			}
 		}
+
 		public ListItem NextOpen
 		{
 			get
@@ -294,6 +335,7 @@ namespace UnityEditorInternal.VersionControl
 				return null;
 			}
 		}
+
 		public ListItem PrevOpenSkip
 		{
 			get
@@ -306,6 +348,7 @@ namespace UnityEditorInternal.VersionControl
 				return prevOpen;
 			}
 		}
+
 		public ListItem NextOpenSkip
 		{
 			get
@@ -318,6 +361,7 @@ namespace UnityEditorInternal.VersionControl
 				return nextOpen;
 			}
 		}
+
 		public ListItem PrevOpenVisible
 		{
 			get
@@ -330,6 +374,7 @@ namespace UnityEditorInternal.VersionControl
 				return prevOpen;
 			}
 		}
+
 		public ListItem NextOpenVisible
 		{
 			get
@@ -342,20 +387,24 @@ namespace UnityEditorInternal.VersionControl
 				return nextOpen;
 			}
 		}
+
 		public ListItem()
 		{
 			this.Clear();
 			this.identifier = Provider.GenerateID();
 		}
+
 		~ListItem()
 		{
 			this.Clear();
 		}
+
 		public bool HasPath()
 		{
 			Asset asset = this.item as Asset;
 			return asset != null && asset.path != null;
 		}
+
 		public bool IsChildOf(ListItem listItem)
 		{
 			for (ListItem listItem2 = this.Parent; listItem2 != null; listItem2 = listItem2.Parent)
@@ -367,6 +416,7 @@ namespace UnityEditorInternal.VersionControl
 			}
 			return false;
 		}
+
 		public void Clear()
 		{
 			this.parent = null;
@@ -383,6 +433,7 @@ namespace UnityEditorInternal.VersionControl
 			this.accept = false;
 			this.item = null;
 		}
+
 		public void Add(ListItem listItem)
 		{
 			listItem.parent = this;
@@ -399,6 +450,7 @@ namespace UnityEditorInternal.VersionControl
 			}
 			this.lastChild = listItem;
 		}
+
 		public bool Remove(ListItem listItem)
 		{
 			if (listItem == null)
@@ -430,6 +482,7 @@ namespace UnityEditorInternal.VersionControl
 			listItem.next = null;
 			return true;
 		}
+
 		public void RemoveAll()
 		{
 			for (ListItem listItem = this.firstChild; listItem != null; listItem = listItem.next)
@@ -439,6 +492,7 @@ namespace UnityEditorInternal.VersionControl
 			this.firstChild = null;
 			this.lastChild = null;
 		}
+
 		public ListItem FindWithIdentifierRecurse(int inIdentifier)
 		{
 			if (this.Identifier == inIdentifier)
@@ -455,6 +509,7 @@ namespace UnityEditorInternal.VersionControl
 			}
 			return null;
 		}
+
 		private void SetIntent(ListItem listItem, int indent)
 		{
 			listItem.indent = indent;

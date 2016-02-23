@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 namespace UnityEditor.Modules
 {
 	internal static class ModuleUtils

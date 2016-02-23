@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+
 internal class PostProcessDashboardWidget
 {
 	public static void PostProcess(BuildTarget target, string installPath, string stagingArea, string playerPackage, string companyName, string productName, int width, int height)

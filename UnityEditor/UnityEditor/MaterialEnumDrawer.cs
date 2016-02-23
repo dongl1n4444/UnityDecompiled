@@ -2,12 +2,15 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class MaterialEnumDrawer : MaterialPropertyDrawer
 	{
 		private readonly string[] names;
+
 		private readonly int[] values;
+
 		public MaterialEnumDrawer(string enumName)
 		{
 			Type[] source = AppDomain.CurrentDomain.GetAssemblies().SelectMany((Assembly x) => AssemblyHelper.GetTypesFromAssembly(x)).ToArray<Type>();
@@ -31,6 +34,7 @@ namespace UnityEditor
 				throw;
 			}
 		}
+
 		public MaterialEnumDrawer(string n1, float v1) : this(new string[]
 		{
 			n1
@@ -40,6 +44,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string n1, float v1, string n2, float v2) : this(new string[]
 		{
 			n1,
@@ -51,6 +56,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3) : this(new string[]
 		{
 			n1,
@@ -64,6 +70,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4) : this(new string[]
 		{
 			n1,
@@ -79,6 +86,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5) : this(new string[]
 		{
 			n1,
@@ -96,6 +104,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5, string n6, float v6) : this(new string[]
 		{
 			n1,
@@ -115,6 +124,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5, string n6, float v6, string n7, float v7) : this(new string[]
 		{
 			n1,
@@ -136,6 +146,7 @@ namespace UnityEditor
 		})
 		{
 		}
+
 		public MaterialEnumDrawer(string[] names, float[] vals)
 		{
 			this.names = names;
@@ -145,6 +156,7 @@ namespace UnityEditor
 				this.values[i] = (int)vals[i];
 			}
 		}
+
 		public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
 		{
 			if (prop.type != MaterialProperty.PropType.Float && prop.type != MaterialProperty.PropType.Range)
@@ -153,6 +165,7 @@ namespace UnityEditor
 			}
 			return base.GetPropertyHeight(prop, label, editor);
 		}
+
 		public override void OnGUI(Rect position, MaterialProperty prop, string label, MaterialEditor editor)
 		{
 			if (prop.type != MaterialProperty.PropType.Float && prop.type != MaterialProperty.PropType.Range)

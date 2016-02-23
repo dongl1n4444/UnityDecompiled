@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class CurveWrapper
@@ -10,22 +11,41 @@ namespace UnityEditor
 			Selected,
 			SemiSelected
 		}
+
 		public delegate Vector2 GetAxisScalarsCallback();
+
 		public delegate void SetAxisScalarsCallback(Vector2 newAxisScalars);
+
 		private CurveRenderer m_Renderer;
+
 		public int id;
+
+		public EditorCurveBinding binding;
+
 		public int groupId;
+
 		public int regionId;
+
 		public Color color;
+
 		public bool readOnly;
+
 		public bool hidden;
+
 		public CurveWrapper.GetAxisScalarsCallback getAxisUiScalarsCallback;
+
 		public CurveWrapper.SetAxisScalarsCallback setAxisUiScalarsCallback;
+
 		public bool changed;
+
 		public CurveWrapper.SelectionMode selected;
+
 		public int listIndex;
+
 		public float vRangeMin = float.NegativeInfinity;
+
 		public float vRangeMax = float.PositiveInfinity;
+
 		public CurveRenderer renderer
 		{
 			get
@@ -37,6 +57,7 @@ namespace UnityEditor
 				this.m_Renderer = value;
 			}
 		}
+
 		public AnimationCurve curve
 		{
 			get
@@ -44,6 +65,7 @@ namespace UnityEditor
 				return this.renderer.GetCurve();
 			}
 		}
+
 		public CurveWrapper()
 		{
 			this.id = 0;

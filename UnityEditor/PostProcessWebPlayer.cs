@@ -5,16 +5,17 @@ using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+
 internal class PostProcessWebPlayer
 {
 	private static Dictionary<BuildOptions, string> optionNames = new Dictionary<BuildOptions, string>
 	{
-
 		{
 			BuildOptions.AllowDebugging,
 			"enableDebugging"
 		}
 	};
+
 	public static void PostProcess(BuildOptions options, string installPath, string downloadWebplayerUrl, int width, int height)
 	{
 		string str = FileUtil.UnityGetFileName(installPath);
@@ -119,10 +120,10 @@ internal class PostProcessWebPlayer
 			FileUtil.CopyDirectoryRecursiveForPostprocess("Assets/StreamingAssets", Path.Combine(installPath, "StreamingAssets"), true);
 		}
 	}
+
 	private static string GeneratePlayerParamsString(BuildOptions options)
 	{
-		return string.Format("{{ {0} }}", string.Join(",", (
-			from pair in PostProcessWebPlayer.optionNames
-			select string.Format("{0}:\"{1}\"", pair.Value, (pair.Key != (options & pair.Key)) ? 0 : 1)).ToArray<string>()));
+		return string.Format("{{ {0} }}", string.Join(",", (from pair in PostProcessWebPlayer.optionNames
+		select string.Format("{0}:\"{1}\"", pair.Value, (pair.Key != (options & pair.Key)) ? 0 : 1)).ToArray<string>()));
 	}
 }

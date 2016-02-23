@@ -1,9 +1,11 @@
 using System;
 using UnityEditor.AnimatedValues;
-using UnityEditorInternal;
+using UnityEditor.Modules;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
+using UnityEngine.Scripting;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(Camera))]
@@ -12,15 +14,28 @@ namespace UnityEditor
 		private class Styles
 		{
 			public static GUIContent iconRemove = EditorGUIUtility.IconContent("Toolbar Minus", "Remove command buffer");
+
 			public static GUIStyle invisibleButton = "InvisibleButton";
 		}
+
+		private enum TargetEyeMask
+		{
+			None,
+			Left,
+			Right,
+			Both
+		}
+
 		private enum ProjectionType
 		{
 			Perspective,
 			Orthographic
 		}
+
 		private const float kPreviewWindowOffset = 10f;
+
 		private const float kPreviewNormalizedSize = 0.2f;
+
 		private static readonly GUIContent[] kCameraRenderPaths = new GUIContent[]
 		{
 			new GUIContent("Use Player Settings"),
@@ -29,6 +44,7 @@ namespace UnityEditor
 			new GUIContent("Legacy Vertex Lit"),
 			new GUIContent("Legacy Deferred (light prepass)")
 		};
+
 		private static readonly int[] kCameraRenderPathValues = new int[]
 		{
 			-1,
@@ -37,49 +53,65 @@ namespace UnityEditor
 			0,
 			2
 		};
+
 		private SerializedProperty m_ClearFlags;
+
 		private SerializedProperty m_BackgroundColor;
+
 		private SerializedProperty m_NormalizedViewPortRect;
+
 		private SerializedProperty m_FieldOfView;
+
 		private SerializedProperty m_Orthographic;
+
 		private SerializedProperty m_OrthographicSize;
+
 		private SerializedProperty m_Depth;
+
 		private SerializedProperty m_CullingMask;
+
 		private SerializedProperty m_RenderingPath;
+
 		private SerializedProperty m_OcclusionCulling;
+
 		private SerializedProperty m_TargetTexture;
+
 		private SerializedProperty m_HDR;
+
 		private SerializedProperty[] m_NearAndFarClippingPlanes;
+
+		private SerializedProperty m_StereoConvergence;
+
+		private SerializedProperty m_StereoSeparation;
+
 		private SerializedProperty m_TargetDisplay;
-		private static readonly GUIContent[] s_GameDisplays = new GUIContent[]
+
+		private SerializedProperty m_TargetEye;
+
+		private static readonly GUIContent[] kTargetEyes = new GUIContent[]
 		{
-			new GUIContent("Display 1"),
-			new GUIContent("Display 2"),
-			new GUIContent("Display 3"),
-			new GUIContent("Display 4"),
-			new GUIContent("Display 5"),
-			new GUIContent("Display 6"),
-			new GUIContent("Display 7"),
-			new GUIContent("Display 8")
+			new GUIContent("Both"),
+			new GUIContent("Left"),
+			new GUIContent("Right"),
+			new GUIContent("None (Main Display)")
 		};
-		private static readonly int[] s_GameDisplayValues = new int[]
-		{
-			0,
-			1,
-			2,
-			3,
-			4,
-			5,
-			6,
-			7
-		};
+
+		private static readonly int[] kTargetEyeValues;
+
 		private readonly AnimBool m_ShowBGColorOptions = new AnimBool();
+
 		private readonly AnimBool m_ShowOrthoOptions = new AnimBool();
-		private readonly AnimBool m_ShowDeferredWarning = new AnimBool();
+
+		private readonly AnimBool m_ShowTargetEyeOption = new AnimBool();
+
 		private Camera m_PreviewCamera;
-		private static readonly Color kGizmoCamera = new Color(0.9137255f, 0.9137255f, 0.9137255f, 0.5019608f);
+
+		private static readonly Color kGizmoCamera;
+
 		private readonly GUIContent m_ViewportLabel = new GUIContent("Viewport Rect");
+
 		private bool m_CommandBuffersShown = true;
+
 		private Camera camera
 		{
 			get
@@ -87,13 +119,15 @@ namespace UnityEditor
 				return this.target as Camera;
 			}
 		}
+
 		private bool deferredWarningValue
 		{
 			get
 			{
-				return !InternalEditorUtility.HasProFeaturesEnabled() && (this.camera.renderingPath == RenderingPath.DeferredLighting || (PlayerSettings.renderingPath == RenderingPath.DeferredLighting && this.camera.renderingPath == RenderingPath.UsePlayerSettings)) && (this.camera.renderingPath == RenderingPath.DeferredShading || (PlayerSettings.renderingPath == RenderingPath.DeferredShading && this.camera.renderingPath == RenderingPath.UsePlayerSettings));
+				return (this.camera.renderingPath == RenderingPath.DeferredLighting || (PlayerSettings.renderingPath == RenderingPath.DeferredLighting && this.camera.renderingPath == RenderingPath.UsePlayerSettings)) && (this.camera.renderingPath == RenderingPath.DeferredShading || (PlayerSettings.renderingPath == RenderingPath.DeferredShading && this.camera.renderingPath == RenderingPath.UsePlayerSettings));
 			}
 		}
+
 		private Camera previewCamera
 		{
 			get
@@ -110,6 +144,24 @@ namespace UnityEditor
 				return this.m_PreviewCamera;
 			}
 		}
+
+		static CameraEditor()
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			int[] expr_A7 = new int[4];
+			expr_A7[0] = 3;
+			expr_A7[1] = 1;
+			expr_A7[2] = 2;
+			CameraEditor.kTargetEyeValues = expr_A7;
+			CameraEditor.kGizmoCamera = new Color(0.9137255f, 0.9137255f, 0.9137255f, 0.5019608f);
+		}
+
+		private bool ShouldShowTargetDisplayProperty()
+		{
+			GUIContent[] displayNames = ModuleManager.GetDisplayNames(EditorUserBuildSettings.activeBuildTarget.ToString());
+			return BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget) == BuildTargetGroup.Standalone || displayNames != null;
+		}
+
 		public void OnEnable()
 		{
 			this.m_ClearFlags = base.serializedObject.FindProperty("m_ClearFlags");
@@ -129,21 +181,34 @@ namespace UnityEditor
 			this.m_OcclusionCulling = base.serializedObject.FindProperty("m_OcclusionCulling");
 			this.m_TargetTexture = base.serializedObject.FindProperty("m_TargetTexture");
 			this.m_HDR = base.serializedObject.FindProperty("m_HDR");
+			this.m_StereoConvergence = base.serializedObject.FindProperty("m_StereoConvergence");
+			this.m_StereoSeparation = base.serializedObject.FindProperty("m_StereoSeparation");
 			this.m_TargetDisplay = base.serializedObject.FindProperty("m_TargetDisplay");
+			this.m_TargetEye = base.serializedObject.FindProperty("m_TargetEye");
 			Camera camera = (Camera)this.target;
 			this.m_ShowBGColorOptions.value = (!this.m_ClearFlags.hasMultipleDifferentValues && (camera.clearFlags == CameraClearFlags.Color || camera.clearFlags == CameraClearFlags.Skybox));
 			this.m_ShowOrthoOptions.value = camera.orthographic;
-			this.m_ShowDeferredWarning.value = this.deferredWarningValue;
+			this.m_ShowTargetEyeOption.value = (this.m_TargetEye.intValue != 3 || PlayerSettings.virtualRealitySupported || PlayerSettings.stereoscopic3D);
 			this.m_ShowBGColorOptions.valueChanged.AddListener(new UnityAction(base.Repaint));
 			this.m_ShowOrthoOptions.valueChanged.AddListener(new UnityAction(base.Repaint));
-			this.m_ShowDeferredWarning.valueChanged.AddListener(new UnityAction(base.Repaint));
+			this.m_ShowTargetEyeOption.valueChanged.AddListener(new UnityAction(base.Repaint));
 		}
+
 		internal void OnDisable()
 		{
 			this.m_ShowBGColorOptions.valueChanged.RemoveListener(new UnityAction(base.Repaint));
 			this.m_ShowOrthoOptions.valueChanged.RemoveListener(new UnityAction(base.Repaint));
-			this.m_ShowDeferredWarning.valueChanged.RemoveListener(new UnityAction(base.Repaint));
+			this.m_ShowTargetEyeOption.valueChanged.RemoveListener(new UnityAction(base.Repaint));
 		}
+
+		public void OnDestroy()
+		{
+			if (this.m_PreviewCamera != null)
+			{
+				UnityEngine.Object.DestroyImmediate(this.m_PreviewCamera.gameObject, true);
+			}
+		}
+
 		private void DepthTextureModeGUI()
 		{
 			if (base.targets.Length != 1)
@@ -162,30 +227,36 @@ namespace UnityEditor
 			{
 				text = "Info: renders Depth & DepthNormals textures";
 			}
-			else
+			else if (flag)
 			{
-				if (flag)
-				{
-					text = "Info: renders Depth texture";
-				}
-				else
-				{
-					if (flag2)
-					{
-						text = "Info: renders DepthNormals texture";
-					}
-				}
+				text = "Info: renders Depth texture";
+			}
+			else if (flag2)
+			{
+				text = "Info: renders DepthNormals texture";
 			}
 			if (text != null)
 			{
 				EditorGUILayout.HelpBox(text, MessageType.None, true);
 			}
 		}
+
 		private static Rect GetRemoveButtonRect(Rect r)
 		{
 			Vector2 vector = CameraEditor.Styles.invisibleButton.CalcSize(CameraEditor.Styles.iconRemove);
 			return new Rect(r.xMax - vector.x, r.y + (float)((int)(r.height / 2f - vector.y / 2f)), vector.x, vector.y);
 		}
+
+		[DrawGizmo(GizmoType.NonSelected)]
+		private static void DrawCameraBound(Camera camera, GizmoType gizmoType)
+		{
+			SceneView currentDrawingSceneView = SceneView.currentDrawingSceneView;
+			if (currentDrawingSceneView != null && currentDrawingSceneView.in2DMode && camera == Camera.main && camera.orthographic)
+			{
+				CameraEditor.RenderGizmo(camera);
+			}
+		}
+
 		private void CommandBufferGUI()
 		{
 			if (base.targets.Length != 1)
@@ -246,13 +317,14 @@ namespace UnityEditor
 			}
 			EditorGUI.indentLevel--;
 		}
+
 		public override void OnInspectorGUI()
 		{
 			base.serializedObject.Update();
 			Camera camera = (Camera)this.target;
 			this.m_ShowBGColorOptions.target = (!this.m_ClearFlags.hasMultipleDifferentValues && (camera.clearFlags == CameraClearFlags.Color || camera.clearFlags == CameraClearFlags.Skybox));
 			this.m_ShowOrthoOptions.target = (!this.m_Orthographic.hasMultipleDifferentValues && camera.orthographic);
-			this.m_ShowDeferredWarning.target = this.deferredWarningValue;
+			this.m_ShowTargetEyeOption.target = (this.m_TargetEye.intValue != 3 || PlayerSettings.virtualRealitySupported || PlayerSettings.stereoscopic3D);
 			EditorGUILayout.PropertyField(this.m_ClearFlags, new GUILayoutOption[0]);
 			if (EditorGUILayout.BeginFadeGroup(this.m_ShowBGColorOptions.faded))
 			{
@@ -288,23 +360,51 @@ namespace UnityEditor
 			EditorGUILayout.Space();
 			EditorGUILayout.PropertyField(this.m_Depth, new GUILayoutOption[0]);
 			EditorGUILayout.IntPopup(this.m_RenderingPath, CameraEditor.kCameraRenderPaths, CameraEditor.kCameraRenderPathValues, EditorGUIUtility.TempContent("Rendering Path"), new GUILayoutOption[0]);
-			if (EditorGUILayout.BeginFadeGroup(this.m_ShowDeferredWarning.faded))
-			{
-				GUIContent gUIContent = EditorGUIUtility.TextContent("CameraEditor.DeferredProOnly");
-				EditorGUILayout.HelpBox(gUIContent.text, MessageType.Warning, false);
-			}
-			EditorGUILayout.EndFadeGroup();
 			EditorGUILayout.PropertyField(this.m_TargetTexture, new GUILayoutOption[0]);
 			EditorGUILayout.PropertyField(this.m_OcclusionCulling, new GUILayoutOption[0]);
 			EditorGUILayout.PropertyField(this.m_HDR, new GUILayoutOption[0]);
-			if (Display.MultiDisplayLicense())
+			if (this.m_HDR.boolValue)
 			{
-				EditorGUILayout.IntPopup(this.m_TargetDisplay, CameraEditor.s_GameDisplays, CameraEditor.s_GameDisplayValues, EditorGUIUtility.TempContent("Target Display"), new GUILayoutOption[0]);
+				this.DisplayHDRWarnings();
 			}
+			if (PlayerSettings.stereoscopic3D)
+			{
+				EditorGUILayout.PropertyField(this.m_StereoSeparation, new GUILayoutOption[0]);
+				EditorGUILayout.PropertyField(this.m_StereoConvergence, new GUILayoutOption[0]);
+			}
+			if (this.ShouldShowTargetDisplayProperty())
+			{
+				int intValue = this.m_TargetDisplay.intValue;
+				EditorGUILayout.Space();
+				EditorGUILayout.IntPopup(this.m_TargetDisplay, DisplayUtility.GetDisplayNames(), DisplayUtility.GetDisplayIndices(), EditorGUIUtility.TempContent("Target Display"), new GUILayoutOption[0]);
+				if (intValue != this.m_TargetDisplay.intValue)
+				{
+					GameView.RepaintAll();
+				}
+			}
+			if (EditorGUILayout.BeginFadeGroup(this.m_ShowTargetEyeOption.faded))
+			{
+				EditorGUILayout.IntPopup(this.m_TargetEye, CameraEditor.kTargetEyes, CameraEditor.kTargetEyeValues, EditorGUIUtility.TempContent("Target Eye"), new GUILayoutOption[0]);
+			}
+			EditorGUILayout.EndFadeGroup();
 			this.DepthTextureModeGUI();
 			this.CommandBufferGUI();
 			base.serializedObject.ApplyModifiedProperties();
 		}
+
+		private void DisplayHDRWarnings()
+		{
+			Camera camera = this.target as Camera;
+			if (camera != null)
+			{
+				string[] hDRWarnings = camera.GetHDRWarnings();
+				if (hDRWarnings.Length > 0)
+				{
+					EditorGUILayout.HelpBox(string.Join("\n\n", hDRWarnings), MessageType.Warning, true);
+				}
+			}
+		}
+
 		public void OnOverlayGUI(UnityEngine.Object target, SceneView sceneView)
 		{
 			if (target == null)
@@ -339,7 +439,8 @@ namespace UnityEditor
 				sizeOfMainGameView.y = sizeOfMainGameView.x / num;
 			}
 			Rect rect2 = GUILayoutUtility.GetRect(sizeOfMainGameView.x, sizeOfMainGameView.y);
-			rect2.y = sceneView.position.height - rect2.y - rect2.height + 1f;
+			rect2 = EditorGUIUtility.PointsToPixels(rect2);
+			rect2.y = (sceneView.position.height + 1f) * EditorGUIUtility.pixelsPerPoint - rect2.y - rect2.height;
 			if (Event.current.type == EventType.Repaint)
 			{
 				this.previewCamera.CopyFrom(camera);
@@ -363,6 +464,8 @@ namespace UnityEditor
 				this.previewCamera.Render();
 			}
 		}
+
+		[RequiredByNativeCode]
 		private static float GetGameViewAspectRatio()
 		{
 			Vector2 sizeOfMainGameView = GameView.GetSizeOfMainGameView();
@@ -373,6 +476,7 @@ namespace UnityEditor
 			}
 			return sizeOfMainGameView.x / sizeOfMainGameView.y;
 		}
+
 		private static float GetFrustumAspectRatio(Camera camera)
 		{
 			Rect rect = camera.rect;
@@ -383,6 +487,7 @@ namespace UnityEditor
 			float num = rect.width / rect.height;
 			return CameraEditor.GetGameViewAspectRatio() * num;
 		}
+
 		private static bool GetFrustum(Camera camera, Vector3[] near, Vector3[] far, out float frustumAspect)
 		{
 			frustumAspect = CameraEditor.GetFrustumAspectRatio(camera);
@@ -390,53 +495,31 @@ namespace UnityEditor
 			{
 				return false;
 			}
-			float num3;
-			float num4;
-			float num5;
-			float num6;
-			if (!camera.orthographic)
-			{
-				float num = Mathf.Tan(camera.fieldOfView * 0.0174532924f * 0.5f);
-				float num2 = num * frustumAspect;
-				num3 = num2 * camera.farClipPlane;
-				num4 = num * camera.farClipPlane;
-				num5 = num2 * camera.nearClipPlane;
-				num6 = num * camera.nearClipPlane;
-			}
-			else
-			{
-				float num = camera.orthographicSize;
-				float num2 = num * frustumAspect;
-				num3 = num2;
-				num4 = num;
-				num5 = num2;
-				num6 = num;
-			}
-			Matrix4x4 matrix4x = Matrix4x4.TRS(camera.transform.position, camera.transform.rotation, Vector3.one);
 			if (far != null)
 			{
-				far[0] = new Vector3(-num3, -num4, camera.farClipPlane);
-				far[1] = new Vector3(-num3, num4, camera.farClipPlane);
-				far[2] = new Vector3(num3, num4, camera.farClipPlane);
-				far[3] = new Vector3(num3, -num4, camera.farClipPlane);
+				far[0] = new Vector3(0f, 0f, camera.farClipPlane);
+				far[1] = new Vector3(0f, 1f, camera.farClipPlane);
+				far[2] = new Vector3(1f, 1f, camera.farClipPlane);
+				far[3] = new Vector3(1f, 0f, camera.farClipPlane);
 				for (int i = 0; i < 4; i++)
 				{
-					far[i] = matrix4x.MultiplyPoint(far[i]);
+					far[i] = camera.ViewportToWorldPoint(far[i]);
 				}
 			}
 			if (near != null)
 			{
-				near[0] = new Vector3(-num5, -num6, camera.nearClipPlane);
-				near[1] = new Vector3(-num5, num6, camera.nearClipPlane);
-				near[2] = new Vector3(num5, num6, camera.nearClipPlane);
-				near[3] = new Vector3(num5, -num6, camera.nearClipPlane);
+				near[0] = new Vector3(0f, 0f, camera.nearClipPlane);
+				near[1] = new Vector3(0f, 1f, camera.nearClipPlane);
+				near[2] = new Vector3(1f, 1f, camera.nearClipPlane);
+				near[3] = new Vector3(1f, 0f, camera.nearClipPlane);
 				for (int j = 0; j < 4; j++)
 				{
-					near[j] = matrix4x.MultiplyPoint(near[j]);
+					near[j] = camera.ViewportToWorldPoint(near[j]);
 				}
 			}
 			return true;
 		}
+
 		internal static void RenderGizmo(Camera camera)
 		{
 			Vector3[] array = new Vector3[4];
@@ -455,10 +538,12 @@ namespace UnityEditor
 				Handles.color = color;
 			}
 		}
+
 		private static bool IsViewPortRectValidToRender(Rect normalizedViewPortRect)
 		{
 			return normalizedViewPortRect.width > 0f && normalizedViewPortRect.height > 0f && normalizedViewPortRect.x < 1f && normalizedViewPortRect.xMax > 0f && normalizedViewPortRect.y < 1f && normalizedViewPortRect.yMax > 0f;
 		}
+
 		public void OnSceneGUI()
 		{
 			Camera camera = (Camera)this.target;
@@ -520,6 +605,7 @@ namespace UnityEditor
 			GUI.changed = changed;
 			Handles.color = color;
 		}
+
 		private static Vector3 MidPointPositionSlider(Vector3 position1, Vector3 position2, Vector3 direction)
 		{
 			Vector3 position3 = Vector3.Lerp(position1, position2, 0.5f);

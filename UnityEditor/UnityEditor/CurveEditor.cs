@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[Serializable]
@@ -12,12 +13,15 @@ namespace UnityEditor
 			public class SavedKeyFrame : IComparable
 			{
 				public Keyframe key;
+
 				public CurveWrapper.SelectionMode selected;
+
 				public SavedKeyFrame(Keyframe key, CurveWrapper.SelectionMode selected)
 				{
 					this.key = key;
 					this.selected = selected;
 				}
+
 				public int CompareTo(object _other)
 				{
 					CurveEditor.SavedCurve.SavedKeyFrame savedKeyFrame = (CurveEditor.SavedCurve.SavedKeyFrame)_other;
@@ -25,17 +29,33 @@ namespace UnityEditor
 					return (num >= 0f) ? ((num <= 0f) ? 0 : 1) : -1;
 				}
 			}
+
 			public int curveId;
+
 			public List<CurveEditor.SavedCurve.SavedKeyFrame> keys;
 		}
+
+		private enum AxisLock
+		{
+			None,
+			X,
+			Y
+		}
+
 		private struct KeyFrameCopy
 		{
 			public float time;
+
 			public float value;
+
 			public float inTangent;
+
 			public float outTangent;
+
 			public int idx;
+
 			public int selectionIdx;
+
 			public KeyFrameCopy(int idx, int selectionIdx, Keyframe source)
 			{
 				this.idx = idx;
@@ -46,18 +66,29 @@ namespace UnityEditor
 				this.outTangent = source.outTangent;
 			}
 		}
+
 		internal new class Styles
 		{
 			public Texture2D pointIcon = EditorGUIUtility.LoadIcon("curvekeyframe");
+
 			public Texture2D pointIconSelected = EditorGUIUtility.LoadIcon("curvekeyframeselected");
+
 			public Texture2D pointIconSelectedOverlay = EditorGUIUtility.LoadIcon("curvekeyframeselectedoverlay");
+
 			public Texture2D pointIconSemiSelectedOverlay = EditorGUIUtility.LoadIcon("curvekeyframesemiselectedoverlay");
+
 			public GUIStyle none = new GUIStyle();
+
 			public GUIStyle labelTickMarksY = "CurveEditorLabelTickMarks";
+
 			public GUIStyle labelTickMarksX;
+
 			public GUIStyle selectionRect = "SelectionRect";
+
 			public GUIStyle dragLabel = "ProfilerBadge";
+
 			public GUIStyle axisLabelNumberField = new GUIStyle(EditorStyles.miniTextField);
+
 			public Styles()
 			{
 				this.axisLabelNumberField.alignment = TextAnchor.UpperRight;
@@ -66,56 +97,100 @@ namespace UnityEditor
 				this.labelTickMarksX.clipping = TextClipping.Overflow;
 			}
 		}
+
 		internal enum PickMode
 		{
 			None,
 			Click,
 			Marquee
 		}
+
 		public delegate void CallbackFunction();
-		private const float kMaxPickDistSqr = 64f;
+
+		private const float kMaxPickDistSqr = 100f;
+
 		private const float kExactPickDistSqr = 16f;
+
 		private const float kCurveTimeEpsilon = 1E-05f;
-		[NonSerialized]
+
+		private const string kPointValueFieldName = "pointValueField";
+
+		private const string kPointTimeFieldName = "pointTimeField";
+
 		private CurveWrapper[] m_AnimationCurves;
+
 		private static int s_SelectKeyHash = "SelectKeys".GetHashCode();
+
 		public CurveEditor.CallbackFunction curvesUpdated;
+
 		private List<int> m_DrawOrder = new List<int>();
-		internal TimeUpdater m_TimeUpdater;
+
+		internal IPlayHead m_PlayHead;
+
 		internal Bounds m_DefaultBounds = new Bounds(new Vector3(0.5f, 0.5f, 0f), new Vector3(1f, 1f, 0f));
+
 		private Color m_TangentColor = new Color(1f, 1f, 1f, 0.5f);
+
 		public float invSnap;
+
 		private CurveMenuManager m_MenuManager;
+
 		private static int s_TangentControlIDHash = "s_TangentControlIDHash".GetHashCode();
+
 		private List<CurveSelection> m_Selection = new List<CurveSelection>();
-		[NonSerialized]
-		private List<CurveSelection> m_DisplayedSelection;
+
+		private CurveSelection lastSelected;
+
+		private List<CurveSelection> preCurveDragSelection;
+
 		private CurveSelection m_SelectedTangentPoint;
+
 		private List<CurveSelection> s_SelectionBackup;
+
 		private float s_TimeRangeSelectionStart;
+
 		private float s_TimeRangeSelectionEnd;
+
 		private bool s_TimeRangeSelectionActive;
+
 		private Bounds m_Bounds = new Bounds(Vector3.zero, Vector3.zero);
+
 		private List<CurveEditor.SavedCurve> m_CurveBackups;
+
 		private CurveWrapper m_DraggingKey;
+
 		private Vector2 m_DraggedCoord;
+
 		private Vector2 m_MoveCoord;
+
 		private Vector2 m_PreviousDrawPointCenter;
+
+		private CurveEditor.AxisLock m_AxisLock;
+
 		internal CurveEditor.Styles ms_Styles;
-		private Vector2 s_StartMouseDragPosition;
-		private Vector2 s_EndMouseDragPosition;
-		private Vector2 s_StartKeyDragPosition;
+
 		private float s_StartClickedTime;
+
+		private Vector2 s_StartMouseDragPosition;
+
+		private Vector2 s_EndMouseDragPosition;
+
+		private Vector2 s_StartKeyDragPosition;
+
 		private CurveEditor.PickMode s_PickMode;
+
 		private string m_AxisLabelFormat = "n1";
+
+		private Vector2 pointEditingFieldPosition;
+
+		private bool timeWasEdited;
+
+		private bool valueWasEdited;
+
+		private string focusedPointField;
+
 		private CurveWrapper[] m_DraggingCurveOrRegion;
-		public bool hasSelection
-		{
-			get
-			{
-				return this.m_Selection.Count != 0;
-			}
-		}
+
 		public CurveWrapper[] animationCurves
 		{
 			get
@@ -128,6 +203,10 @@ namespace UnityEditor
 			}
 			set
 			{
+				if (this.m_AnimationCurves == null)
+				{
+					this.m_AnimationCurves = new CurveWrapper[0];
+				}
 				this.m_AnimationCurves = value;
 				for (int i = 0; i < this.m_AnimationCurves.Length; i++)
 				{
@@ -138,16 +217,18 @@ namespace UnityEditor
 				this.ValidateCurveList();
 			}
 		}
+
 		public float activeTime
 		{
 			set
 			{
-				if (this.m_TimeUpdater != null)
+				if (this.m_PlayHead != null && !this.m_PlayHead.playing)
 				{
-					this.m_TimeUpdater.UpdateTime(value);
+					this.m_PlayHead.currentTime = value;
 				}
 			}
 		}
+
 		public Color tangentColor
 		{
 			get
@@ -159,13 +240,28 @@ namespace UnityEditor
 				this.m_TangentColor = value;
 			}
 		}
+
 		internal List<CurveSelection> selectedCurves
 		{
 			get
 			{
 				return this.m_Selection;
 			}
+			set
+			{
+				this.m_Selection = value;
+				this.lastSelected = null;
+			}
 		}
+
+		public bool hasSelection
+		{
+			get
+			{
+				return this.m_Selection.Count != 0;
+			}
+		}
+
 		public override Bounds drawingBounds
 		{
 			get
@@ -173,6 +269,13 @@ namespace UnityEditor
 				return this.m_Bounds;
 			}
 		}
+
+		private bool editingPoints
+		{
+			get;
+			set;
+		}
+
 		public CurveEditor(Rect rect, CurveWrapper[] curves, bool minimalGUI) : base(minimalGUI)
 		{
 			base.rect = rect;
@@ -216,6 +319,7 @@ namespace UnityEditor
 			base.margin = 40f;
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 		}
+
 		public bool GetTopMostCurveID(out int curveID)
 		{
 			if (this.m_DrawOrder.Count > 0)
@@ -226,13 +330,13 @@ namespace UnityEditor
 			curveID = -1;
 			return false;
 		}
+
 		private void SyncDrawOrder()
 		{
 			if (this.m_DrawOrder.Count == 0)
 			{
-				this.m_DrawOrder = (
-					from cw in this.m_AnimationCurves
-					select cw.id).ToList<int>();
+				this.m_DrawOrder = (from cw in this.m_AnimationCurves
+				select cw.id).ToList<int>();
 				return;
 			}
 			List<int> list = new List<int>(this.m_AnimationCurves.Length);
@@ -272,11 +376,11 @@ namespace UnityEditor
 			}
 			if (this.m_DrawOrder.Count != this.m_AnimationCurves.Length)
 			{
-				this.m_DrawOrder = (
-					from cw in this.m_AnimationCurves
-					select cw.id).ToList<int>();
+				this.m_DrawOrder = (from cw in this.m_AnimationCurves
+				select cw.id).ToList<int>();
 			}
 		}
+
 		public CurveWrapper getCurveWrapperById(int id)
 		{
 			CurveWrapper[] animationCurves = this.m_AnimationCurves;
@@ -290,27 +394,41 @@ namespace UnityEditor
 			}
 			return null;
 		}
+
 		protected override void ApplySettings()
 		{
 			base.ApplySettings();
 			this.RecalculateBounds();
 		}
+
+		internal void AddSelection(CurveSelection curveSelection)
+		{
+			this.m_Selection.Add(curveSelection);
+			this.lastSelected = curveSelection;
+		}
+
+		internal void RemoveSelection(CurveSelection curveSelection)
+		{
+			this.m_Selection.Remove(curveSelection);
+			this.lastSelected = null;
+		}
+
 		internal void ClearSelection()
 		{
 			this.m_Selection.Clear();
+			this.lastSelected = null;
 		}
-		internal void ClearDisplayedSelection()
-		{
-			this.m_DisplayedSelection = null;
-		}
+
 		public void OnDisable()
 		{
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 		}
+
 		private void UndoRedoPerformed()
 		{
 			this.SelectNone();
 		}
+
 		private void ValidateCurveList()
 		{
 			for (int i = 0; i < this.m_AnimationCurves.Length; i++)
@@ -378,13 +496,15 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private void UpdateTangentsFromSelection()
 		{
-			foreach (CurveSelection current in this.m_Selection)
+			foreach (CurveSelection current in this.selectedCurves)
 			{
 				CurveUtility.UpdateTangentsFromModeSurrounding(current.curveWrapper.curve, current.key);
 			}
 		}
+
 		private void SyncSelection()
 		{
 			this.Init();
@@ -401,6 +521,7 @@ namespace UnityEditor
 			this.m_Selection = list;
 			this.RecalculateBounds();
 		}
+
 		public void RecalculateBounds()
 		{
 			this.m_Bounds = this.m_DefaultBounds;
@@ -446,6 +567,7 @@ namespace UnityEditor
 			}
 			this.m_Bounds.size = new Vector3(Mathf.Max(this.m_Bounds.size.x, 0.1f), Mathf.Max(this.m_Bounds.size.y, 0.1f), 0f);
 		}
+
 		public void FrameSelected(bool horizontally, bool vertically)
 		{
 			Bounds bounds = default(Bounds);
@@ -459,8 +581,8 @@ namespace UnityEditor
 			}
 			else
 			{
-				bounds = new Bounds(new Vector2(this.m_Selection[0].keyframe.time, this.m_Selection[0].keyframe.value), Vector2.zero);
-				foreach (CurveSelection current in this.m_Selection)
+				bounds = new Bounds(new Vector2(this.selectedCurves[0].keyframe.time, this.selectedCurves[0].keyframe.value), Vector2.zero);
+				foreach (CurveSelection current in this.selectedCurves)
 				{
 					bounds.Encapsulate(new Vector2(current.curve[current.key].time, current.curve[current.key].value));
 					if (current.key - 1 >= 0)
@@ -483,6 +605,7 @@ namespace UnityEditor
 				base.SetShownVRangeInsideMargins(bounds.min.y, bounds.max.y);
 			}
 		}
+
 		public void UpdateCurves(List<int> curveIds, string undoText)
 		{
 			foreach (int current in curveIds)
@@ -495,6 +618,11 @@ namespace UnityEditor
 				this.curvesUpdated();
 			}
 		}
+
+		public void UpdateCurves(List<ChangedCurve> curve, string undoText)
+		{
+		}
+
 		internal CurveWrapper GetCurveFromID(int curveID)
 		{
 			if (this.m_AnimationCurves == null)
@@ -512,16 +640,18 @@ namespace UnityEditor
 			}
 			return null;
 		}
+
 		private void Init()
 		{
-			if (this.m_Selection != null && this.hasSelection && this.m_Selection[0].m_Host == null)
+			if (this.selectedCurves != null && this.hasSelection && this.selectedCurves[0].m_Host == null)
 			{
-				foreach (CurveSelection current in this.m_Selection)
+				foreach (CurveSelection current in this.selectedCurves)
 				{
 					current.m_Host = this;
 				}
 			}
 		}
+
 		internal void InitStyles()
 		{
 			if (this.ms_Styles == null)
@@ -529,6 +659,7 @@ namespace UnityEditor
 				this.ms_Styles = new CurveEditor.Styles();
 			}
 		}
+
 		public void OnGUI()
 		{
 			base.BeginViewGUI();
@@ -536,6 +667,7 @@ namespace UnityEditor
 			this.CurveGUI();
 			base.EndViewGUI();
 		}
+
 		public void CurveGUI()
 		{
 			this.InitStyles();
@@ -547,6 +679,10 @@ namespace UnityEditor
 			GUI.contentColor = white;
 			Color color = GUI.color;
 			Event current = Event.current;
+			if (current.type != EventType.Repaint)
+			{
+				this.EditSelectedPoints();
+			}
 			EventType type = current.type;
 			switch (type)
 			{
@@ -556,10 +692,10 @@ namespace UnityEditor
 					this.DeleteSelectedPoints();
 					current.Use();
 				}
-				goto IL_30C;
+				goto IL_34E;
 			case EventType.KeyUp:
 			case EventType.ScrollWheel:
-				IL_65:
+				IL_77:
 				switch (type)
 				{
 				case EventType.ValidateCommand:
@@ -594,10 +730,10 @@ namespace UnityEditor
 						current.Use();
 						break;
 					}
-					goto IL_30C;
+					goto IL_34E;
 				}
 				case EventType.DragExited:
-					goto IL_30C;
+					goto IL_34E;
 				case EventType.ContextClick:
 				{
 					CurveSelection curveSelection = this.FindNearest();
@@ -605,7 +741,7 @@ namespace UnityEditor
 					{
 						List<KeyIdentifier> list = new List<KeyIdentifier>();
 						bool flag2 = false;
-						foreach (CurveSelection current2 in this.m_Selection)
+						foreach (CurveSelection current2 in this.selectedCurves)
 						{
 							list.Add(new KeyIdentifier(current2.curveWrapper.renderer, current2.curveID, current2.key));
 							if (current2.curveID == curveSelection.curveID && current2.key == curveSelection.key)
@@ -617,60 +753,55 @@ namespace UnityEditor
 						{
 							list.Clear();
 							list.Add(new KeyIdentifier(curveSelection.curveWrapper.renderer, curveSelection.curveID, curveSelection.key));
-							this.m_Selection.Clear();
-							this.m_Selection.Add(curveSelection);
+							this.ClearSelection();
+							this.AddSelection(curveSelection);
 						}
 						this.m_MenuManager = new CurveMenuManager(this);
 						GenericMenu genericMenu = new GenericMenu();
-						string text;
-						if (list.Count > 1)
-						{
-							text = "Delete Keys";
-						}
-						else
-						{
-							text = "Delete Key";
-						}
-						genericMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(this.DeleteKeys), list);
+						genericMenu.AddItem(new GUIContent((list.Count <= 1) ? "Delete Key" : "Delete Keys"), false, new GenericMenu.MenuFunction2(this.DeleteKeys), list);
+						genericMenu.AddItem(new GUIContent((list.Count <= 1) ? "Edit Key..." : "Edit Keys..."), false, new GenericMenu.MenuFunction2(this.StartEditingSelectedPointsContext), base.mousePositionInDrawing);
 						genericMenu.AddSeparator(string.Empty);
 						this.m_MenuManager.AddTangentMenuItems(genericMenu, list);
 						genericMenu.ShowAsContext();
 						Event.current.Use();
 					}
-					goto IL_30C;
+					goto IL_34E;
 				}
 				default:
-					goto IL_30C;
+					goto IL_34E;
 				}
 				break;
 			case EventType.Repaint:
 				this.DrawCurves(this.animationCurves);
-				goto IL_30C;
+				goto IL_34E;
 			}
-			goto IL_65;
-			IL_30C:
-			bool changed = GUI.changed;
-			GUI.changed = false;
+			goto IL_77;
+			IL_34E:
+			if (current.type == EventType.Repaint)
+			{
+				this.EditSelectedPoints();
+			}
+			EditorGUI.BeginChangeCheck();
 			GUI.color = color;
 			this.DragTangents();
 			this.EditAxisLabels();
 			this.SelectPoints();
-			if (GUI.changed)
+			if (EditorGUI.EndChangeCheck())
 			{
 				this.RecalcSecondarySelection();
 				this.RecalcCurveSelection();
 			}
-			GUI.changed = false;
+			EditorGUI.BeginChangeCheck();
 			Vector2 moveCoord = this.MovePoints();
-			if (GUI.changed && this.m_DraggingKey != null)
+			if (EditorGUI.EndChangeCheck() && this.m_DraggingKey != null)
 			{
 				this.activeTime = moveCoord.x + this.s_StartClickedTime;
 				this.m_MoveCoord = moveCoord;
 			}
-			GUI.changed = changed;
 			GUI.color = color;
 			GUI.EndGroup();
 		}
+
 		private void RecalcCurveSelection()
 		{
 			CurveWrapper[] animationCurves = this.m_AnimationCurves;
@@ -679,14 +810,15 @@ namespace UnityEditor
 				CurveWrapper curveWrapper = animationCurves[i];
 				curveWrapper.selected = CurveWrapper.SelectionMode.None;
 			}
-			foreach (CurveSelection current in this.m_Selection)
+			foreach (CurveSelection current in this.selectedCurves)
 			{
 				current.curveWrapper.selected = ((!current.semiSelected) ? CurveWrapper.SelectionMode.Selected : CurveWrapper.SelectionMode.SemiSelected);
 			}
 		}
+
 		private void RecalcSecondarySelection()
 		{
-			List<CurveSelection> list = new List<CurveSelection>();
+			List<CurveSelection> list = new List<CurveSelection>(this.m_Selection.Count);
 			foreach (CurveSelection current in this.m_Selection)
 			{
 				CurveWrapper curveWrapper = current.curveWrapper;
@@ -733,6 +865,7 @@ namespace UnityEditor
 			}
 			this.m_Selection = list;
 		}
+
 		private void DragTangents()
 		{
 			Event current = Event.current;
@@ -743,9 +876,9 @@ namespace UnityEditor
 				if (current.button == 0 && !current.alt)
 				{
 					this.m_SelectedTangentPoint = null;
-					float num = 64f;
+					float num = 100f;
 					Vector2 mousePosition = Event.current.mousePosition;
-					foreach (CurveSelection current2 in this.m_Selection)
+					foreach (CurveSelection current2 in this.selectedCurves)
 					{
 						Keyframe keyframe = current2.keyframe;
 						if (CurveUtility.GetKeyTangentMode(keyframe, 0) == TangentMode.Editable)
@@ -772,7 +905,6 @@ namespace UnityEditor
 					if (this.m_SelectedTangentPoint != null)
 					{
 						GUIUtility.hotControl = controlID;
-						this.activeTime = this.m_SelectedTangentPoint.keyframe.time;
 						current.Use();
 					}
 				}
@@ -808,50 +940,51 @@ namespace UnityEditor
 							CurveUtility.SetKeyTangentMode(ref keyframe2, 1, TangentMode.Editable);
 						}
 					}
-					else
+					else if (selectedTangentPoint.type == CurveSelection.SelectionType.OutTangent)
 					{
-						if (selectedTangentPoint.type == CurveSelection.SelectionType.OutTangent)
+						Vector2 vector2 = mousePositionInDrawing - new Vector2(keyframe2.time, keyframe2.value);
+						if (vector2.x > 0.0001f)
 						{
-							Vector2 vector2 = mousePositionInDrawing - new Vector2(keyframe2.time, keyframe2.value);
-							if (vector2.x > 0.0001f)
-							{
-								keyframe2.outTangent = vector2.y / vector2.x;
-							}
-							else
-							{
-								keyframe2.outTangent = float.PositiveInfinity;
-							}
-							CurveUtility.SetKeyTangentMode(ref keyframe2, 1, TangentMode.Editable);
-							if (!CurveUtility.GetKeyBroken(keyframe2))
-							{
-								keyframe2.inTangent = keyframe2.outTangent;
-								CurveUtility.SetKeyTangentMode(ref keyframe2, 0, TangentMode.Editable);
-							}
+							keyframe2.outTangent = vector2.y / vector2.x;
+						}
+						else
+						{
+							keyframe2.outTangent = float.PositiveInfinity;
+						}
+						CurveUtility.SetKeyTangentMode(ref keyframe2, 1, TangentMode.Editable);
+						if (!CurveUtility.GetKeyBroken(keyframe2))
+						{
+							keyframe2.inTangent = keyframe2.outTangent;
+							CurveUtility.SetKeyTangentMode(ref keyframe2, 0, TangentMode.Editable);
 						}
 					}
 					selectedTangentPoint.key = selectedTangentPoint.curve.MoveKey(selectedTangentPoint.key, keyframe2);
 					CurveUtility.UpdateTangentsFromModeSurrounding(selectedTangentPoint.curveWrapper.curve, selectedTangentPoint.key);
 					selectedTangentPoint.curveWrapper.changed = true;
+					GUI.changed = true;
 					Event.current.Use();
 				}
 				break;
 			}
 		}
+
 		private void DeleteSelectedPoints()
 		{
-			for (int i = this.m_Selection.Count - 1; i >= 0; i--)
+			for (int i = this.selectedCurves.Count - 1; i >= 0; i--)
 			{
-				CurveSelection curveSelection = this.m_Selection[i];
+				CurveSelection curveSelection = this.selectedCurves[i];
 				CurveWrapper curveWrapper = curveSelection.curveWrapper;
 				if (base.settings.allowDeleteLastKeyInCurve || curveWrapper.curve.keys.Length != 1)
 				{
 					curveWrapper.curve.RemoveKey(curveSelection.key);
 					CurveUtility.UpdateTangentsFromMode(curveWrapper.curve);
 					curveWrapper.changed = true;
+					GUI.changed = true;
 				}
 			}
 			this.SelectNone();
 		}
+
 		private void DeleteKeys(object obj)
 		{
 			List<KeyIdentifier> list = (List<KeyIdentifier>)obj;
@@ -877,6 +1010,7 @@ namespace UnityEditor
 			this.UpdateCurves(list2, undoText);
 			this.SelectNone();
 		}
+
 		private float ClampVerticalValue(float value, int curveID)
 		{
 			value = Mathf.Clamp(value, base.vRangeMin, base.vRangeMax);
@@ -887,53 +1021,62 @@ namespace UnityEditor
 			}
 			return value;
 		}
-		public void UpdateCurvesFromPoints(Vector2 movement)
+
+		private void TranslateSelectedKeys(Vector2 movement)
 		{
-			this.m_DisplayedSelection = new List<CurveSelection>();
+			this.UpdateCurvesFromPoints(delegate(CurveEditor.SavedCurve.SavedKeyFrame keyframe, CurveEditor.SavedCurve curve)
+			{
+				keyframe.key.time = Mathf.Clamp(keyframe.key.time + movement.x, this.hRangeMin, this.hRangeMax);
+				if (keyframe.selected == CurveWrapper.SelectionMode.Selected)
+				{
+					keyframe.key.value = this.ClampVerticalValue(keyframe.key.value + movement.y, curve.curveId);
+				}
+			});
+		}
+
+		private void SetSelectedKeyPositions(Vector2 newPosition, bool updateTime, bool updateValue)
+		{
+			this.UpdateCurvesFromPoints(delegate(CurveEditor.SavedCurve.SavedKeyFrame keyframe, CurveEditor.SavedCurve curve)
+			{
+				if (updateTime)
+				{
+					keyframe.key.time = Mathf.Max(newPosition.x, 0f);
+				}
+				if (updateValue)
+				{
+					keyframe.key.value = this.ClampVerticalValue(newPosition.y, curve.curveId);
+				}
+			});
+		}
+
+		private void UpdateCurvesFromPoints(Action<CurveEditor.SavedCurve.SavedKeyFrame, CurveEditor.SavedCurve> action)
+		{
+			List<CurveSelection> list = new List<CurveSelection>();
 			foreach (CurveEditor.SavedCurve current in this.m_CurveBackups)
 			{
-				List<CurveEditor.SavedCurve.SavedKeyFrame> list = new List<CurveEditor.SavedCurve.SavedKeyFrame>(current.keys.Count);
-				int num;
-				int num2;
-				int num3;
-				if (movement.x <= 0f)
+				List<CurveEditor.SavedCurve.SavedKeyFrame> list2 = new List<CurveEditor.SavedCurve.SavedKeyFrame>(current.keys.Count);
+				for (int num = 0; num != current.keys.Count; num++)
 				{
-					num = 0;
-					num2 = current.keys.Count;
-					num3 = 1;
-				}
-				else
-				{
-					num = current.keys.Count - 1;
-					num2 = -1;
-					num3 = -1;
-				}
-				for (int num4 = num; num4 != num2; num4 += num3)
-				{
-					CurveEditor.SavedCurve.SavedKeyFrame savedKeyFrame = current.keys[num4];
+					CurveEditor.SavedCurve.SavedKeyFrame savedKeyFrame = current.keys[num];
 					if (savedKeyFrame.selected != CurveWrapper.SelectionMode.None)
 					{
 						savedKeyFrame = new CurveEditor.SavedCurve.SavedKeyFrame(savedKeyFrame.key, savedKeyFrame.selected);
-						savedKeyFrame.key.time = Mathf.Clamp(savedKeyFrame.key.time + movement.x, base.hRangeMin, base.hRangeMax);
-						if (savedKeyFrame.selected == CurveWrapper.SelectionMode.Selected)
+						action(savedKeyFrame, current);
+						for (int i = list2.Count - 1; i >= 0; i--)
 						{
-							savedKeyFrame.key.value = this.ClampVerticalValue(savedKeyFrame.key.value + movement.y, current.curveId);
-						}
-						for (int i = list.Count - 1; i >= 0; i--)
-						{
-							if (Mathf.Abs(list[i].key.time - savedKeyFrame.key.time) < 1E-05f)
+							if (Mathf.Abs(list2[i].key.time - savedKeyFrame.key.time) < 1E-05f)
 							{
-								list.RemoveAt(i);
+								list2.RemoveAt(i);
 							}
 						}
 					}
-					list.Add(new CurveEditor.SavedCurve.SavedKeyFrame(savedKeyFrame.key, savedKeyFrame.selected));
+					list2.Add(new CurveEditor.SavedCurve.SavedKeyFrame(savedKeyFrame.key, savedKeyFrame.selected));
 				}
-				list.Sort();
-				Keyframe[] array = new Keyframe[list.Count];
-				for (int j = 0; j < list.Count; j++)
+				list2.Sort();
+				Keyframe[] array = new Keyframe[list2.Count];
+				for (int j = 0; j < list2.Count; j++)
 				{
-					CurveEditor.SavedCurve.SavedKeyFrame savedKeyFrame2 = list[j];
+					CurveEditor.SavedCurve.SavedKeyFrame savedKeyFrame2 = list2[j];
 					array[j] = savedKeyFrame2.key;
 					if (savedKeyFrame2.selected != CurveWrapper.SelectionMode.None)
 					{
@@ -942,15 +1085,17 @@ namespace UnityEditor
 						{
 							curveSelection.semiSelected = true;
 						}
-						this.m_DisplayedSelection.Add(curveSelection);
+						list.Add(curveSelection);
 					}
 				}
+				this.selectedCurves = list;
 				CurveWrapper curveFromID = this.GetCurveFromID(current.curveId);
 				curveFromID.curve.keys = array;
 				curveFromID.changed = true;
 			}
 			this.UpdateTangentsFromSelection();
 		}
+
 		private float SnapTime(float t)
 		{
 			if (EditorGUI.actionKey)
@@ -959,15 +1104,13 @@ namespace UnityEditor
 				float periodOfLevel = base.hTicks.GetPeriodOfLevel(levelWithMinSeparation);
 				t = Mathf.Round(t / periodOfLevel) * periodOfLevel;
 			}
-			else
+			else if (this.invSnap != 0f)
 			{
-				if (this.invSnap != 0f)
-				{
-					t = Mathf.Round(t * this.invSnap) / this.invSnap;
-				}
+				t = Mathf.Round(t * this.invSnap) / this.invSnap;
 			}
 			return t;
 		}
+
 		private float SnapValue(float v)
 		{
 			if (EditorGUI.actionKey)
@@ -978,10 +1121,12 @@ namespace UnityEditor
 			}
 			return v;
 		}
+
 		private Vector2 GetGUIPoint(Vector3 point)
 		{
 			return HandleUtility.WorldToGUIPoint(base.DrawingToViewTransformPoint(point));
 		}
+
 		private int OnlyOneEditableCurve()
 		{
 			int result = -1;
@@ -1001,11 +1146,12 @@ namespace UnityEditor
 			}
 			return -1;
 		}
+
 		private int GetCurveAtPosition(Vector2 position, out Vector2 closestPointOnCurve)
 		{
 			Vector2 v = base.DrawingToViewTransformPoint(position);
-			int num = (int)Mathf.Sqrt(64f);
-			float num2 = 64f;
+			int num = (int)Mathf.Sqrt(100f);
+			float num2 = 100f;
 			int result = -1;
 			closestPointOnCurve = Vector3.zero;
 			for (int i = this.m_DrawOrder.Count - 1; i >= 0; i--)
@@ -1038,11 +1184,13 @@ namespace UnityEditor
 			closestPointOnCurve = base.ViewToDrawingTransformPoint(closestPointOnCurve);
 			return result;
 		}
+
 		private void CreateKeyFromClick(object obj)
 		{
 			List<int> curveIds = this.CreateKeyFromClick((Vector2)obj);
 			this.UpdateCurves(curveIds, "Add Key");
 		}
+
 		private List<int> CreateKeyFromClick(Vector2 position)
 		{
 			List<int> list = new List<int>();
@@ -1067,6 +1215,7 @@ namespace UnityEditor
 			}
 			return list;
 		}
+
 		private void CreateKeyFromClick(int curveIndex, float time)
 		{
 			time = Mathf.Clamp(time, base.settings.hRangeMin, base.settings.hRangeMax);
@@ -1096,8 +1245,8 @@ namespace UnityEditor
 				}
 				if (curveSelection != null)
 				{
-					this.m_Selection = new List<CurveSelection>(1);
-					this.m_Selection.Add(curveSelection);
+					this.ClearSelection();
+					this.AddSelection(curveSelection);
 					this.RecalcSecondarySelection();
 				}
 				else
@@ -1106,6 +1255,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private void CreateKeyFromClick(int curveIndex, Vector2 position)
 		{
 			position.x = Mathf.Clamp(position.x, base.settings.hRangeMin, base.settings.hRangeMax);
@@ -1138,8 +1288,8 @@ namespace UnityEditor
 				}
 				if (curveSelection != null)
 				{
-					this.m_Selection = new List<CurveSelection>(1);
-					this.m_Selection.Add(curveSelection);
+					this.ClearSelection();
+					this.AddSelection(curveSelection);
 					this.RecalcSecondarySelection();
 				}
 				else
@@ -1148,6 +1298,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private CurveSelection AddKeyAtTime(CurveWrapper cw, float time)
 		{
 			time = this.SnapTime(time);
@@ -1169,6 +1320,7 @@ namespace UnityEditor
 			Keyframe key = new Keyframe(time, value, num2, num2);
 			return this.AddKeyframeAndSelect(key, cw);
 		}
+
 		private CurveSelection AddKeyAtPosition(CurveWrapper cw, Vector2 position)
 		{
 			position.x = this.SnapTime(position.x);
@@ -1189,6 +1341,7 @@ namespace UnityEditor
 			Keyframe key = new Keyframe(position.x, this.SnapValue(position.y), num2, num2);
 			return this.AddKeyframeAndSelect(key, cw);
 		}
+
 		private CurveSelection AddKeyframeAndSelect(Keyframe key, CurveWrapper cw)
 		{
 			int num = cw.curve.AddKey(key);
@@ -1200,12 +1353,14 @@ namespace UnityEditor
 			this.activeTime = key.time;
 			return result;
 		}
+
 		private CurveSelection FindNearest()
 		{
 			Vector2 mousePosition = Event.current.mousePosition;
+			bool flag = false;
 			int num = -1;
 			int keyIndex = -1;
-			float num2 = 64f;
+			float num2 = 100f;
 			for (int i = this.m_DrawOrder.Count - 1; i >= 0; i--)
 			{
 				CurveWrapper curveWrapperById = this.getCurveWrapperById(this.m_DrawOrder[i]);
@@ -1221,6 +1376,7 @@ namespace UnityEditor
 						}
 						if (sqrMagnitude < num2)
 						{
+							flag = true;
 							num = curveWrapperById.id;
 							keyIndex = j;
 							num2 = sqrMagnitude;
@@ -1232,15 +1388,16 @@ namespace UnityEditor
 					}
 				}
 			}
-			if (num >= 0)
+			if (flag)
 			{
 				return new CurveSelection(num, this, keyIndex);
 			}
 			return null;
 		}
+
 		public void SelectNone()
 		{
-			this.m_Selection = new List<CurveSelection>();
+			this.ClearSelection();
 			CurveWrapper[] animationCurves = this.m_AnimationCurves;
 			for (int i = 0; i < animationCurves.Length; i++)
 			{
@@ -1248,6 +1405,7 @@ namespace UnityEditor
 				curveWrapper.selected = CurveWrapper.SelectionMode.None;
 			}
 		}
+
 		public void SelectAll()
 		{
 			int num = 0;
@@ -1260,7 +1418,7 @@ namespace UnityEditor
 					num += curveWrapper.curve.length;
 				}
 			}
-			this.m_Selection = new List<CurveSelection>(num);
+			List<CurveSelection> list = new List<CurveSelection>(num);
 			CurveWrapper[] animationCurves2 = this.m_AnimationCurves;
 			for (int j = 0; j < animationCurves2.Length; j++)
 			{
@@ -1268,22 +1426,27 @@ namespace UnityEditor
 				curveWrapper2.selected = CurveWrapper.SelectionMode.Selected;
 				for (int k = 0; k < curveWrapper2.curve.length; k++)
 				{
-					this.m_Selection.Add(new CurveSelection(curveWrapper2.id, this, k));
+					list.Add(new CurveSelection(curveWrapper2.id, this, k));
 				}
 			}
+			this.selectedCurves = list;
 		}
+
 		public bool IsDraggingCurveOrRegion()
 		{
 			return this.m_DraggingCurveOrRegion != null;
 		}
+
 		public bool IsDraggingCurve(CurveWrapper cw)
 		{
 			return this.m_DraggingCurveOrRegion != null && this.m_DraggingCurveOrRegion.Length == 1 && this.m_DraggingCurveOrRegion[0] == cw;
 		}
+
 		public bool IsDraggingRegion(CurveWrapper cw1, CurveWrapper cw2)
 		{
 			return this.m_DraggingCurveOrRegion != null && this.m_DraggingCurveOrRegion.Length == 2 && (this.m_DraggingCurveOrRegion[0] == cw1 || this.m_DraggingCurveOrRegion[0] == cw2);
 		}
+
 		private bool HandleCurveAndRegionMoveToFrontOnMouseDown(ref Vector2 timeValue, ref CurveWrapper[] curves)
 		{
 			Vector2 vector;
@@ -1343,66 +1506,112 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		private void SelectPoints()
 		{
 			int controlID = GUIUtility.GetControlID(897560, FocusType.Passive);
 			Event current = Event.current;
 			bool shift = current.shift;
+			bool actionKey = EditorGUI.actionKey;
 			EventType typeForControl = current.GetTypeForControl(controlID);
 			switch (typeForControl)
 			{
 			case EventType.MouseDown:
 				if (current.clickCount == 2 && current.button == 0)
 				{
-					this.CreateKeyFromClick(base.mousePositionInDrawing);
-				}
-				else
-				{
-					if (current.button == 0)
+					CurveSelection selectedPoint = this.FindNearest();
+					if (selectedPoint != null)
 					{
-						CurveSelection curveSelection = this.FindNearest();
-						if (curveSelection == null || curveSelection.semiSelected)
+						if (!shift)
 						{
-							if (!shift)
-							{
-								this.SelectNone();
-							}
-							Vector2 zero = Vector2.zero;
-							CurveWrapper[] array = null;
-							this.HandleCurveAndRegionMoveToFrontOnMouseDown(ref zero, ref array);
-							GUIUtility.hotControl = controlID;
-							this.s_EndMouseDragPosition = (this.s_StartMouseDragPosition = current.mousePosition);
-							this.s_PickMode = CurveEditor.PickMode.Click;
+							this.ClearSelection();
 						}
-						else
+						int keyIndex;
+						for (keyIndex = 0; keyIndex < selectedPoint.curve.keys.Length; keyIndex++)
 						{
-							this.MoveCurveToFront(curveSelection.curveID);
-							this.activeTime = curveSelection.keyframe.time;
-							this.s_StartKeyDragPosition = new Vector2(curveSelection.keyframe.time, curveSelection.keyframe.value);
-							if (shift)
+							if (!this.selectedCurves.Any((CurveSelection x) => x.curveID == selectedPoint.curveID && x.key == keyIndex))
 							{
-								List<CurveSelection> list = new List<CurveSelection>(this.m_Selection);
-								if (this.m_Selection.IndexOf(curveSelection) == -1)
+								CurveSelection curveSelection = new CurveSelection(selectedPoint.curveID, this, keyIndex);
+								this.AddSelection(curveSelection);
+							}
+						}
+					}
+					else
+					{
+						this.CreateKeyFromClick(base.mousePositionInDrawing);
+					}
+					current.Use();
+				}
+				else if (current.button == 0)
+				{
+					CurveSelection curveSelection2 = this.FindNearest();
+					if (curveSelection2 == null || curveSelection2.semiSelected)
+					{
+						Vector2 zero = Vector2.zero;
+						CurveWrapper[] array = null;
+						bool flag = this.HandleCurveAndRegionMoveToFrontOnMouseDown(ref zero, ref array);
+						if (!shift && !actionKey && !flag)
+						{
+							this.SelectNone();
+						}
+						GUIUtility.hotControl = controlID;
+						this.s_EndMouseDragPosition = (this.s_StartMouseDragPosition = current.mousePosition);
+						this.s_PickMode = CurveEditor.PickMode.Click;
+					}
+					else
+					{
+						this.MoveCurveToFront(curveSelection2.curveID);
+						this.activeTime = curveSelection2.keyframe.time;
+						this.s_StartKeyDragPosition = new Vector2(curveSelection2.keyframe.time, curveSelection2.keyframe.value);
+						if (shift)
+						{
+							if (this.lastSelected == null || curveSelection2.curveID != this.lastSelected.curveID)
+							{
+								if (!this.selectedCurves.Contains(curveSelection2))
 								{
-									list.Add(curveSelection);
-									list.Sort();
+									this.AddSelection(curveSelection2);
 								}
-								this.m_Selection = list;
 							}
 							else
 							{
-								if (this.m_Selection.IndexOf(curveSelection) == -1)
+								CurveEditor.<SelectPoints>c__AnonStorey47 <SelectPoints>c__AnonStorey3 = new CurveEditor.<SelectPoints>c__AnonStorey47();
+								<SelectPoints>c__AnonStorey3.rangeCurveID = curveSelection2.curveID;
+								int keyIndex2 = Mathf.Min(this.lastSelected.key, curveSelection2.key);
+								int num = Mathf.Max(this.lastSelected.key, curveSelection2.key);
+								int keyIndex;
+								for (keyIndex = keyIndex2; keyIndex <= num; keyIndex++)
 								{
-									this.m_Selection = new List<CurveSelection>(1);
-									this.m_Selection.Add(curveSelection);
+									if (!this.selectedCurves.Any((CurveSelection x) => x.curveID == <SelectPoints>c__AnonStorey3.rangeCurveID && x.key == keyIndex))
+									{
+										CurveSelection curveSelection3 = new CurveSelection(<SelectPoints>c__AnonStorey3.rangeCurveID, this, keyIndex);
+										this.AddSelection(curveSelection3);
+									}
 								}
 							}
+							Event.current.Use();
 						}
-						GUI.changed = true;
-						HandleUtility.Repaint();
+						else if (actionKey)
+						{
+							if (!this.selectedCurves.Contains(curveSelection2))
+							{
+								this.AddSelection(curveSelection2);
+							}
+							else
+							{
+								this.RemoveSelection(curveSelection2);
+							}
+							Event.current.Use();
+						}
+						else if (!this.selectedCurves.Contains(curveSelection2))
+						{
+							this.ClearSelection();
+							this.AddSelection(curveSelection2);
+						}
 					}
+					GUI.changed = true;
+					HandleUtility.Repaint();
 				}
-				goto IL_3E3;
+				goto IL_5B5;
 			case EventType.MouseUp:
 				if (GUIUtility.hotControl == controlID)
 				{
@@ -1410,23 +1619,23 @@ namespace UnityEditor
 					this.s_PickMode = CurveEditor.PickMode.None;
 					Event.current.Use();
 				}
-				goto IL_3E3;
+				goto IL_5B5;
 			case EventType.MouseMove:
 			{
-				IL_39:
+				IL_3F:
 				if (typeForControl == EventType.Layout)
 				{
 					HandleUtility.AddDefaultControl(controlID);
-					goto IL_3E3;
+					goto IL_5B5;
 				}
 				if (typeForControl != EventType.ContextClick)
 				{
-					goto IL_3E3;
+					goto IL_5B5;
 				}
 				Rect drawRect = base.drawRect;
-				float num = 0f;
-				drawRect.y = num;
-				drawRect.x = num;
+				float num2 = 0f;
+				drawRect.y = num2;
+				drawRect.x = num2;
 				if (drawRect.Contains(Event.current.mousePosition))
 				{
 					Vector2 vector;
@@ -1439,7 +1648,7 @@ namespace UnityEditor
 						Event.current.Use();
 					}
 				}
-				goto IL_3E3;
+				goto IL_5B5;
 			}
 			case EventType.MouseDrag:
 				if (GUIUtility.hotControl == controlID)
@@ -1450,7 +1659,7 @@ namespace UnityEditor
 						this.s_PickMode = CurveEditor.PickMode.Marquee;
 						if (shift)
 						{
-							this.s_SelectionBackup = new List<CurveSelection>(this.m_Selection);
+							this.s_SelectionBackup = new List<CurveSelection>(this.selectedCurves);
 						}
 						else
 						{
@@ -1460,42 +1669,42 @@ namespace UnityEditor
 					else
 					{
 						Rect rect = EditorGUIExt.FromToRect(this.s_StartMouseDragPosition, current.mousePosition);
-						List<CurveSelection> list2 = new List<CurveSelection>(this.s_SelectionBackup);
+						List<CurveSelection> list = new List<CurveSelection>(this.s_SelectionBackup);
 						CurveWrapper[] animationCurves = this.m_AnimationCurves;
 						for (int i = 0; i < animationCurves.Length; i++)
 						{
 							CurveWrapper curveWrapper = animationCurves[i];
 							if (!curveWrapper.readOnly && !curveWrapper.hidden)
 							{
-								int num2 = 0;
+								int num3 = 0;
 								Keyframe[] keys = curveWrapper.curve.keys;
 								for (int j = 0; j < keys.Length; j++)
 								{
 									Keyframe keyframe = keys[j];
 									if (rect.Contains(this.GetGUIPoint(new Vector2(keyframe.time, keyframe.value))))
 									{
-										list2.Add(new CurveSelection(curveWrapper.id, this, num2));
+										list.Add(new CurveSelection(curveWrapper.id, this, num3));
 										this.MoveCurveToFront(curveWrapper.id);
 									}
-									num2++;
+									num3++;
 								}
 							}
 						}
-						list2.Sort();
-						this.m_Selection = list2;
+						this.selectedCurves = list;
 						GUI.changed = true;
 					}
 					current.Use();
 				}
-				goto IL_3E3;
+				goto IL_5B5;
 			}
-			goto IL_39;
-			IL_3E3:
+			goto IL_3F;
+			IL_5B5:
 			if (this.s_PickMode == CurveEditor.PickMode.Marquee)
 			{
 				GUI.Label(EditorGUIExt.FromToRect(this.s_StartMouseDragPosition, this.s_EndMouseDragPosition), GUIContent.none, this.ms_Styles.selectionRect);
 			}
 		}
+
 		private void EditAxisLabels()
 		{
 			int controlID = GUIUtility.GetControlID(18975602, FocusType.Keyboard);
@@ -1562,6 +1771,7 @@ namespace UnityEditor
 			}
 			EditorGUI.kFloatFieldFormatString = kFloatFieldFormatString;
 		}
+
 		public void BeginTimeRangeSelection(float time, bool addToSelection)
 		{
 			if (this.s_TimeRangeSelectionActive)
@@ -1574,13 +1784,14 @@ namespace UnityEditor
 			this.s_TimeRangeSelectionStart = time;
 			if (addToSelection)
 			{
-				this.s_SelectionBackup = new List<CurveSelection>(this.m_Selection);
+				this.s_SelectionBackup = new List<CurveSelection>(this.selectedCurves);
 			}
 			else
 			{
 				this.s_SelectionBackup = new List<CurveSelection>();
 			}
 		}
+
 		public void TimeRangeSelectTo(float time)
 		{
 			if (!this.s_TimeRangeSelectionActive)
@@ -1589,7 +1800,7 @@ namespace UnityEditor
 				return;
 			}
 			this.s_TimeRangeSelectionEnd = time;
-			this.m_Selection = new List<CurveSelection>(this.s_SelectionBackup);
+			List<CurveSelection> list = new List<CurveSelection>(this.s_SelectionBackup);
 			float num = Mathf.Min(this.s_TimeRangeSelectionStart, this.s_TimeRangeSelectionEnd);
 			float num2 = Mathf.Max(this.s_TimeRangeSelectionStart, this.s_TimeRangeSelectionEnd);
 			CurveWrapper[] animationCurves = this.m_AnimationCurves;
@@ -1605,16 +1816,17 @@ namespace UnityEditor
 						Keyframe keyframe = keys[j];
 						if (keyframe.time >= num && keyframe.time < num2)
 						{
-							this.m_Selection.Add(new CurveSelection(curveWrapper.id, this, num3));
+							list.Add(new CurveSelection(curveWrapper.id, this, num3));
 						}
 						num3++;
 					}
 				}
 			}
-			this.m_Selection.Sort();
+			this.selectedCurves = list;
 			this.RecalcSecondarySelection();
 			this.RecalcCurveSelection();
 		}
+
 		public void EndTimeRangeSelection()
 		{
 			if (!this.s_TimeRangeSelectionActive)
@@ -1625,6 +1837,7 @@ namespace UnityEditor
 			this.s_TimeRangeSelectionStart = (this.s_TimeRangeSelectionEnd = 0f);
 			this.s_TimeRangeSelectionActive = false;
 		}
+
 		public void CancelTimeRangeSelection()
 		{
 			if (!this.s_TimeRangeSelectionActive)
@@ -1632,9 +1845,10 @@ namespace UnityEditor
 				Debug.LogError("CancelTimeRangeSelection can only be called after BeginTimeRangeSelection");
 				return;
 			}
-			this.m_Selection = this.s_SelectionBackup;
+			this.selectedCurves = this.s_SelectionBackup;
 			this.s_TimeRangeSelectionActive = false;
 		}
+
 		public void DrawTimeRange()
 		{
 			if (this.s_TimeRangeSelectionActive && Event.current.type == EventType.Repaint)
@@ -1646,16 +1860,149 @@ namespace UnityEditor
 				GUI.Label(new Rect(x3, -10000f, x4 - x3, 20000f), GUIContent.none, this.ms_Styles.selectionRect);
 			}
 		}
+
+		private void StartEditingSelectedPointsContext(object fieldPosition)
+		{
+			this.StartEditingSelectedPoints((Vector2)fieldPosition);
+		}
+
+		private void StartEditingSelectedPoints()
+		{
+			float num = this.selectedCurves.Min((CurveSelection x) => x.keyframe.time);
+			float num2 = this.selectedCurves.Max((CurveSelection x) => x.keyframe.time);
+			float num3 = this.selectedCurves.Min((CurveSelection x) => x.keyframe.value);
+			float num4 = this.selectedCurves.Max((CurveSelection x) => x.keyframe.value);
+			Vector2 fieldPosition = new Vector2(num + num2, num3 + num4) * 0.5f;
+			this.StartEditingSelectedPoints(fieldPosition);
+		}
+
+		private void StartEditingSelectedPoints(Vector2 fieldPosition)
+		{
+			this.pointEditingFieldPosition = fieldPosition;
+			this.focusedPointField = "pointValueField";
+			this.timeWasEdited = (this.valueWasEdited = false);
+			this.MakeCurveBackups();
+			this.editingPoints = true;
+		}
+
+		private void FinishEditingPoints()
+		{
+			this.editingPoints = false;
+		}
+
+		private void EditSelectedPoints()
+		{
+			Event current = Event.current;
+			if (this.editingPoints && !this.hasSelection)
+			{
+				this.editingPoints = false;
+			}
+			bool flag = false;
+			if (current.type == EventType.KeyDown)
+			{
+				if (current.keyCode == KeyCode.KeypadEnter || current.keyCode == KeyCode.Return)
+				{
+					if (this.hasSelection && !this.editingPoints)
+					{
+						this.StartEditingSelectedPoints();
+						current.Use();
+					}
+					else if (this.editingPoints)
+					{
+						this.FinishEditingPoints();
+						current.Use();
+					}
+				}
+				else if (current.keyCode == KeyCode.Escape)
+				{
+					flag = true;
+				}
+			}
+			if (!this.editingPoints)
+			{
+				return;
+			}
+			Vector2 vector = base.DrawingToViewTransformPoint(this.pointEditingFieldPosition);
+			Rect rect = Rect.MinMaxRect(base.leftmargin, base.topmargin, base.rect.width - base.rightmargin, base.rect.height - base.bottommargin);
+			vector.x = Mathf.Clamp(vector.x, rect.xMin, rect.xMax - 80f);
+			vector.y = Mathf.Clamp(vector.y, rect.yMin, rect.yMax - 36f);
+			EditorGUI.BeginChangeCheck();
+			GUI.SetNextControlName("pointTimeField");
+			float x2 = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, (CurveSelection x) => x.keyframe.time, "time");
+			if (EditorGUI.EndChangeCheck())
+			{
+				this.timeWasEdited = true;
+			}
+			EditorGUI.BeginChangeCheck();
+			GUI.SetNextControlName("pointValueField");
+			float y = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, (CurveSelection x) => x.keyframe.value, "value");
+			if (EditorGUI.EndChangeCheck())
+			{
+				this.valueWasEdited = true;
+			}
+			if (this.timeWasEdited || this.valueWasEdited)
+			{
+				this.SetSelectedKeyPositions(new Vector2(x2, y), this.timeWasEdited, this.valueWasEdited);
+			}
+			if (flag)
+			{
+				this.FinishEditingPoints();
+			}
+			if (this.focusedPointField != null)
+			{
+				EditorGUI.FocusTextInControl(this.focusedPointField);
+				if (current.type == EventType.Repaint)
+				{
+					this.focusedPointField = null;
+				}
+			}
+			if (current.type == EventType.KeyDown && current.character == '\t')
+			{
+				this.focusedPointField = ((!(GUI.GetNameOfFocusedControl() == "pointValueField")) ? "pointValueField" : "pointTimeField");
+				current.Use();
+			}
+			if (current.type == EventType.MouseDown)
+			{
+				this.FinishEditingPoints();
+			}
+		}
+
+		private float PointFieldForSelection(Rect rect, int customID, Func<CurveSelection, float> memberGetter, string label)
+		{
+			float value = 0f;
+			if (this.selectedCurves.All((CurveSelection x) => memberGetter(x) == memberGetter(this.selectedCurves[0])))
+			{
+				value = memberGetter(this.selectedCurves[0]);
+			}
+			else
+			{
+				EditorGUI.showMixedValue = true;
+			}
+			Rect position = rect;
+			position.x -= position.width;
+			GUIStyle label2 = GUI.skin.label;
+			label2.alignment = TextAnchor.UpperRight;
+			int controlID = GUIUtility.GetControlID(customID, FocusType.Keyboard, rect);
+			Color color = GUI.color;
+			GUI.color = Color.white;
+			GUI.Label(position, label, label2);
+			float result = EditorGUI.DoFloatField(EditorGUI.s_RecycledEditor, rect, new Rect(0f, 0f, 0f, 0f), controlID, value, EditorGUI.kFloatFieldFormatString, EditorStyles.numberField, false);
+			GUI.color = color;
+			EditorGUI.showMixedValue = false;
+			return result;
+		}
+
 		private void SetupKeyOrCurveDragging(Vector2 timeValue, CurveWrapper cw, int id, Vector2 mousePos)
 		{
 			this.m_DraggedCoord = timeValue;
 			this.m_DraggingKey = cw;
 			GUIUtility.hotControl = id;
 			this.MakeCurveBackups();
-			this.s_StartMouseDragPosition = mousePos;
 			this.activeTime = timeValue.x;
+			this.s_StartMouseDragPosition = mousePos;
 			this.s_StartClickedTime = timeValue.x;
 		}
+
 		public Vector2 MovePoints()
 		{
 			int controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -1669,11 +2016,11 @@ namespace UnityEditor
 			case EventType.MouseDown:
 				if (current.button == 0)
 				{
-					foreach (CurveSelection current2 in this.m_Selection)
+					foreach (CurveSelection current2 in this.selectedCurves)
 					{
 						if (!current2.curveWrapper.hidden)
 						{
-							if ((base.DrawingToViewTransformPoint(this.GetPosition(current2)) - current.mousePosition).sqrMagnitude <= 64f)
+							if ((base.DrawingToViewTransformPoint(this.GetPosition(current2)) - current.mousePosition).sqrMagnitude <= 100f)
 							{
 								this.SetupKeyOrCurveDragging(new Vector2(current2.keyframe.time, current2.keyframe.value), current2.curveWrapper, controlID, current.mousePosition);
 								break;
@@ -1686,16 +2033,19 @@ namespace UnityEditor
 						CurveWrapper[] array = null;
 						if (this.HandleCurveAndRegionMoveToFrontOnMouseDown(ref zero, ref array))
 						{
+							List<CurveSelection> list = new List<CurveSelection>();
 							CurveWrapper[] array2 = array;
 							for (int i = 0; i < array2.Length; i++)
 							{
 								CurveWrapper curveWrapper = array2[i];
 								for (int j = 0; j < curveWrapper.curve.keys.Length; j++)
 								{
-									this.m_Selection.Add(new CurveSelection(curveWrapper.id, this, j));
+									list.Add(new CurveSelection(curveWrapper.id, this, j));
 								}
 								this.MoveCurveToFront(curveWrapper.id);
 							}
+							this.preCurveDragSelection = this.selectedCurves;
+							this.selectedCurves = list;
 							this.SetupKeyOrCurveDragging(zero, array[0], controlID, current.mousePosition);
 							this.m_DraggingCurveOrRegion = array;
 						}
@@ -1714,7 +2064,11 @@ namespace UnityEditor
 				if (GUIUtility.hotControl == controlID)
 				{
 					Vector2 lhs = current.mousePosition - this.s_StartMouseDragPosition;
-					Vector3 v;
+					Vector3 v = Vector3.zero;
+					if (current.shift && this.m_AxisLock == CurveEditor.AxisLock.None)
+					{
+						this.m_AxisLock = ((Mathf.Abs(lhs.x) <= Mathf.Abs(lhs.y)) ? CurveEditor.AxisLock.Y : CurveEditor.AxisLock.X);
+					}
 					if (this.m_DraggingCurveOrRegion != null)
 					{
 						lhs.x = 0f;
@@ -1723,29 +2077,26 @@ namespace UnityEditor
 					}
 					else
 					{
-						if (current.shift)
+						switch (this.m_AxisLock)
 						{
-							if (Mathf.Abs(lhs.x) > Mathf.Abs(lhs.y))
-							{
-								lhs.y = 0f;
-								v = base.ViewToDrawingTransformVector(lhs);
-								v.x = this.SnapTime(v.x + this.s_StartKeyDragPosition.x) - this.s_StartKeyDragPosition.x;
-							}
-							else
-							{
-								lhs.x = 0f;
-								v = base.ViewToDrawingTransformVector(lhs);
-								v.y = this.SnapValue(v.y + this.s_StartKeyDragPosition.y) - this.s_StartKeyDragPosition.y;
-							}
-						}
-						else
-						{
+						case CurveEditor.AxisLock.None:
 							v = base.ViewToDrawingTransformVector(lhs);
 							v.x = this.SnapTime(v.x + this.s_StartKeyDragPosition.x) - this.s_StartKeyDragPosition.x;
 							v.y = this.SnapValue(v.y + this.s_StartKeyDragPosition.y) - this.s_StartKeyDragPosition.y;
+							break;
+						case CurveEditor.AxisLock.X:
+							lhs.y = 0f;
+							v = base.ViewToDrawingTransformVector(lhs);
+							v.x = this.SnapTime(v.x + this.s_StartKeyDragPosition.x) - this.s_StartKeyDragPosition.x;
+							break;
+						case CurveEditor.AxisLock.Y:
+							lhs.x = 0f;
+							v = base.ViewToDrawingTransformVector(lhs);
+							v.y = this.SnapValue(v.y + this.s_StartKeyDragPosition.y) - this.s_StartKeyDragPosition.y;
+							break;
 						}
 					}
-					this.UpdateCurvesFromPoints(v);
+					this.TranslateSelectedKeys(v);
 					GUI.changed = true;
 					current.Use();
 					return v;
@@ -1754,7 +2105,7 @@ namespace UnityEditor
 			case EventType.KeyDown:
 				if (GUIUtility.hotControl == controlID && current.keyCode == KeyCode.Escape)
 				{
-					this.UpdateCurvesFromPoints(Vector2.zero);
+					this.TranslateSelectedKeys(Vector2.zero);
 					this.ResetDragging();
 					GUI.changed = true;
 					current.Use();
@@ -1769,26 +2120,29 @@ namespace UnityEditor
 			}
 			return Vector2.zero;
 		}
+
 		private void ResetDragging()
 		{
 			if (this.m_DraggingCurveOrRegion != null)
 			{
-				this.SelectNone();
+				this.selectedCurves = this.preCurveDragSelection;
+				this.preCurveDragSelection = null;
 			}
 			GUIUtility.hotControl = 0;
 			this.m_DraggingKey = null;
 			this.m_DraggingCurveOrRegion = null;
-			this.m_DisplayedSelection = null;
 			this.m_MoveCoord = Vector2.zero;
+			this.m_AxisLock = CurveEditor.AxisLock.None;
 		}
+
 		internal void MakeCurveBackups()
 		{
 			this.m_CurveBackups = new List<CurveEditor.SavedCurve>();
 			int num = -1;
 			CurveEditor.SavedCurve savedCurve = null;
-			for (int i = 0; i < this.m_Selection.Count; i++)
+			for (int i = 0; i < this.selectedCurves.Count; i++)
 			{
-				CurveSelection curveSelection = this.m_Selection[i];
+				CurveSelection curveSelection = this.selectedCurves[i];
 				if (curveSelection.curveID != num)
 				{
 					savedCurve = new CurveEditor.SavedCurve();
@@ -1806,6 +2160,7 @@ namespace UnityEditor
 				savedCurve.keys[curveSelection.key].selected = ((!curveSelection.semiSelected) ? CurveWrapper.SelectionMode.Selected : CurveWrapper.SelectionMode.SemiSelected);
 			}
 		}
+
 		private Vector2 GetPosition(CurveSelection selection)
 		{
 			Keyframe keyframe = selection.keyframe;
@@ -1833,6 +2188,7 @@ namespace UnityEditor
 			}
 			return vector;
 		}
+
 		private void MoveCurveToFront(int curveID)
 		{
 			int count = this.m_DrawOrder.Count;
@@ -1887,29 +2243,35 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private bool IsCurveSelected(CurveWrapper cw)
 		{
 			return cw != null && cw.selected != CurveWrapper.SelectionMode.None;
 		}
+
 		private bool IsRegionCurveSelected(CurveWrapper cw1, CurveWrapper cw2)
 		{
 			return this.IsCurveSelected(cw1) || this.IsCurveSelected(cw2);
 		}
+
 		private bool IsRegion(CurveWrapper cw1, CurveWrapper cw2)
 		{
 			return cw1 != null && cw2 != null && cw1.regionId >= 0 && cw1.regionId == cw2.regionId;
 		}
+
 		private void DrawCurvesAndRegion(CurveWrapper cw1, CurveWrapper cw2, List<CurveSelection> selection, bool hasFocus)
 		{
 			this.DrawRegion(cw1, cw2, hasFocus);
 			this.DrawCurveAndPoints(cw1, (!this.IsCurveSelected(cw1)) ? null : selection, hasFocus);
 			this.DrawCurveAndPoints(cw2, (!this.IsCurveSelected(cw2)) ? null : selection, hasFocus);
 		}
+
 		private void DrawCurveAndPoints(CurveWrapper cw, List<CurveSelection> selection, bool hasFocus)
 		{
 			this.DrawCurve(cw, hasFocus);
 			this.DrawPointsOnCurve(cw, selection, hasFocus);
 		}
+
 		private bool ShouldCurveHaveFocus(int indexIntoDrawOrder, CurveWrapper cw1, CurveWrapper cw2)
 		{
 			bool result = false;
@@ -1917,22 +2279,19 @@ namespace UnityEditor
 			{
 				result = true;
 			}
-			else
+			else if (this.hasSelection)
 			{
-				if (this.hasSelection)
-				{
-					result = (this.IsCurveSelected(cw1) || this.IsCurveSelected(cw2));
-				}
+				result = (this.IsCurveSelected(cw1) || this.IsCurveSelected(cw2));
 			}
 			return result;
 		}
+
 		private void DrawCurves(CurveWrapper[] curves)
 		{
 			if (Event.current.type != EventType.Repaint)
 			{
 				return;
 			}
-			List<CurveSelection> list = (this.m_DisplayedSelection == null) ? this.m_Selection : this.m_DisplayedSelection;
 			for (int i = 0; i < this.m_DrawOrder.Count; i++)
 			{
 				CurveWrapper curveWrapperById = this.getCurveWrapperById(this.m_DrawOrder[i]);
@@ -1951,12 +2310,12 @@ namespace UnityEditor
 							{
 								i++;
 								bool hasFocus = this.ShouldCurveHaveFocus(i, curveWrapperById, cw);
-								this.DrawCurvesAndRegion(curveWrapperById, cw, (!this.IsRegionCurveSelected(curveWrapperById, cw)) ? null : list, hasFocus);
+								this.DrawCurvesAndRegion(curveWrapperById, cw, (!this.IsRegionCurveSelected(curveWrapperById, cw)) ? null : this.selectedCurves, hasFocus);
 							}
 							else
 							{
 								bool hasFocus2 = this.ShouldCurveHaveFocus(i, curveWrapperById, null);
-								this.DrawCurveAndPoints(curveWrapperById, (!this.IsCurveSelected(curveWrapperById)) ? null : list, hasFocus2);
+								this.DrawCurveAndPoints(curveWrapperById, (!this.IsCurveSelected(curveWrapperById)) ? null : this.selectedCurves, hasFocus2);
 							}
 						}
 					}
@@ -1969,7 +2328,7 @@ namespace UnityEditor
 			HandleUtility.ApplyWireMaterial();
 			GL.Begin(1);
 			GL.Color(this.m_TangentColor * new Color(1f, 1f, 1f, 0.75f));
-			foreach (CurveSelection current in list)
+			foreach (CurveSelection current in this.selectedCurves)
 			{
 				if (!current.semiSelected)
 				{
@@ -1988,19 +2347,19 @@ namespace UnityEditor
 			}
 			GL.End();
 			GUI.color = this.m_TangentColor;
-			foreach (CurveSelection current2 in list)
+			foreach (CurveSelection current2 in this.selectedCurves)
 			{
 				if (!current2.semiSelected)
 				{
 					if (CurveUtility.GetKeyTangentMode(current2.keyframe, 0) == TangentMode.Editable && current2.keyframe.time != current2.curve.keys[0].time)
 					{
 						Vector2 position4 = this.GetPosition(new CurveSelection(current2.curveID, this, current2.key, CurveSelection.SelectionType.InTangent));
-						this.DrawPoint(position4.x, position4.y, this.ms_Styles.pointIcon);
+						this.DrawPoint(position4.x, position4.y, CurveWrapper.SelectionMode.None);
 					}
 					if (CurveUtility.GetKeyTangentMode(current2.keyframe, 1) == TangentMode.Editable && current2.keyframe.time != current2.curve.keys[current2.curve.keys.Length - 1].time)
 					{
 						Vector2 position5 = this.GetPosition(new CurveSelection(current2.curveID, this, current2.key, CurveSelection.SelectionType.OutTangent));
-						this.DrawPoint(position5.x, position5.y, this.ms_Styles.pointIcon);
+						this.DrawPoint(position5.x, position5.y, CurveWrapper.SelectionMode.None);
 					}
 				}
 			}
@@ -2038,6 +2397,7 @@ namespace UnityEditor
 				EditorGUI.DoDropShadowLabel(new Rect(vector.x, vector.y - vector3.y, vector3.x, vector3.y), content, this.ms_Styles.dragLabel, 0.3f);
 			}
 		}
+
 		private static List<Vector3> CreateRegion(CurveWrapper minCurve, CurveWrapper maxCurve, float deltaTime)
 		{
 			List<Vector3> list = new List<Vector3>();
@@ -2090,33 +2450,30 @@ namespace UnityEditor
 					list.Add(vector3);
 					list.Add(vector4);
 				}
+				else if (vector.y <= vector2.y && vector3.y <= vector4.y)
+				{
+					list.Add(vector2);
+					list.Add(vector3);
+					list.Add(vector);
+					list.Add(vector2);
+					list.Add(vector4);
+					list.Add(vector3);
+				}
 				else
 				{
-					if (vector.y <= vector2.y && vector3.y <= vector4.y)
+					Vector2 zero = Vector2.zero;
+					if (Mathf.LineIntersection(vector, vector3, vector2, vector4, ref zero))
 					{
-						list.Add(vector2);
-						list.Add(vector3);
 						list.Add(vector);
+						list.Add(zero);
 						list.Add(vector2);
-						list.Add(vector4);
 						list.Add(vector3);
+						list.Add(zero);
+						list.Add(vector4);
 					}
 					else
 					{
-						Vector2 zero = Vector2.zero;
-						if (Mathf.LineIntersection(vector, vector3, vector2, vector4, ref zero))
-						{
-							list.Add(vector);
-							list.Add(zero);
-							list.Add(vector2);
-							list.Add(vector3);
-							list.Add(zero);
-							list.Add(vector4);
-						}
-						else
-						{
-							Debug.Log("Error: No intersection found! There should be one...");
-						}
+						Debug.Log("Error: No intersection found! There should be one...");
 					}
 				}
 				vector = vector3;
@@ -2124,6 +2481,7 @@ namespace UnityEditor
 			}
 			return list;
 		}
+
 		public void DrawRegion(CurveWrapper curve1, CurveWrapper curve2, bool hasFocus)
 		{
 			float deltaTime = 1f / (base.rect.width / 10f);
@@ -2138,18 +2496,15 @@ namespace UnityEditor
 				color = Color.Lerp(color, Color.black, 0.1f);
 				color.a = 0.4f;
 			}
+			else if (base.settings.useFocusColors && !hasFocus)
+			{
+				color *= 0.4f;
+				color.a = 0.1f;
+			}
 			else
 			{
-				if (base.settings.useFocusColors && !hasFocus)
-				{
-					color *= 0.4f;
-					color.a = 0.1f;
-				}
-				else
-				{
-					color *= 1f;
-					color.a = 0.4f;
-				}
+				color *= 1f;
+				color.a = 0.4f;
 			}
 			Shader.SetGlobalColor("_HandleColor", color);
 			HandleUtility.ApplyWireMaterial();
@@ -2164,6 +2519,7 @@ namespace UnityEditor
 			}
 			GL.End();
 		}
+
 		private void DrawCurve(CurveWrapper cw, bool hasFocus)
 		{
 			CurveRenderer renderer = cw.renderer;
@@ -2172,17 +2528,15 @@ namespace UnityEditor
 			{
 				color = Color.Lerp(color, Color.white, 0.3f);
 			}
-			else
+			else if (base.settings.useFocusColors && !hasFocus)
 			{
-				if (base.settings.useFocusColors && !hasFocus)
-				{
-					color *= 0.5f;
-					color.a = 0.8f;
-				}
+				color *= 0.5f;
+				color.a = 0.8f;
 			}
 			Rect shownArea = base.shownArea;
 			renderer.DrawCurve(shownArea.xMin, shownArea.xMax, color, base.drawingToViewMatrix, base.settings.wrapColor);
 		}
+
 		private void DrawPointsOnCurve(CurveWrapper cw, List<CurveSelection> selected, bool hasFocus)
 		{
 			this.m_PreviousDrawPointCenter = new Vector2(-3.40282347E+38f, -3.40282347E+38f);
@@ -2198,7 +2552,7 @@ namespace UnityEditor
 				for (int i = 0; i < keys.Length; i++)
 				{
 					Keyframe keyframe = keys[i];
-					this.DrawPoint(keyframe.time, keyframe.value, this.ms_Styles.pointIcon);
+					this.DrawPoint(keyframe.time, keyframe.value, CurveWrapper.SelectionMode.None);
 				}
 			}
 			else
@@ -2217,32 +2571,20 @@ namespace UnityEditor
 					Keyframe keyframe2 = keys2[j];
 					if (num < selected.Count && selected[num].key == num2 && selected[num].curveID == cw.id)
 					{
-						Vector3 vector = base.DrawingToViewTransformPoint(new Vector3(keyframe2.time, keyframe2.value, 0f));
-						vector = new Vector3(Mathf.Floor(vector.x), Mathf.Floor(vector.y), 0f);
-						Rect position = new Rect(vector.x - 4f, vector.y - 4f, (float)this.ms_Styles.pointIcon.width, (float)this.ms_Styles.pointIcon.height);
-						GUI.Label(position, this.ms_Styles.pointIconSelected, this.ms_Styles.none);
-						GUI.color = Color.white;
-						if (!selected[num].semiSelected)
-						{
-							GUI.Label(position, this.ms_Styles.pointIconSelectedOverlay, this.ms_Styles.none);
-						}
-						else
-						{
-							GUI.Label(position, this.ms_Styles.pointIconSemiSelectedOverlay, this.ms_Styles.none);
-						}
-						GUI.color = color2;
+						this.DrawPoint(keyframe2.time, keyframe2.value, (!selected[num].semiSelected) ? CurveWrapper.SelectionMode.Selected : CurveWrapper.SelectionMode.SemiSelected);
 						num++;
 					}
 					else
 					{
-						this.DrawPoint(keyframe2.time, keyframe2.value, this.ms_Styles.pointIcon);
+						this.DrawPoint(keyframe2.time, keyframe2.value, CurveWrapper.SelectionMode.None);
 					}
 					num2++;
 				}
 				GUI.color = Color.white;
 			}
 		}
-		private void DrawPoint(float x, float y, Texture2D icon)
+
+		private void DrawPoint(float x, float y, CurveWrapper.SelectionMode selected)
 		{
 			Vector3 vector = base.DrawingToViewTransformPoint(new Vector3(x, y, 0f));
 			vector = new Vector3(Mathf.Floor(vector.x), Mathf.Floor(vector.y), 0f);
@@ -2250,18 +2592,38 @@ namespace UnityEditor
 			Vector2 center = position.center;
 			if ((center - this.m_PreviousDrawPointCenter).magnitude > 8f)
 			{
-				GUI.Label(position, icon, GUIStyleX.none);
+				if (selected == CurveWrapper.SelectionMode.None)
+				{
+					GUI.Label(position, this.ms_Styles.pointIcon, GUIStyle.none);
+				}
+				else
+				{
+					GUI.Label(position, this.ms_Styles.pointIconSelected, GUIStyle.none);
+					Color color = GUI.color;
+					GUI.color = Color.white;
+					if (selected == CurveWrapper.SelectionMode.Selected)
+					{
+						GUI.Label(position, this.ms_Styles.pointIconSelectedOverlay, GUIStyle.none);
+					}
+					else
+					{
+						GUI.Label(position, this.ms_Styles.pointIconSemiSelectedOverlay, GUIStyle.none);
+					}
+					GUI.color = color;
+				}
 				this.m_PreviousDrawPointCenter = center;
 			}
 		}
+
 		private void DrawLine(Vector2 lhs, Vector2 rhs)
 		{
 			GL.Vertex(base.DrawingToViewTransformPoint(new Vector3(lhs.x, lhs.y, 0f)));
 			GL.Vertex(base.DrawingToViewTransformPoint(new Vector3(rhs.x, rhs.y, 0f)));
 		}
+
 		private Vector2 GetAxisUiScalars(List<CurveWrapper> curvesWithSameParameterSpace)
 		{
-			if (this.m_Selection.Count <= 1)
+			if (this.selectedCurves.Count <= 1)
 			{
 				if (this.m_DrawOrder.Count > 0)
 				{
@@ -2278,14 +2640,14 @@ namespace UnityEditor
 				return Vector2.one;
 			}
 			Vector2 result = new Vector2(-1f, -1f);
-			if (this.m_Selection.Count > 1)
+			if (this.selectedCurves.Count > 1)
 			{
 				bool flag = true;
 				bool flag2 = true;
 				Vector2 vector = Vector2.one;
-				for (int i = 0; i < this.m_Selection.Count; i++)
+				for (int i = 0; i < this.selectedCurves.Count; i++)
 				{
-					CurveWrapper curveWrapper = this.m_Selection[i].curveWrapper;
+					CurveWrapper curveWrapper = this.selectedCurves[i].curveWrapper;
 					if (curveWrapper.getAxisUiScalarsCallback != null)
 					{
 						Vector2 vector2 = curveWrapper.getAxisUiScalarsCallback();
@@ -2322,6 +2684,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		private void SetAxisUiScalars(Vector2 newScalars, List<CurveWrapper> curvesInSameSpace)
 		{
 			foreach (CurveWrapper current in curvesInSameSpace)
@@ -2341,6 +2704,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public void GridGUI()
 		{
 			GUI.BeginGroup(base.drawRect);

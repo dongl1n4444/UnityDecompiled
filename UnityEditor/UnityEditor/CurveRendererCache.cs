@@ -1,17 +1,21 @@
 using System;
 using System.Collections;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class CurveRendererCache
 	{
 		private static Hashtable m_CombiRenderers = new Hashtable();
+
 		private static Hashtable m_NormalRenderers = new Hashtable();
+
 		public static void ClearCurveRendererCache()
 		{
 			CurveRendererCache.m_CombiRenderers = new Hashtable();
 			CurveRendererCache.m_NormalRenderers = new Hashtable();
 		}
+
 		public static CurveRenderer GetCurveRenderer(AnimationClip clip, EditorCurveBinding curveBinding)
 		{
 			if (curveBinding.type == typeof(Transform) && curveBinding.propertyName.StartsWith("localEulerAngles."))

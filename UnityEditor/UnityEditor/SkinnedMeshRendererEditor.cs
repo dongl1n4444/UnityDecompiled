@@ -1,20 +1,30 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(SkinnedMeshRenderer))]
 	internal class SkinnedMeshRendererEditor : RendererEditorBase
 	{
 		private static int s_BoxHash = "SkinnedMeshRendererEditor".GetHashCode();
+
 		private SerializedProperty m_CastShadows;
+
 		private SerializedProperty m_ReceiveShadows;
+
 		private SerializedProperty m_Materials;
+
 		private SerializedProperty m_AABB;
+
 		private SerializedProperty m_DirtyAABB;
+
 		private SerializedProperty m_BlendShapeWeights;
+
 		private BoxEditor m_BoxEditor = new BoxEditor(false, SkinnedMeshRendererEditor.s_BoxHash);
+
 		private string[] m_ExcludedProperties;
+
 		public override void OnEnable()
 		{
 			base.OnEnable();
@@ -39,10 +49,12 @@ namespace UnityEditor
 			list.AddRange(RendererEditorBase.Probes.GetFieldsStringArray());
 			this.m_ExcludedProperties = list.ToArray();
 		}
+
 		public void OnDisable()
 		{
 			this.m_BoxEditor.OnDisable();
 		}
+
 		public override void OnInspectorGUI()
 		{
 			base.serializedObject.Update();
@@ -60,6 +72,7 @@ namespace UnityEditor
 			}
 			base.serializedObject.ApplyModifiedProperties();
 		}
+
 		public void OnBlendShapeUI()
 		{
 			SkinnedMeshRenderer skinnedMeshRenderer = (SkinnedMeshRenderer)this.target;
@@ -99,6 +112,7 @@ namespace UnityEditor
 			}
 			EditorGUI.indentLevel--;
 		}
+
 		public void OnSceneGUI()
 		{
 			SkinnedMeshRenderer skinnedMeshRenderer = (SkinnedMeshRenderer)this.target;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	public abstract class BaseHierarchySort : IComparer<GameObject>
@@ -12,6 +13,7 @@ namespace UnityEditor
 				return null;
 			}
 		}
+
 		public virtual int Compare(GameObject lhs, GameObject rhs)
 		{
 			return 0;

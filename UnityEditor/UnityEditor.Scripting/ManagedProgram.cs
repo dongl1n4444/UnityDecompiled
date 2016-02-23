@@ -4,6 +4,7 @@ using System.IO;
 using UnityEditor.Scripting.Compilers;
 using UnityEditor.Utils;
 using UnityEngine;
+
 namespace UnityEditor.Scripting
 {
 	internal class ManagedProgram : Program
@@ -11,6 +12,7 @@ namespace UnityEditor.Scripting
 		public ManagedProgram(string monodistribution, string profile, string executable, string arguments) : this(monodistribution, profile, executable, arguments, true)
 		{
 		}
+
 		public ManagedProgram(string monodistribution, string profile, string executable, string arguments, bool setMonoEnvironmentVariables)
 		{
 			string text = ManagedProgram.PathCombine(new string[]
@@ -51,6 +53,7 @@ namespace UnityEditor.Scripting
 			}
 			this._process.StartInfo = processStartInfo;
 		}
+
 		private static string PathCombine(params string[] parts)
 		{
 			string text = parts[0];

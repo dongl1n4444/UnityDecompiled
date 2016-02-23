@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace UnityEngine
 {
 	internal class InternalStaticBatchingUtility
@@ -23,6 +24,7 @@ namespace UnityEngine
 				}
 				return num;
 			}
+
 			private static int GetMaterialId(Renderer renderer)
 			{
 				if (renderer == null || renderer.sharedMaterial == null)
@@ -31,6 +33,7 @@ namespace UnityEngine
 				}
 				return renderer.sharedMaterial.GetInstanceID();
 			}
+
 			private static int GetLightmapIndex(Renderer renderer)
 			{
 				if (renderer == null)
@@ -39,6 +42,7 @@ namespace UnityEngine
 				}
 				return renderer.lightmapIndex;
 			}
+
 			private static Renderer GetRenderer(GameObject go)
 			{
 				if (go == null)
@@ -53,13 +57,17 @@ namespace UnityEngine
 				return meshFilter.GetComponent<Renderer>();
 			}
 		}
+
 		private const int MaxVerticesInBatch = 64000;
+
 		private const string CombinedMeshPrefix = "Combined Mesh";
-		public static void Combine(GameObject staticBatchRoot)
+
+		public static void CombineRoot(GameObject staticBatchRoot)
 		{
-			InternalStaticBatchingUtility.Combine(staticBatchRoot, false);
+			InternalStaticBatchingUtility.Combine(staticBatchRoot, false, false);
 		}
-		public static void Combine(GameObject staticBatchRoot, bool combineOnlyStatic)
+
+		public static void Combine(GameObject staticBatchRoot, bool combineOnlyStatic, bool isEditorPostprocessScene)
 		{
 			GameObject[] array = (GameObject[])Object.FindObjectsOfType(typeof(GameObject));
 			List<GameObject> list = new List<GameObject>();
@@ -76,13 +84,10 @@ namespace UnityEngine
 				}
 			}
 			array = list.ToArray();
-			if (!Application.HasProLicense() && !Application.HasAdvancedLicense() && staticBatchRoot != null && array.Length > 0)
-			{
-				Debug.LogError("Your Unity license is not sufficient for Static Batching.");
-			}
-			InternalStaticBatchingUtility.Combine(array, staticBatchRoot);
+			InternalStaticBatchingUtility.CombineGameObjects(array, staticBatchRoot, isEditorPostprocessScene);
 		}
-		public static void Combine(GameObject[] gos, GameObject staticBatchRoot)
+
+		public static void CombineGameObjects(GameObject[] gos, GameObject staticBatchRoot, bool isEditorPostprocessScene)
 		{
 			Matrix4x4 lhs = Matrix4x4.identity;
 			Transform staticBatchRootTransform = null;
@@ -104,7 +109,7 @@ namespace UnityEngine
 				if (!(meshFilter == null))
 				{
 					Mesh sharedMesh = meshFilter.sharedMesh;
-					if (!(sharedMesh == null) && sharedMesh.canAccess)
+					if (!(sharedMesh == null) && (isEditorPostprocessScene || sharedMesh.canAccess))
 					{
 						Renderer component = meshFilter.GetComponent<Renderer>();
 						if (!(component == null) && component.enabled)
@@ -173,6 +178,7 @@ namespace UnityEngine
 			}
 			InternalStaticBatchingUtility.MakeBatch(list, list2, list3, staticBatchRootTransform, batchIndex);
 		}
+
 		private static void MakeBatch(List<MeshSubsetCombineUtility.MeshInstance> meshes, List<MeshSubsetCombineUtility.SubMeshInstance> subsets, List<GameObject> subsetGOs, Transform staticBatchRootTransform, int batchIndex)
 		{
 			if (meshes.Count < 2)

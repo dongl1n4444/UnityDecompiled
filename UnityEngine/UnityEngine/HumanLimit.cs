@@ -1,13 +1,25 @@
 using System;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>This class stores the rotation limits that define the muscle for a single human bone.</para>
+	/// </summary>
 	public struct HumanLimit
 	{
 		private Vector3 m_Min;
+
 		private Vector3 m_Max;
+
 		private Vector3 m_Center;
+
 		private float m_AxisLength;
+
 		private int m_UseDefaultValues;
+
+		/// <summary>
+		///   <para>Should this limit use the default values?</para>
+		/// </summary>
 		public bool useDefaultValues
 		{
 			get
@@ -19,6 +31,10 @@ namespace UnityEngine
 				this.m_UseDefaultValues = ((!value) ? 0 : 1);
 			}
 		}
+
+		/// <summary>
+		///   <para>The maximum negative rotation away from the initial value that this muscle can apply.</para>
+		/// </summary>
 		public Vector3 min
 		{
 			get
@@ -30,6 +46,10 @@ namespace UnityEngine
 				this.m_Min = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The maximum rotation away from the initial value that this muscle can apply.</para>
+		/// </summary>
 		public Vector3 max
 		{
 			get
@@ -41,6 +61,10 @@ namespace UnityEngine
 				this.m_Max = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The default orientation of a bone when no muscle action is applied.</para>
+		/// </summary>
 		public Vector3 center
 		{
 			get
@@ -52,6 +76,10 @@ namespace UnityEngine
 				this.m_Center = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>Length of the bone to which the limit is applied.</para>
+		/// </summary>
 		public float axisLength
 		{
 			get

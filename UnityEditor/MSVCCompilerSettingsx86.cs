@@ -1,9 +1,13 @@
 using System;
+
 internal class MSVCCompilerSettingsx86 : ICompilerSettings
 {
 	private readonly string m_CompilerPath;
+
 	private readonly string m_LinkerPath;
+
 	private readonly string[] m_LibPaths;
+
 	public string CompilerPath
 	{
 		get
@@ -11,6 +15,7 @@ internal class MSVCCompilerSettingsx86 : ICompilerSettings
 			return this.m_CompilerPath;
 		}
 	}
+
 	public string LinkerPath
 	{
 		get
@@ -18,6 +23,7 @@ internal class MSVCCompilerSettingsx86 : ICompilerSettings
 			return this.m_LinkerPath;
 		}
 	}
+
 	public string[] LibPaths
 	{
 		get
@@ -25,6 +31,7 @@ internal class MSVCCompilerSettingsx86 : ICompilerSettings
 			return this.m_LibPaths;
 		}
 	}
+
 	public string MachineSpecification
 	{
 		get
@@ -32,6 +39,7 @@ internal class MSVCCompilerSettingsx86 : ICompilerSettings
 			return "X86";
 		}
 	}
+
 	public MSVCCompilerSettingsx86()
 	{
 		if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VS100COMNTOOLS")))

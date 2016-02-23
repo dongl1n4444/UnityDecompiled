@@ -1,28 +1,35 @@
 using System;
 using System.Reflection;
 using UnityEngine.Serialization;
+
 namespace UnityEngine.Events
 {
 	[Serializable]
 	internal class PersistentCall
 	{
 		[FormerlySerializedAs("instance"), SerializeField]
-		private UnityEngine.Object m_Target;
+		private Object m_Target;
+
 		[FormerlySerializedAs("methodName"), SerializeField]
 		private string m_MethodName;
+
 		[FormerlySerializedAs("mode"), SerializeField]
 		private PersistentListenerMode m_Mode;
+
 		[FormerlySerializedAs("arguments"), SerializeField]
 		private ArgumentCache m_Arguments = new ArgumentCache();
+
 		[FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled"), SerializeField]
 		private UnityEventCallState m_CallState = UnityEventCallState.RuntimeOnly;
-		public UnityEngine.Object target
+
+		public Object target
 		{
 			get
 			{
 				return this.m_Target;
 			}
 		}
+
 		public string methodName
 		{
 			get
@@ -30,6 +37,7 @@ namespace UnityEngine.Events
 				return this.m_MethodName;
 			}
 		}
+
 		public PersistentListenerMode mode
 		{
 			get
@@ -41,6 +49,7 @@ namespace UnityEngine.Events
 				this.m_Mode = value;
 			}
 		}
+
 		public ArgumentCache arguments
 		{
 			get
@@ -48,6 +57,7 @@ namespace UnityEngine.Events
 				return this.m_Arguments;
 			}
 		}
+
 		public UnityEventCallState callState
 		{
 			get
@@ -59,10 +69,12 @@ namespace UnityEngine.Events
 				this.m_CallState = value;
 			}
 		}
+
 		public bool IsValid()
 		{
 			return this.target != null && !string.IsNullOrEmpty(this.methodName);
 		}
+
 		public BaseInvokableCall GetRuntimeCall(UnityEventBase theEvent)
 		{
 			if (this.m_CallState == UnityEventCallState.RuntimeOnly && !Application.isPlaying)
@@ -98,12 +110,13 @@ namespace UnityEngine.Events
 				return null;
 			}
 		}
-		private static BaseInvokableCall GetObjectCall(UnityEngine.Object target, MethodInfo method, ArgumentCache arguments)
+
+		private static BaseInvokableCall GetObjectCall(Object target, MethodInfo method, ArgumentCache arguments)
 		{
-			Type type = typeof(UnityEngine.Object);
+			Type type = typeof(Object);
 			if (!string.IsNullOrEmpty(arguments.unityObjectArgumentAssemblyTypeName))
 			{
-				type = (Type.GetType(arguments.unityObjectArgumentAssemblyTypeName, false) ?? typeof(UnityEngine.Object));
+				type = (Type.GetType(arguments.unityObjectArgumentAssemblyTypeName, false) ?? typeof(Object));
 			}
 			Type typeFromHandle = typeof(CachedInvokableCall<>);
 			Type type2 = typeFromHandle.MakeGenericType(new Type[]
@@ -112,11 +125,11 @@ namespace UnityEngine.Events
 			});
 			ConstructorInfo constructor = type2.GetConstructor(new Type[]
 			{
-				typeof(UnityEngine.Object),
+				typeof(Object),
 				typeof(MethodInfo),
 				type
 			});
-			UnityEngine.Object @object = arguments.unityObjectArgument;
+			Object @object = arguments.unityObjectArgument;
 			if (@object != null && !type.IsAssignableFrom(@object.GetType()))
 			{
 				@object = null;
@@ -128,11 +141,13 @@ namespace UnityEngine.Events
 				@object
 			}) as BaseInvokableCall;
 		}
-		public void RegisterPersistentListener(UnityEngine.Object ttarget, string mmethodName)
+
+		public void RegisterPersistentListener(Object ttarget, string mmethodName)
 		{
 			this.m_Target = ttarget;
 			this.m_MethodName = mmethodName;
 		}
+
 		public void UnregisterPersistentListener()
 		{
 			this.m_MethodName = string.Empty;

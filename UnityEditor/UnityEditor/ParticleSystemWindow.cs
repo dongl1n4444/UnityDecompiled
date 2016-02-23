@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class ParticleSystemWindow : EditorWindow, ParticleEffectUIOwner
@@ -7,31 +8,43 @@ namespace UnityEditor
 		private class Texts
 		{
 			public GUIContent lockParticleSystem = new GUIContent(string.Empty, "Lock the current selected Particle System");
+
 			public GUIContent previewAll = new GUIContent("Simulate All", "Simulate all particle systems that have Play On Awake set");
 		}
+
 		private static ParticleSystemWindow s_Instance;
+
 		private ParticleSystem m_Target;
+
 		private ParticleEffectUI m_ParticleEffectUI;
+
 		private bool m_IsVisible;
+
 		private static GUIContent[] s_Icons;
+
 		private static ParticleSystemWindow.Texts s_Texts;
+
 		private ParticleSystemWindow()
 		{
 		}
+
 		public static void CreateWindow()
 		{
 			ParticleSystemWindow.s_Instance = EditorWindow.GetWindow<ParticleSystemWindow>();
-			ParticleSystemWindow.s_Instance.title = "Particle Effect";
+			ParticleSystemWindow.s_Instance.titleContent = EditorGUIUtility.TextContent("Particle Effect");
 			ParticleSystemWindow.s_Instance.minSize = ParticleEffectUI.GetMinSize();
 		}
+
 		internal static ParticleSystemWindow GetInstance()
 		{
 			return ParticleSystemWindow.s_Instance;
 		}
+
 		internal bool IsVisible()
 		{
 			return this.m_IsVisible;
 		}
+
 		private void OnEnable()
 		{
 			ParticleSystemWindow.s_Instance = this;
@@ -44,6 +57,7 @@ namespace UnityEditor
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 			base.autoRepaintOnSceneChange = false;
 		}
+
 		private void OnDisable()
 		{
 			ParticleSystemEditorUtils.editorUpdateAll = false;
@@ -58,6 +72,7 @@ namespace UnityEditor
 				ParticleSystemWindow.s_Instance = null;
 			}
 		}
+
 		private void Clear()
 		{
 			this.m_Target = null;
@@ -67,10 +82,12 @@ namespace UnityEditor
 				this.m_ParticleEffectUI = null;
 			}
 		}
+
 		private void OnPlayModeStateChanged()
 		{
 			base.Repaint();
 		}
+
 		private void UndoRedoPerformed()
 		{
 			if (this.m_ParticleEffectUI != null)
@@ -79,10 +96,12 @@ namespace UnityEditor
 			}
 			base.Repaint();
 		}
+
 		private void OnHierarchyOrProjectWindowWasChanged()
 		{
 			this.InitEffectUI();
 		}
+
 		private void OnBecameVisible()
 		{
 			if (this.m_IsVisible)
@@ -94,6 +113,7 @@ namespace UnityEditor
 			SceneView.RepaintAll();
 			InspectorWindow.RepaintAllInspectors();
 		}
+
 		private void OnBecameInvisible()
 		{
 			this.m_IsVisible = false;
@@ -102,11 +122,13 @@ namespace UnityEditor
 			SceneView.RepaintAll();
 			InspectorWindow.RepaintAllInspectors();
 		}
+
 		private void OnSelectionChange()
 		{
 			this.InitEffectUI();
 			base.Repaint();
 		}
+
 		private void InitEffectUI()
 		{
 			if (!this.m_IsVisible)
@@ -138,9 +160,11 @@ namespace UnityEditor
 				GameView.RepaintAll();
 			}
 		}
+
 		private void Awake()
 		{
 		}
+
 		private void DoToolbarGUI()
 		{
 			GUILayout.BeginHorizontal("Toolbar", new GUILayoutOption[0]);
@@ -229,6 +253,7 @@ namespace UnityEditor
 			EditorGUI.EndDisabledGroup();
 			GUILayout.EndHorizontal();
 		}
+
 		private void OnGUI()
 		{
 			if (ParticleSystemWindow.s_Texts == null)
@@ -255,6 +280,7 @@ namespace UnityEditor
 			}
 			EditorGUI.EndDisabledGroup();
 		}
+
 		public void OnSceneViewGUI(SceneView sceneView)
 		{
 			if (!this.m_IsVisible)
@@ -271,10 +297,12 @@ namespace UnityEditor
 				this.m_ParticleEffectUI.OnSceneViewGUI();
 			}
 		}
+
 		private void OnDidOpenScene()
 		{
 			base.Repaint();
 		}
+
 		virtual void Repaint()
 		{
 			base.Repaint();

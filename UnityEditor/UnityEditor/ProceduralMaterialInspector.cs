@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(ProceduralMaterial))]
@@ -10,29 +11,49 @@ namespace UnityEditor
 		private class Styles
 		{
 			public GUIContent hslContent = new GUIContent("HSL Adjustment", "Hue_Shift, Saturation, Luminosity");
+
 			public GUIContent randomSeedContent = new GUIContent("Random Seed", "$randomseed : the overall random aspect of the texture.");
+
 			public GUIContent randomizeButtonContent = new GUIContent("Randomize");
+
 			public GUIContent generateAllOutputsContent = new GUIContent("Generate all outputs", "Force the generation of all Substance outputs.");
+
 			public GUIContent animatedContent = new GUIContent("Animation update rate", "Set the animation update rate in millisecond");
-			public GUIContent defaultPlatform = EditorGUIUtility.TextContent("TextureImporter.Platforms.Default");
+
+			public GUIContent defaultPlatform = EditorGUIUtility.TextContent("Default");
+
 			public GUIContent targetWidth = new GUIContent("Target Width");
+
 			public GUIContent targetHeight = new GUIContent("Target Height");
-			public GUIContent textureFormat = EditorGUIUtility.TextContent("TextureImporter.TextureFormat");
+
+			public GUIContent textureFormat = EditorGUIUtility.TextContent("Format");
+
 			public GUIContent loadBehavior = new GUIContent("Load Behavior");
+
 			public GUIContent mipmapContent = new GUIContent("Generate Mip Maps");
 		}
+
 		[Serializable]
 		protected class ProceduralPlatformSetting
 		{
 			private UnityEngine.Object[] targets;
+
 			public string name;
+
 			public bool m_Overridden;
+
 			public int maxTextureWidth;
+
 			public int maxTextureHeight;
+
 			public int m_TextureFormat;
+
 			public int m_LoadBehavior;
+
 			public BuildTarget target;
+
 			public Texture2D icon;
+
 			public bool isDefault
 			{
 				get
@@ -40,6 +61,7 @@ namespace UnityEditor
 					return this.name == string.Empty;
 				}
 			}
+
 			public int textureFormat
 			{
 				get
@@ -51,6 +73,7 @@ namespace UnityEditor
 					this.m_TextureFormat = value;
 				}
 			}
+
 			public bool overridden
 			{
 				get
@@ -58,6 +81,7 @@ namespace UnityEditor
 					return this.m_Overridden;
 				}
 			}
+
 			public ProceduralPlatformSetting(UnityEngine.Object[] objects, string _name, BuildTarget _target, Texture2D _icon)
 			{
 				this.targets = objects;
@@ -91,10 +115,12 @@ namespace UnityEditor
 					}
 				}
 			}
+
 			public void SetOverride(ProceduralMaterialInspector.ProceduralPlatformSetting master)
 			{
 				this.m_Overridden = true;
 			}
+
 			public void ClearOverride(ProceduralMaterialInspector.ProceduralPlatformSetting master)
 			{
 				this.m_TextureFormat = master.textureFormat;
@@ -103,11 +129,13 @@ namespace UnityEditor
 				this.m_LoadBehavior = master.m_LoadBehavior;
 				this.m_Overridden = false;
 			}
+
 			public bool HasChanged()
 			{
 				ProceduralMaterialInspector.ProceduralPlatformSetting proceduralPlatformSetting = new ProceduralMaterialInspector.ProceduralPlatformSetting(this.targets, this.name, this.target, null);
 				return proceduralPlatformSetting.m_Overridden != this.m_Overridden || proceduralPlatformSetting.maxTextureWidth != this.maxTextureWidth || proceduralPlatformSetting.maxTextureHeight != this.maxTextureHeight || proceduralPlatformSetting.textureFormat != this.textureFormat || proceduralPlatformSetting.m_LoadBehavior != this.m_LoadBehavior;
 			}
+
 			public void Apply()
 			{
 				UnityEngine.Object[] array = this.targets;
@@ -120,7 +148,7 @@ namespace UnityEditor
 					{
 						if (this.m_Overridden)
 						{
-							substanceImporter.SetPlatformTextureSettings(proceduralMaterial.name, this.name, this.maxTextureWidth, this.maxTextureHeight, this.m_TextureFormat, this.m_LoadBehavior);
+							substanceImporter.SetPlatformTextureSettings(proceduralMaterial, this.name, this.maxTextureWidth, this.maxTextureHeight, this.m_TextureFormat, this.m_LoadBehavior);
 						}
 						else
 						{
@@ -129,14 +157,18 @@ namespace UnityEditor
 					}
 					else
 					{
-						substanceImporter.SetPlatformTextureSettings(proceduralMaterial.name, this.name, this.maxTextureWidth, this.maxTextureHeight, this.m_TextureFormat, this.m_LoadBehavior);
+						substanceImporter.SetPlatformTextureSettings(proceduralMaterial, this.name, this.maxTextureWidth, this.maxTextureHeight, this.m_TextureFormat, this.m_LoadBehavior);
 					}
 				}
 			}
 		}
+
 		private static ProceduralMaterial m_Material = null;
+
 		private static Shader m_ShaderPMaterial = null;
+
 		private static SubstanceImporter m_Importer = null;
+
 		private static string[] kMaxTextureSizeStrings = new string[]
 		{
 			"32",
@@ -147,6 +179,7 @@ namespace UnityEditor
 			"1024",
 			"2048"
 		};
+
 		private static int[] kMaxTextureSizeValues = new int[]
 		{
 			32,
@@ -157,10 +190,17 @@ namespace UnityEditor
 			1024,
 			2048
 		};
+
+		private bool m_AllowTextureSizeModification;
+
 		private bool m_ShowTexturesSection;
+
 		private bool m_ShowHSLInputs = true;
+
 		private string m_LastGroup;
+
 		private ProceduralMaterialInspector.Styles m_Styles;
+
 		private static string[] kMaxLoadBehaviorStrings = new string[]
 		{
 			"Do nothing",
@@ -170,6 +210,7 @@ namespace UnityEditor
 			"Bake and keep Substance",
 			"Bake and discard Substance"
 		};
+
 		private static int[] kMaxLoadBehaviorValues = new int[]
 		{
 			0,
@@ -179,6 +220,7 @@ namespace UnityEditor
 			2,
 			3
 		};
+
 		private static string[] kTextureFormatStrings = new string[]
 		{
 			"Compressed",
@@ -186,6 +228,7 @@ namespace UnityEditor
 			"RAW",
 			"RAW - No Alpha"
 		};
+
 		private static int[] kTextureFormatValues = new int[]
 		{
 			0,
@@ -193,16 +236,24 @@ namespace UnityEditor
 			1,
 			3
 		};
+
 		private bool m_MightHaveModified;
+
 		private static bool m_UndoWasPerformed = false;
+
 		private static Dictionary<ProceduralMaterial, float> m_GeneratingSince = new Dictionary<ProceduralMaterial, float>();
+
 		private bool m_ReimportOnDisable = true;
+
 		private Vector2 m_ScrollPos = default(Vector2);
+
 		protected List<ProceduralMaterialInspector.ProceduralPlatformSetting> m_PlatformSettings;
+
 		public void DisableReimportOnDisable()
 		{
 			this.m_ReimportOnDisable = false;
 		}
+
 		public void ReimportSubstances()
 		{
 			string[] array = new string[base.targets.GetLength(0)];
@@ -222,6 +273,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public override void Awake()
 		{
 			base.Awake();
@@ -229,11 +281,13 @@ namespace UnityEditor
 			this.m_ReimportOnDisable = true;
 			ProceduralMaterialInspector.m_UndoWasPerformed = false;
 		}
+
 		public override void OnEnable()
 		{
 			base.OnEnable();
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 		}
+
 		public void ReimportSubstancesIfNeeded()
 		{
 			if (this.m_MightHaveModified && !ProceduralMaterialInspector.m_UndoWasPerformed && !EditorApplication.isPlaying && !InternalEditorUtility.ignoreInspectorChanges)
@@ -241,8 +295,20 @@ namespace UnityEditor
 				this.ReimportSubstances();
 			}
 		}
+
 		public override void OnDisable()
 		{
+			ProceduralMaterial exists = this.target as ProceduralMaterial;
+			if (exists && this.m_PlatformSettings != null && this.HasModified())
+			{
+				string message = "Unapplied import settings for '" + AssetDatabase.GetAssetPath(this.target) + "'";
+				if (EditorUtility.DisplayDialog("Unapplied import settings", message, "Apply", "Revert"))
+				{
+					this.Apply();
+					this.ReimportSubstances();
+				}
+				this.ResetValues();
+			}
 			if (this.m_ReimportOnDisable)
 			{
 				this.ReimportSubstancesIfNeeded();
@@ -250,6 +316,7 @@ namespace UnityEditor
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 			base.OnDisable();
 		}
+
 		public override void UndoRedoPerformed()
 		{
 			ProceduralMaterialInspector.m_UndoWasPerformed = true;
@@ -260,6 +327,7 @@ namespace UnityEditor
 			}
 			base.Repaint();
 		}
+
 		internal void DisplayRestrictedInspector()
 		{
 			this.m_MightHaveModified = false;
@@ -277,14 +345,17 @@ namespace UnityEditor
 			GUILayout.Space(15f);
 			this.GeneratedTextures();
 		}
+
 		internal override void OnAssetStoreInspectorGUI()
 		{
 			this.DisplayRestrictedInspector();
 		}
+
 		internal override bool IsEnabled()
 		{
 			return base.IsOpenForEdit();
 		}
+
 		internal override void OnHeaderTitleGUI(Rect titleRect, string header)
 		{
 			ProceduralMaterial proceduralMaterial = this.target as ProceduralMaterial;
@@ -295,7 +366,7 @@ namespace UnityEditor
 				return;
 			}
 			string text = proceduralMaterial.name;
-			text = EditorGUI.DelayedTextField(titleRect, text, null, EditorStyles.textField);
+			text = EditorGUI.DelayedTextField(titleRect, text, EditorStyles.textField);
 			if (text != proceduralMaterial.name)
 			{
 				if (ProceduralMaterialInspector.m_Importer.RenameMaterial(proceduralMaterial, text))
@@ -309,6 +380,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public override void OnInspectorGUI()
 		{
 			EditorGUI.BeginDisabledGroup(AnimationMode.InAnimationMode());
@@ -365,6 +437,7 @@ namespace UnityEditor
 			this.GeneratedTextures();
 			EditorGUI.EndDisabledGroup();
 		}
+
 		private void ProceduralProperties()
 		{
 			GUILayout.Label("Procedural Properties", EditorStyles.boldLabel, new GUILayoutOption[]
@@ -427,11 +500,23 @@ namespace UnityEditor
 			}
 			this.InputOptions(ProceduralMaterialInspector.m_Material);
 		}
+
 		private void GeneratedTextures()
 		{
 			if (base.targets.Length > 1)
 			{
 				return;
+			}
+			ProceduralPropertyDescription[] proceduralPropertyDescriptions = ProceduralMaterialInspector.m_Material.GetProceduralPropertyDescriptions();
+			ProceduralPropertyDescription[] array = proceduralPropertyDescriptions;
+			for (int i = 0; i < array.Length; i++)
+			{
+				ProceduralPropertyDescription proceduralPropertyDescription = array[i];
+				if (proceduralPropertyDescription.name == "$outputsize")
+				{
+					this.m_AllowTextureSizeModification = true;
+					break;
+				}
 			}
 			string text = "Generated Textures";
 			if (ProceduralMaterialInspector.ShowIsGenerating(this.target as ProceduralMaterial))
@@ -461,6 +546,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public static bool ShowIsGenerating(ProceduralMaterial mat)
 		{
 			if (!ProceduralMaterialInspector.m_GeneratingSince.ContainsKey(mat))
@@ -474,15 +560,18 @@ namespace UnityEditor
 			ProceduralMaterialInspector.m_GeneratingSince[mat] = Time.realtimeSinceStartup;
 			return false;
 		}
+
 		public override string GetInfoString()
 		{
 			ProceduralMaterial proceduralMaterial = this.target as ProceduralMaterial;
-			if (proceduralMaterial.mainTexture == null)
+			Texture[] generatedTextures = proceduralMaterial.GetGeneratedTextures();
+			if (generatedTextures.Length == 0)
 			{
 				return string.Empty;
 			}
-			return proceduralMaterial.mainTexture.width + "x" + proceduralMaterial.mainTexture.height;
+			return generatedTextures[0].width + "x" + generatedTextures[0].height;
 		}
+
 		public bool HasProceduralTextureProperties(Material material)
 		{
 			Shader shader = material.shader;
@@ -501,6 +590,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		protected void RecordForUndo(ProceduralMaterial material, SubstanceImporter importer, string message)
 		{
 			if (importer)
@@ -516,6 +606,7 @@ namespace UnityEditor
 				Undo.RecordObject(material, message);
 			}
 		}
+
 		protected void OffsetScaleGUI(ProceduralMaterial material)
 		{
 			if (ProceduralMaterialInspector.m_Importer == null || base.targets.Length > 1)
@@ -538,6 +629,7 @@ namespace UnityEditor
 				ProceduralMaterialInspector.m_Importer.SetMaterialOffset(material, new Vector2(scaleOffset.z, scaleOffset.w));
 			}
 		}
+
 		protected void InputOptions(ProceduralMaterial material)
 		{
 			EditorGUI.BeginChangeCheck();
@@ -547,6 +639,7 @@ namespace UnityEditor
 				material.RebuildTextures();
 			}
 		}
+
 		[MenuItem("CONTEXT/ProceduralMaterial/Reset", false, -100)]
 		public static void ResetSubstance(MenuCommand command)
 		{
@@ -554,13 +647,51 @@ namespace UnityEditor
 			ProceduralMaterialInspector.m_Importer = (AssetImporter.GetAtPath(assetPath) as SubstanceImporter);
 			ProceduralMaterialInspector.m_Importer.ResetMaterial(command.context as ProceduralMaterial);
 		}
-		[MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps", false)]
-		public static void ExportBitmaps(MenuCommand command)
+
+		private static void ExportBitmaps(ProceduralMaterial material, bool alphaRemap)
 		{
-			string assetPath = AssetDatabase.GetAssetPath(command.context);
-			ProceduralMaterialInspector.m_Importer = (AssetImporter.GetAtPath(assetPath) as SubstanceImporter);
-			ProceduralMaterialInspector.m_Importer.ExportBitmaps(command.context as ProceduralMaterial);
+			string text = EditorUtility.SaveFolderPanel("Set bitmap export path...", string.Empty, string.Empty);
+			if (text == string.Empty)
+			{
+				return;
+			}
+			string assetPath = AssetDatabase.GetAssetPath(material);
+			SubstanceImporter substanceImporter = AssetImporter.GetAtPath(assetPath) as SubstanceImporter;
+			if (substanceImporter)
+			{
+				substanceImporter.ExportBitmaps(material, text, alphaRemap);
+			}
 		}
+
+		[MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (remapped alpha channels)", false)]
+		public static void ExportBitmapsAlphaRemap(MenuCommand command)
+		{
+			ProceduralMaterialInspector.ExportBitmaps(command.context as ProceduralMaterial, true);
+		}
+
+		[MenuItem("CONTEXT/ProceduralMaterial/Export Bitmaps (original alpha channels)", false)]
+		public static void ExportBitmapsNoAlphaRemap(MenuCommand command)
+		{
+			ProceduralMaterialInspector.ExportBitmaps(command.context as ProceduralMaterial, false);
+		}
+
+		[MenuItem("CONTEXT/ProceduralMaterial/Export Preset", false)]
+		public static void ExportPreset(MenuCommand command)
+		{
+			string text = EditorUtility.SaveFolderPanel("Set preset export path...", string.Empty, string.Empty);
+			if (text == string.Empty)
+			{
+				return;
+			}
+			ProceduralMaterial proceduralMaterial = command.context as ProceduralMaterial;
+			string assetPath = AssetDatabase.GetAssetPath(proceduralMaterial);
+			SubstanceImporter substanceImporter = AssetImporter.GetAtPath(assetPath) as SubstanceImporter;
+			if (substanceImporter)
+			{
+				substanceImporter.ExportPreset(proceduralMaterial, text);
+			}
+		}
+
 		protected void ShowProceduralTexturesGUI(ProceduralMaterial material)
 		{
 			if (base.targets.Length > 1)
@@ -632,6 +763,7 @@ namespace UnityEditor
 			GUILayout.Space(4f);
 			EditorGUILayout.EndHorizontal();
 		}
+
 		protected void ShowGeneratedTexturesGUI(ProceduralMaterial material)
 		{
 			if (base.targets.Length > 1)
@@ -653,9 +785,11 @@ namespace UnityEditor
 			GUILayout.FlexibleSpace();
 			float pixels = 10f;
 			Texture[] generatedTextures = material.GetGeneratedTextures();
-			for (int i = 0; i < generatedTextures.Length; i++)
+			Texture[] array = generatedTextures;
+			for (int i = 0; i < array.Length; i++)
 			{
-				ProceduralTexture proceduralTexture = generatedTextures[i] as ProceduralTexture;
+				Texture texture = array[i];
+				ProceduralTexture proceduralTexture = texture as ProceduralTexture;
 				if (proceduralTexture != null)
 				{
 					GUILayout.Space(pixels);
@@ -674,6 +808,7 @@ namespace UnityEditor
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.EndScrollView();
 		}
+
 		private void ShowAlphaSourceGUI(ProceduralMaterial material, ProceduralTexture tex, ref Rect rect)
 		{
 			GUIStyle gUIStyle = "ObjectPickerResultsGridLabel";
@@ -715,6 +850,7 @@ namespace UnityEditor
 			}
 			rect.width += num;
 		}
+
 		private UnityEngine.Object TextureValidator(UnityEngine.Object[] references, Type objType, SerializedProperty property)
 		{
 			for (int i = 0; i < references.Length; i++)
@@ -728,6 +864,7 @@ namespace UnityEditor
 			}
 			return null;
 		}
+
 		internal static void DoObjectPingField(Rect position, Rect dropRect, int id, UnityEngine.Object obj, Type objType)
 		{
 			Event current = Event.current;
@@ -764,43 +901,38 @@ namespace UnityEditor
 					}
 				}
 			}
-			else
+			else if (Event.current.button == 0)
 			{
-				if (Event.current.button == 0)
+				if (position.Contains(Event.current.mousePosition))
 				{
-					if (position.Contains(Event.current.mousePosition))
+					UnityEngine.Object @object = obj;
+					Component component = @object as Component;
+					if (component)
 					{
-						UnityEngine.Object @object = obj;
-						Component component = @object as Component;
-						if (component)
+						@object = component.gameObject;
+					}
+					if (Event.current.clickCount == 1)
+					{
+						GUIUtility.keyboardControl = id;
+						if (@object)
 						{
-							@object = component.gameObject;
+							EditorGUIUtility.PingObject(@object);
 						}
-						if (Event.current.clickCount == 1)
+						current.Use();
+					}
+					else if (Event.current.clickCount == 2)
+					{
+						if (@object)
 						{
-							GUIUtility.keyboardControl = id;
-							if (@object)
-							{
-								EditorGUIUtility.PingObject(@object);
-							}
-							current.Use();
+							AssetDatabase.OpenAsset(@object);
+							GUIUtility.ExitGUI();
 						}
-						else
-						{
-							if (Event.current.clickCount == 2)
-							{
-								if (@object)
-								{
-									AssetDatabase.OpenAsset(@object);
-									GUIUtility.ExitGUI();
-								}
-								current.Use();
-							}
-						}
+						current.Use();
 					}
 				}
 			}
 		}
+
 		internal void ResetValues()
 		{
 			this.BuildTargetList();
@@ -809,6 +941,7 @@ namespace UnityEditor
 				Debug.LogError("Impossible");
 			}
 		}
+
 		internal void Apply()
 		{
 			foreach (ProceduralMaterialInspector.ProceduralPlatformSetting current in this.m_PlatformSettings)
@@ -816,6 +949,7 @@ namespace UnityEditor
 				current.Apply();
 			}
 		}
+
 		internal bool HasModified()
 		{
 			foreach (ProceduralMaterialInspector.ProceduralPlatformSetting current in this.m_PlatformSettings)
@@ -827,6 +961,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		public void BuildTargetList()
 		{
 			List<BuildPlayerWindow.BuildPlatform> validPlatforms = BuildPlayerWindow.GetValidPlatforms();
@@ -837,6 +972,7 @@ namespace UnityEditor
 				this.m_PlatformSettings.Add(new ProceduralMaterialInspector.ProceduralPlatformSetting(base.targets, current.name, current.DefaultTarget, current.smallIcon));
 			}
 		}
+
 		public void ShowTextureSizeGUI()
 		{
 			if (this.m_PlatformSettings == null)
@@ -845,6 +981,7 @@ namespace UnityEditor
 			}
 			this.TextureSizeGUI();
 		}
+
 		protected void TextureSizeGUI()
 		{
 			BuildPlayerWindow.BuildPlatform[] platforms = BuildPlayerWindow.GetValidPlatforms().ToArray();
@@ -869,6 +1006,11 @@ namespace UnityEditor
 				}
 			}
 			EditorGUI.BeginDisabledGroup(!flag);
+			if (!this.m_AllowTextureSizeModification)
+			{
+				GUILayout.Label("This ProceduralMaterial was published with a fixed size.", EditorStyles.wordWrappedLabel, new GUILayoutOption[0]);
+			}
+			EditorGUI.BeginDisabledGroup(!this.m_AllowTextureSizeModification);
 			EditorGUI.BeginChangeCheck();
 			proceduralPlatformSetting2.maxTextureWidth = EditorGUILayout.IntPopup(this.m_Styles.targetWidth.text, proceduralPlatformSetting2.maxTextureWidth, ProceduralMaterialInspector.kMaxTextureSizeStrings, ProceduralMaterialInspector.kMaxTextureSizeValues, new GUILayoutOption[0]);
 			proceduralPlatformSetting2.maxTextureHeight = EditorGUILayout.IntPopup(this.m_Styles.targetHeight.text, proceduralPlatformSetting2.maxTextureHeight, ProceduralMaterialInspector.kMaxTextureSizeStrings, ProceduralMaterialInspector.kMaxTextureSizeValues, new GUILayoutOption[0]);
@@ -883,6 +1025,7 @@ namespace UnityEditor
 					}
 				}
 			}
+			EditorGUI.EndDisabledGroup();
 			EditorGUI.BeginChangeCheck();
 			int num2 = proceduralPlatformSetting2.textureFormat;
 			if (num2 < 0 || num2 >= ProceduralMaterialInspector.kTextureFormatStrings.Length)
@@ -936,6 +1079,7 @@ namespace UnityEditor
 			EditorGUILayout.EndPlatformGrouping();
 			EditorGUI.EndDisabledGroup();
 		}
+
 		public override void OnPreviewGUI(Rect r, GUIStyle background)
 		{
 			base.OnPreviewGUI(r, background);
@@ -944,234 +1088,266 @@ namespace UnityEditor
 				EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 20f), "Generating...");
 			}
 		}
+
 		public void InputsGUI()
 		{
+			List<string> list = new List<string>();
+			Dictionary<string, List<ProceduralPropertyDescription>> dictionary = new Dictionary<string, List<ProceduralPropertyDescription>>();
+			Dictionary<string, List<ProceduralPropertyDescription>> dictionary2 = new Dictionary<string, List<ProceduralPropertyDescription>>();
 			ProceduralPropertyDescription[] proceduralPropertyDescriptions = ProceduralMaterialInspector.m_Material.GetProceduralPropertyDescriptions();
 			ProceduralPropertyDescription proceduralPropertyDescription = null;
 			ProceduralPropertyDescription proceduralPropertyDescription2 = null;
 			ProceduralPropertyDescription proceduralPropertyDescription3 = null;
-			this.m_LastGroup = string.Empty;
-			for (int i = 0; i < proceduralPropertyDescriptions.Length; i++)
+			ProceduralPropertyDescription[] array = proceduralPropertyDescriptions;
+			for (int i = 0; i < array.Length; i++)
 			{
-				ProceduralPropertyDescription proceduralPropertyDescription4 = proceduralPropertyDescriptions[i];
-				if (!(proceduralPropertyDescription4.name == "$outputsize"))
+				ProceduralPropertyDescription proceduralPropertyDescription4 = array[i];
+				if (proceduralPropertyDescription4.name == "$randomseed")
 				{
-					if (proceduralPropertyDescription4.name == "$randomseed")
+					this.InputSeedGUI(proceduralPropertyDescription4);
+				}
+				else if (proceduralPropertyDescription4.name.Length <= 0 || proceduralPropertyDescription4.name[0] != '$')
+				{
+					if (ProceduralMaterialInspector.m_Material.IsProceduralPropertyVisible(proceduralPropertyDescription4.name))
 					{
-						this.InputSeedGUI(proceduralPropertyDescription4);
-					}
-					else
-					{
-						if (proceduralPropertyDescription4.name == "Hue_Shift" && proceduralPropertyDescription4.group == string.Empty)
+						string group = proceduralPropertyDescription4.group;
+						if (group != string.Empty && !list.Contains(group))
+						{
+							list.Add(group);
+						}
+						if (proceduralPropertyDescription4.name == "Hue_Shift" && proceduralPropertyDescription4.type == ProceduralPropertyType.Float && group == string.Empty)
 						{
 							proceduralPropertyDescription = proceduralPropertyDescription4;
 						}
+						if (proceduralPropertyDescription4.name == "Saturation" && proceduralPropertyDescription4.type == ProceduralPropertyType.Float && group == string.Empty)
+						{
+							proceduralPropertyDescription2 = proceduralPropertyDescription4;
+						}
+						if (proceduralPropertyDescription4.name == "Luminosity" && proceduralPropertyDescription4.type == ProceduralPropertyType.Float && group == string.Empty)
+						{
+							proceduralPropertyDescription3 = proceduralPropertyDescription4;
+						}
+						if (proceduralPropertyDescription4.type == ProceduralPropertyType.Texture)
+						{
+							if (!dictionary2.ContainsKey(group))
+							{
+								dictionary2.Add(group, new List<ProceduralPropertyDescription>());
+							}
+							dictionary2[group].Add(proceduralPropertyDescription4);
+						}
 						else
 						{
-							if (proceduralPropertyDescription4.name == "Saturation" && proceduralPropertyDescription4.group == string.Empty)
+							if (!dictionary.ContainsKey(group))
 							{
-								proceduralPropertyDescription2 = proceduralPropertyDescription4;
+								dictionary.Add(group, new List<ProceduralPropertyDescription>());
 							}
-							else
-							{
-								if (proceduralPropertyDescription4.name == "Luminosity" && proceduralPropertyDescription4.group == string.Empty)
-								{
-									proceduralPropertyDescription3 = proceduralPropertyDescription4;
-								}
-								else
-								{
-									if (proceduralPropertyDescription4.name.Length <= 0 || proceduralPropertyDescription4.name[0] != '$')
-									{
-										this.InputGUI(proceduralPropertyDescription4);
-									}
-								}
-							}
+							dictionary[group].Add(proceduralPropertyDescription4);
 						}
 					}
 				}
 			}
-			if (proceduralPropertyDescription != null && proceduralPropertyDescription2 != null && proceduralPropertyDescription3 != null && proceduralPropertyDescription.type == ProceduralPropertyType.Float && proceduralPropertyDescription2.type == ProceduralPropertyType.Float && proceduralPropertyDescription3.type == ProceduralPropertyType.Float)
+			bool flag = false;
+			if (proceduralPropertyDescription != null && proceduralPropertyDescription2 != null && proceduralPropertyDescription3 != null)
+			{
+				flag = true;
+			}
+			List<ProceduralPropertyDescription> list2;
+			if (dictionary.TryGetValue(string.Empty, out list2))
+			{
+				foreach (ProceduralPropertyDescription current in list2)
+				{
+					if (!flag || (current != proceduralPropertyDescription && current != proceduralPropertyDescription2 && current != proceduralPropertyDescription3))
+					{
+						this.InputGUI(current);
+					}
+				}
+			}
+			foreach (string current2 in list)
+			{
+				ProceduralMaterial proceduralMaterial = this.target as ProceduralMaterial;
+				string name = proceduralMaterial.name;
+				string key = name + current2;
+				GUILayout.Space(5f);
+				bool flag2 = EditorPrefs.GetBool(key, true);
+				EditorGUI.BeginChangeCheck();
+				flag2 = EditorGUILayout.Foldout(flag2, current2);
+				if (EditorGUI.EndChangeCheck())
+				{
+					EditorPrefs.SetBool(key, flag2);
+				}
+				if (flag2)
+				{
+					EditorGUI.indentLevel++;
+					List<ProceduralPropertyDescription> list3;
+					if (dictionary.TryGetValue(current2, out list3))
+					{
+						foreach (ProceduralPropertyDescription current3 in list3)
+						{
+							this.InputGUI(current3);
+						}
+					}
+					List<ProceduralPropertyDescription> list4;
+					if (dictionary2.TryGetValue(current2, out list4))
+					{
+						GUILayout.Space(2f);
+						foreach (ProceduralPropertyDescription current4 in list4)
+						{
+							this.InputGUI(current4);
+						}
+					}
+					EditorGUI.indentLevel--;
+				}
+			}
+			if (flag)
 			{
 				this.InputHSLGUI(proceduralPropertyDescription, proceduralPropertyDescription2, proceduralPropertyDescription3);
 			}
-			else
-			{
-				if (proceduralPropertyDescription != null)
-				{
-					this.InputGUI(proceduralPropertyDescription);
-				}
-				if (proceduralPropertyDescription2 != null)
-				{
-					this.InputGUI(proceduralPropertyDescription2);
-				}
-				if (proceduralPropertyDescription3 != null)
-				{
-					this.InputGUI(proceduralPropertyDescription3);
-				}
-			}
-		}
-		private void InputGUI(ProceduralPropertyDescription input)
-		{
-			bool flag = true;
-			ProceduralMaterial proceduralMaterial = this.target as ProceduralMaterial;
-			string name = proceduralMaterial.name;
-			string key = name + input.group;
-			if (input.group != this.m_LastGroup)
+			List<ProceduralPropertyDescription> list5;
+			if (dictionary2.TryGetValue(string.Empty, out list5))
 			{
 				GUILayout.Space(5f);
-				if (input.group != string.Empty)
+				foreach (ProceduralPropertyDescription current5 in list5)
 				{
-					this.m_LastGroup = input.group;
-					flag = EditorPrefs.GetBool(key, true);
-					EditorGUI.BeginChangeCheck();
-					flag = EditorGUILayout.Foldout(flag, input.group);
-					if (EditorGUI.EndChangeCheck())
-					{
-						EditorPrefs.SetBool(key, flag);
-					}
+					this.InputGUI(current5);
 				}
-			}
-			else
-			{
-				flag = EditorPrefs.GetBool(key, true);
-			}
-			if (flag || input.group == string.Empty)
-			{
-				int indentLevel = EditorGUI.indentLevel;
-				if (input.group != string.Empty)
-				{
-					EditorGUI.indentLevel++;
-				}
-				ProceduralPropertyType type = input.type;
-				GUIContent gUIContent = new GUIContent(input.label, input.name);
-				switch (type)
-				{
-				case ProceduralPropertyType.Boolean:
-				{
-					EditorGUI.BeginChangeCheck();
-					bool value = EditorGUILayout.Toggle(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralBoolean(input.name), new GUILayoutOption[0]);
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
-						ProceduralMaterialInspector.m_Material.SetProceduralBoolean(input.name, value);
-					}
-					break;
-				}
-				case ProceduralPropertyType.Float:
-				{
-					EditorGUI.BeginChangeCheck();
-					float value2;
-					if (input.hasRange)
-					{
-						float minimum = input.minimum;
-						float maximum = input.maximum;
-						value2 = EditorGUILayout.Slider(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralFloat(input.name), minimum, maximum, new GUILayoutOption[0]);
-					}
-					else
-					{
-						value2 = EditorGUILayout.FloatField(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralFloat(input.name), new GUILayoutOption[0]);
-					}
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
-						ProceduralMaterialInspector.m_Material.SetProceduralFloat(input.name, value2);
-					}
-					break;
-				}
-				case ProceduralPropertyType.Vector2:
-				case ProceduralPropertyType.Vector3:
-				case ProceduralPropertyType.Vector4:
-				{
-					int num = (type != ProceduralPropertyType.Vector2) ? ((type != ProceduralPropertyType.Vector3) ? 4 : 3) : 2;
-					Vector4 vector = ProceduralMaterialInspector.m_Material.GetProceduralVector(input.name);
-					EditorGUI.BeginChangeCheck();
-					if (input.hasRange)
-					{
-						float minimum2 = input.minimum;
-						float maximum2 = input.maximum;
-						EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
-						GUILayout.Label(gUIContent, new GUILayoutOption[0]);
-						EditorGUI.indentLevel++;
-						for (int i = 0; i < num; i++)
-						{
-							vector[i] = EditorGUILayout.Slider(new GUIContent(input.componentLabels[i]), vector[i], minimum2, maximum2, new GUILayoutOption[0]);
-						}
-						EditorGUI.indentLevel--;
-						EditorGUILayout.EndVertical();
-					}
-					else
-					{
-						switch (num)
-						{
-						case 2:
-							vector = EditorGUILayout.Vector2Field(input.name, vector, new GUILayoutOption[0]);
-							break;
-						case 3:
-							vector = EditorGUILayout.Vector3Field(input.name, vector, new GUILayoutOption[0]);
-							break;
-						case 4:
-							vector = EditorGUILayout.Vector4Field(input.name, vector, new GUILayoutOption[0]);
-							break;
-						}
-					}
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
-						ProceduralMaterialInspector.m_Material.SetProceduralVector(input.name, vector);
-					}
-					break;
-				}
-				case ProceduralPropertyType.Color3:
-				case ProceduralPropertyType.Color4:
-				{
-					EditorGUI.BeginChangeCheck();
-					Color value3 = EditorGUILayout.ColorField(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralColor(input.name), new GUILayoutOption[0]);
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
-						ProceduralMaterialInspector.m_Material.SetProceduralColor(input.name, value3);
-					}
-					break;
-				}
-				case ProceduralPropertyType.Enum:
-				{
-					GUIContent[] array = new GUIContent[input.enumOptions.Length];
-					for (int j = 0; j < array.Length; j++)
-					{
-						array[j] = new GUIContent(input.enumOptions[j]);
-					}
-					EditorGUI.BeginChangeCheck();
-					int value4 = EditorGUILayout.Popup(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralEnum(input.name), array, new GUILayoutOption[0]);
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
-						ProceduralMaterialInspector.m_Material.SetProceduralEnum(input.name, value4);
-					}
-					break;
-				}
-				case ProceduralPropertyType.Texture:
-				{
-					EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-					GUILayout.Label(gUIContent, new GUILayoutOption[0]);
-					GUILayout.FlexibleSpace();
-					Rect rect = GUILayoutUtility.GetRect(64f, 64f, new GUILayoutOption[]
-					{
-						GUILayout.ExpandWidth(false)
-					});
-					EditorGUI.BeginChangeCheck();
-					Texture2D value5 = EditorGUI.DoObjectField(rect, rect, GUIUtility.GetControlID(12354, EditorGUIUtility.native, rect), ProceduralMaterialInspector.m_Material.GetProceduralTexture(input.name), typeof(Texture2D), null, null, false) as Texture2D;
-					EditorGUILayout.EndHorizontal();
-					if (EditorGUI.EndChangeCheck())
-					{
-						this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
-						ProceduralMaterialInspector.m_Material.SetProceduralTexture(input.name, value5);
-					}
-					break;
-				}
-				}
-				EditorGUI.indentLevel = indentLevel;
 			}
 		}
+
+		private void InputGUI(ProceduralPropertyDescription input)
+		{
+			ProceduralPropertyType type = input.type;
+			GUIContent gUIContent = new GUIContent(input.label, input.name);
+			switch (type)
+			{
+			case ProceduralPropertyType.Boolean:
+			{
+				EditorGUI.BeginChangeCheck();
+				bool value = EditorGUILayout.Toggle(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralBoolean(input.name), new GUILayoutOption[0]);
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
+					ProceduralMaterialInspector.m_Material.SetProceduralBoolean(input.name, value);
+				}
+				break;
+			}
+			case ProceduralPropertyType.Float:
+			{
+				EditorGUI.BeginChangeCheck();
+				float value2;
+				if (input.hasRange)
+				{
+					float minimum = input.minimum;
+					float maximum = input.maximum;
+					value2 = EditorGUILayout.Slider(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralFloat(input.name), minimum, maximum, new GUILayoutOption[0]);
+				}
+				else
+				{
+					value2 = EditorGUILayout.FloatField(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralFloat(input.name), new GUILayoutOption[0]);
+				}
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
+					ProceduralMaterialInspector.m_Material.SetProceduralFloat(input.name, value2);
+				}
+				break;
+			}
+			case ProceduralPropertyType.Vector2:
+			case ProceduralPropertyType.Vector3:
+			case ProceduralPropertyType.Vector4:
+			{
+				int num = (type != ProceduralPropertyType.Vector2) ? ((type != ProceduralPropertyType.Vector3) ? 4 : 3) : 2;
+				Vector4 vector = ProceduralMaterialInspector.m_Material.GetProceduralVector(input.name);
+				EditorGUI.BeginChangeCheck();
+				if (input.hasRange)
+				{
+					float minimum2 = input.minimum;
+					float maximum2 = input.maximum;
+					EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
+					EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
+					GUILayout.Space((float)(EditorGUI.indentLevel * 15));
+					GUILayout.Label(gUIContent, new GUILayoutOption[0]);
+					EditorGUILayout.EndHorizontal();
+					EditorGUI.indentLevel++;
+					for (int i = 0; i < num; i++)
+					{
+						vector[i] = EditorGUILayout.Slider(new GUIContent(input.componentLabels[i]), vector[i], minimum2, maximum2, new GUILayoutOption[0]);
+					}
+					EditorGUI.indentLevel--;
+					EditorGUILayout.EndVertical();
+				}
+				else
+				{
+					switch (num)
+					{
+					case 2:
+						vector = EditorGUILayout.Vector2Field(input.name, vector, new GUILayoutOption[0]);
+						break;
+					case 3:
+						vector = EditorGUILayout.Vector3Field(input.name, vector, new GUILayoutOption[0]);
+						break;
+					case 4:
+						vector = EditorGUILayout.Vector4Field(input.name, vector, new GUILayoutOption[0]);
+						break;
+					}
+				}
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
+					ProceduralMaterialInspector.m_Material.SetProceduralVector(input.name, vector);
+				}
+				break;
+			}
+			case ProceduralPropertyType.Color3:
+			case ProceduralPropertyType.Color4:
+			{
+				EditorGUI.BeginChangeCheck();
+				Color value3 = EditorGUILayout.ColorField(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralColor(input.name), new GUILayoutOption[0]);
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
+					ProceduralMaterialInspector.m_Material.SetProceduralColor(input.name, value3);
+				}
+				break;
+			}
+			case ProceduralPropertyType.Enum:
+			{
+				GUIContent[] array = new GUIContent[input.enumOptions.Length];
+				for (int j = 0; j < array.Length; j++)
+				{
+					array[j] = new GUIContent(input.enumOptions[j]);
+				}
+				EditorGUI.BeginChangeCheck();
+				int value4 = EditorGUILayout.Popup(gUIContent, ProceduralMaterialInspector.m_Material.GetProceduralEnum(input.name), array, new GUILayoutOption[0]);
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
+					ProceduralMaterialInspector.m_Material.SetProceduralEnum(input.name, value4);
+				}
+				break;
+			}
+			case ProceduralPropertyType.Texture:
+			{
+				EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
+				GUILayout.Space((float)(EditorGUI.indentLevel * 15));
+				GUILayout.Label(gUIContent, new GUILayoutOption[0]);
+				GUILayout.FlexibleSpace();
+				Rect rect = GUILayoutUtility.GetRect(64f, 64f, new GUILayoutOption[]
+				{
+					GUILayout.ExpandWidth(false)
+				});
+				EditorGUI.BeginChangeCheck();
+				Texture2D value5 = EditorGUI.DoObjectField(rect, rect, GUIUtility.GetControlID(12354, EditorGUIUtility.native, rect), ProceduralMaterialInspector.m_Material.GetProceduralTexture(input.name), typeof(Texture2D), null, null, false) as Texture2D;
+				EditorGUILayout.EndHorizontal();
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RecordForUndo(ProceduralMaterialInspector.m_Material, ProceduralMaterialInspector.m_Importer, "Modified property " + input.name + " for material " + ProceduralMaterialInspector.m_Material.name);
+					ProceduralMaterialInspector.m_Material.SetProceduralTexture(input.name, value5);
+				}
+				break;
+			}
+			}
+		}
+
 		private void InputHSLGUI(ProceduralPropertyDescription hInput, ProceduralPropertyDescription sInput, ProceduralPropertyDescription lInput)
 		{
 			GUILayout.Space(5f);
@@ -1191,6 +1367,7 @@ namespace UnityEditor
 				EditorGUI.indentLevel--;
 			}
 		}
+
 		private void InputSeedGUI(ProceduralPropertyDescription input)
 		{
 			Rect controlRect = EditorGUILayout.GetControlRect(new GUILayoutOption[0]);
@@ -1202,11 +1379,13 @@ namespace UnityEditor
 				ProceduralMaterialInspector.m_Material.SetProceduralFloat(input.name, value);
 			}
 		}
+
 		internal int RandomIntField(Rect position, GUIContent label, int val, int min, int max)
 		{
 			position = EditorGUI.PrefixLabel(position, 0, label);
 			return this.RandomIntField(position, val, min, max);
 		}
+
 		internal int RandomIntField(Rect position, int val, int min, int max)
 		{
 			position.width = position.width - EditorGUIUtility.fieldWidth - 5f;

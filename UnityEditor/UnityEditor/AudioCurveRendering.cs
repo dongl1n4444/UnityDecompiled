@@ -1,13 +1,18 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	public class AudioCurveRendering
 	{
 		public delegate float AudioCurveEvaluator(float x);
+
 		public delegate float AudioCurveAndColorEvaluator(float x, out Color col);
+
 		public static readonly Color kAudioOrange = new Color(1f, 0.65882355f, 0.02745098f);
+
 		private static Vector3[] s_PointCache;
+
 		public static Rect BeginCurveFrame(Rect r)
 		{
 			AudioCurveRendering.DrawCurveBackground(r);
@@ -15,10 +20,12 @@ namespace UnityEditor
 			GUI.BeginGroup(r);
 			return new Rect(0f, 0f, r.width, r.height);
 		}
+
 		public static void EndCurveFrame()
 		{
 			GUI.EndGroup();
 		}
+
 		public static Rect DrawCurveFrame(Rect r)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -32,10 +39,12 @@ namespace UnityEditor
 			r.height -= 2f;
 			return r;
 		}
+
 		public static void DrawCurveBackground(Rect r)
 		{
 			EditorGUI.DrawRect(r, new Color(0.3f, 0.3f, 0.3f));
 		}
+
 		public static void DrawFilledCurve(Rect r, AudioCurveRendering.AudioCurveEvaluator eval, Color curveColor)
 		{
 			AudioCurveRendering.DrawFilledCurve(r, delegate(float x, out Color color)
@@ -44,6 +53,7 @@ namespace UnityEditor
 				return eval(x);
 			});
 		}
+
 		public static void DrawFilledCurve(Rect r, AudioCurveRendering.AudioCurveAndColorEvaluator eval)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -52,46 +62,34 @@ namespace UnityEditor
 			}
 			HandleUtility.ApplyWireMaterial();
 			GL.Begin(1);
-			float num = 1f / (r.width - 1f);
-			float num2 = r.height * 0.5f;
+			float num = EditorGUIUtility.pixelsPerPoint;
+			float num2 = 1f / num;
+			float num3 = r.width * num;
+			float num4 = 1f / (num3 - 1f);
+			float num5 = r.height * 0.5f;
+			float num6 = r.y + 0.5f * r.height;
+			float y = r.y + r.height;
 			Color c;
-			float num3 = r.y + Mathf.Clamp(num2 - num2 * eval(0.0001f, out c), 0f, r.height);
-			int num4 = 0;
-			while ((float)num4 < r.width)
+			float num7 = Mathf.Clamp(num5 * eval(0f, out c), -num5, num5);
+			int num8 = 0;
+			while ((float)num8 < num3)
 			{
-				float num5 = (float)((int)r.x + num4);
-				float num6 = r.y + Mathf.Clamp(num2 - num2 * eval((float)num4 * num, out c), 0f, r.height);
+				float x = Mathf.Floor(r.x) + (float)num8 * num2;
+				float num9 = Mathf.Clamp(num5 * eval((float)num8 * num4, out c), -num5, num5);
+				float num10 = ((num9 >= num7) ? num7 : num9) - 0.5f * num2;
+				float num11 = ((num9 <= num7) ? num7 : num9) + 0.5f * num2;
+				GL.Color(new Color(c.r, c.g, c.b, 0f));
+				AudioMixerDrawUtils.Vertex(x, num6 - num11);
 				GL.Color(c);
-				AudioMixerDrawUtils.Vertex(num5, (float)((int)Mathf.Ceil(num6)));
-				AudioMixerDrawUtils.Vertex(num5, r.y + r.height);
-				if (Mathf.Abs(num3 - num6) <= 1f)
-				{
-					GL.Color(new Color(c.r, c.g, c.b, c.a * (Mathf.Ceil(num6) - num6)));
-					AudioMixerDrawUtils.Vertex(num5, Mathf.Ceil(num6) - 1f);
-					AudioMixerDrawUtils.Vertex(num5, Mathf.Ceil(num6));
-				}
-				else
-				{
-					if (num3 < num6)
-					{
-						GL.Color(new Color(c.r, c.g, c.b, 0f));
-						AudioMixerDrawUtils.Vertex(num5, Mathf.Ceil(num3));
-						GL.Color(c);
-						AudioMixerDrawUtils.Vertex(num5, Mathf.Ceil(num6));
-					}
-					else
-					{
-						GL.Color(new Color(c.r, c.g, c.b, 0f));
-						AudioMixerDrawUtils.Vertex(num5 - 1f, Mathf.Ceil(num6));
-						GL.Color(c);
-						AudioMixerDrawUtils.Vertex(num5 - 1f, Mathf.Ceil(num3));
-					}
-				}
-				num3 = num6;
-				num4++;
+				AudioMixerDrawUtils.Vertex(x, num6 - num10);
+				AudioMixerDrawUtils.Vertex(x, num6 - num10);
+				AudioMixerDrawUtils.Vertex(x, y);
+				num7 = num9;
+				num8++;
 			}
 			GL.End();
 		}
+
 		public static void DrawSymmetricFilledCurve(Rect r, AudioCurveRendering.AudioCurveAndColorEvaluator eval)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -100,58 +98,36 @@ namespace UnityEditor
 			}
 			HandleUtility.ApplyWireMaterial();
 			GL.Begin(1);
-			float num = 1f / (r.width - 1f);
-			float num2 = r.height * 0.5f;
-			float y = r.y;
-			float num3 = r.y + r.height;
+			float num = EditorGUIUtility.pixelsPerPoint;
+			float num2 = 1f / num;
+			float num3 = r.width * num;
+			float num4 = 1f / (num3 - 1f);
+			float num5 = r.height * 0.5f;
+			float num6 = r.y + 0.5f * r.height;
 			Color c;
-			float num4 = Mathf.Clamp(num2 - num2 * eval(0.0001f, out c), 0f, num2);
-			int num5 = 0;
-			while ((float)num5 < r.width)
+			float num7 = Mathf.Clamp(num5 * eval(0.0001f, out c), 0f, num5);
+			int num8 = 0;
+			while ((float)num8 < num3)
 			{
-				float num6 = (float)((int)r.x + num5);
-				float num7 = Mathf.Clamp(num2 - num2 * eval((float)num5 * num, out c), 0f, num2);
+				float x = Mathf.Floor(r.x) + (float)num8 * num2;
+				float num9 = Mathf.Clamp(num5 * eval((float)num8 * num4, out c), 0f, num5);
+				float num10 = (num9 >= num7) ? num7 : num9;
+				float num11 = (num9 <= num7) ? num7 : num9;
+				GL.Color(new Color(c.r, c.g, c.b, 0f));
+				AudioMixerDrawUtils.Vertex(x, num6 + num11);
 				GL.Color(c);
-				AudioMixerDrawUtils.Vertex(num6, y + (float)((int)Mathf.Ceil(num7)));
-				AudioMixerDrawUtils.Vertex(num6, num3 - (float)((int)Mathf.Ceil(num7)));
-				if (Mathf.Abs(num4 - num7) <= 1f)
-				{
-					GL.Color(new Color(c.r, c.g, c.b, c.a * (Mathf.Ceil(num7) - num7)));
-					AudioMixerDrawUtils.Vertex(num6, y + Mathf.Ceil(num7) - 1f);
-					AudioMixerDrawUtils.Vertex(num6, y + Mathf.Ceil(num7));
-					AudioMixerDrawUtils.Vertex(num6, num3 - Mathf.Ceil(num7) + 1f);
-					AudioMixerDrawUtils.Vertex(num6, num3 - Mathf.Ceil(num7));
-				}
-				else
-				{
-					if (num4 < num7)
-					{
-						GL.Color(new Color(c.r, c.g, c.b, 0f));
-						AudioMixerDrawUtils.Vertex(num6, y + Mathf.Ceil(num4));
-						GL.Color(c);
-						AudioMixerDrawUtils.Vertex(num6, y + Mathf.Ceil(num7));
-						GL.Color(new Color(c.r, c.g, c.b, 0f));
-						AudioMixerDrawUtils.Vertex(num6, num3 - Mathf.Ceil(num4) - 1f);
-						GL.Color(c);
-						AudioMixerDrawUtils.Vertex(num6, num3 - Mathf.Ceil(num7) - 1f);
-					}
-					else
-					{
-						GL.Color(new Color(c.r, c.g, c.b, 0f));
-						AudioMixerDrawUtils.Vertex(num6 - 1f, y + Mathf.Ceil(num7));
-						GL.Color(c);
-						AudioMixerDrawUtils.Vertex(num6 - 1f, y + Mathf.Ceil(num4));
-						GL.Color(new Color(c.r, c.g, c.b, 0f));
-						AudioMixerDrawUtils.Vertex(num6 - 1f, num3 - Mathf.Ceil(num7) - 1f);
-						GL.Color(c);
-						AudioMixerDrawUtils.Vertex(num6 - 1f, num3 - Mathf.Ceil(num4) - 1f);
-					}
-				}
-				num4 = num7;
-				num5++;
+				AudioMixerDrawUtils.Vertex(x, num6 + num10);
+				AudioMixerDrawUtils.Vertex(x, num6 + num10);
+				AudioMixerDrawUtils.Vertex(x, num6 - num10);
+				AudioMixerDrawUtils.Vertex(x, num6 - num10);
+				GL.Color(new Color(c.r, c.g, c.b, 0f));
+				AudioMixerDrawUtils.Vertex(x, num6 - num11);
+				num7 = num9;
+				num8++;
 			}
 			GL.End();
 		}
+
 		public static void DrawCurve(Rect r, AudioCurveRendering.AudioCurveEvaluator eval, Color curveColor)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -174,6 +150,7 @@ namespace UnityEditor
 			Handles.DrawAAPolyLine(3f, num, pointCache);
 			GUI.EndClip();
 		}
+
 		private static Vector3[] GetPointCache(int numPoints)
 		{
 			if (AudioCurveRendering.s_PointCache == null || AudioCurveRendering.s_PointCache.Length != numPoints)
@@ -182,6 +159,7 @@ namespace UnityEditor
 			}
 			return AudioCurveRendering.s_PointCache;
 		}
+
 		public static void DrawGradientRect(Rect r, Color c1, Color c2, float blend, bool horizontal)
 		{
 			if (Event.current.type != EventType.Repaint)

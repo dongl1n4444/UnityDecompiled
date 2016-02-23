@@ -2,45 +2,56 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.AnimatedValues;
+using UnityEditor.Modules;
+using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
+
 namespace UnityEditor
 {
-	internal class GameView : EditorWindow
+	[EditorWindowTitle(title = "Game", useTypeNameAsIconName = true)]
+	internal class GameView : EditorWindow, IHasCustomMenu
 	{
 		private const int kToolbarHeight = 17;
+
 		private const int kBorderSize = 5;
+
 		[SerializeField]
 		private bool m_MaximizeOnPlay;
+
 		[SerializeField]
 		private bool m_Gizmos;
+
 		[SerializeField]
 		private bool m_Stats;
+
 		[SerializeField]
 		private int[] m_SelectedSizes = new int[0];
+
 		[SerializeField]
 		private int m_TargetDisplay;
+
 		private int m_SizeChangeID = -2147483648;
+
 		private GUIContent gizmosContent = new GUIContent("Gizmos");
+
+		private GUIContent renderdocContent;
+
 		private static GUIStyle s_GizmoButtonStyle;
+
 		private static GUIStyle s_ResolutionWarningStyle;
+
 		private static List<GameView> s_GameViews = new List<GameView>();
+
 		private static GameView s_LastFocusedGameView = null;
-		private static string[] s_GameDisplays = new string[]
-		{
-			"Display 1",
-			"Display 2",
-			"Display 3",
-			"Display 4",
-			"Display 5",
-			"Display 6",
-			"Display 7",
-			"Display 8"
-		};
+
 		private static Rect s_MainGameViewRect = new Rect(0f, 0f, 640f, 480f);
+
 		private Vector2 m_ShownResolution = Vector2.zero;
+
 		private AnimBool m_ResolutionTooLargeWarning = new AnimBool(false);
+
 		public bool maximizeOnPlay
 		{
 			get
@@ -52,6 +63,7 @@ namespace UnityEditor
 				this.m_MaximizeOnPlay = value;
 			}
 		}
+
 		private int selectedSizeIndex
 		{
 			get
@@ -63,6 +75,7 @@ namespace UnityEditor
 				this.m_SelectedSizes[(int)GameView.currentSizeGroupType] = value;
 			}
 		}
+
 		private static GameViewSizeGroupType currentSizeGroupType
 		{
 			get
@@ -70,6 +83,7 @@ namespace UnityEditor
 				return ScriptableSingleton<GameViewSizes>.instance.currentGroupType;
 			}
 		}
+
 		private GameViewSize currentGameViewSize
 		{
 			get
@@ -77,6 +91,7 @@ namespace UnityEditor
 				return ScriptableSingleton<GameViewSizes>.instance.currentGroup.GetGameViewSize(this.selectedSizeIndex);
 			}
 		}
+
 		private Rect gameViewRenderRect
 		{
 			get
@@ -84,6 +99,7 @@ namespace UnityEditor
 				return new Rect(0f, 17f, base.position.width, base.position.height - 17f);
 			}
 		}
+
 		public GameView()
 		{
 			base.depthBufferBits = 32;
@@ -91,24 +107,31 @@ namespace UnityEditor
 			base.autoRepaintOnSceneChange = true;
 			this.m_TargetDisplay = 0;
 		}
+
 		public void OnValidate()
 		{
 			this.EnsureSelectedSizeAreValid();
 		}
+
 		public void OnEnable()
 		{
+			base.depthBufferBits = 32;
+			base.titleContent = base.GetLocalizedTitleContent();
 			this.EnsureSelectedSizeAreValid();
+			this.renderdocContent = EditorGUIUtility.IconContent("renderdoc", "Capture|Capture the current view and open in RenderDoc");
 			base.dontClearBackground = true;
 			GameView.s_GameViews.Add(this);
 			this.m_ResolutionTooLargeWarning.valueChanged.AddListener(new UnityAction(base.Repaint));
 			this.m_ResolutionTooLargeWarning.speed = 0.3f;
 		}
+
 		public void OnDisable()
 		{
 			GameView.s_GameViews.Remove(this);
 			this.m_ResolutionTooLargeWarning.valueChanged.RemoveListener(new UnityAction(base.Repaint));
 			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.DoDelayedGameViewChanged));
 		}
+
 		internal static GameView GetMainGameView()
 		{
 			if (GameView.s_LastFocusedGameView == null && GameView.s_GameViews != null && GameView.s_GameViews.Count > 0)
@@ -117,6 +140,7 @@ namespace UnityEditor
 			}
 			return GameView.s_LastFocusedGameView;
 		}
+
 		public static void RepaintAll()
 		{
 			if (GameView.s_GameViews == null)
@@ -128,11 +152,13 @@ namespace UnityEditor
 				current.Repaint();
 			}
 		}
+
 		internal static Vector2 GetSizeOfMainGameView()
 		{
 			Rect mainGameViewRenderRect = GameView.GetMainGameViewRenderRect();
 			return new Vector2(mainGameViewRenderRect.width, mainGameViewRenderRect.height);
 		}
+
 		internal static Rect GetMainGameViewRenderRect()
 		{
 			GameView mainGameView = GameView.GetMainGameView();
@@ -142,38 +168,51 @@ namespace UnityEditor
 			}
 			return GameView.s_MainGameViewRect;
 		}
+
 		private void GameViewAspectWasChanged()
 		{
 			base.SetInternalGameViewRect(GameView.GetConstrainedGameViewRenderRect(this.gameViewRenderRect, this.selectedSizeIndex));
 			EditorApplication.SetSceneRepaintDirty();
 		}
+
+		private void AllowCursorLockAndHide(bool enable)
+		{
+			Unsupported.SetAllowCursorLock(enable);
+			Unsupported.SetAllowCursorHide(enable);
+		}
+
 		private void OnFocus()
 		{
+			this.AllowCursorLockAndHide(true);
 			GameView.s_LastFocusedGameView = this;
 			InternalEditorUtility.OnGameViewFocus(true);
 		}
+
 		private void OnLostFocus()
 		{
 			if (!EditorApplicationLayout.IsInitializingPlaymodeLayout())
 			{
-				Unsupported.SetAllowCursorLock(false);
-				Unsupported.SetAllowCursorHide(false);
+				this.AllowCursorLockAndHide(false);
 			}
 			InternalEditorUtility.OnGameViewFocus(false);
 		}
+
 		private void DelayedGameViewChanged()
 		{
 			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.DoDelayedGameViewChanged));
 		}
+
 		private void DoDelayedGameViewChanged()
 		{
 			this.GameViewAspectWasChanged();
 			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.DoDelayedGameViewChanged));
 		}
+
 		internal override void OnResized()
 		{
 			this.DelayedGameViewChanged();
 		}
+
 		private void EnsureSelectedSizeAreValid()
 		{
 			int num = Enum.GetNames(typeof(GameViewSizeGroupType)).Length;
@@ -201,10 +240,12 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public bool IsShowingGizmos()
 		{
 			return this.m_Gizmos;
 		}
+
 		private void OnSelectionChange()
 		{
 			if (this.m_Gizmos)
@@ -212,15 +253,41 @@ namespace UnityEditor
 				base.Repaint();
 			}
 		}
+
+		private void LoadRenderDoc()
+		{
+			if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+			{
+				RenderDoc.Load();
+				ShaderUtil.RecreateGfxDevice();
+			}
+		}
+
+		public virtual void AddItemsToMenu(GenericMenu menu)
+		{
+			if (RenderDoc.IsInstalled() && !RenderDoc.IsLoaded())
+			{
+				menu.AddItem(new GUIContent("Load RenderDoc"), false, new GenericMenu.MenuFunction(this.LoadRenderDoc));
+			}
+		}
+
+		private bool ShouldShowMultiDisplayOption()
+		{
+			GUIContent[] displayNames = ModuleManager.GetDisplayNames(EditorUserBuildSettings.activeBuildTarget.ToString());
+			return BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget) == BuildTargetGroup.Standalone || displayNames != null;
+		}
+
 		internal static Rect GetConstrainedGameViewRenderRect(Rect renderRect, int sizeIndex)
 		{
 			bool flag;
 			return GameView.GetConstrainedGameViewRenderRect(renderRect, sizeIndex, out flag);
 		}
+
 		internal static Rect GetConstrainedGameViewRenderRect(Rect renderRect, int sizeIndex, out bool fitsInsideRect)
 		{
 			return GameViewSizes.GetConstrainedRect(renderRect, GameView.currentSizeGroupType, sizeIndex, out fitsInsideRect);
 		}
+
 		internal Rect GetConstrainedGameViewRenderRect()
 		{
 			if (this.m_Parent == null)
@@ -228,8 +295,11 @@ namespace UnityEditor
 				return GameView.s_MainGameViewRect;
 			}
 			this.m_Pos = this.m_Parent.borderSize.Remove(this.m_Parent.position);
-			return GameView.GetConstrainedGameViewRenderRect(this.gameViewRenderRect, this.selectedSizeIndex);
+			Rect renderRect = EditorGUIUtility.PointsToPixels(this.gameViewRenderRect);
+			Rect constrainedGameViewRenderRect = GameView.GetConstrainedGameViewRenderRect(renderRect, this.selectedSizeIndex);
+			return EditorGUIUtility.PixelsToPoints(constrainedGameViewRenderRect);
 		}
+
 		private void SelectionCallback(int indexClicked, object objectSelected)
 		{
 			if (indexClicked != this.selectedSizeIndex)
@@ -239,6 +309,7 @@ namespace UnityEditor
 				this.GameViewAspectWasChanged();
 			}
 		}
+
 		private void DoToolbarGUI()
 		{
 			ScriptableSingleton<GameViewSizes>.instance.RefreshStandaloneAndWebplayerDefaultSizes();
@@ -248,18 +319,24 @@ namespace UnityEditor
 				this.m_SizeChangeID = ScriptableSingleton<GameViewSizes>.instance.GetChangeID();
 			}
 			GUILayout.BeginHorizontal(EditorStyles.toolbar, new GUILayoutOption[0]);
-			if (Display.MultiDisplayLicense())
+			if (this.ShouldShowMultiDisplayOption())
 			{
-				this.m_TargetDisplay = EditorGUILayout.Popup(this.m_TargetDisplay, GameView.s_GameDisplays, EditorStyles.toolbarPopup, new GUILayoutOption[]
+				int num = EditorGUILayout.Popup(this.m_TargetDisplay, DisplayUtility.GetDisplayNames(), EditorStyles.toolbarPopup, new GUILayoutOption[]
 				{
 					GUILayout.Width(80f)
 				});
+				EditorGUILayout.Space();
+				if (num != this.m_TargetDisplay)
+				{
+					this.m_TargetDisplay = num;
+					this.GameViewAspectWasChanged();
+				}
 			}
 			EditorGUILayout.GameViewSizePopup(GameView.currentSizeGroupType, this.selectedSizeIndex, new Action<int, object>(this.SelectionCallback), EditorStyles.toolbarDropDown, new GUILayoutOption[]
 			{
 				GUILayout.Width(160f)
 			});
-			if (FrameDebuggerUtility.enabled)
+			if (FrameDebuggerUtility.IsLocalEnabled())
 			{
 				GUILayout.FlexibleSpace();
 				Color color = GUI.color;
@@ -272,6 +349,16 @@ namespace UnityEditor
 				}
 			}
 			GUILayout.FlexibleSpace();
+			if (RenderDoc.IsLoaded())
+			{
+				EditorGUI.BeginDisabledGroup(!RenderDoc.IsSupported());
+				if (GUILayout.Button(this.renderdocContent, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+				{
+					this.m_Parent.CaptureRenderDoc();
+					GUIUtility.ExitGUI();
+				}
+				EditorGUI.EndDisabledGroup();
+			}
 			this.m_MaximizeOnPlay = GUILayout.Toggle(this.m_MaximizeOnPlay, "Maximize on Play", EditorStyles.toolbarButton, new GUILayoutOption[0]);
 			EditorUtility.audioMasterMute = GUILayout.Toggle(EditorUtility.audioMasterMute, "Mute audio", EditorStyles.toolbarButton, new GUILayoutOption[0]);
 			this.m_Stats = GUILayout.Toggle(this.m_Stats, "Stats", EditorStyles.toolbarButton, new GUILayoutOption[0]);
@@ -288,6 +375,7 @@ namespace UnityEditor
 			this.m_Gizmos = GUI.Toggle(rect, this.m_Gizmos, this.gizmosContent, GameView.s_GizmoButtonStyle);
 			GUILayout.EndHorizontal();
 		}
+
 		private void OnGUI()
 		{
 			if (GameView.s_GizmoButtonStyle == null)
@@ -299,76 +387,92 @@ namespace UnityEditor
 			}
 			this.DoToolbarGUI();
 			Rect gameViewRenderRect = this.gameViewRenderRect;
+			Rect renderRect = EditorGUIUtility.PointsToPixels(gameViewRenderRect);
 			bool fitsInsideRect;
-			Rect constrainedGameViewRenderRect = GameView.GetConstrainedGameViewRenderRect(gameViewRenderRect, this.selectedSizeIndex, out fitsInsideRect);
-			Rect rect = GUIClip.Unclip(constrainedGameViewRenderRect);
-			base.SetInternalGameViewRect(rect);
-			EditorGUIUtility.AddCursorRect(constrainedGameViewRenderRect, MouseCursor.CustomCursor);
+			Rect constrainedGameViewRenderRect = GameView.GetConstrainedGameViewRenderRect(renderRect, this.selectedSizeIndex, out fitsInsideRect);
+			Rect rect = EditorGUIUtility.PixelsToPoints(constrainedGameViewRenderRect);
+			Rect rect2 = GUIClip.Unclip(rect);
+			Rect cameraRect = EditorGUIUtility.PointsToPixels(rect2);
+			base.SetInternalGameViewRect(rect2);
+			EditorGUIUtility.AddCursorRect(rect, MouseCursor.CustomCursor);
 			EventType type = Event.current.type;
 			if (type == EventType.MouseDown && gameViewRenderRect.Contains(Event.current.mousePosition))
 			{
-				Unsupported.SetAllowCursorLock(true);
-				Unsupported.SetAllowCursorHide(true);
+				this.AllowCursorLockAndHide(true);
 			}
-			else
+			else if (type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
 			{
-				if (type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
-				{
-					Unsupported.SetAllowCursorLock(false);
-				}
+				Unsupported.SetAllowCursorLock(false);
 			}
 			if (type == EventType.Repaint)
 			{
-				if (!this.currentGameViewSize.isFreeAspectRatio || !InternalEditorUtility.HasFullscreenCamera())
+				bool flag = EditorGUIUtility.IsDisplayReferencedByCameras(this.m_TargetDisplay);
+				if (!this.currentGameViewSize.isFreeAspectRatio || !InternalEditorUtility.HasFullscreenCamera() || !flag)
 				{
 					GUI.Box(gameViewRenderRect, GUIContent.none, "GameViewBackground");
+					if (!InternalEditorUtility.HasFullscreenCamera())
+					{
+						float[] array = new float[]
+						{
+							30f,
+							gameViewRenderRect.height / 2f - 10f,
+							gameViewRenderRect.height - 10f
+						};
+						for (int i = 0; i < array.Length; i++)
+						{
+							int num = (int)array[i];
+							GUI.Label(new Rect(gameViewRenderRect.width / 2f - 100f, (float)num, 300f, 20f), "Scene is missing a fullscreen camera", "WhiteLargeLabel");
+						}
+					}
 				}
 				Vector2 s_EditorScreenPointOffset = GUIUtility.s_EditorScreenPointOffset;
 				GUIUtility.s_EditorScreenPointOffset = Vector2.zero;
 				SavedGUIState savedGUIState = SavedGUIState.Create();
-				if (Display.MultiDisplayLicense())
+				if (this.ShouldShowMultiDisplayOption())
 				{
-					EditorGUIUtility.RenderGameViewCameras(rect, this.m_TargetDisplay, this.m_Gizmos, true);
+					EditorGUIUtility.RenderGameViewCamerasInternal(cameraRect, this.m_TargetDisplay, this.m_Gizmos, true);
 				}
 				else
 				{
-					EditorGUIUtility.RenderGameViewCameras(rect, 0, this.m_Gizmos, true);
+					EditorGUIUtility.RenderGameViewCamerasInternal(cameraRect, 0, this.m_Gizmos, true);
 				}
+				GL.sRGBWrite = false;
 				savedGUIState.ApplyAndForget();
 				GUIUtility.s_EditorScreenPointOffset = s_EditorScreenPointOffset;
 			}
-			else
+			else if (type != EventType.Layout && type != EventType.Used)
 			{
-				if (type != EventType.Layout && type != EventType.Used)
+				if (WindowLayout.s_MaximizeKey.activated && (!EditorApplication.isPlaying || EditorApplication.isPaused))
 				{
-					if (WindowLayout.s_MaximizeKey.activated && (!EditorApplication.isPlaying || EditorApplication.isPaused))
-					{
-						return;
-					}
-					bool flag = constrainedGameViewRenderRect.Contains(Event.current.mousePosition);
-					if (Event.current.rawType == EventType.MouseDown && !flag)
-					{
-						return;
-					}
-					Event.current.mousePosition = new Vector2(Event.current.mousePosition.x - constrainedGameViewRenderRect.x, Event.current.mousePosition.y - constrainedGameViewRenderRect.y);
-					EditorGUIUtility.QueueGameViewInputEvent(Event.current);
-					bool flag2 = true;
-					if (Event.current.rawType == EventType.MouseUp && !flag)
-					{
-						flag2 = false;
-					}
-					if (type == EventType.ExecuteCommand || type == EventType.ValidateCommand)
-					{
-						flag2 = false;
-					}
-					if (flag2)
-					{
-						Event.current.Use();
-					}
-					else
-					{
-						Event.current.mousePosition = new Vector2(Event.current.mousePosition.x + constrainedGameViewRenderRect.x, Event.current.mousePosition.y + constrainedGameViewRenderRect.y);
-					}
+					return;
+				}
+				bool flag2 = rect.Contains(Event.current.mousePosition);
+				if (Event.current.rawType == EventType.MouseDown && !flag2)
+				{
+					return;
+				}
+				Vector2 mousePosition = Event.current.mousePosition;
+				Vector2 vector = mousePosition - rect.position;
+				vector = EditorGUIUtility.PointsToPixels(vector);
+				Event.current.mousePosition = vector;
+				Event.current.displayIndex = this.m_TargetDisplay;
+				EditorGUIUtility.QueueGameViewInputEvent(Event.current);
+				bool flag3 = true;
+				if (Event.current.rawType == EventType.MouseUp && !flag2)
+				{
+					flag3 = false;
+				}
+				if (type == EventType.ExecuteCommand || type == EventType.ValidateCommand)
+				{
+					flag3 = false;
+				}
+				if (flag3)
+				{
+					Event.current.Use();
+				}
+				else
+				{
+					Event.current.mousePosition = mousePosition;
 				}
 			}
 			this.ShowResolutionWarning(new Rect(gameViewRenderRect.x, gameViewRenderRect.y, 200f, 20f), fitsInsideRect, constrainedGameViewRenderRect.size);
@@ -377,6 +481,7 @@ namespace UnityEditor
 				GameViewGUI.GameViewStatsGUI();
 			}
 		}
+
 		private void ShowResolutionWarning(Rect position, bool fitsInsideRect, Vector2 shownSize)
 		{
 			if (!fitsInsideRect && shownSize != this.m_ShownResolution)

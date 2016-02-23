@@ -1,29 +1,41 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class PopupWindowWithoutFocus : EditorWindow
 	{
 		private static PopupWindowWithoutFocus s_PopupWindowWithoutFocus;
+
 		private static double s_LastClosedTime;
+
 		private static Rect s_LastActivatorRect;
+
 		private PopupWindowContent m_WindowContent;
+
 		private PopupLocationHelper.PopupLocation[] m_LocationPriorityOrder;
+
 		private Vector2 m_LastWantedSize = Vector2.zero;
+
 		private Rect m_ActivatorRect;
+
 		private float m_BorderWidth = 1f;
+
 		private PopupWindowWithoutFocus()
 		{
 			base.hideFlags = HideFlags.DontSave;
 		}
+
 		public static void Show(Rect activatorRect, PopupWindowContent windowContent)
 		{
 			PopupWindowWithoutFocus.Show(activatorRect, windowContent, null);
 		}
+
 		public static bool IsVisible()
 		{
 			return PopupWindowWithoutFocus.s_PopupWindowWithoutFocus != null;
 		}
+
 		internal static void Show(Rect activatorRect, PopupWindowContent windowContent, PopupLocationHelper.PopupLocation[] locationPriorityOrder)
 		{
 			if (PopupWindowWithoutFocus.ShouldShowWindow(activatorRect))
@@ -35,6 +47,7 @@ namespace UnityEditor
 				PopupWindowWithoutFocus.s_PopupWindowWithoutFocus.Init(activatorRect, windowContent, locationPriorityOrder);
 			}
 		}
+
 		public static void Hide()
 		{
 			if (PopupWindowWithoutFocus.s_PopupWindowWithoutFocus != null)
@@ -42,6 +55,7 @@ namespace UnityEditor
 				PopupWindowWithoutFocus.s_PopupWindowWithoutFocus.Close();
 			}
 		}
+
 		private void Init(Rect activatorRect, PopupWindowContent windowContent, PopupLocationHelper.PopupLocation[] locationPriorityOrder)
 		{
 			this.m_WindowContent = windowContent;
@@ -54,10 +68,12 @@ namespace UnityEditor
 			base.ShowPopup();
 			base.Repaint();
 		}
+
 		private void OnEnable()
 		{
 			PopupWindowWithoutFocus.s_PopupWindowWithoutFocus = this;
 		}
+
 		private void OnDisable()
 		{
 			PopupWindowWithoutFocus.s_LastClosedTime = EditorApplication.timeSinceStartup;
@@ -67,6 +83,7 @@ namespace UnityEditor
 			}
 			PopupWindowWithoutFocus.s_PopupWindowWithoutFocus = null;
 		}
+
 		private static bool OnGlobalMouseOrKeyEvent(EventType type, KeyCode keyCode, Vector2 mousePosition)
 		{
 			if (PopupWindowWithoutFocus.s_PopupWindowWithoutFocus == null)
@@ -85,6 +102,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		private static bool ShouldShowWindow(Rect activatorRect)
 		{
 			bool flag = EditorApplication.timeSinceStartup - PopupWindowWithoutFocus.s_LastClosedTime < 0.2;
@@ -95,6 +113,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		internal void OnGUI()
 		{
 			this.FitWindowToContent();
@@ -102,6 +121,7 @@ namespace UnityEditor
 			this.m_WindowContent.OnGUI(rect);
 			GUI.Label(new Rect(0f, 0f, base.position.width, base.position.height), GUIContent.none, "grey_border");
 		}
+
 		private void FitWindowToContent()
 		{
 			Vector2 windowSize = this.m_WindowContent.GetWindowSize();

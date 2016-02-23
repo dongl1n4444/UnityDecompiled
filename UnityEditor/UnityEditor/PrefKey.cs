@@ -1,12 +1,16 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class PrefKey : IPrefType
 	{
 		private string m_name;
+
 		private Event m_event;
+
 		private string m_DefaultShortcut;
+
 		public string Name
 		{
 			get
@@ -14,6 +18,7 @@ namespace UnityEditor
 				return this.m_name;
 			}
 		}
+
 		public Event KeyboardEvent
 		{
 			get
@@ -25,16 +30,19 @@ namespace UnityEditor
 				this.m_event = value;
 			}
 		}
+
 		public bool activated
 		{
 			get
 			{
-				return Event.current.Equals(this);
+				return Event.current.Equals(this) && !GUIUtility.textFieldInput;
 			}
 		}
+
 		public PrefKey()
 		{
 		}
+
 		public PrefKey(string name, string shortcut)
 		{
 			this.m_name = name;
@@ -44,6 +52,7 @@ namespace UnityEditor
 			this.m_name = prefKey.Name;
 			this.m_event = prefKey.KeyboardEvent;
 		}
+
 		public string ToUniqueString()
 		{
 			return string.Concat(new object[]
@@ -57,6 +66,7 @@ namespace UnityEditor
 				this.m_event.keyCode
 			});
 		}
+
 		public void FromUniqueString(string s)
 		{
 			int num = s.IndexOf(";");
@@ -68,10 +78,12 @@ namespace UnityEditor
 			this.m_name = s.Substring(0, num);
 			this.m_event = Event.KeyboardEvent(s.Substring(num + 1));
 		}
+
 		internal void ResetToDefault()
 		{
 			this.m_event = Event.KeyboardEvent(this.m_DefaultShortcut);
 		}
+
 		public static implicit operator Event(PrefKey pkey)
 		{
 			return pkey.m_event;

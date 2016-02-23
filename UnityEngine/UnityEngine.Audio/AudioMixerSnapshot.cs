@@ -1,8 +1,12 @@
 using System;
 using System.Runtime.CompilerServices;
+
 namespace UnityEngine.Audio
 {
-	public class AudioMixerSnapshot : UnityEngine.Object
+	/// <summary>
+	///   <para>Object representing a snapshot in the mixer.</para>
+	/// </summary>
+	public class AudioMixerSnapshot : Object
 	{
 		public extern AudioMixer audioMixer
 		{
@@ -10,9 +14,15 @@ namespace UnityEngine.Audio
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			get;
 		}
+
 		internal AudioMixerSnapshot()
 		{
 		}
+
+		/// <summary>
+		///   <para>Performs an interpolated transition towards this snapshot over the time interval specified.</para>
+		/// </summary>
+		/// <param name="timeToReach">Relative time after which this snapshot should be reached from any current state.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void TransitionTo(float timeToReach);

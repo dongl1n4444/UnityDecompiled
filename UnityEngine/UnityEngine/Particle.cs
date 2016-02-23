@@ -1,16 +1,33 @@
 using System;
+using UnityEngine.Scripting;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>(Legacy Particle system).</para>
+	/// </summary>
+	[UsedByNativeCode]
 	public struct Particle
 	{
 		private Vector3 m_Position;
+
 		private Vector3 m_Velocity;
+
 		private float m_Size;
+
 		private float m_Rotation;
+
 		private float m_AngularVelocity;
+
 		private float m_Energy;
+
 		private float m_StartEnergy;
+
 		private Color m_Color;
+
+		/// <summary>
+		///   <para>The position of the particle.</para>
+		/// </summary>
 		public Vector3 position
 		{
 			get
@@ -22,6 +39,10 @@ namespace UnityEngine
 				this.m_Position = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The velocity of the particle.</para>
+		/// </summary>
 		public Vector3 velocity
 		{
 			get
@@ -33,6 +54,10 @@ namespace UnityEngine
 				this.m_Velocity = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The energy of the particle.</para>
+		/// </summary>
 		public float energy
 		{
 			get
@@ -44,6 +69,10 @@ namespace UnityEngine
 				this.m_Energy = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The starting energy of the particle.</para>
+		/// </summary>
 		public float startEnergy
 		{
 			get
@@ -55,6 +84,10 @@ namespace UnityEngine
 				this.m_StartEnergy = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The size of the particle.</para>
+		/// </summary>
 		public float size
 		{
 			get
@@ -66,6 +99,10 @@ namespace UnityEngine
 				this.m_Size = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The rotation of the particle.</para>
+		/// </summary>
 		public float rotation
 		{
 			get
@@ -77,6 +114,10 @@ namespace UnityEngine
 				this.m_Rotation = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The angular velocity of the particle.</para>
+		/// </summary>
 		public float angularVelocity
 		{
 			get
@@ -88,6 +129,10 @@ namespace UnityEngine
 				this.m_AngularVelocity = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>The color of the particle.</para>
+		/// </summary>
 		public Color color
 		{
 			get

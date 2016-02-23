@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class TerrainMenus
@@ -19,44 +20,47 @@ namespace UnityEditor
 			Selection.activeObject = gameObject;
 			Undo.RegisterCreatedObjectUndo(gameObject, "Create terrain");
 		}
+
 		internal static void ImportRaw()
 		{
 			string text = EditorUtility.OpenFilePanel("Import Raw Heightmap", string.Empty, "raw");
 			if (text != string.Empty)
 			{
-				ImportRawHeightmap importRawHeightmap = ScriptableWizard.DisplayWizard<ImportRawHeightmap>("Import Heightmap", "Import");
+				ImportRawHeightmap importRawHeightmap = TerrainWizard.DisplayTerrainWizard<ImportRawHeightmap>("Import Heightmap", "Import");
 				importRawHeightmap.InitializeImportRaw(TerrainMenus.GetActiveTerrain(), text);
 			}
 		}
+
 		internal static void ExportHeightmapRaw()
 		{
-			ExportRawHeightmap exportRawHeightmap = ScriptableWizard.DisplayWizard<ExportRawHeightmap>("Export Heightmap", "Export");
+			ExportRawHeightmap exportRawHeightmap = TerrainWizard.DisplayTerrainWizard<ExportRawHeightmap>("Export Heightmap", "Export");
 			exportRawHeightmap.InitializeDefaults(TerrainMenus.GetActiveTerrain());
 		}
-		internal static void SetHeightmapResolution()
-		{
-			SetResolutionWizard setResolutionWizard = ScriptableWizard.DisplayWizard<SetResolutionWizard>("Set Heightmap resolution", "Set Resolution");
-			setResolutionWizard.InitializeDefaults(TerrainMenus.GetActiveTerrain());
-		}
+
 		internal static void MassPlaceTrees()
 		{
-			PlaceTreeWizard placeTreeWizard = ScriptableWizard.DisplayWizard<PlaceTreeWizard>("Place Trees", "Place");
+			PlaceTreeWizard placeTreeWizard = TerrainWizard.DisplayTerrainWizard<PlaceTreeWizard>("Place Trees", "Place");
 			placeTreeWizard.InitializeDefaults(TerrainMenus.GetActiveTerrain());
 		}
+
 		internal static void Flatten()
 		{
-			FlattenHeightmap flattenHeightmap = ScriptableWizard.DisplayWizard<FlattenHeightmap>("Flatten Heightmap", "Flatten");
+			FlattenHeightmap flattenHeightmap = TerrainWizard.DisplayTerrainWizard<FlattenHeightmap>("Flatten Heightmap", "Flatten");
 			flattenHeightmap.InitializeDefaults(TerrainMenus.GetActiveTerrain());
 		}
+
 		internal static void RefreshPrototypes()
 		{
 			TerrainMenus.GetActiveTerrainData().RefreshPrototypes();
 			TerrainMenus.GetActiveTerrain().Flush();
+			EditorApplication.SetSceneRepaintDirty();
 		}
+
 		private static void FlushHeightmapModification()
 		{
 			TerrainMenus.GetActiveTerrain().Flush();
 		}
+
 		private static Terrain GetActiveTerrain()
 		{
 			UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(Terrain), SelectionMode.Editable);
@@ -66,6 +70,7 @@ namespace UnityEditor
 			}
 			return Terrain.activeTerrain;
 		}
+
 		private static TerrainData GetActiveTerrainData()
 		{
 			if (TerrainMenus.GetActiveTerrain())

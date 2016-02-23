@@ -1,13 +1,17 @@
 using System;
 using System.Globalization;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class PrefColor : IPrefType
 	{
 		private string m_name;
+
 		private Color m_color;
+
 		private Color m_DefaultColor;
+
 		public Color Color
 		{
 			get
@@ -19,6 +23,7 @@ namespace UnityEditor
 				this.m_color = value;
 			}
 		}
+
 		public string Name
 		{
 			get
@@ -26,9 +31,11 @@ namespace UnityEditor
 				return this.m_name;
 			}
 		}
+
 		public PrefColor()
 		{
 		}
+
 		public PrefColor(string name, float defaultRed, float defaultGreen, float defaultBlue, float defaultAlpha)
 		{
 			this.m_name = name;
@@ -37,6 +44,7 @@ namespace UnityEditor
 			this.m_name = prefColor.Name;
 			this.m_color = prefColor.Color;
 		}
+
 		public string ToUniqueString()
 		{
 			return string.Format(CultureInfo.InvariantCulture, "{0};{1};{2};{3};{4}", new object[]
@@ -48,6 +56,7 @@ namespace UnityEditor
 				this.Color.a
 			});
 		}
+
 		public void FromUniqueString(string s)
 		{
 			string[] array = s.Split(new char[]
@@ -81,10 +90,12 @@ namespace UnityEditor
 				Debug.LogError("Parsing PrefColor failed");
 			}
 		}
+
 		internal void ResetToDefault()
 		{
 			this.m_color = this.m_DefaultColor;
 		}
+
 		public static implicit operator Color(PrefColor pcolor)
 		{
 			return pcolor.Color;

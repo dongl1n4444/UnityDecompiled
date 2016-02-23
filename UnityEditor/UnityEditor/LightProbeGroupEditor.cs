@@ -4,21 +4,33 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class LightProbeGroupEditor : IEditablePoint
 	{
 		private bool m_Editing;
+
 		private List<Vector3> m_SourcePositions;
+
 		private List<int> m_Selection = new List<int>();
+
 		private readonly LightProbeGroupSelection m_SerializedSelectedProbes;
+
 		private readonly LightProbeGroup m_Group;
+
 		private bool m_ShouldRecalculateTetrahedra;
+
 		private Vector3 m_LastPosition = Vector3.zero;
+
 		private Quaternion m_LastRotation = Quaternion.identity;
+
 		private Vector3 m_LastScale = Vector3.one;
+
 		private static readonly Color kCloudColor = new Color(0.784313738f, 0.784313738f, 0.0784313753f, 0.85f);
+
 		private static readonly Color kSelectedCloudColor = new Color(0.3f, 0.6f, 1f, 1f);
+
 		public Bounds selectedProbeBounds
 		{
 			get
@@ -66,6 +78,7 @@ namespace UnityEditor
 				return result;
 			}
 		}
+
 		public int Count
 		{
 			get
@@ -73,6 +86,7 @@ namespace UnityEditor
 				return this.m_SourcePositions.Count;
 			}
 		}
+
 		public int SelectedCount
 		{
 			get
@@ -80,6 +94,7 @@ namespace UnityEditor
 				return this.m_Selection.Count;
 			}
 		}
+
 		public LightProbeGroupEditor(LightProbeGroup group)
 		{
 			this.m_Group = group;
@@ -87,10 +102,12 @@ namespace UnityEditor
 			this.m_SerializedSelectedProbes = ScriptableObject.CreateInstance<LightProbeGroupSelection>();
 			this.m_SerializedSelectedProbes.hideFlags = HideFlags.HideAndDontSave;
 		}
+
 		public void SetEditing(bool editing)
 		{
 			this.m_Editing = editing;
 		}
+
 		public void AddProbe(Vector3 position)
 		{
 			Undo.RegisterCompleteObjectUndo(new UnityEngine.Object[]
@@ -102,6 +119,7 @@ namespace UnityEditor
 			this.SelectProbe(this.m_SourcePositions.Count - 1);
 			this.MarkTetrahedraDirty();
 		}
+
 		private void SelectProbe(int i)
 		{
 			if (!this.m_Selection.Contains(i))
@@ -109,6 +127,7 @@ namespace UnityEditor
 				this.m_Selection.Add(i);
 			}
 		}
+
 		public void SelectAllProbes()
 		{
 			this.DeselectProbes();
@@ -117,16 +136,18 @@ namespace UnityEditor
 				this.SelectProbe(i);
 			}
 		}
+
 		public void DeselectProbes()
 		{
 			this.m_Selection.Clear();
 		}
+
 		private IEnumerable<Vector3> SelectedProbePositions()
 		{
-			return (
-				from t in this.m_Selection
-				select this.m_SourcePositions[t]).ToList<Vector3>();
+			return (from t in this.m_Selection
+			select this.m_SourcePositions[t]).ToList<Vector3>();
 		}
+
 		public void DuplicateSelectedProbes()
 		{
 			if (this.m_Selection.Count == 0)
@@ -144,17 +165,18 @@ namespace UnityEditor
 			}
 			this.MarkTetrahedraDirty();
 		}
+
 		private void CopySelectedProbes()
 		{
 			IEnumerable<Vector3> source = this.SelectedProbePositions();
 			XmlSerializer xmlSerializer = new XmlSerializer(typeof(Vector3[]));
 			StringWriter stringWriter = new StringWriter();
-			xmlSerializer.Serialize(stringWriter, (
-				from pos in source
-				select this.m_Group.transform.TransformPoint(pos)).ToArray<Vector3>());
+			xmlSerializer.Serialize(stringWriter, (from pos in source
+			select this.m_Group.transform.TransformPoint(pos)).ToArray<Vector3>());
 			stringWriter.Close();
 			GUIUtility.systemCopyBuffer = stringWriter.ToString();
 		}
+
 		private static bool CanPasteProbes()
 		{
 			bool result;
@@ -172,6 +194,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		private bool PasteProbes()
 		{
 			bool result;
@@ -214,6 +237,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		public void RemoveSelectedProbes()
 		{
 			if (this.m_Selection.Count == 0)
@@ -225,10 +249,9 @@ namespace UnityEditor
 				this.m_Group,
 				this.m_SerializedSelectedProbes
 			}, "Delete Probes");
-			IOrderedEnumerable<int> orderedEnumerable = 
-				from x in this.m_Selection
-				orderby x descending
-				select x;
+			IOrderedEnumerable<int> orderedEnumerable = from x in this.m_Selection
+			orderby x descending
+			select x;
 			foreach (int current in orderedEnumerable)
 			{
 				this.m_SourcePositions.RemoveAt(current);
@@ -236,11 +259,13 @@ namespace UnityEditor
 			this.DeselectProbes();
 			this.MarkTetrahedraDirty();
 		}
+
 		public void PullProbePositions()
 		{
 			this.m_SourcePositions = new List<Vector3>(this.m_Group.probePositions);
 			this.m_Selection = new List<int>(this.m_SerializedSelectedProbes.m_Selection);
 		}
+
 		public void PushProbePositions()
 		{
 			bool flag = false;
@@ -268,6 +293,7 @@ namespace UnityEditor
 				this.m_SerializedSelectedProbes.m_Selection = this.m_Selection;
 			}
 		}
+
 		private void DrawTetrahedra()
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -280,6 +306,7 @@ namespace UnityEditor
 				this.m_ShouldRecalculateTetrahedra = false;
 			}
 		}
+
 		public void HandleEditMenuHotKeyCommands()
 		{
 			if (Event.current.type == EventType.ValidateCommand || Event.current.type == EventType.ExecuteCommand)
@@ -328,6 +355,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public static void TetrahedralizeSceneProbes(out Vector3[] positions, out int[] indices)
 		{
 			LightProbeGroup[] array = UnityEngine.Object.FindObjectsOfType(typeof(LightProbeGroup)) as LightProbeGroup[];
@@ -359,6 +387,7 @@ namespace UnityEditor
 			}
 			Lightmapping.Tetrahedralize(list.ToArray(), out indices, out positions);
 		}
+
 		public bool OnSceneGUI(Transform transform)
 		{
 			if (Event.current.type == EventType.Layout)
@@ -433,18 +462,22 @@ namespace UnityEditor
 			}
 			return this.m_Editing;
 		}
+
 		public void MarkTetrahedraDirty()
 		{
 			this.m_ShouldRecalculateTetrahedra = true;
 		}
+
 		public Vector3 GetPosition(int idx)
 		{
 			return this.m_SourcePositions[idx];
 		}
+
 		public Vector3 GetWorldPosition(int idx)
 		{
 			return this.m_Group.transform.TransformPoint(this.m_SourcePositions[idx]);
 		}
+
 		public void SetPosition(int idx, Vector3 position)
 		{
 			if (this.m_SourcePositions[idx] == position)
@@ -453,18 +486,22 @@ namespace UnityEditor
 			}
 			this.m_SourcePositions[idx] = position;
 		}
+
 		public Color GetDefaultColor()
 		{
 			return LightProbeGroupEditor.kCloudColor;
 		}
+
 		public Color GetSelectedColor()
 		{
 			return LightProbeGroupEditor.kSelectedCloudColor;
 		}
+
 		public float GetPointScale()
 		{
 			return 10f * AnnotationUtility.iconSize;
 		}
+
 		public Vector3[] GetSelectedPositions()
 		{
 			Vector3[] array = new Vector3[this.SelectedCount];
@@ -474,6 +511,7 @@ namespace UnityEditor
 			}
 			return array;
 		}
+
 		public void UpdateSelectedPosition(int idx, Vector3 position)
 		{
 			if (idx > this.SelectedCount - 1)
@@ -482,10 +520,12 @@ namespace UnityEditor
 			}
 			this.m_SourcePositions[this.m_Selection[idx]] = position;
 		}
+
 		public IEnumerable<Vector3> GetPositions()
 		{
 			return this.m_SourcePositions;
 		}
+
 		public Vector3[] GetUnselectedPositions()
 		{
 			return this.m_SourcePositions.Where((Vector3 t, int i) => !this.m_Selection.Contains(i)).ToArray<Vector3>();

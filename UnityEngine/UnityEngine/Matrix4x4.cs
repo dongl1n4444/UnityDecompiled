@@ -1,25 +1,47 @@
 using System;
 using System.Runtime.CompilerServices;
+using UnityEngine.Scripting;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>A standard 4x4 transformation matrix.</para>
+	/// </summary>
+	[UsedByNativeCode]
 	public struct Matrix4x4
 	{
 		public float m00;
+
 		public float m10;
+
 		public float m20;
+
 		public float m30;
+
 		public float m01;
+
 		public float m11;
+
 		public float m21;
+
 		public float m31;
+
 		public float m02;
+
 		public float m12;
+
 		public float m22;
+
 		public float m32;
+
 		public float m03;
+
 		public float m13;
+
 		public float m23;
+
 		public float m33;
+
 		public float this[int row, int column]
 		{
 			get
@@ -31,6 +53,7 @@ namespace UnityEngine
 				this[row + column * 4] = value;
 			}
 		}
+
 		public float this[int index]
 		{
 			get
@@ -130,6 +153,10 @@ namespace UnityEngine
 				}
 			}
 		}
+
+		/// <summary>
+		///   <para>The inverse of this matrix (Read Only).</para>
+		/// </summary>
 		public Matrix4x4 inverse
 		{
 			get
@@ -137,6 +164,10 @@ namespace UnityEngine
 				return Matrix4x4.Inverse(this);
 			}
 		}
+
+		/// <summary>
+		///   <para>Returns the transpose of this matrix (Read Only).</para>
+		/// </summary>
 		public Matrix4x4 transpose
 		{
 			get
@@ -144,12 +175,31 @@ namespace UnityEngine
 				return Matrix4x4.Transpose(this);
 			}
 		}
+
+		/// <summary>
+		///   <para>Is this the identity matrix?</para>
+		/// </summary>
 		public extern bool isIdentity
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			get;
 		}
+
+		/// <summary>
+		///   <para>The determinant of the matrix.</para>
+		/// </summary>
+		public float determinant
+		{
+			get
+			{
+				return Matrix4x4.Determinant(this);
+			}
+		}
+
+		/// <summary>
+		///   <para>Returns a matrix with all elements set to zero (Read Only).</para>
+		/// </summary>
 		public static Matrix4x4 zero
 		{
 			get
@@ -175,6 +225,10 @@ namespace UnityEngine
 				};
 			}
 		}
+
+		/// <summary>
+		///   <para>Returns the identity matrix (Read Only).</para>
+		/// </summary>
 		public static Matrix4x4 identity
 		{
 			get
@@ -200,10 +254,12 @@ namespace UnityEngine
 				};
 			}
 		}
+
 		public override int GetHashCode()
 		{
 			return this.GetColumn(0).GetHashCode() ^ this.GetColumn(1).GetHashCode() << 2 ^ this.GetColumn(2).GetHashCode() >> 2 ^ this.GetColumn(3).GetHashCode() >> 1;
 		}
+
 		public override bool Equals(object other)
 		{
 			if (!(other is Matrix4x4))
@@ -213,35 +269,70 @@ namespace UnityEngine
 			Matrix4x4 matrix4x = (Matrix4x4)other;
 			return this.GetColumn(0).Equals(matrix4x.GetColumn(0)) && this.GetColumn(1).Equals(matrix4x.GetColumn(1)) && this.GetColumn(2).Equals(matrix4x.GetColumn(2)) && this.GetColumn(3).Equals(matrix4x.GetColumn(3));
 		}
+
 		public static Matrix4x4 Inverse(Matrix4x4 m)
 		{
-			return Matrix4x4.INTERNAL_CALL_Inverse(ref m);
+			Matrix4x4 result;
+			Matrix4x4.INTERNAL_CALL_Inverse(ref m, out result);
+			return result;
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Matrix4x4 INTERNAL_CALL_Inverse(ref Matrix4x4 m);
+		private static extern void INTERNAL_CALL_Inverse(ref Matrix4x4 m, out Matrix4x4 value);
+
 		public static Matrix4x4 Transpose(Matrix4x4 m)
 		{
-			return Matrix4x4.INTERNAL_CALL_Transpose(ref m);
+			Matrix4x4 result;
+			Matrix4x4.INTERNAL_CALL_Transpose(ref m, out result);
+			return result;
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Matrix4x4 INTERNAL_CALL_Transpose(ref Matrix4x4 m);
+		private static extern void INTERNAL_CALL_Transpose(ref Matrix4x4 m, out Matrix4x4 value);
+
 		internal static bool Invert(Matrix4x4 inMatrix, out Matrix4x4 dest)
 		{
 			return Matrix4x4.INTERNAL_CALL_Invert(ref inMatrix, out dest);
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool INTERNAL_CALL_Invert(ref Matrix4x4 inMatrix, out Matrix4x4 dest);
+
+		public static float Determinant(Matrix4x4 m)
+		{
+			return Matrix4x4.INTERNAL_CALL_Determinant(ref m);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern float INTERNAL_CALL_Determinant(ref Matrix4x4 m);
+
+		/// <summary>
+		///   <para>Get a column of the matrix.</para>
+		/// </summary>
+		/// <param name="i"></param>
 		public Vector4 GetColumn(int i)
 		{
 			return new Vector4(this[0, i], this[1, i], this[2, i], this[3, i]);
 		}
+
+		/// <summary>
+		///   <para>Returns a row of the matrix.</para>
+		/// </summary>
+		/// <param name="i"></param>
 		public Vector4 GetRow(int i)
 		{
 			return new Vector4(this[i, 0], this[i, 1], this[i, 2], this[i, 3]);
 		}
+
+		/// <summary>
+		///   <para>Sets a column of the matrix.</para>
+		/// </summary>
+		/// <param name="i"></param>
+		/// <param name="v"></param>
 		public void SetColumn(int i, Vector4 v)
 		{
 			this[0, i] = v.x;
@@ -249,6 +340,12 @@ namespace UnityEngine
 			this[2, i] = v.z;
 			this[3, i] = v.w;
 		}
+
+		/// <summary>
+		///   <para>Sets a row of the matrix.</para>
+		/// </summary>
+		/// <param name="i"></param>
+		/// <param name="v"></param>
 		public void SetRow(int i, Vector4 v)
 		{
 			this[i, 0] = v.x;
@@ -256,6 +353,11 @@ namespace UnityEngine
 			this[i, 2] = v.z;
 			this[i, 3] = v.w;
 		}
+
+		/// <summary>
+		///   <para>Transforms a position by this matrix (generic).</para>
+		/// </summary>
+		/// <param name="v"></param>
 		public Vector3 MultiplyPoint(Vector3 v)
 		{
 			Vector3 result;
@@ -269,6 +371,11 @@ namespace UnityEngine
 			result.z *= num;
 			return result;
 		}
+
+		/// <summary>
+		///   <para>Transforms a position by this matrix (fast).</para>
+		/// </summary>
+		/// <param name="v"></param>
 		public Vector3 MultiplyPoint3x4(Vector3 v)
 		{
 			Vector3 result;
@@ -277,6 +384,11 @@ namespace UnityEngine
 			result.z = this.m20 * v.x + this.m21 * v.y + this.m22 * v.z + this.m23;
 			return result;
 		}
+
+		/// <summary>
+		///   <para>Transforms a direction by this matrix.</para>
+		/// </summary>
+		/// <param name="v"></param>
 		public Vector3 MultiplyVector(Vector3 v)
 		{
 			Vector3 result;
@@ -285,6 +397,11 @@ namespace UnityEngine
 			result.z = this.m20 * v.x + this.m21 * v.y + this.m22 * v.z;
 			return result;
 		}
+
+		/// <summary>
+		///   <para>Creates a scaling matrix.</para>
+		/// </summary>
+		/// <param name="v"></param>
 		public static Matrix4x4 Scale(Vector3 v)
 		{
 			return new Matrix4x4
@@ -307,17 +424,39 @@ namespace UnityEngine
 				m33 = 1f
 			};
 		}
+
+		/// <summary>
+		///   <para>Sets this matrix to a translation, rotation and scaling matrix.</para>
+		/// </summary>
+		/// <param name="pos"></param>
+		/// <param name="q"></param>
+		/// <param name="s"></param>
 		public void SetTRS(Vector3 pos, Quaternion q, Vector3 s)
 		{
 			this = Matrix4x4.TRS(pos, q, s);
 		}
+
+		/// <summary>
+		///   <para>Creates a translation, rotation and scaling matrix.</para>
+		/// </summary>
+		/// <param name="pos"></param>
+		/// <param name="q"></param>
+		/// <param name="s"></param>
 		public static Matrix4x4 TRS(Vector3 pos, Quaternion q, Vector3 s)
 		{
-			return Matrix4x4.INTERNAL_CALL_TRS(ref pos, ref q, ref s);
+			Matrix4x4 result;
+			Matrix4x4.INTERNAL_CALL_TRS(ref pos, ref q, ref s, out result);
+			return result;
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Matrix4x4 INTERNAL_CALL_TRS(ref Vector3 pos, ref Quaternion q, ref Vector3 s);
+		private static extern void INTERNAL_CALL_TRS(ref Vector3 pos, ref Quaternion q, ref Vector3 s, out Matrix4x4 value);
+
+		/// <summary>
+		///   <para>Returns a nicely formatted string for this matrix.</para>
+		/// </summary>
+		/// <param name="format"></param>
 		public override string ToString()
 		{
 			return UnityString.Format("{0:F5}\t{1:F5}\t{2:F5}\t{3:F5}\n{4:F5}\t{5:F5}\t{6:F5}\t{7:F5}\n{8:F5}\t{9:F5}\t{10:F5}\t{11:F5}\n{12:F5}\t{13:F5}\t{14:F5}\t{15:F5}\n", new object[]
@@ -340,6 +479,11 @@ namespace UnityEngine
 				this.m33
 			});
 		}
+
+		/// <summary>
+		///   <para>Returns a nicely formatted string for this matrix.</para>
+		/// </summary>
+		/// <param name="format"></param>
 		public string ToString(string format)
 		{
 			return UnityString.Format("{0}\t{1}\t{2}\t{3}\n{4}\t{5}\t{6}\t{7}\n{8}\t{9}\t{10}\t{11}\n{12}\t{13}\t{14}\t{15}\n", new object[]
@@ -362,12 +506,45 @@ namespace UnityEngine
 				this.m33.ToString(format)
 			});
 		}
+
+		/// <summary>
+		///   <para>Creates an orthogonal projection matrix.</para>
+		/// </summary>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
+		/// <param name="bottom"></param>
+		/// <param name="top"></param>
+		/// <param name="zNear"></param>
+		/// <param name="zFar"></param>
+		public static Matrix4x4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar)
+		{
+			Matrix4x4 result;
+			Matrix4x4.INTERNAL_CALL_Ortho(left, right, bottom, top, zNear, zFar, out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern Matrix4x4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar);
+		private static extern void INTERNAL_CALL_Ortho(float left, float right, float bottom, float top, float zNear, float zFar, out Matrix4x4 value);
+
+		/// <summary>
+		///   <para>Creates a perspective projection matrix.</para>
+		/// </summary>
+		/// <param name="fov"></param>
+		/// <param name="aspect"></param>
+		/// <param name="zNear"></param>
+		/// <param name="zFar"></param>
+		public static Matrix4x4 Perspective(float fov, float aspect, float zNear, float zFar)
+		{
+			Matrix4x4 result;
+			Matrix4x4.INTERNAL_CALL_Perspective(fov, aspect, zNear, zFar, out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern Matrix4x4 Perspective(float fov, float aspect, float zNear, float zFar);
+		private static extern void INTERNAL_CALL_Perspective(float fov, float aspect, float zNear, float zFar, out Matrix4x4 value);
+
 		public static Matrix4x4 operator *(Matrix4x4 lhs, Matrix4x4 rhs)
 		{
 			return new Matrix4x4
@@ -390,6 +567,7 @@ namespace UnityEngine
 				m33 = lhs.m30 * rhs.m03 + lhs.m31 * rhs.m13 + lhs.m32 * rhs.m23 + lhs.m33 * rhs.m33
 			};
 		}
+
 		public static Vector4 operator *(Matrix4x4 lhs, Vector4 v)
 		{
 			Vector4 result;
@@ -399,10 +577,12 @@ namespace UnityEngine
 			result.w = lhs.m30 * v.x + lhs.m31 * v.y + lhs.m32 * v.z + lhs.m33 * v.w;
 			return result;
 		}
+
 		public static bool operator ==(Matrix4x4 lhs, Matrix4x4 rhs)
 		{
 			return lhs.GetColumn(0) == rhs.GetColumn(0) && lhs.GetColumn(1) == rhs.GetColumn(1) && lhs.GetColumn(2) == rhs.GetColumn(2) && lhs.GetColumn(3) == rhs.GetColumn(3);
 		}
+
 		public static bool operator !=(Matrix4x4 lhs, Matrix4x4 rhs)
 		{
 			return !(lhs == rhs);

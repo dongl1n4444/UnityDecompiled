@@ -1,4 +1,5 @@
 using System;
+
 namespace UnityEditor
 {
 	public enum GameViewSizeGroupType
@@ -10,7 +11,9 @@ namespace UnityEditor
 		PS3,
 		Xbox360,
 		BB10,
+		WiiU,
 		Tizen,
-		WP8
+		WP8,
+		Nintendo3DS
 	}
 }

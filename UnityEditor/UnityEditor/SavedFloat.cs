@@ -1,10 +1,13 @@
 using System;
+
 namespace UnityEditor
 {
 	internal class SavedFloat
 	{
 		private float m_Value;
+
 		private string m_Name;
+
 		public float value
 		{
 			get
@@ -21,11 +24,13 @@ namespace UnityEditor
 				EditorPrefs.SetFloat(this.m_Name, value);
 			}
 		}
+
 		public SavedFloat(string name, float value)
 		{
 			this.m_Name = name;
 			this.m_Value = EditorPrefs.GetFloat(name, value);
 		}
+
 		public static implicit operator float(SavedFloat s)
 		{
 			return s.value;

@@ -2,15 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class PointEditor
 	{
 		private static Vector2 s_StartMouseDragPosition;
+
 		private static List<int> s_StartDragSelection;
+
 		private static bool s_DidDrag;
+
 		private static Vector3 s_EditingScale = Vector3.one;
+
 		private static Quaternion s_EditingRotation = Quaternion.identity;
+
 		public static bool MovePoints(IEditablePoint points, Transform cloudTransform, List<int> selection)
 		{
 			if (selection.Count == 0)
@@ -89,6 +95,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		public static int FindNearest(Vector2 point, Transform cloudTransform, IEditablePoint points)
 		{
 			Ray ray = HandleUtility.GUIPointToWorldRay(point);
@@ -106,12 +113,12 @@ namespace UnityEditor
 			{
 				return -1;
 			}
-			IOrderedEnumerable<KeyValuePair<int, float>> source = 
-				from x in dictionary
-				orderby x.Value
-				select x;
+			IOrderedEnumerable<KeyValuePair<int, float>> source = from x in dictionary
+			orderby x.Value
+			select x;
 			return source.First<KeyValuePair<int, float>>().Key;
 		}
+
 		public static bool SelectPoints(IEditablePoint points, Transform cloudTransform, ref List<int> selection, bool firstSelect)
 		{
 			int controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -210,10 +217,12 @@ namespace UnityEditor
 			selection = selection.Distinct<int>().ToList<int>();
 			return result;
 		}
+
 		public static void Draw(IEditablePoint points, Transform cloudTransform, List<int> selection, bool twoPassDrawing)
 		{
 			LightmapVisualization.DrawPointCloud(points.GetUnselectedPositions(), points.GetSelectedPositions(), points.GetDefaultColor(), points.GetSelectedColor(), points.GetPointScale(), cloudTransform);
 		}
+
 		private static Rect FromToRect(Vector2 from, Vector2 to)
 		{
 			Rect result = new Rect(from.x, from.y, to.x - from.x, to.y - from.y);

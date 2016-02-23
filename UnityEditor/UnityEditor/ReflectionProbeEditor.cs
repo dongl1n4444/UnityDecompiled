@@ -6,6 +6,8 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(ReflectionProbe))]
@@ -14,38 +16,73 @@ namespace UnityEditor
 		private static class Styles
 		{
 			public static GUIStyle richTextMiniLabel;
+
 			public static string bakeButtonText;
+
 			public static string editBoundsText;
+
 			public static string[] bakeCustomButtonsText;
+
 			public static string[] bakeButtonsText;
+
 			public static GUIContent runtimeSettingsHeader;
+
 			public static GUIContent backgroundColorText;
+
 			public static GUIContent clearFlagsText;
+
 			public static GUIContent intensityText;
+
 			public static GUIContent resolutionText;
+
 			public static GUIContent captureCubemapHeaderText;
+
 			public static GUIContent boxProjectionText;
+
+			public static GUIContent blendDistanceText;
+
 			public static GUIContent sizeText;
+
 			public static GUIContent centerText;
+
 			public static GUIContent skipFramesText;
+
 			public static GUIContent customCubemapText;
+
 			public static GUIContent editorUpdateText;
+
 			public static GUIContent importanceText;
+
 			public static GUIContent renderDynamicObjects;
+
 			public static GUIContent timeSlicing;
+
 			public static GUIContent refreshMode;
+
 			public static GUIContent typeText;
+
 			public static GUIContent[] reflectionProbeMode;
+
 			public static int[] reflectionProbeModeValues;
+
 			public static int[] renderTextureSizesValues;
+
 			public static GUIContent[] renderTextureSizes;
+
 			public static GUIContent[] clearFlags;
+
 			public static int[] clearFlagsValues;
+
 			public static GUIContent[] toolContents;
+
 			public static EditMode.SceneViewEditMode[] sceneViewEditModes;
+
 			public static string baseSceneEditingToolText;
+
 			public static GUIContent[] toolNames;
+
 			public static GUIStyle commandStyle;
+
 			static Styles()
 			{
 				ReflectionProbeEditor.Styles.richTextMiniLabel = new GUIStyle(EditorStyles.miniLabel);
@@ -66,6 +103,7 @@ namespace UnityEditor
 				ReflectionProbeEditor.Styles.resolutionText = new GUIContent("Resolution");
 				ReflectionProbeEditor.Styles.captureCubemapHeaderText = new GUIContent("Cubemap capture settings");
 				ReflectionProbeEditor.Styles.boxProjectionText = new GUIContent("Box Projection", "Box projection is useful for reflections in enclosed spaces where some parrallax and movement in the reflection is wanted. If not set then cubemap reflection will we treated as coming infinite far away. And within this zone objects with the Standard shader will receive this probe's cubemap.");
+				ReflectionProbeEditor.Styles.blendDistanceText = new GUIContent("Blend Distance", "Area around the probe where it is blended with other probes. Only used in deferred probes.");
 				ReflectionProbeEditor.Styles.sizeText = new GUIContent("Size");
 				ReflectionProbeEditor.Styles.centerText = new GUIContent("Probe Origin");
 				ReflectionProbeEditor.Styles.skipFramesText = new GUIContent("Skip frames");
@@ -75,7 +113,7 @@ namespace UnityEditor
 				ReflectionProbeEditor.Styles.renderDynamicObjects = new GUIContent("Dynamic Objects", "If enabled dynamic objects are also rendered into the cubemap");
 				ReflectionProbeEditor.Styles.timeSlicing = new GUIContent("Time Slicing", "If enabled this probe will update over several frames, to help reduce the impact on the frame rate");
 				ReflectionProbeEditor.Styles.refreshMode = new GUIContent("Refresh Mode", "Controls how this probe refreshes in the Player");
-				ReflectionProbeEditor.Styles.typeText = new GUIContent("Type", "'Baked Cubemap' uses the 'Continous Baking' mode from the Lighting window. If it is enabled then baking is automatic otherwise manual bake is needed (use the bake button below). \n'Custom' can be used if a custom cubemap is wanted. \n'Realtime' can be used to dynamically re-render the cubemap during runtime (via scripting).");
+				ReflectionProbeEditor.Styles.typeText = new GUIContent("Type", "'Baked Cubemap' uses the 'Auto Baking' mode from the Lighting window. If it is enabled then baking is automatic otherwise manual bake is needed (use the bake button below). \n'Custom' can be used if a custom cubemap is wanted. \n'Realtime' can be used to dynamically re-render the cubemap during runtime (via scripting).");
 				ReflectionProbeEditor.Styles.reflectionProbeMode = new GUIContent[]
 				{
 					new GUIContent("Baked"),
@@ -99,9 +137,8 @@ namespace UnityEditor
 					1024,
 					2048
 				};
-				ReflectionProbeEditor.Styles.renderTextureSizes = (
-					from n in ReflectionProbeEditor.Styles.renderTextureSizesValues
-					select new GUIContent(n.ToString())).ToArray<GUIContent>();
+				ReflectionProbeEditor.Styles.renderTextureSizes = (from n in ReflectionProbeEditor.Styles.renderTextureSizesValues
+				select new GUIContent(n.ToString())).ToArray<GUIContent>();
 				ReflectionProbeEditor.Styles.clearFlags = new GUIContent[]
 				{
 					new GUIContent("Skybox"),
@@ -115,7 +152,7 @@ namespace UnityEditor
 				ReflectionProbeEditor.Styles.toolContents = new GUIContent[]
 				{
 					EditorGUIUtility.IconContent("EditCollider"),
-					EditorGUIUtility.IconContent("MoveTool")
+					EditorGUIUtility.IconContent("MoveTool", "|Move the selected objects.")
 				};
 				ReflectionProbeEditor.Styles.sceneViewEditModes = new EditMode.SceneViewEditMode[]
 				{
@@ -132,38 +169,73 @@ namespace UnityEditor
 				ReflectionProbeEditor.Styles.richTextMiniLabel.richText = true;
 			}
 		}
+
 		private static ReflectionProbeEditor s_LastInteractedEditor;
+
 		private SerializedProperty m_Mode;
+
 		private SerializedProperty m_RefreshMode;
+
 		private SerializedProperty m_TimeSlicingMode;
+
 		private SerializedProperty m_Resolution;
+
 		private SerializedProperty m_ShadowDistance;
+
 		private SerializedProperty m_Importance;
+
 		private SerializedProperty m_BoxSize;
+
 		private SerializedProperty m_BoxOffset;
+
 		private SerializedProperty m_CullingMask;
+
 		private SerializedProperty m_ClearFlags;
+
 		private SerializedProperty m_BackgroundColor;
+
 		private SerializedProperty m_HDR;
+
 		private SerializedProperty m_BoxProjection;
+
 		private SerializedProperty m_IntensityMultiplier;
+
+		private SerializedProperty m_BlendDistance;
+
 		private SerializedProperty m_CustomBakedTexture;
+
 		private SerializedProperty m_RenderDynamicObjects;
+
 		private SerializedProperty m_UseOcclusionCulling;
+
 		private SerializedProperty[] m_NearAndFarProperties;
+
 		private static Mesh s_SphereMesh;
+
 		private static Mesh s_PlaneMesh;
+
 		private Material m_ReflectiveMaterial;
+
 		private Vector3 m_OldTransformPosition = Vector3.zero;
+
 		private float m_MipLevelPreview;
+
 		private static int s_BoxHash = "ReflectionProbeEditorHash".GetHashCode();
+
 		private BoxEditor m_BoxEditor = new BoxEditor(true, ReflectionProbeEditor.s_BoxHash);
+
 		internal static Color kGizmoReflectionProbe = new Color(1f, 0.8980392f, 0.5803922f, 0.5019608f);
+
 		internal static Color kGizmoHandleReflectionProbe = new Color(1f, 0.8980392f, 0.6666667f, 1f);
+
 		private readonly AnimBool m_ShowProbeModeRealtimeOptions = new AnimBool();
+
 		private readonly AnimBool m_ShowProbeModeCustomOptions = new AnimBool();
+
 		private readonly AnimBool m_ShowBoxOptions = new AnimBool();
+
 		private TextureInspector m_CubemapEditor;
+
 		private bool sceneViewEditing
 		{
 			get
@@ -171,6 +243,7 @@ namespace UnityEditor
 				return this.IsReflectionProbeEditMode(EditMode.editMode) && EditMode.IsOwner(this);
 			}
 		}
+
 		private ReflectionProbe reflectionProbeTarget
 		{
 			get
@@ -178,6 +251,7 @@ namespace UnityEditor
 				return (ReflectionProbe)this.target;
 			}
 		}
+
 		private ReflectionProbeMode reflectionProbeMode
 		{
 			get
@@ -185,6 +259,7 @@ namespace UnityEditor
 				return this.reflectionProbeTarget.mode;
 			}
 		}
+
 		private static Mesh sphereMesh
 		{
 			get
@@ -197,6 +272,7 @@ namespace UnityEditor
 				return arg_2B_0;
 			}
 		}
+
 		private static Mesh planeMesh
 		{
 			get
@@ -209,6 +285,7 @@ namespace UnityEditor
 				return arg_2B_0;
 			}
 		}
+
 		private Material reflectiveMaterial
 		{
 			get
@@ -221,10 +298,12 @@ namespace UnityEditor
 				return this.m_ReflectiveMaterial;
 			}
 		}
+
 		private bool IsReflectionProbeEditMode(EditMode.SceneViewEditMode editMode)
 		{
 			return editMode == EditMode.SceneViewEditMode.ReflectionProbeBox || editMode == EditMode.SceneViewEditMode.ReflectionProbeOrigin;
 		}
+
 		public void OnEnable()
 		{
 			this.m_Mode = base.serializedObject.FindProperty("m_Mode");
@@ -246,6 +325,7 @@ namespace UnityEditor
 			this.m_HDR = base.serializedObject.FindProperty("m_HDR");
 			this.m_BoxProjection = base.serializedObject.FindProperty("m_BoxProjection");
 			this.m_IntensityMultiplier = base.serializedObject.FindProperty("m_IntensityMultiplier");
+			this.m_BlendDistance = base.serializedObject.FindProperty("m_BlendDistance");
 			this.m_CustomBakedTexture = base.serializedObject.FindProperty("m_CustomBakedTexture");
 			this.m_RenderDynamicObjects = base.serializedObject.FindProperty("m_RenderDynamicObjects");
 			this.m_UseOcclusionCulling = base.serializedObject.FindProperty("m_UseOcclusionCulling");
@@ -261,12 +341,35 @@ namespace UnityEditor
 			this.m_BoxEditor.allowNegativeSize = false;
 			this.m_OldTransformPosition = ((ReflectionProbe)this.target).transform.position;
 		}
+
 		public void OnDisable()
 		{
 			this.m_BoxEditor.OnDisable();
 			UnityEngine.Object.DestroyImmediate(this.m_ReflectiveMaterial);
 			UnityEngine.Object.DestroyImmediate(this.m_CubemapEditor);
 		}
+
+		private bool IsCollidingWithOtherProbes(string targetPath, ReflectionProbe targetProbe, out ReflectionProbe collidingProbe)
+		{
+			ReflectionProbe[] array = UnityEngine.Object.FindObjectsOfType<ReflectionProbe>().ToArray<ReflectionProbe>();
+			collidingProbe = null;
+			ReflectionProbe[] array2 = array;
+			for (int i = 0; i < array2.Length; i++)
+			{
+				ReflectionProbe reflectionProbe = array2[i];
+				if (!(reflectionProbe == targetProbe) && !(reflectionProbe.customBakedTexture == null))
+				{
+					string assetPath = AssetDatabase.GetAssetPath(reflectionProbe.customBakedTexture);
+					if (assetPath == targetPath)
+					{
+						collidingProbe = reflectionProbe;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 		private void BakeCustomReflectionProbe(ReflectionProbe probe, bool usePreviousAssetPath)
 		{
 			string text = string.Empty;
@@ -277,22 +380,24 @@ namespace UnityEditor
 			string text2 = (!probe.hdr) ? "png" : "exr";
 			if (string.IsNullOrEmpty(text) || Path.GetExtension(text) != "." + text2)
 			{
-				string text3 = FileUtil.GetPathWithoutExtension(EditorApplication.currentScene);
+				string text3 = FileUtil.GetPathWithoutExtension(SceneManager.GetActiveScene().path);
 				if (string.IsNullOrEmpty(text3))
 				{
 					text3 = "Assets";
 				}
-				else
+				else if (!Directory.Exists(text3))
 				{
-					if (!Directory.Exists(text3))
-					{
-						Directory.CreateDirectory(text3);
-					}
+					Directory.CreateDirectory(text3);
 				}
 				string text4 = probe.name + ((!probe.hdr) ? "-reflection" : "-reflectionHDR") + "." + text2;
 				text4 = Path.GetFileNameWithoutExtension(AssetDatabase.GenerateUniqueAssetPath(Path.Combine(text3, text4)));
 				text = EditorUtility.SaveFilePanelInProject("Save reflection probe's cubemap.", text4, text2, string.Empty, text3);
 				if (string.IsNullOrEmpty(text))
+				{
+					return;
+				}
+				ReflectionProbe reflectionProbe;
+				if (this.IsCollidingWithOtherProbes(text, probe, out reflectionProbe) && !EditorUtility.DisplayDialog("Cubemap is used by other reflection probe", string.Format("'{0}' path is used by the game object '{1}', do you really want to overwrite it?", text, reflectionProbe.name), "Yes", "No"))
 				{
 					return;
 				}
@@ -304,6 +409,7 @@ namespace UnityEditor
 			}
 			EditorUtility.ClearProgressBar();
 		}
+
 		private void OnBakeCustomButton(object data)
 		{
 			int num = (int)data;
@@ -313,6 +419,7 @@ namespace UnityEditor
 				this.BakeCustomReflectionProbe(probe, false);
 			}
 		}
+
 		private void OnBakeButton(object data)
 		{
 			if ((int)data == 0)
@@ -320,6 +427,7 @@ namespace UnityEditor
 				Lightmapping.BakeAllReflectionProbesSnapshots();
 			}
 		}
+
 		private void DoBakeButton()
 		{
 			if (this.reflectionProbeTarget.mode == ReflectionProbeMode.Realtime)
@@ -333,7 +441,7 @@ namespace UnityEditor
 			}
 			if (this.reflectionProbeTarget.mode == ReflectionProbeMode.Baked && Lightmapping.giWorkflowMode != Lightmapping.GIWorkflowMode.OnDemand)
 			{
-				EditorGUILayout.HelpBox("Baking of this reflection probe is automatic because this probe's type is 'Baked' and the Lighting window is using 'Continous Baking'. The cubemap created is stored in the GI cache.", MessageType.Info);
+				EditorGUILayout.HelpBox("Baking of this reflection probe is automatic because this probe's type is 'Baked' and the Lighting window is using 'Auto Baking'. The cubemap created is stored in the GI cache.", MessageType.Info);
 				return;
 			}
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -359,6 +467,7 @@ namespace UnityEditor
 			}
 			GUILayout.EndHorizontal();
 		}
+
 		private void DoToolbar()
 		{
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -399,6 +508,7 @@ namespace UnityEditor
 			GUILayout.EndVertical();
 			EditorGUILayout.Space();
 		}
+
 		public override void OnInspectorGUI()
 		{
 			base.serializedObject.Update();
@@ -415,7 +525,14 @@ namespace UnityEditor
 				if (EditorGUILayout.BeginFadeGroup(this.m_ShowProbeModeCustomOptions.faded))
 				{
 					EditorGUILayout.PropertyField(this.m_RenderDynamicObjects, ReflectionProbeEditor.Styles.renderDynamicObjects, new GUILayoutOption[0]);
-					this.m_CustomBakedTexture.objectReferenceValue = EditorGUILayout.ObjectField(ReflectionProbeEditor.Styles.customCubemapText, this.m_CustomBakedTexture.objectReferenceValue, typeof(Cubemap), false, new GUILayoutOption[0]);
+					EditorGUI.BeginChangeCheck();
+					EditorGUI.showMixedValue = this.m_CustomBakedTexture.hasMultipleDifferentValues;
+					UnityEngine.Object objectReferenceValue = EditorGUILayout.ObjectField(ReflectionProbeEditor.Styles.customCubemapText, this.m_CustomBakedTexture.objectReferenceValue, typeof(Cubemap), false, new GUILayoutOption[0]);
+					EditorGUI.showMixedValue = false;
+					if (EditorGUI.EndChangeCheck())
+					{
+						this.m_CustomBakedTexture.objectReferenceValue = objectReferenceValue;
+					}
 				}
 				EditorGUILayout.EndFadeGroup();
 				if (EditorGUILayout.BeginFadeGroup(this.m_ShowProbeModeRealtimeOptions.faded))
@@ -433,6 +550,11 @@ namespace UnityEditor
 			EditorGUILayout.PropertyField(this.m_Importance, ReflectionProbeEditor.Styles.importanceText, new GUILayoutOption[0]);
 			EditorGUILayout.PropertyField(this.m_IntensityMultiplier, ReflectionProbeEditor.Styles.intensityText, new GUILayoutOption[0]);
 			EditorGUILayout.PropertyField(this.m_BoxProjection, ReflectionProbeEditor.Styles.boxProjectionText, new GUILayoutOption[0]);
+			bool flag = SceneView.IsUsingDeferredRenderingPath();
+			bool flag2 = flag && UnityEngine.Rendering.GraphicsSettings.GetShaderMode(BuiltinShaderType.DeferredReflections) != BuiltinShaderMode.Disabled;
+			EditorGUI.BeginDisabledGroup(!flag2);
+			EditorGUILayout.PropertyField(this.m_BlendDistance, ReflectionProbeEditor.Styles.blendDistanceText, new GUILayoutOption[0]);
+			EditorGUI.EndDisabledGroup();
 			if (EditorGUILayout.BeginFadeGroup(this.m_ShowBoxOptions.faded))
 			{
 				EditorGUI.BeginChangeCheck();
@@ -467,10 +589,23 @@ namespace UnityEditor
 			EditorGUILayout.PropertiesField(EditorGUI.s_ClipingPlanesLabel, this.m_NearAndFarProperties, EditorGUI.s_NearAndFarLabels, 35f, new GUILayoutOption[0]);
 			EditorGUI.indentLevel--;
 			EditorGUILayout.Space();
+			if (base.targets.Length == 1)
+			{
+				ReflectionProbe reflectionProbe = (ReflectionProbe)this.target;
+				if (reflectionProbe.mode == ReflectionProbeMode.Custom && reflectionProbe.customBakedTexture != null)
+				{
+					Cubemap cubemap = reflectionProbe.customBakedTexture as Cubemap;
+					if (cubemap && cubemap.mipmapCount == 1)
+					{
+						EditorGUILayout.HelpBox("No mipmaps in the cubemap, Smoothness value in Standard shader will be ignored.", MessageType.Warning);
+					}
+				}
+			}
 			this.DoBakeButton();
 			EditorGUILayout.Space();
 			base.serializedObject.ApplyModifiedProperties();
 		}
+
 		private Bounds GetBounds()
 		{
 			if (this.target is ReflectionProbe)
@@ -480,11 +615,13 @@ namespace UnityEditor
 			}
 			return default(Bounds);
 		}
+
 		private bool ValidPreviewSetup()
 		{
 			ReflectionProbe reflectionProbe = (ReflectionProbe)this.target;
 			return reflectionProbe != null && reflectionProbe.texture != null;
 		}
+
 		public override bool HasPreviewGUI()
 		{
 			if (base.targets.Length > 1)
@@ -499,6 +636,7 @@ namespace UnityEditor
 			}
 			return true;
 		}
+
 		public override void OnPreviewSettings()
 		{
 			if (!this.ValidPreviewSetup())
@@ -514,6 +652,7 @@ namespace UnityEditor
 				this.m_MipLevelPreview = this.m_CubemapEditor.mipLevel;
 			}
 		}
+
 		public override void OnPreviewGUI(Rect position, GUIStyle style)
 		{
 			if (!this.ValidPreviewSetup())
@@ -541,6 +680,7 @@ namespace UnityEditor
 				this.m_CubemapEditor.OnPreviewGUI(position, style);
 			}
 		}
+
 		private float GetProbeIntensity(ReflectionProbe p)
 		{
 			if (p == null || p.texture == null)
@@ -554,6 +694,7 @@ namespace UnityEditor
 			}
 			return num;
 		}
+
 		public void OnPreSceneGUI()
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -597,6 +738,7 @@ namespace UnityEditor
 				Graphics.DrawMesh(ReflectionProbeEditor.planeMesh, matrix, this.reflectiveMaterial, 0, SceneView.currentDrawingSceneView.camera);
 			}
 		}
+
 		private bool ValidateAABB(ref Vector3 center, ref Vector3 size)
 		{
 			ReflectionProbe reflectionProbe = (ReflectionProbe)this.target;
@@ -611,6 +753,7 @@ namespace UnityEditor
 			size = bounds.size;
 			return true;
 		}
+
 		[DrawGizmo(GizmoType.Active)]
 		private static void RenderBoxGizmo(ReflectionProbe reflectionProbe, GizmoType gizmoType)
 		{
@@ -626,6 +769,7 @@ namespace UnityEditor
 				Gizmos.color = color;
 			}
 		}
+
 		public void OnSceneGUI()
 		{
 			if (!this.sceneViewEditing)
@@ -645,6 +789,7 @@ namespace UnityEditor
 				this.DoBoxEditing();
 			}
 		}
+
 		private void DoOriginEditing()
 		{
 			ReflectionProbe reflectionProbe = (ReflectionProbe)this.target;
@@ -675,6 +820,7 @@ namespace UnityEditor
 				EditorUtility.SetDirty(this.target);
 			}
 		}
+
 		private void DoBoxEditing()
 		{
 			ReflectionProbe reflectionProbe = (ReflectionProbe)this.target;

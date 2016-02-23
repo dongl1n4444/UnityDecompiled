@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class SearchUtility
@@ -9,6 +10,7 @@ namespace UnityEditor
 		{
 			searchString = searchString.Replace(": ", ":");
 		}
+
 		internal static bool ParseSearchString(string searchText, SearchFilter filter)
 		{
 			if (string.IsNullOrEmpty(searchText))
@@ -48,7 +50,7 @@ namespace UnityEditor
 				if (num > i)
 				{
 					string text2 = text.Substring(i, num - i);
-					if (SearchUtility.ParseSingleWord(text2, filter, num2, num3))
+					if (SearchUtility.CheckForKeyWords(text2, filter, num2, num3))
 					{
 						result = true;
 					}
@@ -61,11 +63,12 @@ namespace UnityEditor
 			}
 			return result;
 		}
-		internal static bool ParseSingleWord(string searchString, SearchFilter filter, int quote1, int quote2)
+
+		internal static bool CheckForKeyWords(string searchString, SearchFilter filter, int quote1, int quote2)
 		{
 			bool result = false;
 			int num = searchString.IndexOf("t:");
-			if (num >= 0)
+			if (num == 0)
 			{
 				string item = searchString.Substring(num + 2);
 				filter.classNames = new List<string>(filter.classNames)
@@ -75,7 +78,7 @@ namespace UnityEditor
 				result = true;
 			}
 			num = searchString.IndexOf("l:");
-			if (num >= 0)
+			if (num == 0)
 			{
 				string item2 = searchString.Substring(num + 2);
 				filter.assetLabels = new List<string>(filter.assetLabels)
@@ -85,7 +88,7 @@ namespace UnityEditor
 				result = true;
 			}
 			num = searchString.IndexOf("b:");
-			if (num >= 0)
+			if (num == 0)
 			{
 				string item3 = searchString.Substring(num + 2);
 				filter.assetBundleNames = new List<string>(filter.assetBundleNames)
@@ -95,7 +98,7 @@ namespace UnityEditor
 				result = true;
 			}
 			num = searchString.IndexOf("ref:");
-			if (num >= 0)
+			if (num == 0)
 			{
 				int num2 = 0;
 				int num3 = num + 3;
@@ -140,6 +143,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		private static int FindFirstPositionNotOf(string source, string chars)
 		{
 			if (source == null)

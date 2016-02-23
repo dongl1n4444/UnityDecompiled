@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class RotateTool : ManipulationTool
 	{
 		private static RotateTool s_Instance;
+
 		public static void OnGUI(SceneView view)
 		{
 			if (RotateTool.s_Instance == null)
@@ -13,6 +15,7 @@ namespace UnityEditor
 			}
 			RotateTool.s_Instance.OnToolGUI(view);
 		}
+
 		public override void ToolGUI(SceneView view, Vector3 handlePosition, bool isStatic)
 		{
 			Quaternion handleRotation = Tools.handleRotation;

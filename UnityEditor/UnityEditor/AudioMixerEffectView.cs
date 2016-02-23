@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor.Audio;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class AudioMixerEffectView
@@ -11,33 +12,58 @@ namespace UnityEditor
 		private static class Texts
 		{
 			public static GUIContent editInPlaymode = new GUIContent("Edit in Playmode");
+
 			public static GUIContent pitch = new GUIContent("Pitch");
+
 			public static GUIContent addEffect = new GUIContent("Add Effect");
+
 			public static GUIContent volume = new GUIContent("Volume");
+
 			public static GUIContent sendLevel = new GUIContent("Send level");
+
 			public static GUIContent bus = new GUIContent("Receive");
+
 			public static GUIContent none = new GUIContent("None");
+
 			public static GUIContent wet = new GUIContent("Wet", "Enables/disables wet/dry ratio on this effect. Note that this makes the DSP graph more complex and requires additional CPU and memory, so use it only when necessary.");
+
 			public static string dB = "dB";
+
 			public static string percentage = "%";
+
 			public static string cpuFormatString = " - CPU: {0:#0.00}%";
 		}
+
 		private class EffectDragging
 		{
 			private readonly Color kMoveColorBorderAllowed = new Color(1f, 1f, 1f, 1f);
+
 			private readonly Color kMoveColorHiAllowed = new Color(1f, 1f, 1f, 0.3f);
+
 			private readonly Color kMoveColorLoAllowed = new Color(1f, 1f, 1f, 0f);
+
 			private readonly Color kMoveColorBorderDisallowed = new Color(0.8f, 0f, 0f, 1f);
+
 			private readonly Color kMoveColorHiDisallowed = new Color(1f, 0f, 0f, 0.3f);
+
 			private readonly Color kMoveColorLoDisallowed = new Color(1f, 0f, 0f, 0f);
+
 			private readonly int m_DragControlID;
+
 			private int m_MovingSrcIndex = -1;
+
 			private int m_MovingDstIndex = -1;
+
 			private bool m_MovingEffectAllowed;
+
 			private float m_MovingPos;
+
 			private Rect m_MovingRect = new Rect(0f, 0f, 0f, 0f);
+
 			private float m_DragHighlightPos = -1f;
+
 			private float m_DragHighlightHeight = 2f;
+
 			public int dragControlID
 			{
 				get
@@ -45,6 +71,7 @@ namespace UnityEditor
 					return this.m_DragControlID;
 				}
 			}
+
 			private bool isDragging
 			{
 				get
@@ -52,14 +79,17 @@ namespace UnityEditor
 					return this.m_MovingSrcIndex != -1 && GUIUtility.hotControl == this.m_DragControlID;
 				}
 			}
+
 			public EffectDragging()
 			{
 				this.m_DragControlID = GUIUtility.GetPermanentControlID();
 			}
+
 			public bool IsDraggingIndex(int effectIndex)
 			{
 				return this.m_MovingSrcIndex == effectIndex && GUIUtility.hotControl == this.m_DragControlID;
 			}
+
 			public void HandleDragElement(int effectIndex, Rect effectRect, Rect dragRect, AudioMixerGroupController group, List<AudioMixerGroupController> allGroups)
 			{
 				Event current = Event.current;
@@ -76,17 +106,14 @@ namespace UnityEditor
 						}
 					}
 				}
-				else
+				else if (current.button == 0 && dragRect.Contains(current.mousePosition) && GUIUtility.hotControl == 0)
 				{
-					if (current.button == 0 && dragRect.Contains(current.mousePosition) && GUIUtility.hotControl == 0)
-					{
-						this.m_MovingSrcIndex = effectIndex;
-						this.m_MovingPos = current.mousePosition.y;
-						this.m_MovingRect = new Rect(effectRect.x, effectRect.y - this.m_MovingPos, effectRect.width, effectRect.height);
-						GUIUtility.hotControl = this.m_DragControlID;
-						EditorGUIUtility.SetWantsMouseJumping(1);
-						current.Use();
-					}
+					this.m_MovingSrcIndex = effectIndex;
+					this.m_MovingPos = current.mousePosition.y;
+					this.m_MovingRect = new Rect(effectRect.x, effectRect.y - this.m_MovingPos, effectRect.width, effectRect.height);
+					GUIUtility.hotControl = this.m_DragControlID;
+					EditorGUIUtility.SetWantsMouseJumping(1);
+					current.Use();
 				}
 				if (this.isDragging)
 				{
@@ -108,6 +135,7 @@ namespace UnityEditor
 					}
 				}
 			}
+
 			public void HandleDragging(Rect totalRect, AudioMixerGroupController group, AudioMixerController controller)
 			{
 				if (!this.isDragging)
@@ -167,15 +195,25 @@ namespace UnityEditor
 				goto IL_35;
 			}
 		}
+
 		private const float kMinPitch = 0.01f;
+
 		private const float kMaxPitch = 10f;
+
 		private const int kLabelWidth = 170;
+
 		private const int kTextboxWidth = 70;
+
 		private AudioMixerGroupController m_PrevGroup;
+
 		private readonly AudioMixerEffectView.EffectDragging m_EffectDragging;
+
 		private int m_LastNumChannels;
+
 		private AudioMixerEffectPlugin m_SharedPlugin = new AudioMixerEffectPlugin();
+
 		private Dictionary<string, IAudioEffectPluginGUI> m_CustomEffectGUIs = new Dictionary<string, IAudioEffectPluginGUI>();
+
 		public AudioMixerEffectView()
 		{
 			this.m_EffectDragging = new AudioMixerEffectView.EffectDragging();
@@ -187,10 +225,9 @@ namespace UnityEditor
 				try
 				{
 					Type[] types = assembly.GetTypes();
-					foreach (Type current in 
-						from t in types
-						where !t.IsAbstract && pluginType.IsAssignableFrom(t)
-						select t)
+					foreach (Type current in from t in types
+					where !t.IsAbstract && pluginType.IsAssignableFrom(t)
+					select t)
 					{
 						this.RegisterCustomGUI(Activator.CreateInstance(current) as IAudioEffectPluginGUI);
 					}
@@ -200,6 +237,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public bool RegisterCustomGUI(IAudioEffectPluginGUI gui)
 		{
 			string name = gui.Name;
@@ -228,6 +266,7 @@ namespace UnityEditor
 			this.m_CustomEffectGUIs[name] = gui;
 			return true;
 		}
+
 		public void OnGUI(AudioMixerGroupController group)
 		{
 			if (group == null)
@@ -283,19 +322,25 @@ namespace UnityEditor
 			{
 				GenericMenu genericMenu = new GenericMenu();
 				Rect last = GUILayoutUtility.topLevel.GetLast();
-				AudioMixerChannelStripView.AddEffectItemsToMenu(controller, group, group.effects.Length, string.Empty, genericMenu);
+				AudioMixerGroupController[] groups = new AudioMixerGroupController[]
+				{
+					group
+				};
+				AudioMixerChannelStripView.AddEffectItemsToMenu(controller, groups, group.effects.Length, string.Empty, genericMenu);
 				genericMenu.DropDown(last);
 			}
 			EditorGUILayout.EndHorizontal();
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndVertical();
 		}
+
 		public static float DoInitialModule(AudioMixerGroupController group, AudioMixerController controller, List<AudioMixerGroupController> allGroups)
 		{
 			Rect rect = EditorGUILayout.BeginVertical(EditorStyles.inspectorDefaultMargins, new GUILayoutOption[0]);
 			float valueForPitch = group.GetValueForPitch(controller, controller.TargetSnapshot);
 			if (AudioMixerEffectGUI.Slider(AudioMixerEffectView.Texts.pitch, ref valueForPitch, 100f, 1f, AudioMixerEffectView.Texts.percentage, 0.01f, 10f, controller, new AudioGroupParameterPath(group, group.GetGUIDForPitch()), new GUILayoutOption[0]))
 			{
+				Undo.RecordObject(controller.TargetSnapshot, "Change Pitch");
 				group.SetValueForPitch(controller, controller.TargetSnapshot, valueForPitch);
 			}
 			GUILayout.Space(5f);
@@ -303,6 +348,7 @@ namespace UnityEditor
 			AudioMixerDrawUtils.DrawSplitter();
 			return rect.height;
 		}
+
 		public void DoEffectGUI(int effectIndex, AudioMixerGroupController group, List<AudioMixerGroupController> allGroups, Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap, ref int highlightEffectIndex)
 		{
 			Event current = Event.current;
@@ -353,6 +399,7 @@ namespace UnityEditor
 				float valueForVolume = group.GetValueForVolume(controller, controller.TargetSnapshot);
 				if (AudioMixerEffectGUI.Slider(AudioMixerEffectView.Texts.volume, ref valueForVolume, 1f, 1f, AudioMixerEffectView.Texts.dB, AudioMixerController.kMinVolume, AudioMixerController.GetMaxVolume(), controller, new AudioGroupParameterPath(group, group.GetGUIDForVolume()), new GUILayoutOption[0]))
 				{
+					Undo.RecordObject(controller.TargetSnapshot, "Change Volume Fader");
 					group.SetValueForVolume(controller, controller.TargetSnapshot, valueForVolume);
 					AudioMixerUtility.RepaintAudioMixerAndInspectors();
 				}
@@ -401,6 +448,7 @@ namespace UnityEditor
 					float valueForMixLevel = audioMixerEffectController.GetValueForMixLevel(controller, controller.TargetSnapshot);
 					if (AudioMixerEffectGUI.Slider(AudioMixerEffectView.Texts.sendLevel, ref valueForMixLevel, 1f, 1f, AudioMixerEffectView.Texts.dB, AudioMixerController.kMinVolume, AudioMixerController.kMaxEffect, controller, new AudioEffectParameterPath(group, audioMixerEffectController, audioMixerEffectController.GetGUIDForMixLevel()), new GUILayoutOption[0]))
 					{
+						Undo.RecordObject(controller.TargetSnapshot, "Change Send Level");
 						audioMixerEffectController.SetValueForMixLevel(controller, controller.TargetSnapshot, valueForMixLevel);
 						AudioMixerUtility.RepaintAudioMixerAndInspectors();
 					}
@@ -440,6 +488,7 @@ namespace UnityEditor
 				float valueForMixLevel2 = audioMixerEffectController.GetValueForMixLevel(controller, controller.TargetSnapshot);
 				if (AudioMixerEffectGUI.Slider(AudioMixerEffectView.Texts.wet, ref valueForMixLevel2, 1f, 1f, AudioMixerEffectView.Texts.dB, AudioMixerController.kMinVolume, AudioMixerController.kMaxEffect, controller, new AudioEffectParameterPath(group, audioMixerEffectController, audioMixerEffectController.GetGUIDForMixLevel()), new GUILayoutOption[0]))
 				{
+					Undo.RecordObject(controller.TargetSnapshot, "Change Mix Level");
 					audioMixerEffectController.SetValueForMixLevel(controller, controller.TargetSnapshot, valueForMixLevel2);
 					AudioMixerUtility.RepaintAudioMixerAndInspectors();
 				}
@@ -462,6 +511,7 @@ namespace UnityEditor
 					float valueForParameter = audioMixerEffectController.GetValueForParameter(controller, controller.TargetSnapshot, mixerParameterDefinition.name);
 					if (AudioMixerEffectGUI.Slider(GUIContent.Temp(mixerParameterDefinition.name, mixerParameterDefinition.description), ref valueForParameter, mixerParameterDefinition.displayScale, mixerParameterDefinition.displayExponent, mixerParameterDefinition.units, mixerParameterDefinition.minRange, mixerParameterDefinition.maxRange, controller, new AudioEffectParameterPath(group, audioMixerEffectController, audioMixerEffectController.GetGUIDForParameter(mixerParameterDefinition.name)), new GUILayoutOption[0]))
 					{
+						Undo.RecordObject(controller.TargetSnapshot, "Change " + mixerParameterDefinition.name);
 						audioMixerEffectController.SetValueForParameter(controller, controller.TargetSnapshot, mixerParameterDefinition.name, valueForParameter);
 					}
 				}
@@ -476,6 +526,7 @@ namespace UnityEditor
 			EditorGUILayout.EndVertical();
 			AudioMixerDrawUtils.DrawSplitter();
 		}
+
 		private static void ShowEffectContextMenu(AudioMixerGroupController group, AudioMixerEffectController effect, int effectIndex, AudioMixerController controller, Rect buttonRect)
 		{
 			GenericMenu genericMenu = new GenericMenu();
@@ -519,8 +570,12 @@ namespace UnityEditor
 				}
 				genericMenu.AddSeparator(string.Empty);
 			}
-			AudioMixerChannelStripView.AddEffectItemsToMenu(controller, group, effectIndex, "Add effect before/", genericMenu);
-			AudioMixerChannelStripView.AddEffectItemsToMenu(controller, group, effectIndex + 1, "Add effect after/", genericMenu);
+			AudioMixerGroupController[] groups = new AudioMixerGroupController[]
+			{
+				group
+			};
+			AudioMixerChannelStripView.AddEffectItemsToMenu(controller, groups, effectIndex, "Add effect before/", genericMenu);
+			AudioMixerChannelStripView.AddEffectItemsToMenu(controller, groups, effectIndex + 1, "Add effect after/", genericMenu);
 			if (!effect.IsAttenuation())
 			{
 				genericMenu.AddSeparator(string.Empty);
@@ -533,6 +588,7 @@ namespace UnityEditor
 			}
 			genericMenu.DropDown(buttonRect);
 		}
+
 		private static void ShowBusPopupMenu(int effectIndex, AudioMixerGroupController group, List<AudioMixerGroupController> allGroups, Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap, AudioMixerEffectController effect, Rect buttonRect)
 		{
 			GenericMenu genericMenu = new GenericMenu();

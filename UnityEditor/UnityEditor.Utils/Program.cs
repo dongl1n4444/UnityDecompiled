@@ -3,14 +3,19 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+
 namespace UnityEditor.Utils
 {
 	internal class Program : IDisposable
 	{
 		private ProcessOutputStreamReader _stdout;
+
 		private ProcessOutputStreamReader _stderr;
+
 		private Stream _stdin;
+
 		public Process _process;
+
 		public bool HasExited
 		{
 			get
@@ -31,6 +36,7 @@ namespace UnityEditor.Utils
 				return result;
 			}
 		}
+
 		public int ExitCode
 		{
 			get
@@ -38,6 +44,7 @@ namespace UnityEditor.Utils
 				return this._process.ExitCode;
 			}
 		}
+
 		public int Id
 		{
 			get
@@ -45,14 +52,17 @@ namespace UnityEditor.Utils
 				return this._process.Id;
 			}
 		}
+
 		protected Program()
 		{
 			this._process = new Process();
 		}
+
 		public Program(ProcessStartInfo si) : this()
 		{
 			this._process.StartInfo = si;
 		}
+
 		public void Start()
 		{
 			this._process.StartInfo.RedirectStandardInput = true;
@@ -64,10 +74,12 @@ namespace UnityEditor.Utils
 			this._stderr = new ProcessOutputStreamReader(this._process, this._process.StandardError);
 			this._stdin = this._process.StandardInput.BaseStream;
 		}
+
 		public ProcessStartInfo GetProcessStartInfo()
 		{
 			return this._process.StartInfo;
 		}
+
 		public void LogProcessStartInfo()
 		{
 			if (this._process != null)
@@ -79,6 +91,7 @@ namespace UnityEditor.Utils
 				Console.WriteLine("Failed to retrieve process startInfo");
 			}
 		}
+
 		private static void LogProcessStartInfo(ProcessStartInfo si)
 		{
 			Console.WriteLine("Filename: " + si.FileName);
@@ -99,6 +112,7 @@ namespace UnityEditor.Utils
 				Console.WriteLine(File.ReadAllText(text));
 			}
 		}
+
 		public string GetAllOutput()
 		{
 			StringBuilder stringBuilder = new StringBuilder();
@@ -118,6 +132,7 @@ namespace UnityEditor.Utils
 			}
 			return stringBuilder.ToString();
 		}
+
 		public void Dispose()
 		{
 			if (!this.HasExited)
@@ -127,14 +142,17 @@ namespace UnityEditor.Utils
 			}
 			this._process.Dispose();
 		}
+
 		public Stream GetStandardInput()
 		{
 			return this._stdin;
 		}
+
 		public string[] GetStandardOutput()
 		{
 			return this._stdout.GetOutput();
 		}
+
 		public string GetStandardOutputAsString()
 		{
 			string[] standardOutput = this.GetStandardOutput();
@@ -147,14 +165,17 @@ namespace UnityEditor.Utils
 			}
 			return stringBuilder.ToString();
 		}
+
 		public string[] GetErrorOutput()
 		{
 			return this._stderr.GetOutput();
 		}
+
 		public void WaitForExit()
 		{
 			this._process.WaitForExit();
 		}
+
 		public bool WaitForExit(int milliseconds)
 		{
 			return this._process.WaitForExit(milliseconds);

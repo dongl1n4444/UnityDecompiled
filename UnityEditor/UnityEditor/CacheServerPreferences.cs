@@ -1,6 +1,7 @@
 using System;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class CacheServerPreferences
@@ -11,33 +12,51 @@ namespace UnityEditor
 			Success,
 			Failure
 		}
+
 		private static bool s_PrefsLoaded;
+
 		private static CacheServerPreferences.ConnectionState s_ConnectionState;
+
 		private static bool s_CacheServerEnabled;
+
 		private static string s_CacheServerIPAddress;
+
 		public static void ReadPreferences()
 		{
 			CacheServerPreferences.s_CacheServerIPAddress = EditorPrefs.GetString("CacheServerIPAddress", CacheServerPreferences.s_CacheServerIPAddress);
 			CacheServerPreferences.s_CacheServerEnabled = EditorPrefs.GetBool("CacheServerEnabled");
 		}
+
 		public static void WritePreferences()
 		{
 			EditorPrefs.SetString("CacheServerIPAddress", CacheServerPreferences.s_CacheServerIPAddress);
 			EditorPrefs.SetBool("CacheServerEnabled", CacheServerPreferences.s_CacheServerEnabled);
 		}
+
 		[PreferenceItem("Cache Server")]
 		public static void OnGUI()
 		{
 			GUILayout.Space(10f);
-			if (!InternalEditorUtility.HasPro())
+			if (!InternalEditorUtility.HasTeamLicense())
 			{
-				GUILayout.Label(EditorGUIUtility.TempContent("You need to have a Pro license to use the cache server.", EditorGUIUtility.GetHelpIcon(MessageType.Warning)), EditorStyles.helpBox, new GUILayoutOption[0]);
+				GUILayout.Label(EditorGUIUtility.TempContent("You need to have a Pro or Team license to use the cache server.", EditorGUIUtility.GetHelpIcon(MessageType.Warning)), EditorStyles.helpBox, new GUILayoutOption[0]);
 			}
-			EditorGUI.BeginDisabledGroup(!InternalEditorUtility.HasPro());
+			EditorGUI.BeginDisabledGroup(!InternalEditorUtility.HasTeamLicense());
 			if (!CacheServerPreferences.s_PrefsLoaded)
 			{
 				CacheServerPreferences.ReadPreferences();
 				CacheServerPreferences.s_PrefsLoaded = true;
+			}
+			if (CacheServerPreferences.s_CacheServerEnabled && CacheServerPreferences.s_ConnectionState == CacheServerPreferences.ConnectionState.Unknown)
+			{
+				if (InternalEditorUtility.CanConnectToCacheServer())
+				{
+					CacheServerPreferences.s_ConnectionState = CacheServerPreferences.ConnectionState.Success;
+				}
+				else
+				{
+					CacheServerPreferences.s_ConnectionState = CacheServerPreferences.ConnectionState.Failure;
+				}
 			}
 			EditorGUI.BeginChangeCheck();
 			CacheServerPreferences.s_CacheServerEnabled = EditorGUILayout.Toggle("Use Cache Server", CacheServerPreferences.s_CacheServerEnabled, new GUILayoutOption[0]);
@@ -63,17 +82,17 @@ namespace UnityEditor
 				}
 			}
 			GUILayout.Space(-25f);
-			CacheServerPreferences.ConnectionState connectionState = CacheServerPreferences.s_ConnectionState;
-			if (connectionState != CacheServerPreferences.ConnectionState.Success)
+			switch (CacheServerPreferences.s_ConnectionState)
 			{
-				if (connectionState == CacheServerPreferences.ConnectionState.Failure)
-				{
-					EditorGUILayout.HelpBox("Connection failed.", MessageType.Warning, false);
-				}
-			}
-			else
-			{
+			case CacheServerPreferences.ConnectionState.Unknown:
+				GUILayout.Space(44f);
+				break;
+			case CacheServerPreferences.ConnectionState.Success:
 				EditorGUILayout.HelpBox("Connection successful.", MessageType.Info, false);
+				break;
+			case CacheServerPreferences.ConnectionState.Failure:
+				EditorGUILayout.HelpBox("Connection failed.", MessageType.Warning, false);
+				break;
 			}
 			EditorGUI.EndDisabledGroup();
 			if (EditorGUI.EndChangeCheck())

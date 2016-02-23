@@ -7,19 +7,39 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Cryptography;
 using UnityEngine.Internal;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>Webplayer security related class.</para>
+	/// </summary>
 	public sealed class Security
 	{
 		private const string publicVerificationKey = "<RSAKeyValue><Modulus>uP7lsvrE6fNoQWhUIdJnQrgKoGXBkgWgs5l1xmS9gfyNkFSXgugIpfmN/0YrtL57PezYFXN0CogAnOpOtcUmpcIrh524VL/7bIh+jDUaOCG292PIx92dtzqCTvbUdCYUmaag9VlrdAw05FxYQJi2iZ/X6EiuO1TnqpVNFCDb6pXPAssoO4Uxn9JXBzL0muNRdcmFGRiLp7JQOL7a2aeU9mF9qjMprnww0k8COa6tHdnNWJqaxdFO+Etk3os0ns/gQ2FWrztKemM1Wfu7lk/B1F+V2g0adwlTiuyNHw6to+5VQXWK775RXB9wAGr8KhsVD5IJvmxrdBT8KVEWve+OXQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+
 		private static List<Assembly> _verifiedAssemblies = new List<Assembly>();
+
 		private static readonly string kSignatureExtension = ".signature";
+
+		/// <summary>
+		///   <para>Prefetch the webplayer socket security policy from a non-default port number.</para>
+		/// </summary>
+		/// <param name="ip">IP address of server.</param>
+		/// <param name="atPort">Port from where socket policy is read.</param>
+		/// <param name="timeout">Time to wait for response.</param>
 		[ExcludeFromDocs]
 		public static bool PrefetchSocketPolicy(string ip, int atPort)
 		{
 			int timeout = 3000;
 			return Security.PrefetchSocketPolicy(ip, atPort, timeout);
 		}
+
+		/// <summary>
+		///   <para>Prefetch the webplayer socket security policy from a non-default port number.</para>
+		/// </summary>
+		/// <param name="ip">IP address of server.</param>
+		/// <param name="atPort">Port from where socket policy is read.</param>
+		/// <param name="timeout">Time to wait for response.</param>
 		public static bool PrefetchSocketPolicy(string ip, int atPort, [DefaultValue("3000")] int timeout)
 		{
 			MethodInfo unityCrossDomainHelperMethod = Security.GetUnityCrossDomainHelperMethod("PrefetchSocketPolicy");
@@ -31,6 +51,14 @@ namespace UnityEngine
 			});
 			return (bool)obj;
 		}
+
+		/// <summary>
+		///   <para>Get secret from Chain of Trust system.</para>
+		/// </summary>
+		/// <param name="name">The name of the secret.</param>
+		/// <returns>
+		///   <para>The secret.</para>
+		/// </returns>
 		[SecuritySafeCritical]
 		public static string GetChainOfTrustValue(string name)
 		{
@@ -42,9 +70,11 @@ namespace UnityEngine
 			byte[] publicKeyToken = callingAssembly.GetName().GetPublicKeyToken();
 			return Security.GetChainOfTrustValueInternal(name, Security.TokenToHex(publicKeyToken));
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern string GetChainOfTrustValueInternal(string name, string publicKeyToken);
+
 		private static MethodInfo GetUnityCrossDomainHelperMethod(string methodname)
 		{
 			Type type = Types.GetType("UnityEngine.UnityCrossDomainHelper", "CrossDomainPolicyParser, Version=1.0.0.0, Culture=neutral");
@@ -59,6 +89,7 @@ namespace UnityEngine
 			}
 			return method;
 		}
+
 		internal static string TokenToHex(byte[] token)
 		{
 			if (token == null || 8 > token.Length)
@@ -77,10 +108,21 @@ namespace UnityEngine
 				token[7]
 			});
 		}
+
 		internal static void ClearVerifiedAssemblies()
 		{
 			Security._verifiedAssemblies.Clear();
 		}
+
+		/// <summary>
+		///   <para>Loads an assembly and checks that it is allowed to be used in the webplayer.
+		/// Note: The single argument version of this API will always issue an error message.  An authorisation key is always needed.</para>
+		/// </summary>
+		/// <param name="assemblyData">Assembly to verify.</param>
+		/// <param name="authorizationKey">Public key used to verify assembly.</param>
+		/// <returns>
+		///   <para>Loaded, verified, assembly, or null if the assembly cannot be verfied.</para>
+		/// </returns>
 		[SecuritySafeCritical]
 		public static Assembly LoadAndVerifyAssembly(byte[] assemblyData, string authorizationKey)
 		{
@@ -105,6 +147,16 @@ namespace UnityEngine
 			}
 			return Security.LoadAndVerifyAssemblyInternal(assemblyData);
 		}
+
+		/// <summary>
+		///   <para>Loads an assembly and checks that it is allowed to be used in the webplayer.
+		/// Note: The single argument version of this API will always issue an error message.  An authorisation key is always needed.</para>
+		/// </summary>
+		/// <param name="assemblyData">Assembly to verify.</param>
+		/// <param name="authorizationKey">Public key used to verify assembly.</param>
+		/// <returns>
+		///   <para>Loaded, verified, assembly, or null if the assembly cannot be verfied.</para>
+		/// </returns>
 		[SecuritySafeCritical]
 		public static Assembly LoadAndVerifyAssembly(byte[] assemblyData)
 		{
@@ -115,6 +167,7 @@ namespace UnityEngine
 			}
 			return Security.LoadAndVerifyAssemblyInternal(assemblyData);
 		}
+
 		[SecuritySafeCritical]
 		private static Assembly LoadAndVerifyAssemblyInternal(byte[] assemblyData)
 		{
@@ -142,6 +195,7 @@ namespace UnityEngine
 			}
 			return result;
 		}
+
 		internal static bool VerifySignature(string file, byte[] publicKey)
 		{
 			try

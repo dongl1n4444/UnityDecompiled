@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 namespace UnityEditorInternal
 {
 	internal class AnimationWindowHierarchyDataSource : TreeViewDataSource
@@ -11,30 +12,36 @@ namespace UnityEditorInternal
 			get;
 			set;
 		}
+
 		public bool showAll
 		{
 			get;
 			set;
 		}
+
 		public AnimationWindowHierarchyDataSource(TreeView treeView, AnimationWindowState animationWindowState) : base(treeView)
 		{
 			this.state = animationWindowState;
 		}
+
 		private void SetupRootNodeSettings()
 		{
 			base.showRootNode = false;
 			base.rootIsCollapsable = false;
 			this.SetExpanded(this.m_RootItem, true);
 		}
+
 		private AnimationWindowHierarchyNode GetEmptyRootNode()
 		{
 			return new AnimationWindowHierarchyNode(0, -1, null, null, string.Empty, string.Empty, "root");
 		}
+
 		public override void FetchData()
 		{
 			this.m_RootItem = this.GetEmptyRootNode();
 			this.SetupRootNodeSettings();
-			if (this.state.m_ActiveGameObject == null || this.state.m_RootGameObject == null)
+			this.m_NeedRefreshVisibleFolders = true;
+			if (this.state.activeRootGameObject == null && this.state.activeAnimationClip == null)
 			{
 				return;
 			}
@@ -46,12 +53,13 @@ namespace UnityEditorInternal
 			list.AddRange(this.CreateTreeFromCurves());
 			list.Add(new AnimationWindowHierarchyAddButtonNode());
 			TreeViewUtility.SetChildParentReferences(new List<TreeViewItem>(list.ToArray()), this.root);
-			this.m_NeedRefreshVisibleFolders = true;
 		}
+
 		public override bool IsRenamingItemAllowed(TreeViewItem item)
 		{
 			return !(item is AnimationWindowHierarchyAddButtonNode) && !(item is AnimationWindowHierarchyMasterNode) && (item as AnimationWindowHierarchyNode).path.Length != 0;
 		}
+
 		public List<AnimationWindowHierarchyNode> CreateTreeFromCurves()
 		{
 			List<AnimationWindowHierarchyNode> list = new List<AnimationWindowHierarchyNode>();
@@ -79,6 +87,7 @@ namespace UnityEditorInternal
 			}
 			return list;
 		}
+
 		private AnimationWindowHierarchyPropertyGroupNode AddPropertyGroupToHierarchy(AnimationWindowCurve[] curves, AnimationWindowHierarchyNode parentNode)
 		{
 			List<AnimationWindowHierarchyNode> list = new List<AnimationWindowHierarchyNode>();
@@ -97,6 +106,7 @@ namespace UnityEditorInternal
 			TreeViewUtility.SetChildParentReferences(new List<TreeViewItem>(list.ToArray()), animationWindowHierarchyPropertyGroupNode);
 			return animationWindowHierarchyPropertyGroupNode;
 		}
+
 		private AnimationWindowHierarchyPropertyNode AddPropertyToHierarchy(AnimationWindowCurve curve, AnimationWindowHierarchyNode parentNode)
 		{
 			AnimationWindowHierarchyPropertyNode animationWindowHierarchyPropertyNode = new AnimationWindowHierarchyPropertyNode(curve.type, curve.propertyName, curve.path, parentNode, curve.binding, curve.isPPtrCurve);
@@ -115,18 +125,20 @@ namespace UnityEditorInternal
 			};
 			return animationWindowHierarchyPropertyNode;
 		}
+
 		public Texture2D GetIcon(EditorCurveBinding curveBinding)
 		{
-			if (this.state.m_RootGameObject != null)
+			if (this.state.activeRootGameObject != null)
 			{
-				UnityEngine.Object animatedObject = AnimationUtility.GetAnimatedObject(this.state.m_RootGameObject, curveBinding);
+				object animatedObject = AnimationUtility.GetAnimatedObject(this.state.activeRootGameObject, curveBinding);
 				if (animatedObject != null)
 				{
-					return AssetPreview.GetMiniThumbnail(AnimationUtility.GetAnimatedObject(this.state.m_RootGameObject, curveBinding));
+					return AssetPreview.GetMiniThumbnail(AnimationUtility.GetAnimatedObject(this.state.activeRootGameObject, curveBinding));
 				}
 			}
 			return AssetPreview.GetMiniTypeThumbnail(curveBinding.type);
 		}
+
 		public void UpdateData()
 		{
 			this.m_TreeView.ReloadData();

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(RenderTexture))]
@@ -12,6 +13,7 @@ namespace UnityEditor
 			new GUIContent("4 samples"),
 			new GUIContent("8 samples")
 		};
+
 		private static readonly int[] kRenderTextureAntiAliasingValues = new int[]
 		{
 			1,
@@ -19,11 +21,17 @@ namespace UnityEditor
 			4,
 			8
 		};
+
 		private SerializedProperty m_Width;
+
 		private SerializedProperty m_Height;
+
 		private SerializedProperty m_ColorFormat;
+
 		private SerializedProperty m_DepthFormat;
+
 		private SerializedProperty m_AntiAliasing;
+
 		protected override void OnEnable()
 		{
 			base.OnEnable();
@@ -33,6 +41,7 @@ namespace UnityEditor
 			this.m_ColorFormat = base.serializedObject.FindProperty("m_ColorFormat");
 			this.m_DepthFormat = base.serializedObject.FindProperty("m_DepthFormat");
 		}
+
 		public override void OnInspectorGUI()
 		{
 			base.serializedObject.Update();
@@ -59,10 +68,25 @@ namespace UnityEditor
 				renderTexture.Release();
 			}
 			base.isInspectorDirty = true;
-			base.serializedObject.ApplyModifiedProperties();
 			EditorGUILayout.Space();
-			base.OnInspectorGUI();
+			base.DoWrapModePopup();
+			base.DoFilterModePopup();
+			EditorGUI.BeginDisabledGroup(this.RenderTextureHasDepth());
+			base.DoAnisoLevelSlider();
+			EditorGUI.EndDisabledGroup();
+			if (this.RenderTextureHasDepth())
+			{
+				this.m_Aniso.intValue = 0;
+				EditorGUILayout.HelpBox("RenderTextures with depth must have an Aniso Level of 0.", MessageType.Info);
+			}
+			base.serializedObject.ApplyModifiedProperties();
 		}
+
+		private bool RenderTextureHasDepth()
+		{
+			return TextureUtil.IsDepthRTFormat((RenderTextureFormat)this.m_ColorFormat.enumValueIndex) || this.m_DepthFormat.enumValueIndex != 0;
+		}
+
 		public override string GetInfoString()
 		{
 			RenderTexture renderTexture = this.target as RenderTexture;

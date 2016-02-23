@@ -1,16 +1,23 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CustomEditor(typeof(ParticleSystem))]
 	internal class ParticleSystemInspector : Editor, ParticleEffectUIOwner
 	{
 		private ParticleEffectUI m_ParticleEffectUI;
+
 		private GUIContent m_PreviewTitle = new GUIContent("Particle System Curves");
+
 		private GUIContent showWindowText = new GUIContent("Open Editor...");
+
 		private GUIContent closeWindowText = new GUIContent("Close Editor");
+
 		private GUIContent hideWindowText = new GUIContent("Hide Editor");
+
 		private static GUIContent m_PlayBackTitle;
+
 		public static GUIContent playBackTitle
 		{
 			get
@@ -22,6 +29,7 @@ namespace UnityEditor
 				return ParticleSystemInspector.m_PlayBackTitle;
 			}
 		}
+
 		public void OnEnable()
 		{
 			EditorApplication.hierarchyWindowChanged = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.hierarchyWindowChanged, new EditorApplication.CallbackFunction(this.HierarchyOrProjectWindowWasChanged));
@@ -29,6 +37,7 @@ namespace UnityEditor
 			SceneView.onSceneGUIDelegate = (SceneView.OnSceneFunc)Delegate.Combine(SceneView.onSceneGUIDelegate, new SceneView.OnSceneFunc(this.OnSceneViewGUI));
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 		}
+
 		public void OnDisable()
 		{
 			SceneView.onSceneGUIDelegate = (SceneView.OnSceneFunc)Delegate.Remove(SceneView.onSceneGUIDelegate, new SceneView.OnSceneFunc(this.OnSceneViewGUI));
@@ -40,6 +49,7 @@ namespace UnityEditor
 				this.m_ParticleEffectUI.Clear();
 			}
 		}
+
 		private void HierarchyOrProjectWindowWasChanged()
 		{
 			if (this.ShouldShowInspector())
@@ -47,6 +57,7 @@ namespace UnityEditor
 				this.Init(true);
 			}
 		}
+
 		private void UndoRedoPerformed()
 		{
 			if (this.m_ParticleEffectUI != null)
@@ -54,6 +65,7 @@ namespace UnityEditor
 				this.m_ParticleEffectUI.UndoRedoPerformed();
 			}
 		}
+
 		private void Init(bool forceInit)
 		{
 			ParticleSystem particleSystem = this.target as ParticleSystem;
@@ -66,14 +78,12 @@ namespace UnityEditor
 				this.m_ParticleEffectUI = new ParticleEffectUI(this);
 				this.m_ParticleEffectUI.InitializeIfNeeded(particleSystem);
 			}
-			else
+			else if (forceInit)
 			{
-				if (forceInit)
-				{
-					this.m_ParticleEffectUI.InitializeIfNeeded(particleSystem);
-				}
+				this.m_ParticleEffectUI.InitializeIfNeeded(particleSystem);
 			}
 		}
+
 		private void ShowEdiorButtonGUI()
 		{
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -123,10 +133,12 @@ namespace UnityEditor
 			}
 			GUILayout.EndHorizontal();
 		}
+
 		public override bool UseDefaultMargins()
 		{
 			return false;
 		}
+
 		public override void OnInspectorGUI()
 		{
 			EditorGUILayout.BeginVertical(EditorStyles.inspectorDefaultMargins, new GUILayoutOption[0]);
@@ -149,6 +161,7 @@ namespace UnityEditor
 			}
 			EditorGUILayout.EndVertical();
 		}
+
 		private void Clear()
 		{
 			if (this.m_ParticleEffectUI != null)
@@ -157,11 +170,13 @@ namespace UnityEditor
 			}
 			this.m_ParticleEffectUI = null;
 		}
+
 		private bool ShouldShowInspector()
 		{
 			ParticleSystemWindow instance = ParticleSystemWindow.GetInstance();
 			return !instance || !instance.IsVisible();
 		}
+
 		public void OnSceneGUI()
 		{
 			if (this.ShouldShowInspector() && this.m_ParticleEffectUI != null)
@@ -169,6 +184,7 @@ namespace UnityEditor
 				this.m_ParticleEffectUI.OnSceneGUI();
 			}
 		}
+
 		public void OnSceneViewGUI(SceneView sceneView)
 		{
 			if (this.ShouldShowInspector())
@@ -180,10 +196,12 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public override bool HasPreviewGUI()
 		{
 			return this.ShouldShowInspector() && Selection.objects.Length == 1;
 		}
+
 		public override void OnPreviewGUI(Rect r, GUIStyle background)
 		{
 			if (this.m_ParticleEffectUI != null)
@@ -191,13 +209,16 @@ namespace UnityEditor
 				this.m_ParticleEffectUI.GetParticleSystemCurveEditor().OnGUI(r);
 			}
 		}
+
 		public override GUIContent GetPreviewTitle()
 		{
 			return this.m_PreviewTitle;
 		}
+
 		public override void OnPreviewSettings()
 		{
 		}
+
 		virtual void Repaint()
 		{
 			base.Repaint();

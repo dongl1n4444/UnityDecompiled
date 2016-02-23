@@ -1,6 +1,7 @@
 using System;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(Cloth))]
@@ -11,52 +12,81 @@ namespace UnityEditor
 			MaxDistance = 1,
 			CollisionSphereDistance
 		}
+
 		public enum ToolMode
 		{
 			Select,
 			Paint
 		}
+
 		private enum RectSelectionMode
 		{
 			Replace,
 			Add,
 			Substract
 		}
+
 		private const float kDisabledValue = 3.40282347E+38f;
+
 		private bool[] m_Selection;
+
 		private bool[] m_RectSelection;
+
 		private int m_MouseOver = -1;
+
 		private int m_MeshVerticesPerSelectionVertex;
+
 		private Mesh[] m_SelectionMesh;
+
 		private Mesh[] m_SelectedMesh;
+
 		private Mesh m_VertexMesh;
+
 		private Mesh m_VertexMeshSelected;
+
 		private Vector3[] m_LastVertices;
+
 		private Vector2 m_SelectStartPoint;
+
 		private Vector2 m_SelectMousePoint;
+
 		private bool m_RectSelecting;
+
 		private bool m_DidSelect;
+
 		private float[] m_MaxVisualizedValue = new float[3];
+
 		private float[] m_MinVisualizedValue = new float[3];
+
 		private ClothInspector.RectSelectionMode m_RectSelectionMode = ClothInspector.RectSelectionMode.Add;
+
 		private static Color s_SelectionColor;
+
 		private static Material s_SelectionMaterial = null;
+
 		private static Material s_SelectionMaterialBackfaces = null;
+
 		private static Material s_SelectedMaterial = null;
+
 		private static Texture2D s_ColorTexture = null;
+
 		private static int s_MaxVertices;
+
 		private static GUIContent[] s_ToolIcons = new GUIContent[]
 		{
-			EditorGUIUtility.TextContent("ClothInspector.SelectTool"),
-			EditorGUIUtility.TextContent("ClothInspector.PaintTool")
+			EditorGUIUtility.TextContent("Select|Select vertices and edit their cloth coefficients in the inspector."),
+			EditorGUIUtility.TextContent("Paint|Paint cloth coefficients on to vertices.")
 		};
+
 		private static GUIContent[] s_ModeStrings = new GUIContent[]
 		{
 			EditorGUIUtility.TextContent("Fixed"),
 			EditorGUIUtility.TextContent("Max Distance"),
 			EditorGUIUtility.TextContent("Surface Penetration")
 		};
+
 		private static GUIContent s_PaintIcon = EditorGUIUtility.IconContent("ClothInspector.PaintValue", "Change this vertex coefficient value by painting in the scene view.");
+
 		private ClothInspectorState state
 		{
 			get
@@ -64,6 +94,7 @@ namespace UnityEditor
 				return ScriptableSingleton<ClothInspectorState>.instance;
 			}
 		}
+
 		private ClothInspector.DrawMode drawMode
 		{
 			get
@@ -80,6 +111,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private Cloth cloth
 		{
 			get
@@ -87,6 +119,7 @@ namespace UnityEditor
 				return (Cloth)this.target;
 			}
 		}
+
 		public bool editing
 		{
 			get
@@ -94,10 +127,12 @@ namespace UnityEditor
 				return EditMode.editMode == EditMode.SceneViewEditMode.Cloth && EditMode.IsOwner(this);
 			}
 		}
+
 		private GUIContent GetModeString(ClothInspector.DrawMode mode)
 		{
 			return ClothInspector.s_ModeStrings[(int)mode];
 		}
+
 		private Texture2D GenerateColorTexture(int width)
 		{
 			Texture2D texture2D = new Texture2D(width, 1, TextureFormat.ARGB32, false);
@@ -113,11 +148,13 @@ namespace UnityEditor
 			texture2D.Apply();
 			return texture2D;
 		}
+
 		public override void OnInspectorGUI()
 		{
 			EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Cloth, "Edit Constraints", EditorGUIUtility.IconContent("EditCollider"), this.GetClothBounds(), this);
 			base.OnInspectorGUI();
 		}
+
 		private Bounds GetClothBounds()
 		{
 			if (this.target is Cloth)
@@ -131,6 +168,7 @@ namespace UnityEditor
 			}
 			return default(Bounds);
 		}
+
 		private bool SelectionMeshDirty()
 		{
 			SkinnedMeshRenderer component = this.cloth.GetComponent<SkinnedMeshRenderer>();
@@ -150,6 +188,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		private void GenerateSelectionMesh()
 		{
 			SkinnedMeshRenderer component = this.cloth.GetComponent<SkinnedMeshRenderer>();
@@ -206,6 +245,7 @@ namespace UnityEditor
 			}
 			this.SetupSelectionMeshColors();
 		}
+
 		private void OnEnable()
 		{
 			if (ClothInspector.s_SelectionMaterial == null)
@@ -245,6 +285,7 @@ namespace UnityEditor
 			this.GenerateSelectionMesh();
 			this.SetupSelectedMeshColors();
 		}
+
 		private float GetCoefficient(ClothSkinningCoefficient coefficient)
 		{
 			ClothInspector.DrawMode drawMode = this.drawMode;
@@ -258,6 +299,7 @@ namespace UnityEditor
 			}
 			return coefficient.collisionSphereDistance;
 		}
+
 		private Color GetGradientColor(float val)
 		{
 			if (val < 0.3f)
@@ -270,6 +312,7 @@ namespace UnityEditor
 			}
 			return Color.Lerp(Color.yellow, Color.green, (val - 0.7f) / 0.3f);
 		}
+
 		private void AssignColorsToMeshArray(Color[] colors, Mesh[] meshArray)
 		{
 			int num = colors.Length / this.m_MeshVerticesPerSelectionVertex;
@@ -286,6 +329,7 @@ namespace UnityEditor
 				meshArray[i].colors = array;
 			}
 		}
+
 		private void SetupSelectionMeshColors()
 		{
 			ClothSkinningCoefficient[] coefficients = this.cloth.coefficients;
@@ -337,6 +381,7 @@ namespace UnityEditor
 			this.m_MinVisualizedValue[(int)this.drawMode] = num2;
 			this.AssignColorsToMeshArray(array, this.m_SelectionMesh);
 		}
+
 		private void SetupSelectedMeshColors()
 		{
 			int num = this.cloth.coefficients.Length;
@@ -367,6 +412,7 @@ namespace UnityEditor
 			}
 			this.AssignColorsToMeshArray(array, this.m_SelectedMesh);
 		}
+
 		private void OnDisable()
 		{
 			if (this.m_SelectionMesh != null)
@@ -387,6 +433,7 @@ namespace UnityEditor
 			UnityEngine.Object.DestroyImmediate(this.m_VertexMesh);
 			UnityEngine.Object.DestroyImmediate(this.m_VertexMeshSelected);
 		}
+
 		private float CoefficientField(float value, float useValue, bool enabled, ClothInspector.DrawMode mode)
 		{
 			GUIContent modeString = this.GetModeString(mode);
@@ -458,6 +505,7 @@ namespace UnityEditor
 			GUILayout.EndHorizontal();
 			return value;
 		}
+
 		private float PaintField(float value, ref bool enabled, ClothInspector.DrawMode mode)
 		{
 			GUIContent modeString = this.GetModeString(mode);
@@ -524,6 +572,7 @@ namespace UnityEditor
 			GUILayout.EndHorizontal();
 			return num;
 		}
+
 		private void SelectionGUI()
 		{
 			ClothSkinningCoefficient[] coefficients = this.cloth.coefficients;
@@ -630,6 +679,7 @@ namespace UnityEditor
 				this.SetupSelectionMeshColors();
 			}
 		}
+
 		private void PaintGUI()
 		{
 			this.state.PaintMaxDistance = this.PaintField(this.state.PaintMaxDistance, ref this.state.PaintMaxDistanceEnabled, ClothInspector.DrawMode.MaxDistance);
@@ -638,12 +688,9 @@ namespace UnityEditor
 			{
 				this.drawMode = ClothInspector.DrawMode.MaxDistance;
 			}
-			else
+			else if (!this.state.PaintMaxDistanceEnabled && this.state.PaintCollisionSphereDistanceEnabled)
 			{
-				if (!this.state.PaintMaxDistanceEnabled && this.state.PaintCollisionSphereDistanceEnabled)
-				{
-					this.drawMode = ClothInspector.DrawMode.CollisionSphereDistance;
-				}
+				this.drawMode = ClothInspector.DrawMode.CollisionSphereDistance;
 			}
 			EditorGUI.BeginDisabledGroup(true);
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
@@ -652,6 +699,7 @@ namespace UnityEditor
 			GUILayout.EndHorizontal();
 			EditorGUI.EndDisabledGroup();
 		}
+
 		private int GetMouseVertex(Event e)
 		{
 			if (Tools.current != Tool.None)
@@ -677,6 +725,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		private void DrawVertices()
 		{
 			if (this.SelectionMeshDirty())
@@ -729,6 +778,7 @@ namespace UnityEditor
 				material.color = Color.white;
 			}
 		}
+
 		private bool UpdateRectSelection()
 		{
 			bool result = false;
@@ -762,6 +812,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		private void ApplyRectSelection()
 		{
 			ClothSkinningCoefficient[] coefficients = this.cloth.coefficients;
@@ -781,6 +832,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private bool RectSelectionModeFromEvent()
 		{
 			Event current = Event.current;
@@ -800,10 +852,12 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		internal void SendCommandsOnModifierKeys()
 		{
 			SceneView.lastActiveSceneView.SendEvent(EditorGUIUtility.CommandEvent("ModifierKeysChanged"));
 		}
+
 		private void SelectionPreSceneGUI(int id)
 		{
 			Event current = Event.current;
@@ -855,15 +909,12 @@ namespace UnityEditor
 						this.RectSelectionModeFromEvent();
 						this.ApplyRectSelection();
 					}
-					else
+					else if (!this.m_DidSelect && !current.alt && !current.control && !current.command)
 					{
-						if (!this.m_DidSelect && !current.alt && !current.control && !current.command)
+						ClothSkinningCoefficient[] coefficients = this.cloth.coefficients;
+						for (int j = 0; j < coefficients.Length; j++)
 						{
-							ClothSkinningCoefficient[] coefficients = this.cloth.coefficients;
-							for (int j = 0; j < coefficients.Length; j++)
-							{
-								this.m_Selection[j] = false;
-							}
+							this.m_Selection[j] = false;
 						}
 					}
 					GUIUtility.keyboardControl = 0;
@@ -906,6 +957,7 @@ namespace UnityEditor
 			}
 			goto IL_26;
 		}
+
 		private void PaintPreSceneGUI(int id)
 		{
 			Event current = Event.current;
@@ -945,15 +997,13 @@ namespace UnityEditor
 				}
 				current.Use();
 			}
-			else
+			else if (typeForControl == EventType.MouseUp && GUIUtility.hotControl == id && current.button == 0)
 			{
-				if (typeForControl == EventType.MouseUp && GUIUtility.hotControl == id && current.button == 0)
-				{
-					GUIUtility.hotControl = 0;
-					current.Use();
-				}
+				GUIUtility.hotControl = 0;
+				current.Use();
 			}
 		}
+
 		public void OnPreSceneGUI()
 		{
 			if (!this.editing)
@@ -1004,6 +1054,7 @@ namespace UnityEditor
 			}
 			Handles.EndGUI();
 		}
+
 		public void OnSceneGUI()
 		{
 			if (!this.editing)
@@ -1047,6 +1098,7 @@ namespace UnityEditor
 			Handles.EndGUI();
 			SceneViewOverlay.Window(new GUIContent("Cloth Constraints"), new SceneViewOverlay.WindowFunction(this.VertexEditing), 0, SceneViewOverlay.WindowDisplayOption.OneWindowPerTarget);
 		}
+
 		public void VisualizationMenuSetMaxDistanceMode()
 		{
 			this.drawMode = ClothInspector.DrawMode.MaxDistance;
@@ -1056,6 +1108,7 @@ namespace UnityEditor
 				this.state.PaintMaxDistanceEnabled = true;
 			}
 		}
+
 		public void VisualizationMenuSetCollisionSphereMode()
 		{
 			this.drawMode = ClothInspector.DrawMode.CollisionSphereDistance;
@@ -1065,10 +1118,12 @@ namespace UnityEditor
 				this.state.PaintMaxDistanceEnabled = false;
 			}
 		}
+
 		public void VisualizationMenuToggleManipulateBackfaces()
 		{
 			this.state.ManipulateBackfaces = !this.state.ManipulateBackfaces;
 		}
+
 		public void DrawColorBox(Texture gradientTex, Color col)
 		{
 			if (!GUI.enabled)
@@ -1095,6 +1150,7 @@ namespace UnityEditor
 			}
 			GUILayout.EndVertical();
 		}
+
 		private bool IsConstrained()
 		{
 			ClothSkinningCoefficient[] coefficients = this.cloth.coefficients;
@@ -1113,6 +1169,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		private void VertexEditing(UnityEngine.Object unused, SceneView sceneView)
 		{
 			GUILayout.BeginVertical(new GUILayoutOption[]

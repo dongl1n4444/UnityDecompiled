@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Events;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(TextureImporter))]
@@ -16,35 +17,49 @@ namespace UnityEditor
 			NormalMap,
 			LightMap
 		}
+
 		[Serializable]
 		protected class PlatformSetting
 		{
 			[SerializeField]
 			public string name;
+
 			[SerializeField]
 			private bool m_Overridden;
+
 			[SerializeField]
 			private bool m_OverriddenIsDifferent;
+
 			[SerializeField]
 			private int m_MaxTextureSize;
+
 			[SerializeField]
 			private bool m_MaxTextureSizeIsDifferent;
+
 			[SerializeField]
 			private int m_CompressionQuality;
+
 			[SerializeField]
 			private bool m_CompressionQualityIsDifferent;
+
 			[SerializeField]
 			private TextureImporterFormat[] m_TextureFormatArray;
+
 			[SerializeField]
 			private bool m_TextureFormatIsDifferent;
+
 			[SerializeField]
 			public BuildTarget m_Target;
+
 			[SerializeField]
 			private TextureImporter[] m_Importers;
+
 			[SerializeField]
 			private bool m_HasChanged;
+
 			[SerializeField]
 			private TextureImporterInspector m_Inspector;
+
 			public bool overridden
 			{
 				get
@@ -52,6 +67,7 @@ namespace UnityEditor
 					return this.m_Overridden;
 				}
 			}
+
 			public bool overriddenIsDifferent
 			{
 				get
@@ -59,6 +75,7 @@ namespace UnityEditor
 					return this.m_OverriddenIsDifferent;
 				}
 			}
+
 			public bool allAreOverridden
 			{
 				get
@@ -66,6 +83,7 @@ namespace UnityEditor
 					return this.isDefault || (this.m_Overridden && !this.m_OverriddenIsDifferent);
 				}
 			}
+
 			public int maxTextureSize
 			{
 				get
@@ -73,6 +91,7 @@ namespace UnityEditor
 					return this.m_MaxTextureSize;
 				}
 			}
+
 			public bool maxTextureSizeIsDifferent
 			{
 				get
@@ -80,6 +99,7 @@ namespace UnityEditor
 					return this.m_MaxTextureSizeIsDifferent;
 				}
 			}
+
 			public int compressionQuality
 			{
 				get
@@ -87,6 +107,7 @@ namespace UnityEditor
 					return this.m_CompressionQuality;
 				}
 			}
+
 			public bool compressionQualityIsDifferent
 			{
 				get
@@ -94,6 +115,7 @@ namespace UnityEditor
 					return this.m_CompressionQualityIsDifferent;
 				}
 			}
+
 			public TextureImporterFormat[] textureFormats
 			{
 				get
@@ -101,6 +123,7 @@ namespace UnityEditor
 					return this.m_TextureFormatArray;
 				}
 			}
+
 			public bool textureFormatIsDifferent
 			{
 				get
@@ -108,6 +131,7 @@ namespace UnityEditor
 					return this.m_TextureFormatIsDifferent;
 				}
 			}
+
 			public TextureImporter[] importers
 			{
 				get
@@ -115,6 +139,7 @@ namespace UnityEditor
 					return this.m_Importers;
 				}
 			}
+
 			public bool isDefault
 			{
 				get
@@ -122,15 +147,15 @@ namespace UnityEditor
 					return this.name == string.Empty;
 				}
 			}
+
 			public PlatformSetting(string name, BuildTarget target, TextureImporterInspector inspector)
 			{
 				this.name = name;
 				this.m_Target = target;
 				this.m_Inspector = inspector;
 				this.m_Overridden = false;
-				this.m_Importers = (
-					from x in inspector.targets
-					select x as TextureImporter).ToArray<TextureImporter>();
+				this.m_Importers = (from x in inspector.targets
+				select x as TextureImporter).ToArray<TextureImporter>();
 				this.m_TextureFormatArray = new TextureImporterFormat[this.importers.Length];
 				for (int i = 0; i < this.importers.Length; i++)
 				{
@@ -179,24 +204,28 @@ namespace UnityEditor
 				}
 				this.Sync();
 			}
+
 			public void SetOverriddenForAll(bool overridden)
 			{
 				this.m_Overridden = overridden;
 				this.m_OverriddenIsDifferent = false;
 				this.m_HasChanged = true;
 			}
+
 			public void SetMaxTextureSizeForAll(int maxTextureSize)
 			{
 				this.m_MaxTextureSize = maxTextureSize;
 				this.m_MaxTextureSizeIsDifferent = false;
 				this.m_HasChanged = true;
 			}
+
 			public void SetCompressionQualityForAll(int quality)
 			{
 				this.m_CompressionQuality = quality;
 				this.m_CompressionQualityIsDifferent = false;
 				this.m_HasChanged = true;
 			}
+
 			public void SetTextureFormatForAll(TextureImporterFormat format)
 			{
 				for (int i = 0; i < this.m_TextureFormatArray.Length; i++)
@@ -206,6 +235,7 @@ namespace UnityEditor
 				this.m_TextureFormatIsDifferent = false;
 				this.m_HasChanged = true;
 			}
+
 			public bool SupportsFormat(TextureImporterFormat format, TextureImporter importer)
 			{
 				TextureImporterSettings settings = this.GetSettings(importer);
@@ -213,41 +243,47 @@ namespace UnityEditor
 				int[] array;
 				switch (target)
 				{
-				case BuildTarget.iOS:
-					array = TextureImporterInspector.kTextureFormatsValueiPhone;
-					goto IL_C4;
-				case BuildTarget.PS3:
-				case BuildTarget.XBOX360:
-				case (BuildTarget)12:
-					IL_30:
-					if (target == BuildTarget.BB10)
+				case BuildTarget.BlackBerry:
+					array = TextureImporterInspector.kTextureFormatsValueBB10;
+					goto IL_F3;
+				case BuildTarget.Tizen:
+					array = TextureImporterInspector.kTextureFormatsValueTizen;
+					goto IL_F3;
+				case BuildTarget.PSP2:
+				case BuildTarget.PS4:
+				case BuildTarget.PSM:
+				case BuildTarget.XboxOne:
+				case BuildTarget.Nintendo3DS:
+					IL_40:
+					switch (target)
 					{
-						array = TextureImporterInspector.kTextureFormatsValueBB10;
-						goto IL_C4;
+					case BuildTarget.iOS:
+						array = TextureImporterInspector.kTextureFormatsValueiPhone;
+						goto IL_F3;
+					case BuildTarget.Android:
+						array = TextureImporterInspector.kTextureFormatsValueAndroid;
+						goto IL_F3;
+					case BuildTarget.StandaloneGLESEmu:
+						array = ((!settings.normalMap) ? TextureImporterInspector.kTextureFormatsValueGLESEmu : TextureImporterInspector.kNormalFormatsValueWeb);
+						goto IL_F3;
 					}
-					if (target == BuildTarget.Tizen)
-					{
-						array = TextureImporterInspector.kTextureFormatsValueTizen;
-						goto IL_C4;
-					}
-					if (target != BuildTarget.SamsungTV)
-					{
-						array = ((!settings.normalMap) ? TextureImporterInspector.kTextureFormatsValueWeb : TextureImporterInspector.kNormalFormatsValueWeb);
-						goto IL_C4;
-					}
+					array = ((!settings.normalMap) ? TextureImporterInspector.kTextureFormatsValueWeb : TextureImporterInspector.kNormalFormatsValueWeb);
+					goto IL_F3;
+				case BuildTarget.SamsungTV:
 					array = TextureImporterInspector.kTextureFormatsValueSTV;
-					goto IL_C4;
-				case BuildTarget.Android:
-					array = TextureImporterInspector.kTextureFormatsValueAndroid;
-					goto IL_C4;
-				case BuildTarget.StandaloneGLESEmu:
-					array = ((!settings.normalMap) ? TextureImporterInspector.kTextureFormatsValueGLESEmu : TextureImporterInspector.kNormalFormatsValueWeb);
-					goto IL_C4;
+					goto IL_F3;
+				case BuildTarget.WiiU:
+					array = TextureImporterInspector.kTextureFormatsValueWiiU;
+					goto IL_F3;
+				case BuildTarget.tvOS:
+					array = TextureImporterInspector.kTextureFormatsValuetvOS;
+					goto IL_F3;
 				}
-				goto IL_30;
-				IL_C4:
+				goto IL_40;
+				IL_F3:
 				return ((IList)array).Contains((int)format);
 			}
+
 			public TextureImporterSettings GetSettings(TextureImporter importer)
 			{
 				TextureImporterSettings textureImporterSettings = new TextureImporterSettings();
@@ -255,10 +291,17 @@ namespace UnityEditor
 				this.m_Inspector.GetSerializedPropertySettings(textureImporterSettings);
 				return textureImporterSettings;
 			}
+
+			public virtual void SetChanged()
+			{
+				this.m_HasChanged = true;
+			}
+
 			public virtual bool HasChanged()
 			{
 				return this.m_HasChanged;
 			}
+
 			public void Sync()
 			{
 				if (!this.isDefault && (!this.m_Overridden || this.m_OverriddenIsDifferent))
@@ -323,6 +366,7 @@ namespace UnityEditor
 					}
 				}
 			}
+
 			private bool GetOverridden(TextureImporter importer)
 			{
 				if (!this.m_OverriddenIsDifferent)
@@ -333,6 +377,7 @@ namespace UnityEditor
 				TextureImporterFormat textureImporterFormat;
 				return importer.GetPlatformTextureSettings(this.name, out num, out textureImporterFormat);
 			}
+
 			public void Apply()
 			{
 				for (int i = 0; i < this.importers.Length; i++)
@@ -368,9 +413,10 @@ namespace UnityEditor
 						{
 							flag = this.m_Overridden;
 						}
+						bool allowsAlphaSplitting = textureImporter.GetAllowsAlphaSplitting();
 						if (flag)
 						{
-							textureImporter.SetPlatformTextureSettings(this.name, maxTextureSize, this.m_TextureFormatArray[i], compressionQuality);
+							textureImporter.SetPlatformTextureSettings(this.name, maxTextureSize, this.m_TextureFormatArray[i], compressionQuality, allowsAlphaSplitting);
 						}
 						else
 						{
@@ -381,57 +427,81 @@ namespace UnityEditor
 					{
 						textureImporter.maxTextureSize = maxTextureSize;
 						textureImporter.textureFormat = this.m_TextureFormatArray[i];
+						textureImporter.compressionQuality = compressionQuality;
 					}
 				}
 			}
 		}
+
 		private enum CookieMode
 		{
 			Spot,
 			Directional,
 			Point
 		}
+
 		private class Styles
 		{
-			public readonly GUIContent textureType = EditorGUIUtility.TextContent("TextureImporter.TextureType");
+			public readonly GUIContent textureType = EditorGUIUtility.TextContent("Texture Type|What will this texture be used for?");
+
 			public readonly GUIContent[] textureTypeOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Image"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Normalmap"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.GUI"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Sprite"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Cursor"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Cubemap"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Cookie"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Lightmap"),
-				EditorGUIUtility.TextContent("TextureImporter.TextureType.Advanced")
+				EditorGUIUtility.TextContent("Texture|Texture is a normal image such as a diffuse texture or other."),
+				EditorGUIUtility.TextContent("Normal map|Texture is a bump or normal map."),
+				EditorGUIUtility.TextContent("Editor GUI and Legacy GUI|Texture is used for a GUI element."),
+				EditorGUIUtility.TextContent("Sprite (2D and UI)|Texture is used for a sprite."),
+				EditorGUIUtility.TextContent("Cursor|Texture is used for a cursor."),
+				EditorGUIUtility.TextContent("Cubemap|Texture is a cubemap."),
+				EditorGUIUtility.TextContent("Cookie|Texture is a cookie you put on a light."),
+				EditorGUIUtility.TextContent("Lightmap|Texture is a lightmap."),
+				EditorGUIUtility.TextContent("Advanced|All settings displayed.")
 			};
-			public readonly GUIContent generateAlphaFromGrayscale = EditorGUIUtility.TextContent("TextureImporter.GenerateAlphaFromGrayscale");
-			public readonly GUIContent cookieType = EditorGUIUtility.TextContent("TextureImporter.Cookie");
+
+			public readonly GUIContent filterMode = EditorGUIUtility.TextContent("Filter Mode");
+
+			public readonly GUIContent[] filterModeOptions = new GUIContent[]
+			{
+				EditorGUIUtility.TextContent("Point (no filter)"),
+				EditorGUIUtility.TextContent("Bilinear"),
+				EditorGUIUtility.TextContent("Trilinear")
+			};
+
+			public readonly GUIContent generateAlphaFromGrayscale = EditorGUIUtility.TextContent("Alpha from Grayscale|Generate texture's alpha channel from grayscale.");
+
+			public readonly GUIContent cookieType = EditorGUIUtility.TextContent("Light Type");
+
 			public readonly GUIContent[] cookieOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.Cookie.Spot"),
-				EditorGUIUtility.TextContent("TextureImporter.Cookie.Directional"),
-				EditorGUIUtility.TextContent("TextureImporter.Cookie.Point")
+				EditorGUIUtility.TextContent("Spotlight"),
+				EditorGUIUtility.TextContent("Directional"),
+				EditorGUIUtility.TextContent("Point")
 			};
-			public readonly GUIContent generateFromBump = EditorGUIUtility.TextContent("TextureImporter.GenerateFromBump");
-			public readonly GUIContent generateBumpmap = EditorGUIUtility.TextContent("TextureImporter.GenerateBumpmap");
-			public readonly GUIContent bumpiness = EditorGUIUtility.TextContent("TextureImporter.Bumpiness");
-			public readonly GUIContent bumpFiltering = EditorGUIUtility.TextContent("TextureImporter.BumpFiltering");
+
+			public readonly GUIContent generateFromBump = EditorGUIUtility.TextContent("Create from Grayscale|The grayscale of the image is used as a heightmap for generating the normal map.");
+
+			public readonly GUIContent generateBumpmap = EditorGUIUtility.TextContent("Create bump map");
+
+			public readonly GUIContent bumpiness = EditorGUIUtility.TextContent("Bumpiness");
+
+			public readonly GUIContent bumpFiltering = EditorGUIUtility.TextContent("Filtering");
+
 			public readonly GUIContent[] bumpFilteringOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.BumpFiltering.Sharp"),
-				EditorGUIUtility.TextContent("TextureImporter.BumpFiltering.Smooth")
+				EditorGUIUtility.TextContent("Sharp"),
+				EditorGUIUtility.TextContent("Smooth")
 			};
-			public readonly GUIContent cubemap = EditorGUIUtility.TextContent("TextureImporter.RefMap");
+
+			public readonly GUIContent cubemap = EditorGUIUtility.TextContent("Mapping");
+
 			public readonly GUIContent[] cubemapOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.RefMap.None"),
-				EditorGUIUtility.TextContent("TextureImporter.RefMap.Auto"),
-				EditorGUIUtility.TextContent("TextureImporter.RefMap.FullCubemap"),
-				EditorGUIUtility.TextContent("TextureImporter.RefMap.Cylindrical"),
-				EditorGUIUtility.TextContent("TextureImporter.RefMap.Sphere")
+				EditorGUIUtility.TextContent("None"),
+				EditorGUIUtility.TextContent("Auto"),
+				EditorGUIUtility.TextContent("6 Frames Layout (Cubic Environment)|Texture contains 6 images arranged in one of the standard cubemap layouts - cross or sequence (+x,-x, +y, -y, +z, -z). Texture can be in vertical or horizontal orientation."),
+				EditorGUIUtility.TextContent("Latitude-Longitude Layout (Cylindrical)|Texture contains an image of a ball unwrapped such that latitude and longitude are mapped to horizontal and vertical dimensions (as on a globe)."),
+				EditorGUIUtility.TextContent("Mirrored Ball (Spheremap)|Texture contains an image of a mirrored ball.")
 			};
+
 			public readonly int[] cubemapValues = new int[]
 			{
 				0,
@@ -440,115 +510,178 @@ namespace UnityEditor
 				2,
 				1
 			};
-			public readonly GUIContent cubemapConvolution = EditorGUIUtility.TextContent("TextureImporter.CubemapConvolution");
+
+			public readonly GUIContent cubemapConvolution = EditorGUIUtility.TextContent("Convolution Type");
+
 			public readonly GUIContent[] cubemapConvolutionOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.CubemapConvolution.None"),
-				EditorGUIUtility.TextContent("TextureImporter.CubemapConvolution.Specular"),
-				EditorGUIUtility.TextContent("TextureImporter.CubemapConvolution.Diffuse")
+				EditorGUIUtility.TextContent("None"),
+				EditorGUIUtility.TextContent("Specular (Glossy Reflection)|Convolve cubemap for specular reflections with varying smoothness (Glossy Reflections)."),
+				EditorGUIUtility.TextContent("Diffuse (Irradiance)|Convolve cubemap for diffuse-only reflection (Irradiance Cubemap).")
 			};
+
 			public readonly int[] cubemapConvolutionValues = new int[]
 			{
 				0,
 				1,
 				2
 			};
-			public readonly GUIContent cubemapConvolutionSimple = EditorGUIUtility.TextContent("TextureImporter.CubemapConvolution.SpecularSimple");
-			public readonly GUIContent cubemapConvolutionSteps = EditorGUIUtility.TextContent("TextureImporter.CubemapConvolutionSteps");
-			public readonly GUIContent cubemapConvolutionExp = EditorGUIUtility.TextContent("TextureImporter.CubemapConvolutionExp");
-			public readonly GUIContent seamlessCubemap = EditorGUIUtility.TextContent("TextureImporter.SeamlessCubemap");
-			public readonly GUIContent maxSize = EditorGUIUtility.TextContent("TextureImporter.MaxSize");
-			public readonly GUIContent textureFormat = EditorGUIUtility.TextContent("TextureImporter.TextureFormat");
-			public readonly string[] textureFormatOptions = new string[]
+
+			public readonly GUIContent cubemapConvolutionSimple = EditorGUIUtility.TextContent("Glossy Reflection");
+
+			public readonly GUIContent cubemapConvolutionSteps = EditorGUIUtility.TextContent("Steps|Number of smoothness steps represented in mip maps of the cubemap.");
+
+			public readonly GUIContent cubemapConvolutionExp = EditorGUIUtility.TextContent("Exponent|Defines smoothness curve (x^exponent) for convolution.");
+
+			public readonly GUIContent seamlessCubemap = EditorGUIUtility.TextContent("Fixup Edge Seams|Enable if this texture is used for glossy reflections.");
+
+			public readonly GUIContent maxSize = EditorGUIUtility.TextContent("Max Size|Textures larger than this will be scaled down.");
+
+			public readonly GUIContent textureFormat = EditorGUIUtility.TextContent("Format");
+
+			public readonly GUIContent[] textureFormatOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.TextureFormat.Compressed").text,
-				EditorGUIUtility.TextContent("TextureImporter.TextureFormat.16 bit").text,
-				EditorGUIUtility.TextContent("TextureImporter.TextureFormat.Truecolor").text
+				EditorGUIUtility.TextContent("Compressed"),
+				EditorGUIUtility.TextContent("16 bits"),
+				EditorGUIUtility.TextContent("Truecolor"),
+				EditorGUIUtility.TextContent("Crunched")
 			};
-			public readonly GUIContent defaultPlatform = EditorGUIUtility.TextContent("TextureImporter.Platforms.Default");
-			public readonly GUIContent mipmapFadeOutToggle = EditorGUIUtility.TextContent("TextureImporter.MipmapFadeToggle");
-			public readonly GUIContent mipmapFadeOut = EditorGUIUtility.TextContent("TextureImporter.MipmapFade");
-			public readonly GUIContent readWrite = EditorGUIUtility.TextContent("TextureImporter.ReadWrite");
-			public readonly GUIContent rgbmEncoding = EditorGUIUtility.TextContent("TextureImporter.RGBMEncoding");
+
+			public readonly GUIContent defaultPlatform = EditorGUIUtility.TextContent("Default");
+
+			public readonly GUIContent mipmapFadeOutToggle = EditorGUIUtility.TextContent("Fadeout Mip Maps");
+
+			public readonly GUIContent mipmapFadeOut = EditorGUIUtility.TextContent("Fade Range");
+
+			public readonly GUIContent readWrite = EditorGUIUtility.TextContent("Read/Write Enabled|Enable to be able to access the raw pixel data from code.");
+
+			public readonly GUIContent rgbmEncoding = EditorGUIUtility.TextContent("Encode as RGBM|Encode texture as RGBM (for HDR textures).");
+
 			public readonly GUIContent[] rgbmEncodingOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.RGBMEncoding.Auto"),
-				EditorGUIUtility.TextContent("TextureImporter.RGBMEncoding.On"),
-				EditorGUIUtility.TextContent("TextureImporter.RGBMEncoding.Off"),
-				EditorGUIUtility.TextContent("TextureImporter.RGBMEncoding.Encoded")
+				EditorGUIUtility.TextContent("Auto"),
+				EditorGUIUtility.TextContent("On"),
+				EditorGUIUtility.TextContent("Off"),
+				EditorGUIUtility.TextContent("Encoded")
 			};
-			public readonly GUIContent generateMipMaps = EditorGUIUtility.TextContent("TextureImporter.GenerateMipMaps");
-			public readonly GUIContent mipMapsInLinearSpace = EditorGUIUtility.TextContent("TextureImporter.MipMapsInLinearSpace");
-			public readonly GUIContent linearTexture = EditorGUIUtility.TextContent("TextureImporter.LinearTexture");
-			public readonly GUIContent borderMipMaps = EditorGUIUtility.TextContent("TextureImporter.BorderMipMaps");
-			public readonly GUIContent mipMapFilter = EditorGUIUtility.TextContent("TextureImporter.MipMapFilter");
+
+			public readonly GUIContent generateMipMaps = EditorGUIUtility.TextContent("Generate Mip Maps");
+
+			public readonly GUIContent mipMapsInLinearSpace = EditorGUIUtility.TextContent("In Linear Space|Perform mip map generation in linear space.");
+
+			public readonly GUIContent linearTexture = EditorGUIUtility.TextContent("Bypass sRGB Sampling|Texture will not be converted from gamma space to linear when sampled. Enable for IMGUI textures and non-color textures.");
+
+			public readonly GUIContent borderMipMaps = EditorGUIUtility.TextContent("Border Mip Maps");
+
+			public readonly GUIContent mipMapFilter = EditorGUIUtility.TextContent("Mip Map Filtering");
+
 			public readonly GUIContent[] mipMapFilterOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.MipMapFilterOptions.Box"),
-				EditorGUIUtility.TextContent("TextureImporter.MipMapFilterOptions.Kaiser")
+				EditorGUIUtility.TextContent("Box"),
+				EditorGUIUtility.TextContent("Kaiser")
 			};
-			public readonly GUIContent normalmap = EditorGUIUtility.TextContent("TextureImporter.NormalMap");
-			public readonly GUIContent npot = EditorGUIUtility.TextContent("TextureImporter.Npot");
-			public readonly GUIContent generateCubemap = EditorGUIUtility.TextContent("TextureImporter.GenerateCubemap");
-			public readonly GUIContent lightmap = EditorGUIUtility.TextContent("TextureImporter.Lightmap");
-			public readonly GUIContent compressionQuality = EditorGUIUtility.TextContent("TextureImporter.CompressionQuality");
+
+			public readonly GUIContent normalmap = EditorGUIUtility.TextContent("Normal Map|Enable if this texture is a normal map baked out of a 3D package.");
+
+			public readonly GUIContent npot = EditorGUIUtility.TextContent("Non Power of 2|How non-power-of-two textures are scaled on import.");
+
+			public readonly GUIContent generateCubemap = EditorGUIUtility.TextContent("Generate Cubemap");
+
+			public readonly GUIContent lightmap = EditorGUIUtility.TextContent("Lightmap|Enable if this is a lightmap (best if stored in EXR format).");
+
+			public readonly GUIContent compressionQuality = EditorGUIUtility.TextContent("Compression Quality");
+
+			public readonly GUIContent compressionQualitySlider = EditorGUIUtility.TextContent("Compression Quality|Use the slider to adjust compression quality from 0 (Fastest) to 100 (Best)");
+
 			public readonly GUIContent[] mobileCompressionQualityOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.CompressionQualityOptions.Fast"),
-				EditorGUIUtility.TextContent("TextureImporter.CompressionQualityOptions.Normal"),
-				EditorGUIUtility.TextContent("TextureImporter.CompressionQualityOptions.Best")
+				EditorGUIUtility.TextContent("Fast"),
+				EditorGUIUtility.TextContent("Normal"),
+				EditorGUIUtility.TextContent("Best")
 			};
-			public readonly GUIContent spriteMode = EditorGUIUtility.TextContent("TextureImporter.SpriteMode");
+
+			public readonly GUIContent spriteMode = EditorGUIUtility.TextContent("Sprite Mode");
+
 			public readonly GUIContent[] spriteModeOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.SpriteModeOptions.SingleSprite"),
-				EditorGUIUtility.TextContent("TextureImporter.SpriteModeOptions.Multiple")
+				EditorGUIUtility.TextContent("Single"),
+				EditorGUIUtility.TextContent("Multiple"),
+				EditorGUIUtility.TextContent("Polygon")
 			};
+
 			public readonly GUIContent[] spriteModeOptionsAdvanced = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.SpriteModeOptions.None"),
-				EditorGUIUtility.TextContent("TextureImporter.SpriteModeOptions.SingleSprite"),
-				EditorGUIUtility.TextContent("TextureImporter.SpriteModeOptions.Multiple")
+				EditorGUIUtility.TextContent("None"),
+				EditorGUIUtility.TextContent("Single"),
+				EditorGUIUtility.TextContent("Multiple"),
+				EditorGUIUtility.TextContent("Polygon")
 			};
+
 			public readonly GUIContent[] spriteMeshTypeOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("TextureImporter.SpriteMeshTypeOptions.FullRect"),
-				EditorGUIUtility.TextContent("TextureImporter.SpriteMeshTypeOptions.Tight")
+				EditorGUIUtility.TextContent("Full Rect"),
+				EditorGUIUtility.TextContent("Tight")
 			};
-			public readonly GUIContent spritePackingTag = EditorGUIUtility.TextContent("TextureImporter.SpritePackingTag");
-			public readonly GUIContent spritePixelsPerUnit = EditorGUIUtility.TextContent("TextureImporter.SpritePixelsPerUnit");
-			public readonly GUIContent spriteExtrude = EditorGUIUtility.TextContent("TextureImporter.SpriteExtrude");
-			public readonly GUIContent spriteMeshType = EditorGUIUtility.TextContent("TextureImporter.SpriteMeshType");
-			public readonly GUIContent spriteAlignment = EditorGUIUtility.TextContent("SpriteInspector.Pivot");
+
+			public readonly GUIContent spritePackingTag = EditorGUIUtility.TextContent("Packing Tag|Tag for the Sprite Packing system.");
+
+			public readonly GUIContent spritePixelsPerUnit = EditorGUIUtility.TextContent("Pixels Per Unit|How many pixels in the sprite correspond to one unit in the world.");
+
+			public readonly GUIContent spriteExtrude = EditorGUIUtility.TextContent("Extrude Edges|How much empty area to leave around the sprite in the generated mesh.");
+
+			public readonly GUIContent spriteMeshType = EditorGUIUtility.TextContent("Mesh Type|Type of sprite mesh to generate.");
+
+			public readonly GUIContent spriteAlignment = EditorGUIUtility.TextContent("Pivot|Sprite pivot point in its localspace. May be used for syncing animation frames of different sizes.");
+
 			public readonly GUIContent[] spriteAlignmentOptions = new GUIContent[]
 			{
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.Center"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.TopLeft"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.Top"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.TopRight"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.Left"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.Right"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.BottomLeft"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.Bottom"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.BottomRight"),
-				EditorGUIUtility.TextContent("SpriteInspector.Pivot.Custom")
+				EditorGUIUtility.TextContent("Center"),
+				EditorGUIUtility.TextContent("Top Left"),
+				EditorGUIUtility.TextContent("Top"),
+				EditorGUIUtility.TextContent("Top Right"),
+				EditorGUIUtility.TextContent("Left"),
+				EditorGUIUtility.TextContent("Right"),
+				EditorGUIUtility.TextContent("Bottom Left"),
+				EditorGUIUtility.TextContent("Bottom"),
+				EditorGUIUtility.TextContent("Bottom Right"),
+				EditorGUIUtility.TextContent("Custom")
 			};
-			public readonly GUIContent alphaIsTransparency = EditorGUIUtility.TextContent("TextureImporter.AlphaIsTransparency");
+
+			public readonly GUIContent alphaIsTransparency = EditorGUIUtility.TextContent("Alpha Is Transparency");
+
+			public readonly GUIContent etc1Compression = EditorGUIUtility.TextContent("Compress using ETC1 (split alpha channel)|This texture will be placed in an atlas that will be compressed using ETC1 compression, provided that the Texture Compression for Android build settings is set to 'ETC (default)'.");
 		}
+
 		private SerializedProperty m_TextureType;
+
 		[SerializeField]
 		protected List<TextureImporterInspector.PlatformSetting> m_PlatformSettings;
+
 		private static int[] s_TextureFormatsValueAll;
+
 		private static readonly int[] kTextureFormatsValueWeb = new int[]
 		{
 			10,
 			12,
+			28,
+			29,
 			7,
 			3,
 			1,
 			2,
 			5
 		};
+
+		private static readonly int[] kTextureFormatsValueWiiU = new int[]
+		{
+			10,
+			12,
+			7,
+			1,
+			4,
+			13
+		};
+
 		private static readonly int[] kTextureFormatsValueiPhone = new int[]
 		{
 			30,
@@ -561,10 +694,38 @@ namespace UnityEditor
 			13,
 			4
 		};
+
+		private static readonly int[] kTextureFormatsValuetvOS = new int[]
+		{
+			30,
+			31,
+			32,
+			33,
+			48,
+			49,
+			50,
+			51,
+			52,
+			53,
+			54,
+			55,
+			56,
+			57,
+			58,
+			59,
+			7,
+			3,
+			1,
+			13,
+			4
+		};
+
 		private static readonly int[] kTextureFormatsValueAndroid = new int[]
 		{
 			10,
 			12,
+			28,
+			29,
 			34,
 			45,
 			46,
@@ -593,6 +754,7 @@ namespace UnityEditor
 			13,
 			4
 		};
+
 		private static readonly int[] kTextureFormatsValueBB10 = new int[]
 		{
 			34,
@@ -606,6 +768,7 @@ namespace UnityEditor
 			13,
 			4
 		};
+
 		private static readonly int[] kTextureFormatsValueTizen = new int[]
 		{
 			34,
@@ -615,6 +778,7 @@ namespace UnityEditor
 			13,
 			4
 		};
+
 		private static readonly int[] kTextureFormatsValueSTV = new int[]
 		{
 			34,
@@ -624,6 +788,7 @@ namespace UnityEditor
 			13,
 			4
 		};
+
 		private static readonly int[] kTextureFormatsValueGLESEmu = new int[]
 		{
 			34,
@@ -652,15 +817,21 @@ namespace UnityEditor
 			13,
 			5
 		};
+
 		private static int[] s_NormalFormatsValueAll;
+
 		private static readonly int[] kNormalFormatsValueWeb = new int[]
 		{
 			12,
+			29,
 			2,
 			5
 		};
+
 		private static readonly TextureImporterFormat[] kFormatsWithCompressionSettings = new TextureImporterFormat[]
 		{
+			TextureImporterFormat.DXT1Crunched,
+			TextureImporterFormat.DXT5Crunched,
 			TextureImporterFormat.PVRTC_RGB2,
 			TextureImporterFormat.PVRTC_RGB4,
 			TextureImporterFormat.PVRTC_RGBA2,
@@ -684,22 +855,43 @@ namespace UnityEditor
 			TextureImporterFormat.ASTC_RGBA_10x10,
 			TextureImporterFormat.ASTC_RGBA_12x12
 		};
+
 		private static string[] s_TextureFormatStringsAll;
+
+		private static string[] s_TextureFormatStringsWiiU;
+
 		private static string[] s_TextureFormatStringsGLESEmu;
+
 		private static string[] s_TextureFormatStringsiPhone;
+
+		private static string[] s_TextureFormatStringstvOS;
+
 		private static string[] s_TextureFormatStringsAndroid;
+
 		private static string[] s_TextureFormatStringsBB10;
+
 		private static string[] s_TextureFormatStringsTizen;
+
 		private static string[] s_TextureFormatStringsSTV;
+
 		private static string[] s_TextureFormatStringsWeb;
+
 		private static string[] s_NormalFormatStringsAll;
+
 		private static string[] s_NormalFormatStringsWeb;
+
 		private readonly AnimBool m_ShowBumpGenerationSettings = new AnimBool();
+
 		private readonly AnimBool m_ShowCookieCubeMapSettings = new AnimBool();
+
 		private readonly AnimBool m_ShowConvolutionCubeMapSettings = new AnimBool();
+
 		private readonly AnimBool m_ShowGenericSpriteSettings = new AnimBool();
+
 		private readonly AnimBool m_ShowManualAtlasGenerationSettings = new AnimBool();
+
 		private readonly GUIContent m_EmptyContent = new GUIContent(" ");
+
 		private readonly int[] m_TextureTypeValues = new int[]
 		{
 			0,
@@ -712,47 +904,87 @@ namespace UnityEditor
 			6,
 			5
 		};
+
 		private readonly int[] m_TextureFormatValues = new int[]
 		{
 			0,
 			1,
-			2
+			2,
+			4
 		};
+
+		private readonly int[] m_FilterModeOptions = (int[])Enum.GetValues(typeof(FilterMode));
+
 		private string m_ImportWarning;
+
 		private static TextureImporterInspector.Styles s_Styles;
+
 		private SerializedProperty m_GrayscaleToAlpha;
+
 		private SerializedProperty m_ConvertToNormalMap;
+
 		private SerializedProperty m_NormalMap;
+
 		private SerializedProperty m_HeightScale;
+
 		private SerializedProperty m_NormalMapFilter;
+
 		private SerializedProperty m_GenerateCubemap;
+
 		private SerializedProperty m_CubemapConvolution;
+
 		private SerializedProperty m_CubemapConvolutionSteps;
+
 		private SerializedProperty m_CubemapConvolutionExponent;
+
 		private SerializedProperty m_SeamlessCubemap;
+
 		private SerializedProperty m_BorderMipMap;
+
 		private SerializedProperty m_NPOTScale;
+
 		private SerializedProperty m_IsReadable;
+
 		private SerializedProperty m_LinearTexture;
+
 		private SerializedProperty m_RGBM;
+
 		private SerializedProperty m_EnableMipMap;
+
 		private SerializedProperty m_GenerateMipsInLinearSpace;
+
 		private SerializedProperty m_MipMapMode;
+
 		private SerializedProperty m_FadeOut;
+
 		private SerializedProperty m_MipMapFadeDistanceStart;
+
 		private SerializedProperty m_MipMapFadeDistanceEnd;
+
 		private SerializedProperty m_Lightmap;
+
 		private SerializedProperty m_Aniso;
+
 		private SerializedProperty m_FilterMode;
+
 		private SerializedProperty m_WrapMode;
+
 		private SerializedProperty m_SpriteMode;
+
 		private SerializedProperty m_SpritePackingTag;
+
 		private SerializedProperty m_SpritePixelsToUnits;
+
 		private SerializedProperty m_SpriteExtrude;
+
 		private SerializedProperty m_SpriteMeshType;
+
 		private SerializedProperty m_Alignment;
+
 		private SerializedProperty m_SpritePivot;
+
 		private SerializedProperty m_AlphaIsTransparency;
+
 		private static readonly string[] kMaxTextureSizeStrings = new string[]
 		{
 			"32",
@@ -765,6 +997,7 @@ namespace UnityEditor
 			"4096",
 			"8192"
 		};
+
 		private static readonly int[] kMaxTextureSizeValues = new int[]
 		{
 			32,
@@ -777,6 +1010,7 @@ namespace UnityEditor
 			4096,
 			8192
 		};
+
 		private TextureImporterType textureType
 		{
 			get
@@ -792,6 +1026,7 @@ namespace UnityEditor
 				return (TextureImporterType)this.m_TextureType.intValue;
 			}
 		}
+
 		private bool textureTypeHasMultipleDifferentValues
 		{
 			get
@@ -817,6 +1052,7 @@ namespace UnityEditor
 				return false;
 			}
 		}
+
 		internal override bool showImportedObject
 		{
 			get
@@ -824,6 +1060,7 @@ namespace UnityEditor
 				return false;
 			}
 		}
+
 		private static int[] TextureFormatsValueAll
 		{
 			get
@@ -847,44 +1084,53 @@ namespace UnityEditor
 					{
 					case BuildTarget.iOS:
 						flag2 = true;
-						goto IL_C1;
+						goto IL_DC;
 					case BuildTarget.PS3:
 					case BuildTarget.XBOX360:
 					case (BuildTarget)12:
 						IL_60:
-						if (defaultTarget == BuildTarget.BB10)
+						switch (defaultTarget)
 						{
+						case BuildTarget.SamsungTV:
+							flag = true;
+							goto IL_DC;
+						case BuildTarget.Nintendo3DS:
+						case BuildTarget.WiiU:
+							IL_7A:
+							if (defaultTarget == BuildTarget.BlackBerry)
+							{
+								flag2 = true;
+								flag = true;
+								goto IL_DC;
+							}
+							if (defaultTarget != BuildTarget.Tizen)
+							{
+								goto IL_DC;
+							}
+							flag = true;
+							goto IL_DC;
+						case BuildTarget.tvOS:
 							flag2 = true;
-							flag = true;
-							goto IL_C1;
+							flag5 = true;
+							goto IL_DC;
 						}
-						if (defaultTarget == BuildTarget.Tizen)
-						{
-							flag = true;
-							goto IL_C1;
-						}
-						if (defaultTarget != BuildTarget.SamsungTV)
-						{
-							goto IL_C1;
-						}
-						flag = true;
-						goto IL_C1;
+						goto IL_7A;
 					case BuildTarget.Android:
 						flag2 = true;
 						flag = true;
 						flag3 = true;
 						flag4 = true;
 						flag5 = true;
-						goto IL_C1;
+						goto IL_DC;
 					case BuildTarget.StandaloneGLESEmu:
 						flag2 = true;
 						flag = true;
 						flag4 = true;
 						flag5 = true;
-						goto IL_C1;
+						goto IL_DC;
 					}
 					goto IL_60;
-					IL_C1:;
+					IL_DC:;
 				}
 				List<int> list = new List<int>();
 				list.AddRange(new int[]
@@ -952,12 +1198,16 @@ namespace UnityEditor
 					3,
 					1,
 					5,
-					4
+					4,
+					-5,
+					28,
+					29
 				});
 				TextureImporterInspector.s_TextureFormatsValueAll = list.ToArray();
 				return TextureImporterInspector.s_TextureFormatsValueAll;
 			}
 		}
+
 		private static int[] NormalFormatsValueAll
 		{
 			get
@@ -978,39 +1228,46 @@ namespace UnityEditor
 					case BuildTarget.iOS:
 						flag2 = true;
 						flag = true;
-						goto IL_A3;
+						goto IL_B8;
 					case BuildTarget.PS3:
 					case BuildTarget.XBOX360:
 					case (BuildTarget)12:
 						IL_50:
-						if (defaultTarget == BuildTarget.BB10)
+						if (defaultTarget == BuildTarget.BlackBerry)
 						{
 							flag2 = true;
 							flag = true;
-							goto IL_A3;
+							goto IL_B8;
 						}
-						if (defaultTarget != BuildTarget.Tizen)
+						if (defaultTarget == BuildTarget.Tizen)
 						{
-							goto IL_A3;
+							flag = true;
+							goto IL_B8;
 						}
+						if (defaultTarget != BuildTarget.tvOS)
+						{
+							goto IL_B8;
+						}
+						flag2 = true;
 						flag = true;
-						goto IL_A3;
+						flag5 = true;
+						goto IL_B8;
 					case BuildTarget.Android:
 						flag2 = true;
 						flag3 = true;
 						flag = true;
 						flag4 = true;
 						flag5 = true;
-						goto IL_A3;
+						goto IL_B8;
 					case BuildTarget.StandaloneGLESEmu:
 						flag2 = true;
 						flag = true;
 						flag4 = true;
 						flag5 = true;
-						goto IL_A3;
+						goto IL_B8;
 					}
 					goto IL_50;
-					IL_A3:;
+					IL_B8:;
 				}
 				List<int> list = new List<int>();
 				list.AddRange(new int[]
@@ -1076,25 +1333,31 @@ namespace UnityEditor
 					2,
 					13,
 					-3,
-					4
+					4,
+					-5,
+					29
 				});
 				TextureImporterInspector.s_NormalFormatsValueAll = list.ToArray();
 				return TextureImporterInspector.s_NormalFormatsValueAll;
 			}
 		}
+
 		public new void OnDisable()
 		{
 			base.OnDisable();
 		}
+
 		internal static bool IsGLESMobileTargetPlatform(BuildTarget target)
 		{
-			return target == BuildTarget.iOS || target == BuildTarget.Android || target == BuildTarget.BB10 || target == BuildTarget.Tizen || target == BuildTarget.SamsungTV;
+			return target == BuildTarget.iOS || target == BuildTarget.Android || target == BuildTarget.BlackBerry || target == BuildTarget.Tizen || target == BuildTarget.SamsungTV || target == BuildTarget.tvOS;
 		}
+
 		private void UpdateImportWarning()
 		{
 			TextureImporter textureImporter = this.target as TextureImporter;
 			this.m_ImportWarning = ((!textureImporter) ? null : textureImporter.GetImportWarnings());
 		}
+
 		private void ToggleFromInt(SerializedProperty property, GUIContent label)
 		{
 			EditorGUI.BeginChangeCheck();
@@ -1106,10 +1369,12 @@ namespace UnityEditor
 				property.intValue = intValue;
 			}
 		}
+
 		private void EnumPopup(SerializedProperty property, Type type, GUIContent label)
 		{
 			EditorGUILayout.IntPopup(property, EditorGUIUtility.TempContent(Enum.GetNames(type)), Enum.GetValues(type) as int[], label, new GUILayoutOption[0]);
 		}
+
 		private void CacheSerializedProperties()
 		{
 			this.m_TextureType = base.serializedObject.FindProperty("m_TextureType");
@@ -1147,6 +1412,7 @@ namespace UnityEditor
 			this.m_SpritePivot = base.serializedObject.FindProperty("m_SpritePivot");
 			this.m_AlphaIsTransparency = base.serializedObject.FindProperty("m_AlphaIsTransparency");
 		}
+
 		public virtual void OnEnable()
 		{
 			this.CacheSerializedProperties();
@@ -1159,6 +1425,7 @@ namespace UnityEditor
 			this.m_ShowGenericSpriteSettings.value = (this.m_SpriteMode.intValue != 0);
 			this.m_ShowManualAtlasGenerationSettings.value = (this.m_SpriteMode.intValue == 2);
 		}
+
 		private void SetSerializedPropertySettings(TextureImporterSettings settings)
 		{
 			this.m_GrayscaleToAlpha.intValue = ((!settings.grayscaleToAlpha) ? 0 : 1);
@@ -1193,10 +1460,12 @@ namespace UnityEditor
 			this.m_Aniso.intValue = settings.aniso;
 			this.m_AlphaIsTransparency.intValue = ((!settings.alphaIsTransparency) ? 0 : 1);
 		}
+
 		private TextureImporterSettings GetSerializedPropertySettings()
 		{
 			return this.GetSerializedPropertySettings(new TextureImporterSettings());
 		}
+
 		private TextureImporterSettings GetSerializedPropertySettings(TextureImporterSettings settings)
 		{
 			if (!this.m_GrayscaleToAlpha.hasMultipleDifferentValues)
@@ -1329,6 +1598,7 @@ namespace UnityEditor
 			}
 			return settings;
 		}
+
 		public override void OnInspectorGUI()
 		{
 			if (TextureImporterInspector.s_Styles == null)
@@ -1387,6 +1657,7 @@ namespace UnityEditor
 			}
 			GUI.enabled = enabled;
 		}
+
 		private void PreviewableGUI()
 		{
 			EditorGUI.BeginChangeCheck();
@@ -1424,7 +1695,7 @@ namespace UnityEditor
 					}
 					if (flag)
 					{
-						GUIContent gUIContent = EditorGUIUtility.TextContent("TextureImporter.WrapWarning");
+						GUIContent gUIContent = EditorGUIUtility.TextContent("Graphics device doesn't support Repeat wrap mode on NPOT textures. Falling back to Clamp.");
 						EditorGUILayout.HelpBox(gUIContent.text, MessageType.Warning, true);
 					}
 				}
@@ -1443,13 +1714,13 @@ namespace UnityEditor
 					filterMode = FilterMode.Bilinear;
 				}
 			}
-			filterMode = (FilterMode)EditorGUILayout.EnumPopup(EditorGUIUtility.TempContent("Filter Mode"), filterMode, new GUILayoutOption[0]);
+			filterMode = (FilterMode)EditorGUILayout.IntPopup(TextureImporterInspector.s_Styles.filterMode, (int)filterMode, TextureImporterInspector.s_Styles.filterModeOptions, this.m_FilterModeOptions, new GUILayoutOption[0]);
 			EditorGUI.showMixedValue = false;
 			if (EditorGUI.EndChangeCheck())
 			{
 				this.m_FilterMode.intValue = (int)filterMode;
 			}
-			if (filterMode != FilterMode.Point && (this.m_EnableMipMap.intValue > 0 || this.textureType == TextureImporterType.Advanced) && this.textureType != TextureImporterType.Sprite)
+			if (filterMode != FilterMode.Point && (this.m_EnableMipMap.intValue > 0 || this.textureType == TextureImporterType.Advanced) && this.textureType != TextureImporterType.Sprite && this.textureType != TextureImporterType.Cubemap)
 			{
 				EditorGUI.BeginChangeCheck();
 				EditorGUI.showMixedValue = this.m_Aniso.hasMultipleDifferentValues;
@@ -1464,12 +1735,14 @@ namespace UnityEditor
 				{
 					this.m_Aniso.intValue = num;
 				}
+				TextureInspector.DoAnisoGlobalSettingNote(num);
 			}
 			if (EditorGUI.EndChangeCheck())
 			{
 				this.ApplySettingsToTexture();
 			}
 		}
+
 		private void ApplySettingsToTexture()
 		{
 			UnityEngine.Object[] targets = base.targets;
@@ -1492,6 +1765,7 @@ namespace UnityEditor
 			}
 			SceneView.RepaintAll();
 		}
+
 		private static bool CountImportersWithAlpha(UnityEngine.Object[] importers, out int count)
 		{
 			bool result;
@@ -1515,6 +1789,7 @@ namespace UnityEditor
 			}
 			return result;
 		}
+
 		private void DoAlphaIsTransparencyGUI()
 		{
 			int num;
@@ -1527,6 +1802,7 @@ namespace UnityEditor
 				EditorGUI.EndDisabledGroup();
 			}
 		}
+
 		private void ImageGUI()
 		{
 			TextureImporter x = this.target as TextureImporter;
@@ -1537,6 +1813,7 @@ namespace UnityEditor
 			this.ToggleFromInt(this.m_GrayscaleToAlpha, TextureImporterInspector.s_Styles.generateAlphaFromGrayscale);
 			this.DoAlphaIsTransparencyGUI();
 		}
+
 		private void BumpGUI()
 		{
 			this.ToggleFromInt(this.m_ConvertToNormalMap, TextureImporterInspector.s_Styles.generateFromBump);
@@ -1548,10 +1825,12 @@ namespace UnityEditor
 			}
 			EditorGUILayout.EndFadeGroup();
 		}
+
 		private void SpriteGUI()
 		{
 			this.SpriteGUI(true);
 		}
+
 		private void SpriteGUI(bool showMipMapControls)
 		{
 			EditorGUI.BeginChangeCheck();
@@ -1561,7 +1840,8 @@ namespace UnityEditor
 				{
 					0,
 					1,
-					2
+					2,
+					3
 				}, TextureImporterInspector.s_Styles.spriteMode, new GUILayoutOption[0]);
 			}
 			else
@@ -1569,7 +1849,8 @@ namespace UnityEditor
 				EditorGUILayout.IntPopup(this.m_SpriteMode, TextureImporterInspector.s_Styles.spriteModeOptions, new int[]
 				{
 					1,
-					2
+					2,
+					3
 				}, TextureImporterInspector.s_Styles.spriteMode, new GUILayoutOption[0]);
 			}
 			if (EditorGUI.EndChangeCheck())
@@ -1582,7 +1863,7 @@ namespace UnityEditor
 			{
 				EditorGUILayout.PropertyField(this.m_SpritePackingTag, TextureImporterInspector.s_Styles.spritePackingTag, new GUILayoutOption[0]);
 				EditorGUILayout.PropertyField(this.m_SpritePixelsToUnits, TextureImporterInspector.s_Styles.spritePixelsPerUnit, new GUILayoutOption[0]);
-				if (this.textureType == TextureImporterType.Advanced && Application.HasAdvancedLicense())
+				if (this.textureType == TextureImporterType.Advanced)
 				{
 					EditorGUILayout.IntPopup(this.m_SpriteMeshType, TextureImporterInspector.s_Styles.spriteMeshTypeOptions, new int[]
 					{
@@ -1606,13 +1887,21 @@ namespace UnityEditor
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button("Sprite Editor", new GUILayoutOption[0]))
 				{
-					bool flag = (this.target as TextureImporter).spriteImportMode != (SpriteImportMode)this.m_SpriteMode.intValue;
-					if (flag)
+					if (this.HasModified())
 					{
-						base.ApplyAndImport();
+						string text = "Unapplied import settings for '" + ((TextureImporter)this.target).assetPath + "'.\n";
+						text += "Apply and continue to sprite editor or cancel.";
+						if (EditorUtility.DisplayDialog("Unapplied import settings", text, "Apply", "Cancel"))
+						{
+							base.ApplyAndImport();
+							SpriteEditorWindow.GetWindow();
+							GUIUtility.ExitGUI();
+						}
 					}
-					SpriteEditorWindow.GetWindow();
-					GUIUtility.ExitGUI();
+					else
+					{
+						SpriteEditorWindow.GetWindow();
+					}
 				}
 				GUILayout.EndHorizontal();
 				EditorGUI.EndDisabledGroup();
@@ -1624,10 +1913,12 @@ namespace UnityEditor
 				this.ToggleFromInt(this.m_EnableMipMap, TextureImporterInspector.s_Styles.generateMipMaps);
 			}
 		}
+
 		private void CubemapGUI()
 		{
 			this.CubemapMappingGUI(false);
 		}
+
 		private void CubemapMappingGUI(bool advancedMode)
 		{
 			EditorGUI.showMixedValue = (this.m_GenerateCubemap.hasMultipleDifferentValues || this.m_SeamlessCubemap.hasMultipleDifferentValues);
@@ -1679,6 +1970,7 @@ namespace UnityEditor
 			EditorGUI.EndDisabledGroup();
 			EditorGUI.showMixedValue = false;
 		}
+
 		private void CookieGUI()
 		{
 			EditorGUI.BeginChangeCheck();
@@ -1687,16 +1979,13 @@ namespace UnityEditor
 			{
 				cookieMode = TextureImporterInspector.CookieMode.Spot;
 			}
+			else if (this.m_GenerateCubemap.intValue != 0)
+			{
+				cookieMode = TextureImporterInspector.CookieMode.Point;
+			}
 			else
 			{
-				if (this.m_GenerateCubemap.intValue != 0)
-				{
-					cookieMode = TextureImporterInspector.CookieMode.Point;
-				}
-				else
-				{
-					cookieMode = TextureImporterInspector.CookieMode.Directional;
-				}
+				cookieMode = TextureImporterInspector.CookieMode.Directional;
 			}
 			cookieMode = (TextureImporterInspector.CookieMode)EditorGUILayout.Popup(TextureImporterInspector.s_Styles.cookieType, (int)cookieMode, TextureImporterInspector.s_Styles.cookieOptions, new GUILayoutOption[0]);
 			if (EditorGUI.EndChangeCheck())
@@ -1711,6 +2000,7 @@ namespace UnityEditor
 			EditorGUILayout.EndFadeGroup();
 			this.ToggleFromInt(this.m_GrayscaleToAlpha, TextureImporterInspector.s_Styles.generateAlphaFromGrayscale);
 		}
+
 		private void SetCookieMode(TextureImporterInspector.CookieMode cm)
 		{
 			switch (cm)
@@ -1732,6 +2022,7 @@ namespace UnityEditor
 				break;
 			}
 		}
+
 		private void BeginToggleGroup(SerializedProperty property, GUIContent label)
 		{
 			EditorGUI.showMixedValue = property.hasMultipleDifferentValues;
@@ -1743,6 +2034,7 @@ namespace UnityEditor
 			}
 			EditorGUI.showMixedValue = false;
 		}
+
 		private void AdvancedGUI()
 		{
 			TextureImporter textureImporter = this.target as TextureImporter;
@@ -1766,12 +2058,9 @@ namespace UnityEditor
 			{
 				advancedTextureType = TextureImporterInspector.AdvancedTextureType.NormalMap;
 			}
-			else
+			else if (this.m_Lightmap.intValue > 0)
 			{
-				if (this.m_Lightmap.intValue > 0)
-				{
-					advancedTextureType = TextureImporterInspector.AdvancedTextureType.LightMap;
-				}
+				advancedTextureType = TextureImporterInspector.AdvancedTextureType.LightMap;
 			}
 			EditorGUI.BeginChangeCheck();
 			advancedTextureType = (TextureImporterInspector.AdvancedTextureType)EditorGUILayout.Popup("Import Type", (int)advancedTextureType, new string[]
@@ -1814,16 +2103,13 @@ namespace UnityEditor
 					this.SyncPlatformSettings();
 				}
 			}
-			else
+			else if (advancedTextureType == TextureImporterInspector.AdvancedTextureType.Default)
 			{
-				if (advancedTextureType == TextureImporterInspector.AdvancedTextureType.Default)
-				{
-					this.ToggleFromInt(this.m_GrayscaleToAlpha, TextureImporterInspector.s_Styles.generateAlphaFromGrayscale);
-					this.DoAlphaIsTransparencyGUI();
-					this.ToggleFromInt(this.m_LinearTexture, TextureImporterInspector.s_Styles.linearTexture);
-					EditorGUILayout.Popup(this.m_RGBM, TextureImporterInspector.s_Styles.rgbmEncodingOptions, TextureImporterInspector.s_Styles.rgbmEncoding, new GUILayoutOption[0]);
-					this.SpriteGUI(false);
-				}
+				this.ToggleFromInt(this.m_GrayscaleToAlpha, TextureImporterInspector.s_Styles.generateAlphaFromGrayscale);
+				this.DoAlphaIsTransparencyGUI();
+				this.ToggleFromInt(this.m_LinearTexture, TextureImporterInspector.s_Styles.linearTexture);
+				EditorGUILayout.Popup(this.m_RGBM, TextureImporterInspector.s_Styles.rgbmEncodingOptions, TextureImporterInspector.s_Styles.rgbmEncoding, new GUILayoutOption[0]);
+				this.SpriteGUI(false);
 			}
 			EditorGUI.indentLevel--;
 			this.ToggleFromInt(this.m_EnableMipMap, TextureImporterInspector.s_Styles.generateMipMaps);
@@ -1851,6 +2137,7 @@ namespace UnityEditor
 				EditorGUI.indentLevel--;
 			}
 		}
+
 		private void SyncPlatformSettings()
 		{
 			foreach (TextureImporterInspector.PlatformSetting current in this.m_PlatformSettings)
@@ -1858,31 +2145,44 @@ namespace UnityEditor
 				current.Sync();
 			}
 		}
+
 		private static string[] BuildTextureStrings(int[] texFormatValues)
 		{
 			string[] array = new string[texFormatValues.Length];
-			for (int i = 0; i < texFormatValues.Length; i++)
+			int i = 0;
+			while (i < texFormatValues.Length)
 			{
 				int num = texFormatValues[i];
 				int num2 = num;
-				switch (num2 + 3)
+				switch (num2 + 5)
 				{
 				case 0:
-					array[i] = "Automatic Truecolor";
+					array[i] = "Automatic Crunched";
 					break;
 				case 1:
+					goto IL_6B;
+				case 2:
+					array[i] = "Automatic Truecolor";
+					break;
+				case 3:
 					array[i] = "Automatic 16 bits";
 					break;
-				case 2:
+				case 4:
 					array[i] = "Automatic Compressed";
 					break;
 				default:
-					array[i] = " " + TextureUtil.GetTextureFormatString((TextureFormat)num);
-					break;
+					goto IL_6B;
 				}
+				IL_83:
+				i++;
+				continue;
+				IL_6B:
+				array[i] = " " + TextureUtil.GetTextureFormatString((TextureFormat)num);
+				goto IL_83;
 			}
 			return array;
 		}
+
 		private static TextureImporterFormat MakeTextureFormatHaveAlpha(TextureImporterFormat format)
 		{
 			switch (format)
@@ -1912,6 +2212,7 @@ namespace UnityEditor
 			}
 			goto IL_1A;
 		}
+
 		protected void SizeAndFormatGUI()
 		{
 			BuildPlayerWindow.BuildPlatform[] platforms = TextureImporterInspector.GetBuildPlayerValidPlatforms().ToArray<BuildPlayerWindow.BuildPlatform>();
@@ -1922,7 +2223,7 @@ namespace UnityEditor
 			{
 				EditorGUI.BeginChangeCheck();
 				EditorGUI.showMixedValue = platformSetting.overriddenIsDifferent;
-				bool overriddenForAll = GUILayout.Toggle(platformSetting.overridden, "Override for " + platformSetting.name, new GUILayoutOption[0]);
+				bool overriddenForAll = EditorGUILayout.ToggleLeft("Override for " + platformSetting.name, platformSetting.overridden, new GUILayoutOption[0]);
 				EditorGUI.showMixedValue = false;
 				if (EditorGUI.EndChangeCheck())
 				{
@@ -1971,7 +2272,8 @@ namespace UnityEditor
 					if (textureImporterType2 != TextureImporterType.Advanced)
 					{
 						array3 = this.m_TextureFormatValues;
-						array4 = TextureImporterInspector.s_Styles.textureFormatOptions;
+						array4 = (from content in TextureImporterInspector.s_Styles.textureFormatOptions
+						select content.text).ToArray<string>();
 						if (num4 >= 0)
 						{
 							num4 = (int)TextureImporter.FullToSimpleTextureFormat((TextureImporterFormat)num4);
@@ -1987,6 +2289,10 @@ namespace UnityEditor
 							{
 								TextureImporterInspector.s_TextureFormatStringsiPhone = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueiPhone);
 							}
+							if (TextureImporterInspector.s_TextureFormatStringstvOS == null)
+							{
+								TextureImporterInspector.s_TextureFormatStringstvOS = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValuetvOS);
+							}
 							if (TextureImporterInspector.s_TextureFormatStringsAndroid == null)
 							{
 								TextureImporterInspector.s_TextureFormatStringsAndroid = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueAndroid);
@@ -1996,79 +2302,84 @@ namespace UnityEditor
 								array3 = TextureImporterInspector.kTextureFormatsValueiPhone;
 								array4 = TextureImporterInspector.s_TextureFormatStringsiPhone;
 							}
+							else if (platformSetting.m_Target == BuildTarget.tvOS)
+							{
+								array3 = TextureImporterInspector.kTextureFormatsValuetvOS;
+								array4 = TextureImporterInspector.s_TextureFormatStringstvOS;
+							}
+							else if (platformSetting.m_Target == BuildTarget.SamsungTV)
+							{
+								if (TextureImporterInspector.s_TextureFormatStringsSTV == null)
+								{
+									TextureImporterInspector.s_TextureFormatStringsSTV = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueSTV);
+								}
+								array3 = TextureImporterInspector.kTextureFormatsValueSTV;
+								array4 = TextureImporterInspector.s_TextureFormatStringsSTV;
+							}
 							else
 							{
-								if (platformSetting.m_Target == BuildTarget.SamsungTV)
-								{
-									if (TextureImporterInspector.s_TextureFormatStringsSTV == null)
-									{
-										TextureImporterInspector.s_TextureFormatStringsSTV = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueSTV);
-									}
-									array3 = TextureImporterInspector.kTextureFormatsValueSTV;
-									array4 = TextureImporterInspector.s_TextureFormatStringsSTV;
-								}
-								else
-								{
-									array3 = TextureImporterInspector.kTextureFormatsValueAndroid;
-									array4 = TextureImporterInspector.s_TextureFormatStringsAndroid;
-								}
+								array3 = TextureImporterInspector.kTextureFormatsValueAndroid;
+								array4 = TextureImporterInspector.s_TextureFormatStringsAndroid;
+							}
+						}
+						else if (!settings.normalMap)
+						{
+							if (TextureImporterInspector.s_TextureFormatStringsAll == null)
+							{
+								TextureImporterInspector.s_TextureFormatStringsAll = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.TextureFormatsValueAll);
+							}
+							if (TextureImporterInspector.s_TextureFormatStringsWiiU == null)
+							{
+								TextureImporterInspector.s_TextureFormatStringsWiiU = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueWiiU);
+							}
+							if (TextureImporterInspector.s_TextureFormatStringsGLESEmu == null)
+							{
+								TextureImporterInspector.s_TextureFormatStringsGLESEmu = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueGLESEmu);
+							}
+							if (TextureImporterInspector.s_TextureFormatStringsWeb == null)
+							{
+								TextureImporterInspector.s_TextureFormatStringsWeb = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueWeb);
+							}
+							if (platformSetting.isDefault)
+							{
+								array3 = TextureImporterInspector.TextureFormatsValueAll;
+								array4 = TextureImporterInspector.s_TextureFormatStringsAll;
+							}
+							else if (platformSetting.m_Target == BuildTarget.WiiU)
+							{
+								array3 = TextureImporterInspector.kTextureFormatsValueWiiU;
+								array4 = TextureImporterInspector.s_TextureFormatStringsWiiU;
+							}
+							else if (platformSetting.m_Target == BuildTarget.StandaloneGLESEmu)
+							{
+								array3 = TextureImporterInspector.kTextureFormatsValueGLESEmu;
+								array4 = TextureImporterInspector.s_TextureFormatStringsGLESEmu;
+							}
+							else
+							{
+								array3 = TextureImporterInspector.kTextureFormatsValueWeb;
+								array4 = TextureImporterInspector.s_TextureFormatStringsWeb;
 							}
 						}
 						else
 						{
-							if (!settings.normalMap)
+							if (TextureImporterInspector.s_NormalFormatStringsAll == null)
 							{
-								if (TextureImporterInspector.s_TextureFormatStringsAll == null)
-								{
-									TextureImporterInspector.s_TextureFormatStringsAll = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.TextureFormatsValueAll);
-								}
-								if (TextureImporterInspector.s_TextureFormatStringsGLESEmu == null)
-								{
-									TextureImporterInspector.s_TextureFormatStringsGLESEmu = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueGLESEmu);
-								}
-								if (TextureImporterInspector.s_TextureFormatStringsWeb == null)
-								{
-									TextureImporterInspector.s_TextureFormatStringsWeb = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kTextureFormatsValueWeb);
-								}
-								if (platformSetting.isDefault)
-								{
-									array3 = TextureImporterInspector.TextureFormatsValueAll;
-									array4 = TextureImporterInspector.s_TextureFormatStringsAll;
-								}
-								else
-								{
-									if (platformSetting.m_Target == BuildTarget.StandaloneGLESEmu)
-									{
-										array3 = TextureImporterInspector.kTextureFormatsValueGLESEmu;
-										array4 = TextureImporterInspector.s_TextureFormatStringsGLESEmu;
-									}
-									else
-									{
-										array3 = TextureImporterInspector.kTextureFormatsValueWeb;
-										array4 = TextureImporterInspector.s_TextureFormatStringsWeb;
-									}
-								}
+								TextureImporterInspector.s_NormalFormatStringsAll = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.NormalFormatsValueAll);
+							}
+							if (TextureImporterInspector.s_NormalFormatStringsWeb == null)
+							{
+								TextureImporterInspector.s_NormalFormatStringsWeb = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kNormalFormatsValueWeb);
+							}
+							if (platformSetting.isDefault)
+							{
+								array3 = TextureImporterInspector.NormalFormatsValueAll;
+								array4 = TextureImporterInspector.s_NormalFormatStringsAll;
 							}
 							else
 							{
-								if (TextureImporterInspector.s_NormalFormatStringsAll == null)
-								{
-									TextureImporterInspector.s_NormalFormatStringsAll = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.NormalFormatsValueAll);
-								}
-								if (TextureImporterInspector.s_NormalFormatStringsWeb == null)
-								{
-									TextureImporterInspector.s_NormalFormatStringsWeb = TextureImporterInspector.BuildTextureStrings(TextureImporterInspector.kNormalFormatsValueWeb);
-								}
-								if (platformSetting.isDefault)
-								{
-									array3 = TextureImporterInspector.NormalFormatsValueAll;
-									array4 = TextureImporterInspector.s_NormalFormatStringsAll;
-								}
-								else
-								{
-									array3 = TextureImporterInspector.kNormalFormatsValueWeb;
-									array4 = TextureImporterInspector.s_NormalFormatStringsWeb;
-								}
+								array3 = TextureImporterInspector.kNormalFormatsValueWeb;
+								array4 = TextureImporterInspector.s_NormalFormatStringsWeb;
 							}
 						}
 					}
@@ -2111,17 +2422,17 @@ namespace UnityEditor
 			EditorGUI.showMixedValue = (flag || flag2);
 			num2 = EditorGUILayout.IntPopup(TextureImporterInspector.s_Styles.textureFormat, num2, EditorGUIUtility.TempContent(array2), array, new GUILayoutOption[0]);
 			EditorGUI.showMixedValue = false;
+			if (this.textureType != TextureImporterType.Advanced)
+			{
+				num2 = -1 - num2;
+			}
 			if (EditorGUI.EndChangeCheck())
 			{
-				if (this.textureType != TextureImporterType.Advanced)
-				{
-					num2 = -1 - num2;
-				}
 				platformSetting.SetTextureFormatForAll((TextureImporterFormat)num2);
 				this.SyncPlatformSettings();
 			}
 			EditorGUI.EndDisabledGroup();
-			if (!flag3 && ArrayUtility.Contains<TextureImporterFormat>(TextureImporterInspector.kFormatsWithCompressionSettings, (TextureImporterFormat)num3))
+			if (num3 == -5 || (!flag3 && ArrayUtility.Contains<TextureImporterFormat>(TextureImporterInspector.kFormatsWithCompressionSettings, (TextureImporterFormat)num3)))
 			{
 				EditorGUI.BeginChangeCheck();
 				EditorGUI.showMixedValue = (platformSetting.overriddenIsDifferent || platformSetting.compressionQualityIsDifferent);
@@ -2133,13 +2444,40 @@ namespace UnityEditor
 					this.SyncPlatformSettings();
 				}
 			}
+			if (TextureImporter.FullToSimpleTextureFormat((TextureImporterFormat)num2) == TextureImporterFormat.AutomaticCrunched && TextureImporter.FullToSimpleTextureFormat((TextureImporterFormat)num3) != TextureImporterFormat.AutomaticCrunched)
+			{
+				EditorGUILayout.HelpBox("Crunched is not supported on this platform. Falling back to 'Compressed'.", MessageType.Warning);
+			}
+			if (platformSetting.overridden && platformSetting.m_Target == BuildTarget.Android && num2 == -1 && platformSetting.importers.Length > 0)
+			{
+				TextureImporter textureImporter2 = platformSetting.importers[0];
+				EditorGUI.BeginChangeCheck();
+				bool allowsAlphaSplitting = GUILayout.Toggle(textureImporter2.GetAllowsAlphaSplitting(), TextureImporterInspector.s_Styles.etc1Compression, new GUILayoutOption[0]);
+				if (EditorGUI.EndChangeCheck())
+				{
+					TextureImporter[] importers = platformSetting.importers;
+					for (int j = 0; j < importers.Length; j++)
+					{
+						TextureImporter textureImporter3 = importers[j];
+						textureImporter3.SetAllowsAlphaSplitting(allowsAlphaSplitting);
+					}
+					platformSetting.SetChanged();
+				}
+			}
+			if (!platformSetting.overridden && platformSetting.m_Target == BuildTarget.Android && platformSetting.importers.Length > 0 && platformSetting.importers[0].GetAllowsAlphaSplitting())
+			{
+				platformSetting.importers[0].SetAllowsAlphaSplitting(false);
+				platformSetting.SetChanged();
+			}
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndPlatformGrouping();
 		}
+
 		private int EditCompressionQuality(BuildTarget target, int compression)
 		{
-			if (target != BuildTarget.iOS && target != BuildTarget.Android && target != BuildTarget.BB10 && target != BuildTarget.Tizen && target != BuildTarget.SamsungTV)
+			if (target != BuildTarget.tvOS && target != BuildTarget.iOS && target != BuildTarget.Android && target != BuildTarget.BlackBerry && target != BuildTarget.Tizen && target != BuildTarget.SamsungTV)
 			{
+				compression = EditorGUILayout.IntSlider(TextureImporterInspector.s_Styles.compressionQualitySlider, compression, 0, 100, new GUILayoutOption[0]);
 				return compression;
 			}
 			int selectedIndex = 1;
@@ -2147,12 +2485,9 @@ namespace UnityEditor
 			{
 				selectedIndex = 0;
 			}
-			else
+			else if (compression == 100)
 			{
-				if (compression == 100)
-				{
-					selectedIndex = 2;
-				}
+				selectedIndex = 2;
 			}
 			switch (EditorGUILayout.Popup(TextureImporterInspector.s_Styles.compressionQuality, selectedIndex, TextureImporterInspector.s_Styles.mobileCompressionQualityOptions, new GUILayoutOption[0]))
 			{
@@ -2166,10 +2501,12 @@ namespace UnityEditor
 				return 50;
 			}
 		}
+
 		private static bool IsPowerOfTwo(int f)
 		{
 			return (f & f - 1) == 0;
 		}
+
 		public static BuildPlayerWindow.BuildPlatform[] GetBuildPlayerValidPlatforms()
 		{
 			List<BuildPlayerWindow.BuildPlatform> validPlatforms = BuildPlayerWindow.GetValidPlatforms();
@@ -2180,6 +2517,7 @@ namespace UnityEditor
 			}
 			return list.ToArray();
 		}
+
 		public virtual void BuildTargetList()
 		{
 			BuildPlayerWindow.BuildPlatform[] buildPlayerValidPlatforms = TextureImporterInspector.GetBuildPlayerValidPlatforms();
@@ -2192,6 +2530,7 @@ namespace UnityEditor
 				this.m_PlatformSettings.Add(new TextureImporterInspector.PlatformSetting(buildPlatform.name, buildPlatform.DefaultTarget, this));
 			}
 		}
+
 		internal override bool HasModified()
 		{
 			if (base.HasModified())
@@ -2207,6 +2546,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		public static void SelectMainAssets(UnityEngine.Object[] targets)
 		{
 			ArrayList arrayList = new ArrayList();
@@ -2221,6 +2561,7 @@ namespace UnityEditor
 			}
 			Selection.objects = (arrayList.ToArray(typeof(UnityEngine.Object)) as UnityEngine.Object[]);
 		}
+
 		internal override void ResetValues()
 		{
 			base.ResetValues();
@@ -2229,8 +2570,10 @@ namespace UnityEditor
 			this.ApplySettingsToTexture();
 			TextureImporterInspector.SelectMainAssets(base.targets);
 		}
+
 		internal override void Apply()
 		{
+			SpriteEditorWindow.TextureImporterApply(base.serializedObject);
 			base.Apply();
 			this.SyncPlatformSettings();
 			foreach (TextureImporterInspector.PlatformSetting current in this.m_PlatformSettings)

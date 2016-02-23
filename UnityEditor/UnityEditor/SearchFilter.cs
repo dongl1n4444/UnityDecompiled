@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[Serializable]
@@ -13,6 +14,7 @@ namespace UnityEditor
 			SelectedFolders,
 			AssetStore
 		}
+
 		public enum State
 		{
 			EmptySearchFilter,
@@ -21,22 +23,31 @@ namespace UnityEditor
 			SearchingInFolders,
 			SearchingInAssetStore
 		}
+
 		[SerializeField]
 		private string m_NameFilter = string.Empty;
+
 		[SerializeField]
 		private string[] m_ClassNames = new string[0];
+
 		[SerializeField]
 		private string[] m_AssetLabels = new string[0];
+
 		[SerializeField]
 		private string[] m_AssetBundleNames = new string[0];
+
 		[SerializeField]
 		private int[] m_ReferencingInstanceIDs = new int[0];
+
 		[SerializeField]
 		private bool m_ShowAllHits;
+
 		[SerializeField]
 		private SearchFilter.SearchArea m_SearchArea;
+
 		[SerializeField]
 		private string[] m_Folders = new string[0];
+
 		public string nameFilter
 		{
 			get
@@ -48,6 +59,7 @@ namespace UnityEditor
 				this.m_NameFilter = value;
 			}
 		}
+
 		public string[] classNames
 		{
 			get
@@ -59,6 +71,7 @@ namespace UnityEditor
 				this.m_ClassNames = value;
 			}
 		}
+
 		public string[] assetLabels
 		{
 			get
@@ -70,6 +83,7 @@ namespace UnityEditor
 				this.m_AssetLabels = value;
 			}
 		}
+
 		public string[] assetBundleNames
 		{
 			get
@@ -81,6 +95,7 @@ namespace UnityEditor
 				this.m_AssetBundleNames = value;
 			}
 		}
+
 		public int[] referencingInstanceIDs
 		{
 			get
@@ -92,6 +107,7 @@ namespace UnityEditor
 				this.m_ReferencingInstanceIDs = value;
 			}
 		}
+
 		public bool showAllHits
 		{
 			get
@@ -103,6 +119,7 @@ namespace UnityEditor
 				this.m_ShowAllHits = value;
 			}
 		}
+
 		public string[] folders
 		{
 			get
@@ -114,6 +131,7 @@ namespace UnityEditor
 				this.m_Folders = value;
 			}
 		}
+
 		public SearchFilter.SearchArea searchArea
 		{
 			get
@@ -125,6 +143,7 @@ namespace UnityEditor
 				this.m_SearchArea = value;
 			}
 		}
+
 		public void ClearSearch()
 		{
 			this.m_NameFilter = string.Empty;
@@ -134,10 +153,12 @@ namespace UnityEditor
 			this.m_ReferencingInstanceIDs = new int[0];
 			this.m_ShowAllHits = false;
 		}
+
 		private bool IsNullOrEmtpy<T>(T[] list)
 		{
 			return list == null || list.Length == 0;
 		}
+
 		public SearchFilter.State GetState()
 		{
 			bool flag = !string.IsNullOrEmpty(this.m_NameFilter) || !this.IsNullOrEmtpy<string>(this.m_AssetLabels) || !this.IsNullOrEmtpy<string>(this.m_ClassNames) || !this.IsNullOrEmtpy<string>(this.m_AssetBundleNames) || !this.IsNullOrEmtpy<int>(this.m_ReferencingInstanceIDs);
@@ -163,11 +184,13 @@ namespace UnityEditor
 				return SearchFilter.State.EmptySearchFilter;
 			}
 		}
+
 		public bool IsSearching()
 		{
 			SearchFilter.State state = this.GetState();
 			return state == SearchFilter.State.SearchingInAllAssets || state == SearchFilter.State.SearchingInFolders || state == SearchFilter.State.SearchingInAssetStore;
 		}
+
 		public bool SetNewFilter(SearchFilter newFilter)
 		{
 			bool result = false;
@@ -209,6 +232,7 @@ namespace UnityEditor
 			this.m_ShowAllHits = newFilter.m_ShowAllHits;
 			return result;
 		}
+
 		public override string ToString()
 		{
 			string text = "SearchFilter: ";
@@ -263,6 +287,7 @@ namespace UnityEditor
 				"]"
 			});
 		}
+
 		internal string FilterToSearchFieldString()
 		{
 			string text = string.Empty;
@@ -275,6 +300,7 @@ namespace UnityEditor
 			this.AddToString<string>("b:", this.m_AssetBundleNames, ref text);
 			return text;
 		}
+
 		private void AddToString<T>(string prefix, T[] list, ref string result)
 		{
 			if (list == null)
@@ -295,6 +321,7 @@ namespace UnityEditor
 				result = result + prefix + t;
 			}
 		}
+
 		internal void SearchFieldStringToFilter(string searchString)
 		{
 			this.ClearSearch();
@@ -304,16 +331,22 @@ namespace UnityEditor
 			}
 			SearchUtility.ParseSearchString(searchString, this);
 		}
+
 		internal static SearchFilter CreateSearchFilterFromString(string searchText)
 		{
 			SearchFilter searchFilter = new SearchFilter();
 			SearchUtility.ParseSearchString(searchText, searchFilter);
 			return searchFilter;
 		}
-		public string[] SplitNameFilter()
+
+		public static string[] Split(string text)
 		{
+			if (string.IsNullOrEmpty(text))
+			{
+				return new string[0];
+			}
 			List<string> list = new List<string>();
-			foreach (Match match in Regex.Matches(this.m_NameFilter, "(?<match>\\w+)|\\\"(?<match>[\\w\\s]*)\""))
+			foreach (Match match in Regex.Matches(text, "\".+?\"|\\S+"))
 			{
 				list.Add(match.Value.Replace("\"", string.Empty));
 			}

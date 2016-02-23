@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class GameViewSizesMenuModifyItemUI : FlexibleMenuModifyItemUI
@@ -7,29 +8,41 @@ namespace UnityEditor
 		private class Styles
 		{
 			public GUIContent headerAdd = new GUIContent("Add");
+
 			public GUIContent headerEdit = new GUIContent("Edit");
+
 			public GUIContent typeName = new GUIContent("Type");
+
 			public GUIContent widthHeightText = new GUIContent("Width & Height");
+
 			public GUIContent optionalText = new GUIContent("Label");
+
 			public GUIContent ok = new GUIContent("OK");
+
 			public GUIContent cancel = new GUIContent("Cancel");
+
 			public GUIContent[] typeNames = new GUIContent[]
 			{
 				new GUIContent("Aspect Ratio"),
 				new GUIContent("Fixed Resolution")
 			};
 		}
+
 		private static GameViewSizesMenuModifyItemUI.Styles s_Styles;
+
 		private GameViewSize m_GameViewSize;
+
 		public override void OnClose()
 		{
 			this.m_GameViewSize = null;
 			base.OnClose();
 		}
+
 		public override Vector2 GetWindowSize()
 		{
 			return new Vector2(230f, 140f);
 		}
+
 		public override void OnGUI(Rect rect)
 		{
 			if (GameViewSizesMenuModifyItemUI.s_Styles == null)
@@ -117,6 +130,7 @@ namespace UnityEditor
 			GUILayout.Space(10f);
 			GUILayout.EndHorizontal();
 		}
+
 		private string GetCroppedText(string fullText, float cropWidth, GUIStyle style)
 		{
 			int numCharactersThatFitWithinWidth = style.GetNumCharactersThatFitWithinWidth(fullText, cropWidth);

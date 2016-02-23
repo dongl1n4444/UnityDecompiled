@@ -1,12 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>Interface to control AnimatorOverrideController.</para>
+	/// </summary>
 	public sealed class AnimatorOverrideController : RuntimeAnimatorController
 	{
 		internal delegate void OnOverrideControllerDirtyCallback();
+
 		internal AnimatorOverrideController.OnOverrideControllerDirtyCallback OnOverrideControllerDirty;
+
+		/// <summary>
+		///   <para>The Controller that the AnimatorOverrideController overrides.</para>
+		/// </summary>
 		public extern RuntimeAnimatorController runtimeAnimatorController
 		{
 			[WrapperlessIcall]
@@ -16,6 +25,7 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
 		public AnimationClip this[string name]
 		{
 			get
@@ -27,6 +37,7 @@ namespace UnityEngine
 				this.Internal_SetClipByName(name, value);
 			}
 		}
+
 		public AnimationClip this[AnimationClip clip]
 		{
 			get
@@ -38,6 +49,10 @@ namespace UnityEngine
 				this.Internal_SetClip(clip, value);
 			}
 		}
+
+		/// <summary>
+		///   <para>Returns the list of orignal clip from the controller and their override clip.</para>
+		/// </summary>
 		public AnimationClipPair[] clips
 		{
 			get
@@ -69,25 +84,32 @@ namespace UnityEngine
 				}
 			}
 		}
+
 		public AnimatorOverrideController()
 		{
 			AnimatorOverrideController.Internal_CreateAnimationSet(this);
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_CreateAnimationSet([Writable] AnimatorOverrideController self);
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern AnimationClip Internal_GetClipByName(string name, bool returnEffectiveClip);
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Internal_SetClipByName(string name, AnimationClip clip);
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern AnimationClip Internal_GetClip(AnimationClip originalClip, bool returnEffectiveClip);
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Internal_SetClip(AnimationClip originalClip, AnimationClip overrideClip);
+
 		internal static void OnInvalidateOverrideController(AnimatorOverrideController controller)
 		{
 			if (controller.OnOverrideControllerDirty != null)
@@ -95,12 +117,15 @@ namespace UnityEngine
 				controller.OnOverrideControllerDirty();
 			}
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern AnimationClip[] GetOriginalClips();
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern AnimationClip[] GetOverrideClips();
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal extern void PerformOverrideClipListCleanup();

@@ -1,8 +1,12 @@
 using System;
 using System.Runtime.CompilerServices;
+
 namespace UnityEngine.Audio
 {
-	public class AudioMixerGroup : UnityEngine.Object
+	/// <summary>
+	///   <para>Object representing a group in the mixer.</para>
+	/// </summary>
+	public class AudioMixerGroup : Object
 	{
 		public extern AudioMixer audioMixer
 		{
@@ -10,6 +14,7 @@ namespace UnityEngine.Audio
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			get;
 		}
+
 		internal AudioMixerGroup()
 		{
 		}

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 namespace UnityEditor
 {
 	internal class Settings
 	{
 		private static SortedList<string, object> m_Prefs = new SortedList<string, object>();
+
 		internal static T Get<T>(string name, T defaultValue) where T : IPrefType, new()
 		{
 			if (defaultValue == null)
@@ -26,16 +28,18 @@ namespace UnityEditor
 			Settings.Set<T>(name, defaultValue);
 			return defaultValue;
 		}
+
 		internal static void Set<T>(string name, T value) where T : IPrefType
 		{
 			EditorPrefs.SetString(name, value.ToUniqueString());
 			Settings.m_Prefs[name] = value;
 		}
+
 		[DebuggerHidden]
 		internal static IEnumerable<KeyValuePair<string, T>> Prefs<T>() where T : IPrefType
 		{
-			Settings.<Prefs>c__Iterator2<T> <Prefs>c__Iterator = new Settings.<Prefs>c__Iterator2<T>();
-			Settings.<Prefs>c__Iterator2<T> expr_07 = <Prefs>c__Iterator;
+			Settings.<Prefs>c__Iterator4<T> <Prefs>c__Iterator = new Settings.<Prefs>c__Iterator4<T>();
+			Settings.<Prefs>c__Iterator4<T> expr_07 = <Prefs>c__Iterator;
 			expr_07.$PC = -2;
 			return expr_07;
 		}

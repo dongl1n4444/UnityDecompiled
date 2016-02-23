@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 namespace UnityEditorInternal
 {
 	internal class AudioProfilerView
@@ -13,14 +14,17 @@ namespace UnityEditorInternal
 				get;
 				set;
 			}
+
 			public AudioProfilerTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, AudioProfilerInfoWrapper info) : base(id, depth, parent, displayName)
 			{
 				this.info = info;
 			}
 		}
+
 		internal class AudioProfilerDataSource : TreeViewDataSource
 		{
 			private AudioProfilerBackend m_Backend;
+
 			public AudioProfilerDataSource(TreeView treeView, AudioProfilerBackend backend) : base(treeView)
 			{
 				this.m_Backend = backend;
@@ -29,6 +33,7 @@ namespace UnityEditorInternal
 				base.rootIsCollapsable = false;
 				this.FetchData();
 			}
+
 			private void FillTreeItems(AudioProfilerView.AudioProfilerTreeViewItem parentNode, int depth, int parentId, List<AudioProfilerInfoWrapper> items)
 			{
 				int num = 0;
@@ -53,6 +58,7 @@ namespace UnityEditorInternal
 					}
 				}
 			}
+
 			public override void FetchData()
 			{
 				AudioProfilerView.AudioProfilerTreeViewItem audioProfilerTreeViewItem = new AudioProfilerView.AudioProfilerTreeViewItem(1, 0, null, "ROOT", new AudioProfilerInfoWrapper(default(AudioProfilerInfo), "ROOT", "ROOT", false));
@@ -61,31 +67,44 @@ namespace UnityEditorInternal
 				this.SetExpandedWithChildren(this.m_RootItem, true);
 				this.m_NeedRefreshVisibleFolders = true;
 			}
+
 			public override bool CanBeParent(TreeViewItem item)
 			{
 				return item.hasChildren;
 			}
+
+			public override bool IsRenamingItemAllowed(TreeViewItem item)
+			{
+				return false;
+			}
 		}
+
 		internal class AudioProfilerViewColumnHeader
 		{
 			private AudioProfilerTreeViewState m_TreeViewState;
+
 			private GUIStyle m_HeaderStyle;
+
 			private AudioProfilerBackend m_Backend;
+
 			public float[] columnWidths
 			{
 				get;
 				set;
 			}
+
 			public float minColumnWidth
 			{
 				get;
 				set;
 			}
+
 			public float dragWidth
 			{
 				get;
 				set;
 			}
+
 			public AudioProfilerViewColumnHeader(AudioProfilerTreeViewState state, AudioProfilerBackend backend)
 			{
 				this.m_TreeViewState = state;
@@ -93,6 +112,7 @@ namespace UnityEditorInternal
 				this.minColumnWidth = 10f;
 				this.dragWidth = 6f;
 			}
+
 			public void OnGUI(Rect rect, bool allowSorting)
 			{
 				float num = rect.x;
@@ -158,6 +178,7 @@ namespace UnityEditorInternal
 				}
 			}
 		}
+
 		internal class AudioProfilerViewGUI : TreeViewGUI
 		{
 			private float[] columnWidths
@@ -167,20 +188,25 @@ namespace UnityEditorInternal
 					return this.m_TreeView.state.columnWidths;
 				}
 			}
+
 			public AudioProfilerViewGUI(TreeView treeView) : base(treeView)
 			{
 				this.k_IconWidth = 0f;
 			}
+
 			protected override Texture GetIconForNode(TreeViewItem item)
 			{
 				return null;
 			}
+
 			protected override void RenameEnded()
 			{
 			}
+
 			protected override void SyncFakeItem()
 			{
 			}
+
 			protected override void DrawIconAndLabel(Rect rect, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
 			{
 				GUIStyle gUIStyle = (!useBoldFont) ? TreeViewGUI.s_Styles.lineStyle : TreeViewGUI.s_Styles.lineBoldStyle;
@@ -199,22 +225,32 @@ namespace UnityEditorInternal
 				gUIStyle.alignment = TextAnchor.MiddleLeft;
 			}
 		}
+
 		private TreeView m_TreeView;
+
 		private AudioProfilerTreeViewState m_TreeViewState;
+
 		private EditorWindow m_EditorWindow;
+
 		private AudioProfilerView.AudioProfilerViewColumnHeader m_ColumnHeader;
+
 		private AudioProfilerBackend m_Backend;
+
 		private GUIStyle m_HeaderStyle;
+
 		private int delayedPingObject;
+
 		public AudioProfilerView(EditorWindow editorWindow, AudioProfilerTreeViewState state)
 		{
 			this.m_EditorWindow = editorWindow;
 			this.m_TreeViewState = state;
 		}
+
 		public int GetNumItemsInData()
 		{
 			return this.m_Backend.items.Count;
 		}
+
 		public void Init(Rect rect, AudioProfilerBackend backend)
 		{
 			this.m_HeaderStyle = "PR Label";
@@ -246,10 +282,12 @@ namespace UnityEditorInternal
 			TreeView expr_14C = this.m_TreeView;
 			expr_14C.selectionChangedCallback = (Action<int[]>)Delegate.Combine(expr_14C.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
 		}
+
 		private void PingObjectDelayed()
 		{
 			EditorGUIUtility.PingObject(this.delayedPingObject);
 		}
+
 		public void OnTreeSelectionChanged(int[] selection)
 		{
 			if (selection.Length == 1)
@@ -264,6 +302,7 @@ namespace UnityEditorInternal
 				}
 			}
 		}
+
 		public void OnGUI(Rect rect, bool allowSorting)
 		{
 			int controlID = GUIUtility.GetControlID(FocusType.Keyboard, rect);

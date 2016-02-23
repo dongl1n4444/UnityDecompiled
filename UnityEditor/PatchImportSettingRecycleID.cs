@@ -1,8 +1,10 @@
 using System;
 using UnityEditor;
+
 internal class PatchImportSettingRecycleID
 {
 	private const int kMaxObjectsPerClassID = 100000;
+
 	public static void Patch(SerializedObject serializedObject, int classID, string oldName, string newName)
 	{
 		PatchImportSettingRecycleID.PatchMultiple(serializedObject, classID, new string[]
@@ -13,6 +15,7 @@ internal class PatchImportSettingRecycleID
 			newName
 		});
 	}
+
 	public static void PatchMultiple(SerializedObject serializedObject, int classID, string[] oldNames, string[] newNames)
 	{
 		int num = oldNames.Length;

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	public abstract class MaterialPropertyDrawer
@@ -8,10 +9,12 @@ namespace UnityEditor
 		{
 			EditorGUI.LabelField(position, new GUIContent(label), EditorGUIUtility.TempContent("No GUI Implemented"));
 		}
+
 		public virtual float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
 		{
 			return 16f;
 		}
+
 		public virtual void Apply(MaterialProperty prop)
 		{
 		}

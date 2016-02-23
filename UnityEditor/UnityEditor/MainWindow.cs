@@ -1,12 +1,15 @@
 using System;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class MainWindow : View, ICleanuppable
 	{
 		private const float kStatusbarHeight = 20f;
-		private const float kMinWidth = 711f;
+
+		private const float kMinWidth = 770f;
+
 		protected override void SetPosition(Rect newPos)
 		{
 			base.SetPosition(newPos);
@@ -22,20 +25,22 @@ namespace UnityEditor
 				base.children[2].position = new Rect(0f, newPos.height - base.children[2].position.height, newPos.width, base.children[2].position.height);
 			}
 		}
+
 		protected override void ChildrenMinMaxChanged()
 		{
 			if (base.children.Length == 3)
 			{
 				Toolbar toolbar = (Toolbar)base.children[0];
-				base.SetMinMaxSizes(new Vector2(711f, toolbar.CalcHeight() + 20f + base.children[1].minSize.y), new Vector2(10000f, 10000f));
+				base.SetMinMaxSizes(new Vector2(770f, toolbar.CalcHeight() + 20f + base.children[1].minSize.y), new Vector2(10000f, 10000f));
 			}
 			base.ChildrenMinMaxChanged();
 		}
+
 		public static void MakeMain()
 		{
 			ContainerWindow containerWindow = ScriptableObject.CreateInstance<ContainerWindow>();
 			MainWindow mainWindow = ScriptableObject.CreateInstance<MainWindow>();
-			mainWindow.SetMinMaxSizes(new Vector2(711f, 300f), new Vector2(10000f, 10000f));
+			mainWindow.SetMinMaxSizes(new Vector2(770f, 300f), new Vector2(10000f, 10000f));
 			containerWindow.mainView = mainWindow;
 			Resolution desktopResolution = InternalEditorUtility.GetDesktopResolution();
 			int num = Mathf.Clamp(desktopResolution.width * 3 / 4, 800, 1400);
@@ -44,6 +49,7 @@ namespace UnityEditor
 			containerWindow.Show(ShowMode.MainWindow, true, true);
 			containerWindow.DisplayAllViews();
 		}
+
 		public void Cleanup()
 		{
 			if (base.children[1].children.Length == 0)

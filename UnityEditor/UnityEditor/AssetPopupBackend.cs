@@ -1,6 +1,7 @@
 using System;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class AssetPopupBackend
@@ -15,16 +16,13 @@ namespace UnityEditor
 			{
 				buttonContent = EditorGUI.mixedValueContent;
 			}
+			else if (serializedProperty.objectReferenceValue != null)
+			{
+				buttonContent = GUIContent.Temp(serializedProperty.objectReferenceStringValue);
+			}
 			else
 			{
-				if (serializedProperty.objectReferenceValue != null)
-				{
-					buttonContent = GUIContent.Temp(serializedProperty.objectReferenceStringValue);
-				}
-				else
-				{
-					buttonContent = GUIContent.Temp("Default");
-				}
+				buttonContent = GUIContent.Temp("Default");
 			}
 			Rect buttonRect;
 			if (AudioMixerEffectGUI.PopupButton(label, buttonContent, EditorStyles.popup, out buttonRect, new GUILayoutOption[0]))
@@ -33,6 +31,7 @@ namespace UnityEditor
 			}
 			EditorGUI.showMixedValue = showMixedValue;
 		}
+
 		private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension) where T : UnityEngine.Object, new()
 		{
 			GenericMenu genericMenu = new GenericMenu();
@@ -85,6 +84,7 @@ namespace UnityEditor
 			});
 			genericMenu.DropDown(buttonRect);
 		}
+
 		private static void AssetPopupMenuCallback(object userData)
 		{
 			object[] array = userData as object[];

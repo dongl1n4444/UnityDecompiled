@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+
 namespace UnityEngine
 {
 	public sealed class UnityEventQueueSystem
@@ -28,6 +29,7 @@ namespace UnityEngine
 				eventPayloadName
 			});
 		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern IntPtr GetGlobalEventQueue();

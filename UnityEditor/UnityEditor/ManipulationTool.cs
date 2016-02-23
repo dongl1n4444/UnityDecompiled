@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal abstract class ManipulationTool
@@ -17,6 +18,7 @@ namespace UnityEditor
 			Handles.ShowStaticLabelIfNeeded(handlePosition);
 			EditorGUI.EndDisabledGroup();
 		}
+
 		public abstract void ToolGUI(SceneView view, Vector3 handlePosition, bool isStatic);
 	}
 }

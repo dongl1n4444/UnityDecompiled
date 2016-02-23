@@ -1,9 +1,29 @@
 using System;
 using System.Runtime.CompilerServices;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>Joint that attempts to keep two Rigidbody2D objects a set distance apart by applying a force between them.</para>
+	/// </summary>
 	public sealed class SpringJoint2D : AnchoredJoint2D
 	{
+		/// <summary>
+		///   <para>Should the distance be calculated automatically?</para>
+		/// </summary>
+		public extern bool autoConfigureDistance
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
+		}
+
+		/// <summary>
+		///   <para>The distance the spring will try to keep between the two objects.</para>
+		/// </summary>
 		public extern float distance
 		{
 			[WrapperlessIcall]
@@ -13,6 +33,10 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>The amount by which the spring force is reduced in proportion to the movement speed.</para>
+		/// </summary>
 		public extern float dampingRatio
 		{
 			[WrapperlessIcall]
@@ -22,6 +46,10 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>The frequency at which the spring oscillates around the distance distance between the objects.</para>
+		/// </summary>
 		public extern float frequency
 		{
 			[WrapperlessIcall]
@@ -31,21 +59,5 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
-		public Vector2 GetReactionForce(float timeStep)
-		{
-			Vector2 result;
-			SpringJoint2D.SpringJoint2D_CUSTOM_INTERNAL_GetReactionForce(this, timeStep, out result);
-			return result;
-		}
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void SpringJoint2D_CUSTOM_INTERNAL_GetReactionForce(SpringJoint2D joint, float timeStep, out Vector2 value);
-		public float GetReactionTorque(float timeStep)
-		{
-			return SpringJoint2D.INTERNAL_CALL_GetReactionTorque(this, timeStep);
-		}
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern float INTERNAL_CALL_GetReactionTorque(SpringJoint2D self, float timeStep);
 	}
 }

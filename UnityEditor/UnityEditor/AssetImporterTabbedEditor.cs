@@ -1,13 +1,18 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal abstract class AssetImporterTabbedEditor : AssetImporterInspector
 	{
 		protected Type[] m_SubEditorTypes;
+
 		protected string[] m_SubEditorNames;
+
 		private int m_ActiveEditorIndex;
+
 		private AssetImporterInspector m_ActiveEditor;
+
 		public AssetImporterInspector activeEditor
 		{
 			get
@@ -15,6 +20,7 @@ namespace UnityEditor
 				return this.m_ActiveEditor;
 			}
 		}
+
 		internal override Editor assetEditor
 		{
 			get
@@ -30,6 +36,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		internal virtual void OnEnable()
 		{
 			this.m_ActiveEditorIndex = EditorPrefs.GetInt(base.GetType().Name + "ActiveEditorIndex", 0);
@@ -38,6 +45,7 @@ namespace UnityEditor
 				this.m_ActiveEditor = (Editor.CreateEditor(base.targets, this.m_SubEditorTypes[this.m_ActiveEditorIndex]) as AssetImporterInspector);
 			}
 		}
+
 		private void OnDestroy()
 		{
 			AssetImporterInspector activeEditor = this.activeEditor;
@@ -47,6 +55,7 @@ namespace UnityEditor
 				UnityEngine.Object.DestroyImmediate(activeEditor);
 			}
 		}
+
 		public override void OnInspectorGUI()
 		{
 			EditorGUI.BeginDisabledGroup(false);
@@ -69,14 +78,17 @@ namespace UnityEditor
 			EditorGUI.EndDisabledGroup();
 			this.activeEditor.OnInspectorGUI();
 		}
+
 		public override void OnPreviewSettings()
 		{
 			this.activeEditor.OnPreviewSettings();
 		}
+
 		public override void OnInteractivePreviewGUI(Rect r, GUIStyle background)
 		{
 			this.activeEditor.OnInteractivePreviewGUI(r, background);
 		}
+
 		public override bool HasPreviewGUI()
 		{
 			return !(this.activeEditor == null) && this.activeEditor.HasPreviewGUI();

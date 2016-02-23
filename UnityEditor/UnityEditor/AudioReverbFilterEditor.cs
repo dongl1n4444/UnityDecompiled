@@ -1,25 +1,41 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(AudioReverbFilter))]
 	internal class AudioReverbFilterEditor : Editor
 	{
 		private SerializedProperty m_ReverbPreset;
+
 		private SerializedProperty m_DryLevel;
+
 		private SerializedProperty m_Room;
+
 		private SerializedProperty m_RoomHF;
+
 		private SerializedProperty m_RoomLF;
+
 		private SerializedProperty m_DecayTime;
+
 		private SerializedProperty m_DecayHFRatio;
+
 		private SerializedProperty m_ReflectionsLevel;
+
 		private SerializedProperty m_ReflectionsDelay;
+
 		private SerializedProperty m_ReverbLevel;
+
 		private SerializedProperty m_ReverbDelay;
+
 		private SerializedProperty m_HFReference;
+
 		private SerializedProperty m_LFReference;
+
 		private SerializedProperty m_Diffusion;
+
 		private SerializedProperty m_Density;
+
 		private void OnEnable()
 		{
 			this.m_ReverbPreset = base.serializedObject.FindProperty("m_ReverbPreset");
@@ -38,15 +54,9 @@ namespace UnityEditor
 			this.m_Diffusion = base.serializedObject.FindProperty("m_Diffusion");
 			this.m_Density = base.serializedObject.FindProperty("m_Density");
 		}
+
 		public override void OnInspectorGUI()
 		{
-			if (!Application.HasAdvancedLicense())
-			{
-				GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-				GUIContent content = new GUIContent("This is only available in the Pro version of Unity.");
-				GUILayout.Label(content, EditorStyles.helpBox, new GUILayoutOption[0]);
-				GUILayout.EndHorizontal();
-			}
 			base.serializedObject.Update();
 			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(this.m_ReverbPreset, new GUILayoutOption[0]);

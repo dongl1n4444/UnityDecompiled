@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class ForceModuleUI : ModuleUI
@@ -7,26 +8,39 @@ namespace UnityEditor
 		private class Texts
 		{
 			public GUIContent x = new GUIContent("X");
+
 			public GUIContent y = new GUIContent("Y");
+
 			public GUIContent z = new GUIContent("Z");
+
 			public GUIContent randomizePerFrame = new GUIContent("Randomize", "Randomize force every frame. Only available when using random between two constants or random between two curves.");
+
 			public GUIContent space = new GUIContent("Space", "Specifies if the force values are in local space (rotated with the transform) or world space.");
+
 			public string[] spaces = new string[]
 			{
 				"Local",
 				"World"
 			};
 		}
+
 		private SerializedMinMaxCurve m_X;
+
 		private SerializedMinMaxCurve m_Y;
+
 		private SerializedMinMaxCurve m_Z;
+
 		private SerializedProperty m_RandomizePerFrame;
+
 		private SerializedProperty m_InWorldSpace;
+
 		private static ForceModuleUI.Texts s_Texts;
+
 		public ForceModuleUI(ParticleSystemUI owner, SerializedObject o, string displayName) : base(owner, o, "ForceModule", displayName)
 		{
 			this.m_ToolTip = "Controls the force of each particle during its lifetime.";
 		}
+
 		protected override void Init()
 		{
 			if (this.m_X != null)
@@ -43,6 +57,7 @@ namespace UnityEditor
 			this.m_RandomizePerFrame = base.GetProperty("randomizePerFrame");
 			this.m_InWorldSpace = base.GetProperty("inWorldSpace");
 		}
+
 		public override void OnInspectorGUI(ParticleSystem s)
 		{
 			if (ForceModuleUI.s_Texts == null)
@@ -56,6 +71,7 @@ namespace UnityEditor
 			ModuleUI.GUIToggle(ForceModuleUI.s_Texts.randomizePerFrame, this.m_RandomizePerFrame);
 			EditorGUI.EndDisabledGroup();
 		}
+
 		public override void UpdateCullingSupportedString(ref string text)
 		{
 			this.Init();

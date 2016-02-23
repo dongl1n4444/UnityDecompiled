@@ -1,27 +1,45 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(AudioReverbZone))]
 	internal class AudioReverbZoneEditor : Editor
 	{
 		private SerializedProperty m_MinDistance;
+
 		private SerializedProperty m_MaxDistance;
+
 		private SerializedProperty m_ReverbPreset;
+
 		private SerializedProperty m_Room;
+
 		private SerializedProperty m_RoomHF;
+
 		private SerializedProperty m_RoomLF;
+
 		private SerializedProperty m_DecayTime;
+
 		private SerializedProperty m_DecayHFRatio;
+
 		private SerializedProperty m_Reflections;
+
 		private SerializedProperty m_ReflectionsDelay;
+
 		private SerializedProperty m_Reverb;
+
 		private SerializedProperty m_ReverbDelay;
+
 		private SerializedProperty m_HFReference;
+
 		private SerializedProperty m_LFReference;
+
 		private SerializedProperty m_RoomRolloffFactor;
+
 		private SerializedProperty m_Diffusion;
+
 		private SerializedProperty m_Density;
+
 		private void OnEnable()
 		{
 			this.m_MinDistance = base.serializedObject.FindProperty("m_MinDistance");
@@ -42,6 +60,7 @@ namespace UnityEditor
 			this.m_Diffusion = base.serializedObject.FindProperty("m_Diffusion");
 			this.m_Density = base.serializedObject.FindProperty("m_Density");
 		}
+
 		public override void OnInspectorGUI()
 		{
 			base.serializedObject.Update();
@@ -72,6 +91,7 @@ namespace UnityEditor
 			EditorGUI.EndDisabledGroup();
 			base.serializedObject.ApplyModifiedProperties();
 		}
+
 		private void OnSceneGUI()
 		{
 			AudioReverbZone audioReverbZone = (AudioReverbZone)this.target;

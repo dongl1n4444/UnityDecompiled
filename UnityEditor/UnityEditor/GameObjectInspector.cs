@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor.VersionControl;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(GameObject))]
@@ -12,29 +13,43 @@ namespace UnityEditor
 		private class Styles
 		{
 			public GUIContent goIcon = EditorGUIUtility.IconContent("GameObject Icon");
+
 			public GUIContent typelessIcon = EditorGUIUtility.IconContent("Prefab Icon");
+
 			public GUIContent prefabIcon = EditorGUIUtility.IconContent("PrefabNormal Icon");
+
 			public GUIContent modelIcon = EditorGUIUtility.IconContent("PrefabModel Icon");
+
 			public GUIContent dataTemplateIcon = EditorGUIUtility.IconContent("PrefabNormal Icon");
+
 			public GUIContent dropDownIcon = EditorGUIUtility.IconContent("Icon Dropdown");
+
 			public float staticFieldToggleWidth = EditorStyles.toggle.CalcSize(EditorGUIUtility.TempContent("Static")).x + 6f;
+
 			public float tagFieldWidth = EditorStyles.boldLabel.CalcSize(EditorGUIUtility.TempContent("Tag")).x;
+
 			public float layerFieldWidth = EditorStyles.boldLabel.CalcSize(EditorGUIUtility.TempContent("Layer")).x;
+
 			public float navLayerFieldWidth = EditorStyles.boldLabel.CalcSize(EditorGUIUtility.TempContent("Nav Layer")).x;
+
 			public GUIStyle staticDropdown = "StaticDropdown";
+
 			public GUIStyle instanceManagementInfo = new GUIStyle(EditorStyles.helpBox);
+
 			public GUIContent goTypeLabelMultiple = new GUIContent("Multiple");
+
 			public GUIContent[] goTypeLabel = new GUIContent[]
 			{
 				null,
-				EditorGUIUtility.TextContent("GameObjectTypePrefab"),
-				EditorGUIUtility.TextContent("GameObjectTypeModel"),
-				EditorGUIUtility.TextContent("GameObjectTypePrefab"),
-				EditorGUIUtility.TextContent("GameObjectTypeModel"),
-				EditorGUIUtility.TextContent("GameObjectTypeMissing"),
-				EditorGUIUtility.TextContent("GameObjectTypeDisconnectedPrefab"),
-				EditorGUIUtility.TextContent("GameObjectTypeDisconnectedModel")
+				EditorGUIUtility.TextContent("Prefab"),
+				EditorGUIUtility.TextContent("Model"),
+				EditorGUIUtility.TextContent("Prefab"),
+				EditorGUIUtility.TextContent("Model"),
+				EditorGUIUtility.TextContent("Missing|The source Prefab or Model has been deleted."),
+				EditorGUIUtility.TextContent("Prefab|You have broken the prefab connection. Changes to the prefab will not be applied to this object before you Apply or Revert."),
+				EditorGUIUtility.TextContent("Model|You have broken the prefab connection. Changes to the model will not be applied to this object before you Revert.")
 			};
+
 			public Styles()
 			{
 				GUIStyle gUIStyle = "MiniButtonMid";
@@ -42,25 +57,45 @@ namespace UnityEditor
 				this.instanceManagementInfo.alignment = gUIStyle.alignment;
 			}
 		}
+
 		private const float kTop = 4f;
+
 		private const float kTop2 = 24f;
+
 		private const float kTop3 = 44f;
+
 		private const float kIconSize = 24f;
+
 		private const float kLeft = 52f;
+
 		private const float kToggleSize = 14f;
+
 		private SerializedProperty m_Name;
+
 		private SerializedProperty m_IsActive;
+
 		private SerializedProperty m_Layer;
+
 		private SerializedProperty m_Tag;
+
 		private SerializedProperty m_StaticEditorFlags;
+
 		private SerializedProperty m_Icon;
+
 		private static GameObjectInspector.Styles s_styles;
+
 		private Vector2 previewDir;
+
 		private PreviewRenderUtility m_PreviewUtility;
+
 		private List<GameObject> m_PreviewInstances;
+
 		private bool m_HasInstance;
+
 		private bool m_AllOfSamePrefabType = true;
+
 		public static GameObject dragObject;
+
 		private GameObjectInspector()
 		{
 			if (EditorSettings.defaultBehaviorMode == EditorBehaviorMode.Mode2D)
@@ -72,6 +107,7 @@ namespace UnityEditor
 				this.previewDir = new Vector2(120f, -20f);
 			}
 		}
+
 		public void OnEnable()
 		{
 			this.m_Name = base.serializedObject.FindProperty("m_Name");
@@ -82,6 +118,7 @@ namespace UnityEditor
 			this.m_Icon = base.serializedObject.FindProperty("m_Icon");
 			this.CalculatePrefabStatus();
 		}
+
 		private void CalculatePrefabStatus()
 		{
 			this.m_HasInstance = false;
@@ -102,9 +139,11 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		private void OnDisable()
 		{
 		}
+
 		private static bool ShowMixedStaticEditorFlags(StaticEditorFlags mask)
 		{
 			uint num = 0u;
@@ -119,14 +158,17 @@ namespace UnityEditor
 			}
 			return num > 0u && num != num2;
 		}
+
 		protected override void OnHeaderGUI()
 		{
 			Rect rect = GUILayoutUtility.GetRect(0f, (float)((!this.m_HasInstance) ? 40 : 60));
 			this.DrawInspector(rect);
 		}
+
 		public override void OnInspectorGUI()
 		{
 		}
+
 		internal bool DrawInspector(Rect contentRect)
 		{
 			if (GameObjectInspector.s_styles == null)
@@ -176,19 +218,7 @@ namespace UnityEditor
 			EditorGUI.PropertyField(new Rect(34f, 4f + y, 14f, 14f), this.m_IsActive, GUIContent.none);
 			float num = GameObjectInspector.s_styles.staticFieldToggleWidth + 15f;
 			float width2 = width - 52f - num - 5f;
-			EditorGUI.BeginChangeCheck();
-			EditorGUI.showMixedValue = this.m_Name.hasMultipleDifferentValues;
-			string name = EditorGUI.DelayedTextField(new Rect(52f, 4f + y + 1f, width2, 16f), gameObject.name, null, EditorStyles.textField);
-			EditorGUI.showMixedValue = false;
-			if (EditorGUI.EndChangeCheck())
-			{
-				UnityEngine.Object[] targets = base.targets;
-				for (int i = 0; i < targets.Length; i++)
-				{
-					UnityEngine.Object @object = targets[i];
-					ObjectNames.SetNameSmart(@object as GameObject, name);
-				}
-			}
+			EditorGUI.DelayedTextField(new Rect(52f, 4f + y + 1f, width2, 16f), this.m_Name, GUIContent.none);
 			Rect rect = new Rect(width - num, 4f + y, GameObjectInspector.s_styles.staticFieldToggleWidth, 16f);
 			EditorGUI.BeginProperty(rect, GUIContent.none, this.m_StaticEditorFlags);
 			EditorGUI.BeginChangeCheck();
@@ -245,11 +275,11 @@ namespace UnityEditor
 			{
 				this.m_Tag.stringValue = text;
 				Undo.RecordObjects(base.targets, "Change Tag of " + this.targetTitle);
-				UnityEngine.Object[] targets2 = base.targets;
-				for (int j = 0; j < targets2.Length; j++)
+				UnityEngine.Object[] targets = base.targets;
+				for (int i = 0; i < targets.Length; i++)
 				{
-					UnityEngine.Object object2 = targets2[j];
-					(object2 as GameObject).tag = text;
+					UnityEngine.Object @object = targets[i];
+					(@object as GameObject).tag = text;
 				}
 			}
 			EditorGUI.EndProperty();
@@ -325,6 +355,7 @@ namespace UnityEditor
 						Undo.RegisterFullObjectHierarchyUndo(gameObject, "Revert Prefab Instance");
 						PrefabUtility.RevertPrefabInstance(gameObject);
 						this.CalculatePrefabStatus();
+						Undo.RegisterCreatedObjectUndo(gameObject, "Revert prefab");
 						GUIUtility.ExitGUI();
 					}
 					if (prefabType == PrefabType.PrefabInstance || prefabType == PrefabType.DisconnectedPrefabInstance)
@@ -338,7 +369,7 @@ namespace UnityEditor
 							bool flag2 = Provider.PromptAndCheckoutIfNeeded(new string[]
 							{
 								assetPath
-							}, "The version control requires you to checkout the prefab before applying changes.");
+							}, "The version control requires you to check out the prefab before applying changes.");
 							if (flag2)
 							{
 								PrefabUtility.ReplacePrefab(gameObject2, prefabParent, ReplacePrefabOptions.ConnectToPrefab);
@@ -359,10 +390,12 @@ namespace UnityEditor
 			base.serializedObject.ApplyModifiedProperties();
 			return true;
 		}
+
 		private UnityEngine.Object[] GetObjects(bool includeChildren)
 		{
 			return SceneModeUtility.GetObjects(base.targets, includeChildren);
 		}
+
 		private void SetLayer(int layer, bool includeChildren)
 		{
 			UnityEngine.Object[] objects = this.GetObjects(includeChildren);
@@ -374,6 +407,7 @@ namespace UnityEditor
 				gameObject.layer = layer;
 			}
 		}
+
 		public static void SetEnabledRecursive(GameObject go, bool enabled)
 		{
 			Renderer[] componentsInChildren = go.GetComponentsInChildren<Renderer>();
@@ -383,10 +417,12 @@ namespace UnityEditor
 				renderer.enabled = enabled;
 			}
 		}
+
 		public override void ReloadPreviewInstances()
 		{
 			this.CreatePreviewInstances();
 		}
+
 		private void CreatePreviewInstances()
 		{
 			this.DestroyPreviewInstances();
@@ -401,6 +437,7 @@ namespace UnityEditor
 				this.m_PreviewInstances.Add(gameObject);
 			}
 		}
+
 		private void DestroyPreviewInstances()
 		{
 			if (this.m_PreviewInstances == null || this.m_PreviewInstances.Count == 0)
@@ -413,6 +450,7 @@ namespace UnityEditor
 			}
 			this.m_PreviewInstances.Clear();
 		}
+
 		private void InitPreview()
 		{
 			if (this.m_PreviewUtility == null)
@@ -423,6 +461,7 @@ namespace UnityEditor
 				this.CreatePreviewInstances();
 			}
 		}
+
 		public void OnDestroy()
 		{
 			this.DestroyPreviewInstances();
@@ -432,6 +471,7 @@ namespace UnityEditor
 				this.m_PreviewUtility = null;
 			}
 		}
+
 		public static bool HasRenderablePartsRecurse(GameObject go)
 		{
 			MeshRenderer exists = go.GetComponent(typeof(MeshRenderer)) as MeshRenderer;
@@ -459,6 +499,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		public static void GetRenderableBoundsRecurse(ref Bounds bounds, GameObject go)
 		{
 			MeshRenderer meshRenderer = go.GetComponent(typeof(MeshRenderer)) as MeshRenderer;
@@ -503,6 +544,7 @@ namespace UnityEditor
 				GameObjectInspector.GetRenderableBoundsRecurse(ref bounds, transform.gameObject);
 			}
 		}
+
 		private static float GetRenderableCenterRecurse(ref Vector3 center, GameObject go, int depth, int minDepth, int maxDepth)
 		{
 			if (depth > maxDepth)
@@ -521,35 +563,26 @@ namespace UnityEditor
 					num = 1f;
 					center += go.transform.position;
 				}
-				else
+				else if (meshRenderer != null && x != null)
 				{
-					if (meshRenderer != null && x != null)
+					if (Vector3.Distance(meshRenderer.bounds.center, go.transform.position) < 0.01f)
 					{
-						if (Vector3.Distance(meshRenderer.bounds.center, go.transform.position) < 0.01f)
-						{
-							num = 1f;
-							center += go.transform.position;
-						}
+						num = 1f;
+						center += go.transform.position;
 					}
-					else
+				}
+				else if (skinnedMeshRenderer != null)
+				{
+					if (Vector3.Distance(skinnedMeshRenderer.bounds.center, go.transform.position) < 0.01f)
 					{
-						if (skinnedMeshRenderer != null)
-						{
-							if (Vector3.Distance(skinnedMeshRenderer.bounds.center, go.transform.position) < 0.01f)
-							{
-								num = 1f;
-								center += go.transform.position;
-							}
-						}
-						else
-						{
-							if (spriteRenderer != null && Vector3.Distance(spriteRenderer.bounds.center, go.transform.position) < 0.01f)
-							{
-								num = 1f;
-								center += go.transform.position;
-							}
-						}
+						num = 1f;
+						center += go.transform.position;
 					}
+				}
+				else if (spriteRenderer != null && Vector3.Distance(spriteRenderer.bounds.center, go.transform.position) < 0.01f)
+				{
+					num = 1f;
+					center += go.transform.position;
 				}
 			}
 			depth++;
@@ -559,6 +592,7 @@ namespace UnityEditor
 			}
 			return num;
 		}
+
 		public static Vector3 GetRenderableCenterRecurse(GameObject go, int minDepth, int maxDepth)
 		{
 			Vector3 vector = Vector3.zero;
@@ -573,10 +607,12 @@ namespace UnityEditor
 			}
 			return vector;
 		}
+
 		public override bool HasPreviewGUI()
 		{
 			return EditorUtility.IsPersistent(this.target) && this.HasStaticPreview();
 		}
+
 		private bool HasStaticPreview()
 		{
 			if (base.targets.Length > 1)
@@ -591,6 +627,7 @@ namespace UnityEditor
 			Camera exists = gameObject.GetComponent(typeof(Camera)) as Camera;
 			return exists || GameObjectInspector.HasRenderablePartsRecurse(gameObject);
 		}
+
 		public override void OnPreviewSettings()
 		{
 			if (!ShaderUtil.hardwareSupportsRectRenderTexture)
@@ -600,6 +637,7 @@ namespace UnityEditor
 			GUI.enabled = true;
 			this.InitPreview();
 		}
+
 		private void DoRenderPreview()
 		{
 			GameObject gameObject = this.m_PreviewInstances[this.referenceTargetIndex];
@@ -627,6 +665,7 @@ namespace UnityEditor
 			Unsupported.SetRenderSettingsUseFogNoDirty(fog);
 			InternalEditorUtility.RemoveCustomLighting();
 		}
+
 		public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
 		{
 			if (!this.HasStaticPreview() || !ShaderUtil.hardwareSupportsRectRenderTexture)
@@ -638,6 +677,7 @@ namespace UnityEditor
 			this.DoRenderPreview();
 			return this.m_PreviewUtility.EndStaticPreview();
 		}
+
 		public override void OnPreviewGUI(Rect r, GUIStyle background)
 		{
 			if (!ShaderUtil.hardwareSupportsRectRenderTexture)
@@ -656,9 +696,9 @@ namespace UnityEditor
 			}
 			this.m_PreviewUtility.BeginPreview(r, background);
 			this.DoRenderPreview();
-			Texture image = this.m_PreviewUtility.EndPreview();
-			GUI.DrawTexture(r, image, ScaleMode.StretchToFill, false);
+			this.m_PreviewUtility.EndAndDrawPreview(r);
 		}
+
 		public void OnSceneDrag(SceneView sceneView)
 		{
 			GameObject gameObject = this.target as GameObject;

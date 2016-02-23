@@ -1,4 +1,5 @@
 using System;
+
 namespace UnityEditor
 {
 	internal class AssembleEditorSkin : EditorWindow
@@ -7,10 +8,12 @@ namespace UnityEditor
 		{
 			EditorApplication.ExecuteMenuItem("Tools/Regenerate Editor Skins Now");
 		}
+
 		private static void RegenerateAllIconsWithMipLevels()
 		{
 			GenerateIconsWithMipLevels.GenerateAllIconsWithMipLevels();
 		}
+
 		private static void RegenerateSelectedIconsWithMipLevels()
 		{
 			GenerateIconsWithMipLevels.GenerateSelectedIconsWithMips();

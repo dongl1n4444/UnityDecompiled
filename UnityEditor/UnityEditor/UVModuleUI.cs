@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	internal class UVModuleUI : ModuleUI
@@ -9,35 +10,55 @@ namespace UnityEditor
 			WholeSheet,
 			SingleRow
 		}
+
 		private class Texts
 		{
 			public GUIContent frameOverTime = new GUIContent("Frame over Time", "Controls the uv animation frame of each particle over its lifetime. On the horisontal axis you will find the lifetime. On the vertical axis you will find the sheet index.");
+
 			public GUIContent animation = new GUIContent("Animation", "Specifies the animation type: Whole Sheet or Single Row. Whole Sheet will animate over the whole texture sheet from left to right, top to bottom. Single Row will animate a single row in the sheet from left to right.");
+
 			public GUIContent tiles = new GUIContent("Tiles", "Defines the tiling of the texture.");
+
 			public GUIContent tilesX = new GUIContent("X");
+
 			public GUIContent tilesY = new GUIContent("Y");
+
 			public GUIContent row = new GUIContent("Row", "The row in the sheet which will be played.");
+
 			public GUIContent frame = new GUIContent("Frame", "The frame in the sheet which will be used.");
+
 			public GUIContent cycles = new GUIContent("Cycles", "Specifies how many times the animation will loop during the lifetime of the particle.");
+
 			public GUIContent randomRow = new GUIContent("Random Row", "If enabled, the animated row will be chosen randomly.");
+
 			public string[] types = new string[]
 			{
 				"Whole Sheet",
 				"Single Row"
 			};
 		}
+
 		private SerializedMinMaxCurve m_FrameOverTime;
+
 		private SerializedProperty m_TilesX;
+
 		private SerializedProperty m_TilesY;
+
 		private SerializedProperty m_AnimationType;
+
 		private SerializedProperty m_Cycles;
+
 		private SerializedProperty m_RandomRow;
+
 		private SerializedProperty m_RowIndex;
+
 		private static UVModuleUI.Texts s_Texts;
+
 		public UVModuleUI(ParticleSystemUI owner, SerializedObject o, string displayName) : base(owner, o, "UVModule", displayName)
 		{
 			this.m_ToolTip = "Particle UV animation. This allows you to specify a texture sheet (a texture with multiple tiles/sub frames) and animate or randomize over it per particle.";
 		}
+
 		protected override void Init()
 		{
 			if (this.m_TilesX != null)
@@ -56,6 +77,7 @@ namespace UnityEditor
 			this.m_RandomRow = base.GetProperty("randomRow");
 			this.m_RowIndex = base.GetProperty("rowIndex");
 		}
+
 		public override void OnInspectorGUI(ParticleSystem s)
 		{
 			if (UVModuleUI.s_Texts == null)

@@ -1,4 +1,5 @@
 using System;
+
 namespace UnityEditor
 {
 	public enum BuildTargetGroup
@@ -6,13 +7,15 @@ namespace UnityEditor
 		Unknown,
 		Standalone,
 		WebPlayer,
-		iOS = 4,
+		[Obsolete("Use iOS instead (UnityUpgradable) -> iOS", true)]
 		iPhone = 4,
+		iOS = 4,
 		PS3,
 		XBOX360,
 		Android,
 		GLESEmu = 9,
 		WebGL = 13,
+		[Obsolete("Use WSA instead")]
 		Metro,
 		WSA = 14,
 		WP8,
@@ -22,6 +25,9 @@ namespace UnityEditor
 		PS4,
 		PSM,
 		XboxOne,
-		SamsungTV
+		SamsungTV,
+		Nintendo3DS,
+		WiiU,
+		tvOS
 	}
 }

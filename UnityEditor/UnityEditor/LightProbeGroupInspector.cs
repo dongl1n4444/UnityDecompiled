@@ -1,13 +1,17 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CustomEditor(typeof(LightProbeGroup))]
 	internal class LightProbeGroupInspector : Editor
 	{
 		private LightProbeGroupEditor m_Editor;
+
 		private bool m_EditingProbes;
+
 		private bool m_ShouldFocus;
+
 		public void OnEnable()
 		{
 			this.m_Editor = new LightProbeGroupEditor(this.target as LightProbeGroup);
@@ -17,6 +21,7 @@ namespace UnityEditor
 			SceneView.onSceneGUIDelegate = (SceneView.OnSceneFunc)Delegate.Combine(SceneView.onSceneGUIDelegate, new SceneView.OnSceneFunc(this.OnSceneGUIDelegate));
 			Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
 		}
+
 		private void StartEditProbes()
 		{
 			if (this.m_EditingProbes)
@@ -28,6 +33,7 @@ namespace UnityEditor
 			Tools.s_Hidden = true;
 			SceneView.RepaintAll();
 		}
+
 		private void EndEditProbes()
 		{
 			if (!this.m_EditingProbes)
@@ -38,6 +44,7 @@ namespace UnityEditor
 			this.m_EditingProbes = false;
 			Tools.s_Hidden = false;
 		}
+
 		public void OnDisable()
 		{
 			this.EndEditProbes();
@@ -48,15 +55,15 @@ namespace UnityEditor
 				this.m_Editor.PushProbePositions();
 			}
 		}
+
 		private void UndoRedoPerformed()
 		{
 			this.m_Editor.PullProbePositions();
 			this.m_Editor.MarkTetrahedraDirty();
 		}
+
 		public override void OnInspectorGUI()
 		{
-			bool flag = Application.HasAdvancedLicense();
-			EditorGUI.BeginDisabledGroup(!flag);
 			this.m_Editor.PullProbePositions();
 			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
 			GUILayout.BeginVertical(new GUILayoutOption[0]);
@@ -108,13 +115,8 @@ namespace UnityEditor
 			}
 			this.m_Editor.HandleEditMenuHotKeyCommands();
 			this.m_Editor.PushProbePositions();
-			EditorGUI.EndDisabledGroup();
-			if (!flag)
-			{
-				GUIContent gUIContent = EditorGUIUtility.TextContent("LightProbeGroup.ProOnly");
-				EditorGUILayout.HelpBox(gUIContent.text, MessageType.Warning, true);
-			}
 		}
+
 		private void InternalOnSceneView()
 		{
 			if (!EditorGUIUtility.IsGizmosAllowedForObject(this.target))
@@ -141,17 +143,15 @@ namespace UnityEditor
 			}
 			this.m_Editor.PushProbePositions();
 		}
+
 		public void OnSceneGUI()
 		{
-			if (!Application.HasAdvancedLicense())
-			{
-				return;
-			}
 			if (Event.current.type != EventType.Repaint)
 			{
 				this.InternalOnSceneView();
 			}
 		}
+
 		public void OnSceneGUIDelegate(SceneView sceneView)
 		{
 			if (Event.current.type == EventType.Repaint)
@@ -159,10 +159,12 @@ namespace UnityEditor
 				this.InternalOnSceneView();
 			}
 		}
+
 		public bool HasFrameBounds()
 		{
 			return this.m_Editor.SelectedCount > 0;
 		}
+
 		public Bounds OnGetFrameBounds()
 		{
 			return this.m_Editor.selectedProbeBounds;

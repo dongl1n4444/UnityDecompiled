@@ -1,22 +1,27 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(MovieTexture))]
 	internal class MovieTextureInspector : TextureInspector
 	{
 		private static GUIContent[] s_PlayIcons = new GUIContent[2];
+
 		private static void Init()
 		{
 			MovieTextureInspector.s_PlayIcons[0] = EditorGUIUtility.IconContent("preAudioPlayOff");
 			MovieTextureInspector.s_PlayIcons[1] = EditorGUIUtility.IconContent("preAudioPlayOn");
 		}
+
 		protected override void OnEnable()
 		{
 		}
+
 		public override void OnInspectorGUI()
 		{
 		}
+
 		public override void OnPreviewSettings()
 		{
 			MovieTextureInspector.Init();
@@ -46,6 +51,7 @@ namespace UnityEditor
 			}
 			EditorGUI.EndDisabledGroup();
 		}
+
 		public override void OnPreviewGUI(Rect r, GUIStyle background)
 		{
 			if (Event.current.type == EventType.Repaint)
@@ -74,6 +80,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		protected override void OnDisable()
 		{
 			base.OnDisable();
@@ -88,6 +95,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		public override string GetInfoString()
 		{
 			string text = base.GetInfoString();

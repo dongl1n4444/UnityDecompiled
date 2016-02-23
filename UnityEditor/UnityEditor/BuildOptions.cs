@@ -1,4 +1,5 @@
 using System;
+
 namespace UnityEditor
 {
 	[Flags]
@@ -16,12 +17,15 @@ namespace UnityEditor
 		AllowDebugging = 512,
 		SymlinkLibraries = 1024,
 		UncompressedAssetBundle = 2048,
+		[Obsolete("Use BuildOptions.Development instead")]
 		StripDebugSymbols = 0,
+		[Obsolete("Texture Compression is now always enabled")]
 		CompressTextures = 0,
 		ConnectToHost = 4096,
-		DeployOnline = 8192,
 		EnableHeadlessMode = 16384,
 		BuildScriptsOnly = 32768,
-		Il2CPP = 65536
+		Il2CPP = 65536,
+		ForceEnableAssertions = 131072,
+		ForceOptimizeScriptCompilation = 524288
 	}
 }

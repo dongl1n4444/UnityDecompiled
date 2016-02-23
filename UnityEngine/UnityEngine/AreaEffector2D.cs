@@ -1,10 +1,17 @@
 using System;
 using System.Runtime.CompilerServices;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>Applies forces within an area.</para>
+	/// </summary>
 	public sealed class AreaEffector2D : Effector2D
 	{
-		public extern float forceDirection
+		/// <summary>
+		///   <para>The angle of the force to be applied.</para>
+		/// </summary>
+		public extern float forceAngle
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -13,6 +20,23 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>Should the forceAngle use global space?</para>
+		/// </summary>
+		public extern bool useGlobalAngle
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
+		}
+
+		/// <summary>
+		///   <para>The magnitude of the force to be applied.</para>
+		/// </summary>
 		public extern float forceMagnitude
 		{
 			[WrapperlessIcall]
@@ -22,6 +46,10 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>The variation of the magnitude of the force to be applied.</para>
+		/// </summary>
 		public extern float forceVariation
 		{
 			[WrapperlessIcall]
@@ -31,6 +59,10 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>The linear drag to apply to rigid-bodies.</para>
+		/// </summary>
 		public extern float drag
 		{
 			[WrapperlessIcall]
@@ -40,6 +72,10 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>The angular drag to apply to rigid-bodies.</para>
+		/// </summary>
 		public extern float angularDrag
 		{
 			[WrapperlessIcall]
@@ -49,6 +85,10 @@ namespace UnityEngine
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		/// <summary>
+		///   <para>The target for where the effector applies any force.</para>
+		/// </summary>
 		public extern EffectorSelection2D forceTarget
 		{
 			[WrapperlessIcall]
@@ -57,6 +97,19 @@ namespace UnityEngine
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
+		}
+
+		[Obsolete("AreaEffector2D.forceDirection has been deprecated. Use AreaEffector2D.forceAngle instead (UnityUpgradable) -> forceAngle", true)]
+		public float forceDirection
+		{
+			get
+			{
+				return this.forceAngle;
+			}
+			set
+			{
+				this.forceAngle = value;
+			}
 		}
 	}
 }

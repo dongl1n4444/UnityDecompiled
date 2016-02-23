@@ -1,4 +1,5 @@
 using System;
+
 namespace UnityEditor
 {
 	public enum BuildTarget
@@ -9,7 +10,6 @@ namespace UnityEditor
 		WebPlayer,
 		WebPlayerStreamed,
 		iOS = 9,
-		iPhone = 9,
 		PS3,
 		XBOX360,
 		Android = 13,
@@ -17,19 +17,26 @@ namespace UnityEditor
 		StandaloneLinux = 17,
 		StandaloneWindows64 = 19,
 		WebGL,
-		MetroPlayer,
-		WSAPlayer = 21,
+		WSAPlayer,
 		StandaloneLinux64 = 24,
 		StandaloneLinuxUniversal,
 		WP8Player,
 		StandaloneOSXIntel64,
-		BB10,
-		BlackBerry = 28,
+		BlackBerry,
 		Tizen,
 		PSP2,
 		PS4,
 		PSM,
 		XboxOne,
-		SamsungTV
+		SamsungTV,
+		Nintendo3DS,
+		WiiU,
+		tvOS,
+		[Obsolete("Use iOS instead (UnityUpgradable) -> iOS", true)]
+		iPhone = -1,
+		[Obsolete("Use BlackBerry instead (UnityUpgradable) -> BlackBerry", true)]
+		BB10 = -1,
+		[Obsolete("Use WSAPlayer instead (UnityUpgradable) -> WSAPlayer", true)]
+		MetroPlayer = -1
 	}
 }

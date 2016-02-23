@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CustomEditor(typeof(ShaderImporter))]
 	internal class ShaderImporterInspector : AssetImporterInspector
 	{
 		private List<string> propertyNames = new List<string>();
+
 		private List<string> displayNames = new List<string>();
+
 		private List<Texture> textures = new List<Texture>();
+
 		private List<ShaderUtil.ShaderPropertyTexDim> dimensions = new List<ShaderUtil.ShaderPropertyTexDim>();
+
 		internal override void OnHeaderControlsGUI()
 		{
 			Shader target = this.assetEditor.target as Shader;
@@ -20,10 +25,12 @@ namespace UnityEditor
 				GUIUtility.ExitGUI();
 			}
 		}
+
 		public void OnEnable()
 		{
 			this.ResetValues();
 		}
+
 		private void ShowDefaultTextures()
 		{
 			if (this.propertyNames.Count == 0)
@@ -66,6 +73,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		internal override bool HasModified()
 		{
 			if (base.HasModified())
@@ -96,6 +104,7 @@ namespace UnityEditor
 			}
 			return false;
 		}
+
 		internal override void ResetValues()
 		{
 			base.ResetValues();
@@ -128,6 +137,7 @@ namespace UnityEditor
 				}
 			}
 		}
+
 		internal override void Apply()
 		{
 			base.Apply();
@@ -139,6 +149,7 @@ namespace UnityEditor
 			shaderImporter.SetDefaultTextures(this.propertyNames.ToArray(), this.textures.ToArray());
 			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(shaderImporter));
 		}
+
 		private static int GetNumberOfTextures(Shader shader)
 		{
 			int num = 0;
@@ -152,6 +163,7 @@ namespace UnityEditor
 			}
 			return num;
 		}
+
 		public override void OnInspectorGUI()
 		{
 			ShaderImporter shaderImporter = this.target as ShaderImporter;

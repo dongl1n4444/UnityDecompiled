@@ -1,18 +1,22 @@
 using System;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(BoxCollider2D))]
 	internal class BoxCollider2DEditor : Collider2DEditorBase
 	{
 		private static readonly int s_BoxHash = "BoxCollider2DEditor".GetHashCode();
+
 		private readonly BoxEditor m_BoxEditor = new BoxEditor(true, BoxCollider2DEditor.s_BoxHash, true);
+
 		public override void OnEnable()
 		{
 			base.OnEnable();
 			this.m_BoxEditor.OnEnable();
 			this.m_BoxEditor.SetAlwaysDisplayHandles(true);
 		}
+
 		public override void OnInspectorGUI()
 		{
 			base.serializedObject.Update();
@@ -20,11 +24,13 @@ namespace UnityEditor
 			base.OnInspectorGUI();
 			base.serializedObject.ApplyModifiedProperties();
 		}
+
 		public override void OnDisable()
 		{
 			base.OnDisable();
 			this.m_BoxEditor.OnDisable();
 		}
+
 		public void OnSceneGUI()
 		{
 			if (!base.editingCollider)

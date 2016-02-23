@@ -2,14 +2,18 @@ using System;
 using UnityEditor.Animations;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[CanEditMultipleObjects, CustomEditor(typeof(AnimatorOverrideController))]
 	internal class AnimatorOverrideControllerInspector : Editor
 	{
 		private SerializedProperty m_Controller;
+
 		private AnimationClipPair[] m_Clips;
+
 		private ReorderableList m_ClipList;
+
 		private void OnEnable()
 		{
 			AnimatorOverrideController animatorOverrideController = this.target as AnimatorOverrideController;
@@ -24,12 +28,14 @@ namespace UnityEditor
 			AnimatorOverrideController expr_8B = animatorOverrideController;
 			expr_8B.OnOverrideControllerDirty = (AnimatorOverrideController.OnOverrideControllerDirtyCallback)Delegate.Combine(expr_8B.OnOverrideControllerDirty, new AnimatorOverrideController.OnOverrideControllerDirtyCallback(base.Repaint));
 		}
+
 		private void OnDisable()
 		{
 			AnimatorOverrideController animatorOverrideController = this.target as AnimatorOverrideController;
 			AnimatorOverrideController expr_0D = animatorOverrideController;
 			expr_0D.OnOverrideControllerDirty = (AnimatorOverrideController.OnOverrideControllerDirtyCallback)Delegate.Remove(expr_0D.OnOverrideControllerDirty, new AnimatorOverrideController.OnOverrideControllerDirtyCallback(base.Repaint));
 		}
+
 		public override void OnInspectorGUI()
 		{
 			bool flag = base.targets.Length > 1;
@@ -68,6 +74,7 @@ namespace UnityEditor
 				animatorOverrideController.PerformOverrideClipListCleanup();
 			}
 		}
+
 		private void DrawClipElement(Rect rect, int index, bool selected, bool focused)
 		{
 			AnimationClip originalClip = this.m_Clips[index].originalClip;
@@ -83,6 +90,7 @@ namespace UnityEditor
 				this.m_Clips[index].overrideClip = animationClip;
 			}
 		}
+
 		private void DrawClipHeader(Rect rect)
 		{
 			rect.xMax /= 2f;

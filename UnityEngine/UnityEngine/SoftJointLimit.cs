@@ -1,11 +1,21 @@
 using System;
+
 namespace UnityEngine
 {
+	/// <summary>
+	///   <para>The limits defined by the CharacterJoint.</para>
+	/// </summary>
 	public struct SoftJointLimit
 	{
 		private float m_Limit;
+
 		private float m_Bounciness;
+
 		private float m_ContactDistance;
+
+		/// <summary>
+		///   <para>The limit position/angle of the joint (in degrees).</para>
+		/// </summary>
 		public float limit
 		{
 			get
@@ -17,7 +27,11 @@ namespace UnityEngine
 				this.m_Limit = value;
 			}
 		}
-		[Obsolete("spring has been moved to SoftJointLimitSpring class in Unity 5", true)]
+
+		/// <summary>
+		///   <para>If greater than zero, the limit is soft. The spring will pull the joint back.</para>
+		/// </summary>
+		[Obsolete("Spring has been moved to SoftJointLimitSpring class in Unity 5", true)]
 		public float spring
 		{
 			get
@@ -28,7 +42,11 @@ namespace UnityEngine
 			{
 			}
 		}
-		[Obsolete("damper has been moved to SoftJointLimitSpring class in Unity 5", true)]
+
+		/// <summary>
+		///   <para>If spring is greater than zero, the limit is soft.</para>
+		/// </summary>
+		[Obsolete("Damper has been moved to SoftJointLimitSpring class in Unity 5", true)]
 		public float damper
 		{
 			get
@@ -39,6 +57,10 @@ namespace UnityEngine
 			{
 			}
 		}
+
+		/// <summary>
+		///   <para>When the joint hits the limit, it can be made to bounce off it.</para>
+		/// </summary>
 		public float bounciness
 		{
 			get
@@ -50,6 +72,10 @@ namespace UnityEngine
 				this.m_Bounciness = value;
 			}
 		}
+
+		/// <summary>
+		///   <para>Determines how far ahead in space the solver can "see" the joint limit.</para>
+		/// </summary>
 		public float contactDistance
 		{
 			get
@@ -61,6 +87,7 @@ namespace UnityEngine
 				this.m_ContactDistance = value;
 			}
 		}
+
 		[Obsolete("Use SoftJointLimit.bounciness instead", true)]
 		public float bouncyness
 		{

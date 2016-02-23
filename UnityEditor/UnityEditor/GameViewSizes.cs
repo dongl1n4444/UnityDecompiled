@@ -1,6 +1,7 @@
 using System;
 using UnityEditorInternal;
 using UnityEngine;
+
 namespace UnityEditor
 {
 	[FilePath("GameViewSizes.asset", FilePathAttribute.Location.PreferencesFolder)]
@@ -8,34 +9,55 @@ namespace UnityEditor
 	{
 		[SerializeField]
 		private GameViewSizeGroup m_Standalone = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_WebPlayer = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_iOS = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_Android = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_XBox360 = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_PS3 = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_BB10 = new GameViewSizeGroup();
+
+		[SerializeField]
+		private GameViewSizeGroup m_WiiU = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_Tizen = new GameViewSizeGroup();
+
 		[SerializeField]
 		private GameViewSizeGroup m_WP8 = new GameViewSizeGroup();
+
+		[SerializeField]
+		private GameViewSizeGroup m_Nintendo3DS = new GameViewSizeGroup();
+
 		[NonSerialized]
 		private GameViewSize m_Remote;
+
 		[NonSerialized]
 		private Vector2 m_LastStandaloneScreenSize = new Vector2(-1f, -1f);
+
 		[NonSerialized]
 		private Vector2 m_LastWebPlayerScreenSize = new Vector2(-1f, -1f);
+
 		[NonSerialized]
 		private Vector2 m_LastRemoteScreenSize = new Vector2(-1f, -1f);
+
 		[NonSerialized]
 		private int m_ChangeID;
+
 		[NonSerialized]
 		private static GameViewSizeGroupType s_GameViewSizeGroupType;
+
 		public GameViewSizeGroupType currentGroupType
 		{
 			get
@@ -43,6 +65,7 @@ namespace UnityEditor
 				return GameViewSizes.s_GameViewSizeGroupType;
 			}
 		}
+
 		public GameViewSizeGroup currentGroup
 		{
 			get
@@ -50,14 +73,16 @@ namespace UnityEditor
 				return this.GetGroup(GameViewSizes.s_GameViewSizeGroupType);
 			}
 		}
+
 		static GameViewSizes()
 		{
 			GameViewSizes.RefreshGameViewSizeGroupType();
-			EditorUserBuildSettings.activeBuildTargetChanged = (Action)Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, delegate
+			EditorUserBuildSettings.activeBuildTargetChanged = (Action)Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, new Action(delegate
 			{
 				GameViewSizes.RefreshGameViewSizeGroupType();
-			});
+			}));
 		}
+
 		public GameViewSizeGroup GetGroup(GameViewSizeGroupType gameViewSizeGroupType)
 		{
 			this.InitBuiltinGroups();
@@ -77,40 +102,51 @@ namespace UnityEditor
 				return this.m_XBox360;
 			case GameViewSizeGroupType.BB10:
 				return this.m_BB10;
+			case GameViewSizeGroupType.WiiU:
+				return this.m_WiiU;
 			case GameViewSizeGroupType.Tizen:
 				return this.m_Tizen;
 			case GameViewSizeGroupType.WP8:
 				return this.m_WP8;
+			case GameViewSizeGroupType.Nintendo3DS:
+				return this.m_Nintendo3DS;
 			default:
 				Debug.LogError("Unhandled group enum! " + gameViewSizeGroupType);
 				return this.m_Standalone;
 			}
 		}
+
 		public void SaveToHDD()
 		{
 			bool saveAsText = true;
 			this.Save(saveAsText);
 		}
+
 		public bool IsDefaultStandaloneScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index)
 		{
 			return gameViewSizeGroupType == GameViewSizeGroupType.Standalone && this.GetDefaultStandaloneIndex() == index;
 		}
+
 		public bool IsDefaultWebPlayerScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index)
 		{
 			return gameViewSizeGroupType == GameViewSizeGroupType.WebPlayer && this.GetDefaultWebPlayerIndex() == index;
 		}
+
 		public bool IsRemoteScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index)
 		{
 			return this.GetGroup(gameViewSizeGroupType).IndexOf(this.m_Remote) == index;
 		}
+
 		public int GetDefaultStandaloneIndex()
 		{
 			return this.m_Standalone.GetBuiltinCount() - 1;
 		}
+
 		public int GetDefaultWebPlayerIndex()
 		{
 			return this.m_WebPlayer.GetBuiltinCount() - 1;
 		}
+
 		public void RefreshStandaloneAndWebplayerDefaultSizes()
 		{
 			if (InternalEditorUtility.defaultScreenWidth != this.m_LastStandaloneScreenSize.x || InternalEditorUtility.defaultScreenHeight != this.m_LastStandaloneScreenSize.y)
@@ -129,6 +165,7 @@ namespace UnityEditor
 				this.RefreshRemoteScreenSize((int)this.m_LastRemoteScreenSize.x, (int)this.m_LastRemoteScreenSize.y);
 			}
 		}
+
 		public void RefreshStandaloneDefaultScreenSize(int width, int height)
 		{
 			GameViewSize gameViewSize = this.m_Standalone.GetGameViewSize(this.GetDefaultStandaloneIndex());
@@ -136,6 +173,7 @@ namespace UnityEditor
 			gameViewSize.width = width;
 			this.Changed();
 		}
+
 		public void RefreshWebPlayerDefaultScreenSize(int width, int height)
 		{
 			GameViewSize gameViewSize = this.m_WebPlayer.GetGameViewSize(this.GetDefaultWebPlayerIndex());
@@ -143,6 +181,7 @@ namespace UnityEditor
 			gameViewSize.width = width;
 			this.Changed();
 		}
+
 		public void RefreshRemoteScreenSize(int width, int height)
 		{
 			this.m_Remote.width = width;
@@ -157,14 +196,17 @@ namespace UnityEditor
 			}
 			this.Changed();
 		}
+
 		public void Changed()
 		{
 			this.m_ChangeID++;
 		}
+
 		public int GetChangeID()
 		{
 			return this.m_ChangeID;
 		}
+
 		private void InitBuiltinGroups()
 		{
 			bool flag = this.m_Standalone.GetBuiltinCount() > 0;
@@ -222,35 +264,40 @@ namespace UnityEditor
 			GameViewSize gameViewSize47 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 16, "9:16 Portrait");
 			GameViewSize gameViewSize48 = new GameViewSize(GameViewSizeType.AspectRatio, 16, 9, "16:9 Landscape");
 			GameViewSize gameViewSize49 = new GameViewSize(GameViewSizeType.AspectRatio, 1, 1, "1:1");
-			GameViewSize gameViewSize50 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 720, "16:9 Landscape");
-			GameViewSize gameViewSize51 = new GameViewSize(GameViewSizeType.FixedResolution, 720, 1280, "9:16 Portrait");
-			GameViewSize gameViewSize52 = new GameViewSize(GameViewSizeType.FixedResolution, 480, 800, "WVGA Portrait");
-			GameViewSize gameViewSize53 = new GameViewSize(GameViewSizeType.FixedResolution, 800, 480, "WVGA Landscape");
-			GameViewSize gameViewSize54 = new GameViewSize(GameViewSizeType.FixedResolution, 768, 1280, "WXGA Portrait");
-			GameViewSize gameViewSize55 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 768, "WXGA Landscape");
-			GameViewSize gameViewSize56 = new GameViewSize(GameViewSizeType.FixedResolution, 720, 1280, "720p Portrait");
-			GameViewSize gameViewSize57 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 720, "720p Landscape");
-			GameViewSize gameViewSize58 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 15, "WVGA Portrait");
-			GameViewSize gameViewSize59 = new GameViewSize(GameViewSizeType.AspectRatio, 15, 9, "WVGA Landscape");
-			GameViewSize gameViewSize60 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 15, "WXGA Portrait");
-			GameViewSize gameViewSize61 = new GameViewSize(GameViewSizeType.AspectRatio, 15, 9, "WXGA Landscape");
-			GameViewSize gameViewSize62 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 16, "720p Portrait");
-			GameViewSize gameViewSize63 = new GameViewSize(GameViewSizeType.AspectRatio, 16, 9, "720p Landscape");
+			GameViewSize gameViewSize50 = new GameViewSize(GameViewSizeType.FixedResolution, 1920, 1080, "1080p (16:9)");
+			GameViewSize gameViewSize51 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 720, "720p (16:9)");
+			GameViewSize gameViewSize52 = new GameViewSize(GameViewSizeType.FixedResolution, 854, 480, "GamePad 480p (16:9)");
+			GameViewSize gameViewSize53 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 720, "16:9 Landscape");
+			GameViewSize gameViewSize54 = new GameViewSize(GameViewSizeType.FixedResolution, 720, 1280, "9:16 Portrait");
+			GameViewSize gameViewSize55 = new GameViewSize(GameViewSizeType.FixedResolution, 480, 800, "WVGA Portrait");
+			GameViewSize gameViewSize56 = new GameViewSize(GameViewSizeType.FixedResolution, 800, 480, "WVGA Landscape");
+			GameViewSize gameViewSize57 = new GameViewSize(GameViewSizeType.FixedResolution, 768, 1280, "WXGA Portrait");
+			GameViewSize gameViewSize58 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 768, "WXGA Landscape");
+			GameViewSize gameViewSize59 = new GameViewSize(GameViewSizeType.FixedResolution, 720, 1280, "720p Portrait");
+			GameViewSize gameViewSize60 = new GameViewSize(GameViewSizeType.FixedResolution, 1280, 720, "720p Landscape");
+			GameViewSize gameViewSize61 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 15, "WVGA Portrait");
+			GameViewSize gameViewSize62 = new GameViewSize(GameViewSizeType.AspectRatio, 15, 9, "WVGA Landscape");
+			GameViewSize gameViewSize63 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 15, "WXGA Portrait");
+			GameViewSize gameViewSize64 = new GameViewSize(GameViewSizeType.AspectRatio, 15, 9, "WXGA Landscape");
+			GameViewSize gameViewSize65 = new GameViewSize(GameViewSizeType.AspectRatio, 9, 16, "720p Portrait");
+			GameViewSize gameViewSize66 = new GameViewSize(GameViewSizeType.AspectRatio, 16, 9, "720p Landscape");
+			GameViewSize gameViewSize67 = new GameViewSize(GameViewSizeType.FixedResolution, 400, 240, "Top Screen");
+			GameViewSize gameViewSize68 = new GameViewSize(GameViewSizeType.FixedResolution, 320, 240, "Bottom Screen");
 			this.m_WP8.AddBuiltinSizes(new GameViewSize[]
 			{
 				gameViewSize,
-				gameViewSize52,
-				gameViewSize58,
-				gameViewSize53,
-				gameViewSize59,
-				gameViewSize54,
-				gameViewSize60,
 				gameViewSize55,
 				gameViewSize61,
 				gameViewSize56,
 				gameViewSize62,
 				gameViewSize57,
-				gameViewSize63
+				gameViewSize63,
+				gameViewSize58,
+				gameViewSize64,
+				gameViewSize59,
+				gameViewSize65,
+				gameViewSize60,
+				gameViewSize66
 			});
 			this.m_Standalone.AddBuiltinSizes(new GameViewSize[]
 			{
@@ -292,6 +339,15 @@ namespace UnityEditor
 				gameViewSize6,
 				gameViewSize5,
 				gameViewSize35
+			});
+			this.m_WiiU.AddBuiltinSizes(new GameViewSize[]
+			{
+				gameViewSize,
+				gameViewSize3,
+				gameViewSize6,
+				gameViewSize50,
+				gameViewSize51,
+				gameViewSize52
 			});
 			this.m_iOS.AddBuiltinSizes(new GameViewSize[]
 			{
@@ -343,10 +399,17 @@ namespace UnityEditor
 			this.m_Tizen.AddBuiltinSizes(new GameViewSize[]
 			{
 				gameViewSize,
-				gameViewSize50,
-				gameViewSize51
+				gameViewSize53,
+				gameViewSize54
+			});
+			this.m_Nintendo3DS.AddBuiltinSizes(new GameViewSize[]
+			{
+				gameViewSize,
+				gameViewSize67,
+				gameViewSize68
 			});
 		}
+
 		private static void RefreshDerivedGameViewSize(GameViewSizeGroupType groupType, int gameViewSizeIndex, GameViewSize gameViewSize)
 		{
 			if (ScriptableSingleton<GameViewSizes>.instance.IsDefaultStandaloneScreenSize(groupType, gameViewSizeIndex))
@@ -354,34 +417,29 @@ namespace UnityEditor
 				gameViewSize.width = (int)InternalEditorUtility.defaultScreenWidth;
 				gameViewSize.height = (int)InternalEditorUtility.defaultScreenHeight;
 			}
-			else
+			else if (ScriptableSingleton<GameViewSizes>.instance.IsDefaultWebPlayerScreenSize(groupType, gameViewSizeIndex))
 			{
-				if (ScriptableSingleton<GameViewSizes>.instance.IsDefaultWebPlayerScreenSize(groupType, gameViewSizeIndex))
+				gameViewSize.width = (int)InternalEditorUtility.defaultWebScreenWidth;
+				gameViewSize.height = (int)InternalEditorUtility.defaultWebScreenHeight;
+			}
+			else if (ScriptableSingleton<GameViewSizes>.instance.IsRemoteScreenSize(groupType, gameViewSizeIndex))
+			{
+				if (InternalEditorUtility.remoteScreenWidth <= 0f || InternalEditorUtility.remoteScreenHeight <= 0f)
 				{
-					gameViewSize.width = (int)InternalEditorUtility.defaultWebScreenWidth;
-					gameViewSize.height = (int)InternalEditorUtility.defaultWebScreenHeight;
+					gameViewSize.sizeType = GameViewSizeType.AspectRatio;
+					int num = 0;
+					gameViewSize.height = num;
+					gameViewSize.width = num;
 				}
 				else
 				{
-					if (ScriptableSingleton<GameViewSizes>.instance.IsRemoteScreenSize(groupType, gameViewSizeIndex))
-					{
-						if (InternalEditorUtility.remoteScreenWidth <= 0f || InternalEditorUtility.remoteScreenHeight <= 0f)
-						{
-							gameViewSize.sizeType = GameViewSizeType.AspectRatio;
-							int num = 0;
-							gameViewSize.height = num;
-							gameViewSize.width = num;
-						}
-						else
-						{
-							gameViewSize.sizeType = GameViewSizeType.FixedResolution;
-							gameViewSize.width = (int)InternalEditorUtility.remoteScreenWidth;
-							gameViewSize.height = (int)InternalEditorUtility.remoteScreenHeight;
-						}
-					}
+					gameViewSize.sizeType = GameViewSizeType.FixedResolution;
+					gameViewSize.width = (int)InternalEditorUtility.remoteScreenWidth;
+					gameViewSize.height = (int)InternalEditorUtility.remoteScreenHeight;
 				}
 			}
 		}
+
 		public static Rect GetConstrainedRect(Rect startRect, GameViewSizeGroupType groupType, int gameViewSizeIndex, out bool fitsInsideRect)
 		{
 			fitsInsideRect = true;
@@ -435,11 +493,13 @@ namespace UnityEditor
 			result.y = Mathf.Floor(result.y + 0.5f);
 			return result;
 		}
+
 		private static void RefreshGameViewSizeGroupType()
 		{
 			BuildTargetGroup buildTargetGroup = BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget);
 			GameViewSizes.s_GameViewSizeGroupType = GameViewSizes.BuildTargetGroupToGameViewSizeGroup(buildTargetGroup);
 		}
+
 		public static GameViewSizeGroupType BuildTargetGroupToGameViewSizeGroup(BuildTargetGroup buildTargetGroup)
 		{
 			switch (buildTargetGroup)
@@ -448,7 +508,25 @@ namespace UnityEditor
 				return GameViewSizeGroupType.Standalone;
 			case BuildTargetGroup.WebPlayer:
 				return GameViewSizeGroupType.WebPlayer;
-			case BuildTargetGroup.iOS:
+			case (BuildTargetGroup)3:
+			case (BuildTargetGroup)8:
+			case BuildTargetGroup.GLESEmu:
+			case (BuildTargetGroup)10:
+			case (BuildTargetGroup)11:
+			case (BuildTargetGroup)12:
+			case BuildTargetGroup.WebGL:
+			case BuildTargetGroup.Metro:
+				IL_4E:
+				if (buildTargetGroup == BuildTargetGroup.Nintendo3DS)
+				{
+					return GameViewSizeGroupType.Nintendo3DS;
+				}
+				if (buildTargetGroup != BuildTargetGroup.WiiU)
+				{
+					return GameViewSizeGroupType.Standalone;
+				}
+				return GameViewSizeGroupType.WiiU;
+			case BuildTargetGroup.iPhone:
 				return GameViewSizeGroupType.iOS;
 			case BuildTargetGroup.PS3:
 				return GameViewSizeGroupType.PS3;
@@ -463,7 +541,7 @@ namespace UnityEditor
 			case BuildTargetGroup.Tizen:
 				return GameViewSizeGroupType.Tizen;
 			}
-			return GameViewSizeGroupType.Standalone;
+			goto IL_4E;
 		}
 	}
 }
