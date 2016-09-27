@@ -14,7 +14,7 @@ namespace UnityEditorInternal
 
 		private GUIStyle plusButtonBackgroundStyle = new GUIStyle("Tag MenuItem");
 
-		public AnimationWindowState state
+		public IAnimationRecordingState state
 		{
 			get;
 			set;
@@ -26,7 +26,7 @@ namespace UnityEditorInternal
 			set;
 		}
 
-		public AddCurvesPopupHierarchyGUI(TreeView treeView, AnimationWindowState state, EditorWindow owner) : base(treeView, true)
+		public AddCurvesPopupHierarchyGUI(TreeView treeView, IAnimationRecordingState state, EditorWindow owner) : base(treeView, true)
 		{
 			this.owner = owner;
 			this.state = state;
@@ -67,7 +67,7 @@ namespace UnityEditorInternal
 			return false;
 		}
 
-		protected override Texture GetIconForNode(TreeViewItem item)
+		protected override Texture GetIconForItem(TreeViewItem item)
 		{
 			if (item != null)
 			{

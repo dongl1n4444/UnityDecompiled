@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using UnityEditor;
+using UnityEditor.BuildReporting;
 using UnityEditor.Utils;
-using UnityEngine;
 
 namespace UnityEditorInternal
 {
@@ -28,11 +28,6 @@ namespace UnityEditorInternal
 		{
 			get
 			{
-				RuntimePlatform platform = Application.platform;
-				if (platform != RuntimePlatform.WindowsEditor)
-				{
-					return Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedByteCodeStripper/UnusedBytecodeStripper.exe");
-				}
 				return Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedBytecodeStripper.exe");
 			}
 		}
@@ -106,7 +101,7 @@ namespace UnityEditorInternal
 		{
 			string text = args.Aggregate((string buff, string s) => buff + " " + s);
 			Console.WriteLine("Invoking UnusedByteCodeStripper2 with arguments: " + text);
-			Runner.RunManagedProgram(linkerPath, text, workingDirectory, null);
+			Runner.RunManagedProgram(linkerPath, text, workingDirectory, null, null);
 			@out = string.Empty;
 			err = string.Empty;
 			return true;
@@ -150,8 +145,9 @@ namespace UnityEditorInternal
 			return list;
 		}
 
-		private static bool AddWhiteListsForModules(IEnumerable<string> nativeModules, ref IEnumerable<string> blacklists, string moduleStrippingInformationFolder)
+		private static bool AddWhiteListsForModules(IEnumerable<string> nativeModules, ref IEnumerable<string> blacklists, string moduleStrippingInformationFolder, BuildReport buildReport)
 		{
+			StrippingInfo buildReportData = StrippingInfo.GetBuildReportData(buildReport);
 			bool flag = false;
 			foreach (string current in nativeModules)
 			{
@@ -166,7 +162,15 @@ namespace UnityEditorInternal
 						});
 						flag = true;
 					}
-					flag = (flag || AssemblyStripper.AddWhiteListsForModules(AssemblyStripper.GetDependentModules(moduleWhitelist), ref blacklists, moduleStrippingInformationFolder));
+					List<string> dependentModules = AssemblyStripper.GetDependentModules(moduleWhitelist);
+					if (buildReportData != null)
+					{
+						foreach (string current2 in dependentModules)
+						{
+							buildReportData.RegisterDependency(current2, current);
+						}
+					}
+					flag = (flag || AssemblyStripper.AddWhiteListsForModules(dependentModules, ref blacklists, moduleStrippingInformationFolder, buildReport));
 				}
 			}
 			return flag;
@@ -218,8 +222,8 @@ namespace UnityEditorInternal
 				{
 					HashSet<string> hashSet;
 					HashSet<string> nativeModules;
-					CodeStrippingUtils.GenerateDependencies(fullPath, text4, rcr, out hashSet, out nativeModules);
-					flag2 = AssemblyStripper.AddWhiteListsForModules(nativeModules, ref enumerable, platformProvider.moduleStrippingInformationFolder);
+					CodeStrippingUtils.GenerateDependencies(fullPath, text4, rcr, out hashSet, out nativeModules, platformProvider.buildReport);
+					flag2 = AssemblyStripper.AddWhiteListsForModules(nativeModules, ref enumerable, platformProvider.moduleStrippingInformationFolder, platformProvider.buildReport);
 				}
 				if (!flag2)
 				{

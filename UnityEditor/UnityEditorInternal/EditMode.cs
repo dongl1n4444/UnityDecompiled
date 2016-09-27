@@ -13,7 +13,10 @@ namespace UnityEditorInternal
 			Collider,
 			Cloth,
 			ReflectionProbeBox,
-			ReflectionProbeOrigin
+			ReflectionProbeOrigin,
+			LightProbeProxyVolumeBox,
+			LightProbeProxyVolumeOrigin,
+			LightProbeGroup
 		}
 
 		public delegate void OnEditModeStopFunc(Editor editor);
@@ -224,7 +227,7 @@ namespace UnityEditorInternal
 			}
 		}
 
-		private static void ChangeEditMode(EditMode.SceneViewEditMode mode, Bounds bounds, Editor caller)
+		public static void ChangeEditMode(EditMode.SceneViewEditMode mode, Bounds bounds, Editor caller)
 		{
 			Editor editor = InternalEditorUtility.GetObjectFromInstanceID(EditMode.ownerID) as Editor;
 			EditMode.editMode = mode;

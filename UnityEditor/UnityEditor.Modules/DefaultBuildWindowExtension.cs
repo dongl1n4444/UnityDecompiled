@@ -42,6 +42,11 @@ namespace UnityEditor.Modules
 			return false;
 		}
 
+		public virtual bool ShouldDrawExplicitDivideByZeroCheckbox()
+		{
+			return false;
+		}
+
 		public virtual bool ShouldDrawForceOptimizeScriptsCheckbox()
 		{
 			return false;

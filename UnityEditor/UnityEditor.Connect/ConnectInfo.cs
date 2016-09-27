@@ -18,6 +18,8 @@ namespace UnityEditor.Connect
 
 		private int m_Error;
 
+		private string m_LastErrorMsg;
+
 		private int m_Maintenance;
 
 		public bool initialized
@@ -73,6 +75,14 @@ namespace UnityEditor.Connect
 			get
 			{
 				return this.m_Error != 0;
+			}
+		}
+
+		public string lastErrorMsg
+		{
+			get
+			{
+				return this.m_LastErrorMsg;
 			}
 		}
 

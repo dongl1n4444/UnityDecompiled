@@ -38,6 +38,20 @@ namespace UnityEditor.Connect
 			}
 		}
 
+		public event UserStateChangedDelegate UserStateChanged
+		{
+			[MethodImpl(MethodImplOptions.Synchronized)]
+			add
+			{
+				this.UserStateChanged = (UserStateChangedDelegate)Delegate.Combine(this.UserStateChanged, value);
+			}
+			[MethodImpl(MethodImplOptions.Synchronized)]
+			remove
+			{
+				this.UserStateChanged = (UserStateChangedDelegate)Delegate.Remove(this.UserStateChanged, value);
+			}
+		}
+
 		public static extern bool preferencesEnabled
 		{
 			[WrapperlessIcall]
@@ -74,6 +88,13 @@ namespace UnityEditor.Connect
 		}
 
 		public extern bool workingOffline
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+		}
+
+		public extern bool shouldShowServicesWindow
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -161,6 +182,10 @@ namespace UnityEditor.Connect
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern string GetUserId();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern string GetUserName();
 
 		[WrapperlessIcall]
@@ -185,7 +210,7 @@ namespace UnityEditor.Connect
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern int GetOrganizationForeignKey();
+		public extern string GetOrganizationForeignKey();
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -231,6 +256,18 @@ namespace UnityEditor.Connect
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void UnhandledError(string request, int responseCode, string response);
 
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern void ComputerGoesToSleep();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern void ComputerDidWakeUp();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern void ClearAccessToken();
+
 		public void GoToHub(string page)
 		{
 			UnityConnectServiceCollection.instance.ShowService("Hub", page, true);
@@ -269,6 +306,14 @@ namespace UnityEditor.Connect
 			{
 				return this.GetConfigurationURL(CloudConfigUrl.CloudLogin);
 			}
+			if (index == 6)
+			{
+				return this.GetConfigurationURL(CloudConfigUrl.CloudIdentity);
+			}
+			if (index == 7)
+			{
+				return this.GetConfigurationURL(CloudConfigUrl.CloudPortal);
+			}
 			return string.Empty;
 		}
 
@@ -287,6 +332,24 @@ namespace UnityEditor.Connect
 			return this.SetCOPPACompliance((COPPACompliance)compliance);
 		}
 
+		[MenuItem("Window/Unity Connect/Computer GoesToSleep", false, 1000, true)]
+		public static void TestComputerGoesToSleep()
+		{
+			UnityConnect.instance.ComputerGoesToSleep();
+		}
+
+		[MenuItem("Window/Unity Connect/Computer DidWakeUp", false, 1000, true)]
+		public static void TestComputerDidWakeUp()
+		{
+			UnityConnect.instance.ComputerDidWakeUp();
+		}
+
+		[MenuItem("Window/Unity Connect/Reset AccessToken", false, 1000, true)]
+		public static void TestClearAccessToken()
+		{
+			UnityConnect.instance.ClearAccessToken();
+		}
+
 		private static void OnStateChanged()
 		{
 			StateChangedDelegate stateChanged = UnityConnect.instance.StateChanged;
@@ -302,6 +365,15 @@ namespace UnityEditor.Connect
 			if (projectStateChanged != null)
 			{
 				projectStateChanged(UnityConnect.instance.projectInfo);
+			}
+		}
+
+		private static void OnUserStateChanged()
+		{
+			UserStateChangedDelegate userStateChanged = UnityConnect.instance.UserStateChanged;
+			if (userStateChanged != null)
+			{
+				userStateChanged(UnityConnect.instance.userInfo);
 			}
 		}
 	}

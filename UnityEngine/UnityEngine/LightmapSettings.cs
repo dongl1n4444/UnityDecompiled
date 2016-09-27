@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Stores lightmaps of the scene.</para>
-	/// </summary>
 	public sealed class LightmapSettings : Object
 	{
-		/// <summary>
-		///   <para>Lightmap array.</para>
-		/// </summary>
 		public static extern LightmapData[] lightmaps
 		{
 			[WrapperlessIcall]
@@ -32,9 +26,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Non-directional, Directional or Directional Specular lightmaps rendering mode.</para>
-		/// </summary>
 		public static extern LightmapsMode lightmapsMode
 		{
 			[WrapperlessIcall]
@@ -57,9 +48,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Holds all data needed by the light probes.</para>
-		/// </summary>
 		public static extern LightProbes lightProbes
 		{
 			[WrapperlessIcall]

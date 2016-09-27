@@ -4,28 +4,22 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A Splat prototype is just a texture that is used by the TerrainData.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class SplatPrototype
 	{
-		private Texture2D m_Texture;
+		internal Texture2D m_Texture;
 
-		private Texture2D m_NormalMap;
+		internal Texture2D m_NormalMap;
 
-		private Vector2 m_TileSize = new Vector2(15f, 15f);
+		internal Vector2 m_TileSize = new Vector2(15f, 15f);
 
-		private Vector2 m_TileOffset = new Vector2(0f, 0f);
+		internal Vector2 m_TileOffset = new Vector2(0f, 0f);
 
-		private Vector4 m_SpecularMetallic = new Vector4(0f, 0f, 0f, 0f);
+		internal Vector4 m_SpecularMetallic = new Vector4(0f, 0f, 0f, 0f);
 
-		private float m_Smoothness;
+		internal float m_Smoothness;
 
-		/// <summary>
-		///   <para>Texture of the splat applied to the Terrain.</para>
-		/// </summary>
 		public Texture2D texture
 		{
 			get
@@ -38,9 +32,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Normal map of the splat applied to the Terrain.</para>
-		/// </summary>
 		public Texture2D normalMap
 		{
 			get
@@ -53,9 +44,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Size of the tile used in the texture of the SplatPrototype.</para>
-		/// </summary>
 		public Vector2 tileSize
 		{
 			get
@@ -68,9 +56,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Offset of the tile texture of the SplatPrototype.</para>
-		/// </summary>
 		public Vector2 tileOffset
 		{
 			get
@@ -97,9 +82,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The metallic value of the splat layer.</para>
-		/// </summary>
 		public float metallic
 		{
 			get
@@ -112,9 +94,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The smoothness value of the splat layer when the main texture has no alpha channel.</para>
-		/// </summary>
 		public float smoothness
 		{
 			get

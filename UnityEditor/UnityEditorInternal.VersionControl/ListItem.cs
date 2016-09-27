@@ -60,6 +60,10 @@ namespace UnityEditorInternal.VersionControl
 		{
 			get
 			{
+				if (this.identifier == -1)
+				{
+					this.identifier = Provider.GenerateID();
+				}
 				return this.identifier;
 			}
 		}
@@ -391,7 +395,7 @@ namespace UnityEditorInternal.VersionControl
 		public ListItem()
 		{
 			this.Clear();
-			this.identifier = Provider.GenerateID();
+			this.identifier = -1;
 		}
 
 		~ListItem()

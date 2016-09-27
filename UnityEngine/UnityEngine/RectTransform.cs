@@ -4,53 +4,22 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Position, size, anchor and pivot information for a rectangle.</para>
-	/// </summary>
 	public sealed class RectTransform : Transform
 	{
-		/// <summary>
-		///   <para>Enum used to specify one edge of a rectangle.</para>
-		/// </summary>
 		public enum Edge
 		{
-			/// <summary>
-			///   <para>The left edge.</para>
-			/// </summary>
 			Left,
-			/// <summary>
-			///   <para>The right edge.</para>
-			/// </summary>
 			Right,
-			/// <summary>
-			///   <para>The top edge.</para>
-			/// </summary>
 			Top,
-			/// <summary>
-			///   <para>The bottom edge.</para>
-			/// </summary>
 			Bottom
 		}
 
-		/// <summary>
-		///   <para>An axis that can be horizontal or vertical.</para>
-		/// </summary>
 		public enum Axis
 		{
-			/// <summary>
-			///   <para>Horizontal.</para>
-			/// </summary>
 			Horizontal,
-			/// <summary>
-			///   <para>Vertical.</para>
-			/// </summary>
 			Vertical
 		}
 
-		/// <summary>
-		///   <para>Delegate used for the reapplyDrivenProperties event.</para>
-		/// </summary>
-		/// <param name="driven"></param>
 		public delegate void ReapplyDrivenProperties(RectTransform driven);
 
 		public static event RectTransform.ReapplyDrivenProperties reapplyDrivenProperties
@@ -67,9 +36,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The calculated rectangle in the local space of the Transform.</para>
-		/// </summary>
 		public Rect rect
 		{
 			get
@@ -80,9 +46,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The normalized position in the parent RectTransform that the lower left corner is anchored to.</para>
-		/// </summary>
 		public Vector2 anchorMin
 		{
 			get
@@ -97,9 +60,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The normalized position in the parent RectTransform that the upper right corner is anchored to.</para>
-		/// </summary>
 		public Vector2 anchorMax
 		{
 			get
@@ -114,9 +74,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The 3D position of the pivot of this RectTransform relative to the anchor reference point.</para>
-		/// </summary>
 		public Vector3 anchoredPosition3D
 		{
 			get
@@ -133,9 +90,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The position of the pivot of this RectTransform relative to the anchor reference point.</para>
-		/// </summary>
 		public Vector2 anchoredPosition
 		{
 			get
@@ -150,9 +104,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The size of this RectTransform relative to the distances between the anchors.</para>
-		/// </summary>
 		public Vector2 sizeDelta
 		{
 			get
@@ -167,9 +118,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The normalized position in this RectTransform that it rotates around.</para>
-		/// </summary>
 		public Vector2 pivot
 		{
 			get
@@ -204,9 +152,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The offset of the lower left corner of the rectangle relative to the lower left anchor.</para>
-		/// </summary>
 		public Vector2 offsetMin
 		{
 			get
@@ -221,9 +166,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The offset of the upper right corner of the rectangle relative to the upper right anchor.</para>
-		/// </summary>
 		public Vector2 offsetMax
 		{
 			get
@@ -291,10 +233,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Get the corners of the calculated rectangle in the local space of its Transform.</para>
-		/// </summary>
-		/// <param name="fourCornersArray">Array that corners should be filled into.</param>
 		public void GetLocalCorners(Vector3[] fourCornersArray)
 		{
 			if (fourCornersArray == null || fourCornersArray.Length < 4)
@@ -313,10 +251,6 @@ namespace UnityEngine
 			fourCornersArray[3] = new Vector3(xMax, y, 0f);
 		}
 
-		/// <summary>
-		///   <para>Get the corners of the calculated rectangle in world space.</para>
-		/// </summary>
-		/// <param name="fourCornersArray">Array that corners should be filled into.</param>
 		public void GetWorldCorners(Vector3[] fourCornersArray)
 		{
 			if (fourCornersArray == null || fourCornersArray.Length < 4)

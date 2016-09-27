@@ -52,7 +52,7 @@ namespace UnityEngine.Networking
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void InitMessagePoolSizeGrowthFactor(float factor);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>BillboardAsset describes how a billboard is rendered.</para>
-	/// </summary>
 	public sealed class BillboardAsset : Object
 	{
-		/// <summary>
-		///   <para>Width of the billboard.</para>
-		/// </summary>
 		public extern float width
 		{
 			[WrapperlessIcall]
@@ -21,9 +15,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Height of the billboard.</para>
-		/// </summary>
 		public extern float height
 		{
 			[WrapperlessIcall]
@@ -34,9 +25,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Height of the billboard that is below ground.</para>
-		/// </summary>
 		public extern float bottom
 		{
 			[WrapperlessIcall]
@@ -47,9 +35,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Number of pre-baked images that can be switched when the billboard is viewed from different angles.</para>
-		/// </summary>
 		public extern int imageCount
 		{
 			[WrapperlessIcall]
@@ -57,9 +42,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Number of vertices in the billboard mesh. The mesh is not necessarily a quad. It can be a more complex shape which fits the actual image more precisely.</para>
-		/// </summary>
 		public extern int vertexCount
 		{
 			[WrapperlessIcall]
@@ -67,9 +49,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Number of indices in the billboard mesh. The mesh is not necessarily a quad. It can be a more complex shape which fits the actual image more precisely.</para>
-		/// </summary>
 		public extern int indexCount
 		{
 			[WrapperlessIcall]
@@ -77,9 +56,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The material used for rendering.</para>
-		/// </summary>
 		public extern Material material
 		{
 			[WrapperlessIcall]

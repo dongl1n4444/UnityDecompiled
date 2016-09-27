@@ -13,6 +13,8 @@ namespace UnityEngine
 
 		public CubemapFace cubemapFace;
 
+		public int depthSlice;
+
 		public RenderBufferLoadAction[] colorLoad;
 
 		public RenderBufferStoreAction[] colorStore;
@@ -27,6 +29,7 @@ namespace UnityEngine
 			this.depth = depth;
 			this.mipLevel = mip;
 			this.cubemapFace = face;
+			this.depthSlice = 0;
 			this.colorLoad = colorLoad;
 			this.colorStore = colorStore;
 			this.depthLoad = depthLoad;
@@ -55,6 +58,15 @@ namespace UnityEngine
 			{
 				color
 			}, depth, mipLevel, face);
+		}
+
+		public RenderTargetSetup(RenderBuffer color, RenderBuffer depth, int mipLevel, CubemapFace face, int depthSlice)
+		{
+			this = new RenderTargetSetup(new RenderBuffer[]
+			{
+				color
+			}, depth, mipLevel, face);
+			this.depthSlice = depthSlice;
 		}
 
 		public RenderTargetSetup(RenderBuffer[] color, RenderBuffer depth)

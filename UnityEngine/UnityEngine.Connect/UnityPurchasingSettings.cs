@@ -5,6 +5,7 @@ namespace UnityEngine.Connect
 {
 	internal class UnityPurchasingSettings
 	{
+		[ThreadAndSerializationSafe]
 		public static extern bool enabled
 		{
 			[WrapperlessIcall]
@@ -15,6 +16,7 @@ namespace UnityEngine.Connect
 			set;
 		}
 
+		[ThreadAndSerializationSafe]
 		public static extern bool testMode
 		{
 			[WrapperlessIcall]

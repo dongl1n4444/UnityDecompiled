@@ -132,47 +132,50 @@ namespace UnityEditor.Sprites
 		private void DoToolbarGUI()
 		{
 			EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			EditorGUI.BeginDisabledGroup(Application.isPlaying);
-			if (GUILayout.Button("Pack", EditorStyles.toolbarButton, new GUILayoutOption[0]))
+			using (new EditorGUI.DisabledScope(Application.isPlaying))
 			{
-				Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true);
-				this.m_SelectedSprite = null;
-				this.RefreshAtlasPageList();
-				this.RefreshState();
-			}
-			else
-			{
-				EditorGUI.BeginDisabledGroup(Packer.SelectedPolicy == Packer.kDefaultPolicy);
-				if (GUILayout.Button("Repack", EditorStyles.toolbarButton, new GUILayoutOption[0]))
+				if (GUILayout.Button("Pack", EditorStyles.toolbarButton, new GUILayoutOption[0]))
 				{
-					Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true, Packer.Execution.ForceRegroup);
+					Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true);
 					this.m_SelectedSprite = null;
 					this.RefreshAtlasPageList();
 					this.RefreshState();
 				}
-				EditorGUI.EndDisabledGroup();
+				else
+				{
+					using (new EditorGUI.DisabledScope(Packer.SelectedPolicy == Packer.kDefaultPolicy))
+					{
+						if (GUILayout.Button("Repack", EditorStyles.toolbarButton, new GUILayoutOption[0]))
+						{
+							Packer.RebuildAtlasCacheIfNeeded(EditorUserBuildSettings.activeBuildTarget, true, Packer.Execution.ForceRegroup);
+							this.m_SelectedSprite = null;
+							this.RefreshAtlasPageList();
+							this.RefreshState();
+						}
+					}
+				}
 			}
-			EditorGUI.EndDisabledGroup();
-			EditorGUI.BeginDisabledGroup(this.m_AtlasNames.Length == 0);
-			GUILayout.Space(16f);
-			GUILayout.Label("View atlas:", new GUILayoutOption[0]);
-			EditorGUI.BeginChangeCheck();
-			this.m_SelectedAtlas = EditorGUILayout.Popup(this.m_SelectedAtlas, this.m_AtlasNames, EditorStyles.toolbarPopup, new GUILayoutOption[0]);
-			if (EditorGUI.EndChangeCheck())
+			using (new EditorGUI.DisabledScope(this.m_AtlasNames.Length == 0))
 			{
-				this.RefreshAtlasPageList();
-				this.m_SelectedSprite = null;
+				GUILayout.Space(16f);
+				GUILayout.Label("View atlas:", new GUILayoutOption[0]);
+				EditorGUI.BeginChangeCheck();
+				this.m_SelectedAtlas = EditorGUILayout.Popup(this.m_SelectedAtlas, this.m_AtlasNames, EditorStyles.toolbarPopup, new GUILayoutOption[0]);
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.RefreshAtlasPageList();
+					this.m_SelectedSprite = null;
+				}
+				EditorGUI.BeginChangeCheck();
+				this.m_SelectedPage = EditorGUILayout.Popup(this.m_SelectedPage, this.m_PageNames, EditorStyles.toolbarPopup, new GUILayoutOption[]
+				{
+					GUILayout.Width(70f)
+				});
+				if (EditorGUI.EndChangeCheck())
+				{
+					this.m_SelectedSprite = null;
+				}
 			}
-			EditorGUI.BeginChangeCheck();
-			this.m_SelectedPage = EditorGUILayout.Popup(this.m_SelectedPage, this.m_PageNames, EditorStyles.toolbarPopup, new GUILayoutOption[]
-			{
-				GUILayout.Width(70f)
-			});
-			if (EditorGUI.EndChangeCheck())
-			{
-				this.m_SelectedSprite = null;
-			}
-			EditorGUI.EndDisabledGroup();
 			EditorGUI.BeginChangeCheck();
 			string[] policies = Packer.Policies;
 			int num = Array.IndexOf<string>(policies, Packer.SelectedPolicy);

@@ -7,7 +7,7 @@ namespace UnityEngine.Events
 	{
 		private readonly object[] m_Arg1 = new object[1];
 
-		public CachedInvokableCall(Object target, MethodInfo theFunction, T argument) : base(target, theFunction)
+		public CachedInvokableCall(UnityEngine.Object target, MethodInfo theFunction, T argument) : base(target, theFunction)
 		{
 			this.m_Arg1[0] = argument;
 		}

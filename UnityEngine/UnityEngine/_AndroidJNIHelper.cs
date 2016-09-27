@@ -588,18 +588,30 @@ namespace UnityEngine
 			}
 			catch (Exception ex)
 			{
-				IntPtr intPtr2 = (!isStatic) ? AndroidJNISafe.GetMethodID(jclass, methodName, signature) : AndroidJNISafe.GetStaticMethodID(jclass, methodName, signature);
-				if (!(intPtr2 != IntPtr.Zero))
+				IntPtr methodIDFallback = _AndroidJNIHelper.GetMethodIDFallback(jclass, methodName, signature, isStatic);
+				if (!(methodIDFallback != IntPtr.Zero))
 				{
 					throw ex;
 				}
-				result = intPtr2;
+				result = methodIDFallback;
 			}
 			finally
 			{
 				AndroidJNISafe.DeleteLocalRef(intPtr);
 			}
 			return result;
+		}
+
+		private static IntPtr GetMethodIDFallback(IntPtr jclass, string methodName, string signature, bool isStatic)
+		{
+			try
+			{
+				return (!isStatic) ? AndroidJNISafe.GetMethodID(jclass, methodName, signature) : AndroidJNISafe.GetStaticMethodID(jclass, methodName, signature);
+			}
+			catch (Exception)
+			{
+			}
+			return IntPtr.Zero;
 		}
 
 		public static IntPtr GetFieldID(IntPtr jclass, string fieldName, string signature, bool isStatic)

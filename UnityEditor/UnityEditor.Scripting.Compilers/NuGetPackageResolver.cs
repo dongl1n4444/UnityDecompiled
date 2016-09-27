@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using UnityEditor.Utils;
 
 namespace UnityEditor.Scripting.Compilers
 {
@@ -42,53 +40,7 @@ namespace UnityEditor.Scripting.Compilers
 			return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 		}
 
-		public bool EnsureProjectLockFile(string projectFile)
-		{
-			string directoryName = Path.GetDirectoryName(this.ProjectLockFile);
-			string text = FileUtil.NiceWinPath(Path.Combine(directoryName, Path.GetFileName(projectFile)));
-			Console.WriteLine("Restoring NuGet packages from \"{0}\".", Path.GetFullPath(text));
-			if (File.Exists(this.ProjectLockFile))
-			{
-				Console.WriteLine("Done. Reusing existing \"{0}\" file.", Path.GetFullPath(this.ProjectLockFile));
-				return true;
-			}
-			if (!string.IsNullOrEmpty(directoryName))
-			{
-				Directory.CreateDirectory(directoryName);
-			}
-			File.Copy(projectFile, text, true);
-			string buildToolsDirectory = BuildPipeline.GetBuildToolsDirectory(BuildTarget.WSAPlayer);
-			string fileName = FileUtil.NiceWinPath(Path.Combine(buildToolsDirectory, "nuget.exe"));
-			Program program = new Program(new ProcessStartInfo
-			{
-				Arguments = string.Format("restore \"{0}\" -NonInteractive -Source https://api.nuget.org/v3/index.json", text),
-				CreateNoWindow = true,
-				FileName = fileName
-			});
-			using (program)
-			{
-				program.Start();
-				for (int i = 0; i < 15; i++)
-				{
-					if (!program.WaitForExit(60000))
-					{
-						Console.WriteLine("Still restoring NuGet packages.");
-					}
-				}
-				if (!program.HasExited)
-				{
-					throw new Exception(string.Format("Failed to restore NuGet packages:{0}Time out.", Environment.NewLine));
-				}
-				if (program.ExitCode != 0)
-				{
-					throw new Exception(string.Format("Failed to restore NuGet packages:{0}{1}", Environment.NewLine, program.GetAllOutput()));
-				}
-			}
-			Console.WriteLine("Done.");
-			return false;
-		}
-
-		public void Resolve()
+		public string[] Resolve()
 		{
 			string json = File.ReadAllText(this.ProjectLockFile);
 			Dictionary<string, object> dictionary = (Dictionary<string, object>)Json.Deserialize(json);
@@ -133,6 +85,7 @@ namespace UnityEditor.Scripting.Compilers
 				}
 			}
 			this.ResolvedReferences = list.ToArray();
+			return this.ResolvedReferences;
 		}
 
 		private string GetPackagesPath()

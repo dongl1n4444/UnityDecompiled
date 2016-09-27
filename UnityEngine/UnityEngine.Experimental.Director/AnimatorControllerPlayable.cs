@@ -1,386 +1,315 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine.Internal;
 using UnityEngine.Scripting;
 
 namespace UnityEngine.Experimental.Director
 {
-	/// <summary>
-	///   <para>Playable that plays a RuntimeAnimatorController. Can be used as an input to an AnimationPlayable.</para>
-	/// </summary>
 	[UsedByNativeCode]
-	public sealed class AnimatorControllerPlayable : AnimationPlayable, IAnimatorControllerPlayable
+	public struct AnimatorControllerPlayable
 	{
-		/// <summary>
-		///   <para>RuntimeAnimatorController played by this playable.</para>
-		/// </summary>
-		public extern RuntimeAnimatorController animatorController
+		internal AnimationPlayable handle;
+
+		internal Playable node
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return this.handle.node;
+			}
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.layerCount.</para>
-		/// </summary>
-		public extern int layerCount
+		public RuntimeAnimatorController animatorController
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return AnimatorControllerPlayable.GetAnimatorControllerInternal(ref this);
+			}
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.parameterCount.</para>
-		/// </summary>
-		public extern int parameterCount
+		public int layerCount
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return AnimatorControllerPlayable.GetLayerCountInternal(ref this);
+			}
 		}
 
-		private extern AnimatorControllerParameter[] parameters
+		public int parameterCount
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return AnimatorControllerPlayable.GetParameterCountInternal(ref this);
+			}
 		}
 
-		public AnimatorControllerPlayable(RuntimeAnimatorController controller) : base(false)
+		public PlayState state
 		{
-			this.m_Ptr = IntPtr.Zero;
-			this.InstantiateEnginePlayable(controller);
+			get
+			{
+				return Playables.GetPlayStateValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetPlayStateValidated(this, value, base.GetType());
+			}
+		}
+
+		public double time
+		{
+			get
+			{
+				return Playables.GetTimeValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetTimeValidated(this, value, base.GetType());
+			}
+		}
+
+		public double duration
+		{
+			get
+			{
+				return Playables.GetDurationValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetDurationValidated(this, value, base.GetType());
+			}
+		}
+
+		public static AnimatorControllerPlayable Create(RuntimeAnimatorController controller)
+		{
+			AnimatorControllerPlayable result = default(AnimatorControllerPlayable);
+			AnimatorControllerPlayable.InternalCreate(controller, ref result);
+			return result;
 		}
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void InstantiateEnginePlayable(RuntimeAnimatorController controller);
+		internal static extern void InternalCreate(RuntimeAnimatorController controller, ref AnimatorControllerPlayable that);
 
-		public override int AddInput(AnimationPlayable source)
+		public void Destroy()
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support adding inputs");
-			return -1;
+			this.node.Destroy();
 		}
 
-		public override bool SetInput(AnimationPlayable source, int index)
-		{
-			Debug.LogError("AnimationClipPlayable doesn't support setting inputs");
-			return false;
-		}
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern RuntimeAnimatorController GetAnimatorControllerInternal(ref AnimatorControllerPlayable that);
 
-		public override bool SetInputs(IEnumerable<AnimationPlayable> sources)
-		{
-			Debug.LogError("AnimationClipPlayable doesn't support setting inputs");
-			return false;
-		}
-
-		public override bool RemoveInput(int index)
-		{
-			Debug.LogError("AnimationClipPlayable doesn't support removing inputs");
-			return false;
-		}
-
-		public override bool RemoveInput(AnimationPlayable playable)
-		{
-			Debug.LogError("AnimationClipPlayable doesn't support removing inputs");
-			return false;
-		}
-
-		public override bool RemoveAllInputs()
-		{
-			Debug.LogError("AnimationClipPlayable doesn't support removing inputs");
-			return false;
-		}
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetFloat.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public float GetFloat(string name)
 		{
-			return this.GetFloatString(name);
+			return AnimatorControllerPlayable.GetFloatString(ref this, name);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetFloat.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public float GetFloat(int id)
 		{
-			return this.GetFloatID(id);
+			return AnimatorControllerPlayable.GetFloatID(ref this, id);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetFloat.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <param name="id"></param>
 		public void SetFloat(string name, float value)
 		{
-			this.SetFloatString(name, value);
+			AnimatorControllerPlayable.SetFloatString(ref this, name, value);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetFloat.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <param name="id"></param>
 		public void SetFloat(int id, float value)
 		{
-			this.SetFloatID(id, value);
+			AnimatorControllerPlayable.SetFloatID(ref this, id, value);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetBool.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public bool GetBool(string name)
 		{
-			return this.GetBoolString(name);
+			return AnimatorControllerPlayable.GetBoolString(ref this, name);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetBool.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public bool GetBool(int id)
 		{
-			return this.GetBoolID(id);
+			return AnimatorControllerPlayable.GetBoolID(ref this, id);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetBool.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <param name="id"></param>
 		public void SetBool(string name, bool value)
 		{
-			this.SetBoolString(name, value);
+			AnimatorControllerPlayable.SetBoolString(ref this, name, value);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetBool.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <param name="id"></param>
 		public void SetBool(int id, bool value)
 		{
-			this.SetBoolID(id, value);
+			AnimatorControllerPlayable.SetBoolID(ref this, id, value);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetInteger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public int GetInteger(string name)
 		{
-			return this.GetIntegerString(name);
+			return AnimatorControllerPlayable.GetIntegerString(ref this, name);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetInteger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public int GetInteger(int id)
 		{
-			return this.GetIntegerID(id);
+			return AnimatorControllerPlayable.GetIntegerID(ref this, id);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetInteger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <param name="id"></param>
 		public void SetInteger(string name, int value)
 		{
-			this.SetIntegerString(name, value);
+			AnimatorControllerPlayable.SetIntegerString(ref this, name, value);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetInteger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <param name="id"></param>
 		public void SetInteger(int id, int value)
 		{
-			this.SetIntegerID(id, value);
+			AnimatorControllerPlayable.SetIntegerID(ref this, id, value);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetTrigger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public void SetTrigger(string name)
 		{
-			this.SetTriggerString(name);
+			AnimatorControllerPlayable.SetTriggerString(ref this, name);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetTrigger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public void SetTrigger(int id)
 		{
-			this.SetTriggerID(id);
+			AnimatorControllerPlayable.SetTriggerID(ref this, id);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.ResetTrigger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public void ResetTrigger(string name)
 		{
-			this.ResetTriggerString(name);
+			AnimatorControllerPlayable.ResetTriggerString(ref this, name);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.ResetTrigger.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public void ResetTrigger(int id)
 		{
-			this.ResetTriggerID(id);
+			AnimatorControllerPlayable.ResetTriggerID(ref this, id);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.IsParameterControlledByCurve.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public bool IsParameterControlledByCurve(string name)
 		{
-			return this.IsParameterControlledByCurveString(name);
+			return AnimatorControllerPlayable.IsParameterControlledByCurveString(ref this, name);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.IsParameterControlledByCurve.</para>
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="id"></param>
 		public bool IsParameterControlledByCurve(int id)
 		{
-			return this.IsParameterControlledByCurveID(id);
+			return AnimatorControllerPlayable.IsParameterControlledByCurveID(ref this, id);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetLayerName.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern string GetLayerName(int layerIndex);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetLayerIndex.</para>
-		/// </summary>
-		/// <param name="layerName"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern int GetLayerIndex(string layerName);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetLayerWeight.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern float GetLayerWeight(int layerIndex);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.SetLayerWeight.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		/// <param name="weight"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void SetLayerWeight(int layerIndex, float weight);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetCurrentAnimatorStateInfo.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern AnimatorStateInfo GetCurrentAnimatorStateInfo(int layerIndex);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetNextAnimatorStateInfo.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern AnimatorStateInfo GetNextAnimatorStateInfo(int layerIndex);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetAnimatorTransitionInfo.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern AnimatorTransitionInfo GetAnimatorTransitionInfo(int layerIndex);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetCurrentAnimatorClipInfo.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern AnimatorClipInfo[] GetCurrentAnimatorClipInfo(int layerIndex);
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.GetNextAnimatorClipInfo.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern AnimatorClipInfo[] GetNextAnimatorClipInfo(int layerIndex);
+		private static extern int GetLayerCountInternal(ref AnimatorControllerPlayable that);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern string ResolveHash(int hash);
+		private static extern string GetLayerNameInternal(ref AnimatorControllerPlayable that, int layerIndex);
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.IsInTransition.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
+		public string GetLayerName(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetLayerNameInternal(ref this, layerIndex);
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern bool IsInTransition(int layerIndex);
+		private static extern int GetLayerIndexInternal(ref AnimatorControllerPlayable that, string layerName);
 
-		/// <summary>
-		///   <para>See AnimatorController.GetParameter.</para>
-		/// </summary>
-		/// <param name="index"></param>
+		public int GetLayerIndex(string layerName)
+		{
+			return AnimatorControllerPlayable.GetLayerIndexInternal(ref this, layerName);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern float GetLayerWeightInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public float GetLayerWeight(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetLayerWeightInternal(ref this, layerIndex);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void SetLayerWeightInternal(ref AnimatorControllerPlayable that, int layerIndex, float weight);
+
+		public void SetLayerWeight(int layerIndex, float weight)
+		{
+			AnimatorControllerPlayable.SetLayerWeightInternal(ref this, layerIndex, weight);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimatorStateInfo GetCurrentAnimatorStateInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public AnimatorStateInfo GetCurrentAnimatorStateInfo(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetCurrentAnimatorStateInfoInternal(ref this, layerIndex);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimatorStateInfo GetNextAnimatorStateInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public AnimatorStateInfo GetNextAnimatorStateInfo(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetNextAnimatorStateInfoInternal(ref this, layerIndex);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimatorTransitionInfo GetAnimatorTransitionInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public AnimatorTransitionInfo GetAnimatorTransitionInfo(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetAnimatorTransitionInfoInternal(ref this, layerIndex);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimatorClipInfo[] GetCurrentAnimatorClipInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public AnimatorClipInfo[] GetCurrentAnimatorClipInfo(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetCurrentAnimatorClipInfoInternal(ref this, layerIndex);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimatorClipInfo[] GetNextAnimatorClipInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public AnimatorClipInfo[] GetNextAnimatorClipInfo(int layerIndex)
+		{
+			return AnimatorControllerPlayable.GetNextAnimatorClipInfoInternal(ref this, layerIndex);
+		}
+
+		internal string ResolveHash(int hash)
+		{
+			return AnimatorControllerPlayable.ResolveHashInternal(ref this, hash);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern string ResolveHashInternal(ref AnimatorControllerPlayable that, int hash);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool IsInTransitionInternal(ref AnimatorControllerPlayable that, int layerIndex);
+
+		public bool IsInTransition(int layerIndex)
+		{
+			return AnimatorControllerPlayable.IsInTransitionInternal(ref this, layerIndex);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int GetParameterCountInternal(ref AnimatorControllerPlayable that);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimatorControllerParameter[] GetParametersArrayInternal(ref AnimatorControllerPlayable that);
+
 		public AnimatorControllerParameter GetParameter(int index)
 		{
-			AnimatorControllerParameter[] parameters = this.parameters;
-			if (index < 0 && index >= this.parameters.Length)
+			AnimatorControllerParameter[] parametersArrayInternal = AnimatorControllerPlayable.GetParametersArrayInternal(ref this);
+			if (index < 0 && index >= parametersArrayInternal.Length)
 			{
 				throw new IndexOutOfRangeException("index");
 			}
-			return parameters[index];
+			return parametersArrayInternal[index];
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern int StringToHash(string name);
 
@@ -399,30 +328,10 @@ namespace UnityEngine.Experimental.Director
 			this.CrossFadeInFixedTime(stateName, transitionDuration, layer, fixedTime);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.CrossFadeInFixedTime.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="transitionDuration"></param>
-		/// <param name="layer"></param>
-		/// <param name="fixedTime"></param>
-		/// <param name="stateNameHash"></param>
 		public void CrossFadeInFixedTime(string stateName, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("0.0f")] float fixedTime)
 		{
-			this.CrossFadeInFixedTime(AnimatorControllerPlayable.StringToHash(stateName), transitionDuration, layer, fixedTime);
+			AnimatorControllerPlayable.CrossFadeInFixedTimeInternal(ref this, AnimatorControllerPlayable.StringToHash(stateName), transitionDuration, layer, fixedTime);
 		}
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.CrossFadeInFixedTime.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="transitionDuration"></param>
-		/// <param name="layer"></param>
-		/// <param name="fixedTime"></param>
-		/// <param name="stateNameHash"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void CrossFadeInFixedTime(int stateNameHash, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("0.0f")] float fixedTime);
 
 		[ExcludeFromDocs]
 		public void CrossFadeInFixedTime(int stateNameHash, float transitionDuration, int layer)
@@ -437,6 +346,30 @@ namespace UnityEngine.Experimental.Director
 			float fixedTime = 0f;
 			int layer = -1;
 			this.CrossFadeInFixedTime(stateNameHash, transitionDuration, layer, fixedTime);
+		}
+
+		public void CrossFadeInFixedTime(int stateNameHash, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("0.0f")] float fixedTime)
+		{
+			AnimatorControllerPlayable.CrossFadeInFixedTimeInternal(ref this, stateNameHash, transitionDuration, layer, fixedTime);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void CrossFadeInFixedTimeInternal(ref AnimatorControllerPlayable that, int stateNameHash, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("0.0f")] float fixedTime);
+
+		[ExcludeFromDocs]
+		private static void CrossFadeInFixedTimeInternal(ref AnimatorControllerPlayable that, int stateNameHash, float transitionDuration, int layer)
+		{
+			float fixedTime = 0f;
+			AnimatorControllerPlayable.CrossFadeInFixedTimeInternal(ref that, stateNameHash, transitionDuration, layer, fixedTime);
+		}
+
+		[ExcludeFromDocs]
+		private static void CrossFadeInFixedTimeInternal(ref AnimatorControllerPlayable that, int stateNameHash, float transitionDuration)
+		{
+			float fixedTime = 0f;
+			int layer = -1;
+			AnimatorControllerPlayable.CrossFadeInFixedTimeInternal(ref that, stateNameHash, transitionDuration, layer, fixedTime);
 		}
 
 		[ExcludeFromDocs]
@@ -454,30 +387,10 @@ namespace UnityEngine.Experimental.Director
 			this.CrossFade(stateName, transitionDuration, layer, normalizedTime);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.CrossFade.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="transitionDuration"></param>
-		/// <param name="layer"></param>
-		/// <param name="normalizedTime"></param>
-		/// <param name="stateNameHash"></param>
 		public void CrossFade(string stateName, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime)
 		{
-			this.CrossFade(AnimatorControllerPlayable.StringToHash(stateName), transitionDuration, layer, normalizedTime);
+			AnimatorControllerPlayable.CrossFadeInternal(ref this, AnimatorControllerPlayable.StringToHash(stateName), transitionDuration, layer, normalizedTime);
 		}
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.CrossFade.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="transitionDuration"></param>
-		/// <param name="layer"></param>
-		/// <param name="normalizedTime"></param>
-		/// <param name="stateNameHash"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void CrossFade(int stateNameHash, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime);
 
 		[ExcludeFromDocs]
 		public void CrossFade(int stateNameHash, float transitionDuration, int layer)
@@ -492,6 +405,30 @@ namespace UnityEngine.Experimental.Director
 			float normalizedTime = float.NegativeInfinity;
 			int layer = -1;
 			this.CrossFade(stateNameHash, transitionDuration, layer, normalizedTime);
+		}
+
+		public void CrossFade(int stateNameHash, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime)
+		{
+			AnimatorControllerPlayable.CrossFadeInternal(ref this, stateNameHash, transitionDuration, layer, normalizedTime);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void CrossFadeInternal(ref AnimatorControllerPlayable that, int stateNameHash, float transitionDuration, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime);
+
+		[ExcludeFromDocs]
+		private static void CrossFadeInternal(ref AnimatorControllerPlayable that, int stateNameHash, float transitionDuration, int layer)
+		{
+			float normalizedTime = float.NegativeInfinity;
+			AnimatorControllerPlayable.CrossFadeInternal(ref that, stateNameHash, transitionDuration, layer, normalizedTime);
+		}
+
+		[ExcludeFromDocs]
+		private static void CrossFadeInternal(ref AnimatorControllerPlayable that, int stateNameHash, float transitionDuration)
+		{
+			float normalizedTime = float.NegativeInfinity;
+			int layer = -1;
+			AnimatorControllerPlayable.CrossFadeInternal(ref that, stateNameHash, transitionDuration, layer, normalizedTime);
 		}
 
 		[ExcludeFromDocs]
@@ -509,28 +446,10 @@ namespace UnityEngine.Experimental.Director
 			this.PlayInFixedTime(stateName, layer, fixedTime);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.PlayInFixedTime.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="layer"></param>
-		/// <param name="fixedTime"></param>
-		/// <param name="stateNameHash"></param>
 		public void PlayInFixedTime(string stateName, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float fixedTime)
 		{
-			this.PlayInFixedTime(AnimatorControllerPlayable.StringToHash(stateName), layer, fixedTime);
+			AnimatorControllerPlayable.PlayInFixedTimeInternal(ref this, AnimatorControllerPlayable.StringToHash(stateName), layer, fixedTime);
 		}
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.PlayInFixedTime.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="layer"></param>
-		/// <param name="fixedTime"></param>
-		/// <param name="stateNameHash"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void PlayInFixedTime(int stateNameHash, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float fixedTime);
 
 		[ExcludeFromDocs]
 		public void PlayInFixedTime(int stateNameHash, int layer)
@@ -545,6 +464,30 @@ namespace UnityEngine.Experimental.Director
 			float fixedTime = float.NegativeInfinity;
 			int layer = -1;
 			this.PlayInFixedTime(stateNameHash, layer, fixedTime);
+		}
+
+		public void PlayInFixedTime(int stateNameHash, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float fixedTime)
+		{
+			AnimatorControllerPlayable.PlayInFixedTimeInternal(ref this, stateNameHash, layer, fixedTime);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void PlayInFixedTimeInternal(ref AnimatorControllerPlayable that, int stateNameHash, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float fixedTime);
+
+		[ExcludeFromDocs]
+		private static void PlayInFixedTimeInternal(ref AnimatorControllerPlayable that, int stateNameHash, int layer)
+		{
+			float fixedTime = float.NegativeInfinity;
+			AnimatorControllerPlayable.PlayInFixedTimeInternal(ref that, stateNameHash, layer, fixedTime);
+		}
+
+		[ExcludeFromDocs]
+		private static void PlayInFixedTimeInternal(ref AnimatorControllerPlayable that, int stateNameHash)
+		{
+			float fixedTime = float.NegativeInfinity;
+			int layer = -1;
+			AnimatorControllerPlayable.PlayInFixedTimeInternal(ref that, stateNameHash, layer, fixedTime);
 		}
 
 		[ExcludeFromDocs]
@@ -562,28 +505,10 @@ namespace UnityEngine.Experimental.Director
 			this.Play(stateName, layer, normalizedTime);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.Play.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="layer"></param>
-		/// <param name="normalizedTime"></param>
-		/// <param name="stateNameHash"></param>
 		public void Play(string stateName, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime)
 		{
-			this.Play(AnimatorControllerPlayable.StringToHash(stateName), layer, normalizedTime);
+			this.PlayInternal(ref this, AnimatorControllerPlayable.StringToHash(stateName), layer, normalizedTime);
 		}
-
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.Play.</para>
-		/// </summary>
-		/// <param name="stateName"></param>
-		/// <param name="layer"></param>
-		/// <param name="normalizedTime"></param>
-		/// <param name="stateNameHash"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void Play(int stateNameHash, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime);
 
 		[ExcludeFromDocs]
 		public void Play(int stateNameHash, int layer)
@@ -600,85 +525,149 @@ namespace UnityEngine.Experimental.Director
 			this.Play(stateNameHash, layer, normalizedTime);
 		}
 
-		/// <summary>
-		///   <para>See IAnimatorControllerPlayable.HasState.</para>
-		/// </summary>
-		/// <param name="layerIndex"></param>
-		/// <param name="stateID"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern bool HasState(int layerIndex, int stateID);
+		public void Play(int stateNameHash, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime)
+		{
+			this.PlayInternal(ref this, stateNameHash, layer, normalizedTime);
+		}
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetFloatString(string name, float value);
+		private extern void PlayInternal(ref AnimatorControllerPlayable that, int stateNameHash, [DefaultValue("-1")] int layer, [DefaultValue("float.NegativeInfinity")] float normalizedTime);
+
+		[ExcludeFromDocs]
+		private void PlayInternal(ref AnimatorControllerPlayable that, int stateNameHash, int layer)
+		{
+			float normalizedTime = float.NegativeInfinity;
+			this.PlayInternal(ref that, stateNameHash, layer, normalizedTime);
+		}
+
+		[ExcludeFromDocs]
+		private void PlayInternal(ref AnimatorControllerPlayable that, int stateNameHash)
+		{
+			float normalizedTime = float.NegativeInfinity;
+			int layer = -1;
+			this.PlayInternal(ref that, stateNameHash, layer, normalizedTime);
+		}
+
+		public bool HasState(int layerIndex, int stateID)
+		{
+			return this.HasStateInternal(ref this, layerIndex, stateID);
+		}
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetFloatID(int id, float value);
+		private extern bool HasStateInternal(ref AnimatorControllerPlayable that, int layerIndex, int stateID);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern float GetFloatString(string name);
+		private static extern void SetFloatString(ref AnimatorControllerPlayable that, string name, float value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern float GetFloatID(int id);
+		private static extern void SetFloatID(ref AnimatorControllerPlayable that, int id, float value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetBoolString(string name, bool value);
+		private static extern float GetFloatString(ref AnimatorControllerPlayable that, string name);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetBoolID(int id, bool value);
+		private static extern float GetFloatID(ref AnimatorControllerPlayable that, int id);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern bool GetBoolString(string name);
+		private static extern void SetBoolString(ref AnimatorControllerPlayable that, string name, bool value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern bool GetBoolID(int id);
+		private static extern void SetBoolID(ref AnimatorControllerPlayable that, int id, bool value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetIntegerString(string name, int value);
+		private static extern bool GetBoolString(ref AnimatorControllerPlayable that, string name);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetIntegerID(int id, int value);
+		private static extern bool GetBoolID(ref AnimatorControllerPlayable that, int id);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern int GetIntegerString(string name);
+		private static extern void SetIntegerString(ref AnimatorControllerPlayable that, string name, int value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern int GetIntegerID(int id);
+		private static extern void SetIntegerID(ref AnimatorControllerPlayable that, int id, int value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetTriggerString(string name);
+		private static extern int GetIntegerString(ref AnimatorControllerPlayable that, string name);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void SetTriggerID(int id);
+		private static extern int GetIntegerID(ref AnimatorControllerPlayable that, int id);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void ResetTriggerString(string name);
+		private static extern void SetTriggerString(ref AnimatorControllerPlayable that, string name);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void ResetTriggerID(int id);
+		private static extern void SetTriggerID(ref AnimatorControllerPlayable that, int id);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern bool IsParameterControlledByCurveString(string name);
+		private static extern void ResetTriggerString(ref AnimatorControllerPlayable that, string name);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern bool IsParameterControlledByCurveID(int id);
+		private static extern void ResetTriggerID(ref AnimatorControllerPlayable that, int id);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool IsParameterControlledByCurveString(ref AnimatorControllerPlayable that, string name);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool IsParameterControlledByCurveID(ref AnimatorControllerPlayable that, int id);
+
+		public bool IsValid()
+		{
+			return Playables.IsValid(this);
+		}
+
+		public T CastTo<T>() where T : struct
+		{
+			return this.handle.CastTo<T>();
+		}
+
+		public override bool Equals(object p)
+		{
+			return Playables.Equals(this, p);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.node.GetHashCode();
+		}
+
+		public static implicit operator Playable(AnimatorControllerPlayable s)
+		{
+			return s.node;
+		}
+
+		public static implicit operator AnimationPlayable(AnimatorControllerPlayable s)
+		{
+			return s.handle;
+		}
+
+		public static bool operator ==(AnimatorControllerPlayable x, Playable y)
+		{
+			return Playables.Equals(x, y);
+		}
+
+		public static bool operator !=(AnimatorControllerPlayable x, Playable y)
+		{
+			return !Playables.Equals(x, y);
+		}
 	}
 }

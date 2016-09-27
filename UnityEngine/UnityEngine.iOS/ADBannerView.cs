@@ -4,95 +4,35 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine.iOS
 {
-	/// <summary>
-	///   <para>ADBannerView is a wrapper around the ADBannerView class found in the Apple iAd framework and is only available on iOS.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	public sealed class ADBannerView
 	{
-		/// <summary>
-		///   <para>Specifies how banner should be layed out on screen.</para>
-		/// </summary>
 		public enum Layout
 		{
-			/// <summary>
-			///   <para>Traditional Banner: align to screen top.</para>
-			/// </summary>
 			Top,
-			/// <summary>
-			///   <para>Traditional Banner: align to screen bottom.</para>
-			/// </summary>
 			Bottom,
-			/// <summary>
-			///   <para>Rect Banner: place in top-left corner.</para>
-			/// </summary>
 			TopLeft = 0,
-			/// <summary>
-			///   <para>Rect Banner: place in top-right corner.</para>
-			/// </summary>
 			TopRight = 4,
-			/// <summary>
-			///   <para>Rect Banner: align to screen top, placing at the center.</para>
-			/// </summary>
 			TopCenter = 8,
-			/// <summary>
-			///   <para>Rect Banner: place in bottom-left corner.</para>
-			/// </summary>
 			BottomLeft = 1,
-			/// <summary>
-			///   <para>Rect Banner: place in bottom-right corner.</para>
-			/// </summary>
 			BottomRight = 5,
-			/// <summary>
-			///   <para>Rect Banner: align to screen bottom, placing at the center.</para>
-			/// </summary>
 			BottomCenter = 9,
-			/// <summary>
-			///   <para>Rect Banner: align to screen left, placing at the center.</para>
-			/// </summary>
 			CenterLeft = 2,
-			/// <summary>
-			///   <para>Rect Banner: align to screen right, placing at the center.</para>
-			/// </summary>
 			CenterRight = 6,
-			/// <summary>
-			///   <para>Rect Banner: place exactly at screen center.</para>
-			/// </summary>
 			Center = 10,
-			/// <summary>
-			///   <para>Completely manual positioning.</para>
-			/// </summary>
 			Manual = -1
 		}
 
-		/// <summary>
-		///   <para>The type of the banner view.</para>
-		/// </summary>
 		public enum Type
 		{
-			/// <summary>
-			///   <para>Traditional Banner (it takes full screen width).</para>
-			/// </summary>
 			Banner,
-			/// <summary>
-			///   <para>Rect Banner (300x250).</para>
-			/// </summary>
 			MediumRect
 		}
 
-		/// <summary>
-		///   <para>Will be fired when banner was clicked.</para>
-		/// </summary>
 		public delegate void BannerWasClickedDelegate();
 
-		/// <summary>
-		///   <para>Will be fired when banner loaded new ad.</para>
-		/// </summary>
 		public delegate void BannerWasLoadedDelegate();
 
-		/// <summary>
-		///   <para>Will be fired when banner ad failed to load.</para>
-		/// </summary>
 		public delegate void BannerFailedToLoadDelegate();
 
 		private ADBannerView.Layout _layout;
@@ -143,9 +83,6 @@ namespace UnityEngine.iOS
 			}
 		}
 
-		/// <summary>
-		///   <para>Checks if banner contents are loaded.</para>
-		/// </summary>
 		public bool loaded
 		{
 			get
@@ -154,9 +91,6 @@ namespace UnityEngine.iOS
 			}
 		}
 
-		/// <summary>
-		///   <para>Banner visibility. Initially banner is not visible.</para>
-		/// </summary>
 		public bool visible
 		{
 			get
@@ -169,9 +103,6 @@ namespace UnityEngine.iOS
 			}
 		}
 
-		/// <summary>
-		///   <para>Banner layout.</para>
-		/// </summary>
 		public ADBannerView.Layout layout
 		{
 			get
@@ -185,9 +116,6 @@ namespace UnityEngine.iOS
 			}
 		}
 
-		/// <summary>
-		///   <para>The position of the banner view.</para>
-		/// </summary>
 		public Vector2 position
 		{
 			get
@@ -203,9 +131,6 @@ namespace UnityEngine.iOS
 			}
 		}
 
-		/// <summary>
-		///   <para>The size of the banner view.</para>
-		/// </summary>
 		public Vector2 size
 		{
 			get
@@ -227,9 +152,16 @@ namespace UnityEngine.iOS
 			this._bannerView = ADBannerView.Native_CreateBanner((int)type, (int)layout);
 		}
 
+		private static IntPtr Native_CreateBanner(int type, int layout)
+		{
+			IntPtr result;
+			ADBannerView.INTERNAL_CALL_Native_CreateBanner(type, layout, out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern IntPtr Native_CreateBanner(int type, int layout);
+		private static extern void INTERNAL_CALL_Native_CreateBanner(int type, int layout, out IntPtr value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -268,7 +200,7 @@ namespace UnityEngine.iOS
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool Native_BannerAdVisible(IntPtr view);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Native_DestroyBanner(IntPtr view);
 

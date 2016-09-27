@@ -75,7 +75,7 @@ namespace UnityEditorInternal
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern ProfilerFrameDataIterator();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

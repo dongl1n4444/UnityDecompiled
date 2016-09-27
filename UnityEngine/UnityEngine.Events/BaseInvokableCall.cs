@@ -42,7 +42,7 @@ namespace UnityEngine.Events
 			{
 				return true;
 			}
-			Object @object = target as Object;
+			UnityEngine.Object @object = target as UnityEngine.Object;
 			return object.ReferenceEquals(@object, null) || @object != null;
 		}
 

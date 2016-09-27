@@ -202,6 +202,7 @@ namespace UnityEditorInternal
 			this.m_ListenersArray = state.m_ReorderableList.serializedProperty;
 			this.m_ReorderableList = state.m_ReorderableList;
 			this.m_LastSelectedIndex = state.lastSelectedIndex;
+			this.m_ReorderableList.index = this.m_LastSelectedIndex;
 			return state;
 		}
 
@@ -331,54 +332,55 @@ namespace UnityEditorInternal
 			{
 				EditorGUI.PropertyField(position3, serializedProperty4, GUIContent.none);
 			}
-			EditorGUI.BeginDisabledGroup(serializedProperty2.objectReferenceValue == null);
-			EditorGUI.BeginProperty(rect2, GUIContent.none, serializedProperty3);
-			GUIContent content;
-			if (EditorGUI.showMixedValue)
+			using (new EditorGUI.DisabledScope(serializedProperty2.objectReferenceValue == null))
 			{
-				content = EditorGUI.mixedValueContent;
-			}
-			else
-			{
-				StringBuilder stringBuilder = new StringBuilder();
-				if (serializedProperty2.objectReferenceValue == null || string.IsNullOrEmpty(serializedProperty3.stringValue))
+				EditorGUI.BeginProperty(rect2, GUIContent.none, serializedProperty3);
+				GUIContent content;
+				if (EditorGUI.showMixedValue)
 				{
-					stringBuilder.Append("No Function");
-				}
-				else if (!UnityEventDrawer.IsPersistantListenerValid(this.m_DummyEvent, serializedProperty3.stringValue, serializedProperty2.objectReferenceValue, UnityEventDrawer.GetMode(mode), type))
-				{
-					string arg = "UnknownComponent";
-					UnityEngine.Object objectReferenceValue2 = serializedProperty2.objectReferenceValue;
-					if (objectReferenceValue2 != null)
-					{
-						arg = objectReferenceValue2.GetType().Name;
-					}
-					stringBuilder.Append(string.Format("<Missing {0}.{1}>", arg, serializedProperty3.stringValue));
+					content = EditorGUI.mixedValueContent;
 				}
 				else
 				{
-					stringBuilder.Append(serializedProperty2.objectReferenceValue.GetType().Name);
-					if (!string.IsNullOrEmpty(serializedProperty3.stringValue))
+					StringBuilder stringBuilder = new StringBuilder();
+					if (serializedProperty2.objectReferenceValue == null || string.IsNullOrEmpty(serializedProperty3.stringValue))
 					{
-						stringBuilder.Append(".");
-						if (serializedProperty3.stringValue.StartsWith("set_"))
+						stringBuilder.Append("No Function");
+					}
+					else if (!UnityEventDrawer.IsPersistantListenerValid(this.m_DummyEvent, serializedProperty3.stringValue, serializedProperty2.objectReferenceValue, UnityEventDrawer.GetMode(mode), type))
+					{
+						string arg = "UnknownComponent";
+						UnityEngine.Object objectReferenceValue2 = serializedProperty2.objectReferenceValue;
+						if (objectReferenceValue2 != null)
 						{
-							stringBuilder.Append(serializedProperty3.stringValue.Substring(4));
+							arg = objectReferenceValue2.GetType().Name;
 						}
-						else
+						stringBuilder.Append(string.Format("<Missing {0}.{1}>", arg, serializedProperty3.stringValue));
+					}
+					else
+					{
+						stringBuilder.Append(serializedProperty2.objectReferenceValue.GetType().Name);
+						if (!string.IsNullOrEmpty(serializedProperty3.stringValue))
 						{
-							stringBuilder.Append(serializedProperty3.stringValue);
+							stringBuilder.Append(".");
+							if (serializedProperty3.stringValue.StartsWith("set_"))
+							{
+								stringBuilder.Append(serializedProperty3.stringValue.Substring(4));
+							}
+							else
+							{
+								stringBuilder.Append(serializedProperty3.stringValue);
+							}
 						}
 					}
+					content = GUIContent.Temp(stringBuilder.ToString());
 				}
-				content = GUIContent.Temp(stringBuilder.ToString());
+				if (GUI.Button(rect2, content, EditorStyles.popup))
+				{
+					UnityEventDrawer.BuildPopupList(serializedProperty2.objectReferenceValue, this.m_DummyEvent, arrayElementAtIndex).DropDown(rect2);
+				}
+				EditorGUI.EndProperty();
 			}
-			if (GUI.Button(rect2, content, EditorStyles.popup))
-			{
-				UnityEventDrawer.BuildPopupList(serializedProperty2.objectReferenceValue, this.m_DummyEvent, arrayElementAtIndex).DropDown(rect2);
-			}
-			EditorGUI.EndProperty();
-			EditorGUI.EndDisabledGroup();
 			GUI.backgroundColor = backgroundColor;
 		}
 

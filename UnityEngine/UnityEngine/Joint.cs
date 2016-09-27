@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Joint is the base class for all joints.</para>
-	/// </summary>
 	public class Joint : Component
 	{
-		/// <summary>
-		///   <para>A reference to another rigidbody this joint connects to.</para>
-		/// </summary>
 		public extern Rigidbody connectedBody
 		{
 			[WrapperlessIcall]
@@ -21,9 +15,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The Direction of the axis around which the body is constrained.</para>
-		/// </summary>
 		public Vector3 axis
 		{
 			get
@@ -38,9 +29,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The Position of the anchor around which the joints motion is constrained.</para>
-		/// </summary>
 		public Vector3 anchor
 		{
 			get
@@ -55,9 +43,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Position of the anchor relative to the connected Rigidbody.</para>
-		/// </summary>
 		public Vector3 connectedAnchor
 		{
 			get
@@ -72,9 +57,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Should the connectedAnchor be calculated automatically?</para>
-		/// </summary>
 		public extern bool autoConfigureConnectedAnchor
 		{
 			[WrapperlessIcall]
@@ -85,9 +67,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The force that needs to be applied for this joint to break.</para>
-		/// </summary>
 		public extern float breakForce
 		{
 			[WrapperlessIcall]
@@ -98,9 +77,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The torque that needs to be applied for this joint to break.</para>
-		/// </summary>
 		public extern float breakTorque
 		{
 			[WrapperlessIcall]
@@ -111,9 +87,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Enable collision between bodies connected with the joint.</para>
-		/// </summary>
 		public extern bool enableCollision
 		{
 			[WrapperlessIcall]
@@ -124,9 +97,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Toggle preprocessing for this joint.</para>
-		/// </summary>
 		public extern bool enablePreprocessing
 		{
 			[WrapperlessIcall]

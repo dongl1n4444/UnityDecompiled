@@ -4,14 +4,8 @@ using UnityEngine.Internal;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Represents a Sprite object for use in 2D gameplay.</para>
-	/// </summary>
 	public sealed class Sprite : Object
 	{
-		/// <summary>
-		///   <para>Bounds of the Sprite, specified by its center and extents in world space units.</para>
-		/// </summary>
 		public Bounds bounds
 		{
 			get
@@ -22,9 +16,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Location of the Sprite on the original Texture, specified in pixels.</para>
-		/// </summary>
 		public Rect rect
 		{
 			get
@@ -35,9 +26,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The number of pixels in the sprite that correspond to one unit in world space. (Read Only)</para>
-		/// </summary>
 		public extern float pixelsPerUnit
 		{
 			[WrapperlessIcall]
@@ -45,9 +33,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Get the reference to the used texture. If packed this will point to the atlas, if not packed will point to the source sprite.</para>
-		/// </summary>
 		public extern Texture2D texture
 		{
 			[WrapperlessIcall]
@@ -55,11 +40,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns the texture that contains the alpha channel from the source texture. Unity generates this texture under the hood for sprites that have alpha in the source, and need to be compressed using techniques like ETC1.
-		///
-		/// Returns NULL if there is no associated alpha texture for the source sprite. This is the case if the sprite has not been setup to use ETC1 compression.</para>
-		/// </summary>
 		public extern Texture2D associatedAlphaSplitTexture
 		{
 			[WrapperlessIcall]
@@ -67,9 +47,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Get the rectangle this sprite uses on its texture. Raises an exception if this sprite is tightly packed in an atlas.</para>
-		/// </summary>
 		public Rect textureRect
 		{
 			get
@@ -80,9 +57,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Gets the offset of the rectangle this sprite uses on its texture to the original sprite bounds. If sprite mesh type is FullRect, offset is zero.</para>
-		/// </summary>
 		public Vector2 textureRectOffset
 		{
 			get
@@ -93,9 +67,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns true if this Sprite is packed in an atlas.</para>
-		/// </summary>
 		public extern bool packed
 		{
 			[WrapperlessIcall]
@@ -103,9 +74,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>If Sprite is packed (see Sprite.packed), returns its SpritePackingMode.</para>
-		/// </summary>
 		public extern SpritePackingMode packingMode
 		{
 			[WrapperlessIcall]
@@ -113,9 +81,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>If Sprite is packed (see Sprite.packed), returns its SpritePackingRotation.</para>
-		/// </summary>
 		public extern SpritePackingRotation packingRotation
 		{
 			[WrapperlessIcall]
@@ -123,9 +88,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Location of the Sprite's center point in the Rect on the original Texture, specified in pixels.</para>
-		/// </summary>
 		public Vector2 pivot
 		{
 			get
@@ -136,9 +98,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the border sizes of the sprite.</para>
-		/// </summary>
 		public Vector4 border
 		{
 			get
@@ -149,9 +108,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns a copy of the array containing sprite mesh vertex positions.</para>
-		/// </summary>
 		public extern Vector2[] vertices
 		{
 			[WrapperlessIcall]
@@ -159,9 +115,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns a copy of the array containing sprite mesh triangles.</para>
-		/// </summary>
 		public extern ushort[] triangles
 		{
 			[WrapperlessIcall]
@@ -169,9 +122,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The base texture coordinates of the sprite mesh.</para>
-		/// </summary>
 		public extern Vector2[] uv
 		{
 			[WrapperlessIcall]
@@ -199,17 +149,6 @@ namespace UnityEngine
 			return Sprite.INTERNAL_CALL_Create(texture, ref rect, ref pivot, pixelsPerUnit, extrude, meshType, ref zero);
 		}
 
-		/// <summary>
-		///   <para>Create a new Sprite object.</para>
-		/// </summary>
-		/// <param name="texture">Texture from which to obtain the sprite graphic.</param>
-		/// <param name="rect">Rectangular section of the texture to use for the sprite.</param>
-		/// <param name="pivot">Sprite's pivot point relative to its graphic rectangle.</param>
-		/// <param name="pixelsToUnits">Scaling to map pixels in the image to world space units.</param>
-		/// <param name="pixelsPerUnit"></param>
-		/// <param name="extrude"></param>
-		/// <param name="meshType"></param>
-		/// <param name="border"></param>
 		[ExcludeFromDocs]
 		public static Sprite Create(Texture2D texture, Rect rect, Vector2 pivot, float pixelsPerUnit)
 		{
@@ -257,11 +196,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_get_border(out Vector4 value);
 
-		/// <summary>
-		///   <para>Sets up new Sprite geometry.</para>
-		/// </summary>
-		/// <param name="vertices">Array of vertex positions in Sprite Rect space.</param>
-		/// <param name="triangles">Array of sprite mesh triangle indices.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void OverrideGeometry(Vector2[] vertices, ushort[] triangles);

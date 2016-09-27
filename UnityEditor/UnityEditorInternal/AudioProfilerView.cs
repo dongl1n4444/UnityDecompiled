@@ -29,7 +29,7 @@ namespace UnityEditorInternal
 			{
 				this.m_Backend = backend;
 				this.m_Backend.OnUpdate = new AudioProfilerBackend.DataUpdateDelegate(this.FetchData);
-				base.showRootNode = false;
+				base.showRootItem = false;
 				base.rootIsCollapsable = false;
 				this.FetchData();
 			}
@@ -83,8 +83,6 @@ namespace UnityEditorInternal
 		{
 			private AudioProfilerTreeViewState m_TreeViewState;
 
-			private GUIStyle m_HeaderStyle;
-
 			private AudioProfilerBackend m_Backend;
 
 			public float[] columnWidths
@@ -113,27 +111,22 @@ namespace UnityEditorInternal
 				this.dragWidth = 6f;
 			}
 
-			public void OnGUI(Rect rect, bool allowSorting)
+			public void OnGUI(Rect rect, bool allowSorting, GUIStyle headerStyle)
 			{
-				float num = rect.x;
+				GUIClip.Push(rect, Vector2.zero, Vector2.zero, false);
+				float num = -this.m_TreeViewState.scrollPos.x;
 				int lastColumnIndex = AudioProfilerInfoHelper.GetLastColumnIndex();
 				for (int i = 0; i <= lastColumnIndex; i++)
 				{
-					Rect position = new Rect(num, rect.y, this.columnWidths[i], rect.height);
+					Rect position = new Rect(num, 0f, this.columnWidths[i], rect.height - 1f);
 					num += this.columnWidths[i];
-					Rect position2 = new Rect(num - this.dragWidth / 2f, rect.y, 3f, rect.height);
+					Rect position2 = new Rect(num - this.dragWidth / 2f, 0f, 3f, rect.height);
 					float x = EditorGUI.MouseDeltaReader(position2, true).x;
 					if (x != 0f)
 					{
 						this.columnWidths[i] += x;
 						this.columnWidths[i] = Mathf.Max(this.columnWidths[i], this.minColumnWidth);
 					}
-					if (this.m_HeaderStyle == null)
-					{
-						this.m_HeaderStyle = new GUIStyle("PR Label");
-						this.m_HeaderStyle.padding.left = 4;
-					}
-					this.m_HeaderStyle.alignment = ((i != 0) ? TextAnchor.MiddleRight : TextAnchor.MiddleLeft);
 					string[] array = new string[]
 					{
 						"Object",
@@ -165,7 +158,7 @@ namespace UnityEditorInternal
 					{
 						text += ((!this.m_TreeViewState.sortByDescendingOrder) ? " ▲" : " ▼");
 					}
-					GUI.Label(position, text, this.m_HeaderStyle);
+					GUI.Box(position, text, headerStyle);
 					if (allowSorting && Event.current.type == EventType.MouseDown && position.Contains(Event.current.mousePosition))
 					{
 						this.m_TreeViewState.SetSelectedColumn(i);
@@ -176,6 +169,7 @@ namespace UnityEditorInternal
 						EditorGUIUtility.AddCursorRect(position2, MouseCursor.SplitResizeLeftRight);
 					}
 				}
+				GUIClip.Pop();
 			}
 		}
 
@@ -194,7 +188,7 @@ namespace UnityEditorInternal
 				this.k_IconWidth = 0f;
 			}
 
-			protected override Texture GetIconForNode(TreeViewItem item)
+			protected override Texture GetIconForItem(TreeViewItem item)
 			{
 				return null;
 			}
@@ -207,20 +201,36 @@ namespace UnityEditorInternal
 			{
 			}
 
+			public override Vector2 GetTotalSize()
+			{
+				Vector2 totalSize = base.GetTotalSize();
+				totalSize.x = 0f;
+				float[] columnWidths = this.columnWidths;
+				for (int i = 0; i < columnWidths.Length; i++)
+				{
+					float num = columnWidths[i];
+					totalSize.x += num;
+				}
+				return totalSize;
+			}
+
 			protected override void DrawIconAndLabel(Rect rect, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
 			{
 				GUIStyle gUIStyle = (!useBoldFont) ? TreeViewGUI.s_Styles.lineStyle : TreeViewGUI.s_Styles.lineBoldStyle;
 				gUIStyle.alignment = TextAnchor.MiddleLeft;
 				gUIStyle.padding.left = 0;
-				base.DrawIconAndLabel(new Rect(rect.x, rect.y, this.columnWidths[0], rect.height), item, label, selected, focused, useBoldFont, isPinging);
-				gUIStyle.alignment = TextAnchor.MiddleRight;
-				rect.x += this.columnWidths[0];
+				int num = 2;
+				base.DrawIconAndLabel(new Rect(rect.x, rect.y, this.columnWidths[0] - (float)num, rect.height), item, label, selected, focused, useBoldFont, isPinging);
+				rect.x += this.columnWidths[0] + (float)num;
 				AudioProfilerView.AudioProfilerTreeViewItem audioProfilerTreeViewItem = item as AudioProfilerView.AudioProfilerTreeViewItem;
 				for (int i = 1; i < this.columnWidths.Length; i++)
 				{
-					rect.width = this.columnWidths[i] - 3f;
+					rect.width = this.columnWidths[i] - (float)(2 * num);
 					gUIStyle.Draw(rect, AudioProfilerInfoHelper.GetColumnString(audioProfilerTreeViewItem.info, (AudioProfilerInfoHelper.ColumnIndices)i), false, false, selected, focused);
+					Handles.color = Color.black;
+					Handles.DrawLine(new Vector3(rect.x - (float)num + 1f, rect.y, 0f), new Vector3(rect.x - (float)num + 1f, rect.y + rect.height, 0f));
 					rect.x += this.columnWidths[i];
+					gUIStyle.alignment = TextAnchor.MiddleRight;
 				}
 				gUIStyle.alignment = TextAnchor.MiddleLeft;
 			}
@@ -253,7 +263,11 @@ namespace UnityEditorInternal
 
 		public void Init(Rect rect, AudioProfilerBackend backend)
 		{
-			this.m_HeaderStyle = "PR Label";
+			if (this.m_HeaderStyle == null)
+			{
+				this.m_HeaderStyle = new GUIStyle("OL title");
+			}
+			this.m_HeaderStyle.alignment = TextAnchor.MiddleLeft;
 			if (this.m_TreeView != null)
 			{
 				return;
@@ -263,14 +277,12 @@ namespace UnityEditorInternal
 			{
 				int num = AudioProfilerInfoHelper.GetLastColumnIndex() + 1;
 				this.m_TreeViewState.columnWidths = new float[num];
-				for (int i = 0; i < num; i++)
+				for (int i = 2; i < num; i++)
 				{
-					this.m_TreeViewState.columnWidths[i] = (float)((i < 18) ? 55 : 80);
+					this.m_TreeViewState.columnWidths[i] = (float)((i != 2 && i != 3 && (i < 11 || i > 16)) ? 60 : 75);
 				}
-				this.m_TreeViewState.columnWidths[0] = 200f;
-				this.m_TreeViewState.columnWidths[1] = 200f;
-				this.m_TreeViewState.columnWidths[2] = 80f;
-				this.m_TreeViewState.columnWidths[3] = 80f;
+				this.m_TreeViewState.columnWidths[0] = 140f;
+				this.m_TreeViewState.columnWidths[1] = 140f;
 			}
 			this.m_TreeView = new TreeView(this.m_EditorWindow, this.m_TreeViewState);
 			ITreeViewGUI gui = new AudioProfilerView.AudioProfilerViewGUI(this.m_TreeView);
@@ -279,8 +291,8 @@ namespace UnityEditorInternal
 			this.m_ColumnHeader = new AudioProfilerView.AudioProfilerViewColumnHeader(this.m_TreeViewState, this.m_Backend);
 			this.m_ColumnHeader.columnWidths = this.m_TreeViewState.columnWidths;
 			this.m_ColumnHeader.minColumnWidth = 30f;
-			TreeView expr_14C = this.m_TreeView;
-			expr_14C.selectionChangedCallback = (Action<int[]>)Delegate.Combine(expr_14C.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
+			TreeView expr_15A = this.m_TreeView;
+			expr_15A.selectionChangedCallback = (Action<int[]>)Delegate.Combine(expr_15A.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
 		}
 
 		private void PingObjectDelayed()
@@ -292,7 +304,7 @@ namespace UnityEditorInternal
 		{
 			if (selection.Length == 1)
 			{
-				TreeViewItem treeViewItem = this.m_TreeView.FindNode(selection[0]);
+				TreeViewItem treeViewItem = this.m_TreeView.FindItem(selection[0]);
 				AudioProfilerView.AudioProfilerTreeViewItem audioProfilerTreeViewItem = treeViewItem as AudioProfilerView.AudioProfilerTreeViewItem;
 				if (audioProfilerTreeViewItem != null)
 				{
@@ -306,12 +318,11 @@ namespace UnityEditorInternal
 		public void OnGUI(Rect rect, bool allowSorting)
 		{
 			int controlID = GUIUtility.GetControlID(FocusType.Keyboard, rect);
-			Rect rect2 = new Rect(rect.x, rect.y, rect.width, 17f);
-			Rect rect3 = new Rect(rect.x, rect.yMax - 20f, rect.width, 20f);
+			Rect rect2 = new Rect(rect.x, rect.y, rect.width, this.m_HeaderStyle.fixedHeight);
 			GUI.Label(rect2, string.Empty, this.m_HeaderStyle);
-			this.m_ColumnHeader.OnGUI(rect2, allowSorting);
+			this.m_ColumnHeader.OnGUI(rect2, allowSorting, this.m_HeaderStyle);
 			rect.y += rect2.height;
-			rect.height -= rect2.height + rect3.height;
+			rect.height -= rect2.height;
 			this.m_TreeView.OnEvent();
 			this.m_TreeView.OnGUI(rect, controlID);
 		}

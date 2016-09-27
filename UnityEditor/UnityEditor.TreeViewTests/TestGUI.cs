@@ -26,7 +26,7 @@ namespace UnityEditor.TreeViewTests
 		{
 		}
 
-		protected override Texture GetIconForNode(TreeViewItem item)
+		protected override Texture GetIconForItem(TreeViewItem item)
 		{
 			return (!item.hasChildren) ? this.m_Icon : this.m_FolderIcon;
 		}

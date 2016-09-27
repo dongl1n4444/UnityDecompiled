@@ -35,7 +35,7 @@ namespace UnityEditor.Scripting.Compilers
 		private static void RunUpdatingProgram(string executable, string arguments)
 		{
 			string executable2 = EditorApplication.applicationContentsPath + "/Tools/ScriptUpdater/" + executable;
-			ManagedProgram managedProgram = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.5", executable2, arguments);
+			ManagedProgram managedProgram = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.5", executable2, arguments, null);
 			managedProgram.LogProcessStartInfo();
 			managedProgram.Start();
 			managedProgram.WaitForExit();

@@ -4,9 +4,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>ControllerColliderHit is used by CharacterController.OnControllerColliderHit to give detailed information about the collision and how to deal with it.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public class ControllerColliderHit
@@ -25,9 +22,6 @@ namespace UnityEngine
 
 		internal int m_Push;
 
-		/// <summary>
-		///   <para>The controller that hit the collider.</para>
-		/// </summary>
 		public CharacterController controller
 		{
 			get
@@ -36,9 +30,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The collider that was hit by the controller.</para>
-		/// </summary>
 		public Collider collider
 		{
 			get
@@ -47,9 +38,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The rigidbody that was hit by the controller.</para>
-		/// </summary>
 		public Rigidbody rigidbody
 		{
 			get
@@ -58,9 +46,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The game object that was hit by the controller.</para>
-		/// </summary>
 		public GameObject gameObject
 		{
 			get
@@ -69,9 +54,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The transform that was hit by the controller.</para>
-		/// </summary>
 		public Transform transform
 		{
 			get
@@ -80,9 +62,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The impact point in world space.</para>
-		/// </summary>
 		public Vector3 point
 		{
 			get
@@ -91,9 +70,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The normal of the surface we collided with in world space.</para>
-		/// </summary>
 		public Vector3 normal
 		{
 			get
@@ -102,9 +78,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The direction the CharacterController was moving in when the collision occured.</para>
-		/// </summary>
 		public Vector3 moveDirection
 		{
 			get
@@ -113,9 +86,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>How far the character has travelled until it hit the collider.</para>
-		/// </summary>
 		public float moveLength
 		{
 			get

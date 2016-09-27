@@ -7,7 +7,7 @@ namespace UnityEditorInternal
 {
 	internal class AddCurvesPopupHierarchyDataSource : TreeViewDataSource
 	{
-		private AnimationWindowState state
+		private IAnimationRecordingState state
 		{
 			get;
 			set;
@@ -19,16 +19,16 @@ namespace UnityEditorInternal
 			set;
 		}
 
-		public AddCurvesPopupHierarchyDataSource(TreeView treeView, AnimationWindowState animationWindowState) : base(treeView)
+		public AddCurvesPopupHierarchyDataSource(TreeView treeView, IAnimationRecordingState animationWindowState) : base(treeView)
 		{
-			base.showRootNode = false;
+			base.showRootItem = false;
 			base.rootIsCollapsable = false;
 			this.state = animationWindowState;
 		}
 
 		private void SetupRootNodeSettings()
 		{
-			base.showRootNode = false;
+			base.showRootItem = false;
 			this.SetExpanded(this.root, true);
 		}
 
@@ -83,6 +83,10 @@ namespace UnityEditorInternal
 						flag2 = (animatableBindings[i + 1].type != editorCurveBinding.type);
 					}
 					if (AnimationWindowUtility.IsCurveCreated(this.state.activeAnimationClip, editorCurveBinding))
+					{
+						list2.Remove(editorCurveBinding);
+					}
+					if (editorCurveBinding.type == typeof(Animator) && editorCurveBinding.propertyName == "m_Enabled")
 					{
 						list2.Remove(editorCurveBinding);
 					}

@@ -25,7 +25,7 @@ namespace UnityEditor.Scripting.Serialization
 
 		private static ManagedProgram ManagedProgramFor(string exe, string arguments)
 		{
-			return new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", exe, arguments);
+			return new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", exe, arguments, null);
 		}
 
 		private static ICompilationExtension GetCompilationExtension()

@@ -1,81 +1,197 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEngine.Scripting;
 
 namespace UnityEngine.Experimental.Director
 {
-	/// <summary>
-	///   <para>Playable that plays an AnimationClip. Can be used as an input to an AnimationPlayable.</para>
-	/// </summary>
-	public sealed class AnimationClipPlayable : AnimationPlayable
+	[UsedByNativeCode]
+	public struct AnimationClipPlayable
 	{
-		/// <summary>
-		///   <para>AnimationClip played by this playable.</para>
-		/// </summary>
-		public extern AnimationClip clip
+		internal AnimationPlayable handle;
+
+		internal Playable node
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return this.handle.node;
+			}
 		}
 
-		/// <summary>
-		///   <para>The speed at which the AnimationClip is played.</para>
-		/// </summary>
-		public extern float speed
+		public PlayState state
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
+			get
+			{
+				return Playables.GetPlayStateValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetPlayStateValidated(this, value, base.GetType());
+			}
 		}
 
-		public AnimationClipPlayable(AnimationClip clip) : base(false)
+		public double time
 		{
-			this.m_Ptr = IntPtr.Zero;
-			this.InstantiateEnginePlayable(clip);
+			get
+			{
+				return Playables.GetTimeValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetTimeValidated(this, value, base.GetType());
+			}
+		}
+
+		public double duration
+		{
+			get
+			{
+				return Playables.GetDurationValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetDurationValidated(this, value, base.GetType());
+			}
+		}
+
+		public int outputCount
+		{
+			get
+			{
+				return Playables.GetOutputCountValidated(this, base.GetType());
+			}
+		}
+
+		public AnimationClip clip
+		{
+			get
+			{
+				return AnimationClipPlayable.GetAnimationClip(ref this);
+			}
+		}
+
+		public float speed
+		{
+			get
+			{
+				return AnimationClipPlayable.GetSpeed(ref this);
+			}
+			set
+			{
+				AnimationClipPlayable.SetSpeed(ref this, value);
+			}
+		}
+
+		public bool applyFootIK
+		{
+			get
+			{
+				return AnimationClipPlayable.GetApplyFootIK(ref this);
+			}
+			set
+			{
+				AnimationClipPlayable.SetApplyFootIK(ref this, value);
+			}
+		}
+
+		internal bool removeStartOffset
+		{
+			get
+			{
+				return AnimationClipPlayable.GetRemoveStartOffset(ref this);
+			}
+			set
+			{
+				AnimationClipPlayable.SetRemoveStartOffset(ref this, value);
+			}
+		}
+
+		public static AnimationClipPlayable Create(AnimationClip clip)
+		{
+			AnimationClipPlayable result = default(AnimationClipPlayable);
+			AnimationClipPlayable.InternalCreate(clip, ref result);
+			return result;
 		}
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void InstantiateEnginePlayable(AnimationClip clip);
+		internal static extern void InternalCreate(AnimationClip clip, ref AnimationClipPlayable that);
 
-		public override int AddInput(AnimationPlayable source)
+		public void Destroy()
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support adding inputs");
-			return -1;
+			this.node.Destroy();
 		}
 
-		public override bool SetInput(AnimationPlayable source, int index)
+		public override bool Equals(object p)
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support setting inputs");
-			return false;
+			return Playables.Equals(this, p);
 		}
 
-		public override bool SetInputs(IEnumerable<AnimationPlayable> sources)
+		public override int GetHashCode()
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support setting inputs");
-			return false;
+			return this.node.GetHashCode();
 		}
 
-		public override bool RemoveInput(int index)
+		public bool IsValid()
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support removing inputs");
-			return false;
+			return Playables.IsValid(this);
 		}
 
-		public override bool RemoveInput(AnimationPlayable playable)
+		public Playable GetOutput(int outputPort)
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support removing inputs");
-			return false;
+			return Playables.GetOutputValidated(this, outputPort, base.GetType());
 		}
 
-		public override bool RemoveAllInputs()
+		public T CastTo<T>() where T : struct
 		{
-			Debug.LogError("AnimationClipPlayable doesn't support removing inputs");
-			return false;
+			return this.handle.CastTo<T>();
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern AnimationClip GetAnimationClip(ref AnimationClipPlayable that);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern float GetSpeed(ref AnimationClipPlayable that);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void SetSpeed(ref AnimationClipPlayable that, float value);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool GetApplyFootIK(ref AnimationClipPlayable that);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void SetApplyFootIK(ref AnimationClipPlayable that, bool value);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool GetRemoveStartOffset(ref AnimationClipPlayable that);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void SetRemoveStartOffset(ref AnimationClipPlayable that, bool value);
+
+		public static bool operator ==(AnimationClipPlayable x, Playable y)
+		{
+			return Playables.Equals(x, y);
+		}
+
+		public static bool operator !=(AnimationClipPlayable x, Playable y)
+		{
+			return !Playables.Equals(x, y);
+		}
+
+		public static implicit operator Playable(AnimationClipPlayable b)
+		{
+			return b.node;
+		}
+
+		public static implicit operator AnimationPlayable(AnimationClipPlayable b)
+		{
+			return b.handle;
 		}
 	}
 }

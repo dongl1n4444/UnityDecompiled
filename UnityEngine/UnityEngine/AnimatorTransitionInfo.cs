@@ -3,9 +3,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Information about the current transition.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	public struct AnimatorTransitionInfo
 	{
@@ -21,9 +18,6 @@ namespace UnityEngine
 
 		private int m_TransitionType;
 
-		/// <summary>
-		///   <para>The unique name of the Transition.</para>
-		/// </summary>
 		public int fullPathHash
 		{
 			get
@@ -32,9 +26,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The simplified name of the Transition.</para>
-		/// </summary>
 		public int nameHash
 		{
 			get
@@ -43,9 +34,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The user-specidied name of the Transition.</para>
-		/// </summary>
 		public int userNameHash
 		{
 			get
@@ -54,9 +42,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Normalized time of the Transition.</para>
-		/// </summary>
 		public float normalizedTime
 		{
 			get
@@ -65,9 +50,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns true if the transition is from an AnyState node, or from Animator.CrossFade().</para>
-		/// </summary>
 		public bool anyState
 		{
 			get
@@ -92,19 +74,11 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Does name match the name of the active Transition.</para>
-		/// </summary>
-		/// <param name="name"></param>
 		public bool IsName(string name)
 		{
 			return Animator.StringToHash(name) == this.m_Name || Animator.StringToHash(name) == this.m_FullPath;
 		}
 
-		/// <summary>
-		///   <para>Does userName match the name of the active Transition.</para>
-		/// </summary>
-		/// <param name="name"></param>
 		public bool IsUserName(string name)
 		{
 			return Animator.StringToHash(name) == this.m_UserName;

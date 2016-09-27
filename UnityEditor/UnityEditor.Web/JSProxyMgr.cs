@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor.Collaboration;
 
 namespace UnityEditor.Web
 {
@@ -43,12 +44,13 @@ namespace UnityEditor.Web
 
 		private static JSProxyMgr s_Instance;
 
-		private static string[] s_IgnoredMethods;
+		private static readonly string[] s_IgnoredMethods;
 
 		protected JSProxyMgr()
 		{
 			this.m_TaskList = new Queue<JSProxyMgr.TaskCallback>();
 			this.m_GlobalObjects = new Dictionary<string, object>();
+			this.AddGlobalObject("unity/collab", Collab.instance);
 		}
 
 		static JSProxyMgr()
@@ -327,7 +329,7 @@ namespace UnityEditor.Web
 
 		public object GetDestinationObject(string reference)
 		{
-			object result = null;
+			object result;
 			this.m_GlobalObjects.TryGetValue(reference, out result);
 			return result;
 		}

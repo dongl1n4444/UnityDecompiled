@@ -71,10 +71,24 @@ namespace UnityEditor.Utils
 				}
 				if (shaderName.Contains("VertexLit") && mat.HasProperty("_Emission"))
 				{
-					Color color = mat.GetColor("_Emission");
-					if (color.r >= 0.5f && color.g >= 0.5f && color.b >= 0.5f)
+					bool flag3 = false;
+					Shader shader = mat.shader;
+					int propertyCount = ShaderUtil.GetPropertyCount(shader);
+					for (int i = 0; i < propertyCount; i++)
 					{
-						return PerformanceChecks.FormattedTextContent("Looks like you're using VertexLit shader to simulate an unlit object (white emissive). Use one of Unlit shaders instead for performance.", new object[0]);
+						if (ShaderUtil.GetPropertyName(shader, i) == "_Emission")
+						{
+							flag3 = (ShaderUtil.GetPropertyType(shader, i) == ShaderUtil.ShaderPropertyType.Color);
+							break;
+						}
+					}
+					if (flag3)
+					{
+						Color color = mat.GetColor("_Emission");
+						if (color.r >= 0.5f && color.g >= 0.5f && color.b >= 0.5f)
+						{
+							return PerformanceChecks.FormattedTextContent("Looks like you're using VertexLit shader to simulate an unlit object (white emissive). Use one of Unlit shaders instead for performance.", new object[0]);
+						}
 					}
 				}
 				if (mat.HasProperty("_BumpMap") && mat.GetTexture("_BumpMap") == null)

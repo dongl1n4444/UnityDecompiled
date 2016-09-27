@@ -74,23 +74,24 @@ namespace UnityEditorInternal
 				}
 				if (list.displayRemove)
 				{
-					EditorGUI.BeginDisabledGroup(list.index < 0 || list.index >= list.count || (list.onCanRemoveCallback != null && !list.onCanRemoveCallback(list)));
-					if (GUI.Button(position, this.iconToolbarMinus, this.preButton))
+					using (new EditorGUI.DisabledScope(list.index < 0 || list.index >= list.count || (list.onCanRemoveCallback != null && !list.onCanRemoveCallback(list))))
 					{
-						if (list.onRemoveCallback == null)
+						if (GUI.Button(position, this.iconToolbarMinus, this.preButton))
 						{
-							this.DoRemoveButton(list);
-						}
-						else
-						{
-							list.onRemoveCallback(list);
-						}
-						if (list.onChangedCallback != null)
-						{
-							list.onChangedCallback(list);
+							if (list.onRemoveCallback == null)
+							{
+								this.DoRemoveButton(list);
+							}
+							else
+							{
+								list.onRemoveCallback(list);
+							}
+							if (list.onChangedCallback != null)
+							{
+								list.onChangedCallback(list);
+							}
 						}
 					}
-					EditorGUI.EndDisabledGroup();
 				}
 			}
 

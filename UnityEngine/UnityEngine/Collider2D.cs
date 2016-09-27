@@ -4,14 +4,8 @@ using UnityEngine.Internal;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Parent class for collider types used with 2D gameplay.</para>
-	/// </summary>
 	public class Collider2D : Behaviour
 	{
-		/// <summary>
-		///   <para>TThe density of the collider used to calculate its mass (when auto mass is enabled)</para>
-		/// </summary>
 		public extern float density
 		{
 			[WrapperlessIcall]
@@ -22,9 +16,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Is this collider configured as a trigger?</para>
-		/// </summary>
 		public extern bool isTrigger
 		{
 			[WrapperlessIcall]
@@ -35,9 +26,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Whether the collider is used by an attached effector or not.</para>
-		/// </summary>
 		public extern bool usedByEffector
 		{
 			[WrapperlessIcall]
@@ -48,9 +36,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The local offset of the collider geometry.</para>
-		/// </summary>
 		public Vector2 offset
 		{
 			get
@@ -65,9 +50,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The Rigidbody2D attached to the Collider2D's GameObject.</para>
-		/// </summary>
 		public extern Rigidbody2D attachedRigidbody
 		{
 			[WrapperlessIcall]
@@ -75,9 +57,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The number of separate shaped regions in the collider.</para>
-		/// </summary>
 		public extern int shapeCount
 		{
 			[WrapperlessIcall]
@@ -85,9 +64,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The world space bounding area of the collider.</para>
-		/// </summary>
 		public Bounds bounds
 		{
 			get
@@ -105,9 +81,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The PhysicsMaterial2D that is applied to this collider.</para>
-		/// </summary>
 		public extern PhysicsMaterial2D sharedMaterial
 		{
 			[WrapperlessIcall]
@@ -130,37 +103,10 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_get_bounds(out Bounds value);
 
-		/// <summary>
-		///   <para>Check if a collider overlaps a point in space.</para>
-		/// </summary>
-		/// <param name="point">A point in world space.</param>
-		public bool OverlapPoint(Vector2 point)
-		{
-			return Collider2D.INTERNAL_CALL_OverlapPoint(this, ref point);
-		}
-
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool INTERNAL_CALL_OverlapPoint(Collider2D self, ref Vector2 point);
-
-		/// <summary>
-		///   <para>Check whether this collider is touching the collider or not.</para>
-		/// </summary>
-		/// <param name="collider">The collider to check if it is touching this collider.</param>
-		/// <returns>
-		///   <para>Whether the collider is touching this collider or not.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern bool IsTouching(Collider2D collider);
 
-		/// <summary>
-		///   <para>Checks whether this collider is touching any colliders on the specified layerMask or not.</para>
-		/// </summary>
-		/// <param name="layerMask">Any colliders on any of these layers count as touching.</param>
-		/// <returns>
-		///   <para>Whether this collider is touching any collider on the specified layerMask or not.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern bool IsTouchingLayers([DefaultValue("Physics2D.AllLayers")] int layerMask);
@@ -171,5 +117,81 @@ namespace UnityEngine
 			int layerMask = -1;
 			return this.IsTouchingLayers(layerMask);
 		}
+
+		public bool OverlapPoint(Vector2 point)
+		{
+			return Collider2D.INTERNAL_CALL_OverlapPoint(this, ref point);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool INTERNAL_CALL_OverlapPoint(Collider2D self, ref Vector2 point);
+
+		public int Raycast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("Physics2D.AllLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
+		{
+			return Collider2D.INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
+		}
+
+		[ExcludeFromDocs]
+		public int Raycast(Vector2 direction, RaycastHit2D[] results, float distance, int layerMask, float minDepth)
+		{
+			float maxDepth = float.PositiveInfinity;
+			return Collider2D.INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
+		}
+
+		[ExcludeFromDocs]
+		public int Raycast(Vector2 direction, RaycastHit2D[] results, float distance, int layerMask)
+		{
+			float maxDepth = float.PositiveInfinity;
+			float minDepth = float.NegativeInfinity;
+			return Collider2D.INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
+		}
+
+		[ExcludeFromDocs]
+		public int Raycast(Vector2 direction, RaycastHit2D[] results, float distance)
+		{
+			float maxDepth = float.PositiveInfinity;
+			float minDepth = float.NegativeInfinity;
+			int layerMask = -1;
+			return Collider2D.INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
+		}
+
+		[ExcludeFromDocs]
+		public int Raycast(Vector2 direction, RaycastHit2D[] results)
+		{
+			float maxDepth = float.PositiveInfinity;
+			float minDepth = float.NegativeInfinity;
+			int layerMask = -1;
+			float distance = float.PositiveInfinity;
+			return Collider2D.INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int INTERNAL_CALL_Raycast(Collider2D self, ref Vector2 direction, RaycastHit2D[] results, float distance, int layerMask, float minDepth, float maxDepth);
+
+		public int Cast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("true")] bool ignoreSiblingColliders)
+		{
+			return Collider2D.INTERNAL_CALL_Cast(this, ref direction, results, distance, ignoreSiblingColliders);
+		}
+
+		[ExcludeFromDocs]
+		public int Cast(Vector2 direction, RaycastHit2D[] results, float distance)
+		{
+			bool ignoreSiblingColliders = true;
+			return Collider2D.INTERNAL_CALL_Cast(this, ref direction, results, distance, ignoreSiblingColliders);
+		}
+
+		[ExcludeFromDocs]
+		public int Cast(Vector2 direction, RaycastHit2D[] results)
+		{
+			bool ignoreSiblingColliders = true;
+			float distance = float.PositiveInfinity;
+			return Collider2D.INTERNAL_CALL_Cast(this, ref direction, results, distance, ignoreSiblingColliders);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int INTERNAL_CALL_Cast(Collider2D self, ref Vector2 direction, RaycastHit2D[] results, float distance, bool ignoreSiblingColliders);
 	}
 }

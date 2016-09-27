@@ -3,9 +3,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A structure describing the webcam device.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public struct WebCamDevice
 	{
@@ -13,9 +10,6 @@ namespace UnityEngine
 
 		internal int m_Flags;
 
-		/// <summary>
-		///   <para>A human-readable name of the device. Varies across different systems.</para>
-		/// </summary>
 		public string name
 		{
 			get
@@ -24,9 +18,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>True if camera faces the same direction a screen does, false otherwise.</para>
-		/// </summary>
 		public bool isFrontFacing
 		{
 			get

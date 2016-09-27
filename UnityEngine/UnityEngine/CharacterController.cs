@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A CharacterController allows you to easily do movement constrained by collisions without having to deal with a rigidbody.</para>
-	/// </summary>
 	public sealed class CharacterController : Collider
 	{
-		/// <summary>
-		///   <para>Was the CharacterController touching the ground during the last move?</para>
-		/// </summary>
 		public extern bool isGrounded
 		{
 			[WrapperlessIcall]
@@ -18,9 +12,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The current relative velocity of the Character (see notes).</para>
-		/// </summary>
 		public Vector3 velocity
 		{
 			get
@@ -31,9 +22,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>What part of the capsule collided with the environment during the last CharacterController.Move call.</para>
-		/// </summary>
 		public extern CollisionFlags collisionFlags
 		{
 			[WrapperlessIcall]
@@ -41,9 +29,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The radius of the character's capsule.</para>
-		/// </summary>
 		public extern float radius
 		{
 			[WrapperlessIcall]
@@ -54,9 +39,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The height of the character's capsule.</para>
-		/// </summary>
 		public extern float height
 		{
 			[WrapperlessIcall]
@@ -67,9 +49,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The center of the character's capsule relative to the transform's position.</para>
-		/// </summary>
 		public Vector3 center
 		{
 			get
@@ -84,9 +63,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The character controllers slope limit in degrees.</para>
-		/// </summary>
 		public extern float slopeLimit
 		{
 			[WrapperlessIcall]
@@ -97,9 +73,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The character controllers step offset in meters.</para>
-		/// </summary>
 		public extern float stepOffset
 		{
 			[WrapperlessIcall]
@@ -110,9 +83,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The character's collision skin width.</para>
-		/// </summary>
 		public extern float skinWidth
 		{
 			[WrapperlessIcall]
@@ -123,9 +93,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Determines whether other rigidbodies or character controllers collide with this character controller (by default this is always enabled).</para>
-		/// </summary>
 		public extern bool detectCollisions
 		{
 			[WrapperlessIcall]
@@ -136,10 +103,16 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Moves the character with speed.</para>
-		/// </summary>
-		/// <param name="speed"></param>
+		public extern bool enableOverlapRecovery
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
+		}
+
 		public bool SimpleMove(Vector3 speed)
 		{
 			return CharacterController.INTERNAL_CALL_SimpleMove(this, ref speed);
@@ -149,10 +122,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool INTERNAL_CALL_SimpleMove(CharacterController self, ref Vector3 speed);
 
-		/// <summary>
-		///   <para>A more complex move function taking absolute movement deltas.</para>
-		/// </summary>
-		/// <param name="motion"></param>
 		public CollisionFlags Move(Vector3 motion)
 		{
 			return CharacterController.INTERNAL_CALL_Move(this, ref motion);

@@ -14,5 +14,15 @@ namespace UnityEditor.Modules
 			}
 			return list.ToArray();
 		}
+
+		internal static string[] GetAdditionalReferencesForEditorCsharpProject()
+		{
+			List<string> list = new List<string>();
+			foreach (IPlatformSupportModule current in ModuleManager.platformSupportModules)
+			{
+				list.AddRange(current.AssemblyReferencesForEditorCsharpProject);
+			}
+			return list.ToArray();
+		}
 	}
 }

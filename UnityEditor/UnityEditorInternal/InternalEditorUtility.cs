@@ -337,19 +337,19 @@ namespace UnityEditorInternal
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_SetRectTransformTemporaryRect(RectTransform rectTransform, ref Rect rect);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool HasTeamLicense();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool HasPro();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool HasFreeLicense();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool HasEduLicense();
 
@@ -462,6 +462,10 @@ namespace UnityEditorInternal
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void SetupShaderMenu(Material material);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern string GetUnityVersionFull();
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -836,15 +840,7 @@ namespace UnityEditorInternal
 			}
 			if (component2 is SpriteRenderer)
 			{
-				SpriteRenderer spriteRenderer = component2 as SpriteRenderer;
-				if (spriteRenderer.sprite != null)
-				{
-					Bounds bounds = spriteRenderer.sprite.bounds;
-					Vector3 size = bounds.size;
-					size.z = 0f;
-					bounds.size = size;
-					return bounds;
-				}
+				return ((SpriteRenderer)component2).GetSpriteBounds();
 			}
 			return new Bounds(Vector3.zero, Vector3.zero);
 		}
@@ -888,6 +884,25 @@ namespace UnityEditorInternal
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern DllType DetectDotNetDll(string path);
+
+		public static bool IsDotNet4Dll(string path)
+		{
+			DllType dllType = InternalEditorUtility.DetectDotNetDll(path);
+			switch (dllType)
+			{
+			case DllType.Unknown:
+			case DllType.Native:
+			case DllType.UnknownManaged:
+			case DllType.ManagedNET35:
+				return false;
+			case DllType.ManagedNET40:
+			case DllType.WinMDNative:
+			case DllType.WinMDNET40:
+				return true;
+			default:
+				throw new Exception(string.Format("Unknown dll type: {0}", dllType));
+			}
+		}
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]

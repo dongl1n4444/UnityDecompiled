@@ -3,14 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>(Legacy Particles) Particle animators move your particles over time, you use them to apply wind, drag &amp; color cycling to your particle emitters.</para>
-	/// </summary>
+	[Obsolete("This component is part of the legacy particle system, which is deprecated and will be removed in a future release. Use the ParticleSystem component instead.", false)]
 	public sealed class ParticleAnimator : Component
 	{
-		/// <summary>
-		///   <para>Do particles cycle their color over their lifetime?</para>
-		/// </summary>
 		public extern bool doesAnimateColor
 		{
 			[WrapperlessIcall]
@@ -21,9 +16,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>World space axis the particles rotate around.</para>
-		/// </summary>
 		public Vector3 worldRotationAxis
 		{
 			get
@@ -38,9 +30,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Local space axis the particles rotate around.</para>
-		/// </summary>
 		public Vector3 localRotationAxis
 		{
 			get
@@ -55,9 +44,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>How the particle sizes grow over their lifetime.</para>
-		/// </summary>
 		public extern float sizeGrow
 		{
 			[WrapperlessIcall]
@@ -68,9 +54,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>A random force added to particles every frame.</para>
-		/// </summary>
 		public Vector3 rndForce
 		{
 			get
@@ -85,9 +68,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The force being applied to particles every frame.</para>
-		/// </summary>
 		public Vector3 force
 		{
 			get
@@ -102,9 +82,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>How much particles are slowed down every frame.</para>
-		/// </summary>
 		public extern float damping
 		{
 			[WrapperlessIcall]
@@ -115,9 +92,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Does the GameObject of this particle animator auto destructs?</para>
-		/// </summary>
 		public extern bool autodestruct
 		{
 			[WrapperlessIcall]
@@ -128,9 +102,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Colors the particles will cycle through over their lifetime.</para>
-		/// </summary>
 		public extern Color[] colorAnimation
 		{
 			[WrapperlessIcall]

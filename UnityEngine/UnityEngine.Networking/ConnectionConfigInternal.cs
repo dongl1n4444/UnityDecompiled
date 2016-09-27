@@ -43,6 +43,7 @@ namespace UnityEngine.Networking
 			this.InitMaxSentMessageQueueSize(config.MaxSentMessageQueueSize);
 			this.InitIsAcksLong(config.IsAcksLong);
 			this.InitUsePlatformSpecificProtocols(config.UsePlatformSpecificProtocols);
+			this.InitWebSocketReceiveBufferMaxSize(config.WebSocketReceiveBufferMaxSize);
 			byte b = 0;
 			while ((int)b < config.ChannelCount)
 			{
@@ -136,6 +137,10 @@ namespace UnityEngine.Networking
 		public extern void InitUsePlatformSpecificProtocols(bool value);
 
 		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern void InitWebSocketReceiveBufferMaxSize(ushort value);
+
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

@@ -8,14 +8,8 @@ using UnityEngine.Networking.Types;
 
 namespace UnityEngine.Networking
 {
-	/// <summary>
-	///   <para>Low level (transport layer) API.</para>
-	/// </summary>
 	public sealed class NetworkTransport
 	{
-		/// <summary>
-		///   <para>Obsolete, will be removed.</para>
-		/// </summary>
 		public static extern bool IsStarted
 		{
 			[WrapperlessIcall]
@@ -124,9 +118,6 @@ namespace UnityEngine.Networking
 			}
 		}
 
-		/// <summary>
-		///   <para>First function which should be called before any other NetworkTransport function.</para>
-		/// </summary>
 		public static void Init()
 		{
 			NetworkTransport.InitWithNoParameters();
@@ -145,20 +136,10 @@ namespace UnityEngine.Networking
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void InitWithParameters(GlobalConfigInternal config);
 
-		/// <summary>
-		///   <para>Shutdown the transport layer, after calling this function no any other function can be called.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void Shutdown();
 
-		/// <summary>
-		///   <para>The UNet spawning system uses assetIds to identify how spawn remote objects. This function allows you to get the assetId for the prefab associated with an object.</para>
-		/// </summary>
-		/// <param name="go">Target game object to get asset Id for.</param>
-		/// <returns>
-		///   <para>The assetId of the game object's prefab.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern string GetAssetId(GameObject go);
@@ -192,16 +173,10 @@ namespace UnityEngine.Networking
 			return NetworkTransport.ConnectToNetworkPeer(hostId, address, port, exceptionConnectionId, relaySlotId, network, source, node, 0, 0f, out error);
 		}
 
-		/// <summary>
-		///   <para>Return value of messages waiting for reading.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetCurrentIncomingMessageAmount();
 
-		/// <summary>
-		///   <para>Return total message amount waiting for sending.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetCurrentOutgoingMessageAmount();
@@ -226,12 +201,6 @@ namespace UnityEngine.Networking
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetRemotePacketReceivedRate(int hostId, int connectionId, out byte error);
 
-		/// <summary>
-		///   <para>Function returns time spent on network io operations in micro seconds.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>Time in micro seconds.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetNetIOTimeuS();
@@ -249,9 +218,6 @@ namespace UnityEngine.Networking
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern string GetConnectionInfo(int hostId, int connectionId, out int port, out ulong network, out ushort dstNode, out byte error);
 
-		/// <summary>
-		///   <para>Get UNET timestamp which can be added to message for further definitions of packet delaying.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetNetworkTimestamp();
@@ -300,17 +266,6 @@ namespace UnityEngine.Networking
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern int AddWsHostWrapperWithoutIp(HostTopologyInternal topologyInt, int port);
 
-		/// <summary>
-		///   <para>Created web socket host. 
-		/// This function is supported only for Editor (Win, Linux, Mac) and StandalonePlayers (Win, Linux, Mac) 
-		/// Topology is used to define how many client can connect, and how many messages should be preallocated in send and receive pool, all other parameters are ignored.</para>
-		/// </summary>
-		/// <param name="port">Listening tcp port.</param>
-		/// <param name="topology">Topology.</param>
-		/// <param name="ip"></param>
-		/// <returns>
-		///   <para>Web socket host id.</para>
-		/// </returns>
 		[ExcludeFromDocs]
 		public static int AddWebsocketHost(HostTopology topology, int port)
 		{
@@ -354,15 +309,6 @@ namespace UnityEngine.Networking
 			return NetworkTransport.AddHost(topology, port, ip);
 		}
 
-		/// <summary>
-		///   <para>Will create a host (open socket) with given topology and optionally port and IP.</para>
-		/// </summary>
-		/// <param name="topology">The host topology for this host.</param>
-		/// <param name="port">Bind to specific port, if 0 is selected the port will chosen by OS.</param>
-		/// <param name="ip">Bind to specific IP address.</param>
-		/// <returns>
-		///   <para>Returns host ID just created.</para>
-		/// </returns>
 		public static int AddHost(HostTopology topology, [DefaultValue("0")] int port, [DefaultValue("null")] string ip)
 		{
 			if (topology == null)
@@ -391,17 +337,6 @@ namespace UnityEngine.Networking
 			return NetworkTransport.AddHostWithSimulator(topology, minTimeout, maxTimeout, port, ip);
 		}
 
-		/// <summary>
-		///   <para>Create a host (open socket) and configure them to simulate internet latency (works on editor and development build only).</para>
-		/// </summary>
-		/// <param name="topology">The host topology for this host.</param>
-		/// <param name="minTimeout">Minimum simulated delay.</param>
-		/// <param name="maxTimeout">Maximum simulated delay.</param>
-		/// <param name="port">Bind to specific port, if 0 is selected the port will chosen by OS.</param>
-		/// <param name="ip">Bind to specific IP address.</param>
-		/// <returns>
-		///   <para>Returns host ID just created.</para>
-		/// </returns>
 		public static int AddHostWithSimulator(HostTopology topology, int minTimeout, int maxTimeout, [DefaultValue("0")] int port, [DefaultValue("null")] string ip)
 		{
 			if (topology == null)
@@ -415,10 +350,6 @@ namespace UnityEngine.Networking
 			return NetworkTransport.AddHostWrapper(new HostTopologyInternal(topology), ip, port, minTimeout, maxTimeout);
 		}
 
-		/// <summary>
-		///   <para>Close opened socket, close all connection belonging this socket.</para>
-		/// </summary>
-		/// <param name="hostId">If of opened udp socket.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool RemoveHost(int hostId);
@@ -464,23 +395,44 @@ namespace UnityEngine.Networking
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void SetPacketStat(int direction, int packetStatId, int numMsgs, int numBytes);
 
+		public static bool StartBroadcastDiscovery(int hostId, int broadcastPort, int key, int version, int subversion, byte[] buffer, int size, int timeout, out byte error)
+		{
+			if (buffer != null)
+			{
+				if (buffer.Length < size)
+				{
+					throw new ArgumentOutOfRangeException(string.Concat(new object[]
+					{
+						"Size: ",
+						size,
+						" > buffer.Length ",
+						buffer.Length
+					}));
+				}
+				if (size == 0)
+				{
+					throw new ArgumentOutOfRangeException("Size is zero while buffer exists, please pass null and 0 as buffer and size parameters");
+				}
+			}
+			if (buffer == null)
+			{
+				return NetworkTransport.StartBroadcastDiscoveryWithoutData(hostId, broadcastPort, key, version, subversion, timeout, out error);
+			}
+			return NetworkTransport.StartBroadcastDiscoveryWithData(hostId, broadcastPort, key, version, subversion, buffer, size, timeout, out error);
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool StartBroadcastDiscovery(int hostId, int broadcastPort, int key, int version, int subversion, byte[] buffer, int size, int timeout, out byte error);
+		private static extern bool StartBroadcastDiscoveryWithoutData(int hostId, int broadcastPort, int key, int version, int subversion, int timeout, out byte error);
 
-		/// <summary>
-		///   <para>Stop sending broadcast discovery message.</para>
-		/// </summary>
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool StartBroadcastDiscoveryWithData(int hostId, int broadcastPort, int key, int version, int subversion, byte[] buffer, int size, int timeout, out byte error);
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void StopBroadcastDiscovery();
 
-		/// <summary>
-		///   <para>Check if broadcastdiscovery sender works.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>True if it works.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool IsBroadcastDiscoveryRunning();

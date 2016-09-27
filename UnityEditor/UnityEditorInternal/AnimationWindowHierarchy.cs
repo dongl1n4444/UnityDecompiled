@@ -52,5 +52,10 @@ namespace UnityEditorInternal
 			List<TreeViewItem> rows = this.m_TreeView.data.GetRows();
 			return TreeView.GetIndexOfID(rows, id) >= 0;
 		}
+
+		public void EndNameEditing(bool acceptChanges)
+		{
+			this.m_TreeView.EndNameEditing(acceptChanges);
+		}
 	}
 }

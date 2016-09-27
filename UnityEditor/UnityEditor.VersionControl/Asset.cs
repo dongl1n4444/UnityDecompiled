@@ -31,6 +31,7 @@ namespace UnityEditor.VersionControl
 
 		private GUID m_guid;
 
+		[ThreadAndSerializationSafe]
 		public extern Asset.States state
 		{
 			[WrapperlessIcall]
@@ -38,6 +39,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern string path
 		{
 			[WrapperlessIcall]
@@ -45,6 +47,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern bool isFolder
 		{
 			[WrapperlessIcall]
@@ -52,6 +55,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern bool readOnly
 		{
 			[WrapperlessIcall]
@@ -59,6 +63,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern bool isMeta
 		{
 			[WrapperlessIcall]
@@ -66,6 +71,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern bool locked
 		{
 			[WrapperlessIcall]
@@ -73,6 +79,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern string name
 		{
 			[WrapperlessIcall]
@@ -80,6 +87,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern string fullName
 		{
 			[WrapperlessIcall]
@@ -87,6 +95,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern bool isInCurrentProject
 		{
 			[WrapperlessIcall]
@@ -115,11 +124,11 @@ namespace UnityEditor.VersionControl
 			this.InternalCreateFromString(clientPath);
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InternalCreateFromString(string clientPath);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 
@@ -128,7 +137,7 @@ namespace UnityEditor.VersionControl
 			this.Dispose();
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern bool IsChildOf(Asset other);
 

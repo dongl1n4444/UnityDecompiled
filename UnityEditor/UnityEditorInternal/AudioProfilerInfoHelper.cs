@@ -71,7 +71,7 @@ namespace UnityEditorInternal
 					num = a.info.playCount.CompareTo(b.info.playCount);
 					break;
 				case AudioProfilerInfoHelper.ColumnIndices.Is3D:
-					num = (a.info.flags & 1).CompareTo(b.info.flags & 1);
+					num = (a.info.flags & 1).CompareTo(b.info.flags & 1) + (a.info.flags & 2).CompareTo(b.info.flags & 2) * 2;
 					break;
 				case AudioProfilerInfoHelper.ColumnIndices.IsPaused:
 					num = (a.info.flags & 4).CompareTo(b.info.flags & 4);
@@ -137,6 +137,8 @@ namespace UnityEditorInternal
 
 		public const int AUDIOPROFILER_FLAGS_3D = 1;
 
+		public const int AUDIOPROFILER_FLAGS_ISSPATIAL = 2;
+
 		public const int AUDIOPROFILER_FLAGS_PAUSED = 4;
 
 		public const int AUDIOPROFILER_FLAGS_MUTED = 8;
@@ -187,7 +189,7 @@ namespace UnityEditorInternal
 			case AudioProfilerInfoHelper.ColumnIndices.PlayCount:
 				return (!flag2) ? info.info.playCount.ToString() : string.Empty;
 			case AudioProfilerInfoHelper.ColumnIndices.Is3D:
-				return (!flag2) ? ((!flag) ? "NO" : "YES") : string.Empty;
+				return (!flag2) ? ((!flag) ? "NO" : (((info.info.flags & 2) == 0) ? "YES" : "Spatial")) : string.Empty;
 			case AudioProfilerInfoHelper.ColumnIndices.IsPaused:
 				return (!flag2) ? (((info.info.flags & 4) == 0) ? "NO" : "YES") : string.Empty;
 			case AudioProfilerInfoHelper.ColumnIndices.IsMuted:

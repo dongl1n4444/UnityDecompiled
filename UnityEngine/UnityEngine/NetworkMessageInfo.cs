@@ -4,9 +4,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>This data structure contains information on a message just received from the network.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	public struct NetworkMessageInfo
 	{
@@ -16,9 +13,6 @@ namespace UnityEngine
 
 		private NetworkViewID m_ViewID;
 
-		/// <summary>
-		///   <para>The time stamp when the Message was sent in seconds.</para>
-		/// </summary>
 		public double timestamp
 		{
 			get
@@ -27,9 +21,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The player who sent this network message (owner).</para>
-		/// </summary>
 		public NetworkPlayer sender
 		{
 			get
@@ -38,9 +29,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The NetworkView who sent this message.</para>
-		/// </summary>
 		public NetworkView networkView
 		{
 			get

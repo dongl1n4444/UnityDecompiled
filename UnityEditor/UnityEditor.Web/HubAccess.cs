@@ -10,11 +10,22 @@ namespace UnityEditor.Web
 
 		private const string kServiceDisplayName = "Services";
 
-		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/hub";
+		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/hub";
+
+		private static HubAccess s_Instance;
+
+		public static HubAccess instance
+		{
+			get
+			{
+				return HubAccess.s_Instance;
+			}
+		}
 
 		static HubAccess()
 		{
-			UnityConnectServiceData cloudService = new UnityConnectServiceData("Hub", "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/hub", new HubAccess(), "unity/project/cloud/hub");
+			HubAccess.s_Instance = new HubAccess();
+			UnityConnectServiceData cloudService = new UnityConnectServiceData("Hub", "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/hub", HubAccess.s_Instance, "unity/project/cloud/hub");
 			UnityConnectServiceCollection.instance.AddService(cloudService);
 		}
 

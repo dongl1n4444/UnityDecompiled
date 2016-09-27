@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine.VR
 {
-	/// <summary>
-	///   <para>Global VR related settings.</para>
-	/// </summary>
-	public sealed class VRSettings
+	public static class VRSettings
 	{
-		/// <summary>
-		///   <para>Globally enables or disables VR for the application.</para>
-		/// </summary>
 		public static extern bool enabled
 		{
 			[WrapperlessIcall]
@@ -21,9 +15,6 @@ namespace UnityEngine.VR
 			set;
 		}
 
-		/// <summary>
-		///   <para>Mirror what is shown on the device to the main display, if possible.</para>
-		/// </summary>
 		public static extern bool showDeviceView
 		{
 			[WrapperlessIcall]
@@ -34,9 +25,6 @@ namespace UnityEngine.VR
 			set;
 		}
 
-		/// <summary>
-		///   <para>Controls the texel:pixel ratio before lens correction, trading performance for sharpness.</para>
-		/// </summary>
 		public static extern float renderScale
 		{
 			[WrapperlessIcall]
@@ -47,10 +35,37 @@ namespace UnityEngine.VR
 			set;
 		}
 
-		/// <summary>
-		///   <para>Type of VR device that is currently in use.</para>
-		/// </summary>
-		public static extern VRDeviceType loadedDevice
+		public static extern int eyeTextureWidth
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+		}
+
+		public static extern int eyeTextureHeight
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+		}
+
+		public static float renderViewportScale
+		{
+			get
+			{
+				return VRSettings.renderViewportScaleInternal;
+			}
+			set
+			{
+				if (value < 0f || value > 1f)
+				{
+					throw new ArgumentOutOfRangeException("value", "Render viewport scale should be between 0 and 1.");
+				}
+				VRSettings.renderViewportScaleInternal = value;
+			}
+		}
+
+		internal static extern float renderViewportScaleInternal
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -59,5 +74,52 @@ namespace UnityEngine.VR
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			set;
 		}
+
+		[Obsolete("loadedDevice is deprecated.  Use loadedDeviceName and LoadDeviceByName instead.")]
+		public static VRDeviceType loadedDevice
+		{
+			get
+			{
+				VRDeviceType result = VRDeviceType.Unknown;
+				try
+				{
+					result = (VRDeviceType)((int)Enum.Parse(typeof(VRDeviceType), VRSettings.loadedDeviceName, true));
+				}
+				catch (Exception)
+				{
+				}
+				return result;
+			}
+			set
+			{
+				VRSettings.LoadDeviceByName(value.ToString());
+			}
+		}
+
+		public static extern string loadedDeviceName
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+		}
+
+		public static extern string[] supportedDevices
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+		}
+
+		public static void LoadDeviceByName(string deviceName)
+		{
+			VRSettings.LoadDeviceByName(new string[]
+			{
+				deviceName
+			});
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern void LoadDeviceByName(string[] prioritizedDeviceNameList);
 	}
 }

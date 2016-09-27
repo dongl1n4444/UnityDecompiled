@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Avatar definition.</para>
-	/// </summary>
 	public sealed class Avatar : Object
 	{
-		/// <summary>
-		///   <para>Return true if this avatar is a valid mecanim avatar. It can be a generic avatar or a human avatar.</para>
-		/// </summary>
 		public extern bool isValid
 		{
 			[WrapperlessIcall]
@@ -18,9 +12,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Return true if this avatar is a valid human avatar.</para>
-		/// </summary>
 		public extern bool isHuman
 		{
 			[WrapperlessIcall]

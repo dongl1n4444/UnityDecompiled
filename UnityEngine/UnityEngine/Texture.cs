@@ -1,11 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
+using UnityEngine.Rendering;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Base class for texture handling. Contains functionality that is common to both Texture2D and RenderTexture classes.</para>
-	/// </summary>
 	public class Texture : Object
 	{
 		public static extern int masterTextureLimit
@@ -28,9 +26,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Width of the texture in pixels. (Read Only)</para>
-		/// </summary>
 		public virtual int width
 		{
 			get
@@ -43,9 +38,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Height of the texture in pixels. (Read Only)</para>
-		/// </summary>
 		public virtual int height
 		{
 			get
@@ -58,9 +50,18 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Filtering mode of the texture.</para>
-		/// </summary>
+		public virtual TextureDimension dimension
+		{
+			get
+			{
+				return Texture.Internal_GetDimension(this);
+			}
+			set
+			{
+				throw new Exception("not implemented");
+			}
+		}
+
 		public extern FilterMode filterMode
 		{
 			[WrapperlessIcall]
@@ -71,9 +72,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Anisotropic filtering level of the texture.</para>
-		/// </summary>
 		public extern int anisoLevel
 		{
 			[WrapperlessIcall]
@@ -84,9 +82,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Wrap mode (Repeat or Clamp) of the texture.</para>
-		/// </summary>
 		public extern TextureWrapMode wrapMode
 		{
 			[WrapperlessIcall]
@@ -97,9 +92,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Mip map bias of the texture.</para>
-		/// </summary>
 		public extern float mipMapBias
 		{
 			[WrapperlessIcall]
@@ -120,33 +112,36 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Sets Anisotropic limits.</para>
-		/// </summary>
-		/// <param name="forcedMin"></param>
-		/// <param name="globalMax"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void SetGlobalAnisotropicFilteringLimits(int forcedMin, int globalMax);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern int Internal_GetWidth(Texture mono);
+		private static extern int Internal_GetWidth(Texture t);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern int Internal_GetHeight(Texture mono);
+		private static extern int Internal_GetHeight(Texture t);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern TextureDimension Internal_GetDimension(Texture t);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_get_texelSize(out Vector2 value);
 
-		/// <summary>
-		///   <para>Retrieve native ('hardware') pointer to a texture.</para>
-		/// </summary>
+		public IntPtr GetNativeTexturePtr()
+		{
+			IntPtr result;
+			Texture.INTERNAL_CALL_GetNativeTexturePtr(this, out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern IntPtr GetNativeTexturePtr();
+		private static extern void INTERNAL_CALL_GetNativeTexturePtr(Texture self, out IntPtr value);
 
 		[Obsolete("Use GetNativeTexturePtr instead."), WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]

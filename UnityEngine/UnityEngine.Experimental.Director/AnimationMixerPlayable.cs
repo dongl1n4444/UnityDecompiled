@@ -1,51 +1,179 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEngine.Scripting;
 
 namespace UnityEngine.Experimental.Director
 {
-	/// <summary>
-	///   <para>Playable used to mix AnimationPlayables.</para>
-	/// </summary>
-	public class AnimationMixerPlayable : AnimationPlayable
+	[UsedByNativeCode]
+	public struct AnimationMixerPlayable
 	{
-		public AnimationMixerPlayable() : base(false)
+		internal AnimationPlayable handle;
+
+		internal Playable node
 		{
-			this.m_Ptr = IntPtr.Zero;
-			this.InstantiateEnginePlayable();
+			get
+			{
+				return this.handle.node;
+			}
 		}
 
-		public AnimationMixerPlayable(bool final) : base(false)
+		public int inputCount
 		{
-			this.m_Ptr = IntPtr.Zero;
-			if (final)
+			get
 			{
-				this.InstantiateEnginePlayable();
+				return Playables.GetInputCountValidated(this, base.GetType());
 			}
+		}
+
+		public int outputCount
+		{
+			get
+			{
+				return Playables.GetOutputCountValidated(this, base.GetType());
+			}
+		}
+
+		public PlayState state
+		{
+			get
+			{
+				return Playables.GetPlayStateValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetPlayStateValidated(this, value, base.GetType());
+			}
+		}
+
+		public double time
+		{
+			get
+			{
+				return Playables.GetTimeValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetTimeValidated(this, value, base.GetType());
+			}
+		}
+
+		public double duration
+		{
+			get
+			{
+				return Playables.GetDurationValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetDurationValidated(this, value, base.GetType());
+			}
+		}
+
+		public static AnimationMixerPlayable Create()
+		{
+			AnimationMixerPlayable result = default(AnimationMixerPlayable);
+			AnimationMixerPlayable.InternalCreate(ref result);
+			return result;
 		}
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void InstantiateEnginePlayable();
+		internal static extern void InternalCreate(ref AnimationMixerPlayable that);
 
-		/// <summary>
-		///   <para>Automatically creates an AnimationClipPlayable for each supplied AnimationClip, then sets them as inputs to the mixer.</para>
-		/// </summary>
-		/// <param name="clips">AnimationClips to be used as inputs.</param>
-		/// <returns>
-		///   <para>Returns false if the creation of the AnimationClipPlayables failed, or if the connection failed.</para>
-		/// </returns>
+		public void Destroy()
+		{
+			this.node.Destroy();
+		}
+
+		public Playable GetInput(int inputPort)
+		{
+			return Playables.GetInputValidated(this, inputPort, base.GetType());
+		}
+
+		public Playable GetOutput(int outputPort)
+		{
+			return Playables.GetOutputValidated(this, outputPort, base.GetType());
+		}
+
 		public bool SetInputs(AnimationClip[] clips)
 		{
-			if (clips == null)
-			{
-				throw new NullReferenceException("Parameter clips was null. You need to pass in a valid array of clips.");
-			}
-			AnimationPlayable[] array = new AnimationPlayable[clips.Length];
-			for (int i = 0; i < clips.Length; i++)
-			{
-				array[i] = new AnimationClipPlayable(clips[i]);
-			}
-			return base.SetInputs(array);
+			return AnimationPlayableUtilities.SetInputs(this, clips);
+		}
+
+		public float GetInputWeight(int index)
+		{
+			return Playables.GetInputWeightValidated(this, index, base.GetType());
+		}
+
+		public void SetInputWeight(int inputIndex, float weight)
+		{
+			Playables.SetInputWeightValidated(this, inputIndex, weight, base.GetType());
+		}
+
+		public override bool Equals(object p)
+		{
+			return Playables.Equals(this, p);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.node.GetHashCode();
+		}
+
+		public bool IsValid()
+		{
+			return Playables.IsValid(this);
+		}
+
+		public T CastTo<T>() where T : struct
+		{
+			return this.handle.CastTo<T>();
+		}
+
+		public int AddInput(Playable input)
+		{
+			return AnimationPlayableUtilities.AddInputValidated(this, input, base.GetType());
+		}
+
+		public bool SetInput(Playable source, int index)
+		{
+			return AnimationPlayableUtilities.SetInputValidated(this, source, index, base.GetType());
+		}
+
+		public bool SetInputs(IEnumerable<Playable> sources)
+		{
+			return AnimationPlayableUtilities.SetInputsValidated(this, sources, base.GetType());
+		}
+
+		public bool RemoveInput(int index)
+		{
+			return AnimationPlayableUtilities.RemoveInputValidated(this, index, base.GetType());
+		}
+
+		public bool RemoveAllInputs()
+		{
+			return AnimationPlayableUtilities.RemoveAllInputsValidated(this, base.GetType());
+		}
+
+		public static bool operator ==(AnimationMixerPlayable x, Playable y)
+		{
+			return Playables.Equals(x, y);
+		}
+
+		public static bool operator !=(AnimationMixerPlayable x, Playable y)
+		{
+			return !Playables.Equals(x, y);
+		}
+
+		public static implicit operator Playable(AnimationMixerPlayable b)
+		{
+			return b.node;
+		}
+
+		public static implicit operator AnimationPlayable(AnimationMixerPlayable b)
+		{
+			return b.handle;
 		}
 	}
 }

@@ -4,9 +4,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Information returned by a collision in 2D physics.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public class Collision2D
@@ -21,9 +18,6 @@ namespace UnityEngine
 
 		internal bool m_Enabled;
 
-		/// <summary>
-		///   <para>Whether the collision was disabled or not.</para>
-		/// </summary>
 		public bool enabled
 		{
 			get
@@ -32,9 +26,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The incoming Rigidbody2D involved in the collision.</para>
-		/// </summary>
 		public Rigidbody2D rigidbody
 		{
 			get
@@ -43,9 +34,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The incoming Collider2D involved in the collision.</para>
-		/// </summary>
 		public Collider2D collider
 		{
 			get
@@ -54,9 +42,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The Transform of the incoming object involved in the collision.</para>
-		/// </summary>
 		public Transform transform
 		{
 			get
@@ -65,9 +50,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The incoming GameObject involved in the collision.</para>
-		/// </summary>
 		public GameObject gameObject
 		{
 			get
@@ -76,9 +58,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The specific points of contact with the incoming Collider2D.</para>
-		/// </summary>
 		public ContactPoint2D[] contacts
 		{
 			get
@@ -87,9 +66,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The relative linear velocity of the two colliding objects (Read Only).</para>
-		/// </summary>
 		public Vector2 relativeVelocity
 		{
 			get

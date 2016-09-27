@@ -75,7 +75,12 @@ namespace UnityEditorInternal
 				GameObject gameObject = CurveBindingUtility.CreateOrGetGameObject(editorCurveBinding.path);
 				if (gameObject.GetComponent(editorCurveBinding.type) == null)
 				{
-					gameObject.AddComponent(editorCurveBinding.type);
+					Component component = gameObject.AddComponent(editorCurveBinding.type);
+					Behaviour behaviour = component as Behaviour;
+					if (behaviour != null)
+					{
+						behaviour.enabled = false;
+					}
 				}
 			}
 		}
@@ -85,7 +90,12 @@ namespace UnityEditorInternal
 			GameObject gameObject = CurveBindingUtility.CreateOrGetGameObject(curveBinding.path);
 			if (gameObject.GetComponent(curveBinding.type) == null)
 			{
-				gameObject.AddComponent(curveBinding.type);
+				Component component = gameObject.AddComponent(curveBinding.type);
+				Behaviour behaviour = component as Behaviour;
+				if (behaviour != null)
+				{
+					behaviour.enabled = false;
+				}
 			}
 		}
 

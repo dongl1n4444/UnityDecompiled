@@ -1,8 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
+using UnityEngine.Scripting;
 
 namespace UnityEditorInternal
 {
+	[RequiredByNativeCode]
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class ObjectMemoryStackInfo

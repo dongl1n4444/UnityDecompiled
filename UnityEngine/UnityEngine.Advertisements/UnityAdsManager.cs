@@ -5,6 +5,7 @@ namespace UnityEngine.Advertisements
 {
 	internal class UnityAdsManager
 	{
+		[ThreadAndSerializationSafe]
 		public static extern bool enabled
 		{
 			[WrapperlessIcall]

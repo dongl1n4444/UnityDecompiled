@@ -5,18 +5,12 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Asynchronous operation coroutine.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public class AsyncOperation : YieldInstruction
 	{
 		internal IntPtr m_Ptr;
 
-		/// <summary>
-		///   <para>Has the operation finished? (Read Only)</para>
-		/// </summary>
 		public extern bool isDone
 		{
 			[WrapperlessIcall]
@@ -24,9 +18,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>What's the operation's progress. (Read Only)</para>
-		/// </summary>
 		public extern float progress
 		{
 			[WrapperlessIcall]
@@ -34,9 +25,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Priority lets you tweak in which order async operation calls will be performed.</para>
-		/// </summary>
 		public extern int priority
 		{
 			[WrapperlessIcall]
@@ -47,9 +35,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Allow scenes to be activated as soon as it is ready.</para>
-		/// </summary>
 		public extern bool allowSceneActivation
 		{
 			[WrapperlessIcall]
@@ -60,7 +45,7 @@ namespace UnityEngine
 			set;
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InternalDestroy();
 

@@ -3,16 +3,10 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Interface into the Gyroscope.</para>
-	/// </summary>
 	public sealed class Gyroscope
 	{
 		private int m_GyroIndex;
 
-		/// <summary>
-		///   <para>Returns rotation rate as measured by the device's gyroscope.</para>
-		/// </summary>
 		public Vector3 rotationRate
 		{
 			get
@@ -21,9 +15,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns unbiased rotation rate as measured by the device's gyroscope.</para>
-		/// </summary>
 		public Vector3 rotationRateUnbiased
 		{
 			get
@@ -32,9 +23,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the gravity acceleration vector expressed in the device's reference frame.</para>
-		/// </summary>
 		public Vector3 gravity
 		{
 			get
@@ -43,9 +31,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the acceleration that the user is giving to the device.</para>
-		/// </summary>
 		public Vector3 userAcceleration
 		{
 			get
@@ -54,9 +39,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the attitude (ie, orientation in space) of the device.</para>
-		/// </summary>
 		public Quaternion attitude
 		{
 			get
@@ -65,9 +47,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Sets or retrieves the enabled status of this gyroscope.</para>
-		/// </summary>
 		public bool enabled
 		{
 			get
@@ -80,9 +59,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Sets or retrieves gyroscope interval in seconds.</para>
-		/// </summary>
 		public float updateInterval
 		{
 			get

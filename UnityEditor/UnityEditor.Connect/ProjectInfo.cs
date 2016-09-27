@@ -18,7 +18,7 @@ namespace UnityEditor.Connect
 
 		private string m_OrganizationName;
 
-		private int m_OrganizationForeignKey;
+		private string m_OrganizationForeignKey;
 
 		private int m_COPPA;
 
@@ -82,7 +82,7 @@ namespace UnityEditor.Connect
 			}
 		}
 
-		public int organizationForeignKey
+		public string organizationForeignKey
 		{
 			get
 			{

@@ -5,9 +5,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Styling information for GUI elements.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
@@ -59,9 +56,6 @@ namespace UnityEngine
 
 		private static GUIStyle s_None;
 
-		/// <summary>
-		///   <para>Rendering settings for when the component is displayed normally.</para>
-		/// </summary>
 		public GUIStyleState normal
 		{
 			get
@@ -78,9 +72,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the mouse is hovering over the control.</para>
-		/// </summary>
 		public GUIStyleState hover
 		{
 			get
@@ -97,9 +88,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the control is pressed down.</para>
-		/// </summary>
 		public GUIStyleState active
 		{
 			get
@@ -116,9 +104,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the control is turned on.</para>
-		/// </summary>
 		public GUIStyleState onNormal
 		{
 			get
@@ -135,9 +120,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the control is turned on and the mouse is hovering it.</para>
-		/// </summary>
 		public GUIStyleState onHover
 		{
 			get
@@ -154,9 +136,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the element is turned on and pressed down.</para>
-		/// </summary>
 		public GUIStyleState onActive
 		{
 			get
@@ -173,9 +152,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the element has keyboard focus.</para>
-		/// </summary>
 		public GUIStyleState focused
 		{
 			get
@@ -192,9 +168,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Rendering settings for when the element has keyboard and is turned on.</para>
-		/// </summary>
 		public GUIStyleState onFocused
 		{
 			get
@@ -211,9 +184,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The borders of all background images.</para>
-		/// </summary>
 		public RectOffset border
 		{
 			get
@@ -230,9 +200,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The margins between elements rendered in this style and any other GUI elements.</para>
-		/// </summary>
 		public RectOffset margin
 		{
 			get
@@ -249,9 +216,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Space from the edge of GUIStyle to the start of the contents.</para>
-		/// </summary>
 		public RectOffset padding
 		{
 			get
@@ -268,9 +232,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Extra space to be added to the background image.</para>
-		/// </summary>
 		public RectOffset overflow
 		{
 			get
@@ -300,9 +261,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The font to use for rendering. If null, the default font for the current GUISkin is used instead.</para>
-		/// </summary>
 		public Font font
 		{
 			get
@@ -316,9 +274,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The height of one line of text with this style, measured in pixels. (Read Only)</para>
-		/// </summary>
 		public float lineHeight
 		{
 			get
@@ -327,9 +282,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shortcut for an empty GUIStyle.</para>
-		/// </summary>
 		public static GUIStyle none
 		{
 			get
@@ -350,9 +302,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The name of this GUIStyle. Used for getting them based on name.</para>
-		/// </summary>
 		public extern string name
 		{
 			[WrapperlessIcall]
@@ -363,9 +312,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>How image and text of the GUIContent is combined.</para>
-		/// </summary>
 		public extern ImagePosition imagePosition
 		{
 			[WrapperlessIcall]
@@ -376,9 +322,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Text alignment.</para>
-		/// </summary>
 		public extern TextAnchor alignment
 		{
 			[WrapperlessIcall]
@@ -389,9 +332,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Should the text be wordwrapped?</para>
-		/// </summary>
 		public extern bool wordWrap
 		{
 			[WrapperlessIcall]
@@ -402,9 +342,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>What to do when the contents to be rendered is too large to fit within the area given.</para>
-		/// </summary>
 		public extern TextClipping clipping
 		{
 			[WrapperlessIcall]
@@ -415,9 +352,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Pixel offset to apply to the content of this GUIstyle.</para>
-		/// </summary>
 		public Vector2 contentOffset
 		{
 			get
@@ -446,9 +380,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>If non-0, any GUI elements rendered with this style will have the width specified here.</para>
-		/// </summary>
 		public extern float fixedWidth
 		{
 			[WrapperlessIcall]
@@ -459,9 +390,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>If non-0, any GUI elements rendered with this style will have the height specified here.</para>
-		/// </summary>
 		public extern float fixedHeight
 		{
 			[WrapperlessIcall]
@@ -472,9 +400,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Can GUI elements of this style be stretched horizontally for better layouting?</para>
-		/// </summary>
 		public extern bool stretchWidth
 		{
 			[WrapperlessIcall]
@@ -485,9 +410,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Can GUI elements of this style be stretched vertically for better layout?</para>
-		/// </summary>
 		public extern bool stretchHeight
 		{
 			[WrapperlessIcall]
@@ -498,9 +420,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The font size to use (for dynamic fonts).</para>
-		/// </summary>
 		public extern int fontSize
 		{
 			[WrapperlessIcall]
@@ -511,9 +430,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The font style to use (for dynamic fonts).</para>
-		/// </summary>
 		public extern FontStyle fontStyle
 		{
 			[WrapperlessIcall]
@@ -524,9 +440,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Enable HTML-style tags for Text Formatting Markup.</para>
-		/// </summary>
 		public extern bool richText
 		{
 			[WrapperlessIcall]
@@ -537,18 +450,11 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Constructor for empty GUIStyle.</para>
-		/// </summary>
 		public GUIStyle()
 		{
 			this.Init();
 		}
 
-		/// <summary>
-		///   <para>Constructs GUIStyle identical to given other GUIStyle.</para>
-		/// </summary>
-		/// <param name="other"></param>
 		public GUIStyle(GUIStyle other)
 		{
 			this.InitCopy(other);
@@ -557,6 +463,11 @@ namespace UnityEngine
 		~GUIStyle()
 		{
 			this.Cleanup();
+		}
+
+		internal static void CleanupRoots()
+		{
+			GUIStyle.s_None = null;
 		}
 
 		internal void InternalOnAfterDeserialize()
@@ -584,14 +495,6 @@ namespace UnityEngine
 			GUIStyle.Internal_Draw(content, ref internal_DrawArguments);
 		}
 
-		/// <summary>
-		///   <para>Draw this GUIStyle on to the screen, internal version.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="isHover"></param>
-		/// <param name="isActive"></param>
-		/// <param name="on"></param>
-		/// <param name="hasKeyboardFocus"></param>
 		public void Draw(Rect position, bool isHover, bool isActive, bool on, bool hasKeyboardFocus)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -602,15 +505,6 @@ namespace UnityEngine
 			GUIStyle.Internal_Draw(this.m_Ptr, position, GUIContent.none, isHover, isActive, on, hasKeyboardFocus);
 		}
 
-		/// <summary>
-		///   <para>Draw the GUIStyle with a text string inside.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="text"></param>
-		/// <param name="isHover"></param>
-		/// <param name="isActive"></param>
-		/// <param name="on"></param>
-		/// <param name="hasKeyboardFocus"></param>
 		public void Draw(Rect position, string text, bool isHover, bool isActive, bool on, bool hasKeyboardFocus)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -621,15 +515,6 @@ namespace UnityEngine
 			GUIStyle.Internal_Draw(this.m_Ptr, position, GUIContent.Temp(text), isHover, isActive, on, hasKeyboardFocus);
 		}
 
-		/// <summary>
-		///   <para>Draw the GUIStyle with an image inside. If the image is too large to fit within the content area of the style it is scaled down.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="image"></param>
-		/// <param name="isHover"></param>
-		/// <param name="isActive"></param>
-		/// <param name="on"></param>
-		/// <param name="hasKeyboardFocus"></param>
 		public void Draw(Rect position, Texture image, bool isHover, bool isActive, bool on, bool hasKeyboardFocus)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -640,16 +525,6 @@ namespace UnityEngine
 			GUIStyle.Internal_Draw(this.m_Ptr, position, GUIContent.Temp(image), isHover, isActive, on, hasKeyboardFocus);
 		}
 
-		/// <summary>
-		///   <para>Draw the GUIStyle with text and an image inside. If the image is too large to fit within the content area of the style it is scaled down.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="controlID"></param>
-		/// <param name="on"></param>
-		/// <param name="isHover"></param>
-		/// <param name="isActive"></param>
-		/// <param name="hasKeyboardFocus"></param>
 		public void Draw(Rect position, GUIContent content, bool isHover, bool isActive, bool on, bool hasKeyboardFocus)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -660,31 +535,11 @@ namespace UnityEngine
 			GUIStyle.Internal_Draw(this.m_Ptr, position, content, isHover, isActive, on, hasKeyboardFocus);
 		}
 
-		/// <summary>
-		///   <para>Draw the GUIStyle with text and an image inside. If the image is too large to fit within the content area of the style it is scaled down.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="controlID"></param>
-		/// <param name="on"></param>
-		/// <param name="isHover"></param>
-		/// <param name="isActive"></param>
-		/// <param name="hasKeyboardFocus"></param>
 		public void Draw(Rect position, GUIContent content, int controlID)
 		{
 			this.Draw(position, content, controlID, false);
 		}
 
-		/// <summary>
-		///   <para>Draw the GUIStyle with text and an image inside. If the image is too large to fit within the content area of the style it is scaled down.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="controlID"></param>
-		/// <param name="on"></param>
-		/// <param name="isHover"></param>
-		/// <param name="isActive"></param>
-		/// <param name="hasKeyboardFocus"></param>
 		public void Draw(Rect position, GUIContent content, int controlID, bool on)
 		{
 			if (Event.current.type != EventType.Repaint)
@@ -714,13 +569,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Draw this GUIStyle with selected content.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="controlID"></param>
-		/// <param name="Character"></param>
 		public void DrawCursor(Rect position, GUIContent content, int controlID, int Character)
 		{
 			Event current = Event.current;
@@ -767,25 +615,11 @@ namespace UnityEngine
 			GUIStyle.Internal_DrawWithTextSelection(content, ref internal_DrawWithTextSelectionArguments);
 		}
 
-		/// <summary>
-		///   <para>Draw this GUIStyle with selected content.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="controlID"></param>
-		/// <param name="firstSelectedCharacter"></param>
-		/// <param name="lastSelectedCharacter"></param>
 		public void DrawWithTextSelection(Rect position, GUIContent content, int controlID, int firstSelectedCharacter, int lastSelectedCharacter)
 		{
 			this.DrawWithTextSelection(position, content, controlID, firstSelectedCharacter, lastSelectedCharacter, false);
 		}
 
-		/// <summary>
-		///   <para>Get the pixel position of a given string index.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="cursorStringIndex"></param>
 		public Vector2 GetCursorPixelPosition(Rect position, GUIContent content, int cursorStringIndex)
 		{
 			Vector2 result;
@@ -793,12 +627,6 @@ namespace UnityEngine
 			return result;
 		}
 
-		/// <summary>
-		///   <para>Get the cursor position (indexing into contents.text) when the user clicked at cursorPixelPosition.</para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="content"></param>
-		/// <param name="cursorPixelPosition"></param>
 		public int GetCursorStringIndex(Rect position, GUIContent content, Vector2 cursorPixelPosition)
 		{
 			return GUIStyle.Internal_GetCursorStringIndex(this.m_Ptr, position, content, cursorPixelPosition);
@@ -809,10 +637,6 @@ namespace UnityEngine
 			return GUIStyle.Internal_GetNumCharactersThatFitWithinWidth(this.m_Ptr, text, width);
 		}
 
-		/// <summary>
-		///   <para>Calculate the size of a some content if it is rendered with this style.</para>
-		/// </summary>
-		/// <param name="content"></param>
 		public Vector2 CalcSize(GUIContent content)
 		{
 			Vector2 result;
@@ -827,20 +651,11 @@ namespace UnityEngine
 			return result;
 		}
 
-		/// <summary>
-		///   <para>Calculate the size of an element formatted with this style, and a given space to content.</para>
-		/// </summary>
-		/// <param name="contentSize"></param>
 		public Vector2 CalcScreenSize(Vector2 contentSize)
 		{
 			return new Vector2((this.fixedWidth == 0f) ? Mathf.Ceil(contentSize.x + (float)this.padding.left + (float)this.padding.right) : this.fixedWidth, (this.fixedHeight == 0f) ? Mathf.Ceil(contentSize.y + (float)this.padding.top + (float)this.padding.bottom) : this.fixedHeight);
 		}
 
-		/// <summary>
-		///   <para>How tall this element will be when rendered with content and a specific width.</para>
-		/// </summary>
-		/// <param name="content"></param>
-		/// <param name="width"></param>
 		public float CalcHeight(GUIContent content, float width)
 		{
 			return GUIStyle.Internal_CalcHeight(this.m_Ptr, content, width);
@@ -859,29 +674,44 @@ namespace UnityEngine
 			});
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Init();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InitCopy(GUIStyle other);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Cleanup();
 
+		[ThreadAndSerializationSafe]
+		private IntPtr GetStyleStatePtr(int idx)
+		{
+			IntPtr result;
+			GUIStyle.INTERNAL_CALL_GetStyleStatePtr(this, idx, out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern IntPtr GetStyleStatePtr(int idx);
+		private static extern void INTERNAL_CALL_GetStyleStatePtr(GUIStyle self, int idx, out IntPtr value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void AssignStyleState(int idx, IntPtr srcStyleState);
 
+		private IntPtr GetRectOffsetPtr(int idx)
+		{
+			IntPtr result;
+			GUIStyle.INTERNAL_CALL_GetRectOffsetPtr(this, idx, out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern IntPtr GetRectOffsetPtr(int idx);
+		private static extern void INTERNAL_CALL_GetRectOffsetPtr(GUIStyle self, int idx, out IntPtr value);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -911,7 +741,7 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void SetFontInternal(Font value);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern Font GetFontInternalDuringLoadingThread();
 

@@ -1,42 +1,26 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Asynchronous load request from an AssetBundle.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class AssetBundleRequest : AsyncOperation
 	{
-		internal AssetBundle m_AssetBundle;
-
-		internal string m_Path;
-
-		internal Type m_Type;
-
-		/// <summary>
-		///   <para>Asset object being loaded (Read Only).</para>
-		/// </summary>
-		public Object asset
+		public extern Object asset
 		{
-			get
-			{
-				return this.m_AssetBundle.LoadAsset(this.m_Path, this.m_Type);
-			}
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
 		}
 
-		/// <summary>
-		///   <para>Asset objects with sub assets being loaded. (Read Only)</para>
-		/// </summary>
-		public Object[] allAssets
+		public extern Object[] allAssets
 		{
-			get
-			{
-				return this.m_AssetBundle.LoadAssetWithSubAssets_Internal(this.m_Path, this.m_Type);
-			}
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
 		}
 	}
 }

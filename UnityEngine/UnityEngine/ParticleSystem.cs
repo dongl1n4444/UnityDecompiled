@@ -2,17 +2,12 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEngine.Internal;
+using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Script interface for particle systems (Shuriken).</para>
-	/// </summary>
 	public sealed class ParticleSystem : Component
 	{
-		/// <summary>
-		///   <para>Script interface for a Burst.</para>
-		/// </summary>
 		public struct Burst
 		{
 			private float m_Time;
@@ -21,9 +16,6 @@ namespace UnityEngine
 
 			private short m_MaxCount;
 
-			/// <summary>
-			///   <para>The time that each burst occurs.</para>
-			/// </summary>
 			public float time
 			{
 				get
@@ -36,9 +28,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Minimum number of bursts to be emitted.</para>
-			/// </summary>
 			public short minCount
 			{
 				get
@@ -51,9 +40,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Maximum number of bursts to be emitted.</para>
-			/// </summary>
 			public short maxCount
 			{
 				get
@@ -66,13 +52,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Construct a new Burst with a time and count.</para>
-			/// </summary>
-			/// <param name="_time">Time to emit the burst.</param>
-			/// <param name="_minCount">Minimum number of particles to emit.</param>
-			/// <param name="_maxCount">Maximum number of particles to emit.</param>
-			/// <param name="_count"></param>
 			public Burst(float _time, short _count)
 			{
 				this.m_Time = _time;
@@ -88,9 +67,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Script interface for a Min-Max Curve.</para>
-		/// </summary>
 		public struct MinMaxCurve
 		{
 			private ParticleSystemCurveMode m_Mode;
@@ -105,9 +81,6 @@ namespace UnityEngine
 
 			private float m_ConstantMax;
 
-			/// <summary>
-			///   <para>Set the mode that the min-max curve will use to evaluate values.</para>
-			/// </summary>
 			public ParticleSystemCurveMode mode
 			{
 				get
@@ -120,9 +93,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a multiplier to be applied to the curves.</para>
-			/// </summary>
 			public float curveScalar
 			{
 				get
@@ -135,9 +105,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a curve for the upper bound.</para>
-			/// </summary>
 			public AnimationCurve curveMax
 			{
 				get
@@ -150,9 +117,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a curve for the lower bound.</para>
-			/// </summary>
 			public AnimationCurve curveMin
 			{
 				get
@@ -165,9 +129,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a constant for the upper bound.</para>
-			/// </summary>
 			public float constantMax
 			{
 				get
@@ -180,9 +141,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a constant for the lower bound.</para>
-			/// </summary>
 			public float constantMin
 			{
 				get
@@ -195,10 +153,30 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>A single constant value for the entire curve.</para>
-			/// </summary>
-			/// <param name="constant">Constant value.</param>
+			public float constant
+			{
+				get
+				{
+					return this.m_ConstantMax;
+				}
+				set
+				{
+					this.m_ConstantMax = value;
+				}
+			}
+
+			public AnimationCurve curve
+			{
+				get
+				{
+					return this.m_CurveMax;
+				}
+				set
+				{
+					this.m_CurveMax = value;
+				}
+			}
+
 			public MinMaxCurve(float constant)
 			{
 				this.m_Mode = ParticleSystemCurveMode.Constant;
@@ -209,11 +187,6 @@ namespace UnityEngine
 				this.m_ConstantMax = constant;
 			}
 
-			/// <summary>
-			///   <para>Use one curve when evaluating numbers along this Min-Max curve.</para>
-			/// </summary>
-			/// <param name="scalar">A multiplier to be applied to the curve.</param>
-			/// <param name="curve">A single curve for evaluating against.</param>
 			public MinMaxCurve(float scalar, AnimationCurve curve)
 			{
 				this.m_Mode = ParticleSystemCurveMode.Curve;
@@ -224,12 +197,6 @@ namespace UnityEngine
 				this.m_ConstantMax = 0f;
 			}
 
-			/// <summary>
-			///   <para>Randomly select values based on the interval between the minimum and maximum curves.</para>
-			/// </summary>
-			/// <param name="scalar">A multiplier to be applied to the curves.</param>
-			/// <param name="min">The curve describing the minimum values to be evaluated.</param>
-			/// <param name="max">The curve describing the maximum values to be evaluated.</param>
 			public MinMaxCurve(float scalar, AnimationCurve min, AnimationCurve max)
 			{
 				this.m_Mode = ParticleSystemCurveMode.TwoCurves;
@@ -240,11 +207,6 @@ namespace UnityEngine
 				this.m_ConstantMax = 0f;
 			}
 
-			/// <summary>
-			///   <para>Randomly select values based on the interval between the minimum and maximum constants.</para>
-			/// </summary>
-			/// <param name="min">The constant describing the minimum values to be evaluated.</param>
-			/// <param name="max">The constant describing the maximum values to be evaluated.</param>
 			public MinMaxCurve(float min, float max)
 			{
 				this.m_Mode = ParticleSystemCurveMode.TwoConstants;
@@ -254,11 +216,38 @@ namespace UnityEngine
 				this.m_ConstantMin = min;
 				this.m_ConstantMax = max;
 			}
+
+			public float Evaluate(float time)
+			{
+				return this.Evaluate(time, 1f);
+			}
+
+			public float Evaluate(float time, float lerpFactor)
+			{
+				time = Mathf.Clamp(time, 0f, 1f);
+				lerpFactor = Mathf.Clamp(lerpFactor, 0f, 1f);
+				if (this.m_Mode == ParticleSystemCurveMode.Constant)
+				{
+					return this.m_ConstantMax;
+				}
+				if (this.m_Mode == ParticleSystemCurveMode.TwoConstants)
+				{
+					return Mathf.Lerp(this.m_ConstantMin, this.m_ConstantMax, lerpFactor);
+				}
+				float num = this.m_CurveMax.Evaluate(time) * this.m_CurveScalar;
+				if (this.m_Mode == ParticleSystemCurveMode.TwoCurves)
+				{
+					return Mathf.Lerp(this.m_CurveMin.Evaluate(time) * this.m_CurveScalar, num, lerpFactor);
+				}
+				return num;
+			}
+
+			public static implicit operator ParticleSystem.MinMaxCurve(float constant)
+			{
+				return new ParticleSystem.MinMaxCurve(constant);
+			}
 		}
 
-		/// <summary>
-		///   <para>Script interface for a Min-Max Gradient.</para>
-		/// </summary>
 		public struct MinMaxGradient
 		{
 			private ParticleSystemGradientMode m_Mode;
@@ -271,9 +260,6 @@ namespace UnityEngine
 
 			private Color m_ColorMax;
 
-			/// <summary>
-			///   <para>Set the mode that the min-max gradient will use to evaluate colors.</para>
-			/// </summary>
 			public ParticleSystemGradientMode mode
 			{
 				get
@@ -286,9 +272,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a gradient for the upper bound.</para>
-			/// </summary>
 			public Gradient gradientMax
 			{
 				get
@@ -301,9 +284,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a gradient for the lower bound.</para>
-			/// </summary>
 			public Gradient gradientMin
 			{
 				get
@@ -316,9 +296,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a constant color for the upper bound.</para>
-			/// </summary>
 			public Color colorMax
 			{
 				get
@@ -331,9 +308,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set a constant color for the lower bound.</para>
-			/// </summary>
 			public Color colorMin
 			{
 				get
@@ -346,10 +320,30 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>A single constant color for the entire gradient.</para>
-			/// </summary>
-			/// <param name="color">Constant color.</param>
+			public Color color
+			{
+				get
+				{
+					return this.m_ColorMax;
+				}
+				set
+				{
+					this.m_ColorMax = value;
+				}
+			}
+
+			public Gradient gradient
+			{
+				get
+				{
+					return this.m_GradientMax;
+				}
+				set
+				{
+					this.m_GradientMax = value;
+				}
+			}
+
 			public MinMaxGradient(Color color)
 			{
 				this.m_Mode = ParticleSystemGradientMode.Color;
@@ -359,10 +353,6 @@ namespace UnityEngine
 				this.m_ColorMax = color;
 			}
 
-			/// <summary>
-			///   <para>Use one gradient when evaluating numbers along this Min-Max gradient.</para>
-			/// </summary>
-			/// <param name="gradient">A single gradient for evaluating against.</param>
 			public MinMaxGradient(Gradient gradient)
 			{
 				this.m_Mode = ParticleSystemGradientMode.Gradient;
@@ -372,11 +362,6 @@ namespace UnityEngine
 				this.m_ColorMax = Color.black;
 			}
 
-			/// <summary>
-			///   <para>Randomly select colors based on the interval between the minimum and maximum constants.</para>
-			/// </summary>
-			/// <param name="min">The constant color describing the minimum colors to be evaluated.</param>
-			/// <param name="max">The constant color describing the maximum colors to be evaluated.</param>
 			public MinMaxGradient(Color min, Color max)
 			{
 				this.m_Mode = ParticleSystemGradientMode.TwoColors;
@@ -386,11 +371,6 @@ namespace UnityEngine
 				this.m_ColorMax = max;
 			}
 
-			/// <summary>
-			///   <para>Randomly select colors based on the interval between the minimum and maximum gradients.</para>
-			/// </summary>
-			/// <param name="min">The gradient describing the minimum colors to be evaluated.</param>
-			/// <param name="max">The gradient describing the maximum colors to be evaluated.</param>
 			public MinMaxGradient(Gradient min, Gradient max)
 			{
 				this.m_Mode = ParticleSystemGradientMode.TwoGradients;
@@ -399,18 +379,47 @@ namespace UnityEngine
 				this.m_ColorMin = Color.black;
 				this.m_ColorMax = Color.black;
 			}
+
+			public Color Evaluate(float time)
+			{
+				return this.Evaluate(time, 1f);
+			}
+
+			public Color Evaluate(float time, float lerpFactor)
+			{
+				time = Mathf.Clamp(time, 0f, 1f);
+				lerpFactor = Mathf.Clamp(lerpFactor, 0f, 1f);
+				if (this.m_Mode == ParticleSystemGradientMode.Color)
+				{
+					return this.m_ColorMax;
+				}
+				if (this.m_Mode == ParticleSystemGradientMode.TwoColors)
+				{
+					return Color.Lerp(this.m_ColorMin, this.m_ColorMax, lerpFactor);
+				}
+				Color color = this.m_GradientMax.Evaluate(time);
+				if (this.m_Mode == ParticleSystemGradientMode.TwoGradients)
+				{
+					return Color.Lerp(this.m_GradientMin.Evaluate(time), color, lerpFactor);
+				}
+				return color;
+			}
+
+			public static implicit operator ParticleSystem.MinMaxGradient(Color color)
+			{
+				return new ParticleSystem.MinMaxGradient(color);
+			}
+
+			public static implicit operator ParticleSystem.MinMaxGradient(Gradient gradient)
+			{
+				return new ParticleSystem.MinMaxGradient(gradient);
+			}
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Emission module.</para>
-		/// </summary>
 		public struct EmissionModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Emission module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -423,9 +432,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The rate at which new particles are spawned.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve rate
 			{
 				get
@@ -440,9 +446,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The emission type.</para>
-			/// </summary>
 			public ParticleSystemEmissionType type
 			{
 				get
@@ -455,9 +458,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The current number of bursts.</para>
-			/// </summary>
 			public int burstCount
 			{
 				get
@@ -523,16 +523,10 @@ namespace UnityEngine
 			private static extern int GetBursts(ParticleSystem system, ParticleSystem.Burst[] bursts);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Shape module.</para>
-		/// </summary>
 		public struct ShapeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Shape module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -545,9 +539,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Type of shape to emit particles from.</para>
-			/// </summary>
 			public ParticleSystemShapeType shapeType
 			{
 				get
@@ -560,9 +551,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Randomizes the starting direction of particles.</para>
-			/// </summary>
 			public bool randomDirection
 			{
 				get
@@ -575,9 +563,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Radius of the shape.</para>
-			/// </summary>
 			public float radius
 			{
 				get
@@ -590,9 +575,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Angle of the cone.</para>
-			/// </summary>
 			public float angle
 			{
 				get
@@ -605,9 +587,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Length of the cone.</para>
-			/// </summary>
 			public float length
 			{
 				get
@@ -620,9 +599,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Scale of the box.</para>
-			/// </summary>
 			public Vector3 box
 			{
 				get
@@ -635,9 +611,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Where on the mesh to emit particles from.</para>
-			/// </summary>
 			public ParticleSystemMeshShapeType meshShapeType
 			{
 				get
@@ -650,9 +623,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Mesh to emit particles from.</para>
-			/// </summary>
 			public Mesh mesh
 			{
 				get
@@ -665,9 +635,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>MeshRenderer to emit particles from.</para>
-			/// </summary>
 			public MeshRenderer meshRenderer
 			{
 				get
@@ -680,9 +647,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>SkinnedMeshRenderer to emit particles from.</para>
-			/// </summary>
 			public SkinnedMeshRenderer skinnedMeshRenderer
 			{
 				get
@@ -695,9 +659,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Emit from a single material, or the whole mesh.</para>
-			/// </summary>
 			public bool useMeshMaterialIndex
 			{
 				get
@@ -710,9 +671,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Emit particles from a single material of a mesh.</para>
-			/// </summary>
 			public int meshMaterialIndex
 			{
 				get
@@ -725,9 +683,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Modulate the particle colours with the vertex colors, or the material color if no vertex colors exist.</para>
-			/// </summary>
 			public bool useMeshColors
 			{
 				get
@@ -740,9 +695,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Move particles away from the surface of the source mesh.</para>
-			/// </summary>
 			public float normalOffset
 			{
 				get
@@ -755,9 +707,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Circle arc angle.</para>
-			/// </summary>
 			public float arc
 			{
 				get
@@ -916,16 +865,10 @@ namespace UnityEngine
 			private static extern float GetArc(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Velocity Over Lifetime module.</para>
-		/// </summary>
 		public struct VelocityOverLifetimeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Velocity Over Lifetime module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -938,9 +881,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to control particle speed based on lifetime, on the X axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve x
 			{
 				get
@@ -955,9 +895,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to control particle speed based on lifetime, on the Y axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve y
 			{
 				get
@@ -972,9 +909,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to control particle speed based on lifetime, on the Z axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve z
 			{
 				get
@@ -989,9 +923,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Specifies if the velocities are in local space (rotated with the transform) or world space.</para>
-			/// </summary>
 			public ParticleSystemSimulationSpace space
 			{
 				get
@@ -1050,16 +981,10 @@ namespace UnityEngine
 			private static extern bool GetWorldSpace(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Limit Velocity Over Lifetime module.</para>
-		/// </summary>
 		public struct LimitVelocityOverLifetimeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Limit Force Over Lifetime module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1072,9 +997,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Maximum velocity curve for the X axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve limitX
 			{
 				get
@@ -1089,9 +1011,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Maximum velocity curve for the Y axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve limitY
 			{
 				get
@@ -1106,9 +1025,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Maximum velocity curve for the Z axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve limitZ
 			{
 				get
@@ -1123,9 +1039,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Maximum velocity curve, when not using one curve per axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve limit
 			{
 				get
@@ -1140,9 +1053,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Controls how much the velocity that exceeds the velocity limit should be dampened.</para>
-			/// </summary>
 			public float dampen
 			{
 				get
@@ -1155,9 +1065,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set the velocity limit on each axis separately.</para>
-			/// </summary>
 			public bool separateAxes
 			{
 				get
@@ -1170,9 +1077,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Specifies if the velocity limits are in local space (rotated with the transform) or world space.</para>
-			/// </summary>
 			public ParticleSystemSimulationSpace space
 			{
 				get
@@ -1255,16 +1159,10 @@ namespace UnityEngine
 			private static extern bool GetWorldSpace(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>The Inherit Velocity Module controls how the velocity of the emitter is transferred to the particles as they are emitted.</para>
-		/// </summary>
 		public struct InheritVelocityModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the InheritVelocity module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1277,9 +1175,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>How to apply emitter velocity to particles.</para>
-			/// </summary>
 			public ParticleSystemInheritVelocityMode mode
 			{
 				get
@@ -1292,9 +1187,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to define how much emitter velocity is applied during the lifetime of a particle.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve curve
 			{
 				get
@@ -1339,16 +1231,10 @@ namespace UnityEngine
 			private static extern void GetCurve(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Force Over Lifetime module.</para>
-		/// </summary>
 		public struct ForceOverLifetimeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Force Over Lifetime module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1361,9 +1247,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The curve defining particle forces in the X axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve x
 			{
 				get
@@ -1378,9 +1261,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The curve defining particle forces in the Y axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve y
 			{
 				get
@@ -1395,9 +1275,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The curve defining particle forces in the Z axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve z
 			{
 				get
@@ -1412,9 +1289,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Are the forces being applied in local or world space?</para>
-			/// </summary>
 			public ParticleSystemSimulationSpace space
 			{
 				get
@@ -1427,9 +1301,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>When randomly selecting values between two curves or constants, this flag will cause a new random force to be chosen on each frame.</para>
-			/// </summary>
 			public bool randomized
 			{
 				get
@@ -1496,16 +1367,10 @@ namespace UnityEngine
 			private static extern bool GetRandomized(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Color Over Lifetime module.</para>
-		/// </summary>
 		public struct ColorOverLifetimeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Color Over Lifetime module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1518,9 +1383,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The curve controlling the particle colors.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxGradient color
 			{
 				get
@@ -1557,16 +1419,10 @@ namespace UnityEngine
 			private static extern void GetColor(ParticleSystem system, ref ParticleSystem.MinMaxGradient gradient);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Color By Speed module.</para>
-		/// </summary>
 		public struct ColorBySpeedModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Color By Speed module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1579,9 +1435,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The curve controlling the particle colors.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxGradient color
 			{
 				get
@@ -1596,9 +1449,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Apply the color gradient between these minimum and maximum speeds.</para>
-			/// </summary>
 			public Vector2 range
 			{
 				get
@@ -1653,16 +1503,10 @@ namespace UnityEngine
 			private static extern void INTERNAL_CALL_GetRange(ParticleSystem system, out Vector2 value);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Size Over Lifetime module.</para>
-		/// </summary>
 		public struct SizeOverLifetimeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Size Over Lifetime module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1675,20 +1519,71 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to control particle size based on lifetime.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve size
 			{
 				get
 				{
 					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
-					ParticleSystem.SizeOverLifetimeModule.GetSize(this.m_ParticleSystem, ref result);
+					ParticleSystem.SizeOverLifetimeModule.GetX(this.m_ParticleSystem, ref result);
 					return result;
 				}
 				set
 				{
-					ParticleSystem.SizeOverLifetimeModule.SetSize(this.m_ParticleSystem, ref value);
+					ParticleSystem.SizeOverLifetimeModule.SetX(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public ParticleSystem.MinMaxCurve x
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.SizeOverLifetimeModule.GetX(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.SizeOverLifetimeModule.SetX(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public ParticleSystem.MinMaxCurve y
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.SizeOverLifetimeModule.GetY(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.SizeOverLifetimeModule.SetY(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public ParticleSystem.MinMaxCurve z
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.SizeOverLifetimeModule.GetZ(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.SizeOverLifetimeModule.SetZ(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public bool separateAxes
+			{
+				get
+				{
+					return ParticleSystem.SizeOverLifetimeModule.GetSeparateAxes(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.SizeOverLifetimeModule.SetSeparateAxes(this.m_ParticleSystem, value);
 				}
 			}
 
@@ -1707,23 +1602,41 @@ namespace UnityEngine
 
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
-			private static extern void SetSize(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+			private static extern void SetX(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
 
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
-			private static extern void GetSize(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+			private static extern void GetX(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetY(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void GetY(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetZ(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void GetZ(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetSeparateAxes(ParticleSystem system, bool value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern bool GetSeparateAxes(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Size By Speed module.</para>
-		/// </summary>
 		public struct SizeBySpeedModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Size By Speed module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1736,26 +1649,74 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to control particle size based on speed.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve size
 			{
 				get
 				{
 					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
-					ParticleSystem.SizeBySpeedModule.GetSize(this.m_ParticleSystem, ref result);
+					ParticleSystem.SizeBySpeedModule.GetX(this.m_ParticleSystem, ref result);
 					return result;
 				}
 				set
 				{
-					ParticleSystem.SizeBySpeedModule.SetSize(this.m_ParticleSystem, ref value);
+					ParticleSystem.SizeBySpeedModule.SetX(this.m_ParticleSystem, ref value);
 				}
 			}
 
-			/// <summary>
-			///   <para>Apply the size curve between these minimum and maximum speeds.</para>
-			/// </summary>
+			public ParticleSystem.MinMaxCurve x
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.SizeBySpeedModule.GetX(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.SizeBySpeedModule.SetX(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public ParticleSystem.MinMaxCurve y
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.SizeBySpeedModule.GetY(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.SizeBySpeedModule.SetY(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public ParticleSystem.MinMaxCurve z
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.SizeBySpeedModule.GetZ(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.SizeBySpeedModule.SetZ(this.m_ParticleSystem, ref value);
+				}
+			}
+
+			public bool separateAxes
+			{
+				get
+				{
+					return ParticleSystem.SizeBySpeedModule.GetSeparateAxes(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.SizeBySpeedModule.SetSeparateAxes(this.m_ParticleSystem, value);
+				}
+			}
+
 			public Vector2 range
 			{
 				get
@@ -1783,11 +1744,35 @@ namespace UnityEngine
 
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
-			private static extern void SetSize(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+			private static extern void SetX(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
 
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
-			private static extern void GetSize(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+			private static extern void GetX(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetY(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void GetY(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetZ(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void GetZ(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetSeparateAxes(ParticleSystem system, bool value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern bool GetSeparateAxes(ParticleSystem system);
 
 			private static void SetRange(ParticleSystem system, Vector2 value)
 			{
@@ -1810,16 +1795,10 @@ namespace UnityEngine
 			private static extern void INTERNAL_CALL_GetRange(ParticleSystem system, out Vector2 value);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Rotation Over Lifetime module.</para>
-		/// </summary>
 		public struct RotationOverLifetimeModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Rotation Over Lifetime module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1832,9 +1811,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Rotation over lifetime curve for the X axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve x
 			{
 				get
@@ -1849,9 +1825,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Rotation over lifetime curve for the Y axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve y
 			{
 				get
@@ -1866,9 +1839,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Rotation over lifetime curve for the Z axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve z
 			{
 				get
@@ -1883,9 +1853,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set the rotation over lifetime on each axis separately.</para>
-			/// </summary>
 			public bool separateAxes
 			{
 				get
@@ -1944,16 +1911,10 @@ namespace UnityEngine
 			private static extern bool GetSeparateAxes(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Rotation By Speed module.</para>
-		/// </summary>
 		public struct RotationBySpeedModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Rotation By Speed module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -1966,9 +1927,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Rotation by speed curve for the X axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve x
 			{
 				get
@@ -1983,9 +1941,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Rotation by speed curve for the Y axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve y
 			{
 				get
@@ -2000,9 +1955,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Rotation by speed curve for the Z axis.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve z
 			{
 				get
@@ -2017,9 +1969,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Set the rotation by speed on each axis separately.</para>
-			/// </summary>
 			public bool separateAxes
 			{
 				get
@@ -2032,9 +1981,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Apply the rotation curve between these minimum and maximum speeds.</para>
-			/// </summary>
 			public Vector2 range
 			{
 				get
@@ -2113,16 +2059,10 @@ namespace UnityEngine
 			private static extern void INTERNAL_CALL_GetRange(ParticleSystem system, out Vector2 value);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the External Forces module.</para>
-		/// </summary>
 		public struct ExternalForcesModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the External Forces module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -2135,9 +2075,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Multiplies the magnitude of applied external forces.</para>
-			/// </summary>
 			public float multiplier
 			{
 				get
@@ -2172,16 +2109,10 @@ namespace UnityEngine
 			private static extern float GetMultiplier(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Collision module.</para>
-		/// </summary>
 		public struct CollisionModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Collision module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -2194,9 +2125,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The type of particle collision to perform.</para>
-			/// </summary>
 			public ParticleSystemCollisionType type
 			{
 				get
@@ -2209,9 +2137,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Choose between 2D and 3D world collisions.</para>
-			/// </summary>
 			public ParticleSystemCollisionMode mode
 			{
 				get
@@ -2224,9 +2149,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>How much speed is lost from each particle after a collision.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve dampen
 			{
 				get
@@ -2241,9 +2163,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>How much force is applied to each particle after a collision.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve bounce
 			{
 				get
@@ -2258,9 +2177,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>How much a particle's lifetime is reduced after a collision.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve lifetimeLoss
 			{
 				get
@@ -2275,9 +2191,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Kill particles whose speed falls below this threshold, after a collision.</para>
-			/// </summary>
 			public float minKillSpeed
 			{
 				get
@@ -2290,9 +2203,18 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Control which layers this particle system collides with.</para>
-			/// </summary>
+			public float maxKillSpeed
+			{
+				get
+				{
+					return ParticleSystem.CollisionModule.GetMaxKillSpeed(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.CollisionModule.SetMaxKillSpeed(this.m_ParticleSystem, value);
+				}
+			}
+
 			public LayerMask collidesWith
 			{
 				get
@@ -2305,9 +2227,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Allow particles to collide with dynamic colliders when using world collision mode.</para>
-			/// </summary>
 			public bool enableDynamicColliders
 			{
 				get
@@ -2320,9 +2239,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Allow particles to collide when inside colliders.</para>
-			/// </summary>
 			public bool enableInteriorCollisions
 			{
 				get
@@ -2335,9 +2251,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The maximum number of collision shapes that will be considered for particle collisions. Excess shapes will be ignored. Terrains take priority.</para>
-			/// </summary>
 			public int maxCollisionShapes
 			{
 				get
@@ -2350,9 +2263,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Specifies the accuracy of particle collisions against colliders in the scene.</para>
-			/// </summary>
 			public ParticleSystemCollisionQuality quality
 			{
 				get
@@ -2365,9 +2275,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Size of voxels in the collision cache.</para>
-			/// </summary>
 			public float voxelSize
 			{
 				get
@@ -2380,9 +2287,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>A multiplier applied to the size of each particle before collisions are processed.</para>
-			/// </summary>
 			public float radiusScale
 			{
 				get
@@ -2395,9 +2299,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Send collision callback messages.</para>
-			/// </summary>
 			public bool sendCollisionMessages
 			{
 				get
@@ -2410,9 +2311,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The maximum number of planes it is possible to set as colliders.</para>
-			/// </summary>
 			public int maxPlaneCount
 			{
 				get
@@ -2426,23 +2324,11 @@ namespace UnityEngine
 				this.m_ParticleSystem = particleSystem;
 			}
 
-			/// <summary>
-			///   <para>Set a collision plane to be used with this particle system.</para>
-			/// </summary>
-			/// <param name="index">Specifies which plane to set.</param>
-			/// <param name="transform">The plane to set.</param>
 			public void SetPlane(int index, Transform transform)
 			{
 				ParticleSystem.CollisionModule.SetPlane(this.m_ParticleSystem, index, transform);
 			}
 
-			/// <summary>
-			///   <para>Get a collision plane associated with this particle system.</para>
-			/// </summary>
-			/// <param name="index">Specifies which plane to access.</param>
-			/// <returns>
-			///   <para>The plane.</para>
-			/// </returns>
 			public Transform GetPlane(int index)
 			{
 				return ParticleSystem.CollisionModule.GetPlane(this.m_ParticleSystem, index);
@@ -2503,6 +2389,14 @@ namespace UnityEngine
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			private static extern float GetMinKillSpeed(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetMaxKillSpeed(ParticleSystem system, float value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern float GetMaxKillSpeed(ParticleSystem system);
 
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -2581,16 +2475,170 @@ namespace UnityEngine
 			private static extern int GetMaxPlaneCount(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Sub Emitters module.</para>
-		/// </summary>
+		public struct TriggerModule
+		{
+			private ParticleSystem m_ParticleSystem;
+
+			public bool enabled
+			{
+				get
+				{
+					return ParticleSystem.TriggerModule.GetEnabled(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TriggerModule.SetEnabled(this.m_ParticleSystem, value);
+				}
+			}
+
+			public ParticleSystemOverlapAction inside
+			{
+				get
+				{
+					return (ParticleSystemOverlapAction)ParticleSystem.TriggerModule.GetInside(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TriggerModule.SetInside(this.m_ParticleSystem, (int)value);
+				}
+			}
+
+			public ParticleSystemOverlapAction outside
+			{
+				get
+				{
+					return (ParticleSystemOverlapAction)ParticleSystem.TriggerModule.GetOutside(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TriggerModule.SetOutside(this.m_ParticleSystem, (int)value);
+				}
+			}
+
+			public ParticleSystemOverlapAction enter
+			{
+				get
+				{
+					return (ParticleSystemOverlapAction)ParticleSystem.TriggerModule.GetEnter(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TriggerModule.SetEnter(this.m_ParticleSystem, (int)value);
+				}
+			}
+
+			public ParticleSystemOverlapAction exit
+			{
+				get
+				{
+					return (ParticleSystemOverlapAction)ParticleSystem.TriggerModule.GetExit(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TriggerModule.SetExit(this.m_ParticleSystem, (int)value);
+				}
+			}
+
+			public float radiusScale
+			{
+				get
+				{
+					return ParticleSystem.TriggerModule.GetRadiusScale(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TriggerModule.SetRadiusScale(this.m_ParticleSystem, value);
+				}
+			}
+
+			public int maxColliderCount
+			{
+				get
+				{
+					return ParticleSystem.TriggerModule.GetMaxColliderCount(this.m_ParticleSystem);
+				}
+			}
+
+			internal TriggerModule(ParticleSystem particleSystem)
+			{
+				this.m_ParticleSystem = particleSystem;
+			}
+
+			public void SetCollider(int index, Component collider)
+			{
+				ParticleSystem.TriggerModule.SetCollider(this.m_ParticleSystem, index, collider);
+			}
+
+			public Component GetCollider(int index)
+			{
+				return ParticleSystem.TriggerModule.GetCollider(this.m_ParticleSystem, index);
+			}
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetEnabled(ParticleSystem system, bool value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern bool GetEnabled(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetInside(ParticleSystem system, int value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern int GetInside(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetOutside(ParticleSystem system, int value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern int GetOutside(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetEnter(ParticleSystem system, int value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern int GetEnter(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetExit(ParticleSystem system, int value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern int GetExit(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetRadiusScale(ParticleSystem system, float value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern float GetRadiusScale(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetCollider(ParticleSystem system, int index, Component collider);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern Component GetCollider(ParticleSystem system, int index);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern int GetMaxColliderCount(ParticleSystem system);
+		}
+
 		public struct SubEmittersModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Sub Emitters module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -2603,9 +2651,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Sub particle system to spawn on birth of the parent system's particles.</para>
-			/// </summary>
 			public ParticleSystem birth0
 			{
 				get
@@ -2618,9 +2663,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Sub particle system to spawn on birth of the parent system's particles.</para>
-			/// </summary>
 			public ParticleSystem birth1
 			{
 				get
@@ -2633,9 +2675,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Sub particle system to spawn on collision of the parent system's particles.</para>
-			/// </summary>
 			public ParticleSystem collision0
 			{
 				get
@@ -2648,9 +2687,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Sub particle system to spawn on collision of the parent system's particles.</para>
-			/// </summary>
 			public ParticleSystem collision1
 			{
 				get
@@ -2663,9 +2699,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Sub particle system to spawn on death of the parent system's particles.</para>
-			/// </summary>
 			public ParticleSystem death0
 			{
 				get
@@ -2678,9 +2711,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Sub particle system to spawn on death of the parent system's particles.</para>
-			/// </summary>
 			public ParticleSystem death1
 			{
 				get
@@ -2731,16 +2761,10 @@ namespace UnityEngine
 			private static extern ParticleSystem GetDeath(ParticleSystem system, int index);
 		}
 
-		/// <summary>
-		///   <para>Script interface for the Texture Sheet Animation module.</para>
-		/// </summary>
 		public struct TextureSheetAnimationModule
 		{
 			private ParticleSystem m_ParticleSystem;
 
-			/// <summary>
-			///   <para>Enable/disable the Texture Sheet Animation module.</para>
-			/// </summary>
 			public bool enabled
 			{
 				get
@@ -2753,9 +2777,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Defines the tiling of the texture in the X axis.</para>
-			/// </summary>
 			public int numTilesX
 			{
 				get
@@ -2768,9 +2789,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Defines the tiling of the texture in the Y axis.</para>
-			/// </summary>
 			public int numTilesY
 			{
 				get
@@ -2783,9 +2801,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Specifies the animation type.</para>
-			/// </summary>
 			public ParticleSystemAnimationType animation
 			{
 				get
@@ -2798,9 +2813,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Use a random row of the texture sheet for each particle emitted.</para>
-			/// </summary>
 			public bool useRandomRow
 			{
 				get
@@ -2813,9 +2825,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Curve to control which frame of the texture sheet animation to play.</para>
-			/// </summary>
 			public ParticleSystem.MinMaxCurve frameOverTime
 			{
 				get
@@ -2830,9 +2839,20 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Specifies how many times the animation will loop during the lifetime of the particle.</para>
-			/// </summary>
+			public ParticleSystem.MinMaxCurve startFrame
+			{
+				get
+				{
+					ParticleSystem.MinMaxCurve result = default(ParticleSystem.MinMaxCurve);
+					ParticleSystem.TextureSheetAnimationModule.GetStartFrame(this.m_ParticleSystem, ref result);
+					return result;
+				}
+				set
+				{
+					ParticleSystem.TextureSheetAnimationModule.SetStartFrame(this.m_ParticleSystem, ref value);
+				}
+			}
+
 			public int cycleCount
 			{
 				get
@@ -2845,9 +2865,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Explicitly select which row of the texture sheet is used, when ParticleSystem.TextureSheetAnimationModule.useRandomRow is set to false.</para>
-			/// </summary>
 			public int rowIndex
 			{
 				get
@@ -2857,6 +2874,18 @@ namespace UnityEngine
 				set
 				{
 					ParticleSystem.TextureSheetAnimationModule.SetRowIndex(this.m_ParticleSystem, value);
+				}
+			}
+
+			public UVChannelFlags uvChannelMask
+			{
+				get
+				{
+					return (UVChannelFlags)ParticleSystem.TextureSheetAnimationModule.GetUVChannelMask(this.m_ParticleSystem);
+				}
+				set
+				{
+					ParticleSystem.TextureSheetAnimationModule.SetUVChannelMask(this.m_ParticleSystem, (int)value);
 				}
 			}
 
@@ -2915,6 +2944,14 @@ namespace UnityEngine
 
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetStartFrame(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void GetStartFrame(ParticleSystem system, ref ParticleSystem.MinMaxCurve curve);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
 			private static extern void SetCycleCount(ParticleSystem system, int value);
 
 			[WrapperlessIcall]
@@ -2928,11 +2965,17 @@ namespace UnityEngine
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			private static extern int GetRowIndex(ParticleSystem system);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void SetUVChannelMask(ParticleSystem system, int value);
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern int GetUVChannelMask(ParticleSystem system);
 		}
 
-		/// <summary>
-		///   <para>Script interface for a Particle.</para>
-		/// </summary>
+		[RequiredByNativeCode("particleSystemParticle", Optional = true)]
 		public struct Particle
 		{
 			private Vector3 m_Position;
@@ -2949,7 +2992,7 @@ namespace UnityEngine
 
 			private Vector3 m_AngularVelocity;
 
-			private float m_StartSize;
+			private Vector3 m_StartSize;
 
 			private Color32 m_StartColor;
 
@@ -2963,9 +3006,6 @@ namespace UnityEngine
 
 			private float m_EmitAccumulator1;
 
-			/// <summary>
-			///   <para>The position of the particle.</para>
-			/// </summary>
 			public Vector3 position
 			{
 				get
@@ -2978,9 +3018,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The velocity of the particle.</para>
-			/// </summary>
 			public Vector3 velocity
 			{
 				get
@@ -2993,9 +3030,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The lifetime of the particle.</para>
-			/// </summary>
 			public float lifetime
 			{
 				get
@@ -3008,9 +3042,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The starting lifetime of the particle.</para>
-			/// </summary>
 			public float startLifetime
 			{
 				get
@@ -3023,10 +3054,19 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The initial size of the particle. The current size of the particle is calculated procedurally based on this value and the active size modules.</para>
-			/// </summary>
 			public float startSize
+			{
+				get
+				{
+					return this.m_StartSize.x;
+				}
+				set
+				{
+					this.m_StartSize = new Vector3(value, value, value);
+				}
+			}
+
+			public Vector3 startSize3D
 			{
 				get
 				{
@@ -3050,9 +3090,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The rotation of the particle.</para>
-			/// </summary>
 			public float rotation
 			{
 				get
@@ -3065,9 +3102,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The 3D rotation of the particle.</para>
-			/// </summary>
 			public Vector3 rotation3D
 			{
 				get
@@ -3080,9 +3114,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The angular velocity of the particle.</para>
-			/// </summary>
 			public float angularVelocity
 			{
 				get
@@ -3095,9 +3126,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The 3D angular velocity of the particle.</para>
-			/// </summary>
 			public Vector3 angularVelocity3D
 			{
 				get
@@ -3110,9 +3138,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The initial color of the particle. The current color of the particle is calculated procedurally based on this value and the active color modules.</para>
-			/// </summary>
 			public Color32 startColor
 			{
 				get
@@ -3125,9 +3150,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The random value of the particle.</para>
-			/// </summary>
 			[Obsolete("randomValue property is deprecated. Use randomSeed instead to control random behavior of particles.")]
 			public float randomValue
 			{
@@ -3141,9 +3163,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>The random seed of the particle.</para>
-			/// </summary>
 			public uint randomSeed
 			{
 				get
@@ -3161,11 +3180,11 @@ namespace UnityEngine
 			{
 				get
 				{
-					return this.m_StartSize;
+					return this.m_StartSize.x;
 				}
 				set
 				{
-					this.m_StartSize = value;
+					this.m_StartSize = new Vector3(value, value, value);
 				}
 			}
 
@@ -3182,25 +3201,16 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Calculate the current size of the particle by applying the relevant curves to its startSize property.</para>
-			/// </summary>
-			/// <param name="system">The particle system from which this particle was emitted.</param>
-			/// <returns>
-			///   <para>Current size.</para>
-			/// </returns>
 			public float GetCurrentSize(ParticleSystem system)
 			{
 				return ParticleSystem.Particle.GetCurrentSize(system, ref this);
 			}
 
-			/// <summary>
-			///   <para>Calculate the current color of the particle by applying the relevant curves to its startColor property.</para>
-			/// </summary>
-			/// <param name="system">The particle system from which this particle was emitted.</param>
-			/// <returns>
-			///   <para>Current color.</para>
-			/// </returns>
+			public Vector3 GetCurrentSize3D(ParticleSystem system)
+			{
+				return ParticleSystem.Particle.GetCurrentSize3D(system, ref this);
+			}
+
 			public Color32 GetCurrentColor(ParticleSystem system)
 			{
 				return ParticleSystem.Particle.GetCurrentColor(system, ref this);
@@ -3209,6 +3219,17 @@ namespace UnityEngine
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			private static extern float GetCurrentSize(ParticleSystem system, ref ParticleSystem.Particle particle);
+
+			private static Vector3 GetCurrentSize3D(ParticleSystem system, ref ParticleSystem.Particle particle)
+			{
+				Vector3 result;
+				ParticleSystem.Particle.INTERNAL_CALL_GetCurrentSize3D(system, ref particle, out result);
+				return result;
+			}
+
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			private static extern void INTERNAL_CALL_GetCurrentSize3D(ParticleSystem system, ref ParticleSystem.Particle particle, out Vector3 value);
 
 			private static Color32 GetCurrentColor(ParticleSystem system, ref ParticleSystem.Particle particle)
 			{
@@ -3222,9 +3243,6 @@ namespace UnityEngine
 			private static extern void INTERNAL_CALL_GetCurrentColor(ParticleSystem system, ref ParticleSystem.Particle particle, out Color32 value);
 		}
 
-		/// <summary>
-		///   <para>Script interface for particle emission parameters.</para>
-		/// </summary>
 		public struct EmitParams
 		{
 			internal ParticleSystem.Particle m_Particle;
@@ -3247,9 +3265,8 @@ namespace UnityEngine
 
 			internal bool m_StartLifetimeSet;
 
-			/// <summary>
-			///   <para>Override the position of emitted particles.</para>
-			/// </summary>
+			internal bool m_ApplyShapeToPosition;
+
 			public Vector3 position
 			{
 				get
@@ -3263,9 +3280,18 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the velocity of emitted particles.</para>
-			/// </summary>
+			public bool applyShapeToPosition
+			{
+				get
+				{
+					return this.m_ApplyShapeToPosition;
+				}
+				set
+				{
+					this.m_ApplyShapeToPosition = value;
+				}
+			}
+
 			public Vector3 velocity
 			{
 				get
@@ -3279,9 +3305,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the lifetime of emitted particles.</para>
-			/// </summary>
 			public float startLifetime
 			{
 				get
@@ -3295,9 +3318,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the initial size of emitted particles.</para>
-			/// </summary>
 			public float startSize
 			{
 				get
@@ -3311,9 +3331,19 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the axis of rotation of emitted particles.</para>
-			/// </summary>
+			public Vector3 startSize3D
+			{
+				get
+				{
+					return this.m_Particle.startSize3D;
+				}
+				set
+				{
+					this.m_Particle.startSize3D = value;
+					this.m_StartSizeSet = true;
+				}
+			}
+
 			public Vector3 axisOfRotation
 			{
 				get
@@ -3327,9 +3357,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the rotation of emitted particles.</para>
-			/// </summary>
 			public float rotation
 			{
 				get
@@ -3343,9 +3370,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the 3D rotation of emitted particles.</para>
-			/// </summary>
 			public Vector3 rotation3D
 			{
 				get
@@ -3359,9 +3383,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the angular velocity of emitted particles.</para>
-			/// </summary>
 			public float angularVelocity
 			{
 				get
@@ -3375,9 +3396,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the 3D angular velocity of emitted particles.</para>
-			/// </summary>
 			public Vector3 angularVelocity3D
 			{
 				get
@@ -3391,9 +3409,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the initial color of emitted particles.</para>
-			/// </summary>
 			public Color32 startColor
 			{
 				get
@@ -3407,9 +3422,6 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Override the random seed of emitted particles.</para>
-			/// </summary>
 			public uint randomSeed
 			{
 				get
@@ -3423,73 +3435,46 @@ namespace UnityEngine
 				}
 			}
 
-			/// <summary>
-			///   <para>Revert the position back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetPosition()
 			{
 				this.m_PositionSet = false;
 			}
 
-			/// <summary>
-			///   <para>Revert the velocity back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetVelocity()
 			{
 				this.m_VelocitySet = false;
 			}
 
-			/// <summary>
-			///   <para>Revert the axis of rotation back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetAxisOfRotation()
 			{
 				this.m_AxisOfRotationSet = false;
 			}
 
-			/// <summary>
-			///   <para>Reverts rotation and rotation3D back to the values specified in the inspector.</para>
-			/// </summary>
 			public void ResetRotation()
 			{
 				this.m_RotationSet = false;
 			}
 
-			/// <summary>
-			///   <para>Reverts angularVelocity and angularVelocity3D back to the values specified in the inspector.</para>
-			/// </summary>
 			public void ResetAngularVelocity()
 			{
 				this.m_AngularVelocitySet = false;
 			}
 
-			/// <summary>
-			///   <para>Revert the initial size back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetStartSize()
 			{
 				this.m_StartSizeSet = false;
 			}
 
-			/// <summary>
-			///   <para>Revert the initial color back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetStartColor()
 			{
 				this.m_StartColorSet = false;
 			}
 
-			/// <summary>
-			///   <para>Revert the random seed back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetRandomSeed()
 			{
 				this.m_RandomSeedSet = false;
 			}
 
-			/// <summary>
-			///   <para>Revert the lifetime back to the value specified in the inspector.</para>
-			/// </summary>
 			public void ResetStartLifetime()
 			{
 				this.m_StartLifetimeSet = false;
@@ -3535,9 +3520,6 @@ namespace UnityEngine
 
 		internal delegate bool IteratorDelegate(ParticleSystem ps);
 
-		/// <summary>
-		///   <para>Start delay in seconds.</para>
-		/// </summary>
 		public extern float startDelay
 		{
 			[WrapperlessIcall]
@@ -3548,9 +3530,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Is the particle system playing right now ?</para>
-		/// </summary>
 		public extern bool isPlaying
 		{
 			[WrapperlessIcall]
@@ -3558,9 +3537,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Is the particle system stopped right now ?</para>
-		/// </summary>
 		public extern bool isStopped
 		{
 			[WrapperlessIcall]
@@ -3568,9 +3544,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Is the particle system paused right now ?</para>
-		/// </summary>
 		public extern bool isPaused
 		{
 			[WrapperlessIcall]
@@ -3578,9 +3551,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Is the particle system looping?</para>
-		/// </summary>
 		public extern bool loop
 		{
 			[WrapperlessIcall]
@@ -3591,9 +3561,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>If set to true, the particle system will automatically start playing on startup.</para>
-		/// </summary>
 		public extern bool playOnAwake
 		{
 			[WrapperlessIcall]
@@ -3604,9 +3571,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Playback position in seconds.</para>
-		/// </summary>
 		public extern float time
 		{
 			[WrapperlessIcall]
@@ -3617,9 +3581,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The duration of the particle system in seconds (Read Only).</para>
-		/// </summary>
 		public extern float duration
 		{
 			[WrapperlessIcall]
@@ -3627,9 +3588,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The playback speed of the particle system. 1 is normal playback speed.</para>
-		/// </summary>
 		public extern float playbackSpeed
 		{
 			[WrapperlessIcall]
@@ -3640,9 +3598,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The current number of particles (Read Only).</para>
-		/// </summary>
 		public extern int particleCount
 		{
 			[WrapperlessIcall]
@@ -3650,10 +3605,7 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>When set to false, the particle system will not emit particles.</para>
-		/// </summary>
-		[Obsolete("enableEmission property is deprecated. Use emission.enable instead.")]
+		[Obsolete("enableEmission property is deprecated. Use emission.enabled instead.")]
 		public extern bool enableEmission
 		{
 			[WrapperlessIcall]
@@ -3664,9 +3616,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The rate of emission.</para>
-		/// </summary>
 		[Obsolete("emissionRate property is deprecated. Use emission.rate instead.")]
 		public extern float emissionRate
 		{
@@ -3678,9 +3627,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The initial speed of particles when emitted. When using curves, this values acts as a scale on the curve.</para>
-		/// </summary>
 		public extern float startSpeed
 		{
 			[WrapperlessIcall]
@@ -3691,9 +3637,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The initial size of particles when emitted. When using curves, this values acts as a scale on the curve.</para>
-		/// </summary>
 		public extern float startSize
 		{
 			[WrapperlessIcall]
@@ -3704,9 +3647,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The initial color of particles when emitted.</para>
-		/// </summary>
 		public Color startColor
 		{
 			get
@@ -3721,9 +3661,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The initial rotation of particles when emitted. When using curves, this values acts as a scale on the curve.</para>
-		/// </summary>
 		public extern float startRotation
 		{
 			[WrapperlessIcall]
@@ -3734,9 +3671,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The initial 3D rotation of particles when emitted. When using curves, this values acts as a scale on the curves.</para>
-		/// </summary>
 		public Vector3 startRotation3D
 		{
 			get
@@ -3751,9 +3685,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The total lifetime in seconds that particles will have when emitted. When using curves, this values acts as a scale on the curve. This value is set in the particle when it is create by the particle system.</para>
-		/// </summary>
 		public extern float startLifetime
 		{
 			[WrapperlessIcall]
@@ -3764,9 +3695,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Scale being applied to the gravity defined by Physics.gravity.</para>
-		/// </summary>
 		public extern float gravityModifier
 		{
 			[WrapperlessIcall]
@@ -3777,9 +3705,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The maximum number of particles to emit.</para>
-		/// </summary>
 		public extern int maxParticles
 		{
 			[WrapperlessIcall]
@@ -3790,9 +3715,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>This selects the space in which to simulate particles. It can be either world or local space.</para>
-		/// </summary>
 		public extern ParticleSystemSimulationSpace simulationSpace
 		{
 			[WrapperlessIcall]
@@ -3803,9 +3725,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The scaling mode applied to particle sizes and positions.</para>
-		/// </summary>
 		public extern ParticleSystemScalingMode scalingMode
 		{
 			[WrapperlessIcall]
@@ -3816,9 +3735,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Random seed used for the particle system emission. If set to 0, it will be assigned a random value on awake.</para>
-		/// </summary>
 		public extern uint randomSeed
 		{
 			[WrapperlessIcall]
@@ -3829,9 +3745,16 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Access the particle system emission module.</para>
-		/// </summary>
+		public extern bool useAutoRandomSeed
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
+		}
+
 		public ParticleSystem.EmissionModule emission
 		{
 			get
@@ -3840,9 +3763,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system shape module.</para>
-		/// </summary>
 		public ParticleSystem.ShapeModule shape
 		{
 			get
@@ -3851,9 +3771,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system velocity over lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime
 		{
 			get
@@ -3862,9 +3779,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system limit velocity over lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.LimitVelocityOverLifetimeModule limitVelocityOverLifetime
 		{
 			get
@@ -3873,9 +3787,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system velocity inheritance module.</para>
-		/// </summary>
 		public ParticleSystem.InheritVelocityModule inheritVelocity
 		{
 			get
@@ -3884,9 +3795,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system force over lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.ForceOverLifetimeModule forceOverLifetime
 		{
 			get
@@ -3895,9 +3803,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system color over lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.ColorOverLifetimeModule colorOverLifetime
 		{
 			get
@@ -3906,9 +3811,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system color by lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.ColorBySpeedModule colorBySpeed
 		{
 			get
@@ -3917,9 +3819,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system size over lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.SizeOverLifetimeModule sizeOverLifetime
 		{
 			get
@@ -3928,9 +3827,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system size by speed module.</para>
-		/// </summary>
 		public ParticleSystem.SizeBySpeedModule sizeBySpeed
 		{
 			get
@@ -3939,9 +3835,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system rotation over lifetime module.</para>
-		/// </summary>
 		public ParticleSystem.RotationOverLifetimeModule rotationOverLifetime
 		{
 			get
@@ -3950,9 +3843,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system rotation by speed  module.</para>
-		/// </summary>
 		public ParticleSystem.RotationBySpeedModule rotationBySpeed
 		{
 			get
@@ -3961,9 +3851,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system external forces module.</para>
-		/// </summary>
 		public ParticleSystem.ExternalForcesModule externalForces
 		{
 			get
@@ -3972,9 +3859,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system collision module.</para>
-		/// </summary>
 		public ParticleSystem.CollisionModule collision
 		{
 			get
@@ -3983,9 +3867,14 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system sub emitters module.</para>
-		/// </summary>
+		public ParticleSystem.TriggerModule trigger
+		{
+			get
+			{
+				return new ParticleSystem.TriggerModule(this);
+			}
+		}
+
 		public ParticleSystem.SubEmittersModule subEmitters
 		{
 			get
@@ -3994,9 +3883,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Access the particle system texture sheet animation module.</para>
-		/// </summary>
 		public ParticleSystem.TextureSheetAnimationModule textureSheetAnimation
 		{
 			get
@@ -4040,7 +3926,7 @@ namespace UnityEngine
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool Internal_Simulate(ParticleSystem self, float t, bool restart);
+		private static extern bool Internal_Simulate(ParticleSystem self, float t, bool restart, bool fixedTimeStep);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -4063,29 +3949,32 @@ namespace UnityEngine
 		private static extern bool Internal_IsAlive(ParticleSystem self);
 
 		[ExcludeFromDocs]
+		public void Simulate(float t, bool withChildren, bool restart)
+		{
+			bool fixedTimeStep = true;
+			this.Simulate(t, withChildren, restart, fixedTimeStep);
+		}
+
+		[ExcludeFromDocs]
 		public void Simulate(float t, bool withChildren)
 		{
+			bool fixedTimeStep = true;
 			bool restart = true;
-			this.Simulate(t, withChildren, restart);
+			this.Simulate(t, withChildren, restart, fixedTimeStep);
 		}
 
 		[ExcludeFromDocs]
 		public void Simulate(float t)
 		{
+			bool fixedTimeStep = true;
 			bool restart = true;
 			bool withChildren = true;
-			this.Simulate(t, withChildren, restart);
+			this.Simulate(t, withChildren, restart, fixedTimeStep);
 		}
 
-		/// <summary>
-		///   <para>Fastforwards the particle system by simulating particles over given period of time, then pauses it.</para>
-		/// </summary>
-		/// <param name="t">Time to fastforward the particle system.</param>
-		/// <param name="withChildren">Fastforward all child particle systems as well.</param>
-		/// <param name="restart">Restart and start from the beginning.</param>
-		public void Simulate(float t, [DefaultValue("true")] bool withChildren, [DefaultValue("true")] bool restart)
+		public void Simulate(float t, [DefaultValue("true")] bool withChildren, [DefaultValue("true")] bool restart, [DefaultValue("true")] bool fixedTimeStep)
 		{
-			this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_Simulate(ps, t, restart));
+			this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_Simulate(ps, t, restart, fixedTimeStep));
 		}
 
 		[ExcludeFromDocs]
@@ -4095,10 +3984,6 @@ namespace UnityEngine
 			this.Play(withChildren);
 		}
 
-		/// <summary>
-		///   <para>Plays the particle system.</para>
-		/// </summary>
-		/// <param name="withChildren">Play all child particle systems as well.</param>
 		public void Play([DefaultValue("true")] bool withChildren)
 		{
 			this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_Play(ps));
@@ -4111,10 +3996,6 @@ namespace UnityEngine
 			this.Stop(withChildren);
 		}
 
-		/// <summary>
-		///   <para>Stops playing the particle system.</para>
-		/// </summary>
-		/// <param name="withChildren">Stop all child particle systems as well.</param>
 		public void Stop([DefaultValue("true")] bool withChildren)
 		{
 			this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_Stop(ps));
@@ -4127,10 +4008,6 @@ namespace UnityEngine
 			this.Pause(withChildren);
 		}
 
-		/// <summary>
-		///   <para>Pauses playing the particle system.</para>
-		/// </summary>
-		/// <param name="withChildren">Pause all child particle systems as well.</param>
 		public void Pause([DefaultValue("true")] bool withChildren)
 		{
 			this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_Pause(ps));
@@ -4143,10 +4020,6 @@ namespace UnityEngine
 			this.Clear(withChildren);
 		}
 
-		/// <summary>
-		///   <para>Remove all particles in the particle system.</para>
-		/// </summary>
-		/// <param name="withChildren">Clear all child particle systems as well.</param>
 		public void Clear([DefaultValue("true")] bool withChildren)
 		{
 			this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_Clear(ps));
@@ -4159,22 +4032,11 @@ namespace UnityEngine
 			return this.IsAlive(withChildren);
 		}
 
-		/// <summary>
-		///   <para>Does the system have any live particles (or will produce more)?</para>
-		/// </summary>
-		/// <param name="withChildren">Check all child particle systems as well.</param>
-		/// <returns>
-		///   <para>True if the particle system is still "alive", false if the particle system is done emitting particles and all particles are dead.</para>
-		/// </returns>
 		public bool IsAlive([DefaultValue("true")] bool withChildren)
 		{
 			return this.IterateParticleSystems(withChildren, (ParticleSystem ps) => ParticleSystem.Internal_IsAlive(ps));
 		}
 
-		/// <summary>
-		///   <para>Emit count particles immediately.</para>
-		/// </summary>
-		/// <param name="count">Number of particles to emit.</param>
 		public void Emit(int count)
 		{
 			ParticleSystem.INTERNAL_CALL_Emit(this, count);
@@ -4184,14 +4046,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_Emit(ParticleSystem self, int count);
 
-		/// <summary>
-		///   <para></para>
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="velocity"></param>
-		/// <param name="size"></param>
-		/// <param name="lifetime"></param>
-		/// <param name="color"></param>
 		[Obsolete("Emit with specific parameters is deprecated. Pass a ParticleSystem.EmitParams parameter instead, which allows you to override some/all of the emission properties")]
 		public void Emit(Vector3 position, Vector3 velocity, float size, float lifetime, Color32 color)
 		{
@@ -4240,9 +4094,11 @@ namespace UnityEngine
 		private static bool IterateParticleSystemsRecursive(Transform transform, ParticleSystem.IteratorDelegate func)
 		{
 			bool flag = false;
-			foreach (Transform transform2 in transform)
+			int childCount = transform.childCount;
+			for (int i = 0; i < childCount; i++)
 			{
-				ParticleSystem component = transform2.gameObject.GetComponent<ParticleSystem>();
+				Transform child = transform.GetChild(i);
+				ParticleSystem component = child.gameObject.GetComponent<ParticleSystem>();
 				if (component != null)
 				{
 					flag = func(component);
@@ -4250,7 +4106,7 @@ namespace UnityEngine
 					{
 						break;
 					}
-					ParticleSystem.IterateParticleSystemsRecursive(transform2, func);
+					ParticleSystem.IterateParticleSystemsRecursive(child, func);
 				}
 			}
 			return flag;
@@ -4259,5 +4115,24 @@ namespace UnityEngine
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal extern void SetupDefaultType(int type);
+
+		internal Matrix4x4 GetLocalToWorldMatrix()
+		{
+			Matrix4x4 result;
+			ParticleSystem.INTERNAL_CALL_GetLocalToWorldMatrix(this, out result);
+			return result;
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void INTERNAL_CALL_GetLocalToWorldMatrix(ParticleSystem self, out Matrix4x4 value);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal extern bool CountSubEmitterParticles(ref int count);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal extern int GenerateRandomSeed();
 	}
 }

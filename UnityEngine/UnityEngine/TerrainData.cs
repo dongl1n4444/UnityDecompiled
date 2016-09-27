@@ -3,14 +3,24 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>The TerrainData class stores heightmaps, detail mesh positions, tree instances, and terrain texture alpha maps.</para>
-	/// </summary>
 	public sealed class TerrainData : Object
 	{
-		/// <summary>
-		///   <para>Width of the terrain in samples (Read Only).</para>
-		/// </summary>
+		private static readonly int kMaximumResolution = TerrainData.Internal_GetMaximumResolution();
+
+		private static readonly int kMinimumDetailResolutionPerPatch = TerrainData.Internal_GetMinimumDetailResolutionPerPatch();
+
+		private static readonly int kMaximumDetailResolutionPerPatch = TerrainData.Internal_GetMaximumDetailResolutionPerPatch();
+
+		private static readonly int kMaximumDetailPatchCount = TerrainData.Internal_GetMaximumDetailPatchCount();
+
+		private static readonly int kMinimumAlphamapResolution = TerrainData.Internal_GetMinimumAlphamapResolution();
+
+		private static readonly int kMaximumAlphamapResolution = TerrainData.Internal_GetMaximumAlphamapResolution();
+
+		private static readonly int kMinimumBaseMapResolution = TerrainData.Internal_GetMinimumBaseMapResolution();
+
+		private static readonly int kMaximumBaseMapResolution = TerrainData.Internal_GetMaximumBaseMapResolution();
+
 		public extern int heightmapWidth
 		{
 			[WrapperlessIcall]
@@ -18,9 +28,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Height of the terrain in samples (Read Only).</para>
-		/// </summary>
 		public extern int heightmapHeight
 		{
 			[WrapperlessIcall]
@@ -28,10 +35,25 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Resolution of the heightmap.</para>
-		/// </summary>
-		public extern int heightmapResolution
+		public int heightmapResolution
+		{
+			get
+			{
+				return this.Internal_heightmapResolution;
+			}
+			set
+			{
+				int internal_heightmapResolution = value;
+				if (value < 0 || value > TerrainData.kMaximumResolution)
+				{
+					Debug.LogWarning("heightmapResolution is clamped to the range of [0, " + TerrainData.kMaximumResolution + "].");
+					internal_heightmapResolution = Math.Min(TerrainData.kMaximumResolution, Math.Max(value, 0));
+				}
+				this.Internal_heightmapResolution = internal_heightmapResolution;
+			}
+		}
+
+		private extern int Internal_heightmapResolution
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -41,9 +63,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The size of each heightmap sample.</para>
-		/// </summary>
 		public Vector3 heightmapScale
 		{
 			get
@@ -54,9 +73,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The total size in world units of the terrain.</para>
-		/// </summary>
 		public Vector3 size
 		{
 			get
@@ -71,9 +87,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The thickness of the terrain used for collision detection.</para>
-		/// </summary>
 		public extern float thickness
 		{
 			[WrapperlessIcall]
@@ -84,9 +97,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Strength of the waving grass in the terrain.</para>
-		/// </summary>
 		public extern float wavingGrassStrength
 		{
 			[WrapperlessIcall]
@@ -97,9 +107,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Amount of waving grass in the terrain.</para>
-		/// </summary>
 		public extern float wavingGrassAmount
 		{
 			[WrapperlessIcall]
@@ -110,9 +117,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Speed of the waving grass.</para>
-		/// </summary>
 		public extern float wavingGrassSpeed
 		{
 			[WrapperlessIcall]
@@ -123,9 +127,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Color of the waving grass that the terrain has.</para>
-		/// </summary>
 		public Color wavingGrassTint
 		{
 			get
@@ -140,9 +141,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Detail width of the TerrainData.</para>
-		/// </summary>
 		public extern int detailWidth
 		{
 			[WrapperlessIcall]
@@ -150,9 +148,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Detail height of the TerrainData.</para>
-		/// </summary>
 		public extern int detailHeight
 		{
 			[WrapperlessIcall]
@@ -160,9 +155,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Detail Resolution of the TerrainData.</para>
-		/// </summary>
 		public extern int detailResolution
 		{
 			[WrapperlessIcall]
@@ -177,9 +169,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Contains the detail texture/meshes that the terrain has.</para>
-		/// </summary>
 		public extern DetailPrototype[] detailPrototypes
 		{
 			[WrapperlessIcall]
@@ -190,9 +179,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Contains the current trees placed in the terrain.</para>
-		/// </summary>
 		public extern TreeInstance[] treeInstances
 		{
 			[WrapperlessIcall]
@@ -203,9 +189,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Returns the number of tree instances.</para>
-		/// </summary>
 		public extern int treeInstanceCount
 		{
 			[WrapperlessIcall]
@@ -213,9 +196,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The list of tree prototypes this are the ones available in the inspector.</para>
-		/// </summary>
 		public extern TreePrototype[] treePrototypes
 		{
 			[WrapperlessIcall]
@@ -226,9 +206,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Number of alpha map layers.</para>
-		/// </summary>
 		public extern int alphamapLayers
 		{
 			[WrapperlessIcall]
@@ -236,10 +213,32 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Resolution of the alpha map.</para>
-		/// </summary>
-		public extern int alphamapResolution
+		public int alphamapResolution
+		{
+			get
+			{
+				return this.Internal_alphamapResolution;
+			}
+			set
+			{
+				int internal_alphamapResolution = value;
+				if (value < TerrainData.kMinimumAlphamapResolution || value > TerrainData.kMaximumAlphamapResolution)
+				{
+					Debug.LogWarning(string.Concat(new object[]
+					{
+						"alphamapResolution is clamped to the range of [",
+						TerrainData.kMinimumAlphamapResolution,
+						", ",
+						TerrainData.kMaximumAlphamapResolution,
+						"]."
+					}));
+					internal_alphamapResolution = Math.Min(TerrainData.kMaximumAlphamapResolution, Math.Max(value, TerrainData.kMinimumAlphamapResolution));
+				}
+				this.Internal_alphamapResolution = internal_alphamapResolution;
+			}
+		}
+
+		private extern int Internal_alphamapResolution
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -249,30 +248,48 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Width of the alpha map.</para>
-		/// </summary>
-		public extern int alphamapWidth
+		public int alphamapWidth
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return this.alphamapResolution;
+			}
 		}
 
-		/// <summary>
-		///   <para>Height of the alpha map.</para>
-		/// </summary>
-		public extern int alphamapHeight
+		public int alphamapHeight
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				return this.alphamapResolution;
+			}
 		}
 
-		/// <summary>
-		///   <para>Resolution of the base map used for rendering far patches on the terrain.</para>
-		/// </summary>
-		public extern int baseMapResolution
+		public int baseMapResolution
+		{
+			get
+			{
+				return this.Internal_baseMapResolution;
+			}
+			set
+			{
+				int internal_baseMapResolution = value;
+				if (value < TerrainData.kMinimumBaseMapResolution || value > TerrainData.kMaximumBaseMapResolution)
+				{
+					Debug.LogWarning(string.Concat(new object[]
+					{
+						"baseMapResolution is clamped to the range of [",
+						TerrainData.kMinimumBaseMapResolution,
+						", ",
+						TerrainData.kMaximumBaseMapResolution,
+						"]."
+					}));
+					internal_baseMapResolution = Math.Min(TerrainData.kMaximumBaseMapResolution, Math.Max(value, TerrainData.kMinimumBaseMapResolution));
+				}
+				this.Internal_baseMapResolution = internal_baseMapResolution;
+			}
+		}
+
+		private extern int Internal_baseMapResolution
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -289,9 +306,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Alpha map textures used by the Terrain. Used by Terrain Inspector for undo.</para>
-		/// </summary>
 		public Texture2D[] alphamapTextures
 		{
 			get
@@ -305,9 +319,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Splat texture used by the terrain.</para>
-		/// </summary>
 		public extern SplatPrototype[] splatPrototypes
 		{
 			[WrapperlessIcall]
@@ -322,6 +333,38 @@ namespace UnityEngine
 		{
 			this.Internal_Create(this);
 		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMaximumResolution();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMinimumDetailResolutionPerPatch();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMaximumDetailResolutionPerPatch();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMaximumDetailPatchCount();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMinimumAlphamapResolution();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMaximumAlphamapResolution();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMinimumBaseMapResolution();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern int Internal_GetMaximumBaseMapResolution();
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -351,41 +394,18 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_set_size(ref Vector3 value);
 
-		/// <summary>
-		///   <para>Gets the height at a certain point x,y.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern float GetHeight(int x, int y);
 
-		/// <summary>
-		///   <para>Gets an interpolated height at a point x,y.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern float GetInterpolatedHeight(float x, float y);
 
-		/// <summary>
-		///   <para>Get an array of heightmap samples.</para>
-		/// </summary>
-		/// <param name="xBase">First x index of heightmap samples to retrieve.</param>
-		/// <param name="yBase">First y index of heightmap samples to retrieve.</param>
-		/// <param name="width">Number of samples to retrieve along the heightmap's x axis.</param>
-		/// <param name="height">Number of samples to retrieve along the heightmap's y axis.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern float[,] GetHeights(int xBase, int yBase, int width, int height);
 
-		/// <summary>
-		///   <para>Set an array of heightmap samples.</para>
-		/// </summary>
-		/// <param name="xBase">First x index of heightmap samples to set.</param>
-		/// <param name="yBase">First y index of heightmap samples to set.</param>
-		/// <param name="heights">Array of heightmap samples to set (values range from 0 to 1, array indexed as [y,x]).</param>
 		public void SetHeights(int xBase, int yBase, float[,] heights)
 		{
 			if (heights == null)
@@ -413,12 +433,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Internal_SetHeightsDelayLOD(int xBase, int yBase, int width, int height, float[,] heights);
 
-		/// <summary>
-		///   <para>Set an array of heightmap samples.</para>
-		/// </summary>
-		/// <param name="xBase">First x index of heightmap samples to set.</param>
-		/// <param name="yBase">First y index of heightmap samples to set.</param>
-		/// <param name="heights">Array of heightmap samples to set (values range from 0 to 1, array indexed as [y,x]).</param>
 		public void SetHeightsDelayLOD(int xBase, int yBase, float[,] heights)
 		{
 			if (heights == null)
@@ -448,20 +462,10 @@ namespace UnityEngine
 			this.Internal_SetHeightsDelayLOD(xBase, yBase, length2, length, heights);
 		}
 
-		/// <summary>
-		///   <para>Gets the gradient of the terrain at point &amp;amp;amp;amp;lt;x,y&amp;amp;amp;amp;gt;.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern float GetSteepness(float x, float y);
 
-		/// <summary>
-		///   <para>Get an interpolated normal at a given location.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
 		public Vector3 GetInterpolatedNormal(float x, float y)
 		{
 			Vector3 result;
@@ -485,56 +489,54 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_set_wavingGrassTint(ref Color value);
 
-		/// <summary>
-		///   <para>Set the resolution of the detail map.</para>
-		/// </summary>
-		/// <param name="detailResolution">Specifies the number of pixels in the detail resolution map. A larger detailResolution, leads to more accurate detail object painting.</param>
-		/// <param name="resolutionPerPatch">Specifies the size in pixels of each individually rendered detail patch. A larger number reduces draw calls, but might increase triangle count since detail patches are culled on a per batch basis. A recommended value is 16. If you use a very large detail object distance and your grass is very sparse, it makes sense to increase the value.</param>
+		public void SetDetailResolution(int detailResolution, int resolutionPerPatch)
+		{
+			if (detailResolution < 0)
+			{
+				Debug.LogWarning("detailResolution must not be negative.");
+				detailResolution = 0;
+			}
+			if (resolutionPerPatch < TerrainData.kMinimumDetailResolutionPerPatch || resolutionPerPatch > TerrainData.kMaximumDetailResolutionPerPatch)
+			{
+				Debug.LogWarning(string.Concat(new object[]
+				{
+					"resolutionPerPatch is clamped to the range of [",
+					TerrainData.kMinimumDetailResolutionPerPatch,
+					", ",
+					TerrainData.kMaximumDetailResolutionPerPatch,
+					"]."
+				}));
+				resolutionPerPatch = Math.Min(TerrainData.kMaximumDetailResolutionPerPatch, Math.Max(resolutionPerPatch, TerrainData.kMinimumDetailResolutionPerPatch));
+			}
+			int num = detailResolution / resolutionPerPatch;
+			if (num > TerrainData.kMaximumDetailPatchCount)
+			{
+				Debug.LogWarning("Patch count (detailResolution / resolutionPerPatch) is clamped to the range of [0, " + TerrainData.kMaximumDetailPatchCount + "].");
+				num = Math.Min(TerrainData.kMaximumDetailPatchCount, Math.Max(num, 0));
+			}
+			this.Internal_SetDetailResolution(num, resolutionPerPatch);
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void SetDetailResolution(int detailResolution, int resolutionPerPatch);
+		private extern void Internal_SetDetailResolution(int patchCount, int resolutionPerPatch);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal extern void ResetDirtyDetails();
 
-		/// <summary>
-		///   <para>Reloads all the values of the available prototypes (ie, detail mesh assets) in the TerrainData Object.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void RefreshPrototypes();
 
-		/// <summary>
-		///   <para>Returns an array of all supported detail layer indices in the area.</para>
-		/// </summary>
-		/// <param name="xBase"></param>
-		/// <param name="yBase"></param>
-		/// <param name="totalWidth"></param>
-		/// <param name="totalHeight"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern int[] GetSupportedLayers(int xBase, int yBase, int totalWidth, int totalHeight);
 
-		/// <summary>
-		///   <para>Returns a 2D array of the detail object density in the specific location.</para>
-		/// </summary>
-		/// <param name="xBase"></param>
-		/// <param name="yBase"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <param name="layer"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern int[,] GetDetailLayer(int xBase, int yBase, int width, int height, int layer);
 
-		/// <summary>
-		///   <para>Sets the detail layer density map.</para>
-		/// </summary>
-		/// <param name="xBase"></param>
-		/// <param name="yBase"></param>
-		/// <param name="layer"></param>
-		/// <param name="details"></param>
 		public void SetDetailLayer(int xBase, int yBase, int layer, int[,] details)
 		{
 			this.Internal_SetDetailLayer(xBase, yBase, details.GetLength(1), details.GetLength(0), layer, details);
@@ -544,10 +546,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Internal_SetDetailLayer(int xBase, int yBase, int totalWidth, int totalHeight, int detailIndex, int[,] data);
 
-		/// <summary>
-		///   <para>Get the tree instance at the specified index. It is used as a faster version of treeInstances[index] as this function doesn't create the entire tree instances array.</para>
-		/// </summary>
-		/// <param name="index">The index of the tree instance.</param>
 		public TreeInstance GetTreeInstance(int index)
 		{
 			TreeInstance result;
@@ -559,11 +557,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_GetTreeInstance(TerrainData self, int index, out TreeInstance value);
 
-		/// <summary>
-		///   <para>Set the tree instance with new parameters at the specified index. However, TreeInstance.prototypeIndex and TreeInstance.position can not be changed otherwise an ArgumentException will be thrown.</para>
-		/// </summary>
-		/// <param name="index">The index of the tree instance.</param>
-		/// <param name="instance">The new TreeInstance value.</param>
 		public void SetTreeInstance(int index, TreeInstance instance)
 		{
 			TerrainData.INTERNAL_CALL_SetTreeInstance(this, index, ref instance);
@@ -593,23 +586,10 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal extern void UpgradeScaledTreePrototype();
 
-		/// <summary>
-		///   <para>Returns the alpha map at a position x, y given a width and height.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern float[,,] GetAlphamaps(int x, int y, int width, int height);
 
-		/// <summary>
-		///   <para>Assign all splat values in the given map area.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="map"></param>
 		public void SetAlphamaps(int x, int y, float[,,] map)
 		{
 			if (map.GetLength(2) != this.alphamapLayers)

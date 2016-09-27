@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Reflection;
+using System.Security;
 using UnityEngine.Scripting;
 
 namespace UnityEngine
@@ -7,6 +9,16 @@ namespace UnityEngine
 	[RequiredByNativeCode]
 	internal class SetupCoroutine
 	{
+		[SecuritySafeCritical, RequiredByNativeCode]
+		public unsafe static void InvokeMoveNext(IEnumerator enumerator, IntPtr returnValueAddress)
+		{
+			if (returnValueAddress == IntPtr.Zero)
+			{
+				throw new ArgumentException("Return value address cannot be 0.", "returnValueAddress");
+			}
+			*(byte*)((void*)returnValueAddress) = (enumerator.MoveNext() ? 1 : 0);
+		}
+
 		[RequiredByNativeCode]
 		public static object InvokeMember(object behaviour, string name, object variable)
 		{

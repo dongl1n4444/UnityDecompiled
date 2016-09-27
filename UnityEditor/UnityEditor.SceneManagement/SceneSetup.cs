@@ -1,15 +1,20 @@
 using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace UnityEditor.SceneManagement
 {
+	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
 	public class SceneSetup
 	{
+		[SerializeField]
 		private string m_Path;
 
+		[SerializeField]
 		private bool m_IsLoaded;
 
+		[SerializeField]
 		private bool m_IsActive;
 
 		public string path

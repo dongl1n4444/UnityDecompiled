@@ -49,7 +49,7 @@ namespace UnityEditor.VersionControl
 		{
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using UnityEditor.Connect;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace UnityEditor.Web
@@ -112,9 +113,29 @@ namespace UnityEditor.Web
 			EditorApplication.isPlaying = true;
 		}
 
+		public bool IsPlayMode()
+		{
+			return EditorApplication.isPlaying;
+		}
+
+		public bool SaveCurrentModifiedScenesIfUserWantsTo()
+		{
+			return EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+		}
+
 		public int GetEditorSkinIndex()
 		{
 			return EditorGUIUtility.skinIndex;
+		}
+
+		public void GoToHistory()
+		{
+			CollabHistoryWindow.ShowHistoryWindow().Focus();
+		}
+
+		public void CloseToolbarWindow()
+		{
+			CollabToolbarWindow.CloseToolbarWindows();
 		}
 	}
 }

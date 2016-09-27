@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.BuildReporting;
 
 namespace UnityEditor.Modules
 {
@@ -23,6 +24,8 @@ namespace UnityEditor.Modules
 		public Guid productGUID;
 
 		public BuildOptions options;
+
+		public BuildReport report;
 
 		internal RuntimeClassRegistry usedClassRegistry;
 	}

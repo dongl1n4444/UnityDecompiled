@@ -97,7 +97,7 @@ namespace UnityEditor.Connect
 					{
 						string @string = EditorPrefs.GetString(UnityConnectPrefs.ServicePrefKey("CloudPanelCustomUrl", serviceName));
 						int @int = EditorPrefs.GetInt(UnityConnectPrefs.ServicePrefKey("CloudPanelCustomPort", serviceName));
-						text = @string + ":" + @int;
+						text = ((@int != 0) ? (@string + ":" + @int) : @string);
 					}
 					else
 					{

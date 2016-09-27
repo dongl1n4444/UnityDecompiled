@@ -4,14 +4,8 @@ using UnityEngine.Internal;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>The Cloth class provides an interface to cloth simulation physics.</para>
-	/// </summary>
 	public sealed class Cloth : Component
 	{
-		/// <summary>
-		///   <para>Cloth's sleep threshold.</para>
-		/// </summary>
 		public extern float sleepThreshold
 		{
 			[WrapperlessIcall]
@@ -22,9 +16,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Bending stiffness of the cloth.</para>
-		/// </summary>
 		public extern float bendingStiffness
 		{
 			[WrapperlessIcall]
@@ -35,9 +26,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Stretching stiffness of the cloth.</para>
-		/// </summary>
 		public extern float stretchingStiffness
 		{
 			[WrapperlessIcall]
@@ -48,9 +36,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Damp cloth motion.</para>
-		/// </summary>
 		public extern float damping
 		{
 			[WrapperlessIcall]
@@ -61,9 +46,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>A constant, external acceleration applied to the cloth.</para>
-		/// </summary>
 		public Vector3 externalAcceleration
 		{
 			get
@@ -78,9 +60,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>A random, external acceleration applied to the cloth.</para>
-		/// </summary>
 		public Vector3 randomAcceleration
 		{
 			get
@@ -95,9 +74,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Should gravity affect the cloth simulation?</para>
-		/// </summary>
 		public extern bool useGravity
 		{
 			[WrapperlessIcall]
@@ -119,9 +95,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Is this cloth enabled?</para>
-		/// </summary>
 		public extern bool enabled
 		{
 			[WrapperlessIcall]
@@ -132,9 +105,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The current vertex positions of the cloth object.</para>
-		/// </summary>
 		public extern Vector3[] vertices
 		{
 			[WrapperlessIcall]
@@ -142,9 +112,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The current normals of the cloth object.</para>
-		/// </summary>
 		public extern Vector3[] normals
 		{
 			[WrapperlessIcall]
@@ -152,9 +119,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The friction of the cloth when colliding with the character.</para>
-		/// </summary>
 		public extern float friction
 		{
 			[WrapperlessIcall]
@@ -165,9 +129,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>How much to increase mass of colliding particles.</para>
-		/// </summary>
 		public extern float collisionMassScale
 		{
 			[WrapperlessIcall]
@@ -178,9 +139,7 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Enable continuous collision to improve collision stability.</para>
-		/// </summary>
+		[Obsolete("useContinuousCollision is no longer supported, use enableContinuousCollision instead")]
 		public extern float useContinuousCollision
 		{
 			[WrapperlessIcall]
@@ -191,9 +150,16 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Add one virtual particle per triangle to improve collision stability.</para>
-		/// </summary>
+		public extern bool enableContinuousCollision
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
+		}
+
 		public extern float useVirtualParticles
 		{
 			[WrapperlessIcall]
@@ -204,9 +170,16 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The cloth skinning coefficients used to set up how the cloth interacts with the skinned mesh.</para>
-		/// </summary>
+		public extern bool enableTethers
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
+		}
+
 		public extern ClothSkinningCoefficient[] coefficients
 		{
 			[WrapperlessIcall]
@@ -217,9 +190,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>How much world-space movement of the character will affect cloth vertices.</para>
-		/// </summary>
 		public extern float worldVelocityScale
 		{
 			[WrapperlessIcall]
@@ -230,9 +200,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>How much world-space acceleration of the character will affect cloth vertices.</para>
-		/// </summary>
 		public extern float worldAccelerationScale
 		{
 			[WrapperlessIcall]
@@ -243,10 +210,20 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Number of solver iterations per second.</para>
-		/// </summary>
-		public extern bool solverFrequency
+		[Obsolete("Parameter solverFrequency is obsolete and no longer supported. Please use clothSolverFrequency instead.")]
+		public bool solverFrequency
+		{
+			get
+			{
+				return this.clothSolverFrequency > 0f;
+			}
+			set
+			{
+				this.clothSolverFrequency = ((!value) ? 0f : 120f);
+			}
+		}
+
+		public extern float clothSolverFrequency
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
@@ -256,9 +233,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>An array of CapsuleColliders which this Cloth instance should collide with.</para>
-		/// </summary>
 		public extern CapsuleCollider[] capsuleColliders
 		{
 			[WrapperlessIcall]
@@ -269,9 +243,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>An array of ClothSphereColliderPairs which this Cloth instance should collide with.</para>
-		/// </summary>
 		public extern ClothSphereColliderPair[] sphereColliders
 		{
 			[WrapperlessIcall]
@@ -298,9 +269,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_set_randomAcceleration(ref Vector3 value);
 
-		/// <summary>
-		///   <para>Clear the pending transform changes from affecting the cloth simulation.</para>
-		/// </summary>
 		public void ClearTransformMotion()
 		{
 			Cloth.INTERNAL_CALL_ClearTransformMotion(this);
@@ -310,11 +278,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_ClearTransformMotion(Cloth self);
 
-		/// <summary>
-		///   <para>Fade the cloth simulation in or out.</para>
-		/// </summary>
-		/// <param name="enabled">Fading enabled or not.</param>
-		/// <param name="interpolationTime"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void SetEnabledFading(bool enabled, [DefaultValue("0.5f")] float interpolationTime);

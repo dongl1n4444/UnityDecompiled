@@ -31,6 +31,9 @@ namespace UnityEditor.MemoryProfiler
 		[SerializeField]
 		internal PackedNativeUnityEngineObject.ObjectFlags m_Flags;
 
+		[SerializeField]
+		internal long m_NativeObjectAddress;
+
 		public bool isPersistent
 		{
 			get
@@ -92,6 +95,14 @@ namespace UnityEditor.MemoryProfiler
 			get
 			{
 				return this.m_HideFlags;
+			}
+		}
+
+		public long nativeObjectAddress
+		{
+			get
+			{
+				return this.m_NativeObjectAddress;
 			}
 		}
 	}

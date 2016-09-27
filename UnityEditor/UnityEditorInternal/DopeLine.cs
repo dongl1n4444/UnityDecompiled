@@ -63,6 +63,19 @@ namespace UnityEditorInternal
 			}
 		}
 
+		public bool isEditable
+		{
+			get
+			{
+				if (this.m_Curves.Length > 0)
+				{
+					bool flag = Array.Exists<AnimationWindowCurve>(this.m_Curves, (AnimationWindowCurve curve) => !curve.animationIsEditable);
+					return !flag;
+				}
+				return false;
+			}
+		}
+
 		public DopeLine(int hierarchyNodeId, AnimationWindowCurve[] curves)
 		{
 			this.m_HierarchyNodeID = hierarchyNodeId;

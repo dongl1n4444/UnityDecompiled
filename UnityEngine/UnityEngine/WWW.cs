@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -10,12 +9,10 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Simple access to web pages.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public sealed class WWW : IDisposable
 	{
+		[RequiredByNativeCode]
 		internal IntPtr m_Ptr;
 
 		private static readonly char[] forbiddenCharacters = new char[]
@@ -86,9 +83,6 @@ namespace UnityEngine
 			"X-Unity-Version"
 		};
 
-		/// <summary>
-		///   <para>Dictionary of headers returned by the request.</para>
-		/// </summary>
 		public Dictionary<string, string> responseHeaders
 		{
 			get
@@ -108,9 +102,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns the contents of the fetched web page as a string (Read Only).</para>
-		/// </summary>
 		public string text
 		{
 			get
@@ -141,9 +132,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the contents of the fetched web page as a byte array (Read Only).</para>
-		/// </summary>
 		public extern byte[] bytes
 		{
 			[WrapperlessIcall]
@@ -158,9 +146,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns an error message if there was an error during the download (Read Only).</para>
-		/// </summary>
 		public extern string error
 		{
 			[WrapperlessIcall]
@@ -168,9 +153,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns a Texture2D generated from the downloaded data (Read Only).</para>
-		/// </summary>
 		public Texture2D texture
 		{
 			get
@@ -179,9 +161,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns a non-readable Texture2D generated from the downloaded data (Read Only).</para>
-		/// </summary>
 		public Texture2D textureNonReadable
 		{
 			get
@@ -190,9 +169,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns a AudioClip generated from the downloaded data (Read Only).</para>
-		/// </summary>
 		public AudioClip audioClip
 		{
 			get
@@ -201,9 +177,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns a MovieTexture generated from the downloaded data (Read Only).</para>
-		/// </summary>
 		public extern MovieTexture movie
 		{
 			[WrapperlessIcall]
@@ -211,9 +184,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Is the download already finished? (Read Only)</para>
-		/// </summary>
 		public extern bool isDone
 		{
 			[WrapperlessIcall]
@@ -221,9 +191,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>How far has the download progressed (Read Only).</para>
-		/// </summary>
 		public extern float progress
 		{
 			[WrapperlessIcall]
@@ -231,9 +198,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>How far has the upload progressed (Read Only).</para>
-		/// </summary>
 		public extern float uploadProgress
 		{
 			[WrapperlessIcall]
@@ -241,9 +205,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The number of bytes downloaded by this WWW query (read only).</para>
-		/// </summary>
 		public extern int bytesDownloaded
 		{
 			[WrapperlessIcall]
@@ -251,9 +212,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Load an Ogg Vorbis file into the audio clip.</para>
-		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property WWW.oggVorbis has been deprecated. Use WWW.audioClip instead (UnityUpgradable).", true)]
 		public AudioClip oggVorbis
 		{
@@ -263,9 +221,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The URL of this WWW request (Read Only).</para>
-		/// </summary>
 		public extern string url
 		{
 			[WrapperlessIcall]
@@ -273,9 +228,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Streams an AssetBundle that can contain any kind of asset from the project folder.</para>
-		/// </summary>
 		public extern AssetBundle assetBundle
 		{
 			[WrapperlessIcall]
@@ -283,9 +235,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Priority of AssetBundle decompression thread.</para>
-		/// </summary>
 		public extern ThreadPriority threadPriority
 		{
 			[WrapperlessIcall]
@@ -296,26 +245,11 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Creates a WWW request with the given URL.</para>
-		/// </summary>
-		/// <param name="url">The url to download. Must be '%' escaped.</param>
-		/// <returns>
-		///   <para>A new WWW object. When it has been downloaded, the results can be fetched from the returned object.</para>
-		/// </returns>
 		public WWW(string url)
 		{
 			this.InitWWW(url, null, null);
 		}
 
-		/// <summary>
-		///   <para>Creates a WWW request with the given URL.</para>
-		/// </summary>
-		/// <param name="url">The url to download. Must be '%' escaped.</param>
-		/// <param name="form">A WWWForm instance containing the form data to post.</param>
-		/// <returns>
-		///   <para>A new WWW object. When it has been downloaded, the results can be fetched from the returned object.</para>
-		/// </returns>
 		public WWW(string url, WWWForm form)
 		{
 			string[] array = WWW.FlattenedHeadersFrom(form.headers);
@@ -326,32 +260,9 @@ namespace UnityEngine
 			this.InitWWW(url, form.data, array);
 		}
 
-		/// <summary>
-		///   <para>Creates a WWW request with the given URL.</para>
-		/// </summary>
-		/// <param name="url">The url to download. Must be '%' escaped.</param>
-		/// <param name="postData">A byte array of data to be posted to the url.</param>
-		/// <returns>
-		///   <para>A new WWW object. When it has been downloaded, the results can be fetched from the returned object.</para>
-		/// </returns>
 		public WWW(string url, byte[] postData)
 		{
 			this.InitWWW(url, postData, null);
-		}
-
-		/// <summary>
-		///   <para>Creates a WWW request with the given URL.</para>
-		/// </summary>
-		/// <param name="url">The url to download. Must be '%' escaped.</param>
-		/// <param name="postData">A byte array of data to be posted to the url.</param>
-		/// <param name="headers">A hash table of custom headers to send with the request.</param>
-		/// <returns>
-		///   <para>A new WWW object. When it has been downloaded, the results can be fetched from the returned object.</para>
-		/// </returns>
-		[Obsolete("This overload is deprecated. Use UnityEngine.WWW.WWW(string, byte[], System.Collections.Generic.Dictionary<string, string>) instead.", true)]
-		public WWW(string url, byte[] postData, Hashtable headers)
-		{
-			Debug.LogError("This overload is deprecated. Use UnityEngine.WWW.WWW(string, byte[], System.Collections.Generic.Dictionary<string, string>) instead");
 		}
 
 		public WWW(string url, byte[] postData, Dictionary<string, string> headers)
@@ -369,9 +280,6 @@ namespace UnityEngine
 			WWW.INTERNAL_CALL_WWW(this, url, ref hash, crc);
 		}
 
-		/// <summary>
-		///   <para>Disposes of an existing WWW object.</para>
-		/// </summary>
 		public void Dispose()
 		{
 			this.DestroyWWW(true);
@@ -382,7 +290,7 @@ namespace UnityEngine
 			this.DestroyWWW(false);
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void DestroyWWW(bool cancel);
 
@@ -394,11 +302,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal extern bool enforceWebSecurityRestrictions();
 
-		/// <summary>
-		///   <para>Escapes characters in a string to ensure they are URL-friendly.</para>
-		/// </summary>
-		/// <param name="s">A string with characters to be escaped.</param>
-		/// <param name="e">The text encoding to use.</param>
 		[ExcludeFromDocs]
 		public static string EscapeURL(string s)
 		{
@@ -406,11 +309,6 @@ namespace UnityEngine
 			return WWW.EscapeURL(s, uTF);
 		}
 
-		/// <summary>
-		///   <para>Escapes characters in a string to ensure they are URL-friendly.</para>
-		/// </summary>
-		/// <param name="s">A string with characters to be escaped.</param>
-		/// <param name="e">The text encoding to use.</param>
 		public static string EscapeURL(string s, [UnityEngine.Internal.DefaultValue("System.Text.Encoding.UTF8")] Encoding e)
 		{
 			if (s == null)
@@ -428,11 +326,6 @@ namespace UnityEngine
 			return WWWTranscoder.URLEncode(s, e);
 		}
 
-		/// <summary>
-		///   <para>Converts URL-friendly escape sequences back to normal text.</para>
-		/// </summary>
-		/// <param name="s">A string containing escaped characters.</param>
-		/// <param name="e">The text encoding to use.</param>
 		[ExcludeFromDocs]
 		public static string UnEscapeURL(string s)
 		{
@@ -440,11 +333,6 @@ namespace UnityEngine
 			return WWW.UnEscapeURL(s, uTF);
 		}
 
-		/// <summary>
-		///   <para>Converts URL-friendly escape sequences back to normal text.</para>
-		/// </summary>
-		/// <param name="s">A string containing escaped characters.</param>
-		/// <param name="e">The text encoding to use.</param>
 		public static string UnEscapeURL(string s, [UnityEngine.Internal.DefaultValue("System.Text.Encoding.UTF8")] Encoding e)
 		{
 			if (s == null)
@@ -497,88 +385,31 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern Texture2D GetTexture(bool markNonReadable);
 
-		/// <summary>
-		///   <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
-		/// </summary>
-		/// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip
-		/// the .audioClip property defaults to 3D.</param>
-		/// <param name="stream">Sets whether the clip should be completely downloaded before it's ready to play (false) or the stream can be played even if only part of the clip is downloaded (true).
-		/// The latter will disable seeking on the clip (with .time and/or .timeSamples).</param>
-		/// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-		/// <returns>
-		///   <para>The returned AudioClip.</para>
-		/// </returns>
 		public AudioClip GetAudioClip(bool threeD)
 		{
 			return this.GetAudioClip(threeD, false);
 		}
 
-		/// <summary>
-		///   <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
-		/// </summary>
-		/// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip
-		/// the .audioClip property defaults to 3D.</param>
-		/// <param name="stream">Sets whether the clip should be completely downloaded before it's ready to play (false) or the stream can be played even if only part of the clip is downloaded (true).
-		/// The latter will disable seeking on the clip (with .time and/or .timeSamples).</param>
-		/// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-		/// <returns>
-		///   <para>The returned AudioClip.</para>
-		/// </returns>
 		public AudioClip GetAudioClip(bool threeD, bool stream)
 		{
 			return this.GetAudioClip(threeD, stream, AudioType.UNKNOWN);
 		}
 
-		/// <summary>
-		///   <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
-		/// </summary>
-		/// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip
-		/// the .audioClip property defaults to 3D.</param>
-		/// <param name="stream">Sets whether the clip should be completely downloaded before it's ready to play (false) or the stream can be played even if only part of the clip is downloaded (true).
-		/// The latter will disable seeking on the clip (with .time and/or .timeSamples).</param>
-		/// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-		/// <returns>
-		///   <para>The returned AudioClip.</para>
-		/// </returns>
 		public AudioClip GetAudioClip(bool threeD, bool stream, AudioType audioType)
 		{
 			return this.GetAudioClipInternal(threeD, stream, false, audioType);
 		}
 
-		/// <summary>
-		///   <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
-		/// </summary>
-		/// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip.</param>
-		/// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-		/// <returns>
-		///   <para>The returned AudioClip.</para>
-		/// </returns>
 		public AudioClip GetAudioClipCompressed()
 		{
 			return this.GetAudioClipCompressed(true);
 		}
 
-		/// <summary>
-		///   <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
-		/// </summary>
-		/// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip.</param>
-		/// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-		/// <returns>
-		///   <para>The returned AudioClip.</para>
-		/// </returns>
 		public AudioClip GetAudioClipCompressed(bool threeD)
 		{
 			return this.GetAudioClipCompressed(threeD, AudioType.UNKNOWN);
 		}
 
-		/// <summary>
-		///   <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
-		/// </summary>
-		/// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip.</param>
-		/// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-		/// <returns>
-		///   <para>The returned AudioClip.</para>
-		/// </returns>
 		public AudioClip GetAudioClipCompressed(bool threeD, AudioType audioType)
 		{
 			return this.GetAudioClipInternal(threeD, false, true, audioType);
@@ -588,10 +419,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern AudioClip GetAudioClipInternal(bool threeD, bool stream, bool compressed, AudioType audioType);
 
-		/// <summary>
-		///   <para>Replaces the contents of an existing Texture2D with an image from the downloaded data.</para>
-		/// </summary>
-		/// <param name="tex">An existing texture object to be overwritten with the image data.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void LoadImageIntoTexture(Texture2D tex);
@@ -606,9 +433,6 @@ namespace UnityEngine
 			return new WWW(url).texture;
 		}
 
-		/// <summary>
-		///   <para>Loads the new web player data file.</para>
-		/// </summary>
 		[Obsolete("LoadUnityWeb is no longer supported. Please use javascript to reload the web player on a different url instead", true)]
 		public void LoadUnityWeb()
 		{
@@ -618,15 +442,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_WWW(WWW self, string url, ref Hash128 hash, uint crc);
 
-		/// <summary>
-		///   <para>Loads an AssetBundle with the specified version number from the cache. If the AssetBundle is not currently cached, it will automatically be downloaded and stored in the cache for future retrieval from local storage.</para>
-		/// </summary>
-		/// <param name="url">The URL to download the AssetBundle from, if it is not present in the cache. Must be '%' escaped.</param>
-		/// <param name="version">Version of the AssetBundle. The file will only be loaded from the disk cache if it has previously been downloaded with the same version parameter. By incrementing the version number requested by your application, you can force Caching to download a new copy of the AssetBundle from url.</param>
-		/// <param name="crc">An optional CRC-32 Checksum of the uncompressed contents. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match. You can use this to avoid data corruption from bad downloads or users tampering with the cached files on disk. If the CRC does not match, Unity will try to redownload the data, and if the CRC on the server does not match it will fail with an error. Look at the error string returned to see the correct CRC value to use for an AssetBundle.</param>
-		/// <returns>
-		///   <para>A WWW instance, which can be used to access the data once the load/download operation is completed.</para>
-		/// </returns>
 		[ExcludeFromDocs]
 		public static WWW LoadFromCacheOrDownload(string url, int version)
 		{
@@ -634,15 +449,6 @@ namespace UnityEngine
 			return WWW.LoadFromCacheOrDownload(url, version, crc);
 		}
 
-		/// <summary>
-		///   <para>Loads an AssetBundle with the specified version number from the cache. If the AssetBundle is not currently cached, it will automatically be downloaded and stored in the cache for future retrieval from local storage.</para>
-		/// </summary>
-		/// <param name="url">The URL to download the AssetBundle from, if it is not present in the cache. Must be '%' escaped.</param>
-		/// <param name="version">Version of the AssetBundle. The file will only be loaded from the disk cache if it has previously been downloaded with the same version parameter. By incrementing the version number requested by your application, you can force Caching to download a new copy of the AssetBundle from url.</param>
-		/// <param name="crc">An optional CRC-32 Checksum of the uncompressed contents. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match. You can use this to avoid data corruption from bad downloads or users tampering with the cached files on disk. If the CRC does not match, Unity will try to redownload the data, and if the CRC on the server does not match it will fail with an error. Look at the error string returned to see the correct CRC value to use for an AssetBundle.</param>
-		/// <returns>
-		///   <para>A WWW instance, which can be used to access the data once the load/download operation is completed.</para>
-		/// </returns>
 		public static WWW LoadFromCacheOrDownload(string url, int version, [UnityEngine.Internal.DefaultValue("0")] uint crc)
 		{
 			Hash128 hash = new Hash128(0u, 0u, 0u, (uint)version);
@@ -663,7 +469,6 @@ namespace UnityEngine
 
 		private static void CheckSecurityOnHeaders(string[] headers)
 		{
-			bool flag = Application.GetBuildUnityVersion() >= Application.GetNumericUnityVersion("4.3.0b1");
 			for (int i = 0; i < headers.Length; i += 2)
 			{
 				string[] array = WWW.forbiddenHeaderKeys;
@@ -672,28 +477,16 @@ namespace UnityEngine
 					string b = array[j];
 					if (string.Equals(headers[i], b, StringComparison.CurrentCultureIgnoreCase))
 					{
-						if (flag)
-						{
-							throw new ArgumentException("Cannot overwrite header: " + headers[i]);
-						}
-						Debug.LogError("Illegal header overwrite, this will fail in 4.3 and above: " + headers[i]);
+						throw new ArgumentException("Cannot overwrite header: " + headers[i]);
 					}
 				}
 				if (headers[i].StartsWith("Sec-") || headers[i].StartsWith("Proxy-"))
 				{
-					if (flag)
-					{
-						throw new ArgumentException("Cannot overwrite header: " + headers[i]);
-					}
-					Debug.LogError("Illegal header overwrite, this will fail in 4.3 and above: " + headers[i]);
+					throw new ArgumentException("Cannot overwrite header: " + headers[i]);
 				}
 				if (headers[i].IndexOfAny(WWW.forbiddenCharacters) > -1 || headers[i].IndexOfAny(WWW.forbiddenCharactersForNames) > -1 || headers[i + 1].IndexOfAny(WWW.forbiddenCharacters) > -1)
 				{
-					if (flag)
-					{
-						throw new ArgumentException("Cannot include control characters in a HTTP header, either as key or value.");
-					}
-					Debug.LogError("Illegal control characters in header, this will fail in 4.3 and above");
+					throw new ArgumentException("Cannot include control characters in a HTTP header, either as key or value.");
 				}
 			}
 		}
@@ -720,7 +513,7 @@ namespace UnityEngine
 			{
 				throw new ArgumentException("input was null to ParseHTTPHeaderString");
 			}
-			Dictionary<string, string> dictionary = new Dictionary<string, string>();
+			Dictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 			StringReader stringReader = new StringReader(input);
 			int num = 0;
 			while (true)

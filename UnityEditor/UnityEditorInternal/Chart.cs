@@ -219,6 +219,10 @@ namespace UnityEditorInternal
 
 		private void DrawSelectedFrame(int selectedFrame, ChartData cdata, Rect r)
 		{
+			if (Event.current.type != EventType.Repaint)
+			{
+				return;
+			}
 			if (cdata.firstSelectableFrame != -1 && selectedFrame - cdata.firstSelectableFrame >= 0)
 			{
 				float num = (float)cdata.NumberOfFrames;
@@ -404,7 +408,7 @@ namespace UnityEditorInternal
 
 		private void DrawGridStacked(Rect r, ChartData cdata)
 		{
-			if (cdata.grid == null || cdata.gridLabels == null)
+			if (Event.current.type != EventType.Repaint || cdata.grid == null || cdata.gridLabels == null)
 			{
 				return;
 			}
@@ -514,6 +518,10 @@ namespace UnityEditorInternal
 
 		private void DrawChartItemStacked(Rect r, int index, ChartData cdata, float[] sumbuf)
 		{
+			if (Event.current.type != EventType.Repaint)
+			{
+				return;
+			}
 			int numberOfFrames = cdata.NumberOfFrames;
 			float num = r.width / (float)numberOfFrames;
 			index = cdata.chartOrder[index];
@@ -564,6 +572,10 @@ namespace UnityEditorInternal
 
 		private void DrawChartItemStackedOverlay(Rect r, int index, ChartData cdata, float[] sumbuf)
 		{
+			if (Event.current.type != EventType.Repaint)
+			{
+				return;
+			}
 			int numberOfFrames = cdata.NumberOfFrames;
 			float num = r.width / (float)numberOfFrames;
 			index = cdata.chartOrder[index];

@@ -5,16 +5,10 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine.iOS
 {
-	/// <summary>
-	///   <para>Represents a request for On Demand Resources (ODR). It's an AsyncOperation and can be yielded in a coroutine.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class OnDemandResourcesRequest : AsyncOperation, IDisposable
 	{
-		/// <summary>
-		///   <para>Returns an error after operation is complete.</para>
-		/// </summary>
 		public extern string error
 		{
 			[WrapperlessIcall]
@@ -22,9 +16,6 @@ namespace UnityEngine.iOS
 			get;
 		}
 
-		/// <summary>
-		///   <para>Sets the priority for request.</para>
-		/// </summary>
 		public extern float loadingPriority
 		{
 			[WrapperlessIcall]
@@ -39,18 +30,11 @@ namespace UnityEngine.iOS
 		{
 		}
 
-		/// <summary>
-		///   <para>Gets file system's path to the resource available in On Demand Resources (ODR) request.</para>
-		/// </summary>
-		/// <param name="resourceName">Resource name.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern string GetResourcePath(string resourceName);
 
-		/// <summary>
-		///   <para>Release all resources kept alive by On Demand Resources (ODR) request.</para>
-		/// </summary>
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

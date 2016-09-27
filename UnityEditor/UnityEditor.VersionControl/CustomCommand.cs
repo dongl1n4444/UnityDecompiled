@@ -8,6 +8,7 @@ namespace UnityEditor.VersionControl
 	{
 		private IntPtr m_thisDummy;
 
+		[ThreadAndSerializationSafe]
 		public extern string name
 		{
 			[WrapperlessIcall]
@@ -15,6 +16,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern string label
 		{
 			[WrapperlessIcall]
@@ -22,6 +24,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern CommandContext context
 		{
 			[WrapperlessIcall]

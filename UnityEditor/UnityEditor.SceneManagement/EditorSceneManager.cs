@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Internal;
 using UnityEngine.SceneManagement;
 
@@ -8,11 +9,25 @@ namespace UnityEditor.SceneManagement
 {
 	public sealed class EditorSceneManager : SceneManager
 	{
+		internal static UnityAction<Scene, NewSceneMode> sceneWasCreated;
+
+		internal static UnityAction<Scene, OpenSceneMode> sceneWasOpened;
+
 		public static extern int loadedSceneCount
 		{
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			get;
+		}
+
+		public static extern bool preventCrossSceneReferences
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			set;
 		}
 
 		public static Scene OpenScene(string scenePath, [DefaultValue("OpenSceneMode.Single")] OpenSceneMode mode)
@@ -67,6 +82,15 @@ namespace UnityEditor.SceneManagement
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool INTERNAL_CALL_CloseScene(ref Scene scene, bool removeScene);
+
+		internal static bool ReloadScene(Scene scene)
+		{
+			return EditorSceneManager.INTERNAL_CALL_ReloadScene(ref scene);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool INTERNAL_CALL_ReloadScene(ref Scene scene);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
@@ -174,5 +198,30 @@ namespace UnityEditor.SceneManagement
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void RestoreSceneManagerSetup(SceneSetup[] value);
+
+		public static bool DetectCrossSceneReferences(Scene scene)
+		{
+			return EditorSceneManager.INTERNAL_CALL_DetectCrossSceneReferences(ref scene);
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern bool INTERNAL_CALL_DetectCrossSceneReferences(ref Scene scene);
+
+		private static void Internal_NewSceneWasCreated(Scene scene, NewSceneMode mode)
+		{
+			if (EditorSceneManager.sceneWasCreated != null)
+			{
+				EditorSceneManager.sceneWasCreated(scene, mode);
+			}
+		}
+
+		private static void Internal_SceneWasOpened(Scene scene, OpenSceneMode mode)
+		{
+			if (EditorSceneManager.sceneWasOpened != null)
+			{
+				EditorSceneManager.sceneWasOpened(scene, mode);
+			}
+		}
 	}
 }

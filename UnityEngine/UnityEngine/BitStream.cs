@@ -5,17 +5,11 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>The BitStream class represents seralized variables, packed into a stream.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	public sealed class BitStream
 	{
 		internal IntPtr m_Ptr;
 
-		/// <summary>
-		///   <para>Is the BitStream currently being read? (Read Only)</para>
-		/// </summary>
 		public extern bool isReading
 		{
 			[WrapperlessIcall]
@@ -23,9 +17,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Is the BitStream currently being written? (Read Only)</para>
-		/// </summary>
 		public extern bool isWriting
 		{
 			[WrapperlessIcall]

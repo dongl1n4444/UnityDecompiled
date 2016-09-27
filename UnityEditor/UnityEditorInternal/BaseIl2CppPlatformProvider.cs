@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using Unity.DataContract;
 using UnityEditor;
+using UnityEditor.BuildReporting;
 using UnityEditor.Modules;
-using UnityEngine;
 
 namespace UnityEditorInternal
 {
@@ -54,7 +54,7 @@ namespace UnityEditorInternal
 			}
 		}
 
-		public virtual bool compactMode
+		public virtual bool enableDivideByZeroCheck
 		{
 			get
 			{
@@ -75,6 +75,14 @@ namespace UnityEditorInternal
 			get
 			{
 				return false;
+			}
+		}
+
+		public virtual BuildReport buildReport
+		{
+			get
+			{
+				return null;
 			}
 		}
 
@@ -125,7 +133,7 @@ namespace UnityEditorInternal
 				Unity.DataContract.PackageInfo packageInfo = BaseIl2CppPlatformProvider.FindIl2CppPackage();
 				if (packageInfo == null)
 				{
-					return Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, (Application.platform != RuntimePlatform.OSXEditor) ? "il2cpp" : "Frameworks/il2cpp"));
+					return Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, "il2cpp"));
 				}
 				return packageInfo.basePath;
 			}
@@ -146,6 +154,11 @@ namespace UnityEditorInternal
 		}
 
 		public virtual INativeCompiler CreateNativeCompiler()
+		{
+			return null;
+		}
+
+		public virtual Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder()
 		{
 			return null;
 		}

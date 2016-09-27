@@ -130,7 +130,7 @@ namespace UnityEditor.VersionControl
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern Message[] Internal_GetMessages();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

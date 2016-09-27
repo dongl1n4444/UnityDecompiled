@@ -12,11 +12,11 @@ namespace UnityEditor.Web
 
 		private const string kServiceDisplayName = "Ads";
 
-		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/ads";
+		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/ads";
 
 		static AdsAccess()
 		{
-			UnityConnectServiceData cloudService = new UnityConnectServiceData("Unity Ads", "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/ads", new AdsAccess(), "unity/project/cloud/ads");
+			UnityConnectServiceData cloudService = new UnityConnectServiceData("Unity Ads", "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/ads", new AdsAccess(), "unity/project/cloud/ads");
 			UnityConnectServiceCollection.instance.AddService(cloudService);
 		}
 

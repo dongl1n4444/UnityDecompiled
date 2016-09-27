@@ -7,6 +7,13 @@ namespace UnityEditor.Web
 	{
 		private const string kServiceEnabled = "ServiceEnabled";
 
+		public CloudServiceAccess()
+		{
+			string value = false.ToString();
+			string name = this.GetSafeServiceName() + "_ServiceEnabled";
+			PlayerSettings.InitializePropertyString(name, value);
+		}
+
 		public abstract string GetServiceName();
 
 		protected WebView GetWebView()
@@ -50,15 +57,13 @@ namespace UnityEditor.Web
 		public void SetServiceConfig(string key, string value)
 		{
 			string name = this.GetSafeServiceName() + "_" + key;
-			string empty = string.Empty;
-			if (!PlayerSettings.GetPropertyOptionalString(name, ref empty))
-			{
-				PlayerSettings.InitializePropertyString(name, value);
-			}
-			else
-			{
-				PlayerSettings.SetPropertyString(name, value);
-			}
+			PlayerSettings.SetPropertyString(name, value);
+			PlayerSettings.SetDirty();
+		}
+
+		public void ShowServicePage()
+		{
+			UnityConnectServiceCollection.instance.ShowService(this.GetServiceName(), true);
 		}
 
 		public void GoBackToHub()

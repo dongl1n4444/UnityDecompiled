@@ -2,10 +2,6 @@ using System;
 
 namespace UnityEngine.WSA
 {
-	/// <summary>
-	///   <para>Templates for various tile styles.
-	/// </para>
-	/// </summary>
 	public enum TileTemplate
 	{
 		TileSquare150x150Image,

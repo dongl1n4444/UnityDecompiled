@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A text string displayed in a GUI.</para>
-	/// </summary>
 	public sealed class GUIText : GUIElement
 	{
-		/// <summary>
-		///   <para>The text to display.</para>
-		/// </summary>
 		public extern string text
 		{
 			[WrapperlessIcall]
@@ -21,9 +15,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The Material to use for rendering.</para>
-		/// </summary>
 		public extern Material material
 		{
 			[WrapperlessIcall]
@@ -34,9 +25,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The pixel offset of the text.</para>
-		/// </summary>
 		public Vector2 pixelOffset
 		{
 			get
@@ -51,9 +39,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The font used for the text.</para>
-		/// </summary>
 		public extern Font font
 		{
 			[WrapperlessIcall]
@@ -64,9 +49,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The alignment of the text.</para>
-		/// </summary>
 		public extern TextAlignment alignment
 		{
 			[WrapperlessIcall]
@@ -77,9 +59,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The anchor of the text.</para>
-		/// </summary>
 		public extern TextAnchor anchor
 		{
 			[WrapperlessIcall]
@@ -90,9 +69,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The line spacing multiplier.</para>
-		/// </summary>
 		public extern float lineSpacing
 		{
 			[WrapperlessIcall]
@@ -103,9 +79,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The tab width multiplier.</para>
-		/// </summary>
 		public extern float tabSize
 		{
 			[WrapperlessIcall]
@@ -116,9 +89,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The font size to use (for dynamic fonts).</para>
-		/// </summary>
 		public extern int fontSize
 		{
 			[WrapperlessIcall]
@@ -129,9 +99,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The font style to use (for dynamic fonts).</para>
-		/// </summary>
 		public extern FontStyle fontStyle
 		{
 			[WrapperlessIcall]
@@ -142,9 +109,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Enable HTML-style tags for Text Formatting Markup.</para>
-		/// </summary>
 		public extern bool richText
 		{
 			[WrapperlessIcall]
@@ -155,9 +119,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The color used to render the text.</para>
-		/// </summary>
 		public Color color
 		{
 			get

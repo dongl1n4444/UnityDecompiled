@@ -1441,7 +1441,7 @@ namespace UnityEngine
 			TextEditor.MapKey("delete", TextEditor.TextEditOp.Delete);
 			TextEditor.MapKey("backspace", TextEditor.TextEditOp.Backspace);
 			TextEditor.MapKey("#backspace", TextEditor.TextEditOp.Backspace);
-			if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXWebPlayer || Application.platform == RuntimePlatform.OSXDashboardPlayer || Application.platform == RuntimePlatform.OSXEditor || (Application.platform == RuntimePlatform.WebGLPlayer && SystemInfo.operatingSystem.StartsWith("Mac")))
+			if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXDashboardPlayer || Application.platform == RuntimePlatform.OSXEditor || (Application.platform == RuntimePlatform.WebGLPlayer && SystemInfo.operatingSystem.StartsWith("Mac")))
 			{
 				TextEditor.MapKey("^left", TextEditor.TextEditOp.MoveGraphicalLineStart);
 				TextEditor.MapKey("^right", TextEditor.TextEditOp.MoveGraphicalLineEnd);

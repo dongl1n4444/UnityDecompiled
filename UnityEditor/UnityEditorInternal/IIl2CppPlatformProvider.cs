@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEditor.BuildReporting;
 
 namespace UnityEditorInternal
 {
@@ -25,7 +26,7 @@ namespace UnityEditorInternal
 			get;
 		}
 
-		bool compactMode
+		bool enableDivideByZeroCheck
 		{
 			get;
 		}
@@ -60,6 +61,11 @@ namespace UnityEditorInternal
 			get;
 		}
 
+		BuildReport buildReport
+		{
+			get;
+		}
+
 		string[] includePaths
 		{
 			get;
@@ -71,5 +77,7 @@ namespace UnityEditorInternal
 		}
 
 		INativeCompiler CreateNativeCompiler();
+
+		Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder();
 	}
 }

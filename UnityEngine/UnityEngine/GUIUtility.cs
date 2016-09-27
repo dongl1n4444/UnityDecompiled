@@ -1,12 +1,10 @@
 using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Utility class for making new GUI controls.</para>
-	/// </summary>
 	public class GUIUtility
 	{
 		internal static int s_SkinMode;
@@ -25,9 +23,12 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The controlID of the current hot control.</para>
-		/// </summary>
+		internal static bool guiIsExiting
+		{
+			get;
+			set;
+		}
+
 		public static int hotControl
 		{
 			get
@@ -40,9 +41,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The controlID of the control that has keyboard focus.</para>
-		/// </summary>
 		public static extern int keyboardControl
 		{
 			[WrapperlessIcall]
@@ -53,9 +51,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Get access to the system-wide pasteboard.</para>
-		/// </summary>
 		public static extern string systemCopyBuffer
 		{
 			[WrapperlessIcall]
@@ -76,9 +71,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>A global property, which is true if a ModalWindow is being displayed, false otherwise.</para>
-		/// </summary>
 		public static extern bool hasModalWindow
 		{
 			[WrapperlessIcall]
@@ -96,74 +88,36 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Get a unique ID for a control.</para>
-		/// </summary>
-		/// <param name="focus"></param>
-		/// <param name="position"></param>
 		public static int GetControlID(FocusType focus)
 		{
 			return GUIUtility.GetControlID(0, focus);
 		}
 
-		/// <summary>
-		///   <para>Get a unique ID for a control, using a the label content as a hint to help ensure correct matching of IDs to controls.</para>
-		/// </summary>
-		/// <param name="contents"></param>
-		/// <param name="focus"></param>
-		/// <param name="position"></param>
 		public static int GetControlID(GUIContent contents, FocusType focus)
 		{
 			return GUIUtility.GetControlID(contents.hash, focus);
 		}
 
-		/// <summary>
-		///   <para>Get a unique ID for a control.</para>
-		/// </summary>
-		/// <param name="focus"></param>
-		/// <param name="position"></param>
 		public static int GetControlID(FocusType focus, Rect position)
 		{
 			return GUIUtility.Internal_GetNextControlID2(0, focus, position);
 		}
 
-		/// <summary>
-		///   <para>Get a unique ID for a control, using an integer as a hint to help ensure correct matching of IDs to controls.</para>
-		/// </summary>
-		/// <param name="hint"></param>
-		/// <param name="focus"></param>
-		/// <param name="position"></param>
 		public static int GetControlID(int hint, FocusType focus, Rect position)
 		{
 			return GUIUtility.Internal_GetNextControlID2(hint, focus, position);
 		}
 
-		/// <summary>
-		///   <para>Get a unique ID for a control, using a the label content as a hint to help ensure correct matching of IDs to controls.</para>
-		/// </summary>
-		/// <param name="contents"></param>
-		/// <param name="focus"></param>
-		/// <param name="position"></param>
 		public static int GetControlID(GUIContent contents, FocusType focus, Rect position)
 		{
 			return GUIUtility.Internal_GetNextControlID2(contents.hash, focus, position);
 		}
 
-		/// <summary>
-		///   <para>Get a state object from a controlID.</para>
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="controlID"></param>
 		public static object GetStateObject(Type t, int controlID)
 		{
 			return GUIStateObjects.GetStateObject(t, controlID);
 		}
 
-		/// <summary>
-		///   <para>Get an existing state object from a controlID.</para>
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="controlID"></param>
 		public static object QueryStateObject(Type t, int controlID)
 		{
 			return GUIStateObjects.QueryStateObject(t, controlID);
@@ -171,6 +125,7 @@ namespace UnityEngine
 
 		public static void ExitGUI()
 		{
+			GUIUtility.guiIsExiting = true;
 			throw new ExitGUIException();
 		}
 
@@ -190,6 +145,7 @@ namespace UnityEngine
 			GUIUtility.s_SkinMode = skinMode;
 			GUIUtility.s_OriginalID = instanceID;
 			GUI.skin = null;
+			GUIUtility.guiIsExiting = false;
 			if (useGUILayout != 0)
 			{
 				GUILayoutUtility.SelectIDList(instanceID, false);
@@ -238,12 +194,25 @@ namespace UnityEngine
 			{
 				return false;
 			}
-			if (!(exception is ExitGUIException) && !(exception.InnerException is ExitGUIException))
+			while (exception is TargetInvocationException && exception.InnerException != null)
+			{
+				exception = exception.InnerException;
+			}
+			if (!(exception is ExitGUIException))
 			{
 				return false;
 			}
 			GUIUtility.Internal_ExitGUI();
 			return true;
+		}
+
+		internal static bool ShouldRethrowException(Exception exception)
+		{
+			while (exception is TargetInvocationException && exception.InnerException != null)
+			{
+				exception = exception.InnerException;
+			}
+			return exception is ExitGUIException;
 		}
 
 		internal static void CheckOnGUI()
@@ -254,10 +223,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Convert a point from GUI position to screen space.</para>
-		/// </summary>
-		/// <param name="guiPoint"></param>
 		public static Vector2 GUIToScreenPoint(Vector2 guiPoint)
 		{
 			return GUIClip.Unclip(guiPoint) + GUIUtility.s_EditorScreenPointOffset;
@@ -271,10 +236,6 @@ namespace UnityEngine
 			return guiRect;
 		}
 
-		/// <summary>
-		///   <para>Convert a point from screen space to GUI position.</para>
-		/// </summary>
-		/// <param name="screenPoint"></param>
 		public static Vector2 ScreenToGUIPoint(Vector2 screenPoint)
 		{
 			return GUIClip.Clip(screenPoint) - GUIUtility.s_EditorScreenPointOffset;
@@ -288,11 +249,6 @@ namespace UnityEngine
 			return screenRect;
 		}
 
-		/// <summary>
-		///   <para>Helper function to rotate the GUI around a point.</para>
-		/// </summary>
-		/// <param name="angle"></param>
-		/// <param name="pivotPoint"></param>
 		public static void RotateAroundPivot(float angle, Vector2 pivotPoint)
 		{
 			Matrix4x4 matrix = GUI.matrix;
@@ -302,11 +258,6 @@ namespace UnityEngine
 			GUI.matrix = lhs * matrix;
 		}
 
-		/// <summary>
-		///   <para>Helper function to scale the GUI around a point.</para>
-		/// </summary>
-		/// <param name="scale"></param>
-		/// <param name="pivotPoint"></param>
 		public static void ScaleAroundPivot(Vector2 scale, Vector2 pivotPoint)
 		{
 			Matrix4x4 matrix = GUI.matrix;
@@ -319,12 +270,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern float Internal_GetPixelsPerPoint();
 
-		/// <summary>
-		///   <para>Get a unique ID for a control, using an integer as a hint to help ensure correct matching of IDs to controls.</para>
-		/// </summary>
-		/// <param name="hint"></param>
-		/// <param name="focus"></param>
-		/// <param name="position"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetControlID(int hint, FocusType focus);

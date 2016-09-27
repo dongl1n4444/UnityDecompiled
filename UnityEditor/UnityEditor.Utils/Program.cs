@@ -135,12 +135,17 @@ namespace UnityEditor.Utils
 
 		public void Dispose()
 		{
+			this.Kill();
+			this._process.Dispose();
+		}
+
+		public void Kill()
+		{
 			if (!this.HasExited)
 			{
 				this._process.Kill();
 				this._process.WaitForExit();
 			}
-			this._process.Dispose();
 		}
 
 		public Stream GetStandardInput()
@@ -156,19 +161,29 @@ namespace UnityEditor.Utils
 		public string GetStandardOutputAsString()
 		{
 			string[] standardOutput = this.GetStandardOutput();
-			StringBuilder stringBuilder = new StringBuilder(string.Empty);
-			string[] array = standardOutput;
-			for (int i = 0; i < array.Length; i++)
-			{
-				string value = array[i];
-				stringBuilder.AppendLine(value);
-			}
-			return stringBuilder.ToString();
+			return Program.GetOutputAsString(standardOutput);
 		}
 
 		public string[] GetErrorOutput()
 		{
 			return this._stderr.GetOutput();
+		}
+
+		public string GetErrorOutputAsString()
+		{
+			string[] errorOutput = this.GetErrorOutput();
+			return Program.GetOutputAsString(errorOutput);
+		}
+
+		private static string GetOutputAsString(string[] output)
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			for (int i = 0; i < output.Length; i++)
+			{
+				string value = output[i];
+				stringBuilder.AppendLine(value);
+			}
+			return stringBuilder.ToString();
 		}
 
 		public void WaitForExit()

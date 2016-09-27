@@ -75,6 +75,22 @@ namespace UnityEditor.Scripting.Compilers
 			return (ScriptingImplementation)result;
 		}
 
+		private static string[] GetReferencesFromMonoDistribution()
+		{
+			return new string[]
+			{
+				"mscorlib.dll",
+				"System.dll",
+				"System.Core.dll",
+				"System.Runtime.Serialization.dll",
+				"System.Xml.dll",
+				"System.Xml.Linq.dll",
+				"UnityScript.dll",
+				"UnityScript.Lang.dll",
+				"Boo.Lang.dll"
+			};
+		}
+
 		internal static string GetNETCoreFrameworkReferencesDirectory(WSASDK wsaSDK)
 		{
 			if (MicrosoftCSharpCompiler.GetCurrentScriptingBackend() == ScriptingImplementation.IL2CPP)
@@ -95,24 +111,15 @@ namespace UnityEditor.Scripting.Compilers
 			throw new Exception("Unknown Windows SDK: " + wsaSDK.ToString());
 		}
 
-		internal static bool EnsureProjectLockFile(string projectLockFile)
-		{
-			return MicrosoftCSharpCompiler.EnsureProjectLockFile(new NuGetPackageResolver
-			{
-				ProjectLockFile = projectLockFile
-			});
-		}
-
-		private static bool EnsureProjectLockFile(NuGetPackageResolver resolver)
-		{
-			string buildToolsDirectory = BuildPipeline.GetBuildToolsDirectory(BuildTarget.WSAPlayer);
-			string projectFile = FileUtil.NiceWinPath(Path.Combine(buildToolsDirectory, "project.json"));
-			return resolver.EnsureProjectLockFile(projectFile);
-		}
-
 		private string[] GetNETWSAAssemblies(WSASDK wsaSDK)
 		{
-			if (wsaSDK != WSASDK.UWP || MicrosoftCSharpCompiler.GetCurrentScriptingBackend() == ScriptingImplementation.IL2CPP)
+			if (MicrosoftCSharpCompiler.GetCurrentScriptingBackend() == ScriptingImplementation.IL2CPP)
+			{
+				string monoAssemblyDirectory = BuildPipeline.GetMonoLibDirectory(BuildTarget.WSAPlayer);
+				return (from dll in MicrosoftCSharpCompiler.GetReferencesFromMonoDistribution()
+				select Path.Combine(monoAssemblyDirectory, dll)).ToArray<string>();
+			}
+			if (wsaSDK != WSASDK.UWP)
 			{
 				return Directory.GetFiles(MicrosoftCSharpCompiler.GetNETCoreFrameworkReferencesDirectory(wsaSDK), "*.dll");
 			}
@@ -120,24 +127,7 @@ namespace UnityEditor.Scripting.Compilers
 			{
 				ProjectLockFile = "UWP\\project.lock.json"
 			};
-			for (int num = (!MicrosoftCSharpCompiler.EnsureProjectLockFile(nuGetPackageResolver)) ? 1 : 2; num != 0; num--)
-			{
-				try
-				{
-					nuGetPackageResolver.Resolve();
-				}
-				catch (Exception)
-				{
-					if (num <= 1)
-					{
-						throw;
-					}
-					Console.WriteLine("Failed to resolve NuGet packages. Deleting \"{0}\" and retrying.", Path.GetFullPath(nuGetPackageResolver.ProjectLockFile));
-					File.Delete(nuGetPackageResolver.ProjectLockFile);
-					MicrosoftCSharpCompiler.EnsureProjectLockFile(nuGetPackageResolver);
-				}
-			}
-			return nuGetPackageResolver.ResolvedReferences;
+			return nuGetPackageResolver.Resolve();
 		}
 
 		private string GetNetWSAAssemblyInfoWindows80()
@@ -188,23 +178,24 @@ namespace UnityEditor.Scripting.Compilers
 			{
 				arguments.Add("/define:NETFX_CORE");
 			}
+			arguments.Add("/preferreduilang:en-US");
 			string platformAssemblyPath = MicrosoftCSharpCompiler.GetPlatformAssemblyPath(wsaSDK);
 			switch (wsaSDK)
 			{
 			case WSASDK.SDK80:
 			{
 				string arg = "8.0";
-				goto IL_B3;
+				goto IL_BE;
 			}
 			case WSASDK.SDK81:
 			{
 				string arg = "8.1";
-				goto IL_B3;
+				goto IL_BE;
 			}
 			case WSASDK.PhoneSDK81:
 			{
 				string arg = "Phone 8.1";
-				goto IL_B3;
+				goto IL_BE;
 			}
 			case WSASDK.UWP:
 			{
@@ -213,11 +204,11 @@ namespace UnityEditor.Scripting.Compilers
 				{
 					arguments.Add("/define:WINDOWS_UWP");
 				}
-				goto IL_B3;
+				goto IL_BE;
 			}
 			}
 			throw new Exception("Unknown Windows SDK: " + EditorUserBuildSettings.wsaSDK.ToString());
-			IL_B3:
+			IL_BE:
 			if (!File.Exists(platformAssemblyPath))
 			{
 				string arg;
@@ -251,25 +242,25 @@ namespace UnityEditor.Scripting.Compilers
 					text = Path.Combine(Path.GetTempPath(), ".NETCore,Version=v4.5.AssemblyAttributes.cs");
 					contents = this.GetNetWSAAssemblyInfoWindows80();
 					text2 = "Managed\\WinRTLegacy.dll";
-					goto IL_24C;
+					goto IL_257;
 				case WSASDK.SDK81:
 					text = Path.Combine(Path.GetTempPath(), ".NETCore,Version=v4.5.1.AssemblyAttributes.cs");
 					contents = this.GetNetWSAAssemblyInfoWindows81();
 					text2 = "Managed\\WinRTLegacy.dll";
-					goto IL_24C;
+					goto IL_257;
 				case WSASDK.PhoneSDK81:
 					text = Path.Combine(Path.GetTempPath(), "WindowsPhoneApp,Version=v8.1.AssemblyAttributes.cs");
 					contents = this.GetNetWSAAssemblyInfoWindowsPhone81();
 					text2 = "Managed\\Phone\\WinRTLegacy.dll";
-					goto IL_24C;
+					goto IL_257;
 				case WSASDK.UWP:
 					text = Path.Combine(Path.GetTempPath(), ".NETCore,Version=v5.0.AssemblyAttributes.cs");
 					contents = this.GetNetWSAAssemblyInfoUWP();
 					text2 = "Managed\\UAP\\WinRTLegacy.dll";
-					goto IL_24C;
+					goto IL_257;
 				}
 				throw new Exception("Unknown Windows SDK: " + EditorUserBuildSettings.wsaSDK.ToString());
-				IL_24C:
+				IL_257:
 				text2 = Path.Combine(BuildPipeline.GetPlaybackEngineDirectory(this._island._target, BuildOptions.None), text2);
 				arguments.Add("/reference:\"" + text2.Replace('/', '\\') + "\"");
 				if (File.Exists(text))

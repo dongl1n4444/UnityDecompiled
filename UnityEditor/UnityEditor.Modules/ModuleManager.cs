@@ -219,6 +219,12 @@ namespace UnityEditor.Modules
 			ModuleManager.RegisterPlatformSupportModules();
 			foreach (IPlatformSupportModule current in ModuleManager.platformSupportModules)
 			{
+				string[] nativeLibraries = current.NativeLibraries;
+				for (int i = 0; i < nativeLibraries.Length; i++)
+				{
+					string nativeLibrary = nativeLibraries[i];
+					EditorUtility.LoadPlatformSupportNativeLibrary(nativeLibrary);
+				}
 				EditorUtility.LoadPlatformSupportModuleNativeDllInternal(current.TargetName);
 				current.OnLoad();
 			}
@@ -460,7 +466,7 @@ namespace UnityEditor.Modules
 			return list;
 		}
 
-		private static IPlatformSupportModule FindPlatformSupportModule(string moduleName)
+		internal static IPlatformSupportModule FindPlatformSupportModule(string moduleName)
 		{
 			foreach (IPlatformSupportModule current in ModuleManager.platformSupportModules)
 			{
@@ -524,6 +530,27 @@ namespace UnityEditor.Modules
 			return ModuleManager.GetBuildPostProcessor(ModuleManager.GetTargetStringFromBuildTarget(target));
 		}
 
+		internal static IBuildAnalyzer GetBuildAnalyzer(string target)
+		{
+			if (target == null)
+			{
+				return null;
+			}
+			foreach (IPlatformSupportModule current in ModuleManager.platformSupportModules)
+			{
+				if (current.TargetName == target)
+				{
+					return current.CreateBuildAnalyzer();
+				}
+			}
+			return null;
+		}
+
+		internal static IBuildAnalyzer GetBuildAnalyzer(BuildTarget target)
+		{
+			return ModuleManager.GetBuildAnalyzer(ModuleManager.GetTargetStringFromBuildTarget(target));
+		}
+
 		internal static ISettingEditorExtension GetEditorSettingsExtension(string target)
 		{
 			if (string.IsNullOrEmpty(target))
@@ -538,6 +565,23 @@ namespace UnityEditor.Modules
 				}
 			}
 			return null;
+		}
+
+		internal static ITextureImportSettingsExtension GetTextureImportSettingsExtension(BuildTarget target)
+		{
+			return ModuleManager.GetTextureImportSettingsExtension(ModuleManager.GetTargetStringFromBuildTarget(target));
+		}
+
+		internal static ITextureImportSettingsExtension GetTextureImportSettingsExtension(string targetName)
+		{
+			foreach (IPlatformSupportModule current in ModuleManager.platformSupportModules)
+			{
+				if (current.TargetName == targetName)
+				{
+					return current.CreateTextureImportSettingsExtension();
+				}
+			}
+			return new DefaultTextureImportSettingsExtension();
 		}
 
 		internal static List<IPreferenceWindowExtension> GetPreferenceWindowExtensions()
@@ -642,7 +686,6 @@ namespace UnityEditor.Modules
 			case BuildTarget.StandaloneOSXIntel64:
 				return "OSXStandalone";
 			case BuildTarget.StandaloneWindows:
-			case BuildTarget.StandaloneGLESEmu:
 			case BuildTarget.StandaloneWindows64:
 				return "WindowsStandalone";
 			case BuildTarget.iOS:
@@ -661,10 +704,6 @@ namespace UnityEditor.Modules
 				return "WebGL";
 			case BuildTarget.WSAPlayer:
 				return "Metro";
-			case BuildTarget.WP8Player:
-				return "WP8";
-			case BuildTarget.BlackBerry:
-				return "BlackBerry";
 			case BuildTarget.Tizen:
 				return "Tizen";
 			case BuildTarget.PSP2:
@@ -703,10 +742,6 @@ namespace UnityEditor.Modules
 				return "WebGL";
 			case BuildTargetGroup.Metro:
 				return "Metro";
-			case BuildTargetGroup.WP8:
-				return "WP8";
-			case BuildTargetGroup.BlackBerry:
-				return "BlackBerry";
 			case BuildTargetGroup.Tizen:
 				return "Tizen";
 			case BuildTargetGroup.PSP2:

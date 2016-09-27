@@ -384,17 +384,18 @@ namespace UnityEditor.VersionControl
 				flag = true;
 			}
 			GUILayout.FlexibleSpace();
-			EditorGUI.BeginDisabledGroup(Provider.activeTask != null);
-			CustomCommand[] customCommands = Provider.customCommands;
-			for (int i = 0; i < customCommands.Length; i++)
+			using (new EditorGUI.DisabledScope(Provider.activeTask != null))
 			{
-				CustomCommand customCommand = customCommands[i];
-				if (customCommand.context == CommandContext.Global && GUILayout.Button(customCommand.label, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+				CustomCommand[] customCommands = Provider.customCommands;
+				for (int i = 0; i < customCommands.Length; i++)
 				{
-					customCommand.StartTask();
+					CustomCommand customCommand = customCommands[i];
+					if (customCommand.context == CommandContext.Global && GUILayout.Button(customCommand.label, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+					{
+						customCommand.StartTask();
+					}
 				}
 			}
-			EditorGUI.EndDisabledGroup();
 			bool flag2 = Mathf.FloorToInt(base.position.width - this.s_ToolbarButtonsWidth - this.s_SettingsButtonWidth - this.s_DeleteChangesetsButtonWidth) > 0 && this.HasEmptyPendingChangesets();
 			if (flag2 && GUILayout.Button("Delete Empty Changesets", EditorStyles.toolbarButton, new GUILayoutOption[0]))
 			{
@@ -486,17 +487,18 @@ namespace UnityEditor.VersionControl
 					position.height = vector.y;
 					position.y = rect.y + 2f;
 					position.x = base.position.width - vector.x - 5f;
-					EditorGUI.BeginDisabledGroup(this.incomingList.Size == 0);
-					if (GUI.Button(position, content2, EditorStyles.miniButton))
+					using (new EditorGUI.DisabledScope(this.incomingList.Size == 0))
 					{
-						Asset item = new Asset(string.Empty);
-						Task latest = Provider.GetLatest(new AssetList
+						if (GUI.Button(position, content2, EditorStyles.miniButton))
 						{
-							item
-						});
-						latest.SetCompletionAction(CompletionAction.OnGotLatestPendingWindow);
+							Asset item = new Asset(string.Empty);
+							Task latest = Provider.GetLatest(new AssetList
+							{
+								item
+							});
+							latest.SetCompletionAction(CompletionAction.OnGotLatestPendingWindow);
+						}
 					}
-					EditorGUI.EndDisabledGroup();
 				}
 			}
 			if (flag5)

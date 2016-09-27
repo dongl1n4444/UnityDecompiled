@@ -15,7 +15,7 @@ namespace UnityEditor.Utils
 			}
 			if (Application.platform == RuntimePlatform.OSXEditor)
 			{
-				return Path.Combine(text, Path.Combine("Contents", "Frameworks"));
+				return Path.Combine(text, "Contents");
 			}
 			return Path.Combine(Path.GetDirectoryName(text), "Data");
 		}
@@ -24,6 +24,12 @@ namespace UnityEditor.Utils
 		{
 			string monoInstallation = MonoInstallationFinder.GetMonoInstallation();
 			return Path.Combine(monoInstallation, Path.Combine("lib", Path.Combine("mono", profile)));
+		}
+
+		public static string GetEtcDirectory(string monoInstallation)
+		{
+			string monoInstallation2 = MonoInstallationFinder.GetMonoInstallation(monoInstallation);
+			return Path.Combine(monoInstallation2, Path.Combine("etc", "mono"));
 		}
 
 		public static string GetMonoInstallation()

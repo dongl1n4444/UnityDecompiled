@@ -2,10 +2,6 @@ using System;
 
 namespace UnityEngine.WSA
 {
-	/// <summary>
-	///   <para>Templates for various toast styles.
-	/// </para>
-	/// </summary>
 	public enum ToastTemplate
 	{
 		ToastImageAndText01,

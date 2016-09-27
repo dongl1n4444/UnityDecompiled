@@ -4,9 +4,6 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine.SceneManagement
 {
-	/// <summary>
-	///   <para>Run-time data structure for *.unity file.</para>
-	/// </summary>
 	public struct Scene
 	{
 		private int m_Handle;
@@ -19,9 +16,6 @@ namespace UnityEngine.SceneManagement
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the relative path of the scene. Like: "AssetsMyScenesMyScene.unity".</para>
-		/// </summary>
 		public string path
 		{
 			get
@@ -30,20 +24,18 @@ namespace UnityEngine.SceneManagement
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the name of the scene.</para>
-		/// </summary>
 		public string name
 		{
 			get
 			{
 				return Scene.GetNameInternal(this.handle);
 			}
+			internal set
+			{
+				Scene.SetNameInternal(this.handle, value);
+			}
 		}
 
-		/// <summary>
-		///   <para>Returns true if the scene is loaded.</para>
-		/// </summary>
 		public bool isLoaded
 		{
 			get
@@ -52,9 +44,6 @@ namespace UnityEngine.SceneManagement
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the index of the scene in the Build Settings. Always returns -1 if the scene was loaded through an AssetBundle.</para>
-		/// </summary>
 		public int buildIndex
 		{
 			get
@@ -63,9 +52,6 @@ namespace UnityEngine.SceneManagement
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns true if the scene is modifed.</para>
-		/// </summary>
 		public bool isDirty
 		{
 			get
@@ -74,9 +60,6 @@ namespace UnityEngine.SceneManagement
 			}
 		}
 
-		/// <summary>
-		///   <para>The number of root transforms of this scene.</para>
-		/// </summary>
 		public int rootCount
 		{
 			get
@@ -85,24 +68,11 @@ namespace UnityEngine.SceneManagement
 			}
 		}
 
-		/// <summary>
-		///   <para>Tells if the scene is valid.
-		/// A scene can be invalid if you eg. tried to open a scene that does not exists in that case the scene returnen from EditorSceneManager.OpenScene would be invalid.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>Returns true if the scene is valid.</para>
-		/// </returns>
 		public bool IsValid()
 		{
 			return Scene.IsValidInternal(this.handle);
 		}
 
-		/// <summary>
-		///   <para>Returns all the root game objects in the scene.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>An array of game objects.</para>
-		/// </returns>
 		public GameObject[] GetRootGameObjects()
 		{
 			List<GameObject> list = new List<GameObject>(this.rootCount);
@@ -158,6 +128,10 @@ namespace UnityEngine.SceneManagement
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern string GetNameInternal(int sceneHandle);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void SetNameInternal(int sceneHandle, string name);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]

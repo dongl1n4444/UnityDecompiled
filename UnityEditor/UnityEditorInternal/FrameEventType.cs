@@ -24,6 +24,7 @@ namespace UnityEditorInternal
 		SkinOnGPU,
 		DrawProcedural,
 		ComputeDispatch,
-		PluginEvent
+		PluginEvent,
+		InstancedMesh
 	}
 }

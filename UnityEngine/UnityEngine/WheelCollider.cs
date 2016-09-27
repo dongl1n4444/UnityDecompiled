@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A special collider for vehicle wheels.</para>
-	/// </summary>
 	public sealed class WheelCollider : Collider
 	{
-		/// <summary>
-		///   <para>The center of the wheel, measured in the object's local space.</para>
-		/// </summary>
 		public Vector3 center
 		{
 			get
@@ -25,9 +19,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The radius of the wheel, measured in local space.</para>
-		/// </summary>
 		public extern float radius
 		{
 			[WrapperlessIcall]
@@ -38,9 +29,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Maximum extension distance of wheel suspension, measured in local space.</para>
-		/// </summary>
 		public extern float suspensionDistance
 		{
 			[WrapperlessIcall]
@@ -51,9 +39,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The parameters of wheel's suspension. The suspension attempts to reach a target position by applying a linear force and a damping force.</para>
-		/// </summary>
 		public JointSpring suspensionSpring
 		{
 			get
@@ -68,9 +53,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Application point of the suspension and tire forces measured from the base of the resting wheel.</para>
-		/// </summary>
 		public extern float forceAppPointDistance
 		{
 			[WrapperlessIcall]
@@ -81,9 +63,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The mass of the wheel, expressed in kilograms. Must be larger than zero. Typical values would be in range (20,80).</para>
-		/// </summary>
 		public extern float mass
 		{
 			[WrapperlessIcall]
@@ -94,9 +73,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The damping rate of the wheel. Must be larger than zero.</para>
-		/// </summary>
 		public extern float wheelDampingRate
 		{
 			[WrapperlessIcall]
@@ -107,9 +83,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Properties of tire friction in the direction the wheel is pointing in.</para>
-		/// </summary>
 		public WheelFrictionCurve forwardFriction
 		{
 			get
@@ -124,9 +97,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Properties of tire friction in the sideways direction.</para>
-		/// </summary>
 		public WheelFrictionCurve sidewaysFriction
 		{
 			get
@@ -141,9 +111,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Motor torque on the wheel axle expressed in Newton metres. Positive or negative depending on direction.</para>
-		/// </summary>
 		public extern float motorTorque
 		{
 			[WrapperlessIcall]
@@ -154,9 +121,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Brake torque expressed in Newton metres.</para>
-		/// </summary>
 		public extern float brakeTorque
 		{
 			[WrapperlessIcall]
@@ -167,9 +131,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Steering angle in degrees, always around the local y-axis.</para>
-		/// </summary>
 		public extern float steerAngle
 		{
 			[WrapperlessIcall]
@@ -180,9 +141,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Indicates whether the wheel currently collides with something (Read Only).</para>
-		/// </summary>
 		public extern bool isGrounded
 		{
 			[WrapperlessIcall]
@@ -190,9 +148,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The mass supported by this WheelCollider.</para>
-		/// </summary>
 		public extern float sprungMass
 		{
 			[WrapperlessIcall]
@@ -200,9 +155,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Current wheel axle rotation speed, in rotations per minute (Read Only).</para>
-		/// </summary>
 		public extern float rpm
 		{
 			[WrapperlessIcall]
@@ -242,12 +194,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void INTERNAL_set_sidewaysFriction(ref WheelFrictionCurve value);
 
-		/// <summary>
-		///   <para>Configure vehicle sub-stepping parameters.</para>
-		/// </summary>
-		/// <param name="speedThreshold">The speed threshold of the sub-stepping algorithm.</param>
-		/// <param name="stepsBelowThreshold">Amount of simulation sub-steps when vehicle's speed is below speedThreshold.</param>
-		/// <param name="stepsAboveThreshold">Amount of simulation sub-steps when vehicle's speed is above speedThreshold.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void ConfigureVehicleSubsteps(float speedThreshold, int stepsBelowThreshold, int stepsAboveThreshold);

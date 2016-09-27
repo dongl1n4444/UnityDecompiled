@@ -6,6 +6,7 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using UnityEditor.Modules;
 using UnityEditor.Scripting;
 using UnityEditorInternal;
 
@@ -96,12 +97,6 @@ namespace UnityEditor.VisualStudioIntegration
 
 		public static readonly Regex scriptReferenceExpression = new Regex("^Library.ScriptAssemblies.(?<project>Assembly-(?<language>[^-]+)(?<editor>-Editor)?(?<firstpass>-firstpass)?).dll$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-		private static string[] InternalAssembliesIncludedIntoEditorProject = new string[]
-		{
-			"/UnityEditor.iOS.Extensions.Common.dll",
-			"/UnityEditor.iOS.Extensions.Xcode.dll"
-		};
-
 		public SolutionSynchronizer(string projectDirectory, ISolutionSynchronizationSettings settings)
 		{
 			this._projectDirectory = projectDirectory;
@@ -185,19 +180,17 @@ namespace UnityEditor.VisualStudioIntegration
 		public void Sync()
 		{
 			this.SetupProjectSupportedExtensions();
-			bool flag = AssetPostprocessingInternal.OnPreGeneratingCSProjectFiles();
-			if (flag)
+			if (!AssetPostprocessingInternal.OnPreGeneratingCSProjectFiles())
 			{
-				return;
-			}
-			IEnumerable<MonoIsland> islands = from i in InternalEditorUtility.GetMonoIslands()
-			where 0 < i._files.Length
-			select i;
-			string otherAssetsProjectPart = this.GenerateAllAssetProjectPart();
-			this.SyncSolution(islands);
-			foreach (MonoIsland current in SolutionSynchronizer.RelevantIslandsForMode(islands, SolutionSynchronizer.ModeForCurrentExternalEditor()))
-			{
-				this.SyncProject(current, otherAssetsProjectPart);
+				IEnumerable<MonoIsland> islands = from i in InternalEditorUtility.GetMonoIslands()
+				where 0 < i._files.Length
+				select i;
+				string otherAssetsProjectPart = this.GenerateAllAssetProjectPart();
+				this.SyncSolution(islands);
+				foreach (MonoIsland current in SolutionSynchronizer.RelevantIslandsForMode(islands, SolutionSynchronizer.ModeForCurrentExternalEditor()))
+				{
+					this.SyncProject(current, otherAssetsProjectPart);
+				}
 			}
 			AssetPostprocessingInternal.CallOnGeneratedCSProjectFiles();
 		}
@@ -234,20 +227,7 @@ namespace UnityEditor.VisualStudioIntegration
 
 		private static bool IsInternalAssemblyThatShouldBeReferenced(bool isBuildingEditorProject, string reference)
 		{
-			if (!isBuildingEditorProject)
-			{
-				return false;
-			}
-			string[] internalAssembliesIncludedIntoEditorProject = SolutionSynchronizer.InternalAssembliesIncludedIntoEditorProject;
-			for (int i = 0; i < internalAssembliesIncludedIntoEditorProject.Length; i++)
-			{
-				string value = internalAssembliesIncludedIntoEditorProject[i];
-				if (reference.EndsWith(value))
-				{
-					return true;
-				}
-			}
-			return false;
+			return isBuildingEditorProject && ModuleUtils.GetAdditionalReferencesForEditorCsharpProject().Contains(reference);
 		}
 
 		private string ProjectText(MonoIsland island, SolutionSynchronizer.Mode mode, string allAssetsProject)
@@ -255,7 +235,6 @@ namespace UnityEditor.VisualStudioIntegration
 			StringBuilder stringBuilder = new StringBuilder(this.ProjectHeader(island));
 			List<string> list = new List<string>();
 			List<Match> list2 = new List<Match>();
-			bool isBuildingEditorProject = island._output.EndsWith("-Editor.dll");
 			string[] files = island._files;
 			for (int i = 0; i < files.Length; i++)
 			{
@@ -287,7 +266,7 @@ namespace UnityEditor.VisualStudioIntegration
 						string text3 = (!Path.IsPathRooted(current)) ? Path.Combine(this._projectDirectory, current) : current;
 						if (AssemblyHelper.IsManagedAssembly(text3))
 						{
-							if (!AssemblyHelper.IsInternalAssembly(text3) || SolutionSynchronizer.IsInternalAssemblyThatShouldBeReferenced(isBuildingEditorProject, text3))
+							if (!AssemblyHelper.IsInternalAssembly(text3))
 							{
 								text3 = text3.Replace("\\", "/");
 								text3 = text3.Replace("\\\\", "/");

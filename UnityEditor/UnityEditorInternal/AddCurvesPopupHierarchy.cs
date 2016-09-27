@@ -12,13 +12,13 @@ namespace UnityEditorInternal
 
 		private AddCurvesPopupHierarchyDataSource m_TreeViewDataSource;
 
-		private AnimationWindowState state
+		private IAnimationRecordingState state
 		{
 			get;
 			set;
 		}
 
-		public AddCurvesPopupHierarchy(AnimationWindowState state)
+		public AddCurvesPopupHierarchy(IAnimationRecordingState state)
 		{
 			this.state = state;
 		}

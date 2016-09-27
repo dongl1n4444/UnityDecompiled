@@ -5,32 +5,17 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Quaternions are used to represent rotations.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public struct Quaternion
 	{
 		public const float kEpsilon = 1E-06f;
 
-		/// <summary>
-		///   <para>X component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</para>
-		/// </summary>
 		public float x;
 
-		/// <summary>
-		///   <para>Y component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</para>
-		/// </summary>
 		public float y;
 
-		/// <summary>
-		///   <para>Z component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</para>
-		/// </summary>
 		public float z;
 
-		/// <summary>
-		///   <para>W component of the Quaternion. Don't modify this directly unless you know quaternions inside out.</para>
-		/// </summary>
 		public float w;
 
 		public float this[int index]
@@ -73,9 +58,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The identity rotation (Read Only).</para>
-		/// </summary>
 		public static Quaternion identity
 		{
 			get
@@ -84,14 +66,11 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the euler angle representation of the rotation.</para>
-		/// </summary>
 		public Vector3 eulerAngles
 		{
 			get
 			{
-				return Quaternion.Internal_ToEulerRad(this) * 57.29578f;
+				return Quaternion.Internal_MakePositive(Quaternion.Internal_ToEulerRad(this) * 57.29578f);
 			}
 			set
 			{
@@ -99,13 +78,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Constructs new Quaternion with given x,y,z,w components.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
-		/// <param name="w"></param>
 		public Quaternion(float x, float y, float z, float w)
 		{
 			this.x = x;
@@ -114,13 +86,6 @@ namespace UnityEngine
 			this.w = w;
 		}
 
-		/// <summary>
-		///   <para>Set x, y, z and w components of an existing Quaternion.</para>
-		/// </summary>
-		/// <param name="new_x"></param>
-		/// <param name="new_y"></param>
-		/// <param name="new_z"></param>
-		/// <param name="new_w"></param>
 		public void Set(float new_x, float new_y, float new_z, float new_w)
 		{
 			this.x = new_x;
@@ -129,21 +94,12 @@ namespace UnityEngine
 			this.w = new_w;
 		}
 
-		/// <summary>
-		///   <para>The dot product between two rotations.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
 		public static float Dot(Quaternion a, Quaternion b)
 		{
 			return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 		}
 
-		/// <summary>
-		///   <para>Creates a rotation which rotates angle degrees around axis.</para>
-		/// </summary>
-		/// <param name="angle"></param>
-		/// <param name="axis"></param>
+		[ThreadAndSerializationSafe]
 		public static Quaternion AngleAxis(float angle, Vector3 axis)
 		{
 			Quaternion result;
@@ -161,11 +117,6 @@ namespace UnityEngine
 			angle *= 57.29578f;
 		}
 
-		/// <summary>
-		///   <para>Creates a rotation which rotates from fromDirection to toDirection.</para>
-		/// </summary>
-		/// <param name="fromDirection"></param>
-		/// <param name="toDirection"></param>
 		public static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection)
 		{
 			Quaternion result;
@@ -177,21 +128,11 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_FromToRotation(ref Vector3 fromDirection, ref Vector3 toDirection, out Quaternion value);
 
-		/// <summary>
-		///   <para>Creates a rotation which rotates from fromDirection to toDirection.</para>
-		/// </summary>
-		/// <param name="fromDirection"></param>
-		/// <param name="toDirection"></param>
 		public void SetFromToRotation(Vector3 fromDirection, Vector3 toDirection)
 		{
 			this = Quaternion.FromToRotation(fromDirection, toDirection);
 		}
 
-		/// <summary>
-		///   <para>Creates a rotation with the specified forward and upwards directions.</para>
-		/// </summary>
-		/// <param name="forward">The direction to look in.</param>
-		/// <param name="upwards">The vector that defines in which direction up is.</param>
 		public static Quaternion LookRotation(Vector3 forward, [DefaultValue("Vector3.up")] Vector3 upwards)
 		{
 			Quaternion result;
@@ -199,11 +140,6 @@ namespace UnityEngine
 			return result;
 		}
 
-		/// <summary>
-		///   <para>Creates a rotation with the specified forward and upwards directions.</para>
-		/// </summary>
-		/// <param name="forward">The direction to look in.</param>
-		/// <param name="upwards">The vector that defines in which direction up is.</param>
 		[ExcludeFromDocs]
 		public static Quaternion LookRotation(Vector3 forward)
 		{
@@ -217,11 +153,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_LookRotation(ref Vector3 forward, ref Vector3 upwards, out Quaternion value);
 
-		/// <summary>
-		///   <para>Creates a rotation with the specified forward and upwards directions.</para>
-		/// </summary>
-		/// <param name="view">The direction to look in.</param>
-		/// <param name="up">The vector that defines in which direction up is.</param>
 		[ExcludeFromDocs]
 		public void SetLookRotation(Vector3 view)
 		{
@@ -229,22 +160,11 @@ namespace UnityEngine
 			this.SetLookRotation(view, up);
 		}
 
-		/// <summary>
-		///   <para>Creates a rotation with the specified forward and upwards directions.</para>
-		/// </summary>
-		/// <param name="view">The direction to look in.</param>
-		/// <param name="up">The vector that defines in which direction up is.</param>
 		public void SetLookRotation(Vector3 view, [DefaultValue("Vector3.up")] Vector3 up)
 		{
 			this = Quaternion.LookRotation(view, up);
 		}
 
-		/// <summary>
-		///   <para>Spherically interpolates between a and b by t. The parameter t is clamped to the range [0, 1].</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Quaternion Slerp(Quaternion a, Quaternion b, float t)
 		{
 			Quaternion result;
@@ -256,12 +176,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_Slerp(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
 
-		/// <summary>
-		///   <para>Spherically interpolates between a and b by t. The parameter t is not clamped.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Quaternion SlerpUnclamped(Quaternion a, Quaternion b, float t)
 		{
 			Quaternion result;
@@ -273,12 +187,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_SlerpUnclamped(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
 
-		/// <summary>
-		///   <para>Interpolates between a and b by t and normalizes the result afterwards. The parameter t is clamped to the range [0, 1].</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Quaternion Lerp(Quaternion a, Quaternion b, float t)
 		{
 			Quaternion result;
@@ -290,12 +198,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_Lerp(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
 
-		/// <summary>
-		///   <para>Interpolates between a and b by t and normalizes the result afterwards. The parameter t is not clamped.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Quaternion LerpUnclamped(Quaternion a, Quaternion b, float t)
 		{
 			Quaternion result;
@@ -307,12 +209,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_LerpUnclamped(ref Quaternion a, ref Quaternion b, float t, out Quaternion value);
 
-		/// <summary>
-		///   <para>Rotates a rotation from towards to.</para>
-		/// </summary>
-		/// <param name="from"></param>
-		/// <param name="to"></param>
-		/// <param name="maxDegreesDelta"></param>
 		public static Quaternion RotateTowards(Quaternion from, Quaternion to, float maxDegreesDelta)
 		{
 			float num = Quaternion.Angle(from, to);
@@ -324,10 +220,6 @@ namespace UnityEngine
 			return Quaternion.SlerpUnclamped(from, to, t);
 		}
 
-		/// <summary>
-		///   <para>Returns the Inverse of rotation.</para>
-		/// </summary>
-		/// <param name="rotation"></param>
 		public static Quaternion Inverse(Quaternion rotation)
 		{
 			Quaternion result;
@@ -339,10 +231,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_Inverse(ref Quaternion rotation, out Quaternion value);
 
-		/// <summary>
-		///   <para>Returns a nicely formatted string of the Quaternion.</para>
-		/// </summary>
-		/// <param name="format"></param>
 		public override string ToString()
 		{
 			return UnityString.Format("({0:F1}, {1:F1}, {2:F1}, {3:F1})", new object[]
@@ -354,10 +242,6 @@ namespace UnityEngine
 			});
 		}
 
-		/// <summary>
-		///   <para>Returns a nicely formatted string of the Quaternion.</para>
-		/// </summary>
-		/// <param name="format"></param>
 		public string ToString(string format)
 		{
 			return UnityString.Format("({0}, {1}, {2}, {3})", new object[]
@@ -369,35 +253,51 @@ namespace UnityEngine
 			});
 		}
 
-		/// <summary>
-		///   <para>Returns the angle in degrees between two rotations a and b.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
 		public static float Angle(Quaternion a, Quaternion b)
 		{
 			float f = Quaternion.Dot(a, b);
 			return Mathf.Acos(Mathf.Min(Mathf.Abs(f), 1f)) * 2f * 57.29578f;
 		}
 
-		/// <summary>
-		///   <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
 		public static Quaternion Euler(float x, float y, float z)
 		{
 			return Quaternion.Internal_FromEulerRad(new Vector3(x, y, z) * 0.0174532924f);
 		}
 
-		/// <summary>
-		///   <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
-		/// </summary>
-		/// <param name="euler"></param>
 		public static Quaternion Euler(Vector3 euler)
 		{
 			return Quaternion.Internal_FromEulerRad(euler * 0.0174532924f);
+		}
+
+		private static Vector3 Internal_MakePositive(Vector3 euler)
+		{
+			float num = -0.005729578f;
+			float num2 = 360f + num;
+			if (euler.x < num)
+			{
+				euler.x += 360f;
+			}
+			else if (euler.x > num2)
+			{
+				euler.x -= 360f;
+			}
+			if (euler.y < num)
+			{
+				euler.y += 360f;
+			}
+			else if (euler.y > num2)
+			{
+				euler.y -= 360f;
+			}
+			if (euler.z < num)
+			{
+				euler.z += 360f;
+			}
+			else if (euler.z > num2)
+			{
+				euler.z -= 360f;
+			}
+			return euler;
 		}
 
 		private static Vector3 Internal_ToEulerRad(Quaternion rotation)

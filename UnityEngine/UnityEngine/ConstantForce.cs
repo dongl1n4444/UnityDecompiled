@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A force applied constantly.</para>
-	/// </summary>
 	public sealed class ConstantForce : Behaviour
 	{
-		/// <summary>
-		///   <para>The force applied to the rigidbody every frame.</para>
-		/// </summary>
 		public Vector3 force
 		{
 			get
@@ -25,9 +19,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The force - relative to the rigid bodies coordinate system - applied every frame.</para>
-		/// </summary>
 		public Vector3 relativeForce
 		{
 			get
@@ -42,9 +33,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The torque applied to the rigidbody every frame.</para>
-		/// </summary>
 		public Vector3 torque
 		{
 			get
@@ -59,9 +47,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The torque - relative to the rigid bodies coordinate system - applied every frame.</para>
-		/// </summary>
 		public Vector3 relativeTorque
 		{
 			get

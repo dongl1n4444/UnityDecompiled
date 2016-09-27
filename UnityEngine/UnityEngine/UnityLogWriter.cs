@@ -15,7 +15,7 @@ namespace UnityEngine
 			}
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void WriteStringToUnityLog(string s);
 

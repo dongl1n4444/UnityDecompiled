@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Unity.DataContract;
 using UnityEditor.Modules;
 using UnityEditor.Scripting.Compilers;
@@ -88,13 +90,17 @@ namespace UnityEditor.Scripting
 			return CommandLineFormatter.PrepareFileName(assemblyPath);
 		}
 
-		public static bool DoesAssemblyRequireUpgrade(string assetFullPath)
+		public static bool DoesAssemblyRequireUpgrade(string assemblyFullPath)
 		{
-			if (!File.Exists(assetFullPath))
+			if (!File.Exists(assemblyFullPath))
 			{
 				return false;
 			}
-			if (!AssemblyHelper.IsManagedAssembly(assetFullPath))
+			if (!AssemblyHelper.IsManagedAssembly(assemblyFullPath))
+			{
+				return false;
+			}
+			if (!APIUpdaterHelper.MayContainUpdatableReferences(assemblyFullPath))
 			{
 				return false;
 			}
@@ -105,7 +111,7 @@ namespace UnityEditor.Scripting
 				APIUpdaterHelper.TimeStampArgument(),
 				APIUpdaterHelper.APIVersionArgument(),
 				"--check-update-required -a ",
-				CommandLineFormatter.PrepareFileName(assetFullPath),
+				CommandLineFormatter.PrepareFileName(assemblyFullPath),
 				APIUpdaterHelper.AssemblySearchPathArgument(),
 				APIUpdaterHelper.ConfigurationProviderAssembliesPathArgument()
 			}), out text, out text2);
@@ -163,7 +169,7 @@ namespace UnityEditor.Scripting
 		private static int RunUpdatingProgram(string executable, string arguments, out string stdOut, out string stdErr)
 		{
 			string executable2 = EditorApplication.applicationContentsPath + "/Tools/ScriptUpdater/" + executable;
-			ManagedProgram managedProgram = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", executable2, arguments);
+			ManagedProgram managedProgram = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", executable2, arguments, null);
 			managedProgram.LogProcessStartInfo();
 			managedProgram.Start();
 			managedProgram.WaitForExit();
@@ -191,6 +197,58 @@ namespace UnityEditor.Scripting
 			}
 			ObsoleteAttribute obsoleteAttribute = (ObsoleteAttribute)customAttributes[0];
 			return obsoleteAttribute.Message.Contains("UnityUpgradable");
+		}
+
+		internal static bool MayContainUpdatableReferences(string assemblyPath)
+		{
+			using (FileStream fileStream = File.Open(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			{
+				AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(fileStream);
+				if (assemblyDefinition.Name.IsWindowsRuntime)
+				{
+					bool result = false;
+					return result;
+				}
+				if (!APIUpdaterHelper.IsTargetFrameworkValidOnCurrentOS(assemblyDefinition))
+				{
+					bool result = false;
+					return result;
+				}
+			}
+			return true;
+		}
+
+		private static bool IsTargetFrameworkValidOnCurrentOS(AssemblyDefinition assembly)
+		{
+			bool arg_4C_0;
+			if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+			{
+				int arg_47_0;
+				if (assembly.HasCustomAttributes)
+				{
+					arg_47_0 = (assembly.CustomAttributes.Any((CustomAttribute attr) => APIUpdaterHelper.TargetsWindowsSpecificFramework(attr)) ? 1 : 0);
+				}
+				else
+				{
+					arg_47_0 = 0;
+				}
+				arg_4C_0 = (arg_47_0 == 0);
+			}
+			else
+			{
+				arg_4C_0 = true;
+			}
+			return arg_4C_0;
+		}
+
+		private static bool TargetsWindowsSpecificFramework(CustomAttribute targetFrameworkAttr)
+		{
+			if (!targetFrameworkAttr.AttributeType.FullName.Contains("System.Runtime.Versioning.TargetFrameworkAttribute"))
+			{
+				return false;
+			}
+			Regex regex = new Regex("\\.NETCore|\\.NETPortable");
+			return targetFrameworkAttr.ConstructorArguments.Any((CustomAttributeArgument arg) => arg.Type.FullName == typeof(string).FullName && regex.IsMatch((string)arg.Value));
 		}
 	}
 }

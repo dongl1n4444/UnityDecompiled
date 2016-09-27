@@ -20,6 +20,8 @@ namespace UnityEditor.Modules
 
 		bool ShouldDrawExplicitNullCheckbox();
 
+		bool ShouldDrawExplicitDivideByZeroCheckbox();
+
 		bool ShouldDrawForceOptimizeScriptsCheckbox();
 	}
 }

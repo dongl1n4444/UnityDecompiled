@@ -26,7 +26,7 @@ namespace UnityEditor.TreeViewTests
 			this.m_BackendData = data;
 		}
 
-		public override void StartDrag(TreeViewItem draggedNode, List<int> draggedItemIDs)
+		public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
 		{
 			DragAndDrop.PrepareStartDrag();
 			DragAndDrop.SetGenericData("FooDragging", new TestDragging.FooDragData(this.GetItemsFromIDs(draggedItemIDs)));

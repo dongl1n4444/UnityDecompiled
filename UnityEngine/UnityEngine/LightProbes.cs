@@ -4,14 +4,8 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Stores light probes for the scene.</para>
-	/// </summary>
 	public sealed class LightProbes : Object
 	{
-		/// <summary>
-		///   <para>Positions of the baked light probes (Read Only).</para>
-		/// </summary>
 		public extern Vector3[] positions
 		{
 			[WrapperlessIcall]
@@ -19,9 +13,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Coefficients of baked light probes.</para>
-		/// </summary>
 		public extern SphericalHarmonicsL2[] bakedProbes
 		{
 			[WrapperlessIcall]
@@ -32,9 +23,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The number of light probes (Read Only).</para>
-		/// </summary>
 		public extern int count
 		{
 			[WrapperlessIcall]
@@ -42,9 +30,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The number of cells space is divided into (Read Only).</para>
-		/// </summary>
 		public extern int cellCount
 		{
 			[WrapperlessIcall]

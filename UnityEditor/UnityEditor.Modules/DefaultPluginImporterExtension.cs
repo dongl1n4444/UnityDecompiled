@@ -203,7 +203,6 @@ namespace UnityEditor.Modules
 			where (imp.GetCompatibleWithPlatform(buildTargetName) || imp.GetCompatibleWithAnyPlatform()) && !string.IsNullOrEmpty(imp.assetPath)
 			select imp).ToArray<PluginImporter>();
 			Dictionary<string, List<PluginImporter>> dictionary = new Dictionary<string, List<PluginImporter>>();
-			BuildTargetGroup buildTargetGroupByName = BuildPipeline.GetBuildTargetGroupByName(buildTargetName);
 			PluginImporter[] array2 = array;
 			for (int i = 0; i < array2.Length; i++)
 			{
@@ -213,16 +212,13 @@ namespace UnityEditor.Modules
 					string text = this.CalculateFinalPluginPath(buildTargetName, pluginImporter);
 					if (!string.IsNullOrEmpty(text))
 					{
-						if (!pluginImporter.isNativePlugin || buildTargetGroupByName != BuildTargetGroup.WebPlayer)
+						List<PluginImporter> list = null;
+						if (!dictionary.TryGetValue(text, out list))
 						{
-							List<PluginImporter> list = null;
-							if (!dictionary.TryGetValue(text, out list))
-							{
-								list = new List<PluginImporter>();
-								dictionary[text] = list;
-							}
-							list.Add(pluginImporter);
+							list = new List<PluginImporter>();
+							dictionary[text] = list;
 						}
+						list.Add(pluginImporter);
 					}
 				}
 			}

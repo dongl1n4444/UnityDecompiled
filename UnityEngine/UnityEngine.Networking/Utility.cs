@@ -1,31 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine.Networking.Types;
 
 namespace UnityEngine.Networking
 {
-	public sealed class Utility
+	public class Utility
 	{
-		private static Random s_randomGenerator = new Random(Environment.TickCount);
-
-		private static bool s_useRandomSourceID = false;
-
-		private static int s_randomSourceComponent = 0;
-
-		private static AppID s_programAppID = AppID.Invalid;
-
 		private static Dictionary<NetworkID, NetworkAccessToken> s_dictTokens = new Dictionary<NetworkID, NetworkAccessToken>();
 
+		[Obsolete("This property is unused and should not be referenced in code.", true)]
 		public static bool useRandomSourceID
 		{
 			get
 			{
-				return Utility.s_useRandomSourceID;
+				return false;
 			}
 			set
 			{
-				Utility.SetUseRandomSourceID(value);
 			}
 		}
 
@@ -35,34 +26,26 @@ namespace UnityEngine.Networking
 
 		public static SourceID GetSourceID()
 		{
-			return (SourceID)((long)(SystemInfo.deviceUniqueIdentifier + Utility.s_randomSourceComponent).GetHashCode());
+			return (SourceID)((long)SystemInfo.deviceUniqueIdentifier.GetHashCode());
 		}
 
-		private static void SetUseRandomSourceID(bool useRandomSourceID)
-		{
-			if (useRandomSourceID && !Utility.s_useRandomSourceID)
-			{
-				Utility.s_randomSourceComponent = Utility.s_randomGenerator.Next(2147483647);
-			}
-			else if (!useRandomSourceID && Utility.s_useRandomSourceID)
-			{
-				Utility.s_randomSourceComponent = 0;
-			}
-			Utility.s_useRandomSourceID = useRandomSourceID;
-		}
-
+		[Obsolete("This function is unused and should not be referenced in code. Please sign in and setup your project in the editor instead.", true)]
 		public static void SetAppID(AppID newAppID)
 		{
-			Utility.s_programAppID = newAppID;
 		}
 
+		[Obsolete("This function is unused and should not be referenced in code. Please sign in and setup your project in the editor instead.", true)]
 		public static AppID GetAppID()
 		{
-			return Utility.s_programAppID;
+			return AppID.Invalid;
 		}
 
 		public static void SetAccessTokenForNetwork(NetworkID netId, NetworkAccessToken accessToken)
 		{
+			if (Utility.s_dictTokens.ContainsKey(netId))
+			{
+				Utility.s_dictTokens.Remove(netId);
+			}
 			Utility.s_dictTokens.Add(netId, accessToken);
 		}
 
@@ -75,9 +58,5 @@ namespace UnityEngine.Networking
 			}
 			return result;
 		}
-
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void FetchNetworkingId(string projectId);
 	}
 }

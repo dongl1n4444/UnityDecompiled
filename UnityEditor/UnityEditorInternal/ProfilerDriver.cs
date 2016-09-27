@@ -214,7 +214,7 @@ namespace UnityEditorInternal
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void RequestObjectMemoryInfo();
+		public static extern void RequestObjectMemoryInfo(bool gatherObjectReferences);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]

@@ -15,7 +15,17 @@ namespace UnityEditor.Modules
 			get;
 		}
 
+		string[] NativeLibraries
+		{
+			get;
+		}
+
 		string[] AssemblyReferencesForUserScripts
+		{
+			get;
+		}
+
+		string[] AssemblyReferencesForEditorCsharpProject
 		{
 			get;
 		}
@@ -39,7 +49,11 @@ namespace UnityEditor.Modules
 
 		ICompilationExtension CreateCompilationExtension();
 
+		ITextureImportSettingsExtension CreateTextureImportSettingsExtension();
+
 		IPluginImporterExtension CreatePluginImporterExtension();
+
+		IBuildAnalyzer CreateBuildAnalyzer();
 
 		IUserAssembliesValidator CreateUserAssembliesValidatorExtension();
 

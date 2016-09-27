@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace UnityEditor.Connect
 {
-	internal class UnityConnectEditorWindow : WebViewEditorWindow
+	[Serializable]
+	internal class UnityConnectEditorWindow : WebViewEditorWindowTabs
 	{
 		private List<string> m_ServiceUrls;
 
@@ -26,12 +27,8 @@ namespace UnityEditor.Connect
 			}
 			set
 			{
-				if (this.m_InitialOpenURL == value)
-				{
-					return;
-				}
 				this.m_InitialOpenURL = value;
-				base.LoadPage();
+				this.LoadPage();
 			}
 		}
 

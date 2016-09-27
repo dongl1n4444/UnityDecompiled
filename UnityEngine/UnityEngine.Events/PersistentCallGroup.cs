@@ -53,21 +53,21 @@ namespace UnityEngine.Events
 			this.m_Calls.Clear();
 		}
 
-		public void RegisterEventPersistentListener(int index, Object targetObj, string methodName)
+		public void RegisterEventPersistentListener(int index, UnityEngine.Object targetObj, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
 			listener.mode = PersistentListenerMode.EventDefined;
 		}
 
-		public void RegisterVoidPersistentListener(int index, Object targetObj, string methodName)
+		public void RegisterVoidPersistentListener(int index, UnityEngine.Object targetObj, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
 			listener.mode = PersistentListenerMode.Void;
 		}
 
-		public void RegisterObjectPersistentListener(int index, Object targetObj, Object argument, string methodName)
+		public void RegisterObjectPersistentListener(int index, UnityEngine.Object targetObj, UnityEngine.Object argument, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
@@ -75,7 +75,7 @@ namespace UnityEngine.Events
 			listener.arguments.unityObjectArgument = argument;
 		}
 
-		public void RegisterIntPersistentListener(int index, Object targetObj, int argument, string methodName)
+		public void RegisterIntPersistentListener(int index, UnityEngine.Object targetObj, int argument, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
@@ -83,7 +83,7 @@ namespace UnityEngine.Events
 			listener.arguments.intArgument = argument;
 		}
 
-		public void RegisterFloatPersistentListener(int index, Object targetObj, float argument, string methodName)
+		public void RegisterFloatPersistentListener(int index, UnityEngine.Object targetObj, float argument, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
@@ -91,7 +91,7 @@ namespace UnityEngine.Events
 			listener.arguments.floatArgument = argument;
 		}
 
-		public void RegisterStringPersistentListener(int index, Object targetObj, string argument, string methodName)
+		public void RegisterStringPersistentListener(int index, UnityEngine.Object targetObj, string argument, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
@@ -99,7 +99,7 @@ namespace UnityEngine.Events
 			listener.arguments.stringArgument = argument;
 		}
 
-		public void RegisterBoolPersistentListener(int index, Object targetObj, bool argument, string methodName)
+		public void RegisterBoolPersistentListener(int index, UnityEngine.Object targetObj, bool argument, string methodName)
 		{
 			PersistentCall listener = this.GetListener(index);
 			listener.RegisterPersistentListener(targetObj, methodName);
@@ -113,7 +113,7 @@ namespace UnityEngine.Events
 			listener.UnregisterPersistentListener();
 		}
 
-		public void RemoveListeners(Object target, string methodName)
+		public void RemoveListeners(UnityEngine.Object target, string methodName)
 		{
 			List<PersistentCall> list = new List<PersistentCall>();
 			for (int i = 0; i < this.m_Calls.Count; i++)

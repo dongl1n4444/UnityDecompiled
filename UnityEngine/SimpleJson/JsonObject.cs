@@ -7,7 +7,7 @@ using System.ComponentModel;
 namespace SimpleJson
 {
 	[GeneratedCode("simple-json", "1.0.0"), EditorBrowsable(EditorBrowsableState.Never)]
-	internal class JsonObject : IDictionary<string, object>, IEnumerable<KeyValuePair<string, object>>, IEnumerable, ICollection<KeyValuePair<string, object>>
+	internal class JsonObject : IDictionary<string, object>, IEnumerable, IEnumerable<KeyValuePair<string, object>>, ICollection<KeyValuePair<string, object>>
 	{
 		private readonly Dictionary<string, object> _members;
 

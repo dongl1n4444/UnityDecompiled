@@ -5,9 +5,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>A UnityGUI event.</para>
-	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class Event
 	{
@@ -18,9 +15,6 @@ namespace UnityEngine
 
 		private static Event s_MasterEvent;
 
-		/// <summary>
-		///   <para>The mouse position.</para>
-		/// </summary>
 		public Vector2 mousePosition
 		{
 			get
@@ -35,9 +29,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The relative movement of the mouse compared to last event.</para>
-		/// </summary>
 		public Vector2 delta
 		{
 			get
@@ -64,9 +55,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is Shift held down? (Read Only)</para>
-		/// </summary>
 		public bool shift
 		{
 			get
@@ -86,9 +74,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is Control key held down? (Read Only)</para>
-		/// </summary>
 		public bool control
 		{
 			get
@@ -108,9 +93,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is Alt/Option key held down? (Read Only)</para>
-		/// </summary>
 		public bool alt
 		{
 			get
@@ -130,9 +112,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is Command/Windows key held down? (Read Only)</para>
-		/// </summary>
 		public bool command
 		{
 			get
@@ -152,9 +131,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is Caps Lock on? (Read Only)</para>
-		/// </summary>
 		public bool capsLock
 		{
 			get
@@ -174,9 +150,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is the current keypress on the numeric keyboard? (Read Only)</para>
-		/// </summary>
 		public bool numeric
 		{
 			get
@@ -196,9 +169,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is the current keypress a function key? (Read Only)</para>
-		/// </summary>
 		public bool functionKey
 		{
 			get
@@ -207,9 +177,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The current event that's being processed right now.</para>
-		/// </summary>
 		public static Event current
 		{
 			get
@@ -234,9 +201,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is this event a keyboard event? (Read Only)</para>
-		/// </summary>
 		public bool isKey
 		{
 			get
@@ -246,9 +210,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is this event a mouse event? (Read Only)</para>
-		/// </summary>
 		public bool isMouse
 		{
 			get
@@ -265,9 +226,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The type of event.</para>
-		/// </summary>
 		public extern EventType type
 		{
 			[WrapperlessIcall]
@@ -278,9 +236,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Which mouse button was pressed.</para>
-		/// </summary>
 		public extern int button
 		{
 			[WrapperlessIcall]
@@ -291,9 +246,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Which modifier keys are held down.</para>
-		/// </summary>
 		public extern EventModifiers modifiers
 		{
 			[WrapperlessIcall]
@@ -314,9 +266,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>How many consecutive mouse clicks have we received.</para>
-		/// </summary>
 		public extern int clickCount
 		{
 			[WrapperlessIcall]
@@ -327,9 +276,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The character typed.</para>
-		/// </summary>
 		public extern char character
 		{
 			[WrapperlessIcall]
@@ -340,9 +286,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The name of an ExecuteCommand or ValidateCommand Event.</para>
-		/// </summary>
 		public extern string commandName
 		{
 			[WrapperlessIcall]
@@ -353,9 +296,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The raw key code for keyboard events.</para>
-		/// </summary>
 		public extern KeyCode keyCode
 		{
 			[WrapperlessIcall]
@@ -366,9 +306,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Index of display that the event belongs to.</para>
-		/// </summary>
 		public extern int displayIndex
 		{
 			[WrapperlessIcall]
@@ -408,6 +345,12 @@ namespace UnityEngine
 			this.Cleanup();
 		}
 
+		internal static void CleanupRoots()
+		{
+			Event.s_Current = null;
+			Event.s_MasterEvent = null;
+		}
+
 		[RequiredByNativeCode]
 		private static void Internal_MakeMasterEventCurrent(int displayIndex)
 		{
@@ -420,10 +363,6 @@ namespace UnityEngine
 			Event.Internal_SetNativeEvent(Event.s_MasterEvent.m_Ptr);
 		}
 
-		/// <summary>
-		///   <para>Create a keyboard event.</para>
-		/// </summary>
-		/// <param name="key"></param>
 		public static Event KeyboardEvent(string key)
 		{
 			Event @event = new Event(0);
@@ -786,26 +725,22 @@ namespace UnityEngine
 			}
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Init(int displayIndex);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Cleanup();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InitCopy(Event other);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InitPtr(IntPtr ptr);
 
-		/// <summary>
-		///   <para>Get a filtered event type for a given control ID.</para>
-		/// </summary>
-		/// <param name="controlID">The ID of the control you are querying from.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern EventType GetTypeForControl(int controlID);
@@ -840,27 +775,14 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_SetNativeEvent(IntPtr ptr);
 
-		/// <summary>
-		///   <para>Use this event.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Use();
 
-		/// <summary>
-		///   <para>Get the next queued [Event] from the event system.</para>
-		/// </summary>
-		/// <param name="outEvent">Next Event.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool PopEvent(Event outEvent);
 
-		/// <summary>
-		///   <para>Returns the current number of events that are stored in the event queue.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>Current number of events currently in the event queue.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern int GetEventCount();

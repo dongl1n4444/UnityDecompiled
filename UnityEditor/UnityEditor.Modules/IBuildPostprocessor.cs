@@ -16,8 +16,8 @@ namespace UnityEditor.Modules
 
 		string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName);
 
-		string GetExtension(BuildTarget target, BuildOptions options);
+		string PrepareForBuild(BuildOptions options, BuildTarget target);
 
-		string[] FindPluginFilesToCopy(string basePluginFolder, out bool shouldRetainStructure);
+		string GetExtension(BuildTarget target, BuildOptions options);
 	}
 }

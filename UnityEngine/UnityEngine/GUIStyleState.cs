@@ -4,9 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Specialized values for the given states used by GUIStyle objects.</para>
-	/// </summary>
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class GUIStyleState
@@ -19,9 +16,9 @@ namespace UnityEngine
 		[NonSerialized]
 		private Texture2D m_Background;
 
-		/// <summary>
-		///   <para>The background image used by GUI elements in this given state.</para>
-		/// </summary>
+		[NonSerialized]
+		private Texture2D[] m_ScaledBackgrounds;
+
 		public Texture2D background
 		{
 			get
@@ -35,9 +32,19 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The text color used by GUI elements in this state.</para>
-		/// </summary>
+		public Texture2D[] scaledBackgrounds
+		{
+			get
+			{
+				return this.GetScaledBackgroundsInternal();
+			}
+			set
+			{
+				this.SetScaledBackgroundsInternal(value);
+				this.m_ScaledBackgrounds = value;
+			}
+		}
+
 		public Color textColor
 		{
 			get
@@ -67,6 +74,7 @@ namespace UnityEngine
 		{
 			GUIStyleState gUIStyleState = new GUIStyleState(sourceStyle, source);
 			gUIStyleState.m_Background = gUIStyleState.GetBackgroundInternalFromDeserialization();
+			gUIStyleState.m_ScaledBackgrounds = gUIStyleState.GetScaledBackgroundsInternalFromDeserialization();
 			return gUIStyleState;
 		}
 
@@ -74,6 +82,7 @@ namespace UnityEngine
 		{
 			GUIStyleState gUIStyleState = new GUIStyleState(sourceStyle, source);
 			gUIStyleState.m_Background = gUIStyleState.GetBackgroundInternal();
+			gUIStyleState.m_ScaledBackgrounds = gUIStyleState.GetScaledBackgroundsInternalFromDeserialization();
 			return gUIStyleState;
 		}
 
@@ -85,11 +94,11 @@ namespace UnityEngine
 			}
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Init();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Cleanup();
 
@@ -97,13 +106,25 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void SetBackgroundInternal(Texture2D value);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern Texture2D GetBackgroundInternalFromDeserialization();
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern Texture2D GetBackgroundInternal();
+
+		[ThreadAndSerializationSafe, WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private extern Texture2D[] GetScaledBackgroundsInternalFromDeserialization();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private extern Texture2D[] GetScaledBackgroundsInternal();
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private extern void SetScaledBackgroundsInternal(Texture2D[] newValue);
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]

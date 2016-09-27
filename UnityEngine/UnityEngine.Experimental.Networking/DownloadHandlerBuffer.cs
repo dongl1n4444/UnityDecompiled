@@ -1,63 +1,14 @@
 using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using UnityEngine.Networking;
 
 namespace UnityEngine.Experimental.Networking
 {
-	/// <summary>
-	///   <para>A general-purpose DownloadHandler implementation which stores received data in a native byte buffer.</para>
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
-	public sealed class DownloadHandlerBuffer : DownloadHandler
+	[Obsolete("DownloadHandlerBuffer has been moved into the UnityEngine.Networking namespace (UnityUpgradable) -> UnityEngine.Networking.DownloadHandlerBuffer", true)]
+	public class DownloadHandlerBuffer : UnityEngine.Networking.DownloadHandler
 	{
-		/// <summary>
-		///   <para>Default constructor.</para>
-		/// </summary>
-		public DownloadHandlerBuffer()
-		{
-			base.InternalCreateString();
-		}
-
-		/// <summary>
-		///   <para>Returns a copy of the contents of the native-memory data buffer as a byte array.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>A copy of the data which has been downloaded.</para>
-		/// </returns>
-		protected override byte[] GetData()
-		{
-			return this.InternalGetData();
-		}
-
-		/// <summary>
-		///   <para>Returns a copy of the native-memory buffer interpreted as a UTF8 string.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>A string representing the data in the native-memory buffer.</para>
-		/// </returns>
-		protected override string GetText()
-		{
-			return this.InternalGetText();
-		}
-
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern byte[] InternalGetData();
-
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern string InternalGetText();
-
-		/// <summary>
-		///   <para>Returns a copy of the native-memory buffer interpreted as a UTF8 string.</para>
-		/// </summary>
-		/// <param name="www">A finished UnityWebRequest object with DownloadHandlerBuffer attached.</param>
-		/// <returns>
-		///   <para>The same as DownloadHandlerBuffer.text</para>
-		/// </returns>
 		public static string GetContent(UnityWebRequest www)
 		{
-			return DownloadHandler.GetCheckedDownloader<DownloadHandlerBuffer>(www).text;
+			return null;
 		}
 	}
 }

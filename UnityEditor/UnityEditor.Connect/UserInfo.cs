@@ -6,11 +6,17 @@ namespace UnityEditor.Connect
 	{
 		private int m_Valid;
 
+		private string m_UserId;
+
 		private string m_UserName;
 
 		private string m_DisplayName;
 
 		private string m_PrimaryOrg;
+
+		private int m_Whitelisted;
+
+		private string m_OrganizationForeignKeys;
 
 		private string m_AccessToken;
 
@@ -21,6 +27,14 @@ namespace UnityEditor.Connect
 			get
 			{
 				return this.m_Valid != 0;
+			}
+		}
+
+		public string userId
+		{
+			get
+			{
+				return this.m_UserId;
 			}
 		}
 
@@ -45,6 +59,22 @@ namespace UnityEditor.Connect
 			get
 			{
 				return this.m_PrimaryOrg;
+			}
+		}
+
+		public bool whitelisted
+		{
+			get
+			{
+				return this.m_Whitelisted != 0;
+			}
+		}
+
+		public string organizationForeignKeys
+		{
+			get
+			{
+				return this.m_OrganizationForeignKeys;
 			}
 		}
 

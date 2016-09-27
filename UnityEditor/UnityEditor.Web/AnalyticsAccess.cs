@@ -11,11 +11,11 @@ namespace UnityEditor.Web
 
 		private const string kServiceDisplayName = "Analytics";
 
-		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/analytics";
+		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/analytics";
 
 		static AnalyticsAccess()
 		{
-			UnityConnectServiceData cloudService = new UnityConnectServiceData("Analytics", "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/analytics", new AnalyticsAccess(), "unity/project/cloud/analytics");
+			UnityConnectServiceData cloudService = new UnityConnectServiceData("Analytics", "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/analytics", new AnalyticsAccess(), "unity/project/cloud/analytics");
 			UnityConnectServiceCollection.instance.AddService(cloudService);
 		}
 

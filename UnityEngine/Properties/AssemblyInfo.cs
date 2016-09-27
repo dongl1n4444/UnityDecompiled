@@ -22,6 +22,7 @@ using System.Security.Permissions;
 [assembly: InternalsVisibleTo("UnityEngine.Advertisements")]
 [assembly: InternalsVisibleTo("UnityEngine.Purchasing")]
 [assembly: InternalsVisibleTo("Unity.Automation")]
+[assembly: InternalsVisibleTo("Unity.DeploymentTests.Services")]
 [assembly: InternalsVisibleTo("Unity.IntegrationTests")]
 [assembly: InternalsVisibleTo("Unity.IntegrationTests.UnityAnalytics")]
 [assembly: InternalsVisibleTo("Unity.IntegrationTests.Framework")]

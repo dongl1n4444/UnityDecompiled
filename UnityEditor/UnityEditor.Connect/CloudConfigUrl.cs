@@ -7,6 +7,8 @@ namespace UnityEditor.Connect
 		CloudCore,
 		CloudCollab,
 		CloudWebauth,
-		CloudLogin
+		CloudLogin,
+		CloudIdentity = 6,
+		CloudPortal
 	}
 }

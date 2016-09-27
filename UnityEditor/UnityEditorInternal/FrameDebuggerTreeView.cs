@@ -30,7 +30,7 @@ namespace UnityEditorInternal
 			{
 			}
 
-			protected override Texture GetIconForNode(TreeViewItem item)
+			protected override Texture GetIconForItem(TreeViewItem item)
 			{
 				return null;
 			}
@@ -97,7 +97,7 @@ namespace UnityEditorInternal
 			{
 				this.m_FrameEvents = frameEvents;
 				base.rootIsCollapsable = false;
-				base.showRootNode = false;
+				base.showRootItem = false;
 			}
 
 			public void SetEvents(FrameDebuggerEvent[] frameEvents)
@@ -212,7 +212,7 @@ namespace UnityEditorInternal
 			int num2 = num;
 			if (num2 <= 0)
 			{
-				FrameDebuggerTreeView.FDTreeViewItem fDTreeViewItem = this.m_TreeView.FindNode(num) as FrameDebuggerTreeView.FDTreeViewItem;
+				FrameDebuggerTreeView.FDTreeViewItem fDTreeViewItem = this.m_TreeView.FindItem(num) as FrameDebuggerTreeView.FDTreeViewItem;
 				if (fDTreeViewItem != null)
 				{
 					num2 = fDTreeViewItem.m_EventIndex;
@@ -230,7 +230,7 @@ namespace UnityEditorInternal
 			int[] selection = this.m_TreeView.GetSelection();
 			if (selection.Length > 0)
 			{
-				FrameDebuggerTreeView.FDTreeViewItem fDTreeViewItem = this.m_TreeView.FindNode(selection[0]) as FrameDebuggerTreeView.FDTreeViewItem;
+				FrameDebuggerTreeView.FDTreeViewItem fDTreeViewItem = this.m_TreeView.FindItem(selection[0]) as FrameDebuggerTreeView.FDTreeViewItem;
 				if (fDTreeViewItem != null && eventIndex == fDTreeViewItem.m_EventIndex)
 				{
 					return;

@@ -95,7 +95,7 @@ namespace UnityEditor.TreeViewTests
 
 		public HashSet<int> GetParentsBelow(int id)
 		{
-			BackendData.Foo foo = BackendData.FindNodeRecursive(this.root, id);
+			BackendData.Foo foo = BackendData.FindItemRecursive(this.root, id);
 			if (foo == null)
 			{
 				return new HashSet<int>();
@@ -214,7 +214,7 @@ namespace UnityEditor.TreeViewTests
 			}
 		}
 
-		public static BackendData.Foo FindNodeRecursive(BackendData.Foo item, int id)
+		public static BackendData.Foo FindItemRecursive(BackendData.Foo item, int id)
 		{
 			if (item == null)
 			{
@@ -230,7 +230,7 @@ namespace UnityEditor.TreeViewTests
 			}
 			foreach (BackendData.Foo current in item.children)
 			{
-				BackendData.Foo foo = BackendData.FindNodeRecursive(current, id);
+				BackendData.Foo foo = BackendData.FindItemRecursive(current, id);
 				if (foo != null)
 				{
 					return foo;

@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine.VR
 {
-	/// <summary>
-	///   <para>Contains all functionality related to a VR device.</para>
-	/// </summary>
-	public sealed class VRDevice
+	public static class VRDevice
 	{
-		/// <summary>
-		///   <para>Successfully detected a VR device in working order.</para>
-		/// </summary>
 		public static extern bool isPresent
 		{
 			[WrapperlessIcall]
@@ -18,9 +12,7 @@ namespace UnityEngine.VR
 			get;
 		}
 
-		/// <summary>
-		///   <para>The name of the family of the loaded VR device.</para>
-		/// </summary>
+		[Obsolete("family is deprecated.  Use VRSettings.loadedDeviceName instead.")]
 		public static extern string family
 		{
 			[WrapperlessIcall]
@@ -28,9 +20,6 @@ namespace UnityEngine.VR
 			get;
 		}
 
-		/// <summary>
-		///   <para>Specific model of loaded VR device.</para>
-		/// </summary>
 		public static extern string model
 		{
 			[WrapperlessIcall]
@@ -38,14 +27,22 @@ namespace UnityEngine.VR
 			get;
 		}
 
-		/// <summary>
-		///   <para>Native pointer to the VR device structure, if available.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>Native pointer to VR device if available, else 0.</para>
-		/// </returns>
+		public static extern float refreshRate
+		{
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
+		}
+
+		public static IntPtr GetNativePtr()
+		{
+			IntPtr result;
+			VRDevice.INTERNAL_CALL_GetNativePtr(out result);
+			return result;
+		}
+
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern IntPtr GetNativePtr();
+		private static extern void INTERNAL_CALL_GetNativePtr(out IntPtr value);
 	}
 }

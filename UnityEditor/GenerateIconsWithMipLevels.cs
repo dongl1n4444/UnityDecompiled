@@ -1,286 +1,305 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
 internal class GenerateIconsWithMipLevels
 {
-	private class InputData
-	{
-		public string sourceFolder;
+    private static string k_IconSourceFolder = "Assets/MipLevels For Icons/";
+    private static string k_IconTargetFolder = "Assets/Editor Default Resources/Icons/Generated";
 
-		public string targetFolder;
+    private static void Blit(Texture2D source, Texture2D dest, int mipLevel)
+    {
+        Color32[] colors = source.GetPixels32();
+        for (int i = 0; i < colors.Length; i++)
+        {
+            Color32 color = colors[i];
+            if (color.a >= 3)
+            {
+                color.a = (byte) (color.a - 3);
+            }
+            colors[i] = color;
+        }
+        dest.SetPixels32(colors, mipLevel);
+    }
 
-		public string mipIdentifier;
+    private static bool BlitMip(Texture2D iconWithMips, string mipFile, int mipLevel)
+    {
+        Texture2D source = GetTexture2D(mipFile);
+        if (source != null)
+        {
+            Blit(source, iconWithMips, mipLevel);
+            return true;
+        }
+        Debug.Log("Mip file NOT found: " + mipFile);
+        return false;
+    }
 
-		public string mipFileExtension;
+    private static Texture2D CreateIconWithMipLevels(InputData inputData, string baseName, List<string> assetPathsOfAllIcons)
+    {
+        <CreateIconWithMipLevels>c__AnonStorey3E storeye = new <CreateIconWithMipLevels>c__AnonStorey3E {
+            baseName = baseName,
+            inputData = inputData
+        };
+        List<string> list = assetPathsOfAllIcons.FindAll(new Predicate<string>(storeye.<>m__5E));
+        List<Texture2D> list2 = new List<Texture2D>();
+        foreach (string str in list)
+        {
+            Texture2D item = GetTexture2D(str);
+            if (item != null)
+            {
+                list2.Add(item);
+            }
+            else
+            {
+                Debug.LogError("Mip not found " + str);
+            }
+        }
+        int num = 0x1869f;
+        int width = 0;
+        foreach (Texture2D textured2 in list2)
+        {
+            int num3 = textured2.width;
+            if (num3 > width)
+            {
+                width = num3;
+            }
+            if (num3 < num)
+            {
+                num = num3;
+            }
+        }
+        if (width == 0)
+        {
+            return null;
+        }
+        Texture2D iconWithMips = new Texture2D(width, width, TextureFormat.ARGB32, true, true);
+        if (BlitMip(iconWithMips, storeye.inputData.GetMipFileName(storeye.baseName, width), 0))
+        {
+            iconWithMips.Apply(true);
+        }
+        else
+        {
+            return iconWithMips;
+        }
+        int mipResolution = width;
+        for (int i = 1; i < iconWithMips.mipmapCount; i++)
+        {
+            mipResolution /= 2;
+            if (mipResolution < num)
+            {
+                break;
+            }
+            BlitMip(iconWithMips, storeye.inputData.GetMipFileName(storeye.baseName, mipResolution), i);
+        }
+        iconWithMips.Apply(false, true);
+        return iconWithMips;
+    }
 
-		public List<string> generatedFileNames = new List<string>();
+    private static void DeleteFile(string file)
+    {
+        if (AssetDatabase.GetMainAssetInstanceID(file) != 0)
+        {
+            Debug.Log("Deleted unused file: " + file);
+            AssetDatabase.DeleteAsset(file);
+        }
+    }
 
-		public string GetMipFileName(string baseName, int mipResolution)
-		{
-			return string.Concat(new object[]
-			{
-				this.sourceFolder,
-				baseName,
-				this.mipIdentifier,
-				mipResolution,
-				".",
-				this.mipFileExtension
-			});
-		}
-	}
+    public static void DeleteGeneratedFolder()
+    {
+        InputData inputData = GetInputData();
+        if (AssetDatabase.GetMainAssetInstanceID(inputData.targetFolder) != 0)
+        {
+            AssetDatabase.DeleteAsset(inputData.targetFolder);
+            AssetDatabase.Refresh();
+        }
+    }
 
-	private static string k_IconSourceFolder = "Assets/MipLevels For Icons/";
+    private static void EnsureFolderIsCreated(string targetFolder)
+    {
+        if (AssetDatabase.GetMainAssetInstanceID(targetFolder) == 0)
+        {
+            Debug.Log("Created target folder " + targetFolder);
+            AssetDatabase.CreateFolder(Path.GetDirectoryName(targetFolder), Path.GetFileName(targetFolder));
+        }
+    }
 
-	private static string k_IconTargetFolder = "Assets/Editor Default Resources/Icons/Generated";
+    private static void EnsureFolderIsCreatedRecursively(string targetFolder)
+    {
+        if (AssetDatabase.GetMainAssetInstanceID(targetFolder) == 0)
+        {
+            EnsureFolderIsCreatedRecursively(Path.GetDirectoryName(targetFolder));
+            Debug.Log("Created target folder " + targetFolder);
+            AssetDatabase.CreateFolder(Path.GetDirectoryName(targetFolder), Path.GetFileName(targetFolder));
+        }
+    }
 
-	public static void GenerateAllIconsWithMipLevels()
-	{
-		GenerateIconsWithMipLevels.InputData inputData = new GenerateIconsWithMipLevels.InputData();
-		inputData.sourceFolder = GenerateIconsWithMipLevels.k_IconSourceFolder;
-		inputData.targetFolder = GenerateIconsWithMipLevels.k_IconTargetFolder;
-		inputData.mipIdentifier = "@";
-		inputData.mipFileExtension = "png";
-		if (AssetDatabase.GetMainAssetInstanceID(inputData.targetFolder) != 0)
-		{
-			AssetDatabase.DeleteAsset(inputData.targetFolder);
-			AssetDatabase.Refresh();
-		}
-		GenerateIconsWithMipLevels.EnsureFolderIsCreated(inputData.targetFolder);
-		float realtimeSinceStartup = Time.realtimeSinceStartup;
-		GenerateIconsWithMipLevels.GenerateIconsWithMips(inputData);
-		Debug.Log(string.Format("Generated {0} icons with mip levels in {1} seconds", inputData.generatedFileNames.Count, Time.realtimeSinceStartup - realtimeSinceStartup));
-		GenerateIconsWithMipLevels.RemoveUnusedFiles(inputData.generatedFileNames);
-		AssetDatabase.Refresh();
-		InternalEditorUtility.RepaintAllViews();
-	}
+    public static void GenerateAllIconsWithMipLevels()
+    {
+        InputData inputData = GetInputData();
+        EnsureFolderIsCreated(inputData.targetFolder);
+        float realtimeSinceStartup = Time.realtimeSinceStartup;
+        GenerateIconsWithMips(inputData);
+        Debug.Log($"Generated {inputData.generatedFileNames.Count} icons with mip levels in {Time.realtimeSinceStartup - realtimeSinceStartup} seconds");
+        RemoveUnusedFiles(inputData.generatedFileNames);
+        AssetDatabase.Refresh();
+        InternalEditorUtility.RepaintAllViews();
+    }
 
-	public static void GenerateSelectedIconsWithMips()
-	{
-		if (Selection.activeInstanceID == 0)
-		{
-			Debug.Log("Ensure to select a mip texture..." + Selection.activeInstanceID);
-			return;
-		}
-		GenerateIconsWithMipLevels.InputData inputData = new GenerateIconsWithMipLevels.InputData();
-		inputData.sourceFolder = GenerateIconsWithMipLevels.k_IconSourceFolder;
-		inputData.targetFolder = GenerateIconsWithMipLevels.k_IconTargetFolder;
-		inputData.mipIdentifier = "@";
-		inputData.mipFileExtension = "png";
-		int activeInstanceID = Selection.activeInstanceID;
-		string assetPath = AssetDatabase.GetAssetPath(activeInstanceID);
-		if (assetPath.IndexOf(inputData.sourceFolder) < 0)
-		{
-			Debug.Log("Selection is not a valid mip texture, it should be located in: " + inputData.sourceFolder);
-			return;
-		}
-		if (assetPath.IndexOf(inputData.mipIdentifier) < 0)
-		{
-			Debug.Log("Selection does not have a valid mip identifier " + assetPath + "  " + inputData.mipIdentifier);
-			return;
-		}
-		float realtimeSinceStartup = Time.realtimeSinceStartup;
-		string text = assetPath.Replace(inputData.sourceFolder, string.Empty);
-		text = text.Substring(0, text.LastIndexOf(inputData.mipIdentifier));
-		List<string> iconAssetPaths = GenerateIconsWithMipLevels.GetIconAssetPaths(inputData.sourceFolder, inputData.mipIdentifier, inputData.mipFileExtension);
-		GenerateIconsWithMipLevels.EnsureFolderIsCreated(inputData.targetFolder);
-		GenerateIconsWithMipLevels.GenerateIcon(inputData, text, iconAssetPaths);
-		Debug.Log(string.Format("Generated {0} icon with mip levels in {1} seconds", text, Time.realtimeSinceStartup - realtimeSinceStartup));
-		InternalEditorUtility.RepaintAllViews();
-	}
+    private static void GenerateIcon(InputData inputData, string baseName, List<string> assetPathsOfAllIcons)
+    {
+        string path = inputData.targetFolder + "/" + baseName + " Icon.asset";
+        EnsureFolderIsCreatedRecursively(Path.GetDirectoryName(path));
+        Texture2D asset = CreateIconWithMipLevels(inputData, baseName, assetPathsOfAllIcons);
+        if (asset == null)
+        {
+            Debug.Log("CreateIconWithMipLevels failed");
+        }
+        else
+        {
+            asset.name = baseName + " Icon.png";
+            AssetDatabase.CreateAsset(asset, path);
+            inputData.generatedFileNames.Add(path);
+        }
+    }
 
-	private static void GenerateIconsWithMips(GenerateIconsWithMipLevels.InputData inputData)
-	{
-		List<string> iconAssetPaths = GenerateIconsWithMipLevels.GetIconAssetPaths(inputData.sourceFolder, inputData.mipIdentifier, inputData.mipFileExtension);
-		if (iconAssetPaths.Count == 0)
-		{
-			Debug.LogWarning("No mip files found for generating icons! Searching in: " + inputData.sourceFolder + ", for files with extension: " + inputData.mipFileExtension);
-		}
-		string[] baseNames = GenerateIconsWithMipLevels.GetBaseNames(inputData, iconAssetPaths);
-		string[] array = baseNames;
-		for (int i = 0; i < array.Length; i++)
-		{
-			string baseName = array[i];
-			GenerateIconsWithMipLevels.GenerateIcon(inputData, baseName, iconAssetPaths);
-		}
-	}
+    private static void GenerateIconsWithMips(InputData inputData)
+    {
+        List<string> files = GetIconAssetPaths(inputData.sourceFolder, inputData.mipIdentifier, inputData.mipFileExtension);
+        if (files.Count == 0)
+        {
+            Debug.LogWarning("No mip files found for generating icons! Searching in: " + inputData.sourceFolder + ", for files with extension: " + inputData.mipFileExtension);
+        }
+        foreach (string str in GetBaseNames(inputData, files))
+        {
+            GenerateIcon(inputData, str, files);
+        }
+    }
 
-	private static void GenerateIcon(GenerateIconsWithMipLevels.InputData inputData, string baseName, List<string> assetPathsOfAllIcons)
-	{
-		string text = inputData.targetFolder + "/" + baseName + " Icon.asset";
-		GenerateIconsWithMipLevels.EnsureFolderIsCreatedRecursively(Path.GetDirectoryName(text));
-		Texture2D texture2D = GenerateIconsWithMipLevels.CreateIconWithMipLevels(inputData, baseName, assetPathsOfAllIcons);
-		if (texture2D == null)
-		{
-			Debug.Log("CreateIconWithMipLevels failed");
-			return;
-		}
-		texture2D.name = baseName + " Icon.png";
-		AssetDatabase.CreateAsset(texture2D, text);
-		inputData.generatedFileNames.Add(text);
-	}
+    public static void GenerateSelectedIconsWithMips()
+    {
+        if (Selection.activeInstanceID == 0)
+        {
+            Debug.Log("Ensure to select a mip texture..." + Selection.activeInstanceID);
+        }
+        else
+        {
+            InputData inputData = GetInputData();
+            string assetPath = AssetDatabase.GetAssetPath(Selection.activeInstanceID);
+            if (assetPath.IndexOf(inputData.sourceFolder) < 0)
+            {
+                Debug.Log("Selection is not a valid mip texture, it should be located in: " + inputData.sourceFolder);
+            }
+            else if (assetPath.IndexOf(inputData.mipIdentifier) < 0)
+            {
+                Debug.Log("Selection does not have a valid mip identifier " + assetPath + "  " + inputData.mipIdentifier);
+            }
+            else
+            {
+                float realtimeSinceStartup = Time.realtimeSinceStartup;
+                string baseName = assetPath.Replace(inputData.sourceFolder, string.Empty);
+                baseName = baseName.Substring(0, baseName.LastIndexOf(inputData.mipIdentifier));
+                List<string> assetPathsOfAllIcons = GetIconAssetPaths(inputData.sourceFolder, inputData.mipIdentifier, inputData.mipFileExtension);
+                EnsureFolderIsCreated(inputData.targetFolder);
+                GenerateIcon(inputData, baseName, assetPathsOfAllIcons);
+                Debug.Log($"Generated {baseName} icon with mip levels in {Time.realtimeSinceStartup - realtimeSinceStartup} seconds");
+                InternalEditorUtility.RepaintAllViews();
+            }
+        }
+    }
 
-	private static Texture2D CreateIconWithMipLevels(GenerateIconsWithMipLevels.InputData inputData, string baseName, List<string> assetPathsOfAllIcons)
-	{
-		List<string> list = assetPathsOfAllIcons.FindAll((string o) => o.IndexOf('/' + baseName + inputData.mipIdentifier) >= 0);
-		List<Texture2D> list2 = new List<Texture2D>();
-		foreach (string current in list)
-		{
-			Texture2D texture2D = GenerateIconsWithMipLevels.GetTexture2D(current);
-			if (texture2D != null)
-			{
-				list2.Add(texture2D);
-			}
-			else
-			{
-				Debug.LogError("Mip not found " + current);
-			}
-		}
-		int num = 99999;
-		int num2 = 0;
-		foreach (Texture2D current2 in list2)
-		{
-			int width = current2.width;
-			if (width > num2)
-			{
-				num2 = width;
-			}
-			if (width < num)
-			{
-				num = width;
-			}
-		}
-		if (num2 == 0)
-		{
-			return null;
-		}
-		Texture2D texture2D2 = new Texture2D(num2, num2, TextureFormat.ARGB32, true, true);
-		if (GenerateIconsWithMipLevels.BlitMip(texture2D2, inputData.GetMipFileName(baseName, num2), 0))
-		{
-			texture2D2.Apply(true);
-			int num3 = num2;
-			for (int i = 1; i < texture2D2.mipmapCount; i++)
-			{
-				num3 /= 2;
-				if (num3 < num)
-				{
-					break;
-				}
-				GenerateIconsWithMipLevels.BlitMip(texture2D2, inputData.GetMipFileName(baseName, num3), i);
-			}
-			texture2D2.Apply(false, true);
-			return texture2D2;
-		}
-		return texture2D2;
-	}
+    private static string[] GetBaseNames(InputData inputData, List<string> files)
+    {
+        string[] collection = new string[files.Count];
+        int length = inputData.sourceFolder.Length;
+        for (int i = 0; i < files.Count; i++)
+        {
+            collection[i] = files[i].Substring(length, files[i].IndexOf(inputData.mipIdentifier) - length);
+        }
+        HashSet<string> set = new HashSet<string>(collection);
+        collection = new string[set.Count];
+        set.CopyTo(collection);
+        return collection;
+    }
 
-	private static bool BlitMip(Texture2D iconWithMips, string mipFile, int mipLevel)
-	{
-		Texture2D texture2D = GenerateIconsWithMipLevels.GetTexture2D(mipFile);
-		if (texture2D)
-		{
-			GenerateIconsWithMipLevels.Blit(texture2D, iconWithMips, mipLevel);
-			return true;
-		}
-		Debug.Log("Mip file NOT found: " + mipFile);
-		return false;
-	}
+    private static List<string> GetIconAssetPaths(string folderPath, string mustHaveIdentifier, string extension)
+    {
+        <GetIconAssetPaths>c__AnonStorey3F storeyf = new <GetIconAssetPaths>c__AnonStorey3F {
+            mustHaveIdentifier = mustHaveIdentifier
+        };
+        string uriString = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+        Uri uri = new Uri(uriString);
+        List<string> list = new List<string>(Directory.GetFiles(uriString, "*." + extension, SearchOption.AllDirectories));
+        list.RemoveAll(new Predicate<string>(storeyf.<>m__5F));
+        for (int i = 0; i < list.Count; i++)
+        {
+            Uri uri2 = new Uri(list[i]);
+            list[i] = folderPath + uri.MakeRelativeUri(uri2).ToString();
+        }
+        return list;
+    }
 
-	private static Texture2D GetTexture2D(string path)
-	{
-		return AssetDatabase.LoadAssetAtPath(path, typeof(Texture2D)) as Texture2D;
-	}
+    private static InputData GetInputData() => 
+        new InputData { 
+            sourceFolder = k_IconSourceFolder,
+            targetFolder = k_IconTargetFolder,
+            mipIdentifier = "@",
+            mipFileExtension = "png"
+        };
 
-	private static List<string> GetIconAssetPaths(string folderPath, string mustHaveIdentifier, string extension)
-	{
-		string currentDirectory = Directory.GetCurrentDirectory();
-		string text = Path.Combine(currentDirectory, folderPath);
-		Uri uri = new Uri(text);
-		List<string> list = new List<string>(Directory.GetFiles(text, "*." + extension, SearchOption.AllDirectories));
-		list.RemoveAll((string o) => o.IndexOf(mustHaveIdentifier) < 0);
-		for (int i = 0; i < list.Count; i++)
-		{
-			Uri uri2 = new Uri(list[i]);
-			Uri uri3 = uri.MakeRelativeUri(uri2);
-			list[i] = folderPath + uri3.ToString();
-		}
-		return list;
-	}
+    private static Texture2D GetTexture2D(string path) => 
+        (AssetDatabase.LoadAssetAtPath(path, typeof(Texture2D)) as Texture2D);
 
-	private static void Blit(Texture2D source, Texture2D dest, int mipLevel)
-	{
-		Color32[] pixels = source.GetPixels32();
-		for (int i = 0; i < pixels.Length; i++)
-		{
-			Color32 color = pixels[i];
-			if (color.a >= 3)
-			{
-				color.a -= 3;
-			}
-			pixels[i] = color;
-		}
-		dest.SetPixels32(pixels, mipLevel);
-	}
+    private static void RemoveUnusedFiles(List<string> generatedFiles)
+    {
+        for (int i = 0; i < generatedFiles.Count; i++)
+        {
+            string file = generatedFiles[i].Replace("Icons/Generated", "Icons").Replace(".asset", ".png");
+            DeleteFile(file);
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
+            if (!fileNameWithoutExtension.StartsWith("d_"))
+            {
+                DeleteFile(file.Replace(fileNameWithoutExtension, "d_" + fileNameWithoutExtension));
+            }
+        }
+        AssetDatabase.Refresh();
+    }
 
-	private static void EnsureFolderIsCreatedRecursively(string targetFolder)
-	{
-		if (AssetDatabase.GetMainAssetInstanceID(targetFolder) == 0)
-		{
-			GenerateIconsWithMipLevels.EnsureFolderIsCreatedRecursively(Path.GetDirectoryName(targetFolder));
-			Debug.Log("Created target folder " + targetFolder);
-			AssetDatabase.CreateFolder(Path.GetDirectoryName(targetFolder), Path.GetFileName(targetFolder));
-		}
-	}
+    [CompilerGenerated]
+    private sealed class <CreateIconWithMipLevels>c__AnonStorey3E
+    {
+        internal string baseName;
+        internal GenerateIconsWithMipLevels.InputData inputData;
 
-	private static void EnsureFolderIsCreated(string targetFolder)
-	{
-		if (AssetDatabase.GetMainAssetInstanceID(targetFolder) == 0)
-		{
-			Debug.Log("Created target folder " + targetFolder);
-			AssetDatabase.CreateFolder(Path.GetDirectoryName(targetFolder), Path.GetFileName(targetFolder));
-		}
-	}
+        internal bool <>m__5E(string o) => 
+            (o.IndexOf('/' + this.baseName + this.inputData.mipIdentifier) >= 0);
+    }
 
-	private static void DeleteFile(string file)
-	{
-		if (AssetDatabase.GetMainAssetInstanceID(file) != 0)
-		{
-			Debug.Log("Deleted unused file: " + file);
-			AssetDatabase.DeleteAsset(file);
-		}
-	}
+    [CompilerGenerated]
+    private sealed class <GetIconAssetPaths>c__AnonStorey3F
+    {
+        internal string mustHaveIdentifier;
 
-	private static void RemoveUnusedFiles(List<string> generatedFiles)
-	{
-		for (int i = 0; i < generatedFiles.Count; i++)
-		{
-			string text = generatedFiles[i].Replace("Icons/Generated", "Icons");
-			text = text.Replace(".asset", ".png");
-			GenerateIconsWithMipLevels.DeleteFile(text);
-			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(text);
-			if (!fileNameWithoutExtension.StartsWith("d_"))
-			{
-				text = text.Replace(fileNameWithoutExtension, "d_" + fileNameWithoutExtension);
-				GenerateIconsWithMipLevels.DeleteFile(text);
-			}
-		}
-		AssetDatabase.Refresh();
-	}
+        internal bool <>m__5F(string o) => 
+            (o.IndexOf(this.mustHaveIdentifier) < 0);
+    }
 
-	private static string[] GetBaseNames(GenerateIconsWithMipLevels.InputData inputData, List<string> files)
-	{
-		string[] array = new string[files.Count];
-		int length = inputData.sourceFolder.Length;
-		for (int i = 0; i < files.Count; i++)
-		{
-			array[i] = files[i].Substring(length, files[i].IndexOf(inputData.mipIdentifier) - length);
-		}
-		HashSet<string> hashSet = new HashSet<string>(array);
-		array = new string[hashSet.Count];
-		hashSet.CopyTo(array);
-		return array;
-	}
+    private class InputData
+    {
+        public List<string> generatedFileNames = new List<string>();
+        public string mipFileExtension;
+        public string mipIdentifier;
+        public string sourceFolder;
+        public string targetFolder;
+
+        public string GetMipFileName(string baseName, int mipResolution)
+        {
+            object[] objArray1 = new object[] { this.sourceFolder, baseName, this.mipIdentifier, mipResolution, ".", this.mipFileExtension };
+            return string.Concat(objArray1);
+        }
+    }
 }
+

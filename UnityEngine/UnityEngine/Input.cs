@@ -3,9 +3,6 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Interface into the Input system.</para>
-	/// </summary>
 	public sealed class Input
 	{
 		private static Gyroscope m_MainGyro;
@@ -14,9 +11,6 @@ namespace UnityEngine
 
 		private static Compass compassInstance;
 
-		/// <summary>
-		///   <para>This property controls if input sensors should be compensated for screen orientation.</para>
-		/// </summary>
 		public static extern bool compensateSensors
 		{
 			[WrapperlessIcall]
@@ -35,9 +29,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns default gyroscope.</para>
-		/// </summary>
 		public static Gyroscope gyro
 		{
 			get
@@ -50,9 +41,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The current mouse position in pixel coordinates. (Read Only)</para>
-		/// </summary>
 		public static Vector3 mousePosition
 		{
 			get
@@ -63,9 +51,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The current mouse scroll delta. (Read Only)</para>
-		/// </summary>
 		public static Vector2 mouseScrollDelta
 		{
 			get
@@ -83,9 +68,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Enables/Disables mouse simulation with touches. By default this option is enabled.</para>
-		/// </summary>
 		public static extern bool simulateMouseWithTouches
 		{
 			[WrapperlessIcall]
@@ -96,9 +78,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Is any key or mouse button currently held down? (Read Only)</para>
-		/// </summary>
 		public static extern bool anyKey
 		{
 			[WrapperlessIcall]
@@ -106,9 +85,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns true the first frame the user hits any key or mouse button. (Read Only)</para>
-		/// </summary>
 		public static extern bool anyKeyDown
 		{
 			[WrapperlessIcall]
@@ -116,9 +92,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns the keyboard input entered this frame. (Read Only)</para>
-		/// </summary>
 		public static extern string inputString
 		{
 			[WrapperlessIcall]
@@ -126,9 +99,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Last measured linear acceleration of a device in three-dimensional space. (Read Only)</para>
-		/// </summary>
 		public static Vector3 acceleration
 		{
 			get
@@ -139,9 +109,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns list of acceleration measurements which occurred during the last frame. (Read Only) (Allocates temporary variables).</para>
-		/// </summary>
 		public static AccelerationEvent[] accelerationEvents
 		{
 			get
@@ -156,9 +123,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Number of acceleration measurements which occurred during last frame.</para>
-		/// </summary>
 		public static extern int accelerationEventCount
 		{
 			[WrapperlessIcall]
@@ -166,9 +130,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns list of objects representing status of all touches during last frame. (Read Only) (Allocates temporary variables).</para>
-		/// </summary>
 		public static Touch[] touches
 		{
 			get
@@ -183,9 +144,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Number of touches. Guaranteed not to change throughout the frame. (Read Only)</para>
-		/// </summary>
 		public static extern int touchCount
 		{
 			[WrapperlessIcall]
@@ -193,9 +151,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Property indicating whether keypresses are eaten by a textinput if it has focus (default true).</para>
-		/// </summary>
 		[Obsolete("eatKeyPressOnTextFieldFocus property is deprecated, and only provided to support legacy behavior.")]
 		public static extern bool eatKeyPressOnTextFieldFocus
 		{
@@ -207,9 +162,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Bool value which let's users check if touch pressure is supported.</para>
-		/// </summary>
 		public static extern bool touchPressureSupported
 		{
 			[WrapperlessIcall]
@@ -217,9 +169,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns true when Stylus Touch is supported by a device or platform.</para>
-		/// </summary>
 		public static extern bool stylusTouchSupported
 		{
 			[WrapperlessIcall]
@@ -227,20 +176,13 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Returns whether the device on which application is currently running supports touch input.</para>
-		/// </summary>
-		public static bool touchSupported
+		public static extern bool touchSupported
 		{
-			get
-			{
-				return false;
-			}
+			[WrapperlessIcall]
+			[MethodImpl(MethodImplOptions.InternalCall)]
+			get;
 		}
 
-		/// <summary>
-		///   <para>Property indicating whether the system handles multiple touches.</para>
-		/// </summary>
 		public static extern bool multiTouchEnabled
 		{
 			[WrapperlessIcall]
@@ -251,9 +193,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Property for accessing device location (handheld devices only). (Read Only)</para>
-		/// </summary>
 		public static LocationService location
 		{
 			get
@@ -266,9 +205,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Property for accessing compass (handheld devices only). (Read Only)</para>
-		/// </summary>
 		public static Compass compass
 		{
 			get
@@ -281,9 +217,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Device physical orientation as reported by OS. (Read Only)</para>
-		/// </summary>
 		public static extern DeviceOrientation deviceOrientation
 		{
 			[WrapperlessIcall]
@@ -291,9 +224,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Controls enabling and disabling of IME input composition.</para>
-		/// </summary>
 		public static extern IMECompositionMode imeCompositionMode
 		{
 			[WrapperlessIcall]
@@ -304,9 +234,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The current IME composition string being typed by the user.</para>
-		/// </summary>
 		public static extern string compositionString
 		{
 			[WrapperlessIcall]
@@ -314,9 +241,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Does the user have an IME keyboard input source selected?</para>
-		/// </summary>
 		public static extern bool imeIsSelected
 		{
 			[WrapperlessIcall]
@@ -324,9 +248,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The current text input position used by IMEs to open windows.</para>
-		/// </summary>
 		public static Vector2 compositionCursorPos
 		{
 			get
@@ -341,11 +262,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Should  Back button quit the application?
-		///
-		/// Only usable on Android, Windows Phone or Windows Tablets.</para>
-		/// </summary>
 		public static extern bool backButtonLeavesApp
 		{
 			[WrapperlessIcall]
@@ -384,145 +300,76 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern bool GetKeyDownString(string name);
 
-		/// <summary>
-		///   <para>Returns the value of the virtual axis identified by axisName.</para>
-		/// </summary>
-		/// <param name="axisName"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern float GetAxis(string axisName);
 
-		/// <summary>
-		///   <para>Returns the value of the virtual axis identified by axisName with no smoothing filtering applied.</para>
-		/// </summary>
-		/// <param name="axisName"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern float GetAxisRaw(string axisName);
 
-		/// <summary>
-		///   <para>Returns true while the virtual button identified by buttonName is held down.</para>
-		/// </summary>
-		/// <param name="buttonName"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetButton(string buttonName);
 
-		/// <summary>
-		///   <para>Returns true during the frame the user pressed down the virtual button identified by buttonName.</para>
-		/// </summary>
-		/// <param name="buttonName"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetButtonDown(string buttonName);
 
-		/// <summary>
-		///   <para>Returns true the first frame the user releases the virtual button identified by buttonName.</para>
-		/// </summary>
-		/// <param name="buttonName"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetButtonUp(string buttonName);
 
-		/// <summary>
-		///   <para>Returns true while the user holds down the key identified by name. Think auto fire.</para>
-		/// </summary>
-		/// <param name="name"></param>
 		public static bool GetKey(string name)
 		{
 			return Input.GetKeyString(name);
 		}
 
-		/// <summary>
-		///   <para>Returns true while the user holds down the key identified by the key KeyCode enum parameter.</para>
-		/// </summary>
-		/// <param name="key"></param>
 		public static bool GetKey(KeyCode key)
 		{
 			return Input.GetKeyInt((int)key);
 		}
 
-		/// <summary>
-		///   <para>Returns true during the frame the user starts pressing down the key identified by name.</para>
-		/// </summary>
-		/// <param name="name"></param>
 		public static bool GetKeyDown(string name)
 		{
 			return Input.GetKeyDownString(name);
 		}
 
-		/// <summary>
-		///   <para>Returns true during the frame the user starts pressing down the key identified by the key KeyCode enum parameter.</para>
-		/// </summary>
-		/// <param name="key"></param>
 		public static bool GetKeyDown(KeyCode key)
 		{
 			return Input.GetKeyDownInt((int)key);
 		}
 
-		/// <summary>
-		///   <para>Returns true during the frame the user releases the key identified by name.</para>
-		/// </summary>
-		/// <param name="name"></param>
 		public static bool GetKeyUp(string name)
 		{
 			return Input.GetKeyUpString(name);
 		}
 
-		/// <summary>
-		///   <para>Returns true during the frame the user releases the key identified by the key KeyCode enum parameter.</para>
-		/// </summary>
-		/// <param name="key"></param>
 		public static bool GetKeyUp(KeyCode key)
 		{
 			return Input.GetKeyUpInt((int)key);
 		}
 
-		/// <summary>
-		///   <para>Returns an array of strings describing the connected joysticks.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern string[] GetJoystickNames();
 
-		/// <summary>
-		///   <para>Determine whether a particular joystick model has been preconfigured by Unity. (Linux-only).</para>
-		/// </summary>
-		/// <param name="joystickName">The name of the joystick to check (returned by Input.GetJoystickNames).</param>
-		/// <returns>
-		///   <para>True if the joystick layout has been preconfigured; false otherwise.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool IsJoystickPreconfigured(string joystickName);
 
-		/// <summary>
-		///   <para>Returns whether the given mouse button is held down.</para>
-		/// </summary>
-		/// <param name="button"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetMouseButton(int button);
 
-		/// <summary>
-		///   <para>Returns true during the frame the user pressed the given mouse button.</para>
-		/// </summary>
-		/// <param name="button"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetMouseButtonDown(int button);
 
-		/// <summary>
-		///   <para>Returns true during the frame the user releases the given mouse button.</para>
-		/// </summary>
-		/// <param name="button"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool GetMouseButtonUp(int button);
 
-		/// <summary>
-		///   <para>Resets all input. After ResetInputAxes all axes return to 0 and all buttons return to 0 for one frame.</para>
-		/// </summary>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern void ResetInputAxes();
@@ -539,21 +386,27 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_get_acceleration(out Vector3 value);
 
-		/// <summary>
-		///   <para>Returns specific acceleration measurement which occurred during last frame. (Does not allocate temporary variables).</para>
-		/// </summary>
-		/// <param name="index"></param>
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern AccelerationEvent GetAccelerationEvent(int index);
+		public static AccelerationEvent GetAccelerationEvent(int index)
+		{
+			AccelerationEvent result;
+			Input.INTERNAL_CALL_GetAccelerationEvent(index, out result);
+			return result;
+		}
 
-		/// <summary>
-		///   <para>Returns object representing status of a specific touch. (Does not allocate temporary variables).</para>
-		/// </summary>
-		/// <param name="index"></param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern Touch GetTouch(int index);
+		private static extern void INTERNAL_CALL_GetAccelerationEvent(int index, out AccelerationEvent value);
+
+		public static Touch GetTouch(int index)
+		{
+			Touch result;
+			Input.INTERNAL_CALL_GetTouch(index, out result);
+			return result;
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void INTERNAL_CALL_GetTouch(int index, out Touch value);
 
 		[Obsolete("Use ps3 move API instead", true)]
 		public static Quaternion GetRotation(int deviceID)

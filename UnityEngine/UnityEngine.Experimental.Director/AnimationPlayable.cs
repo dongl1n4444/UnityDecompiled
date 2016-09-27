@@ -1,110 +1,142 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using UnityEngine.Scripting;
 
 namespace UnityEngine.Experimental.Director
 {
-	/// <summary>
-	///   <para>Base class for all animation related Playable classes.</para>
-	/// </summary>
-	public class AnimationPlayable : Playable
+	[UsedByNativeCode]
+	public struct AnimationPlayable
 	{
-		public AnimationPlayable() : base(false)
-		{
-			this.m_Ptr = IntPtr.Zero;
-			this.InstantiateEnginePlayable();
-		}
+		internal Playable handle;
 
-		public AnimationPlayable(bool final) : base(false)
+		internal Playable node
 		{
-			this.m_Ptr = IntPtr.Zero;
-			if (final)
+			get
 			{
-				this.InstantiateEnginePlayable();
+				return this.handle;
 			}
 		}
 
-		[WrapperlessIcall]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void InstantiateEnginePlayable();
-
-		/// <summary>
-		///   <para>Adds an AnimationPlayable as an input.</para>
-		/// </summary>
-		/// <param name="source">A playable to connect.</param>
-		/// <returns>
-		///   <para>Returns the index of the port the playable was connected to.</para>
-		/// </returns>
-		public virtual int AddInput(AnimationPlayable source)
+		public static AnimationPlayable Null
 		{
-			Playable.Connect(source, this, -1, -1);
-			Playable[] inputs = base.GetInputs();
-			return inputs.Length - 1;
+			get
+			{
+				AnimationPlayable result = default(AnimationPlayable);
+				result.handle.m_Version = 10;
+				return result;
+			}
 		}
 
-		/// <summary>
-		///   <para>Sets an AnimationPlayable as an input.</para>
-		/// </summary>
-		/// <param name="source">AnimationPlayable to be used as input.</param>
-		/// <param name="index">Index of the input.</param>
-		/// <returns>
-		///   <para>Returns false if the operation could not be completed.</para>
-		/// </returns>
-		public virtual bool SetInput(AnimationPlayable source, int index)
+		public int inputCount
 		{
-			if (!base.CheckInputBounds(index))
+			get
+			{
+				return Playables.GetInputCountValidated(this, base.GetType());
+			}
+		}
+
+		public int outputCount
+		{
+			get
+			{
+				return Playables.GetOutputCountValidated(this, base.GetType());
+			}
+		}
+
+		public PlayState state
+		{
+			get
+			{
+				return Playables.GetPlayStateValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetPlayStateValidated(this, value, base.GetType());
+			}
+		}
+
+		public double time
+		{
+			get
+			{
+				return Playables.GetTimeValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetTimeValidated(this, value, base.GetType());
+			}
+		}
+
+		public double duration
+		{
+			get
+			{
+				return Playables.GetDurationValidated(this, base.GetType());
+			}
+			set
+			{
+				Playables.SetDurationValidated(this, value, base.GetType());
+			}
+		}
+
+		public void Destroy()
+		{
+			this.node.Destroy();
+		}
+
+		public int AddInput(Playable input)
+		{
+			if (!Playable.Connect(input, this, -1, -1))
+			{
+				throw new InvalidOperationException("AddInput Failed. Either the connected playable is incompatible or this AnimationPlayable type doesn't support adding inputs");
+			}
+			return this.inputCount - 1;
+		}
+
+		public bool SetInput(Playable source, int index)
+		{
+			if (!this.node.CheckInputBounds(index))
 			{
 				return false;
 			}
-			Playable[] inputs = base.GetInputs();
-			if (inputs[index] != null)
+			if (this.GetInput(index).IsValid())
 			{
 				Playable.Disconnect(this, index);
 			}
 			return Playable.Connect(source, this, -1, index);
 		}
 
-		public virtual bool SetInputs(IEnumerable<AnimationPlayable> sources)
+		public bool SetInputs(IEnumerable<Playable> sources)
 		{
-			Playable[] inputs = base.GetInputs();
-			int num = inputs.Length;
-			for (int i = 0; i < num; i++)
+			for (int i = 0; i < this.inputCount; i++)
 			{
 				Playable.Disconnect(this, i);
 			}
 			bool flag = false;
-			int num2 = 0;
-			foreach (AnimationPlayable current in sources)
+			int num = 0;
+			foreach (Playable current in sources)
 			{
-				if (num2 < num)
+				if (num < this.inputCount)
 				{
-					flag |= Playable.Connect(current, this, -1, num2);
+					flag |= Playable.Connect(current, this, -1, num);
 				}
 				else
 				{
 					flag |= Playable.Connect(current, this, -1, -1);
 				}
-				base.SetInputWeight(num2, 1f);
-				num2++;
+				this.node.SetInputWeight(num, 1f);
+				num++;
 			}
-			for (int j = num2; j < num; j++)
+			for (int j = num; j < this.inputCount; j++)
 			{
-				base.SetInputWeight(j, 0f);
+				this.node.SetInputWeight(j, 0f);
 			}
 			return flag;
 		}
 
-		/// <summary>
-		///   <para>Removes a playable from the list of inputs.</para>
-		/// </summary>
-		/// <param name="index">Index of the playable to remove.</param>
-		/// <param name="playable">AnimationPlayable to remove.</param>
-		/// <returns>
-		///   <para>Returns false if the removal could not be removed because it wasn't found.</para>
-		/// </returns>
-		public virtual bool RemoveInput(int index)
+		public bool RemoveInput(int index)
 		{
-			if (!base.CheckInputBounds(index))
+			if (!Playables.CheckInputBounds(this, index))
 			{
 				return false;
 			}
@@ -112,24 +144,11 @@ namespace UnityEngine.Experimental.Director
 			return true;
 		}
 
-		/// <summary>
-		///   <para>Removes a playable from the list of inputs.</para>
-		/// </summary>
-		/// <param name="index">Index of the playable to remove.</param>
-		/// <param name="playable">AnimationPlayable to remove.</param>
-		/// <returns>
-		///   <para>Returns false if the removal could not be removed because it wasn't found.</para>
-		/// </returns>
-		public virtual bool RemoveInput(AnimationPlayable playable)
+		public bool RemoveInput(Playable playable)
 		{
-			if (!Playable.CheckPlayableValidity(playable, "playable"))
+			for (int i = 0; i < this.inputCount; i++)
 			{
-				return false;
-			}
-			Playable[] inputs = base.GetInputs();
-			for (int i = 0; i < inputs.Length; i++)
-			{
-				if (inputs[i] == playable)
+				if (this.GetInput(i) == playable)
 				{
 					Playable.Disconnect(this, i);
 					return true;
@@ -138,20 +157,69 @@ namespace UnityEngine.Experimental.Director
 			return false;
 		}
 
-		/// <summary>
-		///   <para>Disconnects all input playables.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>Returns false if the removal fails.</para>
-		/// </returns>
-		public virtual bool RemoveAllInputs()
+		public bool RemoveAllInputs()
 		{
-			Playable[] inputs = base.GetInputs();
-			for (int i = 0; i < inputs.Length; i++)
+			int inputCount = this.node.inputCount;
+			for (int i = 0; i < inputCount; i++)
 			{
-				this.RemoveInput(inputs[i] as AnimationPlayable);
+				this.RemoveInput(i);
 			}
 			return true;
+		}
+
+		public override bool Equals(object p)
+		{
+			return Playables.Equals(this, p);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.node.GetHashCode();
+		}
+
+		public bool IsValid()
+		{
+			return Playables.IsValid(this);
+		}
+
+		public T CastTo<T>() where T : struct
+		{
+			return this.handle.CastTo<T>();
+		}
+
+		public Playable GetInput(int inputPort)
+		{
+			return Playables.GetInputValidated(this, inputPort, base.GetType());
+		}
+
+		public Playable GetOutput(int outputPort)
+		{
+			return Playables.GetOutputValidated(this, outputPort, base.GetType());
+		}
+
+		public float GetInputWeight(int index)
+		{
+			return Playables.GetInputWeightValidated(this, index, base.GetType());
+		}
+
+		public void SetInputWeight(int inputIndex, float weight)
+		{
+			Playables.SetInputWeightValidated(this, inputIndex, weight, base.GetType());
+		}
+
+		public static bool operator ==(AnimationPlayable x, Playable y)
+		{
+			return Playables.Equals(x, y);
+		}
+
+		public static bool operator !=(AnimationPlayable x, Playable y)
+		{
+			return !Playables.Equals(x, y);
+		}
+
+		public static implicit operator Playable(AnimationPlayable b)
+		{
+			return b.node;
 		}
 	}
 }

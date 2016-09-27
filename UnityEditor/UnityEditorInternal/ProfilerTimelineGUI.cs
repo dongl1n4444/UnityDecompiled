@@ -164,7 +164,7 @@ namespace UnityEditorInternal
 				}
 				num += threadInfo.weight;
 			}
-			float num2 = 16f * (float)groupCount;
+			float num2 = 20f * (float)groupCount;
 			float num3 = r.height - num2;
 			float num4 = num3 / (num + 2f);
 			foreach (ProfilerTimelineGUI.GroupInfo current in this.groups)
@@ -264,6 +264,10 @@ namespace UnityEditorInternal
 
 		private void DrawGrid(Rect r, int threadCount, float frameTime)
 		{
+			if (Event.current.type != EventType.Repaint)
+			{
+				return;
+			}
 			float num = 16.66667f;
 			HandleUtility.ApplyWireMaterial();
 			GL.Begin(1);

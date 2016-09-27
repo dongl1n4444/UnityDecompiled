@@ -152,8 +152,9 @@ namespace UnityEditor.Web
 		public static void RunTestScript(string path)
 		{
 			string sourcesPath = "file:///" + path;
-			WebViewEditorWindow webViewEditorWindow = WebViewEditorWindow.Create<WebViewTestFunctions>("Test Window", sourcesPath, 0, 0, 0, 0);
-			webViewEditorWindow.OnBatchMode();
+			JSProxyMgr.GetInstance().AddGlobalObject("WebViewTestFunctions", new WebViewTestFunctions());
+			WebViewEditorWindowTabs webViewEditorWindowTabs = WebViewEditorWindow.Create<WebViewEditorWindowTabs>("Test Window", sourcesPath, 0, 0, 0, 0);
+			webViewEditorWindowTabs.OnBatchMode();
 		}
 	}
 }

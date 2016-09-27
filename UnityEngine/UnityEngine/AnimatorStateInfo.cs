@@ -3,9 +3,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Information about the current or next state.</para>
-	/// </summary>
 	[RequiredByNativeCode]
 	public struct AnimatorStateInfo
 	{
@@ -27,9 +24,6 @@ namespace UnityEngine
 
 		private int m_Loop;
 
-		/// <summary>
-		///   <para>The full path hash for this state.</para>
-		/// </summary>
 		public int fullPathHash
 		{
 			get
@@ -38,9 +32,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The hashed name of the State.</para>
-		/// </summary>
 		[Obsolete("Use AnimatorStateInfo.fullPathHash instead.")]
 		public int nameHash
 		{
@@ -50,9 +41,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The hash is generated using Animator::StringToHash. The string to pass doest not include the parent layer's name.</para>
-		/// </summary>
 		public int shortNameHash
 		{
 			get
@@ -61,9 +49,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Normalized time of the State.</para>
-		/// </summary>
 		public float normalizedTime
 		{
 			get
@@ -72,9 +57,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Current duration of the state.</para>
-		/// </summary>
 		public float length
 		{
 			get
@@ -83,9 +65,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The playback speed of the animation. 1 is the normal playback speed.</para>
-		/// </summary>
 		public float speed
 		{
 			get
@@ -94,9 +73,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The speed multiplier for this state.</para>
-		/// </summary>
 		public float speedMultiplier
 		{
 			get
@@ -105,9 +81,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The Tag of the State.</para>
-		/// </summary>
 		public int tagHash
 		{
 			get
@@ -116,9 +89,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is the state looping.</para>
-		/// </summary>
 		public bool loop
 		{
 			get
@@ -127,20 +97,12 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Does name match the name of the active state in the statemachine?</para>
-		/// </summary>
-		/// <param name="name"></param>
 		public bool IsName(string name)
 		{
 			int num = Animator.StringToHash(name);
 			return num == this.m_FullPath || num == this.m_Name || num == this.m_Path;
 		}
 
-		/// <summary>
-		///   <para>Does tag match the tag of the active state in the statemachine.</para>
-		/// </summary>
-		/// <param name="tag"></param>
 		public bool IsTag(string tag)
 		{
 			return Animator.StringToHash(tag) == this.m_Tag;

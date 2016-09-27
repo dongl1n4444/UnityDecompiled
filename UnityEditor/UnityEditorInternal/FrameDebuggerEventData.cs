@@ -11,6 +11,8 @@ namespace UnityEditorInternal
 
 		public int indexCount;
 
+		public int instanceCount;
+
 		public string shaderName;
 
 		public Shader shader;

@@ -12,27 +12,31 @@ namespace UnityEditorInternal
 	{
 		internal static void RunManagedProgram(string exe, string args)
 		{
-			Runner.RunManagedProgram(exe, args, Application.dataPath + "/..", null);
+			Runner.RunManagedProgram(exe, args, Application.dataPath + "/..", null, null);
 		}
 
-		internal static void RunManagedProgram(string exe, string args, string workingDirectory, CompilerOutputParserBase parser)
+		internal static void RunManagedProgram(string exe, string args, string workingDirectory, CompilerOutputParserBase parser, Action<ProcessStartInfo> setupStartInfo)
 		{
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
 			Program program;
 			if (Application.platform == RuntimePlatform.WindowsEditor)
 			{
-				ProcessStartInfo si = new ProcessStartInfo
+				ProcessStartInfo processStartInfo = new ProcessStartInfo
 				{
 					Arguments = args,
 					CreateNoWindow = true,
 					FileName = exe
 				};
-				program = new Program(si);
+				if (setupStartInfo != null)
+				{
+					setupStartInfo(processStartInfo);
+				}
+				program = new Program(processStartInfo);
 			}
 			else
 			{
-				program = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", exe, args);
+				program = new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", exe, args, setupStartInfo);
 			}
 			using (program)
 			{

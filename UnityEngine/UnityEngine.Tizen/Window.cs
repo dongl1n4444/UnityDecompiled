@@ -3,19 +3,34 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine.Tizen
 {
-	/// <summary>
-	///   <para>Interface into Tizen specific functionality.</para>
-	/// </summary>
 	public sealed class Window
 	{
-		/// <summary>
-		///   <para>Get pointer to the native window handle.</para>
-		/// </summary>
-		public static extern IntPtr windowHandle
+		public static IntPtr windowHandle
 		{
-			[WrapperlessIcall]
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
+			get
+			{
+				IntPtr result;
+				Window.INTERNAL_get_windowHandle(out result);
+				return result;
+			}
 		}
+
+		public static IntPtr evasGL
+		{
+			get
+			{
+				IntPtr result;
+				Window.INTERNAL_get_evasGL(out result);
+				return result;
+			}
+		}
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void INTERNAL_get_windowHandle(out IntPtr value);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		private static extern void INTERNAL_get_evasGL(out IntPtr value);
 	}
 }

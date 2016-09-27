@@ -8,7 +8,7 @@ namespace UnityEngine.Events
 	internal class PersistentCall
 	{
 		[FormerlySerializedAs("instance"), SerializeField]
-		private Object m_Target;
+		private UnityEngine.Object m_Target;
 
 		[FormerlySerializedAs("methodName"), SerializeField]
 		private string m_MethodName;
@@ -19,10 +19,10 @@ namespace UnityEngine.Events
 		[FormerlySerializedAs("arguments"), SerializeField]
 		private ArgumentCache m_Arguments = new ArgumentCache();
 
-		[FormerlySerializedAs("enabled"), FormerlySerializedAs("m_Enabled"), SerializeField]
+		[FormerlySerializedAs("m_Enabled"), FormerlySerializedAs("enabled"), SerializeField]
 		private UnityEventCallState m_CallState = UnityEventCallState.RuntimeOnly;
 
-		public Object target
+		public UnityEngine.Object target
 		{
 			get
 			{
@@ -111,12 +111,12 @@ namespace UnityEngine.Events
 			}
 		}
 
-		private static BaseInvokableCall GetObjectCall(Object target, MethodInfo method, ArgumentCache arguments)
+		private static BaseInvokableCall GetObjectCall(UnityEngine.Object target, MethodInfo method, ArgumentCache arguments)
 		{
-			Type type = typeof(Object);
+			Type type = typeof(UnityEngine.Object);
 			if (!string.IsNullOrEmpty(arguments.unityObjectArgumentAssemblyTypeName))
 			{
-				type = (Type.GetType(arguments.unityObjectArgumentAssemblyTypeName, false) ?? typeof(Object));
+				type = (Type.GetType(arguments.unityObjectArgumentAssemblyTypeName, false) ?? typeof(UnityEngine.Object));
 			}
 			Type typeFromHandle = typeof(CachedInvokableCall<>);
 			Type type2 = typeFromHandle.MakeGenericType(new Type[]
@@ -125,11 +125,11 @@ namespace UnityEngine.Events
 			});
 			ConstructorInfo constructor = type2.GetConstructor(new Type[]
 			{
-				typeof(Object),
+				typeof(UnityEngine.Object),
 				typeof(MethodInfo),
 				type
 			});
-			Object @object = arguments.unityObjectArgument;
+			UnityEngine.Object @object = arguments.unityObjectArgument;
 			if (@object != null && !type.IsAssignableFrom(@object.GetType()))
 			{
 				@object = null;
@@ -142,7 +142,7 @@ namespace UnityEngine.Events
 			}) as BaseInvokableCall;
 		}
 
-		public void RegisterPersistentListener(Object ttarget, string mmethodName)
+		public void RegisterPersistentListener(UnityEngine.Object ttarget, string mmethodName)
 		{
 			this.m_Target = ttarget;
 			this.m_MethodName = mmethodName;

@@ -8,22 +8,22 @@ namespace UnityEditor.RestService
 {
 	internal abstract class Handler
 	{
-		private void InvokeGet(Request request, string payload, WriteResponse writeResponse)
+		private void InvokeGet(Request request, string payload, Response writeResponse)
 		{
 			Handler.CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this.HandleGet));
 		}
 
-		private void InvokePost(Request request, string payload, WriteResponse writeResponse)
+		private void InvokePost(Request request, string payload, Response writeResponse)
 		{
 			Handler.CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this.HandlePost));
 		}
 
-		private void InvokeDelete(Request request, string payload, WriteResponse writeResponse)
+		private void InvokeDelete(Request request, string payload, Response writeResponse)
 		{
 			Handler.CallSafely(request, payload, writeResponse, new Func<Request, JSONValue, JSONValue>(this.HandleDelete));
 		}
 
-		private static void CallSafely(Request request, string payload, WriteResponse writeResponse, Func<Request, JSONValue, JSONValue> method)
+		private static void CallSafely(Request request, string payload, Response writeResponse, Func<Request, JSONValue, JSONValue> method)
 		{
 			try
 			{
@@ -43,7 +43,7 @@ namespace UnityEditor.RestService
 						Handler.ThrowInvalidJSONException();
 					}
 				}
-				writeResponse(HttpStatusCode.Ok, method(request, arg).ToString());
+				writeResponse.SimpleResponse(HttpStatusCode.Ok, method(request, arg).ToString());
 			}
 			catch (JSONTypeException)
 			{
@@ -80,7 +80,7 @@ namespace UnityEditor.RestService
 			};
 		}
 
-		private static void RespondWithException(WriteResponse writeResponse, RestRequestException rre)
+		private static void RespondWithException(Response writeResponse, RestRequestException rre)
 		{
 			StringBuilder stringBuilder = new StringBuilder("{");
 			if (rre.RestErrorString != null)
@@ -92,7 +92,7 @@ namespace UnityEditor.RestService
 				stringBuilder.AppendFormat("\"errordescription\":\"{0}\"", rre.RestErrorDescription);
 			}
 			stringBuilder.Append("}");
-			writeResponse(rre.HttpStatusCode, stringBuilder.ToString());
+			writeResponse.SimpleResponse(rre.HttpStatusCode, stringBuilder.ToString());
 		}
 
 		protected virtual JSONValue HandleGet(Request request, JSONValue payload)

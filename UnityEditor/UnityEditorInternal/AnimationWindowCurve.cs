@@ -15,6 +15,10 @@ namespace UnityEditorInternal
 
 		private EditorCurveBinding m_Binding;
 
+		private AnimationClip m_Clip;
+
+		private ISelectionBinding m_SelectionBinding;
+
 		public EditorCurveBinding binding
 		{
 			get
@@ -74,11 +78,64 @@ namespace UnityEditorInternal
 			}
 		}
 
+		public AnimationClip clip
+		{
+			get
+			{
+				return this.m_Clip;
+			}
+		}
+
+		public float timeOffset
+		{
+			get
+			{
+				return (this.m_SelectionBinding == null) ? 0f : this.m_SelectionBinding.timeOffset;
+			}
+		}
+
+		public bool clipIsEditable
+		{
+			get
+			{
+				return this.m_SelectionBinding == null || this.m_SelectionBinding.clipIsEditable;
+			}
+		}
+
+		public bool animationIsEditable
+		{
+			get
+			{
+				return this.m_SelectionBinding == null || this.m_SelectionBinding.animationIsEditable;
+			}
+		}
+
+		public int selectionID
+		{
+			get
+			{
+				return (this.m_SelectionBinding == null) ? 0 : this.m_SelectionBinding.id;
+			}
+		}
+
+		public ISelectionBinding selectionBindingInterface
+		{
+			get
+			{
+				return this.m_SelectionBinding;
+			}
+			set
+			{
+				this.m_SelectionBinding = value;
+			}
+		}
+
 		public AnimationWindowCurve(AnimationClip clip, EditorCurveBinding binding, Type valueType)
 		{
 			binding = RotationCurveInterpolation.RemapAnimationBindingForRotationCurves(binding, clip);
 			this.m_Binding = binding;
 			this.m_ValueType = valueType;
+			this.m_Clip = clip;
 			this.LoadKeyframes(clip);
 		}
 
@@ -109,7 +166,13 @@ namespace UnityEditorInternal
 
 		public override int GetHashCode()
 		{
-			return this.m_Binding.GetHashCode();
+			return this.selectionID * 27 ^ this.binding.GetHashCode();
+		}
+
+		public int GetCurveID()
+		{
+			int num = (!(this.clip == null)) ? this.clip.GetInstanceID() : 0;
+			return this.selectionID * 729 ^ num * 27 ^ this.binding.GetHashCode();
 		}
 
 		public int CompareTo(AnimationWindowCurve obj)

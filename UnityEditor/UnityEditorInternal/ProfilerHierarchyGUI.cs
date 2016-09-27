@@ -721,12 +721,13 @@ namespace UnityEditorInternal
 
 		private void DoSearchingDisabledInfoGUI()
 		{
-			EditorGUI.BeginDisabledGroup(true);
-			TextAnchor alignment = EditorStyles.label.alignment;
-			EditorStyles.label.alignment = TextAnchor.MiddleCenter;
-			GUI.Label(new Rect(0f, 10f, GUIClip.visibleRect.width, 30f), ProfilerHierarchyGUI.styles.disabledSearchText, EditorStyles.label);
-			EditorStyles.label.alignment = alignment;
-			EditorGUI.EndDisabledGroup();
+			using (new EditorGUI.DisabledScope(true))
+			{
+				TextAnchor alignment = EditorStyles.label.alignment;
+				EditorStyles.label.alignment = TextAnchor.MiddleCenter;
+				GUI.Label(new Rect(0f, 10f, GUIClip.visibleRect.width, 30f), ProfilerHierarchyGUI.styles.disabledSearchText, EditorStyles.label);
+				EditorStyles.label.alignment = alignment;
+			}
 		}
 
 		private bool AllowSearching()

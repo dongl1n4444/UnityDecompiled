@@ -7,6 +7,8 @@ namespace UnityEditor.Modules
 	{
 		protected ICompilationExtension compilationExtension;
 
+		protected ITextureImportSettingsExtension textureSettingsExtension;
+
 		public abstract string TargetName
 		{
 			get;
@@ -25,6 +27,14 @@ namespace UnityEditor.Modules
 			}
 		}
 
+		public virtual string[] NativeLibraries
+		{
+			get
+			{
+				return new string[0];
+			}
+		}
+
 		public virtual string[] AssemblyReferencesForUserScripts
 		{
 			get
@@ -33,7 +43,20 @@ namespace UnityEditor.Modules
 			}
 		}
 
+		public virtual string[] AssemblyReferencesForEditorCsharpProject
+		{
+			get
+			{
+				return new string[0];
+			}
+		}
+
 		public virtual GUIContent[] GetDisplayNames()
+		{
+			return null;
+		}
+
+		public virtual IBuildAnalyzer CreateBuildAnalyzer()
 		{
 			return null;
 		}
@@ -53,6 +76,21 @@ namespace UnityEditor.Modules
 		public virtual IPreferenceWindowExtension CreatePreferenceWindowExtension()
 		{
 			return null;
+		}
+
+		public virtual ITextureImportSettingsExtension CreateTextureImportSettingsExtension()
+		{
+			ITextureImportSettingsExtension arg_26_0;
+			if (this.textureSettingsExtension != null)
+			{
+				ITextureImportSettingsExtension textureImportSettingsExtension = this.textureSettingsExtension;
+				arg_26_0 = textureImportSettingsExtension;
+			}
+			else
+			{
+				arg_26_0 = (this.textureSettingsExtension = new DefaultTextureImportSettingsExtension());
+			}
+			return arg_26_0;
 		}
 
 		public virtual IBuildWindowExtension CreateBuildWindowExtension()

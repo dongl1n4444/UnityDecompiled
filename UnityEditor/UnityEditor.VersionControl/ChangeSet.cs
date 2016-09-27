@@ -10,6 +10,7 @@ namespace UnityEditor.VersionControl
 
 		public static string defaultID = "-1";
 
+		[ThreadAndSerializationSafe]
 		public extern string description
 		{
 			[WrapperlessIcall]
@@ -17,6 +18,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern string id
 		{
 			[WrapperlessIcall]
@@ -44,23 +46,23 @@ namespace UnityEditor.VersionControl
 			this.InternalCopyConstruct(other);
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InternalCreate();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InternalCopyConstruct(ChangeSet other);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InternalCreateFromString(string description);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void InternalCreateFromStringString(string description, string changeSetID);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

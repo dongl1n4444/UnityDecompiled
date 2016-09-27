@@ -3,14 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Keeps two Rigidbody2D at their relative orientations.</para>
-	/// </summary>
 	public sealed class RelativeJoint2D : Joint2D
 	{
-		/// <summary>
-		///   <para>The maximum force that can be generated when trying to maintain the relative joint constraint.</para>
-		/// </summary>
 		public extern float maxForce
 		{
 			[WrapperlessIcall]
@@ -21,9 +15,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The maximum torque that can be generated when trying to maintain the relative joint constraint.</para>
-		/// </summary>
 		public extern float maxTorque
 		{
 			[WrapperlessIcall]
@@ -34,9 +25,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Scales both the linear and angular forces used to correct the required relative orientation.</para>
-		/// </summary>
 		public extern float correctionScale
 		{
 			[WrapperlessIcall]
@@ -47,9 +35,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Should both the linearOffset and angularOffset be calculated automatically?</para>
-		/// </summary>
 		public extern bool autoConfigureOffset
 		{
 			[WrapperlessIcall]
@@ -60,9 +45,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The current linear offset between the Rigidbody2D that the joint connects.</para>
-		/// </summary>
 		public Vector2 linearOffset
 		{
 			get
@@ -77,9 +59,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The current angular offset between the Rigidbody2D that the joint connects.</para>
-		/// </summary>
 		public extern float angularOffset
 		{
 			[WrapperlessIcall]
@@ -90,9 +69,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>The world-space position that is currently trying to be maintained.</para>
-		/// </summary>
 		public Vector2 target
 		{
 			get

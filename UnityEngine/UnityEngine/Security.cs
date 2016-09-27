@@ -10,9 +10,6 @@ using UnityEngine.Internal;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Webplayer security related class.</para>
-	/// </summary>
 	public sealed class Security
 	{
 		private const string publicVerificationKey = "<RSAKeyValue><Modulus>uP7lsvrE6fNoQWhUIdJnQrgKoGXBkgWgs5l1xmS9gfyNkFSXgugIpfmN/0YrtL57PezYFXN0CogAnOpOtcUmpcIrh524VL/7bIh+jDUaOCG292PIx92dtzqCTvbUdCYUmaag9VlrdAw05FxYQJi2iZ/X6EiuO1TnqpVNFCDb6pXPAssoO4Uxn9JXBzL0muNRdcmFGRiLp7JQOL7a2aeU9mF9qjMprnww0k8COa6tHdnNWJqaxdFO+Etk3os0ns/gQ2FWrztKemM1Wfu7lk/B1F+V2g0adwlTiuyNHw6to+5VQXWK775RXB9wAGr8KhsVD5IJvmxrdBT8KVEWve+OXQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
@@ -21,12 +18,6 @@ namespace UnityEngine
 
 		private static readonly string kSignatureExtension = ".signature";
 
-		/// <summary>
-		///   <para>Prefetch the webplayer socket security policy from a non-default port number.</para>
-		/// </summary>
-		/// <param name="ip">IP address of server.</param>
-		/// <param name="atPort">Port from where socket policy is read.</param>
-		/// <param name="timeout">Time to wait for response.</param>
 		[ExcludeFromDocs]
 		public static bool PrefetchSocketPolicy(string ip, int atPort)
 		{
@@ -34,12 +25,6 @@ namespace UnityEngine
 			return Security.PrefetchSocketPolicy(ip, atPort, timeout);
 		}
 
-		/// <summary>
-		///   <para>Prefetch the webplayer socket security policy from a non-default port number.</para>
-		/// </summary>
-		/// <param name="ip">IP address of server.</param>
-		/// <param name="atPort">Port from where socket policy is read.</param>
-		/// <param name="timeout">Time to wait for response.</param>
 		public static bool PrefetchSocketPolicy(string ip, int atPort, [DefaultValue("3000")] int timeout)
 		{
 			MethodInfo unityCrossDomainHelperMethod = Security.GetUnityCrossDomainHelperMethod("PrefetchSocketPolicy");
@@ -52,13 +37,6 @@ namespace UnityEngine
 			return (bool)obj;
 		}
 
-		/// <summary>
-		///   <para>Get secret from Chain of Trust system.</para>
-		/// </summary>
-		/// <param name="name">The name of the secret.</param>
-		/// <returns>
-		///   <para>The secret.</para>
-		/// </returns>
 		[SecuritySafeCritical]
 		public static string GetChainOfTrustValue(string name)
 		{
@@ -114,15 +92,6 @@ namespace UnityEngine
 			Security._verifiedAssemblies.Clear();
 		}
 
-		/// <summary>
-		///   <para>Loads an assembly and checks that it is allowed to be used in the webplayer.
-		/// Note: The single argument version of this API will always issue an error message.  An authorisation key is always needed.</para>
-		/// </summary>
-		/// <param name="assemblyData">Assembly to verify.</param>
-		/// <param name="authorizationKey">Public key used to verify assembly.</param>
-		/// <returns>
-		///   <para>Loaded, verified, assembly, or null if the assembly cannot be verfied.</para>
-		/// </returns>
 		[SecuritySafeCritical]
 		public static Assembly LoadAndVerifyAssembly(byte[] assemblyData, string authorizationKey)
 		{
@@ -148,24 +117,11 @@ namespace UnityEngine
 			return Security.LoadAndVerifyAssemblyInternal(assemblyData);
 		}
 
-		/// <summary>
-		///   <para>Loads an assembly and checks that it is allowed to be used in the webplayer.
-		/// Note: The single argument version of this API will always issue an error message.  An authorisation key is always needed.</para>
-		/// </summary>
-		/// <param name="assemblyData">Assembly to verify.</param>
-		/// <param name="authorizationKey">Public key used to verify assembly.</param>
-		/// <returns>
-		///   <para>Loaded, verified, assembly, or null if the assembly cannot be verfied.</para>
-		/// </returns>
 		[SecuritySafeCritical]
 		public static Assembly LoadAndVerifyAssembly(byte[] assemblyData)
 		{
-			if (Application.GetBuildUnityVersion() >= Application.GetNumericUnityVersion("4.5.0a4"))
-			{
-				Debug.LogError("Unable to verify assembly data; you must provide an authorization key when loading this assembly.");
-				return null;
-			}
-			return Security.LoadAndVerifyAssemblyInternal(assemblyData);
+			Debug.LogError("Unable to verify assembly data; you must provide an authorization key when loading this assembly.");
+			return null;
 		}
 
 		[SecuritySafeCritical]

@@ -3,9 +3,6 @@ using System.Runtime.CompilerServices;
 
 namespace UnityEngine.WSA
 {
-	/// <summary>
-	///   <para>Provides essential methods related to Window Store application.</para>
-	/// </summary>
 	public sealed class Application
 	{
 		public static event WindowSizeChanged windowSizeChanged
@@ -36,9 +33,6 @@ namespace UnityEngine.WSA
 			}
 		}
 
-		/// <summary>
-		///   <para>Arguments passed to application.</para>
-		/// </summary>
 		public static string arguments
 		{
 			get
@@ -47,15 +41,12 @@ namespace UnityEngine.WSA
 			}
 		}
 
-		/// <summary>
-		///   <para>Advertising ID.</para>
-		/// </summary>
 		public static string advertisingIdentifier
 		{
 			get
 			{
 				string advertisingIdentifier = Application.GetAdvertisingIdentifier();
-				Application.InvokeOnAdvertisingIdentifierCallback(advertisingIdentifier, true);
+				UnityEngine.Application.InvokeOnAdvertisingIdentifierCallback(advertisingIdentifier, true);
 				return advertisingIdentifier;
 			}
 		}
@@ -84,31 +75,16 @@ namespace UnityEngine.WSA
 			}
 		}
 
-		/// <summary>
-		///   <para>Executes callback item on application thread.</para>
-		/// </summary>
-		/// <param name="item">Item to execute.</param>
-		/// <param name="waitUntilDone">Wait until item is executed.</param>
 		public static void InvokeOnAppThread(AppCallbackItem item, bool waitUntilDone)
 		{
 			item();
 		}
 
-		/// <summary>
-		///   <para>Executes callback item on UI thread.</para>
-		/// </summary>
-		/// <param name="item">Item to execute.</param>
-		/// <param name="waitUntilDone">Wait until item is executed.</param>
 		public static void InvokeOnUIThread(AppCallbackItem item, bool waitUntilDone)
 		{
 			item();
 		}
 
-		/// <summary>
-		///   <para>[OBSOLETE] Tries to execute callback item on application thread.</para>
-		/// </summary>
-		/// <param name="item">Item to execute.</param>
-		/// <param name="waitUntilDone">Wait until item is executed.</param>
 		[Obsolete("TryInvokeOnAppThread is deprecated, use InvokeOnAppThread")]
 		public static bool TryInvokeOnAppThread(AppCallbackItem item, bool waitUntilDone)
 		{
@@ -116,11 +92,6 @@ namespace UnityEngine.WSA
 			return true;
 		}
 
-		/// <summary>
-		///   <para>[OBSOLETE] Tries to execute callback item on UI thread.</para>
-		/// </summary>
-		/// <param name="item">Item to execute.</param>
-		/// <param name="waitUntilDone">Wait until item is executed.</param>
 		[Obsolete("TryInvokeOnUIThread is deprecated, use InvokeOnUIThread")]
 		public static bool TryInvokeOnUIThread(AppCallbackItem item, bool waitUntilDone)
 		{
@@ -128,25 +99,19 @@ namespace UnityEngine.WSA
 			return true;
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool InternalTryInvokeOnAppThread(AppCallbackItem item, bool waitUntilDone);
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal static extern bool InternalTryInvokeOnUIThread(AppCallbackItem item, bool waitUntilDone);
 
-		/// <summary>
-		///   <para>Returns true if you're running on application thread.</para>
-		/// </summary>
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool RunningOnAppThread();
 
-		/// <summary>
-		///   <para>Returns true if you're running on UI thread.</para>
-		/// </summary>
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern bool RunningOnUIThread();
 	}

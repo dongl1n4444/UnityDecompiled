@@ -2,9 +2,6 @@ using System;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Structure describing acceleration status of the device.</para>
-	/// </summary>
 	public struct AccelerationEvent
 	{
 		private float x;
@@ -15,9 +12,6 @@ namespace UnityEngine
 
 		private float m_TimeDelta;
 
-		/// <summary>
-		///   <para>Value of acceleration.</para>
-		/// </summary>
 		public Vector3 acceleration
 		{
 			get
@@ -26,9 +20,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Amount of time passed since last accelerometer measurement.</para>
-		/// </summary>
 		public float deltaTime
 		{
 			get

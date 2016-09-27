@@ -40,7 +40,7 @@ namespace UnityEditor.Connect
 
 		private readonly Dictionary<string, UnityConnectServiceData> m_Services;
 
-		private bool isDrawerOpen
+		public bool isDrawerOpen
 		{
 			get
 			{
@@ -115,10 +115,19 @@ namespace UnityEditor.Connect
 				text2 = text2 + "/#/" + this.m_CurrentPageName;
 			}
 			UnityConnectServiceCollection.s_UnityConnectEditorWindow.currentUrl = text2;
-			UnityConnectServiceCollection.s_UnityConnectEditorWindow.Show();
+			UnityConnectServiceCollection.s_UnityConnectEditorWindow.ShowTab();
 			if (InternalEditorUtility.isApplicationActive && forceFocus)
 			{
 				UnityConnectServiceCollection.s_UnityConnectEditorWindow.Focus();
+			}
+		}
+
+		public void CloseServices()
+		{
+			if (UnityConnectServiceCollection.s_UnityConnectEditorWindow != null)
+			{
+				UnityConnectServiceCollection.s_UnityConnectEditorWindow.Close();
+				UnityConnectServiceCollection.s_UnityConnectEditorWindow = null;
 			}
 		}
 
@@ -126,10 +135,13 @@ namespace UnityEditor.Connect
 		{
 			if (UnityConnectServiceCollection.s_UnityConnectEditorWindow != null)
 			{
-				UnityConnectServiceCollection.s_UnityConnectEditorWindow.Close();
-				UnityConnectServiceCollection.s_UnityConnectEditorWindow = null;
+				UnityConnectServiceCollection.s_UnityConnectEditorWindow.Reload();
 			}
-			UnityConnect.instance.ClearCache();
+		}
+
+		public static void StaticEnableService(string serviceName, bool enabled)
+		{
+			UnityConnectServiceCollection.instance.EnableService(serviceName, enabled);
 		}
 
 		public bool AddService(UnityConnectServiceData cloudService)
@@ -140,6 +152,11 @@ namespace UnityEditor.Connect
 			}
 			this.m_Services[cloudService.serviceName] = cloudService;
 			return true;
+		}
+
+		public bool RemoveService(string serviceName)
+		{
+			return this.m_Services.ContainsKey(serviceName) && this.m_Services.Remove(serviceName);
 		}
 
 		public bool ServiceExist(string serviceName)

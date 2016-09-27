@@ -4,9 +4,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine.Rendering
 {
-	/// <summary>
-	///   <para>Spherical harmonics up to the second order (3 bands, 9 coefficients).</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public struct SphericalHarmonicsL2
 	{
@@ -219,9 +216,6 @@ namespace UnityEngine.Rendering
 			}
 		}
 
-		/// <summary>
-		///   <para>Clears SH probe to zero.</para>
-		/// </summary>
 		public void Clear()
 		{
 			SphericalHarmonicsL2.ClearInternal(ref this);
@@ -236,10 +230,6 @@ namespace UnityEngine.Rendering
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_ClearInternal(ref SphericalHarmonicsL2 sh);
 
-		/// <summary>
-		///   <para>Add ambient lighting to probe data.</para>
-		/// </summary>
-		/// <param name="color"></param>
 		public void AddAmbientLight(Color color)
 		{
 			SphericalHarmonicsL2.AddAmbientLightInternal(color, ref this);
@@ -254,12 +244,6 @@ namespace UnityEngine.Rendering
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_AddAmbientLightInternal(ref Color color, ref SphericalHarmonicsL2 sh);
 
-		/// <summary>
-		///   <para>Add directional light to probe data.</para>
-		/// </summary>
-		/// <param name="direction"></param>
-		/// <param name="color"></param>
-		/// <param name="intensity"></param>
 		public void AddDirectionalLight(Vector3 direction, Color color, float intensity)
 		{
 			Color color2 = color * (2f * intensity);

@@ -28,7 +28,7 @@ namespace UnityEditor.Scripting.Compilers
 				APIUpdaterHelper.UpdateScripts(text, this._island.GetExtensionOfSourceFiles());
 			}
 			string monoInstallation = MonoInstallationFinder.GetMonoInstallation();
-			ManagedProgram managedProgram = new ManagedProgram(monoInstallation, this._island._classlib_profile, compiler, " @" + text, setMonoEnvironmentVariables);
+			ManagedProgram managedProgram = new ManagedProgram(monoInstallation, this._island._classlib_profile, compiler, " @" + text, setMonoEnvironmentVariables, null);
 			managedProgram.Start();
 			return managedProgram;
 		}

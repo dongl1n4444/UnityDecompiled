@@ -3,35 +3,17 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Representation of RGBA colors.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public struct Color
 	{
-		/// <summary>
-		///   <para>Red component of the color.</para>
-		/// </summary>
 		public float r;
 
-		/// <summary>
-		///   <para>Green component of the color.</para>
-		/// </summary>
 		public float g;
 
-		/// <summary>
-		///   <para>Blue component of the color.</para>
-		/// </summary>
 		public float b;
 
-		/// <summary>
-		///   <para>Alpha component of the color.</para>
-		/// </summary>
 		public float a;
 
-		/// <summary>
-		///   <para>Solid red. RGBA is (1, 0, 0, 1).</para>
-		/// </summary>
 		public static Color red
 		{
 			get
@@ -40,9 +22,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Solid green. RGBA is (0, 1, 0, 1).</para>
-		/// </summary>
 		public static Color green
 		{
 			get
@@ -51,9 +30,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Solid blue. RGBA is (0, 0, 1, 1).</para>
-		/// </summary>
 		public static Color blue
 		{
 			get
@@ -62,9 +38,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Solid white. RGBA is (1, 1, 1, 1).</para>
-		/// </summary>
 		public static Color white
 		{
 			get
@@ -73,9 +46,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Solid black. RGBA is (0, 0, 0, 1).</para>
-		/// </summary>
 		public static Color black
 		{
 			get
@@ -84,9 +54,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Yellow. RGBA is (1, 0.92, 0.016, 1), but the color is nice to look at!</para>
-		/// </summary>
 		public static Color yellow
 		{
 			get
@@ -95,9 +62,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Cyan. RGBA is (0, 1, 1, 1).</para>
-		/// </summary>
 		public static Color cyan
 		{
 			get
@@ -106,9 +70,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Magenta. RGBA is (1, 0, 1, 1).</para>
-		/// </summary>
 		public static Color magenta
 		{
 			get
@@ -117,9 +78,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Gray. RGBA is (0.5, 0.5, 0.5, 1).</para>
-		/// </summary>
 		public static Color gray
 		{
 			get
@@ -128,9 +86,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>English spelling for gray. RGBA is the same (0.5, 0.5, 0.5, 1).</para>
-		/// </summary>
 		public static Color grey
 		{
 			get
@@ -139,9 +94,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Completely transparent. RGBA is (0, 0, 0, 0).</para>
-		/// </summary>
 		public static Color clear
 		{
 			get
@@ -150,9 +102,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The grayscale value of the color. (Read Only)</para>
-		/// </summary>
 		public float grayscale
 		{
 			get
@@ -161,9 +110,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>A linear value of an sRGB color.</para>
-		/// </summary>
 		public Color linear
 		{
 			get
@@ -172,9 +118,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>A version of the color that has had the gamma curve applied.</para>
-		/// </summary>
 		public Color gamma
 		{
 			get
@@ -183,9 +126,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the maximum color component value: Max(r,g,b).</para>
-		/// </summary>
 		public float maxColorComponent
 		{
 			get
@@ -234,13 +174,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Constructs a new Color with given r,g,b,a components.</para>
-		/// </summary>
-		/// <param name="r">Red component.</param>
-		/// <param name="g">Green component.</param>
-		/// <param name="b">Blue component.</param>
-		/// <param name="a">Alpha component.</param>
 		public Color(float r, float g, float b, float a)
 		{
 			this.r = r;
@@ -249,12 +182,6 @@ namespace UnityEngine
 			this.a = a;
 		}
 
-		/// <summary>
-		///   <para>Constructs a new Color with given r,g,b components and sets a to 1.</para>
-		/// </summary>
-		/// <param name="r">Red component.</param>
-		/// <param name="g">Green component.</param>
-		/// <param name="b">Blue component.</param>
 		public Color(float r, float g, float b)
 		{
 			this.r = r;
@@ -263,10 +190,6 @@ namespace UnityEngine
 			this.a = 1f;
 		}
 
-		/// <summary>
-		///   <para>Returns a nicely formatted string of this color.</para>
-		/// </summary>
-		/// <param name="format"></param>
 		public override string ToString()
 		{
 			return UnityString.Format("RGBA({0:F3}, {1:F3}, {2:F3}, {3:F3})", new object[]
@@ -278,10 +201,6 @@ namespace UnityEngine
 			});
 		}
 
-		/// <summary>
-		///   <para>Returns a nicely formatted string of this color.</para>
-		/// </summary>
-		/// <param name="format"></param>
 		public string ToString(string format)
 		{
 			return UnityString.Format("RGBA({0}, {1}, {2}, {3})", new object[]
@@ -308,24 +227,12 @@ namespace UnityEngine
 			return this.r.Equals(color.r) && this.g.Equals(color.g) && this.b.Equals(color.b) && this.a.Equals(color.a);
 		}
 
-		/// <summary>
-		///   <para>Linearly interpolates between colors a and b by t.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Color Lerp(Color a, Color b, float t)
 		{
 			t = Mathf.Clamp01(t);
 			return new Color(a.r + (b.r - a.r) * t, a.g + (b.g - a.g) * t, a.b + (b.b - a.b) * t, a.a + (b.a - a.a) * t);
 		}
 
-		/// <summary>
-		///   <para>Linearly interpolates between colors a and b by t.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Color LerpUnclamped(Color a, Color b, float t)
 		{
 			return new Color(a.r + (b.r - a.r) * t, a.g + (b.g - a.g) * t, a.b + (b.b - a.b) * t, a.a + (b.a - a.a) * t);
@@ -400,31 +307,11 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Creates an RGB colour from HSV input.</para>
-		/// </summary>
-		/// <param name="H">Hue [0..1].</param>
-		/// <param name="S">Saturation [0..1].</param>
-		/// <param name="V">Value [0..1].</param>
-		/// <param name="hdr">Output HDR colours. If true, the returned colour will not be clamped to [0..1].</param>
-		/// <returns>
-		///   <para>An opaque colour with HSV matching the input.</para>
-		/// </returns>
 		public static Color HSVToRGB(float H, float S, float V)
 		{
 			return Color.HSVToRGB(H, S, V, true);
 		}
 
-		/// <summary>
-		///   <para>Creates an RGB colour from HSV input.</para>
-		/// </summary>
-		/// <param name="H">Hue [0..1].</param>
-		/// <param name="S">Saturation [0..1].</param>
-		/// <param name="V">Value [0..1].</param>
-		/// <param name="hdr">Output HDR colours. If true, the returned colour will not be clamped to [0..1].</param>
-		/// <returns>
-		///   <para>An opaque colour with HSV matching the input.</para>
-		/// </returns>
 		public static Color HSVToRGB(float H, float S, float V, bool hdr)
 		{
 			Color white = Color.white;

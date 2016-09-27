@@ -4,9 +4,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Detail prototype used by the Terrain GameObject.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	[StructLayout(LayoutKind.Sequential)]
 	public sealed class DetailPrototype
@@ -35,9 +32,6 @@ namespace UnityEngine
 
 		private int m_UsePrototypeMesh;
 
-		/// <summary>
-		///   <para>GameObject used by the DetailPrototype.</para>
-		/// </summary>
 		public GameObject prototype
 		{
 			get
@@ -50,9 +44,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Texture used by the DetailPrototype.</para>
-		/// </summary>
 		public Texture2D prototypeTexture
 		{
 			get
@@ -65,9 +56,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Minimum width of the grass billboards (if render mode is GrassBillboard).</para>
-		/// </summary>
 		public float minWidth
 		{
 			get
@@ -80,9 +68,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Maximum width of the grass billboards (if render mode is GrassBillboard).</para>
-		/// </summary>
 		public float maxWidth
 		{
 			get
@@ -95,9 +80,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Minimum height of the grass billboards (if render mode is GrassBillboard).</para>
-		/// </summary>
 		public float minHeight
 		{
 			get
@@ -110,9 +92,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Maximum height of the grass billboards (if render mode is GrassBillboard).</para>
-		/// </summary>
 		public float maxHeight
 		{
 			get
@@ -125,9 +104,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>How spread out is the noise for the DetailPrototype.</para>
-		/// </summary>
 		public float noiseSpread
 		{
 			get
@@ -140,9 +116,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Bend factor of the detailPrototype.</para>
-		/// </summary>
 		public float bendFactor
 		{
 			get
@@ -155,9 +128,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Color when the DetailPrototypes are "healthy".</para>
-		/// </summary>
 		public Color healthyColor
 		{
 			get
@@ -170,9 +140,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Color when the DetailPrototypes are "dry".</para>
-		/// </summary>
 		public Color dryColor
 		{
 			get
@@ -185,9 +152,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Render mode for the DetailPrototype.</para>
-		/// </summary>
 		public DetailRenderMode renderMode
 		{
 			get

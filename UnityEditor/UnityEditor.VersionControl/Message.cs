@@ -18,6 +18,7 @@ namespace UnityEditor.VersionControl
 
 		private IntPtr m_thisDummy;
 
+		[ThreadAndSerializationSafe]
 		public extern Message.Severity severity
 		{
 			[WrapperlessIcall]
@@ -25,6 +26,7 @@ namespace UnityEditor.VersionControl
 			get;
 		}
 
+		[ThreadAndSerializationSafe]
 		public extern string message
 		{
 			[WrapperlessIcall]
@@ -36,7 +38,7 @@ namespace UnityEditor.VersionControl
 		{
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void Dispose();
 

@@ -62,7 +62,7 @@ namespace UnityEditor.TreeViewTests
 		protected override HashSet<int> GetParentsAbove(int id)
 		{
 			HashSet<int> hashSet = new HashSet<int>();
-			for (BackendData.Foo foo = BackendData.FindNodeRecursive(this.m_Backend.root, id); foo != null; foo = foo.parent)
+			for (BackendData.Foo foo = BackendData.FindItemRecursive(this.m_Backend.root, id); foo != null; foo = foo.parent)
 			{
 				if (foo.parent != null)
 				{

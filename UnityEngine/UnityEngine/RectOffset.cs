@@ -5,9 +5,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Offsets for rectangles, borders, etc.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
@@ -18,9 +15,6 @@ namespace UnityEngine
 
 		private readonly GUIStyle m_SourceStyle;
 
-		/// <summary>
-		///   <para>Left edge size.</para>
-		/// </summary>
 		public extern int left
 		{
 			[WrapperlessIcall]
@@ -31,9 +25,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Right edge size.</para>
-		/// </summary>
 		public extern int right
 		{
 			[WrapperlessIcall]
@@ -44,9 +35,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Top edge size.</para>
-		/// </summary>
 		public extern int top
 		{
 			[WrapperlessIcall]
@@ -57,9 +45,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Bottom edge size.</para>
-		/// </summary>
 		public extern int bottom
 		{
 			[WrapperlessIcall]
@@ -70,9 +55,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Shortcut for left + right. (Read Only)</para>
-		/// </summary>
 		public extern int horizontal
 		{
 			[WrapperlessIcall]
@@ -80,9 +62,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Shortcut for top + bottom. (Read Only)</para>
-		/// </summary>
 		public extern int vertical
 		{
 			[WrapperlessIcall]
@@ -90,13 +69,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Creates a new rectangle with offsets.</para>
-		/// </summary>
-		/// <param name="left"></param>
-		/// <param name="right"></param>
-		/// <param name="top"></param>
-		/// <param name="bottom"></param>
 		public RectOffset()
 		{
 			this.Init();
@@ -108,13 +80,6 @@ namespace UnityEngine
 			this.m_Ptr = source;
 		}
 
-		/// <summary>
-		///   <para>Creates a new rectangle with offsets.</para>
-		/// </summary>
-		/// <param name="left"></param>
-		/// <param name="right"></param>
-		/// <param name="top"></param>
-		/// <param name="bottom"></param>
 		public RectOffset(int left, int right, int top, int bottom)
 		{
 			this.Init();
@@ -124,18 +89,14 @@ namespace UnityEngine
 			this.bottom = bottom;
 		}
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Init();
 
-		[WrapperlessIcall]
+		[ThreadAndSerializationSafe, WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private extern void Cleanup();
 
-		/// <summary>
-		///   <para>Add the border offsets to a rect.</para>
-		/// </summary>
-		/// <param name="rect"></param>
 		public Rect Add(Rect rect)
 		{
 			Rect result;
@@ -147,10 +108,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void INTERNAL_CALL_Add(RectOffset self, ref Rect rect, out Rect value);
 
-		/// <summary>
-		///   <para>Remove the border offsets from a rect.</para>
-		/// </summary>
-		/// <param name="rect"></param>
 		public Rect Remove(Rect rect)
 		{
 			Rect result;

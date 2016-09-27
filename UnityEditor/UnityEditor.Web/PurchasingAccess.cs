@@ -17,7 +17,11 @@ namespace UnityEditor.Web
 
 		private const string kServiceDisplayName = "In App Purchasing";
 
-		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/purchasing";
+		private const string kServiceUrl = "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/purchasing";
+
+		private const string kETagPath = "Assets/Plugins/UnityPurchasing/ETag";
+
+		private const string kUnknownPackageETag = "unknown";
 
 		private static readonly Uri kPackageUri;
 
@@ -26,7 +30,7 @@ namespace UnityEditor.Web
 		static PurchasingAccess()
 		{
 			PurchasingAccess.kPackageUri = new Uri("https://public-cdn.cloud.unity3d.com/UnityEngine.Cloud.Purchasing.unitypackage");
-			UnityConnectServiceData cloudService = new UnityConnectServiceData("Purchasing", "https://public-cdn.cloud.unity3d.com/editor/5.3/production/cloud/purchasing", new PurchasingAccess(), "unity/project/cloud/purchasing");
+			UnityConnectServiceData cloudService = new UnityConnectServiceData("Purchasing", "https://public-cdn.cloud.unity3d.com/editor/5.4/production/cloud/purchasing", new PurchasingAccess(), "unity/project/cloud/purchasing");
 			UnityConnectServiceCollection.instance.AddService(cloudService);
 		}
 
@@ -64,8 +68,8 @@ namespace UnityEditor.Web
 			this.m_InstallInProgress = true;
 			string location = FileUtil.GetUniqueTempPathInProject();
 			location = Path.ChangeExtension(location, ".unitypackage");
-			WebClient webClient = new WebClient();
-			webClient.DownloadFileCompleted += delegate(object sender, AsyncCompletedEventArgs args)
+			WebClient client = new WebClient();
+			client.DownloadFileCompleted += delegate(object sender, AsyncCompletedEventArgs args)
 			{
 				EditorApplication.CallbackFunction handler = null;
 				handler = delegate
@@ -73,35 +77,43 @@ namespace UnityEditor.Web
 					ServicePointManager.ServerCertificateValidationCallback = originalCallback;
 					EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Remove(EditorApplication.update, handler);
 					this.m_InstallInProgress = false;
-					if (args.Error != null)
+					if (args.Error == null)
 					{
-						this.ExecuteJSMethod("OnDownloadFailed", args.Error.Message);
+						this.SaveETag(client);
+						AssetDatabase.ImportPackage(location, false);
 					}
 					else
 					{
-						AssetDatabase.ImportPackage(location, false);
-						this.ExecuteJSMethod("OnDownloadComplete");
+						Debug.LogWarning("Failed to download IAP package. Please check connectivity and retry.");
+						Debug.LogException(args.Error);
 					}
 				};
 				EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.update, handler);
 			};
-			webClient.DownloadFileAsync(PurchasingAccess.kPackageUri, location);
+			client.DownloadFileAsync(PurchasingAccess.kPackageUri, location);
 		}
 
-		private void ExecuteJSMethod(string name)
+		public string GetInstalledETag()
 		{
-			this.ExecuteJSMethod(name, null);
-		}
-
-		private void ExecuteJSMethod(string name, string arg)
-		{
-			string scriptCode = string.Format("UnityPurchasing.{0}({1})", name, (arg != null) ? string.Format("\"{0}\"", arg) : string.Empty);
-			WebView webView = base.GetWebView();
-			if (webView == null)
+			if (File.Exists("Assets/Plugins/UnityPurchasing/ETag"))
 			{
-				return;
+				return File.ReadAllText("Assets/Plugins/UnityPurchasing/ETag");
 			}
-			webView.ExecuteJavascript(scriptCode);
+			if (Directory.Exists(Path.GetDirectoryName("Assets/Plugins/UnityPurchasing/ETag")))
+			{
+				return "unknown";
+			}
+			return null;
+		}
+
+		private void SaveETag(WebClient client)
+		{
+			string text = client.ResponseHeaders.Get("ETag");
+			if (text != null)
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName("Assets/Plugins/UnityPurchasing/ETag"));
+				File.WriteAllText("Assets/Plugins/UnityPurchasing/ETag", text);
+			}
 		}
 	}
 }

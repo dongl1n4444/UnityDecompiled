@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -45,21 +46,27 @@ namespace UnityEditorInternal
 				fileInfo.IsReadOnly = false;
 			}
 			AssemblyStripper.StripAssemblies(this.m_StagingAreaData, this.m_PlatformProvider, this.m_RuntimeClassRegistry, this.m_DevelopmentBuild);
-			this.ConvertPlayerDlltoCpp(this.GetUserAssembliesToConvert(fullPath), cppOutputDirectoryInStagingArea, fullPath);
+			FileUtil.CreateOrCleanDirectory(cppOutputDirectoryInStagingArea);
 			if (this.m_ModifyOutputBeforeCompile != null)
 			{
 				this.m_ModifyOutputBeforeCompile(cppOutputDirectoryInStagingArea);
 			}
+			this.ConvertPlayerDlltoCpp(this.GetUserAssembliesToConvert(fullPath), cppOutputDirectoryInStagingArea, fullPath);
 			INativeCompiler nativeCompiler = this.m_PlatformProvider.CreateNativeCompiler();
-			if (nativeCompiler != null)
+			if (nativeCompiler != null && this.m_PlatformProvider.CreateIl2CppNativeCodeBuilder() == null)
 			{
-				string text = Path.Combine(this.m_StagingAreaData, "Native");
-				Directory.CreateDirectory(text);
-				text = Path.Combine(text, this.m_PlatformProvider.nativeLibraryFileName);
+				string outFile = this.OutputFileRelativePath();
 				List<string> list = new List<string>(this.m_PlatformProvider.includePaths);
 				list.Add(cppOutputDirectoryInStagingArea);
-				this.m_PlatformProvider.CreateNativeCompiler().CompileDynamicLibrary(text, NativeCompiler.AllSourceFilesIn(cppOutputDirectoryInStagingArea), list, this.m_PlatformProvider.libraryPaths, new string[0]);
+				this.m_PlatformProvider.CreateNativeCompiler().CompileDynamicLibrary(outFile, NativeCompiler.AllSourceFilesIn(cppOutputDirectoryInStagingArea), list, this.m_PlatformProvider.libraryPaths, new string[0]);
 			}
+		}
+
+		private string OutputFileRelativePath()
+		{
+			string text = Path.Combine(this.m_StagingAreaData, "Native");
+			Directory.CreateDirectory(text);
+			return Path.Combine(text, this.m_PlatformProvider.nativeLibraryFileName);
 		}
 
 		internal List<string> GetUserAssembliesToConvert(string managedDir)
@@ -98,7 +105,6 @@ namespace UnityEditorInternal
 
 		private void ConvertPlayerDlltoCpp(ICollection<string> userAssemblies, string outputDirectory, string workingDirectory)
 		{
-			FileUtil.CreateOrCleanDirectory(outputDirectory);
 			if (userAssemblies.Count == 0)
 			{
 				return;
@@ -108,7 +114,6 @@ namespace UnityEditorInternal
 			string il2CppExe = this.GetIl2CppExe();
 			List<string> list = new List<string>();
 			list.Add("--convert-to-cpp");
-			list.Add("--copy-level=None");
 			if (this.m_PlatformProvider.emitNullChecks)
 			{
 				list.Add("--emit-null-checks");
@@ -121,9 +126,9 @@ namespace UnityEditorInternal
 			{
 				list.Add("--enable-array-bounds-check");
 			}
-			if (this.m_PlatformProvider.compactMode)
+			if (this.m_PlatformProvider.enableDivideByZeroCheck)
 			{
-				list.Add("--output-format=Compact");
+				list.Add("--enable-divide-by-zero-check");
 			}
 			if (this.m_PlatformProvider.loadSymbols)
 			{
@@ -132,6 +137,14 @@ namespace UnityEditorInternal
 			if (this.m_PlatformProvider.developmentMode)
 			{
 				list.Add("--development-mode");
+			}
+			Il2CppNativeCodeBuilder il2CppNativeCodeBuilder = this.m_PlatformProvider.CreateIl2CppNativeCodeBuilder();
+			if (il2CppNativeCodeBuilder != null)
+			{
+				string fullUnityVersion = InternalEditorUtility.GetFullUnityVersion();
+				Il2CppNativeCodeBuilderUtils.ClearCacheIfEditorVersionDiffers(il2CppNativeCodeBuilder, fullUnityVersion);
+				Il2CppNativeCodeBuilderUtils.PrepareCacheDirectory(il2CppNativeCodeBuilder, fullUnityVersion);
+				list.AddRange(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(il2CppNativeCodeBuilder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths));
 			}
 			if (array.Length > 0)
 			{
@@ -167,7 +180,12 @@ namespace UnityEditorInternal
 			{
 				throw new OperationCanceledException();
 			}
-			Runner.RunManagedProgram(il2CppExe, text3, workingDirectory, new Il2CppOutputParser());
+			Action<ProcessStartInfo> setupStartInfo = null;
+			if (il2CppNativeCodeBuilder != null)
+			{
+				setupStartInfo = new Action<ProcessStartInfo>(il2CppNativeCodeBuilder.SetupStartInfo);
+			}
+			Runner.RunManagedProgram(il2CppExe, text3, workingDirectory, new Il2CppOutputParser(), setupStartInfo);
 		}
 
 		private string GetIl2CppExe()

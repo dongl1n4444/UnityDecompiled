@@ -1,5 +1,4 @@
 using System;
-using System.Text.RegularExpressions;
 using UnityEngine.Serialization;
 
 namespace UnityEngine.Events
@@ -7,14 +6,8 @@ namespace UnityEngine.Events
 	[Serializable]
 	internal class ArgumentCache : ISerializationCallbackReceiver
 	{
-		private const string kVersionString = ", Version=\\d+.\\d+.\\d+.\\d+";
-
-		private const string kCultureString = ", Culture=\\w+";
-
-		private const string kTokenString = ", PublicKeyToken=\\w+";
-
 		[FormerlySerializedAs("objectArgument"), SerializeField]
-		private Object m_ObjectArgument;
+		private UnityEngine.Object m_ObjectArgument;
 
 		[FormerlySerializedAs("objectArgumentAssemblyTypeName"), SerializeField]
 		private string m_ObjectArgumentAssemblyTypeName;
@@ -31,7 +24,7 @@ namespace UnityEngine.Events
 		[SerializeField]
 		private bool m_BoolArgument;
 
-		public Object unityObjectArgument
+		public UnityEngine.Object unityObjectArgument
 		{
 			get
 			{
@@ -106,9 +99,27 @@ namespace UnityEngine.Events
 			{
 				return;
 			}
-			this.m_ObjectArgumentAssemblyTypeName = Regex.Replace(this.m_ObjectArgumentAssemblyTypeName, ", Version=\\d+.\\d+.\\d+.\\d+", string.Empty);
-			this.m_ObjectArgumentAssemblyTypeName = Regex.Replace(this.m_ObjectArgumentAssemblyTypeName, ", Culture=\\w+", string.Empty);
-			this.m_ObjectArgumentAssemblyTypeName = Regex.Replace(this.m_ObjectArgumentAssemblyTypeName, ", PublicKeyToken=\\w+", string.Empty);
+			int num = 2147483647;
+			int num2 = this.m_ObjectArgumentAssemblyTypeName.IndexOf(", Version=");
+			if (num2 != -1)
+			{
+				num = Math.Min(num2, num);
+			}
+			num2 = this.m_ObjectArgumentAssemblyTypeName.IndexOf(", Culture=");
+			if (num2 != -1)
+			{
+				num = Math.Min(num2, num);
+			}
+			num2 = this.m_ObjectArgumentAssemblyTypeName.IndexOf(", PublicKeyToken=");
+			if (num2 != -1)
+			{
+				num = Math.Min(num2, num);
+			}
+			if (num == 2147483647)
+			{
+				return;
+			}
+			this.m_ObjectArgumentAssemblyTypeName = this.m_ObjectArgumentAssemblyTypeName.Substring(0, num);
 		}
 
 		public void OnBeforeSerialize()

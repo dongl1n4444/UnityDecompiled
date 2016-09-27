@@ -6,9 +6,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Script interface for.</para>
-	/// </summary>
 	public sealed class Font : Object
 	{
 		[EditorBrowsable(EditorBrowsableState.Never)]
@@ -42,9 +39,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>The material used for the font display.</para>
-		/// </summary>
 		public extern Material material
 		{
 			[WrapperlessIcall]
@@ -65,9 +59,6 @@ namespace UnityEngine
 			set;
 		}
 
-		/// <summary>
-		///   <para>Access an array of all characters contained in the font texture.</para>
-		/// </summary>
 		public extern CharacterInfo[] characterInfo
 		{
 			[WrapperlessIcall]
@@ -91,9 +82,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Is the font a dynamic font.</para>
-		/// </summary>
 		public extern bool dynamic
 		{
 			[WrapperlessIcall]
@@ -101,9 +89,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The ascent of the font.</para>
-		/// </summary>
 		public extern int ascent
 		{
 			[WrapperlessIcall]
@@ -111,9 +96,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The line height of the font.</para>
-		/// </summary>
 		public extern int lineHeight
 		{
 			[WrapperlessIcall]
@@ -121,9 +103,6 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>The default size of the font.</para>
-		/// </summary>
 		public extern int fontSize
 		{
 			[WrapperlessIcall]
@@ -131,19 +110,11 @@ namespace UnityEngine
 			get;
 		}
 
-		/// <summary>
-		///   <para>Create a new Font.</para>
-		/// </summary>
-		/// <param name="name">The name of the created Font object.</param>
 		public Font()
 		{
 			Font.Internal_CreateFont(this, null);
 		}
 
-		/// <summary>
-		///   <para>Create a new Font.</para>
-		/// </summary>
-		/// <param name="name">The name of the created Font object.</param>
 		public Font(string name)
 		{
 			Font.Internal_CreateFont(this, name);
@@ -154,12 +125,6 @@ namespace UnityEngine
 			Font.Internal_CreateDynamicFont(this, names, size);
 		}
 
-		/// <summary>
-		///   <para>Get names of fonts installed on the machine.</para>
-		/// </summary>
-		/// <returns>
-		///   <para>An array of the names of all fonts installed on the machine.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern string[] GetOSInstalledFontNames();
@@ -172,15 +137,6 @@ namespace UnityEngine
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		private static extern void Internal_CreateDynamicFont([Writable] Font _font, string[] _names, int size);
 
-		/// <summary>
-		///   <para>Creates a Font object which lets you render a font installed on the user machine.</para>
-		/// </summary>
-		/// <param name="fontname">The name of the OS font to use for this font object.</param>
-		/// <param name="size">The default character size of the generated font.</param>
-		/// <param name="fontnames">Am array of names of OS fonts to use for this font object. When rendering characters using this font object, the first font which is installed on the machine, which contains the requested character will be used.</param>
-		/// <returns>
-		///   <para>The generate Font object.</para>
-		/// </returns>
 		public static Font CreateDynamicFontFromOSFont(string fontname, int size)
 		{
 			return new Font(new string[]
@@ -189,37 +145,15 @@ namespace UnityEngine
 			}, size);
 		}
 
-		/// <summary>
-		///   <para>Creates a Font object which lets you render a font installed on the user machine.</para>
-		/// </summary>
-		/// <param name="fontname">The name of the OS font to use for this font object.</param>
-		/// <param name="size">The default character size of the generated font.</param>
-		/// <param name="fontnames">Am array of names of OS fonts to use for this font object. When rendering characters using this font object, the first font which is installed on the machine, which contains the requested character will be used.</param>
-		/// <returns>
-		///   <para>The generate Font object.</para>
-		/// </returns>
 		public static Font CreateDynamicFontFromOSFont(string[] fontnames, int size)
 		{
 			return new Font(fontnames, size);
 		}
 
-		/// <summary>
-		///   <para>Does this font have a specific character?</para>
-		/// </summary>
-		/// <param name="c">The character to check for.</param>
-		/// <returns>
-		///   <para>Whether or not the font has the character specified.</para>
-		/// </returns>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern bool HasCharacter(char c);
 
-		/// <summary>
-		///   <para>Request characters to be added to the font texture (dynamic fonts only).</para>
-		/// </summary>
-		/// <param name="characters">The characters which are needed to be in the font texture.</param>
-		/// <param name="size">The size of the requested characters (the default value of zero will use the font's default size).</param>
-		/// <param name="style">The style of the requested characters.</param>
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern void RequestCharactersInTexture(string characters, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
@@ -253,10 +187,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the maximum number of verts that the text generator may return for a given string.</para>
-		/// </summary>
-		/// <param name="str">Input string.</param>
 		public static int GetMaxVertsForString(string str)
 		{
 			return str.Length * 4 + 4;

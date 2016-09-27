@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Utils;
-using UnityEngine;
 
 namespace UnityEditorInternal
 {
@@ -13,7 +12,7 @@ namespace UnityEditorInternal
 		{
 			get
 			{
-				string path = (Application.platform != RuntimePlatform.OSXEditor) ? "il2cpp" : "Frameworks/il2cpp";
+				string path = "il2cpp";
 				return Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, path));
 			}
 		}

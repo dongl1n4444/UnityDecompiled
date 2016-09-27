@@ -3,9 +3,6 @@ using System.Text;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>AndroidJavaObject is the Unity representation of a generic instance of java.lang.Object.</para>
-	/// </summary>
 	public class AndroidJavaObject : IDisposable
 	{
 		private static bool enableDebugPrints;
@@ -30,11 +27,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Construct an AndroidJavaObject based on the name of the class.</para>
-		/// </summary>
-		/// <param name="className">Specifies the Java class name (e.g. "&lt;tt&gt;java.lang.String&lt;tt&gt;" or "&lt;tt&gt;javalangString&lt;tt&gt;").</param>
-		/// <param name="args">An array of parameters passed to the constructor.</param>
 		public AndroidJavaObject(string className, params object[] args) : this()
 		{
 			this._AndroidJavaObject(className, args);
@@ -56,29 +48,16 @@ namespace UnityEngine
 		{
 		}
 
-		/// <summary>
-		///   <para>IDisposable callback.</para>
-		/// </summary>
 		public void Dispose()
 		{
 			this._Dispose();
 		}
 
-		/// <summary>
-		///   <para>Calls a Java method on an object (non-static).</para>
-		/// </summary>
-		/// <param name="methodName">Specifies which method to call.</param>
-		/// <param name="args">An array of parameters passed to the method.</param>
 		public void Call(string methodName, params object[] args)
 		{
 			this._Call(methodName, args);
 		}
 
-		/// <summary>
-		///   <para>Call a static Java method on a class.</para>
-		/// </summary>
-		/// <param name="methodName">Specifies which method to call.</param>
-		/// <param name="args">An array of parameters passed to the method.</param>
 		public void CallStatic(string methodName, params object[] args)
 		{
 			this._CallStatic(methodName, args);
@@ -104,17 +83,11 @@ namespace UnityEngine
 			this._SetStatic<FieldType>(fieldName, val);
 		}
 
-		/// <summary>
-		///   <para>Retrieve the raw jobject pointer to the Java object.</para>
-		/// </summary>
 		public IntPtr GetRawObject()
 		{
 			return this._GetRawObject();
 		}
 
-		/// <summary>
-		///   <para>Retrieve the raw jclass pointer to the Java class.</para>
-		/// </summary>
 		public IntPtr GetRawClass()
 		{
 			return this._GetRawClass();

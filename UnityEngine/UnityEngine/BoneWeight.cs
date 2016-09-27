@@ -3,9 +3,6 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Skinning bone weights of a vertex in the mesh.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public struct BoneWeight
 	{
@@ -25,9 +22,6 @@ namespace UnityEngine
 
 		private int m_BoneIndex3;
 
-		/// <summary>
-		///   <para>Skinning weight for first bone.</para>
-		/// </summary>
 		public float weight0
 		{
 			get
@@ -40,9 +34,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Skinning weight for second bone.</para>
-		/// </summary>
 		public float weight1
 		{
 			get
@@ -55,9 +46,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Skinning weight for third bone.</para>
-		/// </summary>
 		public float weight2
 		{
 			get
@@ -70,9 +58,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Skinning weight for fourth bone.</para>
-		/// </summary>
 		public float weight3
 		{
 			get
@@ -85,9 +70,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Index of first bone.</para>
-		/// </summary>
 		public int boneIndex0
 		{
 			get
@@ -100,9 +82,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Index of second bone.</para>
-		/// </summary>
 		public int boneIndex1
 		{
 			get
@@ -115,9 +94,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Index of third bone.</para>
-		/// </summary>
 		public int boneIndex2
 		{
 			get
@@ -130,9 +106,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Index of fourth bone.</para>
-		/// </summary>
 		public int boneIndex3
 		{
 			get

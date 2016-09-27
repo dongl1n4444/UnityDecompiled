@@ -4,22 +4,13 @@ using UnityEngine.Scripting;
 
 namespace UnityEngine
 {
-	/// <summary>
-	///   <para>Representation of 2D vectors and points.</para>
-	/// </summary>
 	[UsedByNativeCode]
 	public struct Vector2
 	{
 		public const float kEpsilon = 1E-05f;
 
-		/// <summary>
-		///   <para>X component of the vector.</para>
-		/// </summary>
 		public float x;
 
-		/// <summary>
-		///   <para>Y component of the vector.</para>
-		/// </summary>
 		public float y;
 
 		public float this[int index]
@@ -53,9 +44,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns this vector with a magnitude of 1 (Read Only).</para>
-		/// </summary>
 		public Vector2 normalized
 		{
 			get
@@ -66,9 +54,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the length of this vector (Read Only).</para>
-		/// </summary>
 		public float magnitude
 		{
 			get
@@ -77,9 +62,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns the squared length of this vector (Read Only).</para>
-		/// </summary>
 		public float sqrMagnitude
 		{
 			get
@@ -88,9 +70,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shorthand for writing Vector2(0, 0).</para>
-		/// </summary>
 		public static Vector2 zero
 		{
 			get
@@ -99,9 +78,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shorthand for writing Vector2(1, 1).</para>
-		/// </summary>
 		public static Vector2 one
 		{
 			get
@@ -110,9 +86,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shorthand for writing Vector2(0, 1).</para>
-		/// </summary>
 		public static Vector2 up
 		{
 			get
@@ -121,9 +94,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shorthand for writing Vector2(0, -1).</para>
-		/// </summary>
 		public static Vector2 down
 		{
 			get
@@ -132,9 +102,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shorthand for writing Vector2(-1, 0).</para>
-		/// </summary>
 		public static Vector2 left
 		{
 			get
@@ -143,9 +110,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Shorthand for writing Vector2(1, 0).</para>
-		/// </summary>
 		public static Vector2 right
 		{
 			get
@@ -154,57 +118,29 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Constructs a new vector with given x, y components.</para>
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
 		public Vector2(float x, float y)
 		{
 			this.x = x;
 			this.y = y;
 		}
 
-		/// <summary>
-		///   <para>Set x and y components of an existing Vector2.</para>
-		/// </summary>
-		/// <param name="new_x"></param>
-		/// <param name="new_y"></param>
 		public void Set(float new_x, float new_y)
 		{
 			this.x = new_x;
 			this.y = new_y;
 		}
 
-		/// <summary>
-		///   <para>Linearly interpolates between vectors a and b by t.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
 		{
 			t = Mathf.Clamp01(t);
 			return new Vector2(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
 		}
 
-		/// <summary>
-		///   <para>Linearly interpolates between vectors a and b by t.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <param name="t"></param>
 		public static Vector2 LerpUnclamped(Vector2 a, Vector2 b, float t)
 		{
 			return new Vector2(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
 		}
 
-		/// <summary>
-		///   <para>Moves a point current towards target.</para>
-		/// </summary>
-		/// <param name="current"></param>
-		/// <param name="target"></param>
-		/// <param name="maxDistanceDelta"></param>
 		public static Vector2 MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta)
 		{
 			Vector2 a = target - current;
@@ -216,29 +152,17 @@ namespace UnityEngine
 			return current + a / magnitude * maxDistanceDelta;
 		}
 
-		/// <summary>
-		///   <para>Multiplies two vectors component-wise.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
 		public static Vector2 Scale(Vector2 a, Vector2 b)
 		{
 			return new Vector2(a.x * b.x, a.y * b.y);
 		}
 
-		/// <summary>
-		///   <para>Multiplies every component of this vector by the same component of scale.</para>
-		/// </summary>
-		/// <param name="scale"></param>
 		public void Scale(Vector2 scale)
 		{
 			this.x *= scale.x;
 			this.y *= scale.y;
 		}
 
-		/// <summary>
-		///   <para>Makes this vector have a magnitude of 1.</para>
-		/// </summary>
 		public void Normalize()
 		{
 			float magnitude = this.magnitude;
@@ -252,10 +176,6 @@ namespace UnityEngine
 			}
 		}
 
-		/// <summary>
-		///   <para>Returns a nicely formatted string for this vector.</para>
-		/// </summary>
-		/// <param name="format"></param>
 		public override string ToString()
 		{
 			return UnityString.Format("({0:F1}, {1:F1})", new object[]
@@ -265,10 +185,6 @@ namespace UnityEngine
 			});
 		}
 
-		/// <summary>
-		///   <para>Returns a nicely formatted string for this vector.</para>
-		/// </summary>
-		/// <param name="format"></param>
 		public string ToString(string format)
 		{
 			return UnityString.Format("({0}, {1})", new object[]
@@ -293,51 +209,26 @@ namespace UnityEngine
 			return this.x.Equals(vector.x) && this.y.Equals(vector.y);
 		}
 
-		/// <summary>
-		///   <para>Reflects a vector off the vector defined by a normal.</para>
-		/// </summary>
-		/// <param name="inDirection"></param>
-		/// <param name="inNormal"></param>
 		public static Vector2 Reflect(Vector2 inDirection, Vector2 inNormal)
 		{
 			return -2f * Vector2.Dot(inNormal, inDirection) * inNormal + inDirection;
 		}
 
-		/// <summary>
-		///   <para>Dot Product of two vectors.</para>
-		/// </summary>
-		/// <param name="lhs"></param>
-		/// <param name="rhs"></param>
 		public static float Dot(Vector2 lhs, Vector2 rhs)
 		{
 			return lhs.x * rhs.x + lhs.y * rhs.y;
 		}
 
-		/// <summary>
-		///   <para>Returns the angle in degrees between from and to.</para>
-		/// </summary>
-		/// <param name="from"></param>
-		/// <param name="to"></param>
 		public static float Angle(Vector2 from, Vector2 to)
 		{
 			return Mathf.Acos(Mathf.Clamp(Vector2.Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f;
 		}
 
-		/// <summary>
-		///   <para>Returns the distance between a and b.</para>
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
 		public static float Distance(Vector2 a, Vector2 b)
 		{
 			return (a - b).magnitude;
 		}
 
-		/// <summary>
-		///   <para>Returns a copy of vector with its magnitude clamped to maxLength.</para>
-		/// </summary>
-		/// <param name="vector"></param>
-		/// <param name="maxLength"></param>
 		public static Vector2 ClampMagnitude(Vector2 vector, float maxLength)
 		{
 			if (vector.sqrMagnitude > maxLength * maxLength)
@@ -357,21 +248,11 @@ namespace UnityEngine
 			return this.x * this.x + this.y * this.y;
 		}
 
-		/// <summary>
-		///   <para>Returns a vector that is made from the smallest components of two vectors.</para>
-		/// </summary>
-		/// <param name="lhs"></param>
-		/// <param name="rhs"></param>
 		public static Vector2 Min(Vector2 lhs, Vector2 rhs)
 		{
 			return new Vector2(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y));
 		}
 
-		/// <summary>
-		///   <para>Returns a vector that is made from the largest components of two vectors.</para>
-		/// </summary>
-		/// <param name="lhs"></param>
-		/// <param name="rhs"></param>
 		public static Vector2 Max(Vector2 lhs, Vector2 rhs)
 		{
 			return new Vector2(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y));
