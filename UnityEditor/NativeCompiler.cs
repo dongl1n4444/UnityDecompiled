@@ -1,160 +1,130 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEditor.Utils;
 using UnityEngine;
 
 internal abstract class NativeCompiler : INativeCompiler
 {
-    [CompilerGenerated]
-    private static Func<string, string, string> <>f__am$cache0;
-    [CompilerGenerated]
-    private static Func<string, string, string> <>f__am$cache1;
-    [CompilerGenerated]
-    private static Func<string, string, string> <>f__am$cache2;
+	private class Counter
+	{
+		public int index;
+	}
 
-    protected NativeCompiler()
-    {
-    }
+	protected virtual string objectFileExtension
+	{
+		get
+		{
+			return "o";
+		}
+	}
 
-    protected static string Aggregate(IEnumerable<string> items, string prefix, string suffix)
-    {
-        <Aggregate>c__AnonStorey7B storeyb = new <Aggregate>c__AnonStorey7B {
-            prefix = prefix,
-            suffix = suffix
-        };
-        return items.Aggregate<string, string>(string.Empty, new Func<string, string, string>(storeyb.<>m__119));
-    }
+	public abstract void CompileDynamicLibrary(string outFile, IEnumerable<string> sources, IEnumerable<string> includePaths, IEnumerable<string> libraries, IEnumerable<string> libraryPaths);
 
-    protected internal static IEnumerable<string> AllSourceFilesIn(string directory) => 
-        Directory.GetFiles(directory, "*.cpp", SearchOption.AllDirectories).Concat<string>(Directory.GetFiles(directory, "*.c", SearchOption.AllDirectories));
+	protected virtual void SetupProcessStartInfo(ProcessStartInfo startInfo)
+	{
+	}
 
-    public abstract void CompileDynamicLibrary(string outFile, IEnumerable<string> sources, IEnumerable<string> includePaths, IEnumerable<string> libraries, IEnumerable<string> libraryPaths);
-    protected void Execute(string arguments, string compilerPath)
-    {
-        ProcessStartInfo startInfo = new ProcessStartInfo(compilerPath, arguments);
-        this.SetupProcessStartInfo(startInfo);
-        this.RunProgram(startInfo);
-    }
+	protected void Execute(string arguments, string compilerPath)
+	{
+		ProcessStartInfo startInfo = new ProcessStartInfo(compilerPath, arguments);
+		this.SetupProcessStartInfo(startInfo);
+		this.RunProgram(startInfo);
+	}
 
-    protected void ExecuteCommand(string command, params string[] arguments)
-    {
-        if (<>f__am$cache0 == null)
-        {
-            <>f__am$cache0 = (buff, s) => buff + " " + s;
-        }
-        ProcessStartInfo startInfo = new ProcessStartInfo(command, arguments.Aggregate<string>(<>f__am$cache0));
-        this.SetupProcessStartInfo(startInfo);
-        this.RunProgram(startInfo);
-    }
+	protected void ExecuteCommand(string command, params string[] arguments)
+	{
+		ProcessStartInfo startInfo = new ProcessStartInfo(command, arguments.Aggregate((string buff, string s) => buff + " " + s));
+		this.SetupProcessStartInfo(startInfo);
+		this.RunProgram(startInfo);
+	}
 
-    protected internal static bool IsSourceFile(string source)
-    {
-        string extension = Path.GetExtension(source);
-        return ((extension == "cpp") || (extension == "c"));
-    }
+	private void RunProgram(ProcessStartInfo startInfo)
+	{
+		using (Program program = new Program(startInfo))
+		{
+			program.Start();
+			while (!program.WaitForExit(100))
+			{
+			}
+			string text = string.Empty;
+			string[] standardOutput = program.GetStandardOutput();
+			if (standardOutput.Length > 0)
+			{
+				text = standardOutput.Aggregate((string buf, string s) => buf + Environment.NewLine + s);
+			}
+			string[] errorOutput = program.GetErrorOutput();
+			if (errorOutput.Length > 0)
+			{
+				text += errorOutput.Aggregate((string buf, string s) => buf + Environment.NewLine + s);
+			}
+			if (program.ExitCode != 0)
+			{
+				UnityEngine.Debug.LogError(string.Concat(new string[]
+				{
+					"Failed running ",
+					startInfo.FileName,
+					" ",
+					startInfo.Arguments,
+					"\n\n",
+					text
+				}));
+				throw new Exception("IL2CPP compile failed.");
+			}
+		}
+	}
 
-    protected string ObjectFileFor(string source) => 
-        Path.ChangeExtension(source, this.objectFileExtension);
+	protected static string Aggregate(IEnumerable<string> items, string prefix, string suffix)
+	{
+		return items.Aggregate(string.Empty, (string current, string additionalFile) => current + prefix + additionalFile + suffix);
+	}
 
-    internal static void ParallelFor<T>(T[] sources, Action<T> action)
-    {
-        <ParallelFor>c__AnonStorey7C<T> storeyc = new <ParallelFor>c__AnonStorey7C<T> {
-            sources = sources,
-            action = action
-        };
-        Thread[] threadArray = new Thread[Environment.ProcessorCount];
-        Counter parameter = new Counter();
-        for (int i = 0; i < threadArray.Length; i++)
-        {
-            threadArray[i] = new Thread(new ParameterizedThreadStart(storeyc.<>m__11A));
-        }
-        foreach (Thread thread in threadArray)
-        {
-            thread.Start(parameter);
-        }
-        foreach (Thread thread2 in threadArray)
-        {
-            thread2.Join();
-        }
-    }
+	internal static void ParallelFor<T>(T[] sources, Action<T> action)
+	{
+		Thread[] array = new Thread[Environment.ProcessorCount];
+		NativeCompiler.Counter parameter = new NativeCompiler.Counter();
+		for (int i = 0; i < array.Length; i++)
+		{
+			array[i] = new Thread(delegate(object obj)
+			{
+				NativeCompiler.Counter counter = (NativeCompiler.Counter)obj;
+				int num;
+				while ((num = Interlocked.Increment(ref counter.index)) <= sources.Length)
+				{
+					action(sources[num - 1]);
+				}
+			});
+		}
+		Thread[] array2 = array;
+		for (int j = 0; j < array2.Length; j++)
+		{
+			Thread thread = array2[j];
+			thread.Start(parameter);
+		}
+		Thread[] array3 = array;
+		for (int k = 0; k < array3.Length; k++)
+		{
+			Thread thread2 = array3[k];
+			thread2.Join();
+		}
+	}
 
-    private void RunProgram(ProcessStartInfo startInfo)
-    {
-        using (Program program = new Program(startInfo))
-        {
-            program.Start();
-            while (!program.WaitForExit(100))
-            {
-            }
-            string str = string.Empty;
-            string[] standardOutput = program.GetStandardOutput();
-            if (standardOutput.Length > 0)
-            {
-                if (<>f__am$cache1 == null)
-                {
-                    <>f__am$cache1 = (buf, s) => buf + Environment.NewLine + s;
-                }
-                str = standardOutput.Aggregate<string>(<>f__am$cache1);
-            }
-            string[] errorOutput = program.GetErrorOutput();
-            if (errorOutput.Length > 0)
-            {
-                if (<>f__am$cache2 == null)
-                {
-                    <>f__am$cache2 = (buf, s) => buf + Environment.NewLine + s;
-                }
-                str = str + errorOutput.Aggregate<string>(<>f__am$cache2);
-            }
-            if (program.ExitCode != 0)
-            {
-                Debug.LogError("Failed running " + startInfo.FileName + " " + startInfo.Arguments + "\n\n" + str);
-                throw new Exception("IL2CPP compile failed.");
-            }
-        }
-    }
+	protected internal static IEnumerable<string> AllSourceFilesIn(string directory)
+	{
+		return Directory.GetFiles(directory, "*.cpp", SearchOption.AllDirectories).Concat(Directory.GetFiles(directory, "*.c", SearchOption.AllDirectories));
+	}
 
-    protected virtual void SetupProcessStartInfo(ProcessStartInfo startInfo)
-    {
-    }
+	protected internal static bool IsSourceFile(string source)
+	{
+		string extension = Path.GetExtension(source);
+		return extension == "cpp" || extension == "c";
+	}
 
-    protected virtual string objectFileExtension =>
-        "o";
-
-    [CompilerGenerated]
-    private sealed class <Aggregate>c__AnonStorey7B
-    {
-        internal string prefix;
-        internal string suffix;
-
-        internal string <>m__119(string current, string additionalFile) => 
-            (current + this.prefix + additionalFile + this.suffix);
-    }
-
-    [CompilerGenerated]
-    private sealed class <ParallelFor>c__AnonStorey7C<T>
-    {
-        internal Action<T> action;
-        internal T[] sources;
-
-        internal void <>m__11A(object obj)
-        {
-            int num;
-            NativeCompiler.Counter counter = (NativeCompiler.Counter) obj;
-            while ((num = Interlocked.Increment(ref counter.index)) <= this.sources.Length)
-            {
-                this.action(this.sources[num - 1]);
-            }
-        }
-    }
-
-    private class Counter
-    {
-        public int index;
-    }
+	protected string ObjectFileFor(string source)
+	{
+		return Path.ChangeExtension(source, this.objectFileExtension);
+	}
 }
-

@@ -1,17 +1,36 @@
-﻿using System;
+using System;
 
 internal class ClangCompilerSettingsx86 : ICompilerSettings
 {
-    public string CompilerPath =>
-        "clang++";
+	public string CompilerPath
+	{
+		get
+		{
+			return "clang++";
+		}
+	}
 
-    public string[] LibPaths =>
-        new string[0];
+	public string LinkerPath
+	{
+		get
+		{
+			return "ld";
+		}
+	}
 
-    public string LinkerPath =>
-        "ld";
+	public string[] LibPaths
+	{
+		get
+		{
+			return new string[0];
+		}
+	}
 
-    public string MachineSpecification =>
-        "i386";
+	public string MachineSpecification
+	{
+		get
+		{
+			return "i386";
+		}
+	}
 }
-

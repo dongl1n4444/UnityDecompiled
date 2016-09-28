@@ -1,21 +1,27 @@
-﻿using System;
+using System;
 using UnityEditor;
 
 internal static class DesktopStandaloneSettings
 {
-    private static readonly string kSettingCopyPDBFiles = "CopyPDBFiles";
+	private static readonly string kSettingCopyPDBFiles = "CopyPDBFiles";
 
-    internal static bool CopyPDBFiles
-    {
-        get => 
-            (EditorUserBuildSettings.GetPlatformSettings(PlatformName, kSettingCopyPDBFiles).ToLower() == "true");
-        set
-        {
-            EditorUserBuildSettings.SetPlatformSettings(PlatformName, kSettingCopyPDBFiles, value.ToString().ToLower());
-        }
-    }
+	internal static string PlatformName
+	{
+		get
+		{
+			return "Standalone";
+		}
+	}
 
-    internal static string PlatformName =>
-        "Standalone";
+	internal static bool CopyPDBFiles
+	{
+		get
+		{
+			return EditorUserBuildSettings.GetPlatformSettings(DesktopStandaloneSettings.PlatformName, DesktopStandaloneSettings.kSettingCopyPDBFiles).ToLower() == "true";
+		}
+		set
+		{
+			EditorUserBuildSettings.SetPlatformSettings(DesktopStandaloneSettings.PlatformName, DesktopStandaloneSettings.kSettingCopyPDBFiles, value.ToString().ToLower());
+		}
+	}
 }
-

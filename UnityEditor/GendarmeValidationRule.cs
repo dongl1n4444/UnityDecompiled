@@ -1,95 +1,93 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEditor.Scripting;
 using UnityEditor.Scripting.Compilers;
 using UnityEditor.Utils;
 
 internal abstract class GendarmeValidationRule : IValidationRule
 {
-    private readonly string _gendarmeExePath;
-    [CompilerGenerated]
-    private static Func<string, string, string> <>f__am$cache1;
+	private readonly string _gendarmeExePath;
 
-    protected GendarmeValidationRule(string gendarmeExePath)
-    {
-        this._gendarmeExePath = gendarmeExePath;
-    }
+	protected GendarmeValidationRule(string gendarmeExePath)
+	{
+		this._gendarmeExePath = gendarmeExePath;
+	}
 
-    protected string BuildGendarmeCommandLineArguments(IEnumerable<string> userAssemblies)
-    {
-        GendarmeOptions options = this.ConfigureGendarme(userAssemblies);
-        if ((options.UserAssemblies == null) || (options.UserAssemblies.Length == 0))
-        {
-            return null;
-        }
-        List<string> source = new List<string> {
-            "--config " + options.ConfigFilePath,
-            "--set " + options.RuleSet
-        };
-        source.AddRange(options.UserAssemblies);
-        if (<>f__am$cache1 == null)
-        {
-            <>f__am$cache1 = (agg, i) => agg + " " + i;
-        }
-        return source.Aggregate<string>(<>f__am$cache1);
-    }
+	public ValidationResult Validate(IEnumerable<string> userAssemblies, params object[] options)
+	{
+		string arguments = this.BuildGendarmeCommandLineArguments(userAssemblies);
+		ValidationResult validationResult = default(ValidationResult);
+		ValidationResult validationResult2 = validationResult;
+		validationResult2.Success = true;
+		validationResult2.Rule = this;
+		validationResult2.CompilerMessages = null;
+		validationResult = validationResult2;
+		try
+		{
+			validationResult.Success = GendarmeValidationRule.StartManagedProgram(this._gendarmeExePath, arguments, new GendarmeOutputParser(), ref validationResult.CompilerMessages);
+		}
+		catch (Exception ex)
+		{
+			validationResult.Success = false;
+			validationResult.CompilerMessages = new CompilerMessage[]
+			{
+				new CompilerMessage
+				{
+					file = "Exception",
+					message = ex.Message,
+					line = 0,
+					column = 0,
+					type = CompilerMessageType.Error
+				}
+			};
+		}
+		return validationResult;
+	}
 
-    protected abstract GendarmeOptions ConfigureGendarme(IEnumerable<string> userAssemblies);
-    private static ManagedProgram ManagedProgramFor(string exe, string arguments) => 
-        new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", exe, arguments, null);
+	protected abstract GendarmeOptions ConfigureGendarme(IEnumerable<string> userAssemblies);
 
-    private static bool StartManagedProgram(string exe, string arguments, CompilerOutputParserBase parser, ref IEnumerable<CompilerMessage> compilerMessages)
-    {
-        using (ManagedProgram program = ManagedProgramFor(exe, arguments))
-        {
-            program.LogProcessStartInfo();
-            try
-            {
-                program.Start();
-            }
-            catch
-            {
-                throw new Exception("Could not start " + exe);
-            }
-            program.WaitForExit();
-            if (program.ExitCode == 0)
-            {
-                return true;
-            }
-            compilerMessages = parser.Parse(program.GetErrorOutput(), program.GetStandardOutput(), true);
-        }
-        return false;
-    }
+	protected string BuildGendarmeCommandLineArguments(IEnumerable<string> userAssemblies)
+	{
+		GendarmeOptions gendarmeOptions = this.ConfigureGendarme(userAssemblies);
+		if (gendarmeOptions.UserAssemblies == null || gendarmeOptions.UserAssemblies.Length == 0)
+		{
+			return null;
+		}
+		List<string> list = new List<string>
+		{
+			"--config " + gendarmeOptions.ConfigFilePath,
+			"--set " + gendarmeOptions.RuleSet
+		};
+		list.AddRange(gendarmeOptions.UserAssemblies);
+		return list.Aggregate((string agg, string i) => agg + " " + i);
+	}
 
-    public ValidationResult Validate(IEnumerable<string> userAssemblies, params object[] options)
-    {
-        string arguments = this.BuildGendarmeCommandLineArguments(userAssemblies);
-        ValidationResult result = new ValidationResult {
-            Success = true,
-            Rule = this,
-            CompilerMessages = null
-        };
-        try
-        {
-            result.Success = StartManagedProgram(this._gendarmeExePath, arguments, new GendarmeOutputParser(), ref result.CompilerMessages);
-        }
-        catch (Exception exception)
-        {
-            result.Success = false;
-            CompilerMessage[] messageArray1 = new CompilerMessage[1];
-            CompilerMessage message = new CompilerMessage {
-                file = "Exception",
-                message = exception.Message,
-                line = 0,
-                column = 0,
-                type = CompilerMessageType.Error
-            };
-            messageArray1[0] = message;
-            result.CompilerMessages = messageArray1;
-        }
-        return result;
-    }
+	private static bool StartManagedProgram(string exe, string arguments, CompilerOutputParserBase parser, ref IEnumerable<CompilerMessage> compilerMessages)
+	{
+		using (ManagedProgram managedProgram = GendarmeValidationRule.ManagedProgramFor(exe, arguments))
+		{
+			managedProgram.LogProcessStartInfo();
+			try
+			{
+				managedProgram.Start();
+			}
+			catch
+			{
+				throw new Exception("Could not start " + exe);
+			}
+			managedProgram.WaitForExit();
+			if (managedProgram.ExitCode == 0)
+			{
+				return true;
+			}
+			compilerMessages = parser.Parse(managedProgram.GetErrorOutput(), managedProgram.GetStandardOutput(), true);
+		}
+		return false;
+	}
+
+	private static ManagedProgram ManagedProgramFor(string exe, string arguments)
+	{
+		return new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), "4.0", exe, arguments, null);
+	}
 }
-

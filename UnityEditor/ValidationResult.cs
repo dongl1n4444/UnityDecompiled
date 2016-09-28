@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using UnityEditor.Scripting.Compilers;
 
-[StructLayout(LayoutKind.Sequential)]
 internal struct ValidationResult
 {
-    public bool Success;
-    public IValidationRule Rule;
-    public IEnumerable<CompilerMessage> CompilerMessages;
-}
+	public bool Success;
 
+	public IValidationRule Rule;
+
+	public IEnumerable<CompilerMessage> CompilerMessages;
+}

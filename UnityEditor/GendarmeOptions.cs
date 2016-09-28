@@ -1,11 +1,10 @@
-﻿using System;
-using System.Runtime.InteropServices;
+using System;
 
-[StructLayout(LayoutKind.Sequential)]
 internal struct GendarmeOptions
 {
-    public string RuleSet;
-    public string ConfigFilePath;
-    public string[] UserAssemblies;
-}
+	public string RuleSet;
 
+	public string ConfigFilePath;
+
+	public string[] UserAssemblies;
+}

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditor.Modules;
 using UnityEditorInternal;
@@ -9,329 +7,312 @@ using UnityEngine;
 
 internal abstract class DesktopStandalonePostProcessor
 {
-    [CompilerGenerated]
-    private static Action<string> <>f__am$cache2;
-    [CompilerGenerated]
-    private static Func<string, bool> <>f__am$cache3;
-    [CompilerGenerated]
-    private static Func<string, bool> <>f__am$cache4;
-    [CompilerGenerated]
-    private static Dictionary<string, int> <>f__switch$map16;
-    protected BuildPostProcessArgs m_PostProcessArgs;
+	internal class ScriptingImplementations : IScriptingImplementations
+	{
+		public ScriptingImplementation[] Supported()
+		{
+			return new ScriptingImplementation[]
+			{
+				ScriptingImplementation.Mono2x,
+				ScriptingImplementation.IL2CPP
+			};
+		}
 
-    protected DesktopStandalonePostProcessor()
-    {
-    }
+		public ScriptingImplementation[] Enabled()
+		{
+			if (Unsupported.IsDeveloperBuild())
+			{
+				return new ScriptingImplementation[]
+				{
+					ScriptingImplementation.Mono2x,
+					ScriptingImplementation.IL2CPP
+				};
+			}
+			return new ScriptingImplementation[1];
+		}
+	}
 
-    protected DesktopStandalonePostProcessor(BuildPostProcessArgs postProcessArgs)
-    {
-        this.m_PostProcessArgs = postProcessArgs;
-    }
+	protected BuildPostProcessArgs m_PostProcessArgs;
 
-    protected abstract void CopyDataForBuildsFolder();
-    private bool CopyFilter(string path)
-    {
-        bool flag = !path.Contains("UnityEngine.mdb");
-        if (!DesktopStandaloneSettings.CopyPDBFiles)
-        {
-            flag &= Path.GetExtension(path).ToLower() != ".pdb";
-        }
-        return flag;
-    }
+	protected abstract string StagingAreaPluginsFolder
+	{
+		get;
+	}
 
-    private void CopyNativePlugins()
-    {
-        string buildTargetName = BuildPipeline.GetBuildTargetName(this.m_PostProcessArgs.target);
-        IPluginImporterExtension extension = new DesktopPluginImporterExtension();
-        string stagingAreaPluginsFolder = this.StagingAreaPluginsFolder;
-        string path = Path.Combine(stagingAreaPluginsFolder, "x86");
-        string str4 = Path.Combine(stagingAreaPluginsFolder, "x86_64");
-        bool flag = false;
-        bool flag2 = false;
-        bool flag3 = false;
-        foreach (PluginImporter importer in PluginImporter.GetImporters(this.m_PostProcessArgs.target))
-        {
-            string str6;
-            BuildTarget platform = this.m_PostProcessArgs.target;
-            if (!importer.isNativePlugin)
-            {
-                continue;
-            }
-            if (string.IsNullOrEmpty(importer.assetPath))
-            {
-                Debug.LogWarning("Got empty plugin importer path for " + this.m_PostProcessArgs.target.ToString());
-                continue;
-            }
-            if (!flag)
-            {
-                Directory.CreateDirectory(stagingAreaPluginsFolder);
-                flag = true;
-            }
-            bool flag4 = Directory.Exists(importer.assetPath);
-            string platformData = importer.GetPlatformData(platform, "CPU");
-            if (platformData != null)
-            {
-                int num2;
-                if (<>f__switch$map16 == null)
-                {
-                    Dictionary<string, int> dictionary = new Dictionary<string, int>(3) {
-                        { 
-                            "x86",
-                            0
-                        },
-                        { 
-                            "x86_64",
-                            1
-                        },
-                        { 
-                            "None",
-                            2
-                        }
-                    };
-                    <>f__switch$map16 = dictionary;
-                }
-                if (<>f__switch$map16.TryGetValue(platformData, out num2))
-                {
-                    switch (num2)
-                    {
-                        case 0:
-                        {
-                            if (((platform != BuildTarget.StandaloneOSXIntel64) && (platform != BuildTarget.StandaloneWindows64)) && (platform != BuildTarget.StandaloneLinux64))
-                            {
-                                goto Label_017E;
-                            }
-                            continue;
-                        }
-                        case 1:
-                        {
-                            switch (platform)
-                            {
-                                case BuildTarget.StandaloneOSXIntel64:
-                                case BuildTarget.StandaloneOSXUniversal:
-                                case BuildTarget.StandaloneWindows64:
-                                case BuildTarget.StandaloneLinux64:
-                                case BuildTarget.StandaloneLinuxUniversal:
-                                    goto Label_01C5;
-                            }
-                            continue;
-                        }
-                        case 2:
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-            goto Label_01E1;
-        Label_017E:
-            if (!flag2)
-            {
-                Directory.CreateDirectory(path);
-                flag2 = true;
-            }
-            goto Label_01E1;
-        Label_01C5:
-            if (!flag3)
-            {
-                Directory.CreateDirectory(str4);
-                flag3 = true;
-            }
-        Label_01E1:
-            str6 = extension.CalculateFinalPluginPath(buildTargetName, importer);
-            if (!string.IsNullOrEmpty(str6))
-            {
-                string target = Path.Combine(stagingAreaPluginsFolder, str6);
-                if (flag4)
-                {
-                    FileUtil.CopyDirectoryRecursive(importer.assetPath, target);
-                }
-                else
-                {
-                    FileUtil.UnityFileCopy(importer.assetPath, target);
-                }
-            }
-        }
-        IEnumerator<PluginDesc> enumerator = PluginImporter.GetExtensionPlugins(this.m_PostProcessArgs.target).GetEnumerator();
-        try
-        {
-            while (enumerator.MoveNext())
-            {
-                PluginDesc current = enumerator.Current;
-                if (!flag)
-                {
-                    Directory.CreateDirectory(stagingAreaPluginsFolder);
-                    flag = true;
-                }
-                string str8 = Path.Combine(stagingAreaPluginsFolder, Path.GetFileName(current.pluginPath));
-                if (!Directory.Exists(str8) && !File.Exists(str8))
-                {
-                    if (Directory.Exists(current.pluginPath))
-                    {
-                        FileUtil.CopyDirectoryRecursive(current.pluginPath, str8);
-                    }
-                    else
-                    {
-                        FileUtil.CopyFileIfExists(current.pluginPath, str8, false);
-                    }
-                }
-            }
-        }
-        finally
-        {
-            if (enumerator == null)
-            {
-            }
-            enumerator.Dispose();
-        }
-    }
+	protected abstract string DestinationFolderForInstallingIntoBuildsFolder
+	{
+		get;
+	}
 
-    protected void CopyStagingAreaIntoDestination()
-    {
-        if (this.InstallingIntoBuildsFolder)
-        {
-            string path = Unsupported.GetBaseUnityDeveloperFolder() + "/" + this.DestinationFolderForInstallingIntoBuildsFolder;
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
-            {
-                throw new Exception("Installing in builds folder failed because the player has not been built (You most likely want to enable 'Development build').");
-            }
-            if (<>f__am$cache3 == null)
-            {
-                <>f__am$cache3 = f => true;
-            }
-            FileUtil.CopyDirectoryFiltered(this.DataFolder, path, true, <>f__am$cache3, true);
-        }
-        else
-        {
-            this.DeleteDestination();
-            if (<>f__am$cache4 == null)
-            {
-                <>f__am$cache4 = f => true;
-            }
-            FileUtil.CopyDirectoryFiltered(this.StagingArea, this.DestinationFolder, true, <>f__am$cache4, true);
-        }
-    }
+	protected bool InstallingIntoBuildsFolder
+	{
+		get
+		{
+			return (this.m_PostProcessArgs.options & BuildOptions.InstallInBuildFolder) != BuildOptions.None;
+		}
+	}
 
-    protected virtual void CopyVariationFolderIntoStagingArea()
-    {
-        FileUtil.CopyDirectoryFiltered(this.m_PostProcessArgs.playerPackage + "/Variations/" + this.GetVariationName(), this.StagingArea, true, f => this.CopyFilter(f), true);
-    }
+	protected bool UseIl2Cpp
+	{
+		get
+		{
+			int num = 0;
+			return PlayerSettings.GetPropertyOptionalInt("ScriptingBackend", ref num, BuildTargetGroup.Standalone) && num == 1;
+		}
+	}
 
-    protected void CreateApplicationData()
-    {
-        string[] textArray1 = new string[] { this.m_PostProcessArgs.companyName, this.m_PostProcessArgs.productName };
-        File.WriteAllText(Path.Combine(this.DataFolder, "app.info"), string.Join("\n", textArray1));
-    }
+	protected string StagingArea
+	{
+		get
+		{
+			return this.m_PostProcessArgs.stagingArea;
+		}
+	}
 
-    protected abstract void DeleteDestination();
-    protected abstract IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target);
-    protected virtual string GetVariationName() => 
-        $"{this.PlatformStringFor(this.m_PostProcessArgs.target)}_{(!this.Development ? "nondevelopment" : "development")}";
+	protected string InstallPath
+	{
+		get
+		{
+			return this.m_PostProcessArgs.installPath;
+		}
+	}
 
-    protected abstract string PlatformStringFor(BuildTarget target);
-    public void PostProcess()
-    {
-        this.SetupStagingArea();
-        this.CopyStagingAreaIntoDestination();
-    }
+	protected string DataFolder
+	{
+		get
+		{
+			return this.StagingArea + "/Data";
+		}
+	}
 
-    protected abstract void RenameFilesInStagingArea();
-    protected virtual void SetupStagingArea()
-    {
-        Directory.CreateDirectory(this.DataFolder);
-        this.CopyNativePlugins();
-        if ((this.m_PostProcessArgs.target == BuildTarget.StandaloneWindows) || (this.m_PostProcessArgs.target == BuildTarget.StandaloneWindows64))
-        {
-            this.CreateApplicationData();
-        }
-        PostprocessBuildPlayer.InstallStreamingAssets(this.DataFolder);
-        if (this.UseIl2Cpp)
-        {
-            this.CopyVariationFolderIntoStagingArea();
-            string stagingAreaData = this.StagingArea + "/Data";
-            string destinationFolder = this.DataFolder + "/Managed";
-            string dir = destinationFolder + "/Resources";
-            string str4 = destinationFolder + "/Metadata";
-            if (<>f__am$cache2 == null)
-            {
-                <>f__am$cache2 = delegate (string s) {
-                };
-            }
-            IL2CPPUtils.RunIl2Cpp(stagingAreaData, this.GetPlatformProvider(this.m_PostProcessArgs.target), <>f__am$cache2, this.m_PostProcessArgs.usedClassRegistry, this.Development);
-            FileUtil.CreateOrCleanDirectory(dir);
-            IL2CPPUtils.CopyEmbeddedResourceFiles(stagingAreaData, dir);
-            FileUtil.CreateOrCleanDirectory(str4);
-            IL2CPPUtils.CopyMetadataFiles(stagingAreaData, str4);
-            IL2CPPUtils.CopySymmapFile(stagingAreaData + "/Native", destinationFolder);
-        }
-        if (this.InstallingIntoBuildsFolder)
-        {
-            this.CopyDataForBuildsFolder();
-        }
-        else
-        {
-            if (!this.UseIl2Cpp)
-            {
-                this.CopyVariationFolderIntoStagingArea();
-            }
-            this.RenameFilesInStagingArea();
-            this.m_PostProcessArgs.report.AddFilesRecursive(this.StagingArea, string.Empty);
-            this.m_PostProcessArgs.report.RelocateFiles(this.StagingArea, string.Empty);
-        }
-    }
+	protected BuildTarget Target
+	{
+		get
+		{
+			return this.m_PostProcessArgs.target;
+		}
+	}
 
-    protected string DataFolder =>
-        (this.StagingArea + "/Data");
+	protected string DestinationFolder
+	{
+		get
+		{
+			return FileUtil.UnityGetDirectoryName(this.m_PostProcessArgs.installPath);
+		}
+	}
 
-    protected string DestinationFolder =>
-        FileUtil.UnityGetDirectoryName(this.m_PostProcessArgs.installPath);
+	protected bool Development
+	{
+		get
+		{
+			return (this.m_PostProcessArgs.options & BuildOptions.Development) != BuildOptions.None;
+		}
+	}
 
-    protected abstract string DestinationFolderForInstallingIntoBuildsFolder { get; }
+	protected DesktopStandalonePostProcessor()
+	{
+	}
 
-    protected bool Development =>
-        ((this.m_PostProcessArgs.options & BuildOptions.Development) != BuildOptions.CompressTextures);
+	protected DesktopStandalonePostProcessor(BuildPostProcessArgs postProcessArgs)
+	{
+		this.m_PostProcessArgs = postProcessArgs;
+	}
 
-    protected bool InstallingIntoBuildsFolder =>
-        ((this.m_PostProcessArgs.options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures);
+	public void PostProcess()
+	{
+		this.SetupStagingArea();
+		this.CopyStagingAreaIntoDestination();
+	}
 
-    protected string InstallPath =>
-        this.m_PostProcessArgs.installPath;
+	private void CopyNativePlugins()
+	{
+		string buildTargetName = BuildPipeline.GetBuildTargetName(this.m_PostProcessArgs.target);
+		IPluginImporterExtension pluginImporterExtension = new DesktopPluginImporterExtension();
+		string stagingAreaPluginsFolder = this.StagingAreaPluginsFolder;
+		string path = Path.Combine(stagingAreaPluginsFolder, "x86");
+		string path2 = Path.Combine(stagingAreaPluginsFolder, "x86_64");
+		bool flag = false;
+		bool flag2 = false;
+		bool flag3 = false;
+		PluginImporter[] importers = PluginImporter.GetImporters(this.m_PostProcessArgs.target);
+		for (int i = 0; i < importers.Length; i++)
+		{
+			PluginImporter pluginImporter = importers[i];
+			BuildTarget target = this.m_PostProcessArgs.target;
+			if (pluginImporter.isNativePlugin)
+			{
+				if (string.IsNullOrEmpty(pluginImporter.assetPath))
+				{
+					Debug.LogWarning("Got empty plugin importer path for " + this.m_PostProcessArgs.target.ToString());
+				}
+				else
+				{
+					if (!flag)
+					{
+						Directory.CreateDirectory(stagingAreaPluginsFolder);
+						flag = true;
+					}
+					bool flag4 = Directory.Exists(pluginImporter.assetPath);
+					string platformData = pluginImporter.GetPlatformData(target, "CPU");
+					string text = platformData;
+					switch (text)
+					{
+					case "x86":
+						if (target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneWindows64 || target == BuildTarget.StandaloneLinux64)
+						{
+							goto IL_22F;
+						}
+						if (!flag2)
+						{
+							Directory.CreateDirectory(path);
+							flag2 = true;
+						}
+						break;
+					case "x86_64":
+						if (target != BuildTarget.StandaloneOSXIntel64 && target != BuildTarget.StandaloneOSXUniversal && target != BuildTarget.StandaloneWindows64 && target != BuildTarget.StandaloneLinux64 && target != BuildTarget.StandaloneLinuxUniversal)
+						{
+							goto IL_22F;
+						}
+						if (!flag3)
+						{
+							Directory.CreateDirectory(path2);
+							flag3 = true;
+						}
+						break;
+					case "None":
+						goto IL_22F;
+					}
+					string text2 = pluginImporterExtension.CalculateFinalPluginPath(buildTargetName, pluginImporter);
+					if (!string.IsNullOrEmpty(text2))
+					{
+						string text3 = Path.Combine(stagingAreaPluginsFolder, text2);
+						if (flag4)
+						{
+							FileUtil.CopyDirectoryRecursive(pluginImporter.assetPath, text3);
+						}
+						else
+						{
+							FileUtil.UnityFileCopy(pluginImporter.assetPath, text3);
+						}
+					}
+				}
+			}
+			IL_22F:;
+		}
+		foreach (PluginDesc current in PluginImporter.GetExtensionPlugins(this.m_PostProcessArgs.target))
+		{
+			if (!flag)
+			{
+				Directory.CreateDirectory(stagingAreaPluginsFolder);
+				flag = true;
+			}
+			string text4 = Path.Combine(stagingAreaPluginsFolder, Path.GetFileName(current.pluginPath));
+			if (!Directory.Exists(text4) && !File.Exists(text4))
+			{
+				if (Directory.Exists(current.pluginPath))
+				{
+					FileUtil.CopyDirectoryRecursive(current.pluginPath, text4);
+				}
+				else
+				{
+					FileUtil.CopyFileIfExists(current.pluginPath, text4, false);
+				}
+			}
+		}
+	}
 
-    protected string StagingArea =>
-        this.m_PostProcessArgs.stagingArea;
+	protected virtual void SetupStagingArea()
+	{
+		Directory.CreateDirectory(this.DataFolder);
+		this.CopyNativePlugins();
+		if (this.m_PostProcessArgs.target == BuildTarget.StandaloneWindows || this.m_PostProcessArgs.target == BuildTarget.StandaloneWindows64)
+		{
+			this.CreateApplicationData();
+		}
+		PostprocessBuildPlayer.InstallStreamingAssets(this.DataFolder);
+		if (this.UseIl2Cpp)
+		{
+			this.CopyVariationFolderIntoStagingArea();
+			string text = this.StagingArea + "/Data";
+			string text2 = this.DataFolder + "/Managed";
+			string text3 = text2 + "/Resources";
+			string text4 = text2 + "/Metadata";
+			IL2CPPUtils.RunIl2Cpp(text, this.GetPlatformProvider(this.m_PostProcessArgs.target), delegate(string s)
+			{
+			}, this.m_PostProcessArgs.usedClassRegistry, this.Development);
+			FileUtil.CreateOrCleanDirectory(text3);
+			IL2CPPUtils.CopyEmbeddedResourceFiles(text, text3);
+			FileUtil.CreateOrCleanDirectory(text4);
+			IL2CPPUtils.CopyMetadataFiles(text, text4);
+			IL2CPPUtils.CopySymmapFile(text + "/Native", text2);
+		}
+		if (this.InstallingIntoBuildsFolder)
+		{
+			this.CopyDataForBuildsFolder();
+			return;
+		}
+		if (!this.UseIl2Cpp)
+		{
+			this.CopyVariationFolderIntoStagingArea();
+		}
+		this.RenameFilesInStagingArea();
+		this.m_PostProcessArgs.report.AddFilesRecursive(this.StagingArea, string.Empty);
+		this.m_PostProcessArgs.report.RelocateFiles(this.StagingArea, string.Empty);
+	}
 
-    protected abstract string StagingAreaPluginsFolder { get; }
+	protected void CreateApplicationData()
+	{
+		File.WriteAllText(Path.Combine(this.DataFolder, "app.info"), string.Join("\n", new string[]
+		{
+			this.m_PostProcessArgs.companyName,
+			this.m_PostProcessArgs.productName
+		}));
+	}
 
-    protected BuildTarget Target =>
-        this.m_PostProcessArgs.target;
+	private bool CopyFilter(string path)
+	{
+		bool flag = !path.Contains("UnityEngine.mdb");
+		if (!DesktopStandaloneSettings.CopyPDBFiles)
+		{
+			flag &= (Path.GetExtension(path).ToLower() != ".pdb");
+		}
+		return flag;
+	}
 
-    protected bool UseIl2Cpp
-    {
-        get
-        {
-            int num = 0;
-            return (PlayerSettings.GetPropertyOptionalInt("ScriptingBackend", ref num, BuildTargetGroup.Standalone) && (num == 1));
-        }
-    }
+	protected virtual void CopyVariationFolderIntoStagingArea()
+	{
+		string source = this.m_PostProcessArgs.playerPackage + "/Variations/" + this.GetVariationName();
+		FileUtil.CopyDirectoryFiltered(source, this.StagingArea, true, (string f) => this.CopyFilter(f), true);
+	}
 
-    internal class ScriptingImplementations : IScriptingImplementations
-    {
-        public ScriptingImplementation[] Enabled()
-        {
-            if (Unsupported.IsDeveloperBuild())
-            {
-                ScriptingImplementation[] implementationArray1 = new ScriptingImplementation[2];
-                implementationArray1[1] = ScriptingImplementation.IL2CPP;
-                return implementationArray1;
-            }
-            return new ScriptingImplementation[1];
-        }
+	protected void CopyStagingAreaIntoDestination()
+	{
+		if (!this.InstallingIntoBuildsFolder)
+		{
+			this.DeleteDestination();
+			FileUtil.CopyDirectoryFiltered(this.StagingArea, this.DestinationFolder, true, (string f) => true, true);
+			return;
+		}
+		string text = Unsupported.GetBaseUnityDeveloperFolder() + "/" + this.DestinationFolderForInstallingIntoBuildsFolder;
+		if (!Directory.Exists(Path.GetDirectoryName(text)))
+		{
+			throw new Exception("Installing in builds folder failed because the player has not been built (You most likely want to enable 'Development build').");
+		}
+		FileUtil.CopyDirectoryFiltered(this.DataFolder, text, true, (string f) => true, true);
+	}
 
-        public ScriptingImplementation[] Supported()
-        {
-            ScriptingImplementation[] implementationArray1 = new ScriptingImplementation[2];
-            implementationArray1[1] = ScriptingImplementation.IL2CPP;
-            return implementationArray1;
-        }
-    }
+	protected abstract void DeleteDestination();
+
+	protected abstract void CopyDataForBuildsFolder();
+
+	protected virtual string GetVariationName()
+	{
+		return string.Format("{0}_{1}", this.PlatformStringFor(this.m_PostProcessArgs.target), (!this.Development) ? "nondevelopment" : "development");
+	}
+
+	protected abstract string PlatformStringFor(BuildTarget target);
+
+	protected abstract void RenameFilesInStagingArea();
+
+	protected abstract IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target);
 }
-
