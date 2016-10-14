@@ -193,6 +193,14 @@ namespace UnityEditor
 
 		[WrapperlessIcall]
 		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern Type GetMainAssetTypeAtPath(string assetPath);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern bool IsMainAssetAtPathLoaded(string assetPath);
+
+		[WrapperlessIcall]
+		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern UnityEngine.Object[] LoadAllAssetRepresentationsAtPath(string assetPath);
 
 		[WrapperlessIcall]

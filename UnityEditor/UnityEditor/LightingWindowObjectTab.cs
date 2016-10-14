@@ -653,7 +653,7 @@ namespace UnityEditor
 			EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
 			if (advancedParameters)
 			{
-				EditorGUIInternal.AssetPopup<LightmapParameters>(prop, content, "giparams", "Default scene parameter");
+				EditorGUIInternal.AssetPopup<LightmapParameters>(prop, content, "giparams", "Scene Default Parameters");
 			}
 			else
 			{

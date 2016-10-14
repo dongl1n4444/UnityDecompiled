@@ -25,6 +25,7 @@ namespace UnityEngine
 				case RuntimePlatform.TizenPlayer:
 				case RuntimePlatform.PSM:
 				case RuntimePlatform.WiiU:
+				case RuntimePlatform.tvOS:
 					return true;
 				case RuntimePlatform.BB10Player:
 				case RuntimePlatform.PSP2:
@@ -32,7 +33,7 @@ namespace UnityEngine
 				case RuntimePlatform.XboxOne:
 				case RuntimePlatform.SamsungTVPlayer:
 				case (RuntimePlatform)29:
-					IL_45:
+					IL_49:
 					switch (runtimePlatform)
 					{
 					case RuntimePlatform.IPhonePlayer:
@@ -41,7 +42,7 @@ namespace UnityEngine
 					}
 					return false;
 				}
-				goto IL_45;
+				goto IL_49;
 			}
 		}
 

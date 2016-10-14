@@ -527,7 +527,6 @@ namespace UnityEngine
 				internalDrawTextureArguments.bottomBorder = 0;
 				internalDrawTextureArguments.color = GUI.color;
 				internalDrawTextureArguments.mat = mat;
-				GL.sRGBWrite = (QualitySettings.activeColorSpace == ColorSpace.Linear);
 				switch (scaleMode)
 				{
 				case ScaleMode.StretchToFill:
@@ -568,7 +567,6 @@ namespace UnityEngine
 					}
 					break;
 				}
-				GL.sRGBWrite = false;
 			}
 		}
 
@@ -640,9 +638,7 @@ namespace UnityEngine
 				internalDrawTextureArguments.mat = mat;
 				internalDrawTextureArguments.screenRect = position;
 				internalDrawTextureArguments.sourceRect = texCoords;
-				GL.sRGBWrite = (QualitySettings.activeColorSpace == ColorSpace.Linear);
 				Graphics.DrawTexture(ref internalDrawTextureArguments);
-				GL.sRGBWrite = false;
 			}
 		}
 

@@ -106,10 +106,10 @@ namespace UnityEditor
 				ReflectionProbeEditor.Styles.intensityText = new GUIContent("Intensity");
 				ReflectionProbeEditor.Styles.resolutionText = new GUIContent("Resolution");
 				ReflectionProbeEditor.Styles.captureCubemapHeaderText = new GUIContent("Cubemap capture settings");
-				ReflectionProbeEditor.Styles.boxProjectionText = new GUIContent("Box Projection", "Box projection is useful for reflections in enclosed spaces where some parallax and movement in the reflection is wanted. If not set then cubemap reflection will we treated as coming infinite far away. And within this zone objects with the Standard shader will receive this Reflection Probe's cubemap.");
+				ReflectionProbeEditor.Styles.boxProjectionText = new GUIContent("Box Projection", "Box projection causes reflections to appear to change based on the object's position within the probe's box, while still using a single probe as the source of the reflection. This works well for reflections on objects that are moving through enclosed spaces such as corridors and rooms. Setting box projection to False and the cubemap reflection will be treated as coming from infinitely far away.");
 				ReflectionProbeEditor.Styles.blendDistanceText = new GUIContent("Blend Distance", "Area around the probe where it is blended with other probes. Only used in deferred probes.");
-				ReflectionProbeEditor.Styles.sizeText = EditorGUIUtility.TextContent("Box Size|The size of the box in which the reflection will be applied to the objects. The value is not affected by the Transform of the Game Object.");
-				ReflectionProbeEditor.Styles.centerText = EditorGUIUtility.TextContent("Box Offset|The center of the box in which the reflections will be applied to the objects. The value is relative to the position of the Game Object.");
+				ReflectionProbeEditor.Styles.sizeText = EditorGUIUtility.TextContent("Box Size|The size of the box in which the reflections will be applied to objects. The value is not affected by the Transform of the Game Object.");
+				ReflectionProbeEditor.Styles.centerText = EditorGUIUtility.TextContent("Box Offset|The center of the box in which the reflections will be applied to objects. The value is relative to the position of the Game Object.");
 				ReflectionProbeEditor.Styles.skipFramesText = new GUIContent("Skip frames");
 				ReflectionProbeEditor.Styles.customCubemapText = new GUIContent("Cubemap");
 				ReflectionProbeEditor.Styles.editorUpdateText = new GUIContent("Editor Update");

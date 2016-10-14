@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Security.Permissions;
 
-[assembly: AssemblyVersion("1.0.6106.19147")]
+[assembly: AssemblyVersion("1.0.6124.2570")]
 [assembly: AssemblyCompany("Unity Technologies")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCopyright("Copyright © 2014")]

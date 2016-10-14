@@ -204,14 +204,18 @@ namespace UnityEditor
 							if (configField.isPassword)
 							{
 								text = EditorGUILayout.PasswordField(configField.label, configValue, new GUILayoutOption[0]);
+								if (text != configValue)
+								{
+									EditorUserSettings.SetPrivateConfigValue(configField.name, text);
+								}
 							}
 							else
 							{
 								text = EditorGUILayout.TextField(configField.label, configValue, new GUILayoutOption[0]);
-							}
-							if (text != configValue)
-							{
-								EditorUserSettings.SetConfigValue(configField.name, text);
+								if (text != configValue)
+								{
+									EditorUserSettings.SetConfigValue(configField.name, text);
+								}
 							}
 							if (configField.isRequired && string.IsNullOrEmpty(text))
 							{

@@ -207,13 +207,21 @@ namespace UnityEditor
 			gameObject.name += "AnimatorPreview";
 			gameObject.tag = "Untagged";
 			EditorUtility.InitInstantiatedPreviewRecursive(gameObject);
-			Animator component = gameObject.GetComponent<Animator>();
-			if (component)
+			Animator animator = gameObject.GetComponent<Animator>();
+			if (animator)
 			{
-				component.enabled = false;
-				component.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-				component.logWarnings = false;
-				component.fireEvents = false;
+				animator.enabled = false;
+				animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+				animator.logWarnings = false;
+				animator.fireEvents = false;
+			}
+			else
+			{
+				animator = gameObject.AddComponent<Animator>();
+				animator.enabled = false;
+				animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+				animator.logWarnings = false;
+				animator.fireEvents = false;
 			}
 			return gameObject;
 		}

@@ -2204,6 +2204,16 @@ namespace UnityEditor
 				set;
 			}
 
+			public static extern bool requireExtendedGameController
+			{
+				[WrapperlessIcall]
+				[MethodImpl(MethodImplOptions.InternalCall)]
+				get;
+				[WrapperlessIcall]
+				[MethodImpl(MethodImplOptions.InternalCall)]
+				set;
+			}
+
 			[WrapperlessIcall]
 			[MethodImpl(MethodImplOptions.InternalCall)]
 			internal static extern Texture2D[] GetSmallIconLayers();

@@ -23,7 +23,7 @@ namespace UnityEngine.Networking
 
 		internal static bool DoesEndPointUsePlatformProtocols(EndPoint endPoint)
 		{
-			if (endPoint.GetType().FullName == "UnityEngine.PS4.SceEndPoint")
+			if (endPoint.GetType().FullName == "UnityEngine.PS4.SceEndPoint" || endPoint.GetType().FullName == "UnityEngine.PSVita.SceEndPoint")
 			{
 				SocketAddress socketAddress = endPoint.Serialize();
 				if (socketAddress[8] != 0 || socketAddress[9] != 0)
@@ -48,7 +48,7 @@ namespace UnityEngine.Networking
 			{
 				throw new NullReferenceException("Null EndPoint provided");
 			}
-			if (endPoint.GetType().FullName != "UnityEngine.XboxOne.XboxOneEndPoint" && endPoint.GetType().FullName != "UnityEngine.PS4.SceEndPoint")
+			if (endPoint.GetType().FullName != "UnityEngine.XboxOne.XboxOneEndPoint" && endPoint.GetType().FullName != "UnityEngine.PS4.SceEndPoint" && endPoint.GetType().FullName != "UnityEngine.PSVita.SceEndPoint")
 			{
 				throw new ArgumentException("Endpoint of type XboxOneEndPoint or SceEndPoint  required");
 			}

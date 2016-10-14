@@ -533,8 +533,13 @@ namespace UnityEngine
 					if (num2 != -1)
 					{
 						string key = text.Substring(0, num2).ToUpper();
-						string value = text.Substring(num2 + 2);
-						dictionary[key] = value;
+						string text2 = text.Substring(num2 + 2);
+						string str;
+						if (dictionary.TryGetValue(key, out str))
+						{
+							text2 = str + "," + text2;
+						}
+						dictionary[key] = text2;
 					}
 				}
 			}
