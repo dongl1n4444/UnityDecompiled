@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum InspectorMode
-	{
-		Normal,
-		Debug,
-		DebugInternal
-	}
+    using System;
+
+    public enum InspectorMode
+    {
+        Normal,
+        Debug,
+        DebugInternal
+    }
 }
+

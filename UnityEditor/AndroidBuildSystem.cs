@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum AndroidBuildSystem
-	{
-		Internal,
-		Gradle,
-		ADT
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Type of Android build system.</para>
+    /// </summary>
+    public enum AndroidBuildSystem
+    {
+        Internal,
+        Gradle,
+        ADT
+    }
 }
+

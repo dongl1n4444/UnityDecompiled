@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum NameConflictResolution
-	{
-		Unresolved,
-		RenameLocal,
-		RenameRemote
-	}
+    using System;
+
+    internal enum NameConflictResolution
+    {
+        Unresolved,
+        RenameLocal,
+        RenameRemote
+    }
 }
+

@@ -1,17 +1,18 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum MemoryInfoGCReason
-	{
-		SceneObject,
-		BuiltinResource,
-		MarkedDontSave,
-		AssetMarkedDirtyInEditor,
-		SceneAssetReferencedByNativeCodeOnly = 5,
-		SceneAssetReferenced,
-		AssetReferencedByNativeCodeOnly = 8,
-		AssetReferenced,
-		NotApplicable
-	}
+    using System;
+
+    public enum MemoryInfoGCReason
+    {
+        AssetMarkedDirtyInEditor = 3,
+        AssetReferenced = 9,
+        AssetReferencedByNativeCodeOnly = 8,
+        BuiltinResource = 1,
+        MarkedDontSave = 2,
+        NotApplicable = 10,
+        SceneAssetReferenced = 6,
+        SceneAssetReferencedByNativeCodeOnly = 5,
+        SceneObject = 0
+    }
 }
+

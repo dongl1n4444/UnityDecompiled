@@ -1,13 +1,19 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[RequiredByNativeCode]
-	public interface ISerializationCallbackReceiver
-	{
-		void OnBeforeSerialize();
+    using System;
+    using UnityEngine.Scripting;
 
-		void OnAfterDeserialize();
-	}
+    [RequiredByNativeCode]
+    public interface ISerializationCallbackReceiver
+    {
+        /// <summary>
+        /// <para>Implement this method to receive a callback after Unity deserializes your object.</para>
+        /// </summary>
+        void OnAfterDeserialize();
+        /// <summary>
+        /// <para>Implement this method to receive a callback before Unity serializes your object.</para>
+        /// </summary>
+        void OnBeforeSerialize();
+    }
 }
+

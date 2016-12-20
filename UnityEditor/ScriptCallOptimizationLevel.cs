@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum ScriptCallOptimizationLevel
-	{
-		SlowAndSafe,
-		FastButNoExceptions
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Script call optimization level.</para>
+    /// </summary>
+    public enum ScriptCallOptimizationLevel
+    {
+        SlowAndSafe,
+        FastButNoExceptions
+    }
 }
+

@@ -1,70 +1,67 @@
-using System;
-using System.IO;
-using System.Text.RegularExpressions;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class ProvisioningProfile
-	{
-		private string m_UUID = string.Empty;
+    using System;
+    using System.IO;
+    using System.Text.RegularExpressions;
 
-		private static readonly string s_FirstLinePattern = "<key>UUID<\\/key>";
+    internal class ProvisioningProfile
+    {
+        private string m_UUID;
+        private static readonly string s_FirstLinePattern = @"<key>UUID<\/key>";
+        private static readonly string s_SecondLinePattern = @"<string>((\w*\-?){5})";
 
-		private static readonly string s_SecondLinePattern = "<string>((\\w*\\-?){5})";
+        internal ProvisioningProfile()
+        {
+            this.m_UUID = string.Empty;
+        }
 
-		public string UUID
-		{
-			get
-			{
-				return this.m_UUID;
-			}
-			set
-			{
-				this.m_UUID = value;
-			}
-		}
+        internal ProvisioningProfile(string UUID)
+        {
+            this.m_UUID = string.Empty;
+            this.m_UUID = UUID;
+        }
 
-		internal ProvisioningProfile()
-		{
-		}
+        private static void parseFile(string filePath, ProvisioningProfile profile)
+        {
+            string str;
+            StreamReader reader = new StreamReader(filePath);
+            while ((str = reader.ReadLine()) != null)
+            {
+                if (Regex.Match(str, s_FirstLinePattern).Success && ((str = reader.ReadLine()) != null))
+                {
+                    Match match2 = Regex.Match(str, s_SecondLinePattern);
+                    if (match2.Success)
+                    {
+                        profile.UUID = match2.Groups[1].Value;
+                        break;
+                    }
+                }
+                if (!string.IsNullOrEmpty(profile.UUID))
+                {
+                    break;
+                }
+            }
+            reader.Close();
+        }
 
-		internal ProvisioningProfile(string UUID)
-		{
-			this.m_UUID = UUID;
-		}
+        internal static ProvisioningProfile ParseProvisioningProfileAtPath(string pathToFile)
+        {
+            ProvisioningProfile profile = new ProvisioningProfile();
+            parseFile(pathToFile, profile);
+            return profile;
+        }
 
-		internal static ProvisioningProfile ParseProvisioningProfileAtPath(string pathToFile)
-		{
-			ProvisioningProfile provisioningProfile = new ProvisioningProfile();
-			ProvisioningProfile.parseFile(pathToFile, provisioningProfile);
-			return provisioningProfile;
-		}
-
-		private static void parseFile(string filePath, ProvisioningProfile profile)
-		{
-			StreamReader streamReader = new StreamReader(filePath);
-			string input;
-			while ((input = streamReader.ReadLine()) != null)
-			{
-				Match match = Regex.Match(input, ProvisioningProfile.s_FirstLinePattern);
-				if (match.Success)
-				{
-					if ((input = streamReader.ReadLine()) != null)
-					{
-						Match match2 = Regex.Match(input, ProvisioningProfile.s_SecondLinePattern);
-						if (match2.Success)
-						{
-							profile.UUID = match2.Groups[1].Value;
-							break;
-						}
-					}
-				}
-				if (!string.IsNullOrEmpty(profile.UUID))
-				{
-					break;
-				}
-			}
-			streamReader.Close();
-		}
-	}
+        public string UUID
+        {
+            get
+            {
+                return this.m_UUID;
+            }
+            set
+            {
+                this.m_UUID = value;
+            }
+        }
+    }
 }
+

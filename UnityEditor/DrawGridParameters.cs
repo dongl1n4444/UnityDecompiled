@@ -1,20 +1,18 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct DrawGridParameters
-	{
-		public Vector3 pivot;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		public Color color;
-
-		public float size;
-
-		public float alphaX;
-
-		public float alphaY;
-
-		public float alphaZ;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct DrawGridParameters
+    {
+        public Vector3 pivot;
+        public Color color;
+        public float size;
+        public float alphaX;
+        public float alphaY;
+        public float alphaZ;
+    }
 }
+

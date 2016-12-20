@@ -1,9 +1,9 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class AudioManager : UnityEngine.Object
-	{
-	}
+    using UnityEngine;
+
+    internal sealed class AudioManager : Object
+    {
+    }
 }
+

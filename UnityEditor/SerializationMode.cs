@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum SerializationMode
-	{
-		Mixed,
-		ForceBinary,
-		ForceText
-	}
+    using System;
+
+    public enum SerializationMode
+    {
+        Mixed,
+        ForceBinary,
+        ForceText
+    }
 }
+

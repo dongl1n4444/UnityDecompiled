@@ -1,22 +1,19 @@
-using System;
-using UnityEngine.Rendering;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct FrameDebuggerBlendState
-	{
-		public uint writeMask;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Rendering;
 
-		public BlendMode srcBlend;
-
-		public BlendMode dstBlend;
-
-		public BlendMode srcBlendAlpha;
-
-		public BlendMode dstBlendAlpha;
-
-		public BlendOp blendOp;
-
-		public BlendOp blendOpAlpha;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct FrameDebuggerBlendState
+    {
+        public uint writeMask;
+        public BlendMode srcBlend;
+        public BlendMode dstBlend;
+        public BlendMode srcBlendAlpha;
+        public BlendMode dstBlendAlpha;
+        public BlendOp blendOp;
+        public BlendOp blendOpAlpha;
+    }
 }
+

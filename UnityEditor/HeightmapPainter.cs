@@ -1,107 +1,95 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class HeightmapPainter
-	{
-		public int size;
+    using System;
+    using UnityEngine;
 
-		public float strength;
+    internal class HeightmapPainter
+    {
+        public Brush brush;
+        public int size;
+        public float strength;
+        public float targetHeight;
+        public TerrainData terrainData;
+        public TerrainTool tool;
 
-		public float targetHeight;
+        private float ApplyBrush(float height, float brushStrength, int x, int y)
+        {
+            if (this.tool == TerrainTool.PaintHeight)
+            {
+                return (height + brushStrength);
+            }
+            if (this.tool == TerrainTool.SetHeight)
+            {
+                if (this.targetHeight > height)
+                {
+                    height += brushStrength;
+                    height = Mathf.Min(height, this.targetHeight);
+                    return height;
+                }
+                height -= brushStrength;
+                height = Mathf.Max(height, this.targetHeight);
+                return height;
+            }
+            if (this.tool == TerrainTool.SmoothHeight)
+            {
+                return Mathf.Lerp(height, this.Smooth(x, y), brushStrength);
+            }
+            return height;
+        }
 
-		public TerrainTool tool;
+        public void PaintHeight(float xCenterNormalized, float yCenterNormalized)
+        {
+            int num;
+            int num2;
+            if ((this.size % 2) == 0)
+            {
+                num = Mathf.CeilToInt(xCenterNormalized * (this.terrainData.heightmapWidth - 1));
+                num2 = Mathf.CeilToInt(yCenterNormalized * (this.terrainData.heightmapHeight - 1));
+            }
+            else
+            {
+                num = Mathf.RoundToInt(xCenterNormalized * (this.terrainData.heightmapWidth - 1));
+                num2 = Mathf.RoundToInt(yCenterNormalized * (this.terrainData.heightmapHeight - 1));
+            }
+            int num3 = this.size / 2;
+            int num4 = this.size % 2;
+            int xBase = Mathf.Clamp(num - num3, 0, this.terrainData.heightmapWidth - 1);
+            int yBase = Mathf.Clamp(num2 - num3, 0, this.terrainData.heightmapHeight - 1);
+            int num7 = Mathf.Clamp((num + num3) + num4, 0, this.terrainData.heightmapWidth);
+            int num8 = Mathf.Clamp((num2 + num3) + num4, 0, this.terrainData.heightmapHeight);
+            int width = num7 - xBase;
+            int height = num8 - yBase;
+            float[,] heights = this.terrainData.GetHeights(xBase, yBase, width, height);
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    int ix = (xBase + j) - (num - num3);
+                    int iy = (yBase + i) - (num2 - num3);
+                    float strengthInt = this.brush.GetStrengthInt(ix, iy);
+                    float num16 = heights[i, j];
+                    num16 = this.ApplyBrush(num16, strengthInt * this.strength, j + xBase, i + yBase);
+                    heights[i, j] = num16;
+                }
+            }
+            this.terrainData.SetHeightsDelayLOD(xBase, yBase, heights);
+        }
 
-		public Brush brush;
-
-		public TerrainData terrainData;
-
-		private float Smooth(int x, int y)
-		{
-			float num = 0f;
-			float num2 = 1f / this.terrainData.size.y;
-			num += this.terrainData.GetHeight(x, y) * num2;
-			num += this.terrainData.GetHeight(x + 1, y) * num2;
-			num += this.terrainData.GetHeight(x - 1, y) * num2;
-			num += this.terrainData.GetHeight(x + 1, y + 1) * num2 * 0.75f;
-			num += this.terrainData.GetHeight(x - 1, y + 1) * num2 * 0.75f;
-			num += this.terrainData.GetHeight(x + 1, y - 1) * num2 * 0.75f;
-			num += this.terrainData.GetHeight(x - 1, y - 1) * num2 * 0.75f;
-			num += this.terrainData.GetHeight(x, y + 1) * num2;
-			num += this.terrainData.GetHeight(x, y - 1) * num2;
-			return num / 8f;
-		}
-
-		private float ApplyBrush(float height, float brushStrength, int x, int y)
-		{
-			float result;
-			if (this.tool == TerrainTool.PaintHeight)
-			{
-				result = height + brushStrength;
-			}
-			else if (this.tool == TerrainTool.SetHeight)
-			{
-				if (this.targetHeight > height)
-				{
-					height += brushStrength;
-					height = Mathf.Min(height, this.targetHeight);
-					result = height;
-				}
-				else
-				{
-					height -= brushStrength;
-					height = Mathf.Max(height, this.targetHeight);
-					result = height;
-				}
-			}
-			else if (this.tool == TerrainTool.SmoothHeight)
-			{
-				result = Mathf.Lerp(height, this.Smooth(x, y), brushStrength);
-			}
-			else
-			{
-				result = height;
-			}
-			return result;
-		}
-
-		public void PaintHeight(float xCenterNormalized, float yCenterNormalized)
-		{
-			int num;
-			int num2;
-			if (this.size % 2 == 0)
-			{
-				num = Mathf.CeilToInt(xCenterNormalized * (float)(this.terrainData.heightmapWidth - 1));
-				num2 = Mathf.CeilToInt(yCenterNormalized * (float)(this.terrainData.heightmapHeight - 1));
-			}
-			else
-			{
-				num = Mathf.RoundToInt(xCenterNormalized * (float)(this.terrainData.heightmapWidth - 1));
-				num2 = Mathf.RoundToInt(yCenterNormalized * (float)(this.terrainData.heightmapHeight - 1));
-			}
-			int num3 = this.size / 2;
-			int num4 = this.size % 2;
-			int num5 = Mathf.Clamp(num - num3, 0, this.terrainData.heightmapWidth - 1);
-			int num6 = Mathf.Clamp(num2 - num3, 0, this.terrainData.heightmapHeight - 1);
-			int num7 = Mathf.Clamp(num + num3 + num4, 0, this.terrainData.heightmapWidth);
-			int num8 = Mathf.Clamp(num2 + num3 + num4, 0, this.terrainData.heightmapHeight);
-			int num9 = num7 - num5;
-			int num10 = num8 - num6;
-			float[,] heights = this.terrainData.GetHeights(num5, num6, num9, num10);
-			for (int i = 0; i < num10; i++)
-			{
-				for (int j = 0; j < num9; j++)
-				{
-					int ix = num5 + j - (num - num3);
-					int iy = num6 + i - (num2 - num3);
-					float strengthInt = this.brush.GetStrengthInt(ix, iy);
-					float num11 = heights[i, j];
-					num11 = this.ApplyBrush(num11, strengthInt * this.strength, j + num5, i + num6);
-					heights[i, j] = num11;
-				}
-			}
-			this.terrainData.SetHeightsDelayLOD(num5, num6, heights);
-		}
-	}
+        private float Smooth(int x, int y)
+        {
+            float num = 0f;
+            float num2 = 1f / this.terrainData.size.y;
+            num += this.terrainData.GetHeight(x, y) * num2;
+            num += this.terrainData.GetHeight(x + 1, y) * num2;
+            num += this.terrainData.GetHeight(x - 1, y) * num2;
+            num += (this.terrainData.GetHeight(x + 1, y + 1) * num2) * 0.75f;
+            num += (this.terrainData.GetHeight(x - 1, y + 1) * num2) * 0.75f;
+            num += (this.terrainData.GetHeight(x + 1, y - 1) * num2) * 0.75f;
+            num += (this.terrainData.GetHeight(x - 1, y - 1) * num2) * 0.75f;
+            num += this.terrainData.GetHeight(x, y + 1) * num2;
+            num += this.terrainData.GetHeight(x, y - 1) * num2;
+            return (num / 8f);
+        }
+    }
 }
+

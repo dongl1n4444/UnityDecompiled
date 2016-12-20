@@ -1,11 +1,13 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct PluginDesc
-	{
-		public string pluginPath;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public CPUArch architecture;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PluginDesc
+    {
+        public string pluginPath;
+        public CPUArch architecture;
+    }
 }
+

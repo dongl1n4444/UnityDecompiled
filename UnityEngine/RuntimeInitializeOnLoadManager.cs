@@ -1,23 +1,16 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal sealed class RuntimeInitializeOnLoadManager
-	{
-		internal static extern string[] dontStripClassNames
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		internal static extern RuntimeInitializeMethodInfo[] methodInfos
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    internal sealed class RuntimeInitializeOnLoadManager
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void UpdateMethodExecutionOrders(int[] changedIndices, int[] changedOrder);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void UpdateMethodExecutionOrders(int[] changedIndices, int[] changedOrder);
-	}
+        internal static string[] dontStripClassNames { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+
+        internal static RuntimeInitializeMethodInfo[] methodInfos { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

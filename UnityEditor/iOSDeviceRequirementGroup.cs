@@ -1,66 +1,66 @@
-using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class iOSDeviceRequirementGroup
-	{
-		private string m_VariantName;
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public int count
-		{
-			get
-			{
-				return iOSDeviceRequirementGroup.GetCountForVariantImpl(this.m_VariantName);
-			}
-		}
+    internal sealed class iOSDeviceRequirementGroup
+    {
+        private string m_VariantName;
 
-		public iOSDeviceRequirement this[int index]
-		{
-			get
-			{
-				string[] array;
-				string[] array2;
-				iOSDeviceRequirementGroup.GetDeviceRequirementForVariantNameImpl(this.m_VariantName, index, out array, out array2);
-				iOSDeviceRequirement iOSDeviceRequirement = new iOSDeviceRequirement();
-				for (int i = 0; i < array.Length; i++)
-				{
-					iOSDeviceRequirement.values.Add(array[i], array2[i]);
-				}
-				return iOSDeviceRequirement;
-			}
-			set
-			{
-				iOSDeviceRequirementGroup.SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, index, value.values.Keys.ToArray<string>(), value.values.Values.ToArray<string>());
-			}
-		}
+        internal iOSDeviceRequirementGroup(string variantName)
+        {
+            this.m_VariantName = variantName;
+        }
 
-		internal iOSDeviceRequirementGroup(string variantName)
-		{
-			this.m_VariantName = variantName;
-		}
+        public void Add(iOSDeviceRequirement requirement)
+        {
+            SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, -1, Enumerable.ToArray<string>(requirement.values.Keys), Enumerable.ToArray<string>(requirement.values.Values));
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void GetDeviceRequirementForVariantNameImpl(string name, int index, out string[] keys, out string[] values);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int GetCountForVariantImpl(string name);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void GetDeviceRequirementForVariantNameImpl(string name, int index, out string[] keys, out string[] values);
+        public void RemoveAt(int index)
+        {
+            RemoveAtImpl(this.m_VariantName, index);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void SetOrAddDeviceRequirementForVariantNameImpl(string name, int index, string[] keys, string[] values);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void RemoveAtImpl(string name, int index);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void SetOrAddDeviceRequirementForVariantNameImpl(string name, int index, string[] keys, string[] values);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern int GetCountForVariantImpl(string name);
+        public int count
+        {
+            get
+            {
+                return GetCountForVariantImpl(this.m_VariantName);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void RemoveAtImpl(string name, int index);
-
-		public void RemoveAt(int index)
-		{
-			iOSDeviceRequirementGroup.RemoveAtImpl(this.m_VariantName, index);
-		}
-
-		public void Add(iOSDeviceRequirement requirement)
-		{
-			iOSDeviceRequirementGroup.SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, -1, requirement.values.Keys.ToArray<string>(), requirement.values.Values.ToArray<string>());
-		}
-	}
+        public iOSDeviceRequirement this[int index]
+        {
+            get
+            {
+                string[] strArray;
+                string[] strArray2;
+                GetDeviceRequirementForVariantNameImpl(this.m_VariantName, index, out strArray, out strArray2);
+                iOSDeviceRequirement requirement = new iOSDeviceRequirement();
+                for (int i = 0; i < strArray.Length; i++)
+                {
+                    requirement.values.Add(strArray[i], strArray2[i]);
+                }
+                return requirement;
+            }
+            set
+            {
+                SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, index, Enumerable.ToArray<string>(value.values.Keys), Enumerable.ToArray<string>(value.values.Values));
+            }
+        }
+    }
 }
+

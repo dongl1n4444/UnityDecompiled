@@ -1,37 +1,37 @@
-using System;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal sealed class UnityLogWriter : TextWriter
-	{
-		public override Encoding Encoding
-		{
-			get
-			{
-				return Encoding.UTF8;
-			}
-		}
+    using System;
+    using System.IO;
+    using System.Runtime.CompilerServices;
+    using System.Text;
 
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void WriteStringToUnityLog(string s);
+    internal sealed class UnityLogWriter : TextWriter
+    {
+        public static void Init()
+        {
+            Console.SetOut(new UnityLogWriter());
+        }
 
-		public static void Init()
-		{
-			Console.SetOut(new UnityLogWriter());
-		}
+        public override void Write(char value)
+        {
+            WriteStringToUnityLog(value.ToString());
+        }
 
-		public override void Write(char value)
-		{
-			UnityLogWriter.WriteStringToUnityLog(value.ToString());
-		}
+        public override void Write(string s)
+        {
+            WriteStringToUnityLog(s);
+        }
 
-		public override void Write(string s)
-		{
-			UnityLogWriter.WriteStringToUnityLog(s);
-		}
-	}
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        public static extern void WriteStringToUnityLog(string s);
+
+        public override System.Text.Encoding Encoding
+        {
+            get
+            {
+                return System.Text.Encoding.UTF8;
+            }
+        }
+    }
 }
+

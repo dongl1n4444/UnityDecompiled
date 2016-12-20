@@ -1,41 +1,34 @@
-using System;
-using UnityEngine;
-using UnityEngine.Rendering;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class CubemapInfo
-	{
-		private const float kDefaultShadowIntensity = 0.3f;
+    using System;
+    using UnityEngine;
+    using UnityEngine.Rendering;
 
-		public Cubemap cubemap;
+    [Serializable]
+    internal class CubemapInfo
+    {
+        [NonSerialized]
+        public bool alreadyComputed;
+        public SphericalHarmonicsL2 ambientProbe;
+        public float angleOffset = 0f;
+        public Cubemap cubemap;
+        public CubemapInfo cubemapShadowInfo;
+        private const float kDefaultShadowIntensity = 0.3f;
+        public int serialIndexMain;
+        public int serialIndexShadow;
+        public ShadowInfo shadowInfo = new ShadowInfo();
 
-		public CubemapInfo cubemapShadowInfo;
+        public void ResetEnvInfos()
+        {
+            this.angleOffset = 0f;
+        }
 
-		public float angleOffset = 0f;
-
-		public SphericalHarmonicsL2 ambientProbe;
-
-		public ShadowInfo shadowInfo = new ShadowInfo();
-
-		public int serialIndexMain;
-
-		public int serialIndexShadow;
-
-		[NonSerialized]
-		public bool alreadyComputed;
-
-		public void SetCubemapShadowInfo(CubemapInfo newCubemapShadowInfo)
-		{
-			this.cubemapShadowInfo = newCubemapShadowInfo;
-			this.shadowInfo.shadowIntensity = ((newCubemapShadowInfo != this) ? 1f : 0.3f);
-			this.shadowInfo.shadowColor = Color.white;
-		}
-
-		public void ResetEnvInfos()
-		{
-			this.angleOffset = 0f;
-		}
-	}
+        public void SetCubemapShadowInfo(CubemapInfo newCubemapShadowInfo)
+        {
+            this.cubemapShadowInfo = newCubemapShadowInfo;
+            this.shadowInfo.shadowIntensity = (newCubemapShadowInfo != this) ? 1f : 0.3f;
+            this.shadowInfo.shadowColor = Color.white;
+        }
+    }
 }
+

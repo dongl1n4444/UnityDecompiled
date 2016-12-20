@@ -1,15 +1,14 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[RequiredByNativeCode]
-	internal class SliderState
-	{
-		public float dragStartPos;
+    using System;
+    using UnityEngine.Scripting;
 
-		public float dragStartValue;
-
-		public bool isDragging;
-	}
+    [RequiredByNativeCode]
+    internal class SliderState
+    {
+        public float dragStartPos;
+        public float dragStartValue;
+        public bool isDragging;
+    }
 }
+

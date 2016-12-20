@@ -1,128 +1,123 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine.Internal;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class AnimatorOverrideController : RuntimeAnimatorController
-	{
-		internal delegate void OnOverrideControllerDirtyCallback();
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
-		internal AnimatorOverrideController.OnOverrideControllerDirtyCallback OnOverrideControllerDirty;
+    /// <summary>
+    /// <para>Interface to control AnimatorOverrideController.</para>
+    /// </summary>
+    public sealed class AnimatorOverrideController : RuntimeAnimatorController
+    {
+        internal OnOverrideControllerDirtyCallback OnOverrideControllerDirty;
 
-		public extern RuntimeAnimatorController runtimeAnimatorController
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        public AnimatorOverrideController()
+        {
+            Internal_CreateAnimationSet(this);
+        }
 
-		public AnimationClip this[string name]
-		{
-			get
-			{
-				return this.Internal_GetClipByName(name, true);
-			}
-			set
-			{
-				this.Internal_SetClipByName(name, value);
-			}
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern AnimationClip[] GetOriginalClips();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern AnimationClip[] GetOverrideClips();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_CreateAnimationSet([Writable] AnimatorOverrideController self);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern AnimationClip Internal_GetClip(AnimationClip originalClip, bool returnEffectiveClip);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern AnimationClip Internal_GetClipByName(string name, bool returnEffectiveClip);
+        [ExcludeFromDocs]
+        private void Internal_SetClip(AnimationClip originalClip, AnimationClip overrideClip)
+        {
+            bool notify = true;
+            this.Internal_SetClip(originalClip, overrideClip, notify);
+        }
 
-		public AnimationClip this[AnimationClip clip]
-		{
-			get
-			{
-				return this.Internal_GetClip(clip, true);
-			}
-			set
-			{
-				this.Internal_SetClip(clip, value);
-			}
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void Internal_SetClip(AnimationClip originalClip, AnimationClip overrideClip, [DefaultValue("true")] bool notify);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void Internal_SetClipByName(string name, AnimationClip clip);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void Internal_SetDirty();
+        [RequiredByNativeCode]
+        internal static void OnInvalidateOverrideController(AnimatorOverrideController controller)
+        {
+            if (controller.OnOverrideControllerDirty != null)
+            {
+                controller.OnOverrideControllerDirty();
+            }
+        }
 
-		public AnimationClipPair[] clips
-		{
-			get
-			{
-				AnimationClip[] array = this.GetOriginalClips();
-				Dictionary<AnimationClip, bool> dictionary = new Dictionary<AnimationClip, bool>(array.Length);
-				AnimationClip[] array2 = array;
-				for (int i = 0; i < array2.Length; i++)
-				{
-					AnimationClip key = array2[i];
-					dictionary[key] = true;
-				}
-				array = new AnimationClip[dictionary.Count];
-				dictionary.Keys.CopyTo(array, 0);
-				AnimationClipPair[] array3 = new AnimationClipPair[array.Length];
-				for (int j = 0; j < array.Length; j++)
-				{
-					array3[j] = new AnimationClipPair();
-					array3[j].originalClip = array[j];
-					array3[j].overrideClip = this.Internal_GetClip(array[j], false);
-				}
-				return array3;
-			}
-			set
-			{
-				for (int i = 0; i < value.Length; i++)
-				{
-					this.Internal_SetClip(value[i].originalClip, value[i].overrideClip, false);
-				}
-				this.Internal_SetDirty();
-			}
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void PerformOverrideClipListCleanup();
 
-		public AnimatorOverrideController()
-		{
-			AnimatorOverrideController.Internal_CreateAnimationSet(this);
-		}
+        /// <summary>
+        /// <para>Returns the list of orignal clip from the controller and their override clip.</para>
+        /// </summary>
+        public AnimationClipPair[] clips
+        {
+            get
+            {
+                AnimationClip[] originalClips = this.GetOriginalClips();
+                Dictionary<AnimationClip, bool> dictionary = new Dictionary<AnimationClip, bool>(originalClips.Length);
+                foreach (AnimationClip clip in originalClips)
+                {
+                    dictionary[clip] = true;
+                }
+                originalClips = new AnimationClip[dictionary.Count];
+                dictionary.Keys.CopyTo(originalClips, 0);
+                AnimationClipPair[] pairArray = new AnimationClipPair[originalClips.Length];
+                for (int i = 0; i < originalClips.Length; i++)
+                {
+                    pairArray[i] = new AnimationClipPair();
+                    pairArray[i].originalClip = originalClips[i];
+                    pairArray[i].overrideClip = this.Internal_GetClip(originalClips[i], false);
+                }
+                return pairArray;
+            }
+            set
+            {
+                for (int i = 0; i < value.Length; i++)
+                {
+                    this.Internal_SetClip(value[i].originalClip, value[i].overrideClip, false);
+                }
+                this.Internal_SetDirty();
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_CreateAnimationSet([Writable] AnimatorOverrideController self);
+        public AnimationClip this[string name]
+        {
+            get
+            {
+                return this.Internal_GetClipByName(name, true);
+            }
+            set
+            {
+                this.Internal_SetClipByName(name, value);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern AnimationClip Internal_GetClipByName(string name, bool returnEffectiveClip);
+        public AnimationClip this[AnimationClip clip]
+        {
+            get
+            {
+                return this.Internal_GetClip(clip, true);
+            }
+            set
+            {
+                this.Internal_SetClip(clip, value);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void Internal_SetClipByName(string name, AnimationClip clip);
+        /// <summary>
+        /// <para>The Controller that the AnimatorOverrideController overrides.</para>
+        /// </summary>
+        public RuntimeAnimatorController runtimeAnimatorController { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern AnimationClip Internal_GetClip(AnimationClip originalClip, bool returnEffectiveClip);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void Internal_SetClip(AnimationClip originalClip, AnimationClip overrideClip, [DefaultValue("true")] bool notify);
-
-		[ExcludeFromDocs]
-		private void Internal_SetClip(AnimationClip originalClip, AnimationClip overrideClip)
-		{
-			bool notify = true;
-			this.Internal_SetClip(originalClip, overrideClip, notify);
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void Internal_SetDirty();
-
-		[RequiredByNativeCode]
-		internal static void OnInvalidateOverrideController(AnimatorOverrideController controller)
-		{
-			if (controller.OnOverrideControllerDirty != null)
-			{
-				controller.OnOverrideControllerDirty();
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern AnimationClip[] GetOriginalClips();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern AnimationClip[] GetOverrideClips();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern void PerformOverrideClipListCleanup();
-	}
+        internal delegate void OnOverrideControllerDirtyCallback();
+    }
 }
+

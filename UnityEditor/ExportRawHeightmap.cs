@@ -1,125 +1,111 @@
-using System;
-using System.IO;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ExportRawHeightmap : TerrainWizard
-	{
-		internal enum Depth
-		{
-			Bit8 = 1,
-			Bit16
-		}
+    using System;
+    using System.IO;
+    using UnityEngine;
 
-		internal enum ByteOrder
-		{
-			Mac = 1,
-			Windows
-		}
+    internal class ExportRawHeightmap : TerrainWizard
+    {
+        public ByteOrder m_ByteOrder = ByteOrder.Windows;
+        public Depth m_Depth = Depth.Bit16;
+        public bool m_FlipVertically = false;
 
-		public ExportRawHeightmap.Depth m_Depth = ExportRawHeightmap.Depth.Bit16;
+        private void InitializeDefaults(Terrain terrain)
+        {
+            base.m_Terrain = terrain;
+            object[] objArray1 = new object[] { "Width ", terrain.terrainData.heightmapWidth, " Height ", terrain.terrainData.heightmapHeight };
+            base.helpString = string.Concat(objArray1);
+            this.OnWizardUpdate();
+        }
 
-		public ExportRawHeightmap.ByteOrder m_ByteOrder = ExportRawHeightmap.ByteOrder.Windows;
+        public void OnEnable()
+        {
+            base.minSize = new Vector2(400f, 200f);
+        }
 
-		public bool m_FlipVertically = false;
+        internal void OnWizardCreate()
+        {
+            if (base.m_Terrain == null)
+            {
+                base.isValid = false;
+                base.errorString = "Terrain does not exist";
+            }
+            string path = EditorUtility.SaveFilePanel("Save Raw Heightmap", "", "terrain", "raw");
+            if (path != "")
+            {
+                this.WriteRaw(path);
+            }
+        }
 
-		public void OnEnable()
-		{
-			base.minSize = new Vector2(400f, 200f);
-		}
+        internal override void OnWizardUpdate()
+        {
+            base.OnWizardUpdate();
+            if (base.terrainData != null)
+            {
+                object[] objArray1 = new object[] { "Width ", base.terrainData.heightmapWidth, "\nHeight ", base.terrainData.heightmapHeight };
+                base.helpString = string.Concat(objArray1);
+            }
+        }
 
-		internal void OnWizardCreate()
-		{
-			if (this.m_Terrain == null)
-			{
-				base.isValid = false;
-				base.errorString = "Terrain does not exist";
-			}
-			string text = EditorUtility.SaveFilePanel("Save Raw Heightmap", "", "terrain", "raw");
-			if (text != "")
-			{
-				this.WriteRaw(text);
-			}
-		}
+        private void WriteRaw(string path)
+        {
+            int heightmapWidth = base.terrainData.heightmapWidth;
+            int heightmapHeight = base.terrainData.heightmapHeight;
+            float[,] numArray = base.terrainData.GetHeights(0, 0, heightmapWidth, heightmapHeight);
+            byte[] buffer = new byte[(heightmapWidth * heightmapHeight) * this.m_Depth];
+            if (this.m_Depth == Depth.Bit16)
+            {
+                float num3 = 65536f;
+                for (int i = 0; i < heightmapHeight; i++)
+                {
+                    for (int j = 0; j < heightmapWidth; j++)
+                    {
+                        int num6 = j + (i * heightmapWidth);
+                        int num7 = !this.m_FlipVertically ? i : ((heightmapHeight - 1) - i);
+                        ushort num9 = (ushort) Mathf.Clamp(Mathf.RoundToInt(numArray[num7, j] * num3), 0, 0xffff);
+                        byte[] bytes = BitConverter.GetBytes(num9);
+                        if ((this.m_ByteOrder == ByteOrder.Mac) == BitConverter.IsLittleEndian)
+                        {
+                            buffer[num6 * 2] = bytes[1];
+                            buffer[(num6 * 2) + 1] = bytes[0];
+                        }
+                        else
+                        {
+                            buffer[num6 * 2] = bytes[0];
+                            buffer[(num6 * 2) + 1] = bytes[1];
+                        }
+                    }
+                }
+            }
+            else
+            {
+                float num10 = 256f;
+                for (int k = 0; k < heightmapHeight; k++)
+                {
+                    for (int m = 0; m < heightmapWidth; m++)
+                    {
+                        int index = m + (k * heightmapWidth);
+                        int num14 = !this.m_FlipVertically ? k : ((heightmapHeight - 1) - k);
+                        buffer[index] = (byte) Mathf.Clamp(Mathf.RoundToInt(numArray[num14, m] * num10), 0, 0xff);
+                    }
+                }
+            }
+            FileStream stream = new FileStream(path, FileMode.Create);
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Close();
+        }
 
-		internal override void OnWizardUpdate()
-		{
-			base.OnWizardUpdate();
-			if (base.terrainData)
-			{
-				base.helpString = string.Concat(new object[]
-				{
-					"Width ",
-					base.terrainData.heightmapWidth,
-					"\nHeight ",
-					base.terrainData.heightmapHeight
-				});
-			}
-		}
+        internal enum ByteOrder
+        {
+            Mac = 1,
+            Windows = 2
+        }
 
-		private void WriteRaw(string path)
-		{
-			int heightmapWidth = base.terrainData.heightmapWidth;
-			int heightmapHeight = base.terrainData.heightmapHeight;
-			float[,] heights = base.terrainData.GetHeights(0, 0, heightmapWidth, heightmapHeight);
-			byte[] array = new byte[heightmapWidth * heightmapHeight * (int)this.m_Depth];
-			if (this.m_Depth == ExportRawHeightmap.Depth.Bit16)
-			{
-				float num = 65536f;
-				for (int i = 0; i < heightmapHeight; i++)
-				{
-					for (int j = 0; j < heightmapWidth; j++)
-					{
-						int num2 = j + i * heightmapWidth;
-						int num3 = (!this.m_FlipVertically) ? i : (heightmapHeight - 1 - i);
-						int value = Mathf.RoundToInt(heights[num3, j] * num);
-						ushort value2 = (ushort)Mathf.Clamp(value, 0, 65535);
-						byte[] bytes = BitConverter.GetBytes(value2);
-						if (this.m_ByteOrder == ExportRawHeightmap.ByteOrder.Mac == BitConverter.IsLittleEndian)
-						{
-							array[num2 * 2] = bytes[1];
-							array[num2 * 2 + 1] = bytes[0];
-						}
-						else
-						{
-							array[num2 * 2] = bytes[0];
-							array[num2 * 2 + 1] = bytes[1];
-						}
-					}
-				}
-			}
-			else
-			{
-				float num4 = 256f;
-				for (int k = 0; k < heightmapHeight; k++)
-				{
-					for (int l = 0; l < heightmapWidth; l++)
-					{
-						int num5 = l + k * heightmapWidth;
-						int num6 = (!this.m_FlipVertically) ? k : (heightmapHeight - 1 - k);
-						int value3 = Mathf.RoundToInt(heights[num6, l] * num4);
-						byte b = (byte)Mathf.Clamp(value3, 0, 255);
-						array[num5] = b;
-					}
-				}
-			}
-			FileStream fileStream = new FileStream(path, FileMode.Create);
-			fileStream.Write(array, 0, array.Length);
-			fileStream.Close();
-		}
-
-		private new void InitializeDefaults(Terrain terrain)
-		{
-			this.m_Terrain = terrain;
-			base.helpString = string.Concat(new object[]
-			{
-				"Width ",
-				terrain.terrainData.heightmapWidth,
-				" Height ",
-				terrain.terrainData.heightmapHeight
-			});
-			this.OnWizardUpdate();
-		}
-	}
+        internal enum Depth
+        {
+            Bit16 = 2,
+            Bit8 = 1
+        }
+    }
 }
+

@@ -1,444 +1,537 @@
-using Mono.Cecil;
-using Mono.Collections.Generic;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using UnityEditor.Modules;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AssemblyHelper
-	{
-		private const int kDefaultDepth = 10;
+    using Mono.Cecil;
+    using Mono.Collections.Generic;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using System.Threading;
+    using UnityEditor.Modules;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-		public static void CheckForAssemblyFileNameMismatch(string assemblyPath)
-		{
-			string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(assemblyPath);
-			string text = AssemblyHelper.ExtractInternalAssemblyName(assemblyPath);
-			if (fileNameWithoutExtension != text)
-			{
-				UnityEngine.Debug.LogWarning(string.Concat(new string[]
-				{
-					"Assembly '",
-					text,
-					"' has non matching file name: '",
-					Path.GetFileName(assemblyPath),
-					"'. This can cause build issues on some platforms."
-				}));
-			}
-		}
+    internal class AssemblyHelper
+    {
+        [CompilerGenerated]
+        private static Func<PluginImporter, string> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<FileInfo, bool> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Func<FileInfo, string> <>f__am$cache2;
+        private const int kDefaultDepth = 10;
 
-		public static string[] GetNamesOfAssembliesLoadedInCurrentDomain()
-		{
-			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-			List<string> list = new List<string>();
-			Assembly[] array = assemblies;
-			for (int i = 0; i < array.Length; i++)
-			{
-				Assembly assembly = array[i];
-				try
-				{
-					list.Add(assembly.Location);
-				}
-				catch (NotSupportedException)
-				{
-				}
-			}
-			return list.ToArray();
-		}
+        private static void AddReferencedAssembliesRecurse(string assemblyPath, List<string> alreadyFoundAssemblies, string[] allAssemblyPaths, string[] foldersToSearch, Dictionary<string, AssemblyDefinition> cache, BuildTarget target)
+        {
+            <AddReferencedAssembliesRecurse>c__AnonStorey1 storey = new <AddReferencedAssembliesRecurse>c__AnonStorey1 {
+                target = target
+            };
+            if (!IgnoreAssembly(assemblyPath, storey.target))
+            {
+                AssemblyDefinition assemblyDefinitionCached = GetAssemblyDefinitionCached(assemblyPath, cache);
+                if (assemblyDefinitionCached == null)
+                {
+                    throw new ArgumentException("Referenced Assembly " + Path.GetFileName(assemblyPath) + " could not be found!");
+                }
+                if (alreadyFoundAssemblies.IndexOf(assemblyPath) == -1)
+                {
+                    alreadyFoundAssemblies.Add(assemblyPath);
+                    if (<>f__am$cache0 == null)
+                    {
+                        <>f__am$cache0 = new Func<PluginImporter, string>(null, (IntPtr) <AddReferencedAssembliesRecurse>m__0);
+                    }
+                    IEnumerable<string> enumerable = Enumerable.Distinct<string>(Enumerable.Select<PluginImporter, string>(Enumerable.Where<PluginImporter>(PluginImporter.GetImporters(storey.target), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0));
+                    using (Collection<AssemblyNameReference>.Enumerator enumerator = assemblyDefinitionCached.MainModule.AssemblyReferences.GetEnumerator())
+                    {
+                        while (enumerator.MoveNext())
+                        {
+                            <AddReferencedAssembliesRecurse>c__AnonStorey2 storey2 = new <AddReferencedAssembliesRecurse>c__AnonStorey2 {
+                                referencedAssembly = enumerator.Current
+                            };
+                            if (((storey2.referencedAssembly.Name != "BridgeInterface") && (storey2.referencedAssembly.Name != "WinRTBridge")) && ((storey2.referencedAssembly.Name != "UnityEngineProxy") && !IgnoreAssembly(storey2.referencedAssembly.Name + ".dll", storey.target)))
+                            {
+                                string str = FindAssemblyName(storey2.referencedAssembly.FullName, storey2.referencedAssembly.Name, allAssemblyPaths, foldersToSearch, cache);
+                                if (str == "")
+                                {
+                                    bool flag = false;
+                                    string[] strArray = new string[] { ".dll", ".winmd" };
+                                    for (int i = 0; i < strArray.Length; i++)
+                                    {
+                                        <AddReferencedAssembliesRecurse>c__AnonStorey3 storey3 = new <AddReferencedAssembliesRecurse>c__AnonStorey3 {
+                                            <>f__ref$2 = storey2,
+                                            extension = strArray[i]
+                                        };
+                                        if (Enumerable.Any<string>(enumerable, new Func<string, bool>(storey3, (IntPtr) this.<>m__0)))
+                                        {
+                                            flag = true;
+                                            break;
+                                        }
+                                    }
+                                    if (flag)
+                                    {
+                                        continue;
+                                    }
+                                    throw new ArgumentException(string.Format("The Assembly {0} is referenced by {1} ('{2}'). But the dll is not allowed to be included or could not be found.", storey2.referencedAssembly.Name, assemblyDefinitionCached.MainModule.Assembly.Name.Name, assemblyPath));
+                                }
+                                AddReferencedAssembliesRecurse(str, alreadyFoundAssemblies, allAssemblyPaths, foldersToSearch, cache, storey.target);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-		public static Assembly FindLoadedAssemblyWithName(string s)
-		{
-			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-			Assembly[] array = assemblies;
-			Assembly result;
-			for (int i = 0; i < array.Length; i++)
-			{
-				Assembly assembly = array[i];
-				try
-				{
-					if (assembly.Location.Contains(s))
-					{
-						result = assembly;
-						return result;
-					}
-				}
-				catch (NotSupportedException)
-				{
-				}
-			}
-			result = null;
-			return result;
-		}
+        public static void CheckForAssemblyFileNameMismatch(string assemblyPath)
+        {
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(assemblyPath);
+            string str2 = ExtractInternalAssemblyName(assemblyPath);
+            if (fileNameWithoutExtension != str2)
+            {
+                Debug.LogWarning("Assembly '" + str2 + "' has non matching file name: '" + Path.GetFileName(assemblyPath) + "'. This can cause build issues on some platforms.");
+            }
+        }
 
-		public static string ExtractInternalAssemblyName(string path)
-		{
-			AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(path);
-			return assemblyDefinition.Name.Name;
-		}
+        public static void ExtractAllClassesThatInheritMonoBehaviourAndScriptableObject(string path, out string[] classNamesArray, out string[] classNameSpacesArray)
+        {
+            List<string> list = new List<string>();
+            List<string> list2 = new List<string>();
+            ReaderParameters parameters = new ReaderParameters();
+            DefaultAssemblyResolver resolver = new DefaultAssemblyResolver();
+            resolver.AddSearchDirectory(Path.GetDirectoryName(path));
+            parameters.AssemblyResolver = resolver;
+            AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(path, parameters);
+            foreach (ModuleDefinition definition2 in assembly.Modules)
+            {
+                foreach (TypeDefinition definition3 in definition2.Types)
+                {
+                    TypeReference baseType = definition3.BaseType;
+                    try
+                    {
+                        if (IsTypeMonoBehaviourOrScriptableObject(assembly, baseType))
+                        {
+                            list.Add(definition3.Name);
+                            list2.Add(definition3.Namespace);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Debug.LogError("Failed to extract " + definition3.FullName + " class of base type " + baseType.FullName + " when inspecting " + path);
+                    }
+                }
+            }
+            classNamesArray = list.ToArray();
+            classNameSpacesArray = list2.ToArray();
+        }
 
-		private static AssemblyDefinition GetAssemblyDefinitionCached(string path, Dictionary<string, AssemblyDefinition> cache)
-		{
-			AssemblyDefinition result;
-			if (cache.ContainsKey(path))
-			{
-				result = cache[path];
-			}
-			else
-			{
-				AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(path);
-				cache[path] = assemblyDefinition;
-				result = assemblyDefinition;
-			}
-			return result;
-		}
+        public static AssemblyTypeInfoGenerator.ClassInfo[] ExtractAssemblyTypeInfo(BuildTarget targetPlatform, bool isEditor, string assemblyPathName, string[] searchDirs)
+        {
+            AssemblyTypeInfoGenerator.ClassInfo[] infoArray;
+            try
+            {
+                AssemblyTypeInfoGenerator generator;
+                ICompilationExtension compilationExtension = ModuleManager.GetCompilationExtension(ModuleManager.GetTargetStringFromBuildTarget(targetPlatform));
+                string[] compilerExtraAssemblyPaths = compilationExtension.GetCompilerExtraAssemblyPaths(isEditor, assemblyPathName);
+                if ((compilerExtraAssemblyPaths != null) && (compilerExtraAssemblyPaths.Length > 0))
+                {
+                    List<string> list = new List<string>(searchDirs);
+                    list.AddRange(compilerExtraAssemblyPaths);
+                    searchDirs = list.ToArray();
+                }
+                IAssemblyResolver resolver = compilationExtension.GetAssemblyResolver(isEditor, assemblyPathName, searchDirs);
+                if (resolver == null)
+                {
+                    generator = new AssemblyTypeInfoGenerator(assemblyPathName, searchDirs);
+                }
+                else
+                {
+                    generator = new AssemblyTypeInfoGenerator(assemblyPathName, resolver);
+                }
+                infoArray = generator.GatherClassInfo();
+            }
+            catch (Exception exception)
+            {
+                object[] objArray1 = new object[] { "ExtractAssemblyTypeInfo: Failed to process ", assemblyPathName, ", ", exception };
+                throw new Exception(string.Concat(objArray1));
+            }
+            return infoArray;
+        }
 
-		private static bool IgnoreAssembly(string assemblyPath, BuildTarget target)
-		{
-			bool result;
-			if (target == BuildTarget.WSAPlayer)
-			{
-				if (assemblyPath.IndexOf("mscorlib.dll") != -1 || assemblyPath.IndexOf("System.") != -1 || assemblyPath.IndexOf("Windows.dll") != -1 || assemblyPath.IndexOf("Microsoft.") != -1 || assemblyPath.IndexOf("Windows.") != -1 || assemblyPath.IndexOf("WinRTLegacy.dll") != -1 || assemblyPath.IndexOf("platform.dll") != -1)
-				{
-					result = true;
-					return result;
-				}
-			}
-			result = AssemblyHelper.IsInternalAssembly(assemblyPath);
-			return result;
-		}
+        public static string ExtractInternalAssemblyName(string path)
+        {
+            return AssemblyDefinition.ReadAssembly(path).Name.Name;
+        }
 
-		private static void AddReferencedAssembliesRecurse(string assemblyPath, List<string> alreadyFoundAssemblies, string[] allAssemblyPaths, string[] foldersToSearch, Dictionary<string, AssemblyDefinition> cache, BuildTarget target)
-		{
-			if (!AssemblyHelper.IgnoreAssembly(assemblyPath, target))
-			{
-				AssemblyDefinition assemblyDefinitionCached = AssemblyHelper.GetAssemblyDefinitionCached(assemblyPath, cache);
-				if (assemblyDefinitionCached == null)
-				{
-					throw new ArgumentException("Referenced Assembly " + Path.GetFileName(assemblyPath) + " could not be found!");
-				}
-				if (alreadyFoundAssemblies.IndexOf(assemblyPath) == -1)
-				{
-					alreadyFoundAssemblies.Add(assemblyPath);
-					IEnumerable<string> source = (from i in PluginImporter.GetImporters(target).Where(delegate(PluginImporter i)
-					{
-						string platformData = i.GetPlatformData(target, "CPU");
-						return !string.IsNullOrEmpty(platformData) && !string.Equals(platformData, "AnyCPU", StringComparison.InvariantCultureIgnoreCase);
-					})
-					select Path.GetFileName(i.assetPath)).Distinct<string>();
-					using (Collection<AssemblyNameReference>.Enumerator enumerator = assemblyDefinitionCached.MainModule.AssemblyReferences.GetEnumerator())
-					{
-						while (enumerator.MoveNext())
-						{
-							AssemblyNameReference referencedAssembly = enumerator.Current;
-							if (!(referencedAssembly.Name == "BridgeInterface"))
-							{
-								if (!(referencedAssembly.Name == "WinRTBridge"))
-								{
-									if (!(referencedAssembly.Name == "UnityEngineProxy"))
-									{
-										if (!AssemblyHelper.IgnoreAssembly(referencedAssembly.Name + ".dll", target))
-										{
-											string text = AssemblyHelper.FindAssemblyName(referencedAssembly.FullName, referencedAssembly.Name, allAssemblyPaths, foldersToSearch, cache);
-											if (text == "")
-											{
-												bool flag = false;
-												string[] array = new string[]
-												{
-													".dll",
-													".winmd"
-												};
-												for (int j = 0; j < array.Length; j++)
-												{
-													string extension = array[j];
-													if (source.Any((string p) => string.Equals(p, referencedAssembly.Name + extension, StringComparison.InvariantCultureIgnoreCase)))
-													{
-														flag = true;
-														break;
-													}
-												}
-												if (!flag)
-												{
-													throw new ArgumentException(string.Format("The Assembly {0} is referenced by {1} ('{2}'). But the dll is not allowed to be included or could not be found.", referencedAssembly.Name, assemblyDefinitionCached.MainModule.Assembly.Name.Name, assemblyPath));
-												}
-											}
-											else
-											{
-												AssemblyHelper.AddReferencedAssembliesRecurse(text, alreadyFoundAssemblies, allAssemblyPaths, foldersToSearch, cache, target);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+        internal static ICollection<string> FindAssemblies(string basePath)
+        {
+            return FindAssemblies(basePath, 10);
+        }
 
-		private static string FindAssemblyName(string fullName, string name, string[] allAssemblyPaths, string[] foldersToSearch, Dictionary<string, AssemblyDefinition> cache)
-		{
-			string result;
-			for (int i = 0; i < allAssemblyPaths.Length; i++)
-			{
-				AssemblyDefinition assemblyDefinitionCached = AssemblyHelper.GetAssemblyDefinitionCached(allAssemblyPaths[i], cache);
-				if (assemblyDefinitionCached.MainModule.Assembly.Name.Name == name)
-				{
-					result = allAssemblyPaths[i];
-					return result;
-				}
-			}
-			for (int j = 0; j < foldersToSearch.Length; j++)
-			{
-				string path = foldersToSearch[j];
-				string text = Path.Combine(path, name + ".dll");
-				if (File.Exists(text))
-				{
-					result = text;
-					return result;
-				}
-			}
-			result = "";
-			return result;
-		}
+        internal static ICollection<string> FindAssemblies(string basePath, int maxDepth)
+        {
+            List<string> list = new List<string>();
+            if (maxDepth != 0)
+            {
+                try
+                {
+                    DirectoryInfo info = new DirectoryInfo(basePath);
+                    if (<>f__am$cache1 == null)
+                    {
+                        <>f__am$cache1 = new Func<FileInfo, bool>(null, (IntPtr) <FindAssemblies>m__1);
+                    }
+                    if (<>f__am$cache2 == null)
+                    {
+                        <>f__am$cache2 = new Func<FileInfo, string>(null, (IntPtr) <FindAssemblies>m__2);
+                    }
+                    list.AddRange(Enumerable.Select<FileInfo, string>(Enumerable.Where<FileInfo>(info.GetFiles(), <>f__am$cache1), <>f__am$cache2));
+                    foreach (DirectoryInfo info2 in info.GetDirectories())
+                    {
+                        list.AddRange(FindAssemblies(info2.FullName, maxDepth - 1));
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return list;
+        }
 
-		public static string[] FindAssembliesReferencedBy(string[] paths, string[] foldersToSearch, BuildTarget target)
-		{
-			List<string> list = new List<string>();
-			Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition>();
-			for (int i = 0; i < paths.Length; i++)
-			{
-				AssemblyHelper.AddReferencedAssembliesRecurse(paths[i], list, paths, foldersToSearch, cache, target);
-			}
-			for (int j = 0; j < paths.Length; j++)
-			{
-				list.Remove(paths[j]);
-			}
-			return list.ToArray();
-		}
+        public static string[] FindAssembliesReferencedBy(string[] paths, string[] foldersToSearch, BuildTarget target)
+        {
+            List<string> alreadyFoundAssemblies = new List<string>();
+            string[] allAssemblyPaths = paths;
+            Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition>();
+            for (int i = 0; i < paths.Length; i++)
+            {
+                AddReferencedAssembliesRecurse(paths[i], alreadyFoundAssemblies, allAssemblyPaths, foldersToSearch, cache, target);
+            }
+            for (int j = 0; j < paths.Length; j++)
+            {
+                alreadyFoundAssemblies.Remove(paths[j]);
+            }
+            return alreadyFoundAssemblies.ToArray();
+        }
 
-		public static string[] FindAssembliesReferencedBy(string path, string[] foldersToSearch, BuildTarget target)
-		{
-			return AssemblyHelper.FindAssembliesReferencedBy(new string[]
-			{
-				path
-			}, foldersToSearch, target);
-		}
+        public static string[] FindAssembliesReferencedBy(string path, string[] foldersToSearch, BuildTarget target)
+        {
+            return FindAssembliesReferencedBy(new string[] { path }, foldersToSearch, target);
+        }
 
-		private static bool IsTypeMonoBehaviourOrScriptableObject(AssemblyDefinition assembly, TypeReference type)
-		{
-			bool result;
-			if (type == null)
-			{
-				result = false;
-			}
-			else if (type.FullName == "System.Object")
-			{
-				result = false;
-			}
-			else
-			{
-				Assembly assembly2 = null;
-				if (type.Scope.Name == "UnityEngine")
-				{
-					assembly2 = typeof(MonoBehaviour).Assembly;
-				}
-				else if (type.Scope.Name == "UnityEditor")
-				{
-					assembly2 = typeof(EditorWindow).Assembly;
-				}
-				else if (type.Scope.Name == "UnityEngine.UI")
-				{
-					assembly2 = AssemblyHelper.FindLoadedAssemblyWithName("UnityEngine.UI");
-				}
-				if (assembly2 != null)
-				{
-					string name = (!type.IsGenericInstance) ? type.FullName : (type.Namespace + "." + type.Name);
-					Type type2 = assembly2.GetType(name);
-					if (type2 == typeof(MonoBehaviour) || type2.IsSubclassOf(typeof(MonoBehaviour)))
-					{
-						result = true;
-						return result;
-					}
-					if (type2 == typeof(ScriptableObject) || type2.IsSubclassOf(typeof(ScriptableObject)))
-					{
-						result = true;
-						return result;
-					}
-				}
-				TypeDefinition typeDefinition = null;
-				try
-				{
-					typeDefinition = type.Resolve();
-				}
-				catch (AssemblyResolutionException)
-				{
-				}
-				result = (typeDefinition != null && AssemblyHelper.IsTypeMonoBehaviourOrScriptableObject(assembly, typeDefinition.BaseType));
-			}
-			return result;
-		}
+        private static string FindAssemblyName(string fullName, string name, string[] allAssemblyPaths, string[] foldersToSearch, Dictionary<string, AssemblyDefinition> cache)
+        {
+            for (int i = 0; i < allAssemblyPaths.Length; i++)
+            {
+                if (GetAssemblyDefinitionCached(allAssemblyPaths[i], cache).MainModule.Assembly.Name.Name == name)
+                {
+                    return allAssemblyPaths[i];
+                }
+            }
+            foreach (string str2 in foldersToSearch)
+            {
+                string path = Path.Combine(str2, name + ".dll");
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+            }
+            return "";
+        }
 
-		public static void ExtractAllClassesThatInheritMonoBehaviourAndScriptableObject(string path, out string[] classNamesArray, out string[] classNameSpacesArray)
-		{
-			List<string> list = new List<string>();
-			List<string> list2 = new List<string>();
-			ReaderParameters readerParameters = new ReaderParameters();
-			DefaultAssemblyResolver defaultAssemblyResolver = new DefaultAssemblyResolver();
-			defaultAssemblyResolver.AddSearchDirectory(Path.GetDirectoryName(path));
-			readerParameters.AssemblyResolver = defaultAssemblyResolver;
-			AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(path, readerParameters);
-			foreach (ModuleDefinition current in assemblyDefinition.Modules)
-			{
-				foreach (TypeDefinition current2 in current.Types)
-				{
-					TypeReference baseType = current2.BaseType;
-					try
-					{
-						if (AssemblyHelper.IsTypeMonoBehaviourOrScriptableObject(assemblyDefinition, baseType))
-						{
-							list.Add(current2.Name);
-							list2.Add(current2.Namespace);
-						}
-					}
-					catch (Exception)
-					{
-						UnityEngine.Debug.LogError(string.Concat(new string[]
-						{
-							"Failed to extract ",
-							current2.FullName,
-							" class of base type ",
-							baseType.FullName,
-							" when inspecting ",
-							path
-						}));
-					}
-				}
-			}
-			classNamesArray = list.ToArray();
-			classNameSpacesArray = list2.ToArray();
-		}
+        [DebuggerHidden]
+        internal static IEnumerable<T> FindImplementors<T>(Assembly assembly) where T: class
+        {
+            return new <FindImplementors>c__Iterator0<T> { 
+                assembly = assembly,
+                $PC = -2
+            };
+        }
 
-		public static AssemblyTypeInfoGenerator.ClassInfo[] ExtractAssemblyTypeInfo(BuildTarget targetPlatform, bool isEditor, string assemblyPathName, string[] searchDirs)
-		{
-			AssemblyTypeInfoGenerator.ClassInfo[] result;
-			try
-			{
-				string targetStringFromBuildTarget = ModuleManager.GetTargetStringFromBuildTarget(targetPlatform);
-				ICompilationExtension compilationExtension = ModuleManager.GetCompilationExtension(targetStringFromBuildTarget);
-				string[] compilerExtraAssemblyPaths = compilationExtension.GetCompilerExtraAssemblyPaths(isEditor, assemblyPathName);
-				if (compilerExtraAssemblyPaths != null && compilerExtraAssemblyPaths.Length > 0)
-				{
-					List<string> list = new List<string>(searchDirs);
-					list.AddRange(compilerExtraAssemblyPaths);
-					searchDirs = list.ToArray();
-				}
-				IAssemblyResolver assemblyResolver = compilationExtension.GetAssemblyResolver(isEditor, assemblyPathName, searchDirs);
-				AssemblyTypeInfoGenerator assemblyTypeInfoGenerator;
-				if (assemblyResolver == null)
-				{
-					assemblyTypeInfoGenerator = new AssemblyTypeInfoGenerator(assemblyPathName, searchDirs);
-				}
-				else
-				{
-					assemblyTypeInfoGenerator = new AssemblyTypeInfoGenerator(assemblyPathName, assemblyResolver);
-				}
-				result = assemblyTypeInfoGenerator.GatherClassInfo();
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(string.Concat(new object[]
-				{
-					"ExtractAssemblyTypeInfo: Failed to process ",
-					assemblyPathName,
-					", ",
-					ex
-				}));
-			}
-			return result;
-		}
+        public static Assembly FindLoadedAssemblyWithName(string s)
+        {
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly assembly in assemblies)
+            {
+                try
+                {
+                    if (assembly.Location.Contains(s))
+                    {
+                        return assembly;
+                    }
+                }
+                catch (NotSupportedException)
+                {
+                }
+            }
+            return null;
+        }
 
-		internal static Type[] GetTypesFromAssembly(Assembly assembly)
-		{
-			Type[] result;
-			if (assembly == null)
-			{
-				result = new Type[0];
-			}
-			else
-			{
-				try
-				{
-					result = assembly.GetTypes();
-				}
-				catch (ReflectionTypeLoadException)
-				{
-					result = new Type[0];
-				}
-			}
-			return result;
-		}
+        private static AssemblyDefinition GetAssemblyDefinitionCached(string path, Dictionary<string, AssemblyDefinition> cache)
+        {
+            if (cache.ContainsKey(path))
+            {
+                return cache[path];
+            }
+            AssemblyDefinition definition2 = AssemblyDefinition.ReadAssembly(path);
+            cache[path] = definition2;
+            return definition2;
+        }
 
-		[DebuggerHidden]
-		internal static IEnumerable<T> FindImplementors<T>(Assembly assembly) where T : class
-		{
-			AssemblyHelper.<FindImplementors>c__Iterator0<T> <FindImplementors>c__Iterator = new AssemblyHelper.<FindImplementors>c__Iterator0<T>();
-			<FindImplementors>c__Iterator.assembly = assembly;
-			AssemblyHelper.<FindImplementors>c__Iterator0<T> expr_0E = <FindImplementors>c__Iterator;
-			expr_0E.$PC = -2;
-			return expr_0E;
-		}
+        public static string[] GetNamesOfAssembliesLoadedInCurrentDomain()
+        {
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            List<string> list = new List<string>();
+            foreach (Assembly assembly in assemblies)
+            {
+                try
+                {
+                    list.Add(assembly.Location);
+                }
+                catch (NotSupportedException)
+                {
+                }
+            }
+            return list.ToArray();
+        }
 
-		public static bool IsManagedAssembly(string file)
-		{
-			DllType dllType = InternalEditorUtility.DetectDotNetDll(file);
-			return dllType != DllType.Unknown && dllType != DllType.Native;
-		}
+        internal static Type[] GetTypesFromAssembly(Assembly assembly)
+        {
+            if (assembly == null)
+            {
+                return new Type[0];
+            }
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                return new Type[0];
+            }
+        }
 
-		public static bool IsInternalAssembly(string file)
-		{
-			return ModuleManager.IsRegisteredModule(file) || ModuleUtils.GetAdditionalReferencesForUserScripts().Any((string p) => p.Equals(file));
-		}
+        private static bool IgnoreAssembly(string assemblyPath, BuildTarget target)
+        {
+            return (((target == BuildTarget.WSAPlayer) && ((((assemblyPath.IndexOf("mscorlib.dll") != -1) || (assemblyPath.IndexOf("System.") != -1)) || ((assemblyPath.IndexOf("Windows.dll") != -1) || (assemblyPath.IndexOf("Microsoft.") != -1))) || (((assemblyPath.IndexOf("Windows.") != -1) || (assemblyPath.IndexOf("WinRTLegacy.dll") != -1)) || (assemblyPath.IndexOf("platform.dll") != -1)))) || IsInternalAssembly(assemblyPath));
+        }
 
-		internal static ICollection<string> FindAssemblies(string basePath)
-		{
-			return AssemblyHelper.FindAssemblies(basePath, 10);
-		}
+        public static bool IsInternalAssembly(string file)
+        {
+            <IsInternalAssembly>c__AnonStorey4 storey = new <IsInternalAssembly>c__AnonStorey4 {
+                file = file
+            };
+            return (ModuleManager.IsRegisteredModule(storey.file) || Enumerable.Any<string>(ModuleUtils.GetAdditionalReferencesForUserScripts(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)));
+        }
 
-		internal static ICollection<string> FindAssemblies(string basePath, int maxDepth)
-		{
-			List<string> list = new List<string>();
-			ICollection<string> result;
-			if (maxDepth == 0)
-			{
-				result = list;
-			}
-			else
-			{
-				try
-				{
-					DirectoryInfo directoryInfo = new DirectoryInfo(basePath);
-					list.AddRange(from file in directoryInfo.GetFiles()
-					where AssemblyHelper.IsManagedAssembly(file.FullName)
-					select file.FullName);
-					DirectoryInfo[] directories = directoryInfo.GetDirectories();
-					for (int i = 0; i < directories.Length; i++)
-					{
-						DirectoryInfo directoryInfo2 = directories[i];
-						list.AddRange(AssemblyHelper.FindAssemblies(directoryInfo2.FullName, maxDepth - 1));
-					}
-				}
-				catch (Exception)
-				{
-				}
-				result = list;
-			}
-			return result;
-		}
-	}
+        public static bool IsManagedAssembly(string file)
+        {
+            DllType type = InternalEditorUtility.DetectDotNetDll(file);
+            return ((type != DllType.Unknown) && (type != DllType.Native));
+        }
+
+        private static bool IsTypeMonoBehaviourOrScriptableObject(AssemblyDefinition assembly, TypeReference type)
+        {
+            if (type == null)
+            {
+                return false;
+            }
+            if (type.FullName == "System.Object")
+            {
+                return false;
+            }
+            Assembly assembly2 = null;
+            if (type.Scope.Name == "UnityEngine")
+            {
+                assembly2 = typeof(MonoBehaviour).Assembly;
+            }
+            else if (type.Scope.Name == "UnityEditor")
+            {
+                assembly2 = typeof(EditorWindow).Assembly;
+            }
+            else if (type.Scope.Name == "UnityEngine.UI")
+            {
+                assembly2 = FindLoadedAssemblyWithName("UnityEngine.UI");
+            }
+            if (assembly2 != null)
+            {
+                string name = !type.IsGenericInstance ? type.FullName : (type.Namespace + "." + type.Name);
+                Type type2 = assembly2.GetType(name);
+                if ((type2 == typeof(MonoBehaviour)) || type2.IsSubclassOf(typeof(MonoBehaviour)))
+                {
+                    return true;
+                }
+                if ((type2 == typeof(ScriptableObject)) || type2.IsSubclassOf(typeof(ScriptableObject)))
+                {
+                    return true;
+                }
+            }
+            TypeDefinition definition = null;
+            try
+            {
+                definition = type.Resolve();
+            }
+            catch (AssemblyResolutionException)
+            {
+            }
+            return ((definition != null) && IsTypeMonoBehaviourOrScriptableObject(assembly, definition.BaseType));
+        }
+
+        [CompilerGenerated]
+        private sealed class <AddReferencedAssembliesRecurse>c__AnonStorey1
+        {
+            internal BuildTarget target;
+
+            internal bool <>m__0(PluginImporter i)
+            {
+                string platformData = i.GetPlatformData(this.target, "CPU");
+                return (!string.IsNullOrEmpty(platformData) && !string.Equals(platformData, "AnyCPU", StringComparison.InvariantCultureIgnoreCase));
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <AddReferencedAssembliesRecurse>c__AnonStorey2
+        {
+            internal AssemblyNameReference referencedAssembly;
+        }
+
+        [CompilerGenerated]
+        private sealed class <AddReferencedAssembliesRecurse>c__AnonStorey3
+        {
+            internal AssemblyHelper.<AddReferencedAssembliesRecurse>c__AnonStorey2 <>f__ref$2;
+            internal string extension;
+
+            internal bool <>m__0(string p)
+            {
+                return string.Equals(p, this.<>f__ref$2.referencedAssembly.Name + this.extension, StringComparison.InvariantCultureIgnoreCase);
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <FindImplementors>c__Iterator0<T> : IEnumerable, IEnumerable<T>, IEnumerator, IDisposable, IEnumerator<T> where T: class
+        {
+            internal T $current;
+            internal bool $disposing;
+            internal Type[] $locvar0;
+            internal int $locvar1;
+            internal int $PC;
+            internal Type <interfaze>__0;
+            internal T <module>__2;
+            internal Type <type>__1;
+            internal Assembly assembly;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                        this.<interfaze>__0 = typeof(T);
+                        this.$locvar0 = AssemblyHelper.GetTypesFromAssembly(this.assembly);
+                        this.$locvar1 = 0;
+                        goto Label_0144;
+
+                    case 1:
+                        break;
+
+                    default:
+                        goto Label_015E;
+                }
+            Label_0136:
+                this.$locvar1++;
+            Label_0144:
+                if (this.$locvar1 < this.$locvar0.Length)
+                {
+                    this.<type>__1 = this.$locvar0[this.$locvar1];
+                    if ((!this.<type>__1.IsInterface && !this.<type>__1.IsAbstract) && this.<interfaze>__0.IsAssignableFrom(this.<type>__1))
+                    {
+                        this.<module>__2 = null;
+                        if (typeof(ScriptableObject).IsAssignableFrom(this.<type>__1))
+                        {
+                            this.<module>__2 = ScriptableObject.CreateInstance(this.<type>__1) as T;
+                        }
+                        else
+                        {
+                            this.<module>__2 = Activator.CreateInstance(this.<type>__1) as T;
+                        }
+                        if (this.<module>__2 != null)
+                        {
+                            this.$current = this.<module>__2;
+                            if (!this.$disposing)
+                            {
+                                this.$PC = 1;
+                            }
+                            return true;
+                        }
+                    }
+                    goto Label_0136;
+                }
+                this.$PC = -1;
+            Label_015E:
+                return false;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new AssemblyHelper.<FindImplementors>c__Iterator0<T> { assembly = this.assembly };
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
+            }
+
+            T IEnumerator<T>.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return this.$current;
+                }
+            }
+
+            object IEnumerator.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return this.$current;
+                }
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <IsInternalAssembly>c__AnonStorey4
+        {
+            internal string file;
+
+            internal bool <>m__0(string p)
+            {
+                return p.Equals(this.file);
+            }
+        }
+    }
 }
+

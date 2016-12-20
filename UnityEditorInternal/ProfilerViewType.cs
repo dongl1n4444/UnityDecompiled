@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum ProfilerViewType
-	{
-		Hierarchy,
-		Timeline,
-		RawHierarchy
-	}
+    using System;
+
+    public enum ProfilerViewType
+    {
+        Hierarchy,
+        Timeline,
+        RawHierarchy
+    }
 }
+

@@ -1,31 +1,27 @@
-using System;
-using UnityEditor;
-using UnityEditor.IMGUI.Controls;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AnimationWindowHierarchyNode : TreeViewItem
-	{
-		public string path;
+    using System;
+    using UnityEditor.IMGUI.Controls;
 
-		public Type animatableObjectType;
+    internal class AnimationWindowHierarchyNode : TreeViewItem
+    {
+        public Type animatableObjectType;
+        public EditorCurveBinding? binding;
+        public AnimationWindowCurve[] curves;
+        public int indent;
+        public string path;
+        public string propertyName;
+        public float? topPixel;
 
-		public string propertyName;
-
-		public EditorCurveBinding? binding;
-
-		public AnimationWindowCurve[] curves;
-
-		public float? topPixel = null;
-
-		public int indent = 0;
-
-		public AnimationWindowHierarchyNode(int instanceID, int depth, TreeViewItem parent, Type animatableObjectType, string propertyName, string path, string displayName) : base(instanceID, depth, parent, displayName)
-		{
-			this.displayName = displayName;
-			this.animatableObjectType = animatableObjectType;
-			this.propertyName = propertyName;
-			this.path = path;
-		}
-	}
+        public AnimationWindowHierarchyNode(int instanceID, int depth, TreeViewItem parent, Type animatableObjectType, string propertyName, string path, string displayName) : base(instanceID, depth, parent, displayName)
+        {
+            this.topPixel = null;
+            this.indent = 0;
+            this.displayName = displayName;
+            this.animatableObjectType = animatableObjectType;
+            this.propertyName = propertyName;
+            this.path = path;
+        }
+    }
 }
+

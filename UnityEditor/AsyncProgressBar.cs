@@ -1,32 +1,20 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class AsyncProgressBar
-	{
-		public static extern float progress
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public static extern string progressInfo
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    internal sealed class AsyncProgressBar
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Clear();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void Display(string progressInfo, float progress);
 
-		public static extern bool isShowing
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public static bool isShowing { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void Display(string progressInfo, float progress);
+        public static float progress { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void Clear();
-	}
+        public static string progressInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

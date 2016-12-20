@@ -1,200 +1,183 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEditor.Audio;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-using UnityEngine.Audio;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AudioMixersDataSource : TreeViewDataSource
-	{
-		private Func<List<AudioMixerController>> m_GetAllControllersCallback;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using UnityEditor.Audio;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-		public AudioMixersDataSource(TreeViewController treeView, Func<List<AudioMixerController>> getAllControllersCallback) : base(treeView)
-		{
-			base.showRootItem = false;
-			this.m_GetAllControllersCallback = getAllControllersCallback;
-		}
+    internal class AudioMixersDataSource : TreeViewDataSource
+    {
+        private Func<List<AudioMixerController>> m_GetAllControllersCallback;
 
-		public override void FetchData()
-		{
-			int depth = -1;
-			bool flag = this.m_TreeView.state.expandedIDs.Count == 0;
-			this.m_RootItem = new TreeViewItem(1010101010, depth, null, "InvisibleRoot");
-			this.SetExpanded(this.m_RootItem.id, true);
-			List<AudioMixerController> list = this.m_GetAllControllersCallback();
-			this.m_NeedRefreshRows = true;
-			if (list.Count > 0)
-			{
-				List<AudioMixerItem> list2 = (from mixer in list
-				select new AudioMixerItem(mixer.GetInstanceID(), 0, this.m_RootItem, mixer.name, mixer, AudioMixersDataSource.GetInfoText(mixer))).ToList<AudioMixerItem>();
-				foreach (AudioMixerItem current in list2)
-				{
-					this.SetChildParentOfMixerItem(current, list2);
-				}
-				this.SetItemDepthRecursive(this.m_RootItem, -1);
-				this.SortRecursive(this.m_RootItem);
-				if (flag)
-				{
-					this.m_TreeView.data.SetExpandedWithChildren(this.m_RootItem, true);
-				}
-			}
-		}
+        public AudioMixersDataSource(TreeViewController treeView, Func<List<AudioMixerController>> getAllControllersCallback) : base(treeView)
+        {
+            base.showRootItem = false;
+            this.m_GetAllControllersCallback = getAllControllersCallback;
+        }
 
-		private static string GetInfoText(AudioMixerController controller)
-		{
-			string result;
-			if (controller.outputAudioMixerGroup != null)
-			{
-				result = string.Format("({0} of {1})", controller.outputAudioMixerGroup.name, controller.outputAudioMixerGroup.audioMixer.name);
-			}
-			else
-			{
-				result = "(Audio Listener)";
-			}
-			return result;
-		}
+        public override void FetchData()
+        {
+            int depth = -1;
+            bool flag = base.m_TreeView.state.expandedIDs.Count == 0;
+            base.m_RootItem = new TreeViewItem(0x3c34eb12, depth, null, "InvisibleRoot");
+            this.SetExpanded(base.m_RootItem.id, true);
+            List<AudioMixerController> list = this.m_GetAllControllersCallback.Invoke();
+            base.m_NeedRefreshRows = true;
+            if (list.Count > 0)
+            {
+                List<AudioMixerItem> items = Enumerable.ToList<AudioMixerItem>(Enumerable.Select<AudioMixerController, AudioMixerItem>(list, new Func<AudioMixerController, AudioMixerItem>(this, (IntPtr) this.<FetchData>m__0)));
+                foreach (AudioMixerItem item in items)
+                {
+                    this.SetChildParentOfMixerItem(item, items);
+                }
+                this.SetItemDepthRecursive(base.m_RootItem, -1);
+                this.SortRecursive(base.m_RootItem);
+                if (flag)
+                {
+                    base.m_TreeView.data.SetExpandedWithChildren(base.m_RootItem, true);
+                }
+            }
+        }
 
-		private void SetChildParentOfMixerItem(AudioMixerItem item, List<AudioMixerItem> items)
-		{
-			if (item.mixer.outputAudioMixerGroup != null)
-			{
-				AudioMixer audioMixer = item.mixer.outputAudioMixerGroup.audioMixer;
-				AudioMixerItem audioMixerItem = TreeViewUtility.FindItemInList<AudioMixerItem>(audioMixer.GetInstanceID(), items) as AudioMixerItem;
-				if (audioMixerItem != null)
-				{
-					audioMixerItem.AddChild(item);
-				}
-			}
-			else
-			{
-				this.m_RootItem.AddChild(item);
-			}
-		}
+        private static string GetInfoText(AudioMixerController controller)
+        {
+            if (controller.outputAudioMixerGroup != null)
+            {
+                return string.Format("({0} of {1})", controller.outputAudioMixerGroup.name, controller.outputAudioMixerGroup.audioMixer.name);
+            }
+            return "(Audio Listener)";
+        }
 
-		private void SetItemDepthRecursive(TreeViewItem item, int depth)
-		{
-			item.depth = depth;
-			if (item.hasChildren)
-			{
-				foreach (TreeViewItem current in item.children)
-				{
-					this.SetItemDepthRecursive(current, depth + 1);
-				}
-			}
-		}
+        public int GetInsertAfterItemIDForNewItem(string newName, TreeViewItem parentItem)
+        {
+            int id = parentItem.id;
+            if (parentItem.hasChildren)
+            {
+                for (int i = 0; i < parentItem.children.Count; i++)
+                {
+                    int instanceID = parentItem.children[i].id;
+                    if (EditorUtility.NaturalCompare(Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(instanceID)), newName) > 0)
+                    {
+                        return id;
+                    }
+                    id = instanceID;
+                }
+            }
+            return id;
+        }
 
-		private void SortRecursive(TreeViewItem item)
-		{
-			if (item.hasChildren)
-			{
-				item.children.Sort(new TreeViewItemAlphaNumericSort());
-				foreach (TreeViewItem current in item.children)
-				{
-					this.SortRecursive(current);
-				}
-			}
-		}
+        public override void InsertFakeItem(int id, int parentID, string name, Texture2D icon)
+        {
+            TreeViewItem item = this.FindItem(id);
+            if (item != null)
+            {
+                Debug.LogError(string.Concat(new object[] { "Cannot insert fake Item because id is not unique ", id, " Item already there: ", item.displayName }));
+            }
+            else if (this.FindItem(parentID) == null)
+            {
+                Debug.LogError("No parent Item found with ID: " + parentID);
+            }
+            else
+            {
+                TreeViewItem rootItem;
+                this.SetExpanded(parentID, true);
+                IList<TreeViewItem> rows = this.GetRows();
+                int indexOfID = TreeViewController.GetIndexOfID(rows, parentID);
+                if (indexOfID >= 0)
+                {
+                    rootItem = rows[indexOfID];
+                }
+                else
+                {
+                    rootItem = base.m_RootItem;
+                }
+                int depth = rootItem.depth + 1;
+                base.m_FakeItem = new TreeViewItem(id, depth, rootItem, name);
+                base.m_FakeItem.icon = icon;
+                int insertAfterItemIDForNewItem = this.GetInsertAfterItemIDForNewItem(name, rootItem);
+                int index = TreeViewController.GetIndexOfID(rows, insertAfterItemIDForNewItem);
+                if (index < 0)
+                {
+                    if (rows.Count > 0)
+                    {
+                        rows.Insert(0, base.m_FakeItem);
+                    }
+                    else
+                    {
+                        rows.Add(base.m_FakeItem);
+                    }
+                }
+                else
+                {
+                    while (++index < rows.Count)
+                    {
+                        if (rows[index].depth <= depth)
+                        {
+                            break;
+                        }
+                    }
+                    if (index < rows.Count)
+                    {
+                        rows.Insert(index, base.m_FakeItem);
+                    }
+                    else
+                    {
+                        rows.Add(base.m_FakeItem);
+                    }
+                }
+                base.m_NeedRefreshRows = false;
+                base.m_TreeView.Frame(base.m_FakeItem.id, true, false);
+                base.m_TreeView.Repaint();
+            }
+        }
 
-		public override bool IsRenamingItemAllowed(TreeViewItem item)
-		{
-			return true;
-		}
+        public override bool IsRenamingItemAllowed(TreeViewItem item)
+        {
+            return true;
+        }
 
-		public int GetInsertAfterItemIDForNewItem(string newName, TreeViewItem parentItem)
-		{
-			int num = parentItem.id;
-			int result;
-			if (!parentItem.hasChildren)
-			{
-				result = num;
-			}
-			else
-			{
-				for (int i = 0; i < parentItem.children.Count; i++)
-				{
-					int id = parentItem.children[i].id;
-					string assetPath = AssetDatabase.GetAssetPath(id);
-					if (EditorUtility.NaturalCompare(Path.GetFileNameWithoutExtension(assetPath), newName) > 0)
-					{
-						break;
-					}
-					num = id;
-				}
-				result = num;
-			}
-			return result;
-		}
+        private void SetChildParentOfMixerItem(AudioMixerItem item, List<AudioMixerItem> items)
+        {
+            if (item.mixer.outputAudioMixerGroup != null)
+            {
+                AudioMixerItem item2 = TreeViewUtility.FindItemInList<AudioMixerItem>(item.mixer.outputAudioMixerGroup.audioMixer.GetInstanceID(), items) as AudioMixerItem;
+                if (item2 != null)
+                {
+                    item2.AddChild(item);
+                }
+            }
+            else
+            {
+                base.m_RootItem.AddChild(item);
+            }
+        }
 
-		public override void InsertFakeItem(int id, int parentID, string name, Texture2D icon)
-		{
-			TreeViewItem treeViewItem = this.FindItem(id);
-			if (treeViewItem != null)
-			{
-				Debug.LogError(string.Concat(new object[]
-				{
-					"Cannot insert fake Item because id is not unique ",
-					id,
-					" Item already there: ",
-					treeViewItem.displayName
-				}));
-			}
-			else if (this.FindItem(parentID) != null)
-			{
-				this.SetExpanded(parentID, true);
-				IList<TreeViewItem> rows = this.GetRows();
-				int indexOfID = TreeViewController.GetIndexOfID(rows, parentID);
-				TreeViewItem treeViewItem2;
-				if (indexOfID >= 0)
-				{
-					treeViewItem2 = rows[indexOfID];
-				}
-				else
-				{
-					treeViewItem2 = this.m_RootItem;
-				}
-				int num = treeViewItem2.depth + 1;
-				this.m_FakeItem = new TreeViewItem(id, num, treeViewItem2, name);
-				this.m_FakeItem.icon = icon;
-				int insertAfterItemIDForNewItem = this.GetInsertAfterItemIDForNewItem(name, treeViewItem2);
-				int num2 = TreeViewController.GetIndexOfID(rows, insertAfterItemIDForNewItem);
-				if (num2 >= 0)
-				{
-					while (++num2 < rows.Count)
-					{
-						if (rows[num2].depth <= num)
-						{
-							break;
-						}
-					}
-					if (num2 < rows.Count)
-					{
-						rows.Insert(num2, this.m_FakeItem);
-					}
-					else
-					{
-						rows.Add(this.m_FakeItem);
-					}
-				}
-				else if (rows.Count > 0)
-				{
-					rows.Insert(0, this.m_FakeItem);
-				}
-				else
-				{
-					rows.Add(this.m_FakeItem);
-				}
-				this.m_NeedRefreshRows = false;
-				this.m_TreeView.Frame(this.m_FakeItem.id, true, false);
-				this.m_TreeView.Repaint();
-			}
-			else
-			{
-				Debug.LogError("No parent Item found with ID: " + parentID);
-			}
-		}
-	}
+        private void SetItemDepthRecursive(TreeViewItem item, int depth)
+        {
+            item.depth = depth;
+            if (item.hasChildren)
+            {
+                foreach (TreeViewItem item2 in item.children)
+                {
+                    this.SetItemDepthRecursive(item2, depth + 1);
+                }
+            }
+        }
+
+        private void SortRecursive(TreeViewItem item)
+        {
+            if (item.hasChildren)
+            {
+                item.children.Sort(new TreeViewItemAlphaNumericSort());
+                foreach (TreeViewItem item2 in item.children)
+                {
+                    this.SortRecursive(item2);
+                }
+            }
+        }
+    }
 }
+

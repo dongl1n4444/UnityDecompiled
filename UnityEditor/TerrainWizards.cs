@@ -1,8 +1,9 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class TerrainWizards
-	{
-	}
+    using System;
+
+    internal class TerrainWizards
+    {
+    }
 }
+

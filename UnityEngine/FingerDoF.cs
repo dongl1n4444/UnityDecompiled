@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum FingerDoF
-	{
-		ProximalDownUp,
-		ProximalInOut,
-		IntermediateCloseOpen,
-		DistalCloseOpen,
-		LastFingerDoF
-	}
+    using System;
+
+    internal enum FingerDoF
+    {
+        ProximalDownUp,
+        ProximalInOut,
+        IntermediateCloseOpen,
+        DistalCloseOpen,
+        LastFingerDoF
+    }
 }
+

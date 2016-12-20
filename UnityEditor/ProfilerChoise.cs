@@ -1,15 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct ProfilerChoise
-	{
-		public string Name;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public bool Enabled;
-
-		public Func<bool> IsSelected;
-
-		public Action ConnectTo;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ProfilerChoise
+    {
+        public string Name;
+        public bool Enabled;
+        public Func<bool> IsSelected;
+        public Action ConnectTo;
+    }
 }
+

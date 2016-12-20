@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum BoneState
-	{
-		None,
-		NotFound,
-		Duplicate,
-		InvalidHierarchy,
-		BoneLenghtIsZero,
-		Valid
-	}
+    using System;
+
+    public enum BoneState
+    {
+        None,
+        NotFound,
+        Duplicate,
+        InvalidHierarchy,
+        BoneLenghtIsZero,
+        Valid
+    }
 }
+

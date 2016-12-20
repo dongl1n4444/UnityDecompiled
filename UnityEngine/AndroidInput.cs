@@ -1,46 +1,51 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class AndroidInput
-	{
-		public static extern int touchCountSecondary
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public static extern bool secondaryTouchEnabled
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    /// <summary>
+    /// <para>AndroidInput provides support for off-screen touch input, such as a touchpad.</para>
+    /// </summary>
+    public sealed class AndroidInput
+    {
+        private AndroidInput()
+        {
+        }
 
-		public static extern int secondaryTouchWidth
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Returns object representing status of a specific touch on a secondary touchpad (Does not allocate temporary variables).</para>
+        /// </summary>
+        /// <param name="index"></param>
+        public static Touch GetSecondaryTouch(int index)
+        {
+            Touch touch;
+            INTERNAL_CALL_GetSecondaryTouch(index, out touch);
+            return touch;
+        }
 
-		public static extern int secondaryTouchHeight
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_GetSecondaryTouch(int index, out Touch value);
 
-		private AndroidInput()
-		{
-		}
+        /// <summary>
+        /// <para>Property indicating whether the system provides secondary touch input.</para>
+        /// </summary>
+        public static bool secondaryTouchEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public static Touch GetSecondaryTouch(int index)
-		{
-			Touch result;
-			AndroidInput.INTERNAL_CALL_GetSecondaryTouch(index, out result);
-			return result;
-		}
+        /// <summary>
+        /// <para>Property indicating the height of the secondary touchpad.</para>
+        /// </summary>
+        public static int secondaryTouchHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_GetSecondaryTouch(int index, out Touch value);
-	}
+        /// <summary>
+        /// <para>Property indicating the width of the secondary touchpad.</para>
+        /// </summary>
+        public static int secondaryTouchWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+
+        /// <summary>
+        /// <para>Number of secondary touches. Guaranteed not to change throughout the frame. (Read Only).</para>
+        /// </summary>
+        public static int touchCountSecondary { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

@@ -1,78 +1,74 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class CurveSelection : IComparable
-	{
-		internal enum SelectionType
-		{
-			Key,
-			InTangent,
-			OutTangent,
-			Count
-		}
+    using System;
+    using UnityEngine;
 
-		[SerializeField]
-		public int curveID = 0;
+    [Serializable]
+    internal class CurveSelection : IComparable
+    {
+        [SerializeField]
+        public int curveID;
+        [SerializeField]
+        public int key;
+        [SerializeField]
+        public bool semiSelected;
+        [SerializeField]
+        public SelectionType type;
 
-		[SerializeField]
-		public int key = -1;
+        internal CurveSelection(int curveID, int key)
+        {
+            this.curveID = 0;
+            this.key = -1;
+            this.semiSelected = false;
+            this.curveID = curveID;
+            this.key = key;
+            this.type = SelectionType.Key;
+        }
 
-		[SerializeField]
-		public bool semiSelected = false;
+        internal CurveSelection(int curveID, int key, SelectionType type)
+        {
+            this.curveID = 0;
+            this.key = -1;
+            this.semiSelected = false;
+            this.curveID = curveID;
+            this.key = key;
+            this.type = type;
+        }
 
-		[SerializeField]
-		public CurveSelection.SelectionType type;
+        public int CompareTo(object _other)
+        {
+            CurveSelection selection = (CurveSelection) _other;
+            int num = this.curveID - selection.curveID;
+            if (num != 0)
+            {
+                return num;
+            }
+            num = this.key - selection.key;
+            if (num != 0)
+            {
+                return num;
+            }
+            return (int) (this.type - selection.type);
+        }
 
-		internal CurveSelection(int curveID, int key)
-		{
-			this.curveID = curveID;
-			this.key = key;
-			this.type = CurveSelection.SelectionType.Key;
-		}
+        public override bool Equals(object _other)
+        {
+            CurveSelection selection = (CurveSelection) _other;
+            return (((selection.curveID == this.curveID) && (selection.key == this.key)) && (selection.type == this.type));
+        }
 
-		internal CurveSelection(int curveID, int key, CurveSelection.SelectionType type)
-		{
-			this.curveID = curveID;
-			this.key = key;
-			this.type = type;
-		}
+        public override int GetHashCode()
+        {
+            return (((this.curveID * 0x2d9) + (this.key * 0x1b)) + this.type);
+        }
 
-		public int CompareTo(object _other)
-		{
-			CurveSelection curveSelection = (CurveSelection)_other;
-			int num = this.curveID - curveSelection.curveID;
-			int result;
-			if (num != 0)
-			{
-				result = num;
-			}
-			else
-			{
-				num = this.key - curveSelection.key;
-				if (num != 0)
-				{
-					result = num;
-				}
-				else
-				{
-					result = this.type - curveSelection.type;
-				}
-			}
-			return result;
-		}
-
-		public override bool Equals(object _other)
-		{
-			CurveSelection curveSelection = (CurveSelection)_other;
-			return curveSelection.curveID == this.curveID && curveSelection.key == this.key && curveSelection.type == this.type;
-		}
-
-		public override int GetHashCode()
-		{
-			return (int)(this.curveID * 729 + this.key * 27 + this.type);
-		}
-	}
+        internal enum SelectionType
+        {
+            Key,
+            InTangent,
+            OutTangent,
+            Count
+        }
+    }
 }
+

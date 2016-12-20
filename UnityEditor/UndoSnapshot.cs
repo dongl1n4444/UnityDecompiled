@@ -1,21 +1,22 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Obsolete("Use Undo.RecordObject before modifying the object instead")]
-	public sealed class UndoSnapshot
-	{
-		public UndoSnapshot(UnityEngine.Object[] objectsToUndo)
-		{
-		}
+    using System;
+    using UnityEngine;
 
-		public void Restore()
-		{
-		}
+    [Obsolete("Use Undo.RecordObject before modifying the object instead")]
+    public sealed class UndoSnapshot
+    {
+        public UndoSnapshot(Object[] objectsToUndo)
+        {
+        }
 
-		public void Dispose()
-		{
-		}
-	}
+        public void Dispose()
+        {
+        }
+
+        public void Restore()
+        {
+        }
+    }
 }
+

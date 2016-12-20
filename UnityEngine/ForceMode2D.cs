@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ForceMode2D
-	{
-		Force,
-		Impulse
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Option for how to apply a force using Rigidbody2D.AddForce.</para>
+    /// </summary>
+    public enum ForceMode2D
+    {
+        Force,
+        Impulse
+    }
 }
+

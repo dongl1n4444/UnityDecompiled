@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum ModelImporterMaterialSearch
-	{
-		Local,
-		RecursiveUp,
-		Everywhere
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Material search options for ModelImporter.</para>
+    /// </summary>
+    public enum ModelImporterMaterialSearch
+    {
+        Local,
+        RecursiveUp,
+        Everywhere
+    }
 }
+

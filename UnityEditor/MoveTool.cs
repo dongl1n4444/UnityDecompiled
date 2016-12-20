@@ -1,33 +1,34 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class MoveTool : ManipulationTool
-	{
-		private static MoveTool s_Instance;
+    using System;
+    using UnityEngine;
 
-		public static void OnGUI(SceneView view)
-		{
-			if (MoveTool.s_Instance == null)
-			{
-				MoveTool.s_Instance = new MoveTool();
-			}
-			MoveTool.s_Instance.OnToolGUI(view);
-		}
+    internal class MoveTool : ManipulationTool
+    {
+        private static MoveTool s_Instance;
 
-		public override void ToolGUI(SceneView view, Vector3 handlePosition, bool isStatic)
-		{
-			TransformManipulator.BeginManipulationHandling(false);
-			EditorGUI.BeginChangeCheck();
-			Vector3 a = Handles.PositionHandle(handlePosition, Tools.handleRotation);
-			if (EditorGUI.EndChangeCheck() && !isStatic)
-			{
-				Vector3 positionDelta = a - TransformManipulator.mouseDownHandlePosition;
-				ManipulationToolUtility.SetMinDragDifferenceForPos(handlePosition);
-				TransformManipulator.SetPositionDelta(positionDelta);
-			}
-			TransformManipulator.EndManipulationHandling();
-		}
-	}
+        public static void OnGUI(SceneView view)
+        {
+            if (s_Instance == null)
+            {
+                s_Instance = new MoveTool();
+            }
+            s_Instance.OnToolGUI(view);
+        }
+
+        public override void ToolGUI(SceneView view, Vector3 handlePosition, bool isStatic)
+        {
+            TransformManipulator.BeginManipulationHandling(false);
+            EditorGUI.BeginChangeCheck();
+            Vector3 vector = Handles.PositionHandle(handlePosition, Tools.handleRotation);
+            if (EditorGUI.EndChangeCheck() && !isStatic)
+            {
+                Vector3 positionDelta = vector - TransformManipulator.mouseDownHandlePosition;
+                ManipulationToolUtility.SetMinDragDifferenceForPos(handlePosition);
+                TransformManipulator.SetPositionDelta(positionDelta);
+            }
+            TransformManipulator.EndManipulationHandling();
+        }
+    }
 }
+

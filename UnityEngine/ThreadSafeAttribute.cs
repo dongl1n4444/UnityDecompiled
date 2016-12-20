@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
-	public class ThreadSafeAttribute : Attribute
-	{
-	}
+    using System;
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Struct | AttributeTargets.Class, AllowMultiple=false)]
+    public class ThreadSafeAttribute : Attribute
+    {
+    }
 }
+

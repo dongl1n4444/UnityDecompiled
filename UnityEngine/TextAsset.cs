@@ -1,25 +1,27 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class TextAsset : Object
-	{
-		public extern string text
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public extern byte[] bytes
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    /// <summary>
+    /// <para>Text file assets.</para>
+    /// </summary>
+    public class TextAsset : UnityEngine.Object
+    {
+        public override string ToString()
+        {
+            return this.text;
+        }
 
-		public override string ToString()
-		{
-			return this.text;
-		}
-	}
+        /// <summary>
+        /// <para>The raw bytes of the text asset. (Read Only)</para>
+        /// </summary>
+        public byte[] bytes { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+
+        /// <summary>
+        /// <para>The text contents of the .txt file as a string. (Read Only)</para>
+        /// </summary>
+        public string text { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

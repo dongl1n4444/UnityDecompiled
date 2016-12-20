@@ -1,54 +1,53 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(EdgeCollider2D))]
-	internal class EdgeCollider2DEditor : Collider2DEditorBase
-	{
-		private PolygonEditorUtility m_PolyUtility = new PolygonEditorUtility();
+    using System;
+    using UnityEngine;
 
-		private bool m_ShowColliderInfo;
+    [CustomEditor(typeof(EdgeCollider2D)), CanEditMultipleObjects]
+    internal class EdgeCollider2DEditor : Collider2DEditorBase
+    {
+        private SerializedProperty m_Points;
+        private PolygonEditorUtility m_PolyUtility = new PolygonEditorUtility();
+        private bool m_ShowColliderInfo;
 
-		private SerializedProperty m_Points;
+        protected override void OnEditEnd()
+        {
+            this.m_PolyUtility.StopEditing();
+        }
 
-		public override void OnEnable()
-		{
-			base.OnEnable();
-			this.m_Points = base.serializedObject.FindProperty("m_Points");
-			this.m_Points.isExpanded = false;
-		}
+        protected override void OnEditStart()
+        {
+            this.m_PolyUtility.StartEditing(base.target as Collider2D);
+        }
 
-		public override void OnInspectorGUI()
-		{
-			base.BeginColliderInspector();
-			base.OnInspectorGUI();
-			if (base.targets.Length == 1)
-			{
-				EditorGUI.BeginDisabledGroup(base.editingCollider);
-				EditorGUILayout.PropertyField(this.m_Points, true, new GUILayoutOption[0]);
-				EditorGUI.EndDisabledGroup();
-			}
-			base.EndColliderInspector();
-			base.FinalizeInspectorGUI();
-		}
+        public override void OnEnable()
+        {
+            base.OnEnable();
+            this.m_Points = base.serializedObject.FindProperty("m_Points");
+            this.m_Points.isExpanded = false;
+        }
 
-		protected override void OnEditStart()
-		{
-			this.m_PolyUtility.StartEditing(base.target as Collider2D);
-		}
+        public override void OnInspectorGUI()
+        {
+            base.BeginColliderInspector();
+            base.OnInspectorGUI();
+            if (base.targets.Length == 1)
+            {
+                EditorGUI.BeginDisabledGroup(base.editingCollider);
+                EditorGUILayout.PropertyField(this.m_Points, true, new GUILayoutOption[0]);
+                EditorGUI.EndDisabledGroup();
+            }
+            base.EndColliderInspector();
+            base.FinalizeInspectorGUI();
+        }
 
-		protected override void OnEditEnd()
-		{
-			this.m_PolyUtility.StopEditing();
-		}
-
-		public void OnSceneGUI()
-		{
-			if (base.editingCollider)
-			{
-				this.m_PolyUtility.OnSceneGUI();
-			}
-		}
-	}
+        public void OnSceneGUI()
+        {
+            if (base.editingCollider)
+            {
+                this.m_PolyUtility.OnSceneGUI();
+            }
+        }
+    }
 }
+

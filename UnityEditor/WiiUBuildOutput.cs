@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WiiUBuildOutput
-	{
-		Unpackaged,
-		WUMADFile,
-		DownloadImage
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Player packaging.</para>
+    /// </summary>
+    public enum WiiUBuildOutput
+    {
+        Unpackaged,
+        WUMADFile,
+        DownloadImage
+    }
 }
+

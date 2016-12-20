@@ -1,21 +1,17 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public sealed class DefaultAsset : UnityEngine.Object
-	{
-		internal extern string message
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		internal extern bool isWarning
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
-	}
+    /// <summary>
+    /// <para>DefaultAsset is used for assets that does not have a specific type (yet).</para>
+    /// </summary>
+    public sealed class DefaultAsset : Object
+    {
+        internal bool isWarning { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+
+        internal string message { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

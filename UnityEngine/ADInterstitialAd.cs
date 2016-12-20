@@ -1,56 +1,58 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[Obsolete("ADInterstitialAd class is obsolete, Apple iAD service discontinued", true)]
-	public sealed class ADInterstitialAd
-	{
-		public delegate void InterstitialWasLoadedDelegate();
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public static event ADInterstitialAd.InterstitialWasLoadedDelegate onInterstitialWasLoaded
-		{
-			add
-			{
-			}
-			remove
-			{
-			}
-		}
+    [Obsolete("ADInterstitialAd class is obsolete, Apple iAD service discontinued", true)]
+    public sealed class ADInterstitialAd
+    {
+        public static  event InterstitialWasLoadedDelegate onInterstitialWasLoaded
+        {
+            add
+            {
+            }
+            remove
+            {
+            }
+        }
 
-		public static bool isAvailable
-		{
-			get
-			{
-				return false;
-			}
-		}
+        public ADInterstitialAd()
+        {
+        }
 
-		public bool loaded
-		{
-			get
-			{
-				return false;
-			}
-		}
+        public ADInterstitialAd(bool autoReload)
+        {
+        }
 
-		public ADInterstitialAd(bool autoReload)
-		{
-		}
+        ~ADInterstitialAd()
+        {
+        }
 
-		public ADInterstitialAd()
-		{
-		}
+        public void ReloadAd()
+        {
+        }
 
-		~ADInterstitialAd()
-		{
-		}
+        public void Show()
+        {
+        }
 
-		public void Show()
-		{
-		}
+        public static bool isAvailable
+        {
+            get
+            {
+                return false;
+            }
+        }
 
-		public void ReloadAd()
-		{
-		}
-	}
+        public bool loaded
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public delegate void InterstitialWasLoadedDelegate();
+    }
 }
+

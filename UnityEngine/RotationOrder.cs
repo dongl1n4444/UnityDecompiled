@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum RotationOrder
-	{
-		OrderXYZ,
-		OrderXZY,
-		OrderYZX,
-		OrderYXZ,
-		OrderZXY,
-		OrderZYX
-	}
+    using System;
+
+    internal enum RotationOrder
+    {
+        OrderXYZ,
+        OrderXZY,
+        OrderYZX,
+        OrderYXZ,
+        OrderZXY,
+        OrderZYX
+    }
 }
+

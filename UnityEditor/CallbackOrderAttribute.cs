@@ -1,19 +1,27 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[RequiredByNativeCode]
-	public abstract class CallbackOrderAttribute : Attribute
-	{
-		protected int m_CallbackOrder;
+    using System;
+    using UnityEngine.Scripting;
 
-		internal int callbackOrder
-		{
-			get
-			{
-				return this.m_CallbackOrder;
-			}
-		}
-	}
+    /// <summary>
+    /// <para>Base class for Attributes that require a callback index.</para>
+    /// </summary>
+    [RequiredByNativeCode]
+    public abstract class CallbackOrderAttribute : Attribute
+    {
+        protected int m_CallbackOrder;
+
+        protected CallbackOrderAttribute()
+        {
+        }
+
+        internal int callbackOrder
+        {
+            get
+            {
+                return this.m_CallbackOrder;
+            }
+        }
+    }
 }
+

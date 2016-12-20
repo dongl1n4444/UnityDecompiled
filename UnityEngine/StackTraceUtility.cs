@@ -1,242 +1,216 @@
-using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Security;
-using System.Text;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class StackTraceUtility
-	{
-		private static string projectFolder = "";
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Runtime.InteropServices;
+    using System.Security;
+    using System.Text;
+    using UnityEngine.Scripting;
 
-		[RequiredByNativeCode]
-		internal static void SetProjectFolder(string folder)
-		{
-			StackTraceUtility.projectFolder = folder.Replace("\\", "/");
-		}
+    public class StackTraceUtility
+    {
+        private static string projectFolder = "";
 
-		[SecuritySafeCritical, RequiredByNativeCode]
-		public static string ExtractStackTrace()
-		{
-			StackTrace stackTrace = new StackTrace(1, true);
-			return StackTraceUtility.ExtractFormattedStackTrace(stackTrace).ToString();
-		}
+        [SecuritySafeCritical]
+        internal static string ExtractFormattedStackTrace(StackTrace stackTrace)
+        {
+            StringBuilder builder = new StringBuilder(0xff);
+            for (int i = 0; i < stackTrace.FrameCount; i++)
+            {
+                StackFrame frame = stackTrace.GetFrame(i);
+                MethodBase method = frame.GetMethod();
+                if (method != null)
+                {
+                    System.Type declaringType = method.DeclaringType;
+                    if (declaringType != null)
+                    {
+                        string str = declaringType.Namespace;
+                        if ((str != null) && (str.Length != 0))
+                        {
+                            builder.Append(str);
+                            builder.Append(".");
+                        }
+                        builder.Append(declaringType.Name);
+                        builder.Append(":");
+                        builder.Append(method.Name);
+                        builder.Append("(");
+                        int index = 0;
+                        ParameterInfo[] parameters = method.GetParameters();
+                        bool flag = true;
+                        while (index < parameters.Length)
+                        {
+                            if (!flag)
+                            {
+                                builder.Append(", ");
+                            }
+                            else
+                            {
+                                flag = false;
+                            }
+                            builder.Append(parameters[index].ParameterType.Name);
+                            index++;
+                        }
+                        builder.Append(")");
+                        string fileName = frame.GetFileName();
+                        if ((fileName != null) && (((((declaringType.Name != "Debug") || (declaringType.Namespace != "UnityEngine")) && ((declaringType.Name != "Logger") || (declaringType.Namespace != "UnityEngine"))) && (((declaringType.Name != "DebugLogHandler") || (declaringType.Namespace != "UnityEngine")) && ((declaringType.Name != "Assert") || (declaringType.Namespace != "UnityEngine.Assertions")))) && (((method.Name != "print") || (declaringType.Name != "MonoBehaviour")) || (declaringType.Namespace != "UnityEngine"))))
+                        {
+                            builder.Append(" (at ");
+                            if (fileName.Replace(@"\", "/").StartsWith(projectFolder))
+                            {
+                                fileName = fileName.Substring(projectFolder.Length, fileName.Length - projectFolder.Length);
+                            }
+                            builder.Append(fileName);
+                            builder.Append(":");
+                            builder.Append(frame.GetFileLineNumber().ToString());
+                            builder.Append(")");
+                        }
+                        builder.Append("\n");
+                    }
+                }
+            }
+            return builder.ToString();
+        }
 
-		private static bool IsSystemStacktraceType(object name)
-		{
-			string text = (string)name;
-			return text.StartsWith("UnityEditor.") || text.StartsWith("UnityEngine.") || text.StartsWith("System.") || text.StartsWith("UnityScript.Lang.") || text.StartsWith("Boo.Lang.") || text.StartsWith("UnityEngine.SetupCoroutine");
-		}
+        [RequiredByNativeCode, SecuritySafeCritical]
+        public static string ExtractStackTrace()
+        {
+            StackTrace stackTrace = new StackTrace(1, true);
+            return ExtractFormattedStackTrace(stackTrace).ToString();
+        }
 
-		public static string ExtractStringFromException(object exception)
-		{
-			string str = "";
-			string str2 = "";
-			StackTraceUtility.ExtractStringFromExceptionInternal(exception, out str, out str2);
-			return str + "\n" + str2;
-		}
+        public static string ExtractStringFromException(object exception)
+        {
+            string message = "";
+            string stackTrace = "";
+            ExtractStringFromExceptionInternal(exception, out message, out stackTrace);
+            return (message + "\n" + stackTrace);
+        }
 
-		[SecuritySafeCritical, RequiredByNativeCode]
-		internal static void ExtractStringFromExceptionInternal(object exceptiono, out string message, out string stackTrace)
-		{
-			if (exceptiono == null)
-			{
-				throw new ArgumentException("ExtractStringFromExceptionInternal called with null exception");
-			}
-			Exception ex = exceptiono as Exception;
-			if (ex == null)
-			{
-				throw new ArgumentException("ExtractStringFromExceptionInternal called with an exceptoin that was not of type System.Exception");
-			}
-			StringBuilder stringBuilder = new StringBuilder((ex.StackTrace != null) ? (ex.StackTrace.Length * 2) : 512);
-			message = "";
-			string text = "";
-			while (ex != null)
-			{
-				if (text.Length == 0)
-				{
-					text = ex.StackTrace;
-				}
-				else
-				{
-					text = ex.StackTrace + "\n" + text;
-				}
-				string text2 = ex.GetType().Name;
-				string text3 = "";
-				if (ex.Message != null)
-				{
-					text3 = ex.Message;
-				}
-				if (text3.Trim().Length != 0)
-				{
-					text2 += ": ";
-					text2 += text3;
-				}
-				message = text2;
-				if (ex.InnerException != null)
-				{
-					text = "Rethrow as " + text2 + "\n" + text;
-				}
-				ex = ex.InnerException;
-			}
-			stringBuilder.Append(text + "\n");
-			StackTrace stackTrace2 = new StackTrace(1, true);
-			stringBuilder.Append(StackTraceUtility.ExtractFormattedStackTrace(stackTrace2));
-			stackTrace = stringBuilder.ToString();
-		}
+        [RequiredByNativeCode, SecuritySafeCritical]
+        internal static void ExtractStringFromExceptionInternal(object exceptiono, out string message, out string stackTrace)
+        {
+            if (exceptiono == null)
+            {
+                throw new ArgumentException("ExtractStringFromExceptionInternal called with null exception");
+            }
+            Exception innerException = exceptiono as Exception;
+            if (innerException == null)
+            {
+                throw new ArgumentException("ExtractStringFromExceptionInternal called with an exceptoin that was not of type System.Exception");
+            }
+            StringBuilder builder = new StringBuilder((innerException.StackTrace != null) ? (innerException.StackTrace.Length * 2) : 0x200);
+            message = "";
+            string str = "";
+            while (innerException != null)
+            {
+                if (str.Length == 0)
+                {
+                    str = innerException.StackTrace;
+                }
+                else
+                {
+                    str = innerException.StackTrace + "\n" + str;
+                }
+                string name = innerException.GetType().Name;
+                string str3 = "";
+                if (innerException.Message != null)
+                {
+                    str3 = innerException.Message;
+                }
+                if (str3.Trim().Length != 0)
+                {
+                    name = name + ": " + str3;
+                }
+                message = name;
+                if (innerException.InnerException != null)
+                {
+                    str = "Rethrow as " + name + "\n" + str;
+                }
+                innerException = innerException.InnerException;
+            }
+            builder.Append(str + "\n");
+            StackTrace trace = new StackTrace(1, true);
+            builder.Append(ExtractFormattedStackTrace(trace));
+            stackTrace = builder.ToString();
+        }
 
-		[RequiredByNativeCode]
-		internal static string PostprocessStacktrace(string oldString, bool stripEngineInternalInformation)
-		{
-			string result;
-			if (oldString == null)
-			{
-				result = string.Empty;
-			}
-			else
-			{
-				string[] array = oldString.Split(new char[]
-				{
-					'\n'
-				});
-				StringBuilder stringBuilder = new StringBuilder(oldString.Length);
-				for (int i = 0; i < array.Length; i++)
-				{
-					array[i] = array[i].Trim();
-				}
-				for (int j = 0; j < array.Length; j++)
-				{
-					string text = array[j];
-					if (text.Length != 0 && text[0] != '\n')
-					{
-						if (!text.StartsWith("in (unmanaged)"))
-						{
-							if (stripEngineInternalInformation && text.StartsWith("UnityEditor.EditorGUIUtility:RenderGameViewCameras"))
-							{
-								break;
-							}
-							if (stripEngineInternalInformation && j < array.Length - 1 && StackTraceUtility.IsSystemStacktraceType(text))
-							{
-								if (StackTraceUtility.IsSystemStacktraceType(array[j + 1]))
-								{
-									goto IL_288;
-								}
-								int num = text.IndexOf(" (at");
-								if (num != -1)
-								{
-									text = text.Substring(0, num);
-								}
-							}
-							if (text.IndexOf("(wrapper managed-to-native)") == -1)
-							{
-								if (text.IndexOf("(wrapper delegate-invoke)") == -1)
-								{
-									if (text.IndexOf("at <0x00000> <unknown method>") == -1)
-									{
-										if (!stripEngineInternalInformation || !text.StartsWith("[") || !text.EndsWith("]"))
-										{
-											if (text.StartsWith("at "))
-											{
-												text = text.Remove(0, 3);
-											}
-											int num2 = text.IndexOf("[0x");
-											int num3 = -1;
-											if (num2 != -1)
-											{
-												num3 = text.IndexOf("]", num2);
-											}
-											if (num2 != -1 && num3 > num2)
-											{
-												text = text.Remove(num2, num3 - num2 + 1);
-											}
-											text = text.Replace("  in <filename unknown>:0", "");
-											text = text.Replace("\\", "/");
-											text = text.Replace(StackTraceUtility.projectFolder, "");
-											text = text.Replace('\\', '/');
-											int num4 = text.LastIndexOf("  in ");
-											if (num4 != -1)
-											{
-												text = text.Remove(num4, 5);
-												text = text.Insert(num4, " (at ");
-												text = text.Insert(text.Length, ")");
-											}
-											stringBuilder.Append(text + "\n");
-										}
-									}
-								}
-							}
-						}
-					}
-					IL_288:;
-				}
-				result = stringBuilder.ToString();
-			}
-			return result;
-		}
+        private static bool IsSystemStacktraceType(object name)
+        {
+            string str = (string) name;
+            return ((((str.StartsWith("UnityEditor.") || str.StartsWith("UnityEngine.")) || (str.StartsWith("System.") || str.StartsWith("UnityScript.Lang."))) || str.StartsWith("Boo.Lang.")) || str.StartsWith("UnityEngine.SetupCoroutine"));
+        }
 
-		[SecuritySafeCritical]
-		internal static string ExtractFormattedStackTrace(StackTrace stackTrace)
-		{
-			StringBuilder stringBuilder = new StringBuilder(255);
-			for (int i = 0; i < stackTrace.FrameCount; i++)
-			{
-				StackFrame frame = stackTrace.GetFrame(i);
-				MethodBase method = frame.GetMethod();
-				if (method != null)
-				{
-					Type declaringType = method.DeclaringType;
-					if (declaringType != null)
-					{
-						string @namespace = declaringType.Namespace;
-						if (@namespace != null && @namespace.Length != 0)
-						{
-							stringBuilder.Append(@namespace);
-							stringBuilder.Append(".");
-						}
-						stringBuilder.Append(declaringType.Name);
-						stringBuilder.Append(":");
-						stringBuilder.Append(method.Name);
-						stringBuilder.Append("(");
-						int j = 0;
-						ParameterInfo[] parameters = method.GetParameters();
-						bool flag = true;
-						while (j < parameters.Length)
-						{
-							if (!flag)
-							{
-								stringBuilder.Append(", ");
-							}
-							else
-							{
-								flag = false;
-							}
-							stringBuilder.Append(parameters[j].ParameterType.Name);
-							j++;
-						}
-						stringBuilder.Append(")");
-						string text = frame.GetFileName();
-						if (text != null)
-						{
-							if ((!(declaringType.Name == "Debug") || !(declaringType.Namespace == "UnityEngine")) && (!(declaringType.Name == "Logger") || !(declaringType.Namespace == "UnityEngine")) && (!(declaringType.Name == "DebugLogHandler") || !(declaringType.Namespace == "UnityEngine")) && (!(declaringType.Name == "Assert") || !(declaringType.Namespace == "UnityEngine.Assertions")) && (!(method.Name == "print") || !(declaringType.Name == "MonoBehaviour") || !(declaringType.Namespace == "UnityEngine")))
-							{
-								stringBuilder.Append(" (at ");
-								if (text.Replace("\\", "/").StartsWith(StackTraceUtility.projectFolder))
-								{
-									text = text.Substring(StackTraceUtility.projectFolder.Length, text.Length - StackTraceUtility.projectFolder.Length);
-								}
-								stringBuilder.Append(text);
-								stringBuilder.Append(":");
-								stringBuilder.Append(frame.GetFileLineNumber().ToString());
-								stringBuilder.Append(")");
-							}
-						}
-						stringBuilder.Append("\n");
-					}
-				}
-			}
-			return stringBuilder.ToString();
-		}
-	}
+        [RequiredByNativeCode]
+        internal static string PostprocessStacktrace(string oldString, bool stripEngineInternalInformation)
+        {
+            if (oldString == null)
+            {
+                return string.Empty;
+            }
+            char[] separator = new char[] { '\n' };
+            string[] strArray = oldString.Split(separator);
+            StringBuilder builder = new StringBuilder(oldString.Length);
+            for (int i = 0; i < strArray.Length; i++)
+            {
+                strArray[i] = strArray[i].Trim();
+            }
+            for (int j = 0; j < strArray.Length; j++)
+            {
+                string name = strArray[j];
+                if (((name.Length != 0) && (name[0] != '\n')) && !name.StartsWith("in (unmanaged)"))
+                {
+                    if (stripEngineInternalInformation && name.StartsWith("UnityEditor.EditorGUIUtility:RenderGameViewCameras"))
+                    {
+                        break;
+                    }
+                    if ((stripEngineInternalInformation && (j < (strArray.Length - 1))) && IsSystemStacktraceType(name))
+                    {
+                        if (IsSystemStacktraceType(strArray[j + 1]))
+                        {
+                            continue;
+                        }
+                        int index = name.IndexOf(" (at");
+                        if (index != -1)
+                        {
+                            name = name.Substring(0, index);
+                        }
+                    }
+                    if (((name.IndexOf("(wrapper managed-to-native)") == -1) && (name.IndexOf("(wrapper delegate-invoke)") == -1)) && ((name.IndexOf("at <0x00000> <unknown method>") == -1) && ((!stripEngineInternalInformation || !name.StartsWith("[")) || !name.EndsWith("]"))))
+                    {
+                        if (name.StartsWith("at "))
+                        {
+                            name = name.Remove(0, 3);
+                        }
+                        int startIndex = name.IndexOf("[0x");
+                        int num5 = -1;
+                        if (startIndex != -1)
+                        {
+                            num5 = name.IndexOf("]", startIndex);
+                        }
+                        if ((startIndex != -1) && (num5 > startIndex))
+                        {
+                            name = name.Remove(startIndex, (num5 - startIndex) + 1);
+                        }
+                        name = name.Replace("  in <filename unknown>:0", "").Replace(@"\", "/").Replace(projectFolder, "").Replace('\\', '/');
+                        int num6 = name.LastIndexOf("  in ");
+                        if (num6 != -1)
+                        {
+                            name = name.Remove(num6, 5).Insert(num6, " (at ");
+                            name = name.Insert(name.Length, ")");
+                        }
+                        builder.Append(name + "\n");
+                    }
+                }
+            }
+            return builder.ToString();
+        }
+
+        [RequiredByNativeCode]
+        internal static void SetProjectFolder(string folder)
+        {
+            projectFolder = folder.Replace(@"\", "/");
+        }
+    }
 }
+

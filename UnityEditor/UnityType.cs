@@ -1,182 +1,176 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEngine.Scripting;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class UnityType
-	{
-		[UsedByNativeCode]
-		private struct UnityTypeTransport
-		{
-			public uint runtimeTypeIndex;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-			public uint descendantCount;
+    internal sealed class UnityType
+    {
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UnityType <baseClass>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private UnityTypeFlags <flags>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private string <name>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string <nativeNamespace>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private int <persistentTypeID>k__BackingField;
+        private uint descendantCount;
+        private static Dictionary<int, UnityType> ms_idToTypeInfo;
+        private static Dictionary<string, UnityType> ms_nameToTypeInfo;
+        private static UnityType[] ms_types;
+        private static ReadOnlyCollection<UnityType> ms_typesReadOnly;
+        private uint runtimeTypeIndex;
 
-			public uint baseClassIndex;
+        static UnityType()
+        {
+            UnityTypeTransport[] transportArray = Internal_GetAllTypes();
+            ms_types = new UnityType[transportArray.Length];
+            ms_idToTypeInfo = new Dictionary<int, UnityType>();
+            ms_nameToTypeInfo = new Dictionary<string, UnityType>();
+            for (int i = 0; i < transportArray.Length; i++)
+            {
+                UnityType type = null;
+                if (transportArray[i].baseClassIndex < transportArray.Length)
+                {
+                    type = ms_types[transportArray[i].baseClassIndex];
+                }
+                UnityType type2 = new UnityType {
+                    runtimeTypeIndex = transportArray[i].runtimeTypeIndex,
+                    descendantCount = transportArray[i].descendantCount,
+                    name = transportArray[i].className,
+                    nativeNamespace = transportArray[i].classNamespace,
+                    persistentTypeID = transportArray[i].persistentTypeID,
+                    baseClass = type,
+                    flags = (UnityTypeFlags) transportArray[i].flags
+                };
+                ms_types[i] = type2;
+                ms_typesReadOnly = new ReadOnlyCollection<UnityType>(ms_types);
+                ms_idToTypeInfo[type2.persistentTypeID] = type2;
+                ms_nameToTypeInfo[type2.name] = type2;
+            }
+        }
 
-			public string className;
+        public static UnityType FindTypeByName(string name)
+        {
+            UnityType type = null;
+            ms_nameToTypeInfo.TryGetValue(name, out type);
+            return type;
+        }
 
-			public string classNamespace;
+        public static UnityType FindTypeByNameCaseInsensitive(string name)
+        {
+            <FindTypeByNameCaseInsensitive>c__AnonStorey0 storey = new <FindTypeByNameCaseInsensitive>c__AnonStorey0 {
+                name = name
+            };
+            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey, (IntPtr) this.<>m__0));
+        }
 
-			public int persistentTypeID;
+        public static UnityType FindTypeByPersistentTypeID(int id)
+        {
+            UnityType type = null;
+            ms_idToTypeInfo.TryGetValue(id, out type);
+            return type;
+        }
 
-			public uint flags;
-		}
+        public static ReadOnlyCollection<UnityType> GetTypes()
+        {
+            return ms_typesReadOnly;
+        }
 
-		private uint runtimeTypeIndex;
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern UnityTypeTransport[] Internal_GetAllTypes();
+        public bool IsDerivedFrom(UnityType baseClass)
+        {
+            return ((this.runtimeTypeIndex - baseClass.runtimeTypeIndex) < baseClass.descendantCount);
+        }
 
-		private uint descendantCount;
+        public UnityType baseClass { get; private set; }
 
-		private static UnityType[] ms_types;
+        public UnityTypeFlags flags { get; private set; }
 
-		private static ReadOnlyCollection<UnityType> ms_typesReadOnly;
+        public bool hasNativeNamespace
+        {
+            get
+            {
+                return (this.nativeNamespace.Length > 0);
+            }
+        }
 
-		private static Dictionary<int, UnityType> ms_idToTypeInfo;
+        public bool isAbstract
+        {
+            get
+            {
+                return ((this.flags & UnityTypeFlags.Abstract) != 0);
+            }
+        }
 
-		private static Dictionary<string, UnityType> ms_nameToTypeInfo;
+        public bool isDeprecated
+        {
+            get
+            {
+                return ((this.flags & UnityTypeFlags.Deprecated) != 0);
+            }
+        }
 
-		public string name
-		{
-			get;
-			private set;
-		}
+        public bool isEditorOnly
+        {
+            get
+            {
+                return ((this.flags & UnityTypeFlags.EditorOnly) != 0);
+            }
+        }
 
-		public string nativeNamespace
-		{
-			get;
-			private set;
-		}
+        public bool isSealed
+        {
+            get
+            {
+                return ((this.flags & UnityTypeFlags.Sealed) != 0);
+            }
+        }
 
-		public int persistentTypeID
-		{
-			get;
-			private set;
-		}
+        public string name { get; private set; }
 
-		public UnityType baseClass
-		{
-			get;
-			private set;
-		}
+        public string nativeNamespace { get; private set; }
 
-		public UnityTypeFlags flags
-		{
-			get;
-			private set;
-		}
+        public int persistentTypeID { get; private set; }
 
-		public bool isAbstract
-		{
-			get
-			{
-				return (this.flags & UnityTypeFlags.Abstract) != (UnityTypeFlags)0;
-			}
-		}
+        public string qualifiedName
+        {
+            get
+            {
+                return (!this.hasNativeNamespace ? this.name : (this.nativeNamespace + "::" + this.name));
+            }
+        }
 
-		public bool isSealed
-		{
-			get
-			{
-				return (this.flags & UnityTypeFlags.Sealed) != (UnityTypeFlags)0;
-			}
-		}
+        [CompilerGenerated]
+        private sealed class <FindTypeByNameCaseInsensitive>c__AnonStorey0
+        {
+            internal string name;
 
-		public bool isEditorOnly
-		{
-			get
-			{
-				return (this.flags & UnityTypeFlags.EditorOnly) != (UnityTypeFlags)0;
-			}
-		}
+            internal bool <>m__0(UnityType t)
+            {
+                return string.Equals(this.name, t.name, StringComparison.OrdinalIgnoreCase);
+            }
+        }
 
-		public bool isDeprecated
-		{
-			get
-			{
-				return (this.flags & UnityTypeFlags.Deprecated) != (UnityTypeFlags)0;
-			}
-		}
-
-		public string qualifiedName
-		{
-			get
-			{
-				return (!this.hasNativeNamespace) ? this.name : (this.nativeNamespace + "::" + this.name);
-			}
-		}
-
-		public bool hasNativeNamespace
-		{
-			get
-			{
-				return this.nativeNamespace.Length > 0;
-			}
-		}
-
-		static UnityType()
-		{
-			UnityType.UnityTypeTransport[] array = UnityType.Internal_GetAllTypes();
-			UnityType.ms_types = new UnityType[array.Length];
-			UnityType.ms_idToTypeInfo = new Dictionary<int, UnityType>();
-			UnityType.ms_nameToTypeInfo = new Dictionary<string, UnityType>();
-			for (int i = 0; i < array.Length; i++)
-			{
-				UnityType baseClass = null;
-				if ((ulong)array[i].baseClassIndex < (ulong)((long)array.Length))
-				{
-					baseClass = UnityType.ms_types[(int)((UIntPtr)array[i].baseClassIndex)];
-				}
-				UnityType unityType = new UnityType
-				{
-					runtimeTypeIndex = array[i].runtimeTypeIndex,
-					descendantCount = array[i].descendantCount,
-					name = array[i].className,
-					nativeNamespace = array[i].classNamespace,
-					persistentTypeID = array[i].persistentTypeID,
-					baseClass = baseClass,
-					flags = (UnityTypeFlags)array[i].flags
-				};
-				UnityType.ms_types[i] = unityType;
-				UnityType.ms_typesReadOnly = new ReadOnlyCollection<UnityType>(UnityType.ms_types);
-				UnityType.ms_idToTypeInfo[unityType.persistentTypeID] = unityType;
-				UnityType.ms_nameToTypeInfo[unityType.name] = unityType;
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern UnityType.UnityTypeTransport[] Internal_GetAllTypes();
-
-		public bool IsDerivedFrom(UnityType baseClass)
-		{
-			return this.runtimeTypeIndex - baseClass.runtimeTypeIndex < baseClass.descendantCount;
-		}
-
-		public static UnityType FindTypeByPersistentTypeID(int id)
-		{
-			UnityType result = null;
-			UnityType.ms_idToTypeInfo.TryGetValue(id, out result);
-			return result;
-		}
-
-		public static UnityType FindTypeByName(string name)
-		{
-			UnityType result = null;
-			UnityType.ms_nameToTypeInfo.TryGetValue(name, out result);
-			return result;
-		}
-
-		public static UnityType FindTypeByNameCaseInsensitive(string name)
-		{
-			return UnityType.ms_types.FirstOrDefault((UnityType t) => string.Equals(name, t.name, StringComparison.OrdinalIgnoreCase));
-		}
-
-		public static ReadOnlyCollection<UnityType> GetTypes()
-		{
-			return UnityType.ms_typesReadOnly;
-		}
-	}
+        [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
+        private struct UnityTypeTransport
+        {
+            public uint runtimeTypeIndex;
+            public uint descendantCount;
+            public uint baseClassIndex;
+            public string className;
+            public string classNamespace;
+            public int persistentTypeID;
+            public uint flags;
+        }
+    }
 }
+

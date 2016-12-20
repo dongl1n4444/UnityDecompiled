@@ -1,19 +1,22 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[RequiredByNativeCode]
-	public sealed class AssetBundleCreateRequest : AsyncOperation
-	{
-		public extern AssetBundle assetBundle
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern void DisableCompatibilityChecks();
-	}
+    /// <summary>
+    /// <para>Asynchronous create request for an AssetBundle.</para>
+    /// </summary>
+    [RequiredByNativeCode]
+    public sealed class AssetBundleCreateRequest : AsyncOperation
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void DisableCompatibilityChecks();
+
+        /// <summary>
+        /// <para>Asset object being loaded (Read Only).</para>
+        /// </summary>
+        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

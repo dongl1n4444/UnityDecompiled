@@ -1,14 +1,26 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public sealed class Menu
-	{
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void SetChecked(string menuPath, bool isChecked);
+    using System;
+    using System.Runtime.CompilerServices;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool GetChecked(string menuPath);
-	}
+    /// <summary>
+    /// <para>Menu class to manipulate the menu item.</para>
+    /// </summary>
+    public sealed class Menu
+    {
+        /// <summary>
+        /// <para>Get the check status of the given menu.</para>
+        /// </summary>
+        /// <param name="menuPath"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetChecked(string menuPath);
+        /// <summary>
+        /// <para>Set the check status of the given menu.</para>
+        /// </summary>
+        /// <param name="menuPath"></param>
+        /// <param name="isChecked"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetChecked(string menuPath, bool isChecked);
+    }
 }
+

@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum iOSAutomaticallySignValue
-	{
-		AutomaticallySignValueNotSet,
-		AutomaticallySignValueTrue,
-		AutomaticallySignValueFalse
-	}
+    using System;
+
+    internal enum iOSAutomaticallySignValue
+    {
+        AutomaticallySignValueNotSet,
+        AutomaticallySignValueTrue,
+        AutomaticallySignValueFalse
+    }
 }
+

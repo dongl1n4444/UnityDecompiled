@@ -1,74 +1,70 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class EditorApplicationLayout
-	{
-		private static GameView m_GameView = null;
+    using System;
 
-		private static bool m_MaximizePending = false;
+    internal class EditorApplicationLayout
+    {
+        private static GameView m_GameView = null;
+        private static bool m_MaximizePending = false;
 
-		internal static bool IsInitializingPlaymodeLayout()
-		{
-			return EditorApplicationLayout.m_GameView != null;
-		}
+        private static void Clear()
+        {
+            m_MaximizePending = false;
+            m_GameView = null;
+        }
 
-		internal static void SetPlaymodeLayout()
-		{
-			EditorApplicationLayout.InitPlaymodeLayout();
-			EditorApplicationLayout.FinalizePlaymodeLayout();
-		}
+        internal static void FinalizePlaymodeLayout()
+        {
+            if (m_GameView != null)
+            {
+                if (m_MaximizePending)
+                {
+                    WindowLayout.MaximizePresent(m_GameView);
+                }
+                m_GameView.m_Parent.ClearStartView();
+            }
+            Clear();
+        }
 
-		internal static void SetStopmodeLayout()
-		{
-			WindowLayout.ShowAppropriateViewOnEnterExitPlaymode(false);
-			Toolbar.RepaintToolbar();
-		}
+        internal static void InitPlaymodeLayout()
+        {
+            m_GameView = WindowLayout.ShowAppropriateViewOnEnterExitPlaymode(true) as GameView;
+            if (m_GameView != null)
+            {
+                if (m_GameView.maximizeOnPlay)
+                {
+                    DockArea parent = m_GameView.m_Parent as DockArea;
+                    if ((parent != null) && !parent.actualView.m_Parent.window.maximized)
+                    {
+                        m_MaximizePending = WindowLayout.MaximizePrepare(parent.actualView);
+                    }
+                }
+                m_GameView.m_Parent.SetAsStartView();
+                Toolbar.RepaintToolbar();
+            }
+        }
 
-		internal static void SetPausemodeLayout()
-		{
-			EditorApplicationLayout.SetStopmodeLayout();
-		}
+        internal static bool IsInitializingPlaymodeLayout()
+        {
+            return (m_GameView != null);
+        }
 
-		internal static void InitPlaymodeLayout()
-		{
-			EditorApplicationLayout.m_GameView = (WindowLayout.ShowAppropriateViewOnEnterExitPlaymode(true) as GameView);
-			if (!(EditorApplicationLayout.m_GameView == null))
-			{
-				if (EditorApplicationLayout.m_GameView.maximizeOnPlay)
-				{
-					DockArea dockArea = EditorApplicationLayout.m_GameView.m_Parent as DockArea;
-					if (dockArea != null)
-					{
-						ContainerWindow window = dockArea.actualView.m_Parent.window;
-						if (!window.maximized)
-						{
-							EditorApplicationLayout.m_MaximizePending = WindowLayout.MaximizePrepare(dockArea.actualView);
-						}
-					}
-				}
-				EditorApplicationLayout.m_GameView.m_Parent.SetAsStartView();
-				Toolbar.RepaintToolbar();
-			}
-		}
+        internal static void SetPausemodeLayout()
+        {
+            SetStopmodeLayout();
+        }
 
-		internal static void FinalizePlaymodeLayout()
-		{
-			if (EditorApplicationLayout.m_GameView != null)
-			{
-				if (EditorApplicationLayout.m_MaximizePending)
-				{
-					WindowLayout.MaximizePresent(EditorApplicationLayout.m_GameView);
-				}
-				EditorApplicationLayout.m_GameView.m_Parent.ClearStartView();
-			}
-			EditorApplicationLayout.Clear();
-		}
+        internal static void SetPlaymodeLayout()
+        {
+            InitPlaymodeLayout();
+            FinalizePlaymodeLayout();
+        }
 
-		private static void Clear()
-		{
-			EditorApplicationLayout.m_MaximizePending = false;
-			EditorApplicationLayout.m_GameView = null;
-		}
-	}
+        internal static void SetStopmodeLayout()
+        {
+            WindowLayout.ShowAppropriateViewOnEnterExitPlaymode(false);
+            Toolbar.RepaintToolbar();
+        }
+    }
 }
+

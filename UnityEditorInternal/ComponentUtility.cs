@@ -1,90 +1,113 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEditor;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public sealed class ComponentUtility
-	{
-		public delegate bool IsDesiredComponent(Component c);
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+    using UnityEditor;
+    using UnityEngine;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool MoveComponentUp(Component component);
+    public sealed class ComponentUtility
+    {
+        private static bool CompareComponentOrderAndTypes(List<Component> srcComponents, List<Component> dstComponents)
+        {
+            if (srcComponents.Count != dstComponents.Count)
+            {
+                return false;
+            }
+            for (int i = 0; i != srcComponents.Count; i++)
+            {
+                if (srcComponents[i].GetType() != dstComponents[i].GetType())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool MoveComponentDown(Component component);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool CopyComponent(Component component);
+        private static void DestroyComponents(List<Component> components)
+        {
+            for (int i = components.Count - 1; i >= 0; i--)
+            {
+                Object.DestroyImmediate(components[i]);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool CopyComponent(Component component);
+        public static void DestroyComponentsMatching(GameObject dst, IsDesiredComponent componentFilter)
+        {
+            <DestroyComponentsMatching>c__AnonStorey0 storey = new <DestroyComponentsMatching>c__AnonStorey0 {
+                componentFilter = componentFilter
+            };
+            List<Component> results = new List<Component>();
+            dst.GetComponents<Component>(results);
+            results.RemoveAll(new Predicate<Component>(storey.<>m__0));
+            DestroyComponents(results);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool PasteComponentValues(Component component);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool MoveComponentDown(Component component);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool MoveComponentUp(Component component);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool PasteComponentAsNew(GameObject go);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool PasteComponentValues(Component component);
+        public static void ReplaceComponentsIfDifferent(GameObject src, GameObject dst, IsDesiredComponent componentFilter)
+        {
+            <ReplaceComponentsIfDifferent>c__AnonStorey1 storey = new <ReplaceComponentsIfDifferent>c__AnonStorey1 {
+                componentFilter = componentFilter
+            };
+            List<Component> results = new List<Component>();
+            src.GetComponents<Component>(results);
+            results.RemoveAll(new Predicate<Component>(storey.<>m__0));
+            List<Component> list2 = new List<Component>();
+            dst.GetComponents<Component>(list2);
+            list2.RemoveAll(new Predicate<Component>(storey.<>m__1));
+            if (!CompareComponentOrderAndTypes(results, list2))
+            {
+                DestroyComponents(list2);
+                list2.Clear();
+                for (int j = 0; j != results.Count; j++)
+                {
+                    Component item = dst.AddComponent(results[j].GetType());
+                    list2.Add(item);
+                }
+            }
+            for (int i = 0; i != results.Count; i++)
+            {
+                EditorUtility.CopySerializedIfDifferent(results[i], list2[i]);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool PasteComponentAsNew(GameObject go);
+        [CompilerGenerated]
+        private sealed class <DestroyComponentsMatching>c__AnonStorey0
+        {
+            internal ComponentUtility.IsDesiredComponent componentFilter;
 
-		private static bool CompareComponentOrderAndTypes(List<Component> srcComponents, List<Component> dstComponents)
-		{
-			bool result;
-			if (srcComponents.Count != dstComponents.Count)
-			{
-				result = false;
-			}
-			else
-			{
-				for (int num = 0; num != srcComponents.Count; num++)
-				{
-					if (srcComponents[num].GetType() != dstComponents[num].GetType())
-					{
-						result = false;
-						return result;
-					}
-				}
-				result = true;
-			}
-			return result;
-		}
+            internal bool <>m__0(Component x)
+            {
+                return !this.componentFilter(x);
+            }
+        }
 
-		private static void DestroyComponents(List<Component> components)
-		{
-			for (int i = components.Count - 1; i >= 0; i--)
-			{
-				UnityEngine.Object.DestroyImmediate(components[i]);
-			}
-		}
+        [CompilerGenerated]
+        private sealed class <ReplaceComponentsIfDifferent>c__AnonStorey1
+        {
+            internal ComponentUtility.IsDesiredComponent componentFilter;
 
-		public static void DestroyComponentsMatching(GameObject dst, ComponentUtility.IsDesiredComponent componentFilter)
-		{
-			List<Component> list = new List<Component>();
-			dst.GetComponents<Component>(list);
-			list.RemoveAll((Component x) => !componentFilter(x));
-			ComponentUtility.DestroyComponents(list);
-		}
+            internal bool <>m__0(Component x)
+            {
+                return !this.componentFilter(x);
+            }
 
-		public static void ReplaceComponentsIfDifferent(GameObject src, GameObject dst, ComponentUtility.IsDesiredComponent componentFilter)
-		{
-			List<Component> list = new List<Component>();
-			src.GetComponents<Component>(list);
-			list.RemoveAll((Component x) => !componentFilter(x));
-			List<Component> list2 = new List<Component>();
-			dst.GetComponents<Component>(list2);
-			list2.RemoveAll((Component x) => !componentFilter(x));
-			if (!ComponentUtility.CompareComponentOrderAndTypes(list, list2))
-			{
-				ComponentUtility.DestroyComponents(list2);
-				list2.Clear();
-				for (int num = 0; num != list.Count; num++)
-				{
-					Component item = dst.AddComponent(list[num].GetType());
-					list2.Add(item);
-				}
-			}
-			for (int num2 = 0; num2 != list.Count; num2++)
-			{
-				EditorUtility.CopySerializedIfDifferent(list[num2], list2[num2]);
-			}
-		}
-	}
+            internal bool <>m__1(Component x)
+            {
+                return !this.componentFilter(x);
+            }
+        }
+
+        public delegate bool IsDesiredComponent(Component c);
+    }
 }
+

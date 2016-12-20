@@ -1,427 +1,383 @@
-using System;
-using System.IO;
-using System.Linq;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class PackageImport : EditorWindow
-	{
-		internal class Constants
-		{
-			public GUIStyle ConsoleEntryBackEven = "CN EntryBackEven";
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-			public GUIStyle ConsoleEntryBackOdd = "CN EntryBackOdd";
+    internal class PackageImport : EditorWindow
+    {
+        [SerializeField]
+        private ImportPackageItem[] m_ImportPackageItems;
+        [SerializeField]
+        private string m_PackageIconPath;
+        [SerializeField]
+        private string m_PackageName;
+        private bool m_ReInstallPackage;
+        private bool m_ShowReInstall;
+        [NonSerialized]
+        private PackageImportTreeView m_Tree;
+        [SerializeField]
+        private TreeViewState m_TreeViewState;
+        private static Constants ms_Constants;
+        private static readonly char[] s_InvalidPathChars = Path.GetInvalidPathChars();
+        private static string s_LastPreviewPath;
+        private static Texture2D s_PackageIcon;
+        private static Texture2D s_Preview;
 
-			public GUIStyle title = new GUIStyle(EditorStyles.largeLabel);
+        public PackageImport()
+        {
+            base.minSize = new Vector2(350f, 350f);
+        }
 
-			public GUIStyle bottomBarBg = "ProjectBrowserBottomBarBg";
+        private void BottomArea()
+        {
+            GUILayout.BeginVertical(ms_Constants.bottomBarBg, new GUILayoutOption[0]);
+            GUILayout.Space(8f);
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.Space(10f);
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(50f) };
+            if (GUILayout.Button(EditorGUIUtility.TextContent("All"), options))
+            {
+                this.m_Tree.SetAllEnabled(PackageImportTreeView.EnabledState.All);
+            }
+            GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(50f) };
+            if (GUILayout.Button(EditorGUIUtility.TextContent("None"), optionArray2))
+            {
+                this.m_Tree.SetAllEnabled(PackageImportTreeView.EnabledState.None);
+            }
+            this.ReInstallToggle();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(EditorGUIUtility.TextContent("Cancel"), new GUILayoutOption[0]))
+            {
+                PopupWindowWithoutFocus.Hide();
+                base.Close();
+                GUIUtility.ExitGUI();
+            }
+            if (GUILayout.Button(EditorGUIUtility.TextContent("Import"), new GUILayoutOption[0]))
+            {
+                bool flag = true;
+                if (this.doReInstall)
+                {
+                    flag = EditorUtility.DisplayDialog("Re-Install?", "Highlighted folders will be completely deleted first! Recommend backing up your project first. Are you sure?", "Do It", "Cancel");
+                }
+                if (flag)
+                {
+                    if (this.m_ImportPackageItems != null)
+                    {
+                        PackageUtility.ImportPackageAssets(this.m_PackageName, this.m_ImportPackageItems, this.doReInstall);
+                    }
+                    PopupWindowWithoutFocus.Hide();
+                    base.Close();
+                    GUIUtility.ExitGUI();
+                }
+            }
+            GUILayout.Space(10f);
+            GUILayout.EndHorizontal();
+            GUILayout.Space(5f);
+            GUILayout.EndVertical();
+        }
 
-			public GUIStyle topBarBg = new GUIStyle("ProjectBrowserHeaderBgTop");
+        private void DestroyCreatedIcons()
+        {
+            if (s_Preview != null)
+            {
+                Object.DestroyImmediate(s_Preview);
+                s_Preview = null;
+                s_LastPreviewPath = null;
+            }
+            if (s_PackageIcon != null)
+            {
+                Object.DestroyImmediate(s_PackageIcon);
+                s_PackageIcon = null;
+            }
+        }
 
-			public GUIStyle textureIconDropShadow = "ProjectBrowserTextureIconDropShadow";
+        public static void DrawTexture(Rect r, Texture2D tex, bool useDropshadow)
+        {
+            if (tex != null)
+            {
+                float width = tex.width;
+                float height = tex.height;
+                if ((width >= height) && (width > r.width))
+                {
+                    height = (height * r.width) / width;
+                    width = r.width;
+                }
+                else if ((height > width) && (height > r.height))
+                {
+                    width = (width * r.height) / height;
+                    height = r.height;
+                }
+                float x = r.x + Mathf.Round((r.width - width) / 2f);
+                float y = r.y + Mathf.Round((r.height - height) / 2f);
+                r = new Rect(x, y, width, height);
+                if (useDropshadow && (Event.current.type == EventType.Repaint))
+                {
+                    Rect position = new RectOffset(1, 1, 1, 1).Remove(ms_Constants.textureIconDropShadow.border.Add(r));
+                    ms_Constants.textureIconDropShadow.Draw(position, GUIContent.none, false, false, false, false);
+                }
+                GUI.DrawTexture(r, tex, ScaleMode.ScaleToFit, true);
+            }
+        }
 
-			public Color lineColor;
+        public static Texture2D GetPreview(string previewPath)
+        {
+            if (previewPath != s_LastPreviewPath)
+            {
+                s_LastPreviewPath = previewPath;
+                LoadTexture(previewPath, ref s_Preview);
+            }
+            return s_Preview;
+        }
 
-			public Constants()
-			{
-				this.lineColor = ((!EditorGUIUtility.isProSkin) ? new Color(0.4f, 0.4f, 0.4f) : new Color(0.1f, 0.1f, 0.1f));
-				this.topBarBg.fixedHeight = 0f;
-				RectOffset arg_D8_0 = this.topBarBg.border;
-				int num = 2;
-				this.topBarBg.border.bottom = num;
-				arg_D8_0.top = num;
-				this.title.fontStyle = FontStyle.Bold;
-				this.title.alignment = TextAnchor.MiddleLeft;
-			}
-		}
+        public static bool HasInvalidCharInFilePath(string filePath)
+        {
+            char ch;
+            int num;
+            return HasInvalidCharInFilePath(filePath, out ch, out num);
+        }
 
-		[SerializeField]
-		private ImportPackageItem[] m_ImportPackageItems;
+        private static bool HasInvalidCharInFilePath(string filePath, out char invalidChar, out int invalidCharIndex)
+        {
+            for (int i = 0; i < filePath.Length; i++)
+            {
+                char ch = filePath[i];
+                if (Enumerable.Contains<char>(s_InvalidPathChars, ch))
+                {
+                    invalidChar = ch;
+                    invalidCharIndex = i;
+                    return true;
+                }
+            }
+            invalidChar = ' ';
+            invalidCharIndex = -1;
+            return false;
+        }
 
-		[SerializeField]
-		private string m_PackageName;
+        private void Init(string packagePath, ImportPackageItem[] items, string packageIconPath, bool allowReInstall)
+        {
+            this.DestroyCreatedIcons();
+            this.m_ShowReInstall = allowReInstall;
+            this.m_ReInstallPackage = true;
+            this.m_TreeViewState = null;
+            this.m_Tree = null;
+            this.m_ImportPackageItems = items;
+            this.m_PackageName = Path.GetFileNameWithoutExtension(packagePath);
+            this.m_PackageIconPath = packageIconPath;
+            base.Repaint();
+        }
 
-		[SerializeField]
-		private string m_PackageIconPath;
+        private static bool IsAllFilePathsValid(ImportPackageItem[] assetItems, out string errorMessage)
+        {
+            foreach (ImportPackageItem item in assetItems)
+            {
+                char ch;
+                int num2;
+                if (!item.isFolder && HasInvalidCharInFilePath(item.destinationAssetPath, out ch, out num2))
+                {
+                    errorMessage = string.Format("Invalid character found in file path: '{0}'. Invalid ascii value: {1} (at character index {2}).", item.destinationAssetPath, (int) ch, num2);
+                    return false;
+                }
+            }
+            errorMessage = "";
+            return true;
+        }
 
-		[SerializeField]
-		private TreeViewState m_TreeViewState;
+        private static void LoadTexture(string filepath, ref Texture2D texture)
+        {
+            if (texture == null)
+            {
+                texture = new Texture2D(0x80, 0x80);
+            }
+            byte[] data = null;
+            try
+            {
+                data = File.ReadAllBytes(filepath);
+            }
+            catch
+            {
+            }
+            if (((filepath == "") || (data == null)) || !texture.LoadImage(data))
+            {
+                Color[] pixels = texture.GetPixels();
+                for (int i = 0; i < pixels.Length; i++)
+                {
+                    pixels[i] = new Color(0.5f, 0.5f, 0.5f, 0f);
+                }
+                texture.SetPixels(pixels);
+                texture.Apply();
+            }
+        }
 
-		[NonSerialized]
-		private PackageImportTreeView m_Tree;
+        private void OnDisable()
+        {
+            this.DestroyCreatedIcons();
+        }
 
-		private bool m_ShowReInstall;
+        public void OnGUI()
+        {
+            if (ms_Constants == null)
+            {
+                ms_Constants = new Constants();
+            }
+            if (this.m_TreeViewState == null)
+            {
+                this.m_TreeViewState = new TreeViewState();
+            }
+            if (this.m_Tree == null)
+            {
+                this.m_Tree = new PackageImportTreeView(this, this.m_TreeViewState, new Rect());
+            }
+            if ((this.m_ImportPackageItems != null) && this.ShowTreeGUI(this.doReInstall, this.m_ImportPackageItems))
+            {
+                this.TopArea();
+                this.m_Tree.OnGUI(GUILayoutUtility.GetRect(1f, 9999f, (float) 1f, (float) 99999f));
+                this.BottomArea();
+            }
+            else
+            {
+                GUILayout.Label("Nothing to import!", EditorStyles.boldLabel, new GUILayoutOption[0]);
+                GUILayout.Label("All assets from this package are already in your project.", "WordWrappedLabel", new GUILayoutOption[0]);
+                GUILayout.FlexibleSpace();
+                GUILayout.BeginVertical(ms_Constants.bottomBarBg, new GUILayoutOption[0]);
+                GUILayout.Space(8f);
+                GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                GUILayout.FlexibleSpace();
+                this.ReInstallToggle();
+                if (GUILayout.Button("OK", new GUILayoutOption[0]))
+                {
+                    base.Close();
+                    GUIUtility.ExitGUI();
+                }
+                GUILayout.Space(10f);
+                GUILayout.EndHorizontal();
+                GUILayout.Space(5f);
+                GUILayout.EndVertical();
+            }
+        }
 
-		private bool m_ReInstallPackage;
+        private void ReInstallToggle()
+        {
+            if (this.m_ShowReInstall)
+            {
+                EditorGUI.BeginChangeCheck();
+                bool flag = GUILayout.Toggle(this.m_ReInstallPackage, "Re-Install Package", new GUILayoutOption[0]);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    this.m_ReInstallPackage = flag;
+                }
+            }
+        }
 
-		private static Texture2D s_PackageIcon;
+        public static void ShowImportPackage(string packagePath, ImportPackageItem[] items, string packageIconPath, bool allowReInstall)
+        {
+            if (ValidateInput(items))
+            {
+                EditorWindow.GetWindow<PackageImport>(true, "Import Unity Package").Init(packagePath, items, packageIconPath, allowReInstall);
+            }
+        }
 
-		private static Texture2D s_Preview;
+        private bool ShowTreeGUI(bool reInstalling, ImportPackageItem[] items)
+        {
+            if (reInstalling)
+            {
+                return true;
+            }
+            if (items.Length != 0)
+            {
+                for (int i = 0; i < items.Length; i++)
+                {
+                    if (!items[i].isFolder && items[i].assetChanged)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-		private static string s_LastPreviewPath;
+        private void TopArea()
+        {
+            Rect rect3;
+            if ((s_PackageIcon == null) && !string.IsNullOrEmpty(this.m_PackageIconPath))
+            {
+                LoadTexture(this.m_PackageIconPath, ref s_PackageIcon);
+            }
+            bool flag = s_PackageIcon != null;
+            float height = !flag ? 52f : 84f;
+            Rect position = GUILayoutUtility.GetRect(base.position.width, height);
+            GUI.Label(position, GUIContent.none, ms_Constants.topBarBg);
+            if (flag)
+            {
+                Rect r = new Rect(position.x + 10f, position.y + 10f, 64f, 64f);
+                DrawTexture(r, s_PackageIcon, true);
+                rect3 = new Rect(r.xMax + 10f, r.yMin, position.width, r.height);
+            }
+            else
+            {
+                rect3 = new Rect(position.x + 5f, position.yMin, position.width, position.height);
+            }
+            GUI.Label(rect3, this.m_PackageName, ms_Constants.title);
+        }
 
-		private static readonly char[] s_InvalidPathChars = Path.GetInvalidPathChars();
+        private static bool ValidateInput(ImportPackageItem[] items)
+        {
+            string str;
+            if (!IsAllFilePathsValid(items, out str))
+            {
+                str = str + "\nDo you want to import the valid file paths of the package or cancel importing?";
+                return EditorUtility.DisplayDialog("Invalid file path found", str, "Import", "Cancel importing");
+            }
+            return true;
+        }
 
-		private static PackageImport.Constants ms_Constants;
+        public bool canReInstall
+        {
+            get
+            {
+                return this.m_ShowReInstall;
+            }
+        }
 
-		public bool canReInstall
-		{
-			get
-			{
-				return this.m_ShowReInstall;
-			}
-		}
+        public bool doReInstall
+        {
+            get
+            {
+                return (this.m_ShowReInstall && this.m_ReInstallPackage);
+            }
+        }
 
-		public bool doReInstall
-		{
-			get
-			{
-				return this.m_ShowReInstall && this.m_ReInstallPackage;
-			}
-		}
+        public ImportPackageItem[] packageItems
+        {
+            get
+            {
+                return this.m_ImportPackageItems;
+            }
+        }
 
-		public ImportPackageItem[] packageItems
-		{
-			get
-			{
-				return this.m_ImportPackageItems;
-			}
-		}
+        internal class Constants
+        {
+            public GUIStyle bottomBarBg = "ProjectBrowserBottomBarBg";
+            public GUIStyle ConsoleEntryBackEven = "CN EntryBackEven";
+            public GUIStyle ConsoleEntryBackOdd = "CN EntryBackOdd";
+            public Color lineColor = (!EditorGUIUtility.isProSkin ? new Color(0.4f, 0.4f, 0.4f) : new Color(0.1f, 0.1f, 0.1f));
+            public GUIStyle textureIconDropShadow = "ProjectBrowserTextureIconDropShadow";
+            public GUIStyle title = new GUIStyle(EditorStyles.largeLabel);
+            public GUIStyle topBarBg = new GUIStyle("ProjectBrowserHeaderBgTop");
 
-		public PackageImport()
-		{
-			base.minSize = new Vector2(350f, 350f);
-		}
-
-		public static void ShowImportPackage(string packagePath, ImportPackageItem[] items, string packageIconPath, bool allowReInstall)
-		{
-			if (PackageImport.ValidateInput(items))
-			{
-				PackageImport window = EditorWindow.GetWindow<PackageImport>(true, "Import Unity Package");
-				window.Init(packagePath, items, packageIconPath, allowReInstall);
-			}
-		}
-
-		private void OnDisable()
-		{
-			this.DestroyCreatedIcons();
-		}
-
-		private void DestroyCreatedIcons()
-		{
-			if (PackageImport.s_Preview != null)
-			{
-				UnityEngine.Object.DestroyImmediate(PackageImport.s_Preview);
-				PackageImport.s_Preview = null;
-				PackageImport.s_LastPreviewPath = null;
-			}
-			if (PackageImport.s_PackageIcon != null)
-			{
-				UnityEngine.Object.DestroyImmediate(PackageImport.s_PackageIcon);
-				PackageImport.s_PackageIcon = null;
-			}
-		}
-
-		private void Init(string packagePath, ImportPackageItem[] items, string packageIconPath, bool allowReInstall)
-		{
-			this.DestroyCreatedIcons();
-			this.m_ShowReInstall = allowReInstall;
-			this.m_ReInstallPackage = true;
-			this.m_TreeViewState = null;
-			this.m_Tree = null;
-			this.m_ImportPackageItems = items;
-			this.m_PackageName = Path.GetFileNameWithoutExtension(packagePath);
-			this.m_PackageIconPath = packageIconPath;
-			base.Repaint();
-		}
-
-		private bool ShowTreeGUI(bool reInstalling, ImportPackageItem[] items)
-		{
-			bool result;
-			if (reInstalling)
-			{
-				result = true;
-			}
-			else if (items.Length == 0)
-			{
-				result = false;
-			}
-			else
-			{
-				for (int i = 0; i < items.Length; i++)
-				{
-					if (!items[i].isFolder && items[i].assetChanged)
-					{
-						result = true;
-						return result;
-					}
-				}
-				result = false;
-			}
-			return result;
-		}
-
-		public void OnGUI()
-		{
-			if (PackageImport.ms_Constants == null)
-			{
-				PackageImport.ms_Constants = new PackageImport.Constants();
-			}
-			if (this.m_TreeViewState == null)
-			{
-				this.m_TreeViewState = new TreeViewState();
-			}
-			if (this.m_Tree == null)
-			{
-				this.m_Tree = new PackageImportTreeView(this, this.m_TreeViewState, default(Rect));
-			}
-			if (this.m_ImportPackageItems != null && this.ShowTreeGUI(this.doReInstall, this.m_ImportPackageItems))
-			{
-				this.TopArea();
-				this.m_Tree.OnGUI(GUILayoutUtility.GetRect(1f, 9999f, 1f, 99999f));
-				this.BottomArea();
-			}
-			else
-			{
-				GUILayout.Label("Nothing to import!", EditorStyles.boldLabel, new GUILayoutOption[0]);
-				GUILayout.Label("All assets from this package are already in your project.", "WordWrappedLabel", new GUILayoutOption[0]);
-				GUILayout.FlexibleSpace();
-				GUILayout.BeginVertical(PackageImport.ms_Constants.bottomBarBg, new GUILayoutOption[0]);
-				GUILayout.Space(8f);
-				GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-				GUILayout.FlexibleSpace();
-				this.ReInstallToggle();
-				if (GUILayout.Button("OK", new GUILayoutOption[0]))
-				{
-					base.Close();
-					GUIUtility.ExitGUI();
-				}
-				GUILayout.Space(10f);
-				GUILayout.EndHorizontal();
-				GUILayout.Space(5f);
-				GUILayout.EndVertical();
-			}
-		}
-
-		private void ReInstallToggle()
-		{
-			if (this.m_ShowReInstall)
-			{
-				EditorGUI.BeginChangeCheck();
-				bool reInstallPackage = GUILayout.Toggle(this.m_ReInstallPackage, "Re-Install Package", new GUILayoutOption[0]);
-				if (EditorGUI.EndChangeCheck())
-				{
-					this.m_ReInstallPackage = reInstallPackage;
-				}
-			}
-		}
-
-		private void TopArea()
-		{
-			if (PackageImport.s_PackageIcon == null && !string.IsNullOrEmpty(this.m_PackageIconPath))
-			{
-				PackageImport.LoadTexture(this.m_PackageIconPath, ref PackageImport.s_PackageIcon);
-			}
-			bool flag = PackageImport.s_PackageIcon != null;
-			float height = (!flag) ? 52f : 84f;
-			Rect rect = GUILayoutUtility.GetRect(base.position.width, height);
-			GUI.Label(rect, GUIContent.none, PackageImport.ms_Constants.topBarBg);
-			Rect position;
-			if (flag)
-			{
-				Rect r = new Rect(rect.x + 10f, rect.y + 10f, 64f, 64f);
-				PackageImport.DrawTexture(r, PackageImport.s_PackageIcon, true);
-				position = new Rect(r.xMax + 10f, r.yMin, rect.width, r.height);
-			}
-			else
-			{
-				position = new Rect(rect.x + 5f, rect.yMin, rect.width, rect.height);
-			}
-			GUI.Label(position, this.m_PackageName, PackageImport.ms_Constants.title);
-		}
-
-		private void BottomArea()
-		{
-			GUILayout.BeginVertical(PackageImport.ms_Constants.bottomBarBg, new GUILayoutOption[0]);
-			GUILayout.Space(8f);
-			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			GUILayout.Space(10f);
-			if (GUILayout.Button(EditorGUIUtility.TextContent("All"), new GUILayoutOption[]
-			{
-				GUILayout.Width(50f)
-			}))
-			{
-				this.m_Tree.SetAllEnabled(PackageImportTreeView.EnabledState.All);
-			}
-			if (GUILayout.Button(EditorGUIUtility.TextContent("None"), new GUILayoutOption[]
-			{
-				GUILayout.Width(50f)
-			}))
-			{
-				this.m_Tree.SetAllEnabled(PackageImportTreeView.EnabledState.None);
-			}
-			this.ReInstallToggle();
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button(EditorGUIUtility.TextContent("Cancel"), new GUILayoutOption[0]))
-			{
-				PopupWindowWithoutFocus.Hide();
-				base.Close();
-				GUIUtility.ExitGUI();
-			}
-			if (GUILayout.Button(EditorGUIUtility.TextContent("Import"), new GUILayoutOption[0]))
-			{
-				bool flag = true;
-				if (this.doReInstall)
-				{
-					flag = EditorUtility.DisplayDialog("Re-Install?", "Highlighted folders will be completely deleted first! Recommend backing up your project first. Are you sure?", "Do It", "Cancel");
-				}
-				if (flag)
-				{
-					if (this.m_ImportPackageItems != null)
-					{
-						PackageUtility.ImportPackageAssets(this.m_PackageName, this.m_ImportPackageItems, this.doReInstall);
-					}
-					PopupWindowWithoutFocus.Hide();
-					base.Close();
-					GUIUtility.ExitGUI();
-				}
-			}
-			GUILayout.Space(10f);
-			GUILayout.EndHorizontal();
-			GUILayout.Space(5f);
-			GUILayout.EndVertical();
-		}
-
-		private static void LoadTexture(string filepath, ref Texture2D texture)
-		{
-			if (!texture)
-			{
-				texture = new Texture2D(128, 128);
-			}
-			byte[] array = null;
-			try
-			{
-				array = File.ReadAllBytes(filepath);
-			}
-			catch
-			{
-			}
-			if (filepath == "" || array == null || !texture.LoadImage(array))
-			{
-				Color[] pixels = texture.GetPixels();
-				for (int i = 0; i < pixels.Length; i++)
-				{
-					pixels[i] = new Color(0.5f, 0.5f, 0.5f, 0f);
-				}
-				texture.SetPixels(pixels);
-				texture.Apply();
-			}
-		}
-
-		public static void DrawTexture(Rect r, Texture2D tex, bool useDropshadow)
-		{
-			if (!(tex == null))
-			{
-				float num = (float)tex.width;
-				float num2 = (float)tex.height;
-				if (num >= num2 && num > r.width)
-				{
-					num2 = num2 * r.width / num;
-					num = r.width;
-				}
-				else if (num2 > num && num2 > r.height)
-				{
-					num = num * r.height / num2;
-					num2 = r.height;
-				}
-				float x = r.x + Mathf.Round((r.width - num) / 2f);
-				float y = r.y + Mathf.Round((r.height - num2) / 2f);
-				r = new Rect(x, y, num, num2);
-				if (useDropshadow && Event.current.type == EventType.Repaint)
-				{
-					Rect position = new RectOffset(1, 1, 1, 1).Remove(PackageImport.ms_Constants.textureIconDropShadow.border.Add(r));
-					PackageImport.ms_Constants.textureIconDropShadow.Draw(position, GUIContent.none, false, false, false, false);
-				}
-				GUI.DrawTexture(r, tex, ScaleMode.ScaleToFit, true);
-			}
-		}
-
-		public static Texture2D GetPreview(string previewPath)
-		{
-			if (previewPath != PackageImport.s_LastPreviewPath)
-			{
-				PackageImport.s_LastPreviewPath = previewPath;
-				PackageImport.LoadTexture(previewPath, ref PackageImport.s_Preview);
-			}
-			return PackageImport.s_Preview;
-		}
-
-		private static bool ValidateInput(ImportPackageItem[] items)
-		{
-			string text;
-			bool result;
-			if (!PackageImport.IsAllFilePathsValid(items, out text))
-			{
-				text += "\nDo you want to import the valid file paths of the package or cancel importing?";
-				result = EditorUtility.DisplayDialog("Invalid file path found", text, "Import", "Cancel importing");
-			}
-			else
-			{
-				result = true;
-			}
-			return result;
-		}
-
-		private static bool IsAllFilePathsValid(ImportPackageItem[] assetItems, out string errorMessage)
-		{
-			bool result;
-			for (int i = 0; i < assetItems.Length; i++)
-			{
-				ImportPackageItem importPackageItem = assetItems[i];
-				if (!importPackageItem.isFolder)
-				{
-					char c;
-					int num;
-					if (PackageImport.HasInvalidCharInFilePath(importPackageItem.destinationAssetPath, out c, out num))
-					{
-						errorMessage = string.Format("Invalid character found in file path: '{0}'. Invalid ascii value: {1} (at character index {2}).", importPackageItem.destinationAssetPath, (int)c, num);
-						result = false;
-						return result;
-					}
-				}
-			}
-			errorMessage = "";
-			result = true;
-			return result;
-		}
-
-		private static bool HasInvalidCharInFilePath(string filePath, out char invalidChar, out int invalidCharIndex)
-		{
-			bool result;
-			for (int i = 0; i < filePath.Length; i++)
-			{
-				char c = filePath[i];
-				if (PackageImport.s_InvalidPathChars.Contains(c))
-				{
-					invalidChar = c;
-					invalidCharIndex = i;
-					result = true;
-					return result;
-				}
-			}
-			invalidChar = ' ';
-			invalidCharIndex = -1;
-			result = false;
-			return result;
-		}
-
-		public static bool HasInvalidCharInFilePath(string filePath)
-		{
-			char c;
-			int num;
-			return PackageImport.HasInvalidCharInFilePath(filePath, out c, out num);
-		}
-	}
+            public Constants()
+            {
+                this.topBarBg.fixedHeight = 0f;
+                int num = 2;
+                this.topBarBg.border.bottom = num;
+                this.topBarBg.border.top = num;
+                this.title.fontStyle = FontStyle.Bold;
+                this.title.alignment = TextAnchor.MiddleLeft;
+            }
+        }
+    }
 }
+

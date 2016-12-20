@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum CanAppendBuild
-	{
-		Unsupported,
-		Yes,
-		No
-	}
+    using System;
+
+    public enum CanAppendBuild
+    {
+        Unsupported,
+        Yes,
+        No
+    }
 }
+

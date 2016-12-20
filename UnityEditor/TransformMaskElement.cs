@@ -1,11 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct TransformMaskElement
-	{
-		public string path;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public float weight;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct TransformMaskElement
+    {
+        public string path;
+        public float weight;
+    }
 }
+

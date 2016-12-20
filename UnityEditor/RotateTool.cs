@@ -1,56 +1,55 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class RotateTool : ManipulationTool
-	{
-		private static RotateTool s_Instance;
+    using System;
+    using UnityEngine;
 
-		public static void OnGUI(SceneView view)
-		{
-			if (RotateTool.s_Instance == null)
-			{
-				RotateTool.s_Instance = new RotateTool();
-			}
-			RotateTool.s_Instance.OnToolGUI(view);
-		}
+    internal class RotateTool : ManipulationTool
+    {
+        private static RotateTool s_Instance;
 
-		public override void ToolGUI(SceneView view, Vector3 handlePosition, bool isStatic)
-		{
-			Quaternion handleRotation = Tools.handleRotation;
-			EditorGUI.BeginChangeCheck();
-			Quaternion quaternion = Handles.RotationHandle(handleRotation, handlePosition);
-			if (EditorGUI.EndChangeCheck() && !isStatic)
-			{
-				float angle;
-				Vector3 point;
-				(Quaternion.Inverse(handleRotation) * quaternion).ToAngleAxis(out angle, out point);
-				Undo.RecordObjects(Selection.transforms, "Rotate");
-				Transform[] transforms = Selection.transforms;
-				for (int i = 0; i < transforms.Length; i++)
-				{
-					Transform transform = transforms[i];
-					if (Tools.pivotMode == PivotMode.Center)
-					{
-						transform.RotateAround(handlePosition, handleRotation * point, angle);
-					}
-					else if (TransformManipulator.individualSpace)
-					{
-						transform.Rotate(transform.rotation * point, angle, Space.World);
-					}
-					else
-					{
-						transform.Rotate(handleRotation * point, angle, Space.World);
-					}
-					transform.SetLocalEulerHint(transform.GetLocalEulerAngles(transform.rotationOrder));
-					if (transform.parent != null)
-					{
-						transform.SendTransformChangedScale();
-					}
-				}
-				Tools.handleRotation = quaternion;
-			}
-		}
-	}
+        public static void OnGUI(SceneView view)
+        {
+            if (s_Instance == null)
+            {
+                s_Instance = new RotateTool();
+            }
+            s_Instance.OnToolGUI(view);
+        }
+
+        public override void ToolGUI(SceneView view, Vector3 handlePosition, bool isStatic)
+        {
+            Quaternion handleRotation = Tools.handleRotation;
+            EditorGUI.BeginChangeCheck();
+            Quaternion quaternion2 = Handles.RotationHandle(handleRotation, handlePosition);
+            if (EditorGUI.EndChangeCheck() && !isStatic)
+            {
+                float num;
+                Vector3 vector;
+                (Quaternion.Inverse(handleRotation) * quaternion2).ToAngleAxis(out num, out vector);
+                Undo.RecordObjects(Selection.transforms, "Rotate");
+                foreach (Transform transform in Selection.transforms)
+                {
+                    if (Tools.pivotMode == PivotMode.Center)
+                    {
+                        transform.RotateAround(handlePosition, (Vector3) (handleRotation * vector), num);
+                    }
+                    else if (TransformManipulator.individualSpace)
+                    {
+                        transform.Rotate((Vector3) (transform.rotation * vector), num, Space.World);
+                    }
+                    else
+                    {
+                        transform.Rotate((Vector3) (handleRotation * vector), num, Space.World);
+                    }
+                    transform.SetLocalEulerHint(transform.GetLocalEulerAngles(transform.rotationOrder));
+                    if (transform.parent != null)
+                    {
+                        transform.SendTransformChangedScale();
+                    }
+                }
+                Tools.handleRotation = quaternion2;
+            }
+        }
+    }
 }
+

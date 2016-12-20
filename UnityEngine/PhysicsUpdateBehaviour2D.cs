@@ -1,8 +1,10 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class PhysicsUpdateBehaviour2D : Behaviour
-	{
-	}
+    /// <summary>
+    /// <para>A base type for 2D physics components that required a callback during FixedUpdate.</para>
+    /// </summary>
+    public class PhysicsUpdateBehaviour2D : Behaviour
+    {
+    }
 }
+

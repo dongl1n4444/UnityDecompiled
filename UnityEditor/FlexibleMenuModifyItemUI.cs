@@ -1,55 +1,57 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal abstract class FlexibleMenuModifyItemUI : PopupWindowContent
-	{
-		public enum MenuType
-		{
-			Add,
-			Edit
-		}
+    using System;
+    using UnityEngine;
 
-		protected FlexibleMenuModifyItemUI.MenuType m_MenuType;
+    internal abstract class FlexibleMenuModifyItemUI : PopupWindowContent
+    {
+        protected Action<object> m_AcceptedCallback;
+        private bool m_IsInitialized;
+        protected MenuType m_MenuType;
+        public object m_Object;
 
-		public object m_Object;
+        protected FlexibleMenuModifyItemUI()
+        {
+        }
 
-		protected Action<object> m_AcceptedCallback;
+        public void Accepted()
+        {
+            if (this.m_AcceptedCallback != null)
+            {
+                this.m_AcceptedCallback(this.m_Object);
+            }
+            else
+            {
+                Debug.LogError("Missing callback. Did you remember to call Init ?");
+            }
+        }
 
-		private bool m_IsInitialized;
+        public void Init(MenuType menuType, object obj, Action<object> acceptedCallback)
+        {
+            this.m_MenuType = menuType;
+            this.m_Object = obj;
+            this.m_AcceptedCallback = acceptedCallback;
+            this.m_IsInitialized = true;
+        }
 
-		public override void OnClose()
-		{
-			this.m_Object = null;
-			this.m_AcceptedCallback = null;
-			this.m_IsInitialized = false;
-			EditorApplication.RequestRepaintAllViews();
-		}
+        public bool IsShowing()
+        {
+            return this.m_IsInitialized;
+        }
 
-		public void Init(FlexibleMenuModifyItemUI.MenuType menuType, object obj, Action<object> acceptedCallback)
-		{
-			this.m_MenuType = menuType;
-			this.m_Object = obj;
-			this.m_AcceptedCallback = acceptedCallback;
-			this.m_IsInitialized = true;
-		}
+        public override void OnClose()
+        {
+            this.m_Object = null;
+            this.m_AcceptedCallback = null;
+            this.m_IsInitialized = false;
+            EditorApplication.RequestRepaintAllViews();
+        }
 
-		public void Accepted()
-		{
-			if (this.m_AcceptedCallback != null)
-			{
-				this.m_AcceptedCallback(this.m_Object);
-			}
-			else
-			{
-				Debug.LogError("Missing callback. Did you remember to call Init ?");
-			}
-		}
-
-		public bool IsShowing()
-		{
-			return this.m_IsInitialized;
-		}
-	}
+        public enum MenuType
+        {
+            Add,
+            Edit
+        }
+    }
 }
+

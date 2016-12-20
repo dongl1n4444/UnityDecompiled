@@ -1,21 +1,18 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal struct Internal_DrawMeshMatrixArguments
-	{
-		public int layer;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public int submeshIndex;
-
-		public Matrix4x4 matrix;
-
-		public int castShadows;
-
-		public int receiveShadows;
-
-		public int reflectionProbeAnchorInstanceID;
-
-		public bool useLightProbes;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Internal_DrawMeshMatrixArguments
+    {
+        public int layer;
+        public int submeshIndex;
+        public Matrix4x4 matrix;
+        public int castShadows;
+        public int receiveShadows;
+        public int reflectionProbeAnchorInstanceID;
+        public bool useLightProbes;
+    }
 }
+

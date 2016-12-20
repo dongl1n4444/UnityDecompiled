@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum PivotMode
-	{
-		Center,
-		Pivot
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Where is the tool handle placed.</para>
+    /// </summary>
+    public enum PivotMode
+    {
+        Center,
+        Pivot
+    }
 }
+

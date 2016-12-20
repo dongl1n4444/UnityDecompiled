@@ -1,27 +1,27 @@
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[RequiredByNativeCode]
-	[StructLayout(LayoutKind.Sequential)]
-	public sealed class Coroutine : YieldInstruction
-	{
-		internal IntPtr m_Ptr;
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-		private Coroutine()
-		{
-		}
+    /// <summary>
+    /// <para>MonoBehaviour.StartCoroutine returns a Coroutine. Instances of this class are only used to reference these coroutines and do not hold any exposed properties or functions.</para>
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential), RequiredByNativeCode]
+    public sealed class Coroutine : YieldInstruction
+    {
+        internal IntPtr m_Ptr;
+        private Coroutine()
+        {
+        }
 
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void ReleaseCoroutine();
-
-		~Coroutine()
-		{
-			this.ReleaseCoroutine();
-		}
-	}
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        private extern void ReleaseCoroutine();
+        ~Coroutine()
+        {
+            this.ReleaseCoroutine();
+        }
+    }
 }
+

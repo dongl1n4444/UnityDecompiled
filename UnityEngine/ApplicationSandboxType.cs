@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ApplicationSandboxType
-	{
-		Unknown,
-		NotSandboxed,
-		Sandboxed,
-		SandboxBroken
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Application sandbox type.</para>
+    /// </summary>
+    public enum ApplicationSandboxType
+    {
+        Unknown,
+        NotSandboxed,
+        Sandboxed,
+        SandboxBroken
+    }
 }
+

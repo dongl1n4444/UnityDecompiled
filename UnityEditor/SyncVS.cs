@@ -1,472 +1,429 @@
-using Microsoft.Win32;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEditor.Utils;
-using UnityEditor.VisualStudioIntegration;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[InitializeOnLoad]
-	internal class SyncVS : AssetPostprocessor
-	{
-		private class SolutionSynchronizationSettings : DefaultSolutionSynchronizationSettings
-		{
-			public override int VisualStudioVersion
-			{
-				get
-				{
-					string externalScriptEditor = InternalEditorUtility.GetExternalScriptEditor();
-					int result;
-					if (SyncVS.InstalledVisualStudios.ContainsKey(UnityEditor.VisualStudioVersion.VisualStudio2008) && externalScriptEditor != string.Empty && SyncVS.PathsAreEquivalent(SyncVS.InstalledVisualStudios[UnityEditor.VisualStudioVersion.VisualStudio2008], externalScriptEditor))
-					{
-						result = 9;
-					}
-					else
-					{
-						result = 10;
-					}
-					return result;
-				}
-			}
+    using Microsoft.Win32;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditor.Utils;
+    using UnityEditor.VisualStudioIntegration;
+    using UnityEditorInternal;
 
-			public override string SolutionTemplate
-			{
-				get
-				{
-					return EditorPrefs.GetString("VSSolutionText", base.SolutionTemplate);
-				}
-			}
+    [InitializeOnLoad]
+    internal class SyncVS : AssetPostprocessor
+    {
+        [CompilerGenerated]
+        private static Func<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<KeyValuePair<VisualStudioVersion, string>, string> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Action <>f__mg$cache0;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private static Dictionary<VisualStudioVersion, string> <InstalledVisualStudios>k__BackingField;
+        private static bool s_AlreadySyncedThisDomainReload;
+        private static readonly SolutionSynchronizer Synchronizer = new SolutionSynchronizer(Directory.GetParent(Application.dataPath).FullName, new SolutionSynchronizationSettings());
 
-			public override string EditorAssemblyPath
-			{
-				get
-				{
-					return InternalEditorUtility.GetEditorAssemblyPath();
-				}
-			}
+        static SyncVS()
+        {
+            if (<>f__mg$cache0 == null)
+            {
+                <>f__mg$cache0 = new Action(null, (IntPtr) SyncVisualStudioProjectIfItAlreadyExists);
+            }
+            EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
+            try
+            {
+                InstalledVisualStudios = GetInstalledVisualStudios() as Dictionary<VisualStudioVersion, string>;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error detecting Visual Studio installations: {0}{1}{2}", exception.Message, Environment.NewLine, exception.StackTrace);
+                InstalledVisualStudios = new Dictionary<VisualStudioVersion, string>();
+            }
+            SetVisualStudioAsEditorIfNoEditorWasSet();
+            UnityVSSupport.Initialize();
+        }
 
-			public override string EngineAssemblyPath
-			{
-				get
-				{
-					return InternalEditorUtility.GetEngineAssemblyPath();
-				}
-			}
+        internal static bool CheckVisualStudioVersion(int major, int minor, int build)
+        {
+            int num = -1;
+            int num2 = -1;
+            if (major == 11)
+            {
+                RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\DevDiv\vc\Servicing");
+                if (key == null)
+                {
+                    return false;
+                }
+                foreach (string str in key.GetSubKeyNames())
+                {
+                    if (str.StartsWith("11.") && (str.Length > 3))
+                    {
+                        try
+                        {
+                            int num4 = Convert.ToInt32(str.Substring(3));
+                            if (num4 > num)
+                            {
+                                num = num4;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+                if (num < 0)
+                {
+                    return false;
+                }
+                RegistryKey key2 = key.OpenSubKey(string.Format(@"11.{0}\RuntimeDebug", num));
+                if (key2 == null)
+                {
+                    return false;
+                }
+                string str2 = key2.GetValue("Version", null) as string;
+                if (str2 == null)
+                {
+                    return false;
+                }
+                char[] separator = new char[] { '.' };
+                string[] strArray2 = str2.Split(separator);
+                if ((strArray2 == null) || (strArray2.Length < 3))
+                {
+                    return false;
+                }
+                try
+                {
+                    num2 = Convert.ToInt32(strArray2[2]);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return ((num > minor) || ((num == minor) && (num2 >= build)));
+        }
 
-			public override string[] Defines
-			{
-				get
-				{
-					return EditorUserBuildSettings.activeScriptCompilationDefines;
-				}
-			}
+        public static void CreateIfDoesntExist()
+        {
+            if (!Synchronizer.SolutionExists())
+            {
+                Synchronizer.Sync();
+            }
+        }
 
-			internal static bool IsOSX
-			{
-				get
-				{
-					return Environment.OSVersion.Platform == PlatformID.Unix;
-				}
-			}
+        private static string DeriveProgramFilesSentinel()
+        {
+            char[] separator = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+            string str = Enumerable.LastOrDefault<string>(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Split(separator));
+            if (!string.IsNullOrEmpty(str))
+            {
+                int startIndex = str.LastIndexOf("(x86)");
+                if (0 <= startIndex)
+                {
+                    str = str.Remove(startIndex);
+                }
+                return str.TrimEnd(new char[0]);
+            }
+            return "Program Files";
+        }
 
-			internal static bool IsWindows
-			{
-				get
-				{
-					return !SyncVS.SolutionSynchronizationSettings.IsOSX && Path.DirectorySeparatorChar == '\\' && Environment.NewLine == "\r\n";
-				}
-			}
+        private static string DeriveVisualStudioPath(string debuggerPath)
+        {
+            string a = DeriveProgramFilesSentinel();
+            string str2 = "Common7";
+            bool flag = false;
+            char[] separator = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+            string[] strArray = debuggerPath.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            foreach (string str4 in strArray)
+            {
+                if (!flag && string.Equals(a, str4, StringComparison.OrdinalIgnoreCase))
+                {
+                    flag = true;
+                }
+                else if (flag)
+                {
+                    folderPath = Path.Combine(folderPath, str4);
+                    if (string.Equals(str2, str4, StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+                }
+            }
+            string[] components = new string[] { folderPath, "IDE", "devenv.exe" };
+            return Paths.Combine(components);
+        }
 
-			public override string GetProjectHeaderTemplate(ScriptingLanguage language)
-			{
-				return EditorPrefs.GetString("VSProjectHeader", base.GetProjectHeaderTemplate(language));
-			}
+        public static string FindBestVisualStudio()
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = new Func<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(null, (IntPtr) <FindBestVisualStudio>m__0);
+            }
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = new Func<KeyValuePair<VisualStudioVersion, string>, string>(null, (IntPtr) <FindBestVisualStudio>m__1);
+            }
+            return Enumerable.FirstOrDefault<string>(Enumerable.Select<KeyValuePair<VisualStudioVersion, string>, string>(Enumerable.OrderByDescending<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(InstalledVisualStudios, <>f__am$cache0), <>f__am$cache1));
+        }
 
-			public override string GetProjectFooterTemplate(ScriptingLanguage language)
-			{
-				return EditorPrefs.GetString("VSProjectFooter", base.GetProjectFooterTemplate(language));
-			}
+        private static IDictionary<VisualStudioVersion, string> GetInstalledVisualStudios()
+        {
+            Dictionary<VisualStudioVersion, string> dictionary = new Dictionary<VisualStudioVersion, string>();
+            if (SolutionSynchronizationSettings.IsWindows)
+            {
+                IEnumerator enumerator = Enum.GetValues(typeof(VisualStudioVersion)).GetEnumerator();
+                try
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        VisualStudioVersion current = (VisualStudioVersion) enumerator.Current;
+                        try
+                        {
+                            string environmentVariable = Environment.GetEnvironmentVariable(string.Format("VS{0}0COMNTOOLS", (int) current));
+                            if (!string.IsNullOrEmpty(environmentVariable))
+                            {
+                                string[] components = new string[] { environmentVariable, "..", "IDE", "devenv.exe" };
+                                string path = Paths.Combine(components);
+                                if (File.Exists(path))
+                                {
+                                    dictionary[current] = path;
+                                    continue;
+                                }
+                            }
+                            environmentVariable = GetRegistryValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{0}.0", (int) current), "InstallDir");
+                            if (string.IsNullOrEmpty(environmentVariable))
+                            {
+                                environmentVariable = GetRegistryValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\{0}.0", (int) current), "InstallDir");
+                            }
+                            if (!string.IsNullOrEmpty(environmentVariable))
+                            {
+                                string[] textArray2 = new string[] { environmentVariable, "devenv.exe" };
+                                string str3 = Paths.Combine(textArray2);
+                                if (File.Exists(str3))
+                                {
+                                    dictionary[current] = str3;
+                                    continue;
+                                }
+                            }
+                            environmentVariable = GetRegistryValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{0}.0\Debugger", (int) current), "FEQARuntimeImplDll");
+                            if (!string.IsNullOrEmpty(environmentVariable))
+                            {
+                                string str4 = DeriveVisualStudioPath(environmentVariable);
+                                if (!string.IsNullOrEmpty(str4) && File.Exists(str4))
+                                {
+                                    dictionary[current] = DeriveVisualStudioPath(environmentVariable);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                finally
+                {
+                    IDisposable disposable = enumerator as IDisposable;
+                    if (disposable != null)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+            }
+            return dictionary;
+        }
 
-			protected override string FrameworksPath()
-			{
-				return EditorApplication.applicationContentsPath;
-			}
-		}
+        private static string GetRegistryValue(string path, string key)
+        {
+            try
+            {
+                return (Registry.GetValue(path, key, null) as string);
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
 
-		private static bool s_AlreadySyncedThisDomainReload;
+        private static void OpenProjectFileUnlessInBatchMode()
+        {
+            if (!InternalEditorUtility.inBatchMode)
+            {
+                InternalEditorUtility.OpenFileAtLineExternal("", -1);
+            }
+        }
 
-		private static readonly SolutionSynchronizer Synchronizer;
+        private static bool PathsAreEquivalent(string aPath, string zPath)
+        {
+            if ((aPath == null) && (zPath == null))
+            {
+                return true;
+            }
+            if (string.IsNullOrEmpty(aPath) || string.IsNullOrEmpty(zPath))
+            {
+                return false;
+            }
+            aPath = Path.GetFullPath(aPath);
+            zPath = Path.GetFullPath(zPath);
+            StringComparison ordinalIgnoreCase = StringComparison.OrdinalIgnoreCase;
+            if (!SolutionSynchronizationSettings.IsOSX && !SolutionSynchronizationSettings.IsWindows)
+            {
+                ordinalIgnoreCase = StringComparison.Ordinal;
+            }
+            aPath = aPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            zPath = zPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            return string.Equals(aPath, zPath, ordinalIgnoreCase);
+        }
 
-		[CompilerGenerated]
-		private static Action <>f__mg$cache0;
+        public static void PostprocessSyncProject(string[] importedAssets, string[] addedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+        {
+            Synchronizer.SyncIfNeeded(Enumerable.Union<string>(addedAssets, Enumerable.Union<string>(deletedAssets, Enumerable.Union<string>(movedAssets, movedFromAssetPaths))));
+        }
 
-		internal static Dictionary<VisualStudioVersion, string> InstalledVisualStudios
-		{
-			get;
-			private set;
-		}
+        public static bool ProjectExists()
+        {
+            return Synchronizer.SolutionExists();
+        }
 
-		static SyncVS()
-		{
-			SyncVS.Synchronizer = new SolutionSynchronizer(Directory.GetParent(Application.dataPath).FullName, new SyncVS.SolutionSynchronizationSettings());
-			Delegate arg_41_0 = EditorUserBuildSettings.activeBuildTargetChanged;
-			if (SyncVS.<>f__mg$cache0 == null)
-			{
-				SyncVS.<>f__mg$cache0 = new Action(SyncVS.SyncVisualStudioProjectIfItAlreadyExists);
-			}
-			EditorUserBuildSettings.activeBuildTargetChanged = (Action)Delegate.Combine(arg_41_0, SyncVS.<>f__mg$cache0);
-			try
-			{
-				SyncVS.InstalledVisualStudios = (SyncVS.GetInstalledVisualStudios() as Dictionary<VisualStudioVersion, string>);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Error detecting Visual Studio installations: {0}{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace);
-				SyncVS.InstalledVisualStudios = new Dictionary<VisualStudioVersion, string>();
-			}
-			SyncVS.SetVisualStudioAsEditorIfNoEditorWasSet();
-			UnityVSSupport.Initialize();
-		}
+        private static void SetVisualStudioAsEditorIfNoEditorWasSet()
+        {
+            string str = EditorPrefs.GetString("kScriptsDefaultApp");
+            string str2 = FindBestVisualStudio();
+            if ((str == "") && (str2 != null))
+            {
+                EditorPrefs.SetString("kScriptsDefaultApp", str2);
+            }
+        }
 
-		private static void SetVisualStudioAsEditorIfNoEditorWasSet()
-		{
-			string @string = EditorPrefs.GetString("kScriptsDefaultApp");
-			string text = SyncVS.FindBestVisualStudio();
-			if (@string == "" && text != null)
-			{
-				EditorPrefs.SetString("kScriptsDefaultApp", text);
-			}
-		}
+        [MenuItem("Assets/Open C# Project")]
+        private static void SyncAndOpenSolution()
+        {
+            SyncSolution();
+            OpenProjectFileUnlessInBatchMode();
+        }
 
-		public static string FindBestVisualStudio()
-		{
-			return (from kvp in SyncVS.InstalledVisualStudios
-			orderby kvp.Key descending
-			select kvp into kvp2
-			select kvp2.Value).FirstOrDefault<string>();
-		}
+        public static void SyncIfFirstFileOpenSinceDomainLoad()
+        {
+            if (!s_AlreadySyncedThisDomainReload)
+            {
+                s_AlreadySyncedThisDomainReload = true;
+                Synchronizer.Sync();
+            }
+        }
 
-		public static bool ProjectExists()
-		{
-			return SyncVS.Synchronizer.SolutionExists();
-		}
+        public static void SyncSolution()
+        {
+            AssetDatabase.Refresh();
+            Synchronizer.Sync();
+        }
 
-		public static void CreateIfDoesntExist()
-		{
-			if (!SyncVS.Synchronizer.SolutionExists())
-			{
-				SyncVS.Synchronizer.Sync();
-			}
-		}
+        public static void SyncVisualStudioProjectIfItAlreadyExists()
+        {
+            if (Synchronizer.SolutionExists())
+            {
+                Synchronizer.Sync();
+            }
+        }
 
-		public static void SyncVisualStudioProjectIfItAlreadyExists()
-		{
-			if (SyncVS.Synchronizer.SolutionExists())
-			{
-				SyncVS.Synchronizer.Sync();
-			}
-		}
+        internal static Dictionary<VisualStudioVersion, string> InstalledVisualStudios
+        {
+            [CompilerGenerated]
+            get
+            {
+                return <InstalledVisualStudios>k__BackingField;
+            }
+            [CompilerGenerated]
+            private set
+            {
+                <InstalledVisualStudios>k__BackingField = value;
+            }
+        }
 
-		public static void PostprocessSyncProject(string[] importedAssets, string[] addedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-		{
-			SyncVS.Synchronizer.SyncIfNeeded(addedAssets.Union(deletedAssets.Union(movedAssets.Union(movedFromAssetPaths))));
-		}
+        private class SolutionSynchronizationSettings : DefaultSolutionSynchronizationSettings
+        {
+            protected override string FrameworksPath()
+            {
+                return EditorApplication.applicationContentsPath;
+            }
 
-		[MenuItem("Assets/Open C# Project")]
-		private static void SyncAndOpenSolution()
-		{
-			SyncVS.SyncSolution();
-			SyncVS.OpenProjectFileUnlessInBatchMode();
-		}
+            public override string GetProjectFooterTemplate(ScriptingLanguage language)
+            {
+                return EditorPrefs.GetString("VSProjectFooter", base.GetProjectFooterTemplate(language));
+            }
 
-		public static void SyncSolution()
-		{
-			AssetDatabase.Refresh();
-			SyncVS.Synchronizer.Sync();
-		}
+            public override string GetProjectHeaderTemplate(ScriptingLanguage language)
+            {
+                return EditorPrefs.GetString("VSProjectHeader", base.GetProjectHeaderTemplate(language));
+            }
 
-		public static void SyncIfFirstFileOpenSinceDomainLoad()
-		{
-			if (!SyncVS.s_AlreadySyncedThisDomainReload)
-			{
-				SyncVS.s_AlreadySyncedThisDomainReload = true;
-				SyncVS.Synchronizer.Sync();
-			}
-		}
+            public override string[] Defines
+            {
+                get
+                {
+                    return EditorUserBuildSettings.activeScriptCompilationDefines;
+                }
+            }
 
-		private static void OpenProjectFileUnlessInBatchMode()
-		{
-			if (!InternalEditorUtility.inBatchMode)
-			{
-				InternalEditorUtility.OpenFileAtLineExternal("", -1);
-			}
-		}
+            public override string EditorAssemblyPath
+            {
+                get
+                {
+                    return InternalEditorUtility.GetEditorAssemblyPath();
+                }
+            }
 
-		private static IDictionary<VisualStudioVersion, string> GetInstalledVisualStudios()
-		{
-			Dictionary<VisualStudioVersion, string> dictionary = new Dictionary<VisualStudioVersion, string>();
-			if (SyncVS.SolutionSynchronizationSettings.IsWindows)
-			{
-				IEnumerator enumerator = Enum.GetValues(typeof(VisualStudioVersion)).GetEnumerator();
-				try
-				{
-					while (enumerator.MoveNext())
-					{
-						VisualStudioVersion visualStudioVersion = (VisualStudioVersion)enumerator.Current;
-						try
-						{
-							string text = Environment.GetEnvironmentVariable(string.Format("VS{0}0COMNTOOLS", (int)visualStudioVersion));
-							if (!string.IsNullOrEmpty(text))
-							{
-								string text2 = Paths.Combine(new string[]
-								{
-									text,
-									"..",
-									"IDE",
-									"devenv.exe"
-								});
-								if (File.Exists(text2))
-								{
-									dictionary[visualStudioVersion] = text2;
-									continue;
-								}
-							}
-							text = SyncVS.GetRegistryValue(string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\{0}.0", (int)visualStudioVersion), "InstallDir");
-							if (string.IsNullOrEmpty(text))
-							{
-								text = SyncVS.GetRegistryValue(string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\{0}.0", (int)visualStudioVersion), "InstallDir");
-							}
-							if (!string.IsNullOrEmpty(text))
-							{
-								string text3 = Paths.Combine(new string[]
-								{
-									text,
-									"devenv.exe"
-								});
-								if (File.Exists(text3))
-								{
-									dictionary[visualStudioVersion] = text3;
-									continue;
-								}
-							}
-							text = SyncVS.GetRegistryValue(string.Format("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\{0}.0\\Debugger", (int)visualStudioVersion), "FEQARuntimeImplDll");
-							if (!string.IsNullOrEmpty(text))
-							{
-								string text4 = SyncVS.DeriveVisualStudioPath(text);
-								if (!string.IsNullOrEmpty(text4) && File.Exists(text4))
-								{
-									dictionary[visualStudioVersion] = SyncVS.DeriveVisualStudioPath(text);
-								}
-							}
-						}
-						catch
-						{
-						}
-					}
-				}
-				finally
-				{
-					IDisposable disposable;
-					if ((disposable = (enumerator as IDisposable)) != null)
-					{
-						disposable.Dispose();
-					}
-				}
-			}
-			return dictionary;
-		}
+            public override string EngineAssemblyPath
+            {
+                get
+                {
+                    return InternalEditorUtility.GetEngineAssemblyPath();
+                }
+            }
 
-		private static string GetRegistryValue(string path, string key)
-		{
-			string result;
-			try
-			{
-				result = (Registry.GetValue(path, key, null) as string);
-			}
-			catch (Exception)
-			{
-				result = "";
-			}
-			return result;
-		}
+            internal static bool IsOSX
+            {
+                get
+                {
+                    return (Environment.OSVersion.Platform == PlatformID.Unix);
+                }
+            }
 
-		private static string DeriveVisualStudioPath(string debuggerPath)
-		{
-			string a = SyncVS.DeriveProgramFilesSentinel();
-			string a2 = "Common7";
-			bool flag = false;
-			string[] array = debuggerPath.Split(new char[]
-			{
-				Path.DirectorySeparatorChar,
-				Path.AltDirectorySeparatorChar
-			}, StringSplitOptions.RemoveEmptyEntries);
-			string text = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-			string[] array2 = array;
-			for (int i = 0; i < array2.Length; i++)
-			{
-				string text2 = array2[i];
-				if (!flag && string.Equals(a, text2, StringComparison.OrdinalIgnoreCase))
-				{
-					flag = true;
-				}
-				else if (flag)
-				{
-					text = Path.Combine(text, text2);
-					if (string.Equals(a2, text2, StringComparison.OrdinalIgnoreCase))
-					{
-						break;
-					}
-				}
-			}
-			return Paths.Combine(new string[]
-			{
-				text,
-				"IDE",
-				"devenv.exe"
-			});
-		}
+            internal static bool IsWindows
+            {
+                get
+                {
+                    return ((!IsOSX && (Path.DirectorySeparatorChar == '\\')) && (Environment.NewLine == "\r\n"));
+                }
+            }
 
-		private static string DeriveProgramFilesSentinel()
-		{
-			string text = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Split(new char[]
-			{
-				Path.DirectorySeparatorChar,
-				Path.AltDirectorySeparatorChar
-			}).LastOrDefault<string>();
-			string result;
-			if (!string.IsNullOrEmpty(text))
-			{
-				int num = text.LastIndexOf("(x86)");
-				if (0 <= num)
-				{
-					text = text.Remove(num);
-				}
-				result = text.TrimEnd(new char[0]);
-			}
-			else
-			{
-				result = "Program Files";
-			}
-			return result;
-		}
+            public override string SolutionTemplate
+            {
+                get
+                {
+                    return EditorPrefs.GetString("VSSolutionText", base.SolutionTemplate);
+                }
+            }
 
-		private static bool PathsAreEquivalent(string aPath, string zPath)
-		{
-			bool result;
-			if (aPath == null && zPath == null)
-			{
-				result = true;
-			}
-			else if (string.IsNullOrEmpty(aPath) || string.IsNullOrEmpty(zPath))
-			{
-				result = false;
-			}
-			else
-			{
-				aPath = Path.GetFullPath(aPath);
-				zPath = Path.GetFullPath(zPath);
-				StringComparison comparisonType = StringComparison.OrdinalIgnoreCase;
-				if (!SyncVS.SolutionSynchronizationSettings.IsOSX && !SyncVS.SolutionSynchronizationSettings.IsWindows)
-				{
-					comparisonType = StringComparison.Ordinal;
-				}
-				aPath = aPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-				zPath = zPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-				result = string.Equals(aPath, zPath, comparisonType);
-			}
-			return result;
-		}
-
-		internal static bool CheckVisualStudioVersion(int major, int minor, int build)
-		{
-			int num = -1;
-			int num2 = -1;
-			bool result;
-			if (major != 11)
-			{
-				result = false;
-			}
-			else
-			{
-				RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Microsoft\\DevDiv\\vc\\Servicing");
-				if (registryKey == null)
-				{
-					result = false;
-				}
-				else
-				{
-					string[] subKeyNames = registryKey.GetSubKeyNames();
-					for (int i = 0; i < subKeyNames.Length; i++)
-					{
-						string text = subKeyNames[i];
-						if (text.StartsWith("11.") && text.Length > 3)
-						{
-							try
-							{
-								int num3 = Convert.ToInt32(text.Substring(3));
-								if (num3 > num)
-								{
-									num = num3;
-								}
-							}
-							catch (Exception)
-							{
-							}
-						}
-					}
-					if (num < 0)
-					{
-						result = false;
-					}
-					else
-					{
-						RegistryKey registryKey2 = registryKey.OpenSubKey(string.Format("11.{0}\\RuntimeDebug", num));
-						if (registryKey2 == null)
-						{
-							result = false;
-						}
-						else
-						{
-							string text2 = registryKey2.GetValue("Version", null) as string;
-							if (text2 == null)
-							{
-								result = false;
-							}
-							else
-							{
-								string[] array = text2.Split(new char[]
-								{
-									'.'
-								});
-								if (array == null || array.Length < 3)
-								{
-									result = false;
-								}
-								else
-								{
-									try
-									{
-										num2 = Convert.ToInt32(array[2]);
-									}
-									catch (Exception)
-									{
-										result = false;
-										return result;
-									}
-									result = (num > minor || (num == minor && num2 >= build));
-								}
-							}
-						}
-					}
-				}
-			}
-			return result;
-		}
-	}
+            public override int VisualStudioVersion
+            {
+                get
+                {
+                    string externalScriptEditor = InternalEditorUtility.GetExternalScriptEditor();
+                    if ((SyncVS.InstalledVisualStudios.ContainsKey(UnityEditor.VisualStudioVersion.VisualStudio2008) && (externalScriptEditor != string.Empty)) && SyncVS.PathsAreEquivalent(SyncVS.InstalledVisualStudios[UnityEditor.VisualStudioVersion.VisualStudio2008], externalScriptEditor))
+                    {
+                        return 9;
+                    }
+                    return 10;
+                }
+            }
+        }
+    }
 }
+

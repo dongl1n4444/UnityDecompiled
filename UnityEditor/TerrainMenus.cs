@@ -1,96 +1,84 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class TerrainMenus
-	{
-		[MenuItem("GameObject/3D Object/Terrain", false, 3000)]
-		private static void CreateTerrain(MenuCommand menuCommand)
-		{
-			TerrainData terrainData = new TerrainData();
-			terrainData.heightmapResolution = 1025;
-			terrainData.size = new Vector3(1000f, 600f, 1000f);
-			terrainData.heightmapResolution = 512;
-			terrainData.baseMapResolution = 1024;
-			terrainData.SetDetailResolution(1024, terrainData.detailResolutionPerPatch);
-			AssetDatabase.CreateAsset(terrainData, AssetDatabase.GenerateUniqueAssetPath("Assets/New Terrain.asset"));
-			GameObject gameObject = menuCommand.context as GameObject;
-			string uniqueNameForSibling = GameObjectUtility.GetUniqueNameForSibling((!(gameObject != null)) ? null : gameObject.transform, "Terrain");
-			GameObject gameObject2 = Terrain.CreateTerrainGameObject(terrainData);
-			gameObject2.name = uniqueNameForSibling;
-			GameObjectUtility.SetParentAndAlign(gameObject2, gameObject);
-			Selection.activeObject = gameObject2;
-			Undo.RegisterCreatedObjectUndo(gameObject2, "Create terrain");
-		}
+    using System;
+    using UnityEngine;
 
-		internal static void ImportRaw()
-		{
-			string text = EditorUtility.OpenFilePanel("Import Raw Heightmap", "", "raw");
-			if (text != "")
-			{
-				ImportRawHeightmap importRawHeightmap = TerrainWizard.DisplayTerrainWizard<ImportRawHeightmap>("Import Heightmap", "Import");
-				importRawHeightmap.InitializeImportRaw(TerrainMenus.GetActiveTerrain(), text);
-			}
-		}
+    internal class TerrainMenus
+    {
+        [MenuItem("GameObject/3D Object/Terrain", false, 0xbb8)]
+        private static void CreateTerrain(MenuCommand menuCommand)
+        {
+            TerrainData asset = new TerrainData {
+                heightmapResolution = 0x401,
+                size = new Vector3(1000f, 600f, 1000f),
+                heightmapResolution = 0x200,
+                baseMapResolution = 0x400
+            };
+            asset.SetDetailResolution(0x400, asset.detailResolutionPerPatch);
+            AssetDatabase.CreateAsset(asset, AssetDatabase.GenerateUniqueAssetPath("Assets/New Terrain.asset"));
+            GameObject context = menuCommand.context as GameObject;
+            string uniqueNameForSibling = GameObjectUtility.GetUniqueNameForSibling((context == null) ? null : context.transform, "Terrain");
+            GameObject child = Terrain.CreateTerrainGameObject(asset);
+            child.name = uniqueNameForSibling;
+            GameObjectUtility.SetParentAndAlign(child, context);
+            Selection.activeObject = child;
+            Undo.RegisterCreatedObjectUndo(child, "Create terrain");
+        }
 
-		internal static void ExportHeightmapRaw()
-		{
-			ExportRawHeightmap exportRawHeightmap = TerrainWizard.DisplayTerrainWizard<ExportRawHeightmap>("Export Heightmap", "Export");
-			exportRawHeightmap.InitializeDefaults(TerrainMenus.GetActiveTerrain());
-		}
+        internal static void ExportHeightmapRaw()
+        {
+            TerrainWizard.DisplayTerrainWizard<ExportRawHeightmap>("Export Heightmap", "Export").InitializeDefaults(GetActiveTerrain());
+        }
 
-		internal static void MassPlaceTrees()
-		{
-			PlaceTreeWizard placeTreeWizard = TerrainWizard.DisplayTerrainWizard<PlaceTreeWizard>("Place Trees", "Place");
-			placeTreeWizard.InitializeDefaults(TerrainMenus.GetActiveTerrain());
-		}
+        internal static void Flatten()
+        {
+            TerrainWizard.DisplayTerrainWizard<FlattenHeightmap>("Flatten Heightmap", "Flatten").InitializeDefaults(GetActiveTerrain());
+        }
 
-		internal static void Flatten()
-		{
-			FlattenHeightmap flattenHeightmap = TerrainWizard.DisplayTerrainWizard<FlattenHeightmap>("Flatten Heightmap", "Flatten");
-			flattenHeightmap.InitializeDefaults(TerrainMenus.GetActiveTerrain());
-		}
+        private static void FlushHeightmapModification()
+        {
+            GetActiveTerrain().Flush();
+        }
 
-		internal static void RefreshPrototypes()
-		{
-			TerrainMenus.GetActiveTerrainData().RefreshPrototypes();
-			TerrainMenus.GetActiveTerrain().Flush();
-			EditorApplication.SetSceneRepaintDirty();
-		}
+        private static Terrain GetActiveTerrain()
+        {
+            Object[] filtered = Selection.GetFiltered(typeof(Terrain), SelectionMode.Editable);
+            if (filtered.Length != 0)
+            {
+                return (filtered[0] as Terrain);
+            }
+            return Terrain.activeTerrain;
+        }
 
-		private static void FlushHeightmapModification()
-		{
-			TerrainMenus.GetActiveTerrain().Flush();
-		}
+        private static TerrainData GetActiveTerrainData()
+        {
+            if (GetActiveTerrain() != null)
+            {
+                return GetActiveTerrain().terrainData;
+            }
+            return null;
+        }
 
-		private static Terrain GetActiveTerrain()
-		{
-			UnityEngine.Object[] filtered = Selection.GetFiltered(typeof(Terrain), SelectionMode.Editable);
-			Terrain result;
-			if (filtered.Length != 0)
-			{
-				result = (filtered[0] as Terrain);
-			}
-			else
-			{
-				result = Terrain.activeTerrain;
-			}
-			return result;
-		}
+        internal static void ImportRaw()
+        {
+            string path = EditorUtility.OpenFilePanel("Import Raw Heightmap", "", "raw");
+            if (path != "")
+            {
+                TerrainWizard.DisplayTerrainWizard<ImportRawHeightmap>("Import Heightmap", "Import").InitializeImportRaw(GetActiveTerrain(), path);
+            }
+        }
 
-		private static TerrainData GetActiveTerrainData()
-		{
-			TerrainData result;
-			if (TerrainMenus.GetActiveTerrain())
-			{
-				result = TerrainMenus.GetActiveTerrain().terrainData;
-			}
-			else
-			{
-				result = null;
-			}
-			return result;
-		}
-	}
+        internal static void MassPlaceTrees()
+        {
+            TerrainWizard.DisplayTerrainWizard<PlaceTreeWizard>("Place Trees", "Place").InitializeDefaults(GetActiveTerrain());
+        }
+
+        internal static void RefreshPrototypes()
+        {
+            GetActiveTerrainData().RefreshPrototypes();
+            GetActiveTerrain().Flush();
+            EditorApplication.SetSceneRepaintDirty();
+        }
+    }
 }
+

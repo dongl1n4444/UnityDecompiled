@@ -1,28 +1,44 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class AvatarBuilder
-	{
-		public static Avatar BuildHumanAvatar(GameObject go, HumanDescription humanDescription)
-		{
-			if (go == null)
-			{
-				throw new NullReferenceException();
-			}
-			return AvatarBuilder.BuildHumanAvatarMono(go, humanDescription);
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		private static Avatar BuildHumanAvatarMono(GameObject go, HumanDescription monoHumanDescription)
-		{
-			return AvatarBuilder.INTERNAL_CALL_BuildHumanAvatarMono(go, ref monoHumanDescription);
-		}
+    /// <summary>
+    /// <para>Class to build avatars from user scripts.</para>
+    /// </summary>
+    public sealed class AvatarBuilder
+    {
+        /// <summary>
+        /// <para>Create a new generic avatar.</para>
+        /// </summary>
+        /// <param name="go">Root object of your transform hierarchy.</param>
+        /// <param name="rootMotionTransformName">Transform name of the root motion transform. If empty no root motion is defined and you must take care of avatar movement yourself.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern Avatar BuildGenericAvatar(GameObject go, string rootMotionTransformName);
+        /// <summary>
+        /// <para>Create a humanoid avatar.</para>
+        /// </summary>
+        /// <param name="go">Root object of your transform hierachy. It must be the top most gameobject when you create the avatar.</param>
+        /// <param name="humanDescription">Humanoid description of the avatar.</param>
+        /// <returns>
+        /// <para>Returns the Avatar, you must always always check the avatar is valid before using it with Avatar.isValid.</para>
+        /// </returns>
+        public static Avatar BuildHumanAvatar(GameObject go, HumanDescription humanDescription)
+        {
+            if (go == null)
+            {
+                throw new NullReferenceException();
+            }
+            return BuildHumanAvatarMono(go, humanDescription);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Avatar INTERNAL_CALL_BuildHumanAvatarMono(GameObject go, ref HumanDescription monoHumanDescription);
+        private static Avatar BuildHumanAvatarMono(GameObject go, HumanDescription monoHumanDescription)
+        {
+            return INTERNAL_CALL_BuildHumanAvatarMono(go, ref monoHumanDescription);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern Avatar BuildGenericAvatar(GameObject go, string rootMotionTransformName);
-	}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Avatar INTERNAL_CALL_BuildHumanAvatarMono(GameObject go, ref HumanDescription monoHumanDescription);
+    }
 }
+

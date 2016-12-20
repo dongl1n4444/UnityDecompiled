@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum PresetFileLocation
-	{
-		PreferencesFolder,
-		ProjectFolder
-	}
+    using System;
+
+    internal enum PresetFileLocation
+    {
+        PreferencesFolder,
+        ProjectFolder
+    }
 }
+

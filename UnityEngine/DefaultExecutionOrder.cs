@@ -1,20 +1,22 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Class), UsedByNativeCode]
-	public class DefaultExecutionOrder : Attribute
-	{
-		public int order
-		{
-			get;
-			private set;
-		}
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
-		public DefaultExecutionOrder(int order)
-		{
-			this.order = order;
-		}
-	}
+    [AttributeUsage(AttributeTargets.Class), UsedByNativeCode]
+    public class DefaultExecutionOrder : Attribute
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private int <order>k__BackingField;
+
+        public DefaultExecutionOrder(int order)
+        {
+            this.order = order;
+        }
+
+        public int order { get; private set; }
+    }
 }
+

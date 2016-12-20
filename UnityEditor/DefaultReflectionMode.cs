@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum DefaultReflectionMode
-	{
-		FromSkybox,
-		Custom
-	}
+    using System;
+
+    internal enum DefaultReflectionMode
+    {
+        FromSkybox,
+        Custom
+    }
 }
+

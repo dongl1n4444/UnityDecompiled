@@ -1,57 +1,54 @@
-using System;
-using System.Runtime.InteropServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[StructLayout(LayoutKind.Sequential)]
-	public class TrackedReference
-	{
-		internal IntPtr m_Ptr;
+    using System;
+    using System.Runtime.InteropServices;
 
-		protected TrackedReference()
-		{
-		}
+    [StructLayout(LayoutKind.Sequential)]
+    public class TrackedReference
+    {
+        internal IntPtr m_Ptr;
+        protected TrackedReference()
+        {
+        }
 
-		public static bool operator ==(TrackedReference x, TrackedReference y)
-		{
-			bool result;
-			if (y == null && x == null)
-			{
-				result = true;
-			}
-			else if (y == null)
-			{
-				result = (x.m_Ptr == IntPtr.Zero);
-			}
-			else if (x == null)
-			{
-				result = (y.m_Ptr == IntPtr.Zero);
-			}
-			else
-			{
-				result = (x.m_Ptr == y.m_Ptr);
-			}
-			return result;
-		}
+        public static bool operator ==(TrackedReference x, TrackedReference y)
+        {
+            object obj2 = x;
+            object obj3 = y;
+            if ((obj3 == null) && (obj2 == null))
+            {
+                return true;
+            }
+            if (obj3 == null)
+            {
+                return (x.m_Ptr == IntPtr.Zero);
+            }
+            if (obj2 == null)
+            {
+                return (y.m_Ptr == IntPtr.Zero);
+            }
+            return (x.m_Ptr == y.m_Ptr);
+        }
 
-		public static bool operator !=(TrackedReference x, TrackedReference y)
-		{
-			return !(x == y);
-		}
+        public static bool operator !=(TrackedReference x, TrackedReference y)
+        {
+            return !(x == y);
+        }
 
-		public override bool Equals(object o)
-		{
-			return o as TrackedReference == this;
-		}
+        public override bool Equals(object o)
+        {
+            return ((o as TrackedReference) == this);
+        }
 
-		public override int GetHashCode()
-		{
-			return (int)this.m_Ptr;
-		}
+        public override int GetHashCode()
+        {
+            return (int) this.m_Ptr;
+        }
 
-		public static implicit operator bool(TrackedReference exists)
-		{
-			return exists != null;
-		}
-	}
+        public static implicit operator bool(TrackedReference exists)
+        {
+            return (exists != null);
+        }
+    }
 }
+

@@ -1,593 +1,554 @@
-using System;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(AssetStoreAssetInspector))]
-	internal class AssetStoreAssetInspector : Editor
-	{
-		private class Styles
-		{
-			public GUIStyle link = new GUIStyle(EditorStyles.label);
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-			public GUIContent assetStoreLogo = EditorGUIUtility.IconContent("WelcomeScreen.AssetStoreLogo");
+    [CustomEditor(typeof(AssetStoreAssetInspector))]
+    internal class AssetStoreAssetInspector : Editor
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static bool <OfflineNoticeEnabled>k__BackingField;
+        private int lastAssetID;
+        internal static PaymentAvailability m_PaymentAvailability;
+        private EditorWrapper m_PreviewEditor;
+        private Object m_PreviewObject;
+        private bool packageInfoShown = true;
+        private Vector2 pos;
+        internal static string s_PaymentMethodCard = "";
+        internal static string s_PaymentMethodExpire = "";
+        internal static string s_PriceText = "";
+        internal static string s_PurchaseMessage = "";
+        private static AssetStoreAssetInspector s_SharedAssetStoreAssetInspector;
+        private static GUIContent[] sStatusWheel;
+        private static Styles styles;
 
-			public Styles()
-			{
-				this.link.normal.textColor = new Color(0.26f, 0.51f, 0.75f, 1f);
-			}
-		}
+        public override string GetInfoString()
+        {
+            EditorWrapper previewEditor = this.previewEditor;
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            if (firstAsset == null)
+            {
+                return "No item selected";
+            }
+            if ((previewEditor != null) && firstAsset.HasLivePreview)
+            {
+                return previewEditor.GetInfoString();
+            }
+            return "";
+        }
 
-		internal enum PaymentAvailability
-		{
-			BasketNotEmpty,
-			ServiceDisabled,
-			AnonymousUser,
-			Ok
-		}
+        public override GUIContent GetPreviewTitle()
+        {
+            return GUIContent.Temp("Asset Store Preview");
+        }
 
-		private static AssetStoreAssetInspector s_SharedAssetStoreAssetInspector;
+        public override bool HasPreviewGUI()
+        {
+            return ((base.target != null) && (AssetStoreAssetSelection.Count != 0));
+        }
 
-		private static AssetStoreAssetInspector.Styles styles;
+        private void ImportPackage(AssetStoreAsset asset)
+        {
+            if (paymentAvailability == PaymentAvailability.AnonymousUser)
+            {
+                this.LoginAndImport(asset);
+            }
+            else
+            {
+                AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindowBuilding(asset);
+            }
+        }
 
-		private Vector2 pos;
+        private void InitiateBuySelected()
+        {
+            this.InitiateBuySelected(true);
+        }
 
-		private bool packageInfoShown = true;
+        private void InitiateBuySelected(bool firstAttempt)
+        {
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            if (firstAsset == null)
+            {
+                EditorUtility.DisplayDialog("No asset selected", "Please select asset before buying a package", "ok");
+            }
+            else if (paymentAvailability == PaymentAvailability.AnonymousUser)
+            {
+                if (AssetStoreClient.LoggedIn())
+                {
+                    AssetStoreAssetSelection.RefreshFromServer(() => this.InitiateBuySelected(false));
+                }
+                else if (firstAttempt)
+                {
+                    this.LoginAndInitiateBuySelected();
+                }
+            }
+            else if (paymentAvailability == PaymentAvailability.ServiceDisabled)
+            {
+                if (firstAsset.previewInfo != null)
+                {
+                    AssetStore.Open(string.Format("content/{0}/directpurchase", firstAsset.packageID));
+                }
+            }
+            else if (paymentAvailability == PaymentAvailability.BasketNotEmpty)
+            {
+                if (firstAsset.previewInfo != null)
+                {
+                    if (firstAttempt)
+                    {
+                        AssetStoreAssetSelection.RefreshFromServer(() => this.InitiateBuySelected(false));
+                    }
+                    else
+                    {
+                        AssetStore.Open(string.Format("content/{0}/basketpurchase", firstAsset.packageID));
+                    }
+                }
+            }
+            else
+            {
+                AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindow(firstAsset, s_PurchaseMessage, s_PaymentMethodCard, s_PaymentMethodExpire, s_PriceText);
+            }
+        }
 
-		internal static string s_PurchaseMessage = "";
+        private static string intToSizeString(int inValue)
+        {
+            if (inValue < 0)
+            {
+                return "unknown";
+            }
+            float num = inValue;
+            string[] strArray = new string[] { "TB", "GB", "MB", "KB", "Bytes" };
+            int index = strArray.Length - 1;
+            while ((num > 1000f) && (index >= 0))
+            {
+                num /= 1000f;
+                index--;
+            }
+            if (index < 0)
+            {
+                return "<error>";
+            }
+            return string.Format("{0:#.##} {1}", num, strArray[index]);
+        }
 
-		internal static string s_PaymentMethodCard = "";
+        private void LoginAndImport(AssetStoreAsset asset)
+        {
+            <LoginAndImport>c__AnonStorey0 storey = new <LoginAndImport>c__AnonStorey0 {
+                asset = asset
+            };
+            AssetStoreLoginWindow.Login("Please login to the Asset Store in order to get download information for the package.", new AssetStoreLoginWindow.LoginCallback(storey.<>m__0));
+        }
 
-		internal static string s_PaymentMethodExpire = "";
+        private void LoginAndInitiateBuySelected()
+        {
+            AssetStoreLoginWindow.Login("Please login to the Asset Store in order to get payment information about the package.", delegate (string errorMessage) {
+                if (errorMessage == null)
+                {
+                    AssetStoreAssetSelection.RefreshFromServer(() => this.InitiateBuySelected(false));
+                }
+            });
+        }
 
-		internal static string s_PriceText = "";
+        public void OnDisable()
+        {
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
+            if (this.m_PreviewEditor != null)
+            {
+                this.m_PreviewEditor.Dispose();
+                this.m_PreviewEditor = null;
+            }
+            if (this.m_PreviewObject != null)
+            {
+                this.m_PreviewObject = null;
+            }
+            AssetStoreUtils.UnRegisterDownloadDelegate(this);
+        }
 
-		private static GUIContent[] sStatusWheel;
+        public void OnDownloadProgress(string id, string message, int bytes, int total)
+        {
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            if (firstAsset != null)
+            {
+                AssetStoreAsset.PreviewInfo previewInfo = firstAsset.previewInfo;
+                if ((previewInfo != null) && (firstAsset.packageID.ToString() == id))
+                {
+                    if (((message == "downloading") || (message == "connecting")) && !OfflineNoticeEnabled)
+                    {
+                        previewInfo.downloadProgress = ((float) bytes) / ((float) total);
+                    }
+                    else
+                    {
+                        previewInfo.downloadProgress = -1f;
+                    }
+                    base.Repaint();
+                }
+            }
+        }
 
-		internal static AssetStoreAssetInspector.PaymentAvailability m_PaymentAvailability;
+        public void OnEnable()
+        {
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
+            AssetStoreUtils.RegisterDownloadDelegate(this);
+        }
 
-		private int lastAssetID;
+        public override void OnInspectorGUI()
+        {
+            if (styles == null)
+            {
+                s_SharedAssetStoreAssetInspector = this;
+                styles = new Styles();
+            }
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            AssetStoreAsset.PreviewInfo previewInfo = null;
+            if (firstAsset != null)
+            {
+                previewInfo = firstAsset.previewInfo;
+            }
+            if (firstAsset != null)
+            {
+                base.target.name = string.Format("Asset Store: {0}", firstAsset.name);
+            }
+            else
+            {
+                base.target.name = "Asset Store";
+            }
+            EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
+            bool enabled = GUI.enabled;
+            GUI.enabled = (firstAsset != null) && (firstAsset.packageID != 0);
+            if (OfflineNoticeEnabled)
+            {
+                Color color = GUI.color;
+                GUI.color = Color.yellow;
+                GUILayout.Label("Network is offline", new GUILayoutOption[0]);
+                GUI.color = color;
+            }
+            if (firstAsset != null)
+            {
+                string name = (firstAsset.className != null) ? firstAsset.className.Split(new char[] { ' ' }, 2)[0] : "";
+                bool flag2 = firstAsset.id == -firstAsset.packageID;
+                if (flag2)
+                {
+                    name = "Package";
+                }
+                if (firstAsset.HasLivePreview)
+                {
+                    name = firstAsset.Preview.GetType().Name;
+                }
+                EditorGUILayout.LabelField("Type", name, new GUILayoutOption[0]);
+                if (flag2)
+                {
+                    this.packageInfoShown = true;
+                }
+                else
+                {
+                    EditorGUILayout.Separator();
+                    this.packageInfoShown = EditorGUILayout.Foldout(this.packageInfoShown, "Part of package", true);
+                }
+                if (this.packageInfoShown)
+                {
+                    EditorGUILayout.LabelField("Name", (previewInfo != null) ? previewInfo.packageName : "-", new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("Version", (previewInfo != null) ? previewInfo.packageVersion : "-", new GUILayoutOption[0]);
+                    string str2 = (previewInfo != null) ? (((firstAsset.price == null) || (firstAsset.price == "")) ? "free" : firstAsset.price) : "-";
+                    EditorGUILayout.LabelField("Price", str2, new GUILayoutOption[0]);
+                    string str3 = ((previewInfo == null) || (previewInfo.packageRating < 0)) ? "-" : (previewInfo.packageRating.ToString() + " of 5");
+                    EditorGUILayout.LabelField("Rating", str3, new GUILayoutOption[0]);
+                    EditorGUILayout.LabelField("Size", (previewInfo != null) ? intToSizeString(previewInfo.packageSize) : "-", new GUILayoutOption[0]);
+                    string str4 = ((previewInfo == null) || (previewInfo.packageAssetCount < 0)) ? "-" : previewInfo.packageAssetCount.ToString();
+                    EditorGUILayout.LabelField("Asset count", str4, new GUILayoutOption[0]);
+                    GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                    EditorGUILayout.PrefixLabel("Web page");
+                    bool flag3 = ((previewInfo != null) && (previewInfo.packageShortUrl != null)) && (previewInfo.packageShortUrl != "");
+                    bool flag4 = GUI.enabled;
+                    GUI.enabled = flag3;
+                    if (GUILayout.Button(!flag3 ? EditorGUIUtility.TempContent("-") : new GUIContent(previewInfo.packageShortUrl, "View in browser"), styles.link, new GUILayoutOption[0]))
+                    {
+                        Application.OpenURL(previewInfo.packageShortUrl);
+                    }
+                    if (GUI.enabled)
+                    {
+                        EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+                    }
+                    GUI.enabled = flag4;
+                    GUILayout.EndHorizontal();
+                    EditorGUILayout.LabelField("Publisher", (previewInfo != null) ? previewInfo.publisherName : "-", new GUILayoutOption[0]);
+                }
+                if (firstAsset.id != 0)
+                {
+                    string str5;
+                    GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                    GUILayout.FlexibleSpace();
+                    if ((previewInfo != null) && previewInfo.isDownloadable)
+                    {
+                        str5 = "Import package";
+                    }
+                    else
+                    {
+                        str5 = "Buy for " + firstAsset.price;
+                    }
+                    bool flag5 = GUI.enabled;
+                    bool flag6 = (previewInfo != null) && (previewInfo.buildProgress >= 0f);
+                    bool flag7 = (previewInfo != null) && (previewInfo.downloadProgress >= 0f);
+                    if ((flag6 || flag7) || (previewInfo == null))
+                    {
+                        str5 = "";
+                        GUI.enabled = false;
+                    }
+                    GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(40f), GUILayout.Width(120f) };
+                    if (GUILayout.Button(str5, options))
+                    {
+                        if (previewInfo.isDownloadable)
+                        {
+                            this.ImportPackage(firstAsset);
+                        }
+                        else
+                        {
+                            this.InitiateBuySelected();
+                        }
+                        GUIUtility.ExitGUI();
+                    }
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        Rect lastRect = GUILayoutUtility.GetLastRect();
+                        lastRect.height -= 4f;
+                        float width = lastRect.width;
+                        lastRect.width = lastRect.height;
+                        lastRect.y += 2f;
+                        lastRect.x += 2f;
+                        if (flag6 || flag7)
+                        {
+                            lastRect.width = (width - lastRect.height) - 4f;
+                            lastRect.x += lastRect.height;
+                            EditorGUI.ProgressBar(lastRect, !flag7 ? previewInfo.buildProgress : previewInfo.downloadProgress, !flag7 ? "Building" : "Downloading");
+                        }
+                    }
+                    GUI.enabled = flag5;
+                    GUILayout.Space(4f);
+                    GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Height(40f), GUILayout.Width(120f) };
+                    if (GUILayout.Button("Open Asset Store", optionArray2))
+                    {
+                        OpenItemInAssetStore(firstAsset);
+                        GUIUtility.ExitGUI();
+                    }
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.FlexibleSpace();
+            }
+            EditorWrapper previewEditor = this.previewEditor;
+            if (((previewEditor != null) && (firstAsset != null)) && firstAsset.HasLivePreview)
+            {
+                previewEditor.OnAssetStoreInspectorGUI();
+            }
+            GUI.enabled = enabled;
+            EditorGUILayout.EndVertical();
+        }
 
-		private EditorWrapper m_PreviewEditor;
+        public override void OnInteractivePreviewGUI(Rect r, GUIStyle background)
+        {
+            EditorWrapper previewEditor = this.previewEditor;
+            if (previewEditor != null)
+            {
+                previewEditor.OnInteractivePreviewGUI(r, background);
+            }
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            if (((firstAsset != null) && !firstAsset.HasLivePreview) && !string.IsNullOrEmpty(firstAsset.dynamicPreviewURL))
+            {
+                GUIContent statusWheel = StatusWheel;
+                r.y += (r.height - statusWheel.image.height) / 2f;
+                r.x += (r.width - statusWheel.image.width) / 2f;
+                GUI.Label(r, StatusWheel);
+                base.Repaint();
+            }
+        }
 
-		private UnityEngine.Object m_PreviewObject;
+        public override void OnPreviewGUI(Rect r, GUIStyle background)
+        {
+            if (this.m_PreviewObject != null)
+            {
+                EditorWrapper previewEditor = this.previewEditor;
+                if ((previewEditor != null) && (this.m_PreviewObject is AnimationClip))
+                {
+                    previewEditor.OnPreviewGUI(r, background);
+                }
+                else
+                {
+                    this.OnInteractivePreviewGUI(r, background);
+                }
+            }
+        }
 
-		public static AssetStoreAssetInspector Instance
-		{
-			get
-			{
-				if (AssetStoreAssetInspector.s_SharedAssetStoreAssetInspector == null)
-				{
-					AssetStoreAssetInspector.s_SharedAssetStoreAssetInspector = ScriptableObject.CreateInstance<AssetStoreAssetInspector>();
-					AssetStoreAssetInspector.s_SharedAssetStoreAssetInspector.hideFlags = HideFlags.HideAndDontSave;
-				}
-				return AssetStoreAssetInspector.s_SharedAssetStoreAssetInspector;
-			}
-		}
+        public override void OnPreviewSettings()
+        {
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            if (firstAsset != null)
+            {
+                EditorWrapper previewEditor = this.previewEditor;
+                if ((previewEditor != null) && firstAsset.HasLivePreview)
+                {
+                    previewEditor.OnPreviewSettings();
+                }
+            }
+        }
 
-		public static bool OfflineNoticeEnabled
-		{
-			get;
-			set;
-		}
+        public static void OpenItemInAssetStore(AssetStoreAsset activeAsset)
+        {
+            if (activeAsset.id != 0)
+            {
+                AssetStore.Open(string.Format("content/{0}?assetID={1}", activeAsset.packageID, activeAsset.id));
+                UsabilityAnalytics.Track(string.Format("/AssetStore/ViewInStore/{0}/{1}", activeAsset.packageID, activeAsset.id));
+            }
+        }
 
-		internal static AssetStoreAssetInspector.PaymentAvailability paymentAvailability
-		{
-			get
-			{
-				if (AssetStoreClient.LoggedOut())
-				{
-					AssetStoreAssetInspector.m_PaymentAvailability = AssetStoreAssetInspector.PaymentAvailability.AnonymousUser;
-				}
-				return AssetStoreAssetInspector.m_PaymentAvailability;
-			}
-			set
-			{
-				if (AssetStoreClient.LoggedOut())
-				{
-					AssetStoreAssetInspector.m_PaymentAvailability = AssetStoreAssetInspector.PaymentAvailability.AnonymousUser;
-				}
-				else
-				{
-					AssetStoreAssetInspector.m_PaymentAvailability = value;
-				}
-			}
-		}
+        public void Update()
+        {
+            AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+            bool flag = ((firstAsset != null) && (firstAsset.previewInfo != null)) && ((firstAsset.previewInfo.buildProgress >= 0f) || (firstAsset.previewInfo.downloadProgress >= 0f));
+            if ((((firstAsset == null) && (this.lastAssetID != 0)) || ((firstAsset != null) && (this.lastAssetID != firstAsset.id))) || flag)
+            {
+                this.lastAssetID = (firstAsset != null) ? firstAsset.id : 0;
+                base.Repaint();
+            }
+            if ((firstAsset != null) && (firstAsset.previewBundle != null))
+            {
+                firstAsset.previewBundle.Unload(false);
+                firstAsset.previewBundle = null;
+                base.Repaint();
+            }
+        }
 
-		private EditorWrapper previewEditor
-		{
-			get
-			{
-				AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-				EditorWrapper result;
-				if (firstAsset == null)
-				{
-					result = null;
-				}
-				else
-				{
-					UnityEngine.Object preview = firstAsset.Preview;
-					if (preview == null)
-					{
-						result = null;
-					}
-					else
-					{
-						if (preview != this.m_PreviewObject)
-						{
-							this.m_PreviewObject = preview;
-							if (this.m_PreviewEditor != null)
-							{
-								this.m_PreviewEditor.Dispose();
-							}
-							this.m_PreviewEditor = EditorWrapper.Make(this.m_PreviewObject, EditorFeatures.PreviewGUI);
-						}
-						result = this.m_PreviewEditor;
-					}
-				}
-				return result;
-			}
-		}
+        public static AssetStoreAssetInspector Instance
+        {
+            get
+            {
+                if (s_SharedAssetStoreAssetInspector == null)
+                {
+                    s_SharedAssetStoreAssetInspector = ScriptableObject.CreateInstance<AssetStoreAssetInspector>();
+                    s_SharedAssetStoreAssetInspector.hideFlags = HideFlags.HideAndDontSave;
+                }
+                return s_SharedAssetStoreAssetInspector;
+            }
+        }
 
-		private static GUIContent StatusWheel
-		{
-			get
-			{
-				if (AssetStoreAssetInspector.sStatusWheel == null)
-				{
-					AssetStoreAssetInspector.sStatusWheel = new GUIContent[12];
-					for (int i = 0; i < 12; i++)
-					{
-						GUIContent gUIContent = new GUIContent();
-						gUIContent.image = EditorGUIUtility.LoadIcon("WaitSpin" + i.ToString("00"));
-						AssetStoreAssetInspector.sStatusWheel[i] = gUIContent;
-					}
-				}
-				int num = (int)Mathf.Repeat(Time.realtimeSinceStartup * 10f, 11.99f);
-				return AssetStoreAssetInspector.sStatusWheel[num];
-			}
-		}
+        public static bool OfflineNoticeEnabled
+        {
+            [CompilerGenerated]
+            get
+            {
+                return <OfflineNoticeEnabled>k__BackingField;
+            }
+            [CompilerGenerated]
+            set
+            {
+                <OfflineNoticeEnabled>k__BackingField = value;
+            }
+        }
 
-		public void OnDownloadProgress(string id, string message, int bytes, int total)
-		{
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			if (firstAsset != null)
-			{
-				AssetStoreAsset.PreviewInfo previewInfo = firstAsset.previewInfo;
-				if (previewInfo != null)
-				{
-					if (!(firstAsset.packageID.ToString() != id))
-					{
-						if ((message == "downloading" || message == "connecting") && !AssetStoreAssetInspector.OfflineNoticeEnabled)
-						{
-							previewInfo.downloadProgress = (float)bytes / (float)total;
-						}
-						else
-						{
-							previewInfo.downloadProgress = -1f;
-						}
-						base.Repaint();
-					}
-				}
-			}
-		}
+        internal static PaymentAvailability paymentAvailability
+        {
+            get
+            {
+                if (AssetStoreClient.LoggedOut())
+                {
+                    m_PaymentAvailability = PaymentAvailability.AnonymousUser;
+                }
+                return m_PaymentAvailability;
+            }
+            set
+            {
+                if (AssetStoreClient.LoggedOut())
+                {
+                    m_PaymentAvailability = PaymentAvailability.AnonymousUser;
+                }
+                else
+                {
+                    m_PaymentAvailability = value;
+                }
+            }
+        }
 
-		public void Update()
-		{
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			bool flag = firstAsset != null && firstAsset.previewInfo != null && (firstAsset.previewInfo.buildProgress >= 0f || firstAsset.previewInfo.downloadProgress >= 0f);
-			if ((firstAsset == null && this.lastAssetID != 0) || (firstAsset != null && this.lastAssetID != firstAsset.id) || flag)
-			{
-				this.lastAssetID = ((firstAsset != null) ? firstAsset.id : 0);
-				base.Repaint();
-			}
-			if (firstAsset != null && firstAsset.previewBundle != null)
-			{
-				firstAsset.previewBundle.Unload(false);
-				firstAsset.previewBundle = null;
-				base.Repaint();
-			}
-		}
+        private EditorWrapper previewEditor
+        {
+            get
+            {
+                AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
+                if (firstAsset == null)
+                {
+                    return null;
+                }
+                Object preview = firstAsset.Preview;
+                if (preview == null)
+                {
+                    return null;
+                }
+                if (preview != this.m_PreviewObject)
+                {
+                    this.m_PreviewObject = preview;
+                    if (this.m_PreviewEditor != null)
+                    {
+                        this.m_PreviewEditor.Dispose();
+                    }
+                    this.m_PreviewEditor = EditorWrapper.Make(this.m_PreviewObject, EditorFeatures.PreviewGUI);
+                }
+                return this.m_PreviewEditor;
+            }
+        }
 
-		public override void OnInspectorGUI()
-		{
-			if (AssetStoreAssetInspector.styles == null)
-			{
-				AssetStoreAssetInspector.s_SharedAssetStoreAssetInspector = this;
-				AssetStoreAssetInspector.styles = new AssetStoreAssetInspector.Styles();
-			}
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			AssetStoreAsset.PreviewInfo previewInfo = null;
-			if (firstAsset != null)
-			{
-				previewInfo = firstAsset.previewInfo;
-			}
-			if (firstAsset != null)
-			{
-				base.target.name = string.Format("Asset Store: {0}", firstAsset.name);
-			}
-			else
-			{
-				base.target.name = "Asset Store";
-			}
-			EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
-			bool enabled = GUI.enabled;
-			GUI.enabled = (firstAsset != null && firstAsset.packageID != 0);
-			if (AssetStoreAssetInspector.OfflineNoticeEnabled)
-			{
-				Color color = GUI.color;
-				GUI.color = Color.yellow;
-				GUILayout.Label("Network is offline", new GUILayoutOption[0]);
-				GUI.color = color;
-			}
-			if (firstAsset != null)
-			{
-				string label = (firstAsset.className != null) ? firstAsset.className.Split(new char[]
-				{
-					' '
-				}, 2)[0] : "";
-				bool flag = firstAsset.id == -firstAsset.packageID;
-				if (flag)
-				{
-					label = "Package";
-				}
-				if (firstAsset.HasLivePreview)
-				{
-					label = firstAsset.Preview.GetType().Name;
-				}
-				EditorGUILayout.LabelField("Type", label, new GUILayoutOption[0]);
-				if (flag)
-				{
-					this.packageInfoShown = true;
-				}
-				else
-				{
-					EditorGUILayout.Separator();
-					this.packageInfoShown = EditorGUILayout.Foldout(this.packageInfoShown, "Part of package", true);
-				}
-				if (this.packageInfoShown)
-				{
-					EditorGUILayout.LabelField("Name", (previewInfo != null) ? previewInfo.packageName : "-", new GUILayoutOption[0]);
-					EditorGUILayout.LabelField("Version", (previewInfo != null) ? previewInfo.packageVersion : "-", new GUILayoutOption[0]);
-					string label2 = (previewInfo != null) ? ((firstAsset.price == null || !(firstAsset.price != "")) ? "free" : firstAsset.price) : "-";
-					EditorGUILayout.LabelField("Price", label2, new GUILayoutOption[0]);
-					string label3 = (previewInfo == null || previewInfo.packageRating < 0) ? "-" : (previewInfo.packageRating.ToString() + " of 5");
-					EditorGUILayout.LabelField("Rating", label3, new GUILayoutOption[0]);
-					EditorGUILayout.LabelField("Size", (previewInfo != null) ? AssetStoreAssetInspector.intToSizeString(previewInfo.packageSize) : "-", new GUILayoutOption[0]);
-					string label4 = (previewInfo == null || previewInfo.packageAssetCount < 0) ? "-" : previewInfo.packageAssetCount.ToString();
-					EditorGUILayout.LabelField("Asset count", label4, new GUILayoutOption[0]);
-					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-					EditorGUILayout.PrefixLabel("Web page");
-					bool flag2 = previewInfo != null && previewInfo.packageShortUrl != null && previewInfo.packageShortUrl != "";
-					bool enabled2 = GUI.enabled;
-					GUI.enabled = flag2;
-					if (GUILayout.Button((!flag2) ? EditorGUIUtility.TempContent("-") : new GUIContent(previewInfo.packageShortUrl, "View in browser"), AssetStoreAssetInspector.styles.link, new GUILayoutOption[0]))
-					{
-						Application.OpenURL(previewInfo.packageShortUrl);
-					}
-					if (GUI.enabled)
-					{
-						EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-					}
-					GUI.enabled = enabled2;
-					GUILayout.EndHorizontal();
-					EditorGUILayout.LabelField("Publisher", (previewInfo != null) ? previewInfo.publisherName : "-", new GUILayoutOption[0]);
-				}
-				if (firstAsset.id != 0)
-				{
-					GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-					GUILayout.FlexibleSpace();
-					string text;
-					if (previewInfo != null && previewInfo.isDownloadable)
-					{
-						text = "Import package";
-					}
-					else
-					{
-						text = "Buy for " + firstAsset.price;
-					}
-					bool enabled3 = GUI.enabled;
-					bool flag3 = previewInfo != null && previewInfo.buildProgress >= 0f;
-					bool flag4 = previewInfo != null && previewInfo.downloadProgress >= 0f;
-					if (flag3 || flag4 || previewInfo == null)
-					{
-						text = "";
-						GUI.enabled = false;
-					}
-					if (GUILayout.Button(text, new GUILayoutOption[]
-					{
-						GUILayout.Height(40f),
-						GUILayout.Width(120f)
-					}))
-					{
-						if (previewInfo.isDownloadable)
-						{
-							this.ImportPackage(firstAsset);
-						}
-						else
-						{
-							this.InitiateBuySelected();
-						}
-						GUIUtility.ExitGUI();
-					}
-					if (Event.current.type == EventType.Repaint)
-					{
-						Rect lastRect = GUILayoutUtility.GetLastRect();
-						lastRect.height -= 4f;
-						float width = lastRect.width;
-						lastRect.width = lastRect.height;
-						lastRect.y += 2f;
-						lastRect.x += 2f;
-						if (flag3 || flag4)
-						{
-							lastRect.width = width - lastRect.height - 4f;
-							lastRect.x += lastRect.height;
-							EditorGUI.ProgressBar(lastRect, (!flag4) ? previewInfo.buildProgress : previewInfo.downloadProgress, (!flag4) ? "Building" : "Downloading");
-						}
-					}
-					GUI.enabled = enabled3;
-					GUILayout.Space(4f);
-					if (GUILayout.Button("Open Asset Store", new GUILayoutOption[]
-					{
-						GUILayout.Height(40f),
-						GUILayout.Width(120f)
-					}))
-					{
-						AssetStoreAssetInspector.OpenItemInAssetStore(firstAsset);
-						GUIUtility.ExitGUI();
-					}
-					GUILayout.FlexibleSpace();
-					GUILayout.EndHorizontal();
-				}
-				GUILayout.FlexibleSpace();
-			}
-			EditorWrapper previewEditor = this.previewEditor;
-			if (previewEditor != null && firstAsset != null && firstAsset.HasLivePreview)
-			{
-				previewEditor.OnAssetStoreInspectorGUI();
-			}
-			GUI.enabled = enabled;
-			EditorGUILayout.EndVertical();
-		}
+        private static GUIContent StatusWheel
+        {
+            get
+            {
+                if (sStatusWheel == null)
+                {
+                    sStatusWheel = new GUIContent[12];
+                    for (int i = 0; i < 12; i++)
+                    {
+                        sStatusWheel[i] = new GUIContent { image = EditorGUIUtility.LoadIcon("WaitSpin" + i.ToString("00")) };
+                    }
+                }
+                int index = (int) Mathf.Repeat(Time.realtimeSinceStartup * 10f, 11.99f);
+                return sStatusWheel[index];
+            }
+        }
 
-		public static void OpenItemInAssetStore(AssetStoreAsset activeAsset)
-		{
-			if (activeAsset.id != 0)
-			{
-				AssetStore.Open(string.Format("content/{0}?assetID={1}", activeAsset.packageID, activeAsset.id));
-				UsabilityAnalytics.Track(string.Format("/AssetStore/ViewInStore/{0}/{1}", activeAsset.packageID, activeAsset.id));
-			}
-		}
+        [CompilerGenerated]
+        private sealed class <LoginAndImport>c__AnonStorey0
+        {
+            internal AssetStoreAsset asset;
 
-		private static string intToSizeString(int inValue)
-		{
-			string result;
-			if (inValue < 0)
-			{
-				result = "unknown";
-			}
-			else
-			{
-				float num = (float)inValue;
-				string[] array = new string[]
-				{
-					"TB",
-					"GB",
-					"MB",
-					"KB",
-					"Bytes"
-				};
-				int num2 = array.Length - 1;
-				while (num > 1000f && num2 >= 0)
-				{
-					num /= 1000f;
-					num2--;
-				}
-				if (num2 < 0)
-				{
-					result = "<error>";
-				}
-				else
-				{
-					result = string.Format("{0:#.##} {1}", num, array[num2]);
-				}
-			}
-			return result;
-		}
+            internal void <>m__0(string errorMessage)
+            {
+                if (errorMessage == null)
+                {
+                    AssetStoreAssetSelection.RefreshFromServer(() => AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindowBuilding(this.asset));
+                }
+            }
 
-		public override bool HasPreviewGUI()
-		{
-			return base.target != null && AssetStoreAssetSelection.Count != 0;
-		}
+            internal void <>m__1()
+            {
+                AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindowBuilding(this.asset);
+            }
+        }
 
-		public void OnEnable()
-		{
-			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
-			AssetStoreUtils.RegisterDownloadDelegate(this);
-		}
+        internal enum PaymentAvailability
+        {
+            BasketNotEmpty,
+            ServiceDisabled,
+            AnonymousUser,
+            Ok
+        }
 
-		public void OnDisable()
-		{
-			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
-			if (this.m_PreviewEditor != null)
-			{
-				this.m_PreviewEditor.Dispose();
-				this.m_PreviewEditor = null;
-			}
-			if (this.m_PreviewObject != null)
-			{
-				this.m_PreviewObject = null;
-			}
-			AssetStoreUtils.UnRegisterDownloadDelegate(this);
-		}
+        private class Styles
+        {
+            public GUIContent assetStoreLogo = EditorGUIUtility.IconContent("WelcomeScreen.AssetStoreLogo");
+            public GUIStyle link = new GUIStyle(EditorStyles.label);
 
-		public override void OnPreviewSettings()
-		{
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			if (firstAsset != null)
-			{
-				EditorWrapper previewEditor = this.previewEditor;
-				if (previewEditor != null && firstAsset.HasLivePreview)
-				{
-					previewEditor.OnPreviewSettings();
-				}
-			}
-		}
-
-		public override string GetInfoString()
-		{
-			EditorWrapper previewEditor = this.previewEditor;
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			string result;
-			if (firstAsset == null)
-			{
-				result = "No item selected";
-			}
-			else if (previewEditor != null && firstAsset.HasLivePreview)
-			{
-				result = previewEditor.GetInfoString();
-			}
-			else
-			{
-				result = "";
-			}
-			return result;
-		}
-
-		public override void OnPreviewGUI(Rect r, GUIStyle background)
-		{
-			if (!(this.m_PreviewObject == null))
-			{
-				EditorWrapper previewEditor = this.previewEditor;
-				if (previewEditor != null && this.m_PreviewObject is AnimationClip)
-				{
-					previewEditor.OnPreviewGUI(r, background);
-				}
-				else
-				{
-					this.OnInteractivePreviewGUI(r, background);
-				}
-			}
-		}
-
-		public override void OnInteractivePreviewGUI(Rect r, GUIStyle background)
-		{
-			EditorWrapper previewEditor = this.previewEditor;
-			if (previewEditor != null)
-			{
-				previewEditor.OnInteractivePreviewGUI(r, background);
-			}
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			if (firstAsset != null && !firstAsset.HasLivePreview && !string.IsNullOrEmpty(firstAsset.dynamicPreviewURL))
-			{
-				GUIContent statusWheel = AssetStoreAssetInspector.StatusWheel;
-				r.y += (r.height - (float)statusWheel.image.height) / 2f;
-				r.x += (r.width - (float)statusWheel.image.width) / 2f;
-				GUI.Label(r, AssetStoreAssetInspector.StatusWheel);
-				base.Repaint();
-			}
-		}
-
-		public override GUIContent GetPreviewTitle()
-		{
-			return GUIContent.Temp("Asset Store Preview");
-		}
-
-		private void InitiateBuySelected(bool firstAttempt)
-		{
-			AssetStoreAsset firstAsset = AssetStoreAssetSelection.GetFirstAsset();
-			if (firstAsset == null)
-			{
-				EditorUtility.DisplayDialog("No asset selected", "Please select asset before buying a package", "ok");
-			}
-			else if (AssetStoreAssetInspector.paymentAvailability == AssetStoreAssetInspector.PaymentAvailability.AnonymousUser)
-			{
-				if (AssetStoreClient.LoggedIn())
-				{
-					AssetStoreAssetSelection.RefreshFromServer(delegate
-					{
-						this.InitiateBuySelected(false);
-					});
-				}
-				else if (firstAttempt)
-				{
-					this.LoginAndInitiateBuySelected();
-				}
-			}
-			else if (AssetStoreAssetInspector.paymentAvailability == AssetStoreAssetInspector.PaymentAvailability.ServiceDisabled)
-			{
-				if (firstAsset.previewInfo != null)
-				{
-					AssetStore.Open(string.Format("content/{0}/directpurchase", firstAsset.packageID));
-				}
-			}
-			else if (AssetStoreAssetInspector.paymentAvailability == AssetStoreAssetInspector.PaymentAvailability.BasketNotEmpty)
-			{
-				if (firstAsset.previewInfo != null)
-				{
-					if (firstAttempt)
-					{
-						AssetStoreAssetSelection.RefreshFromServer(delegate
-						{
-							this.InitiateBuySelected(false);
-						});
-					}
-					else
-					{
-						AssetStore.Open(string.Format("content/{0}/basketpurchase", firstAsset.packageID));
-					}
-				}
-			}
-			else
-			{
-				AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindow(firstAsset, AssetStoreAssetInspector.s_PurchaseMessage, AssetStoreAssetInspector.s_PaymentMethodCard, AssetStoreAssetInspector.s_PaymentMethodExpire, AssetStoreAssetInspector.s_PriceText);
-			}
-		}
-
-		private void InitiateBuySelected()
-		{
-			this.InitiateBuySelected(true);
-		}
-
-		private void LoginAndInitiateBuySelected()
-		{
-			AssetStoreLoginWindow.Login("Please login to the Asset Store in order to get payment information about the package.", delegate(string errorMessage)
-			{
-				if (errorMessage == null)
-				{
-					AssetStoreAssetSelection.RefreshFromServer(delegate
-					{
-						this.InitiateBuySelected(false);
-					});
-				}
-			});
-		}
-
-		private void ImportPackage(AssetStoreAsset asset)
-		{
-			if (AssetStoreAssetInspector.paymentAvailability == AssetStoreAssetInspector.PaymentAvailability.AnonymousUser)
-			{
-				this.LoginAndImport(asset);
-			}
-			else
-			{
-				AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindowBuilding(asset);
-			}
-		}
-
-		private void LoginAndImport(AssetStoreAsset asset)
-		{
-			AssetStoreLoginWindow.Login("Please login to the Asset Store in order to get download information for the package.", delegate(string errorMessage)
-			{
-				if (errorMessage == null)
-				{
-					AssetStoreAssetSelection.RefreshFromServer(delegate
-					{
-						AssetStoreInstaBuyWindow.ShowAssetStoreInstaBuyWindowBuilding(asset);
-					});
-				}
-			});
-		}
-	}
+            public Styles()
+            {
+                this.link.normal.textColor = new Color(0.26f, 0.51f, 0.75f, 1f);
+            }
+        }
+    }
 }
+

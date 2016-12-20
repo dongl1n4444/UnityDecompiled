@@ -1,8 +1,7 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal sealed class SpeedTreeWindAsset : Object
-	{
-	}
+    internal sealed class SpeedTreeWindAsset : Object
+    {
+    }
 }
+

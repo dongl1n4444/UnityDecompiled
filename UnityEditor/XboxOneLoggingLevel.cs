@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum XboxOneLoggingLevel
-	{
-		AllLogging = 4,
-		WarningsAndErrors = 2,
-		ErrorsOnly = 1
-	}
+    using System;
+
+    public enum XboxOneLoggingLevel
+    {
+        AllLogging = 4,
+        ErrorsOnly = 1,
+        WarningsAndErrors = 2
+    }
 }
+

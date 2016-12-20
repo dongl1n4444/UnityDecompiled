@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum ReplacePrefabOptions
-	{
-		Default,
-		ConnectToPrefab,
-		ReplaceNameBased
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Flags for the PrefabUtility.ReplacePrefab function.</para>
+    /// </summary>
+    public enum ReplacePrefabOptions
+    {
+        Default,
+        ConnectToPrefab,
+        ReplaceNameBased
+    }
 }
+

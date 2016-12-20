@@ -1,14 +1,15 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct ListViewElement
-	{
-		public int row;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		public int column;
-
-		public Rect position;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ListViewElement
+    {
+        public int row;
+        public int column;
+        public Rect position;
+    }
 }
+

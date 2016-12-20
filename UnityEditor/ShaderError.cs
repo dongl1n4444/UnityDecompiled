@@ -1,19 +1,17 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct ShaderError
-	{
-		public string message;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public string messageDetails;
-
-		public string platform;
-
-		public string file;
-
-		public int line;
-
-		public int warning;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ShaderError
+    {
+        public string message;
+        public string messageDetails;
+        public string platform;
+        public string file;
+        public int line;
+        public int warning;
+    }
 }
+

@@ -1,15 +1,19 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum DeviceOrientation
-	{
-		Unknown,
-		Portrait,
-		PortraitUpsideDown,
-		LandscapeLeft,
-		LandscapeRight,
-		FaceUp,
-		FaceDown
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Describes physical orientation of the device as determined by the OS.</para>
+    /// </summary>
+    public enum DeviceOrientation
+    {
+        Unknown,
+        Portrait,
+        PortraitUpsideDown,
+        LandscapeLeft,
+        LandscapeRight,
+        FaceUp,
+        FaceDown
+    }
 }
+

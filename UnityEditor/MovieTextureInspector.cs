@@ -1,111 +1,112 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(MovieTexture))]
-	internal class MovieTextureInspector : TextureInspector
-	{
-		private static GUIContent[] s_PlayIcons = new GUIContent[2];
+    using System;
+    using UnityEngine;
 
-		private static void Init()
-		{
-			MovieTextureInspector.s_PlayIcons[0] = EditorGUIUtility.IconContent("preAudioPlayOff");
-			MovieTextureInspector.s_PlayIcons[1] = EditorGUIUtility.IconContent("preAudioPlayOn");
-		}
+    [CustomEditor(typeof(MovieTexture)), CanEditMultipleObjects]
+    internal class MovieTextureInspector : TextureInspector
+    {
+        private static GUIContent[] s_PlayIcons = new GUIContent[2];
 
-		protected override void OnEnable()
-		{
-		}
+        public override string GetInfoString()
+        {
+            string infoString = base.GetInfoString();
+            MovieTexture target = base.target as MovieTexture;
+            if (!target.isReadyToPlay)
+            {
+                infoString = infoString + "/nNot ready to play yet.";
+            }
+            return infoString;
+        }
 
-		public override void OnInspectorGUI()
-		{
-		}
+        private static void Init()
+        {
+            s_PlayIcons[0] = EditorGUIUtility.IconContent("preAudioPlayOff");
+            s_PlayIcons[1] = EditorGUIUtility.IconContent("preAudioPlayOn");
+        }
 
-		public override void OnPreviewSettings()
-		{
-			MovieTextureInspector.Init();
-			using (new EditorGUI.DisabledScope(Application.isPlaying || base.targets.Length > 1))
-			{
-				MovieTexture movieTexture = base.target as MovieTexture;
-				AudioClip audioClip = movieTexture.audioClip;
-				bool flag = PreviewGUI.CycleButton((!movieTexture.isPlaying) ? 0 : 1, MovieTextureInspector.s_PlayIcons) != 0;
-				if (flag != movieTexture.isPlaying)
-				{
-					if (flag)
-					{
-						movieTexture.Stop();
-						movieTexture.Play();
-						if (audioClip != null)
-						{
-							AudioUtil.PlayClip(audioClip);
-						}
-					}
-					else
-					{
-						movieTexture.Pause();
-						if (audioClip != null)
-						{
-							AudioUtil.PauseClip(audioClip);
-						}
-					}
-				}
-			}
-		}
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            MovieTexture target = base.target as MovieTexture;
+            if (!Application.isPlaying && (target != null))
+            {
+                AudioClip audioClip = target.audioClip;
+                target.Stop();
+                if (audioClip != null)
+                {
+                    AudioUtil.StopClip(audioClip);
+                }
+            }
+        }
 
-		public override void OnPreviewGUI(Rect r, GUIStyle background)
-		{
-			if (Event.current.type == EventType.Repaint)
-			{
-				background.Draw(r, false, false, false, false);
-			}
-			MovieTexture movieTexture = base.target as MovieTexture;
-			float num = Mathf.Min(Mathf.Min(r.width / (float)movieTexture.width, r.height / (float)movieTexture.height), 1f);
-			Rect rect = new Rect(r.x, r.y, (float)movieTexture.width * num, (float)movieTexture.height * num);
-			PreviewGUI.BeginScrollView(r, this.m_Pos, rect, "PreHorizontalScrollbar", "PreHorizontalScrollbarThumb");
-			EditorGUI.DrawPreviewTexture(rect, movieTexture, null, ScaleMode.StretchToFill);
-			this.m_Pos = PreviewGUI.EndScrollView();
-			if (movieTexture.isPlaying)
-			{
-				GUIView.current.Repaint();
-			}
-			if (Application.isPlaying)
-			{
-				if (movieTexture.isPlaying)
-				{
-					EditorGUI.DropShadowLabel(new Rect(r.x, r.y + 10f, r.width, 20f), "Can't pause preview when in play mode");
-				}
-				else
-				{
-					EditorGUI.DropShadowLabel(new Rect(r.x, r.y + 10f, r.width, 20f), "Can't start preview when in play mode");
-				}
-			}
-		}
+        protected override void OnEnable()
+        {
+        }
 
-		protected override void OnDisable()
-		{
-			base.OnDisable();
-			MovieTexture movieTexture = base.target as MovieTexture;
-			if (!Application.isPlaying && movieTexture != null)
-			{
-				AudioClip audioClip = movieTexture.audioClip;
-				movieTexture.Stop();
-				if (audioClip != null)
-				{
-					AudioUtil.StopClip(audioClip);
-				}
-			}
-		}
+        public override void OnInspectorGUI()
+        {
+        }
 
-		public override string GetInfoString()
-		{
-			string text = base.GetInfoString();
-			MovieTexture movieTexture = base.target as MovieTexture;
-			if (!movieTexture.isReadyToPlay)
-			{
-				text += "/nNot ready to play yet.";
-			}
-			return text;
-		}
-	}
+        public override void OnPreviewGUI(Rect r, GUIStyle background)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                background.Draw(r, false, false, false, false);
+            }
+            MovieTexture target = base.target as MovieTexture;
+            float num = Mathf.Min(Mathf.Min((float) (r.width / ((float) target.width)), (float) (r.height / ((float) target.height))), 1f);
+            Rect viewRect = new Rect(r.x, r.y, target.width * num, target.height * num);
+            PreviewGUI.BeginScrollView(r, base.m_Pos, viewRect, "PreHorizontalScrollbar", "PreHorizontalScrollbarThumb");
+            EditorGUI.DrawPreviewTexture(viewRect, target, null, ScaleMode.StretchToFill);
+            base.m_Pos = PreviewGUI.EndScrollView();
+            if (target.isPlaying)
+            {
+                GUIView.current.Repaint();
+            }
+            if (Application.isPlaying)
+            {
+                if (target.isPlaying)
+                {
+                    EditorGUI.DropShadowLabel(new Rect(r.x, r.y + 10f, r.width, 20f), "Can't pause preview when in play mode");
+                }
+                else
+                {
+                    EditorGUI.DropShadowLabel(new Rect(r.x, r.y + 10f, r.width, 20f), "Can't start preview when in play mode");
+                }
+            }
+        }
+
+        public override void OnPreviewSettings()
+        {
+            Init();
+            using (new EditorGUI.DisabledScope(Application.isPlaying || (base.targets.Length > 1)))
+            {
+                MovieTexture target = base.target as MovieTexture;
+                AudioClip audioClip = target.audioClip;
+                bool flag = PreviewGUI.CycleButton(!target.isPlaying ? 0 : 1, s_PlayIcons) != 0;
+                if (flag != target.isPlaying)
+                {
+                    if (flag)
+                    {
+                        target.Stop();
+                        target.Play();
+                        if (audioClip != null)
+                        {
+                            AudioUtil.PlayClip(audioClip);
+                        }
+                    }
+                    else
+                    {
+                        target.Pause();
+                        if (audioClip != null)
+                        {
+                            AudioUtil.PauseClip(audioClip);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+

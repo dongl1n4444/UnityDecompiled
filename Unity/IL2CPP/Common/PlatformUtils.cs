@@ -1,0 +1,84 @@
+﻿namespace Unity.IL2CPP.Common
+{
+    using System;
+    using System.IO;
+    using System.Reflection;
+    using Unity.IL2CPP.Portability;
+
+    public static class PlatformUtils
+    {
+        private static Architecture _nativeCompilerArchitecture;
+        private static bool _runningOnIl2Cpp;
+        private static bool _runningWithMono;
+
+        static PlatformUtils()
+        {
+            Type type = Type.GetType("Mono.Runtime");
+            if (type != null)
+            {
+                string str = (string) type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
+                if (str.Contains("IL2CPP"))
+                {
+                    _runningOnIl2Cpp = true;
+                }
+                else
+                {
+                    _runningWithMono = true;
+                }
+            }
+        }
+
+        public static bool IsLinux()
+        {
+            return (!IsWindows() && Directory.Exists("/proc"));
+        }
+
+        public static bool IsOSX()
+        {
+            return (!IsWindows() && !IsLinux());
+        }
+
+        public static bool IsWindows()
+        {
+            return PortabilityUtilities.IsWindows();
+        }
+
+        public static bool RunningOnIl2Cpp()
+        {
+            return _runningOnIl2Cpp;
+        }
+
+        public static bool RunningWithMono()
+        {
+            return _runningWithMono;
+        }
+
+        public static Architecture ManagedRuntimeArchitecture
+        {
+            get
+            {
+                return ((IntPtr.Size != 4) ? Architecture.x64 : Architecture.x86);
+            }
+        }
+
+        public static Architecture NativeCompilerArchitecture
+        {
+            get
+            {
+                return ((_nativeCompilerArchitecture != Architecture.UseManagedRuntimeArchitecture) ? _nativeCompilerArchitecture : ManagedRuntimeArchitecture);
+            }
+            set
+            {
+                _nativeCompilerArchitecture = value;
+            }
+        }
+
+        public enum Architecture
+        {
+            UseManagedRuntimeArchitecture,
+            x86,
+            x64
+        }
+    }
+}
+

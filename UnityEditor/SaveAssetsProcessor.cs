@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Obsolete("Use UnityEditor.AssetModificationProcessor")]
-	public class SaveAssetsProcessor : AssetModificationProcessor
-	{
-	}
+    using System;
+
+    [Obsolete("Use UnityEditor.AssetModificationProcessor")]
+    public class SaveAssetsProcessor : AssetModificationProcessor
+    {
+    }
 }
+

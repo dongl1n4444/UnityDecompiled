@@ -1,462 +1,447 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Audio;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AudioMixerGroupTreeView
-	{
-		private class Styles
-		{
-			public GUIStyle optionsButton = "PaneOptions";
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditor.Audio;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-			public GUIContent header = new GUIContent("Groups", "An Audio Mixer Group is used by e.g Audio Sources to modify the audio output before it reaches the Audio Listener. An Audio Mixer Group will route its output to another Audio Mixer Group if it is made a child of that group. The Master Group will route its output to the Audio Listener if it doesn't route its output into another Mixer.");
+    internal class AudioMixerGroupTreeView
+    {
+        [CompilerGenerated]
+        private static Func<AudioMixerGroupController, int> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<AudioMixerGroupController, int> <>f__am$cache1;
+        private TreeViewController m_AudioGroupTree;
+        private AudioGroupDataSource m_AudioGroupTreeDataSource;
+        private TreeViewState m_AudioGroupTreeState;
+        private AudioMixerController m_Controller;
+        private AudioMixerGroupController m_ScrollToItem;
+        private AudioGroupTreeViewGUI m_TreeViewGUI;
+        private int m_TreeViewKeyboardControlID;
+        private static Styles s_Styles;
 
-			public GUIContent addText = new GUIContent("+", "Add child group");
+        public AudioMixerGroupTreeView(AudioMixerWindow mixerWindow, TreeViewState treeState)
+        {
+            this.m_AudioGroupTreeState = treeState;
+            this.m_AudioGroupTree = new TreeViewController(mixerWindow, this.m_AudioGroupTreeState);
+            this.m_AudioGroupTree.deselectOnUnhandledMouseDown = false;
+            this.m_AudioGroupTree.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_AudioGroupTree.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
+            this.m_AudioGroupTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_AudioGroupTree.contextClickItemCallback, new Action<int>(this.OnTreeViewContextClick));
+            this.m_AudioGroupTree.expandedStateChanged = (Action) Delegate.Combine(this.m_AudioGroupTree.expandedStateChanged, new Action(this, (IntPtr) this.SaveExpandedState));
+            this.m_TreeViewGUI = new AudioGroupTreeViewGUI(this.m_AudioGroupTree);
+            this.m_TreeViewGUI.NodeWasToggled = (Action<AudioMixerTreeViewNode, bool>) Delegate.Combine(this.m_TreeViewGUI.NodeWasToggled, new Action<AudioMixerTreeViewNode, bool>(this, (IntPtr) this.OnNodeToggled));
+            this.m_AudioGroupTreeDataSource = new AudioGroupDataSource(this.m_AudioGroupTree, this.m_Controller);
+            this.m_AudioGroupTree.Init(mixerWindow.position, this.m_AudioGroupTreeDataSource, this.m_TreeViewGUI, new AudioGroupTreeViewDragging(this.m_AudioGroupTree, this));
+            this.m_AudioGroupTree.ReloadData();
+        }
 
-			public Texture2D audioMixerGroupIcon = EditorGUIUtility.FindTexture("AudioMixerGroup Icon");
-		}
+        public void AddAudioMixerGroup(AudioMixerGroupController parent)
+        {
+            if ((parent != null) && (this.m_Controller != null))
+            {
+                Object[] objectsToUndo = new Object[] { this.m_Controller, parent };
+                Undo.RecordObjects(objectsToUndo, "Add Child Group");
+                AudioMixerGroupController child = this.m_Controller.CreateNewGroup("New Group", true);
+                this.m_Controller.AddChildToParent(child, parent);
+                this.m_Controller.AddGroupToCurrentView(child);
+                AudioMixerGroupController[] controllerArray1 = new AudioMixerGroupController[] { child };
+                Selection.objects = controllerArray1;
+                this.m_Controller.OnUnitySelectionChanged();
+                int[] selectedIDs = new int[] { child.GetInstanceID() };
+                this.m_AudioGroupTree.SetSelection(selectedIDs, true);
+                this.ReloadTree();
+                this.m_AudioGroupTree.BeginNameEditing(0f);
+            }
+        }
 
-		private AudioMixerController m_Controller;
+        public void AddChildGroupPopupCallback(object obj)
+        {
+            AudioMixerGroupPopupContext context = (AudioMixerGroupPopupContext) obj;
+            if ((context.groups != null) && (context.groups.Length > 0))
+            {
+                this.AddAudioMixerGroup(context.groups[0]);
+            }
+        }
 
-		private AudioGroupDataSource m_AudioGroupTreeDataSource;
+        public void AddSiblingGroupPopupCallback(object obj)
+        {
+            AudioMixerGroupPopupContext context = (AudioMixerGroupPopupContext) obj;
+            if ((context.groups != null) && (context.groups.Length > 0))
+            {
+                AudioMixerTreeViewNode node = this.m_AudioGroupTree.FindItem(context.groups[0].GetInstanceID()) as AudioMixerTreeViewNode;
+                if (node != null)
+                {
+                    AudioMixerTreeViewNode parent = node.parent as AudioMixerTreeViewNode;
+                    this.AddAudioMixerGroup(parent.group);
+                }
+            }
+        }
 
-		private TreeViewState m_AudioGroupTreeState;
+        public void DeleteGroups(List<AudioMixerGroupController> groups, bool recordUndo)
+        {
+            foreach (AudioMixerGroupController controller in groups)
+            {
+                if (controller.HasDependentMixers())
+                {
+                    if (!EditorUtility.DisplayDialog("Referenced Group", "Deleted group is referenced by another AudioMixer, are you sure?", "Delete", "Cancel"))
+                    {
+                        return;
+                    }
+                    break;
+                }
+            }
+            if (recordUndo)
+            {
+                Undo.RegisterCompleteObjectUndo(this.m_Controller, "Delete Group" + PluralIfNeeded(groups.Count));
+            }
+            this.m_Controller.DeleteGroups(groups.ToArray());
+            this.ReloadTree();
+        }
 
-		private TreeViewController m_AudioGroupTree;
+        private void DeleteGroupsPopupCallback(object obj)
+        {
+            ((AudioMixerGroupTreeView) obj).DeleteGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
+        }
 
-		private int m_TreeViewKeyboardControlID;
+        private void DuplicateGroupPopupCallback(object obj)
+        {
+            ((AudioMixerGroupTreeView) obj).DuplicateGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
+        }
 
-		private AudioGroupTreeViewGUI m_TreeViewGUI;
+        public void DuplicateGroups(List<AudioMixerGroupController> groups, bool recordUndo)
+        {
+            if (recordUndo)
+            {
+                Undo.RecordObject(this.m_Controller, "Duplicate group" + PluralIfNeeded(groups.Count));
+            }
+            List<AudioMixerGroupController> list = this.m_Controller.DuplicateGroups(groups.ToArray());
+            if (list.Count > 0)
+            {
+                this.ReloadTree();
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <DuplicateGroups>m__0);
+                }
+                int[] selectedIDs = Enumerable.ToArray<int>(Enumerable.Select<AudioMixerGroupController, int>(list, <>f__am$cache0));
+                this.m_AudioGroupTree.SetSelection(selectedIDs, false);
+                this.m_AudioGroupTree.Frame(selectedIDs[selectedIDs.Length - 1], true, false);
+            }
+        }
 
-		private AudioMixerGroupController m_ScrollToItem;
+        public void EndRenaming()
+        {
+            this.m_AudioGroupTree.EndNameEditing(true);
+        }
 
-		private static AudioMixerGroupTreeView.Styles s_Styles;
+        private List<AudioMixerGroupController> GetAudioMixerGroupsFromNodeIDs(int[] instanceIDs)
+        {
+            List<AudioMixerGroupController> list = new List<AudioMixerGroupController>();
+            foreach (int num in instanceIDs)
+            {
+                TreeViewItem item = this.m_AudioGroupTree.FindItem(num);
+                if (item != null)
+                {
+                    AudioMixerTreeViewNode node = item as AudioMixerTreeViewNode;
+                    if (node != null)
+                    {
+                        list.Add(node.group);
+                    }
+                }
+            }
+            return list;
+        }
 
-		public AudioMixerController Controller
-		{
-			get
-			{
-				return this.m_Controller;
-			}
-		}
+        private List<AudioMixerGroupController> GetGroupSelectionWithoutMasterGroup()
+        {
+            List<AudioMixerGroupController> audioMixerGroupsFromNodeIDs = this.GetAudioMixerGroupsFromNodeIDs(this.m_AudioGroupTree.GetSelection());
+            audioMixerGroupsFromNodeIDs.Remove(this.m_Controller.masterGroup);
+            return audioMixerGroupsFromNodeIDs;
+        }
 
-		public AudioMixerGroupController ScrollToItem
-		{
-			get
-			{
-				return this.m_ScrollToItem;
-			}
-		}
+        public float GetTotalHeight()
+        {
+            if (this.m_Controller == null)
+            {
+                return 0f;
+            }
+            return (this.m_AudioGroupTree.gui.GetTotalSize().y + 22f);
+        }
 
-		public AudioMixerGroupTreeView(AudioMixerWindow mixerWindow, TreeViewState treeState)
-		{
-			this.m_AudioGroupTreeState = treeState;
-			this.m_AudioGroupTree = new TreeViewController(mixerWindow, this.m_AudioGroupTreeState);
-			this.m_AudioGroupTree.deselectOnUnhandledMouseDown = false;
-			TreeViewController expr_32 = this.m_AudioGroupTree;
-			expr_32.selectionChangedCallback = (Action<int[]>)Delegate.Combine(expr_32.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
-			TreeViewController expr_59 = this.m_AudioGroupTree;
-			expr_59.contextClickItemCallback = (Action<int>)Delegate.Combine(expr_59.contextClickItemCallback, new Action<int>(this.OnTreeViewContextClick));
-			TreeViewController expr_80 = this.m_AudioGroupTree;
-			expr_80.expandedStateChanged = (Action)Delegate.Combine(expr_80.expandedStateChanged, new Action(this.SaveExpandedState));
-			this.m_TreeViewGUI = new AudioGroupTreeViewGUI(this.m_AudioGroupTree);
-			AudioGroupTreeViewGUI expr_B8 = this.m_TreeViewGUI;
-			expr_B8.NodeWasToggled = (Action<AudioMixerTreeViewNode, bool>)Delegate.Combine(expr_B8.NodeWasToggled, new Action<AudioMixerTreeViewNode, bool>(this.OnNodeToggled));
-			this.m_AudioGroupTreeDataSource = new AudioGroupDataSource(this.m_AudioGroupTree, this.m_Controller);
-			this.m_AudioGroupTree.Init(mixerWindow.position, this.m_AudioGroupTreeDataSource, this.m_TreeViewGUI, new AudioGroupTreeViewDragging(this.m_AudioGroupTree, this));
-			this.m_AudioGroupTree.ReloadData();
-		}
+        private static string GetUniqueAudioMixerName(AudioMixerController controller)
+        {
+            return ("AudioMixer_" + controller.GetInstanceID());
+        }
 
-		public void UseScrollView(bool useScrollView)
-		{
-			this.m_AudioGroupTree.SetUseScrollView(useScrollView);
-		}
+        private void HandleCommandEvents(int treeViewKeyboardControlID)
+        {
+            if (GUIUtility.keyboardControl == treeViewKeyboardControlID)
+            {
+                EventType type = Event.current.type;
+                switch (type)
+                {
+                    case EventType.ExecuteCommand:
+                    case EventType.ValidateCommand:
+                    {
+                        bool flag = type == EventType.ExecuteCommand;
+                        if ((Event.current.commandName == "Delete") || (Event.current.commandName == "SoftDelete"))
+                        {
+                            Event.current.Use();
+                            if (flag)
+                            {
+                                this.DeleteGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
+                                GUIUtility.ExitGUI();
+                            }
+                        }
+                        else if (Event.current.commandName == "Duplicate")
+                        {
+                            Event.current.Use();
+                            if (flag)
+                            {
+                                this.DuplicateGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
 
-		public void ReloadTreeData()
-		{
-			this.m_AudioGroupTree.ReloadData();
-		}
+        private void HandleKeyboardEvents(int treeViewKeyboardControlID)
+        {
+            if (GUIUtility.keyboardControl == treeViewKeyboardControlID)
+            {
+                Event current = Event.current;
+                if ((current.keyCode == KeyCode.Space) && (current.type == EventType.KeyDown))
+                {
+                    int[] selection = this.m_AudioGroupTree.GetSelection();
+                    if (selection.Length > 0)
+                    {
+                        AudioMixerTreeViewNode node = this.m_AudioGroupTree.FindItem(selection[0]) as AudioMixerTreeViewNode;
+                        bool flag = this.m_Controller.CurrentViewContainsGroup(node.group.groupID);
+                        this.OnNodeToggled(node, !flag);
+                        current.Use();
+                    }
+                }
+            }
+        }
 
-		public void ReloadTree()
-		{
-			this.m_AudioGroupTree.ReloadData();
-			if (this.m_Controller != null)
-			{
-				this.m_Controller.SanitizeGroupViews();
-				this.m_Controller.OnSubAssetChanged();
-			}
-		}
+        public void InitSelection(bool revealSelectionAndFrameLastSelected)
+        {
+            if (this.m_Controller != null)
+            {
+                List<AudioMixerGroupController> cachedSelection = this.m_Controller.CachedSelection;
+                if (<>f__am$cache1 == null)
+                {
+                    <>f__am$cache1 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <InitSelection>m__1);
+                }
+                this.m_AudioGroupTree.SetSelection(Enumerable.ToArray<int>(Enumerable.Select<AudioMixerGroupController, int>(cachedSelection, <>f__am$cache1)), revealSelectionAndFrameLastSelected);
+            }
+        }
 
-		public void AddChildGroupPopupCallback(object obj)
-		{
-			AudioMixerGroupPopupContext audioMixerGroupPopupContext = (AudioMixerGroupPopupContext)obj;
-			if (audioMixerGroupPopupContext.groups != null && audioMixerGroupPopupContext.groups.Length > 0)
-			{
-				this.AddAudioMixerGroup(audioMixerGroupPopupContext.groups[0]);
-			}
-		}
+        private void LoadExpandedState()
+        {
+            int[] intArray = SessionState.GetIntArray(GetUniqueAudioMixerName(this.m_Controller), null);
+            if (intArray != null)
+            {
+                this.m_AudioGroupTreeState.expandedIDs = new List<int>(intArray);
+            }
+            else
+            {
+                this.m_AudioGroupTree.state.expandedIDs = new List<int>();
+                this.m_AudioGroupTree.data.SetExpandedWithChildren(this.m_AudioGroupTree.data.root, true);
+            }
+        }
 
-		public void AddSiblingGroupPopupCallback(object obj)
-		{
-			AudioMixerGroupPopupContext audioMixerGroupPopupContext = (AudioMixerGroupPopupContext)obj;
-			if (audioMixerGroupPopupContext.groups != null && audioMixerGroupPopupContext.groups.Length > 0)
-			{
-				AudioMixerTreeViewNode audioMixerTreeViewNode = this.m_AudioGroupTree.FindItem(audioMixerGroupPopupContext.groups[0].GetInstanceID()) as AudioMixerTreeViewNode;
-				if (audioMixerTreeViewNode != null)
-				{
-					AudioMixerTreeViewNode audioMixerTreeViewNode2 = audioMixerTreeViewNode.parent as AudioMixerTreeViewNode;
-					this.AddAudioMixerGroup(audioMixerTreeViewNode2.group);
-				}
-			}
-		}
+        public void OnGUI(Rect rect)
+        {
+            Rect rect2;
+            Rect rect3;
+            int controlID = GUIUtility.GetControlID(FocusType.Keyboard);
+            this.m_ScrollToItem = null;
+            if (s_Styles == null)
+            {
+                s_Styles = new Styles();
+            }
+            this.m_AudioGroupTree.OnEvent();
+            using (new EditorGUI.DisabledScope(this.m_Controller == null))
+            {
+                AudioMixerDrawUtils.DrawRegionBg(rect, out rect2, out rect3);
+                AudioMixerDrawUtils.HeaderLabel(rect2, s_Styles.header, s_Styles.audioMixerGroupIcon);
+            }
+            if (this.m_Controller != null)
+            {
+                AudioMixerGroupController parent = (this.m_Controller.CachedSelection.Count != 1) ? this.m_Controller.masterGroup : this.m_Controller.CachedSelection[0];
+                using (new EditorGUI.DisabledScope(EditorApplication.isPlaying))
+                {
+                    if (GUI.Button(new Rect(rect2.xMax - 15f, rect2.y + 3f, 15f, 15f), s_Styles.addText, EditorStyles.label))
+                    {
+                        this.AddAudioMixerGroup(parent);
+                    }
+                }
+                this.m_AudioGroupTree.OnGUI(rect3, controlID);
+                AudioMixerDrawUtils.DrawScrollDropShadow(rect3, this.m_AudioGroupTree.state.scrollPos.y, this.m_AudioGroupTree.gui.GetTotalSize().y);
+                this.HandleKeyboardEvents(controlID);
+                this.HandleCommandEvents(controlID);
+            }
+        }
 
-		public void AddAudioMixerGroup(AudioMixerGroupController parent)
-		{
-			if (!(parent == null) && !(this.m_Controller == null))
-			{
-				Undo.RecordObjects(new UnityEngine.Object[]
-				{
-					this.m_Controller,
-					parent
-				}, "Add Child Group");
-				AudioMixerGroupController audioMixerGroupController = this.m_Controller.CreateNewGroup("New Group", true);
-				this.m_Controller.AddChildToParent(audioMixerGroupController, parent);
-				this.m_Controller.AddGroupToCurrentView(audioMixerGroupController);
-				Selection.objects = new AudioMixerGroupController[]
-				{
-					audioMixerGroupController
-				};
-				this.m_Controller.OnUnitySelectionChanged();
-				this.m_AudioGroupTree.SetSelection(new int[]
-				{
-					audioMixerGroupController.GetInstanceID()
-				}, true);
-				this.ReloadTree();
-				this.m_AudioGroupTree.BeginNameEditing(0f);
-			}
-		}
+        public void OnMixerControllerChanged(AudioMixerController controller)
+        {
+            if (this.m_Controller != controller)
+            {
+                this.m_TreeViewGUI.m_Controller = controller;
+                this.m_Controller = controller;
+                this.m_AudioGroupTreeDataSource.m_Controller = controller;
+                if (controller != null)
+                {
+                    this.ReloadTree();
+                    this.InitSelection(false);
+                    this.LoadExpandedState();
+                    this.m_AudioGroupTree.data.SetExpandedWithChildren(this.m_AudioGroupTree.data.root, true);
+                }
+            }
+        }
 
-		private static string PluralIfNeeded(int count)
-		{
-			return (count <= 1) ? "" : "s";
-		}
+        private void OnNodeToggled(AudioMixerTreeViewNode node, bool nodeWasEnabled)
+        {
+            List<AudioMixerGroupController> audioMixerGroupsFromNodeIDs = this.GetAudioMixerGroupsFromNodeIDs(this.m_AudioGroupTree.GetSelection());
+            if (!audioMixerGroupsFromNodeIDs.Contains(node.group))
+            {
+                audioMixerGroupsFromNodeIDs = new List<AudioMixerGroupController> {
+                    node.group
+                };
+            }
+            List<GUID> list3 = new List<GUID>();
+            List<AudioMixerGroupController> allAudioGroupsSlow = this.m_Controller.GetAllAudioGroupsSlow();
+            foreach (AudioMixerGroupController controller in allAudioGroupsSlow)
+            {
+                bool flag = this.m_Controller.CurrentViewContainsGroup(controller.groupID);
+                bool flag2 = audioMixerGroupsFromNodeIDs.Contains(controller);
+                bool flag3 = flag && !flag2;
+                if (!flag && flag2)
+                {
+                    flag3 = nodeWasEnabled;
+                }
+                if (flag3)
+                {
+                    list3.Add(controller.groupID);
+                }
+            }
+            this.m_Controller.SetCurrentViewVisibility(list3.ToArray());
+        }
 
-		public void DeleteGroups(List<AudioMixerGroupController> groups, bool recordUndo)
-		{
-			foreach (AudioMixerGroupController current in groups)
-			{
-				if (current.HasDependentMixers())
-				{
-					if (!EditorUtility.DisplayDialog("Referenced Group", "Deleted group is referenced by another AudioMixer, are you sure?", "Delete", "Cancel"))
-					{
-						return;
-					}
-					break;
-				}
-			}
-			if (recordUndo)
-			{
-				Undo.RegisterCompleteObjectUndo(this.m_Controller, "Delete Group" + AudioMixerGroupTreeView.PluralIfNeeded(groups.Count));
-			}
-			this.m_Controller.DeleteGroups(groups.ToArray());
-			this.ReloadTree();
-		}
+        public void OnTreeSelectionChanged(int[] selection)
+        {
+            List<AudioMixerGroupController> audioMixerGroupsFromNodeIDs = this.GetAudioMixerGroupsFromNodeIDs(selection);
+            Selection.objects = audioMixerGroupsFromNodeIDs.ToArray();
+            this.m_Controller.OnUnitySelectionChanged();
+            if (audioMixerGroupsFromNodeIDs.Count == 1)
+            {
+                this.m_ScrollToItem = audioMixerGroupsFromNodeIDs[0];
+            }
+            InspectorWindow.RepaintAllInspectors();
+        }
 
-		public void DuplicateGroups(List<AudioMixerGroupController> groups, bool recordUndo)
-		{
-			if (recordUndo)
-			{
-				Undo.RecordObject(this.m_Controller, "Duplicate group" + AudioMixerGroupTreeView.PluralIfNeeded(groups.Count));
-			}
-			List<AudioMixerGroupController> list = this.m_Controller.DuplicateGroups(groups.ToArray());
-			if (list.Count > 0)
-			{
-				this.ReloadTree();
-				int[] array = (from audioMixerGroup in list
-				select audioMixerGroup.GetInstanceID()).ToArray<int>();
-				this.m_AudioGroupTree.SetSelection(array, false);
-				this.m_AudioGroupTree.Frame(array[array.Length - 1], true, false);
-			}
-		}
+        public void OnTreeViewContextClick(int index)
+        {
+            TreeViewItem userData = this.m_AudioGroupTree.FindItem(index);
+            if (userData != null)
+            {
+                AudioMixerTreeViewNode node = userData as AudioMixerTreeViewNode;
+                if ((node != null) && (node.group != null))
+                {
+                    GenericMenu menu = new GenericMenu();
+                    if (!EditorApplication.isPlaying)
+                    {
+                        menu.AddItem(new GUIContent("Add child group"), false, new GenericMenu.MenuFunction2(this.AddChildGroupPopupCallback), new AudioMixerGroupPopupContext(this.m_Controller, node.group));
+                        if (node.group != this.m_Controller.masterGroup)
+                        {
+                            menu.AddItem(new GUIContent("Add sibling group"), false, new GenericMenu.MenuFunction2(this.AddSiblingGroupPopupCallback), new AudioMixerGroupPopupContext(this.m_Controller, node.group));
+                            menu.AddSeparator("");
+                            menu.AddItem(new GUIContent("Rename"), false, new GenericMenu.MenuFunction2(this.RenameGroupCallback), userData);
+                            AudioMixerGroupController[] controllerArray = this.GetGroupSelectionWithoutMasterGroup().ToArray();
+                            menu.AddItem(new GUIContent((controllerArray.Length <= 1) ? "Duplicate group (and children)" : "Duplicate groups (and children)"), false, new GenericMenu.MenuFunction2(this.DuplicateGroupPopupCallback), this);
+                            menu.AddItem(new GUIContent((controllerArray.Length <= 1) ? "Remove group (and children)" : "Remove groups (and children)"), false, new GenericMenu.MenuFunction2(this.DeleteGroupsPopupCallback), this);
+                        }
+                    }
+                    else
+                    {
+                        menu.AddDisabledItem(new GUIContent("Modifying group topology in play mode is not allowed"));
+                    }
+                    menu.ShowAsContext();
+                }
+            }
+        }
 
-		private void DeleteGroupsPopupCallback(object obj)
-		{
-			AudioMixerGroupTreeView audioMixerGroupTreeView = (AudioMixerGroupTreeView)obj;
-			audioMixerGroupTreeView.DeleteGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
-		}
+        public void OnUndoRedoPerformed()
+        {
+            this.ReloadTree();
+        }
 
-		private void DuplicateGroupPopupCallback(object obj)
-		{
-			AudioMixerGroupTreeView audioMixerGroupTreeView = (AudioMixerGroupTreeView)obj;
-			audioMixerGroupTreeView.DuplicateGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
-		}
+        private static string PluralIfNeeded(int count)
+        {
+            return ((count <= 1) ? "" : "s");
+        }
 
-		private void RenameGroupCallback(object obj)
-		{
-			TreeViewItem treeViewItem = (TreeViewItem)obj;
-			this.m_AudioGroupTree.SetSelection(new int[]
-			{
-				treeViewItem.id
-			}, false);
-			this.m_AudioGroupTree.BeginNameEditing(0f);
-		}
+        public void ReloadTree()
+        {
+            this.m_AudioGroupTree.ReloadData();
+            if (this.m_Controller != null)
+            {
+                this.m_Controller.SanitizeGroupViews();
+                this.m_Controller.OnSubAssetChanged();
+            }
+        }
 
-		private List<AudioMixerGroupController> GetGroupSelectionWithoutMasterGroup()
-		{
-			List<AudioMixerGroupController> audioMixerGroupsFromNodeIDs = this.GetAudioMixerGroupsFromNodeIDs(this.m_AudioGroupTree.GetSelection());
-			audioMixerGroupsFromNodeIDs.Remove(this.m_Controller.masterGroup);
-			return audioMixerGroupsFromNodeIDs;
-		}
+        public void ReloadTreeData()
+        {
+            this.m_AudioGroupTree.ReloadData();
+        }
 
-		public void OnTreeViewContextClick(int index)
-		{
-			TreeViewItem treeViewItem = this.m_AudioGroupTree.FindItem(index);
-			if (treeViewItem != null)
-			{
-				AudioMixerTreeViewNode audioMixerTreeViewNode = treeViewItem as AudioMixerTreeViewNode;
-				if (audioMixerTreeViewNode != null && audioMixerTreeViewNode.group != null)
-				{
-					GenericMenu genericMenu = new GenericMenu();
-					if (!EditorApplication.isPlaying)
-					{
-						genericMenu.AddItem(new GUIContent("Add child group"), false, new GenericMenu.MenuFunction2(this.AddChildGroupPopupCallback), new AudioMixerGroupPopupContext(this.m_Controller, audioMixerTreeViewNode.group));
-						if (audioMixerTreeViewNode.group != this.m_Controller.masterGroup)
-						{
-							genericMenu.AddItem(new GUIContent("Add sibling group"), false, new GenericMenu.MenuFunction2(this.AddSiblingGroupPopupCallback), new AudioMixerGroupPopupContext(this.m_Controller, audioMixerTreeViewNode.group));
-							genericMenu.AddSeparator("");
-							genericMenu.AddItem(new GUIContent("Rename"), false, new GenericMenu.MenuFunction2(this.RenameGroupCallback), treeViewItem);
-							AudioMixerGroupController[] array = this.GetGroupSelectionWithoutMasterGroup().ToArray();
-							genericMenu.AddItem(new GUIContent((array.Length <= 1) ? "Duplicate group (and children)" : "Duplicate groups (and children)"), false, new GenericMenu.MenuFunction2(this.DuplicateGroupPopupCallback), this);
-							genericMenu.AddItem(new GUIContent((array.Length <= 1) ? "Remove group (and children)" : "Remove groups (and children)"), false, new GenericMenu.MenuFunction2(this.DeleteGroupsPopupCallback), this);
-						}
-					}
-					else
-					{
-						genericMenu.AddDisabledItem(new GUIContent("Modifying group topology in play mode is not allowed"));
-					}
-					genericMenu.ShowAsContext();
-				}
-			}
-		}
+        private void RenameGroupCallback(object obj)
+        {
+            TreeViewItem item = (TreeViewItem) obj;
+            int[] selectedIDs = new int[] { item.id };
+            this.m_AudioGroupTree.SetSelection(selectedIDs, false);
+            this.m_AudioGroupTree.BeginNameEditing(0f);
+        }
 
-		private void OnNodeToggled(AudioMixerTreeViewNode node, bool nodeWasEnabled)
-		{
-			List<AudioMixerGroupController> list = this.GetAudioMixerGroupsFromNodeIDs(this.m_AudioGroupTree.GetSelection());
-			if (!list.Contains(node.group))
-			{
-				list = new List<AudioMixerGroupController>
-				{
-					node.group
-				};
-			}
-			List<GUID> list2 = new List<GUID>();
-			List<AudioMixerGroupController> allAudioGroupsSlow = this.m_Controller.GetAllAudioGroupsSlow();
-			foreach (AudioMixerGroupController current in allAudioGroupsSlow)
-			{
-				bool flag = this.m_Controller.CurrentViewContainsGroup(current.groupID);
-				bool flag2 = list.Contains(current);
-				bool flag3 = flag && !flag2;
-				if (!flag && flag2)
-				{
-					flag3 = nodeWasEnabled;
-				}
-				if (flag3)
-				{
-					list2.Add(current.groupID);
-				}
-			}
-			this.m_Controller.SetCurrentViewVisibility(list2.ToArray());
-		}
+        private void SaveExpandedState()
+        {
+            SessionState.SetIntArray(GetUniqueAudioMixerName(this.m_Controller), this.m_AudioGroupTreeState.expandedIDs.ToArray());
+        }
 
-		private List<AudioMixerGroupController> GetAudioMixerGroupsFromNodeIDs(int[] instanceIDs)
-		{
-			List<AudioMixerGroupController> list = new List<AudioMixerGroupController>();
-			for (int i = 0; i < instanceIDs.Length; i++)
-			{
-				int id = instanceIDs[i];
-				TreeViewItem treeViewItem = this.m_AudioGroupTree.FindItem(id);
-				if (treeViewItem != null)
-				{
-					AudioMixerTreeViewNode audioMixerTreeViewNode = treeViewItem as AudioMixerTreeViewNode;
-					if (audioMixerTreeViewNode != null)
-					{
-						list.Add(audioMixerTreeViewNode.group);
-					}
-				}
-			}
-			return list;
-		}
+        public void UseScrollView(bool useScrollView)
+        {
+            this.m_AudioGroupTree.SetUseScrollView(useScrollView);
+        }
 
-		public void OnTreeSelectionChanged(int[] selection)
-		{
-			List<AudioMixerGroupController> audioMixerGroupsFromNodeIDs = this.GetAudioMixerGroupsFromNodeIDs(selection);
-			Selection.objects = audioMixerGroupsFromNodeIDs.ToArray();
-			this.m_Controller.OnUnitySelectionChanged();
-			if (audioMixerGroupsFromNodeIDs.Count == 1)
-			{
-				this.m_ScrollToItem = audioMixerGroupsFromNodeIDs[0];
-			}
-			InspectorWindow.RepaintAllInspectors();
-		}
+        public AudioMixerController Controller
+        {
+            get
+            {
+                return this.m_Controller;
+            }
+        }
 
-		public void InitSelection(bool revealSelectionAndFrameLastSelected)
-		{
-			if (!(this.m_Controller == null))
-			{
-				List<AudioMixerGroupController> cachedSelection = this.m_Controller.CachedSelection;
-				this.m_AudioGroupTree.SetSelection((from x in cachedSelection
-				select x.GetInstanceID()).ToArray<int>(), revealSelectionAndFrameLastSelected);
-			}
-		}
+        public AudioMixerGroupController ScrollToItem
+        {
+            get
+            {
+                return this.m_ScrollToItem;
+            }
+        }
 
-		public float GetTotalHeight()
-		{
-			float result;
-			if (this.m_Controller == null)
-			{
-				result = 0f;
-			}
-			else
-			{
-				result = this.m_AudioGroupTree.gui.GetTotalSize().y + 22f;
-			}
-			return result;
-		}
-
-		public void OnGUI(Rect rect)
-		{
-			int controlID = GUIUtility.GetControlID(FocusType.Keyboard);
-			this.m_ScrollToItem = null;
-			if (AudioMixerGroupTreeView.s_Styles == null)
-			{
-				AudioMixerGroupTreeView.s_Styles = new AudioMixerGroupTreeView.Styles();
-			}
-			this.m_AudioGroupTree.OnEvent();
-			Rect r;
-			Rect rect2;
-			using (new EditorGUI.DisabledScope(this.m_Controller == null))
-			{
-				AudioMixerDrawUtils.DrawRegionBg(rect, out r, out rect2);
-				AudioMixerDrawUtils.HeaderLabel(r, AudioMixerGroupTreeView.s_Styles.header, AudioMixerGroupTreeView.s_Styles.audioMixerGroupIcon);
-			}
-			if (this.m_Controller != null)
-			{
-				AudioMixerGroupController parent = (this.m_Controller.CachedSelection.Count != 1) ? this.m_Controller.masterGroup : this.m_Controller.CachedSelection[0];
-				using (new EditorGUI.DisabledScope(EditorApplication.isPlaying))
-				{
-					if (GUI.Button(new Rect(r.xMax - 15f, r.y + 3f, 15f, 15f), AudioMixerGroupTreeView.s_Styles.addText, EditorStyles.label))
-					{
-						this.AddAudioMixerGroup(parent);
-					}
-				}
-				this.m_AudioGroupTree.OnGUI(rect2, controlID);
-				AudioMixerDrawUtils.DrawScrollDropShadow(rect2, this.m_AudioGroupTree.state.scrollPos.y, this.m_AudioGroupTree.gui.GetTotalSize().y);
-				this.HandleKeyboardEvents(controlID);
-				this.HandleCommandEvents(controlID);
-			}
-		}
-
-		private void HandleCommandEvents(int treeViewKeyboardControlID)
-		{
-			if (GUIUtility.keyboardControl == treeViewKeyboardControlID)
-			{
-				EventType type = Event.current.type;
-				if (type == EventType.ExecuteCommand || type == EventType.ValidateCommand)
-				{
-					bool flag = type == EventType.ExecuteCommand;
-					if (Event.current.commandName == "Delete" || Event.current.commandName == "SoftDelete")
-					{
-						Event.current.Use();
-						if (flag)
-						{
-							this.DeleteGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
-							GUIUtility.ExitGUI();
-						}
-					}
-					else if (Event.current.commandName == "Duplicate")
-					{
-						Event.current.Use();
-						if (flag)
-						{
-							this.DuplicateGroups(this.GetGroupSelectionWithoutMasterGroup(), true);
-						}
-					}
-				}
-			}
-		}
-
-		private void HandleKeyboardEvents(int treeViewKeyboardControlID)
-		{
-			if (GUIUtility.keyboardControl == treeViewKeyboardControlID)
-			{
-				Event current = Event.current;
-				if (current.keyCode == KeyCode.Space && current.type == EventType.KeyDown)
-				{
-					int[] selection = this.m_AudioGroupTree.GetSelection();
-					if (selection.Length > 0)
-					{
-						AudioMixerTreeViewNode audioMixerTreeViewNode = this.m_AudioGroupTree.FindItem(selection[0]) as AudioMixerTreeViewNode;
-						bool flag = this.m_Controller.CurrentViewContainsGroup(audioMixerTreeViewNode.group.groupID);
-						this.OnNodeToggled(audioMixerTreeViewNode, !flag);
-						current.Use();
-					}
-				}
-			}
-		}
-
-		public void OnMixerControllerChanged(AudioMixerController controller)
-		{
-			if (this.m_Controller != controller)
-			{
-				this.m_TreeViewGUI.m_Controller = controller;
-				this.m_Controller = controller;
-				this.m_AudioGroupTreeDataSource.m_Controller = controller;
-				if (controller != null)
-				{
-					this.ReloadTree();
-					this.InitSelection(false);
-					this.LoadExpandedState();
-					this.m_AudioGroupTree.data.SetExpandedWithChildren(this.m_AudioGroupTree.data.root, true);
-				}
-			}
-		}
-
-		private static string GetUniqueAudioMixerName(AudioMixerController controller)
-		{
-			return "AudioMixer_" + controller.GetInstanceID();
-		}
-
-		private void SaveExpandedState()
-		{
-			SessionState.SetIntArray(AudioMixerGroupTreeView.GetUniqueAudioMixerName(this.m_Controller), this.m_AudioGroupTreeState.expandedIDs.ToArray());
-		}
-
-		private void LoadExpandedState()
-		{
-			int[] intArray = SessionState.GetIntArray(AudioMixerGroupTreeView.GetUniqueAudioMixerName(this.m_Controller), null);
-			if (intArray != null)
-			{
-				this.m_AudioGroupTreeState.expandedIDs = new List<int>(intArray);
-			}
-			else
-			{
-				this.m_AudioGroupTree.state.expandedIDs = new List<int>();
-				this.m_AudioGroupTree.data.SetExpandedWithChildren(this.m_AudioGroupTree.data.root, true);
-			}
-		}
-
-		public void EndRenaming()
-		{
-			this.m_AudioGroupTree.EndNameEditing(true);
-		}
-
-		public void OnUndoRedoPerformed()
-		{
-			this.ReloadTree();
-		}
-	}
+        private class Styles
+        {
+            public GUIContent addText = new GUIContent("+", "Add child group");
+            public Texture2D audioMixerGroupIcon = EditorGUIUtility.FindTexture("AudioMixerGroup Icon");
+            public GUIContent header = new GUIContent("Groups", "An Audio Mixer Group is used by e.g Audio Sources to modify the audio output before it reaches the Audio Listener. An Audio Mixer Group will route its output to another Audio Mixer Group if it is made a child of that group. The Master Group will route its output to the Audio Listener if it doesn't route its output into another Mixer.");
+            public GUIStyle optionsButton = "PaneOptions";
+        }
+    }
 }
+

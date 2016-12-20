@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum WebCamFlags
-	{
-		FrontFacing = 1
-	}
+    using System;
+
+    public enum WebCamFlags
+    {
+        FrontFacing = 1
+    }
 }
+

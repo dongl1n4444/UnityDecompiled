@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WSAUWPBuildType
-	{
-		XAML,
-		D3D
-	}
+    using System;
+
+    public enum WSAUWPBuildType
+    {
+        XAML,
+        D3D
+    }
 }
+

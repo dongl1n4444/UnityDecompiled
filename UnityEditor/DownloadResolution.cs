@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum DownloadResolution
-	{
-		Unresolved,
-		SkipAsset,
-		TrashMyChanges,
-		TrashServerChanges,
-		Merge
-	}
+    using System;
+
+    internal enum DownloadResolution
+    {
+        Unresolved,
+        SkipAsset,
+        TrashMyChanges,
+        TrashServerChanges,
+        Merge
+    }
 }
+

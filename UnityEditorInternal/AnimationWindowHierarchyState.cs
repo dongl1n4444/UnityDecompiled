@@ -1,42 +1,43 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Serializable]
-	internal class AnimationWindowHierarchyState : TreeViewState
-	{
-		private List<int> m_TallInstanceIDs = new List<int>();
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor.IMGUI.Controls;
 
-		public bool GetTallMode(AnimationWindowHierarchyNode node)
-		{
-			return this.m_TallInstanceIDs.Contains(node.id);
-		}
+    [Serializable]
+    internal class AnimationWindowHierarchyState : TreeViewState
+    {
+        private List<int> m_TallInstanceIDs = new List<int>();
 
-		public void SetTallMode(AnimationWindowHierarchyNode node, bool tallMode)
-		{
-			if (tallMode)
-			{
-				this.m_TallInstanceIDs.Add(node.id);
-			}
-			else
-			{
-				this.m_TallInstanceIDs.Remove(node.id);
-			}
-		}
+        public void AddTallInstance(int id)
+        {
+            if (!this.m_TallInstanceIDs.Contains(id))
+            {
+                this.m_TallInstanceIDs.Add(id);
+            }
+        }
 
-		public int GetTallInstancesCount()
-		{
-			return this.m_TallInstanceIDs.Count;
-		}
+        public int GetTallInstancesCount()
+        {
+            return this.m_TallInstanceIDs.Count;
+        }
 
-		public void AddTallInstance(int id)
-		{
-			if (!this.m_TallInstanceIDs.Contains(id))
-			{
-				this.m_TallInstanceIDs.Add(id);
-			}
-		}
-	}
+        public bool GetTallMode(AnimationWindowHierarchyNode node)
+        {
+            return this.m_TallInstanceIDs.Contains(node.id);
+        }
+
+        public void SetTallMode(AnimationWindowHierarchyNode node, bool tallMode)
+        {
+            if (tallMode)
+            {
+                this.m_TallInstanceIDs.Add(node.id);
+            }
+            else
+            {
+                this.m_TallInstanceIDs.Remove(node.id);
+            }
+        }
+    }
 }
+

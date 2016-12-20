@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum PSP2BuildSubtarget
-	{
-		PCHosted,
-		Package
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Target PS Vita build type.</para>
+    /// </summary>
+    public enum PSP2BuildSubtarget
+    {
+        PCHosted,
+        Package
+    }
 }
+

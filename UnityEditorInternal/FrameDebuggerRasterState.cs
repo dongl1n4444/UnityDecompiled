@@ -1,14 +1,15 @@
-using System;
-using UnityEngine.Rendering;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct FrameDebuggerRasterState
-	{
-		public CullMode cullMode;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Rendering;
 
-		public int depthBias;
-
-		public float slopeScaledDepthBias;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct FrameDebuggerRasterState
+    {
+        public CullMode cullMode;
+        public int depthBias;
+        public float slopeScaledDepthBias;
+    }
 }
+

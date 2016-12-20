@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ShadowResolution
-	{
-		Low,
-		Medium,
-		High,
-		VeryHigh
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Default shadow resolution.</para>
+    /// </summary>
+    public enum ShadowResolution
+    {
+        Low,
+        Medium,
+        High,
+        VeryHigh
+    }
 }
+

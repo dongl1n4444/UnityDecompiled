@@ -1,22 +1,18 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Serializable]
-	public struct AudioProfilerClipInfo
-	{
-		public int assetInstanceId;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public int assetNameOffset;
-
-		public int loadState;
-
-		public int internalLoadState;
-
-		public int age;
-
-		public int disposed;
-
-		public int numChannelInstances;
-	}
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct AudioProfilerClipInfo
+    {
+        public int assetInstanceId;
+        public int assetNameOffset;
+        public int loadState;
+        public int internalLoadState;
+        public int age;
+        public int disposed;
+        public int numChannelInstances;
+    }
 }
+

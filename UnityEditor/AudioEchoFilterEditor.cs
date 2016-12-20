@@ -1,10 +1,10 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(AudioEchoFilter))]
-	internal class AudioEchoFilterEditor : Editor
-	{
-	}
+    using UnityEngine;
+
+    [CustomEditor(typeof(AudioEchoFilter))]
+    internal class AudioEchoFilterEditor : Editor
+    {
+    }
 }
+

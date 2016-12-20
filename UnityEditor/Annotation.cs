@@ -1,17 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct Annotation
-	{
-		public int iconEnabled;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public int gizmoEnabled;
-
-		public int flags;
-
-		public int classID;
-
-		public string scriptClass;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Annotation
+    {
+        public int iconEnabled;
+        public int gizmoEnabled;
+        public int flags;
+        public int classID;
+        public string scriptClass;
+    }
 }
+

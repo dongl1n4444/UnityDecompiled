@@ -1,21 +1,22 @@
-using System;
-using UnityEditorInternal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AssemblyReloadEvents
-	{
-		public static void OnBeforeAssemblyReload()
-		{
-			InternalEditorUtility.AuxWindowManager_OnAssemblyReload();
-		}
+    using System;
+    using UnityEditorInternal;
 
-		public static void OnAfterAssemblyReload()
-		{
-			foreach (ProjectBrowser current in ProjectBrowser.GetAllProjectBrowsers())
-			{
-				current.Repaint();
-			}
-		}
-	}
+    internal class AssemblyReloadEvents
+    {
+        public static void OnAfterAssemblyReload()
+        {
+            foreach (ProjectBrowser browser in ProjectBrowser.GetAllProjectBrowsers())
+            {
+                browser.Repaint();
+            }
+        }
+
+        public static void OnBeforeAssemblyReload()
+        {
+            InternalEditorUtility.AuxWindowManager_OnAssemblyReload();
+        }
+    }
 }
+

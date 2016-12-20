@@ -1,16 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-	internal class CppPropertyAttribute : Attribute
-	{
-		public CppPropertyAttribute(string getter, string setter)
-		{
-		}
+    using System;
 
-		public CppPropertyAttribute(string getter)
-		{
-		}
-	}
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false)]
+    internal class CppPropertyAttribute : Attribute
+    {
+        public CppPropertyAttribute(string getter)
+        {
+        }
+
+        public CppPropertyAttribute(string getter, string setter)
+        {
+        }
+    }
 }
+

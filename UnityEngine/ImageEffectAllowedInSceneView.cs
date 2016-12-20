@@ -1,8 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class ImageEffectAllowedInSceneView : Attribute
-	{
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Any Image Effect with this attribute can be rendered into the scene view camera.</para>
+    /// </summary>
+    public sealed class ImageEffectAllowedInSceneView : Attribute
+    {
+    }
 }
+

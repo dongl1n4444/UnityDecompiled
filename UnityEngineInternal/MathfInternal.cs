@@ -1,15 +1,21 @@
-using System;
-using System.Runtime.InteropServices;
-
-namespace UnityEngineInternal
+﻿namespace UnityEngineInternal
 {
-	[StructLayout(LayoutKind.Sequential, Size = 1)]
-	public struct MathfInternal
-	{
-		public static volatile float FloatMinNormal = 1.17549435E-38f;
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public static volatile float FloatMinDenormal = 1.401298E-45f;
-
-		public static bool IsFlushToZeroEnabled = MathfInternal.FloatMinDenormal == 0f;
-	}
+    [StructLayout(LayoutKind.Sequential, Size=1)]
+    public struct MathfInternal
+    {
+        public static volatile float FloatMinNormal;
+        public static volatile float FloatMinDenormal;
+        public static bool IsFlushToZeroEnabled;
+        static MathfInternal()
+        {
+            FloatMinNormal = 1.175494E-38f;
+            FloatMinDenormal = float.Epsilon;
+            IsFlushToZeroEnabled = FloatMinDenormal == 0f;
+        }
+    }
 }
+

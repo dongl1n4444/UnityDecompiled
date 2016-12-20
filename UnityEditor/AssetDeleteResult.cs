@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	public enum AssetDeleteResult
-	{
-		DidNotDelete = 0,
-		FailedDelete = 1,
-		DidDelete = 2
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Result of Asset delete operation</para>
+    /// </summary>
+    [Flags]
+    public enum AssetDeleteResult
+    {
+        DidNotDelete,
+        FailedDelete,
+        DidDelete
+    }
 }
+

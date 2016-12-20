@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum StereoTargetEyeMask
-	{
-		None,
-		Left,
-		Right,
-		Both
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Enum values for the Camera's targetEye property.</para>
+    /// </summary>
+    public enum StereoTargetEyeMask
+    {
+        None,
+        Left,
+        Right,
+        Both
+    }
 }
+

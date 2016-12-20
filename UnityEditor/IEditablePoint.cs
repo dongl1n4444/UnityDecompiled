@@ -1,30 +1,21 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IEditablePoint
-	{
-		int Count
-		{
-			get;
-		}
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
 
-		Vector3 GetPosition(int idx);
+    internal interface IEditablePoint
+    {
+        Color GetDefaultColor();
+        float GetPointScale();
+        Vector3 GetPosition(int idx);
+        IEnumerable<Vector3> GetPositions();
+        Color GetSelectedColor();
+        Vector3[] GetSelectedPositions();
+        Vector3[] GetUnselectedPositions();
+        void SetPosition(int idx, Vector3 position);
 
-		void SetPosition(int idx, Vector3 position);
-
-		Color GetDefaultColor();
-
-		Color GetSelectedColor();
-
-		float GetPointScale();
-
-		IEnumerable<Vector3> GetPositions();
-
-		Vector3[] GetUnselectedPositions();
-
-		Vector3[] GetSelectedPositions();
-	}
+        int Count { get; }
+    }
 }
+

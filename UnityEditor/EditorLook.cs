@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum EditorLook
-	{
-		Uninitialized,
-		LikeControls,
-		LikeInspector
-	}
+    using System;
+
+    internal enum EditorLook
+    {
+        Uninitialized,
+        LikeControls,
+        LikeInspector
+    }
 }
+

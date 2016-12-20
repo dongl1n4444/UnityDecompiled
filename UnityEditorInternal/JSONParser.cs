@@ -1,389 +1,339 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class JSONParser
-	{
-		private string json;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using UnityEngine;
 
-		private int line;
+    internal class JSONParser
+    {
+        private char cur;
+        private static char[] endcodes = new char[] { '\\', '"' };
+        private int idx;
+        private string json;
+        private int len;
+        private int line;
+        private int linechar;
+        private int pctParsed;
 
-		private int linechar;
+        public JSONParser(string jsondata)
+        {
+            this.json = jsondata + "    ";
+            this.line = 1;
+            this.linechar = 1;
+            this.len = this.json.Length;
+            this.idx = 0;
+            this.pctParsed = 0;
+        }
 
-		private int len;
+        private char Next()
+        {
+            if (this.cur == '\n')
+            {
+                this.line++;
+                this.linechar = 0;
+            }
+            this.idx++;
+            if (this.idx >= this.len)
+            {
+                throw new JSONParseException("End of json while parsing at " + this.PosMsg());
+            }
+            this.linechar++;
+            int num = (int) ((this.idx * 100f) / ((float) this.len));
+            if (num != this.pctParsed)
+            {
+                this.pctParsed = num;
+            }
+            this.cur = this.json[this.idx];
+            return this.cur;
+        }
 
-		private int idx;
+        public JSONValue Parse()
+        {
+            this.cur = this.json[this.idx];
+            return this.ParseValue();
+        }
 
-		private int pctParsed;
+        private JSONValue ParseArray()
+        {
+            this.Next();
+            this.SkipWs();
+            List<JSONValue> o = new List<JSONValue>();
+            while (this.cur != ']')
+            {
+                o.Add(this.ParseValue());
+                this.SkipWs();
+                if (this.cur == ',')
+                {
+                    this.Next();
+                    this.SkipWs();
+                }
+            }
+            this.Next();
+            return new JSONValue(o);
+        }
 
-		private char cur;
+        private JSONValue ParseConstant()
+        {
+            string str = "";
+            object[] objArray1 = new object[] { "", this.cur, this.Next(), this.Next(), this.Next() };
+            str = string.Concat(objArray1);
+            this.Next();
+            switch (str)
+            {
+                case "true":
+                    return new JSONValue(true);
 
-		private static char[] endcodes = new char[]
-		{
-			'\\',
-			'"'
-		};
+                case "fals":
+                    if (this.cur == 'e')
+                    {
+                        this.Next();
+                        return new JSONValue(false);
+                    }
+                    break;
 
-		public JSONParser(string jsondata)
-		{
-			this.json = jsondata + "    ";
-			this.line = 1;
-			this.linechar = 1;
-			this.len = this.json.Length;
-			this.idx = 0;
-			this.pctParsed = 0;
-		}
+                case "null":
+                    return new JSONValue(null);
+            }
+            throw new JSONParseException("Invalid token at " + this.PosMsg());
+        }
 
-		public static JSONValue SimpleParse(string jsondata)
-		{
-			JSONParser jSONParser = new JSONParser(jsondata);
-			JSONValue result;
-			try
-			{
-				result = jSONParser.Parse();
-				return result;
-			}
-			catch (JSONParseException ex)
-			{
-				Debug.LogError(ex.Message);
-			}
-			result = new JSONValue(null);
-			return result;
-		}
+        private JSONValue ParseDict()
+        {
+            this.Next();
+            this.SkipWs();
+            Dictionary<string, JSONValue> o = new Dictionary<string, JSONValue>();
+            while (this.cur != '}')
+            {
+                JSONValue value2 = this.ParseValue();
+                if (!value2.IsString())
+                {
+                    throw new JSONParseException("Key not string type at " + this.PosMsg());
+                }
+                this.SkipWs();
+                if (this.cur != ':')
+                {
+                    throw new JSONParseException("Missing dict entry delimiter ':' at " + this.PosMsg());
+                }
+                this.Next();
+                o.Add(value2.AsString(), this.ParseValue());
+                this.SkipWs();
+                if (this.cur == ',')
+                {
+                    this.Next();
+                    this.SkipWs();
+                }
+            }
+            this.Next();
+            return new JSONValue(o);
+        }
 
-		public JSONValue Parse()
-		{
-			this.cur = this.json[this.idx];
-			return this.ParseValue();
-		}
+        private JSONValue ParseNumber()
+        {
+            JSONValue value2;
+            string str = "";
+            if (this.cur == '-')
+            {
+                str = "-";
+                this.Next();
+            }
+            while ((this.cur >= '0') && (this.cur <= '9'))
+            {
+                str = str + this.cur;
+                this.Next();
+            }
+            if (this.cur == '.')
+            {
+                this.Next();
+                str = str + '.';
+                while ((this.cur >= '0') && (this.cur <= '9'))
+                {
+                    str = str + this.cur;
+                    this.Next();
+                }
+            }
+            if ((this.cur == 'e') || (this.cur == 'E'))
+            {
+                str = str + "e";
+                this.Next();
+                if ((this.cur != '-') && (this.cur != '+'))
+                {
+                    str = str + this.cur;
+                    this.Next();
+                }
+                while ((this.cur >= '0') && (this.cur <= '9'))
+                {
+                    str = str + this.cur;
+                    this.Next();
+                }
+            }
+            try
+            {
+                value2 = new JSONValue(Convert.ToSingle(str));
+            }
+            catch (Exception)
+            {
+                throw new JSONParseException("Cannot convert string to float : '" + str + "' at " + this.PosMsg());
+            }
+            return value2;
+        }
 
-		private char Next()
-		{
-			if (this.cur == '\n')
-			{
-				this.line++;
-				this.linechar = 0;
-			}
-			this.idx++;
-			if (this.idx >= this.len)
-			{
-				throw new JSONParseException("End of json while parsing at " + this.PosMsg());
-			}
-			this.linechar++;
-			int num = (int)((float)this.idx * 100f / (float)this.len);
-			if (num != this.pctParsed)
-			{
-				this.pctParsed = num;
-			}
-			this.cur = this.json[this.idx];
-			return this.cur;
-		}
+        private JSONValue ParseString()
+        {
+            string o = "";
+            this.Next();
+            while (this.idx < this.len)
+            {
+                object[] objArray1;
+                string str2;
+                int num = this.json.IndexOfAny(endcodes, this.idx);
+                if (num < 0)
+                {
+                    throw new JSONParseException("missing '\"' to end string at " + this.PosMsg());
+                }
+                o = o + this.json.Substring(this.idx, num - this.idx);
+                if (this.json[num] == '"')
+                {
+                    this.cur = this.json[num];
+                    this.idx = num;
+                    break;
+                }
+                num++;
+                if (num >= this.len)
+                {
+                    throw new JSONParseException("End of json while parsing while parsing string at " + this.PosMsg());
+                }
+                char ch = this.json[num];
+                switch (ch)
+                {
+                    case 'r':
+                        o = o + '\r';
+                        goto Label_029E;
 
-		private void SkipWs()
-		{
-			string text = " \n\t\r";
-			while (text.IndexOf(this.cur) != -1)
-			{
-				this.Next();
-			}
-		}
+                    case 't':
+                        o = o + '\t';
+                        goto Label_029E;
 
-		private string PosMsg()
-		{
-			return "line " + this.line.ToString() + ", column " + this.linechar.ToString();
-		}
+                    case 'u':
+                        str2 = "";
+                        if ((num + 4) >= this.len)
+                        {
+                            throw new JSONParseException("End of json while parsing while parsing unicode char near " + this.PosMsg());
+                        }
+                        break;
 
-		private JSONValue ParseValue()
-		{
-			this.SkipWs();
-			char c = this.cur;
-			switch (c)
-			{
-			case '-':
-			case '0':
-			case '1':
-			case '2':
-			case '3':
-			case '4':
-			case '5':
-			case '6':
-			case '7':
-			case '8':
-			case '9':
-			{
-				JSONValue result = this.ParseNumber();
-				return result;
-			}
-			case '.':
-			case '/':
-			{
-				IL_4B:
-				JSONValue result;
-				if (c == '"')
-				{
-					result = this.ParseString();
-					return result;
-				}
-				if (c == '[')
-				{
-					result = this.ParseArray();
-					return result;
-				}
-				if (c == 'f' || c == 'n' || c == 't')
-				{
-					result = this.ParseConstant();
-					return result;
-				}
-				if (c != '{')
-				{
-					throw new JSONParseException("Cannot parse json value starting with '" + this.json.Substring(this.idx, 5) + "' at " + this.PosMsg());
-				}
-				result = this.ParseDict();
-				return result;
-			}
-			}
-			goto IL_4B;
-		}
+                    default:
+                        if (((ch == '"') || (ch == '/')) || (ch == '\\'))
+                        {
+                            o = o + ch;
+                        }
+                        else if (ch == 'b')
+                        {
+                            o = o + '\b';
+                        }
+                        else if (ch == 'f')
+                        {
+                            o = o + '\f';
+                        }
+                        else
+                        {
+                            if (ch != 'n')
+                            {
+                                goto Label_026B;
+                            }
+                            o = o + '\n';
+                        }
+                        goto Label_029E;
+                }
+                str2 = (str2 + this.json[num + 1] + this.json[num + 2]) + this.json[num + 3] + this.json[num + 4];
+                try
+                {
+                    int num2 = int.Parse(str2, NumberStyles.AllowHexSpecifier);
+                    o = o + ((char) num2);
+                }
+                catch (FormatException)
+                {
+                    throw new JSONParseException("Invalid unicode escape char near " + this.PosMsg());
+                }
+                num += 4;
+                goto Label_029E;
+            Label_026B:
+                objArray1 = new object[] { "Invalid escape char '", ch, "' near ", this.PosMsg() };
+                throw new JSONParseException(string.Concat(objArray1));
+            Label_029E:
+                this.idx = num + 1;
+            }
+            if (this.idx >= this.len)
+            {
+                throw new JSONParseException("End of json while parsing while parsing string near " + this.PosMsg());
+            }
+            this.cur = this.json[this.idx];
+            this.Next();
+            return new JSONValue(o);
+        }
 
-		private JSONValue ParseArray()
-		{
-			this.Next();
-			this.SkipWs();
-			List<JSONValue> list = new List<JSONValue>();
-			while (this.cur != ']')
-			{
-				list.Add(this.ParseValue());
-				this.SkipWs();
-				if (this.cur == ',')
-				{
-					this.Next();
-					this.SkipWs();
-				}
-			}
-			this.Next();
-			return new JSONValue(list);
-		}
+        private JSONValue ParseValue()
+        {
+            this.SkipWs();
+            switch (this.cur)
+            {
+                case '-':
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    return this.ParseNumber();
 
-		private JSONValue ParseDict()
-		{
-			this.Next();
-			this.SkipWs();
-			Dictionary<string, JSONValue> dictionary = new Dictionary<string, JSONValue>();
-			while (this.cur != '}')
-			{
-				JSONValue jSONValue = this.ParseValue();
-				if (!jSONValue.IsString())
-				{
-					throw new JSONParseException("Key not string type at " + this.PosMsg());
-				}
-				this.SkipWs();
-				if (this.cur != ':')
-				{
-					throw new JSONParseException("Missing dict entry delimiter ':' at " + this.PosMsg());
-				}
-				this.Next();
-				dictionary.Add(jSONValue.AsString(), this.ParseValue());
-				this.SkipWs();
-				if (this.cur == ',')
-				{
-					this.Next();
-					this.SkipWs();
-				}
-			}
-			this.Next();
-			return new JSONValue(dictionary);
-		}
+                case '"':
+                    return this.ParseString();
 
-		private JSONValue ParseString()
-		{
-			string text = "";
-			this.Next();
-			while (this.idx < this.len)
-			{
-				int num = this.json.IndexOfAny(JSONParser.endcodes, this.idx);
-				if (num < 0)
-				{
-					throw new JSONParseException("missing '\"' to end string at " + this.PosMsg());
-				}
-				text += this.json.Substring(this.idx, num - this.idx);
-				if (this.json[num] == '"')
-				{
-					this.cur = this.json[num];
-					this.idx = num;
-					break;
-				}
-				num++;
-				if (num >= this.len)
-				{
-					throw new JSONParseException("End of json while parsing while parsing string at " + this.PosMsg());
-				}
-				char c = this.json[num];
-				switch (c)
-				{
-				case 'r':
-					text += '\r';
-					goto IL_29E;
-				case 's':
-					IL_E6:
-					if (c != '"')
-					{
-						if (c != '/')
-						{
-							if (c != '\\')
-							{
-								if (c == 'b')
-								{
-									text += '\b';
-									goto IL_29E;
-								}
-								if (c == 'f')
-								{
-									text += '\f';
-									goto IL_29E;
-								}
-								if (c != 'n')
-								{
-									throw new JSONParseException(string.Concat(new object[]
-									{
-										"Invalid escape char '",
-										c,
-										"' near ",
-										this.PosMsg()
-									}));
-								}
-								text += '\n';
-								goto IL_29E;
-							}
-						}
-					}
-					text += c;
-					goto IL_29E;
-				case 't':
-					text += '\t';
-					goto IL_29E;
-				case 'u':
-				{
-					string text2 = "";
-					if (num + 4 >= this.len)
-					{
-						throw new JSONParseException("End of json while parsing while parsing unicode char near " + this.PosMsg());
-					}
-					text2 += this.json[num + 1];
-					text2 += this.json[num + 2];
-					text2 += this.json[num + 3];
-					text2 += this.json[num + 4];
-					try
-					{
-						int num2 = int.Parse(text2, NumberStyles.AllowHexSpecifier);
-						text += (char)num2;
-					}
-					catch (FormatException)
-					{
-						throw new JSONParseException("Invalid unicode escape char near " + this.PosMsg());
-					}
-					num += 4;
-					goto IL_29E;
-				}
-				}
-				goto IL_E6;
-				IL_29E:
-				this.idx = num + 1;
-			}
-			if (this.idx >= this.len)
-			{
-				throw new JSONParseException("End of json while parsing while parsing string near " + this.PosMsg());
-			}
-			this.cur = this.json[this.idx];
-			this.Next();
-			return new JSONValue(text);
-		}
+                case '[':
+                    return this.ParseArray();
 
-		private JSONValue ParseNumber()
-		{
-			string text = "";
-			if (this.cur == '-')
-			{
-				text = "-";
-				this.Next();
-			}
-			while (this.cur >= '0' && this.cur <= '9')
-			{
-				text += this.cur;
-				this.Next();
-			}
-			if (this.cur == '.')
-			{
-				this.Next();
-				text += '.';
-				while (this.cur >= '0' && this.cur <= '9')
-				{
-					text += this.cur;
-					this.Next();
-				}
-			}
-			if (this.cur == 'e' || this.cur == 'E')
-			{
-				text += "e";
-				this.Next();
-				if (this.cur != '-' && this.cur != '+')
-				{
-					text += this.cur;
-					this.Next();
-				}
-				while (this.cur >= '0' && this.cur <= '9')
-				{
-					text += this.cur;
-					this.Next();
-				}
-			}
-			JSONValue result;
-			try
-			{
-				float num = Convert.ToSingle(text);
-				result = new JSONValue(num);
-			}
-			catch (Exception)
-			{
-				throw new JSONParseException("Cannot convert string to float : '" + text + "' at " + this.PosMsg());
-			}
-			return result;
-		}
+                case 'f':
+                case 'n':
+                case 't':
+                    return this.ParseConstant();
 
-		private JSONValue ParseConstant()
-		{
-			string a = string.Concat(new object[]
-			{
-				"",
-				this.cur,
-				this.Next(),
-				this.Next(),
-				this.Next()
-			});
-			this.Next();
-			JSONValue result;
-			if (!(a == "true"))
-			{
-				if (a == "fals")
-				{
-					if (this.cur == 'e')
-					{
-						this.Next();
-						result = new JSONValue(false);
-						return result;
-					}
-				}
-				else if (a == "null")
-				{
-					result = new JSONValue(null);
-					return result;
-				}
-				throw new JSONParseException("Invalid token at " + this.PosMsg());
-			}
-			result = new JSONValue(true);
-			return result;
-		}
-	}
+                case '{':
+                    return this.ParseDict();
+            }
+            throw new JSONParseException("Cannot parse json value starting with '" + this.json.Substring(this.idx, 5) + "' at " + this.PosMsg());
+        }
+
+        private string PosMsg()
+        {
+            return ("line " + this.line.ToString() + ", column " + this.linechar.ToString());
+        }
+
+        public static JSONValue SimpleParse(string jsondata)
+        {
+            JSONParser parser = new JSONParser(jsondata);
+            try
+            {
+                return parser.Parse();
+            }
+            catch (JSONParseException exception)
+            {
+                Debug.LogError(exception.Message);
+            }
+            return new JSONValue(null);
+        }
+
+        private void SkipWs()
+        {
+            string str = " \n\t\r";
+            while (str.IndexOf(this.cur) != -1)
+            {
+                this.Next();
+            }
+        }
+    }
 }
+

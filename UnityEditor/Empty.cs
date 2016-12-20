@@ -1,16 +1,17 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class Empty
-	{
-		internal static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
-		{
-		}
+    using System;
 
-		internal static bool OnOpenAsset(int instanceID, int line)
-		{
-			return false;
-		}
-	}
+    internal class Empty
+    {
+        internal static bool OnOpenAsset(int instanceID, int line)
+        {
+            return false;
+        }
+
+        internal static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
+        {
+        }
+    }
 }
+

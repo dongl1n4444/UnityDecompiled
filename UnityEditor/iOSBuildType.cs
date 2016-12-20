@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum iOSBuildType
-	{
-		Debug,
-		Release
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Build configurations for the generated Xcode project.</para>
+    /// </summary>
+    public enum iOSBuildType
+    {
+        Debug,
+        Release
+    }
 }
+

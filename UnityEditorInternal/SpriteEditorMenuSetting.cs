@@ -1,40 +1,34 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Serializable]
-	internal class SpriteEditorMenuSetting : ScriptableObject
-	{
-		public enum SlicingType
-		{
-			Automatic,
-			GridByCellSize,
-			GridByCellCount
-		}
+    using System;
+    using UnityEngine;
 
-		[SerializeField]
-		public Vector2 gridCellCount = new Vector2(1f, 1f);
+    [Serializable]
+    internal class SpriteEditorMenuSetting : ScriptableObject
+    {
+        [SerializeField]
+        public int autoSlicingMethod = 0;
+        [SerializeField]
+        public Vector2 gridCellCount = new Vector2(1f, 1f);
+        [SerializeField]
+        public Vector2 gridSpriteOffset = new Vector2(0f, 0f);
+        [SerializeField]
+        public Vector2 gridSpritePadding = new Vector2(0f, 0f);
+        [SerializeField]
+        public Vector2 gridSpriteSize = new Vector2(64f, 64f);
+        [SerializeField]
+        public Vector2 pivot = Vector2.zero;
+        [SerializeField]
+        public SlicingType slicingType;
+        [SerializeField]
+        public int spriteAlignment;
 
-		[SerializeField]
-		public Vector2 gridSpriteSize = new Vector2(64f, 64f);
-
-		[SerializeField]
-		public Vector2 gridSpriteOffset = new Vector2(0f, 0f);
-
-		[SerializeField]
-		public Vector2 gridSpritePadding = new Vector2(0f, 0f);
-
-		[SerializeField]
-		public Vector2 pivot = Vector2.zero;
-
-		[SerializeField]
-		public int autoSlicingMethod = 0;
-
-		[SerializeField]
-		public int spriteAlignment;
-
-		[SerializeField]
-		public SpriteEditorMenuSetting.SlicingType slicingType;
-	}
+        public enum SlicingType
+        {
+            Automatic,
+            GridByCellSize,
+            GridByCellCount
+        }
+    }
 }
+

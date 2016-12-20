@@ -1,91 +1,83 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class SkinnedMeshRenderer : Renderer
-	{
-		public extern Transform[] bones
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public extern Transform rootBone
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    /// <summary>
+    /// <para>The Skinned Mesh filter.</para>
+    /// </summary>
+    public class SkinnedMeshRenderer : Renderer
+    {
+        /// <summary>
+        /// <para>Creates a snapshot of SkinnedMeshRenderer and stores it in mesh.</para>
+        /// </summary>
+        /// <param name="mesh">A static mesh that will receive the snapshot of the skinned mesh.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void BakeMesh(Mesh mesh);
+        /// <summary>
+        /// <para>Returns weight of BlendShape on this renderer.</para>
+        /// </summary>
+        /// <param name="index"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern float GetBlendShapeWeight(int index);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_localBounds(out Bounds value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_localBounds(ref Bounds value);
+        /// <summary>
+        /// <para>Sets the weight in percent of a BlendShape on this Renderer.</para>
+        /// </summary>
+        /// <param name="index">The index of the BlendShape to modify.</param>
+        /// <param name="value">The weight in percent for this BlendShape.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetBlendShapeWeight(int index, float value);
 
-		public extern SkinQuality quality
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        internal Transform actualRootBone { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern Mesh sharedMesh
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The bones used to skin the mesh.</para>
+        /// </summary>
+        public Transform[] bones { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern bool updateWhenOffscreen
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>AABB of this Skinned Mesh in its local space.</para>
+        /// </summary>
+        public Bounds localBounds
+        {
+            get
+            {
+                Bounds bounds;
+                this.INTERNAL_get_localBounds(out bounds);
+                return bounds;
+            }
+            set
+            {
+                this.INTERNAL_set_localBounds(ref value);
+            }
+        }
 
-		public extern bool skinnedMotionVectors
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The maximum number of bones affecting a single vertex.</para>
+        /// </summary>
+        public SkinQuality quality { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public Bounds localBounds
-		{
-			get
-			{
-				Bounds result;
-				this.INTERNAL_get_localBounds(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_localBounds(ref value);
-			}
-		}
+        public Transform rootBone { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		internal extern Transform actualRootBone
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>The mesh used for skinning.</para>
+        /// </summary>
+        public Mesh sharedMesh { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_localBounds(out Bounds value);
+        /// <summary>
+        /// <para>Specifies whether skinned motion vectors should be used for this renderer.</para>
+        /// </summary>
+        public bool skinnedMotionVectors { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_localBounds(ref Bounds value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void BakeMesh(Mesh mesh);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern float GetBlendShapeWeight(int index);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void SetBlendShapeWeight(int index, float value);
-	}
+        /// <summary>
+        /// <para>If enabled, the Skinned Mesh will be updated when offscreen. If disabled, this also disables updating animations.</para>
+        /// </summary>
+        public bool updateWhenOffscreen { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

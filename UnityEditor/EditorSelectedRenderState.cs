@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	public enum EditorSelectedRenderState
-	{
-		Hidden = 0,
-		Wireframe = 1,
-		Highlight = 2
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The editor selected render mode for Scene View selection.</para>
+    /// </summary>
+    [Flags]
+    public enum EditorSelectedRenderState
+    {
+        Hidden,
+        Wireframe,
+        Highlight
+    }
 }
+

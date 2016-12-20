@@ -1,13 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ProceduralCacheSize
-	{
-		Tiny,
-		Medium,
-		Heavy,
-		NoLimit,
-		None
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Substance memory budget.</para>
+    /// </summary>
+    public enum ProceduralCacheSize
+    {
+        Tiny,
+        Medium,
+        Heavy,
+        NoLimit,
+        None
+    }
 }
+

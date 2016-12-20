@@ -1,109 +1,61 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-using UnityEngine.Internal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class ParticleSystemEditorUtils
-	{
-		internal static extern float editorSimulationSpeed
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
+    using UnityEngine.Internal;
 
-		internal static extern float editorPlaybackTime
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    internal sealed class ParticleSystemEditorUtils
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern string CheckCircularReferences(ParticleSystem subEmitter);
+        public static ParticleSystem GetRoot(ParticleSystem ps)
+        {
+            if (ps == null)
+            {
+                return null;
+            }
+            Transform parent = ps.transform;
+            while ((parent.parent != null) && (parent.parent.gameObject.GetComponent<ParticleSystem>() != null))
+            {
+                parent = parent.parent;
+            }
+            return parent.gameObject.GetComponent<ParticleSystem>();
+        }
 
-		internal static extern bool editorIsScrubbing
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void PerformCompleteResimulation();
+        [ExcludeFromDocs]
+        internal static void StopEffect()
+        {
+            bool clear = true;
+            bool stop = true;
+            StopEffect(stop, clear);
+        }
 
-		internal static extern bool editorIsPlaying
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [ExcludeFromDocs]
+        internal static void StopEffect(bool stop)
+        {
+            bool clear = true;
+            StopEffect(stop, clear);
+        }
 
-		internal static extern bool editorIsPaused
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void StopEffect([DefaultValue("true")] bool stop, [DefaultValue("true")] bool clear);
 
-		internal static extern bool editorResimulation
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        internal static bool editorIsPaused { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		internal static extern ParticleSystem lockedParticleSystem
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        internal static bool editorIsPlaying { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern string CheckCircularReferences(ParticleSystem subEmitter);
+        internal static bool editorIsScrubbing { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void PerformCompleteResimulation();
+        internal static float editorPlaybackTime { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static ParticleSystem GetRoot(ParticleSystem ps)
-		{
-			ParticleSystem result;
-			if (ps == null)
-			{
-				result = null;
-			}
-			else
-			{
-				Transform transform = ps.transform;
-				while (transform.parent && transform.parent.gameObject.GetComponent<ParticleSystem>() != null)
-				{
-					transform = transform.parent;
-				}
-				result = transform.gameObject.GetComponent<ParticleSystem>();
-			}
-			return result;
-		}
+        internal static bool editorResimulation { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void StopEffect([DefaultValue("true")] bool stop, [DefaultValue("true")] bool clear);
+        internal static float editorSimulationSpeed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[ExcludeFromDocs]
-		internal static void StopEffect(bool stop)
-		{
-			bool clear = true;
-			ParticleSystemEditorUtils.StopEffect(stop, clear);
-		}
-
-		[ExcludeFromDocs]
-		internal static void StopEffect()
-		{
-			bool clear = true;
-			bool stop = true;
-			ParticleSystemEditorUtils.StopEffect(stop, clear);
-		}
-	}
+        internal static ParticleSystem lockedParticleSystem { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

@@ -1,8 +1,7 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AvatarHandleEditor : AvatarSubEditor
-	{
-	}
+    internal class AvatarHandleEditor : AvatarSubEditor
+    {
+    }
 }
+

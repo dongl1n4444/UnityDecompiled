@@ -1,77 +1,113 @@
-using System;
-using UnityEngine;
-using UnityEngine.Internal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public class AssetPostprocessor
-	{
-		private string m_PathName;
+    using System;
+    using UnityEngine;
+    using UnityEngine.Internal;
 
-		public string assetPath
-		{
-			get
-			{
-				return this.m_PathName;
-			}
-			set
-			{
-				this.m_PathName = value;
-			}
-		}
+    /// <summary>
+    /// <para>AssetPostprocessor lets you hook into the import pipeline and run scripts prior or after importing assets.</para>
+    /// </summary>
+    public class AssetPostprocessor
+    {
+        private string m_PathName;
 
-		public AssetImporter assetImporter
-		{
-			get
-			{
-				return AssetImporter.GetAtPath(this.assetPath);
-			}
-		}
+        /// <summary>
+        /// <para>Override the order in which importers are processed.</para>
+        /// </summary>
+        public virtual int GetPostprocessOrder()
+        {
+            return 0;
+        }
 
-		[Obsolete("To set or get the preview, call EditorUtility.SetAssetPreview or AssetPreview.GetAssetPreview instead", true)]
-		public Texture2D preview
-		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-			}
-		}
+        /// <summary>
+        /// <para>Returns the version of the asset postprocessor.</para>
+        /// </summary>
+        public virtual uint GetVersion()
+        {
+            return 0;
+        }
 
-		[ExcludeFromDocs]
-		public void LogWarning(string warning)
-		{
-			UnityEngine.Object context = null;
-			this.LogWarning(warning, context);
-		}
+        /// <summary>
+        /// <para>Logs an import error message to the console.</para>
+        /// </summary>
+        /// <param name="warning"></param>
+        /// <param name="context"></param>
+        [ExcludeFromDocs]
+        public void LogError(string warning)
+        {
+            Object context = null;
+            this.LogError(warning, context);
+        }
 
-		public void LogWarning(string warning, [DefaultValue("null")] UnityEngine.Object context)
-		{
-			Debug.LogWarning(warning, context);
-		}
+        /// <summary>
+        /// <para>Logs an import error message to the console.</para>
+        /// </summary>
+        /// <param name="warning"></param>
+        /// <param name="context"></param>
+        public void LogError(string warning, [DefaultValue("null")] Object context)
+        {
+            Debug.LogError(warning, context);
+        }
 
-		[ExcludeFromDocs]
-		public void LogError(string warning)
-		{
-			UnityEngine.Object context = null;
-			this.LogError(warning, context);
-		}
+        /// <summary>
+        /// <para>Logs an import warning to the console.</para>
+        /// </summary>
+        /// <param name="warning"></param>
+        /// <param name="context"></param>
+        [ExcludeFromDocs]
+        public void LogWarning(string warning)
+        {
+            Object context = null;
+            this.LogWarning(warning, context);
+        }
 
-		public void LogError(string warning, [DefaultValue("null")] UnityEngine.Object context)
-		{
-			Debug.LogError(warning, context);
-		}
+        /// <summary>
+        /// <para>Logs an import warning to the console.</para>
+        /// </summary>
+        /// <param name="warning"></param>
+        /// <param name="context"></param>
+        public void LogWarning(string warning, [DefaultValue("null")] Object context)
+        {
+            Debug.LogWarning(warning, context);
+        }
 
-		public virtual uint GetVersion()
-		{
-			return 0u;
-		}
+        /// <summary>
+        /// <para>Reference to the asset importer.</para>
+        /// </summary>
+        public AssetImporter assetImporter
+        {
+            get
+            {
+                return AssetImporter.GetAtPath(this.assetPath);
+            }
+        }
 
-		public virtual int GetPostprocessOrder()
-		{
-			return 0;
-		}
-	}
+        /// <summary>
+        /// <para>The path name of the asset being imported.</para>
+        /// </summary>
+        public string assetPath
+        {
+            get
+            {
+                return this.m_PathName;
+            }
+            set
+            {
+                this.m_PathName = value;
+            }
+        }
+
+        [Obsolete("To set or get the preview, call EditorUtility.SetAssetPreview or AssetPreview.GetAssetPreview instead", true)]
+        public Texture2D preview
+        {
+            get
+            {
+                return null;
+            }
+            set
+            {
+            }
+        }
+    }
 }
+

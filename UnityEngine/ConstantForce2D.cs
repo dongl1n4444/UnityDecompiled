@@ -1,56 +1,61 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class ConstantForce2D : PhysicsUpdateBehaviour2D
-	{
-		public Vector2 force
-		{
-			get
-			{
-				Vector2 result;
-				this.INTERNAL_get_force(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_force(ref value);
-			}
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public Vector2 relativeForce
-		{
-			get
-			{
-				Vector2 result;
-				this.INTERNAL_get_relativeForce(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_relativeForce(ref value);
-			}
-		}
+    /// <summary>
+    /// <para>Applies both linear and angular (torque) forces continuously to the rigidbody each physics update.</para>
+    /// </summary>
+    public sealed class ConstantForce2D : PhysicsUpdateBehaviour2D
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_force(out Vector2 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_relativeForce(out Vector2 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_force(ref Vector2 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_relativeForce(ref Vector2 value);
 
-		public extern float torque
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The linear force applied to the rigidbody each physics update.</para>
+        /// </summary>
+        public Vector2 force
+        {
+            get
+            {
+                Vector2 vector;
+                this.INTERNAL_get_force(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_force(ref value);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_force(out Vector2 value);
+        /// <summary>
+        /// <para>The linear force, relative to the rigid-body coordinate system, applied each physics update.</para>
+        /// </summary>
+        public Vector2 relativeForce
+        {
+            get
+            {
+                Vector2 vector;
+                this.INTERNAL_get_relativeForce(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_relativeForce(ref value);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_force(ref Vector2 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_relativeForce(out Vector2 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_relativeForce(ref Vector2 value);
-	}
+        /// <summary>
+        /// <para>The torque applied to the rigidbody each physics update.</para>
+        /// </summary>
+        public float torque { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

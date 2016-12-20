@@ -1,10 +1,15 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal abstract class CameraController
-	{
-		public abstract void Update(CameraState cameraState, Camera cam);
-	}
+    using System;
+    using UnityEngine;
+
+    internal abstract class CameraController
+    {
+        protected CameraController()
+        {
+        }
+
+        public abstract void Update(CameraState cameraState, Camera cam);
+    }
 }
+

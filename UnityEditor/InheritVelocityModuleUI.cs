@@ -1,83 +1,76 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class InheritVelocityModuleUI : ModuleUI
-	{
-		private enum Modes
-		{
-			Initial,
-			Current
-		}
+    using System;
+    using UnityEngine;
 
-		private class Texts
-		{
-			public GUIContent mode = EditorGUIUtility.TextContent("Mode|Specifies whether the emitter velocity is inherited as a one-shot when a particle is born, always using the current emitter velocity, or using the emitter velocity when the particle was born.");
+    internal class InheritVelocityModuleUI : ModuleUI
+    {
+        private SerializedMinMaxCurve m_Curve;
+        private SerializedProperty m_Mode;
+        private static Texts s_Texts;
 
-			public GUIContent velocity = EditorGUIUtility.TextContent("Multiplier|Controls the amount of emitter velocity inherited during each particle's lifetime.");
+        public InheritVelocityModuleUI(ParticleSystemUI owner, SerializedObject o, string displayName) : base(owner, o, "InheritVelocityModule", displayName)
+        {
+            base.m_ToolTip = "Controls the velocity inherited from the emitter, for each particle.";
+        }
 
-			public string[] modes = new string[]
-			{
-				"Initial",
-				"Current"
-			};
-		}
+        protected override void Init()
+        {
+            if (this.m_Curve == null)
+            {
+                if (s_Texts == null)
+                {
+                    s_Texts = new Texts();
+                }
+                this.m_Mode = base.GetProperty("m_Mode");
+                this.m_Curve = new SerializedMinMaxCurve(this, GUIContent.none, "m_Curve", ModuleUI.kUseSignedRange);
+            }
+        }
 
-		private SerializedProperty m_Mode;
+        public override void OnInspectorGUI(ParticleSystem s)
+        {
+            if (s_Texts == null)
+            {
+                s_Texts = new Texts();
+            }
+            ModuleUI.GUIPopup(s_Texts.mode, this.m_Mode, s_Texts.modes, new GUILayoutOption[0]);
+            ModuleUI.GUIMinMaxCurve(s_Texts.velocity, this.m_Curve, new GUILayoutOption[0]);
+            if (this.m_Curve.scalar.floatValue != 0f)
+            {
+                Rigidbody componentInParent = s.GetComponentInParent<Rigidbody>();
+                Rigidbody2D rigidbodyd = s.GetComponentInParent<Rigidbody2D>();
+                if ((componentInParent != null) && !componentInParent.isKinematic)
+                {
+                    EditorGUILayout.HelpBox("Velocity is being driven by RigidBody(" + componentInParent.name + ")", MessageType.Info, true);
+                }
+                else if ((rigidbodyd != null) && (rigidbodyd.bodyType == RigidbodyType2D.Dynamic))
+                {
+                    EditorGUILayout.HelpBox("Velocity is being driven by RigidBody2D(" + componentInParent.name + ")", MessageType.Info, true);
+                }
+            }
+        }
 
-		private SerializedMinMaxCurve m_Curve;
+        public override void UpdateCullingSupportedString(ref string text)
+        {
+            this.Init();
+            if (!this.m_Curve.SupportsProcedural())
+            {
+                text = text + "\n\tInherited velocity curves use too many keys.";
+            }
+        }
 
-		private static InheritVelocityModuleUI.Texts s_Texts;
+        private enum Modes
+        {
+            Initial,
+            Current
+        }
 
-		public InheritVelocityModuleUI(ParticleSystemUI owner, SerializedObject o, string displayName) : base(owner, o, "InheritVelocityModule", displayName)
-		{
-			this.m_ToolTip = "Controls the velocity inherited from the emitter, for each particle.";
-		}
-
-		protected override void Init()
-		{
-			if (this.m_Curve == null)
-			{
-				if (InheritVelocityModuleUI.s_Texts == null)
-				{
-					InheritVelocityModuleUI.s_Texts = new InheritVelocityModuleUI.Texts();
-				}
-				this.m_Mode = base.GetProperty("m_Mode");
-				this.m_Curve = new SerializedMinMaxCurve(this, GUIContent.none, "m_Curve", ModuleUI.kUseSignedRange);
-			}
-		}
-
-		public override void OnInspectorGUI(ParticleSystem s)
-		{
-			if (InheritVelocityModuleUI.s_Texts == null)
-			{
-				InheritVelocityModuleUI.s_Texts = new InheritVelocityModuleUI.Texts();
-			}
-			ModuleUI.GUIPopup(InheritVelocityModuleUI.s_Texts.mode, this.m_Mode, InheritVelocityModuleUI.s_Texts.modes, new GUILayoutOption[0]);
-			ModuleUI.GUIMinMaxCurve(InheritVelocityModuleUI.s_Texts.velocity, this.m_Curve, new GUILayoutOption[0]);
-			if (this.m_Curve.scalar.floatValue != 0f)
-			{
-				Rigidbody componentInParent = s.GetComponentInParent<Rigidbody>();
-				Rigidbody2D componentInParent2 = s.GetComponentInParent<Rigidbody2D>();
-				if (componentInParent != null && !componentInParent.isKinematic)
-				{
-					EditorGUILayout.HelpBox("Velocity is being driven by RigidBody(" + componentInParent.name + ")", MessageType.Info, true);
-				}
-				else if (componentInParent2 != null && componentInParent2.bodyType == RigidbodyType2D.Dynamic)
-				{
-					EditorGUILayout.HelpBox("Velocity is being driven by RigidBody2D(" + componentInParent.name + ")", MessageType.Info, true);
-				}
-			}
-		}
-
-		public override void UpdateCullingSupportedString(ref string text)
-		{
-			this.Init();
-			if (!this.m_Curve.SupportsProcedural())
-			{
-				text += "\n\tInherited velocity curves use too many keys.";
-			}
-		}
-	}
+        private class Texts
+        {
+            public GUIContent mode = EditorGUIUtility.TextContent("Mode|Specifies whether the emitter velocity is inherited as a one-shot when a particle is born, always using the current emitter velocity, or using the emitter velocity when the particle was born.");
+            public string[] modes = new string[] { "Initial", "Current" };
+            public GUIContent velocity = EditorGUIUtility.TextContent("Multiplier|Controls the amount of emitter velocity inherited during each particle's lifetime.");
+        }
+    }
 }
+

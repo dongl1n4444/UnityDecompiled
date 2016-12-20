@@ -1,48 +1,45 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal static class ColorClipboard
-	{
-		public static void SetColor(Color color)
-		{
-			EditorGUIUtility.systemCopyBuffer = "";
-			EditorGUIUtility.SetPasteboardColor(color);
-		}
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		public static bool HasColor()
-		{
-			Color color;
-			return ColorClipboard.TryGetColor(false, out color);
-		}
+    internal static class ColorClipboard
+    {
+        public static bool HasColor()
+        {
+            Color color;
+            return TryGetColor(false, out color);
+        }
 
-		public static bool TryGetColor(bool allowHDR, out Color color)
-		{
-			bool flag = false;
-			if (ColorUtility.TryParseHtmlString(EditorGUIUtility.systemCopyBuffer, out color))
-			{
-				flag = true;
-			}
-			else if (EditorGUIUtility.HasPasteboardColor())
-			{
-				color = EditorGUIUtility.GetPasteboardColor();
-				flag = true;
-			}
-			bool result;
-			if (flag)
-			{
-				if (!allowHDR && color.maxColorComponent > 1f)
-				{
-					color = color.RGBMultiplied(1f / color.maxColorComponent);
-				}
-				result = true;
-			}
-			else
-			{
-				result = false;
-			}
-			return result;
-		}
-	}
+        public static void SetColor(Color color)
+        {
+            EditorGUIUtility.systemCopyBuffer = "";
+            EditorGUIUtility.SetPasteboardColor(color);
+        }
+
+        public static bool TryGetColor(bool allowHDR, out Color color)
+        {
+            bool flag = false;
+            if (ColorUtility.TryParseHtmlString(EditorGUIUtility.systemCopyBuffer, out color))
+            {
+                flag = true;
+            }
+            else if (EditorGUIUtility.HasPasteboardColor())
+            {
+                color = EditorGUIUtility.GetPasteboardColor();
+                flag = true;
+            }
+            if (flag)
+            {
+                if (!allowHDR && (color.maxColorComponent > 1f))
+                {
+                    color = color.RGBMultiplied((float) (1f / color.maxColorComponent));
+                }
+                return true;
+            }
+            return false;
+        }
+    }
 }
+

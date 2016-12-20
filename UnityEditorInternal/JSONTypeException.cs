@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class JSONTypeException : Exception
-	{
-		public JSONTypeException(string msg) : base(msg)
-		{
-		}
-	}
+    using System;
+
+    internal class JSONTypeException : Exception
+    {
+        public JSONTypeException(string msg) : base(msg)
+        {
+        }
+    }
 }
+

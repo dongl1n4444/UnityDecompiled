@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum EditorMetricCollectionType
-	{
-		Bake,
-		Build,
-		EditorStartup,
-		ProjectSnapshot,
-		SessionInfo,
-		UnitTest
-	}
+    using System;
+
+    internal enum EditorMetricCollectionType
+    {
+        Bake,
+        Build,
+        EditorStartup,
+        ProjectSnapshot,
+        SessionInfo,
+        UnitTest
+    }
 }
+

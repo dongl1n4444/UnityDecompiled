@@ -1,26 +1,23 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal sealed class DebugLogHandler : ILogHandler
-	{
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_Log(LogType level, string msg, [Writable] Object obj);
+    using System;
+    using System.Runtime.CompilerServices;
 
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Internal_LogException(Exception exception, [Writable] Object obj);
+    internal sealed class DebugLogHandler : ILogHandler
+    {
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        internal static extern void Internal_Log(LogType level, string msg, [Writable] UnityEngine.Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        internal static extern void Internal_LogException(Exception exception, [Writable] UnityEngine.Object obj);
+        public void LogException(Exception exception, UnityEngine.Object context)
+        {
+            Internal_LogException(exception, context);
+        }
 
-		public void LogFormat(LogType logType, Object context, string format, params object[] args)
-		{
-			DebugLogHandler.Internal_Log(logType, string.Format(format, args), context);
-		}
-
-		public void LogException(Exception exception, Object context)
-		{
-			DebugLogHandler.Internal_LogException(exception, context);
-		}
-	}
+        public void LogFormat(LogType logType, UnityEngine.Object context, string format, params object[] args)
+        {
+            Internal_Log(logType, string.Format(format, args), context);
+        }
+    }
 }
+

@@ -1,13 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum MasterServerEvent
-	{
-		RegistrationFailedGameName,
-		RegistrationFailedGameType,
-		RegistrationFailedNoServer,
-		RegistrationSucceeded,
-		HostListReceived
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Describes status messages from the master server as returned in MonoBehaviour.OnMasterServerEvent|OnMasterServerEvent.</para>
+    /// </summary>
+    public enum MasterServerEvent
+    {
+        RegistrationFailedGameName,
+        RegistrationFailedGameType,
+        RegistrationFailedNoServer,
+        RegistrationSucceeded,
+        HostListReceived
+    }
 }
+

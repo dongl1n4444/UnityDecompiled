@@ -1,22 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface ICurveEditorState
-	{
-		float currentTime
-		{
-			set;
-		}
+    using System;
 
-		bool syncTimeDuringDrag
-		{
-			get;
-		}
+    internal interface ICurveEditorState
+    {
+        float currentTime { set; }
 
-		TimeArea.TimeFormat timeFormat
-		{
-			get;
-		}
-	}
+        bool syncTimeDuringDrag { get; }
+
+        TimeArea.TimeFormat timeFormat { get; }
+    }
 }
+

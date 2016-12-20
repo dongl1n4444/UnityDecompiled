@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum AvatarIKGoal
-	{
-		LeftFoot,
-		RightFoot,
-		LeftHand,
-		RightHand
-	}
+    using System;
+
+    /// <summary>
+    /// <para>IK Goal.</para>
+    /// </summary>
+    public enum AvatarIKGoal
+    {
+        LeftFoot,
+        RightFoot,
+        LeftHand,
+        RightHand
+    }
 }
+

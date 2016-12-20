@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemMeshShapeType
-	{
-		Vertex,
-		Edge,
-		Triangle
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The mesh emission type.</para>
+    /// </summary>
+    public enum ParticleSystemMeshShapeType
+    {
+        Vertex,
+        Edge,
+        Triangle
+    }
 }
+

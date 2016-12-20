@@ -1,137 +1,107 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal class AttributeHelperEngine
-	{
-		[RequiredByNativeCode]
-		private static Type GetParentTypeDisallowingMultipleInclusion(Type type)
-		{
-			Stack<Type> stack = new Stack<Type>();
-			while (type != null && type != typeof(MonoBehaviour))
-			{
-				stack.Push(type);
-				type = type.BaseType;
-			}
-			Type result;
-			while (stack.Count > 0)
-			{
-				Type type2 = stack.Pop();
-				object[] customAttributes = type2.GetCustomAttributes(typeof(DisallowMultipleComponent), false);
-				int num = customAttributes.Length;
-				if (num != 0)
-				{
-					result = type2;
-					return result;
-				}
-			}
-			result = null;
-			return result;
-		}
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine.Scripting;
 
-		[RequiredByNativeCode]
-		private static Type[] GetRequiredComponents(Type klass)
-		{
-			List<Type> list = null;
-			Type[] result;
-			while (klass != null && klass != typeof(MonoBehaviour))
-			{
-				RequireComponent[] array = (RequireComponent[])klass.GetCustomAttributes(typeof(RequireComponent), false);
-				Type baseType = klass.BaseType;
-				RequireComponent[] array2 = array;
-				for (int i = 0; i < array2.Length; i++)
-				{
-					RequireComponent requireComponent = array2[i];
-					if (list == null && array.Length == 1 && baseType == typeof(MonoBehaviour))
-					{
-						Type[] array3 = new Type[]
-						{
-							requireComponent.m_Type0,
-							requireComponent.m_Type1,
-							requireComponent.m_Type2
-						};
-						result = array3;
-						return result;
-					}
-					if (list == null)
-					{
-						list = new List<Type>();
-					}
-					if (requireComponent.m_Type0 != null)
-					{
-						list.Add(requireComponent.m_Type0);
-					}
-					if (requireComponent.m_Type1 != null)
-					{
-						list.Add(requireComponent.m_Type1);
-					}
-					if (requireComponent.m_Type2 != null)
-					{
-						list.Add(requireComponent.m_Type2);
-					}
-				}
-				klass = baseType;
-			}
-			if (list == null)
-			{
-				result = null;
-				return result;
-			}
-			result = list.ToArray();
-			return result;
-		}
+    internal class AttributeHelperEngine
+    {
+        [RequiredByNativeCode]
+        private static bool CheckIsEditorScript(System.Type klass)
+        {
+            while ((klass != null) && (klass != typeof(MonoBehaviour)))
+            {
+                if (klass.GetCustomAttributes(typeof(ExecuteInEditMode), false).Length != 0)
+                {
+                    return true;
+                }
+                klass = klass.BaseType;
+            }
+            return false;
+        }
 
-		[RequiredByNativeCode]
-		private static bool CheckIsEditorScript(Type klass)
-		{
-			bool result;
-			while (klass != null && klass != typeof(MonoBehaviour))
-			{
-				object[] customAttributes = klass.GetCustomAttributes(typeof(ExecuteInEditMode), false);
-				int num = customAttributes.Length;
-				if (num != 0)
-				{
-					result = true;
-					return result;
-				}
-				klass = klass.BaseType;
-			}
-			result = false;
-			return result;
-		}
+        private static T GetCustomAttributeOfType<T>(System.Type klass) where T: Attribute
+        {
+            System.Type attributeType = typeof(T);
+            object[] customAttributes = klass.GetCustomAttributes(attributeType, true);
+            if ((customAttributes != null) && (customAttributes.Length != 0))
+            {
+                return (T) customAttributes[0];
+            }
+            return null;
+        }
 
-		[RequiredByNativeCode]
-		private static int GetDefaultExecutionOrderFor(Type klass)
-		{
-			DefaultExecutionOrder customAttributeOfType = AttributeHelperEngine.GetCustomAttributeOfType<DefaultExecutionOrder>(klass);
-			int result;
-			if (customAttributeOfType == null)
-			{
-				result = 0;
-			}
-			else
-			{
-				result = customAttributeOfType.order;
-			}
-			return result;
-		}
+        [RequiredByNativeCode]
+        private static int GetDefaultExecutionOrderFor(System.Type klass)
+        {
+            DefaultExecutionOrder customAttributeOfType = GetCustomAttributeOfType<DefaultExecutionOrder>(klass);
+            if (customAttributeOfType == null)
+            {
+                return 0;
+            }
+            return customAttributeOfType.order;
+        }
 
-		private static T GetCustomAttributeOfType<T>(Type klass) where T : Attribute
-		{
-			Type typeFromHandle = typeof(T);
-			object[] customAttributes = klass.GetCustomAttributes(typeFromHandle, true);
-			T result;
-			if (customAttributes != null && customAttributes.Length != 0)
-			{
-				result = (T)((object)customAttributes[0]);
-			}
-			else
-			{
-				result = (T)((object)null);
-			}
-			return result;
-		}
-	}
+        [RequiredByNativeCode]
+        private static System.Type GetParentTypeDisallowingMultipleInclusion(System.Type type)
+        {
+            Stack<System.Type> stack = new Stack<System.Type>();
+            while ((type != null) && (type != typeof(MonoBehaviour)))
+            {
+                stack.Push(type);
+                type = type.BaseType;
+            }
+            System.Type type2 = null;
+            while (stack.Count > 0)
+            {
+                type2 = stack.Pop();
+                if (type2.GetCustomAttributes(typeof(DisallowMultipleComponent), false).Length != 0)
+                {
+                    return type2;
+                }
+            }
+            return null;
+        }
+
+        [RequiredByNativeCode]
+        private static System.Type[] GetRequiredComponents(System.Type klass)
+        {
+            List<System.Type> list = null;
+            while ((klass != null) && (klass != typeof(MonoBehaviour)))
+            {
+                RequireComponent[] customAttributes = (RequireComponent[]) klass.GetCustomAttributes(typeof(RequireComponent), false);
+                System.Type baseType = klass.BaseType;
+                foreach (RequireComponent component in customAttributes)
+                {
+                    if (((list == null) && (customAttributes.Length == 1)) && (baseType == typeof(MonoBehaviour)))
+                    {
+                        return new System.Type[] { component.m_Type0, component.m_Type1, component.m_Type2 };
+                    }
+                    if (list == null)
+                    {
+                        list = new List<System.Type>();
+                    }
+                    if (component.m_Type0 != null)
+                    {
+                        list.Add(component.m_Type0);
+                    }
+                    if (component.m_Type1 != null)
+                    {
+                        list.Add(component.m_Type1);
+                    }
+                    if (component.m_Type2 != null)
+                    {
+                        list.Add(component.m_Type2);
+                    }
+                }
+                klass = baseType;
+            }
+            if (list == null)
+            {
+                return null;
+            }
+            return list.ToArray();
+        }
+    }
 }
+

@@ -1,13 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemGradientMode
-	{
-		Color,
-		Gradient,
-		TwoColors,
-		TwoGradients,
-		RandomColor
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The particle gradient mode (Shuriken).</para>
+    /// </summary>
+    public enum ParticleSystemGradientMode
+    {
+        Color,
+        Gradient,
+        TwoColors,
+        TwoGradients,
+        RandomColor
+    }
 }
+

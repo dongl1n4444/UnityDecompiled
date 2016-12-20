@@ -1,29 +1,31 @@
-using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEditor;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal sealed class ModuleMetadata
-	{
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern string[] GetModuleNames();
+    using System;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditor;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool GetModuleStrippable(string moduleName);
+    internal sealed class ModuleMetadata
+    {
+        [CompilerGenerated]
+        private static Func<int, UnityType> <>f__am$cache0;
 
-		public static UnityType[] GetModuleTypes(string moduleName)
-		{
-			int[] moduleClasses = ModuleMetadata.GetModuleClasses(moduleName);
-			return (from id in moduleClasses
-			select UnityType.FindTypeByPersistentTypeID(id)).ToArray<UnityType>();
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern int[] GetModuleClasses(string moduleName);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern string GetICallModule(string icall);
-	}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string GetICallModule(string icall);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int[] GetModuleClasses(string moduleName);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string[] GetModuleNames();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetModuleStrippable(string moduleName);
+        public static UnityType[] GetModuleTypes(string moduleName)
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = new Func<int, UnityType>(null, (IntPtr) <GetModuleTypes>m__0);
+            }
+            return Enumerable.ToArray<UnityType>(Enumerable.Select<int, UnityType>(GetModuleClasses(moduleName), <>f__am$cache0));
+        }
+    }
 }
+

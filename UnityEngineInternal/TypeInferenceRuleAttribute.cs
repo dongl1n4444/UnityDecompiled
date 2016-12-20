@@ -1,25 +1,25 @@
-using System;
-
-namespace UnityEngineInternal
+﻿namespace UnityEngineInternal
 {
-	[AttributeUsage(AttributeTargets.Method)]
-	[Serializable]
-	public class TypeInferenceRuleAttribute : Attribute
-	{
-		private readonly string _rule;
+    using System;
 
-		public TypeInferenceRuleAttribute(TypeInferenceRules rule) : this(rule.ToString())
-		{
-		}
+    [Serializable, AttributeUsage(AttributeTargets.Method)]
+    public class TypeInferenceRuleAttribute : Attribute
+    {
+        private readonly string _rule;
 
-		public TypeInferenceRuleAttribute(string rule)
-		{
-			this._rule = rule;
-		}
+        public TypeInferenceRuleAttribute(string rule)
+        {
+            this._rule = rule;
+        }
 
-		public override string ToString()
-		{
-			return this._rule;
-		}
-	}
+        public TypeInferenceRuleAttribute(TypeInferenceRules rule) : this(rule.ToString())
+        {
+        }
+
+        public override string ToString()
+        {
+            return this._rule;
+        }
+    }
 }
+

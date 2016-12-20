@@ -1,15 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class KnobState
-	{
-		public float dragStartPos;
+    using System;
 
-		public float dragStartValue;
-
-		public bool isDragging;
-
-		public bool isEditing;
-	}
+    internal class KnobState
+    {
+        public float dragStartPos;
+        public float dragStartValue;
+        public bool isDragging;
+        public bool isEditing;
+    }
 }
+

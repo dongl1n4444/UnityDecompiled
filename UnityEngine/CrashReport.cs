@@ -1,147 +1,144 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class CrashReport
-	{
-		private static List<CrashReport> internalReports;
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		private static object reportsLock = new object();
+    /// <summary>
+    /// <para>Holds data for a single application crash event and provides access to all gathered crash reports.</para>
+    /// </summary>
+    public sealed class CrashReport
+    {
+        [CompilerGenerated]
+        private static Comparison<CrashReport> <>f__mg$cache0;
+        private readonly string id;
+        private static List<CrashReport> internalReports;
+        private static object reportsLock = new object();
+        /// <summary>
+        /// <para>Crash report data as formatted text.</para>
+        /// </summary>
+        public readonly string text;
+        /// <summary>
+        /// <para>Time, when the crash occured.</para>
+        /// </summary>
+        public readonly DateTime time;
 
-		private readonly string id;
+        private CrashReport(string id, DateTime time, string text)
+        {
+            this.id = id;
+            this.time = time;
+            this.text = text;
+        }
 
-		public readonly DateTime time;
+        private static int Compare(CrashReport c1, CrashReport c2)
+        {
+            long ticks = c1.time.Ticks;
+            long num2 = c2.time.Ticks;
+            if (ticks > num2)
+            {
+                return 1;
+            }
+            if (ticks < num2)
+            {
+                return -1;
+            }
+            return 0;
+        }
 
-		public readonly string text;
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        private static extern string GetReportData(string id, out double secondsSinceUnixEpoch);
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        private static extern string[] GetReports();
+        private static void PopulateReports()
+        {
+            object reportsLock = CrashReport.reportsLock;
+            lock (reportsLock)
+            {
+                if (internalReports == null)
+                {
+                    string[] reports = GetReports();
+                    internalReports = new List<CrashReport>(reports.Length);
+                    foreach (string str in reports)
+                    {
+                        double num2;
+                        string reportData = GetReportData(str, out num2);
+                        DateTime time = new DateTime(0x7b2, 1, 1).AddSeconds(num2);
+                        internalReports.Add(new CrashReport(str, time, reportData));
+                    }
+                    if (<>f__mg$cache0 == null)
+                    {
+                        <>f__mg$cache0 = new Comparison<CrashReport>(CrashReport.Compare);
+                    }
+                    internalReports.Sort(<>f__mg$cache0);
+                }
+            }
+        }
 
-		[CompilerGenerated]
-		private static Comparison<CrashReport> <>f__mg$cache0;
+        /// <summary>
+        /// <para>Remove report from available reports list.</para>
+        /// </summary>
+        public void Remove()
+        {
+            if (RemoveReport(this.id))
+            {
+                object reportsLock = CrashReport.reportsLock;
+                lock (reportsLock)
+                {
+                    internalReports.Remove(this);
+                }
+            }
+        }
 
-		public static CrashReport[] reports
-		{
-			get
-			{
-				CrashReport.PopulateReports();
-				object obj = CrashReport.reportsLock;
-				CrashReport[] result;
-				lock (obj)
-				{
-					result = CrashReport.internalReports.ToArray();
-				}
-				return result;
-			}
-		}
+        /// <summary>
+        /// <para>Remove all reports from available reports list.</para>
+        /// </summary>
+        public static void RemoveAll()
+        {
+            foreach (CrashReport report in reports)
+            {
+                report.Remove();
+            }
+        }
 
-		public static CrashReport lastReport
-		{
-			get
-			{
-				CrashReport.PopulateReports();
-				object obj = CrashReport.reportsLock;
-				CrashReport result;
-				lock (obj)
-				{
-					if (CrashReport.internalReports.Count > 0)
-					{
-						result = CrashReport.internalReports[CrashReport.internalReports.Count - 1];
-						return result;
-					}
-				}
-				result = null;
-				return result;
-			}
-		}
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        private static extern bool RemoveReport(string id);
 
-		private CrashReport(string id, DateTime time, string text)
-		{
-			this.id = id;
-			this.time = time;
-			this.text = text;
-		}
+        /// <summary>
+        /// <para>Returns last crash report, or null if no reports are available.</para>
+        /// </summary>
+        public static CrashReport lastReport
+        {
+            get
+            {
+                PopulateReports();
+                object reportsLock = CrashReport.reportsLock;
+                lock (reportsLock)
+                {
+                    if (internalReports.Count > 0)
+                    {
+                        return internalReports[internalReports.Count - 1];
+                    }
+                }
+                return null;
+            }
+        }
 
-		private static int Compare(CrashReport c1, CrashReport c2)
-		{
-			long ticks = c1.time.Ticks;
-			long ticks2 = c2.time.Ticks;
-			int result;
-			if (ticks > ticks2)
-			{
-				result = 1;
-			}
-			else if (ticks < ticks2)
-			{
-				result = -1;
-			}
-			else
-			{
-				result = 0;
-			}
-			return result;
-		}
-
-		private static void PopulateReports()
-		{
-			object obj = CrashReport.reportsLock;
-			lock (obj)
-			{
-				if (CrashReport.internalReports == null)
-				{
-					string[] reports = CrashReport.GetReports();
-					CrashReport.internalReports = new List<CrashReport>(reports.Length);
-					string[] array = reports;
-					for (int i = 0; i < array.Length; i++)
-					{
-						string text = array[i];
-						double value;
-						string reportData = CrashReport.GetReportData(text, out value);
-						DateTime dateTime = new DateTime(1970, 1, 1);
-						DateTime dateTime2 = dateTime.AddSeconds(value);
-						CrashReport.internalReports.Add(new CrashReport(text, dateTime2, reportData));
-					}
-					List<CrashReport> arg_AB_0 = CrashReport.internalReports;
-					if (CrashReport.<>f__mg$cache0 == null)
-					{
-						CrashReport.<>f__mg$cache0 = new Comparison<CrashReport>(CrashReport.Compare);
-					}
-					arg_AB_0.Sort(CrashReport.<>f__mg$cache0);
-				}
-			}
-		}
-
-		public static void RemoveAll()
-		{
-			CrashReport[] reports = CrashReport.reports;
-			for (int i = 0; i < reports.Length; i++)
-			{
-				CrashReport crashReport = reports[i];
-				crashReport.Remove();
-			}
-		}
-
-		public void Remove()
-		{
-			if (CrashReport.RemoveReport(this.id))
-			{
-				object obj = CrashReport.reportsLock;
-				lock (obj)
-				{
-					CrashReport.internalReports.Remove(this);
-				}
-			}
-		}
-
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern string[] GetReports();
-
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern string GetReportData(string id, out double secondsSinceUnixEpoch);
-
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool RemoveReport(string id);
-	}
+        /// <summary>
+        /// <para>Returns all currently available reports in a new array.</para>
+        /// </summary>
+        public static CrashReport[] reports
+        {
+            get
+            {
+                PopulateReports();
+                object reportsLock = CrashReport.reportsLock;
+                lock (reportsLock)
+                {
+                    return internalReports.ToArray();
+                }
+            }
+        }
+    }
 }
+

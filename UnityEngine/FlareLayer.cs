@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class FlareLayer : Behaviour
-	{
-		internal FlareLayer()
-		{
-		}
-	}
+    using System;
+
+    /// <summary>
+    /// <para>FlareLayer component.</para>
+    /// </summary>
+    public sealed class FlareLayer : Behaviour
+    {
+        internal FlareLayer()
+        {
+        }
+    }
 }
+

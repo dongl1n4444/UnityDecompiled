@@ -1,1137 +1,1110 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.AnimatedValues;
-using UnityEditorInternal;
-using UnityEngine;
-using UnityEngine.Events;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(LODGroup))]
-	internal class LODGroupEditor : Editor
-	{
-		private class LODAction
-		{
-			public delegate void Callback();
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditor.AnimatedValues;
+    using UnityEditorInternal;
+    using UnityEngine;
+    using UnityEngine.Events;
 
-			private readonly float m_Percentage;
+    [CustomEditor(typeof(LODGroup))]
+    internal class LODGroupEditor : Editor
+    {
+        [CompilerGenerated]
+        private static Func<Vector3, Vector2> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<int, string> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Func<Object, bool> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<Object, GameObject> <>f__am$cache3;
+        [CompilerGenerated]
+        private static Func<Object, bool> <>f__am$cache4;
+        [CompilerGenerated]
+        private static Func<Object, Renderer> <>f__am$cache5;
+        [CompilerGenerated]
+        private static Func<LODGroupGUI.LODInfo, bool> <>f__am$cache6;
+        [CompilerGenerated]
+        private static Func<LODGroupGUI.LODInfo, int> <>f__am$cache7;
+        [CompilerGenerated]
+        private static Func<LODGroupGUI.LODInfo, bool> <>f__am$cache8;
+        [CompilerGenerated]
+        private static Func<LODGroupGUI.LODInfo, int> <>f__am$cache9;
+        [CompilerGenerated]
+        private static Func<Object, bool> <>f__am$cacheA;
+        [CompilerGenerated]
+        private static Func<Object, GameObject> <>f__am$cacheB;
+        private const string kFadeTransitionWidthDataPath = "m_LODs.Array.data[{0}].fadeTransitionWidth";
+        private const string kLODDataPath = "m_LODs.Array.data[{0}]";
+        private const string kPixelHeightDataPath = "m_LODs.Array.data[{0}].screenRelativeHeight";
+        private const string kRenderRootPath = "m_LODs.Array.data[{0}].renderers";
+        private static readonly GUIContent[] kSLightIcons = new GUIContent[2];
+        private SerializedProperty m_AnimateCrossFading;
+        private readonly int m_CameraSliderId = "LODCameraIDHash".GetHashCode();
+        private SerializedProperty m_FadeMode;
+        private bool m_IsPrefab;
+        private Vector3 m_LastCameraPos = Vector3.zero;
+        private LODGroup m_LODGroup;
+        private SerializedProperty m_LODs;
+        private readonly int m_LODSliderId = "LODSliderIDHash".GetHashCode();
+        private int m_NumberOfLODs;
+        private Vector2 m_PreviewDir = new Vector2(0f, -20f);
+        private PreviewRenderUtility m_PreviewUtility;
+        private int m_SelectedLOD = -1;
+        private int m_SelectedLODSlider = -1;
+        private AnimBool m_ShowAnimateCrossFading = new AnimBool();
+        private AnimBool m_ShowFadeTransitionWidth = new AnimBool();
 
-			private readonly List<LODGroupGUI.LODInfo> m_LODs;
+        private void AddGameObjectRenderers(IEnumerable<Renderer> toAdd, bool add)
+        {
+            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            if (!add)
+            {
+                property.ClearArray();
+            }
+            List<Renderer> list = new List<Renderer>();
+            for (int i = 0; i < property.arraySize; i++)
+            {
+                Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
+                if (objectReferenceValue != null)
+                {
+                    list.Add(objectReferenceValue);
+                }
+            }
+            foreach (Renderer renderer2 in toAdd)
+            {
+                if (!list.Contains(renderer2))
+                {
+                    property.arraySize++;
+                    property.GetArrayElementAtIndex(property.arraySize - 1).FindPropertyRelative("renderer").objectReferenceValue = renderer2;
+                    list.Add(renderer2);
+                }
+            }
+            base.serializedObject.ApplyModifiedProperties();
+            this.m_LODGroup.RecalculateBounds();
+        }
 
-			private readonly Vector2 m_ClickedPosition;
+        private void BeginLODDrag(float desiredPercentage, LODGroup group)
+        {
+            if (((SceneView.lastActiveSceneView != null) && (SceneView.lastActiveSceneView.camera != null)) && !this.m_IsPrefab)
+            {
+                UpdateCamera(desiredPercentage, group);
+                SceneView.lastActiveSceneView.ClearSearchFilter();
+                SceneView.lastActiveSceneView.SetSceneViewFiltering(true);
+                HierarchyProperty.FilterSingleSceneObject(group.gameObject.GetInstanceID(), false);
+                SceneView.RepaintAll();
+            }
+        }
 
-			private readonly SerializedObject m_ObjectRef;
+        private static Rect CalculateScreenRect(IEnumerable<Vector3> points)
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = new Func<Vector3, Vector2>(null, (IntPtr) <CalculateScreenRect>m__0);
+            }
+            List<Vector2> list = Enumerable.ToList<Vector2>(Enumerable.Select<Vector3, Vector2>(points, <>f__am$cache0));
+            Vector2 vector = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 vector2 = new Vector2(float.MinValue, float.MinValue);
+            foreach (Vector2 vector3 in list)
+            {
+                vector.x = (vector3.x >= vector.x) ? vector.x : vector3.x;
+                vector2.x = (vector3.x <= vector2.x) ? vector2.x : vector3.x;
+                vector.y = (vector3.y >= vector.y) ? vector.y : vector3.y;
+                vector2.y = (vector3.y <= vector2.y) ? vector2.y : vector3.y;
+            }
+            return new Rect(vector.x, vector.y, vector2.x - vector.x, vector2.y - vector.y);
+        }
 
-			private readonly SerializedProperty m_LODsProperty;
+        private void DeletedLOD()
+        {
+            this.m_SelectedLOD--;
+        }
 
-			private readonly LODGroupEditor.LODAction.Callback m_Callback;
+        protected void DoRenderPreview()
+        {
+            if ((((this.m_PreviewUtility.m_RenderTexture.width > 0) && (this.m_PreviewUtility.m_RenderTexture.height > 0)) && (this.m_NumberOfLODs > 0)) && (this.activeLOD >= 0))
+            {
+                Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+                bool flag = false;
+                List<MeshFilter> list = new List<MeshFilter>();
+                SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+                for (int i = 0; i < property.arraySize; i++)
+                {
+                    Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
+                    if (objectReferenceValue != null)
+                    {
+                        MeshFilter component = objectReferenceValue.GetComponent<MeshFilter>();
+                        if (((component != null) && (component.sharedMesh != null)) && (component.sharedMesh.subMeshCount > 0))
+                        {
+                            list.Add(component);
+                        }
+                        if (!flag)
+                        {
+                            bounds = objectReferenceValue.bounds;
+                            flag = true;
+                        }
+                        else
+                        {
+                            bounds.Encapsulate(objectReferenceValue.bounds);
+                        }
+                    }
+                }
+                if (flag)
+                {
+                    float num3 = bounds.extents.magnitude * 10f;
+                    Vector2 vector2 = (Vector2) -(this.m_PreviewDir / 100f);
+                    float introduced18 = Mathf.Sin(vector2.x);
+                    float y = Mathf.Sin(vector2.y);
+                    float introduced20 = Mathf.Cos(vector2.x);
+                    this.m_PreviewUtility.m_Camera.transform.position = bounds.center + ((Vector3) (new Vector3(introduced18 * Mathf.Cos(vector2.y), y, introduced20 * Mathf.Cos(vector2.y)) * num3));
+                    this.m_PreviewUtility.m_Camera.transform.LookAt(bounds.center);
+                    this.m_PreviewUtility.m_Camera.nearClipPlane = 0.05f;
+                    this.m_PreviewUtility.m_Camera.farClipPlane = 1000f;
+                    this.m_PreviewUtility.m_Light[0].intensity = 1f;
+                    this.m_PreviewUtility.m_Light[0].transform.rotation = Quaternion.Euler(50f, 50f, 0f);
+                    this.m_PreviewUtility.m_Light[1].intensity = 1f;
+                    Color ambient = new Color(0.2f, 0.2f, 0.2f, 0f);
+                    InternalEditorUtility.SetCustomLighting(this.m_PreviewUtility.m_Light, ambient);
+                    foreach (MeshFilter filter2 in list)
+                    {
+                        for (int j = 0; j < filter2.sharedMesh.subMeshCount; j++)
+                        {
+                            if (j < filter2.GetComponent<Renderer>().sharedMaterials.Length)
+                            {
+                                Matrix4x4 matrix = Matrix4x4.TRS(filter2.transform.position, filter2.transform.rotation, filter2.transform.localScale);
+                                this.m_PreviewUtility.DrawMesh(filter2.sharedMesh, matrix, filter2.GetComponent<Renderer>().sharedMaterials[j], j);
+                            }
+                        }
+                    }
+                    bool fog = RenderSettings.fog;
+                    Unsupported.SetRenderSettingsUseFogNoDirty(false);
+                    this.m_PreviewUtility.m_Camera.Render();
+                    Unsupported.SetRenderSettingsUseFogNoDirty(fog);
+                    InternalEditorUtility.RemoveCustomLighting();
+                }
+            }
+        }
 
-			public LODAction(List<LODGroupGUI.LODInfo> lods, float percentage, Vector2 clickedPosition, SerializedProperty propLODs, LODGroupEditor.LODAction.Callback callback)
-			{
-				this.m_LODs = lods;
-				this.m_Percentage = percentage;
-				this.m_ClickedPosition = clickedPosition;
-				this.m_LODsProperty = propLODs;
-				this.m_ObjectRef = propLODs.serializedObject;
-				this.m_Callback = callback;
-			}
+        private void DrawLODLevelSlider(Rect sliderPosition, List<LODGroupGUI.LODInfo> lods)
+        {
+            int controlID = GUIUtility.GetControlID(this.m_LODSliderId, FocusType.Passive);
+            int num2 = GUIUtility.GetControlID(this.m_CameraSliderId, FocusType.Passive);
+            Event current = Event.current;
+            EventType typeForControl = current.GetTypeForControl(controlID);
+            switch (typeForControl)
+            {
+                case EventType.MouseDown:
+                {
+                    if ((current.button != 1) || !sliderPosition.Contains(current.mousePosition))
+                    {
+                        Rect rect = sliderPosition;
+                        rect.x -= 5f;
+                        rect.width += 10f;
+                        if (rect.Contains(current.mousePosition))
+                        {
+                            current.Use();
+                            GUIUtility.hotControl = controlID;
+                            bool flag3 = false;
+                            if (<>f__am$cache6 == null)
+                            {
+                                <>f__am$cache6 = new Func<LODGroupGUI.LODInfo, bool>(null, (IntPtr) <DrawLODLevelSlider>m__9);
+                            }
+                            if (<>f__am$cache7 == null)
+                            {
+                                <>f__am$cache7 = new Func<LODGroupGUI.LODInfo, int>(null, (IntPtr) <DrawLODLevelSlider>m__A);
+                            }
+                            IOrderedEnumerable<LODGroupGUI.LODInfo> collection = Enumerable.OrderByDescending<LODGroupGUI.LODInfo, int>(Enumerable.Where<LODGroupGUI.LODInfo>(lods, <>f__am$cache6), <>f__am$cache7);
+                            if (<>f__am$cache8 == null)
+                            {
+                                <>f__am$cache8 = new Func<LODGroupGUI.LODInfo, bool>(null, (IntPtr) <DrawLODLevelSlider>m__B);
+                            }
+                            if (<>f__am$cache9 == null)
+                            {
+                                <>f__am$cache9 = new Func<LODGroupGUI.LODInfo, int>(null, (IntPtr) <DrawLODLevelSlider>m__C);
+                            }
+                            IOrderedEnumerable<LODGroupGUI.LODInfo> enumerable2 = Enumerable.OrderBy<LODGroupGUI.LODInfo, int>(Enumerable.Where<LODGroupGUI.LODInfo>(lods, <>f__am$cache8), <>f__am$cache9);
+                            List<LODGroupGUI.LODInfo> list = new List<LODGroupGUI.LODInfo>();
+                            list.AddRange(collection);
+                            list.AddRange(enumerable2);
+                            foreach (LODGroupGUI.LODInfo info2 in list)
+                            {
+                                if (info2.m_ButtonPosition.Contains(current.mousePosition))
+                                {
+                                    this.m_SelectedLODSlider = info2.LODLevel;
+                                    flag3 = true;
+                                    this.BeginLODDrag(info2.RawScreenPercent + 0.001f, this.m_LODGroup);
+                                    break;
+                                }
+                            }
+                            if (!flag3)
+                            {
+                                foreach (LODGroupGUI.LODInfo info3 in lods)
+                                {
+                                    if (info3.m_RangePosition.Contains(current.mousePosition))
+                                    {
+                                        this.m_SelectedLOD = info3.LODLevel;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    float cameraPercent = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
+                    GenericMenu menu = new GenericMenu();
+                    if (lods.Count < 8)
+                    {
+                        menu.AddItem(EditorGUIUtility.TextContent("Insert Before"), false, new GenericMenu.MenuFunction(new LODAction(lods, cameraPercent, current.mousePosition, this.m_LODs, null).InsertLOD));
+                    }
+                    else
+                    {
+                        menu.AddDisabledItem(EditorGUIUtility.TextContent("Insert Before"));
+                    }
+                    bool flag = true;
+                    if ((lods.Count > 0) && (lods[lods.Count - 1].RawScreenPercent < cameraPercent))
+                    {
+                        flag = false;
+                    }
+                    if (flag)
+                    {
+                        menu.AddDisabledItem(EditorGUIUtility.TextContent("Delete"));
+                    }
+                    else
+                    {
+                        menu.AddItem(EditorGUIUtility.TextContent("Delete"), false, new GenericMenu.MenuFunction(new LODAction(lods, cameraPercent, current.mousePosition, this.m_LODs, new LODAction.Callback(this.DeletedLOD)).DeleteLOD));
+                    }
+                    menu.ShowAsContext();
+                    bool flag2 = false;
+                    foreach (LODGroupGUI.LODInfo info in lods)
+                    {
+                        if (info.m_RangePosition.Contains(current.mousePosition))
+                        {
+                            this.m_SelectedLOD = info.LODLevel;
+                            flag2 = true;
+                            break;
+                        }
+                    }
+                    if (!flag2)
+                    {
+                        this.m_SelectedLOD = -1;
+                    }
+                    current.Use();
+                    break;
+                }
+                case EventType.MouseUp:
+                    if (GUIUtility.hotControl == controlID)
+                    {
+                        GUIUtility.hotControl = 0;
+                        this.m_SelectedLODSlider = -1;
+                        this.EndLODDrag();
+                        current.Use();
+                    }
+                    break;
 
-			public void InsertLOD()
-			{
-				if (this.m_LODsProperty.isArray)
-				{
-					int num = -1;
-					foreach (LODGroupGUI.LODInfo current in this.m_LODs)
-					{
-						if (this.m_Percentage > current.RawScreenPercent)
-						{
-							num = current.LODLevel;
-							break;
-						}
-					}
-					if (num < 0)
-					{
-						this.m_LODsProperty.InsertArrayElementAtIndex(this.m_LODs.Count);
-						num = this.m_LODs.Count;
-					}
-					else
-					{
-						this.m_LODsProperty.InsertArrayElementAtIndex(num);
-					}
-					SerializedProperty serializedProperty = this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", num));
-					serializedProperty.arraySize = 0;
-					SerializedProperty arrayElementAtIndex = this.m_LODsProperty.GetArrayElementAtIndex(num);
-					arrayElementAtIndex.FindPropertyRelative("screenRelativeHeight").floatValue = this.m_Percentage;
-					if (this.m_Callback != null)
-					{
-						this.m_Callback();
-					}
-					this.m_ObjectRef.ApplyModifiedProperties();
-				}
-			}
+                case EventType.MouseDrag:
+                    if (((GUIUtility.hotControl == controlID) && (this.m_SelectedLODSlider >= 0)) && (lods[this.m_SelectedLODSlider] != null))
+                    {
+                        current.Use();
+                        float desiredPercentage = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
+                        LODGroupGUI.SetSelectedLODLevelPercentage(desiredPercentage - 0.001f, this.m_SelectedLODSlider, lods);
+                        base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods[this.m_SelectedLODSlider].LODLevel)).floatValue = lods[this.m_SelectedLODSlider].RawScreenPercent;
+                        this.UpdateLODDrag(desiredPercentage, this.m_LODGroup);
+                    }
+                    break;
 
-			public void DeleteLOD()
-			{
-				if (this.m_LODs.Count > 0)
-				{
-					foreach (LODGroupGUI.LODInfo current in this.m_LODs)
-					{
-						int arraySize = this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", current.LODLevel)).arraySize;
-						if (current.m_RangePosition.Contains(this.m_ClickedPosition) && (arraySize == 0 || EditorUtility.DisplayDialog("Delete LOD", "Are you sure you wish to delete this LOD?", "Yes", "No")))
-						{
-							SerializedProperty serializedProperty = this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}]", current.LODLevel));
-							serializedProperty.DeleteCommand();
-							this.m_ObjectRef.ApplyModifiedProperties();
-							if (this.m_Callback != null)
-							{
-								this.m_Callback();
-							}
-							break;
-						}
-					}
-				}
-			}
-		}
+                case EventType.Repaint:
+                    LODGroupGUI.DrawLODSlider(sliderPosition, lods, this.activeLOD);
+                    break;
 
-		private class LODLightmapScale
-		{
-			public readonly float m_Scale;
+                case EventType.DragUpdated:
+                case EventType.DragPerform:
+                {
+                    int lODLevel = -2;
+                    foreach (LODGroupGUI.LODInfo info4 in lods)
+                    {
+                        if (info4.m_RangePosition.Contains(current.mousePosition))
+                        {
+                            lODLevel = info4.LODLevel;
+                            break;
+                        }
+                    }
+                    if ((lODLevel == -2) && LODGroupGUI.GetCulledBox(sliderPosition, (lods.Count <= 0) ? 1f : lods[lods.Count - 1].ScreenPercent).Contains(current.mousePosition))
+                    {
+                        lODLevel = -1;
+                    }
+                    if (lODLevel >= -1)
+                    {
+                        this.m_SelectedLOD = lODLevel;
+                        if (Enumerable.Count<Object>(DragAndDrop.objectReferences) > 0)
+                        {
+                            DragAndDrop.visualMode = !this.m_IsPrefab ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None;
+                            if (current.type == EventType.DragPerform)
+                            {
+                                if (<>f__am$cacheA == null)
+                                {
+                                    <>f__am$cacheA = new Func<Object, bool>(null, (IntPtr) <DrawLODLevelSlider>m__D);
+                                }
+                                if (<>f__am$cacheB == null)
+                                {
+                                    <>f__am$cacheB = new Func<Object, GameObject>(null, (IntPtr) <DrawLODLevelSlider>m__E);
+                                }
+                                IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<Object, GameObject>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cacheA), <>f__am$cacheB);
+                                IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
+                                if (lODLevel == -1)
+                                {
+                                    this.m_LODs.arraySize++;
+                                    SerializedProperty property2 = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods.Count));
+                                    if (lods.Count == 0)
+                                    {
+                                        property2.floatValue = 0.5f;
+                                    }
+                                    else
+                                    {
+                                        SerializedProperty property3 = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods.Count - 1));
+                                        property2.floatValue = property3.floatValue / 2f;
+                                    }
+                                    this.m_SelectedLOD = lods.Count;
+                                    this.AddGameObjectRenderers(renderers, false);
+                                }
+                                else
+                                {
+                                    this.AddGameObjectRenderers(renderers, true);
+                                }
+                                DragAndDrop.AcceptDrag();
+                            }
+                        }
+                        current.Use();
+                    }
+                    break;
+                }
+                default:
+                    if (typeForControl == EventType.DragExited)
+                    {
+                        current.Use();
+                    }
+                    break;
+            }
+            if (((SceneView.lastActiveSceneView != null) && (SceneView.lastActiveSceneView.camera != null)) && !this.m_IsPrefab)
+            {
+                Camera camera = SceneView.lastActiveSceneView.camera;
+                float activeRelativeScreenSize = LODUtility.CalculateVisualizationData(camera, this.m_LODGroup, -1).activeRelativeScreenSize;
+                float num7 = LODGroupGUI.DelinearizeScreenPercentage(activeRelativeScreenSize);
+                Vector3 vector = LODUtility.CalculateWorldReferencePoint(this.m_LODGroup);
+                Vector3 vector3 = SceneView.lastActiveSceneView.camera.transform.position - vector;
+                Vector3 normalized = vector3.normalized;
+                if (Vector3.Dot(camera.transform.forward, normalized) > 0f)
+                {
+                    num7 = 1f;
+                }
+                Rect rect3 = LODGroupGUI.CalcLODButton(sliderPosition, Mathf.Clamp01(num7));
+                Rect position = new Rect(rect3.center.x - 15f, rect3.y - 25f, 32f, 32f);
+                Rect rect5 = new Rect(rect3.center.x - 1f, rect3.y, 2f, rect3.height);
+                Rect rect6 = new Rect(position.center.x - 5f, rect5.yMax, 35f, 20f);
+                switch (current.GetTypeForControl(num2))
+                {
+                    case EventType.MouseDown:
+                        if (position.Contains(current.mousePosition))
+                        {
+                            current.Use();
+                            float num8 = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
+                            this.UpdateSelectedLODFromCamera(lods, num8);
+                            GUIUtility.hotControl = num2;
+                            this.BeginLODDrag(num8, this.m_LODGroup);
+                        }
+                        break;
 
-			public readonly List<SerializedProperty> m_Renderers;
+                    case EventType.MouseUp:
+                        if (GUIUtility.hotControl == num2)
+                        {
+                            this.EndLODDrag();
+                            GUIUtility.hotControl = 0;
+                            current.Use();
+                        }
+                        break;
 
-			public LODLightmapScale(float scale, List<SerializedProperty> renderers)
-			{
-				this.m_Scale = scale;
-				this.m_Renderers = renderers;
-			}
-		}
+                    case EventType.MouseDrag:
+                        if (GUIUtility.hotControl == num2)
+                        {
+                            current.Use();
+                            float num9 = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
+                            this.UpdateSelectedLODFromCamera(lods, num9);
+                            this.UpdateLODDrag(num9, this.m_LODGroup);
+                        }
+                        break;
 
-		private int m_SelectedLODSlider = -1;
+                    case EventType.Repaint:
+                    {
+                        Color backgroundColor = GUI.backgroundColor;
+                        GUI.backgroundColor = new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, 0.8f);
+                        LODGroupGUI.Styles.m_LODCameraLine.Draw(rect5, false, false, false, false);
+                        GUI.backgroundColor = backgroundColor;
+                        GUI.Label(position, LODGroupGUI.Styles.m_CameraIcon, GUIStyle.none);
+                        LODGroupGUI.Styles.m_LODSliderText.Draw(rect6, string.Format("{0:0}%", Mathf.Clamp01(activeRelativeScreenSize) * 100f), false, false, false, false);
+                        break;
+                    }
+                }
+            }
+        }
 
-		private int m_SelectedLOD = -1;
+        private void DrawRendererButton(Rect position, int rendererIndex)
+        {
+            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            Renderer objectReferenceValue = property.GetArrayElementAtIndex(rendererIndex).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
+            Rect rect = new Rect(position.xMax - 20f, position.yMax - 20f, 20f, 20f);
+            Event current = Event.current;
+            switch (current.type)
+            {
+                case EventType.Repaint:
+                    if (objectReferenceValue != null)
+                    {
+                        GUIContent content;
+                        MeshFilter component = objectReferenceValue.GetComponent<MeshFilter>();
+                        if ((component != null) && (component.sharedMesh != null))
+                        {
+                            content = new GUIContent(AssetPreview.GetAssetPreview(component.sharedMesh), objectReferenceValue.gameObject.name);
+                        }
+                        else if (objectReferenceValue is SkinnedMeshRenderer)
+                        {
+                            content = new GUIContent(AssetPreview.GetAssetPreview((objectReferenceValue as SkinnedMeshRenderer).sharedMesh), objectReferenceValue.gameObject.name);
+                        }
+                        else
+                        {
+                            content = new GUIContent(ObjectNames.NicifyVariableName(objectReferenceValue.GetType().Name), objectReferenceValue.gameObject.name);
+                        }
+                        LODGroupGUI.Styles.m_LODBlackBox.Draw(position, GUIContent.none, false, false, false, false);
+                        LODGroupGUI.Styles.m_LODRendererButton.Draw(new Rect(position.x + 2f, position.y + 2f, position.width - 4f, position.height - 4f), content, false, false, false, false);
+                    }
+                    else
+                    {
+                        LODGroupGUI.Styles.m_LODBlackBox.Draw(position, GUIContent.none, false, false, false, false);
+                        LODGroupGUI.Styles.m_LODRendererButton.Draw(position, "<Empty>", false, false, false, false);
+                    }
+                    if (!this.m_IsPrefab)
+                    {
+                        LODGroupGUI.Styles.m_LODBlackBox.Draw(rect, GUIContent.none, false, false, false, false);
+                        LODGroupGUI.Styles.m_LODRendererRemove.Draw(rect, LODGroupGUI.Styles.m_IconRendererMinus, false, false, false, false);
+                    }
+                    break;
 
-		private int m_NumberOfLODs;
+                case EventType.MouseDown:
+                    if (!this.m_IsPrefab && rect.Contains(current.mousePosition))
+                    {
+                        property.DeleteArrayElementAtIndex(rendererIndex);
+                        current.Use();
+                        base.serializedObject.ApplyModifiedProperties();
+                        this.m_LODGroup.RecalculateBounds();
+                    }
+                    else if (position.Contains(current.mousePosition))
+                    {
+                        EditorGUIUtility.PingObject(objectReferenceValue);
+                        current.Use();
+                    }
+                    break;
+            }
+        }
 
-		private LODGroup m_LODGroup;
+        private void DrawRenderersInfo(float availableWidth)
+        {
+            int num = Mathf.FloorToInt(availableWidth / 60f);
+            Rect position = GUILayoutUtility.GetRect(LODGroupGUI.Styles.m_RendersTitle, LODGroupGUI.Styles.m_LODSliderTextSelected);
+            if (Event.current.type == EventType.Repaint)
+            {
+                EditorStyles.label.Draw(position, LODGroupGUI.Styles.m_RendersTitle, false, false, false, false);
+            }
+            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            int num2 = property.arraySize + 1;
+            int num3 = Mathf.CeilToInt(((float) num2) / ((float) num));
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
+            Rect rect2 = GUILayoutUtility.GetRect((float) 0f, (float) (num3 * 60), options);
+            Rect rect3 = rect2;
+            GUI.Box(rect2, GUIContent.none);
+            rect3.width -= 6f;
+            rect3.x += 3f;
+            float num4 = rect3.width / ((float) num);
+            List<Rect> alreadyDrawn = new List<Rect>();
+            for (int i = 0; i < num3; i++)
+            {
+                for (int j = 0; (j < num) && (((i * num) + j) < property.arraySize); j++)
+                {
+                    Rect item = new Rect((2f + rect3.x) + (j * num4), (2f + rect3.y) + (i * 60), num4 - 4f, 56f);
+                    alreadyDrawn.Add(item);
+                    this.DrawRendererButton(item, (i * num) + j);
+                }
+            }
+            if (!this.m_IsPrefab)
+            {
+                int num7 = (num2 - 1) % num;
+                int num8 = num3 - 1;
+                this.HandleAddRenderer(new Rect((2f + rect3.x) + (num7 * num4), (2f + rect3.y) + (num8 * 60), num4 - 4f, 56f), alreadyDrawn, rect2);
+            }
+        }
 
-		private bool m_IsPrefab;
+        private void EndLODDrag()
+        {
+            if (((SceneView.lastActiveSceneView != null) && (SceneView.lastActiveSceneView.camera != null)) && !this.m_IsPrefab)
+            {
+                SceneView.lastActiveSceneView.SetSceneViewFiltering(false);
+                SceneView.lastActiveSceneView.ClearSearchFilter();
+                HierarchyProperty.ClearSceneObjectsFilter();
+            }
+        }
 
-		private SerializedProperty m_FadeMode;
+        private ModelImporter GetImporter()
+        {
+            return (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(base.target))) as ModelImporter);
+        }
 
-		private SerializedProperty m_AnimateCrossFading;
+        public override string GetInfoString()
+        {
+            if (((SceneView.lastActiveSceneView == null) || (SceneView.lastActiveSceneView.camera == null)) || ((this.m_NumberOfLODs <= 0) || (this.activeLOD < 0)))
+            {
+                return "";
+            }
+            List<Material> source = new List<Material>();
+            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            for (int i = 0; i < property.arraySize; i++)
+            {
+                Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
+                if (objectReferenceValue != null)
+                {
+                    source.AddRange(objectReferenceValue.sharedMaterials);
+                }
+            }
+            LODVisualizationInformation information = LODUtility.CalculateVisualizationData(SceneView.lastActiveSceneView.camera, this.m_LODGroup, this.activeLOD);
+            return ((this.activeLOD == -1) ? "LOD: culled" : string.Format("{0} Renderer(s)\n{1} Triangle(s)\n{2} Material(s)", property.arraySize, information.triangleCount, Enumerable.Count<Material>(Enumerable.Distinct<Material>(source))));
+        }
 
-		private SerializedProperty m_LODs;
+        private IEnumerable<Renderer> GetRenderers(IEnumerable<GameObject> selectedGameObjects, bool searchChildren)
+        {
+            if (EditorUtility.IsPersistent(this.m_LODGroup))
+            {
+                return new List<Renderer>();
+            }
+            IEnumerable<GameObject> first = Enumerable.Where<GameObject>(selectedGameObjects, new Func<GameObject, bool>(this, (IntPtr) this.<GetRenderers>m__5));
+            IEnumerable<GameObject> source = Enumerable.Where<GameObject>(selectedGameObjects, new Func<GameObject, bool>(this, (IntPtr) this.<GetRenderers>m__6));
+            List<GameObject> second = new List<GameObject>();
+            if ((Enumerable.Count<GameObject>(source) > 0) && EditorUtility.DisplayDialog("Reparent GameObjects", "Some objects are not children of the LODGroup GameObject. Do you want to reparent them and add them to the LODGroup?", "Yes, Reparent", "No, Use Only Existing Children"))
+            {
+                foreach (GameObject obj2 in source)
+                {
+                    if (EditorUtility.IsPersistent(obj2))
+                    {
+                        GameObject item = Object.Instantiate<GameObject>(obj2);
+                        if (item != null)
+                        {
+                            item.transform.parent = this.m_LODGroup.transform;
+                            item.transform.localPosition = Vector3.zero;
+                            item.transform.localRotation = Quaternion.identity;
+                            second.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        obj2.transform.parent = this.m_LODGroup.transform;
+                        second.Add(obj2);
+                    }
+                }
+                first = Enumerable.Union<GameObject>(first, second);
+            }
+            List<Renderer> list2 = new List<Renderer>();
+            foreach (GameObject obj4 in first)
+            {
+                if (searchChildren)
+                {
+                    list2.AddRange(obj4.GetComponentsInChildren<Renderer>());
+                }
+                else
+                {
+                    list2.Add(obj4.GetComponent<Renderer>());
+                }
+            }
+            if (<>f__am$cache4 == null)
+            {
+                <>f__am$cache4 = new Func<Object, bool>(null, (IntPtr) <GetRenderers>m__7);
+            }
+            if (<>f__am$cache5 == null)
+            {
+                <>f__am$cache5 = new Func<Object, Renderer>(null, (IntPtr) <GetRenderers>m__8);
+            }
+            IEnumerable<Renderer> collection = Enumerable.Select<Object, Renderer>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache4), <>f__am$cache5);
+            list2.AddRange(collection);
+            return list2;
+        }
 
-		private AnimBool m_ShowAnimateCrossFading = new AnimBool();
+        private void HandleAddRenderer(Rect position, IEnumerable<Rect> alreadyDrawn, Rect drawArea)
+        {
+            <HandleAddRenderer>c__AnonStorey0 storey = new <HandleAddRenderer>c__AnonStorey0 {
+                evt = Event.current
+            };
+            EventType type = storey.evt.type;
+            switch (type)
+            {
+                case EventType.Repaint:
+                    LODGroupGUI.Styles.m_LODStandardButton.Draw(position, GUIContent.none, false, false, false, false);
+                    LODGroupGUI.Styles.m_LODRendererAddButton.Draw(new Rect(position.x - 2f, position.y, position.width, position.height), "Add", false, false, false, false);
+                    return;
 
-		private AnimBool m_ShowFadeTransitionWidth = new AnimBool();
+                case EventType.DragUpdated:
+                case EventType.DragPerform:
+                {
+                    bool flag = false;
+                    if (drawArea.Contains(storey.evt.mousePosition) && Enumerable.All<Rect>(alreadyDrawn, new Func<Rect, bool>(storey, (IntPtr) this.<>m__0)))
+                    {
+                        flag = true;
+                    }
+                    if (flag)
+                    {
+                        if (Enumerable.Count<Object>(DragAndDrop.objectReferences) > 0)
+                        {
+                            DragAndDrop.visualMode = !this.m_IsPrefab ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None;
+                            if (storey.evt.type == EventType.DragPerform)
+                            {
+                                if (<>f__am$cache2 == null)
+                                {
+                                    <>f__am$cache2 = new Func<Object, bool>(null, (IntPtr) <HandleAddRenderer>m__3);
+                                }
+                                if (<>f__am$cache3 == null)
+                                {
+                                    <>f__am$cache3 = new Func<Object, GameObject>(null, (IntPtr) <HandleAddRenderer>m__4);
+                                }
+                                IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<Object, GameObject>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache2), <>f__am$cache3);
+                                IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
+                                this.AddGameObjectRenderers(renderers, true);
+                                DragAndDrop.AcceptDrag();
+                                storey.evt.Use();
+                                return;
+                            }
+                        }
+                        storey.evt.Use();
+                    }
+                    return;
+                }
+                case EventType.ExecuteCommand:
+                    if ((storey.evt.commandName == "ObjectSelectorClosed") && (ObjectSelector.get.objectSelectorID == "LODGroupSelector".GetHashCode()))
+                    {
+                        GameObject currentObject = ObjectSelector.GetCurrentObject() as GameObject;
+                        if (currentObject != null)
+                        {
+                            List<GameObject> list = new List<GameObject> {
+                                currentObject
+                            };
+                            this.AddGameObjectRenderers(this.GetRenderers(list, true), true);
+                        }
+                        storey.evt.Use();
+                        GUIUtility.ExitGUI();
+                    }
+                    return;
+            }
+            if ((type == EventType.MouseDown) && position.Contains(storey.evt.mousePosition))
+            {
+                storey.evt.Use();
+                int hashCode = "LODGroupSelector".GetHashCode();
+                ObjectSelector.get.Show(null, typeof(Renderer), null, true);
+                ObjectSelector.get.objectSelectorID = hashCode;
+                GUIUtility.ExitGUI();
+            }
+        }
 
-		private Vector3 m_LastCameraPos = Vector3.zero;
+        public override bool HasPreviewGUI()
+        {
+            return (base.target != null);
+        }
 
-		private const string kLODDataPath = "m_LODs.Array.data[{0}]";
+        private void InitPreview()
+        {
+            if (this.m_PreviewUtility == null)
+            {
+                this.m_PreviewUtility = new PreviewRenderUtility();
+            }
+            if (kSLightIcons[0] == null)
+            {
+                kSLightIcons[0] = EditorGUIUtility.IconContent("PreMatLight0");
+                kSLightIcons[1] = EditorGUIUtility.IconContent("PreMatLight1");
+            }
+        }
 
-		private const string kPixelHeightDataPath = "m_LODs.Array.data[{0}].screenRelativeHeight";
+        private bool IsLODUsingCrossFadeWidth(int lod)
+        {
+            if ((this.m_FadeMode.intValue != 0) && !this.m_AnimateCrossFading.boolValue)
+            {
+                if (this.m_FadeMode.intValue == 1)
+                {
+                    return true;
+                }
+                if ((this.m_NumberOfLODs > 0) && (this.m_SelectedLOD == (this.m_NumberOfLODs - 1)))
+                {
+                    return true;
+                }
+                if ((this.m_NumberOfLODs > 1) && (this.m_SelectedLOD == (this.m_NumberOfLODs - 2)))
+                {
+                    SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.m_NumberOfLODs - 1));
+                    if ((property.arraySize == 1) && (property.GetArrayElementAtIndex(0).FindPropertyRelative("renderer").objectReferenceValue is BillboardRenderer))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-		private const string kRenderRootPath = "m_LODs.Array.data[{0}].renderers";
+        private void OnDisable()
+        {
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
+            this.m_ShowAnimateCrossFading.valueChanged.RemoveListener(new UnityAction(this.Repaint));
+            this.m_ShowFadeTransitionWidth.valueChanged.RemoveListener(new UnityAction(this.Repaint));
+        }
 
-		private const string kFadeTransitionWidthDataPath = "m_LODs.Array.data[{0}].fadeTransitionWidth";
+        private void OnEnable()
+        {
+            this.m_FadeMode = base.serializedObject.FindProperty("m_FadeMode");
+            this.m_AnimateCrossFading = base.serializedObject.FindProperty("m_AnimateCrossFading");
+            this.m_LODs = base.serializedObject.FindProperty("m_LODs");
+            this.m_ShowAnimateCrossFading.value = this.m_FadeMode.intValue != 0;
+            this.m_ShowAnimateCrossFading.valueChanged.AddListener(new UnityAction(this.Repaint));
+            this.m_ShowFadeTransitionWidth.value = false;
+            this.m_ShowFadeTransitionWidth.valueChanged.AddListener(new UnityAction(this.Repaint));
+            EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
+            this.m_LODGroup = (LODGroup) base.target;
+            PrefabType prefabType = PrefabUtility.GetPrefabType(this.m_LODGroup.gameObject);
+            this.m_IsPrefab = (prefabType == PrefabType.Prefab) || (prefabType == PrefabType.ModelPrefab);
+            base.Repaint();
+        }
 
-		private readonly int m_LODSliderId = "LODSliderIDHash".GetHashCode();
+        public override void OnInspectorGUI()
+        {
+            bool enabled = GUI.enabled;
+            base.serializedObject.Update();
+            EditorGUILayout.PropertyField(this.m_FadeMode, new GUILayoutOption[0]);
+            this.m_ShowAnimateCrossFading.target = this.m_FadeMode.intValue != 0;
+            if (EditorGUILayout.BeginFadeGroup(this.m_ShowAnimateCrossFading.faded))
+            {
+                EditorGUILayout.PropertyField(this.m_AnimateCrossFading, new GUILayoutOption[0]);
+            }
+            EditorGUILayout.EndFadeGroup();
+            this.m_NumberOfLODs = this.m_LODs.arraySize;
+            if (this.m_SelectedLOD >= this.m_NumberOfLODs)
+            {
+                this.m_SelectedLOD = this.m_NumberOfLODs - 1;
+            }
+            if ((this.m_NumberOfLODs > 0) && (this.activeLOD >= 0))
+            {
+                SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+                for (int i = property.arraySize - 1; i >= 0; i--)
+                {
+                    Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
+                    if (objectReferenceValue == null)
+                    {
+                        property.DeleteArrayElementAtIndex(i);
+                    }
+                }
+            }
+            GUILayout.Space(18f);
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
+            Rect area = GUILayoutUtility.GetRect((float) 0f, (float) 30f, options);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = new Func<int, string>(null, (IntPtr) <OnInspectorGUI>m__1);
+            }
+            List<LODGroupGUI.LODInfo> lods = LODGroupGUI.CreateLODInfos(this.m_NumberOfLODs, area, <>f__am$cache1, new Func<int, float>(this, (IntPtr) this.<OnInspectorGUI>m__2));
+            this.DrawLODLevelSlider(area, lods);
+            GUILayout.Space(16f);
+            if (QualitySettings.lodBias != 1f)
+            {
+                EditorGUILayout.HelpBox(string.Format("Active LOD bias is {0:0.0#}. Distances are adjusted accordingly.", QualitySettings.lodBias), MessageType.Warning);
+            }
+            if (((this.m_NumberOfLODs > 0) && (this.activeLOD >= 0)) && (this.activeLOD < this.m_NumberOfLODs))
+            {
+                this.m_ShowFadeTransitionWidth.target = this.IsLODUsingCrossFadeWidth(this.activeLOD);
+                if (EditorGUILayout.BeginFadeGroup(this.m_ShowFadeTransitionWidth.faded))
+                {
+                    EditorGUILayout.PropertyField(base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].fadeTransitionWidth", this.activeLOD)), new GUILayoutOption[0]);
+                }
+                EditorGUILayout.EndFadeGroup();
+                this.DrawRenderersInfo(EditorGUIUtility.currentViewWidth);
+            }
+            GUILayout.Space(8f);
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.FlexibleSpace();
+            bool flag2 = LODUtility.NeedUpdateLODGroupBoundingBox(this.m_LODGroup);
+            using (new EditorGUI.DisabledScope(!flag2))
+            {
+                GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
+                if (GUILayout.Button(!flag2 ? LODGroupGUI.Styles.m_RecalculateBoundsDisabled : LODGroupGUI.Styles.m_RecalculateBounds, optionArray2))
+                {
+                    Undo.RecordObject(this.m_LODGroup, "Recalculate LODGroup Bounds");
+                    this.m_LODGroup.RecalculateBounds();
+                }
+            }
+            GUILayoutOption[] optionArray3 = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
+            if (GUILayout.Button(LODGroupGUI.Styles.m_LightmapScale, optionArray3))
+            {
+                this.SendPercentagesToLightmapScale();
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.Space(5f);
+            ModelImporter importer = (PrefabUtility.GetPrefabType(base.target) != PrefabType.ModelPrefabInstance) ? null : this.GetImporter();
+            if (importer != null)
+            {
+                SerializedObject obj2 = new SerializedObject(importer);
+                SerializedProperty property3 = obj2.FindProperty("m_LODScreenPercentages");
+                bool flag3 = property3.isArray && (property3.arraySize == lods.Count);
+                bool flag4 = GUI.enabled;
+                if (!flag3)
+                {
+                    GUI.enabled = false;
+                }
+                if ((importer != null) && GUILayout.Button(!flag3 ? LODGroupGUI.Styles.m_UploadToImporterDisabled : LODGroupGUI.Styles.m_UploadToImporter, new GUILayoutOption[0]))
+                {
+                    for (int j = 0; j < property3.arraySize; j++)
+                    {
+                        property3.GetArrayElementAtIndex(j).floatValue = lods[j].RawScreenPercent;
+                    }
+                    obj2.ApplyModifiedProperties();
+                    AssetDatabase.ImportAsset(importer.assetPath);
+                }
+                GUI.enabled = flag4;
+            }
+            base.serializedObject.ApplyModifiedProperties();
+            GUI.enabled = enabled;
+        }
 
-		private readonly int m_CameraSliderId = "LODCameraIDHash".GetHashCode();
+        public override void OnPreviewGUI(Rect r, GUIStyle background)
+        {
+            if (!ShaderUtil.hardwareSupportsRectRenderTexture)
+            {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 40f), "LOD preview \nnot available");
+                }
+            }
+            else
+            {
+                this.InitPreview();
+                this.m_PreviewDir = PreviewGUI.Drag2D(this.m_PreviewDir, r);
+                this.m_PreviewDir.y = Mathf.Clamp(this.m_PreviewDir.y, -89f, 89f);
+                if (Event.current.type == EventType.Repaint)
+                {
+                    this.m_PreviewUtility.BeginPreview(r, background);
+                    this.DoRenderPreview();
+                    this.m_PreviewUtility.EndAndDrawPreview(r);
+                }
+            }
+        }
 
-		private PreviewRenderUtility m_PreviewUtility;
+        public void OnSceneGUI()
+        {
+            if (((Event.current.type == EventType.Repaint) && (Camera.current != null)) && (SceneView.lastActiveSceneView == SceneView.currentDrawingSceneView))
+            {
+                Camera camera = SceneView.lastActiveSceneView.camera;
+                Vector3 position = LODUtility.CalculateWorldReferencePoint(this.m_LODGroup);
+                Vector3 vector2 = camera.transform.position - position;
+                if (Vector3.Dot(camera.transform.forward, vector2.normalized) <= 0f)
+                {
+                    LODVisualizationInformation information = LODUtility.CalculateVisualizationData(camera, this.m_LODGroup, -1);
+                    float worldSpaceSize = information.worldSpaceSize;
+                    Handles.color = (information.activeLODLevel == -1) ? LODGroupGUI.kCulledLODColor : LODGroupGUI.kLODColors[information.activeLODLevel];
+                    Handles.SelectionFrame(0, position, camera.transform.rotation, worldSpaceSize / 2f);
+                    Vector3 vector3 = (Vector3) ((camera.transform.right * worldSpaceSize) / 2f);
+                    Vector3 vector4 = (Vector3) ((camera.transform.up * worldSpaceSize) / 2f);
+                    Vector3[] points = new Vector3[] { (position - vector3) + vector4, (position - vector3) - vector4, (position + vector3) + vector4, (position + vector3) - vector4 };
+                    Rect rect = CalculateScreenRect(points);
+                    float num2 = rect.x + (rect.width / 2f);
+                    rect = new Rect(num2 - 100f, rect.yMax, 200f, 45f);
+                    if (rect.yMax > (Screen.height - 0x2d))
+                    {
+                        rect.y = (Screen.height - 0x2d) - 40;
+                    }
+                    Handles.BeginGUI();
+                    GUI.Label(rect, GUIContent.none, EditorStyles.notificationBackground);
+                    EditorGUI.DoDropShadowLabel(rect, GUIContent.Temp((information.activeLODLevel < 0) ? "Culled" : ("LOD " + information.activeLODLevel)), LODGroupGUI.Styles.m_LODLevelNotifyText, 0.3f);
+                    Handles.EndGUI();
+                }
+            }
+        }
 
-		private static readonly GUIContent[] kSLightIcons = new GUIContent[2];
+        private void SendPercentagesToLightmapScale()
+        {
+            List<LODLightmapScale> list = new List<LODLightmapScale>();
+            for (int i = 0; i < this.m_NumberOfLODs; i++)
+            {
+                SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", i));
+                List<SerializedProperty> renderers = new List<SerializedProperty>();
+                for (int k = 0; k < property.arraySize; k++)
+                {
+                    SerializedProperty item = property.GetArrayElementAtIndex(k).FindPropertyRelative("renderer");
+                    if (item != null)
+                    {
+                        renderers.Add(item);
+                    }
+                }
+                float scale = (i != 0) ? base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", i - 1)).floatValue : 1f;
+                list.Add(new LODLightmapScale(scale, renderers));
+            }
+            for (int j = 0; j < this.m_NumberOfLODs; j++)
+            {
+                SetLODLightmapScale(list[j]);
+            }
+        }
 
-		private Vector2 m_PreviewDir = new Vector2(0f, -20f);
+        private static void SetLODLightmapScale(LODLightmapScale lodRenderer)
+        {
+            foreach (SerializedProperty property in lodRenderer.m_Renderers)
+            {
+                SerializedObject obj2 = new SerializedObject(property.objectReferenceValue);
+                obj2.FindProperty("m_ScaleInLightmap").floatValue = Mathf.Max((float) 0f, (float) (lodRenderer.m_Scale * (1f / LightmapVisualization.GetLightmapLODLevelScale((Renderer) property.objectReferenceValue))));
+                obj2.ApplyModifiedProperties();
+            }
+        }
 
-		private int activeLOD
-		{
-			get
-			{
-				return this.m_SelectedLOD;
-			}
-		}
+        public void Update()
+        {
+            if (((SceneView.lastActiveSceneView != null) && (SceneView.lastActiveSceneView.camera != null)) && (SceneView.lastActiveSceneView.camera.transform.position != this.m_LastCameraPos))
+            {
+                this.m_LastCameraPos = SceneView.lastActiveSceneView.camera.transform.position;
+                base.Repaint();
+            }
+        }
 
-		private void OnEnable()
-		{
-			this.m_FadeMode = base.serializedObject.FindProperty("m_FadeMode");
-			this.m_AnimateCrossFading = base.serializedObject.FindProperty("m_AnimateCrossFading");
-			this.m_LODs = base.serializedObject.FindProperty("m_LODs");
-			this.m_ShowAnimateCrossFading.value = (this.m_FadeMode.intValue != 0);
-			this.m_ShowAnimateCrossFading.valueChanged.AddListener(new UnityAction(base.Repaint));
-			this.m_ShowFadeTransitionWidth.value = false;
-			this.m_ShowFadeTransitionWidth.valueChanged.AddListener(new UnityAction(base.Repaint));
-			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
-			this.m_LODGroup = (LODGroup)base.target;
-			PrefabType prefabType = PrefabUtility.GetPrefabType(this.m_LODGroup.gameObject);
-			this.m_IsPrefab = (prefabType == PrefabType.Prefab || prefabType == PrefabType.ModelPrefab);
-			base.Repaint();
-		}
+        private static void UpdateCamera(float desiredPercentage, LODGroup group)
+        {
+            Vector3 pos = LODUtility.CalculateWorldReferencePoint(group);
+            float relativeScreenHeight = Mathf.Max((float) (desiredPercentage / QualitySettings.lodBias), (float) 1E-06f);
+            float newSize = LODUtility.CalculateDistance(SceneView.lastActiveSceneView.camera, relativeScreenHeight, group);
+            if (SceneView.lastActiveSceneView.camera.orthographic)
+            {
+                newSize *= Mathf.Sqrt(2f * SceneView.lastActiveSceneView.camera.aspect);
+            }
+            SceneView.lastActiveSceneView.LookAtDirect(pos, SceneView.lastActiveSceneView.camera.transform.rotation, newSize);
+        }
 
-		private void OnDisable()
-		{
-			EditorApplication.update = (EditorApplication.CallbackFunction)Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.Update));
-			this.m_ShowAnimateCrossFading.valueChanged.RemoveListener(new UnityAction(base.Repaint));
-			this.m_ShowFadeTransitionWidth.valueChanged.RemoveListener(new UnityAction(base.Repaint));
-		}
+        private void UpdateLODDrag(float desiredPercentage, LODGroup group)
+        {
+            if (((SceneView.lastActiveSceneView != null) && (SceneView.lastActiveSceneView.camera != null)) && !this.m_IsPrefab)
+            {
+                UpdateCamera(desiredPercentage, group);
+                SceneView.RepaintAll();
+            }
+        }
 
-		private static Rect CalculateScreenRect(IEnumerable<Vector3> points)
-		{
-			List<Vector2> list = (from p in points
-			select HandleUtility.WorldToGUIPoint(p)).ToList<Vector2>();
-			Vector2 vector = new Vector2(3.40282347E+38f, 3.40282347E+38f);
-			Vector2 vector2 = new Vector2(-3.40282347E+38f, -3.40282347E+38f);
-			foreach (Vector2 current in list)
-			{
-				vector.x = ((current.x >= vector.x) ? vector.x : current.x);
-				vector2.x = ((current.x <= vector2.x) ? vector2.x : current.x);
-				vector.y = ((current.y >= vector.y) ? vector.y : current.y);
-				vector2.y = ((current.y <= vector2.y) ? vector2.y : current.y);
-			}
-			return new Rect(vector.x, vector.y, vector2.x - vector.x, vector2.y - vector.y);
-		}
+        private void UpdateSelectedLODFromCamera(IEnumerable<LODGroupGUI.LODInfo> lods, float cameraPercent)
+        {
+            foreach (LODGroupGUI.LODInfo info in lods)
+            {
+                if (cameraPercent > info.RawScreenPercent)
+                {
+                    this.m_SelectedLOD = info.LODLevel;
+                    break;
+                }
+            }
+        }
 
-		public void OnSceneGUI()
-		{
-			if (Event.current.type == EventType.Repaint && !(Camera.current == null) && !(SceneView.lastActiveSceneView != SceneView.currentDrawingSceneView))
-			{
-				Camera camera = SceneView.lastActiveSceneView.camera;
-				Vector3 vector = LODUtility.CalculateWorldReferencePoint(this.m_LODGroup);
-				if (Vector3.Dot(camera.transform.forward, (camera.transform.position - vector).normalized) <= 0f)
-				{
-					LODVisualizationInformation lODVisualizationInformation = LODUtility.CalculateVisualizationData(camera, this.m_LODGroup, -1);
-					float worldSpaceSize = lODVisualizationInformation.worldSpaceSize;
-					Handles.color = ((lODVisualizationInformation.activeLODLevel == -1) ? LODGroupGUI.kCulledLODColor : LODGroupGUI.kLODColors[lODVisualizationInformation.activeLODLevel]);
-					Handles.SelectionFrame(0, vector, camera.transform.rotation, worldSpaceSize / 2f);
-					Vector3 b = camera.transform.right * worldSpaceSize / 2f;
-					Vector3 b2 = camera.transform.up * worldSpaceSize / 2f;
-					Rect position = LODGroupEditor.CalculateScreenRect(new Vector3[]
-					{
-						vector - b + b2,
-						vector - b - b2,
-						vector + b + b2,
-						vector + b - b2
-					});
-					float num = position.x + position.width / 2f;
-					position = new Rect(num - 100f, position.yMax, 200f, 45f);
-					if (position.yMax > (float)(Screen.height - 45))
-					{
-						position.y = (float)(Screen.height - 45 - 40);
-					}
-					Handles.BeginGUI();
-					GUI.Label(position, GUIContent.none, EditorStyles.notificationBackground);
-					EditorGUI.DoDropShadowLabel(position, GUIContent.Temp((lODVisualizationInformation.activeLODLevel < 0) ? "Culled" : ("LOD " + lODVisualizationInformation.activeLODLevel)), LODGroupGUI.Styles.m_LODLevelNotifyText, 0.3f);
-					Handles.EndGUI();
-				}
-			}
-		}
+        private int activeLOD
+        {
+            get
+            {
+                return this.m_SelectedLOD;
+            }
+        }
 
-		public void Update()
-		{
-			if (!(SceneView.lastActiveSceneView == null) && !(SceneView.lastActiveSceneView.camera == null))
-			{
-				if (SceneView.lastActiveSceneView.camera.transform.position != this.m_LastCameraPos)
-				{
-					this.m_LastCameraPos = SceneView.lastActiveSceneView.camera.transform.position;
-					base.Repaint();
-				}
-			}
-		}
+        [CompilerGenerated]
+        private sealed class <HandleAddRenderer>c__AnonStorey0
+        {
+            internal Event evt;
 
-		private ModelImporter GetImporter()
-		{
-			return AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(base.target))) as ModelImporter;
-		}
+            internal bool <>m__0(Rect x)
+            {
+                return !x.Contains(this.evt.mousePosition);
+            }
+        }
 
-		private bool IsLODUsingCrossFadeWidth(int lod)
-		{
-			bool result;
-			if (this.m_FadeMode.intValue == 0 || this.m_AnimateCrossFading.boolValue)
-			{
-				result = false;
-			}
-			else if (this.m_FadeMode.intValue == 1)
-			{
-				result = true;
-			}
-			else if (this.m_NumberOfLODs > 0 && this.m_SelectedLOD == this.m_NumberOfLODs - 1)
-			{
-				result = true;
-			}
-			else
-			{
-				if (this.m_NumberOfLODs > 1 && this.m_SelectedLOD == this.m_NumberOfLODs - 2)
-				{
-					SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.m_NumberOfLODs - 1));
-					if (serializedProperty.arraySize == 1 && serializedProperty.GetArrayElementAtIndex(0).FindPropertyRelative("renderer").objectReferenceValue is BillboardRenderer)
-					{
-						result = true;
-						return result;
-					}
-				}
-				result = false;
-			}
-			return result;
-		}
+        private class LODAction
+        {
+            private readonly Callback m_Callback;
+            private readonly Vector2 m_ClickedPosition;
+            private readonly List<LODGroupGUI.LODInfo> m_LODs;
+            private readonly SerializedProperty m_LODsProperty;
+            private readonly SerializedObject m_ObjectRef;
+            private readonly float m_Percentage;
 
-		public override void OnInspectorGUI()
-		{
-			bool enabled = GUI.enabled;
-			base.serializedObject.Update();
-			EditorGUILayout.PropertyField(this.m_FadeMode, new GUILayoutOption[0]);
-			this.m_ShowAnimateCrossFading.target = (this.m_FadeMode.intValue != 0);
-			if (EditorGUILayout.BeginFadeGroup(this.m_ShowAnimateCrossFading.faded))
-			{
-				EditorGUILayout.PropertyField(this.m_AnimateCrossFading, new GUILayoutOption[0]);
-			}
-			EditorGUILayout.EndFadeGroup();
-			this.m_NumberOfLODs = this.m_LODs.arraySize;
-			if (this.m_SelectedLOD >= this.m_NumberOfLODs)
-			{
-				this.m_SelectedLOD = this.m_NumberOfLODs - 1;
-			}
-			if (this.m_NumberOfLODs > 0 && this.activeLOD >= 0)
-			{
-				SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
-				for (int k = serializedProperty.arraySize - 1; k >= 0; k--)
-				{
-					SerializedProperty serializedProperty2 = serializedProperty.GetArrayElementAtIndex(k).FindPropertyRelative("renderer");
-					Renderer x = serializedProperty2.objectReferenceValue as Renderer;
-					if (x == null)
-					{
-						serializedProperty.DeleteArrayElementAtIndex(k);
-					}
-				}
-			}
-			GUILayout.Space(18f);
-			Rect rect = GUILayoutUtility.GetRect(0f, 30f, new GUILayoutOption[]
-			{
-				GUILayout.ExpandWidth(true)
-			});
-			List<LODGroupGUI.LODInfo> list = LODGroupGUI.CreateLODInfos(this.m_NumberOfLODs, rect, (int i) => string.Format("LOD {0}", i), (int i) => base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", i)).floatValue);
-			this.DrawLODLevelSlider(rect, list);
-			GUILayout.Space(16f);
-			if (QualitySettings.lodBias != 1f)
-			{
-				EditorGUILayout.HelpBox(string.Format("Active LOD bias is {0:0.0#}. Distances are adjusted accordingly.", QualitySettings.lodBias), MessageType.Warning);
-			}
-			if (this.m_NumberOfLODs > 0 && this.activeLOD >= 0 && this.activeLOD < this.m_NumberOfLODs)
-			{
-				this.m_ShowFadeTransitionWidth.target = this.IsLODUsingCrossFadeWidth(this.activeLOD);
-				if (EditorGUILayout.BeginFadeGroup(this.m_ShowFadeTransitionWidth.faded))
-				{
-					EditorGUILayout.PropertyField(base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].fadeTransitionWidth", this.activeLOD)), new GUILayoutOption[0]);
-				}
-				EditorGUILayout.EndFadeGroup();
-				this.DrawRenderersInfo(EditorGUIUtility.currentViewWidth);
-			}
-			GUILayout.Space(8f);
-			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			GUILayout.FlexibleSpace();
-			bool flag = LODUtility.NeedUpdateLODGroupBoundingBox(this.m_LODGroup);
-			using (new EditorGUI.DisabledScope(!flag))
-			{
-				if (GUILayout.Button((!flag) ? LODGroupGUI.Styles.m_RecalculateBoundsDisabled : LODGroupGUI.Styles.m_RecalculateBounds, new GUILayoutOption[]
-				{
-					GUILayout.ExpandWidth(false)
-				}))
-				{
-					Undo.RecordObject(this.m_LODGroup, "Recalculate LODGroup Bounds");
-					this.m_LODGroup.RecalculateBounds();
-				}
-			}
-			if (GUILayout.Button(LODGroupGUI.Styles.m_LightmapScale, new GUILayoutOption[]
-			{
-				GUILayout.ExpandWidth(false)
-			}))
-			{
-				this.SendPercentagesToLightmapScale();
-			}
-			GUILayout.EndHorizontal();
-			GUILayout.Space(5f);
-			ModelImporter modelImporter = (PrefabUtility.GetPrefabType(base.target) != PrefabType.ModelPrefabInstance) ? null : this.GetImporter();
-			if (modelImporter != null)
-			{
-				SerializedObject serializedObject = new SerializedObject(modelImporter);
-				SerializedProperty serializedProperty3 = serializedObject.FindProperty("m_LODScreenPercentages");
-				bool flag2 = serializedProperty3.isArray && serializedProperty3.arraySize == list.Count;
-				bool enabled2 = GUI.enabled;
-				if (!flag2)
-				{
-					GUI.enabled = false;
-				}
-				if (modelImporter != null && GUILayout.Button((!flag2) ? LODGroupGUI.Styles.m_UploadToImporterDisabled : LODGroupGUI.Styles.m_UploadToImporter, new GUILayoutOption[0]))
-				{
-					for (int j = 0; j < serializedProperty3.arraySize; j++)
-					{
-						serializedProperty3.GetArrayElementAtIndex(j).floatValue = list[j].RawScreenPercent;
-					}
-					serializedObject.ApplyModifiedProperties();
-					AssetDatabase.ImportAsset(modelImporter.assetPath);
-				}
-				GUI.enabled = enabled2;
-			}
-			base.serializedObject.ApplyModifiedProperties();
-			GUI.enabled = enabled;
-		}
+            public LODAction(List<LODGroupGUI.LODInfo> lods, float percentage, Vector2 clickedPosition, SerializedProperty propLODs, Callback callback)
+            {
+                this.m_LODs = lods;
+                this.m_Percentage = percentage;
+                this.m_ClickedPosition = clickedPosition;
+                this.m_LODsProperty = propLODs;
+                this.m_ObjectRef = propLODs.serializedObject;
+                this.m_Callback = callback;
+            }
 
-		private void DrawRenderersInfo(float availableWidth)
-		{
-			int num = Mathf.FloorToInt(availableWidth / 60f);
-			Rect rect = GUILayoutUtility.GetRect(LODGroupGUI.Styles.m_RendersTitle, LODGroupGUI.Styles.m_LODSliderTextSelected);
-			if (Event.current.type == EventType.Repaint)
-			{
-				EditorStyles.label.Draw(rect, LODGroupGUI.Styles.m_RendersTitle, false, false, false, false);
-			}
-			SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
-			int num2 = serializedProperty.arraySize + 1;
-			int num3 = Mathf.CeilToInt((float)num2 / (float)num);
-			Rect rect2 = GUILayoutUtility.GetRect(0f, (float)(num3 * 60), new GUILayoutOption[]
-			{
-				GUILayout.ExpandWidth(true)
-			});
-			Rect rect3 = rect2;
-			GUI.Box(rect2, GUIContent.none);
-			rect3.width -= 6f;
-			rect3.x += 3f;
-			float num4 = rect3.width / (float)num;
-			List<Rect> list = new List<Rect>();
-			for (int i = 0; i < num3; i++)
-			{
-				int num5 = 0;
-				while (num5 < num && i * num + num5 < serializedProperty.arraySize)
-				{
-					Rect rect4 = new Rect(2f + rect3.x + (float)num5 * num4, 2f + rect3.y + (float)(i * 60), num4 - 4f, 56f);
-					list.Add(rect4);
-					this.DrawRendererButton(rect4, i * num + num5);
-					num5++;
-				}
-			}
-			if (!this.m_IsPrefab)
-			{
-				int num6 = (num2 - 1) % num;
-				int num7 = num3 - 1;
-				this.HandleAddRenderer(new Rect(2f + rect3.x + (float)num6 * num4, 2f + rect3.y + (float)(num7 * 60), num4 - 4f, 56f), list, rect2);
-			}
-		}
+            public void DeleteLOD()
+            {
+                if (this.m_LODs.Count > 0)
+                {
+                    foreach (LODGroupGUI.LODInfo info in this.m_LODs)
+                    {
+                        int arraySize = this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", info.LODLevel)).arraySize;
+                        if (info.m_RangePosition.Contains(this.m_ClickedPosition) && ((arraySize == 0) || EditorUtility.DisplayDialog("Delete LOD", "Are you sure you wish to delete this LOD?", "Yes", "No")))
+                        {
+                            this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}]", info.LODLevel)).DeleteCommand();
+                            this.m_ObjectRef.ApplyModifiedProperties();
+                            if (this.m_Callback != null)
+                            {
+                                this.m_Callback();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
 
-		private void HandleAddRenderer(Rect position, IEnumerable<Rect> alreadyDrawn, Rect drawArea)
-		{
-			Event evt = Event.current;
-			EventType type = evt.type;
-			switch (type)
-			{
-			case EventType.Repaint:
-				LODGroupGUI.Styles.m_LODStandardButton.Draw(position, GUIContent.none, false, false, false, false);
-				LODGroupGUI.Styles.m_LODRendererAddButton.Draw(new Rect(position.x - 2f, position.y, position.width, position.height), "Add", false, false, false, false);
-				return;
-			case EventType.Layout:
-			case EventType.Ignore:
-			case EventType.Used:
-			case EventType.ValidateCommand:
-				IL_46:
-				if (type != EventType.MouseDown)
-				{
-					return;
-				}
-				if (position.Contains(evt.mousePosition))
-				{
-					evt.Use();
-					int hashCode = "LODGroupSelector".GetHashCode();
-					ObjectSelector.get.Show(null, typeof(Renderer), null, true);
-					ObjectSelector.get.objectSelectorID = hashCode;
-					GUIUtility.ExitGUI();
-				}
-				return;
-			case EventType.DragUpdated:
-			case EventType.DragPerform:
-			{
-				bool flag = false;
-				if (drawArea.Contains(evt.mousePosition))
-				{
-					if (alreadyDrawn.All((Rect x) => !x.Contains(evt.mousePosition)))
-					{
-						flag = true;
-					}
-				}
-				if (!flag)
-				{
-					return;
-				}
-				if (DragAndDrop.objectReferences.Count<UnityEngine.Object>() > 0)
-				{
-					DragAndDrop.visualMode = ((!this.m_IsPrefab) ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None);
-					if (evt.type == EventType.DragPerform)
-					{
-						IEnumerable<GameObject> selectedGameObjects = from go in DragAndDrop.objectReferences
-						where go as GameObject != null
-						select go as GameObject;
-						IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
-						this.AddGameObjectRenderers(renderers, true);
-						DragAndDrop.AcceptDrag();
-						evt.Use();
-						return;
-					}
-				}
-				evt.Use();
-				return;
-			}
-			case EventType.ExecuteCommand:
-			{
-				string commandName = evt.commandName;
-				if (commandName == "ObjectSelectorClosed" && ObjectSelector.get.objectSelectorID == "LODGroupSelector".GetHashCode())
-				{
-					GameObject gameObject = ObjectSelector.GetCurrentObject() as GameObject;
-					if (gameObject != null)
-					{
-						this.AddGameObjectRenderers(this.GetRenderers(new List<GameObject>
-						{
-							gameObject
-						}, true), true);
-					}
-					evt.Use();
-					GUIUtility.ExitGUI();
-				}
-				return;
-			}
-			}
-			goto IL_46;
-		}
+            public void InsertLOD()
+            {
+                if (this.m_LODsProperty.isArray)
+                {
+                    int index = -1;
+                    foreach (LODGroupGUI.LODInfo info in this.m_LODs)
+                    {
+                        if (this.m_Percentage > info.RawScreenPercent)
+                        {
+                            index = info.LODLevel;
+                            break;
+                        }
+                    }
+                    if (index < 0)
+                    {
+                        this.m_LODsProperty.InsertArrayElementAtIndex(this.m_LODs.Count);
+                        index = this.m_LODs.Count;
+                    }
+                    else
+                    {
+                        this.m_LODsProperty.InsertArrayElementAtIndex(index);
+                    }
+                    this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", index)).arraySize = 0;
+                    this.m_LODsProperty.GetArrayElementAtIndex(index).FindPropertyRelative("screenRelativeHeight").floatValue = this.m_Percentage;
+                    if (this.m_Callback != null)
+                    {
+                        this.m_Callback();
+                    }
+                    this.m_ObjectRef.ApplyModifiedProperties();
+                }
+            }
 
-		private void DrawRendererButton(Rect position, int rendererIndex)
-		{
-			SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
-			SerializedProperty serializedProperty2 = serializedProperty.GetArrayElementAtIndex(rendererIndex).FindPropertyRelative("renderer");
-			Renderer renderer = serializedProperty2.objectReferenceValue as Renderer;
-			Rect position2 = new Rect(position.xMax - 20f, position.yMax - 20f, 20f, 20f);
-			Event current = Event.current;
-			EventType type = current.type;
-			if (type != EventType.Repaint)
-			{
-				if (type == EventType.MouseDown)
-				{
-					if (!this.m_IsPrefab && position2.Contains(current.mousePosition))
-					{
-						serializedProperty.DeleteArrayElementAtIndex(rendererIndex);
-						current.Use();
-						base.serializedObject.ApplyModifiedProperties();
-						this.m_LODGroup.RecalculateBounds();
-					}
-					else if (position.Contains(current.mousePosition))
-					{
-						EditorGUIUtility.PingObject(renderer);
-						current.Use();
-					}
-				}
-			}
-			else
-			{
-				if (renderer != null)
-				{
-					MeshFilter component = renderer.GetComponent<MeshFilter>();
-					GUIContent content;
-					if (component != null && component.sharedMesh != null)
-					{
-						content = new GUIContent(AssetPreview.GetAssetPreview(component.sharedMesh), renderer.gameObject.name);
-					}
-					else if (renderer is SkinnedMeshRenderer)
-					{
-						content = new GUIContent(AssetPreview.GetAssetPreview((renderer as SkinnedMeshRenderer).sharedMesh), renderer.gameObject.name);
-					}
-					else
-					{
-						content = new GUIContent(ObjectNames.NicifyVariableName(renderer.GetType().Name), renderer.gameObject.name);
-					}
-					LODGroupGUI.Styles.m_LODBlackBox.Draw(position, GUIContent.none, false, false, false, false);
-					LODGroupGUI.Styles.m_LODRendererButton.Draw(new Rect(position.x + 2f, position.y + 2f, position.width - 4f, position.height - 4f), content, false, false, false, false);
-				}
-				else
-				{
-					LODGroupGUI.Styles.m_LODBlackBox.Draw(position, GUIContent.none, false, false, false, false);
-					LODGroupGUI.Styles.m_LODRendererButton.Draw(position, "<Empty>", false, false, false, false);
-				}
-				if (!this.m_IsPrefab)
-				{
-					LODGroupGUI.Styles.m_LODBlackBox.Draw(position2, GUIContent.none, false, false, false, false);
-					LODGroupGUI.Styles.m_LODRendererRemove.Draw(position2, LODGroupGUI.Styles.m_IconRendererMinus, false, false, false, false);
-				}
-			}
-		}
+            public delegate void Callback();
+        }
 
-		private IEnumerable<Renderer> GetRenderers(IEnumerable<GameObject> selectedGameObjects, bool searchChildren)
-		{
-			IEnumerable<Renderer> result;
-			if (EditorUtility.IsPersistent(this.m_LODGroup))
-			{
-				result = new List<Renderer>();
-			}
-			else
-			{
-				IEnumerable<GameObject> enumerable = from go in selectedGameObjects
-				where go.transform.IsChildOf(this.m_LODGroup.transform)
-				select go;
-				IEnumerable<GameObject> enumerable2 = from go in selectedGameObjects
-				where !go.transform.IsChildOf(this.m_LODGroup.transform)
-				select go;
-				List<GameObject> list = new List<GameObject>();
-				if (enumerable2.Count<GameObject>() > 0)
-				{
-					if (EditorUtility.DisplayDialog("Reparent GameObjects", "Some objects are not children of the LODGroup GameObject. Do you want to reparent them and add them to the LODGroup?", "Yes, Reparent", "No, Use Only Existing Children"))
-					{
-						foreach (GameObject current in enumerable2)
-						{
-							if (EditorUtility.IsPersistent(current))
-							{
-								GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(current);
-								if (gameObject != null)
-								{
-									gameObject.transform.parent = this.m_LODGroup.transform;
-									gameObject.transform.localPosition = Vector3.zero;
-									gameObject.transform.localRotation = Quaternion.identity;
-									list.Add(gameObject);
-								}
-							}
-							else
-							{
-								current.transform.parent = this.m_LODGroup.transform;
-								list.Add(current);
-							}
-						}
-						enumerable = enumerable.Union(list);
-					}
-				}
-				List<Renderer> list2 = new List<Renderer>();
-				foreach (GameObject current2 in enumerable)
-				{
-					if (searchChildren)
-					{
-						list2.AddRange(current2.GetComponentsInChildren<Renderer>());
-					}
-					else
-					{
-						list2.Add(current2.GetComponent<Renderer>());
-					}
-				}
-				IEnumerable<Renderer> collection = from go in DragAndDrop.objectReferences
-				where go as Renderer != null
-				select go as Renderer;
-				list2.AddRange(collection);
-				result = list2;
-			}
-			return result;
-		}
+        private class LODLightmapScale
+        {
+            public readonly List<SerializedProperty> m_Renderers;
+            public readonly float m_Scale;
 
-		private void AddGameObjectRenderers(IEnumerable<Renderer> toAdd, bool add)
-		{
-			SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
-			if (!add)
-			{
-				serializedProperty.ClearArray();
-			}
-			List<Renderer> list = new List<Renderer>();
-			for (int i = 0; i < serializedProperty.arraySize; i++)
-			{
-				SerializedProperty serializedProperty2 = serializedProperty.GetArrayElementAtIndex(i).FindPropertyRelative("renderer");
-				Renderer renderer = serializedProperty2.objectReferenceValue as Renderer;
-				if (!(renderer == null))
-				{
-					list.Add(renderer);
-				}
-			}
-			foreach (Renderer current in toAdd)
-			{
-				if (!list.Contains(current))
-				{
-					serializedProperty.arraySize++;
-					serializedProperty.GetArrayElementAtIndex(serializedProperty.arraySize - 1).FindPropertyRelative("renderer").objectReferenceValue = current;
-					list.Add(current);
-				}
-			}
-			base.serializedObject.ApplyModifiedProperties();
-			this.m_LODGroup.RecalculateBounds();
-		}
-
-		private void DeletedLOD()
-		{
-			this.m_SelectedLOD--;
-		}
-
-		private static void UpdateCamera(float desiredPercentage, LODGroup group)
-		{
-			Vector3 pos = LODUtility.CalculateWorldReferencePoint(group);
-			float relativeScreenHeight = Mathf.Max(desiredPercentage / QualitySettings.lodBias, 1E-06f);
-			float num = LODUtility.CalculateDistance(SceneView.lastActiveSceneView.camera, relativeScreenHeight, group);
-			if (SceneView.lastActiveSceneView.camera.orthographic)
-			{
-				num *= Mathf.Sqrt(2f * SceneView.lastActiveSceneView.camera.aspect);
-			}
-			SceneView.lastActiveSceneView.LookAtDirect(pos, SceneView.lastActiveSceneView.camera.transform.rotation, num);
-		}
-
-		private void UpdateSelectedLODFromCamera(IEnumerable<LODGroupGUI.LODInfo> lods, float cameraPercent)
-		{
-			foreach (LODGroupGUI.LODInfo current in lods)
-			{
-				if (cameraPercent > current.RawScreenPercent)
-				{
-					this.m_SelectedLOD = current.LODLevel;
-					break;
-				}
-			}
-		}
-
-		private void DrawLODLevelSlider(Rect sliderPosition, List<LODGroupGUI.LODInfo> lods)
-		{
-			int controlID = GUIUtility.GetControlID(this.m_LODSliderId, FocusType.Passive);
-			int controlID2 = GUIUtility.GetControlID(this.m_CameraSliderId, FocusType.Passive);
-			Event current = Event.current;
-			EventType typeForControl = current.GetTypeForControl(controlID);
-			switch (typeForControl)
-			{
-			case EventType.MouseDown:
-			{
-				if (current.button == 1 && sliderPosition.Contains(current.mousePosition))
-				{
-					float cameraPercent = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
-					GenericMenu genericMenu = new GenericMenu();
-					if (lods.Count >= 8)
-					{
-						genericMenu.AddDisabledItem(EditorGUIUtility.TextContent("Insert Before"));
-					}
-					else
-					{
-						genericMenu.AddItem(EditorGUIUtility.TextContent("Insert Before"), false, new GenericMenu.MenuFunction(new LODGroupEditor.LODAction(lods, cameraPercent, current.mousePosition, this.m_LODs, null).InsertLOD));
-					}
-					bool flag = true;
-					if (lods.Count > 0 && lods[lods.Count - 1].RawScreenPercent < cameraPercent)
-					{
-						flag = false;
-					}
-					if (flag)
-					{
-						genericMenu.AddDisabledItem(EditorGUIUtility.TextContent("Delete"));
-					}
-					else
-					{
-						genericMenu.AddItem(EditorGUIUtility.TextContent("Delete"), false, new GenericMenu.MenuFunction(new LODGroupEditor.LODAction(lods, cameraPercent, current.mousePosition, this.m_LODs, new LODGroupEditor.LODAction.Callback(this, ldftn(DeletedLOD))).DeleteLOD));
-					}
-					genericMenu.ShowAsContext();
-					bool flag2 = false;
-					foreach (LODGroupGUI.LODInfo current2 in lods)
-					{
-						if (current2.m_RangePosition.Contains(current.mousePosition))
-						{
-							this.m_SelectedLOD = current2.LODLevel;
-							flag2 = true;
-							break;
-						}
-					}
-					if (!flag2)
-					{
-						this.m_SelectedLOD = -1;
-					}
-					current.Use();
-					goto IL_6FF;
-				}
-				Rect rect = sliderPosition;
-				rect.x -= 5f;
-				rect.width += 10f;
-				if (rect.Contains(current.mousePosition))
-				{
-					current.Use();
-					GUIUtility.hotControl = controlID;
-					bool flag3 = false;
-					IOrderedEnumerable<LODGroupGUI.LODInfo> collection = from lod in lods
-					where lod.ScreenPercent > 0.5f
-					select lod into x
-					orderby x.LODLevel descending
-					select x;
-					IOrderedEnumerable<LODGroupGUI.LODInfo> collection2 = from lod in lods
-					where lod.ScreenPercent <= 0.5f
-					select lod into x
-					orderby x.LODLevel
-					select x;
-					List<LODGroupGUI.LODInfo> list = new List<LODGroupGUI.LODInfo>();
-					list.AddRange(collection);
-					list.AddRange(collection2);
-					foreach (LODGroupGUI.LODInfo current3 in list)
-					{
-						if (current3.m_ButtonPosition.Contains(current.mousePosition))
-						{
-							this.m_SelectedLODSlider = current3.LODLevel;
-							flag3 = true;
-							this.BeginLODDrag(current3.RawScreenPercent + 0.001f, this.m_LODGroup);
-							break;
-						}
-					}
-					if (!flag3)
-					{
-						foreach (LODGroupGUI.LODInfo current4 in lods)
-						{
-							if (current4.m_RangePosition.Contains(current.mousePosition))
-							{
-								this.m_SelectedLOD = current4.LODLevel;
-								break;
-							}
-						}
-					}
-				}
-				goto IL_6FF;
-			}
-			case EventType.MouseUp:
-				if (GUIUtility.hotControl == controlID)
-				{
-					GUIUtility.hotControl = 0;
-					this.m_SelectedLODSlider = -1;
-					this.EndLODDrag();
-					current.Use();
-				}
-				goto IL_6FF;
-			case EventType.MouseMove:
-			case EventType.KeyDown:
-			case EventType.KeyUp:
-			case EventType.ScrollWheel:
-			case EventType.Layout:
-				IL_5B:
-				if (typeForControl != EventType.DragExited)
-				{
-					goto IL_6FF;
-				}
-				current.Use();
-				goto IL_6FF;
-			case EventType.MouseDrag:
-				if (GUIUtility.hotControl == controlID && this.m_SelectedLODSlider >= 0 && lods[this.m_SelectedLODSlider] != null)
-				{
-					current.Use();
-					float cameraPercent2 = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
-					LODGroupGUI.SetSelectedLODLevelPercentage(cameraPercent2 - 0.001f, this.m_SelectedLODSlider, lods);
-					SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods[this.m_SelectedLODSlider].LODLevel));
-					serializedProperty.floatValue = lods[this.m_SelectedLODSlider].RawScreenPercent;
-					this.UpdateLODDrag(cameraPercent2, this.m_LODGroup);
-				}
-				goto IL_6FF;
-			case EventType.Repaint:
-				LODGroupGUI.DrawLODSlider(sliderPosition, lods, this.activeLOD);
-				goto IL_6FF;
-			case EventType.DragUpdated:
-			case EventType.DragPerform:
-			{
-				int num = -2;
-				foreach (LODGroupGUI.LODInfo current5 in lods)
-				{
-					if (current5.m_RangePosition.Contains(current.mousePosition))
-					{
-						num = current5.LODLevel;
-						break;
-					}
-				}
-				if (num == -2)
-				{
-					if (LODGroupGUI.GetCulledBox(sliderPosition, (lods.Count <= 0) ? 1f : lods[lods.Count - 1].ScreenPercent).Contains(current.mousePosition))
-					{
-						num = -1;
-					}
-				}
-				if (num >= -1)
-				{
-					this.m_SelectedLOD = num;
-					if (DragAndDrop.objectReferences.Count<UnityEngine.Object>() > 0)
-					{
-						DragAndDrop.visualMode = ((!this.m_IsPrefab) ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None);
-						if (current.type == EventType.DragPerform)
-						{
-							IEnumerable<GameObject> selectedGameObjects = from go in DragAndDrop.objectReferences
-							where go as GameObject != null
-							select go as GameObject;
-							IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
-							if (num == -1)
-							{
-								this.m_LODs.arraySize++;
-								SerializedProperty serializedProperty2 = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods.Count));
-								if (lods.Count == 0)
-								{
-									serializedProperty2.floatValue = 0.5f;
-								}
-								else
-								{
-									SerializedProperty serializedProperty3 = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods.Count - 1));
-									serializedProperty2.floatValue = serializedProperty3.floatValue / 2f;
-								}
-								this.m_SelectedLOD = lods.Count;
-								this.AddGameObjectRenderers(renderers, false);
-							}
-							else
-							{
-								this.AddGameObjectRenderers(renderers, true);
-							}
-							DragAndDrop.AcceptDrag();
-						}
-					}
-					current.Use();
-					goto IL_6FF;
-				}
-				goto IL_6FF;
-			}
-			}
-			goto IL_5B;
-			IL_6FF:
-			if (SceneView.lastActiveSceneView != null && SceneView.lastActiveSceneView.camera != null && !this.m_IsPrefab)
-			{
-				Camera camera = SceneView.lastActiveSceneView.camera;
-				float activeRelativeScreenSize = LODUtility.CalculateVisualizationData(camera, this.m_LODGroup, -1).activeRelativeScreenSize;
-				float value = LODGroupGUI.DelinearizeScreenPercentage(activeRelativeScreenSize);
-				Vector3 b = LODUtility.CalculateWorldReferencePoint(this.m_LODGroup);
-				Vector3 normalized = (SceneView.lastActiveSceneView.camera.transform.position - b).normalized;
-				if (Vector3.Dot(camera.transform.forward, normalized) > 0f)
-				{
-					value = 1f;
-				}
-				Rect rect2 = LODGroupGUI.CalcLODButton(sliderPosition, Mathf.Clamp01(value));
-				Rect position = new Rect(rect2.center.x - 15f, rect2.y - 25f, 32f, 32f);
-				Rect position2 = new Rect(rect2.center.x - 1f, rect2.y, 2f, rect2.height);
-				Rect position3 = new Rect(position.center.x - 5f, position2.yMax, 35f, 20f);
-				switch (current.GetTypeForControl(controlID2))
-				{
-				case EventType.MouseDown:
-					if (position.Contains(current.mousePosition))
-					{
-						current.Use();
-						float cameraPercent3 = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
-						this.UpdateSelectedLODFromCamera(lods, cameraPercent3);
-						GUIUtility.hotControl = controlID2;
-						this.BeginLODDrag(cameraPercent3, this.m_LODGroup);
-					}
-					break;
-				case EventType.MouseUp:
-					if (GUIUtility.hotControl == controlID2)
-					{
-						this.EndLODDrag();
-						GUIUtility.hotControl = 0;
-						current.Use();
-					}
-					break;
-				case EventType.MouseDrag:
-					if (GUIUtility.hotControl == controlID2)
-					{
-						current.Use();
-						float cameraPercent4 = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
-						this.UpdateSelectedLODFromCamera(lods, cameraPercent4);
-						this.UpdateLODDrag(cameraPercent4, this.m_LODGroup);
-					}
-					break;
-				case EventType.Repaint:
-				{
-					Color backgroundColor = GUI.backgroundColor;
-					GUI.backgroundColor = new Color(backgroundColor.r, backgroundColor.g, backgroundColor.b, 0.8f);
-					LODGroupGUI.Styles.m_LODCameraLine.Draw(position2, false, false, false, false);
-					GUI.backgroundColor = backgroundColor;
-					GUI.Label(position, LODGroupGUI.Styles.m_CameraIcon, GUIStyle.none);
-					LODGroupGUI.Styles.m_LODSliderText.Draw(position3, string.Format("{0:0}%", Mathf.Clamp01(activeRelativeScreenSize) * 100f), false, false, false, false);
-					break;
-				}
-				}
-			}
-		}
-
-		private void BeginLODDrag(float desiredPercentage, LODGroup group)
-		{
-			if (!(SceneView.lastActiveSceneView == null) && !(SceneView.lastActiveSceneView.camera == null) && !this.m_IsPrefab)
-			{
-				LODGroupEditor.UpdateCamera(desiredPercentage, group);
-				SceneView.lastActiveSceneView.ClearSearchFilter();
-				SceneView.lastActiveSceneView.SetSceneViewFiltering(true);
-				HierarchyProperty.FilterSingleSceneObject(group.gameObject.GetInstanceID(), false);
-				SceneView.RepaintAll();
-			}
-		}
-
-		private void UpdateLODDrag(float desiredPercentage, LODGroup group)
-		{
-			if (!(SceneView.lastActiveSceneView == null) && !(SceneView.lastActiveSceneView.camera == null) && !this.m_IsPrefab)
-			{
-				LODGroupEditor.UpdateCamera(desiredPercentage, group);
-				SceneView.RepaintAll();
-			}
-		}
-
-		private void EndLODDrag()
-		{
-			if (!(SceneView.lastActiveSceneView == null) && !(SceneView.lastActiveSceneView.camera == null) && !this.m_IsPrefab)
-			{
-				SceneView.lastActiveSceneView.SetSceneViewFiltering(false);
-				SceneView.lastActiveSceneView.ClearSearchFilter();
-				HierarchyProperty.ClearSceneObjectsFilter();
-			}
-		}
-
-		private void SendPercentagesToLightmapScale()
-		{
-			List<LODGroupEditor.LODLightmapScale> list = new List<LODGroupEditor.LODLightmapScale>();
-			for (int i = 0; i < this.m_NumberOfLODs; i++)
-			{
-				SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", i));
-				List<SerializedProperty> list2 = new List<SerializedProperty>();
-				for (int j = 0; j < serializedProperty.arraySize; j++)
-				{
-					SerializedProperty serializedProperty2 = serializedProperty.GetArrayElementAtIndex(j).FindPropertyRelative("renderer");
-					if (serializedProperty2 != null)
-					{
-						list2.Add(serializedProperty2);
-					}
-				}
-				float scale = (i != 0) ? base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", i - 1)).floatValue : 1f;
-				list.Add(new LODGroupEditor.LODLightmapScale(scale, list2));
-			}
-			for (int k = 0; k < this.m_NumberOfLODs; k++)
-			{
-				LODGroupEditor.SetLODLightmapScale(list[k]);
-			}
-		}
-
-		private static void SetLODLightmapScale(LODGroupEditor.LODLightmapScale lodRenderer)
-		{
-			foreach (SerializedProperty current in lodRenderer.m_Renderers)
-			{
-				SerializedObject serializedObject = new SerializedObject(current.objectReferenceValue);
-				SerializedProperty serializedProperty = serializedObject.FindProperty("m_ScaleInLightmap");
-				serializedProperty.floatValue = Mathf.Max(0f, lodRenderer.m_Scale * (1f / LightmapVisualization.GetLightmapLODLevelScale((Renderer)current.objectReferenceValue)));
-				serializedObject.ApplyModifiedProperties();
-			}
-		}
-
-		public override bool HasPreviewGUI()
-		{
-			return base.target != null;
-		}
-
-		public override void OnPreviewGUI(Rect r, GUIStyle background)
-		{
-			if (!ShaderUtil.hardwareSupportsRectRenderTexture)
-			{
-				if (Event.current.type == EventType.Repaint)
-				{
-					EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 40f), "LOD preview \nnot available");
-				}
-			}
-			else
-			{
-				this.InitPreview();
-				this.m_PreviewDir = PreviewGUI.Drag2D(this.m_PreviewDir, r);
-				this.m_PreviewDir.y = Mathf.Clamp(this.m_PreviewDir.y, -89f, 89f);
-				if (Event.current.type == EventType.Repaint)
-				{
-					this.m_PreviewUtility.BeginPreview(r, background);
-					this.DoRenderPreview();
-					this.m_PreviewUtility.EndAndDrawPreview(r);
-				}
-			}
-		}
-
-		private void InitPreview()
-		{
-			if (this.m_PreviewUtility == null)
-			{
-				this.m_PreviewUtility = new PreviewRenderUtility();
-			}
-			if (LODGroupEditor.kSLightIcons[0] == null)
-			{
-				LODGroupEditor.kSLightIcons[0] = EditorGUIUtility.IconContent("PreMatLight0");
-				LODGroupEditor.kSLightIcons[1] = EditorGUIUtility.IconContent("PreMatLight1");
-			}
-		}
-
-		protected void DoRenderPreview()
-		{
-			if (this.m_PreviewUtility.m_RenderTexture.width > 0 && this.m_PreviewUtility.m_RenderTexture.height > 0 && this.m_NumberOfLODs > 0 && this.activeLOD >= 0)
-			{
-				Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
-				bool flag = false;
-				List<MeshFilter> list = new List<MeshFilter>();
-				SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
-				for (int i = 0; i < serializedProperty.arraySize; i++)
-				{
-					SerializedProperty serializedProperty2 = serializedProperty.GetArrayElementAtIndex(i).FindPropertyRelative("renderer");
-					Renderer renderer = serializedProperty2.objectReferenceValue as Renderer;
-					if (!(renderer == null))
-					{
-						MeshFilter component = renderer.GetComponent<MeshFilter>();
-						if (component != null && component.sharedMesh != null && component.sharedMesh.subMeshCount > 0)
-						{
-							list.Add(component);
-						}
-						if (!flag)
-						{
-							bounds = renderer.bounds;
-							flag = true;
-						}
-						else
-						{
-							bounds.Encapsulate(renderer.bounds);
-						}
-					}
-				}
-				if (flag)
-				{
-					float magnitude = bounds.extents.magnitude;
-					float d = magnitude * 10f;
-					Vector2 vector = -(this.m_PreviewDir / 100f);
-					this.m_PreviewUtility.m_Camera.transform.position = bounds.center + new Vector3(Mathf.Sin(vector.x) * Mathf.Cos(vector.y), Mathf.Sin(vector.y), Mathf.Cos(vector.x) * Mathf.Cos(vector.y)) * d;
-					this.m_PreviewUtility.m_Camera.transform.LookAt(bounds.center);
-					this.m_PreviewUtility.m_Camera.nearClipPlane = 0.05f;
-					this.m_PreviewUtility.m_Camera.farClipPlane = 1000f;
-					this.m_PreviewUtility.m_Light[0].intensity = 1f;
-					this.m_PreviewUtility.m_Light[0].transform.rotation = Quaternion.Euler(50f, 50f, 0f);
-					this.m_PreviewUtility.m_Light[1].intensity = 1f;
-					Color ambient = new Color(0.2f, 0.2f, 0.2f, 0f);
-					InternalEditorUtility.SetCustomLighting(this.m_PreviewUtility.m_Light, ambient);
-					foreach (MeshFilter current in list)
-					{
-						for (int j = 0; j < current.sharedMesh.subMeshCount; j++)
-						{
-							if (j < current.GetComponent<Renderer>().sharedMaterials.Length)
-							{
-								Matrix4x4 matrix = Matrix4x4.TRS(current.transform.position, current.transform.rotation, current.transform.localScale);
-								this.m_PreviewUtility.DrawMesh(current.sharedMesh, matrix, current.GetComponent<Renderer>().sharedMaterials[j], j);
-							}
-						}
-					}
-					bool fog = RenderSettings.fog;
-					Unsupported.SetRenderSettingsUseFogNoDirty(false);
-					this.m_PreviewUtility.m_Camera.Render();
-					Unsupported.SetRenderSettingsUseFogNoDirty(fog);
-					InternalEditorUtility.RemoveCustomLighting();
-				}
-			}
-		}
-
-		public override string GetInfoString()
-		{
-			string result;
-			if (SceneView.lastActiveSceneView == null || SceneView.lastActiveSceneView.camera == null || this.m_NumberOfLODs <= 0 || this.activeLOD < 0)
-			{
-				result = "";
-			}
-			else
-			{
-				List<Material> list = new List<Material>();
-				SerializedProperty serializedProperty = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
-				for (int i = 0; i < serializedProperty.arraySize; i++)
-				{
-					SerializedProperty serializedProperty2 = serializedProperty.GetArrayElementAtIndex(i).FindPropertyRelative("renderer");
-					Renderer renderer = serializedProperty2.objectReferenceValue as Renderer;
-					if (renderer != null)
-					{
-						list.AddRange(renderer.sharedMaterials);
-					}
-				}
-				Camera camera = SceneView.lastActiveSceneView.camera;
-				LODVisualizationInformation lODVisualizationInformation = LODUtility.CalculateVisualizationData(camera, this.m_LODGroup, this.activeLOD);
-				result = ((this.activeLOD == -1) ? "LOD: culled" : string.Format("{0} Renderer(s)\n{1} Triangle(s)\n{2} Material(s)", serializedProperty.arraySize, lODVisualizationInformation.triangleCount, list.Distinct<Material>().Count<Material>()));
-			}
-			return result;
-		}
-	}
+            public LODLightmapScale(float scale, List<SerializedProperty> renderers)
+            {
+                this.m_Scale = scale;
+                this.m_Renderers = renderers;
+            }
+        }
+    }
 }
+

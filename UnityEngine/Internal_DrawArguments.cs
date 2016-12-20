@@ -1,19 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal struct Internal_DrawArguments
-	{
-		public IntPtr target;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public Rect position;
-
-		public int isHover;
-
-		public int isActive;
-
-		public int on;
-
-		public int hasKeyboardFocus;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct Internal_DrawArguments
+    {
+        public IntPtr target;
+        public Rect position;
+        public int isHover;
+        public int isActive;
+        public int on;
+        public int hasKeyboardFocus;
+    }
 }
+

@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum XboxOnePackageUpdateGranularity
-	{
-		Chunk = 1,
-		File
-	}
+    using System;
+
+    public enum XboxOnePackageUpdateGranularity
+    {
+        Chunk = 1,
+        File = 2
+    }
 }
+

@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemCollisionType
-	{
-		Planes,
-		World
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The type of collisions to use for a given particle system.</para>
+    /// </summary>
+    public enum ParticleSystemCollisionType
+    {
+        Planes,
+        World
+    }
 }
+

@@ -1,93 +1,93 @@
-using System;
-using UnityEditor;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AddCurvesPopup : EditorWindow
-	{
-		public delegate void OnNewCurveAdded(AddCurvesPopupPropertyNode node);
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using UnityEditor;
+    using UnityEngine;
 
-		private const float k_WindowPadding = 3f;
+    internal class AddCurvesPopup : EditorWindow
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static AnimationWindowSelection <selection>k__BackingField;
+        private const float k_WindowPadding = 3f;
+        private static OnNewCurveAdded NewCurveAddedCallback;
+        private static AddCurvesPopup s_AddCurvesPopup;
+        private static AddCurvesPopupHierarchy s_Hierarchy;
+        private static long s_LastClosedTime;
+        internal static IAnimationRecordingState s_State;
+        private static Vector2 windowSize = new Vector2(240f, 250f);
 
-		internal static IAnimationRecordingState s_State;
+        internal static void AddNewCurve(AddCurvesPopupPropertyNode node)
+        {
+            AnimationWindowUtility.CreateDefaultCurves(s_State, node.selectionItem, node.curveBindings);
+            if (NewCurveAddedCallback != null)
+            {
+                NewCurveAddedCallback(node);
+            }
+        }
 
-		private static AddCurvesPopup s_AddCurvesPopup;
+        private void Init(Rect buttonRect)
+        {
+            buttonRect = GUIUtility.GUIToScreenRect(buttonRect);
+            PopupLocationHelper.PopupLocation[] locationPriorityOrder = new PopupLocationHelper.PopupLocation[] { PopupLocationHelper.PopupLocation.Right };
+            base.ShowAsDropDown(buttonRect, windowSize, locationPriorityOrder);
+        }
 
-		private static long s_LastClosedTime;
+        private void OnDisable()
+        {
+            s_LastClosedTime = DateTime.Now.Ticks / 0x2710L;
+            s_AddCurvesPopup = null;
+            s_Hierarchy = null;
+        }
 
-		private static AddCurvesPopupHierarchy s_Hierarchy;
+        internal void OnGUI()
+        {
+            if (Event.current.type != EventType.Layout)
+            {
+                if (s_Hierarchy == null)
+                {
+                    s_Hierarchy = new AddCurvesPopupHierarchy();
+                }
+                Rect position = new Rect(1f, 1f, windowSize.x - 3f, windowSize.y - 3f);
+                GUI.Box(new Rect(0f, 0f, windowSize.x, windowSize.y), GUIContent.none, new GUIStyle("grey_border"));
+                s_Hierarchy.OnGUI(position, this);
+            }
+        }
 
-		private static Vector2 windowSize = new Vector2(240f, 250f);
+        internal static bool ShowAtPosition(Rect buttonRect, IAnimationRecordingState state, OnNewCurveAdded newCurveCallback)
+        {
+            long num = DateTime.Now.Ticks / 0x2710L;
+            if (num >= (s_LastClosedTime + 50L))
+            {
+                Event.current.Use();
+                if (s_AddCurvesPopup == null)
+                {
+                    s_AddCurvesPopup = ScriptableObject.CreateInstance<AddCurvesPopup>();
+                }
+                NewCurveAddedCallback = newCurveCallback;
+                s_State = state;
+                s_AddCurvesPopup.Init(buttonRect);
+                return true;
+            }
+            return false;
+        }
 
-		private static AddCurvesPopup.OnNewCurveAdded NewCurveAddedCallback;
+        internal static AnimationWindowSelection selection
+        {
+            [CompilerGenerated]
+            get
+            {
+                return <selection>k__BackingField;
+            }
+            [CompilerGenerated]
+            set
+            {
+                <selection>k__BackingField = value;
+            }
+        }
 
-		internal static AnimationWindowSelection selection
-		{
-			get;
-			set;
-		}
-
-		private void Init(Rect buttonRect)
-		{
-			buttonRect = GUIUtility.GUIToScreenRect(buttonRect);
-			base.ShowAsDropDown(buttonRect, AddCurvesPopup.windowSize, new PopupLocationHelper.PopupLocation[]
-			{
-				PopupLocationHelper.PopupLocation.Right
-			});
-		}
-
-		private void OnDisable()
-		{
-			AddCurvesPopup.s_LastClosedTime = DateTime.Now.Ticks / 10000L;
-			AddCurvesPopup.s_AddCurvesPopup = null;
-			AddCurvesPopup.s_Hierarchy = null;
-		}
-
-		internal static void AddNewCurve(AddCurvesPopupPropertyNode node)
-		{
-			AnimationWindowUtility.CreateDefaultCurves(AddCurvesPopup.s_State, node.selectionItem, node.curveBindings);
-			if (AddCurvesPopup.NewCurveAddedCallback != null)
-			{
-				AddCurvesPopup.NewCurveAddedCallback(node);
-			}
-		}
-
-		internal static bool ShowAtPosition(Rect buttonRect, IAnimationRecordingState state, AddCurvesPopup.OnNewCurveAdded newCurveCallback)
-		{
-			long num = DateTime.Now.Ticks / 10000L;
-			bool result;
-			if (num >= AddCurvesPopup.s_LastClosedTime + 50L)
-			{
-				Event.current.Use();
-				if (AddCurvesPopup.s_AddCurvesPopup == null)
-				{
-					AddCurvesPopup.s_AddCurvesPopup = ScriptableObject.CreateInstance<AddCurvesPopup>();
-				}
-				AddCurvesPopup.NewCurveAddedCallback = newCurveCallback;
-				AddCurvesPopup.s_State = state;
-				AddCurvesPopup.s_AddCurvesPopup.Init(buttonRect);
-				result = true;
-			}
-			else
-			{
-				result = false;
-			}
-			return result;
-		}
-
-		internal void OnGUI()
-		{
-			if (Event.current.type != EventType.Layout)
-			{
-				if (AddCurvesPopup.s_Hierarchy == null)
-				{
-					AddCurvesPopup.s_Hierarchy = new AddCurvesPopupHierarchy();
-				}
-				Rect position = new Rect(1f, 1f, AddCurvesPopup.windowSize.x - 3f, AddCurvesPopup.windowSize.y - 3f);
-				GUI.Box(new Rect(0f, 0f, AddCurvesPopup.windowSize.x, AddCurvesPopup.windowSize.y), GUIContent.none, new GUIStyle("grey_border"));
-				AddCurvesPopup.s_Hierarchy.OnGUI(position, this);
-			}
-		}
-	}
+        public delegate void OnNewCurveAdded(AddCurvesPopupPropertyNode node);
+    }
 }
+

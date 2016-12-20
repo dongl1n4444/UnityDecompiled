@@ -1,86 +1,85 @@
-using System;
-using UnityEditor.Sprites;
-using UnityEditor.VersionControl;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class CreateBuiltinWindows
-	{
-		[MenuItem("Window/Scene %1", false, 2000)]
-		private static void ShowSceneView()
-		{
-			EditorWindow.GetWindow<SceneView>();
-		}
+    using System;
 
-		[MenuItem("Window/Game %2", false, 2001)]
-		private static void ShowGameView()
-		{
-			EditorWindow.GetWindow<GameView>();
-		}
+    internal class CreateBuiltinWindows
+    {
+        [MenuItem("Window/Animation %6", false, 0x7d6)]
+        private static void ShowAnimationWindow()
+        {
+            EditorWindow.GetWindow<AnimationWindow>();
+        }
 
-		[MenuItem("Window/Inspector %3", false, 2002)]
-		private static void ShowInspector()
-		{
-			EditorWindow.GetWindow<InspectorWindow>();
-		}
+        [MenuItem("Window/Audio Mixer %8", false, 0x7d8)]
+        private static void ShowAudioMixer()
+        {
+            AudioMixerWindow.Create();
+        }
 
-		[MenuItem("Window/Hierarchy %4", false, 2003)]
-		private static void ShowNewHierarchy()
-		{
-			EditorWindow.GetWindow<SceneHierarchyWindow>();
-		}
+        [MenuItem("Window/Console %#c", false, 0x898)]
+        private static void ShowConsole()
+        {
+            EditorWindow.GetWindow<ConsoleWindow>();
+        }
 
-		[MenuItem("Window/Project %5", false, 2004)]
-		private static void ShowProject()
-		{
-			EditorWindow.GetWindow<ProjectBrowser>();
-		}
+        [MenuItem("Window/Game %2", false, 0x7d1)]
+        private static void ShowGameView()
+        {
+            EditorWindow.GetWindow<GameView>();
+        }
 
-		[MenuItem("Window/Animation %6", false, 2006)]
-		private static void ShowAnimationWindow()
-		{
-			EditorWindow.GetWindow<AnimationWindow>();
-		}
+        [MenuItem("Window/Inspector %3", false, 0x7d2)]
+        private static void ShowInspector()
+        {
+            EditorWindow.GetWindow<InspectorWindow>();
+        }
 
-		private static void ShowProfilerWindow()
-		{
-			EditorWindow.GetWindow<ProfilerWindow>();
-		}
+        [MenuItem("Window/Experimental/Look Dev", false, 0x7df)]
+        private static void ShowLookDevTool()
+        {
+            EditorWindow.GetWindow<LookDevView>();
+        }
 
-		[MenuItem("Window/Audio Mixer %8", false, 2008)]
-		private static void ShowAudioMixer()
-		{
-			AudioMixerWindow.Create();
-		}
+        [MenuItem("Window/Hierarchy %4", false, 0x7d3)]
+        private static void ShowNewHierarchy()
+        {
+            EditorWindow.GetWindow<SceneHierarchyWindow>();
+        }
 
-		private static void ShowVersionControl()
-		{
-			if (EditorSettings.externalVersionControl == ExternalVersionControl.AssetServer)
-			{
-				ASEditorBackend.DoAS();
-			}
-			else
-			{
-				EditorWindow.GetWindow<WindowPending>();
-			}
-		}
+        private static void ShowProfilerWindow()
+        {
+            EditorWindow.GetWindow<ProfilerWindow>();
+        }
 
-		[MenuItem("Window/Sprite Packer", false, 2014)]
-		private static void ShowSpritePackerWindow()
-		{
-			EditorWindow.GetWindow<PackerWindow>();
-		}
+        [MenuItem("Window/Project %5", false, 0x7d4)]
+        private static void ShowProject()
+        {
+            EditorWindow.GetWindow<ProjectBrowser>();
+        }
 
-		[MenuItem("Window/Console %#c", false, 2200)]
-		private static void ShowConsole()
-		{
-			EditorWindow.GetWindow<ConsoleWindow>();
-		}
+        [MenuItem("Window/Scene %1", false, 0x7d0)]
+        private static void ShowSceneView()
+        {
+            EditorWindow.GetWindow<SceneView>();
+        }
 
-		[MenuItem("Window/Experimental/Look Dev", false, 2015)]
-		private static void ShowLookDevTool()
-		{
-			EditorWindow.GetWindow<LookDevView>();
-		}
-	}
+        [MenuItem("Window/Sprite Packer", false, 0x7de)]
+        private static void ShowSpritePackerWindow()
+        {
+            EditorWindow.GetWindow<PackerWindow>();
+        }
+
+        private static void ShowVersionControl()
+        {
+            if (EditorSettings.externalVersionControl == ExternalVersionControl.AssetServer)
+            {
+                ASEditorBackend.DoAS();
+            }
+            else
+            {
+                EditorWindow.GetWindow<WindowPending>();
+            }
+        }
+    }
 }
+

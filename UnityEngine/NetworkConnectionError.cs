@@ -1,23 +1,72 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum NetworkConnectionError
-	{
-		NoError,
-		RSAPublicKeyMismatch = 21,
-		InvalidPassword = 23,
-		ConnectionFailed = 15,
-		TooManyConnectedPlayers = 18,
-		ConnectionBanned = 22,
-		AlreadyConnectedToServer = 16,
-		AlreadyConnectedToAnotherServer = -1,
-		CreateSocketOrThreadFailure = -2,
-		IncorrectParameters = -3,
-		EmptyConnectTarget = -4,
-		InternalDirectConnectFailed = -5,
-		NATTargetNotConnected = 69,
-		NATTargetConnectionLost = 71,
-		NATPunchthroughFailed = 73
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Possible status messages returned by Network.Connect and in MonoBehaviour.OnFailedToConnect|OnFailedToConnect in case the error was not immediate.</para>
+    /// </summary>
+    public enum NetworkConnectionError
+    {
+        /// <summary>
+        /// <para>Cannot connect to two servers at once. Close the connection before connecting again.</para>
+        /// </summary>
+        AlreadyConnectedToAnotherServer = -1,
+        /// <summary>
+        /// <para>We are already connected to this particular server (can happen after fast disconnect/reconnect).</para>
+        /// </summary>
+        AlreadyConnectedToServer = 0x10,
+        /// <summary>
+        /// <para>We are banned from the system we attempted to connect to (likely temporarily).</para>
+        /// </summary>
+        ConnectionBanned = 0x16,
+        /// <summary>
+        /// <para>Connection attempt failed, possibly because of internal connectivity problems.</para>
+        /// </summary>
+        ConnectionFailed = 15,
+        /// <summary>
+        /// <para>Internal error while attempting to initialize network interface. Socket possibly already in use.</para>
+        /// </summary>
+        CreateSocketOrThreadFailure = -2,
+        /// <summary>
+        /// <para>No host target given in Connect.</para>
+        /// </summary>
+        EmptyConnectTarget = -4,
+        /// <summary>
+        /// <para>Incorrect parameters given to Connect function.</para>
+        /// </summary>
+        IncorrectParameters = -3,
+        /// <summary>
+        /// <para>Client could not connect internally to same network NAT enabled server.</para>
+        /// </summary>
+        InternalDirectConnectFailed = -5,
+        /// <summary>
+        /// <para>The server is using a password and has refused our connection because we did not set the correct password.</para>
+        /// </summary>
+        InvalidPassword = 0x17,
+        /// <summary>
+        /// <para>NAT punchthrough attempt has failed. The cause could be a too restrictive NAT implementation on either endpoints.</para>
+        /// </summary>
+        NATPunchthroughFailed = 0x49,
+        /// <summary>
+        /// <para>Connection lost while attempting to connect to NAT target.</para>
+        /// </summary>
+        NATTargetConnectionLost = 0x47,
+        /// <summary>
+        /// <para>The NAT target we are trying to connect to is not connected to the facilitator server.</para>
+        /// </summary>
+        NATTargetNotConnected = 0x45,
+        /// <summary>
+        /// <para>No error occurred.</para>
+        /// </summary>
+        NoError = 0,
+        /// <summary>
+        /// <para>We presented an RSA public key which does not match what the system we connected to is using.</para>
+        /// </summary>
+        RSAPublicKeyMismatch = 0x15,
+        /// <summary>
+        /// <para>The server is at full capacity, failed to connect.</para>
+        /// </summary>
+        TooManyConnectedPlayers = 0x12
+    }
 }
+

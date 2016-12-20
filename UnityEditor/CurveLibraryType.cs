@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum CurveLibraryType
-	{
-		Unbounded,
-		NormalizedZeroToOne
-	}
+    using System;
+
+    internal enum CurveLibraryType
+    {
+        Unbounded,
+        NormalizedZeroToOne
+    }
 }
+

@@ -1,15 +1,16 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class DragAndDropDelay
-	{
-		public Vector2 mouseDownPosition;
+    using System;
+    using UnityEngine;
 
-		public bool CanStartDrag()
-		{
-			return Vector2.Distance(this.mouseDownPosition, Event.current.mousePosition) > 6f;
-		}
-	}
+    internal class DragAndDropDelay
+    {
+        public Vector2 mouseDownPosition;
+
+        public bool CanStartDrag()
+        {
+            return (Vector2.Distance(this.mouseDownPosition, Event.current.mousePosition) > 6f);
+        }
+    }
 }
+

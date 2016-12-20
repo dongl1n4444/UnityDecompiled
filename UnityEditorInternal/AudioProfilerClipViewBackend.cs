@@ -1,41 +1,41 @@
-using System;
-using System.Collections.Generic;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AudioProfilerClipViewBackend
-	{
-		public delegate void DataUpdateDelegate();
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
 
-		public AudioProfilerClipViewBackend.DataUpdateDelegate OnUpdate;
+    internal class AudioProfilerClipViewBackend
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private List<AudioProfilerClipInfoWrapper> <items>k__BackingField;
+        public AudioProfilerClipTreeViewState m_TreeViewState;
+        public DataUpdateDelegate OnUpdate;
 
-		public AudioProfilerClipTreeViewState m_TreeViewState;
+        public AudioProfilerClipViewBackend(AudioProfilerClipTreeViewState state)
+        {
+            this.m_TreeViewState = state;
+            this.items = new List<AudioProfilerClipInfoWrapper>();
+        }
 
-		public List<AudioProfilerClipInfoWrapper> items
-		{
-			get;
-			private set;
-		}
+        public void SetData(List<AudioProfilerClipInfoWrapper> data)
+        {
+            this.items = data;
+            this.UpdateSorting();
+        }
 
-		public AudioProfilerClipViewBackend(AudioProfilerClipTreeViewState state)
-		{
-			this.m_TreeViewState = state;
-			this.items = new List<AudioProfilerClipInfoWrapper>();
-		}
+        public void UpdateSorting()
+        {
+            this.items.Sort(new AudioProfilerClipInfoHelper.AudioProfilerClipInfoComparer((AudioProfilerClipInfoHelper.ColumnIndices) this.m_TreeViewState.selectedColumn, (AudioProfilerClipInfoHelper.ColumnIndices) this.m_TreeViewState.prevSelectedColumn, this.m_TreeViewState.sortByDescendingOrder));
+            if (this.OnUpdate != null)
+            {
+                this.OnUpdate();
+            }
+        }
 
-		public void SetData(List<AudioProfilerClipInfoWrapper> data)
-		{
-			this.items = data;
-			this.UpdateSorting();
-		}
+        public List<AudioProfilerClipInfoWrapper> items { get; private set; }
 
-		public void UpdateSorting()
-		{
-			this.items.Sort(new AudioProfilerClipInfoHelper.AudioProfilerClipInfoComparer((AudioProfilerClipInfoHelper.ColumnIndices)this.m_TreeViewState.selectedColumn, (AudioProfilerClipInfoHelper.ColumnIndices)this.m_TreeViewState.prevSelectedColumn, this.m_TreeViewState.sortByDescendingOrder));
-			if (this.OnUpdate != null)
-			{
-				this.OnUpdate();
-			}
-		}
-	}
+        public delegate void DataUpdateDelegate();
+    }
 }
+

@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum ResolutionDialogSetting
-	{
-		Disabled,
-		Enabled,
-		HiddenByDefault
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Resolution dialog setting.</para>
+    /// </summary>
+    public enum ResolutionDialogSetting
+    {
+        Disabled,
+        Enabled,
+        HiddenByDefault
+    }
 }
+

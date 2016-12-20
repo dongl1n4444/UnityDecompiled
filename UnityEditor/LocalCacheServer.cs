@@ -1,251 +1,197 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using UnityEditor.Utils;
-using UnityEngine;
-using UnityEngine.Scripting;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class LocalCacheServer : ScriptableSingleton<LocalCacheServer>
-	{
-		[SerializeField]
-		public string path;
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Net;
+    using System.Net.Sockets;
+    using UnityEditor.Utils;
+    using UnityEngine;
+    using UnityEngine.Scripting;
 
-		[SerializeField]
-		public int port;
+    internal class LocalCacheServer : ScriptableSingleton<LocalCacheServer>
+    {
+        public const string CustomPathKey = "LocalCacheServerCustomPath";
+        [SerializeField]
+        public string path;
+        public const string PathKey = "LocalCacheServerPath";
+        [SerializeField]
+        public int pid = -1;
+        [SerializeField]
+        public int port;
+        [SerializeField]
+        public ulong size;
+        public const string SizeKey = "LocalCacheServerSize";
+        [SerializeField]
+        public string time;
 
-		[SerializeField]
-		public ulong size;
+        public static bool CheckValidCacheLocation(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                string[] fileSystemEntries = Directory.GetFileSystemEntries(path);
+                foreach (string str in fileSystemEntries)
+                {
+                    string str2 = Path.GetFileName(str).ToLower();
+                    if (((str2.Length != 2) && (str2 != "temp")) && ((str2 != ".ds_store") && (str2 != "desktop.ini")))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
-		[SerializeField]
-		public int pid = -1;
+        public static void Clear()
+        {
+            Kill();
+            Directory.Delete(GetCacheLocation(), true);
+        }
 
-		[SerializeField]
-		public string time;
+        private void Create(int _port, ulong _size)
+        {
+            string[] components = new string[] { EditorApplication.applicationContentsPath, "Tools", "nodejs" };
+            string fileName = Paths.Combine(components);
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                string[] textArray2 = new string[] { fileName, "node.exe" };
+                fileName = Paths.Combine(textArray2);
+            }
+            else
+            {
+                string[] textArray3 = new string[] { fileName, "bin", "node" };
+                fileName = Paths.Combine(textArray3);
+            }
+            this.path = GetCacheLocation();
+            string[] textArray4 = new string[] { EditorApplication.applicationContentsPath, "Tools", "CacheServer", "main.js" };
+            string str2 = Paths.Combine(textArray4);
+            ProcessStartInfo info2 = new ProcessStartInfo(fileName);
+            object[] objArray1 = new object[] { str2, " --port ", _port, " --path ", this.path, " --nolegacy --monitor-parent-process ", Process.GetCurrentProcess().Id, " --silent --size ", _size };
+            info2.Arguments = string.Concat(objArray1);
+            info2.UseShellExecute = false;
+            info2.CreateNoWindow = true;
+            ProcessStartInfo info = info2;
+            Process process = new Process {
+                StartInfo = info
+            };
+            process.Start();
+            this.port = _port;
+            this.pid = process.Id;
+            this.size = _size;
+            this.time = process.StartTime.ToString();
+            this.Save(true);
+        }
 
-		public const string SizeKey = "LocalCacheServerSize";
+        public static void CreateIfNeeded()
+        {
+            Process processById = null;
+            try
+            {
+                processById = Process.GetProcessById(ScriptableSingleton<LocalCacheServer>.instance.pid);
+            }
+            catch
+            {
+            }
+            ulong num = (ulong) (((EditorPrefs.GetInt("LocalCacheServerSize", 10) * 0x400L) * 0x400L) * 0x400L);
+            if ((processById != null) && (processById.StartTime.ToString() == ScriptableSingleton<LocalCacheServer>.instance.time))
+            {
+                if ((ScriptableSingleton<LocalCacheServer>.instance.size == num) && (ScriptableSingleton<LocalCacheServer>.instance.path == GetCacheLocation()))
+                {
+                    return;
+                }
+                Kill();
+            }
+            ScriptableSingleton<LocalCacheServer>.instance.Create(GetRandomUnusedPort(), num);
+            WaitForServerToComeAlive(ScriptableSingleton<LocalCacheServer>.instance.port);
+        }
 
-		public const string PathKey = "LocalCacheServerPath";
+        public static string GetCacheLocation()
+        {
+            string str = EditorPrefs.GetString("LocalCacheServerPath");
+            bool @bool = EditorPrefs.GetBool("LocalCacheServerCustomPath");
+            string path = str;
+            if (!@bool || string.IsNullOrEmpty(str))
+            {
+                string[] components = new string[] { OSUtil.GetDefaultCachePath(), "CacheServer" };
+                path = Paths.Combine(components);
+            }
+            Directory.CreateDirectory(path);
+            return path;
+        }
 
-		public const string CustomPathKey = "LocalCacheServerCustomPath";
+        [UsedByNativeCode]
+        public static int GetLocalCacheServerPort()
+        {
+            Setup();
+            return ScriptableSingleton<LocalCacheServer>.instance.port;
+        }
 
-		public static string GetCacheLocation()
-		{
-			string @string = EditorPrefs.GetString("LocalCacheServerPath");
-			bool @bool = EditorPrefs.GetBool("LocalCacheServerCustomPath");
-			string result = @string;
-			if (!@bool || string.IsNullOrEmpty(@string))
-			{
-				result = Paths.Combine(new string[]
-				{
-					OSUtil.GetDefaultCachePath(),
-					"CacheServer"
-				});
-			}
-			Directory.CreateDirectory(result);
-			return result;
-		}
+        public static int GetRandomUnusedPort()
+        {
+            TcpListener listener = new TcpListener(IPAddress.Any, 0);
+            listener.Start();
+            int port = ((IPEndPoint) listener.LocalEndpoint).Port;
+            listener.Stop();
+            return port;
+        }
 
-		private void Create(int _port, ulong _size)
-		{
-			string text = Paths.Combine(new string[]
-			{
-				EditorApplication.applicationContentsPath,
-				"Tools",
-				"nodejs"
-			});
-			if (Application.platform == RuntimePlatform.WindowsEditor)
-			{
-				text = Paths.Combine(new string[]
-				{
-					text,
-					"node.exe"
-				});
-			}
-			else
-			{
-				text = Paths.Combine(new string[]
-				{
-					text,
-					"bin",
-					"node"
-				});
-			}
-			this.path = LocalCacheServer.GetCacheLocation();
-			string text2 = Paths.Combine(new string[]
-			{
-				EditorApplication.applicationContentsPath,
-				"Tools",
-				"CacheServer",
-				"main.js"
-			});
-			ProcessStartInfo startInfo = new ProcessStartInfo(text)
-			{
-				Arguments = string.Concat(new object[]
-				{
-					text2,
-					" --port ",
-					_port,
-					" --path ",
-					this.path,
-					" --nolegacy --monitor-parent-process ",
-					Process.GetCurrentProcess().Id,
-					" --silent --size ",
-					_size
-				}),
-				UseShellExecute = false,
-				CreateNoWindow = true
-			};
-			Process process = new Process();
-			process.StartInfo = startInfo;
-			process.Start();
-			this.port = _port;
-			this.pid = process.Id;
-			this.size = _size;
-			this.time = process.StartTime.ToString();
-			this.Save(true);
-		}
+        public static void Kill()
+        {
+            if (ScriptableSingleton<LocalCacheServer>.instance.pid != -1)
+            {
+                try
+                {
+                    Process.GetProcessById(ScriptableSingleton<LocalCacheServer>.instance.pid).Kill();
+                    ScriptableSingleton<LocalCacheServer>.instance.pid = -1;
+                }
+                catch
+                {
+                }
+            }
+        }
 
-		public static int GetRandomUnusedPort()
-		{
-			TcpListener tcpListener = new TcpListener(IPAddress.Any, 0);
-			tcpListener.Start();
-			int result = ((IPEndPoint)tcpListener.LocalEndpoint).Port;
-			tcpListener.Stop();
-			return result;
-		}
+        public static bool PingHost(string host, int port, int timeout)
+        {
+            bool connected;
+            try
+            {
+                using (TcpClient client = new TcpClient())
+                {
+                    client.BeginConnect(host, port, null, null).AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds((double) timeout));
+                    connected = client.Connected;
+                }
+            }
+            catch
+            {
+                connected = false;
+            }
+            return connected;
+        }
 
-		public static bool PingHost(string host, int port, int timeout)
-		{
-			bool result;
-			try
-			{
-				using (TcpClient tcpClient = new TcpClient())
-				{
-					IAsyncResult asyncResult = tcpClient.BeginConnect(host, port, null, null);
-					asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromMilliseconds((double)timeout));
-					result = tcpClient.Connected;
-				}
-			}
-			catch
-			{
-				result = false;
-			}
-			return result;
-		}
+        public static void Setup()
+        {
+            if (EditorPrefs.GetInt("CacheServerMode") == 0)
+            {
+                CreateIfNeeded();
+            }
+            else
+            {
+                Kill();
+            }
+        }
 
-		public static bool WaitForServerToComeAlive(int port)
-		{
-			bool result;
-			for (int i = 0; i < 500; i++)
-			{
-				if (LocalCacheServer.PingHost("localhost", port, 10))
-				{
-					Console.WriteLine("Server Came alive after " + i * 10 + "ms");
-					result = true;
-					return result;
-				}
-			}
-			result = false;
-			return result;
-		}
-
-		public static void Kill()
-		{
-			if (ScriptableSingleton<LocalCacheServer>.instance.pid != -1)
-			{
-				try
-				{
-					Process processById = Process.GetProcessById(ScriptableSingleton<LocalCacheServer>.instance.pid);
-					processById.Kill();
-					ScriptableSingleton<LocalCacheServer>.instance.pid = -1;
-				}
-				catch
-				{
-				}
-			}
-		}
-
-		public static void CreateIfNeeded()
-		{
-			Process process = null;
-			try
-			{
-				process = Process.GetProcessById(ScriptableSingleton<LocalCacheServer>.instance.pid);
-			}
-			catch
-			{
-			}
-			ulong num = (ulong)((long)EditorPrefs.GetInt("LocalCacheServerSize", 10) * 1024L * 1024L * 1024L);
-			if (process != null && process.StartTime.ToString() == ScriptableSingleton<LocalCacheServer>.instance.time)
-			{
-				if (ScriptableSingleton<LocalCacheServer>.instance.size == num && ScriptableSingleton<LocalCacheServer>.instance.path == LocalCacheServer.GetCacheLocation())
-				{
-					return;
-				}
-				LocalCacheServer.Kill();
-			}
-			ScriptableSingleton<LocalCacheServer>.instance.Create(LocalCacheServer.GetRandomUnusedPort(), num);
-			LocalCacheServer.WaitForServerToComeAlive(ScriptableSingleton<LocalCacheServer>.instance.port);
-		}
-
-		public static void Setup()
-		{
-			if (EditorPrefs.GetInt("CacheServerMode") == 0)
-			{
-				LocalCacheServer.CreateIfNeeded();
-			}
-			else
-			{
-				LocalCacheServer.Kill();
-			}
-		}
-
-		[UsedByNativeCode]
-		public static int GetLocalCacheServerPort()
-		{
-			LocalCacheServer.Setup();
-			return ScriptableSingleton<LocalCacheServer>.instance.port;
-		}
-
-		public static void Clear()
-		{
-			LocalCacheServer.Kill();
-			Directory.Delete(LocalCacheServer.GetCacheLocation(), true);
-		}
-
-		public static bool CheckValidCacheLocation(string path)
-		{
-			bool result;
-			if (Directory.Exists(path))
-			{
-				string[] fileSystemEntries = Directory.GetFileSystemEntries(path);
-				string[] array = fileSystemEntries;
-				for (int i = 0; i < array.Length; i++)
-				{
-					string text = array[i];
-					string text2 = Path.GetFileName(text).ToLower();
-					if (text2.Length != 2)
-					{
-						if (!(text2 == "temp"))
-						{
-							if (!(text2 == ".ds_store"))
-							{
-								if (!(text2 == "desktop.ini"))
-								{
-									result = false;
-									return result;
-								}
-							}
-						}
-					}
-				}
-			}
-			result = true;
-			return result;
-		}
-	}
+        public static bool WaitForServerToComeAlive(int port)
+        {
+            for (int i = 0; i < 500; i++)
+            {
+                if (PingHost("localhost", port, 10))
+                {
+                    Console.WriteLine("Server Came alive after " + (i * 10) + "ms");
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
+

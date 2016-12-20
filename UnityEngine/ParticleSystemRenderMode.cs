@@ -1,14 +1,18 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemRenderMode
-	{
-		Billboard,
-		Stretch,
-		HorizontalBillboard,
-		VerticalBillboard,
-		Mesh,
-		None
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The rendering mode for particle systems (Shuriken).</para>
+    /// </summary>
+    public enum ParticleSystemRenderMode
+    {
+        Billboard,
+        Stretch,
+        HorizontalBillboard,
+        VerticalBillboard,
+        Mesh,
+        None
+    }
 }
+

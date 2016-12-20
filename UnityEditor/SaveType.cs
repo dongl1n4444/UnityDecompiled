@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum SaveType
-	{
-		Binary,
-		Text
-	}
+    using System;
+
+    public enum SaveType
+    {
+        Binary,
+        Text
+    }
 }
+

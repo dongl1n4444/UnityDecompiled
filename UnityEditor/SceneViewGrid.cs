@@ -1,70 +1,68 @@
-using System;
-using UnityEditor.AnimatedValues;
-using UnityEngine;
-using UnityEngine.Events;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class SceneViewGrid
-	{
-		private static PrefColor kViewGridColor = new PrefColor("Scene/Grid", 0.5f, 0.5f, 0.5f, 0.4f);
+    using System;
+    using UnityEditor.AnimatedValues;
+    using UnityEngine;
+    using UnityEngine.Events;
 
-		[SerializeField]
-		private AnimBool xGrid = new AnimBool();
+    [Serializable]
+    internal class SceneViewGrid
+    {
+        private static PrefColor kViewGridColor = new PrefColor("Scene/Grid", 0.5f, 0.5f, 0.5f, 0.4f);
+        [SerializeField]
+        private AnimBool xGrid = new AnimBool();
+        [SerializeField]
+        private AnimBool yGrid = new AnimBool();
+        [SerializeField]
+        private AnimBool zGrid = new AnimBool();
 
-		[SerializeField]
-		private AnimBool yGrid = new AnimBool();
+        public DrawGridParameters PrepareGridRender(Camera camera, Vector3 pivot, Quaternion rotation, float size, bool orthoMode, bool gridVisible)
+        {
+            DrawGridParameters parameters;
+            bool flag = false;
+            bool flag2 = false;
+            bool flag3 = false;
+            if (gridVisible)
+            {
+                if (orthoMode)
+                {
+                    Vector3 vector = (Vector3) (rotation * Vector3.forward);
+                    if (Mathf.Abs(vector.y) > 0.2f)
+                    {
+                        flag2 = true;
+                    }
+                    else if ((vector == Vector3.left) || (vector == Vector3.right))
+                    {
+                        flag = true;
+                    }
+                    else if ((vector == Vector3.forward) || (vector == Vector3.back))
+                    {
+                        flag3 = true;
+                    }
+                }
+                else
+                {
+                    flag2 = true;
+                }
+            }
+            this.xGrid.target = flag;
+            this.yGrid.target = flag2;
+            this.zGrid.target = flag3;
+            parameters.pivot = pivot;
+            parameters.color = (Color) kViewGridColor;
+            parameters.size = size;
+            parameters.alphaX = this.xGrid.faded;
+            parameters.alphaY = this.yGrid.faded;
+            parameters.alphaZ = this.zGrid.faded;
+            return parameters;
+        }
 
-		[SerializeField]
-		private AnimBool zGrid = new AnimBool();
-
-		public void Register(SceneView source)
-		{
-			this.xGrid.valueChanged.AddListener(new UnityAction(source.Repaint));
-			this.yGrid.valueChanged.AddListener(new UnityAction(source.Repaint));
-			this.zGrid.valueChanged.AddListener(new UnityAction(source.Repaint));
-		}
-
-		public DrawGridParameters PrepareGridRender(Camera camera, Vector3 pivot, Quaternion rotation, float size, bool orthoMode, bool gridVisible)
-		{
-			bool target = false;
-			bool target2 = false;
-			bool target3 = false;
-			if (gridVisible)
-			{
-				if (orthoMode)
-				{
-					Vector3 lhs = rotation * Vector3.forward;
-					if (Mathf.Abs(lhs.y) > 0.2f)
-					{
-						target2 = true;
-					}
-					else if (lhs == Vector3.left || lhs == Vector3.right)
-					{
-						target = true;
-					}
-					else if (lhs == Vector3.forward || lhs == Vector3.back)
-					{
-						target3 = true;
-					}
-				}
-				else
-				{
-					target2 = true;
-				}
-			}
-			this.xGrid.target = target;
-			this.yGrid.target = target2;
-			this.zGrid.target = target3;
-			DrawGridParameters result;
-			result.pivot = pivot;
-			result.color = SceneViewGrid.kViewGridColor;
-			result.size = size;
-			result.alphaX = this.xGrid.faded;
-			result.alphaY = this.yGrid.faded;
-			result.alphaZ = this.zGrid.faded;
-			return result;
-		}
-	}
+        public void Register(SceneView source)
+        {
+            this.xGrid.valueChanged.AddListener(new UnityAction(source.Repaint));
+            this.yGrid.valueChanged.AddListener(new UnityAction(source.Repaint));
+            this.zGrid.valueChanged.AddListener(new UnityAction(source.Repaint));
+        }
+    }
 }
+

@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[Flags]
-	internal enum DiagnosticSwitchFlags
-	{
-		None = 0,
-		CanChangeAfterEngineStart = 1
-	}
+    using System;
+
+    [Flags]
+    internal enum DiagnosticSwitchFlags
+    {
+        None,
+        CanChangeAfterEngineStart
+    }
 }
+

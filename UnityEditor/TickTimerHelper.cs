@@ -1,36 +1,31 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class TickTimerHelper
-	{
-		private double m_NextTick;
+    using System;
 
-		private double m_Interval;
+    internal class TickTimerHelper
+    {
+        private double m_Interval;
+        private double m_NextTick;
 
-		public TickTimerHelper(double intervalBetweenTicksInSeconds)
-		{
-			this.m_Interval = intervalBetweenTicksInSeconds;
-		}
+        public TickTimerHelper(double intervalBetweenTicksInSeconds)
+        {
+            this.m_Interval = intervalBetweenTicksInSeconds;
+        }
 
-		public bool DoTick()
-		{
-			bool result;
-			if (EditorApplication.timeSinceStartup > this.m_NextTick)
-			{
-				this.m_NextTick = EditorApplication.timeSinceStartup + this.m_Interval;
-				result = true;
-			}
-			else
-			{
-				result = false;
-			}
-			return result;
-		}
+        public bool DoTick()
+        {
+            if (EditorApplication.timeSinceStartup > this.m_NextTick)
+            {
+                this.m_NextTick = EditorApplication.timeSinceStartup + this.m_Interval;
+                return true;
+            }
+            return false;
+        }
 
-		public void Reset()
-		{
-			this.m_NextTick = 0.0;
-		}
-	}
+        public void Reset()
+        {
+            this.m_NextTick = 0.0;
+        }
+    }
 }
+

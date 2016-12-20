@@ -1,11 +1,24 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum TextureCompressionQuality
-	{
-		Fast,
-		Normal = 50,
-		Best = 100
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Compression Quality.</para>
+    /// </summary>
+    public enum TextureCompressionQuality
+    {
+        /// <summary>
+        /// <para>Best compression.</para>
+        /// </summary>
+        Best = 100,
+        /// <summary>
+        /// <para>Fast compression.</para>
+        /// </summary>
+        Fast = 0,
+        /// <summary>
+        /// <para>Normal compression (default).</para>
+        /// </summary>
+        Normal = 50
+    }
 }
+

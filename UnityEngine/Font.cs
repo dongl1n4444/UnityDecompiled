@@ -1,223 +1,205 @@
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using UnityEngine.Internal;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class Font : Object
-	{
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		public delegate void FontTextureRebuildCallback();
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using System.Threading;
+    using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
-		public static event Action<Font> textureRebuilt
-		{
-			add
-			{
-				Action<Font> action = Font.textureRebuilt;
-				Action<Font> action2;
-				do
-				{
-					action2 = action;
-					action = Interlocked.CompareExchange<Action<Font>>(ref Font.textureRebuilt, (Action<Font>)Delegate.Combine(action2, value), action);
-				}
-				while (action != action2);
-			}
-			remove
-			{
-				Action<Font> action = Font.textureRebuilt;
-				Action<Font> action2;
-				do
-				{
-					action2 = action;
-					action = Interlocked.CompareExchange<Action<Font>>(ref Font.textureRebuilt, (Action<Font>)Delegate.Remove(action2, value), action);
-				}
-				while (action != action2);
-			}
-		}
+    /// <summary>
+    /// <para>Script interface for.</para>
+    /// </summary>
+    public sealed class Font : UnityEngine.Object
+    {
+        private event FontTextureRebuildCallback m_FontTextureRebuildCallback;
 
-		private event Font.FontTextureRebuildCallback m_FontTextureRebuildCallback
-		{
-			add
-			{
-				Font.FontTextureRebuildCallback fontTextureRebuildCallback = this.m_FontTextureRebuildCallback;
-				Font.FontTextureRebuildCallback fontTextureRebuildCallback2;
-				do
-				{
-					fontTextureRebuildCallback2 = fontTextureRebuildCallback;
-					fontTextureRebuildCallback = Interlocked.CompareExchange<Font.FontTextureRebuildCallback>(ref this.m_FontTextureRebuildCallback, (Font.FontTextureRebuildCallback)Delegate.Combine(fontTextureRebuildCallback2, value), fontTextureRebuildCallback);
-				}
-				while (fontTextureRebuildCallback != fontTextureRebuildCallback2);
-			}
-			remove
-			{
-				Font.FontTextureRebuildCallback fontTextureRebuildCallback = this.m_FontTextureRebuildCallback;
-				Font.FontTextureRebuildCallback fontTextureRebuildCallback2;
-				do
-				{
-					fontTextureRebuildCallback2 = fontTextureRebuildCallback;
-					fontTextureRebuildCallback = Interlocked.CompareExchange<Font.FontTextureRebuildCallback>(ref this.m_FontTextureRebuildCallback, (Font.FontTextureRebuildCallback)Delegate.Remove(fontTextureRebuildCallback2, value), fontTextureRebuildCallback);
-				}
-				while (fontTextureRebuildCallback != fontTextureRebuildCallback2);
-			}
-		}
+        public static  event Action<Font> textureRebuilt;
 
-		public extern Material material
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Create a new Font.</para>
+        /// </summary>
+        /// <param name="name">The name of the created Font object.</param>
+        public Font()
+        {
+            Internal_CreateFont(this, null);
+        }
 
-		public extern string[] fontNames
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Create a new Font.</para>
+        /// </summary>
+        /// <param name="name">The name of the created Font object.</param>
+        public Font(string name)
+        {
+            Internal_CreateFont(this, name);
+        }
 
-		public extern CharacterInfo[] characterInfo
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        private Font(string[] names, int size)
+        {
+            Internal_CreateDynamicFont(this, names, size);
+        }
 
-		[EditorBrowsable(EditorBrowsableState.Never), Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead.")]
-		public Font.FontTextureRebuildCallback textureRebuildCallback
-		{
-			get
-			{
-				return this.m_FontTextureRebuildCallback;
-			}
-			set
-			{
-				this.m_FontTextureRebuildCallback = value;
-			}
-		}
+        /// <summary>
+        /// <para>Creates a Font object which lets you render a font installed on the user machine.</para>
+        /// </summary>
+        /// <param name="fontname">The name of the OS font to use for this font object.</param>
+        /// <param name="size">The default character size of the generated font.</param>
+        /// <param name="fontnames">Am array of names of OS fonts to use for this font object. When rendering characters using this font object, the first font which is installed on the machine, which contains the requested character will be used.</param>
+        /// <returns>
+        /// <para>The generate Font object.</para>
+        /// </returns>
+        public static Font CreateDynamicFontFromOSFont(string fontname, int size)
+        {
+            return new Font(new string[] { fontname }, size);
+        }
 
-		public extern bool dynamic
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Creates a Font object which lets you render a font installed on the user machine.</para>
+        /// </summary>
+        /// <param name="fontname">The name of the OS font to use for this font object.</param>
+        /// <param name="size">The default character size of the generated font.</param>
+        /// <param name="fontnames">Am array of names of OS fonts to use for this font object. When rendering characters using this font object, the first font which is installed on the machine, which contains the requested character will be used.</param>
+        /// <returns>
+        /// <para>The generate Font object.</para>
+        /// </returns>
+        public static Font CreateDynamicFontFromOSFont(string[] fontnames, int size)
+        {
+            return new Font(fontnames, size);
+        }
 
-		public extern int ascent
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [ExcludeFromDocs]
+        public bool GetCharacterInfo(char ch, out CharacterInfo info)
+        {
+            FontStyle normal = FontStyle.Normal;
+            int size = 0;
+            return this.GetCharacterInfo(ch, out info, size, normal);
+        }
 
-		public extern int lineHeight
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [ExcludeFromDocs]
+        public bool GetCharacterInfo(char ch, out CharacterInfo info, int size)
+        {
+            FontStyle normal = FontStyle.Normal;
+            return this.GetCharacterInfo(ch, out info, size, normal);
+        }
 
-		public extern int fontSize
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern bool GetCharacterInfo(char ch, out CharacterInfo info, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
+        /// <summary>
+        /// <para>Returns the maximum number of verts that the text generator may return for a given string.</para>
+        /// </summary>
+        /// <param name="str">Input string.</param>
+        public static int GetMaxVertsForString(string str)
+        {
+            return ((str.Length * 4) + 4);
+        }
 
-		public Font()
-		{
-			Font.Internal_CreateFont(this, null);
-		}
+        /// <summary>
+        /// <para>Get names of fonts installed on the machine.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>An array of the names of all fonts installed on the machine.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string[] GetOSInstalledFontNames();
+        /// <summary>
+        /// <para>Does this font have a specific character?</para>
+        /// </summary>
+        /// <param name="c">The character to check for.</param>
+        /// <returns>
+        /// <para>Whether or not the font has the character specified.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern bool HasCharacter(char c);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_CreateDynamicFont([Writable] Font _font, string[] _names, int size);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_CreateFont([Writable] Font _font, string name);
+        [RequiredByNativeCode]
+        private static void InvokeTextureRebuilt_Internal(Font font)
+        {
+            Action<Font> textureRebuilt = Font.textureRebuilt;
+            if (textureRebuilt != null)
+            {
+                textureRebuilt(font);
+            }
+            if (font.m_FontTextureRebuildCallback != null)
+            {
+                font.m_FontTextureRebuildCallback();
+            }
+        }
 
-		public Font(string name)
-		{
-			Font.Internal_CreateFont(this, name);
-		}
+        [ExcludeFromDocs]
+        public void RequestCharactersInTexture(string characters)
+        {
+            FontStyle normal = FontStyle.Normal;
+            int size = 0;
+            this.RequestCharactersInTexture(characters, size, normal);
+        }
 
-		private Font(string[] names, int size)
-		{
-			Font.Internal_CreateDynamicFont(this, names, size);
-		}
+        [ExcludeFromDocs]
+        public void RequestCharactersInTexture(string characters, int size)
+        {
+            FontStyle normal = FontStyle.Normal;
+            this.RequestCharactersInTexture(characters, size, normal);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern string[] GetOSInstalledFontNames();
+        /// <summary>
+        /// <para>Request characters to be added to the font texture (dynamic fonts only).</para>
+        /// </summary>
+        /// <param name="characters">The characters which are needed to be in the font texture.</param>
+        /// <param name="size">The size of the requested characters (the default value of zero will use the font's default size).</param>
+        /// <param name="style">The style of the requested characters.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void RequestCharactersInTexture(string characters, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_CreateFont([Writable] Font _font, string name);
+        /// <summary>
+        /// <para>The ascent of the font.</para>
+        /// </summary>
+        public int ascent { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_CreateDynamicFont([Writable] Font _font, string[] _names, int size);
+        /// <summary>
+        /// <para>Access an array of all characters contained in the font texture.</para>
+        /// </summary>
+        public CharacterInfo[] characterInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static Font CreateDynamicFontFromOSFont(string fontname, int size)
-		{
-			return new Font(new string[]
-			{
-				fontname
-			}, size);
-		}
+        /// <summary>
+        /// <para>Is the font a dynamic font.</para>
+        /// </summary>
+        public bool dynamic { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public static Font CreateDynamicFontFromOSFont(string[] fontnames, int size)
-		{
-			return new Font(fontnames, size);
-		}
+        public string[] fontNames { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern bool HasCharacter(char c);
+        /// <summary>
+        /// <para>The default size of the font.</para>
+        /// </summary>
+        public int fontSize { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void RequestCharactersInTexture(string characters, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
+        /// <summary>
+        /// <para>The line height of the font.</para>
+        /// </summary>
+        public int lineHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[ExcludeFromDocs]
-		public void RequestCharactersInTexture(string characters, int size)
-		{
-			FontStyle style = FontStyle.Normal;
-			this.RequestCharactersInTexture(characters, size, style);
-		}
+        /// <summary>
+        /// <para>The material used for the font display.</para>
+        /// </summary>
+        public Material material { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[ExcludeFromDocs]
-		public void RequestCharactersInTexture(string characters)
-		{
-			FontStyle style = FontStyle.Normal;
-			int size = 0;
-			this.RequestCharactersInTexture(characters, size, style);
-		}
+        [Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead."), EditorBrowsable(EditorBrowsableState.Never)]
+        public FontTextureRebuildCallback textureRebuildCallback
+        {
+            get
+            {
+                return this.m_FontTextureRebuildCallback;
+            }
+            set
+            {
+                this.m_FontTextureRebuildCallback = value;
+            }
+        }
 
-		[RequiredByNativeCode]
-		private static void InvokeTextureRebuilt_Internal(Font font)
-		{
-			Action<Font> action = Font.textureRebuilt;
-			if (action != null)
-			{
-				action(font);
-			}
-			if (font.m_FontTextureRebuildCallback != null)
-			{
-				font.m_FontTextureRebuildCallback();
-			}
-		}
-
-		public static int GetMaxVertsForString(string str)
-		{
-			return str.Length * 4 + 4;
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern bool GetCharacterInfo(char ch, out CharacterInfo info, [UnityEngine.Internal.DefaultValue("0")] int size, [UnityEngine.Internal.DefaultValue("FontStyle.Normal")] FontStyle style);
-
-		[ExcludeFromDocs]
-		public bool GetCharacterInfo(char ch, out CharacterInfo info, int size)
-		{
-			FontStyle style = FontStyle.Normal;
-			return this.GetCharacterInfo(ch, out info, size, style);
-		}
-
-		[ExcludeFromDocs]
-		public bool GetCharacterInfo(char ch, out CharacterInfo info)
-		{
-			FontStyle style = FontStyle.Normal;
-			int size = 0;
-			return this.GetCharacterInfo(ch, out info, size, style);
-		}
-	}
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public delegate void FontTextureRebuildCallback();
+    }
 }
+

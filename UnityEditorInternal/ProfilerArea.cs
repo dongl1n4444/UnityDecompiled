@@ -1,18 +1,19 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum ProfilerArea
-	{
-		CPU,
-		GPU,
-		Rendering,
-		Memory,
-		Audio,
-		Physics,
-		Physics2D,
-		NetworkMessages,
-		NetworkOperations,
-		AreaCount
-	}
+    using System;
+
+    public enum ProfilerArea
+    {
+        CPU,
+        GPU,
+        Rendering,
+        Memory,
+        Audio,
+        Physics,
+        Physics2D,
+        NetworkMessages,
+        NetworkOperations,
+        AreaCount
+    }
 }
+

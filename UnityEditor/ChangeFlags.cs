@@ -1,16 +1,17 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	internal enum ChangeFlags
-	{
-		None = 0,
-		Modified = 1,
-		Renamed = 2,
-		Moved = 4,
-		Deleted = 8,
-		Undeleted = 16,
-		Created = 32
-	}
+    using System;
+
+    [Flags]
+    internal enum ChangeFlags
+    {
+        Created = 0x20,
+        Deleted = 8,
+        Modified = 1,
+        Moved = 4,
+        None = 0,
+        Renamed = 2,
+        Undeleted = 0x10
+    }
 }
+

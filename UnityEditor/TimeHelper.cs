@@ -1,23 +1,24 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct TimeHelper
-	{
-		public float deltaTime;
+    using System;
+    using System.Runtime.InteropServices;
 
-		private long lastTime;
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct TimeHelper
+    {
+        public float deltaTime;
+        private long lastTime;
+        public void Begin()
+        {
+            this.lastTime = DateTime.Now.Ticks;
+        }
 
-		public void Begin()
-		{
-			this.lastTime = DateTime.Now.Ticks;
-		}
-
-		public float Update()
-		{
-			this.deltaTime = (float)(DateTime.Now.Ticks - this.lastTime) / 1E+07f;
-			this.lastTime = DateTime.Now.Ticks;
-			return this.deltaTime;
-		}
-	}
+        public float Update()
+        {
+            this.deltaTime = ((float) (DateTime.Now.Ticks - this.lastTime)) / 1E+07f;
+            this.lastTime = DateTime.Now.Ticks;
+            return this.deltaTime;
+        }
+    }
 }
+

@@ -1,38 +1,21 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface ISelectionBinding
-	{
-		GameObject rootGameObject
-		{
-			get;
-		}
+    using System;
+    using UnityEngine;
 
-		AnimationClip animationClip
-		{
-			get;
-		}
+    internal interface ISelectionBinding
+    {
+        AnimationClip animationClip { get; }
 
-		bool clipIsEditable
-		{
-			get;
-		}
+        bool animationIsEditable { get; }
 
-		bool animationIsEditable
-		{
-			get;
-		}
+        bool clipIsEditable { get; }
 
-		float timeOffset
-		{
-			get;
-		}
+        int id { get; }
 
-		int id
-		{
-			get;
-		}
-	}
+        GameObject rootGameObject { get; }
+
+        float timeOffset { get; }
+    }
 }
+

@@ -1,15 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum BodyDoF
-	{
-		SpineFrontBack,
-		SpineLeftRight,
-		SpineRollLeftRight,
-		ChestFrontBack,
-		ChestLeftRight,
-		ChestRollLeftRight,
-		LastBodyDoF
-	}
+    using System;
+
+    internal enum BodyDoF
+    {
+        SpineFrontBack,
+        SpineLeftRight,
+        SpineRollLeftRight,
+        ChestFrontBack,
+        ChestLeftRight,
+        ChestRollLeftRight,
+        LastBodyDoF
+    }
 }
+

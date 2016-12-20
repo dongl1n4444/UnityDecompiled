@@ -1,26 +1,24 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[AttributeUsage(AttributeTargets.Class)]
-	internal class EditorWindowTitleAttribute : Attribute
-	{
-		public string title
-		{
-			get;
-			set;
-		}
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
 
-		public string icon
-		{
-			get;
-			set;
-		}
+    [AttributeUsage(AttributeTargets.Class)]
+    internal class EditorWindowTitleAttribute : Attribute
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private string <icon>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private string <title>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <useTypeNameAsIconName>k__BackingField;
 
-		public bool useTypeNameAsIconName
-		{
-			get;
-			set;
-		}
-	}
+        public string icon { get; set; }
+
+        public string title { get; set; }
+
+        public bool useTypeNameAsIconName { get; set; }
+    }
 }
+

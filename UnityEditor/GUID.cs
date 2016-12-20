@@ -1,62 +1,60 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine.Scripting;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[RequiredByNativeCode]
-	public struct GUID
-	{
-		private uint m_Value0;
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-		private uint m_Value1;
+    [StructLayout(LayoutKind.Sequential), RequiredByNativeCode]
+    public struct GUID
+    {
+        private uint m_Value0;
+        private uint m_Value1;
+        private uint m_Value2;
+        private uint m_Value3;
+        public GUID(string hexRepresentation)
+        {
+            this.m_Value0 = 0;
+            this.m_Value1 = 0;
+            this.m_Value2 = 0;
+            this.m_Value3 = 0;
+            this.ParseExact(hexRepresentation);
+        }
 
-		private uint m_Value2;
+        public static bool operator ==(GUID x, GUID y)
+        {
+            return ((((x.m_Value0 == y.m_Value0) && (x.m_Value1 == y.m_Value1)) && (x.m_Value2 == y.m_Value2)) && (x.m_Value3 == y.m_Value3));
+        }
 
-		private uint m_Value3;
+        public static bool operator !=(GUID x, GUID y)
+        {
+            return !(x == y);
+        }
 
-		public GUID(string hexRepresentation)
-		{
-			this.m_Value0 = 0u;
-			this.m_Value1 = 0u;
-			this.m_Value2 = 0u;
-			this.m_Value3 = 0u;
-			this.ParseExact(hexRepresentation);
-		}
+        public override bool Equals(object obj)
+        {
+            GUID guid = (GUID) obj;
+            return (guid == this);
+        }
 
-		public static bool operator ==(GUID x, GUID y)
-		{
-			return x.m_Value0 == y.m_Value0 && x.m_Value1 == y.m_Value1 && x.m_Value2 == y.m_Value2 && x.m_Value3 == y.m_Value3;
-		}
+        public override int GetHashCode()
+        {
+            return this.m_Value0.GetHashCode();
+        }
 
-		public static bool operator !=(GUID x, GUID y)
-		{
-			return !(x == y);
-		}
+        public bool Empty()
+        {
+            return ((((this.m_Value0 == 0) && (this.m_Value1 == 0)) && (this.m_Value2 == 0)) && (this.m_Value3 == 0));
+        }
 
-		public override bool Equals(object obj)
-		{
-			GUID x = (GUID)obj;
-			return x == this;
-		}
+        public bool ParseExact(string hex)
+        {
+            this.HexToGUIDInternal(hex, ref this);
+            return !this.Empty();
+        }
 
-		public override int GetHashCode()
-		{
-			return this.m_Value0.GetHashCode();
-		}
-
-		public bool Empty()
-		{
-			return this.m_Value0 == 0u && this.m_Value1 == 0u && this.m_Value2 == 0u && this.m_Value3 == 0u;
-		}
-
-		public bool ParseExact(string hex)
-		{
-			this.HexToGUIDInternal(hex, ref this);
-			return !this.Empty();
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void HexToGUIDInternal(string hex, ref GUID guid);
-	}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void HexToGUIDInternal(string hex, ref GUID guid);
+    }
 }
+

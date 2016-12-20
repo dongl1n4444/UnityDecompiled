@@ -1,30 +1,19 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal interface IAnimationRecordingState
-	{
-		GameObject activeGameObject
-		{
-			get;
-		}
+    using System;
+    using UnityEngine;
 
-		GameObject activeRootGameObject
-		{
-			get;
-		}
+    internal interface IAnimationRecordingState
+    {
+        void SaveCurve(AnimationWindowCurve curve);
 
-		AnimationClip activeAnimationClip
-		{
-			get;
-		}
+        AnimationClip activeAnimationClip { get; }
 
-		int frame
-		{
-			get;
-		}
+        GameObject activeGameObject { get; }
 
-		void SaveCurve(AnimationWindowCurve curve);
-	}
+        GameObject activeRootGameObject { get; }
+
+        int frame { get; }
+    }
 }
+

@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum LookDevProperty
-	{
-		ExposureValue,
-		HDRI,
-		ShadingMode,
-		EnvRotation,
-		LoDIndex,
-		Count
-	}
+    using System;
+
+    internal enum LookDevProperty
+    {
+        ExposureValue,
+        HDRI,
+        ShadingMode,
+        EnvRotation,
+        LoDIndex,
+        Count
+    }
 }
+

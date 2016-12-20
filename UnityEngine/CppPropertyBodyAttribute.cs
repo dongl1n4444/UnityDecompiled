@@ -1,16 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-	internal class CppPropertyBodyAttribute : Attribute
-	{
-		public CppPropertyBodyAttribute(string getterBody, string setterBody)
-		{
-		}
+    using System;
 
-		public CppPropertyBodyAttribute(string getterBody)
-		{
-		}
-	}
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple=false)]
+    internal class CppPropertyBodyAttribute : Attribute
+    {
+        public CppPropertyBodyAttribute(string getterBody)
+        {
+        }
+
+        public CppPropertyBodyAttribute(string getterBody, string setterBody)
+        {
+        }
+    }
 }
+

@@ -1,219 +1,222 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class PointEditor
-	{
-		private static Vector2 s_StartMouseDragPosition;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		private static List<int> s_StartDragSelection;
+    internal class PointEditor
+    {
+        [CompilerGenerated]
+        private static Func<KeyValuePair<int, float>, float> <>f__am$cache0;
+        private static bool s_DidDrag;
+        private static List<int> s_SelectionStart;
+        private static List<int> s_StartDragSelection;
+        private static Vector2 s_StartMouseDragPosition;
 
-		private static bool s_DidDrag;
+        public static void Draw(IEditablePoint points, Transform cloudTransform, List<int> selection, bool twoPassDrawing)
+        {
+            LightmapVisualization.DrawPointCloud(points.GetUnselectedPositions(), points.GetSelectedPositions(), points.GetDefaultColor(), points.GetSelectedColor(), points.GetPointScale(), cloudTransform);
+        }
 
-		private static List<int> s_SelectionStart;
+        public static int FindNearest(Vector2 point, Transform cloudTransform, IEditablePoint points)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(point);
+            Dictionary<int, float> dictionary = new Dictionary<int, float>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                float t = 0f;
+                Vector3 zero = Vector3.zero;
+                if (MathUtils.IntersectRaySphere(ray, cloudTransform.TransformPoint(points.GetPosition(i)), points.GetPointScale() * 0.5f, ref t, ref zero) && (t > 0f))
+                {
+                    dictionary.Add(i, t);
+                }
+            }
+            if (dictionary.Count <= 0)
+            {
+                return -1;
+            }
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = new Func<KeyValuePair<int, float>, float>(null, (IntPtr) <FindNearest>m__0);
+            }
+            return Enumerable.First<KeyValuePair<int, float>>(Enumerable.OrderBy<KeyValuePair<int, float>, float>(dictionary, <>f__am$cache0)).Key;
+        }
 
-		public static bool MovePoints(IEditablePoint points, Transform cloudTransform, List<int> selection)
-		{
-			bool result;
-			if (selection.Count == 0)
-			{
-				result = false;
-			}
-			else
-			{
-				if (Camera.current)
-				{
-					Vector3 vector = Vector3.zero;
-					vector = ((Tools.pivotMode != PivotMode.Pivot) ? (selection.Aggregate(vector, (Vector3 current, int index) => current + points.GetPosition(index)) / (float)selection.Count) : points.GetPosition(selection[0]));
-					vector = cloudTransform.TransformPoint(vector);
-					Vector3 position = Handles.PositionHandle(vector, (Tools.pivotRotation != PivotRotation.Local) ? Quaternion.identity : cloudTransform.rotation);
-					if (GUI.changed)
-					{
-						Vector3 b = cloudTransform.InverseTransformPoint(position) - cloudTransform.InverseTransformPoint(vector);
-						foreach (int current2 in selection)
-						{
-							points.SetPosition(current2, points.GetPosition(current2) + b);
-						}
-						result = true;
-						return result;
-					}
-				}
-				result = false;
-			}
-			return result;
-		}
+        private static Rect FromToRect(Vector2 from, Vector2 to)
+        {
+            Rect rect = new Rect(from.x, from.y, to.x - from.x, to.y - from.y);
+            if (rect.width < 0f)
+            {
+                rect.x += rect.width;
+                rect.width = -rect.width;
+            }
+            if (rect.height < 0f)
+            {
+                rect.y += rect.height;
+                rect.height = -rect.height;
+            }
+            return rect;
+        }
 
-		public static int FindNearest(Vector2 point, Transform cloudTransform, IEditablePoint points)
-		{
-			Ray ray = HandleUtility.GUIPointToWorldRay(point);
-			Dictionary<int, float> dictionary = new Dictionary<int, float>();
-			for (int i = 0; i < points.Count; i++)
-			{
-				float num = 0f;
-				Vector3 zero = Vector3.zero;
-				if (MathUtils.IntersectRaySphere(ray, cloudTransform.TransformPoint(points.GetPosition(i)), points.GetPointScale() * 0.5f, ref num, ref zero))
-				{
-					if (num > 0f)
-					{
-						dictionary.Add(i, num);
-					}
-				}
-			}
-			int result;
-			if (dictionary.Count <= 0)
-			{
-				result = -1;
-			}
-			else
-			{
-				IOrderedEnumerable<KeyValuePair<int, float>> source = from x in dictionary
-				orderby x.Value
-				select x;
-				result = source.First<KeyValuePair<int, float>>().Key;
-			}
-			return result;
-		}
+        public static bool MovePoints(IEditablePoint points, Transform cloudTransform, List<int> selection)
+        {
+            <MovePoints>c__AnonStorey0 storey = new <MovePoints>c__AnonStorey0 {
+                points = points
+            };
+            if ((selection.Count != 0) && (Camera.current != null))
+            {
+                Vector3 zero = Vector3.zero;
+                zero = (Tools.pivotMode != PivotMode.Pivot) ? ((Vector3) (Enumerable.Aggregate<int, Vector3>(selection, zero, new Func<Vector3, int, Vector3>(storey, (IntPtr) this.<>m__0)) / ((float) selection.Count))) : storey.points.GetPosition(selection[0]);
+                zero = cloudTransform.TransformPoint(zero);
+                Vector3 position = Handles.PositionHandle(zero, (Tools.pivotRotation != PivotRotation.Local) ? Quaternion.identity : cloudTransform.rotation);
+                if (GUI.changed)
+                {
+                    Vector3 vector3 = cloudTransform.InverseTransformPoint(position) - cloudTransform.InverseTransformPoint(zero);
+                    foreach (int num in selection)
+                    {
+                        storey.points.SetPosition(num, storey.points.GetPosition(num) + vector3);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
 
-		public static bool SelectPoints(IEditablePoint points, Transform cloudTransform, ref List<int> selection, bool firstSelect)
-		{
-			int controlID = GUIUtility.GetControlID(FocusType.Passive);
-			bool result;
-			if (Event.current.alt && Event.current.type != EventType.Repaint)
-			{
-				result = false;
-			}
-			else
-			{
-				bool flag = false;
-				Event current = Event.current;
-				switch (current.GetTypeForControl(controlID))
-				{
-				case EventType.MouseDown:
-					if ((HandleUtility.nearestControl == controlID || firstSelect) && current.button == 0)
-					{
-						if (!current.shift && !EditorGUI.actionKey)
-						{
-							selection.Clear();
-							flag = true;
-						}
-						PointEditor.s_SelectionStart = new List<int>(selection);
-						GUIUtility.hotControl = controlID;
-						PointEditor.s_StartMouseDragPosition = current.mousePosition;
-						PointEditor.s_StartDragSelection = new List<int>(selection);
-						current.Use();
-					}
-					break;
-				case EventType.MouseUp:
-					if (GUIUtility.hotControl == controlID && current.button == 0)
-					{
-						if (!PointEditor.s_DidDrag)
-						{
-							int num = PointEditor.FindNearest(PointEditor.s_StartMouseDragPosition, cloudTransform, points);
-							if (num != -1)
-							{
-								if (!current.shift && !EditorGUI.actionKey)
-								{
-									selection.Add(num);
-								}
-								else
-								{
-									int num2 = selection.IndexOf(num);
-									if (num2 != -1)
-									{
-										selection.RemoveAt(num2);
-									}
-									else
-									{
-										selection.Add(num);
-									}
-								}
-							}
-							GUI.changed = true;
-							flag = true;
-						}
-						PointEditor.s_StartDragSelection = null;
-						PointEditor.s_StartMouseDragPosition = Vector2.zero;
-						PointEditor.s_DidDrag = false;
-						GUIUtility.hotControl = 0;
-						current.Use();
-					}
-					break;
-				case EventType.MouseDrag:
-					if (GUIUtility.hotControl == controlID && current.button == 0)
-					{
-						PointEditor.s_DidDrag = true;
-						selection.Clear();
-						selection.AddRange(PointEditor.s_StartDragSelection);
-						Rect rect = PointEditor.FromToRect(PointEditor.s_StartMouseDragPosition, current.mousePosition);
-						Matrix4x4 matrix = Handles.matrix;
-						Handles.matrix = cloudTransform.localToWorldMatrix;
-						for (int i = 0; i < points.Count; i++)
-						{
-							Vector2 point = HandleUtility.WorldToGUIPoint(points.GetPosition(i));
-							if (rect.Contains(point))
-							{
-								if (EditorGUI.actionKey)
-								{
-									if (PointEditor.s_SelectionStart.Contains(i))
-									{
-										selection.Remove(i);
-									}
-								}
-								else if (!PointEditor.s_SelectionStart.Contains(i))
-								{
-									selection.Add(i);
-								}
-							}
-						}
-						Handles.matrix = matrix;
-						GUI.changed = true;
-						current.Use();
-					}
-					break;
-				case EventType.Repaint:
-					if (GUIUtility.hotControl == controlID && current.mousePosition != PointEditor.s_StartMouseDragPosition)
-					{
-						GUIStyle gUIStyle = "SelectionRect";
-						Handles.BeginGUI();
-						gUIStyle.Draw(PointEditor.FromToRect(PointEditor.s_StartMouseDragPosition, current.mousePosition), false, false, false, false);
-						Handles.EndGUI();
-					}
-					break;
-				case EventType.Layout:
-					HandleUtility.AddDefaultControl(controlID);
-					break;
-				}
-				if (flag)
-				{
-					selection = selection.Distinct<int>().ToList<int>();
-				}
-				result = flag;
-			}
-			return result;
-		}
+        public static bool SelectPoints(IEditablePoint points, Transform cloudTransform, ref List<int> selection, bool firstSelect)
+        {
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
+            if (Event.current.alt && (Event.current.type != EventType.Repaint))
+            {
+                return false;
+            }
+            bool flag2 = false;
+            Event current = Event.current;
+            switch (current.GetTypeForControl(controlID))
+            {
+                case EventType.MouseDown:
+                    if (((HandleUtility.nearestControl == controlID) || firstSelect) && (current.button == 0))
+                    {
+                        if (!current.shift && !EditorGUI.actionKey)
+                        {
+                            selection.Clear();
+                            flag2 = true;
+                        }
+                        s_SelectionStart = new List<int>(selection);
+                        GUIUtility.hotControl = controlID;
+                        s_StartMouseDragPosition = current.mousePosition;
+                        s_StartDragSelection = new List<int>(selection);
+                        current.Use();
+                    }
+                    goto Label_02F5;
 
-		public static void Draw(IEditablePoint points, Transform cloudTransform, List<int> selection, bool twoPassDrawing)
-		{
-			LightmapVisualization.DrawPointCloud(points.GetUnselectedPositions(), points.GetSelectedPositions(), points.GetDefaultColor(), points.GetSelectedColor(), points.GetPointScale(), cloudTransform);
-		}
+                case EventType.MouseUp:
+                {
+                    if ((GUIUtility.hotControl != controlID) || (current.button != 0))
+                    {
+                        goto Label_02F5;
+                    }
+                    if (s_DidDrag)
+                    {
+                        goto Label_0275;
+                    }
+                    int item = FindNearest(s_StartMouseDragPosition, cloudTransform, points);
+                    if (item != -1)
+                    {
+                        if (current.shift || EditorGUI.actionKey)
+                        {
+                            int index = selection.IndexOf(item);
+                            if (index != -1)
+                            {
+                                selection.RemoveAt(index);
+                            }
+                            else
+                            {
+                                selection.Add(item);
+                            }
+                            break;
+                        }
+                        selection.Add(item);
+                    }
+                    break;
+                }
+                case EventType.MouseDrag:
+                    if ((GUIUtility.hotControl == controlID) && (current.button == 0))
+                    {
+                        s_DidDrag = true;
+                        selection.Clear();
+                        selection.AddRange(s_StartDragSelection);
+                        Rect rect = FromToRect(s_StartMouseDragPosition, current.mousePosition);
+                        Matrix4x4 matrix = Handles.matrix;
+                        Handles.matrix = cloudTransform.localToWorldMatrix;
+                        for (int i = 0; i < points.Count; i++)
+                        {
+                            Vector2 point = HandleUtility.WorldToGUIPoint(points.GetPosition(i));
+                            if (rect.Contains(point))
+                            {
+                                if (EditorGUI.actionKey)
+                                {
+                                    if (s_SelectionStart.Contains(i))
+                                    {
+                                        selection.Remove(i);
+                                    }
+                                }
+                                else if (!s_SelectionStart.Contains(i))
+                                {
+                                    selection.Add(i);
+                                }
+                            }
+                        }
+                        Handles.matrix = matrix;
+                        GUI.changed = true;
+                        current.Use();
+                    }
+                    goto Label_02F5;
 
-		private static Rect FromToRect(Vector2 from, Vector2 to)
-		{
-			Rect result = new Rect(from.x, from.y, to.x - from.x, to.y - from.y);
-			if (result.width < 0f)
-			{
-				result.x += result.width;
-				result.width = -result.width;
-			}
-			if (result.height < 0f)
-			{
-				result.y += result.height;
-				result.height = -result.height;
-			}
-			return result;
-		}
-	}
+                case EventType.Repaint:
+                    if ((GUIUtility.hotControl == controlID) && (current.mousePosition != s_StartMouseDragPosition))
+                    {
+                        GUIStyle style = "SelectionRect";
+                        Handles.BeginGUI();
+                        style.Draw(FromToRect(s_StartMouseDragPosition, current.mousePosition), false, false, false, false);
+                        Handles.EndGUI();
+                    }
+                    goto Label_02F5;
+
+                case EventType.Layout:
+                    HandleUtility.AddDefaultControl(controlID);
+                    goto Label_02F5;
+
+                default:
+                    goto Label_02F5;
+            }
+            GUI.changed = true;
+            flag2 = true;
+        Label_0275:
+            s_StartDragSelection = null;
+            s_StartMouseDragPosition = Vector2.zero;
+            s_DidDrag = false;
+            GUIUtility.hotControl = 0;
+            current.Use();
+        Label_02F5:
+            if (flag2)
+            {
+                selection = Enumerable.ToList<int>(Enumerable.Distinct<int>(selection));
+            }
+            return flag2;
+        }
+
+        [CompilerGenerated]
+        private sealed class <MovePoints>c__AnonStorey0
+        {
+            internal IEditablePoint points;
+
+            internal Vector3 <>m__0(Vector3 current, int index)
+            {
+                return (current + this.points.GetPosition(index));
+            }
+        }
+    }
 }
+

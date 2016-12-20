@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum Space
-	{
-		World,
-		Self
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The coordinate space in which to operate.</para>
+    /// </summary>
+    public enum Space
+    {
+        World,
+        Self
+    }
 }
+

@@ -1,31 +1,30 @@
-using System;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AudioProfilerGroupTreeViewState : TreeViewState
-	{
-		[SerializeField]
-		public int selectedColumn = 3;
+    using System;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-		[SerializeField]
-		public int prevSelectedColumn = 5;
+    internal class AudioProfilerGroupTreeViewState : TreeViewState
+    {
+        [SerializeField]
+        public int prevSelectedColumn = 5;
+        [SerializeField]
+        public int selectedColumn = 3;
+        [SerializeField]
+        public bool sortByDescendingOrder = true;
 
-		[SerializeField]
-		public bool sortByDescendingOrder = true;
-
-		public void SetSelectedColumn(int index)
-		{
-			if (index != this.selectedColumn)
-			{
-				this.prevSelectedColumn = this.selectedColumn;
-			}
-			else
-			{
-				this.sortByDescendingOrder = !this.sortByDescendingOrder;
-			}
-			this.selectedColumn = index;
-		}
-	}
+        public void SetSelectedColumn(int index)
+        {
+            if (index != this.selectedColumn)
+            {
+                this.prevSelectedColumn = this.selectedColumn;
+            }
+            else
+            {
+                this.sortByDescendingOrder = !this.sortByDescendingOrder;
+            }
+            this.selectedColumn = index;
+        }
+    }
 }
+

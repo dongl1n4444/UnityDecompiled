@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum AnimationPlayMode
-	{
-		Stop,
-		Queue,
-		Mix
-	}
+    using System;
+
+    public enum AnimationPlayMode
+    {
+        Stop,
+        Queue,
+        Mix
+    }
 }
+

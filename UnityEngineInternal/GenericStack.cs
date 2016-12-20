@@ -1,9 +1,9 @@
-using System;
-using System.Collections;
-
-namespace UnityEngineInternal
+﻿namespace UnityEngineInternal
 {
-	public class GenericStack : Stack
-	{
-	}
+    using System.Collections;
+
+    public class GenericStack : Stack
+    {
+    }
 }
+

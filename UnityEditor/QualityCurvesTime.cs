@@ -1,15 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct QualityCurvesTime
-	{
-		public float fixedTime;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public float variableEndStart;
-
-		public float variableEndEnd;
-
-		public int q;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct QualityCurvesTime
+    {
+        public float fixedTime;
+        public float variableEndStart;
+        public float variableEndEnd;
+        public int q;
+    }
 }
+

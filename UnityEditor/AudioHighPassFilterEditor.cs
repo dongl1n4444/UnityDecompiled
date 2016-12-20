@@ -1,10 +1,10 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(AudioHighPassFilter))]
-	internal class AudioHighPassFilterEditor : Editor
-	{
-	}
+    using UnityEngine;
+
+    [CustomEditor(typeof(AudioHighPassFilter))]
+    internal class AudioHighPassFilterEditor : Editor
+    {
+    }
 }
+

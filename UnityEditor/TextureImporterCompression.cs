@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum TextureImporterCompression
-	{
-		Uncompressed,
-		Compressed,
-		CompressedHQ,
-		CompressedLQ
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Select the kind of compression you want for your texture.</para>
+    /// </summary>
+    public enum TextureImporterCompression
+    {
+        Uncompressed,
+        Compressed,
+        CompressedHQ,
+        CompressedLQ
+    }
 }
+

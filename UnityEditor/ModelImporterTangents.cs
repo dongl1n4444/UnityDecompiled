@@ -1,13 +1,17 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum ModelImporterTangents
-	{
-		Import,
-		CalculateLegacy,
-		CalculateLegacyWithSplitTangents = 4,
-		CalculateMikk = 3,
-		None = 2
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Vertex tangent generation options for ModelImporter.</para>
+    /// </summary>
+    public enum ModelImporterTangents
+    {
+        Import,
+        CalculateLegacy,
+        None,
+        CalculateMikk,
+        CalculateLegacyWithSplitTangents
+    }
 }
+

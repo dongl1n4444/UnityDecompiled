@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public interface IHasCustomMenu
-	{
-		void AddItemsToMenu(GenericMenu menu);
-	}
+    using System;
+
+    public interface IHasCustomMenu
+    {
+        void AddItemsToMenu(GenericMenu menu);
+    }
 }
+

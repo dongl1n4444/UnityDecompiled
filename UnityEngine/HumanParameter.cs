@@ -1,15 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum HumanParameter
-	{
-		UpperArmTwist,
-		LowerArmTwist,
-		UpperLegTwist,
-		LowerLegTwist,
-		ArmStretch,
-		LegStretch,
-		FeetSpacing
-	}
+    using System;
+
+    internal enum HumanParameter
+    {
+        UpperArmTwist,
+        LowerArmTwist,
+        UpperLegTwist,
+        LowerLegTwist,
+        ArmStretch,
+        LegStretch,
+        FeetSpacing
+    }
 }
+

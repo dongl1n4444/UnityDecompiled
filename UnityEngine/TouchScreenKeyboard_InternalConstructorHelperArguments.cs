@@ -1,17 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal struct TouchScreenKeyboard_InternalConstructorHelperArguments
-	{
-		public uint keyboardType;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public uint autocorrection;
-
-		public uint multiline;
-
-		public uint secure;
-
-		public uint alert;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct TouchScreenKeyboard_InternalConstructorHelperArguments
+    {
+        public uint keyboardType;
+        public uint autocorrection;
+        public uint multiline;
+        public uint secure;
+        public uint alert;
+    }
 }
+

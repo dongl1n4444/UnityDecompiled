@@ -1,10 +1,10 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(AudioDistortionFilter))]
-	internal class AudioDistortionFilterEditor : Editor
-	{
-	}
+    using UnityEngine;
+
+    [CustomEditor(typeof(AudioDistortionFilter))]
+    internal class AudioDistortionFilterEditor : Editor
+    {
+    }
 }
+

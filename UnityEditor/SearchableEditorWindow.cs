@@ -1,299 +1,257 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public class SearchableEditorWindow : EditorWindow
-	{
-		public enum SearchMode
-		{
-			All,
-			Name,
-			Type,
-			Label,
-			AssetBundleName
-		}
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using UnityEngine;
 
-		public enum SearchModeHierarchyWindow
-		{
-			All,
-			Name,
-			Type
-		}
+    public class SearchableEditorWindow : EditorWindow
+    {
+        private bool m_FocusSearchField = false;
+        private bool m_HasSearchFilterFocus = false;
+        internal HierarchyType m_HierarchyType = HierarchyType.Assets;
+        private int m_SearchFieldControlId;
+        internal string m_SearchFilter = "";
+        internal SearchMode m_SearchMode = SearchMode.All;
+        private static int s_SearchableEditorWindowSearchField = "SearchableEditorWindowSearchField".GetHashCode();
+        private static List<SearchableEditorWindow> searchableWindows = new List<SearchableEditorWindow>();
 
-		private static List<SearchableEditorWindow> searchableWindows = new List<SearchableEditorWindow>();
+        internal void ClearSearchFilter()
+        {
+            this.SetSearchFilter("", this.m_SearchMode, true);
+            if (EditorGUI.s_RecycledEditor != null)
+            {
+                EditorGUI.s_RecycledEditor.controlID = 0;
+            }
+        }
 
-		private static int s_SearchableEditorWindowSearchField = "SearchableEditorWindowSearchField".GetHashCode();
+        internal virtual void ClickedSearchField()
+        {
+        }
 
-		internal HierarchyType m_HierarchyType = HierarchyType.Assets;
+        internal static SearchFilter CreateFilter(string searchString, SearchMode searchMode)
+        {
+            SearchFilter filter = new SearchFilter();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                switch (searchMode)
+                {
+                    case SearchMode.All:
+                        if (!SearchUtility.ParseSearchString(searchString, filter))
+                        {
+                            filter.nameFilter = searchString;
+                            filter.classNames = new string[] { searchString };
+                            filter.assetLabels = new string[] { searchString };
+                            filter.assetBundleNames = new string[] { searchString };
+                            filter.showAllHits = true;
+                        }
+                        return filter;
 
-		internal string m_SearchFilter = "";
+                    case SearchMode.Name:
+                        filter.nameFilter = searchString;
+                        return filter;
 
-		internal SearchableEditorWindow.SearchMode m_SearchMode = SearchableEditorWindow.SearchMode.All;
+                    case SearchMode.Type:
+                        filter.classNames = new string[] { searchString };
+                        return filter;
 
-		private bool m_FocusSearchField = false;
+                    case SearchMode.Label:
+                        filter.assetLabels = new string[] { searchString };
+                        return filter;
 
-		private bool m_HasSearchFilterFocus = false;
+                    case SearchMode.AssetBundleName:
+                        filter.assetBundleNames = new string[] { searchString };
+                        return filter;
+                }
+            }
+            return filter;
+        }
 
-		private int m_SearchFieldControlId;
+        internal void FocusSearchField()
+        {
+            this.m_FocusSearchField = true;
+        }
 
-		internal bool hasSearchFilter
-		{
-			get
-			{
-				return this.m_SearchFilter != "";
-			}
-		}
+        public virtual void OnDisable()
+        {
+            searchableWindows.Remove(this);
+        }
 
-		internal bool hasSearchFilterFocus
-		{
-			get
-			{
-				return this.m_HasSearchFilterFocus;
-			}
-			set
-			{
-				this.m_HasSearchFilterFocus = value;
-			}
-		}
+        public virtual void OnEnable()
+        {
+            searchableWindows.Add(this);
+        }
 
-		internal SearchableEditorWindow.SearchMode searchMode
-		{
-			get
-			{
-				return this.m_SearchMode;
-			}
-			set
-			{
-				this.m_SearchMode = value;
-			}
-		}
+        [MenuItem("Assets/Find References In Scene", false, 0x19)]
+        private static void OnSearchForReferences()
+        {
+            string str;
+            int activeInstanceID = Selection.activeInstanceID;
+            string str2 = AssetDatabase.GetAssetPath(activeInstanceID).Substring(7);
+            if (str2.IndexOf(' ') != -1)
+            {
+                str2 = '"' + str2 + '"';
+            }
+            if (AssetDatabase.IsMainAsset(activeInstanceID))
+            {
+                str = "ref:" + str2;
+            }
+            else
+            {
+                object[] objArray1 = new object[] { "ref:", activeInstanceID, ":", str2 };
+                str = string.Concat(objArray1);
+            }
+            foreach (SearchableEditorWindow window in searchableWindows)
+            {
+                if (window.m_HierarchyType == HierarchyType.GameObjects)
+                {
+                    window.SetSearchFilter(str, SearchMode.All, false);
+                    window.m_HasSearchFilterFocus = true;
+                    window.Repaint();
+                }
+            }
+        }
 
-		internal static SearchFilter CreateFilter(string searchString, SearchableEditorWindow.SearchMode searchMode)
-		{
-			SearchFilter searchFilter = new SearchFilter();
-			SearchFilter result;
-			if (string.IsNullOrEmpty(searchString))
-			{
-				result = searchFilter;
-			}
-			else
-			{
-				switch (searchMode)
-				{
-				case SearchableEditorWindow.SearchMode.All:
-					if (!SearchUtility.ParseSearchString(searchString, searchFilter))
-					{
-						searchFilter.nameFilter = searchString;
-						searchFilter.classNames = new string[]
-						{
-							searchString
-						};
-						searchFilter.assetLabels = new string[]
-						{
-							searchString
-						};
-						searchFilter.assetBundleNames = new string[]
-						{
-							searchString
-						};
-						searchFilter.showAllHits = true;
-					}
-					break;
-				case SearchableEditorWindow.SearchMode.Name:
-					searchFilter.nameFilter = searchString;
-					break;
-				case SearchableEditorWindow.SearchMode.Type:
-					searchFilter.classNames = new string[]
-					{
-						searchString
-					};
-					break;
-				case SearchableEditorWindow.SearchMode.Label:
-					searchFilter.assetLabels = new string[]
-					{
-						searchString
-					};
-					break;
-				case SearchableEditorWindow.SearchMode.AssetBundleName:
-					searchFilter.assetBundleNames = new string[]
-					{
-						searchString
-					};
-					break;
-				}
-				result = searchFilter;
-			}
-			return result;
-		}
+        [MenuItem("Assets/Find References In Scene", true)]
+        private static bool OnSearchForReferencesValidate()
+        {
+            Object activeObject = Selection.activeObject;
+            return (((activeObject != null) && AssetDatabase.Contains(activeObject)) && !Directory.Exists(AssetDatabase.GetAssetPath(activeObject)));
+        }
 
-		[MenuItem("Assets/Find References In Scene", false, 25)]
-		private static void OnSearchForReferences()
-		{
-			int activeInstanceID = Selection.activeInstanceID;
-			string text = AssetDatabase.GetAssetPath(activeInstanceID).Substring(7);
-			if (text.IndexOf(' ') != -1)
-			{
-				text = '"' + text + '"';
-			}
-			string searchFilter;
-			if (AssetDatabase.IsMainAsset(activeInstanceID))
-			{
-				searchFilter = "ref:" + text;
-			}
-			else
-			{
-				searchFilter = string.Concat(new object[]
-				{
-					"ref:",
-					activeInstanceID,
-					":",
-					text
-				});
-			}
-			foreach (SearchableEditorWindow current in SearchableEditorWindow.searchableWindows)
-			{
-				if (current.m_HierarchyType == HierarchyType.GameObjects)
-				{
-					current.SetSearchFilter(searchFilter, SearchableEditorWindow.SearchMode.All, false);
-					current.m_HasSearchFilterFocus = true;
-					current.Repaint();
-				}
-			}
-		}
+        internal void SearchFieldGUI()
+        {
+            this.SearchFieldGUI(EditorGUILayout.kLabelFloatMaxW * 1.5f);
+        }
 
-		[MenuItem("Assets/Find References In Scene", true)]
-		private static bool OnSearchForReferencesValidate()
-		{
-			UnityEngine.Object activeObject = Selection.activeObject;
-			bool result;
-			if (activeObject != null)
-			{
-				if (AssetDatabase.Contains(activeObject))
-				{
-					string assetPath = AssetDatabase.GetAssetPath(activeObject);
-					result = !Directory.Exists(assetPath);
-					return result;
-				}
-			}
-			result = false;
-			return result;
-		}
+        internal void SearchFieldGUI(float maxWidth)
+        {
+            Rect position = GUILayoutUtility.GetRect(EditorGUILayout.kLabelFloatMaxW * 0.2f, maxWidth, 16f, 16f, EditorStyles.toolbarSearchField);
+            if ((Event.current.type == EventType.MouseDown) && position.Contains(Event.current.mousePosition))
+            {
+                this.ClickedSearchField();
+            }
+            GUI.SetNextControlName("SearchFilter");
+            if (this.m_FocusSearchField)
+            {
+                EditorGUI.FocusTextInControl("SearchFilter");
+                if (Event.current.type == EventType.Repaint)
+                {
+                    this.m_FocusSearchField = false;
+                }
+            }
+            int searchMode = (int) this.m_SearchMode;
+            if (((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape)) && (GUI.GetNameOfFocusedControl() == "SearchFilter"))
+            {
+                this.SetSearchFilter("", (SearchMode) searchMode, true);
+            }
+            string[] names = Enum.GetNames((this.m_HierarchyType != HierarchyType.GameObjects) ? typeof(SearchMode) : typeof(SearchModeHierarchyWindow));
+            this.m_SearchFieldControlId = GUIUtility.GetControlID(s_SearchableEditorWindowSearchField, FocusType.Keyboard, position);
+            EditorGUI.BeginChangeCheck();
+            string searchFilter = EditorGUI.ToolbarSearchField(this.m_SearchFieldControlId, position, names, ref searchMode, this.m_SearchFilter);
+            if (EditorGUI.EndChangeCheck())
+            {
+                this.SetSearchFilter(searchFilter, (SearchMode) searchMode, true);
+            }
+            this.m_HasSearchFilterFocus = GUIUtility.keyboardControl == this.m_SearchFieldControlId;
+            if (((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape)) && ((this.m_SearchFilter != "") && (GUIUtility.hotControl == 0)))
+            {
+                this.m_SearchFilter = "";
+                this.SetSearchFilter(searchFilter, (SearchMode) searchMode, true);
+                Event.current.Use();
+                this.m_HasSearchFilterFocus = false;
+            }
+        }
 
-		public virtual void OnEnable()
-		{
-			SearchableEditorWindow.searchableWindows.Add(this);
-		}
+        internal void SelectNextSearchResult()
+        {
+            foreach (SearchableEditorWindow window in searchableWindows)
+            {
+                if (window is SceneHierarchyWindow)
+                {
+                    ((SceneHierarchyWindow) window).SelectNext();
+                    break;
+                }
+            }
+        }
 
-		public virtual void OnDisable()
-		{
-			SearchableEditorWindow.searchableWindows.Remove(this);
-		}
+        internal void SelectPreviousSearchResult()
+        {
+            foreach (SearchableEditorWindow window in searchableWindows)
+            {
+                if (window is SceneHierarchyWindow)
+                {
+                    ((SceneHierarchyWindow) window).SelectPrevious();
+                    break;
+                }
+            }
+        }
 
-		internal void FocusSearchField()
-		{
-			this.m_FocusSearchField = true;
-		}
+        internal virtual void SetSearchFilter(string searchFilter, SearchMode mode, bool setAll)
+        {
+            this.m_SearchMode = mode;
+            this.m_SearchFilter = searchFilter;
+            if (setAll)
+            {
+                foreach (SearchableEditorWindow window in searchableWindows)
+                {
+                    if (((window != this) && (window.m_HierarchyType == this.m_HierarchyType)) && (window.m_HierarchyType != HierarchyType.Assets))
+                    {
+                        window.SetSearchFilter(this.m_SearchFilter, this.m_SearchMode, false);
+                    }
+                }
+            }
+            base.Repaint();
+            EditorApplication.Internal_CallSearchHasChanged();
+        }
 
-		internal void ClearSearchFilter()
-		{
-			this.SetSearchFilter("", this.m_SearchMode, true);
-			if (EditorGUI.s_RecycledEditor != null)
-			{
-				EditorGUI.s_RecycledEditor.controlID = 0;
-			}
-		}
+        internal bool hasSearchFilter
+        {
+            get
+            {
+                return (this.m_SearchFilter != "");
+            }
+        }
 
-		internal void SelectPreviousSearchResult()
-		{
-			foreach (SearchableEditorWindow current in SearchableEditorWindow.searchableWindows)
-			{
-				if (current is SceneHierarchyWindow)
-				{
-					((SceneHierarchyWindow)current).SelectPrevious();
-					break;
-				}
-			}
-		}
+        internal bool hasSearchFilterFocus
+        {
+            get
+            {
+                return this.m_HasSearchFilterFocus;
+            }
+            set
+            {
+                this.m_HasSearchFilterFocus = value;
+            }
+        }
 
-		internal void SelectNextSearchResult()
-		{
-			foreach (SearchableEditorWindow current in SearchableEditorWindow.searchableWindows)
-			{
-				if (current is SceneHierarchyWindow)
-				{
-					((SceneHierarchyWindow)current).SelectNext();
-					break;
-				}
-			}
-		}
+        internal SearchMode searchMode
+        {
+            get
+            {
+                return this.m_SearchMode;
+            }
+            set
+            {
+                this.m_SearchMode = value;
+            }
+        }
 
-		internal virtual void SetSearchFilter(string searchFilter, SearchableEditorWindow.SearchMode mode, bool setAll)
-		{
-			this.m_SearchMode = mode;
-			this.m_SearchFilter = searchFilter;
-			if (setAll)
-			{
-				foreach (SearchableEditorWindow current in SearchableEditorWindow.searchableWindows)
-				{
-					if (current != this && current.m_HierarchyType == this.m_HierarchyType && current.m_HierarchyType != HierarchyType.Assets)
-					{
-						current.SetSearchFilter(this.m_SearchFilter, this.m_SearchMode, false);
-					}
-				}
-			}
-			base.Repaint();
-			EditorApplication.Internal_CallSearchHasChanged();
-		}
+        public enum SearchMode
+        {
+            All,
+            Name,
+            Type,
+            Label,
+            AssetBundleName
+        }
 
-		internal virtual void ClickedSearchField()
-		{
-		}
-
-		internal void SearchFieldGUI()
-		{
-			this.SearchFieldGUI(EditorGUILayout.kLabelFloatMaxW * 1.5f);
-		}
-
-		internal void SearchFieldGUI(float maxWidth)
-		{
-			Rect rect = GUILayoutUtility.GetRect(EditorGUILayout.kLabelFloatMaxW * 0.2f, maxWidth, 16f, 16f, EditorStyles.toolbarSearchField);
-			if (Event.current.type == EventType.MouseDown && rect.Contains(Event.current.mousePosition))
-			{
-				this.ClickedSearchField();
-			}
-			GUI.SetNextControlName("SearchFilter");
-			if (this.m_FocusSearchField)
-			{
-				EditorGUI.FocusTextInControl("SearchFilter");
-				if (Event.current.type == EventType.Repaint)
-				{
-					this.m_FocusSearchField = false;
-				}
-			}
-			int searchMode = (int)this.m_SearchMode;
-			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape && GUI.GetNameOfFocusedControl() == "SearchFilter")
-			{
-				this.SetSearchFilter("", (SearchableEditorWindow.SearchMode)searchMode, true);
-			}
-			string[] names = Enum.GetNames((this.m_HierarchyType != HierarchyType.GameObjects) ? typeof(SearchableEditorWindow.SearchMode) : typeof(SearchableEditorWindow.SearchModeHierarchyWindow));
-			this.m_SearchFieldControlId = GUIUtility.GetControlID(SearchableEditorWindow.s_SearchableEditorWindowSearchField, FocusType.Keyboard, rect);
-			EditorGUI.BeginChangeCheck();
-			string searchFilter = EditorGUI.ToolbarSearchField(this.m_SearchFieldControlId, rect, names, ref searchMode, this.m_SearchFilter);
-			if (EditorGUI.EndChangeCheck())
-			{
-				this.SetSearchFilter(searchFilter, (SearchableEditorWindow.SearchMode)searchMode, true);
-			}
-			this.m_HasSearchFilterFocus = (GUIUtility.keyboardControl == this.m_SearchFieldControlId);
-			if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape && this.m_SearchFilter != "" && GUIUtility.hotControl == 0)
-			{
-				this.m_SearchFilter = "";
-				this.SetSearchFilter(searchFilter, (SearchableEditorWindow.SearchMode)searchMode, true);
-				Event.current.Use();
-				this.m_HasSearchFilterFocus = false;
-			}
-		}
-	}
+        public enum SearchModeHierarchyWindow
+        {
+            All,
+            Name,
+            Type
+        }
+    }
 }
+

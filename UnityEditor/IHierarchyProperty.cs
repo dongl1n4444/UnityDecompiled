@@ -1,103 +1,50 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IHierarchyProperty
-	{
-		int instanceID
-		{
-			get;
-		}
+    using System;
+    using UnityEngine;
 
-		UnityEngine.Object pptrValue
-		{
-			get;
-		}
+    internal interface IHierarchyProperty
+    {
+        int CountRemaining(int[] expanded);
+        bool Find(int instanceID, int[] expanded);
+        int[] FindAllAncestors(int[] instanceIDs);
+        bool IsExpanded(int[] expanded);
+        bool Next(int[] expanded);
+        bool NextWithDepthCheck(int[] expanded, int minDepth);
+        bool Parent();
+        bool Previous(int[] expanded);
+        void Reset();
+        bool Skip(int count, int[] expanded);
 
-		string name
-		{
-			get;
-		}
+        int[] ancestors { get; }
 
-		bool hasChildren
-		{
-			get;
-		}
+        int colorCode { get; }
 
-		int depth
-		{
-			get;
-		}
+        int depth { get; }
 
-		int row
-		{
-			get;
-		}
+        string guid { get; }
 
-		int colorCode
-		{
-			get;
-		}
+        bool hasChildren { get; }
 
-		string guid
-		{
-			get;
-		}
+        bool hasFullPreviewImage { get; }
 
-		Texture2D icon
-		{
-			get;
-		}
+        Texture2D icon { get; }
 
-		bool isValid
-		{
-			get;
-		}
+        IconDrawStyle iconDrawStyle { get; }
 
-		bool isMainRepresentation
-		{
-			get;
-		}
+        int instanceID { get; }
 
-		bool hasFullPreviewImage
-		{
-			get;
-		}
+        bool isFolder { get; }
 
-		IconDrawStyle iconDrawStyle
-		{
-			get;
-		}
+        bool isMainRepresentation { get; }
 
-		bool isFolder
-		{
-			get;
-		}
+        bool isValid { get; }
 
-		int[] ancestors
-		{
-			get;
-		}
+        string name { get; }
 
-		void Reset();
+        Object pptrValue { get; }
 
-		bool IsExpanded(int[] expanded);
-
-		bool Next(int[] expanded);
-
-		bool NextWithDepthCheck(int[] expanded, int minDepth);
-
-		bool Previous(int[] expanded);
-
-		bool Parent();
-
-		bool Find(int instanceID, int[] expanded);
-
-		int[] FindAllAncestors(int[] instanceIDs);
-
-		bool Skip(int count, int[] expanded);
-
-		int CountRemaining(int[] expanded);
-	}
+        int row { get; }
+    }
 }
+

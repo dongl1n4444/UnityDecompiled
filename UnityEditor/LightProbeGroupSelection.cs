@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class LightProbeGroupSelection : ScriptableObject
-	{
-		public List<int> m_Selection = new List<int>();
-	}
+    using System.Collections.Generic;
+    using UnityEngine;
+
+    internal class LightProbeGroupSelection : ScriptableObject
+    {
+        public List<int> m_Selection = new List<int>();
+    }
 }
+

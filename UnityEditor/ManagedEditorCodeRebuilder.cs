@@ -1,96 +1,105 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using UnityEditor.Modules;
-using UnityEditor.Scripting.Compilers;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ManagedEditorCodeRebuilder
-	{
-		private static readonly char[] kNewlineChars = new char[]
-		{
-			'\r',
-			'\n'
-		};
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using UnityEditor.Modules;
+    using UnityEditor.Scripting.Compilers;
 
-		private static bool Run(out CompilerMessage[] messages, bool includeModules)
-		{
-			int num;
-			messages = ManagedEditorCodeRebuilder.ParseResults(ManagedEditorCodeRebuilder.GetOutputStream(ManagedEditorCodeRebuilder.GetJamStartInfo(includeModules), out num));
-			return num == 0;
-		}
+    internal class ManagedEditorCodeRebuilder
+    {
+        private static readonly char[] kNewlineChars = new char[] { '\r', '\n' };
 
-		private static ProcessStartInfo GetJamStartInfo(bool includeModules)
-		{
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.Append("jam.pl LiveReloadableEditorAssemblies");
-			if (includeModules)
-			{
-				foreach (string current in ModuleManager.GetJamTargets())
-				{
-					stringBuilder.Append(" ").Append(current);
-				}
-			}
-			return new ProcessStartInfo
-			{
-				WorkingDirectory = Unsupported.GetBaseUnityDeveloperFolder(),
-				RedirectStandardOutput = true,
-				RedirectStandardError = false,
-				Arguments = stringBuilder.ToString(),
-				FileName = "perl"
-			};
-		}
+        private static ProcessStartInfo GetJamStartInfo(bool includeModules)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("jam.pl LiveReloadableEditorAssemblies");
+            if (includeModules)
+            {
+                foreach (string str in ModuleManager.GetJamTargets())
+                {
+                    builder.Append(" ").Append(str);
+                }
+            }
+            return new ProcessStartInfo { 
+                WorkingDirectory = Unsupported.GetBaseUnityDeveloperFolder(),
+                RedirectStandardOutput = true,
+                RedirectStandardError = false,
+                Arguments = builder.ToString(),
+                FileName = "perl"
+            };
+        }
 
-		private static CompilerMessage[] ParseResults(string text)
-		{
-			Console.Write(text);
-			string[] errorOutput = text.Split(ManagedEditorCodeRebuilder.kNewlineChars, StringSplitOptions.RemoveEmptyEntries);
-			string baseUnityDeveloperFolder = Unsupported.GetBaseUnityDeveloperFolder();
-			List<CompilerMessage> list = new MonoCSharpCompilerOutputParser().Parse(errorOutput, false).ToList<CompilerMessage>();
-			for (int i = 0; i < list.Count; i++)
-			{
-				CompilerMessage value = list[i];
-				value.file = Path.Combine(baseUnityDeveloperFolder, value.file);
-				list[i] = value;
-			}
-			return list.ToArray();
-		}
+        private static string GetOutputStream(ProcessStartInfo startInfo, out int exitCode)
+        {
+            <GetOutputStream>c__AnonStorey0 storey = new <GetOutputStream>c__AnonStorey0();
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = true;
+            Process process = new Process {
+                StartInfo = startInfo
+            };
+            storey.sbStandardOut = new StringBuilder();
+            storey.sbStandardError = new StringBuilder();
+            process.OutputDataReceived += new DataReceivedEventHandler(storey.<>m__0);
+            process.ErrorDataReceived += new DataReceivedEventHandler(storey.<>m__1);
+            process.Start();
+            if (startInfo.RedirectStandardError)
+            {
+                process.BeginErrorReadLine();
+            }
+            else
+            {
+                process.BeginOutputReadLine();
+            }
+            process.WaitForExit();
+            string str = !startInfo.RedirectStandardError ? storey.sbStandardOut.ToString() : storey.sbStandardError.ToString();
+            exitCode = process.ExitCode;
+            return str;
+        }
 
-		private static string GetOutputStream(ProcessStartInfo startInfo, out int exitCode)
-		{
-			startInfo.UseShellExecute = false;
-			startInfo.CreateNoWindow = true;
-			Process process = new Process
-			{
-				StartInfo = startInfo
-			};
-			StringBuilder sbStandardOut = new StringBuilder();
-			StringBuilder sbStandardError = new StringBuilder();
-			process.OutputDataReceived += delegate(object sender, DataReceivedEventArgs data)
-			{
-				sbStandardOut.AppendLine(data.Data);
-			};
-			process.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs data)
-			{
-				sbStandardError.AppendLine(data.Data);
-			};
-			process.Start();
-			if (startInfo.RedirectStandardError)
-			{
-				process.BeginErrorReadLine();
-			}
-			else
-			{
-				process.BeginOutputReadLine();
-			}
-			process.WaitForExit();
-			string result = (!startInfo.RedirectStandardError) ? sbStandardOut.ToString() : sbStandardError.ToString();
-			exitCode = process.ExitCode;
-			return result;
-		}
-	}
+        private static CompilerMessage[] ParseResults(string text)
+        {
+            Console.Write(text);
+            string[] errorOutput = text.Split(kNewlineChars, StringSplitOptions.RemoveEmptyEntries);
+            string baseUnityDeveloperFolder = Unsupported.GetBaseUnityDeveloperFolder();
+            List<CompilerMessage> list = Enumerable.ToList<CompilerMessage>(new MonoCSharpCompilerOutputParser().Parse(errorOutput, false));
+            for (int i = 0; i < list.Count; i++)
+            {
+                CompilerMessage message = list[i];
+                message.file = Path.Combine(baseUnityDeveloperFolder, message.file);
+                list[i] = message;
+            }
+            return list.ToArray();
+        }
+
+        private static bool Run(out CompilerMessage[] messages, bool includeModules)
+        {
+            int num;
+            messages = ParseResults(GetOutputStream(GetJamStartInfo(includeModules), out num));
+            return (num == 0);
+        }
+
+        [CompilerGenerated]
+        private sealed class <GetOutputStream>c__AnonStorey0
+        {
+            internal StringBuilder sbStandardError;
+            internal StringBuilder sbStandardOut;
+
+            internal void <>m__0(object sender, DataReceivedEventArgs data)
+            {
+                this.sbStandardOut.AppendLine(data.Data);
+            }
+
+            internal void <>m__1(object sender, DataReceivedEventArgs data)
+            {
+                this.sbStandardError.AppendLine(data.Data);
+            }
+        }
+    }
 }
+

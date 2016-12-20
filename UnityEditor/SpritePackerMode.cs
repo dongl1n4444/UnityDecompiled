@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum SpritePackerMode
-	{
-		Disabled,
-		BuildTimeOnly,
-		AlwaysOn
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Sprite Packer mode for the current project.</para>
+    /// </summary>
+    public enum SpritePackerMode
+    {
+        Disabled,
+        BuildTimeOnly,
+        AlwaysOn
+    }
 }
+

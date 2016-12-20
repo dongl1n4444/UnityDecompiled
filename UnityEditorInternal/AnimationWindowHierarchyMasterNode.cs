@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AnimationWindowHierarchyMasterNode : AnimationWindowHierarchyNode
-	{
-		public AnimationWindowHierarchyMasterNode() : base(0, -1, null, null, null, null, "")
-		{
-		}
-	}
+    using System;
+
+    internal class AnimationWindowHierarchyMasterNode : AnimationWindowHierarchyNode
+    {
+        public AnimationWindowHierarchyMasterNode() : base(0, -1, null, null, null, null, "")
+        {
+        }
+    }
 }
+

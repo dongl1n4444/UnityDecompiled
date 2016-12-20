@@ -1,125 +1,113 @@
-using System;
-using System.Globalization;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class PrefColor : IPrefType
-	{
-		private string m_name;
+    using System;
+    using System.Globalization;
+    using UnityEngine;
 
-		private Color m_color;
+    internal class PrefColor : IPrefType
+    {
+        private UnityEngine.Color m_color;
+        private UnityEngine.Color m_DefaultColor;
+        private bool m_Loaded;
+        private string m_name;
 
-		private Color m_DefaultColor;
+        public PrefColor()
+        {
+            this.m_Loaded = true;
+        }
 
-		private bool m_Loaded;
+        public PrefColor(string name, float defaultRed, float defaultGreen, float defaultBlue, float defaultAlpha)
+        {
+            this.m_name = name;
+            this.m_color = this.m_DefaultColor = new UnityEngine.Color(defaultRed, defaultGreen, defaultBlue, defaultAlpha);
+            Settings.Add(this);
+            this.m_Loaded = false;
+        }
 
-		public Color Color
-		{
-			get
-			{
-				this.Load();
-				return this.m_color;
-			}
-			set
-			{
-				this.Load();
-				this.m_color = value;
-			}
-		}
+        public void FromUniqueString(string s)
+        {
+            this.Load();
+            char[] separator = new char[] { ';' };
+            string[] strArray = s.Split(separator);
+            if (strArray.Length != 5)
+            {
+                Debug.LogError("Parsing PrefColor failed");
+            }
+            else
+            {
+                float num;
+                float num2;
+                float num3;
+                float num4;
+                this.m_name = strArray[0];
+                strArray[1] = strArray[1].Replace(',', '.');
+                strArray[2] = strArray[2].Replace(',', '.');
+                strArray[3] = strArray[3].Replace(',', '.');
+                strArray[4] = strArray[4].Replace(',', '.');
+                bool flag = float.TryParse(strArray[1], NumberStyles.Float, (IFormatProvider) CultureInfo.InvariantCulture.NumberFormat, out num) & float.TryParse(strArray[2], NumberStyles.Float, (IFormatProvider) CultureInfo.InvariantCulture.NumberFormat, out num2);
+                flag &= float.TryParse(strArray[3], NumberStyles.Float, (IFormatProvider) CultureInfo.InvariantCulture.NumberFormat, out num3);
+                if (flag & float.TryParse(strArray[4], NumberStyles.Float, (IFormatProvider) CultureInfo.InvariantCulture.NumberFormat, out num4))
+                {
+                    this.m_color = new UnityEngine.Color(num, num2, num3, num4);
+                }
+                else
+                {
+                    Debug.LogError("Parsing PrefColor failed");
+                }
+            }
+        }
 
-		public string Name
-		{
-			get
-			{
-				this.Load();
-				return this.m_name;
-			}
-		}
+        public void Load()
+        {
+            if (!this.m_Loaded)
+            {
+                this.m_Loaded = true;
+                PrefColor color = Settings.Get<PrefColor>(this.m_name, this);
+                this.m_name = color.Name;
+                this.m_color = color.Color;
+            }
+        }
 
-		public PrefColor()
-		{
-			this.m_Loaded = true;
-		}
+        public static implicit operator UnityEngine.Color(PrefColor pcolor)
+        {
+            return pcolor.Color;
+        }
 
-		public PrefColor(string name, float defaultRed, float defaultGreen, float defaultBlue, float defaultAlpha)
-		{
-			this.m_name = name;
-			this.m_color = (this.m_DefaultColor = new Color(defaultRed, defaultGreen, defaultBlue, defaultAlpha));
-			Settings.Add(this);
-			this.m_Loaded = false;
-		}
+        internal void ResetToDefault()
+        {
+            this.Load();
+            this.m_color = this.m_DefaultColor;
+        }
 
-		public void Load()
-		{
-			if (!this.m_Loaded)
-			{
-				this.m_Loaded = true;
-				PrefColor prefColor = Settings.Get<PrefColor>(this.m_name, this);
-				this.m_name = prefColor.Name;
-				this.m_color = prefColor.Color;
-			}
-		}
+        public string ToUniqueString()
+        {
+            this.Load();
+            object[] args = new object[] { this.m_name, this.Color.r, this.Color.g, this.Color.b, this.Color.a };
+            return string.Format(CultureInfo.InvariantCulture, "{0};{1};{2};{3};{4}", args);
+        }
 
-		public static implicit operator Color(PrefColor pcolor)
-		{
-			return pcolor.Color;
-		}
+        public UnityEngine.Color Color
+        {
+            get
+            {
+                this.Load();
+                return this.m_color;
+            }
+            set
+            {
+                this.Load();
+                this.m_color = value;
+            }
+        }
 
-		public string ToUniqueString()
-		{
-			this.Load();
-			return string.Format(CultureInfo.InvariantCulture, "{0};{1};{2};{3};{4}", new object[]
-			{
-				this.m_name,
-				this.Color.r,
-				this.Color.g,
-				this.Color.b,
-				this.Color.a
-			});
-		}
-
-		public void FromUniqueString(string s)
-		{
-			this.Load();
-			string[] array = s.Split(new char[]
-			{
-				';'
-			});
-			if (array.Length != 5)
-			{
-				Debug.LogError("Parsing PrefColor failed");
-			}
-			else
-			{
-				this.m_name = array[0];
-				array[1] = array[1].Replace(',', '.');
-				array[2] = array[2].Replace(',', '.');
-				array[3] = array[3].Replace(',', '.');
-				array[4] = array[4].Replace(',', '.');
-				float r;
-				bool flag = float.TryParse(array[1], NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out r);
-				float g;
-				flag &= float.TryParse(array[2], NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out g);
-				float b;
-				flag &= float.TryParse(array[3], NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out b);
-				float a;
-				flag &= float.TryParse(array[4], NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out a);
-				if (flag)
-				{
-					this.m_color = new Color(r, g, b, a);
-				}
-				else
-				{
-					Debug.LogError("Parsing PrefColor failed");
-				}
-			}
-		}
-
-		internal void ResetToDefault()
-		{
-			this.Load();
-			this.m_color = this.m_DefaultColor;
-		}
-	}
+        public string Name
+        {
+            get
+            {
+                this.Load();
+                return this.m_name;
+            }
+        }
+    }
 }
+

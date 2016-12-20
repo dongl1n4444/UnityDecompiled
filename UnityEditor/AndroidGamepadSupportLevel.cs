@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum AndroidGamepadSupportLevel
-	{
-		SupportsDPad,
-		SupportsGamepad,
-		RequiresGamepad
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Gamepad support level for Android TV.</para>
+    /// </summary>
+    public enum AndroidGamepadSupportLevel
+    {
+        SupportsDPad,
+        SupportsGamepad,
+        RequiresGamepad
+    }
 }
+

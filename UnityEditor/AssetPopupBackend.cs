@@ -1,175 +1,169 @@
-using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AssetPopupBackend
-	{
-		[CompilerGenerated]
-		private static GenericMenu.MenuFunction2 <>f__mg$cache0;
+    using System;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-		[CompilerGenerated]
-		private static GenericMenu.MenuFunction2 <>f__mg$cache1;
+    internal class AssetPopupBackend
+    {
+        [CompilerGenerated]
+        private static GenericMenu.MenuFunction2 <>f__mg$cache0;
+        [CompilerGenerated]
+        private static GenericMenu.MenuFunction2 <>f__mg$cache1;
+        [CompilerGenerated]
+        private static GenericMenu.MenuFunction2 <>f__mg$cache2;
+        [CompilerGenerated]
+        private static GenericMenu.MenuFunction2 <>f__mg$cache3;
 
-		[CompilerGenerated]
-		private static GenericMenu.MenuFunction2 <>f__mg$cache2;
+        public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension) where T: Object, new()
+        {
+            AssetPopup<T>(serializedProperty, label, fileExtension, "Default");
+        }
 
-		[CompilerGenerated]
-		private static GenericMenu.MenuFunction2 <>f__mg$cache3;
+        public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension, string defaultFieldName) where T: Object, new()
+        {
+            GUIContent mixedValueContent;
+            Rect rect;
+            bool showMixedValue = EditorGUI.showMixedValue;
+            EditorGUI.showMixedValue = serializedProperty.hasMultipleDifferentValues;
+            string objectReferenceTypeString = serializedProperty.objectReferenceTypeString;
+            if (serializedProperty.hasMultipleDifferentValues)
+            {
+                mixedValueContent = EditorGUI.mixedValueContent;
+            }
+            else if (serializedProperty.objectReferenceValue != null)
+            {
+                mixedValueContent = GUIContent.Temp(serializedProperty.objectReferenceStringValue);
+            }
+            else
+            {
+                mixedValueContent = GUIContent.Temp(defaultFieldName);
+            }
+            if (AudioMixerEffectGUI.PopupButton(label, mixedValueContent, EditorStyles.popup, out rect, new GUILayoutOption[0]))
+            {
+                ShowAssetsPopupMenu<T>(rect, objectReferenceTypeString, serializedProperty, fileExtension, defaultFieldName);
+            }
+            EditorGUI.showMixedValue = showMixedValue;
+        }
 
-		public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension, string defaultFieldName) where T : UnityEngine.Object, new()
-		{
-			bool showMixedValue = EditorGUI.showMixedValue;
-			EditorGUI.showMixedValue = serializedProperty.hasMultipleDifferentValues;
-			string objectReferenceTypeString = serializedProperty.objectReferenceTypeString;
-			GUIContent buttonContent;
-			if (serializedProperty.hasMultipleDifferentValues)
-			{
-				buttonContent = EditorGUI.mixedValueContent;
-			}
-			else if (serializedProperty.objectReferenceValue != null)
-			{
-				buttonContent = GUIContent.Temp(serializedProperty.objectReferenceStringValue);
-			}
-			else
-			{
-				buttonContent = GUIContent.Temp(defaultFieldName);
-			}
-			Rect buttonRect;
-			if (AudioMixerEffectGUI.PopupButton(label, buttonContent, EditorStyles.popup, out buttonRect, new GUILayoutOption[0]))
-			{
-				AssetPopupBackend.ShowAssetsPopupMenu<T>(buttonRect, objectReferenceTypeString, serializedProperty, fileExtension, defaultFieldName);
-			}
-			EditorGUI.showMixedValue = showMixedValue;
-		}
+        private static void AssetPopupMenuCallback(object userData)
+        {
+            object[] objArray = userData as object[];
+            int instanceID = (int) objArray[0];
+            SerializedProperty property = (SerializedProperty) objArray[1];
+            property.objectReferenceValue = EditorUtility.InstanceIDToObject(instanceID);
+            property.m_SerializedObject.ApplyModifiedProperties();
+        }
 
-		public static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent label, string fileExtension) where T : UnityEngine.Object, new()
-		{
-			AssetPopupBackend.AssetPopup<T>(serializedProperty, label, fileExtension, "Default");
-		}
+        private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension) where T: Object, new()
+        {
+            ShowAssetsPopupMenu<T>(buttonRect, typeName, serializedProperty, fileExtension, "Default");
+        }
 
-		private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension, string defaultFieldName) where T : UnityEngine.Object, new()
-		{
-			GenericMenu genericMenu = new GenericMenu();
-			int num = (!(serializedProperty.objectReferenceValue != null)) ? 0 : serializedProperty.objectReferenceValue.GetInstanceID();
-			bool flag = false;
-			int num2 = BaseObjectTools.StringToClassID(typeName);
-			BuiltinResource[] array = null;
-			if (num2 > 0)
-			{
-				array = EditorGUIUtility.GetBuiltinResourceList(num2);
-				BuiltinResource[] array2 = array;
-				for (int i = 0; i < array2.Length; i++)
-				{
-					BuiltinResource resource = array2[i];
-					if (resource.m_Name == defaultFieldName)
-					{
-						GenericMenu arg_10E_0 = genericMenu;
-						GUIContent arg_10E_1 = new GUIContent(resource.m_Name);
-						bool arg_10E_2 = resource.m_InstanceID == num;
-						if (AssetPopupBackend.<>f__mg$cache0 == null)
-						{
-							AssetPopupBackend.<>f__mg$cache0 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
-						}
-						arg_10E_0.AddItem(arg_10E_1, arg_10E_2, AssetPopupBackend.<>f__mg$cache0, new object[]
-						{
-							resource.m_InstanceID,
-							serializedProperty
-						});
-						array = (from x in array
-						where x != resource
-						select x).ToArray<BuiltinResource>();
-						flag = true;
-						break;
-					}
-				}
-			}
-			if (!flag)
-			{
-				GenericMenu arg_190_0 = genericMenu;
-				GUIContent arg_190_1 = new GUIContent(defaultFieldName);
-				bool arg_190_2 = num == 0;
-				if (AssetPopupBackend.<>f__mg$cache1 == null)
-				{
-					AssetPopupBackend.<>f__mg$cache1 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
-				}
-				arg_190_0.AddItem(arg_190_1, arg_190_2, AssetPopupBackend.<>f__mg$cache1, new object[]
-				{
-					0,
-					serializedProperty
-				});
-			}
-			HierarchyProperty hierarchyProperty = new HierarchyProperty(HierarchyType.Assets);
-			SearchFilter searchFilter = new SearchFilter
-			{
-				classNames = new string[]
-				{
-					typeName
-				}
-			};
-			hierarchyProperty.SetSearchFilter(searchFilter);
-			hierarchyProperty.Reset();
-			while (hierarchyProperty.Next(null))
-			{
-				GenericMenu arg_227_0 = genericMenu;
-				GUIContent arg_227_1 = new GUIContent(hierarchyProperty.name);
-				bool arg_227_2 = hierarchyProperty.instanceID == num;
-				if (AssetPopupBackend.<>f__mg$cache2 == null)
-				{
-					AssetPopupBackend.<>f__mg$cache2 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
-				}
-				arg_227_0.AddItem(arg_227_1, arg_227_2, AssetPopupBackend.<>f__mg$cache2, new object[]
-				{
-					hierarchyProperty.instanceID,
-					serializedProperty
-				});
-			}
-			if (num2 > 0 && array != null)
-			{
-				BuiltinResource[] array3 = array;
-				for (int j = 0; j < array3.Length; j++)
-				{
-					BuiltinResource builtinResource = array3[j];
-					GenericMenu arg_2B1_0 = genericMenu;
-					GUIContent arg_2B1_1 = new GUIContent(builtinResource.m_Name);
-					bool arg_2B1_2 = builtinResource.m_InstanceID == num;
-					if (AssetPopupBackend.<>f__mg$cache3 == null)
-					{
-						AssetPopupBackend.<>f__mg$cache3 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
-					}
-					arg_2B1_0.AddItem(arg_2B1_1, arg_2B1_2, AssetPopupBackend.<>f__mg$cache3, new object[]
-					{
-						builtinResource.m_InstanceID,
-						serializedProperty
-					});
-				}
-			}
-			genericMenu.AddSeparator("");
-			genericMenu.AddItem(new GUIContent("Create New..."), false, delegate
-			{
-				T t = Activator.CreateInstance<T>();
-				ProjectWindowUtil.CreateAsset(t, "New " + typeName + "." + fileExtension);
-				serializedProperty.objectReferenceValue = t;
-				serializedProperty.m_SerializedObject.ApplyModifiedProperties();
-			});
-			genericMenu.DropDown(buttonRect);
-		}
+        private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension, string defaultFieldName) where T: Object, new()
+        {
+            <ShowAssetsPopupMenu>c__AnonStorey1<T> storey = new <ShowAssetsPopupMenu>c__AnonStorey1<T> {
+                typeName = typeName,
+                fileExtension = fileExtension,
+                serializedProperty = serializedProperty
+            };
+            GenericMenu menu = new GenericMenu();
+            int num = (storey.serializedProperty.objectReferenceValue == null) ? 0 : storey.serializedProperty.objectReferenceValue.GetInstanceID();
+            bool flag = false;
+            int classID = BaseObjectTools.StringToClassID(storey.typeName);
+            BuiltinResource[] builtinResourceList = null;
+            if (classID > 0)
+            {
+                builtinResourceList = EditorGUIUtility.GetBuiltinResourceList(classID);
+                BuiltinResource[] resourceArray2 = builtinResourceList;
+                for (int i = 0; i < resourceArray2.Length; i++)
+                {
+                    <ShowAssetsPopupMenu>c__AnonStorey0<T> storey2 = new <ShowAssetsPopupMenu>c__AnonStorey0<T> {
+                        resource = resourceArray2[i]
+                    };
+                    if (storey2.resource.m_Name == defaultFieldName)
+                    {
+                        if (<>f__mg$cache0 == null)
+                        {
+                            <>f__mg$cache0 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
+                        }
+                        object[] userData = new object[] { storey2.resource.m_InstanceID, storey.serializedProperty };
+                        menu.AddItem(new GUIContent(storey2.resource.m_Name), storey2.resource.m_InstanceID == num, <>f__mg$cache0, userData);
+                        builtinResourceList = Enumerable.ToArray<BuiltinResource>(Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2, (IntPtr) this.<>m__0)));
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if (!flag)
+            {
+                if (<>f__mg$cache1 == null)
+                {
+                    <>f__mg$cache1 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
+                }
+                object[] objArray2 = new object[] { 0, storey.serializedProperty };
+                menu.AddItem(new GUIContent(defaultFieldName), num == 0, <>f__mg$cache1, objArray2);
+            }
+            HierarchyProperty property = new HierarchyProperty(HierarchyType.Assets);
+            SearchFilter filter2 = new SearchFilter();
+            filter2.classNames = new string[] { storey.typeName };
+            SearchFilter filter = filter2;
+            property.SetSearchFilter(filter);
+            property.Reset();
+            while (property.Next(null))
+            {
+                if (<>f__mg$cache2 == null)
+                {
+                    <>f__mg$cache2 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
+                }
+                object[] objArray3 = new object[] { property.instanceID, storey.serializedProperty };
+                menu.AddItem(new GUIContent(property.name), property.instanceID == num, <>f__mg$cache2, objArray3);
+            }
+            if ((classID > 0) && (builtinResourceList != null))
+            {
+                foreach (BuiltinResource resource in builtinResourceList)
+                {
+                    if (<>f__mg$cache3 == null)
+                    {
+                        <>f__mg$cache3 = new GenericMenu.MenuFunction2(AssetPopupBackend.AssetPopupMenuCallback);
+                    }
+                    object[] objArray4 = new object[] { resource.m_InstanceID, storey.serializedProperty };
+                    menu.AddItem(new GUIContent(resource.m_Name), resource.m_InstanceID == num, <>f__mg$cache3, objArray4);
+                }
+            }
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("Create New..."), false, new GenericMenu.MenuFunction(storey.<>m__0));
+            menu.DropDown(buttonRect);
+        }
 
-		private static void ShowAssetsPopupMenu<T>(Rect buttonRect, string typeName, SerializedProperty serializedProperty, string fileExtension) where T : UnityEngine.Object, new()
-		{
-			AssetPopupBackend.ShowAssetsPopupMenu<T>(buttonRect, typeName, serializedProperty, fileExtension, "Default");
-		}
+        [CompilerGenerated]
+        private sealed class <ShowAssetsPopupMenu>c__AnonStorey0<T> where T: Object, new()
+        {
+            internal BuiltinResource resource;
 
-		private static void AssetPopupMenuCallback(object userData)
-		{
-			object[] array = userData as object[];
-			int instanceID = (int)array[0];
-			SerializedProperty serializedProperty = (SerializedProperty)array[1];
-			serializedProperty.objectReferenceValue = EditorUtility.InstanceIDToObject(instanceID);
-			serializedProperty.m_SerializedObject.ApplyModifiedProperties();
-		}
-	}
+            internal bool <>m__0(BuiltinResource x)
+            {
+                return (x != this.resource);
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <ShowAssetsPopupMenu>c__AnonStorey1<T> where T: Object, new()
+        {
+            internal string fileExtension;
+            internal SerializedProperty serializedProperty;
+            internal string typeName;
+
+            internal void <>m__0()
+            {
+                T asset = Activator.CreateInstance<T>();
+                ProjectWindowUtil.CreateAsset(asset, "New " + this.typeName + "." + this.fileExtension);
+                this.serializedProperty.objectReferenceValue = asset;
+                this.serializedProperty.m_SerializedObject.ApplyModifiedProperties();
+            }
+        }
+    }
 }
+

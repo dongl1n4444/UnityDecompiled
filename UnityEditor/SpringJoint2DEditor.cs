@@ -1,25 +1,26 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(SpringJoint2D))]
-	internal class SpringJoint2DEditor : AnchoredJoint2DEditor
-	{
-		public new void OnSceneGUI()
-		{
-			SpringJoint2D springJoint2D = (SpringJoint2D)base.target;
-			if (springJoint2D.enabled)
-			{
-				Vector3 anchor = Joint2DEditor.TransformPoint(springJoint2D.transform, springJoint2D.anchor);
-				Vector3 vector = springJoint2D.connectedAnchor;
-				if (springJoint2D.connectedBody)
-				{
-					vector = Joint2DEditor.TransformPoint(springJoint2D.connectedBody.transform, vector);
-				}
-				Joint2DEditor.DrawDistanceGizmo(anchor, vector, springJoint2D.distance);
-				base.OnSceneGUI();
-			}
-		}
-	}
+    using System;
+    using UnityEngine;
+
+    [CustomEditor(typeof(SpringJoint2D)), CanEditMultipleObjects]
+    internal class SpringJoint2DEditor : AnchoredJoint2DEditor
+    {
+        public void OnSceneGUI()
+        {
+            SpringJoint2D target = (SpringJoint2D) base.target;
+            if (target.enabled)
+            {
+                Vector3 anchor = Joint2DEditor.TransformPoint(target.transform, (Vector3) target.anchor);
+                Vector3 connectedAnchor = (Vector3) target.connectedAnchor;
+                if (target.connectedBody != null)
+                {
+                    connectedAnchor = Joint2DEditor.TransformPoint(target.connectedBody.transform, connectedAnchor);
+                }
+                Joint2DEditor.DrawDistanceGizmo(anchor, connectedAnchor, target.distance);
+                base.OnSceneGUI();
+            }
+        }
+    }
 }
+

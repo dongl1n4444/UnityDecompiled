@@ -1,15 +1,15 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[Obsolete("this API is not for public use."), UsedByNativeCode]
-	public struct CacheIndex
-	{
-		public string name;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-		public int bytesUsed;
-
-		public int expires;
-	}
+    [StructLayout(LayoutKind.Sequential), Obsolete("this API is not for public use."), UsedByNativeCode]
+    public struct CacheIndex
+    {
+        public string name;
+        public int bytesUsed;
+        public int expires;
+    }
 }
+

@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum VerticalWrapMode
-	{
-		Truncate,
-		Overflow
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Wrapping modes for text that reaches the vertical boundary.</para>
+    /// </summary>
+    public enum VerticalWrapMode
+    {
+        Truncate,
+        Overflow
+    }
 }
+

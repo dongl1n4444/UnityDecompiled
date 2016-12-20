@@ -1,13 +1,23 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[UsedByNativeCode]
-	public struct UICharInfo
-	{
-		public Vector2 cursorPos;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-		public float charWidth;
-	}
+    /// <summary>
+    /// <para>Class that specifies some information about a renderable character.</para>
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
+    public struct UICharInfo
+    {
+        /// <summary>
+        /// <para>Position of the character cursor in local (text generated) space.</para>
+        /// </summary>
+        public Vector2 cursorPos;
+        /// <summary>
+        /// <para>Character width.</para>
+        /// </summary>
+        public float charWidth;
+    }
 }
+

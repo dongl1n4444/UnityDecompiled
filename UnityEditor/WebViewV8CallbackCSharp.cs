@@ -1,24 +1,23 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal sealed class WebViewV8CallbackCSharp
-	{
-		[SerializeField]
-		private IntPtr m_thisDummy;
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void Callback(string result);
+    [Serializable]
+    internal sealed class WebViewV8CallbackCSharp
+    {
+        [SerializeField]
+        private IntPtr m_thisDummy;
 
-		public void OnDestroy()
-		{
-			this.DestroyCallBack();
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void DestroyCallBack();
-	}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void Callback(string result);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void DestroyCallBack();
+        public void OnDestroy()
+        {
+            this.DestroyCallBack();
+        }
+    }
 }
+

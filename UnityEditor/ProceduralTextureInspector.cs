@@ -1,94 +1,90 @@
-using System;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(ProceduralTexture))]
-	internal class ProceduralTextureInspector : TextureInspector
-	{
-		private bool m_MightHaveModified = false;
+    using System;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-		protected override void OnDisable()
-		{
-			base.OnDisable();
-			if (!EditorApplication.isPlaying && !InternalEditorUtility.ignoreInspectorChanges && this.m_MightHaveModified)
-			{
-				this.m_MightHaveModified = false;
-				string[] array = new string[base.targets.GetLength(0)];
-				int num = 0;
-				UnityEngine.Object[] targets = base.targets;
-				for (int i = 0; i < targets.Length; i++)
-				{
-					ProceduralTexture proceduralTexture = (ProceduralTexture)targets[i];
-					string assetPath = AssetDatabase.GetAssetPath(proceduralTexture);
-					SubstanceImporter substanceImporter = AssetImporter.GetAtPath(assetPath) as SubstanceImporter;
-					if (substanceImporter)
-					{
-						substanceImporter.OnTextureInformationsChanged(proceduralTexture);
-					}
-					assetPath = AssetDatabase.GetAssetPath(proceduralTexture.GetProceduralMaterial());
-					bool flag = false;
-					for (int j = 0; j < num; j++)
-					{
-						if (array[j] == assetPath)
-						{
-							flag = true;
-							break;
-						}
-					}
-					if (!flag)
-					{
-						array[num++] = assetPath;
-					}
-				}
-				for (int k = 0; k < num; k++)
-				{
-					SubstanceImporter substanceImporter2 = AssetImporter.GetAtPath(array[k]) as SubstanceImporter;
-					if (substanceImporter2 && EditorUtility.IsDirty(substanceImporter2.GetInstanceID()))
-					{
-						AssetDatabase.ImportAsset(array[k], ImportAssetOptions.ForceUncompressedImport);
-					}
-				}
-			}
-		}
+    [CustomEditor(typeof(ProceduralTexture)), CanEditMultipleObjects]
+    internal class ProceduralTextureInspector : TextureInspector
+    {
+        private bool m_MightHaveModified = false;
 
-		public override void OnInspectorGUI()
-		{
-			base.OnInspectorGUI();
-			if (GUI.changed)
-			{
-				this.m_MightHaveModified = true;
-			}
-			UnityEngine.Object[] targets = base.targets;
-			for (int i = 0; i < targets.Length; i++)
-			{
-				ProceduralTexture proceduralTexture = (ProceduralTexture)targets[i];
-				if (proceduralTexture)
-				{
-					ProceduralMaterial proceduralMaterial = proceduralTexture.GetProceduralMaterial();
-					if (proceduralMaterial && proceduralMaterial.isProcessing)
-					{
-						base.Repaint();
-						SceneView.RepaintAll();
-						GameView.RepaintAll();
-						break;
-					}
-				}
-			}
-		}
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            if ((!EditorApplication.isPlaying && !InternalEditorUtility.ignoreInspectorChanges) && this.m_MightHaveModified)
+            {
+                this.m_MightHaveModified = false;
+                string[] strArray = new string[base.targets.GetLength(0)];
+                int num = 0;
+                foreach (ProceduralTexture texture in base.targets)
+                {
+                    SubstanceImporter atPath = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(texture)) as SubstanceImporter;
+                    if (atPath != null)
+                    {
+                        atPath.OnTextureInformationsChanged(texture);
+                    }
+                    string assetPath = AssetDatabase.GetAssetPath(texture.GetProceduralMaterial());
+                    bool flag = false;
+                    for (int j = 0; j < num; j++)
+                    {
+                        if (strArray[j] == assetPath)
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag)
+                    {
+                        strArray[num++] = assetPath;
+                    }
+                }
+                for (int i = 0; i < num; i++)
+                {
+                    SubstanceImporter importer2 = AssetImporter.GetAtPath(strArray[i]) as SubstanceImporter;
+                    if ((importer2 != null) && EditorUtility.IsDirty(importer2.GetInstanceID()))
+                    {
+                        AssetDatabase.ImportAsset(strArray[i], ImportAssetOptions.ForceUncompressedImport);
+                    }
+                }
+            }
+        }
 
-		public override void OnPreviewGUI(Rect r, GUIStyle background)
-		{
-			base.OnPreviewGUI(r, background);
-			if (base.target)
-			{
-				ProceduralMaterial proceduralMaterial = (base.target as ProceduralTexture).GetProceduralMaterial();
-				if (proceduralMaterial && ProceduralMaterialInspector.ShowIsGenerating(proceduralMaterial) && r.width > 50f)
-				{
-					EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 20f), "Generating...");
-				}
-			}
-		}
-	}
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            if (GUI.changed)
+            {
+                this.m_MightHaveModified = true;
+            }
+            foreach (ProceduralTexture texture in base.targets)
+            {
+                if (texture != null)
+                {
+                    ProceduralMaterial proceduralMaterial = texture.GetProceduralMaterial();
+                    if ((proceduralMaterial != null) && proceduralMaterial.isProcessing)
+                    {
+                        base.Repaint();
+                        SceneView.RepaintAll();
+                        GameView.RepaintAll();
+                        break;
+                    }
+                }
+            }
+        }
+
+        public override void OnPreviewGUI(Rect r, GUIStyle background)
+        {
+            base.OnPreviewGUI(r, background);
+            if (base.target != null)
+            {
+                ProceduralMaterial proceduralMaterial = (base.target as ProceduralTexture).GetProceduralMaterial();
+                if (((proceduralMaterial != null) && ProceduralMaterialInspector.ShowIsGenerating(proceduralMaterial)) && (r.width > 50f))
+                {
+                    EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 20f), "Generating...");
+                }
+            }
+        }
+    }
 }
+

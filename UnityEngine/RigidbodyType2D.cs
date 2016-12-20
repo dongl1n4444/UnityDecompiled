@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum RigidbodyType2D
-	{
-		Dynamic,
-		Kinematic,
-		Static
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The physical behaviour type of the Rigidbody2D.</para>
+    /// </summary>
+    public enum RigidbodyType2D
+    {
+        Dynamic,
+        Kinematic,
+        Static
+    }
 }
+

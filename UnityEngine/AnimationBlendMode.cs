@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum AnimationBlendMode
-	{
-		Blend,
-		Additive
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Used by Animation.Play function.</para>
+    /// </summary>
+    public enum AnimationBlendMode
+    {
+        Blend,
+        Additive
+    }
 }
+

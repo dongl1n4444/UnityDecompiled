@@ -1,13 +1,13 @@
-using System;
-using System.Runtime.InteropServices;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[StructLayout(LayoutKind.Sequential)]
-	internal sealed class BuiltinResource
-	{
-		public string m_Name;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public int m_InstanceID;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal sealed class BuiltinResource
+    {
+        public string m_Name;
+        public int m_InstanceID;
+    }
 }
+

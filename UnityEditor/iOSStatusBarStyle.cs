@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum iOSStatusBarStyle
-	{
-		Default,
-		BlackTranslucent,
-		BlackOpaque
-	}
+    using System;
+
+    /// <summary>
+    /// <para>iOS status bar style.</para>
+    /// </summary>
+    public enum iOSStatusBarStyle
+    {
+        Default,
+        BlackTranslucent,
+        BlackOpaque
+    }
 }
+

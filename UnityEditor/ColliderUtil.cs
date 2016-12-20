@@ -1,29 +1,30 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class ColliderUtil
-	{
-		public static Vector3 GetCapsuleExtents(CapsuleCollider cc)
-		{
-			Vector3 result;
-			ColliderUtil.INTERNAL_CALL_GetCapsuleExtents(cc, out result);
-			return result;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_GetCapsuleExtents(CapsuleCollider cc, out Vector3 value);
+    internal sealed class ColliderUtil
+    {
+        public static Matrix4x4 CalculateCapsuleTransform(CapsuleCollider cc)
+        {
+            Matrix4x4 matrixx;
+            INTERNAL_CALL_CalculateCapsuleTransform(cc, out matrixx);
+            return matrixx;
+        }
 
-		public static Matrix4x4 CalculateCapsuleTransform(CapsuleCollider cc)
-		{
-			Matrix4x4 result;
-			ColliderUtil.INTERNAL_CALL_CalculateCapsuleTransform(cc, out result);
-			return result;
-		}
+        public static Vector3 GetCapsuleExtents(CapsuleCollider cc)
+        {
+            Vector3 vector;
+            INTERNAL_CALL_GetCapsuleExtents(cc, out vector);
+            return vector;
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_CalculateCapsuleTransform(CapsuleCollider cc, out Matrix4x4 value);
-	}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_CalculateCapsuleTransform(CapsuleCollider cc, out Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_GetCapsuleExtents(CapsuleCollider cc, out Vector3 value);
+    }
 }
+

@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemTrailTextureMode
-	{
-		Stretch,
-		Tile
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Choose how textures are applied to Particle Trails.</para>
+    /// </summary>
+    public enum ParticleSystemTrailTextureMode
+    {
+        Stretch,
+        Tile
+    }
 }
+

@@ -1,180 +1,170 @@
-using System;
-using UnityEditor;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class ProvisioningProfileGUI
-	{
-		internal delegate void ProvisioningProfileChangedDelegate(ProvisioningProfile profile);
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEditor;
+    using UnityEngine;
 
-		internal static void ShowProvisioningProfileUIWithProperty(GUIContent titleWithToolTip, ProvisioningProfile profile, SerializedProperty prop)
-		{
-			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			GUILayout.Label(titleWithToolTip, EditorStyles.label, new GUILayoutOption[0]);
-			Rect controlRect = EditorGUILayout.GetControlRect(false, 0f, new GUILayoutOption[0]);
-			GUIContent label = EditorGUIUtility.TextContent("Profile ID:");
-			EditorGUI.BeginProperty(controlRect, label, prop);
-			if (GUILayout.Button("Browse", EditorStyles.miniButton, new GUILayoutOption[0]))
-			{
-				ProvisioningProfile provisioningProfile = ProvisioningProfileGUI.Browse("");
-				if (provisioningProfile != null && !string.IsNullOrEmpty(provisioningProfile.UUID))
-				{
-					profile = provisioningProfile;
-					prop.stringValue = profile.UUID;
-					GUI.FocusControl("");
-				}
-			}
-			GUILayout.EndHorizontal();
-			EditorGUI.EndProperty();
-			EditorGUI.BeginChangeCheck();
-			EditorGUI.indentLevel++;
-			controlRect = EditorGUILayout.GetControlRect(true, 0f, new GUILayoutOption[0]);
-			label = EditorGUIUtility.TextContent("Profile ID:");
-			EditorGUI.BeginProperty(controlRect, label, prop);
-			profile.UUID = EditorGUILayout.TextField(label, profile.UUID, new GUILayoutOption[0]);
-			if (EditorGUI.EndChangeCheck())
-			{
-				prop.stringValue = profile.UUID;
-			}
-			EditorGUI.EndProperty();
-			EditorGUI.indentLevel--;
-		}
+    internal class ProvisioningProfileGUI
+    {
+        internal static ProvisioningProfile Browse(string path)
+        {
+            string title = "Select the Provising Profile used for Manual Signing";
+            string directory = path;
+            if (InternalEditorUtility.inBatchMode)
+            {
+                return null;
+            }
+            ProvisioningProfile provisioningProfile = null;
+            do
+            {
+                path = EditorUtility.OpenFilePanel(title, directory, "mobileprovision");
+                if (path.Length == 0)
+                {
+                    return null;
+                }
+            }
+            while (!GetProvisioningProfileId(path, out provisioningProfile));
+            return provisioningProfile;
+        }
 
-		internal static void ShowProvisioningProfileUIWithCallback(GUIContent titleWithToolTip, ProvisioningProfile profile, ProvisioningProfileGUI.ProvisioningProfileChangedDelegate callback)
-		{
-			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			GUILayout.Label(titleWithToolTip, EditorStyles.label, new GUILayoutOption[0]);
-			if (GUILayout.Button("Browse", EditorStyles.miniButton, new GUILayoutOption[0]))
-			{
-				ProvisioningProfile provisioningProfile = ProvisioningProfileGUI.Browse("");
-				if (provisioningProfile != null && !string.IsNullOrEmpty(provisioningProfile.UUID))
-				{
-					profile = provisioningProfile;
-					callback(profile);
-					GUI.FocusControl("");
-				}
-			}
-			GUILayout.EndHorizontal();
-			EditorGUI.BeginChangeCheck();
-			EditorGUI.indentLevel++;
-			GUIContent label = EditorGUIUtility.TextContent("Profile ID:");
-			profile.UUID = EditorGUILayout.TextField(label, profile.UUID, new GUILayoutOption[0]);
-			EditorGUI.indentLevel--;
-			if (EditorGUI.EndChangeCheck())
-			{
-				callback(profile);
-			}
-		}
+        private static bool GetBoolForAutomaticSigningValue(int signingValue)
+        {
+            return (signingValue == 1);
+        }
 
-		internal static ProvisioningProfile Browse(string path)
-		{
-			string title = "Select the Provising Profile used for Manual Signing";
-			string directory = path;
-			ProvisioningProfile result;
-			if (InternalEditorUtility.inBatchMode)
-			{
-				result = null;
-			}
-			else
-			{
-				ProvisioningProfile provisioningProfile = null;
-				while (true)
-				{
-					path = EditorUtility.OpenFilePanel(title, directory, "mobileprovision");
-					if (path.Length == 0)
-					{
-						break;
-					}
-					if (ProvisioningProfileGUI.GetProvisioningProfileId(path, out provisioningProfile))
-					{
-						goto Block_3;
-					}
-				}
-				result = null;
-				return result;
-				Block_3:
-				result = provisioningProfile;
-			}
-			return result;
-		}
+        private static int GetDefaultAutomaticSigningValue(SerializedProperty prop, string editorPropKey)
+        {
+            int intValue = prop.intValue;
+            if (intValue == 0)
+            {
+                intValue = !EditorPrefs.GetBool(editorPropKey, true) ? 2 : 1;
+            }
+            return intValue;
+        }
 
-		internal static bool GetProvisioningProfileId(string filePath, out ProvisioningProfile provisioningProfile)
-		{
-			ProvisioningProfile provisioningProfile2 = ProvisioningProfile.ParseProvisioningProfileAtPath(filePath);
-			provisioningProfile = provisioningProfile2;
-			return provisioningProfile2.UUID != null;
-		}
+        private static string GetDefaultStringValue(SerializedProperty prop, string editorPrefKey)
+        {
+            string stringValue = prop.stringValue;
+            if (string.IsNullOrEmpty(stringValue))
+            {
+                stringValue = EditorPrefs.GetString(editorPrefKey, "");
+            }
+            return stringValue;
+        }
 
-		internal static void ShowUIWithDefaults(string provisioningPrefKey, SerializedProperty enableAutomaticSigningProp, GUIContent automaticSigningGUI, SerializedProperty manualSigningIDProp, GUIContent manualSigningProfileGUI, SerializedProperty appleDevIDProp, GUIContent teamIDGUIContent)
-		{
-			int defaultAutomaticSigningValue = ProvisioningProfileGUI.GetDefaultAutomaticSigningValue(enableAutomaticSigningProp, iOSEditorPrefKeys.kDefaultiOSAutomaticallySignBuild);
-			bool boolForAutomaticSigningValue = ProvisioningProfileGUI.GetBoolForAutomaticSigningValue(defaultAutomaticSigningValue);
-			Rect controlRect = EditorGUILayout.GetControlRect(true, 0f, new GUILayoutOption[0]);
-			EditorGUI.BeginProperty(controlRect, automaticSigningGUI, enableAutomaticSigningProp);
-			bool flag = EditorGUILayout.Toggle(automaticSigningGUI, boolForAutomaticSigningValue, new GUILayoutOption[0]);
-			if (flag != boolForAutomaticSigningValue)
-			{
-				enableAutomaticSigningProp.intValue = ProvisioningProfileGUI.GetIntValueForAutomaticSigningBool(flag);
-			}
-			EditorGUI.EndProperty();
-			if (!flag)
-			{
-				ProvisioningProfileGUI.ShowProvisioningProfileUIWithDefaults(provisioningPrefKey, manualSigningIDProp, manualSigningProfileGUI);
-			}
-			else
-			{
-				string defaultStringValue = ProvisioningProfileGUI.GetDefaultStringValue(appleDevIDProp, iOSEditorPrefKeys.kDefaultiOSAutomaticSignTeamId);
-				Rect controlRect2 = EditorGUILayout.GetControlRect(true, 0f, new GUILayoutOption[0]);
-				EditorGUI.BeginProperty(controlRect2, teamIDGUIContent, appleDevIDProp);
-				EditorGUI.BeginChangeCheck();
-				string stringValue = EditorGUILayout.TextField(teamIDGUIContent, defaultStringValue, new GUILayoutOption[0]);
-				if (EditorGUI.EndChangeCheck())
-				{
-					appleDevIDProp.stringValue = stringValue;
-				}
-				EditorGUI.EndProperty();
-			}
-		}
+        private static int GetIntValueForAutomaticSigningBool(bool automaticallySign)
+        {
+            return (!automaticallySign ? 2 : 1);
+        }
 
-		private static void ShowProvisioningProfileUIWithDefaults(string defaultPreferenceKey, SerializedProperty uuidProp, GUIContent title)
-		{
-			string text = uuidProp.stringValue;
-			if (string.IsNullOrEmpty(text))
-			{
-				text = EditorPrefs.GetString(defaultPreferenceKey);
-			}
-			ProvisioningProfileGUI.ShowProvisioningProfileUIWithProperty(title, new ProvisioningProfile(text), uuidProp);
-		}
+        internal static bool GetProvisioningProfileId(string filePath, out ProvisioningProfile provisioningProfile)
+        {
+            ProvisioningProfile profile = ProvisioningProfile.ParseProvisioningProfileAtPath(filePath);
+            provisioningProfile = profile;
+            return (profile.UUID != null);
+        }
 
-		private static bool GetBoolForAutomaticSigningValue(int signingValue)
-		{
-			return signingValue == 1;
-		}
+        internal static void ShowProvisioningProfileUIWithCallback(GUIContent titleWithToolTip, ProvisioningProfile profile, ProvisioningProfileChangedDelegate callback)
+        {
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.Label(titleWithToolTip, EditorStyles.label, new GUILayoutOption[0]);
+            if (GUILayout.Button("Browse", EditorStyles.miniButton, new GUILayoutOption[0]))
+            {
+                ProvisioningProfile profile2 = Browse("");
+                if ((profile2 != null) && !string.IsNullOrEmpty(profile2.UUID))
+                {
+                    profile = profile2;
+                    callback(profile);
+                    GUI.FocusControl("");
+                }
+            }
+            GUILayout.EndHorizontal();
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.indentLevel++;
+            GUIContent label = EditorGUIUtility.TextContent("Profile ID:");
+            profile.UUID = EditorGUILayout.TextField(label, profile.UUID, new GUILayoutOption[0]);
+            EditorGUI.indentLevel--;
+            if (EditorGUI.EndChangeCheck())
+            {
+                callback(profile);
+            }
+        }
 
-		private static int GetIntValueForAutomaticSigningBool(bool automaticallySign)
-		{
-			return (!automaticallySign) ? 2 : 1;
-		}
+        private static void ShowProvisioningProfileUIWithDefaults(string defaultPreferenceKey, SerializedProperty uuidProp, GUIContent title)
+        {
+            string stringValue = uuidProp.stringValue;
+            if (string.IsNullOrEmpty(stringValue))
+            {
+                stringValue = EditorPrefs.GetString(defaultPreferenceKey);
+            }
+            ShowProvisioningProfileUIWithProperty(title, new ProvisioningProfile(stringValue), uuidProp);
+        }
 
-		private static int GetDefaultAutomaticSigningValue(SerializedProperty prop, string editorPropKey)
-		{
-			int num = prop.intValue;
-			if (num == 0)
-			{
-				num = ((!EditorPrefs.GetBool(editorPropKey, true)) ? 2 : 1);
-			}
-			return num;
-		}
+        internal static void ShowProvisioningProfileUIWithProperty(GUIContent titleWithToolTip, ProvisioningProfile profile, SerializedProperty prop)
+        {
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.Label(titleWithToolTip, EditorStyles.label, new GUILayoutOption[0]);
+            Rect totalPosition = EditorGUILayout.GetControlRect(false, 0f, new GUILayoutOption[0]);
+            GUIContent label = EditorGUIUtility.TextContent("Profile ID:");
+            EditorGUI.BeginProperty(totalPosition, label, prop);
+            if (GUILayout.Button("Browse", EditorStyles.miniButton, new GUILayoutOption[0]))
+            {
+                ProvisioningProfile profile2 = Browse("");
+                if ((profile2 != null) && !string.IsNullOrEmpty(profile2.UUID))
+                {
+                    profile = profile2;
+                    prop.stringValue = profile.UUID;
+                    GUI.FocusControl("");
+                }
+            }
+            GUILayout.EndHorizontal();
+            EditorGUI.EndProperty();
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.indentLevel++;
+            totalPosition = EditorGUILayout.GetControlRect(true, 0f, new GUILayoutOption[0]);
+            label = EditorGUIUtility.TextContent("Profile ID:");
+            EditorGUI.BeginProperty(totalPosition, label, prop);
+            profile.UUID = EditorGUILayout.TextField(label, profile.UUID, new GUILayoutOption[0]);
+            if (EditorGUI.EndChangeCheck())
+            {
+                prop.stringValue = profile.UUID;
+            }
+            EditorGUI.EndProperty();
+            EditorGUI.indentLevel--;
+        }
 
-		private static string GetDefaultStringValue(SerializedProperty prop, string editorPrefKey)
-		{
-			string text = prop.stringValue;
-			if (string.IsNullOrEmpty(text))
-			{
-				text = EditorPrefs.GetString(editorPrefKey, "");
-			}
-			return text;
-		}
-	}
+        internal static void ShowUIWithDefaults(string provisioningPrefKey, SerializedProperty enableAutomaticSigningProp, GUIContent automaticSigningGUI, SerializedProperty manualSigningIDProp, GUIContent manualSigningProfileGUI, SerializedProperty appleDevIDProp, GUIContent teamIDGUIContent)
+        {
+            bool boolForAutomaticSigningValue = GetBoolForAutomaticSigningValue(GetDefaultAutomaticSigningValue(enableAutomaticSigningProp, iOSEditorPrefKeys.kDefaultiOSAutomaticallySignBuild));
+            EditorGUI.BeginProperty(EditorGUILayout.GetControlRect(true, 0f, new GUILayoutOption[0]), automaticSigningGUI, enableAutomaticSigningProp);
+            bool automaticallySign = EditorGUILayout.Toggle(automaticSigningGUI, boolForAutomaticSigningValue, new GUILayoutOption[0]);
+            if (automaticallySign != boolForAutomaticSigningValue)
+            {
+                enableAutomaticSigningProp.intValue = GetIntValueForAutomaticSigningBool(automaticallySign);
+            }
+            EditorGUI.EndProperty();
+            if (!automaticallySign)
+            {
+                ShowProvisioningProfileUIWithDefaults(provisioningPrefKey, manualSigningIDProp, manualSigningProfileGUI);
+            }
+            else
+            {
+                string defaultStringValue = GetDefaultStringValue(appleDevIDProp, iOSEditorPrefKeys.kDefaultiOSAutomaticSignTeamId);
+                string str2 = null;
+                EditorGUI.BeginProperty(EditorGUILayout.GetControlRect(true, 0f, new GUILayoutOption[0]), teamIDGUIContent, appleDevIDProp);
+                EditorGUI.BeginChangeCheck();
+                str2 = EditorGUILayout.TextField(teamIDGUIContent, defaultStringValue, new GUILayoutOption[0]);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    appleDevIDProp.stringValue = str2;
+                }
+                EditorGUI.EndProperty();
+            }
+        }
+
+        internal delegate void ProvisioningProfileChangedDelegate(ProvisioningProfile profile);
+    }
 }
+

@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum InstructionType
-	{
-		kStyleDraw = 1,
-		kClipPush,
-		kClipPop,
-		kLayoutBeginGroup,
-		kLayoutEndGroup,
-		kLayoutEntry
-	}
+    using System;
+
+    internal enum InstructionType
+    {
+        kClipPop = 3,
+        kClipPush = 2,
+        kLayoutBeginGroup = 4,
+        kLayoutEndGroup = 5,
+        kLayoutEntry = 6,
+        kStyleDraw = 1
+    }
 }
+

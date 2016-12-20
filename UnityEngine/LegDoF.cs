@@ -1,17 +1,18 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum LegDoF
-	{
-		UpperLegFrontBack,
-		UpperLegInOut,
-		UpperLegRollInOut,
-		LegCloseOpen,
-		LegRollInOut,
-		FootCloseOpen,
-		FootInOut,
-		ToesUpDown,
-		LastLegDoF
-	}
+    using System;
+
+    internal enum LegDoF
+    {
+        UpperLegFrontBack,
+        UpperLegInOut,
+        UpperLegRollInOut,
+        LegCloseOpen,
+        LegRollInOut,
+        FootCloseOpen,
+        FootInOut,
+        ToesUpDown,
+        LastLegDoF
+    }
 }
+

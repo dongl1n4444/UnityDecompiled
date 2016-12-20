@@ -1,34 +1,33 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class PlaceTreeWizard : TerrainWizard
-	{
-		public int numberOfTrees = 10000;
+    using System;
+    using UnityEngine;
 
-		public bool keepExistingTrees = true;
+    internal class PlaceTreeWizard : TerrainWizard
+    {
+        public bool keepExistingTrees = true;
+        private const int kMaxNumberOfTrees = 0xf4240;
+        public int numberOfTrees = 0x2710;
 
-		private const int kMaxNumberOfTrees = 1000000;
+        public void OnEnable()
+        {
+            base.minSize = new Vector2(250f, 150f);
+        }
 
-		public void OnEnable()
-		{
-			base.minSize = new Vector2(250f, 150f);
-		}
-
-		private void OnWizardCreate()
-		{
-			if (this.numberOfTrees > 1000000)
-			{
-				base.isValid = false;
-				base.errorString = string.Format("Mass placing more than {0} trees is not supported", 1000000);
-				Debug.LogError(base.errorString);
-			}
-			else
-			{
-				TreePainter.MassPlaceTrees(this.m_Terrain.terrainData, this.numberOfTrees, true, this.keepExistingTrees);
-				this.m_Terrain.Flush();
-			}
-		}
-	}
+        private void OnWizardCreate()
+        {
+            if (this.numberOfTrees > 0xf4240)
+            {
+                base.isValid = false;
+                base.errorString = string.Format("Mass placing more than {0} trees is not supported", 0xf4240);
+                Debug.LogError(base.errorString);
+            }
+            else
+            {
+                TreePainter.MassPlaceTrees(base.m_Terrain.terrainData, this.numberOfTrees, true, this.keepExistingTrees);
+                base.m_Terrain.Flush();
+            }
+        }
+    }
 }
+

@@ -1,115 +1,122 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class SamsungTV
-	{
-		public enum TouchPadMode
-		{
-			Dpad,
-			Joystick,
-			Mouse
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public enum GestureMode
-		{
-			Off,
-			Mouse,
-			Joystick
-		}
+    /// <summary>
+    /// <para>Interface into SamsungTV specific functionality.</para>
+    /// </summary>
+    public sealed class SamsungTV
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern TouchPadMode GetTouchPadMode();
+        /// <summary>
+        /// <para>Set the system language that is returned by Application.SystemLanguage.</para>
+        /// </summary>
+        /// <param name="language"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetSystemLanguage(SystemLanguage language);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool SetTouchPadMode(TouchPadMode value);
 
-		public enum GamePadMode
-		{
-			Default,
-			Mouse
-		}
+        /// <summary>
+        /// <para>Returns true if there is an air mouse available.</para>
+        /// </summary>
+        public static bool airMouseConnected { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public sealed class OpenAPI
-		{
-			public enum OpenAPIServerType
-			{
-				Operating,
-				Development,
-				Developing,
-				Invalid
-			}
+        /// <summary>
+        /// <para>Changes the type of input the gamepad produces.</para>
+        /// </summary>
+        public static GamePadMode gamePadMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-			public static extern SamsungTV.OpenAPI.OpenAPIServerType serverType
-			{
-				[MethodImpl(MethodImplOptions.InternalCall)]
-				get;
-			}
+        /// <summary>
+        /// <para>Changes the type of input the gesture camera produces.</para>
+        /// </summary>
+        public static GestureMode gestureMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-			public static extern string timeOnTV
-			{
-				[MethodImpl(MethodImplOptions.InternalCall)]
-				get;
-			}
+        /// <summary>
+        /// <para>Returns true if the camera sees a hand.</para>
+        /// </summary>
+        public static bool gestureWorking { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-			public static extern string uid
-			{
-				[MethodImpl(MethodImplOptions.InternalCall)]
-				get;
-			}
+        /// <summary>
+        /// <para>The type of input the remote's touch pad produces.</para>
+        /// </summary>
+        public static TouchPadMode touchPadMode
+        {
+            get
+            {
+                return GetTouchPadMode();
+            }
+            set
+            {
+                if (!SetTouchPadMode(value))
+                {
+                    throw new ArgumentException("Fail to set touchPadMode.");
+                }
+            }
+        }
 
-			public static extern string dUid
-			{
-				[MethodImpl(MethodImplOptions.InternalCall)]
-				get;
-			}
-		}
+        /// <summary>
+        /// <para>Types of input the gamepad can produce.</para>
+        /// </summary>
+        public enum GamePadMode
+        {
+            Default,
+            Mouse
+        }
 
-		public static SamsungTV.TouchPadMode touchPadMode
-		{
-			get
-			{
-				return SamsungTV.GetTouchPadMode();
-			}
-			set
-			{
-				if (!SamsungTV.SetTouchPadMode(value))
-				{
-					throw new ArgumentException("Fail to set touchPadMode.");
-				}
-			}
-		}
+        /// <summary>
+        /// <para>Types of input the gesture camera can produce.</para>
+        /// </summary>
+        public enum GestureMode
+        {
+            Off,
+            Mouse,
+            Joystick
+        }
 
-		public static extern SamsungTV.GestureMode gestureMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Access to TV specific information.</para>
+        /// </summary>
+        public sealed class OpenAPI
+        {
+            public static string dUid { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public static extern bool airMouseConnected
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+            /// <summary>
+            /// <para>The server type. Possible values:
+            /// Developing, Development, Invalid, Operating.</para>
+            /// </summary>
+            public static OpenAPIServerType serverType { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public static extern bool gestureWorking
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+            /// <summary>
+            /// <para>Get local time on TV.</para>
+            /// </summary>
+            public static string timeOnTV { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public static extern SamsungTV.GamePadMode gamePadMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+            /// <summary>
+            /// <para>Get UID from TV.</para>
+            /// </summary>
+            public static string uid { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern SamsungTV.TouchPadMode GetTouchPadMode();
+            public enum OpenAPIServerType
+            {
+                Operating,
+                Development,
+                Developing,
+                Invalid
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool SetTouchPadMode(SamsungTV.TouchPadMode value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void SetSystemLanguage(SystemLanguage language);
-	}
+        /// <summary>
+        /// <para>Types of input the remote's touchpad can produce.</para>
+        /// </summary>
+        public enum TouchPadMode
+        {
+            Dpad,
+            Joystick,
+            Mouse
+        }
+    }
 }
+

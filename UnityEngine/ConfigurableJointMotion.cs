@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ConfigurableJointMotion
-	{
-		Locked,
-		Limited,
-		Free
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Constrains movement for a ConfigurableJoint along the 6 axes.</para>
+    /// </summary>
+    public enum ConfigurableJointMotion
+    {
+        Locked,
+        Limited,
+        Free
+    }
 }
+

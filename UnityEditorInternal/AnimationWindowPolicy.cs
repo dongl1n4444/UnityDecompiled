@@ -1,72 +1,129 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Serializable]
-	internal class AnimationWindowPolicy
-	{
-		public delegate bool SynchronizeGeometryDelegate(ref int[] sizes, ref int[] minSizes);
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		public delegate bool SynchronizeFrameRateDelegate(ref float frameRate);
+    [Serializable]
+    internal class AnimationWindowPolicy
+    {
+        [CompilerGenerated]
+        private static SynchronizeGeometryDelegate <>f__am$cache0;
+        [CompilerGenerated]
+        private static SynchronizeFrameRateDelegate <>f__am$cache1;
+        [CompilerGenerated]
+        private static SynchronizeCurrentTimeDelegate <>f__am$cache2;
+        [CompilerGenerated]
+        private static SynchronizeZoomableAreaDelegate <>f__am$cache3;
+        [CompilerGenerated]
+        private static OnGeometryChangeDelegate <>f__am$cache4;
+        [CompilerGenerated]
+        private static OnCurrentTimeChangeDelegate <>f__am$cache5;
+        [CompilerGenerated]
+        private static OnZoomableAreaChangeDelegate <>f__am$cache6;
+        public OnCurrentTimeChangeDelegate OnCurrentTimeChange;
+        public OnGeometryChangeDelegate OnGeometryChange;
+        public OnZoomableAreaChangeDelegate OnZoomableAreaChange;
+        public SynchronizeCurrentTimeDelegate SynchronizeCurrentTime;
+        public SynchronizeFrameRateDelegate SynchronizeFrameRate;
+        public SynchronizeGeometryDelegate SynchronizeGeometry;
+        public SynchronizeZoomableAreaDelegate SynchronizeZoomableArea;
+        [SerializeField]
+        public bool triggerFramingOnSelection = true;
+        [NonSerialized]
+        public bool unitialized = true;
 
-		public delegate bool SynchronizeCurrentTimeDelegate(ref float time);
+        public AnimationWindowPolicy()
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = new SynchronizeGeometryDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__0);
+            }
+            this.SynchronizeGeometry = (SynchronizeGeometryDelegate) Delegate.Combine(this.SynchronizeGeometry, <>f__am$cache0);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = new SynchronizeFrameRateDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__1);
+            }
+            this.SynchronizeFrameRate = (SynchronizeFrameRateDelegate) Delegate.Combine(this.SynchronizeFrameRate, <>f__am$cache1);
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = new SynchronizeCurrentTimeDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__2);
+            }
+            this.SynchronizeCurrentTime = (SynchronizeCurrentTimeDelegate) Delegate.Combine(this.SynchronizeCurrentTime, <>f__am$cache2);
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = new SynchronizeZoomableAreaDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__3);
+            }
+            this.SynchronizeZoomableArea = (SynchronizeZoomableAreaDelegate) Delegate.Combine(this.SynchronizeZoomableArea, <>f__am$cache3);
+            if (<>f__am$cache4 == null)
+            {
+                <>f__am$cache4 = new OnGeometryChangeDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__4);
+            }
+            this.OnGeometryChange = (OnGeometryChangeDelegate) Delegate.Combine(this.OnGeometryChange, <>f__am$cache4);
+            if (<>f__am$cache5 == null)
+            {
+                <>f__am$cache5 = new OnCurrentTimeChangeDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__5);
+            }
+            this.OnCurrentTimeChange = (OnCurrentTimeChangeDelegate) Delegate.Combine(this.OnCurrentTimeChange, <>f__am$cache5);
+            if (<>f__am$cache6 == null)
+            {
+                <>f__am$cache6 = new OnZoomableAreaChangeDelegate(AnimationWindowPolicy.<AnimationWindowPolicy>m__6);
+            }
+            this.OnZoomableAreaChange = (OnZoomableAreaChangeDelegate) Delegate.Combine(this.OnZoomableAreaChange, <>f__am$cache6);
+        }
 
-		public delegate bool SynchronizeZoomableAreaDelegate(ref float horizontalScale, ref float horizontalTranslation);
+        [CompilerGenerated]
+        private static bool <AnimationWindowPolicy>m__0(ref int[] sizes, ref int[] minSizes)
+        {
+            return false;
+        }
 
-		public delegate void OnGeometryChangeDelegate(int[] sizes);
+        [CompilerGenerated]
+        private static bool <AnimationWindowPolicy>m__1(ref float frameRate)
+        {
+            return false;
+        }
 
-		public delegate void OnCurrentTimeChangeDelegate(float time);
+        [CompilerGenerated]
+        private static bool <AnimationWindowPolicy>m__2(ref float time)
+        {
+            return false;
+        }
 
-		public delegate void OnZoomableAreaChangeDelegate(float horizontalScale, float horizontalTranslation);
+        [CompilerGenerated]
+        private static bool <AnimationWindowPolicy>m__3(ref float horizontalScale, ref float horizontalTranslation)
+        {
+            return false;
+        }
 
-		[SerializeField]
-		public bool triggerFramingOnSelection = true;
+        [CompilerGenerated]
+        private static void <AnimationWindowPolicy>m__4(int[] sizes)
+        {
+        }
 
-		[NonSerialized]
-		public bool unitialized = true;
+        [CompilerGenerated]
+        private static void <AnimationWindowPolicy>m__5(float time)
+        {
+        }
 
-		public AnimationWindowPolicy.SynchronizeGeometryDelegate SynchronizeGeometry;
+        [CompilerGenerated]
+        private static void <AnimationWindowPolicy>m__6(float horizontalScale, float horizontalTranslation)
+        {
+        }
 
-		public AnimationWindowPolicy.SynchronizeFrameRateDelegate SynchronizeFrameRate;
+        public delegate void OnCurrentTimeChangeDelegate(float time);
 
-		public AnimationWindowPolicy.SynchronizeCurrentTimeDelegate SynchronizeCurrentTime;
+        public delegate void OnGeometryChangeDelegate(int[] sizes);
 
-		public AnimationWindowPolicy.SynchronizeZoomableAreaDelegate SynchronizeZoomableArea;
+        public delegate void OnZoomableAreaChangeDelegate(float horizontalScale, float horizontalTranslation);
 
-		public AnimationWindowPolicy.OnGeometryChangeDelegate OnGeometryChange;
+        public delegate bool SynchronizeCurrentTimeDelegate(ref float time);
 
-		public AnimationWindowPolicy.OnCurrentTimeChangeDelegate OnCurrentTimeChange;
+        public delegate bool SynchronizeFrameRateDelegate(ref float frameRate);
 
-		public AnimationWindowPolicy.OnZoomableAreaChangeDelegate OnZoomableAreaChange;
+        public delegate bool SynchronizeGeometryDelegate(ref int[] sizes, ref int[] minSizes);
 
-		public AnimationWindowPolicy()
-		{
-			this.SynchronizeGeometry = (AnimationWindowPolicy.SynchronizeGeometryDelegate)Delegate.Combine(this.SynchronizeGeometry, new AnimationWindowPolicy.SynchronizeGeometryDelegate(delegate(ref int[] sizes, ref int[] minSizes)
-			{
-				return false;
-			}));
-			this.SynchronizeFrameRate = (AnimationWindowPolicy.SynchronizeFrameRateDelegate)Delegate.Combine(this.SynchronizeFrameRate, new AnimationWindowPolicy.SynchronizeFrameRateDelegate(delegate(ref float frameRate)
-			{
-				return false;
-			}));
-			this.SynchronizeCurrentTime = (AnimationWindowPolicy.SynchronizeCurrentTimeDelegate)Delegate.Combine(this.SynchronizeCurrentTime, new AnimationWindowPolicy.SynchronizeCurrentTimeDelegate(delegate(ref float time)
-			{
-				return false;
-			}));
-			this.SynchronizeZoomableArea = (AnimationWindowPolicy.SynchronizeZoomableAreaDelegate)Delegate.Combine(this.SynchronizeZoomableArea, new AnimationWindowPolicy.SynchronizeZoomableAreaDelegate(delegate(ref float horizontalScale, ref float horizontalTranslation)
-			{
-				return false;
-			}));
-			this.OnGeometryChange = (AnimationWindowPolicy.OnGeometryChangeDelegate)Delegate.Combine(this.OnGeometryChange, new AnimationWindowPolicy.OnGeometryChangeDelegate(delegate(int[] sizes)
-			{
-			}));
-			this.OnCurrentTimeChange = (AnimationWindowPolicy.OnCurrentTimeChangeDelegate)Delegate.Combine(this.OnCurrentTimeChange, new AnimationWindowPolicy.OnCurrentTimeChangeDelegate(delegate(float time)
-			{
-			}));
-			this.OnZoomableAreaChange = (AnimationWindowPolicy.OnZoomableAreaChangeDelegate)Delegate.Combine(this.OnZoomableAreaChange, new AnimationWindowPolicy.OnZoomableAreaChangeDelegate(delegate(float horizontalScale, float horizontalTranslation)
-			{
-			}));
-		}
-	}
+        public delegate bool SynchronizeZoomableAreaDelegate(ref float horizontalScale, ref float horizontalTranslation);
+    }
 }
+

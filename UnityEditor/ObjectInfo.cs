@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ObjectInfo
-	{
-		public int instanceId;
+    using System;
+    using System.Collections.Generic;
 
-		public int memorySize;
-
-		public int reason;
-
-		public List<ObjectInfo> referencedBy;
-
-		public string name;
-
-		public string className;
-	}
+    internal class ObjectInfo
+    {
+        public string className;
+        public int instanceId;
+        public int memorySize;
+        public string name;
+        public int reason;
+        public List<ObjectInfo> referencedBy;
+    }
 }
+

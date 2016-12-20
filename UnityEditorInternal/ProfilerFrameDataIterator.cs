@@ -1,113 +1,67 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public sealed class ProfilerFrameDataIterator
-	{
-		private IntPtr m_Ptr;
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		public extern int group
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    public sealed class ProfilerFrameDataIterator
+    {
+        private IntPtr m_Ptr;
 
-		public extern int depth
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern ProfilerFrameDataIterator();
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        public extern void Dispose();
+        ~ProfilerFrameDataIterator()
+        {
+            this.Dispose();
+        }
 
-		public extern string path
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern bool GetAllocationCallstack(ref string resolvedStack);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern double GetFrameStartS(int frame);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern int GetGroupCount(int frame);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern string GetGroupName();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern bool GetIsNativeAllocation();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern int GetThreadCount(int frame);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern string GetThreadName();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern bool Next(bool enterChildren);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetRoot(int frame, int threadIdx);
 
-		public extern string name
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public int depth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern int sampleId
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public float durationMS { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern int instanceId
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public float frameTimeMS { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern float frameTimeMS
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public int group { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern float startTimeMS
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [Obsolete("Use instanceId instead (UnityUpgradable) -> instanceId")]
+        public int id
+        {
+            get
+            {
+                return this.instanceId;
+            }
+        }
 
-		public extern float durationMS
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public int instanceId { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[Obsolete("Use instanceId instead (UnityUpgradable) -> instanceId")]
-		public int id
-		{
-			get
-			{
-				return this.instanceId;
-			}
-		}
+        public string name { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern ProfilerFrameDataIterator();
+        public string path { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void Dispose();
+        public int sampleId { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		~ProfilerFrameDataIterator()
-		{
-			this.Dispose();
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern bool Next(bool enterChildren);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern int GetThreadCount(int frame);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern double GetFrameStartS(int frame);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern int GetGroupCount(int frame);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern string GetGroupName();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern string GetThreadName();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void SetRoot(int frame, int threadIdx);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern bool GetIsNativeAllocation();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern bool GetAllocationCallstack(ref string resolvedStack);
-	}
+        public float startTimeMS { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

@@ -1,15 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum ShowMode
-	{
-		NormalWindow,
-		PopupMenu,
-		Utility,
-		NoShadow,
-		MainWindow,
-		AuxWindow,
-		PopupMenuWithKeyboardFocus
-	}
+    using System;
+
+    internal enum ShowMode
+    {
+        NormalWindow,
+        PopupMenu,
+        Utility,
+        NoShadow,
+        MainWindow,
+        AuxWindow,
+        PopupMenuWithKeyboardFocus
+    }
 }
+

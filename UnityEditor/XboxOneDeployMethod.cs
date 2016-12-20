@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum XboxOneDeployMethod
-	{
-		Push,
-		Pull,
-		RunFromPC,
-		Package,
-		PackageStreaming
-	}
+    using System;
+
+    public enum XboxOneDeployMethod
+    {
+        Push,
+        Pull,
+        RunFromPC,
+        Package,
+        PackageStreaming
+    }
 }
+

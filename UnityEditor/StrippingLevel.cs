@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum StrippingLevel
-	{
-		Disabled,
-		StripAssemblies,
-		StripByteCode,
-		UseMicroMSCorlib
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Managed code stripping level.</para>
+    /// </summary>
+    public enum StrippingLevel
+    {
+        Disabled,
+        StripAssemblies,
+        StripByteCode,
+        UseMicroMSCorlib
+    }
 }
+

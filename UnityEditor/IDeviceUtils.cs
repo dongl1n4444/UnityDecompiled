@@ -1,32 +1,29 @@
-using System;
-using UnityEditor.Modules;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal static class IDeviceUtils
-	{
-		internal static RemoteAddress StartRemoteSupport(string deviceId)
-		{
-			IDevice device = ModuleManager.GetDevice(deviceId);
-			return device.StartRemoteSupport();
-		}
+    using System;
+    using UnityEditor.Modules;
 
-		internal static void StopRemoteSupport(string deviceId)
-		{
-			IDevice device = ModuleManager.GetDevice(deviceId);
-			device.StopRemoteSupport();
-		}
+    internal static class IDeviceUtils
+    {
+        internal static RemoteAddress StartPlayerConnectionSupport(string deviceId)
+        {
+            return ModuleManager.GetDevice(deviceId).StartPlayerConnectionSupport();
+        }
 
-		internal static RemoteAddress StartPlayerConnectionSupport(string deviceId)
-		{
-			IDevice device = ModuleManager.GetDevice(deviceId);
-			return device.StartPlayerConnectionSupport();
-		}
+        internal static RemoteAddress StartRemoteSupport(string deviceId)
+        {
+            return ModuleManager.GetDevice(deviceId).StartRemoteSupport();
+        }
 
-		internal static void StopPlayerConnectionSupport(string deviceId)
-		{
-			IDevice device = ModuleManager.GetDevice(deviceId);
-			device.StopPlayerConnectionSupport();
-		}
-	}
+        internal static void StopPlayerConnectionSupport(string deviceId)
+        {
+            ModuleManager.GetDevice(deviceId).StopPlayerConnectionSupport();
+        }
+
+        internal static void StopRemoteSupport(string deviceId)
+        {
+            ModuleManager.GetDevice(deviceId).StopRemoteSupport();
+        }
+    }
 }
+

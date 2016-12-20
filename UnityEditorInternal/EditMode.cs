@@ -1,311 +1,273 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEditor;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[InitializeOnLoad]
-	public class EditMode
-	{
-		public delegate void OnEditModeStopFunc(Editor editor);
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEditor;
+    using UnityEngine;
 
-		public delegate void OnEditModeStartFunc(Editor editor, EditMode.SceneViewEditMode mode);
+    [InitializeOnLoad]
+    public class EditMode
+    {
+        [CompilerGenerated]
+        private static Action <>f__mg$cache0;
+        private const float k_EditColliderbuttonHeight = 23f;
+        private const float k_EditColliderbuttonWidth = 33f;
+        private const float k_SpaceBetweenLabelAndButton = 5f;
+        private const string kEditModeStringKey = "EditModeState";
+        private const string kOwnerStringKey = "EditModeOwner";
+        private const string kPrevToolStringKey = "EditModePrevTool";
+        public static OnEditModeStopFunc onEditModeEndDelegate;
+        public static OnEditModeStartFunc onEditModeStartDelegate;
+        private static bool s_Debug = false;
+        private static GUIStyle s_EditColliderButtonStyle;
+        private static SceneViewEditMode s_EditMode;
+        private static int s_OwnerID;
+        private static GUIStyle s_ToolbarBaseStyle;
+        private static Tool s_ToolBeforeEnteringEditMode = Tool.Move;
 
-		public enum SceneViewEditMode
-		{
-			None,
-			Collider,
-			Cloth,
-			ReflectionProbeBox,
-			ReflectionProbeOrigin,
-			LightProbeProxyVolumeBox,
-			LightProbeProxyVolumeOrigin,
-			LightProbeGroup
-		}
+        static EditMode()
+        {
+            ownerID = SessionState.GetInt("EditModeOwner", ownerID);
+            editMode = (SceneViewEditMode) SessionState.GetInt("EditModeState", (int) editMode);
+            toolBeforeEnteringEditMode = (Tool) SessionState.GetInt("EditModePrevTool", (int) toolBeforeEnteringEditMode);
+            if (<>f__mg$cache0 == null)
+            {
+                <>f__mg$cache0 = new Action(null, (IntPtr) OnSelectionChange);
+            }
+            Selection.selectionChanged = (Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
+            if (s_Debug)
+            {
+                Debug.Log(string.Concat(new object[] { "EditMode static constructor: ", ownerID, " ", editMode, " ", toolBeforeEnteringEditMode }));
+            }
+        }
 
-		private const string kEditModeStringKey = "EditModeState";
+        private static bool AnyPointSeenByCamera(Camera camera, Vector3[] points)
+        {
+            foreach (Vector3 vector in points)
+            {
+                if (PointSeenByCamera(camera, vector))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-		private const string kPrevToolStringKey = "EditModePrevTool";
+        private static Vector3[] BoundsToPoints(Bounds bounds)
+        {
+            return new Vector3[] { new Vector3(bounds.min.x, bounds.min.y, bounds.min.z), new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), new Vector3(bounds.min.x, bounds.max.y, bounds.min.z), new Vector3(bounds.min.x, bounds.max.y, bounds.max.z), new Vector3(bounds.max.x, bounds.min.y, bounds.min.z), new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), new Vector3(bounds.max.x, bounds.max.y, bounds.min.z), new Vector3(bounds.max.x, bounds.max.y, bounds.max.z) };
+        }
 
-		private const string kOwnerStringKey = "EditModeOwner";
+        public static void ChangeEditMode(SceneViewEditMode mode, Bounds bounds, Editor caller)
+        {
+            Editor objectFromInstanceID = InternalEditorUtility.GetObjectFromInstanceID(ownerID) as Editor;
+            editMode = mode;
+            ownerID = (mode == SceneViewEditMode.None) ? 0 : caller.GetInstanceID();
+            if (onEditModeEndDelegate != null)
+            {
+                onEditModeEndDelegate(objectFromInstanceID);
+            }
+            if ((editMode != SceneViewEditMode.None) && (onEditModeStartDelegate != null))
+            {
+                onEditModeStartDelegate(caller, editMode);
+            }
+            EditModeChanged(bounds);
+            InspectorWindow.RepaintAllInspectors();
+        }
 
-		private static bool s_Debug;
+        private static void DetectMainToolChange()
+        {
+            if ((Tools.current != Tool.None) && (editMode != SceneViewEditMode.None))
+            {
+                EndSceneViewEditing();
+            }
+        }
 
-		private static GUIStyle s_ToolbarBaseStyle;
+        public static void DoEditModeInspectorModeButton(SceneViewEditMode mode, string label, GUIContent icon, Bounds bounds, Editor caller)
+        {
+            if (!EditorUtility.IsPersistent(caller.target))
+            {
+                DetectMainToolChange();
+                if (s_EditColliderButtonStyle == null)
+                {
+                    s_EditColliderButtonStyle = new GUIStyle("Button");
+                    s_EditColliderButtonStyle.padding = new RectOffset(0, 0, 0, 0);
+                    s_EditColliderButtonStyle.margin = new RectOffset(0, 0, 0, 0);
+                }
+                Rect rect = EditorGUILayout.GetControlRect(true, 23f, new GUILayoutOption[0]);
+                Rect position = new Rect(rect.xMin + EditorGUIUtility.labelWidth, rect.yMin, 33f, 23f);
+                GUIContent content = new GUIContent(label);
+                Vector2 vector = GUI.skin.label.CalcSize(content);
+                Rect rect3 = new Rect(position.xMax + 5f, rect.yMin + ((rect.height - vector.y) * 0.5f), vector.x, rect.height);
+                int instanceID = caller.GetInstanceID();
+                bool flag = (editMode == mode) && (ownerID == instanceID);
+                EditorGUI.BeginChangeCheck();
+                bool flag2 = GUI.Toggle(position, flag, icon, s_EditColliderButtonStyle);
+                GUI.Label(rect3, label);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    ChangeEditMode(!flag2 ? SceneViewEditMode.None : mode, bounds, caller);
+                }
+            }
+        }
 
-		private static GUIStyle s_EditColliderButtonStyle;
+        public static void DoInspectorToolbar(SceneViewEditMode[] modes, GUIContent[] guiContents, Bounds bounds, Editor caller)
+        {
+            if (!EditorUtility.IsPersistent(caller.target))
+            {
+                DetectMainToolChange();
+                if (s_ToolbarBaseStyle == null)
+                {
+                    s_ToolbarBaseStyle = "Command";
+                }
+                int instanceID = caller.GetInstanceID();
+                int index = ArrayUtility.IndexOf<SceneViewEditMode>(modes, editMode);
+                if (ownerID != instanceID)
+                {
+                    index = -1;
+                }
+                EditorGUI.BeginChangeCheck();
+                int num3 = GUILayout.Toolbar(index, guiContents, s_ToolbarBaseStyle, new GUILayoutOption[0]);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    SceneViewEditMode mode = (num3 != index) ? modes[num3] : SceneViewEditMode.None;
+                    ChangeEditMode(mode, bounds, caller);
+                }
+            }
+        }
 
-		private const float k_EditColliderbuttonWidth = 33f;
+        private static void EditModeChanged(Bounds bounds)
+        {
+            if (((editMode != SceneViewEditMode.None) && (SceneView.lastActiveSceneView != null)) && ((SceneView.lastActiveSceneView.camera != null) && !SeenByCamera(SceneView.lastActiveSceneView.camera, bounds)))
+            {
+                SceneView.lastActiveSceneView.Frame(bounds);
+            }
+            SceneView.RepaintAll();
+        }
 
-		private const float k_EditColliderbuttonHeight = 23f;
+        private static void EndSceneViewEditing()
+        {
+            ChangeEditMode(SceneViewEditMode.None, new Bounds(), null);
+        }
 
-		private const float k_SpaceBetweenLabelAndButton = 5f;
+        private static Vector3[] GetPoints(Bounds bounds)
+        {
+            return BoundsToPoints(bounds);
+        }
 
-		public static EditMode.OnEditModeStopFunc onEditModeEndDelegate;
+        public static bool IsOwner(Editor editor)
+        {
+            return (editor.GetInstanceID() == ownerID);
+        }
 
-		public static EditMode.OnEditModeStartFunc onEditModeStartDelegate;
+        public static void OnSelectionChange()
+        {
+            QuitEditMode();
+        }
 
-		private static Tool s_ToolBeforeEnteringEditMode;
+        private static bool PointSeenByCamera(Camera camera, Vector3 point)
+        {
+            Vector3 vector = camera.WorldToViewportPoint(point);
+            return ((((vector.x > 0f) && (vector.x < 1f)) && (vector.y > 0f)) && (vector.y < 1f));
+        }
 
-		private static int s_OwnerID;
+        public static void QuitEditMode()
+        {
+            if ((Tools.current == Tool.None) && (editMode != SceneViewEditMode.None))
+            {
+                ResetToolToPrevious();
+            }
+            EndSceneViewEditing();
+        }
 
-		private static EditMode.SceneViewEditMode s_EditMode;
+        public static void ResetToolToPrevious()
+        {
+            if (Tools.current == Tool.None)
+            {
+                Tools.current = toolBeforeEnteringEditMode;
+            }
+        }
 
-		[CompilerGenerated]
-		private static Action <>f__mg$cache0;
+        private static bool SeenByCamera(Camera camera, Bounds bounds)
+        {
+            return AnyPointSeenByCamera(camera, GetPoints(bounds));
+        }
 
-		private static Tool toolBeforeEnteringEditMode
-		{
-			get
-			{
-				return EditMode.s_ToolBeforeEnteringEditMode;
-			}
-			set
-			{
-				EditMode.s_ToolBeforeEnteringEditMode = value;
-				SessionState.SetInt("EditModePrevTool", (int)EditMode.s_ToolBeforeEnteringEditMode);
-				if (EditMode.s_Debug)
-				{
-					Debug.Log("Set toolBeforeEnteringEditMode " + value);
-				}
-			}
-		}
+        public static SceneViewEditMode editMode
+        {
+            get
+            {
+                return s_EditMode;
+            }
+            private set
+            {
+                if ((s_EditMode == SceneViewEditMode.None) && (value != SceneViewEditMode.None))
+                {
+                    toolBeforeEnteringEditMode = (Tools.current == Tool.None) ? Tool.Move : Tools.current;
+                    Tools.current = Tool.None;
+                }
+                else if ((s_EditMode != SceneViewEditMode.None) && (value == SceneViewEditMode.None))
+                {
+                    ResetToolToPrevious();
+                }
+                s_EditMode = value;
+                SessionState.SetInt("EditModeState", (int) s_EditMode);
+                if (s_Debug)
+                {
+                    Debug.Log("Set editMode " + s_EditMode);
+                }
+            }
+        }
 
-		private static int ownerID
-		{
-			get
-			{
-				return EditMode.s_OwnerID;
-			}
-			set
-			{
-				EditMode.s_OwnerID = value;
-				SessionState.SetInt("EditModeOwner", EditMode.s_OwnerID);
-				if (EditMode.s_Debug)
-				{
-					Debug.Log("Set ownerID " + value);
-				}
-			}
-		}
+        private static int ownerID
+        {
+            get
+            {
+                return s_OwnerID;
+            }
+            set
+            {
+                s_OwnerID = value;
+                SessionState.SetInt("EditModeOwner", s_OwnerID);
+                if (s_Debug)
+                {
+                    Debug.Log("Set ownerID " + value);
+                }
+            }
+        }
 
-		public static EditMode.SceneViewEditMode editMode
-		{
-			get
-			{
-				return EditMode.s_EditMode;
-			}
-			private set
-			{
-				if (EditMode.s_EditMode == EditMode.SceneViewEditMode.None && value != EditMode.SceneViewEditMode.None)
-				{
-					EditMode.toolBeforeEnteringEditMode = ((Tools.current == Tool.None) ? Tool.Move : Tools.current);
-					Tools.current = Tool.None;
-				}
-				else if (EditMode.s_EditMode != EditMode.SceneViewEditMode.None && value == EditMode.SceneViewEditMode.None)
-				{
-					EditMode.ResetToolToPrevious();
-				}
-				EditMode.s_EditMode = value;
-				SessionState.SetInt("EditModeState", (int)EditMode.s_EditMode);
-				if (EditMode.s_Debug)
-				{
-					Debug.Log("Set editMode " + EditMode.s_EditMode);
-				}
-			}
-		}
+        private static Tool toolBeforeEnteringEditMode
+        {
+            get
+            {
+                return s_ToolBeforeEnteringEditMode;
+            }
+            set
+            {
+                s_ToolBeforeEnteringEditMode = value;
+                SessionState.SetInt("EditModePrevTool", (int) s_ToolBeforeEnteringEditMode);
+                if (s_Debug)
+                {
+                    Debug.Log("Set toolBeforeEnteringEditMode " + value);
+                }
+            }
+        }
 
-		static EditMode()
-		{
-			EditMode.s_Debug = false;
-			EditMode.s_ToolBeforeEnteringEditMode = Tool.Move;
-			EditMode.ownerID = SessionState.GetInt("EditModeOwner", EditMode.ownerID);
-			EditMode.editMode = (EditMode.SceneViewEditMode)SessionState.GetInt("EditModeState", (int)EditMode.editMode);
-			EditMode.toolBeforeEnteringEditMode = (Tool)SessionState.GetInt("EditModePrevTool", (int)EditMode.toolBeforeEnteringEditMode);
-			Delegate arg_6B_0 = Selection.selectionChanged;
-			if (EditMode.<>f__mg$cache0 == null)
-			{
-				EditMode.<>f__mg$cache0 = new Action(EditMode.OnSelectionChange);
-			}
-			Selection.selectionChanged = (Action)Delegate.Combine(arg_6B_0, EditMode.<>f__mg$cache0);
-			if (EditMode.s_Debug)
-			{
-				Debug.Log(string.Concat(new object[]
-				{
-					"EditMode static constructor: ",
-					EditMode.ownerID,
-					" ",
-					EditMode.editMode,
-					" ",
-					EditMode.toolBeforeEnteringEditMode
-				}));
-			}
-		}
+        public delegate void OnEditModeStartFunc(Editor editor, EditMode.SceneViewEditMode mode);
 
-		public static bool IsOwner(Editor editor)
-		{
-			return editor.GetInstanceID() == EditMode.ownerID;
-		}
+        public delegate void OnEditModeStopFunc(Editor editor);
 
-		public static void ResetToolToPrevious()
-		{
-			if (Tools.current == Tool.None)
-			{
-				Tools.current = EditMode.toolBeforeEnteringEditMode;
-			}
-		}
-
-		private static void EndSceneViewEditing()
-		{
-			EditMode.ChangeEditMode(EditMode.SceneViewEditMode.None, default(Bounds), null);
-		}
-
-		public static void OnSelectionChange()
-		{
-			EditMode.QuitEditMode();
-		}
-
-		public static void QuitEditMode()
-		{
-			if (Tools.current == Tool.None && EditMode.editMode != EditMode.SceneViewEditMode.None)
-			{
-				EditMode.ResetToolToPrevious();
-			}
-			EditMode.EndSceneViewEditing();
-		}
-
-		private static void DetectMainToolChange()
-		{
-			if (Tools.current != Tool.None && EditMode.editMode != EditMode.SceneViewEditMode.None)
-			{
-				EditMode.EndSceneViewEditing();
-			}
-		}
-
-		public static void DoEditModeInspectorModeButton(EditMode.SceneViewEditMode mode, string label, GUIContent icon, Bounds bounds, Editor caller)
-		{
-			if (!EditorUtility.IsPersistent(caller.target))
-			{
-				EditMode.DetectMainToolChange();
-				if (EditMode.s_EditColliderButtonStyle == null)
-				{
-					EditMode.s_EditColliderButtonStyle = new GUIStyle("Button");
-					EditMode.s_EditColliderButtonStyle.padding = new RectOffset(0, 0, 0, 0);
-					EditMode.s_EditColliderButtonStyle.margin = new RectOffset(0, 0, 0, 0);
-				}
-				Rect controlRect = EditorGUILayout.GetControlRect(true, 23f, new GUILayoutOption[0]);
-				Rect position = new Rect(controlRect.xMin + EditorGUIUtility.labelWidth, controlRect.yMin, 33f, 23f);
-				GUIContent content = new GUIContent(label);
-				Vector2 vector = GUI.skin.label.CalcSize(content);
-				Rect position2 = new Rect(position.xMax + 5f, controlRect.yMin + (controlRect.height - vector.y) * 0.5f, vector.x, controlRect.height);
-				int instanceID = caller.GetInstanceID();
-				bool value = EditMode.editMode == mode && EditMode.ownerID == instanceID;
-				EditorGUI.BeginChangeCheck();
-				bool flag = GUI.Toggle(position, value, icon, EditMode.s_EditColliderButtonStyle);
-				GUI.Label(position2, label);
-				if (EditorGUI.EndChangeCheck())
-				{
-					EditMode.ChangeEditMode((!flag) ? EditMode.SceneViewEditMode.None : mode, bounds, caller);
-				}
-			}
-		}
-
-		public static void DoInspectorToolbar(EditMode.SceneViewEditMode[] modes, GUIContent[] guiContents, Bounds bounds, Editor caller)
-		{
-			if (!EditorUtility.IsPersistent(caller.target))
-			{
-				EditMode.DetectMainToolChange();
-				if (EditMode.s_ToolbarBaseStyle == null)
-				{
-					EditMode.s_ToolbarBaseStyle = "Command";
-				}
-				int instanceID = caller.GetInstanceID();
-				int num = ArrayUtility.IndexOf<EditMode.SceneViewEditMode>(modes, EditMode.editMode);
-				if (EditMode.ownerID != instanceID)
-				{
-					num = -1;
-				}
-				EditorGUI.BeginChangeCheck();
-				int num2 = GUILayout.Toolbar(num, guiContents, EditMode.s_ToolbarBaseStyle, new GUILayoutOption[0]);
-				if (EditorGUI.EndChangeCheck())
-				{
-					EditMode.SceneViewEditMode mode = (num2 != num) ? modes[num2] : EditMode.SceneViewEditMode.None;
-					EditMode.ChangeEditMode(mode, bounds, caller);
-				}
-			}
-		}
-
-		public static void ChangeEditMode(EditMode.SceneViewEditMode mode, Bounds bounds, Editor caller)
-		{
-			Editor editor = InternalEditorUtility.GetObjectFromInstanceID(EditMode.ownerID) as Editor;
-			EditMode.editMode = mode;
-			EditMode.ownerID = ((mode == EditMode.SceneViewEditMode.None) ? 0 : caller.GetInstanceID());
-			if (EditMode.onEditModeEndDelegate != null)
-			{
-				EditMode.onEditModeEndDelegate(editor);
-			}
-			if (EditMode.editMode != EditMode.SceneViewEditMode.None && EditMode.onEditModeStartDelegate != null)
-			{
-				EditMode.onEditModeStartDelegate(caller, EditMode.editMode);
-			}
-			EditMode.EditModeChanged(bounds);
-			InspectorWindow.RepaintAllInspectors();
-		}
-
-		private static void EditModeChanged(Bounds bounds)
-		{
-			if (EditMode.editMode != EditMode.SceneViewEditMode.None && SceneView.lastActiveSceneView != null && SceneView.lastActiveSceneView.camera != null && !EditMode.SeenByCamera(SceneView.lastActiveSceneView.camera, bounds))
-			{
-				SceneView.lastActiveSceneView.Frame(bounds);
-			}
-			SceneView.RepaintAll();
-		}
-
-		private static bool SeenByCamera(Camera camera, Bounds bounds)
-		{
-			return EditMode.AnyPointSeenByCamera(camera, EditMode.GetPoints(bounds));
-		}
-
-		private static Vector3[] GetPoints(Bounds bounds)
-		{
-			return EditMode.BoundsToPoints(bounds);
-		}
-
-		private static Vector3[] BoundsToPoints(Bounds bounds)
-		{
-			return new Vector3[]
-			{
-				new Vector3(bounds.min.x, bounds.min.y, bounds.min.z),
-				new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
-				new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
-				new Vector3(bounds.min.x, bounds.max.y, bounds.max.z),
-				new Vector3(bounds.max.x, bounds.min.y, bounds.min.z),
-				new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
-				new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
-				new Vector3(bounds.max.x, bounds.max.y, bounds.max.z)
-			};
-		}
-
-		private static bool AnyPointSeenByCamera(Camera camera, Vector3[] points)
-		{
-			bool result;
-			for (int i = 0; i < points.Length; i++)
-			{
-				Vector3 point = points[i];
-				if (EditMode.PointSeenByCamera(camera, point))
-				{
-					result = true;
-					return result;
-				}
-			}
-			result = false;
-			return result;
-		}
-
-		private static bool PointSeenByCamera(Camera camera, Vector3 point)
-		{
-			Vector3 vector = camera.WorldToViewportPoint(point);
-			return vector.x > 0f && vector.x < 1f && vector.y > 0f && vector.y < 1f;
-		}
-	}
+        public enum SceneViewEditMode
+        {
+            None,
+            Collider,
+            Cloth,
+            ReflectionProbeBox,
+            ReflectionProbeOrigin,
+            LightProbeProxyVolumeBox,
+            LightProbeProxyVolumeOrigin,
+            LightProbeGroup
+        }
+    }
 }
+

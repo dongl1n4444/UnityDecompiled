@@ -1,8 +1,9 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class ExitGUIException : Exception
-	{
-	}
+    using System;
+
+    public sealed class ExitGUIException : Exception
+    {
+    }
 }
+

@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum PS4HardwareTarget
-	{
-		BaseOnly,
-		NeoAndBase
-	}
+    using System;
+
+    public enum PS4HardwareTarget
+    {
+        BaseOnly,
+        NeoAndBase
+    }
 }
+

@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WSABuildType
-	{
-		Debug,
-		Release,
-		Master
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Build configurations for Windows Store Visual Studio solutions.</para>
+    /// </summary>
+    public enum WSABuildType
+    {
+        Debug,
+        Release,
+        Master
+    }
 }
+

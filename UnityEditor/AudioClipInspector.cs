@@ -1,347 +1,352 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(AudioClip))]
-	internal class AudioClipInspector : Editor
-	{
-		private PreviewRenderUtility m_PreviewUtility;
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		private AudioClip m_PlayingClip = null;
+    [CanEditMultipleObjects, CustomEditor(typeof(AudioClip))]
+    internal class AudioClipInspector : Editor
+    {
+        private static bool m_bAutoPlay;
+        private static bool m_bLoop = false;
+        private static bool m_bPlayFirst;
+        private GUIView m_GUI;
+        private AudioClip m_PlayingClip = null;
+        private Vector2 m_Position = Vector2.zero;
+        private PreviewRenderUtility m_PreviewUtility;
+        private static Rect m_wantedRect;
+        private static GUIContent[] s_AutoPlayIcons = new GUIContent[2];
+        private static Texture2D s_DefaultIcon;
+        private static GUIContent[] s_LoopIcons = new GUIContent[2];
+        private static GUIContent[] s_PlayIcons = new GUIContent[2];
+        private static GUIStyle s_PreButton;
 
-		private Vector2 m_Position = Vector2.zero;
+        private void DoRenderPreview(AudioClip clip, AudioImporter audioImporter, Rect wantedRect, float scaleFactor)
+        {
+            <DoRenderPreview>c__AnonStorey1 storey = new <DoRenderPreview>c__AnonStorey1 {
+                scaleFactor = scaleFactor
+            };
+            storey.scaleFactor *= 0.95f;
+            storey.minMaxData = (audioImporter != null) ? AudioUtil.GetMinMaxData(audioImporter) : null;
+            storey.numChannels = clip.channels;
+            storey.numSamples = (storey.minMaxData != null) ? (storey.minMaxData.Length / (2 * storey.numChannels)) : 0;
+            float height = wantedRect.height / ((float) storey.numChannels);
+            <DoRenderPreview>c__AnonStorey2 storey2 = new <DoRenderPreview>c__AnonStorey2 {
+                channel = 0
+            };
+            while (storey2.channel < storey.numChannels)
+            {
+                <DoRenderPreview>c__AnonStorey0 storey3 = new <DoRenderPreview>c__AnonStorey0 {
+                    <>f__ref$1 = storey,
+                    <>f__ref$2 = storey2
+                };
+                Rect r = new Rect(wantedRect.x, wantedRect.y + (height * storey2.channel), wantedRect.width, height);
+                storey3.curveColor = new Color(1f, 0.5490196f, 0f, 1f);
+                AudioCurveRendering.DrawMinMaxFilledCurve(r, new AudioCurveRendering.AudioMinMaxCurveAndColorEvaluator(storey3.<>m__0));
+                storey2.channel++;
+            }
+        }
 
-		private GUIView m_GUI;
+        public override string GetInfoString()
+        {
+            AudioClip target = base.target as AudioClip;
+            int channelCount = AudioUtil.GetChannelCount(target);
+            string str = (channelCount != 1) ? ((channelCount != 2) ? (((channelCount - 1)).ToString() + ".1") : "Stereo") : "Mono";
+            AudioCompressionFormat targetPlatformSoundCompressionFormat = AudioUtil.GetTargetPlatformSoundCompressionFormat(target);
+            AudioCompressionFormat soundCompressionFormat = AudioUtil.GetSoundCompressionFormat(target);
+            string str2 = targetPlatformSoundCompressionFormat.ToString();
+            if (targetPlatformSoundCompressionFormat != soundCompressionFormat)
+            {
+                str2 = str2 + " (" + soundCompressionFormat.ToString() + " in editor)";
+            }
+            string str3 = str2;
+            object[] objArray1 = new object[] { str3, ", ", AudioUtil.GetFrequency(target), " Hz, ", str, ", " };
+            str2 = string.Concat(objArray1);
+            TimeSpan span = new TimeSpan(0, 0, 0, 0, (int) AudioUtil.GetDuration(target));
+            if (((uint) AudioUtil.GetDuration(target)) == uint.MaxValue)
+            {
+                return (str2 + "Unlimited");
+            }
+            return (str2 + string.Format("{0:00}:{1:00}.{2:000}", span.Minutes, span.Seconds, span.Milliseconds));
+        }
 
-		private static GUIStyle s_PreButton;
+        public override bool HasPreviewGUI()
+        {
+            return (base.targets != null);
+        }
 
-		private static Rect m_wantedRect;
+        private static void Init()
+        {
+            if (s_PreButton == null)
+            {
+                s_PreButton = "preButton";
+                m_bAutoPlay = EditorPrefs.GetBool("AutoPlayAudio", false);
+                m_bLoop = false;
+                s_AutoPlayIcons[0] = EditorGUIUtility.IconContent("preAudioAutoPlayOff", "|Turn Auto Play on");
+                s_AutoPlayIcons[1] = EditorGUIUtility.IconContent("preAudioAutoPlayOn", "|Turn Auto Play off");
+                s_PlayIcons[0] = EditorGUIUtility.IconContent("preAudioPlayOff", "|Play");
+                s_PlayIcons[1] = EditorGUIUtility.IconContent("preAudioPlayOn", "|Stop");
+                s_LoopIcons[0] = EditorGUIUtility.IconContent("preAudioLoopOff", "|Loop on");
+                s_LoopIcons[1] = EditorGUIUtility.IconContent("preAudioLoopOn", "|Loop off");
+                s_DefaultIcon = EditorGUIUtility.LoadIcon("Profiler.Audio");
+            }
+        }
 
-		private static bool m_bAutoPlay;
+        public void OnDestroy()
+        {
+            if (this.m_PreviewUtility != null)
+            {
+                this.m_PreviewUtility.Cleanup();
+                this.m_PreviewUtility = null;
+            }
+        }
 
-		private static bool m_bLoop = false;
+        public void OnDisable()
+        {
+            AudioUtil.StopAllClips();
+            EditorPrefs.SetBool("AutoPlayAudio", m_bAutoPlay);
+        }
 
-		private static bool m_bPlayFirst;
+        public void OnEnable()
+        {
+            m_bAutoPlay = EditorPrefs.GetBool("AutoPlayAudio", false);
+            if (m_bAutoPlay)
+            {
+                m_bPlayFirst = true;
+            }
+        }
 
-		private static GUIContent[] s_PlayIcons = new GUIContent[2];
+        public override void OnInspectorGUI()
+        {
+        }
 
-		private static GUIContent[] s_AutoPlayIcons = new GUIContent[2];
+        public override void OnPreviewGUI(Rect r, GUIStyle background)
+        {
+            if (s_DefaultIcon == null)
+            {
+                Init();
+            }
+            AudioClip target = base.target as AudioClip;
+            Event current = Event.current;
+            if (((current.type != EventType.Repaint) && (current.type != EventType.Layout)) && (current.type != EventType.Used))
+            {
+                int num = AudioUtil.GetSampleCount(target) / ((int) r.width);
+                EventType type = current.type;
+                if (((type == EventType.MouseDrag) || (type == EventType.MouseDown)) && (r.Contains(current.mousePosition) && !AudioUtil.IsMovieAudio(target)))
+                {
+                    if (this.m_PlayingClip != target)
+                    {
+                        AudioUtil.StopAllClips();
+                        AudioUtil.PlayClip(target, 0, m_bLoop);
+                        this.m_PlayingClip = target;
+                    }
+                    AudioUtil.SetClipSamplePosition(target, num * ((int) current.mousePosition.x));
+                    current.Use();
+                }
+            }
+            else
+            {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    background.Draw(r, false, false, false, false);
+                }
+                int channelCount = AudioUtil.GetChannelCount(target);
+                m_wantedRect = new Rect(r.x, r.y, r.width, r.height);
+                float num3 = m_wantedRect.width / target.length;
+                if (!AudioUtil.HasPreview(target) && (AudioUtil.IsTrackerFile(target) || AudioUtil.IsMovieAudio(target)))
+                {
+                    float y = (r.height <= 150f) ? ((r.y + (r.height / 2f)) - 25f) : ((r.y + (r.height / 2f)) - 10f);
+                    if (r.width > 64f)
+                    {
+                        if (AudioUtil.IsTrackerFile(target))
+                        {
+                            EditorGUI.DropShadowLabel(new Rect(r.x, y, r.width, 20f), string.Format("Module file with " + AudioUtil.GetMusicChannelCount(target) + " channels.", new object[0]));
+                        }
+                        else if (AudioUtil.IsMovieAudio(target))
+                        {
+                            if (r.width > 450f)
+                            {
+                                EditorGUI.DropShadowLabel(new Rect(r.x, y, r.width, 20f), "Audio is attached to a movie. To audition the sound, play the movie.");
+                            }
+                            else
+                            {
+                                EditorGUI.DropShadowLabel(new Rect(r.x, y, r.width, 20f), "Audio is attached to a movie.");
+                                EditorGUI.DropShadowLabel(new Rect(r.x, y + 10f, r.width, 20f), "To audition the sound, play the movie.");
+                            }
+                        }
+                        else
+                        {
+                            EditorGUI.DropShadowLabel(new Rect(r.x, y, r.width, 20f), "Can not show PCM data for this file");
+                        }
+                    }
+                    if (this.m_PlayingClip == target)
+                    {
+                        float clipPosition = AudioUtil.GetClipPosition(target);
+                        TimeSpan span = new TimeSpan(0, 0, 0, 0, (int) (clipPosition * 1000f));
+                        EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), string.Format("Playing - {0:00}:{1:00}.{2:000}", span.Minutes, span.Seconds, span.Milliseconds));
+                    }
+                }
+                else
+                {
+                    PreviewGUI.BeginScrollView(m_wantedRect, this.m_Position, m_wantedRect, "PreHorizontalScrollbar", "PreHorizontalScrollbarThumb");
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        this.DoRenderPreview(target, AudioUtil.GetImporterFromClip(target), m_wantedRect, 1f);
+                    }
+                    for (int i = 0; i < channelCount; i++)
+                    {
+                        if ((channelCount > 1) && (r.width > 64f))
+                        {
+                            Rect position = new Rect(m_wantedRect.x + 5f, m_wantedRect.y + ((m_wantedRect.height / ((float) channelCount)) * i), 30f, 20f);
+                            EditorGUI.DropShadowLabel(position, "ch " + ((i + 1)).ToString());
+                        }
+                    }
+                    if (this.m_PlayingClip == target)
+                    {
+                        float num8 = AudioUtil.GetClipPosition(target);
+                        TimeSpan span2 = new TimeSpan(0, 0, 0, 0, (int) (num8 * 1000f));
+                        GUI.DrawTexture(new Rect(m_wantedRect.x + ((int) (num3 * num8)), m_wantedRect.y, 2f, m_wantedRect.height), EditorGUIUtility.whiteTexture);
+                        if (r.width > 64f)
+                        {
+                            EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), string.Format("{0:00}:{1:00}.{2:000}", span2.Minutes, span2.Seconds, span2.Milliseconds));
+                        }
+                        else
+                        {
+                            EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), string.Format("{0:00}:{1:00}", span2.Minutes, span2.Seconds));
+                        }
+                        if (!AudioUtil.IsClipPlaying(target))
+                        {
+                            this.m_PlayingClip = null;
+                        }
+                    }
+                    PreviewGUI.EndScrollView();
+                }
+                if (m_bPlayFirst)
+                {
+                    AudioUtil.PlayClip(target, 0, m_bLoop);
+                    this.m_PlayingClip = target;
+                    m_bPlayFirst = false;
+                }
+                if (this.playing)
+                {
+                    GUIView.current.Repaint();
+                }
+            }
+        }
 
-		private static GUIContent[] s_LoopIcons = new GUIContent[2];
+        public override void OnPreviewSettings()
+        {
+            if (s_DefaultIcon == null)
+            {
+                Init();
+            }
+            AudioClip target = base.target as AudioClip;
+            using (new EditorGUI.DisabledScope(AudioUtil.IsMovieAudio(target)))
+            {
+                bool disabled = base.targets.Length > 1;
+                using (new EditorGUI.DisabledScope(disabled))
+                {
+                    m_bAutoPlay = !disabled ? m_bAutoPlay : false;
+                    m_bAutoPlay = PreviewGUI.CycleButton(!m_bAutoPlay ? 0 : 1, s_AutoPlayIcons) != 0;
+                }
+                bool bLoop = m_bLoop;
+                m_bLoop = PreviewGUI.CycleButton(!m_bLoop ? 0 : 1, s_LoopIcons) != 0;
+                if ((bLoop != m_bLoop) && this.playing)
+                {
+                    AudioUtil.LoopClip(target, m_bLoop);
+                }
+                using (new EditorGUI.DisabledScope(disabled && !this.playing))
+                {
+                    bool flag3 = PreviewGUI.CycleButton(!this.playing ? 0 : 1, s_PlayIcons) != 0;
+                    if (flag3 != this.playing)
+                    {
+                        if (flag3)
+                        {
+                            AudioUtil.PlayClip(target, 0, m_bLoop);
+                            this.m_PlayingClip = target;
+                        }
+                        else
+                        {
+                            AudioUtil.StopAllClips();
+                            this.m_PlayingClip = null;
+                        }
+                    }
+                }
+            }
+        }
 
-		private static Texture2D s_DefaultIcon;
+        public override Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
+        {
+            AudioClip target = base.target as AudioClip;
+            AudioImporter atPath = AssetImporter.GetAtPath(assetPath) as AudioImporter;
+            if ((atPath == null) || !ShaderUtil.hardwareSupportsRectRenderTexture)
+            {
+                return null;
+            }
+            if (this.m_PreviewUtility == null)
+            {
+                this.m_PreviewUtility = new PreviewRenderUtility();
+            }
+            this.m_PreviewUtility.BeginStaticPreview(new Rect(0f, 0f, (float) width, (float) height));
+            this.DoRenderPreview(target, atPath, new Rect((0.05f * width) * EditorGUIUtility.pixelsPerPoint, (0.05f * width) * EditorGUIUtility.pixelsPerPoint, (1.9f * width) * EditorGUIUtility.pixelsPerPoint, (1.9f * height) * EditorGUIUtility.pixelsPerPoint), 1f);
+            return this.m_PreviewUtility.EndStaticPreview();
+        }
 
-		private bool playing
-		{
-			get
-			{
-				return this.m_PlayingClip != null;
-			}
-		}
+        private bool playing
+        {
+            get
+            {
+                return (this.m_PlayingClip != null);
+            }
+        }
 
-		public override void OnInspectorGUI()
-		{
-		}
+        [CompilerGenerated]
+        private sealed class <DoRenderPreview>c__AnonStorey0
+        {
+            internal AudioClipInspector.<DoRenderPreview>c__AnonStorey1 <>f__ref$1;
+            internal AudioClipInspector.<DoRenderPreview>c__AnonStorey2 <>f__ref$2;
+            internal Color curveColor;
 
-		private static void Init()
-		{
-			if (AudioClipInspector.s_PreButton == null)
-			{
-				AudioClipInspector.s_PreButton = "preButton";
-				AudioClipInspector.m_bAutoPlay = EditorPrefs.GetBool("AutoPlayAudio", false);
-				AudioClipInspector.m_bLoop = false;
-				AudioClipInspector.s_AutoPlayIcons[0] = EditorGUIUtility.IconContent("preAudioAutoPlayOff", "|Turn Auto Play on");
-				AudioClipInspector.s_AutoPlayIcons[1] = EditorGUIUtility.IconContent("preAudioAutoPlayOn", "|Turn Auto Play off");
-				AudioClipInspector.s_PlayIcons[0] = EditorGUIUtility.IconContent("preAudioPlayOff", "|Play");
-				AudioClipInspector.s_PlayIcons[1] = EditorGUIUtility.IconContent("preAudioPlayOn", "|Stop");
-				AudioClipInspector.s_LoopIcons[0] = EditorGUIUtility.IconContent("preAudioLoopOff", "|Loop on");
-				AudioClipInspector.s_LoopIcons[1] = EditorGUIUtility.IconContent("preAudioLoopOn", "|Loop off");
-				AudioClipInspector.s_DefaultIcon = EditorGUIUtility.LoadIcon("Profiler.Audio");
-			}
-		}
+            internal void <>m__0(float x, out Color col, out float minValue, out float maxValue)
+            {
+                col = this.curveColor;
+                if (this.<>f__ref$1.numSamples <= 0)
+                {
+                    minValue = 0f;
+                    maxValue = 0f;
+                }
+                else
+                {
+                    int num2 = (int) Mathf.Floor(Mathf.Clamp(x * (this.<>f__ref$1.numSamples - 2), 0f, (float) (this.<>f__ref$1.numSamples - 2)));
+                    int index = ((num2 * this.<>f__ref$1.numChannels) + this.<>f__ref$2.channel) * 2;
+                    int num4 = index + (this.<>f__ref$1.numChannels * 2);
+                    minValue = Mathf.Min(this.<>f__ref$1.minMaxData[index + 1], this.<>f__ref$1.minMaxData[num4 + 1]) * this.<>f__ref$1.scaleFactor;
+                    maxValue = Mathf.Max(this.<>f__ref$1.minMaxData[index], this.<>f__ref$1.minMaxData[num4]) * this.<>f__ref$1.scaleFactor;
+                    if (minValue > maxValue)
+                    {
+                        float num5 = minValue;
+                        minValue = maxValue;
+                        maxValue = num5;
+                    }
+                }
+            }
+        }
 
-		public void OnDisable()
-		{
-			AudioUtil.StopAllClips();
-			EditorPrefs.SetBool("AutoPlayAudio", AudioClipInspector.m_bAutoPlay);
-		}
+        [CompilerGenerated]
+        private sealed class <DoRenderPreview>c__AnonStorey1
+        {
+            internal float[] minMaxData;
+            internal int numChannels;
+            internal int numSamples;
+            internal float scaleFactor;
+        }
 
-		public void OnEnable()
-		{
-			AudioClipInspector.m_bAutoPlay = EditorPrefs.GetBool("AutoPlayAudio", false);
-			if (AudioClipInspector.m_bAutoPlay)
-			{
-				AudioClipInspector.m_bPlayFirst = true;
-			}
-		}
-
-		public void OnDestroy()
-		{
-			if (this.m_PreviewUtility != null)
-			{
-				this.m_PreviewUtility.Cleanup();
-				this.m_PreviewUtility = null;
-			}
-		}
-
-		public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
-		{
-			AudioClip clip = base.target as AudioClip;
-			AssetImporter atPath = AssetImporter.GetAtPath(assetPath);
-			AudioImporter audioImporter = atPath as AudioImporter;
-			Texture2D result;
-			if (audioImporter == null || !ShaderUtil.hardwareSupportsRectRenderTexture)
-			{
-				result = null;
-			}
-			else
-			{
-				if (this.m_PreviewUtility == null)
-				{
-					this.m_PreviewUtility = new PreviewRenderUtility();
-				}
-				this.m_PreviewUtility.BeginStaticPreview(new Rect(0f, 0f, (float)width, (float)height));
-				this.DoRenderPreview(clip, audioImporter, new Rect(0.05f * (float)width * EditorGUIUtility.pixelsPerPoint, 0.05f * (float)width * EditorGUIUtility.pixelsPerPoint, 1.9f * (float)width * EditorGUIUtility.pixelsPerPoint, 1.9f * (float)height * EditorGUIUtility.pixelsPerPoint), 1f);
-				result = this.m_PreviewUtility.EndStaticPreview();
-			}
-			return result;
-		}
-
-		public override bool HasPreviewGUI()
-		{
-			return base.targets != null;
-		}
-
-		public override void OnPreviewSettings()
-		{
-			if (AudioClipInspector.s_DefaultIcon == null)
-			{
-				AudioClipInspector.Init();
-			}
-			AudioClip audioClip = base.target as AudioClip;
-			using (new EditorGUI.DisabledScope(AudioUtil.IsMovieAudio(audioClip)))
-			{
-				bool flag = base.targets.Length > 1;
-				using (new EditorGUI.DisabledScope(flag))
-				{
-					AudioClipInspector.m_bAutoPlay = (!flag && AudioClipInspector.m_bAutoPlay);
-					AudioClipInspector.m_bAutoPlay = (PreviewGUI.CycleButton((!AudioClipInspector.m_bAutoPlay) ? 0 : 1, AudioClipInspector.s_AutoPlayIcons) != 0);
-				}
-				bool bLoop = AudioClipInspector.m_bLoop;
-				AudioClipInspector.m_bLoop = (PreviewGUI.CycleButton((!AudioClipInspector.m_bLoop) ? 0 : 1, AudioClipInspector.s_LoopIcons) != 0);
-				if (bLoop != AudioClipInspector.m_bLoop && this.playing)
-				{
-					AudioUtil.LoopClip(audioClip, AudioClipInspector.m_bLoop);
-				}
-				using (new EditorGUI.DisabledScope(flag && !this.playing))
-				{
-					bool flag2 = PreviewGUI.CycleButton((!this.playing) ? 0 : 1, AudioClipInspector.s_PlayIcons) != 0;
-					if (flag2 != this.playing)
-					{
-						if (flag2)
-						{
-							AudioUtil.PlayClip(audioClip, 0, AudioClipInspector.m_bLoop);
-							this.m_PlayingClip = audioClip;
-						}
-						else
-						{
-							AudioUtil.StopAllClips();
-							this.m_PlayingClip = null;
-						}
-					}
-				}
-			}
-		}
-
-		private void DoRenderPreview(AudioClip clip, AudioImporter audioImporter, Rect wantedRect, float scaleFactor)
-		{
-			scaleFactor *= 0.95f;
-			float[] minMaxData = (!(audioImporter == null)) ? AudioUtil.GetMinMaxData(audioImporter) : null;
-			int numChannels = clip.channels;
-			int numSamples = (minMaxData != null) ? (minMaxData.Length / (2 * numChannels)) : 0;
-			float num = wantedRect.height / (float)numChannels;
-			int channel;
-			for (channel = 0; channel < numChannels; channel++)
-			{
-				Rect r = new Rect(wantedRect.x, wantedRect.y + num * (float)channel, wantedRect.width, num);
-				Color curveColor = new Color(1f, 0.549019635f, 0f, 1f);
-				AudioCurveRendering.DrawMinMaxFilledCurve(r, delegate(float x, out Color col, out float minValue, out float maxValue)
-				{
-					col = curveColor;
-					if (numSamples <= 0)
-					{
-						minValue = 0f;
-						maxValue = 0f;
-					}
-					else
-					{
-						float f = Mathf.Clamp(x * (float)(numSamples - 2), 0f, (float)(numSamples - 2));
-						int num2 = (int)Mathf.Floor(f);
-						int num3 = (num2 * numChannels + channel) * 2;
-						int num4 = num3 + numChannels * 2;
-						minValue = Mathf.Min(minMaxData[num3 + 1], minMaxData[num4 + 1]) * scaleFactor;
-						maxValue = Mathf.Max(minMaxData[num3], minMaxData[num4]) * scaleFactor;
-						if (minValue > maxValue)
-						{
-							float num5 = minValue;
-							minValue = maxValue;
-							maxValue = num5;
-						}
-					}
-				});
-			}
-		}
-
-		public override void OnPreviewGUI(Rect r, GUIStyle background)
-		{
-			if (AudioClipInspector.s_DefaultIcon == null)
-			{
-				AudioClipInspector.Init();
-			}
-			AudioClip audioClip = base.target as AudioClip;
-			Event current = Event.current;
-			if (current.type != EventType.Repaint && current.type != EventType.Layout && current.type != EventType.Used)
-			{
-				int num = AudioUtil.GetSampleCount(audioClip) / (int)r.width;
-				EventType type = current.type;
-				if (type == EventType.MouseDrag || type == EventType.MouseDown)
-				{
-					if (r.Contains(current.mousePosition) && !AudioUtil.IsMovieAudio(audioClip))
-					{
-						if (this.m_PlayingClip != audioClip)
-						{
-							AudioUtil.StopAllClips();
-							AudioUtil.PlayClip(audioClip, 0, AudioClipInspector.m_bLoop);
-							this.m_PlayingClip = audioClip;
-						}
-						AudioUtil.SetClipSamplePosition(audioClip, num * (int)current.mousePosition.x);
-						current.Use();
-					}
-				}
-			}
-			else
-			{
-				if (Event.current.type == EventType.Repaint)
-				{
-					background.Draw(r, false, false, false, false);
-				}
-				int channelCount = AudioUtil.GetChannelCount(audioClip);
-				AudioClipInspector.m_wantedRect = new Rect(r.x, r.y, r.width, r.height);
-				float num2 = AudioClipInspector.m_wantedRect.width / audioClip.length;
-				if (!AudioUtil.HasPreview(audioClip) && (AudioUtil.IsTrackerFile(audioClip) || AudioUtil.IsMovieAudio(audioClip)))
-				{
-					float num3 = (r.height <= 150f) ? (r.y + r.height / 2f - 25f) : (r.y + r.height / 2f - 10f);
-					if (r.width > 64f)
-					{
-						if (AudioUtil.IsTrackerFile(audioClip))
-						{
-							EditorGUI.DropShadowLabel(new Rect(r.x, num3, r.width, 20f), string.Format("Module file with " + AudioUtil.GetMusicChannelCount(audioClip) + " channels.", new object[0]));
-						}
-						else if (AudioUtil.IsMovieAudio(audioClip))
-						{
-							if (r.width > 450f)
-							{
-								EditorGUI.DropShadowLabel(new Rect(r.x, num3, r.width, 20f), "Audio is attached to a movie. To audition the sound, play the movie.");
-							}
-							else
-							{
-								EditorGUI.DropShadowLabel(new Rect(r.x, num3, r.width, 20f), "Audio is attached to a movie.");
-								EditorGUI.DropShadowLabel(new Rect(r.x, num3 + 10f, r.width, 20f), "To audition the sound, play the movie.");
-							}
-						}
-						else
-						{
-							EditorGUI.DropShadowLabel(new Rect(r.x, num3, r.width, 20f), "Can not show PCM data for this file");
-						}
-					}
-					if (this.m_PlayingClip == audioClip)
-					{
-						float clipPosition = AudioUtil.GetClipPosition(audioClip);
-						TimeSpan timeSpan = new TimeSpan(0, 0, 0, 0, (int)(clipPosition * 1000f));
-						EditorGUI.DropShadowLabel(new Rect(AudioClipInspector.m_wantedRect.x, AudioClipInspector.m_wantedRect.y, AudioClipInspector.m_wantedRect.width, 20f), string.Format("Playing - {0:00}:{1:00}.{2:000}", timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds));
-					}
-				}
-				else
-				{
-					PreviewGUI.BeginScrollView(AudioClipInspector.m_wantedRect, this.m_Position, AudioClipInspector.m_wantedRect, "PreHorizontalScrollbar", "PreHorizontalScrollbarThumb");
-					if (Event.current.type == EventType.Repaint)
-					{
-						this.DoRenderPreview(audioClip, AudioUtil.GetImporterFromClip(audioClip), AudioClipInspector.m_wantedRect, 1f);
-					}
-					for (int i = 0; i < channelCount; i++)
-					{
-						if (channelCount > 1 && r.width > 64f)
-						{
-							Rect position = new Rect(AudioClipInspector.m_wantedRect.x + 5f, AudioClipInspector.m_wantedRect.y + AudioClipInspector.m_wantedRect.height / (float)channelCount * (float)i, 30f, 20f);
-							EditorGUI.DropShadowLabel(position, "ch " + (i + 1).ToString());
-						}
-					}
-					if (this.m_PlayingClip == audioClip)
-					{
-						float clipPosition2 = AudioUtil.GetClipPosition(audioClip);
-						TimeSpan timeSpan2 = new TimeSpan(0, 0, 0, 0, (int)(clipPosition2 * 1000f));
-						GUI.DrawTexture(new Rect(AudioClipInspector.m_wantedRect.x + (float)((int)(num2 * clipPosition2)), AudioClipInspector.m_wantedRect.y, 2f, AudioClipInspector.m_wantedRect.height), EditorGUIUtility.whiteTexture);
-						if (r.width > 64f)
-						{
-							EditorGUI.DropShadowLabel(new Rect(AudioClipInspector.m_wantedRect.x, AudioClipInspector.m_wantedRect.y, AudioClipInspector.m_wantedRect.width, 20f), string.Format("{0:00}:{1:00}.{2:000}", timeSpan2.Minutes, timeSpan2.Seconds, timeSpan2.Milliseconds));
-						}
-						else
-						{
-							EditorGUI.DropShadowLabel(new Rect(AudioClipInspector.m_wantedRect.x, AudioClipInspector.m_wantedRect.y, AudioClipInspector.m_wantedRect.width, 20f), string.Format("{0:00}:{1:00}", timeSpan2.Minutes, timeSpan2.Seconds));
-						}
-						if (!AudioUtil.IsClipPlaying(audioClip))
-						{
-							this.m_PlayingClip = null;
-						}
-					}
-					PreviewGUI.EndScrollView();
-				}
-				if (AudioClipInspector.m_bPlayFirst)
-				{
-					AudioUtil.PlayClip(audioClip, 0, AudioClipInspector.m_bLoop);
-					this.m_PlayingClip = audioClip;
-					AudioClipInspector.m_bPlayFirst = false;
-				}
-				if (this.playing)
-				{
-					GUIView.current.Repaint();
-				}
-			}
-		}
-
-		public override string GetInfoString()
-		{
-			AudioClip clip = base.target as AudioClip;
-			int channelCount = AudioUtil.GetChannelCount(clip);
-			string text = (channelCount != 1) ? ((channelCount != 2) ? ((channelCount - 1).ToString() + ".1") : "Stereo") : "Mono";
-			AudioCompressionFormat targetPlatformSoundCompressionFormat = AudioUtil.GetTargetPlatformSoundCompressionFormat(clip);
-			AudioCompressionFormat soundCompressionFormat = AudioUtil.GetSoundCompressionFormat(clip);
-			string text2 = targetPlatformSoundCompressionFormat.ToString();
-			if (targetPlatformSoundCompressionFormat != soundCompressionFormat)
-			{
-				text2 = text2 + " (" + soundCompressionFormat.ToString() + " in editor)";
-			}
-			string text3 = text2;
-			text2 = string.Concat(new object[]
-			{
-				text3,
-				", ",
-				AudioUtil.GetFrequency(clip),
-				" Hz, ",
-				text,
-				", "
-			});
-			TimeSpan timeSpan = new TimeSpan(0, 0, 0, 0, (int)AudioUtil.GetDuration(clip));
-			if ((uint)AudioUtil.GetDuration(clip) == 4294967295u)
-			{
-				text2 += "Unlimited";
-			}
-			else
-			{
-				text2 += string.Format("{0:00}:{1:00}.{2:000}", timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
-			}
-			return text2;
-		}
-	}
+        [CompilerGenerated]
+        private sealed class <DoRenderPreview>c__AnonStorey2
+        {
+            internal int channel;
+        }
+    }
 }
+

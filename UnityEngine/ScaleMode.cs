@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ScaleMode
-	{
-		StretchToFill,
-		ScaleAndCrop,
-		ScaleToFit
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Scaling mode to draw textures with.</para>
+    /// </summary>
+    public enum ScaleMode
+    {
+        StretchToFill,
+        ScaleAndCrop,
+        ScaleToFit
+    }
 }
+

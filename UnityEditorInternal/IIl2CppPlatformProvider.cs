@@ -1,83 +1,41 @@
-using System;
-using UnityEditor;
-using UnityEditor.BuildReporting;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal interface IIl2CppPlatformProvider
-	{
-		BuildTarget target
-		{
-			get;
-		}
+    using System;
+    using UnityEditor;
+    using UnityEditor.BuildReporting;
 
-		bool emitNullChecks
-		{
-			get;
-		}
+    internal interface IIl2CppPlatformProvider
+    {
+        Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder();
+        INativeCompiler CreateNativeCompiler();
 
-		bool enableStackTraces
-		{
-			get;
-		}
+        BuildReport buildReport { get; }
 
-		bool enableArrayBoundsCheck
-		{
-			get;
-		}
+        bool developmentMode { get; }
 
-		bool enableDivideByZeroCheck
-		{
-			get;
-		}
+        bool emitNullChecks { get; }
 
-		bool loadSymbols
-		{
-			get;
-		}
+        bool enableArrayBoundsCheck { get; }
 
-		string nativeLibraryFileName
-		{
-			get;
-		}
+        bool enableDivideByZeroCheck { get; }
 
-		string il2CppFolder
-		{
-			get;
-		}
+        bool enableStackTraces { get; }
 
-		bool developmentMode
-		{
-			get;
-		}
+        string il2CppFolder { get; }
 
-		string moduleStrippingInformationFolder
-		{
-			get;
-		}
+        string[] includePaths { get; }
 
-		bool supportsEngineStripping
-		{
-			get;
-		}
+        string[] libraryPaths { get; }
 
-		BuildReport buildReport
-		{
-			get;
-		}
+        bool loadSymbols { get; }
 
-		string[] includePaths
-		{
-			get;
-		}
+        string moduleStrippingInformationFolder { get; }
 
-		string[] libraryPaths
-		{
-			get;
-		}
+        string nativeLibraryFileName { get; }
 
-		INativeCompiler CreateNativeCompiler();
+        bool supportsEngineStripping { get; }
 
-		Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder();
-	}
+        BuildTarget target { get; }
+    }
 }
+

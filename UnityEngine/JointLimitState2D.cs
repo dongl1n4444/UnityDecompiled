@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum JointLimitState2D
-	{
-		Inactive,
-		LowerLimit,
-		UpperLimit,
-		EqualLimits
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Represents the state of a joint limit.</para>
+    /// </summary>
+    public enum JointLimitState2D
+    {
+        Inactive,
+        LowerLimit,
+        UpperLimit,
+        EqualLimits
+    }
 }
+

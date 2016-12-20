@@ -1,11 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct AnimationWindowEventMethod
-	{
-		public string name;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public Type parameterType;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct AnimationWindowEventMethod
+    {
+        public string name;
+        public Type parameterType;
+    }
 }
+

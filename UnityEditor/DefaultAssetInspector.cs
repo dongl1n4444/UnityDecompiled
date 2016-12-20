@@ -1,17 +1,18 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(DefaultAsset), isFallback = true)]
-	internal class DefaultAssetInspector : Editor
-	{
-		public override void OnInspectorGUI()
-		{
-			DefaultAsset defaultAsset = (DefaultAsset)base.target;
-			if (defaultAsset.message.Length > 0)
-			{
-				EditorGUILayout.HelpBox(defaultAsset.message, (!defaultAsset.isWarning) ? MessageType.Info : MessageType.Warning);
-			}
-		}
-	}
+    using System;
+
+    [CustomEditor(typeof(DefaultAsset), isFallback=true)]
+    internal class DefaultAssetInspector : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DefaultAsset target = (DefaultAsset) base.target;
+            if (target.message.Length > 0)
+            {
+                EditorGUILayout.HelpBox(target.message, !target.isWarning ? MessageType.Info : MessageType.Warning);
+            }
+        }
+    }
 }
+

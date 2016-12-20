@@ -1,0 +1,23 @@
+﻿namespace UnityEngine.iOS
+{
+    using System;
+
+    /// <summary>
+    /// <para>Specify calendar types.</para>
+    /// </summary>
+    public enum CalendarIdentifier
+    {
+        GregorianCalendar,
+        BuddhistCalendar,
+        ChineseCalendar,
+        HebrewCalendar,
+        IslamicCalendar,
+        IslamicCivilCalendar,
+        JapaneseCalendar,
+        RepublicOfChinaCalendar,
+        PersianCalendar,
+        IndianCalendar,
+        ISO8601Calendar
+    }
+}
+

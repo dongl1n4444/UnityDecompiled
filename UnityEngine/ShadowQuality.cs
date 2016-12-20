@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ShadowQuality
-	{
-		Disable,
-		HardOnly,
-		All
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Determines which type of shadows should be used.</para>
+    /// </summary>
+    public enum ShadowQuality
+    {
+        Disable,
+        HardOnly,
+        All
+    }
 }
+

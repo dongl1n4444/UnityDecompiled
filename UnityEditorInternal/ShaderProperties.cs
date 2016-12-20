@@ -1,15 +1,15 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct ShaderProperties
-	{
-		public ShaderFloatInfo[] floats;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public ShaderVectorInfo[] vectors;
-
-		public ShaderMatrixInfo[] matrices;
-
-		public ShaderTextureInfo[] textures;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ShaderProperties
+    {
+        public ShaderFloatInfo[] floats;
+        public ShaderVectorInfo[] vectors;
+        public ShaderMatrixInfo[] matrices;
+        public ShaderTextureInfo[] textures;
+    }
 }
+

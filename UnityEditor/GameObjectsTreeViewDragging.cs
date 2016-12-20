@@ -1,269 +1,261 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.IMGUI.Controls;
-using UnityEditor.SceneManagement;
-using UnityEditorInternal;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class GameObjectsTreeViewDragging : TreeViewDragging
-	{
-		private const string kSceneHeaderDragString = "SceneHeaderList";
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEditor.SceneManagement;
+    using UnityEditorInternal;
+    using UnityEngine;
+    using UnityEngine.SceneManagement;
 
-		public bool allowDragBetween
-		{
-			get;
-			set;
-		}
+    internal class GameObjectsTreeViewDragging : TreeViewDragging
+    {
+        [CompilerGenerated]
+        private static Func<Scene, int> <>f__am$cache0;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <allowDragBetween>k__BackingField;
+        private const string kSceneHeaderDragString = "SceneHeaderList";
 
-		public GameObjectsTreeViewDragging(TreeViewController treeView) : base(treeView)
-		{
-			this.allowDragBetween = true;
-		}
+        public GameObjectsTreeViewDragging(TreeViewController treeView) : base(treeView)
+        {
+            this.allowDragBetween = true;
+        }
 
-		public override bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition)
-		{
-			return string.IsNullOrEmpty(((GameObjectTreeViewDataSource)this.m_TreeView.data).searchString);
-		}
+        public override bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition)
+        {
+            if (!string.IsNullOrEmpty(((GameObjectTreeViewDataSource) base.m_TreeView.data).searchString))
+            {
+                return false;
+            }
+            return true;
+        }
 
-		public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
-		{
-			DragAndDrop.PrepareStartDrag();
-			draggedItemIDs = this.m_TreeView.SortIDsInVisiblityOrder(draggedItemIDs);
-			if (!draggedItemIDs.Contains(draggedItem.id))
-			{
-				draggedItemIDs = new List<int>
-				{
-					draggedItem.id
-				};
-			}
-			UnityEngine.Object[] dragAndDropObjects = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
-			DragAndDrop.objectReferences = dragAndDropObjects;
-			List<Scene> draggedScenes = this.GetDraggedScenes(draggedItemIDs);
-			if (draggedScenes != null)
-			{
-				DragAndDrop.SetGenericData("SceneHeaderList", draggedScenes);
-				List<string> list = new List<string>();
-				foreach (Scene current in draggedScenes)
-				{
-					if (current.path.Length > 0)
-					{
-						list.Add(current.path);
-					}
-				}
-				DragAndDrop.paths = list.ToArray();
-			}
-			else
-			{
-				DragAndDrop.paths = new string[0];
-			}
-			string title;
-			if (draggedItemIDs.Count > 1)
-			{
-				title = "<Multiple>";
-			}
-			else if (dragAndDropObjects.Length == 1)
-			{
-				title = ObjectNames.GetDragAndDropTitle(dragAndDropObjects[0]);
-			}
-			else if (draggedScenes != null && draggedScenes.Count == 1)
-			{
-				title = draggedScenes[0].path;
-			}
-			else
-			{
-				title = "Unhandled dragged item";
-				Debug.LogError("Unhandled dragged item");
-			}
-			DragAndDrop.StartDrag(title);
-			if (this.m_TreeView.data is GameObjectTreeViewDataSource)
-			{
-				((GameObjectTreeViewDataSource)this.m_TreeView.data).SetupChildParentReferencesIfNeeded();
-			}
-		}
+        public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
+        {
+            DragAndDropVisualMode mode = this.DoDragScenes(parentItem as GameObjectTreeViewItem, targetItem as GameObjectTreeViewItem, perform, dropPos);
+            if (mode != DragAndDropVisualMode.None)
+            {
+                return mode;
+            }
+            if ((parentItem == null) || (targetItem == null))
+            {
+                return InternalEditorUtility.HierarchyWindowDrag(null, perform, InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon);
+            }
+            HierarchyProperty property = new HierarchyProperty(HierarchyType.GameObjects);
+            if (this.allowDragBetween)
+            {
+                if (!property.Find(targetItem.id, null))
+                {
+                    property = null;
+                }
+            }
+            else if (!property.Find(parentItem.id, null))
+            {
+                property = null;
+            }
+            InternalEditorUtility.HierarchyDropMode kHierarchyDragNormal = InternalEditorUtility.HierarchyDropMode.kHierarchyDragNormal;
+            if (this.allowDragBetween)
+            {
+                kHierarchyDragNormal = (dropPos != TreeViewDragging.DropPosition.Upon) ? InternalEditorUtility.HierarchyDropMode.kHierarchyDropBetween : InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon;
+            }
+            if ((((parentItem != null) && (targetItem != parentItem)) && (dropPos == TreeViewDragging.DropPosition.Above)) && (parentItem.children[0] == targetItem))
+            {
+                kHierarchyDragNormal |= InternalEditorUtility.HierarchyDropMode.kHierarchyDropAfterParent;
+            }
+            return InternalEditorUtility.HierarchyWindowDrag(property, perform, kHierarchyDragNormal);
+        }
 
-		public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
-		{
-			DragAndDropVisualMode dragAndDropVisualMode = this.DoDragScenes(parentItem as GameObjectTreeViewItem, targetItem as GameObjectTreeViewItem, perform, dropPos);
-			DragAndDropVisualMode result;
-			if (dragAndDropVisualMode != DragAndDropVisualMode.None)
-			{
-				result = dragAndDropVisualMode;
-			}
-			else if (parentItem == null || targetItem == null)
-			{
-				result = InternalEditorUtility.HierarchyWindowDrag(null, perform, InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon);
-			}
-			else
-			{
-				HierarchyProperty hierarchyProperty = new HierarchyProperty(HierarchyType.GameObjects);
-				if (this.allowDragBetween)
-				{
-					if (!hierarchyProperty.Find(targetItem.id, null))
-					{
-						hierarchyProperty = null;
-					}
-				}
-				else if (!hierarchyProperty.Find(parentItem.id, null))
-				{
-					hierarchyProperty = null;
-				}
-				InternalEditorUtility.HierarchyDropMode hierarchyDropMode = InternalEditorUtility.HierarchyDropMode.kHierarchyDragNormal;
-				if (this.allowDragBetween)
-				{
-					hierarchyDropMode = ((dropPos != TreeViewDragging.DropPosition.Upon) ? InternalEditorUtility.HierarchyDropMode.kHierarchyDropBetween : InternalEditorUtility.HierarchyDropMode.kHierarchyDropUpon);
-				}
-				bool flag = parentItem != null && targetItem != parentItem && dropPos == TreeViewDragging.DropPosition.Above && parentItem.children[0] == targetItem;
-				if (flag)
-				{
-					hierarchyDropMode |= InternalEditorUtility.HierarchyDropMode.kHierarchyDropAfterParent;
-				}
-				result = InternalEditorUtility.HierarchyWindowDrag(hierarchyProperty, perform, hierarchyDropMode);
-			}
-			return result;
-		}
+        private DragAndDropVisualMode DoDragScenes(GameObjectTreeViewItem parentItem, GameObjectTreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
+        {
+            List<Scene> genericData = DragAndDrop.GetGenericData("SceneHeaderList") as List<Scene>;
+            bool flag = genericData != null;
+            bool flag2 = false;
+            if (!flag && (DragAndDrop.objectReferences.Length > 0))
+            {
+                int num = 0;
+                foreach (Object obj2 in DragAndDrop.objectReferences)
+                {
+                    if (obj2 is SceneAsset)
+                    {
+                        num++;
+                    }
+                }
+                flag2 = num == DragAndDrop.objectReferences.Length;
+            }
+            if (!flag && !flag2)
+            {
+                return DragAndDropVisualMode.None;
+            }
+            if (perform)
+            {
+                List<Scene> list2 = null;
+                if (flag2)
+                {
+                    List<Scene> source = new List<Scene>();
+                    foreach (Object obj3 in DragAndDrop.objectReferences)
+                    {
+                        string assetPath = AssetDatabase.GetAssetPath(obj3);
+                        Scene sceneByPath = SceneManager.GetSceneByPath(assetPath);
+                        if (SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(sceneByPath))
+                        {
+                            base.m_TreeView.Frame(sceneByPath.handle, true, true);
+                        }
+                        else
+                        {
+                            if (Event.current.alt)
+                            {
+                                sceneByPath = EditorSceneManager.OpenScene(assetPath, OpenSceneMode.AdditiveWithoutLoading);
+                            }
+                            else
+                            {
+                                sceneByPath = EditorSceneManager.OpenScene(assetPath, OpenSceneMode.Additive);
+                            }
+                            if (SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(sceneByPath))
+                            {
+                                source.Add(sceneByPath);
+                            }
+                        }
+                    }
+                    if (targetItem != null)
+                    {
+                        list2 = source;
+                    }
+                    if (source.Count > 0)
+                    {
+                        if (<>f__am$cache0 == null)
+                        {
+                            <>f__am$cache0 = new Func<Scene, int>(null, (IntPtr) <DoDragScenes>m__0);
+                        }
+                        Selection.instanceIDs = Enumerable.ToArray<int>(Enumerable.Select<Scene, int>(source, <>f__am$cache0));
+                        base.m_TreeView.Frame(Enumerable.Last<Scene>(source).handle, true, false);
+                    }
+                }
+                else
+                {
+                    list2 = genericData;
+                }
+                if (list2 != null)
+                {
+                    if (targetItem != null)
+                    {
+                        Scene scene = targetItem.scene;
+                        if (SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(scene))
+                        {
+                            if (!targetItem.isSceneHeader || (dropPos == TreeViewDragging.DropPosition.Upon))
+                            {
+                                dropPos = TreeViewDragging.DropPosition.Below;
+                            }
+                            if (dropPos == TreeViewDragging.DropPosition.Above)
+                            {
+                                for (int i = 0; i < list2.Count; i++)
+                                {
+                                    EditorSceneManager.MoveSceneBefore(list2[i], scene);
+                                }
+                            }
+                            else if (dropPos == TreeViewDragging.DropPosition.Below)
+                            {
+                                for (int j = list2.Count - 1; j >= 0; j--)
+                                {
+                                    EditorSceneManager.MoveSceneAfter(list2[j], scene);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Scene sceneAt = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
+                        for (int k = list2.Count - 1; k >= 0; k--)
+                        {
+                            EditorSceneManager.MoveSceneAfter(list2[k], sceneAt);
+                        }
+                    }
+                }
+            }
+            return DragAndDropVisualMode.Move;
+        }
 
-		public override void DragCleanup(bool revertExpanded)
-		{
-			DragAndDrop.SetGenericData("SceneHeaderList", null);
-			base.DragCleanup(revertExpanded);
-		}
+        public override void DragCleanup(bool revertExpanded)
+        {
+            DragAndDrop.SetGenericData("SceneHeaderList", null);
+            base.DragCleanup(revertExpanded);
+        }
 
-		private List<Scene> GetDraggedScenes(List<int> draggedItemIDs)
-		{
-			List<Scene> list = new List<Scene>();
-			List<Scene> result;
-			foreach (int current in draggedItemIDs)
-			{
-				Scene sceneByHandle = EditorSceneManager.GetSceneByHandle(current);
-				if (!SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(sceneByHandle))
-				{
-					result = null;
-					return result;
-				}
-				list.Add(sceneByHandle);
-			}
-			result = list;
-			return result;
-		}
+        private List<Scene> GetDraggedScenes(List<int> draggedItemIDs)
+        {
+            List<Scene> list = new List<Scene>();
+            foreach (int num in draggedItemIDs)
+            {
+                Scene sceneByHandle = EditorSceneManager.GetSceneByHandle(num);
+                if (!SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(sceneByHandle))
+                {
+                    return null;
+                }
+                list.Add(sceneByHandle);
+            }
+            return list;
+        }
 
-		private DragAndDropVisualMode DoDragScenes(GameObjectTreeViewItem parentItem, GameObjectTreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
-		{
-			List<Scene> list = DragAndDrop.GetGenericData("SceneHeaderList") as List<Scene>;
-			bool flag = list != null;
-			bool flag2 = false;
-			if (!flag && DragAndDrop.objectReferences.Length > 0)
-			{
-				int num = 0;
-				UnityEngine.Object[] objectReferences = DragAndDrop.objectReferences;
-				for (int i = 0; i < objectReferences.Length; i++)
-				{
-					UnityEngine.Object @object = objectReferences[i];
-					if (@object is SceneAsset)
-					{
-						num++;
-					}
-				}
-				flag2 = (num == DragAndDrop.objectReferences.Length);
-			}
-			DragAndDropVisualMode result;
-			if (!flag && !flag2)
-			{
-				result = DragAndDropVisualMode.None;
-			}
-			else
-			{
-				if (perform)
-				{
-					List<Scene> list2 = null;
-					if (flag2)
-					{
-						List<Scene> list3 = new List<Scene>();
-						UnityEngine.Object[] objectReferences2 = DragAndDrop.objectReferences;
-						for (int j = 0; j < objectReferences2.Length; j++)
-						{
-							UnityEngine.Object assetObject = objectReferences2[j];
-							string assetPath = AssetDatabase.GetAssetPath(assetObject);
-							Scene scene = SceneManager.GetSceneByPath(assetPath);
-							if (SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(scene))
-							{
-								this.m_TreeView.Frame(scene.handle, true, true);
-							}
-							else
-							{
-								bool alt = Event.current.alt;
-								if (alt)
-								{
-									scene = EditorSceneManager.OpenScene(assetPath, OpenSceneMode.AdditiveWithoutLoading);
-								}
-								else
-								{
-									scene = EditorSceneManager.OpenScene(assetPath, OpenSceneMode.Additive);
-								}
-								if (SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(scene))
-								{
-									list3.Add(scene);
-								}
-							}
-						}
-						if (targetItem != null)
-						{
-							list2 = list3;
-						}
-						if (list3.Count > 0)
-						{
-							Selection.instanceIDs = (from x in list3
-							select x.handle).ToArray<int>();
-							this.m_TreeView.Frame(list3.Last<Scene>().handle, true, false);
-						}
-					}
-					else
-					{
-						list2 = list;
-					}
-					if (list2 != null)
-					{
-						if (targetItem != null)
-						{
-							Scene scene2 = targetItem.scene;
-							if (SceneHierarchyWindow.IsSceneHeaderInHierarchyWindow(scene2))
-							{
-								if (!targetItem.isSceneHeader || dropPos == TreeViewDragging.DropPosition.Upon)
-								{
-									dropPos = TreeViewDragging.DropPosition.Below;
-								}
-								if (dropPos == TreeViewDragging.DropPosition.Above)
-								{
-									for (int k = 0; k < list2.Count; k++)
-									{
-										EditorSceneManager.MoveSceneBefore(list2[k], scene2);
-									}
-								}
-								else if (dropPos == TreeViewDragging.DropPosition.Below)
-								{
-									for (int l = list2.Count - 1; l >= 0; l--)
-									{
-										EditorSceneManager.MoveSceneAfter(list2[l], scene2);
-									}
-								}
-							}
-						}
-						else
-						{
-							Scene sceneAt = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
-							for (int m = list2.Count - 1; m >= 0; m--)
-							{
-								EditorSceneManager.MoveSceneAfter(list2[m], sceneAt);
-							}
-						}
-					}
-				}
-				result = DragAndDropVisualMode.Move;
-			}
-			return result;
-		}
-	}
+        public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
+        {
+            string dragAndDropTitle;
+            DragAndDrop.PrepareStartDrag();
+            draggedItemIDs = base.m_TreeView.SortIDsInVisiblityOrder(draggedItemIDs);
+            if (!draggedItemIDs.Contains(draggedItem.id))
+            {
+                List<int> list = new List<int> {
+                    draggedItem.id
+                };
+                draggedItemIDs = list;
+            }
+            Object[] dragAndDropObjects = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
+            DragAndDrop.objectReferences = dragAndDropObjects;
+            List<Scene> draggedScenes = this.GetDraggedScenes(draggedItemIDs);
+            if (draggedScenes != null)
+            {
+                DragAndDrop.SetGenericData("SceneHeaderList", draggedScenes);
+                List<string> list3 = new List<string>();
+                foreach (Scene scene in draggedScenes)
+                {
+                    if (scene.path.Length > 0)
+                    {
+                        list3.Add(scene.path);
+                    }
+                }
+                DragAndDrop.paths = list3.ToArray();
+            }
+            else
+            {
+                DragAndDrop.paths = new string[0];
+            }
+            if (draggedItemIDs.Count > 1)
+            {
+                dragAndDropTitle = "<Multiple>";
+            }
+            else if (dragAndDropObjects.Length == 1)
+            {
+                dragAndDropTitle = ObjectNames.GetDragAndDropTitle(dragAndDropObjects[0]);
+            }
+            else if ((draggedScenes != null) && (draggedScenes.Count == 1))
+            {
+                Scene scene2 = draggedScenes[0];
+                dragAndDropTitle = scene2.path;
+            }
+            else
+            {
+                dragAndDropTitle = "Unhandled dragged item";
+                Debug.LogError("Unhandled dragged item");
+            }
+            DragAndDrop.StartDrag(dragAndDropTitle);
+            if (base.m_TreeView.data is GameObjectTreeViewDataSource)
+            {
+                ((GameObjectTreeViewDataSource) base.m_TreeView.data).SetupChildParentReferencesIfNeeded();
+            }
+        }
+
+        public bool allowDragBetween { get; set; }
+    }
 }
+

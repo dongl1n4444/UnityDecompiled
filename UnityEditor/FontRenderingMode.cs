@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum FontRenderingMode
-	{
-		Smooth,
-		HintedSmooth,
-		HintedRaster,
-		OSDefault
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Font rendering mode constants for TrueTypeFontImporter.</para>
+    /// </summary>
+    public enum FontRenderingMode
+    {
+        Smooth,
+        HintedSmooth,
+        HintedRaster,
+        OSDefault
+    }
 }
+

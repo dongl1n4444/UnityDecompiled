@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum ASRefreshState
-	{
-		RefreshUpdate = 1,
-		RefreshCommit
-	}
+    using System;
+
+    internal enum ASRefreshState
+    {
+        RefreshCommit = 2,
+        RefreshUpdate = 1
+    }
 }
+

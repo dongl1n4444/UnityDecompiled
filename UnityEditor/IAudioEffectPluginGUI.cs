@@ -1,24 +1,20 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public abstract class IAudioEffectPluginGUI
-	{
-		public abstract string Name
-		{
-			get;
-		}
+    using System;
 
-		public abstract string Description
-		{
-			get;
-		}
+    public abstract class IAudioEffectPluginGUI
+    {
+        protected IAudioEffectPluginGUI()
+        {
+        }
 
-		public abstract string Vendor
-		{
-			get;
-		}
+        public abstract bool OnGUI(IAudioEffectPlugin plugin);
 
-		public abstract bool OnGUI(IAudioEffectPlugin plugin);
-	}
+        public abstract string Description { get; }
+
+        public abstract string Name { get; }
+
+        public abstract string Vendor { get; }
+    }
 }
+

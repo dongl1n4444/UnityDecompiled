@@ -1,15 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	internal enum CrossCompileOptions
-	{
-		Dynamic = 0,
-		FastICall = 1,
-		Static = 2,
-		Debugging = 4,
-		ExplicitNullChecks = 8,
-		LoadSymbols = 16
-	}
+    using System;
+
+    [Flags]
+    internal enum CrossCompileOptions
+    {
+        Debugging = 4,
+        Dynamic = 0,
+        ExplicitNullChecks = 8,
+        FastICall = 1,
+        LoadSymbols = 0x10,
+        Static = 2
+    }
 }
+

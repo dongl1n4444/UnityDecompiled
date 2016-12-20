@@ -1,21 +1,20 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class PropertyAndTargetHandler
-	{
-		public SerializedProperty property;
+    using System;
+    using UnityEngine;
 
-		public UnityEngine.Object target;
+    internal class PropertyAndTargetHandler
+    {
+        public TargetChoiceHandler.TargetChoiceMenuFunction function;
+        public SerializedProperty property;
+        public Object target;
 
-		public TargetChoiceHandler.TargetChoiceMenuFunction function;
-
-		public PropertyAndTargetHandler(SerializedProperty property, UnityEngine.Object target, TargetChoiceHandler.TargetChoiceMenuFunction function)
-		{
-			this.property = property;
-			this.target = target;
-			this.function = function;
-		}
-	}
+        public PropertyAndTargetHandler(SerializedProperty property, Object target, TargetChoiceHandler.TargetChoiceMenuFunction function)
+        {
+            this.property = property;
+            this.target = target;
+            this.function = function;
+        }
+    }
 }
+

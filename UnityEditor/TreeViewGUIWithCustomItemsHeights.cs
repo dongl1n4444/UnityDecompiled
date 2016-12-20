@@ -1,223 +1,219 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal abstract class TreeViewGUIWithCustomItemsHeights : ITreeViewGUI
-	{
-		private List<Rect> m_RowRects = new List<Rect>();
+    using mscorlib;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-		private float m_MaxWidthOfRows;
+    internal abstract class TreeViewGUIWithCustomItemsHeights : ITreeViewGUI
+    {
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private float <bottomRowMargin>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private float <topRowMargin>k__BackingField;
+        protected float m_BaseIndent = 2f;
+        protected float m_FoldoutWidth = 12f;
+        protected float m_IndentWidth = 14f;
+        private float m_MaxWidthOfRows;
+        private List<Rect> m_RowRects = new List<Rect>();
+        protected readonly TreeViewController m_TreeView;
 
-		protected readonly TreeViewController m_TreeView;
+        public TreeViewGUIWithCustomItemsHeights(TreeViewController treeView)
+        {
+            this.m_TreeView = treeView;
+        }
 
-		protected float m_BaseIndent = 2f;
+        protected virtual float AddSpaceBefore(TreeViewItem item)
+        {
+            return 0f;
+        }
 
-		protected float m_IndentWidth = 14f;
+        public virtual void BeginPingItem(TreeViewItem item, float topPixelOfRow, float availableWidth)
+        {
+            throw new NotImplementedException();
+        }
 
-		protected float m_FoldoutWidth = 12f;
+        public virtual bool BeginRename(TreeViewItem item, float delay)
+        {
+            throw new NotImplementedException();
+        }
 
-		public virtual float halfDropBetweenHeight
-		{
-			get
-			{
-				return 8f;
-			}
-		}
+        public virtual void BeginRowGUI()
+        {
+        }
 
-		public virtual float topRowMargin
-		{
-			get;
-			private set;
-		}
+        public void CalculateRowRects()
+        {
+            if (!this.m_TreeView.isSearching)
+            {
+                IList<TreeViewItem> rows = this.m_TreeView.data.GetRows();
+                this.m_RowRects = new List<Rect>(rows.Count);
+                float y = 2f;
+                this.m_MaxWidthOfRows = 1f;
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    TreeViewItem item = rows[i];
+                    float num3 = this.AddSpaceBefore(item);
+                    y += num3;
+                    Vector2 sizeOfRow = this.GetSizeOfRow(item);
+                    this.m_RowRects.Add(new Rect(0f, y, sizeOfRow.x, sizeOfRow.y));
+                    y += sizeOfRow.y;
+                    if (sizeOfRow.x > this.m_MaxWidthOfRows)
+                    {
+                        this.m_MaxWidthOfRows = sizeOfRow.x;
+                    }
+                }
+            }
+        }
 
-		public virtual float bottomRowMargin
-		{
-			get;
-			private set;
-		}
+        public virtual void EndPingItem()
+        {
+            throw new NotImplementedException();
+        }
 
-		protected float indentWidth
-		{
-			get
-			{
-				return this.m_IndentWidth;
-			}
-		}
+        public virtual void EndRename()
+        {
+            throw new NotImplementedException();
+        }
 
-		public TreeViewGUIWithCustomItemsHeights(TreeViewController treeView)
-		{
-			this.m_TreeView = treeView;
-		}
+        public virtual void EndRowGUI()
+        {
+        }
 
-		public virtual void OnInitialize()
-		{
-		}
+        public virtual float GetContentIndent(TreeViewItem item)
+        {
+            return (this.GetFoldoutIndent(item) + this.m_FoldoutWidth);
+        }
 
-		public Rect GetRowRect(int row, float rowWidth)
-		{
-			Rect result;
-			if (this.m_RowRects.Count == 0)
-			{
-				Debug.LogError("Ensure precalc rects");
-				result = default(Rect);
-			}
-			else
-			{
-				result = this.m_RowRects[row];
-			}
-			return result;
-		}
+        public void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
+        {
+            float y = this.m_TreeView.state.scrollPos.y;
+            float height = this.m_TreeView.GetTotalRect().height;
+            int rowCount = this.m_TreeView.data.rowCount;
+            if (rowCount != this.m_RowRects.Count)
+            {
+                Debug.LogError("Mismatch in state: rows vs cached rects. Did you remember to hook up: dataSource.onVisibleRowsChanged += gui.CalculateRowRects ?");
+                this.CalculateRowRects();
+            }
+            int num4 = -1;
+            int num5 = -1;
+            for (int i = 0; i < this.m_RowRects.Count; i++)
+            {
+                Rect rect2 = this.m_RowRects[i];
+                if (rect2.y > y)
+                {
+                    Rect rect3 = this.m_RowRects[i];
+                    if (rect3.y < (y + height))
+                    {
+                        goto Label_00E4;
+                    }
+                }
+                Rect rect4 = this.m_RowRects[i];
+                System.Boolean ReflectorVariable0 = true;
+                goto Label_00E5;
+            Label_00E4:
+                ReflectorVariable0 = false;
+            Label_00E5:
+                if (ReflectorVariable0 ? ((rect4.yMax > y) && (this.m_RowRects[i].yMax < (y + height))) : true)
+                {
+                    if (num4 == -1)
+                    {
+                        num4 = i;
+                    }
+                    num5 = i;
+                }
+            }
+            if ((num4 != -1) && (num5 != -1))
+            {
+                firstRowVisible = num4;
+                lastRowVisible = num5;
+            }
+            else
+            {
+                firstRowVisible = 0;
+                lastRowVisible = rowCount - 1;
+            }
+        }
 
-		public Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
-		{
-			return default(Rect);
-		}
+        public virtual float GetFoldoutIndent(TreeViewItem item)
+        {
+            if (this.m_TreeView.isSearching)
+            {
+                return this.m_BaseIndent;
+            }
+            return (this.m_BaseIndent + (item.depth * this.indentWidth));
+        }
 
-		public Rect GetRectForFraming(int row)
-		{
-			return this.GetRowRect(row, 1f);
-		}
+        public int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
+        {
+            Debug.LogError("GetNumRowsOnPageUpDown: Not impemented");
+            return (int) Mathf.Floor(heightOfTreeView / 30f);
+        }
 
-		public abstract void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused);
+        public Rect GetRectForFraming(int row)
+        {
+            return this.GetRowRect(row, 1f);
+        }
 
-		protected virtual float AddSpaceBefore(TreeViewItem item)
-		{
-			return 0f;
-		}
+        public Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
+        {
+            return new Rect();
+        }
 
-		protected virtual Vector2 GetSizeOfRow(TreeViewItem item)
-		{
-			return new Vector2(this.m_TreeView.GetTotalRect().width, 16f);
-		}
+        public Rect GetRowRect(int row, float rowWidth)
+        {
+            if (this.m_RowRects.Count == 0)
+            {
+                Debug.LogError("Ensure precalc rects");
+                return new Rect();
+            }
+            return this.m_RowRects[row];
+        }
 
-		public void CalculateRowRects()
-		{
-			if (!this.m_TreeView.isSearching)
-			{
-				IList<TreeViewItem> rows = this.m_TreeView.data.GetRows();
-				this.m_RowRects = new List<Rect>(rows.Count);
-				float num = 2f;
-				this.m_MaxWidthOfRows = 1f;
-				for (int i = 0; i < rows.Count; i++)
-				{
-					TreeViewItem item = rows[i];
-					float num2 = this.AddSpaceBefore(item);
-					num += num2;
-					Vector2 sizeOfRow = this.GetSizeOfRow(item);
-					this.m_RowRects.Add(new Rect(0f, num, sizeOfRow.x, sizeOfRow.y));
-					num += sizeOfRow.y;
-					if (sizeOfRow.x > this.m_MaxWidthOfRows)
-					{
-						this.m_MaxWidthOfRows = sizeOfRow.x;
-					}
-				}
-			}
-		}
+        protected virtual Vector2 GetSizeOfRow(TreeViewItem item)
+        {
+            return new Vector2(this.m_TreeView.GetTotalRect().width, 16f);
+        }
 
-		public Vector2 GetTotalSize()
-		{
-			Vector2 result;
-			if (this.m_RowRects.Count == 0)
-			{
-				result = new Vector2(0f, 0f);
-			}
-			else
-			{
-				result = new Vector2(this.m_MaxWidthOfRows, this.m_RowRects[this.m_RowRects.Count - 1].yMax);
-			}
-			return result;
-		}
+        public Vector2 GetTotalSize()
+        {
+            if (this.m_RowRects.Count == 0)
+            {
+                return new Vector2(0f, 0f);
+            }
+            Rect rect = this.m_RowRects[this.m_RowRects.Count - 1];
+            return new Vector2(this.m_MaxWidthOfRows, rect.yMax);
+        }
 
-		public int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
-		{
-			Debug.LogError("GetNumRowsOnPageUpDown: Not impemented");
-			return (int)Mathf.Floor(heightOfTreeView / 30f);
-		}
+        public virtual void OnInitialize()
+        {
+        }
 
-		public void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
-		{
-			float y = this.m_TreeView.state.scrollPos.y;
-			float height = this.m_TreeView.GetTotalRect().height;
-			int rowCount = this.m_TreeView.data.rowCount;
-			if (rowCount != this.m_RowRects.Count)
-			{
-				Debug.LogError("Mismatch in state: rows vs cached rects. Did you remember to hook up: dataSource.onVisibleRowsChanged += gui.CalculateRowRects ?");
-				this.CalculateRowRects();
-			}
-			int num = -1;
-			int num2 = -1;
-			for (int i = 0; i < this.m_RowRects.Count; i++)
-			{
-				bool flag = (this.m_RowRects[i].y > y && this.m_RowRects[i].y < y + height) || (this.m_RowRects[i].yMax > y && this.m_RowRects[i].yMax < y + height);
-				if (flag)
-				{
-					if (num == -1)
-					{
-						num = i;
-					}
-					num2 = i;
-				}
-			}
-			if (num != -1 && num2 != -1)
-			{
-				firstRowVisible = num;
-				lastRowVisible = num2;
-			}
-			else
-			{
-				firstRowVisible = 0;
-				lastRowVisible = rowCount - 1;
-			}
-		}
+        public abstract void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused);
 
-		public virtual void BeginRowGUI()
-		{
-		}
+        public float bottomRowMargin { virtual get; private set; }
 
-		public virtual void EndRowGUI()
-		{
-		}
+        public virtual float halfDropBetweenHeight
+        {
+            get
+            {
+                return 8f;
+            }
+        }
 
-		public virtual void BeginPingItem(TreeViewItem item, float topPixelOfRow, float availableWidth)
-		{
-			throw new NotImplementedException();
-		}
+        protected float indentWidth
+        {
+            get
+            {
+                return this.m_IndentWidth;
+            }
+        }
 
-		public virtual void EndPingItem()
-		{
-			throw new NotImplementedException();
-		}
-
-		public virtual bool BeginRename(TreeViewItem item, float delay)
-		{
-			throw new NotImplementedException();
-		}
-
-		public virtual void EndRename()
-		{
-			throw new NotImplementedException();
-		}
-
-		public virtual float GetFoldoutIndent(TreeViewItem item)
-		{
-			float result;
-			if (this.m_TreeView.isSearching)
-			{
-				result = this.m_BaseIndent;
-			}
-			else
-			{
-				result = this.m_BaseIndent + (float)item.depth * this.indentWidth;
-			}
-			return result;
-		}
-
-		public virtual float GetContentIndent(TreeViewItem item)
-		{
-			return this.GetFoldoutIndent(item) + this.m_FoldoutWidth;
-		}
-	}
+        public float topRowMargin { virtual get; private set; }
+    }
 }
+

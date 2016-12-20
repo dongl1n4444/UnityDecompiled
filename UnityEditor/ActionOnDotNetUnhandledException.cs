@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum ActionOnDotNetUnhandledException
-	{
-		SilentExit,
-		Crash
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The behavior in case of unhandled .NET exception.</para>
+    /// </summary>
+    public enum ActionOnDotNetUnhandledException
+    {
+        SilentExit,
+        Crash
+    }
 }
+

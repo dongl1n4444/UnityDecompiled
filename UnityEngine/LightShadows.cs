@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum LightShadows
-	{
-		None,
-		Hard,
-		Soft
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Shadow casting options for a Light.</para>
+    /// </summary>
+    public enum LightShadows
+    {
+        None,
+        Hard,
+        Soft
+    }
 }
+

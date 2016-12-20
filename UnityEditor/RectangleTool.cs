@@ -1,273 +1,239 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class RectangleTool
-	{
-		internal enum ToolCoord
-		{
-			BottomLeft,
-			Bottom,
-			BottomRight,
-			Left,
-			Center,
-			Right,
-			TopLeft,
-			Top,
-			TopRight
-		}
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		internal class Styles
-		{
-			public GUIStyle rectangleToolHBarLeft = "RectangleToolHBarLeft";
+    internal class RectangleTool
+    {
+        private bool m_RippleTimeClutch;
+        private Styles m_Styles;
+        private TimeArea m_TimeArea;
 
-			public GUIStyle rectangleToolHBarRight = "RectangleToolHBarRight";
+        public bool CalculateScaleTimeMatrix(float fromTime, float toTime, float offsetTime, float pivotTime, float frameRate, out Matrix4x4 transform, out bool flipKeys)
+        {
+            transform = Matrix4x4.identity;
+            flipKeys = false;
+            float num = !Mathf.Approximately(frameRate, 0f) ? (1f / frameRate) : 0.001f;
+            float f = toTime - pivotTime;
+            float num3 = fromTime - pivotTime;
+            if ((Mathf.Abs(f) - offsetTime) < 0f)
+            {
+                return false;
+            }
+            f = (Mathf.Sign(f) != Mathf.Sign(num3)) ? (f + offsetTime) : (f - offsetTime);
+            if (Mathf.Approximately(num3, 0f))
+            {
+                transform.SetTRS(new Vector3(f, 0f, 0f), Quaternion.identity, Vector3.one);
+                flipKeys = false;
+                return true;
+            }
+            if (Mathf.Abs(f) < num)
+            {
+                f = (f >= 0f) ? num : -num;
+            }
+            float x = f / num3;
+            transform.SetTRS(new Vector3(pivotTime, 0f, 0f), Quaternion.identity, Vector3.one);
+            transform *= Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(x, 1f, 1f));
+            transform *= Matrix4x4.TRS(new Vector3(-pivotTime, 0f), Quaternion.identity, Vector3.one);
+            flipKeys = x < 0f;
+            return true;
+        }
 
-			public GUIStyle rectangleToolHBar = "RectangleToolHBar";
+        public bool CalculateScaleValueMatrix(float fromValue, float toValue, float offsetValue, float pivotValue, out Matrix4x4 transform, out bool flipKeys)
+        {
+            transform = Matrix4x4.identity;
+            flipKeys = false;
+            float num = 0.001f;
+            float f = toValue - pivotValue;
+            float num3 = fromValue - pivotValue;
+            if ((Mathf.Abs(f) - offsetValue) < 0f)
+            {
+                return false;
+            }
+            f = (Mathf.Sign(f) != Mathf.Sign(num3)) ? (f + offsetValue) : (f - offsetValue);
+            if (Mathf.Approximately(num3, 0f))
+            {
+                transform.SetTRS(new Vector3(0f, f, 0f), Quaternion.identity, Vector3.one);
+                flipKeys = false;
+                return true;
+            }
+            if (Mathf.Abs(f) < num)
+            {
+                f = (f >= 0f) ? num : -num;
+            }
+            float y = f / num3;
+            transform.SetTRS(new Vector3(0f, pivotValue, 0f), Quaternion.identity, Vector3.one);
+            transform *= Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1f, y, 1f));
+            transform *= Matrix4x4.TRS(new Vector3(0f, -pivotValue, 0f), Quaternion.identity, Vector3.one);
+            flipKeys = y < 0f;
+            return true;
+        }
 
-			public GUIStyle rectangleToolVBarBottom = "RectangleToolVBarBottom";
+        public void HandleClutchKeys()
+        {
+            Event current = Event.current;
+            switch (current.type)
+            {
+                case EventType.KeyDown:
+                    if (current.keyCode == KeyCode.R)
+                    {
+                        this.m_RippleTimeClutch = true;
+                    }
+                    break;
 
-			public GUIStyle rectangleToolVBarTop = "RectangleToolVBarTop";
+                case EventType.KeyUp:
+                    if (current.keyCode == KeyCode.R)
+                    {
+                        this.m_RippleTimeClutch = false;
+                    }
+                    break;
+            }
+        }
 
-			public GUIStyle rectangleToolVBar = "RectangleToolVBar";
+        public virtual void Initialize(TimeArea timeArea)
+        {
+            this.m_TimeArea = timeArea;
+            if (this.m_Styles == null)
+            {
+                this.m_Styles = new Styles();
+            }
+        }
 
-			public GUIStyle rectangleToolSelection = "RectangleToolSelection";
+        public float PixelToTime(float pixelTime, float frameRate)
+        {
+            float width = this.contentRect.width;
+            float num2 = this.m_TimeArea.shownArea.xMax - this.m_TimeArea.shownArea.xMin;
+            float xMin = this.m_TimeArea.shownArea.xMin;
+            float num4 = ((pixelTime / width) * num2) + xMin;
+            if (frameRate != 0f)
+            {
+                num4 = Mathf.Round(num4 * frameRate) / frameRate;
+            }
+            return num4;
+        }
 
-			public GUIStyle rectangleToolHighlight = "RectangleToolHighlight";
+        public float PixelToValue(float pixelValue)
+        {
+            float height = this.contentRect.height;
+            float num2 = this.m_TimeArea.m_Scale.y * -1f;
+            float num3 = (this.m_TimeArea.shownArea.yMin * num2) * -1f;
+            return (((height - pixelValue) - num3) / num2);
+        }
 
-			public GUIStyle rectangleToolScaleLeft = "RectangleToolScaleLeft";
+        public float TimeToPixel(float time)
+        {
+            float width = this.contentRect.width;
+            float num2 = this.m_TimeArea.shownArea.xMax - this.m_TimeArea.shownArea.xMin;
+            float xMin = this.m_TimeArea.shownArea.xMin;
+            return (((time - xMin) * width) / num2);
+        }
 
-			public GUIStyle rectangleToolScaleRight = "RectangleToolScaleRight";
+        public Vector2 ToolCoordToPosition(ToolCoord coord, Bounds bounds)
+        {
+            switch (coord)
+            {
+                case ToolCoord.BottomLeft:
+                    return bounds.min;
 
-			public GUIStyle rectangleToolScaleBottom = "RectangleToolScaleBottom";
+                case ToolCoord.Bottom:
+                    return new Vector2(bounds.center.x, bounds.min.y);
 
-			public GUIStyle rectangleToolScaleTop = "RectangleToolScaleTop";
+                case ToolCoord.BottomRight:
+                    return new Vector2(bounds.max.x, bounds.min.y);
 
-			public GUIStyle dopesheetScaleLeft = "DopesheetScaleLeft";
+                case ToolCoord.Left:
+                    return new Vector2(bounds.min.x, bounds.center.y);
 
-			public GUIStyle dopesheetScaleRight = "DopesheetScaleRight";
+                case ToolCoord.Center:
+                    return bounds.center;
 
-			public GUIStyle dragLabel = "ProfilerBadge";
-		}
+                case ToolCoord.Right:
+                    return new Vector2(bounds.max.x, bounds.center.y);
 
-		private TimeArea m_TimeArea;
+                case ToolCoord.TopLeft:
+                    return new Vector2(bounds.min.x, bounds.max.y);
 
-		private RectangleTool.Styles m_Styles;
+                case ToolCoord.Top:
+                    return new Vector2(bounds.center.x, bounds.max.y);
 
-		private bool m_RippleTimeClutch;
+                case ToolCoord.TopRight:
+                    return bounds.max;
+            }
+            return Vector2.zero;
+        }
 
-		public TimeArea timeArea
-		{
-			get
-			{
-				return this.m_TimeArea;
-			}
-		}
+        public float ValueToPixel(float value)
+        {
+            float height = this.contentRect.height;
+            float num2 = this.m_TimeArea.m_Scale.y * -1f;
+            float num3 = (this.m_TimeArea.shownArea.yMin * num2) * -1f;
+            return (height - ((value * num2) + num3));
+        }
 
-		public RectangleTool.Styles styles
-		{
-			get
-			{
-				return this.m_Styles;
-			}
-		}
+        public Rect contentRect
+        {
+            get
+            {
+                return new Rect(0f, 0f, this.m_TimeArea.drawRect.width, this.m_TimeArea.drawRect.height);
+            }
+        }
 
-		public bool rippleTimeClutch
-		{
-			get
-			{
-				return this.m_RippleTimeClutch;
-			}
-		}
+        public bool rippleTimeClutch
+        {
+            get
+            {
+                return this.m_RippleTimeClutch;
+            }
+        }
 
-		public Rect contentRect
-		{
-			get
-			{
-				return new Rect(0f, 0f, this.m_TimeArea.drawRect.width, this.m_TimeArea.drawRect.height);
-			}
-		}
+        public Styles styles
+        {
+            get
+            {
+                return this.m_Styles;
+            }
+        }
 
-		public virtual void Initialize(TimeArea timeArea)
-		{
-			this.m_TimeArea = timeArea;
-			if (this.m_Styles == null)
-			{
-				this.m_Styles = new RectangleTool.Styles();
-			}
-		}
+        public TimeArea timeArea
+        {
+            get
+            {
+                return this.m_TimeArea;
+            }
+        }
 
-		public Vector2 ToolCoordToPosition(RectangleTool.ToolCoord coord, Bounds bounds)
-		{
-			Vector2 result;
-			switch (coord)
-			{
-			case RectangleTool.ToolCoord.BottomLeft:
-				result = bounds.min;
-				break;
-			case RectangleTool.ToolCoord.Bottom:
-				result = new Vector2(bounds.center.x, bounds.min.y);
-				break;
-			case RectangleTool.ToolCoord.BottomRight:
-				result = new Vector2(bounds.max.x, bounds.min.y);
-				break;
-			case RectangleTool.ToolCoord.Left:
-				result = new Vector2(bounds.min.x, bounds.center.y);
-				break;
-			case RectangleTool.ToolCoord.Center:
-				result = bounds.center;
-				break;
-			case RectangleTool.ToolCoord.Right:
-				result = new Vector2(bounds.max.x, bounds.center.y);
-				break;
-			case RectangleTool.ToolCoord.TopLeft:
-				result = new Vector2(bounds.min.x, bounds.max.y);
-				break;
-			case RectangleTool.ToolCoord.Top:
-				result = new Vector2(bounds.center.x, bounds.max.y);
-				break;
-			case RectangleTool.ToolCoord.TopRight:
-				result = bounds.max;
-				break;
-			default:
-				result = Vector2.zero;
-				break;
-			}
-			return result;
-		}
+        internal class Styles
+        {
+            public GUIStyle dopesheetScaleLeft = "DopesheetScaleLeft";
+            public GUIStyle dopesheetScaleRight = "DopesheetScaleRight";
+            public GUIStyle dragLabel = "ProfilerBadge";
+            public GUIStyle rectangleToolHBar = "RectangleToolHBar";
+            public GUIStyle rectangleToolHBarLeft = "RectangleToolHBarLeft";
+            public GUIStyle rectangleToolHBarRight = "RectangleToolHBarRight";
+            public GUIStyle rectangleToolHighlight = "RectangleToolHighlight";
+            public GUIStyle rectangleToolScaleBottom = "RectangleToolScaleBottom";
+            public GUIStyle rectangleToolScaleLeft = "RectangleToolScaleLeft";
+            public GUIStyle rectangleToolScaleRight = "RectangleToolScaleRight";
+            public GUIStyle rectangleToolScaleTop = "RectangleToolScaleTop";
+            public GUIStyle rectangleToolSelection = "RectangleToolSelection";
+            public GUIStyle rectangleToolVBar = "RectangleToolVBar";
+            public GUIStyle rectangleToolVBarBottom = "RectangleToolVBarBottom";
+            public GUIStyle rectangleToolVBarTop = "RectangleToolVBarTop";
+        }
 
-		public bool CalculateScaleTimeMatrix(float fromTime, float toTime, float offsetTime, float pivotTime, float frameRate, out Matrix4x4 transform, out bool flipKeys)
-		{
-			transform = Matrix4x4.identity;
-			flipKeys = false;
-			float num = (!Mathf.Approximately(frameRate, 0f)) ? (1f / frameRate) : 0.001f;
-			float num2 = toTime - pivotTime;
-			float num3 = fromTime - pivotTime;
-			bool result;
-			if (Mathf.Abs(num2) - offsetTime < 0f)
-			{
-				result = false;
-			}
-			else
-			{
-				num2 = ((Mathf.Sign(num2) != Mathf.Sign(num3)) ? (num2 + offsetTime) : (num2 - offsetTime));
-				if (Mathf.Approximately(num3, 0f))
-				{
-					transform.SetTRS(new Vector3(num2, 0f, 0f), Quaternion.identity, Vector3.one);
-					flipKeys = false;
-					result = true;
-				}
-				else
-				{
-					if (Mathf.Abs(num2) < num)
-					{
-						num2 = ((num2 >= 0f) ? num : (-num));
-					}
-					float num4 = num2 / num3;
-					transform.SetTRS(new Vector3(pivotTime, 0f, 0f), Quaternion.identity, Vector3.one);
-					transform *= Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(num4, 1f, 1f));
-					transform *= Matrix4x4.TRS(new Vector3(-pivotTime, 0f), Quaternion.identity, Vector3.one);
-					flipKeys = (num4 < 0f);
-					result = true;
-				}
-			}
-			return result;
-		}
-
-		public bool CalculateScaleValueMatrix(float fromValue, float toValue, float offsetValue, float pivotValue, out Matrix4x4 transform, out bool flipKeys)
-		{
-			transform = Matrix4x4.identity;
-			flipKeys = false;
-			float num = 0.001f;
-			float num2 = toValue - pivotValue;
-			float num3 = fromValue - pivotValue;
-			bool result;
-			if (Mathf.Abs(num2) - offsetValue < 0f)
-			{
-				result = false;
-			}
-			else
-			{
-				num2 = ((Mathf.Sign(num2) != Mathf.Sign(num3)) ? (num2 + offsetValue) : (num2 - offsetValue));
-				if (Mathf.Approximately(num3, 0f))
-				{
-					transform.SetTRS(new Vector3(0f, num2, 0f), Quaternion.identity, Vector3.one);
-					flipKeys = false;
-					result = true;
-				}
-				else
-				{
-					if (Mathf.Abs(num2) < num)
-					{
-						num2 = ((num2 >= 0f) ? num : (-num));
-					}
-					float num4 = num2 / num3;
-					transform.SetTRS(new Vector3(0f, pivotValue, 0f), Quaternion.identity, Vector3.one);
-					transform *= Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(1f, num4, 1f));
-					transform *= Matrix4x4.TRS(new Vector3(0f, -pivotValue, 0f), Quaternion.identity, Vector3.one);
-					flipKeys = (num4 < 0f);
-					result = true;
-				}
-			}
-			return result;
-		}
-
-		public float PixelToTime(float pixelTime, float frameRate)
-		{
-			float width = this.contentRect.width;
-			float num = this.m_TimeArea.shownArea.xMax - this.m_TimeArea.shownArea.xMin;
-			float xMin = this.m_TimeArea.shownArea.xMin;
-			float num2 = pixelTime / width * num + xMin;
-			if (frameRate != 0f)
-			{
-				num2 = Mathf.Round(num2 * frameRate) / frameRate;
-			}
-			return num2;
-		}
-
-		public float PixelToValue(float pixelValue)
-		{
-			float height = this.contentRect.height;
-			float num = this.m_TimeArea.m_Scale.y * -1f;
-			float num2 = this.m_TimeArea.shownArea.yMin * num * -1f;
-			return (height - pixelValue - num2) / num;
-		}
-
-		public float TimeToPixel(float time)
-		{
-			float width = this.contentRect.width;
-			float num = this.m_TimeArea.shownArea.xMax - this.m_TimeArea.shownArea.xMin;
-			float xMin = this.m_TimeArea.shownArea.xMin;
-			return (time - xMin) * width / num;
-		}
-
-		public float ValueToPixel(float value)
-		{
-			float height = this.contentRect.height;
-			float num = this.m_TimeArea.m_Scale.y * -1f;
-			float num2 = this.m_TimeArea.shownArea.yMin * num * -1f;
-			return height - (value * num + num2);
-		}
-
-		public void HandleClutchKeys()
-		{
-			Event current = Event.current;
-			EventType type = current.type;
-			if (type != EventType.KeyDown)
-			{
-				if (type == EventType.KeyUp)
-				{
-					if (current.keyCode == KeyCode.R)
-					{
-						this.m_RippleTimeClutch = false;
-					}
-				}
-			}
-			else if (current.keyCode == KeyCode.R)
-			{
-				this.m_RippleTimeClutch = true;
-			}
-		}
-	}
+        internal enum ToolCoord
+        {
+            BottomLeft,
+            Bottom,
+            BottomRight,
+            Left,
+            Center,
+            Right,
+            TopLeft,
+            Top,
+            TopRight
+        }
+    }
 }
+

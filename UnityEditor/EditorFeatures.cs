@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	internal enum EditorFeatures
-	{
-		None = 0,
-		PreviewGUI = 1,
-		OnSceneDrag = 4
-	}
+    using System;
+
+    [Flags]
+    internal enum EditorFeatures
+    {
+        None = 0,
+        OnSceneDrag = 4,
+        PreviewGUI = 1
+    }
 }
+

@@ -1,20 +1,22 @@
-using System;
-using UnityEditor.Audio;
-using UnityEditor.IMGUI.Controls;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AudioMixerTreeViewNode : TreeViewItem
-	{
-		public AudioMixerGroupController group
-		{
-			get;
-			set;
-		}
+    using System;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using UnityEditor.Audio;
+    using UnityEditor.IMGUI.Controls;
 
-		public AudioMixerTreeViewNode(int instanceID, int depth, TreeViewItem parent, string displayName, AudioMixerGroupController group) : base(instanceID, depth, parent, displayName)
-		{
-			this.group = group;
-		}
-	}
+    internal class AudioMixerTreeViewNode : TreeViewItem
+    {
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AudioMixerGroupController <group>k__BackingField;
+
+        public AudioMixerTreeViewNode(int instanceID, int depth, TreeViewItem parent, string displayName, AudioMixerGroupController group) : base(instanceID, depth, parent, displayName)
+        {
+            this.group = group;
+        }
+
+        public AudioMixerGroupController group { get; set; }
+    }
 }
+

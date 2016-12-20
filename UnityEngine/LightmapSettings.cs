@@ -1,56 +1,45 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class LightmapSettings : Object
-	{
-		public static extern LightmapData[] lightmaps
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		[Obsolete("Use lightmapsMode property")]
-		public static extern LightmapsModeLegacy lightmapsModeLegacy
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    /// <summary>
+    /// <para>Stores lightmaps of the scene.</para>
+    /// </summary>
+    public sealed class LightmapSettings : UnityEngine.Object
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void Reset();
 
-		public static extern LightmapsMode lightmapsMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [Obsolete("bakedColorSpace is no longer valid. Use QualitySettings.desiredColorSpace.", false)]
+        public static ColorSpace bakedColorSpace
+        {
+            get
+            {
+                return QualitySettings.desiredColorSpace;
+            }
+            set
+            {
+            }
+        }
 
-		[Obsolete("bakedColorSpace is no longer valid. Use QualitySettings.desiredColorSpace.", false)]
-		public static ColorSpace bakedColorSpace
-		{
-			get
-			{
-				return QualitySettings.desiredColorSpace;
-			}
-			set
-			{
-			}
-		}
+        /// <summary>
+        /// <para>Lightmap array.</para>
+        /// </summary>
+        public static LightmapData[] lightmaps { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static extern LightProbes lightProbes
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Non-directional, Directional or Directional Specular lightmaps rendering mode.</para>
+        /// </summary>
+        public static LightmapsMode lightmapsMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void Reset();
-	}
+        [Obsolete("Use lightmapsMode property")]
+        public static LightmapsModeLegacy lightmapsModeLegacy { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+
+        /// <summary>
+        /// <para>Holds all data needed by the light probes.</para>
+        /// </summary>
+        public static LightProbes lightProbes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

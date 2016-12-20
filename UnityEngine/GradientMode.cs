@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum GradientMode
-	{
-		Blend,
-		Fixed
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Select how gradients will be evaluated.</para>
+    /// </summary>
+    public enum GradientMode
+    {
+        Blend,
+        Fixed
+    }
 }
+

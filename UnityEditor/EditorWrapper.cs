@@ -1,133 +1,122 @@
-using System;
-using System.Reflection;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class EditorWrapper : IDisposable
-	{
-		public delegate void VoidDelegate(SceneView sceneView);
+    using System;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		private Editor editor;
+    internal class EditorWrapper : IDisposable
+    {
+        private Editor editor;
+        public VoidDelegate OnSceneDrag;
 
-		public EditorWrapper.VoidDelegate OnSceneDrag;
+        private EditorWrapper()
+        {
+        }
 
-		public string name
-		{
-			get
-			{
-				return this.editor.target.name;
-			}
-		}
+        private void DefaultOnSceneDrag(SceneView sceneView)
+        {
+        }
 
-		private EditorWrapper()
-		{
-		}
+        public void Dispose()
+        {
+            if (this.editor != null)
+            {
+                this.OnSceneDrag = null;
+                Object.DestroyImmediate(this.editor);
+                this.editor = null;
+            }
+            GC.SuppressFinalize(this);
+        }
 
-		public bool HasPreviewGUI()
-		{
-			return this.editor.HasPreviewGUI();
-		}
+        ~EditorWrapper()
+        {
+            Debug.LogError("Failed to dispose EditorWrapper.");
+        }
 
-		public void OnPreviewSettings()
-		{
-			this.editor.OnPreviewSettings();
-		}
+        public string GetInfoString()
+        {
+            return this.editor.GetInfoString();
+        }
 
-		public void OnPreviewGUI(Rect position, GUIStyle background)
-		{
-			this.editor.OnPreviewGUI(position, background);
-		}
+        public bool HasPreviewGUI()
+        {
+            return this.editor.HasPreviewGUI();
+        }
 
-		public void OnInteractivePreviewGUI(Rect r, GUIStyle background)
-		{
-			if (this.editor != null)
-			{
-				this.editor.OnInteractivePreviewGUI(r, background);
-			}
-		}
+        private bool Init(Object obj, EditorFeatures requirements)
+        {
+            this.editor = Editor.CreateEditor(obj);
+            if (this.editor == null)
+            {
+                return false;
+            }
+            if (((requirements & EditorFeatures.PreviewGUI) > EditorFeatures.None) && !this.editor.HasPreviewGUI())
+            {
+                return false;
+            }
+            MethodInfo method = this.editor.GetType().GetMethod("OnSceneDrag", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (method != null)
+            {
+                this.OnSceneDrag = (VoidDelegate) Delegate.CreateDelegate(typeof(VoidDelegate), this.editor, method);
+            }
+            else
+            {
+                if ((requirements & EditorFeatures.OnSceneDrag) > EditorFeatures.None)
+                {
+                    return false;
+                }
+                this.OnSceneDrag = new VoidDelegate(this.DefaultOnSceneDrag);
+            }
+            return true;
+        }
 
-		internal void OnAssetStoreInspectorGUI()
-		{
-			if (this.editor != null)
-			{
-				this.editor.OnAssetStoreInspectorGUI();
-			}
-		}
+        public static EditorWrapper Make(Object obj, EditorFeatures requirements)
+        {
+            EditorWrapper wrapper = new EditorWrapper();
+            if (wrapper.Init(obj, requirements))
+            {
+                return wrapper;
+            }
+            wrapper.Dispose();
+            return null;
+        }
 
-		public string GetInfoString()
-		{
-			return this.editor.GetInfoString();
-		}
+        internal void OnAssetStoreInspectorGUI()
+        {
+            if (this.editor != null)
+            {
+                this.editor.OnAssetStoreInspectorGUI();
+            }
+        }
 
-		public static EditorWrapper Make(UnityEngine.Object obj, EditorFeatures requirements)
-		{
-			EditorWrapper editorWrapper = new EditorWrapper();
-			EditorWrapper result;
-			if (editorWrapper.Init(obj, requirements))
-			{
-				result = editorWrapper;
-			}
-			else
-			{
-				editorWrapper.Dispose();
-				result = null;
-			}
-			return result;
-		}
+        public void OnInteractivePreviewGUI(Rect r, GUIStyle background)
+        {
+            if (this.editor != null)
+            {
+                this.editor.OnInteractivePreviewGUI(r, background);
+            }
+        }
 
-		private bool Init(UnityEngine.Object obj, EditorFeatures requirements)
-		{
-			this.editor = Editor.CreateEditor(obj);
-			bool result;
-			if (this.editor == null)
-			{
-				result = false;
-			}
-			else if ((requirements & EditorFeatures.PreviewGUI) > EditorFeatures.None && !this.editor.HasPreviewGUI())
-			{
-				result = false;
-			}
-			else
-			{
-				Type type = this.editor.GetType();
-				MethodInfo method = type.GetMethod("OnSceneDrag", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-				if (method != null)
-				{
-					this.OnSceneDrag = (EditorWrapper.VoidDelegate)Delegate.CreateDelegate(typeof(EditorWrapper.VoidDelegate), this.editor, method);
-				}
-				else
-				{
-					if ((requirements & EditorFeatures.OnSceneDrag) > EditorFeatures.None)
-					{
-						result = false;
-						return result;
-					}
-					this.OnSceneDrag = new EditorWrapper.VoidDelegate(this.DefaultOnSceneDrag);
-				}
-				result = true;
-			}
-			return result;
-		}
+        public void OnPreviewGUI(Rect position, GUIStyle background)
+        {
+            this.editor.OnPreviewGUI(position, background);
+        }
 
-		private void DefaultOnSceneDrag(SceneView sceneView)
-		{
-		}
+        public void OnPreviewSettings()
+        {
+            this.editor.OnPreviewSettings();
+        }
 
-		public void Dispose()
-		{
-			if (this.editor != null)
-			{
-				this.OnSceneDrag = null;
-				UnityEngine.Object.DestroyImmediate(this.editor);
-				this.editor = null;
-			}
-			GC.SuppressFinalize(this);
-		}
+        public string name
+        {
+            get
+            {
+                return this.editor.target.name;
+            }
+        }
 
-		~EditorWrapper()
-		{
-			Debug.LogError("Failed to dispose EditorWrapper.");
-		}
-	}
+        public delegate void VoidDelegate(SceneView sceneView);
+    }
 }
+

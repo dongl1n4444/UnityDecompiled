@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WebGLCompressionFormat
-	{
-		Brotli,
-		Gzip,
-		Disabled
-	}
+    using System;
+
+    /// <summary>
+    /// <para>An enum containing different compression types.</para>
+    /// </summary>
+    public enum WebGLCompressionFormat
+    {
+        Brotli,
+        Gzip,
+        Disabled
+    }
 }
+

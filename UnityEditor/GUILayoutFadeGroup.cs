@@ -1,21 +1,20 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class GUILayoutFadeGroup : GUILayoutGroup
-	{
-		public float fadeValue;
+    using System;
+    using UnityEngine;
 
-		public bool wasGUIEnabled;
+    internal sealed class GUILayoutFadeGroup : GUILayoutGroup
+    {
+        public float fadeValue;
+        public Color guiColor;
+        public bool wasGUIEnabled;
 
-		public Color guiColor;
-
-		public override void CalcHeight()
-		{
-			base.CalcHeight();
-			this.minHeight *= this.fadeValue;
-			this.maxHeight *= this.fadeValue;
-		}
-	}
+        public override void CalcHeight()
+        {
+            base.CalcHeight();
+            base.minHeight *= this.fadeValue;
+            base.maxHeight *= this.fadeValue;
+        }
+    }
 }
+

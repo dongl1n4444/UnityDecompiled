@@ -1,137 +1,128 @@
-using System;
-using System.Collections;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public sealed class DragAndDrop
-	{
-		private static Hashtable ms_GenericData;
+    using System;
+    using System.Collections;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		public static extern UnityEngine.Object[] objectReferences
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    /// <summary>
+    /// <para>Editor drag &amp; drop operations.</para>
+    /// </summary>
+    public sealed class DragAndDrop
+    {
+        private static Hashtable ms_GenericData;
 
-		public static extern string[] paths
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Accept a drag operation.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AcceptDrag();
+        /// <summary>
+        /// <para>Get data associated with current drag and drop operation.</para>
+        /// </summary>
+        /// <param name="type"></param>
+        public static object GetGenericData(string type)
+        {
+            if ((ms_GenericData != null) && ms_GenericData.Contains(type))
+            {
+                return ms_GenericData[type];
+            }
+            return null;
+        }
 
-		public static extern DragAndDropVisualMode visualMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        internal static bool HandleDelayedDrag(Rect position, int id, Object objectToDrag)
+        {
+            Event current = Event.current;
+            EventType typeForControl = current.GetTypeForControl(id);
+            if (typeForControl != EventType.MouseDown)
+            {
+                if ((typeForControl == EventType.MouseDrag) && (GUIUtility.hotControl == id))
+                {
+                    DragAndDropDelay stateObject = (DragAndDropDelay) GUIUtility.GetStateObject(typeof(DragAndDropDelay), id);
+                    if (stateObject.CanStartDrag())
+                    {
+                        GUIUtility.hotControl = 0;
+                        PrepareStartDrag();
+                        Object[] objArray = new Object[] { objectToDrag };
+                        objectReferences = objArray;
+                        StartDrag(ObjectNames.GetDragAndDropTitle(objectToDrag));
+                        return true;
+                    }
+                }
+            }
+            else if ((position.Contains(current.mousePosition) && (current.clickCount == 1)) && ((current.button == 0) && ((Application.platform != RuntimePlatform.OSXEditor) || !current.control)))
+            {
+                GUIUtility.hotControl = id;
+                DragAndDropDelay delay = (DragAndDropDelay) GUIUtility.GetStateObject(typeof(DragAndDropDelay), id);
+                delay.mouseDownPosition = current.mousePosition;
+                return true;
+            }
+            return false;
+        }
 
-		public static extern int activeControlID
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Clears drag &amp; drop data.</para>
+        /// </summary>
+        public static void PrepareStartDrag()
+        {
+            ms_GenericData = null;
+            PrepareStartDrag_Internal();
+        }
 
-		internal static bool HandleDelayedDrag(Rect position, int id, UnityEngine.Object objectToDrag)
-		{
-			Event current = Event.current;
-			EventType typeForControl = current.GetTypeForControl(id);
-			bool result;
-			if (typeForControl != EventType.MouseDown)
-			{
-				if (typeForControl == EventType.MouseDrag)
-				{
-					if (GUIUtility.hotControl == id)
-					{
-						DragAndDropDelay dragAndDropDelay = (DragAndDropDelay)GUIUtility.GetStateObject(typeof(DragAndDropDelay), id);
-						if (dragAndDropDelay.CanStartDrag())
-						{
-							GUIUtility.hotControl = 0;
-							DragAndDrop.PrepareStartDrag();
-							UnityEngine.Object[] objectReferences = new UnityEngine.Object[]
-							{
-								objectToDrag
-							};
-							DragAndDrop.objectReferences = objectReferences;
-							DragAndDrop.StartDrag(ObjectNames.GetDragAndDropTitle(objectToDrag));
-							result = true;
-							return result;
-						}
-					}
-				}
-			}
-			else if (position.Contains(current.mousePosition) && current.clickCount == 1)
-			{
-				if (current.button == 0 && (Application.platform != RuntimePlatform.OSXEditor || !current.control))
-				{
-					GUIUtility.hotControl = id;
-					DragAndDropDelay dragAndDropDelay2 = (DragAndDropDelay)GUIUtility.GetStateObject(typeof(DragAndDropDelay), id);
-					dragAndDropDelay2.mouseDownPosition = current.mousePosition;
-					result = true;
-					return result;
-				}
-			}
-			result = false;
-			return result;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void PrepareStartDrag_Internal();
+        /// <summary>
+        /// <para>Set data associated with current drag and drop operation.</para>
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="data"></param>
+        public static void SetGenericData(string type, object data)
+        {
+            if (ms_GenericData == null)
+            {
+                ms_GenericData = new Hashtable();
+            }
+            ms_GenericData[type] = data;
+        }
 
-		public static void PrepareStartDrag()
-		{
-			DragAndDrop.ms_GenericData = null;
-			DragAndDrop.PrepareStartDrag_Internal();
-		}
+        /// <summary>
+        /// <para>Start a drag operation.</para>
+        /// </summary>
+        /// <param name="title"></param>
+        public static void StartDrag(string title)
+        {
+            if ((Event.current.type == EventType.MouseDown) || (Event.current.type == EventType.MouseDrag))
+            {
+                StartDrag_Internal(title);
+            }
+            else
+            {
+                Debug.LogError("Drags can only be started from MouseDown or MouseDrag events");
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void PrepareStartDrag_Internal();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void StartDrag_Internal(string title);
 
-		public static void StartDrag(string title)
-		{
-			if (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag)
-			{
-				DragAndDrop.StartDrag_Internal(title);
-			}
-			else
-			{
-				Debug.LogError("Drags can only be started from MouseDown or MouseDrag events");
-			}
-		}
+        /// <summary>
+        /// <para>Get or set ID of currently active drag and drop control.</para>
+        /// </summary>
+        public static int activeControlID { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void StartDrag_Internal(string title);
+        /// <summary>
+        /// <para>References to Object|objects being dragged.</para>
+        /// </summary>
+        public static Object[] objectReferences { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void AcceptDrag();
+        /// <summary>
+        /// <para>The file names being dragged.</para>
+        /// </summary>
+        public static string[] paths { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static object GetGenericData(string type)
-		{
-			object result;
-			if (DragAndDrop.ms_GenericData != null && DragAndDrop.ms_GenericData.Contains(type))
-			{
-				result = DragAndDrop.ms_GenericData[type];
-			}
-			else
-			{
-				result = null;
-			}
-			return result;
-		}
-
-		public static void SetGenericData(string type, object data)
-		{
-			if (DragAndDrop.ms_GenericData == null)
-			{
-				DragAndDrop.ms_GenericData = new Hashtable();
-			}
-			DragAndDrop.ms_GenericData[type] = data;
-		}
-	}
+        /// <summary>
+        /// <para>The visual indication of the drag.</para>
+        /// </summary>
+        public static DragAndDropVisualMode visualMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

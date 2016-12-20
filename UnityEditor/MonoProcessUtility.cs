@@ -1,113 +1,83 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class MonoProcessUtility
-	{
-		public static string ProcessToString(Process process)
-		{
-			return string.Concat(new string[]
-			{
-				process.StartInfo.FileName,
-				" ",
-				process.StartInfo.Arguments,
-				" current dir : ",
-				process.StartInfo.WorkingDirectory,
-				"\n"
-			});
-		}
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using UnityEngine;
 
-		public static void RunMonoProcess(Process process, string name, string resultingFile)
-		{
-			MonoProcessRunner monoProcessRunner = new MonoProcessRunner();
-			bool flag = monoProcessRunner.Run(process);
-			if (process.ExitCode != 0 || !File.Exists(resultingFile))
-			{
-				string text = string.Concat(new object[]
-				{
-					"Failed ",
-					name,
-					": ",
-					MonoProcessUtility.ProcessToString(process),
-					" result file exists: ",
-					File.Exists(resultingFile),
-					". Timed out: ",
-					!flag
-				});
-				text += "\n\n";
-				string text2 = text;
-				text = string.Concat(new object[]
-				{
-					text2,
-					"stdout:\n",
-					monoProcessRunner.Output,
-					"\n"
-				});
-				text2 = text;
-				text = string.Concat(new object[]
-				{
-					text2,
-					"stderr:\n",
-					monoProcessRunner.Error,
-					"\n"
-				});
-				Console.WriteLine(text);
-				throw new UnityException(text);
-			}
-		}
+    internal class MonoProcessUtility
+    {
+        public static string GetMonoExec(BuildTarget buildTarget)
+        {
+            string monoBinDirectory = BuildPipeline.GetMonoBinDirectory(buildTarget);
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                return Path.Combine(monoBinDirectory, "mono.exe");
+            }
+            return Path.Combine(monoBinDirectory, "mono");
+        }
 
-		private static BuildTarget GetMonoExecTarget(BuildTarget buildTarget)
-		{
-			BuildTarget result = buildTarget;
-			switch (buildTarget)
-			{
-			case BuildTarget.PSP2:
-			case BuildTarget.PS4:
-			case BuildTarget.XboxOne:
-			case BuildTarget.WiiU:
-				result = BuildTarget.StandaloneWindows64;
-				break;
-			}
-			return result;
-		}
+        private static BuildTarget GetMonoExecTarget(BuildTarget buildTarget)
+        {
+            BuildTarget target = buildTarget;
+            switch (buildTarget)
+            {
+                case BuildTarget.PSP2:
+                case BuildTarget.PS4:
+                case BuildTarget.XboxOne:
+                case BuildTarget.WiiU:
+                    return BuildTarget.StandaloneWindows64;
 
-		public static string GetMonoExec(BuildTarget buildTarget)
-		{
-			string monoBinDirectory = BuildPipeline.GetMonoBinDirectory(buildTarget);
-			string result;
-			if (Application.platform == RuntimePlatform.WindowsEditor)
-			{
-				result = Path.Combine(monoBinDirectory, "mono.exe");
-			}
-			else
-			{
-				result = Path.Combine(monoBinDirectory, "mono");
-			}
-			return result;
-		}
+                case BuildTarget.PSM:
+                case BuildTarget.SamsungTV:
+                case BuildTarget.N3DS:
+                    return target;
+            }
+            return target;
+        }
 
-		public static string GetMonoPath(BuildTarget buildTarget)
-		{
-			string monoLibDirectory = BuildPipeline.GetMonoLibDirectory(buildTarget);
-			return monoLibDirectory + Path.PathSeparator + ".";
-		}
+        public static string GetMonoPath(BuildTarget buildTarget)
+        {
+            return (BuildPipeline.GetMonoLibDirectory(buildTarget) + Path.PathSeparator + ".");
+        }
 
-		public static Process PrepareMonoProcess(BuildTarget target, string workDir)
-		{
-			BuildTarget monoExecTarget = MonoProcessUtility.GetMonoExecTarget(target);
-			Process process = new Process();
-			process.StartInfo.FileName = MonoProcessUtility.GetMonoExec(monoExecTarget);
-			process.StartInfo.EnvironmentVariables["_WAPI_PROCESS_HANDLE_OFFSET"] = "5";
-			process.StartInfo.EnvironmentVariables["MONO_PATH"] = MonoProcessUtility.GetMonoPath(monoExecTarget);
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardError = true;
-			process.StartInfo.CreateNoWindow = true;
-			process.StartInfo.WorkingDirectory = workDir;
-			return process;
-		}
-	}
+        public static Process PrepareMonoProcess(BuildTarget target, string workDir)
+        {
+            BuildTarget monoExecTarget = GetMonoExecTarget(target);
+            Process process = new Process {
+                StartInfo = { FileName = GetMonoExec(monoExecTarget) }
+            };
+            process.StartInfo.EnvironmentVariables["_WAPI_PROCESS_HANDLE_OFFSET"] = "5";
+            process.StartInfo.EnvironmentVariables["MONO_PATH"] = GetMonoPath(monoExecTarget);
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WorkingDirectory = workDir;
+            return process;
+        }
+
+        public static string ProcessToString(Process process)
+        {
+            string[] textArray1 = new string[] { process.StartInfo.FileName, " ", process.StartInfo.Arguments, " current dir : ", process.StartInfo.WorkingDirectory, "\n" };
+            return string.Concat(textArray1);
+        }
+
+        public static void RunMonoProcess(Process process, string name, string resultingFile)
+        {
+            MonoProcessRunner runner = new MonoProcessRunner();
+            bool flag = runner.Run(process);
+            if ((process.ExitCode != 0) || !File.Exists(resultingFile))
+            {
+                string str2 = string.Concat(new object[] { "Failed ", name, ": ", ProcessToString(process), " result file exists: ", File.Exists(resultingFile), ". Timed out: ", !flag }) + "\n\n";
+                object[] objArray2 = new object[] { str2, "stdout:\n", runner.Output, "\n" };
+                str2 = string.Concat(objArray2);
+                object[] objArray3 = new object[] { str2, "stderr:\n", runner.Error, "\n" };
+                string str = string.Concat(objArray3);
+                Console.WriteLine(str);
+                throw new UnityException(str);
+            }
+        }
+    }
 }
+

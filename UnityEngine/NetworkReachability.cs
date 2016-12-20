@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum NetworkReachability
-	{
-		NotReachable,
-		ReachableViaCarrierDataNetwork,
-		ReachableViaLocalAreaNetwork
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Describes network reachability options.</para>
+    /// </summary>
+    public enum NetworkReachability
+    {
+        NotReachable,
+        ReachableViaCarrierDataNetwork,
+        ReachableViaLocalAreaNetwork
+    }
 }
+

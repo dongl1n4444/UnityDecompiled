@@ -1,40 +1,38 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ColliderEditorUtility
-	{
-		private static GUIStyle s_EditColliderButtonStyle;
+    using System;
+    using UnityEngine;
 
-		private const float k_EditColliderbuttonWidth = 22f;
+    internal class ColliderEditorUtility
+    {
+        private const float k_EditColliderbuttonHeight = 22f;
+        private const float k_EditColliderbuttonWidth = 22f;
+        private const float k_SpaceBetweenLabelAndButton = 5f;
+        private static GUIStyle s_EditColliderButtonStyle;
 
-		private const float k_EditColliderbuttonHeight = 22f;
-
-		private const float k_SpaceBetweenLabelAndButton = 5f;
-
-		public static bool InspectorEditButtonGUI(bool editing)
-		{
-			if (ColliderEditorUtility.s_EditColliderButtonStyle == null)
-			{
-				ColliderEditorUtility.s_EditColliderButtonStyle = new GUIStyle("Button");
-				ColliderEditorUtility.s_EditColliderButtonStyle.padding = new RectOffset(0, 0, 0, 0);
-				ColliderEditorUtility.s_EditColliderButtonStyle.margin = new RectOffset(0, 0, 0, 0);
-			}
-			EditorGUI.BeginChangeCheck();
-			Rect controlRect = EditorGUILayout.GetControlRect(true, 22f, new GUILayoutOption[0]);
-			Rect position = new Rect(controlRect.xMin + EditorGUIUtility.labelWidth, controlRect.yMin, 22f, 22f);
-			GUIContent content = new GUIContent("Edit Collider");
-			Vector2 vector = GUI.skin.label.CalcSize(content);
-			Rect position2 = new Rect(position.xMax + 5f, controlRect.yMin + (controlRect.height - vector.y) * 0.5f, vector.x, controlRect.height);
-			GUILayout.Space(2f);
-			bool result = GUI.Toggle(position, editing, EditorGUIUtility.IconContent("EditCollider"), ColliderEditorUtility.s_EditColliderButtonStyle);
-			GUI.Label(position2, "Edit Collider");
-			if (EditorGUI.EndChangeCheck())
-			{
-				SceneView.RepaintAll();
-			}
-			return result;
-		}
-	}
+        public static bool InspectorEditButtonGUI(bool editing)
+        {
+            if (s_EditColliderButtonStyle == null)
+            {
+                s_EditColliderButtonStyle = new GUIStyle("Button");
+                s_EditColliderButtonStyle.padding = new RectOffset(0, 0, 0, 0);
+                s_EditColliderButtonStyle.margin = new RectOffset(0, 0, 0, 0);
+            }
+            EditorGUI.BeginChangeCheck();
+            Rect rect = EditorGUILayout.GetControlRect(true, 22f, new GUILayoutOption[0]);
+            Rect position = new Rect(rect.xMin + EditorGUIUtility.labelWidth, rect.yMin, 22f, 22f);
+            GUIContent content = new GUIContent("Edit Collider");
+            Vector2 vector = GUI.skin.label.CalcSize(content);
+            Rect rect3 = new Rect(position.xMax + 5f, rect.yMin + ((rect.height - vector.y) * 0.5f), vector.x, rect.height);
+            GUILayout.Space(2f);
+            bool flag = GUI.Toggle(position, editing, EditorGUIUtility.IconContent("EditCollider"), s_EditColliderButtonStyle);
+            GUI.Label(rect3, "Edit Collider");
+            if (EditorGUI.EndChangeCheck())
+            {
+                SceneView.RepaintAll();
+            }
+            return flag;
+        }
+    }
 }
+

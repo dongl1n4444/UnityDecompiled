@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum TextureImporterMipFilter
-	{
-		BoxFilter,
-		KaiserFilter
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Mip map filter for TextureImporter.</para>
+    /// </summary>
+    public enum TextureImporterMipFilter
+    {
+        BoxFilter,
+        KaiserFilter
+    }
 }
+

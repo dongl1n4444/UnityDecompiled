@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum WrapModeFixed
-	{
-		Default,
-		Once,
-		Loop,
-		ClampForever = 8,
-		PingPong = 4
-	}
+    using System;
+
+    internal enum WrapModeFixed
+    {
+        ClampForever = 8,
+        Default = 0,
+        Loop = 2,
+        Once = 1,
+        PingPong = 4
+    }
 }
+

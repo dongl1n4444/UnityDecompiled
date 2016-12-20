@@ -1,32 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml.XPath;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class LinkXmlReader
-	{
-		private readonly List<string> _assembliesInALinkXmlFile = new List<string>();
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Xml.XPath;
 
-		public LinkXmlReader()
-		{
-			foreach (string current in AssemblyStripper.GetUserBlacklistFiles())
-			{
-				XPathDocument xPathDocument = new XPathDocument(current);
-				XPathNavigator xPathNavigator = xPathDocument.CreateNavigator();
-				xPathNavigator.MoveToFirstChild();
-				XPathNodeIterator xPathNodeIterator = xPathNavigator.SelectChildren("assembly", string.Empty);
-				while (xPathNodeIterator.MoveNext())
-				{
-					this._assembliesInALinkXmlFile.Add(xPathNodeIterator.Current.GetAttribute("fullname", string.Empty));
-				}
-			}
-		}
+    internal class LinkXmlReader
+    {
+        private readonly List<string> _assembliesInALinkXmlFile = new List<string>();
 
-		public bool IsDLLUsed(string assemblyFileName)
-		{
-			return this._assembliesInALinkXmlFile.Contains(Path.GetFileNameWithoutExtension(assemblyFileName));
-		}
-	}
+        public LinkXmlReader()
+        {
+            foreach (string str in AssemblyStripper.GetUserBlacklistFiles())
+            {
+                XPathNavigator navigator = new XPathDocument(str).CreateNavigator();
+                navigator.MoveToFirstChild();
+                XPathNodeIterator iterator = navigator.SelectChildren("assembly", string.Empty);
+                while (iterator.MoveNext())
+                {
+                    this._assembliesInALinkXmlFile.Add(iterator.Current.GetAttribute("fullname", string.Empty));
+                }
+            }
+        }
+
+        public bool IsDLLUsed(string assemblyFileName)
+        {
+            return this._assembliesInALinkXmlFile.Contains(Path.GetFileNameWithoutExtension(assemblyFileName));
+        }
+    }
 }
+

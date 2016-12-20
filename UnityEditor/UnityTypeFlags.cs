@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	internal enum UnityTypeFlags
-	{
-		Abstract = 1,
-		Sealed = 2,
-		EditorOnly = 4,
-		Deprecated = 16
-	}
+    using System;
+
+    [Flags]
+    internal enum UnityTypeFlags
+    {
+        Abstract = 1,
+        Deprecated = 0x10,
+        EditorOnly = 4,
+        Sealed = 2
+    }
 }
+

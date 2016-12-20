@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum XboxOneEncryptionLevel
-	{
-		None,
-		DevkitCompatible,
-		FullEncryption
-	}
+    using System;
+
+    public enum XboxOneEncryptionLevel
+    {
+        None,
+        DevkitCompatible,
+        FullEncryption
+    }
 }
+

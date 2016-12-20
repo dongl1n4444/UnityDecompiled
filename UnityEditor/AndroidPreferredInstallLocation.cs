@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum AndroidPreferredInstallLocation
-	{
-		Auto,
-		PreferExternal,
-		ForceInternal
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Preferred application install location.</para>
+    /// </summary>
+    public enum AndroidPreferredInstallLocation
+    {
+        Auto,
+        PreferExternal,
+        ForceInternal
+    }
 }
+

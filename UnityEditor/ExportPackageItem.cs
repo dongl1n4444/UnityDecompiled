@@ -1,18 +1,15 @@
-using System;
-using System.Runtime.InteropServices;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	[StructLayout(LayoutKind.Sequential)]
-	internal sealed class ExportPackageItem
-	{
-		public string assetPath;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public string guid;
-
-		public bool isFolder;
-
-		public int enabledStatus;
-	}
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    internal sealed class ExportPackageItem
+    {
+        public string assetPath;
+        public string guid;
+        public bool isFolder;
+        public int enabledStatus;
+    }
 }
+

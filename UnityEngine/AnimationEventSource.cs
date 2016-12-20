@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum AnimationEventSource
-	{
-		NoSource,
-		Legacy,
-		Animator
-	}
+    using System;
+
+    internal enum AnimationEventSource
+    {
+        NoSource,
+        Legacy,
+        Animator
+    }
 }
+

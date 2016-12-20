@@ -1,16 +1,17 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class BillboardRenderer : Renderer
-	{
-		public extern BillboardAsset billboard
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
-	}
+    using System;
+    using System.Runtime.CompilerServices;
+
+    /// <summary>
+    /// <para>Renders a billboard.</para>
+    /// </summary>
+    public sealed class BillboardRenderer : Renderer
+    {
+        /// <summary>
+        /// <para>The BillboardAsset to render.</para>
+        /// </summary>
+        public BillboardAsset billboard { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum AvatarIKHint
-	{
-		LeftKnee,
-		RightKnee,
-		LeftElbow,
-		RightElbow
-	}
+    using System;
+
+    /// <summary>
+    /// <para>IK Hint.</para>
+    /// </summary>
+    public enum AvatarIKHint
+    {
+        LeftKnee,
+        RightKnee,
+        LeftElbow,
+        RightElbow
+    }
 }
+

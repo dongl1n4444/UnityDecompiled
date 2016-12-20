@@ -1,187 +1,179 @@
-using System;
-using System.IO;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ScreenShots
-	{
-		public static Color kToolbarBorderColor = new Color(0.54f, 0.54f, 0.54f, 1f);
+    using System;
+    using System.IO;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-		public static Color kWindowBorderColor = new Color(0.51f, 0.51f, 0.51f, 1f);
+    internal class ScreenShots
+    {
+        public static Color kToolbarBorderColor = new Color(0.54f, 0.54f, 0.54f, 1f);
+        public static Color kWindowBorderColor = new Color(0.51f, 0.51f, 0.51f, 1f);
+        public static bool s_TakeComponentScreenshot = false;
 
-		public static bool s_TakeComponentScreenshot = false;
+        private static string GetGUIViewName(GUIView view)
+        {
+            HostView view2 = view as HostView;
+            if (view2 != null)
+            {
+                return view2.actualView.GetType().Name;
+            }
+            return "Window";
+        }
 
-		[MenuItem("Window/Screenshot/Set Window Size %&l", false, 1000, true)]
-		public static void SetMainWindowSize()
-		{
-			MainView mainView = Resources.FindObjectsOfTypeAll<MainView>()[0];
-			mainView.window.position = new Rect(0f, 0f, 1024f, 768f);
-		}
+        private static GUIView GetMouseOverView()
+        {
+            GUIView mouseOverView = GUIView.mouseOverView;
+            if (mouseOverView == null)
+            {
+                EditorApplication.Beep();
+                Debug.LogWarning("Could not take screenshot.");
+            }
+            return mouseOverView;
+        }
 
-		[MenuItem("Window/Screenshot/Set Window Size Small", false, 1000, true)]
-		public static void SetMainWindowSizeSmall()
-		{
-			MainView mainView = Resources.FindObjectsOfTypeAll<MainView>()[0];
-			mainView.window.position = new Rect(0f, 0f, 762f, 600f);
-		}
+        private static string GetUniquePathForName(string name)
+        {
+            string path = string.Format("{0}/../../{1}.png", Application.dataPath, name);
+            for (int i = 0; File.Exists(path); i++)
+            {
+                path = string.Format("{0}/../../{1}{2:000}.png", Application.dataPath, name, i);
+            }
+            return path;
+        }
 
-		[MenuItem("Window/Screenshot/Snap View %&j", false, 1000, true)]
-		public static void Screenshot()
-		{
-			GUIView mouseOverView = ScreenShots.GetMouseOverView();
-			if (mouseOverView != null)
-			{
-				string gUIViewName = ScreenShots.GetGUIViewName(mouseOverView);
-				Rect screenPosition = mouseOverView.screenPosition;
-				screenPosition.y -= 1f;
-				screenPosition.height += 2f;
-				ScreenShots.SaveScreenShot(screenPosition, gUIViewName);
-			}
-		}
+        public static void SaveScreenShot(Rect r, string name)
+        {
+            SaveScreenShot((int) r.width, (int) r.height, InternalEditorUtility.ReadScreenPixel(new Vector2(r.x, r.y), (int) r.width, (int) r.height), name);
+        }
 
-		[MenuItem("Window/Screenshot/Snap View Toolbar", false, 1000, true)]
-		public static void ScreenshotToolbar()
-		{
-			GUIView mouseOverView = ScreenShots.GetMouseOverView();
-			if (mouseOverView != null)
-			{
-				string name = ScreenShots.GetGUIViewName(mouseOverView) + "Toolbar";
-				Rect screenPosition = mouseOverView.screenPosition;
-				screenPosition.y += 19f;
-				screenPosition.height = 16f;
-				screenPosition.width -= 2f;
-				ScreenShots.SaveScreenShotWithBorder(screenPosition, ScreenShots.kToolbarBorderColor, name);
-			}
-		}
+        private static string SaveScreenShot(int width, int height, Color[] pixels, string name)
+        {
+            Texture2D textured = new Texture2D(width, height);
+            textured.SetPixels(pixels, 0);
+            textured.Apply(true);
+            byte[] bytes = textured.EncodeToPNG();
+            Object.DestroyImmediate(textured, true);
+            string uniquePathForName = GetUniquePathForName(name);
+            File.WriteAllBytes(uniquePathForName, bytes);
+            Debug.Log(string.Format("Saved screenshot at {0}", uniquePathForName));
+            return uniquePathForName;
+        }
 
-		[MenuItem("Window/Screenshot/Snap View Extended Right %&k", false, 1000, true)]
-		public static void ScreenshotExtendedRight()
-		{
-			GUIView mouseOverView = ScreenShots.GetMouseOverView();
-			if (mouseOverView != null)
-			{
-				string name = ScreenShots.GetGUIViewName(mouseOverView) + "Extended";
-				MainView mainView = Resources.FindObjectsOfTypeAll<MainView>()[0];
-				Rect screenPosition = mouseOverView.screenPosition;
-				screenPosition.xMax = mainView.window.position.xMax;
-				screenPosition.y -= 1f;
-				screenPosition.height += 2f;
-				ScreenShots.SaveScreenShot(screenPosition, name);
-			}
-		}
+        public static string SaveScreenShotWithBorder(Rect r, Color borderColor, string name)
+        {
+            int width = (int) r.width;
+            int height = (int) r.height;
+            Color[] colorArray = InternalEditorUtility.ReadScreenPixel(new Vector2(r.x, r.y), width, height);
+            Color[] pixels = new Color[(width + 2) * (height + 2)];
+            for (int i = 0; i < width; i++)
+            {
+                for (int m = 0; m < height; m++)
+                {
+                    pixels[(i + 1) + ((width + 2) * (m + 1))] = colorArray[i + (width * m)];
+                }
+            }
+            for (int j = 0; j < (width + 2); j++)
+            {
+                pixels[j] = borderColor;
+                pixels[j + ((width + 2) * (height + 1))] = borderColor;
+            }
+            for (int k = 0; k < (height + 2); k++)
+            {
+                pixels[k * (width + 2)] = borderColor;
+                pixels[(k * (width + 2)) + (width + 1)] = borderColor;
+            }
+            return SaveScreenShot((int) (r.width + 2f), (int) (r.height + 2f), pixels, name);
+        }
 
-		[MenuItem("Window/Screenshot/Snap Component", false, 1000, true)]
-		public static void ScreenShotComponent()
-		{
-			ScreenShots.s_TakeComponentScreenshot = true;
-		}
+        [MenuItem("Window/Screenshot/Snap Game View Content", false, 0x3e8, true)]
+        public static void ScreenGameViewContent()
+        {
+            string uniquePathForName = GetUniquePathForName("ContentExample");
+            Application.CaptureScreenshot(uniquePathForName);
+            Debug.Log(string.Format("Saved screenshot at {0}", uniquePathForName));
+        }
 
-		public static void ScreenShotComponent(Rect contentRect, UnityEngine.Object target)
-		{
-			ScreenShots.s_TakeComponentScreenshot = false;
-			contentRect.yMax += 2f;
-			contentRect.xMin += 1f;
-			ScreenShots.SaveScreenShotWithBorder(contentRect, ScreenShots.kWindowBorderColor, target.GetType().Name + "Inspector");
-		}
+        [MenuItem("Window/Screenshot/Snap View %&j", false, 0x3e8, true)]
+        public static void Screenshot()
+        {
+            GUIView mouseOverView = GetMouseOverView();
+            if (mouseOverView != null)
+            {
+                string gUIViewName = GetGUIViewName(mouseOverView);
+                Rect screenPosition = mouseOverView.screenPosition;
+                screenPosition.y--;
+                screenPosition.height += 2f;
+                SaveScreenShot(screenPosition, gUIViewName);
+            }
+        }
 
-		[MenuItem("Window/Screenshot/Snap Game View Content", false, 1000, true)]
-		public static void ScreenGameViewContent()
-		{
-			string uniquePathForName = ScreenShots.GetUniquePathForName("ContentExample");
-			Application.CaptureScreenshot(uniquePathForName);
-			Debug.Log(string.Format("Saved screenshot at {0}", uniquePathForName));
-		}
+        [MenuItem("Window/Screenshot/Snap Component", false, 0x3e8, true)]
+        public static void ScreenShotComponent()
+        {
+            s_TakeComponentScreenshot = true;
+        }
 
-		[MenuItem("Window/Screenshot/Toggle DeveloperBuild", false, 1000, true)]
-		public static void ToggleFakeNonDeveloperBuild()
-		{
-			Unsupported.fakeNonDeveloperBuild = !Unsupported.fakeNonDeveloperBuild;
-			InternalEditorUtility.RequestScriptReload();
-			InternalEditorUtility.RepaintAllViews();
-		}
+        public static void ScreenShotComponent(Rect contentRect, Object target)
+        {
+            s_TakeComponentScreenshot = false;
+            contentRect.yMax += 2f;
+            contentRect.xMin++;
+            SaveScreenShotWithBorder(contentRect, kWindowBorderColor, target.GetType().Name + "Inspector");
+        }
 
-		private static GUIView GetMouseOverView()
-		{
-			GUIView mouseOverView = GUIView.mouseOverView;
-			if (mouseOverView == null)
-			{
-				EditorApplication.Beep();
-				Debug.LogWarning("Could not take screenshot.");
-			}
-			return mouseOverView;
-		}
+        [MenuItem("Window/Screenshot/Snap View Extended Right %&k", false, 0x3e8, true)]
+        public static void ScreenshotExtendedRight()
+        {
+            GUIView mouseOverView = GetMouseOverView();
+            if (mouseOverView != null)
+            {
+                string name = GetGUIViewName(mouseOverView) + "Extended";
+                MainView view2 = Resources.FindObjectsOfTypeAll<MainView>()[0];
+                Rect screenPosition = mouseOverView.screenPosition;
+                screenPosition.xMax = view2.window.position.xMax;
+                screenPosition.y--;
+                screenPosition.height += 2f;
+                SaveScreenShot(screenPosition, name);
+            }
+        }
 
-		private static string GetGUIViewName(GUIView view)
-		{
-			HostView hostView = view as HostView;
-			string result;
-			if (hostView != null)
-			{
-				result = hostView.actualView.GetType().Name;
-			}
-			else
-			{
-				result = "Window";
-			}
-			return result;
-		}
+        [MenuItem("Window/Screenshot/Snap View Toolbar", false, 0x3e8, true)]
+        public static void ScreenshotToolbar()
+        {
+            GUIView mouseOverView = GetMouseOverView();
+            if (mouseOverView != null)
+            {
+                string name = GetGUIViewName(mouseOverView) + "Toolbar";
+                Rect screenPosition = mouseOverView.screenPosition;
+                screenPosition.y += 19f;
+                screenPosition.height = 16f;
+                screenPosition.width -= 2f;
+                SaveScreenShotWithBorder(screenPosition, kToolbarBorderColor, name);
+            }
+        }
 
-		public static void SaveScreenShot(Rect r, string name)
-		{
-			ScreenShots.SaveScreenShot((int)r.width, (int)r.height, InternalEditorUtility.ReadScreenPixel(new Vector2(r.x, r.y), (int)r.width, (int)r.height), name);
-		}
+        [MenuItem("Window/Screenshot/Set Window Size %&l", false, 0x3e8, true)]
+        public static void SetMainWindowSize()
+        {
+            MainView view = Resources.FindObjectsOfTypeAll<MainView>()[0];
+            view.window.position = new Rect(0f, 0f, 1024f, 768f);
+        }
 
-		public static string SaveScreenShotWithBorder(Rect r, Color borderColor, string name)
-		{
-			int num = (int)r.width;
-			int num2 = (int)r.height;
-			Color[] array = InternalEditorUtility.ReadScreenPixel(new Vector2(r.x, r.y), num, num2);
-			Color[] array2 = new Color[(num + 2) * (num2 + 2)];
-			for (int i = 0; i < num; i++)
-			{
-				for (int j = 0; j < num2; j++)
-				{
-					array2[i + 1 + (num + 2) * (j + 1)] = array[i + num * j];
-				}
-			}
-			for (int k = 0; k < num + 2; k++)
-			{
-				array2[k] = borderColor;
-				array2[k + (num + 2) * (num2 + 1)] = borderColor;
-			}
-			for (int l = 0; l < num2 + 2; l++)
-			{
-				array2[l * (num + 2)] = borderColor;
-				array2[l * (num + 2) + (num + 1)] = borderColor;
-			}
-			return ScreenShots.SaveScreenShot((int)(r.width + 2f), (int)(r.height + 2f), array2, name);
-		}
+        [MenuItem("Window/Screenshot/Set Window Size Small", false, 0x3e8, true)]
+        public static void SetMainWindowSizeSmall()
+        {
+            MainView view = Resources.FindObjectsOfTypeAll<MainView>()[0];
+            view.window.position = new Rect(0f, 0f, 762f, 600f);
+        }
 
-		private static string SaveScreenShot(int width, int height, Color[] pixels, string name)
-		{
-			Texture2D texture2D = new Texture2D(width, height);
-			texture2D.SetPixels(pixels, 0);
-			texture2D.Apply(true);
-			byte[] bytes = texture2D.EncodeToPNG();
-			UnityEngine.Object.DestroyImmediate(texture2D, true);
-			string uniquePathForName = ScreenShots.GetUniquePathForName(name);
-			File.WriteAllBytes(uniquePathForName, bytes);
-			Debug.Log(string.Format("Saved screenshot at {0}", uniquePathForName));
-			return uniquePathForName;
-		}
-
-		private static string GetUniquePathForName(string name)
-		{
-			string text = string.Format("{0}/../../{1}.png", Application.dataPath, name);
-			int num = 0;
-			while (File.Exists(text))
-			{
-				text = string.Format("{0}/../../{1}{2:000}.png", Application.dataPath, name, num);
-				num++;
-			}
-			return text;
-		}
-	}
+        [MenuItem("Window/Screenshot/Toggle DeveloperBuild", false, 0x3e8, true)]
+        public static void ToggleFakeNonDeveloperBuild()
+        {
+            Unsupported.fakeNonDeveloperBuild = !Unsupported.fakeNonDeveloperBuild;
+            InternalEditorUtility.RequestScriptReload();
+            InternalEditorUtility.RepaintAllViews();
+        }
+    }
 }
+

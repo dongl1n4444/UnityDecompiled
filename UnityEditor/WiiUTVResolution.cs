@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WiiUTVResolution
-	{
-		Resolution_720p,
-		Resolution_1080p
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Resolution setting for TV output.</para>
+    /// </summary>
+    public enum WiiUTVResolution
+    {
+        Resolution_720p,
+        Resolution_1080p
+    }
 }
+

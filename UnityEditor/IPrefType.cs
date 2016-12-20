@@ -1,13 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IPrefType
-	{
-		string ToUniqueString();
+    using System;
 
-		void FromUniqueString(string sstr);
-
-		void Load();
-	}
+    internal interface IPrefType
+    {
+        void FromUniqueString(string sstr);
+        void Load();
+        string ToUniqueString();
+    }
 }
+

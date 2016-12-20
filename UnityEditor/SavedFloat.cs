@@ -1,51 +1,50 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class SavedFloat
-	{
-		private float m_Value;
+    using System;
 
-		private string m_Name;
+    internal class SavedFloat
+    {
+        private bool m_Loaded;
+        private string m_Name;
+        private float m_Value;
 
-		private bool m_Loaded;
+        public SavedFloat(string name, float value)
+        {
+            this.m_Name = name;
+            this.m_Loaded = false;
+        }
 
-		public float value
-		{
-			get
-			{
-				this.Load();
-				return this.m_Value;
-			}
-			set
-			{
-				this.Load();
-				if (this.m_Value != value)
-				{
-					this.m_Value = value;
-					EditorPrefs.SetFloat(this.m_Name, value);
-				}
-			}
-		}
+        private void Load()
+        {
+            if (!this.m_Loaded)
+            {
+                this.m_Loaded = true;
+                this.m_Value = EditorPrefs.GetFloat(this.m_Name, this.value);
+            }
+        }
 
-		public SavedFloat(string name, float value)
-		{
-			this.m_Name = name;
-			this.m_Loaded = false;
-		}
+        public static implicit operator float(SavedFloat s)
+        {
+            return s.value;
+        }
 
-		private void Load()
-		{
-			if (!this.m_Loaded)
-			{
-				this.m_Loaded = true;
-				this.m_Value = EditorPrefs.GetFloat(this.m_Name, this.value);
-			}
-		}
-
-		public static implicit operator float(SavedFloat s)
-		{
-			return s.value;
-		}
-	}
+        public float value
+        {
+            get
+            {
+                this.Load();
+                return this.m_Value;
+            }
+            set
+            {
+                this.Load();
+                if (this.m_Value != value)
+                {
+                    this.m_Value = value;
+                    EditorPrefs.SetFloat(this.m_Name, value);
+                }
+            }
+        }
+    }
 }
+

@@ -1,46 +1,44 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal sealed class UnhandledExceptionHandler
-	{
-		[CompilerGenerated]
-		private static UnhandledExceptionEventHandler <>f__mg$cache0;
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
-		[RequiredByNativeCode]
-		private static void RegisterUECatcher()
-		{
-			AppDomain arg_23_0 = AppDomain.CurrentDomain;
-			if (UnhandledExceptionHandler.<>f__mg$cache0 == null)
-			{
-				UnhandledExceptionHandler.<>f__mg$cache0 = new UnhandledExceptionEventHandler(UnhandledExceptionHandler.HandleUnhandledException);
-			}
-			arg_23_0.UnhandledException += UnhandledExceptionHandler.<>f__mg$cache0;
-		}
+    internal sealed class UnhandledExceptionHandler
+    {
+        [CompilerGenerated]
+        private static UnhandledExceptionEventHandler <>f__mg$cache0;
 
-		private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
-		{
-			Exception ex = args.ExceptionObject as Exception;
-			if (ex != null)
-			{
-				UnhandledExceptionHandler.PrintException("Unhandled Exception: ", ex);
-			}
-			UnhandledExceptionHandler.NativeUnhandledExceptionHandler();
-		}
+        private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception exceptionObject = args.ExceptionObject as Exception;
+            if (exceptionObject != null)
+            {
+                PrintException("Unhandled Exception: ", exceptionObject);
+            }
+            NativeUnhandledExceptionHandler();
+        }
 
-		private static void PrintException(string title, Exception e)
-		{
-			Debug.LogException(e);
-			if (e.InnerException != null)
-			{
-				UnhandledExceptionHandler.PrintException("Inner Exception: ", e.InnerException);
-			}
-		}
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        private static extern void NativeUnhandledExceptionHandler();
+        private static void PrintException(string title, Exception e)
+        {
+            Debug.LogException(e);
+            if (e.InnerException != null)
+            {
+                PrintException("Inner Exception: ", e.InnerException);
+            }
+        }
 
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void NativeUnhandledExceptionHandler();
-	}
+        [RequiredByNativeCode]
+        private static void RegisterUECatcher()
+        {
+            if (<>f__mg$cache0 == null)
+            {
+                <>f__mg$cache0 = new UnhandledExceptionEventHandler(UnhandledExceptionHandler.HandleUnhandledException);
+            }
+            AppDomain.CurrentDomain.UnhandledException += <>f__mg$cache0;
+        }
+    }
 }
+

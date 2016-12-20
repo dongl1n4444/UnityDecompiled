@@ -1,16 +1,21 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal abstract class HierarchySorting
-	{
-		public virtual GUIContent content
-		{
-			get
-			{
-				return null;
-			}
-		}
-	}
+    using System;
+    using UnityEngine;
+
+    internal abstract class HierarchySorting
+    {
+        protected HierarchySorting()
+        {
+        }
+
+        public virtual GUIContent content
+        {
+            get
+            {
+                return null;
+            }
+        }
+    }
 }
+

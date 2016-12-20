@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false)]
-	internal class CppBodyAttribute : Attribute
-	{
-		public CppBodyAttribute(string body)
-		{
-		}
-	}
+    using System;
+
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple=false)]
+    internal class CppBodyAttribute : Attribute
+    {
+        public CppBodyAttribute(string body)
+        {
+        }
+    }
 }
+

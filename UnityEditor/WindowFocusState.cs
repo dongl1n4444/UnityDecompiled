@@ -1,38 +1,36 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class WindowFocusState : ScriptableObject
-	{
-		private static WindowFocusState m_Instance;
+    using System;
+    using UnityEngine;
 
-		internal string m_LastWindowTypeInSameDock = "";
+    internal class WindowFocusState : ScriptableObject
+    {
+        internal bool m_CurrentlyInPlayMode = false;
+        private static WindowFocusState m_Instance;
+        internal string m_LastWindowTypeInSameDock = "";
+        internal bool m_WasMaximizedBeforePlay = false;
 
-		internal bool m_WasMaximizedBeforePlay = false;
+        private void OnEnable()
+        {
+            base.hideFlags = HideFlags.HideAndDontSave;
+            m_Instance = this;
+        }
 
-		internal bool m_CurrentlyInPlayMode = false;
-
-		internal static WindowFocusState instance
-		{
-			get
-			{
-				if (WindowFocusState.m_Instance == null)
-				{
-					WindowFocusState.m_Instance = (UnityEngine.Object.FindObjectOfType(typeof(WindowFocusState)) as WindowFocusState);
-				}
-				if (WindowFocusState.m_Instance == null)
-				{
-					WindowFocusState.m_Instance = ScriptableObject.CreateInstance<WindowFocusState>();
-				}
-				return WindowFocusState.m_Instance;
-			}
-		}
-
-		private void OnEnable()
-		{
-			base.hideFlags = HideFlags.HideAndDontSave;
-			WindowFocusState.m_Instance = this;
-		}
-	}
+        internal static WindowFocusState instance
+        {
+            get
+            {
+                if (m_Instance == null)
+                {
+                    m_Instance = Object.FindObjectOfType(typeof(WindowFocusState)) as WindowFocusState;
+                }
+                if (m_Instance == null)
+                {
+                    m_Instance = ScriptableObject.CreateInstance<WindowFocusState>();
+                }
+                return m_Instance;
+            }
+        }
+    }
 }
+

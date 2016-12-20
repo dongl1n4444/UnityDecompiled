@@ -1,63 +1,73 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[UsedByNativeCode]
-	public struct ContactPoint
-	{
-		internal Vector3 m_Point;
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-		internal Vector3 m_Normal;
-
-		internal int m_ThisColliderInstanceID;
-
-		internal int m_OtherColliderInstanceID;
-
-		internal float m_Separation;
-
-		public Vector3 point
-		{
-			get
-			{
-				return this.m_Point;
-			}
-		}
-
-		public Vector3 normal
-		{
-			get
-			{
-				return this.m_Normal;
-			}
-		}
-
-		public Collider thisCollider
-		{
-			get
-			{
-				return ContactPoint.ColliderFromInstanceId(this.m_ThisColliderInstanceID);
-			}
-		}
-
-		public Collider otherCollider
-		{
-			get
-			{
-				return ContactPoint.ColliderFromInstanceId(this.m_OtherColliderInstanceID);
-			}
-		}
-
-		public float separation
-		{
-			get
-			{
-				return this.m_Separation;
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Collider ColliderFromInstanceId(int instanceID);
-	}
+    /// <summary>
+    /// <para>Describes a contact point where the collision occurs.</para>
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
+    public struct ContactPoint
+    {
+        internal Vector3 m_Point;
+        internal Vector3 m_Normal;
+        internal int m_ThisColliderInstanceID;
+        internal int m_OtherColliderInstanceID;
+        internal float m_Separation;
+        /// <summary>
+        /// <para>The point of contact.</para>
+        /// </summary>
+        public Vector3 point
+        {
+            get
+            {
+                return this.m_Point;
+            }
+        }
+        /// <summary>
+        /// <para>Normal of the contact point.</para>
+        /// </summary>
+        public Vector3 normal
+        {
+            get
+            {
+                return this.m_Normal;
+            }
+        }
+        /// <summary>
+        /// <para>The first collider in contact at the point.</para>
+        /// </summary>
+        public Collider thisCollider
+        {
+            get
+            {
+                return ColliderFromInstanceId(this.m_ThisColliderInstanceID);
+            }
+        }
+        /// <summary>
+        /// <para>The other collider in contact at the point.</para>
+        /// </summary>
+        public Collider otherCollider
+        {
+            get
+            {
+                return ColliderFromInstanceId(this.m_OtherColliderInstanceID);
+            }
+        }
+        /// <summary>
+        /// <para>The distance between the colliders at the contact point.</para>
+        /// </summary>
+        public float separation
+        {
+            get
+            {
+                return this.m_Separation;
+            }
+        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Collider ColliderFromInstanceId(int instanceID);
+    }
 }
+

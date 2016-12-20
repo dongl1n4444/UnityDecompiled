@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(LookDevEnvironmentLibrary))]
-	internal class LookDevEnvironmentLibraryInspector : AssetImporterInspector
-	{
-		public override void OnInspectorGUI()
-		{
-		}
-	}
+    using System;
+
+    [CustomEditor(typeof(LookDevEnvironmentLibrary))]
+    internal class LookDevEnvironmentLibraryInspector : AssetImporterInspector
+    {
+        public override void OnInspectorGUI()
+        {
+        }
+    }
 }
+

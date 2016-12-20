@@ -1,37 +1,35 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class PhysicsMaterial2D : Object
-	{
-		public extern float bounciness
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public extern float friction
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    /// <summary>
+    /// <para>Asset type that defines the surface properties of a Collider2D.</para>
+    /// </summary>
+    public sealed class PhysicsMaterial2D : UnityEngine.Object
+    {
+        public PhysicsMaterial2D()
+        {
+            Internal_Create(this, null);
+        }
 
-		public PhysicsMaterial2D()
-		{
-			PhysicsMaterial2D.Internal_Create(this, null);
-		}
+        public PhysicsMaterial2D(string name)
+        {
+            Internal_Create(this, name);
+        }
 
-		public PhysicsMaterial2D(string name)
-		{
-			PhysicsMaterial2D.Internal_Create(this, name);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_Create([Writable] PhysicsMaterial2D mat, string name);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_Create([Writable] PhysicsMaterial2D mat, string name);
-	}
+        /// <summary>
+        /// <para>The degree of elasticity during collisions.</para>
+        /// </summary>
+        public float bounciness { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+
+        /// <summary>
+        /// <para>Coefficient of friction.</para>
+        /// </summary>
+        public float friction { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

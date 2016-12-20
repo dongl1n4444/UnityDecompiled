@@ -1,56 +1,53 @@
-using System;
-using UnityEditor.Audio;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AudioMixerExposedParametersPopup : PopupWindowContent
-	{
-		private static GUIContent m_ButtonContent = new GUIContent("", "Audio Mixer parameters can be exposed to scripting. Select an Audio Mixer Group, right click one of its properties in the Inspector and select 'Expose ..'.");
+    using System;
+    using UnityEditor.Audio;
+    using UnityEngine;
 
-		private static int m_LastNumExposedParams = -1;
+    internal class AudioMixerExposedParametersPopup : PopupWindowContent
+    {
+        private static GUIContent m_ButtonContent = new GUIContent("", "Audio Mixer parameters can be exposed to scripting. Select an Audio Mixer Group, right click one of its properties in the Inspector and select 'Expose ..'.");
+        private readonly AudioMixerExposedParameterView m_ExposedParametersView = new AudioMixerExposedParameterView(new ReorderableListWithRenameAndScrollView.State());
+        private static int m_LastNumExposedParams = -1;
 
-		private readonly AudioMixerExposedParameterView m_ExposedParametersView;
+        private AudioMixerExposedParametersPopup(AudioMixerController controller)
+        {
+            this.m_ExposedParametersView.OnMixerControllerChanged(controller);
+        }
 
-		private AudioMixerExposedParametersPopup(AudioMixerController controller)
-		{
-			this.m_ExposedParametersView = new AudioMixerExposedParameterView(new ReorderableListWithRenameAndScrollView.State());
-			this.m_ExposedParametersView.OnMixerControllerChanged(controller);
-		}
+        private static GUIContent GetButtonContent(AudioMixerController controller)
+        {
+            if (controller.numExposedParameters != m_LastNumExposedParams)
+            {
+                m_ButtonContent.text = string.Format("Exposed Parameters ({0})", controller.numExposedParameters);
+                m_LastNumExposedParams = controller.numExposedParameters;
+            }
+            return m_ButtonContent;
+        }
 
-		internal static void Popup(AudioMixerController controller, GUIStyle style, params GUILayoutOption[] options)
-		{
-			GUIContent buttonContent = AudioMixerExposedParametersPopup.GetButtonContent(controller);
-			Rect rect = GUILayoutUtility.GetRect(buttonContent, style, options);
-			if (EditorGUI.ButtonMouseDown(rect, buttonContent, FocusType.Passive, style))
-			{
-				PopupWindow.Show(rect, new AudioMixerExposedParametersPopup(controller));
-			}
-		}
+        public override Vector2 GetWindowSize()
+        {
+            Vector2 vector = this.m_ExposedParametersView.CalcSize();
+            vector.x = Math.Max(vector.x, 125f);
+            vector.y = Math.Max(vector.y, 23f);
+            return vector;
+        }
 
-		private static GUIContent GetButtonContent(AudioMixerController controller)
-		{
-			if (controller.numExposedParameters != AudioMixerExposedParametersPopup.m_LastNumExposedParams)
-			{
-				AudioMixerExposedParametersPopup.m_ButtonContent.text = string.Format("Exposed Parameters ({0})", controller.numExposedParameters);
-				AudioMixerExposedParametersPopup.m_LastNumExposedParams = controller.numExposedParameters;
-			}
-			return AudioMixerExposedParametersPopup.m_ButtonContent;
-		}
+        public override void OnGUI(Rect rect)
+        {
+            this.m_ExposedParametersView.OnEvent();
+            this.m_ExposedParametersView.OnGUI(rect);
+        }
 
-		public override void OnGUI(Rect rect)
-		{
-			this.m_ExposedParametersView.OnEvent();
-			this.m_ExposedParametersView.OnGUI(rect);
-		}
-
-		public override Vector2 GetWindowSize()
-		{
-			Vector2 result = this.m_ExposedParametersView.CalcSize();
-			result.x = Math.Max(result.x, 125f);
-			result.y = Math.Max(result.y, 23f);
-			return result;
-		}
-	}
+        internal static void Popup(AudioMixerController controller, GUIStyle style, params GUILayoutOption[] options)
+        {
+            GUIContent buttonContent = GetButtonContent(controller);
+            Rect position = GUILayoutUtility.GetRect(buttonContent, style, options);
+            if (EditorGUI.ButtonMouseDown(position, buttonContent, FocusType.Passive, style))
+            {
+                PopupWindow.Show(position, new AudioMixerExposedParametersPopup(controller));
+            }
+        }
+    }
 }
+

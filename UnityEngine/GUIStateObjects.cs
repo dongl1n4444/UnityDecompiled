@@ -1,43 +1,39 @@
-using System;
-using System.Collections.Generic;
-using System.Security;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal class GUIStateObjects
-	{
-		private static Dictionary<int, object> s_StateCache = new Dictionary<int, object>();
+    using System;
+    using System.Collections.Generic;
+    using System.Security;
 
-		[SecuritySafeCritical]
-		internal static object GetStateObject(Type t, int controlID)
-		{
-			object obj;
-			if (!GUIStateObjects.s_StateCache.TryGetValue(controlID, out obj) || obj.GetType() != t)
-			{
-				obj = Activator.CreateInstance(t);
-				GUIStateObjects.s_StateCache[controlID] = obj;
-			}
-			return obj;
-		}
+    internal class GUIStateObjects
+    {
+        private static Dictionary<int, object> s_StateCache = new Dictionary<int, object>();
 
-		internal static object QueryStateObject(Type t, int controlID)
-		{
-			object obj = GUIStateObjects.s_StateCache[controlID];
-			object result;
-			if (t.IsInstanceOfType(obj))
-			{
-				result = obj;
-			}
-			else
-			{
-				result = null;
-			}
-			return result;
-		}
+        [SecuritySafeCritical]
+        internal static object GetStateObject(System.Type t, int controlID)
+        {
+            object obj2;
+            if (!s_StateCache.TryGetValue(controlID, out obj2) || (obj2.GetType() != t))
+            {
+                obj2 = Activator.CreateInstance(t);
+                s_StateCache[controlID] = obj2;
+            }
+            return obj2;
+        }
 
-		internal static void Tests_ClearObjects()
-		{
-			GUIStateObjects.s_StateCache.Clear();
-		}
-	}
+        internal static object QueryStateObject(System.Type t, int controlID)
+        {
+            object o = s_StateCache[controlID];
+            if (t.IsInstanceOfType(o))
+            {
+                return o;
+            }
+            return null;
+        }
+
+        internal static void Tests_ClearObjects()
+        {
+            s_StateCache.Clear();
+        }
+    }
 }
+

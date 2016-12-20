@@ -1,285 +1,264 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using UnityEngine;
-using UnityEngine.Internal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class AsyncHTTPClient
-	{
-		private delegate void RequestProgressCallback(AsyncHTTPClient.State status, int downloaded, int totalSize);
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using UnityEngine;
+    using UnityEngine.Internal;
 
-		private delegate void RequestDoneCallback(AsyncHTTPClient.State status, int httpStatus);
+    internal sealed class AsyncHTTPClient
+    {
+        [CompilerGenerated]
+        private static Func<KeyValuePair<string, string>, string> <>f__am$cache0;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private int <responseCode>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private State <state>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private string <tag>k__BackingField;
+        public DoneCallback doneCallback;
+        public Dictionary<string, string> header;
+        private string m_FromData;
+        private IntPtr m_Handle;
+        private string m_Method;
+        private string m_ToUrl;
+        public StatusCallback statusCallback;
 
-		internal enum State
-		{
-			INIT,
-			CONNECTING,
-			CONNECTED,
-			UPLOADING,
-			DOWNLOADING,
-			CONFIRMING,
-			DONE_OK,
-			DONE_FAILED,
-			ABORTED,
-			TIMEOUT
-		}
+        public AsyncHTTPClient(string _toUrl)
+        {
+            this.m_ToUrl = _toUrl;
+            this.m_FromData = null;
+            this.m_Method = "";
+            this.state = State.INIT;
+            this.header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            this.m_Handle = IntPtr.Zero;
+            this.tag = "";
+            this.statusCallback = null;
+        }
 
-		public delegate void DoneCallback(AsyncHTTPClient client);
+        public AsyncHTTPClient(string _toUrl, string _method)
+        {
+            this.m_ToUrl = _toUrl;
+            this.m_FromData = null;
+            this.m_Method = _method;
+            this.state = State.INIT;
+            this.header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            this.m_Handle = IntPtr.Zero;
+            this.tag = "";
+            this.statusCallback = null;
+        }
 
-		public delegate void StatusCallback(AsyncHTTPClient.State status, int bytesDone, int bytesTotal);
+        public void Abort()
+        {
+            this.state = State.ABORTED;
+            AbortByHandle(this.m_Handle);
+        }
 
-		private IntPtr m_Handle;
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void AbortByHandle(IntPtr handle);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AbortByTag(string tag);
+        public void Begin()
+        {
+            if (this.IsAborted())
+            {
+                this.state = State.ABORTED;
+            }
+            else
+            {
+                if (this.m_Method == "")
+                {
+                    this.m_Method = "GET";
+                }
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = new Func<KeyValuePair<string, string>, string>(null, (IntPtr) <Begin>m__1);
+                }
+                string[] headers = Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, string>, string>(this.header, <>f__am$cache0));
+                this.m_Handle = SubmitClientRequest(this.tag, this.m_ToUrl, headers, this.m_Method, this.m_FromData, new RequestDoneCallback(this.Done), new RequestProgressCallback(this.Progress));
+            }
+        }
 
-		public AsyncHTTPClient.StatusCallback statusCallback;
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void CurlRequestCheck();
+        private void Done(State status, int i_ResponseCode)
+        {
+            this.state = status;
+            this.responseCode = i_ResponseCode;
+            if (this.doneCallback != null)
+            {
+                this.doneCallback(this);
+            }
+            this.m_Handle = IntPtr.Zero;
+        }
 
-		public AsyncHTTPClient.DoneCallback doneCallback;
+        private string EscapeLong(string v)
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < v.Length; i += 0x7ffe)
+            {
+                builder.Append(Uri.EscapeDataString(v.Substring(i, ((v.Length - i) <= 0x7ffe) ? (v.Length - i) : 0x7ffe)));
+            }
+            return builder.ToString();
+        }
 
-		private string m_ToUrl;
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern byte[] GetBytesByHandle(IntPtr handle);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern Texture2D GetTextureByHandle(IntPtr handle);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_SubmitClientRequest(string tag, string url, string[] headers, string method, string data, RequestDoneCallback doneDelegate, RequestProgressCallback progressDelegate, out IntPtr value);
+        public bool IsAborted()
+        {
+            return (this.state == State.ABORTED);
+        }
 
-		private string m_FromData;
+        public bool IsDone()
+        {
+            return IsDone(this.state);
+        }
 
-		private string m_Method;
+        public static bool IsDone(State state)
+        {
+            switch (state)
+            {
+                case State.DONE_OK:
+                case State.DONE_FAILED:
+                case State.ABORTED:
+                case State.TIMEOUT:
+                    return true;
+            }
+            return false;
+        }
 
-		public Dictionary<string, string> header;
+        public bool IsSuccess()
+        {
+            return (this.state == State.DONE_OK);
+        }
 
-		public string url
-		{
-			get
-			{
-				return this.m_ToUrl;
-			}
-		}
+        public static bool IsSuccess(State state)
+        {
+            return (state == State.DONE_OK);
+        }
 
-		public string text
-		{
-			get
-			{
-				UTF8Encoding uTF8Encoding = new UTF8Encoding();
-				byte[] bytes = this.bytes;
-				string result;
-				if (bytes == null)
-				{
-					result = null;
-				}
-				else
-				{
-					result = uTF8Encoding.GetString(bytes);
-				}
-				return result;
-			}
-		}
+        private void Progress(State status, int bytesDone, int bytesTotal)
+        {
+            this.state = status;
+            if (this.statusCallback != null)
+            {
+                this.statusCallback(status, bytesDone, bytesTotal);
+            }
+        }
 
-		public byte[] bytes
-		{
-			get
-			{
-				return AsyncHTTPClient.GetBytesByHandle(this.m_Handle);
-			}
-		}
+        [ExcludeFromDocs]
+        private static IntPtr SubmitClientRequest(string tag, string url, string[] headers, string method, string data, RequestDoneCallback doneDelegate)
+        {
+            RequestProgressCallback progressDelegate = null;
+            IntPtr ptr;
+            INTERNAL_CALL_SubmitClientRequest(tag, url, headers, method, data, doneDelegate, progressDelegate, out ptr);
+            return ptr;
+        }
 
-		public Texture2D texture
-		{
-			get
-			{
-				return AsyncHTTPClient.GetTextureByHandle(this.m_Handle);
-			}
-		}
+        private static IntPtr SubmitClientRequest(string tag, string url, string[] headers, string method, string data, RequestDoneCallback doneDelegate, [DefaultValue("null")] RequestProgressCallback progressDelegate)
+        {
+            IntPtr ptr;
+            INTERNAL_CALL_SubmitClientRequest(tag, url, headers, method, data, doneDelegate, progressDelegate, out ptr);
+            return ptr;
+        }
 
-		public AsyncHTTPClient.State state
-		{
-			get;
-			private set;
-		}
+        public byte[] bytes
+        {
+            get
+            {
+                return GetBytesByHandle(this.m_Handle);
+            }
+        }
 
-		public int responseCode
-		{
-			get;
-			private set;
-		}
+        public string postData
+        {
+            set
+            {
+                this.m_FromData = value;
+                if (this.m_Method == "")
+                {
+                    this.m_Method = "POST";
+                }
+                if (!this.header.ContainsKey("Content-Type"))
+                {
+                    this.header["Content-Type"] = "application/x-www-form-urlencoded";
+                }
+            }
+        }
 
-		public string tag
-		{
-			get;
-			set;
-		}
+        public Dictionary<string, string> postDictionary
+        {
+            set
+            {
+                this.postData = string.Join("&", Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, string>, string>(value, new Func<KeyValuePair<string, string>, string>(this, (IntPtr) this.<set_postDictionary>m__0))));
+            }
+        }
 
-		public string postData
-		{
-			set
-			{
-				this.m_FromData = value;
-				if (this.m_Method == "")
-				{
-					this.m_Method = "POST";
-				}
-				if (!this.header.ContainsKey("Content-Type"))
-				{
-					this.header["Content-Type"] = "application/x-www-form-urlencoded";
-				}
-			}
-		}
+        public int responseCode { get; private set; }
 
-		public Dictionary<string, string> postDictionary
-		{
-			set
-			{
-				this.postData = string.Join("&", (from kv in value
-				select this.EscapeLong(kv.Key) + "=" + this.EscapeLong(kv.Value)).ToArray<string>());
-			}
-		}
+        public State state { get; private set; }
 
-		public AsyncHTTPClient(string _toUrl)
-		{
-			this.m_ToUrl = _toUrl;
-			this.m_FromData = null;
-			this.m_Method = "";
-			this.state = AsyncHTTPClient.State.INIT;
-			this.header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-			this.m_Handle = (IntPtr)0;
-			this.tag = "";
-			this.statusCallback = null;
-		}
+        public string tag { get; set; }
 
-		public AsyncHTTPClient(string _toUrl, string _method)
-		{
-			this.m_ToUrl = _toUrl;
-			this.m_FromData = null;
-			this.m_Method = _method;
-			this.state = AsyncHTTPClient.State.INIT;
-			this.header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-			this.m_Handle = (IntPtr)0;
-			this.tag = "";
-			this.statusCallback = null;
-		}
+        public string text
+        {
+            get
+            {
+                UTF8Encoding encoding = new UTF8Encoding();
+                byte[] bytes = this.bytes;
+                if (bytes == null)
+                {
+                    return null;
+                }
+                return encoding.GetString(bytes);
+            }
+        }
 
-		private static IntPtr SubmitClientRequest(string tag, string url, string[] headers, string method, string data, AsyncHTTPClient.RequestDoneCallback doneDelegate, [DefaultValue("null")] AsyncHTTPClient.RequestProgressCallback progressDelegate)
-		{
-			IntPtr result;
-			AsyncHTTPClient.INTERNAL_CALL_SubmitClientRequest(tag, url, headers, method, data, doneDelegate, progressDelegate, out result);
-			return result;
-		}
+        public Texture2D texture
+        {
+            get
+            {
+                return GetTextureByHandle(this.m_Handle);
+            }
+        }
 
-		[ExcludeFromDocs]
-		private static IntPtr SubmitClientRequest(string tag, string url, string[] headers, string method, string data, AsyncHTTPClient.RequestDoneCallback doneDelegate)
-		{
-			AsyncHTTPClient.RequestProgressCallback progressDelegate = null;
-			IntPtr result;
-			AsyncHTTPClient.INTERNAL_CALL_SubmitClientRequest(tag, url, headers, method, data, doneDelegate, progressDelegate, out result);
-			return result;
-		}
+        public string url
+        {
+            get
+            {
+                return this.m_ToUrl;
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_SubmitClientRequest(string tag, string url, string[] headers, string method, string data, AsyncHTTPClient.RequestDoneCallback doneDelegate, AsyncHTTPClient.RequestProgressCallback progressDelegate, out IntPtr value);
+        public delegate void DoneCallback(AsyncHTTPClient client);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern byte[] GetBytesByHandle(IntPtr handle);
+        private delegate void RequestDoneCallback(AsyncHTTPClient.State status, int httpStatus);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Texture2D GetTextureByHandle(IntPtr handle);
+        private delegate void RequestProgressCallback(AsyncHTTPClient.State status, int downloaded, int totalSize);
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void AbortByTag(string tag);
+        internal enum State
+        {
+            INIT,
+            CONNECTING,
+            CONNECTED,
+            UPLOADING,
+            DOWNLOADING,
+            CONFIRMING,
+            DONE_OK,
+            DONE_FAILED,
+            ABORTED,
+            TIMEOUT
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void AbortByHandle(IntPtr handle);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void CurlRequestCheck();
-
-		public void Abort()
-		{
-			this.state = AsyncHTTPClient.State.ABORTED;
-			AsyncHTTPClient.AbortByHandle(this.m_Handle);
-		}
-
-		public bool IsAborted()
-		{
-			return this.state == AsyncHTTPClient.State.ABORTED;
-		}
-
-		public bool IsDone()
-		{
-			return AsyncHTTPClient.IsDone(this.state);
-		}
-
-		public static bool IsDone(AsyncHTTPClient.State state)
-		{
-			bool result;
-			switch (state)
-			{
-			case AsyncHTTPClient.State.DONE_OK:
-			case AsyncHTTPClient.State.DONE_FAILED:
-			case AsyncHTTPClient.State.ABORTED:
-			case AsyncHTTPClient.State.TIMEOUT:
-				result = true;
-				break;
-			default:
-				result = false;
-				break;
-			}
-			return result;
-		}
-
-		public bool IsSuccess()
-		{
-			return this.state == AsyncHTTPClient.State.DONE_OK;
-		}
-
-		public static bool IsSuccess(AsyncHTTPClient.State state)
-		{
-			return state == AsyncHTTPClient.State.DONE_OK;
-		}
-
-		public void Begin()
-		{
-			if (this.IsAborted())
-			{
-				this.state = AsyncHTTPClient.State.ABORTED;
-			}
-			else
-			{
-				if (this.m_Method == "")
-				{
-					this.m_Method = "GET";
-				}
-				string[] headers = (from kv in this.header
-				select string.Format("{0}: {1}", kv.Key, kv.Value)).ToArray<string>();
-				this.m_Handle = AsyncHTTPClient.SubmitClientRequest(this.tag, this.m_ToUrl, headers, this.m_Method, this.m_FromData, new AsyncHTTPClient.RequestDoneCallback(this.Done), new AsyncHTTPClient.RequestProgressCallback(this.Progress));
-			}
-		}
-
-		private void Done(AsyncHTTPClient.State status, int i_ResponseCode)
-		{
-			this.state = status;
-			this.responseCode = i_ResponseCode;
-			if (this.doneCallback != null)
-			{
-				this.doneCallback(this);
-			}
-			this.m_Handle = (IntPtr)0;
-		}
-
-		private void Progress(AsyncHTTPClient.State status, int bytesDone, int bytesTotal)
-		{
-			this.state = status;
-			if (this.statusCallback != null)
-			{
-				this.statusCallback(status, bytesDone, bytesTotal);
-			}
-		}
-
-		private string EscapeLong(string v)
-		{
-			StringBuilder stringBuilder = new StringBuilder();
-			for (int i = 0; i < v.Length; i += 32766)
-			{
-				stringBuilder.Append(Uri.EscapeDataString(v.Substring(i, (v.Length - i <= 32766) ? (v.Length - i) : 32766)));
-			}
-			return stringBuilder.ToString();
-		}
-	}
+        public delegate void StatusCallback(AsyncHTTPClient.State status, int bytesDone, int bytesTotal);
+    }
 }
+

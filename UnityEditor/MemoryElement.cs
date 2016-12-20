@@ -1,214 +1,182 @@
-using System;
-using System.Collections.Generic;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class MemoryElement
-	{
-		public List<MemoryElement> children = null;
+    using System;
+    using System.Collections.Generic;
 
-		public MemoryElement parent = null;
+    [Serializable]
+    internal class MemoryElement
+    {
+        public List<MemoryElement> children;
+        public string description;
+        public bool expanded;
+        public ObjectInfo memoryInfo;
+        public string name;
+        public MemoryElement parent;
+        public int totalChildCount;
+        public int totalMemory;
 
-		public ObjectInfo memoryInfo;
+        public MemoryElement()
+        {
+            this.children = null;
+            this.parent = null;
+            this.children = new List<MemoryElement>();
+        }
 
-		public int totalMemory;
+        public MemoryElement(string n)
+        {
+            this.children = null;
+            this.parent = null;
+            this.expanded = false;
+            this.name = n;
+            this.children = new List<MemoryElement>();
+            this.description = "";
+        }
 
-		public int totalChildCount;
+        public MemoryElement(string n, List<MemoryElement> groups)
+        {
+            this.children = null;
+            this.parent = null;
+            this.name = n;
+            this.expanded = false;
+            this.description = "";
+            this.totalMemory = 0;
+            this.totalChildCount = 0;
+            this.children = new List<MemoryElement>();
+            foreach (MemoryElement element in groups)
+            {
+                this.AddChild(element);
+            }
+        }
 
-		public string name;
+        public MemoryElement(ObjectInfo memInfo, bool finalize)
+        {
+            this.children = null;
+            this.parent = null;
+            this.expanded = false;
+            this.memoryInfo = memInfo;
+            this.name = this.memoryInfo.name;
+            this.totalMemory = (memInfo == null) ? 0 : memInfo.memorySize;
+            this.totalChildCount = 1;
+            if (finalize)
+            {
+                this.children = new List<MemoryElement>();
+            }
+        }
 
-		public bool expanded;
+        public int AccumulatedChildCount()
+        {
+            return this.totalChildCount;
+        }
 
-		public string description;
+        public void AddChild(MemoryElement node)
+        {
+            if (node == this)
+            {
+                throw new Exception("Should not AddChild to itself");
+            }
+            this.children.Add(node);
+            node.parent = this;
+            this.totalMemory += node.totalMemory;
+            this.totalChildCount += node.totalChildCount;
+        }
 
-		public MemoryElement()
-		{
-			this.children = new List<MemoryElement>();
-		}
+        public int ChildCount()
+        {
+            if (this.children != null)
+            {
+                return this.children.Count;
+            }
+            return this.ReferenceCount();
+        }
 
-		public MemoryElement(string n)
-		{
-			this.expanded = false;
-			this.name = n;
-			this.children = new List<MemoryElement>();
-			this.description = "";
-		}
+        public void ExpandChildren()
+        {
+            if (this.children == null)
+            {
+                this.children = new List<MemoryElement>();
+                for (int i = 0; i < this.ReferenceCount(); i++)
+                {
+                    this.AddChild(new MemoryElement(this.memoryInfo.referencedBy[i], false));
+                }
+            }
+        }
 
-		public MemoryElement(ObjectInfo memInfo, bool finalize)
-		{
-			this.expanded = false;
-			this.memoryInfo = memInfo;
-			this.name = this.memoryInfo.name;
-			this.totalMemory = ((memInfo == null) ? 0 : memInfo.memorySize);
-			this.totalChildCount = 1;
-			if (finalize)
-			{
-				this.children = new List<MemoryElement>();
-			}
-		}
+        public MemoryElement FirstChild()
+        {
+            return this.children[0];
+        }
 
-		public MemoryElement(string n, List<MemoryElement> groups)
-		{
-			this.name = n;
-			this.expanded = false;
-			this.description = "";
-			this.totalMemory = 0;
-			this.totalChildCount = 0;
-			this.children = new List<MemoryElement>();
-			foreach (MemoryElement current in groups)
-			{
-				this.AddChild(current);
-			}
-		}
+        public int GetChildIndexInList()
+        {
+            for (int i = 0; i < this.parent.children.Count; i++)
+            {
+                if (this.parent.children[i] == this)
+                {
+                    return i;
+                }
+            }
+            return this.parent.children.Count;
+        }
 
-		public void ExpandChildren()
-		{
-			if (this.children == null)
-			{
-				this.children = new List<MemoryElement>();
-				for (int i = 0; i < this.ReferenceCount(); i++)
-				{
-					this.AddChild(new MemoryElement(this.memoryInfo.referencedBy[i], false));
-				}
-			}
-		}
+        public MemoryElement GetNextNode()
+        {
+            if (this.expanded && (this.children.Count > 0))
+            {
+                return this.children[0];
+            }
+            int num = this.GetChildIndexInList() + 1;
+            if (num < this.parent.children.Count)
+            {
+                return this.parent.children[num];
+            }
+            for (MemoryElement element2 = this.parent; element2.parent != null; element2 = element2.parent)
+            {
+                int num2 = element2.GetChildIndexInList() + 1;
+                if (num2 < element2.parent.children.Count)
+                {
+                    return element2.parent.children[num2];
+                }
+            }
+            return null;
+        }
 
-		public int AccumulatedChildCount()
-		{
-			return this.totalChildCount;
-		}
+        public MemoryElement GetPrevNode()
+        {
+            int num = this.GetChildIndexInList() - 1;
+            if (num >= 0)
+            {
+                MemoryElement element = this.parent.children[num];
+                while (element.expanded)
+                {
+                    element = element.children[element.children.Count - 1];
+                }
+                return element;
+            }
+            return this.parent;
+        }
 
-		public int ChildCount()
-		{
-			int result;
-			if (this.children != null)
-			{
-				result = this.children.Count;
-			}
-			else
-			{
-				result = this.ReferenceCount();
-			}
-			return result;
-		}
+        public MemoryElement GetRoot()
+        {
+            if (this.parent != null)
+            {
+                return this.parent.GetRoot();
+            }
+            return this;
+        }
 
-		public int ReferenceCount()
-		{
-			return (this.memoryInfo == null || this.memoryInfo.referencedBy == null) ? 0 : this.memoryInfo.referencedBy.Count;
-		}
+        public MemoryElement LastChild()
+        {
+            if (!this.expanded)
+            {
+                return this;
+            }
+            return this.children[this.children.Count - 1].LastChild();
+        }
 
-		public void AddChild(MemoryElement node)
-		{
-			if (node == this)
-			{
-				throw new Exception("Should not AddChild to itself");
-			}
-			this.children.Add(node);
-			node.parent = this;
-			this.totalMemory += node.totalMemory;
-			this.totalChildCount += node.totalChildCount;
-		}
-
-		public int GetChildIndexInList()
-		{
-			int result;
-			for (int i = 0; i < this.parent.children.Count; i++)
-			{
-				if (this.parent.children[i] == this)
-				{
-					result = i;
-					return result;
-				}
-			}
-			result = this.parent.children.Count;
-			return result;
-		}
-
-		public MemoryElement GetPrevNode()
-		{
-			int num = this.GetChildIndexInList() - 1;
-			MemoryElement result;
-			if (num >= 0)
-			{
-				MemoryElement memoryElement = this.parent.children[num];
-				while (memoryElement.expanded)
-				{
-					memoryElement = memoryElement.children[memoryElement.children.Count - 1];
-				}
-				result = memoryElement;
-			}
-			else
-			{
-				result = this.parent;
-			}
-			return result;
-		}
-
-		public MemoryElement GetNextNode()
-		{
-			MemoryElement result;
-			if (this.expanded && this.children.Count > 0)
-			{
-				result = this.children[0];
-			}
-			else
-			{
-				int num = this.GetChildIndexInList() + 1;
-				if (num < this.parent.children.Count)
-				{
-					result = this.parent.children[num];
-				}
-				else
-				{
-					MemoryElement memoryElement = this.parent;
-					while (memoryElement.parent != null)
-					{
-						int num2 = memoryElement.GetChildIndexInList() + 1;
-						if (num2 < memoryElement.parent.children.Count)
-						{
-							result = memoryElement.parent.children[num2];
-							return result;
-						}
-						memoryElement = memoryElement.parent;
-					}
-					result = null;
-				}
-			}
-			return result;
-		}
-
-		public MemoryElement GetRoot()
-		{
-			MemoryElement result;
-			if (this.parent != null)
-			{
-				result = this.parent.GetRoot();
-			}
-			else
-			{
-				result = this;
-			}
-			return result;
-		}
-
-		public MemoryElement FirstChild()
-		{
-			return this.children[0];
-		}
-
-		public MemoryElement LastChild()
-		{
-			MemoryElement result;
-			if (!this.expanded)
-			{
-				result = this;
-			}
-			else
-			{
-				result = this.children[this.children.Count - 1].LastChild();
-			}
-			return result;
-		}
-	}
+        public int ReferenceCount()
+        {
+            return (((this.memoryInfo == null) || (this.memoryInfo.referencedBy == null)) ? 0 : this.memoryInfo.referencedBy.Count);
+        }
+    }
 }
+

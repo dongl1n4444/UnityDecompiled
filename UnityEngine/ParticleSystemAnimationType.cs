@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemAnimationType
-	{
-		WholeSheet,
-		SingleRow
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The animation type.</para>
+    /// </summary>
+    public enum ParticleSystemAnimationType
+    {
+        WholeSheet,
+        SingleRow
+    }
 }
+

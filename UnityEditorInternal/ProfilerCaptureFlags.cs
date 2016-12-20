@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Flags]
-	public enum ProfilerCaptureFlags
-	{
-		None = 0,
-		Channels = 1,
-		DSPNodes = 2,
-		Clips = 4,
-		All = 7
-	}
+    using System;
+
+    [Flags]
+    public enum ProfilerCaptureFlags
+    {
+        All = 7,
+        Channels = 1,
+        Clips = 4,
+        DSPNodes = 2,
+        None = 0
+    }
 }
+

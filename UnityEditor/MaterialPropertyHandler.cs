@@ -1,251 +1,218 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class MaterialPropertyHandler
-	{
-		private MaterialPropertyDrawer m_PropertyDrawer;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Runtime.InteropServices;
+    using System.Text.RegularExpressions;
+    using UnityEngine;
 
-		private List<MaterialPropertyDrawer> m_DecoratorDrawers;
+    internal class MaterialPropertyHandler
+    {
+        private List<MaterialPropertyDrawer> m_DecoratorDrawers;
+        private MaterialPropertyDrawer m_PropertyDrawer;
+        private static Dictionary<string, MaterialPropertyHandler> s_PropertyHandlers = new Dictionary<string, MaterialPropertyHandler>();
 
-		private static Dictionary<string, MaterialPropertyHandler> s_PropertyHandlers = new Dictionary<string, MaterialPropertyHandler>();
+        private static MaterialPropertyDrawer CreatePropertyDrawer(Type klass, string argsText)
+        {
+            if (string.IsNullOrEmpty(argsText))
+            {
+                return (Activator.CreateInstance(klass) as MaterialPropertyDrawer);
+            }
+            char[] separator = new char[] { ',' };
+            string[] strArray = argsText.Split(separator);
+            object[] args = new object[strArray.Length];
+            for (int i = 0; i < strArray.Length; i++)
+            {
+                float num2;
+                string s = strArray[i].Trim();
+                if (float.TryParse(s, NumberStyles.Float, (IFormatProvider) CultureInfo.InvariantCulture.NumberFormat, out num2))
+                {
+                    args[i] = num2;
+                }
+                else
+                {
+                    args[i] = s;
+                }
+            }
+            return (Activator.CreateInstance(klass, args) as MaterialPropertyDrawer);
+        }
 
-		public MaterialPropertyDrawer propertyDrawer
-		{
-			get
-			{
-				return this.m_PropertyDrawer;
-			}
-		}
+        internal static MaterialPropertyHandler GetHandler(Shader shader, string name)
+        {
+            MaterialPropertyHandler shaderPropertyHandler;
+            if (shader == null)
+            {
+                return null;
+            }
+            string propertyString = GetPropertyString(shader, name);
+            if (!s_PropertyHandlers.TryGetValue(propertyString, out shaderPropertyHandler))
+            {
+                shaderPropertyHandler = GetShaderPropertyHandler(shader, name);
+                if ((shaderPropertyHandler != null) && shaderPropertyHandler.IsEmpty())
+                {
+                    shaderPropertyHandler = null;
+                }
+                s_PropertyHandlers[propertyString] = shaderPropertyHandler;
+            }
+            return shaderPropertyHandler;
+        }
 
-		public bool IsEmpty()
-		{
-			return this.m_PropertyDrawer == null && (this.m_DecoratorDrawers == null || this.m_DecoratorDrawers.Count == 0);
-		}
+        public float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
+        {
+            float num = 0f;
+            if (this.m_DecoratorDrawers != null)
+            {
+                foreach (MaterialPropertyDrawer drawer in this.m_DecoratorDrawers)
+                {
+                    num += drawer.GetPropertyHeight(prop, label, editor);
+                }
+            }
+            if (this.m_PropertyDrawer != null)
+            {
+                num += this.m_PropertyDrawer.GetPropertyHeight(prop, label, editor);
+            }
+            return num;
+        }
 
-		public void OnGUI(ref Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
-		{
-			float num = position.height;
-			position.height = 0f;
-			if (this.m_DecoratorDrawers != null)
-			{
-				foreach (MaterialPropertyDrawer current in this.m_DecoratorDrawers)
-				{
-					position.height = current.GetPropertyHeight(prop, label.text, editor);
-					float labelWidth = EditorGUIUtility.labelWidth;
-					float fieldWidth = EditorGUIUtility.fieldWidth;
-					current.OnGUI(position, prop, label, editor);
-					EditorGUIUtility.labelWidth = labelWidth;
-					EditorGUIUtility.fieldWidth = fieldWidth;
-					position.y += position.height;
-					num -= position.height;
-				}
-			}
-			position.height = num;
-			if (this.m_PropertyDrawer != null)
-			{
-				float labelWidth = EditorGUIUtility.labelWidth;
-				float fieldWidth = EditorGUIUtility.fieldWidth;
-				this.m_PropertyDrawer.OnGUI(position, prop, label, editor);
-				EditorGUIUtility.labelWidth = labelWidth;
-				EditorGUIUtility.fieldWidth = fieldWidth;
-			}
-		}
+        private static string GetPropertyString(Shader shader, string name)
+        {
+            if (shader == null)
+            {
+                return string.Empty;
+            }
+            return (shader.GetInstanceID() + "_" + name);
+        }
 
-		public float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
-		{
-			float num = 0f;
-			if (this.m_DecoratorDrawers != null)
-			{
-				foreach (MaterialPropertyDrawer current in this.m_DecoratorDrawers)
-				{
-					num += current.GetPropertyHeight(prop, label, editor);
-				}
-			}
-			if (this.m_PropertyDrawer != null)
-			{
-				num += this.m_PropertyDrawer.GetPropertyHeight(prop, label, editor);
-			}
-			return num;
-		}
+        private static MaterialPropertyDrawer GetShaderPropertyDrawer(string attrib, out bool isDecorator)
+        {
+            isDecorator = false;
+            string str = attrib;
+            string argsText = string.Empty;
+            Match match = Regex.Match(attrib, @"(\w+)\s*\((.*)\)");
+            if (match.Success)
+            {
+                str = match.Groups[1].Value;
+                argsText = match.Groups[2].Value.Trim();
+            }
+            foreach (Type type in EditorAssemblies.SubclassesOf(typeof(MaterialPropertyDrawer)))
+            {
+                if (((type.Name == str) || (type.Name == (str + "Drawer"))) || (((type.Name == ("Material" + str + "Drawer")) || (type.Name == (str + "Decorator"))) || (type.Name == ("Material" + str + "Decorator"))))
+                {
+                    try
+                    {
+                        isDecorator = type.Name.EndsWith("Decorator");
+                        return CreatePropertyDrawer(type, argsText);
+                    }
+                    catch (Exception)
+                    {
+                        object[] args = new object[] { str, argsText };
+                        Debug.LogWarningFormat("Failed to create material drawer {0} with arguments '{1}'", args);
+                        return null;
+                    }
+                }
+            }
+            return null;
+        }
 
-		private static string GetPropertyString(Shader shader, string name)
-		{
-			string result;
-			if (shader == null)
-			{
-				result = string.Empty;
-			}
-			else
-			{
-				result = shader.GetInstanceID() + "_" + name;
-			}
-			return result;
-		}
+        private static MaterialPropertyHandler GetShaderPropertyHandler(Shader shader, string name)
+        {
+            string[] shaderPropertyAttributes = ShaderUtil.GetShaderPropertyAttributes(shader, name);
+            if ((shaderPropertyAttributes == null) || (shaderPropertyAttributes.Length == 0))
+            {
+                return null;
+            }
+            MaterialPropertyHandler handler2 = new MaterialPropertyHandler();
+            foreach (string str in shaderPropertyAttributes)
+            {
+                bool flag;
+                MaterialPropertyDrawer shaderPropertyDrawer = GetShaderPropertyDrawer(str, out flag);
+                if (shaderPropertyDrawer != null)
+                {
+                    if (flag)
+                    {
+                        if (handler2.m_DecoratorDrawers == null)
+                        {
+                            handler2.m_DecoratorDrawers = new List<MaterialPropertyDrawer>();
+                        }
+                        handler2.m_DecoratorDrawers.Add(shaderPropertyDrawer);
+                    }
+                    else
+                    {
+                        if (handler2.m_PropertyDrawer != null)
+                        {
+                            Debug.LogWarning(string.Format("Shader property {0} already has a property drawer", name), shader);
+                        }
+                        handler2.m_PropertyDrawer = shaderPropertyDrawer;
+                    }
+                }
+            }
+            return handler2;
+        }
 
-		internal static void InvalidatePropertyCache(Shader shader)
-		{
-			if (!(shader == null))
-			{
-				string value = shader.GetInstanceID() + "_";
-				List<string> list = new List<string>();
-				foreach (string current in MaterialPropertyHandler.s_PropertyHandlers.Keys)
-				{
-					if (current.StartsWith(value))
-					{
-						list.Add(current);
-					}
-				}
-				foreach (string current2 in list)
-				{
-					MaterialPropertyHandler.s_PropertyHandlers.Remove(current2);
-				}
-			}
-		}
+        internal static void InvalidatePropertyCache(Shader shader)
+        {
+            if (shader != null)
+            {
+                string str = shader.GetInstanceID() + "_";
+                List<string> list = new List<string>();
+                foreach (string str2 in s_PropertyHandlers.Keys)
+                {
+                    if (str2.StartsWith(str))
+                    {
+                        list.Add(str2);
+                    }
+                }
+                foreach (string str3 in list)
+                {
+                    s_PropertyHandlers.Remove(str3);
+                }
+            }
+        }
 
-		private static MaterialPropertyDrawer CreatePropertyDrawer(Type klass, string argsText)
-		{
-			MaterialPropertyDrawer result;
-			if (string.IsNullOrEmpty(argsText))
-			{
-				result = (Activator.CreateInstance(klass) as MaterialPropertyDrawer);
-			}
-			else
-			{
-				string[] array = argsText.Split(new char[]
-				{
-					','
-				});
-				object[] array2 = new object[array.Length];
-				for (int i = 0; i < array.Length; i++)
-				{
-					string text = array[i].Trim();
-					float num;
-					if (float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out num))
-					{
-						array2[i] = num;
-					}
-					else
-					{
-						array2[i] = text;
-					}
-				}
-				result = (Activator.CreateInstance(klass, array2) as MaterialPropertyDrawer);
-			}
-			return result;
-		}
+        public bool IsEmpty()
+        {
+            return ((this.m_PropertyDrawer == null) && ((this.m_DecoratorDrawers == null) || (this.m_DecoratorDrawers.Count == 0)));
+        }
 
-		private static MaterialPropertyDrawer GetShaderPropertyDrawer(string attrib, out bool isDecorator)
-		{
-			isDecorator = false;
-			string text = attrib;
-			string text2 = string.Empty;
-			Match match = Regex.Match(attrib, "(\\w+)\\s*\\((.*)\\)");
-			if (match.Success)
-			{
-				text = match.Groups[1].Value;
-				text2 = match.Groups[2].Value.Trim();
-			}
-			MaterialPropertyDrawer result;
-			foreach (Type current in EditorAssemblies.SubclassesOf(typeof(MaterialPropertyDrawer)))
-			{
-				if (current.Name == text || current.Name == text + "Drawer" || current.Name == "Material" + text + "Drawer" || current.Name == text + "Decorator" || current.Name == "Material" + text + "Decorator")
-				{
-					try
-					{
-						isDecorator = current.Name.EndsWith("Decorator");
-						result = MaterialPropertyHandler.CreatePropertyDrawer(current, text2);
-						return result;
-					}
-					catch (Exception)
-					{
-						Debug.LogWarningFormat("Failed to create material drawer {0} with arguments '{1}'", new object[]
-						{
-							text,
-							text2
-						});
-						result = null;
-						return result;
-					}
-				}
-			}
-			result = null;
-			return result;
-		}
+        public void OnGUI(ref Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
+        {
+            float labelWidth;
+            float fieldWidth;
+            float height = position.height;
+            position.height = 0f;
+            if (this.m_DecoratorDrawers != null)
+            {
+                foreach (MaterialPropertyDrawer drawer in this.m_DecoratorDrawers)
+                {
+                    position.height = drawer.GetPropertyHeight(prop, label.text, editor);
+                    labelWidth = EditorGUIUtility.labelWidth;
+                    fieldWidth = EditorGUIUtility.fieldWidth;
+                    drawer.OnGUI(position, prop, label, editor);
+                    EditorGUIUtility.labelWidth = labelWidth;
+                    EditorGUIUtility.fieldWidth = fieldWidth;
+                    position.y += position.height;
+                    height -= position.height;
+                }
+            }
+            position.height = height;
+            if (this.m_PropertyDrawer != null)
+            {
+                labelWidth = EditorGUIUtility.labelWidth;
+                fieldWidth = EditorGUIUtility.fieldWidth;
+                this.m_PropertyDrawer.OnGUI(position, prop, label, editor);
+                EditorGUIUtility.labelWidth = labelWidth;
+                EditorGUIUtility.fieldWidth = fieldWidth;
+            }
+        }
 
-		private static MaterialPropertyHandler GetShaderPropertyHandler(Shader shader, string name)
-		{
-			string[] shaderPropertyAttributes = ShaderUtil.GetShaderPropertyAttributes(shader, name);
-			MaterialPropertyHandler result;
-			if (shaderPropertyAttributes == null || shaderPropertyAttributes.Length == 0)
-			{
-				result = null;
-			}
-			else
-			{
-				MaterialPropertyHandler materialPropertyHandler = new MaterialPropertyHandler();
-				string[] array = shaderPropertyAttributes;
-				for (int i = 0; i < array.Length; i++)
-				{
-					string attrib = array[i];
-					bool flag;
-					MaterialPropertyDrawer shaderPropertyDrawer = MaterialPropertyHandler.GetShaderPropertyDrawer(attrib, out flag);
-					if (shaderPropertyDrawer != null)
-					{
-						if (flag)
-						{
-							if (materialPropertyHandler.m_DecoratorDrawers == null)
-							{
-								materialPropertyHandler.m_DecoratorDrawers = new List<MaterialPropertyDrawer>();
-							}
-							materialPropertyHandler.m_DecoratorDrawers.Add(shaderPropertyDrawer);
-						}
-						else
-						{
-							if (materialPropertyHandler.m_PropertyDrawer != null)
-							{
-								Debug.LogWarning(string.Format("Shader property {0} already has a property drawer", name), shader);
-							}
-							materialPropertyHandler.m_PropertyDrawer = shaderPropertyDrawer;
-						}
-					}
-				}
-				result = materialPropertyHandler;
-			}
-			return result;
-		}
-
-		internal static MaterialPropertyHandler GetHandler(Shader shader, string name)
-		{
-			MaterialPropertyHandler result;
-			if (shader == null)
-			{
-				result = null;
-			}
-			else
-			{
-				string propertyString = MaterialPropertyHandler.GetPropertyString(shader, name);
-				MaterialPropertyHandler materialPropertyHandler;
-				if (MaterialPropertyHandler.s_PropertyHandlers.TryGetValue(propertyString, out materialPropertyHandler))
-				{
-					result = materialPropertyHandler;
-				}
-				else
-				{
-					materialPropertyHandler = MaterialPropertyHandler.GetShaderPropertyHandler(shader, name);
-					if (materialPropertyHandler != null && materialPropertyHandler.IsEmpty())
-					{
-						materialPropertyHandler = null;
-					}
-					MaterialPropertyHandler.s_PropertyHandlers[propertyString] = materialPropertyHandler;
-					result = materialPropertyHandler;
-				}
-			}
-			return result;
-		}
-	}
+        public MaterialPropertyDrawer propertyDrawer
+        {
+            get
+            {
+                return this.m_PropertyDrawer;
+            }
+        }
+    }
 }
+

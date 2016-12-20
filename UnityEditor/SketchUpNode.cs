@@ -1,57 +1,58 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class SketchUpNode : TreeViewItem
-	{
-		public SketchUpNodeInfo Info;
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor.IMGUI.Controls;
 
-		public bool Enabled
-		{
-			get
-			{
-				return this.Info.enabled;
-			}
-			set
-			{
-				if (this.Info.enabled != value)
-				{
-					if (value)
-					{
-						this.ToggleParent(value);
-					}
-					this.ToggleChildren(value);
-					this.Info.enabled = value;
-				}
-			}
-		}
+    internal class SketchUpNode : TreeViewItem
+    {
+        public SketchUpNodeInfo Info;
 
-		public SketchUpNode(int id, int depth, TreeViewItem parent, string displayName, SketchUpNodeInfo info) : base(id, depth, parent, displayName)
-		{
-			this.Info = info;
-			this.children = new List<TreeViewItem>();
-		}
+        public SketchUpNode(int id, int depth, TreeViewItem parent, string displayName, SketchUpNodeInfo info) : base(id, depth, parent, displayName)
+        {
+            this.Info = info;
+            this.children = new List<TreeViewItem>();
+        }
 
-		private void ToggleParent(bool toggle)
-		{
-			SketchUpNode sketchUpNode = this.parent as SketchUpNode;
-			if (sketchUpNode != null)
-			{
-				sketchUpNode.ToggleParent(toggle);
-				sketchUpNode.Info.enabled = toggle;
-			}
-		}
+        private void ToggleChildren(bool toggle)
+        {
+            foreach (TreeViewItem item in this.children)
+            {
+                SketchUpNode node = item as SketchUpNode;
+                node.Info.enabled = toggle;
+                node.ToggleChildren(toggle);
+            }
+        }
 
-		private void ToggleChildren(bool toggle)
-		{
-			foreach (TreeViewItem current in this.children)
-			{
-				SketchUpNode sketchUpNode = current as SketchUpNode;
-				sketchUpNode.Info.enabled = toggle;
-				sketchUpNode.ToggleChildren(toggle);
-			}
-		}
-	}
+        private void ToggleParent(bool toggle)
+        {
+            SketchUpNode parent = this.parent as SketchUpNode;
+            if (parent != null)
+            {
+                parent.ToggleParent(toggle);
+                parent.Info.enabled = toggle;
+            }
+        }
+
+        public bool Enabled
+        {
+            get
+            {
+                return this.Info.enabled;
+            }
+            set
+            {
+                if (this.Info.enabled != value)
+                {
+                    if (value)
+                    {
+                        this.ToggleParent(value);
+                    }
+                    this.ToggleChildren(value);
+                    this.Info.enabled = value;
+                }
+            }
+        }
+    }
 }
+

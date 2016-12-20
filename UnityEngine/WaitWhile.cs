@@ -1,22 +1,26 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class WaitWhile : CustomYieldInstruction
-	{
-		private Func<bool> m_Predicate;
+    using System;
 
-		public override bool keepWaiting
-		{
-			get
-			{
-				return this.m_Predicate();
-			}
-		}
+    /// <summary>
+    /// <para>Suspends the coroutine execution until the supplied delegate evaluates to false.</para>
+    /// </summary>
+    public sealed class WaitWhile : CustomYieldInstruction
+    {
+        private Func<bool> m_Predicate;
 
-		public WaitWhile(Func<bool> predicate)
-		{
-			this.m_Predicate = predicate;
-		}
-	}
+        public WaitWhile(Func<bool> predicate)
+        {
+            this.m_Predicate = predicate;
+        }
+
+        public override bool keepWaiting
+        {
+            get
+            {
+                return this.m_Predicate.Invoke();
+            }
+        }
+    }
 }
+

@@ -1,21 +1,22 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class EditorGUILayoutUtilityInternal : GUILayoutUtility
-	{
-		internal new static GUILayoutGroup topLevel
-		{
-			get
-			{
-				return GUILayoutUtility.topLevel;
-			}
-		}
+    using System;
+    using UnityEngine;
 
-		internal new static GUILayoutGroup BeginLayoutArea(GUIStyle style, Type LayoutType)
-		{
-			return GUILayoutUtility.DoBeginLayoutArea(style, LayoutType);
-		}
-	}
+    internal sealed class EditorGUILayoutUtilityInternal : GUILayoutUtility
+    {
+        internal static GUILayoutGroup BeginLayoutArea(GUIStyle style, Type LayoutType)
+        {
+            return GUILayoutUtility.DoBeginLayoutArea(style, LayoutType);
+        }
+
+        internal static GUILayoutGroup topLevel
+        {
+            get
+            {
+                return GUILayoutUtility.topLevel;
+            }
+        }
+    }
 }
+

@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ShadowProjection
-	{
-		CloseFit,
-		StableFit
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Shadow projection type for.</para>
+    /// </summary>
+    public enum ShadowProjection
+    {
+        CloseFit,
+        StableFit
+    }
 }
+

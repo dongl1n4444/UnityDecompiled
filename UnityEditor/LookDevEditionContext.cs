@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum LookDevEditionContext
-	{
-		Left,
-		Right,
-		None
-	}
+    using System;
+
+    internal enum LookDevEditionContext
+    {
+        Left,
+        Right,
+        None
+    }
 }
+

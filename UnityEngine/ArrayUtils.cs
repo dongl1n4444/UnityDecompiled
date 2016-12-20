@@ -1,8 +1,9 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal static class ArrayUtils
-	{
-	}
+    using System;
+
+    internal static class ArrayUtils
+    {
+    }
 }
+

@@ -1,35 +1,31 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class ChartSeries
-	{
-		public string identifierName;
+    using System;
+    using UnityEngine;
 
-		public string name;
+    internal class ChartSeries
+    {
+        public Color color;
+        public float[] data;
+        public bool enabled;
+        public string identifierName;
+        public string name;
+        public float[] overlayData;
 
-		public float[] data;
+        public ChartSeries(string name, int len, Color clr)
+        {
+            this.name = name;
+            this.identifierName = name;
+            this.data = new float[len];
+            this.overlayData = null;
+            this.color = clr;
+            this.enabled = true;
+        }
 
-		public float[] overlayData;
-
-		public Color color;
-
-		public bool enabled;
-
-		public ChartSeries(string name, int len, Color clr)
-		{
-			this.name = name;
-			this.identifierName = name;
-			this.data = new float[len];
-			this.overlayData = null;
-			this.color = clr;
-			this.enabled = true;
-		}
-
-		public void CreateOverlayData()
-		{
-			this.overlayData = new float[this.data.Length];
-		}
-	}
+        public void CreateOverlayData()
+        {
+            this.overlayData = new float[this.data.Length];
+        }
+    }
 }
+

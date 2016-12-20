@@ -1,204 +1,155 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class MaterialEnumDrawer : MaterialPropertyDrawer
-	{
-		private readonly GUIContent[] names;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		private readonly int[] values;
+    internal class MaterialEnumDrawer : MaterialPropertyDrawer
+    {
+        [CompilerGenerated]
+        private static Func<Assembly, IEnumerable<Type>> <>f__am$cache0;
+        private readonly GUIContent[] names;
+        private readonly int[] values;
 
-		public MaterialEnumDrawer(string enumName)
-		{
-			Type[] source = AppDomain.CurrentDomain.GetAssemblies().SelectMany((Assembly x) => AssemblyHelper.GetTypesFromAssembly(x)).ToArray<Type>();
-			try
-			{
-				Type enumType = source.FirstOrDefault((Type x) => x.IsSubclassOf(typeof(Enum)) && (x.Name == enumName || x.FullName == enumName));
-				string[] array = Enum.GetNames(enumType);
-				this.names = new GUIContent[array.Length];
-				for (int i = 0; i < array.Length; i++)
-				{
-					this.names[i] = new GUIContent(array[i]);
-				}
-				Array array2 = Enum.GetValues(enumType);
-				this.values = new int[array2.Length];
-				for (int j = 0; j < array2.Length; j++)
-				{
-					this.values[j] = (int)array2.GetValue(j);
-				}
-			}
-			catch (Exception)
-			{
-				Debug.LogWarningFormat("Failed to create MaterialEnum, enum {0} not found", new object[]
-				{
-					enumName
-				});
-				throw;
-			}
-		}
+        public MaterialEnumDrawer(string enumName)
+        {
+            <MaterialEnumDrawer>c__AnonStorey0 storey = new <MaterialEnumDrawer>c__AnonStorey0 {
+                enumName = enumName
+            };
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <MaterialEnumDrawer>m__0);
+            }
+            Type[] typeArray = Enumerable.ToArray<Type>(Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0));
+            try
+            {
+                Type enumType = Enumerable.FirstOrDefault<Type>(typeArray, new Func<Type, bool>(storey, (IntPtr) this.<>m__0));
+                string[] names = Enum.GetNames(enumType);
+                this.names = new GUIContent[names.Length];
+                for (int i = 0; i < names.Length; i++)
+                {
+                    this.names[i] = new GUIContent(names[i]);
+                }
+                Array values = Enum.GetValues(enumType);
+                this.values = new int[values.Length];
+                for (int j = 0; j < values.Length; j++)
+                {
+                    this.values[j] = (int) values.GetValue(j);
+                }
+            }
+            catch (Exception)
+            {
+                object[] args = new object[] { storey.enumName };
+                Debug.LogWarningFormat("Failed to create MaterialEnum, enum {0} not found", args);
+                throw;
+            }
+        }
 
-		public MaterialEnumDrawer(string n1, float v1) : this(new string[]
-		{
-			n1
-		}, new float[]
-		{
-			v1
-		})
-		{
-		}
+        public MaterialEnumDrawer(string n1, float v1) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1 };
+            float[] singleArray1 = new float[] { v1 };
+        }
 
-		public MaterialEnumDrawer(string n1, float v1, string n2, float v2) : this(new string[]
-		{
-			n1,
-			n2
-		}, new float[]
-		{
-			v1,
-			v2
-		})
-		{
-		}
+        public MaterialEnumDrawer(string[] enumNames, float[] vals)
+        {
+            this.names = new GUIContent[enumNames.Length];
+            for (int i = 0; i < enumNames.Length; i++)
+            {
+                this.names[i] = new GUIContent(enumNames[i]);
+            }
+            this.values = new int[vals.Length];
+            for (int j = 0; j < vals.Length; j++)
+            {
+                this.values[j] = (int) vals[j];
+            }
+        }
 
-		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3) : this(new string[]
-		{
-			n1,
-			n2,
-			n3
-		}, new float[]
-		{
-			v1,
-			v2,
-			v3
-		})
-		{
-		}
+        public MaterialEnumDrawer(string n1, float v1, string n2, float v2) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1, n2 };
+            float[] singleArray1 = new float[] { v1, v2 };
+        }
 
-		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4) : this(new string[]
-		{
-			n1,
-			n2,
-			n3,
-			n4
-		}, new float[]
-		{
-			v1,
-			v2,
-			v3,
-			v4
-		})
-		{
-		}
+        public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1, n2, n3 };
+            float[] singleArray1 = new float[] { v1, v2, v3 };
+        }
 
-		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5) : this(new string[]
-		{
-			n1,
-			n2,
-			n3,
-			n4,
-			n5
-		}, new float[]
-		{
-			v1,
-			v2,
-			v3,
-			v4,
-			v5
-		})
-		{
-		}
+        public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1, n2, n3, n4 };
+            float[] singleArray1 = new float[] { v1, v2, v3, v4 };
+        }
 
-		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5, string n6, float v6) : this(new string[]
-		{
-			n1,
-			n2,
-			n3,
-			n4,
-			n5,
-			n6
-		}, new float[]
-		{
-			v1,
-			v2,
-			v3,
-			v4,
-			v5,
-			v6
-		})
-		{
-		}
+        public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1, n2, n3, n4, n5 };
+            float[] singleArray1 = new float[] { v1, v2, v3, v4, v5 };
+        }
 
-		public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5, string n6, float v6, string n7, float v7) : this(new string[]
-		{
-			n1,
-			n2,
-			n3,
-			n4,
-			n5,
-			n6,
-			n7
-		}, new float[]
-		{
-			v1,
-			v2,
-			v3,
-			v4,
-			v5,
-			v6,
-			v7
-		})
-		{
-		}
+        public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5, string n6, float v6) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1, n2, n3, n4, n5, n6 };
+            float[] singleArray1 = new float[] { v1, v2, v3, v4, v5, v6 };
+        }
 
-		public MaterialEnumDrawer(string[] enumNames, float[] vals)
-		{
-			this.names = new GUIContent[enumNames.Length];
-			for (int i = 0; i < enumNames.Length; i++)
-			{
-				this.names[i] = new GUIContent(enumNames[i]);
-			}
-			this.values = new int[vals.Length];
-			for (int j = 0; j < vals.Length; j++)
-			{
-				this.values[j] = (int)vals[j];
-			}
-		}
+        public MaterialEnumDrawer(string n1, float v1, string n2, float v2, string n3, float v3, string n4, float v4, string n5, float v5, string n6, float v6, string n7, float v7) : this(textArray1, singleArray1)
+        {
+            string[] textArray1 = new string[] { n1, n2, n3, n4, n5, n6, n7 };
+            float[] singleArray1 = new float[] { v1, v2, v3, v4, v5, v6, v7 };
+        }
 
-		public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
-		{
-			float result;
-			if (prop.type != MaterialProperty.PropType.Float && prop.type != MaterialProperty.PropType.Range)
-			{
-				result = 40f;
-			}
-			else
-			{
-				result = base.GetPropertyHeight(prop, label, editor);
-			}
-			return result;
-		}
+        [CompilerGenerated]
+        private static IEnumerable<Type> <MaterialEnumDrawer>m__0(Assembly x)
+        {
+            return AssemblyHelper.GetTypesFromAssembly(x);
+        }
 
-		public override void OnGUI(Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
-		{
-			if (prop.type != MaterialProperty.PropType.Float && prop.type != MaterialProperty.PropType.Range)
-			{
-				GUIContent label2 = EditorGUIUtility.TempContent("Enum used on a non-float property: " + prop.name, EditorGUIUtility.GetHelpIcon(MessageType.Warning));
-				EditorGUI.LabelField(position, label2, EditorStyles.helpBox);
-			}
-			else
-			{
-				EditorGUI.BeginChangeCheck();
-				EditorGUI.showMixedValue = prop.hasMixedValue;
-				int num = (int)prop.floatValue;
-				num = EditorGUI.IntPopup(position, label, num, this.names, this.values);
-				EditorGUI.showMixedValue = false;
-				if (EditorGUI.EndChangeCheck())
-				{
-					prop.floatValue = (float)num;
-				}
-			}
-		}
-	}
+        public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
+        {
+            if ((prop.type != MaterialProperty.PropType.Float) && (prop.type != MaterialProperty.PropType.Range))
+            {
+                return 40f;
+            }
+            return base.GetPropertyHeight(prop, label, editor);
+        }
+
+        public override void OnGUI(Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
+        {
+            if ((prop.type != MaterialProperty.PropType.Float) && (prop.type != MaterialProperty.PropType.Range))
+            {
+                GUIContent content = EditorGUIUtility.TempContent("Enum used on a non-float property: " + prop.name, EditorGUIUtility.GetHelpIcon(MessageType.Warning));
+                EditorGUI.LabelField(position, content, EditorStyles.helpBox);
+            }
+            else
+            {
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = prop.hasMixedValue;
+                int floatValue = (int) prop.floatValue;
+                floatValue = EditorGUI.IntPopup(position, label, floatValue, this.names, this.values);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    prop.floatValue = floatValue;
+                }
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <MaterialEnumDrawer>c__AnonStorey0
+        {
+            internal string enumName;
+
+            internal bool <>m__0(Type x)
+            {
+                return (x.IsSubclassOf(typeof(Enum)) && ((x.Name == this.enumName) || (x.FullName == this.enumName)));
+            }
+        }
+    }
 }
+

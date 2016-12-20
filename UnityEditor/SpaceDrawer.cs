@@ -1,14 +1,15 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomPropertyDrawer(typeof(SpaceAttribute))]
-	internal sealed class SpaceDrawer : DecoratorDrawer
-	{
-		public override float GetHeight()
-		{
-			return (base.attribute as SpaceAttribute).height;
-		}
-	}
+    using System;
+    using UnityEngine;
+
+    [CustomPropertyDrawer(typeof(SpaceAttribute))]
+    internal sealed class SpaceDrawer : DecoratorDrawer
+    {
+        public override float GetHeight()
+        {
+            return (base.attribute as SpaceAttribute).height;
+        }
+    }
 }
+

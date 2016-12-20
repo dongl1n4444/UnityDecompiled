@@ -1,102 +1,103 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Sprites;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(PolygonCollider2D))]
-	internal class PolygonCollider2DEditor : Collider2DEditorBase
-	{
-		private readonly PolygonEditorUtility m_PolyUtility = new PolygonEditorUtility();
+    using System;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEditor.Sprites;
+    using UnityEngine;
 
-		private bool m_ShowColliderInfo;
+    [CanEditMultipleObjects, CustomEditor(typeof(PolygonCollider2D))]
+    internal class PolygonCollider2DEditor : Collider2DEditorBase
+    {
+        [CompilerGenerated]
+        private static Func<Object, bool> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<Object, PolygonCollider2D> <>f__am$cache1;
+        private SerializedProperty m_Points;
+        private readonly PolygonEditorUtility m_PolyUtility = new PolygonEditorUtility();
+        private bool m_ShowColliderInfo;
 
-		private SerializedProperty m_Points;
+        private void HandleDragAndDrop(Rect targetRect)
+        {
+            if (((Event.current.type == EventType.DragPerform) || (Event.current.type == EventType.DragUpdated)) && targetRect.Contains(Event.current.mousePosition))
+            {
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <HandleDragAndDrop>m__0);
+                }
+                foreach (Object obj2 in Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache0))
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    if (Event.current.type == EventType.DragPerform)
+                    {
+                        Sprite sprite = !(obj2 is Sprite) ? SpriteUtility.TextureToSprite(obj2 as Texture2D) : (obj2 as Sprite);
+                        if (<>f__am$cache1 == null)
+                        {
+                            <>f__am$cache1 = new Func<Object, PolygonCollider2D>(null, (IntPtr) <HandleDragAndDrop>m__1);
+                        }
+                        foreach (PolygonCollider2D colliderd in Enumerable.Select<Object, PolygonCollider2D>(base.targets, <>f__am$cache1))
+                        {
+                            Vector2[][] vectorArray;
+                            SpriteUtility.GenerateOutlineFromSprite(sprite, 0.25f, 200, true, out vectorArray);
+                            colliderd.pathCount = vectorArray.Length;
+                            for (int i = 0; i < vectorArray.Length; i++)
+                            {
+                                colliderd.SetPath(i, vectorArray[i]);
+                            }
+                            this.m_PolyUtility.StopEditing();
+                            DragAndDrop.AcceptDrag();
+                        }
+                    }
+                    return;
+                }
+                DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
+            }
+        }
 
-		public override void OnEnable()
-		{
-			base.OnEnable();
-			this.m_Points = base.serializedObject.FindProperty("m_Points");
-			this.m_Points.isExpanded = false;
-		}
+        protected override void OnEditEnd()
+        {
+            this.m_PolyUtility.StopEditing();
+        }
 
-		public override void OnInspectorGUI()
-		{
-			EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
-			base.BeginColliderInspector();
-			base.OnInspectorGUI();
-			if (base.targets.Length == 1)
-			{
-				EditorGUI.BeginDisabledGroup(base.editingCollider);
-				EditorGUILayout.PropertyField(this.m_Points, true, new GUILayoutOption[0]);
-				EditorGUI.EndDisabledGroup();
-			}
-			base.EndColliderInspector();
-			base.FinalizeInspectorGUI();
-			EditorGUILayout.EndVertical();
-			this.HandleDragAndDrop(GUILayoutUtility.GetLastRect());
-		}
+        protected override void OnEditStart()
+        {
+            if (base.target != null)
+            {
+                this.m_PolyUtility.StartEditing(base.target as Collider2D);
+            }
+        }
 
-		private void HandleDragAndDrop(Rect targetRect)
-		{
-			if (Event.current.type == EventType.DragPerform || Event.current.type == EventType.DragUpdated)
-			{
-				if (targetRect.Contains(Event.current.mousePosition))
-				{
-					using (IEnumerator<UnityEngine.Object> enumerator = (from obj in DragAndDrop.objectReferences
-					where obj is Sprite || obj is Texture2D
-					select obj).GetEnumerator())
-					{
-						if (enumerator.MoveNext())
-						{
-							UnityEngine.Object current = enumerator.Current;
-							DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-							if (Event.current.type == EventType.DragPerform)
-							{
-								Sprite sprite = (!(current is Sprite)) ? SpriteUtility.TextureToSprite(current as Texture2D) : (current as Sprite);
-								foreach (PolygonCollider2D current2 in from target in base.targets
-								select target as PolygonCollider2D)
-								{
-									Vector2[][] array;
-									UnityEditor.Sprites.SpriteUtility.GenerateOutlineFromSprite(sprite, 0.25f, 200, true, out array);
-									current2.pathCount = array.Length;
-									for (int i = 0; i < array.Length; i++)
-									{
-										current2.SetPath(i, array[i]);
-									}
-									this.m_PolyUtility.StopEditing();
-									DragAndDrop.AcceptDrag();
-								}
-							}
-							return;
-						}
-					}
-					DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
-				}
-			}
-		}
+        public override void OnEnable()
+        {
+            base.OnEnable();
+            this.m_Points = base.serializedObject.FindProperty("m_Points");
+            this.m_Points.isExpanded = false;
+        }
 
-		protected override void OnEditStart()
-		{
-			if (!(base.target == null))
-			{
-				this.m_PolyUtility.StartEditing(base.target as Collider2D);
-			}
-		}
+        public override void OnInspectorGUI()
+        {
+            EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
+            base.BeginColliderInspector();
+            base.OnInspectorGUI();
+            if (base.targets.Length == 1)
+            {
+                EditorGUI.BeginDisabledGroup(base.editingCollider);
+                EditorGUILayout.PropertyField(this.m_Points, true, new GUILayoutOption[0]);
+                EditorGUI.EndDisabledGroup();
+            }
+            base.EndColliderInspector();
+            base.FinalizeInspectorGUI();
+            EditorGUILayout.EndVertical();
+            this.HandleDragAndDrop(GUILayoutUtility.GetLastRect());
+        }
 
-		protected override void OnEditEnd()
-		{
-			this.m_PolyUtility.StopEditing();
-		}
-
-		public void OnSceneGUI()
-		{
-			if (base.editingCollider)
-			{
-				this.m_PolyUtility.OnSceneGUI();
-			}
-		}
-	}
+        public void OnSceneGUI()
+        {
+            if (base.editingCollider)
+            {
+                this.m_PolyUtility.OnSceneGUI();
+            }
+        }
+    }
 }
+

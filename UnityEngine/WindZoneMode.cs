@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum WindZoneMode
-	{
-		Directional,
-		Spherical
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Modes a Wind Zone can have, either Spherical or Directional.</para>
+    /// </summary>
+    public enum WindZoneMode
+    {
+        Directional,
+        Spherical
+    }
 }
+

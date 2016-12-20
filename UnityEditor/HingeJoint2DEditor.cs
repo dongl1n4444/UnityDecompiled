@@ -1,53 +1,49 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(HingeJoint2D))]
-	internal class HingeJoint2DEditor : AnchoredJoint2DEditor
-	{
-		public new void OnSceneGUI()
-		{
-			HingeJoint2D hingeJoint2D = (HingeJoint2D)base.target;
-			if (hingeJoint2D.enabled)
-			{
-				if (hingeJoint2D.useLimits)
-				{
-					Vector3 vector = Joint2DEditor.TransformPoint(hingeJoint2D.transform, hingeJoint2D.anchor);
-					float num = Mathf.Min(hingeJoint2D.limits.min, hingeJoint2D.limits.max);
-					float num2 = Mathf.Max(hingeJoint2D.limits.min, hingeJoint2D.limits.max);
-					float angle = num2 - num;
-					float num3 = HandleUtility.GetHandleSize(vector) * 0.8f;
-					float rotation = hingeJoint2D.GetComponent<Rigidbody2D>().rotation;
-					Vector3 vector2 = Joint2DEditor.RotateVector2(Vector3.right, -num2 - rotation);
-					Vector3 end = vector + Joint2DEditor.RotateVector2(Vector3.right, -hingeJoint2D.jointAngle - rotation) * num3;
-					Handles.color = new Color(0f, 1f, 0f, 0.7f);
-					Joint2DEditor.DrawAALine(vector, end);
-					Handles.color = new Color(0f, 1f, 0f, 0.03f);
-					Handles.DrawSolidArc(vector, Vector3.back, vector2, angle, num3);
-					Handles.color = new Color(0f, 1f, 0f, 0.7f);
-					Handles.DrawWireArc(vector, Vector3.back, vector2, angle, num3);
-					this.DrawTick(vector, num3, 0f, vector2, 1f);
-					this.DrawTick(vector, num3, angle, vector2, 1f);
-				}
-				base.OnSceneGUI();
-			}
-		}
+    using System;
+    using UnityEngine;
 
-		private void DrawTick(Vector3 center, float radius, float angle, Vector3 up, float length)
-		{
-			Vector3 a = Joint2DEditor.RotateVector2(up, angle).normalized;
-			Vector3 vector = center + a * radius;
-			Vector3 vector2 = vector + (center - vector).normalized * radius * length;
-			Handles.DrawAAPolyLine(new Color[]
-			{
-				new Color(0f, 1f, 0f, 0.7f),
-				new Color(0f, 1f, 0f, 0f)
-			}, new Vector3[]
-			{
-				vector,
-				vector2
-			});
-		}
-	}
+    [CustomEditor(typeof(HingeJoint2D)), CanEditMultipleObjects]
+    internal class HingeJoint2DEditor : AnchoredJoint2DEditor
+    {
+        private void DrawTick(Vector3 center, float radius, float angle, Vector3 up, float length)
+        {
+            Vector3 normalized = (Vector3) Joint2DEditor.RotateVector2(up, angle).normalized;
+            Vector3 vector3 = center + ((Vector3) (normalized * radius));
+            Vector3 vector5 = center - vector3;
+            Vector3 vector4 = vector3 + ((Vector3) ((vector5.normalized * radius) * length));
+            Color[] colors = new Color[] { new Color(0f, 1f, 0f, 0.7f), new Color(0f, 1f, 0f, 0f) };
+            Vector3[] points = new Vector3[] { vector3, vector4 };
+            Handles.DrawAAPolyLine(colors, points);
+        }
+
+        public void OnSceneGUI()
+        {
+            HingeJoint2D target = (HingeJoint2D) base.target;
+            if (target.enabled)
+            {
+                if (target.useLimits)
+                {
+                    Vector3 position = Joint2DEditor.TransformPoint(target.transform, (Vector3) target.anchor);
+                    float num = Mathf.Min(target.limits.min, target.limits.max);
+                    float num2 = Mathf.Max(target.limits.min, target.limits.max);
+                    float angle = num2 - num;
+                    float radius = HandleUtility.GetHandleSize(position) * 0.8f;
+                    float rotation = target.GetComponent<Rigidbody2D>().rotation;
+                    Vector3 from = (Vector3) Joint2DEditor.RotateVector2(Vector3.right, -num2 - rotation);
+                    Vector3 end = position + ((Vector3) (Joint2DEditor.RotateVector2(Vector3.right, -target.jointAngle - rotation) * radius));
+                    Handles.color = new Color(0f, 1f, 0f, 0.7f);
+                    Joint2DEditor.DrawAALine(position, end);
+                    Handles.color = new Color(0f, 1f, 0f, 0.03f);
+                    Handles.DrawSolidArc(position, Vector3.back, from, angle, radius);
+                    Handles.color = new Color(0f, 1f, 0f, 0.7f);
+                    Handles.DrawWireArc(position, Vector3.back, from, angle, radius);
+                    this.DrawTick(position, radius, 0f, from, 1f);
+                    this.DrawTick(position, radius, angle, from, 1f);
+                }
+                base.OnSceneGUI();
+            }
+        }
+    }
 }
+

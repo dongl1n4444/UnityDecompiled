@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum TextureWrapMode
-	{
-		Repeat,
-		Clamp
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Wrap mode for textures.</para>
+    /// </summary>
+    public enum TextureWrapMode
+    {
+        Repeat,
+        Clamp
+    }
 }
+

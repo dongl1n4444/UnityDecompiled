@@ -1,65 +1,66 @@
-using System;
-using System.Collections.Generic;
-using UnityEditorInternal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class PurchaseResult : AssetStoreResultBase<PurchaseResult>
-	{
-		public enum Status
-		{
-			BasketNotEmpty,
-			ServiceDisabled,
-			AnonymousUser,
-			PasswordMissing,
-			PasswordWrong,
-			PurchaseDeclined,
-			Ok
-		}
+    using System;
+    using System.Collections.Generic;
+    using UnityEditorInternal;
 
-		public PurchaseResult.Status status;
+    internal class PurchaseResult : AssetStoreResultBase<PurchaseResult>
+    {
+        public string message;
+        public int packageID;
+        public Status status;
 
-		public int packageID;
+        public PurchaseResult(AssetStoreResultBase<PurchaseResult>.Callback c) : base(c)
+        {
+        }
 
-		public string message;
+        protected override void Parse(Dictionary<string, JSONValue> dict)
+        {
+            this.packageID = int.Parse(dict["package_id"].AsString());
+            this.message = !dict.ContainsKey("message") ? null : dict["message"].AsString(true);
+            JSONValue value4 = dict["status"];
+            switch (value4.AsString(true))
+            {
+                case "basket-not-empty":
+                    this.status = Status.BasketNotEmpty;
+                    break;
 
-		public PurchaseResult(AssetStoreResultBase<PurchaseResult>.Callback c) : base(c)
-		{
-		}
+                case "service-disabled":
+                    this.status = Status.ServiceDisabled;
+                    break;
 
-		protected override void Parse(Dictionary<string, JSONValue> dict)
-		{
-			this.packageID = int.Parse(dict["package_id"].AsString());
-			this.message = ((!dict.ContainsKey("message")) ? null : dict["message"].AsString(true));
-			string a = dict["status"].AsString(true);
-			if (a == "basket-not-empty")
-			{
-				this.status = PurchaseResult.Status.BasketNotEmpty;
-			}
-			else if (a == "service-disabled")
-			{
-				this.status = PurchaseResult.Status.ServiceDisabled;
-			}
-			else if (a == "user-anonymous")
-			{
-				this.status = PurchaseResult.Status.AnonymousUser;
-			}
-			else if (a == "password-missing")
-			{
-				this.status = PurchaseResult.Status.PasswordMissing;
-			}
-			else if (a == "password-wrong")
-			{
-				this.status = PurchaseResult.Status.PasswordWrong;
-			}
-			else if (a == "purchase-declined")
-			{
-				this.status = PurchaseResult.Status.PurchaseDeclined;
-			}
-			else if (a == "ok")
-			{
-				this.status = PurchaseResult.Status.Ok;
-			}
-		}
-	}
+                case "user-anonymous":
+                    this.status = Status.AnonymousUser;
+                    break;
+
+                case "password-missing":
+                    this.status = Status.PasswordMissing;
+                    break;
+
+                case "password-wrong":
+                    this.status = Status.PasswordWrong;
+                    break;
+
+                case "purchase-declined":
+                    this.status = Status.PurchaseDeclined;
+                    break;
+
+                case "ok":
+                    this.status = Status.Ok;
+                    break;
+            }
+        }
+
+        public enum Status
+        {
+            BasketNotEmpty,
+            ServiceDisabled,
+            AnonymousUser,
+            PasswordMissing,
+            PasswordWrong,
+            PurchaseDeclined,
+            Ok
+        }
+    }
 }
+

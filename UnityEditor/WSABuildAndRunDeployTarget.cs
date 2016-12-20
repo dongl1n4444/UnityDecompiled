@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WSABuildAndRunDeployTarget
-	{
-		LocalMachine,
-		WindowsPhone,
-		LocalMachineAndWindowsPhone
-	}
+    using System;
+
+    public enum WSABuildAndRunDeployTarget
+    {
+        LocalMachine,
+        WindowsPhone,
+        LocalMachineAndWindowsPhone
+    }
 }
+

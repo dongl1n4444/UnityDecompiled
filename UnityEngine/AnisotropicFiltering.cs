@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum AnisotropicFiltering
-	{
-		Disable,
-		Enable,
-		ForceEnable
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Anisotropic filtering mode.</para>
+    /// </summary>
+    public enum AnisotropicFiltering
+    {
+        Disable,
+        Enable,
+        ForceEnable
+    }
 }
+

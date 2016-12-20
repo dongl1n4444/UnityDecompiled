@@ -1,23 +1,24 @@
-using System;
-using UnityEditorInternal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AssembleEditorSkin : EditorWindow
-	{
-		public static void DoIt()
-		{
-			EditorApplication.ExecuteMenuItem("Tools/Regenerate Editor Skins Now");
-		}
+    using System;
+    using UnityEditorInternal;
 
-		private static void RegenerateAllIconsWithMipLevels()
-		{
-			GenerateIconsWithMipLevels.GenerateAllIconsWithMipLevels();
-		}
+    internal class AssembleEditorSkin : EditorWindow
+    {
+        public static void DoIt()
+        {
+            EditorApplication.ExecuteMenuItem("Tools/Regenerate Editor Skins Now");
+        }
 
-		private static void RegenerateSelectedIconsWithMipLevels()
-		{
-			GenerateIconsWithMipLevels.GenerateSelectedIconsWithMips();
-		}
-	}
+        private static void RegenerateAllIconsWithMipLevels()
+        {
+            GenerateIconsWithMipLevels.GenerateAllIconsWithMipLevels();
+        }
+
+        private static void RegenerateSelectedIconsWithMipLevels()
+        {
+            GenerateIconsWithMipLevels.GenerateSelectedIconsWithMips();
+        }
+    }
 }
+

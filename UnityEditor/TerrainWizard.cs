@@ -1,71 +1,61 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class TerrainWizard : ScriptableWizard
-	{
-		internal const int kMaxResolution = 4097;
+    using System;
+    using UnityEngine;
 
-		protected Terrain m_Terrain;
+    internal class TerrainWizard : ScriptableWizard
+    {
+        internal const int kMaxResolution = 0x1001;
+        protected Terrain m_Terrain;
 
-		protected TerrainData terrainData
-		{
-			get
-			{
-				TerrainData result;
-				if (this.m_Terrain != null)
-				{
-					result = this.m_Terrain.terrainData;
-				}
-				else
-				{
-					result = null;
-				}
-				return result;
-			}
-		}
+        internal static T DisplayTerrainWizard<T>(string title, string button) where T: TerrainWizard
+        {
+            T[] localArray = Resources.FindObjectsOfTypeAll<T>();
+            if (localArray.Length > 0)
+            {
+                T local = localArray[0];
+                local.titleContent = EditorGUIUtility.TextContent(title);
+                local.createButtonName = button;
+                local.otherButtonName = "";
+                local.Focus();
+                return local;
+            }
+            return ScriptableWizard.DisplayWizard<T>(title, button);
+        }
 
-		internal virtual void OnWizardUpdate()
-		{
-			base.isValid = true;
-			base.errorString = "";
-			if (this.m_Terrain == null || this.m_Terrain.terrainData == null)
-			{
-				base.isValid = false;
-				base.errorString = "Terrain does not exist";
-			}
-		}
+        internal void FlushHeightmapModification()
+        {
+            this.m_Terrain.Flush();
+        }
 
-		internal void InitializeDefaults(Terrain terrain)
-		{
-			this.m_Terrain = terrain;
-			this.OnWizardUpdate();
-		}
+        internal void InitializeDefaults(Terrain terrain)
+        {
+            this.m_Terrain = terrain;
+            this.OnWizardUpdate();
+        }
 
-		internal void FlushHeightmapModification()
-		{
-			this.m_Terrain.Flush();
-		}
+        internal virtual void OnWizardUpdate()
+        {
+            base.isValid = true;
+            base.errorString = "";
+            if ((this.m_Terrain == null) || (this.m_Terrain.terrainData == null))
+            {
+                base.isValid = false;
+                base.errorString = "Terrain does not exist";
+            }
+        }
 
-		internal static T DisplayTerrainWizard<T>(string title, string button) where T : TerrainWizard
-		{
-			T[] array = Resources.FindObjectsOfTypeAll<T>();
-			T result;
-			if (array.Length > 0)
-			{
-				T t = array[0];
-				t.titleContent = EditorGUIUtility.TextContent(title);
-				t.createButtonName = button;
-				t.otherButtonName = "";
-				t.Focus();
-				result = t;
-			}
-			else
-			{
-				result = ScriptableWizard.DisplayWizard<T>(title, button);
-			}
-			return result;
-		}
-	}
+        protected TerrainData terrainData
+        {
+            get
+            {
+                if (this.m_Terrain != null)
+                {
+                    return this.m_Terrain.terrainData;
+                }
+                return null;
+            }
+        }
+    }
 }
+

@@ -1,22 +1,23 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[InitializeOnLoad]
-	internal class WebViewStatic : ScriptableSingleton<WebViewStatic>
-	{
-		[SerializeField]
-		private WebView m_WebView;
+    using System;
+    using UnityEngine;
 
-		public static WebView GetWebView()
-		{
-			return ScriptableSingleton<WebViewStatic>.instance.m_WebView;
-		}
+    [InitializeOnLoad]
+    internal class WebViewStatic : ScriptableSingleton<WebViewStatic>
+    {
+        [SerializeField]
+        private WebView m_WebView;
 
-		public static void SetWebView(WebView webView)
-		{
-			ScriptableSingleton<WebViewStatic>.instance.m_WebView = webView;
-		}
-	}
+        public static WebView GetWebView()
+        {
+            return ScriptableSingleton<WebViewStatic>.instance.m_WebView;
+        }
+
+        public static void SetWebView(WebView webView)
+        {
+            ScriptableSingleton<WebViewStatic>.instance.m_WebView = webView;
+        }
+    }
 }
+

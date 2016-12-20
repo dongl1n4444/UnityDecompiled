@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum ProfilerAudioView
-	{
-		Stats,
-		Channels,
-		Groups,
-		ChannelsAndGroups,
-		DSPGraph,
-		Clips
-	}
+    using System;
+
+    public enum ProfilerAudioView
+    {
+        Stats,
+        Channels,
+        Groups,
+        ChannelsAndGroups,
+        DSPGraph,
+        Clips
+    }
 }
+

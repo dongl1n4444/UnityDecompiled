@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum LineTextureMode
-	{
-		Stretch,
-		Tile
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Choose how textures are applied to Lines and Trails.</para>
+    /// </summary>
+    public enum LineTextureMode
+    {
+        Stretch,
+        Tile
+    }
 }
+

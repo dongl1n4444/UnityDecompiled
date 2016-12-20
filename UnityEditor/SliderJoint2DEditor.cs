@@ -1,40 +1,41 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(SliderJoint2D))]
-	internal class SliderJoint2DEditor : AnchoredJoint2DEditor
-	{
-		public new void OnSceneGUI()
-		{
-			SliderJoint2D sliderJoint2D = (SliderJoint2D)base.target;
-			if (sliderJoint2D.enabled)
-			{
-				Vector3 vector = Joint2DEditor.TransformPoint(sliderJoint2D.transform, sliderJoint2D.anchor);
-				Vector3 vector2 = vector;
-				Vector3 vector3 = vector;
-				Vector3 vector4 = Joint2DEditor.RotateVector2(Vector3.right, -sliderJoint2D.angle - sliderJoint2D.transform.eulerAngles.z);
-				Handles.color = Color.green;
-				if (sliderJoint2D.useLimits)
-				{
-					vector2 = vector + vector4 * sliderJoint2D.limits.max;
-					vector3 = vector + vector4 * sliderJoint2D.limits.min;
-					Vector3 a = Vector3.Cross(vector4, Vector3.forward);
-					float d = HandleUtility.GetHandleSize(vector2) * 0.16f;
-					float d2 = HandleUtility.GetHandleSize(vector3) * 0.16f;
-					Joint2DEditor.DrawAALine(vector2 + a * d, vector2 - a * d);
-					Joint2DEditor.DrawAALine(vector3 + a * d2, vector3 - a * d2);
-				}
-				else
-				{
-					vector4 *= HandleUtility.GetHandleSize(vector) * 0.3f;
-					vector2 += vector4;
-					vector3 -= vector4;
-				}
-				Joint2DEditor.DrawAALine(vector2, vector3);
-				base.OnSceneGUI();
-			}
-		}
-	}
+    using System;
+    using UnityEngine;
+
+    [CustomEditor(typeof(SliderJoint2D)), CanEditMultipleObjects]
+    internal class SliderJoint2DEditor : AnchoredJoint2DEditor
+    {
+        public void OnSceneGUI()
+        {
+            SliderJoint2D target = (SliderJoint2D) base.target;
+            if (target.enabled)
+            {
+                Vector3 position = Joint2DEditor.TransformPoint(target.transform, (Vector3) target.anchor);
+                Vector3 vector2 = position;
+                Vector3 vector3 = position;
+                Vector3 lhs = (Vector3) Joint2DEditor.RotateVector2(Vector3.right, -target.angle - target.transform.eulerAngles.z);
+                Handles.color = Color.green;
+                if (target.useLimits)
+                {
+                    vector2 = position + ((Vector3) (lhs * target.limits.max));
+                    vector3 = position + ((Vector3) (lhs * target.limits.min));
+                    Vector3 vector6 = Vector3.Cross(lhs, Vector3.forward);
+                    float num = HandleUtility.GetHandleSize(vector2) * 0.16f;
+                    float num2 = HandleUtility.GetHandleSize(vector3) * 0.16f;
+                    Joint2DEditor.DrawAALine(vector2 + ((Vector3) (vector6 * num)), vector2 - ((Vector3) (vector6 * num)));
+                    Joint2DEditor.DrawAALine(vector3 + ((Vector3) (vector6 * num2)), vector3 - ((Vector3) (vector6 * num2)));
+                }
+                else
+                {
+                    lhs = (Vector3) (lhs * (HandleUtility.GetHandleSize(position) * 0.3f));
+                    vector2 += lhs;
+                    vector3 -= lhs;
+                }
+                Joint2DEditor.DrawAALine(vector2, vector3);
+                base.OnSceneGUI();
+            }
+        }
+    }
 }
+

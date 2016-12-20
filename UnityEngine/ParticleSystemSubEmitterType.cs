@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemSubEmitterType
-	{
-		Birth,
-		Collision,
-		Death
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The events that cause new particles to be spawned.</para>
+    /// </summary>
+    public enum ParticleSystemSubEmitterType
+    {
+        Birth,
+        Collision,
+        Death
+    }
 }
+

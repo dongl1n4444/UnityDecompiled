@@ -1,35 +1,23 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IPreviewable
-	{
-		UnityEngine.Object target
-		{
-			get;
-		}
+    using System;
+    using UnityEngine;
 
-		void Initialize(UnityEngine.Object[] targets);
+    internal interface IPreviewable
+    {
+        void DrawPreview(Rect previewArea);
+        string GetInfoString();
+        GUIContent GetPreviewTitle();
+        bool HasPreviewGUI();
+        void Initialize(Object[] targets);
+        bool MoveNextTarget();
+        void OnInteractivePreviewGUI(Rect r, GUIStyle background);
+        void OnPreviewGUI(Rect r, GUIStyle background);
+        void OnPreviewSettings();
+        void ReloadPreviewInstances();
+        void ResetTarget();
 
-		bool MoveNextTarget();
-
-		void ResetTarget();
-
-		bool HasPreviewGUI();
-
-		GUIContent GetPreviewTitle();
-
-		void DrawPreview(Rect previewArea);
-
-		void OnPreviewGUI(Rect r, GUIStyle background);
-
-		void OnInteractivePreviewGUI(Rect r, GUIStyle background);
-
-		void OnPreviewSettings();
-
-		string GetInfoString();
-
-		void ReloadPreviewInstances();
-	}
+        Object target { get; }
+    }
 }
+

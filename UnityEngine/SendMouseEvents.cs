@@ -1,195 +1,169 @@
-using System;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal class SendMouseEvents
-	{
-		private struct HitInfo
-		{
-			public GameObject target;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-			public Camera camera;
+    internal class SendMouseEvents
+    {
+        private static Camera[] m_Cameras;
+        private static readonly HitInfo[] m_CurrentHit = new HitInfo[] { new HitInfo(), new HitInfo(), new HitInfo() };
+        private const int m_HitIndexGUI = 0;
+        private const int m_HitIndexPhysics2D = 2;
+        private const int m_HitIndexPhysics3D = 1;
+        private static readonly HitInfo[] m_LastHit = new HitInfo[] { new HitInfo(), new HitInfo(), new HitInfo() };
+        private static readonly HitInfo[] m_MouseDownHit = new HitInfo[] { new HitInfo(), new HitInfo(), new HitInfo() };
+        private static bool s_MouseUsed = false;
 
-			public void SendMessage(string name)
-			{
-				this.target.SendMessage(name, null, SendMessageOptions.DontRequireReceiver);
-			}
+        [RequiredByNativeCode]
+        private static void DoSendMouseEvents(int skipRTCameras)
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            int allCamerasCount = Camera.allCamerasCount;
+            if ((m_Cameras == null) || (m_Cameras.Length != allCamerasCount))
+            {
+                m_Cameras = new Camera[allCamerasCount];
+            }
+            Camera.GetAllCameras(m_Cameras);
+            for (int i = 0; i < m_CurrentHit.Length; i++)
+            {
+                m_CurrentHit[i] = new HitInfo();
+            }
+            if (!s_MouseUsed)
+            {
+                foreach (Camera camera in m_Cameras)
+                {
+                    if (((camera != null) && ((skipRTCameras == 0) || (camera.targetTexture == null))) && camera.pixelRect.Contains(mousePosition))
+                    {
+                        GUILayer component = camera.GetComponent<GUILayer>();
+                        if (component != null)
+                        {
+                            GUIElement element = component.HitTest(mousePosition);
+                            if (element != null)
+                            {
+                                m_CurrentHit[0].target = element.gameObject;
+                                m_CurrentHit[0].camera = camera;
+                            }
+                            else
+                            {
+                                m_CurrentHit[0].target = null;
+                                m_CurrentHit[0].camera = null;
+                            }
+                        }
+                        if (camera.eventMask != 0)
+                        {
+                            Ray ray = camera.ScreenPointToRay(mousePosition);
+                            float z = ray.direction.z;
+                            float distance = !Mathf.Approximately(0f, z) ? Mathf.Abs((float) ((camera.farClipPlane - camera.nearClipPlane) / z)) : float.PositiveInfinity;
+                            GameObject obj2 = camera.RaycastTry(ray, distance, camera.cullingMask & camera.eventMask);
+                            if (obj2 != null)
+                            {
+                                m_CurrentHit[1].target = obj2;
+                                m_CurrentHit[1].camera = camera;
+                            }
+                            else if ((camera.clearFlags == CameraClearFlags.Skybox) || (camera.clearFlags == CameraClearFlags.Color))
+                            {
+                                m_CurrentHit[1].target = null;
+                                m_CurrentHit[1].camera = null;
+                            }
+                            GameObject obj3 = camera.RaycastTry2D(ray, distance, camera.cullingMask & camera.eventMask);
+                            if (obj3 != null)
+                            {
+                                m_CurrentHit[2].target = obj3;
+                                m_CurrentHit[2].camera = camera;
+                            }
+                            else if ((camera.clearFlags == CameraClearFlags.Skybox) || (camera.clearFlags == CameraClearFlags.Color))
+                            {
+                                m_CurrentHit[2].target = null;
+                                m_CurrentHit[2].camera = null;
+                            }
+                        }
+                    }
+                }
+            }
+            for (int j = 0; j < m_CurrentHit.Length; j++)
+            {
+                SendEvents(j, m_CurrentHit[j]);
+            }
+            s_MouseUsed = false;
+        }
 
-			public static implicit operator bool(SendMouseEvents.HitInfo exists)
-			{
-				return exists.target != null && exists.camera != null;
-			}
+        private static void SendEvents(int i, HitInfo hit)
+        {
+            bool mouseButtonDown = Input.GetMouseButtonDown(0);
+            bool mouseButton = Input.GetMouseButton(0);
+            if (mouseButtonDown)
+            {
+                if (hit != 0)
+                {
+                    m_MouseDownHit[i] = hit;
+                    m_MouseDownHit[i].SendMessage("OnMouseDown");
+                }
+            }
+            else if (!mouseButton)
+            {
+                if (m_MouseDownHit[i] != 0)
+                {
+                    if (HitInfo.Compare(hit, m_MouseDownHit[i]))
+                    {
+                        m_MouseDownHit[i].SendMessage("OnMouseUpAsButton");
+                    }
+                    m_MouseDownHit[i].SendMessage("OnMouseUp");
+                    m_MouseDownHit[i] = new HitInfo();
+                }
+            }
+            else if (m_MouseDownHit[i] != 0)
+            {
+                m_MouseDownHit[i].SendMessage("OnMouseDrag");
+            }
+            if (HitInfo.Compare(hit, m_LastHit[i]))
+            {
+                if (hit != 0)
+                {
+                    hit.SendMessage("OnMouseOver");
+                }
+            }
+            else
+            {
+                if (m_LastHit[i] != 0)
+                {
+                    m_LastHit[i].SendMessage("OnMouseExit");
+                }
+                if (hit != 0)
+                {
+                    hit.SendMessage("OnMouseEnter");
+                    hit.SendMessage("OnMouseOver");
+                }
+            }
+            m_LastHit[i] = hit;
+        }
 
-			public static bool Compare(SendMouseEvents.HitInfo lhs, SendMouseEvents.HitInfo rhs)
-			{
-				return lhs.target == rhs.target && lhs.camera == rhs.camera;
-			}
-		}
+        [RequiredByNativeCode]
+        private static void SetMouseMoved()
+        {
+            s_MouseUsed = true;
+        }
 
-		private const int m_HitIndexGUI = 0;
+        [StructLayout(LayoutKind.Sequential)]
+        private struct HitInfo
+        {
+            public GameObject target;
+            public Camera camera;
+            public void SendMessage(string name)
+            {
+                this.target.SendMessage(name, null, SendMessageOptions.DontRequireReceiver);
+            }
 
-		private const int m_HitIndexPhysics3D = 1;
+            public static implicit operator bool(SendMouseEvents.HitInfo exists)
+            {
+                return ((exists.target != null) && (exists.camera != null));
+            }
 
-		private const int m_HitIndexPhysics2D = 2;
-
-		private static bool s_MouseUsed = false;
-
-		private static readonly SendMouseEvents.HitInfo[] m_LastHit = new SendMouseEvents.HitInfo[]
-		{
-			default(SendMouseEvents.HitInfo),
-			default(SendMouseEvents.HitInfo),
-			default(SendMouseEvents.HitInfo)
-		};
-
-		private static readonly SendMouseEvents.HitInfo[] m_MouseDownHit = new SendMouseEvents.HitInfo[]
-		{
-			default(SendMouseEvents.HitInfo),
-			default(SendMouseEvents.HitInfo),
-			default(SendMouseEvents.HitInfo)
-		};
-
-		private static readonly SendMouseEvents.HitInfo[] m_CurrentHit = new SendMouseEvents.HitInfo[]
-		{
-			default(SendMouseEvents.HitInfo),
-			default(SendMouseEvents.HitInfo),
-			default(SendMouseEvents.HitInfo)
-		};
-
-		private static Camera[] m_Cameras;
-
-		[RequiredByNativeCode]
-		private static void SetMouseMoved()
-		{
-			SendMouseEvents.s_MouseUsed = true;
-		}
-
-		[RequiredByNativeCode]
-		private static void DoSendMouseEvents(int skipRTCameras)
-		{
-			Vector3 mousePosition = Input.mousePosition;
-			int allCamerasCount = Camera.allCamerasCount;
-			if (SendMouseEvents.m_Cameras == null || SendMouseEvents.m_Cameras.Length != allCamerasCount)
-			{
-				SendMouseEvents.m_Cameras = new Camera[allCamerasCount];
-			}
-			Camera.GetAllCameras(SendMouseEvents.m_Cameras);
-			for (int i = 0; i < SendMouseEvents.m_CurrentHit.Length; i++)
-			{
-				SendMouseEvents.m_CurrentHit[i] = default(SendMouseEvents.HitInfo);
-			}
-			if (!SendMouseEvents.s_MouseUsed)
-			{
-				Camera[] cameras = SendMouseEvents.m_Cameras;
-				for (int j = 0; j < cameras.Length; j++)
-				{
-					Camera camera = cameras[j];
-					if (!(camera == null) && (skipRTCameras == 0 || !(camera.targetTexture != null)))
-					{
-						if (camera.pixelRect.Contains(mousePosition))
-						{
-							GUILayer component = camera.GetComponent<GUILayer>();
-							if (component)
-							{
-								GUIElement gUIElement = component.HitTest(mousePosition);
-								if (gUIElement)
-								{
-									SendMouseEvents.m_CurrentHit[0].target = gUIElement.gameObject;
-									SendMouseEvents.m_CurrentHit[0].camera = camera;
-								}
-								else
-								{
-									SendMouseEvents.m_CurrentHit[0].target = null;
-									SendMouseEvents.m_CurrentHit[0].camera = null;
-								}
-							}
-							if (camera.eventMask != 0)
-							{
-								Ray ray = camera.ScreenPointToRay(mousePosition);
-								float z = ray.direction.z;
-								float distance = (!Mathf.Approximately(0f, z)) ? Mathf.Abs((camera.farClipPlane - camera.nearClipPlane) / z) : float.PositiveInfinity;
-								GameObject gameObject = camera.RaycastTry(ray, distance, camera.cullingMask & camera.eventMask);
-								if (gameObject != null)
-								{
-									SendMouseEvents.m_CurrentHit[1].target = gameObject;
-									SendMouseEvents.m_CurrentHit[1].camera = camera;
-								}
-								else if (camera.clearFlags == CameraClearFlags.Skybox || camera.clearFlags == CameraClearFlags.Color)
-								{
-									SendMouseEvents.m_CurrentHit[1].target = null;
-									SendMouseEvents.m_CurrentHit[1].camera = null;
-								}
-								GameObject gameObject2 = camera.RaycastTry2D(ray, distance, camera.cullingMask & camera.eventMask);
-								if (gameObject2 != null)
-								{
-									SendMouseEvents.m_CurrentHit[2].target = gameObject2;
-									SendMouseEvents.m_CurrentHit[2].camera = camera;
-								}
-								else if (camera.clearFlags == CameraClearFlags.Skybox || camera.clearFlags == CameraClearFlags.Color)
-								{
-									SendMouseEvents.m_CurrentHit[2].target = null;
-									SendMouseEvents.m_CurrentHit[2].camera = null;
-								}
-							}
-						}
-					}
-				}
-			}
-			for (int k = 0; k < SendMouseEvents.m_CurrentHit.Length; k++)
-			{
-				SendMouseEvents.SendEvents(k, SendMouseEvents.m_CurrentHit[k]);
-			}
-			SendMouseEvents.s_MouseUsed = false;
-		}
-
-		private static void SendEvents(int i, SendMouseEvents.HitInfo hit)
-		{
-			bool mouseButtonDown = Input.GetMouseButtonDown(0);
-			bool mouseButton = Input.GetMouseButton(0);
-			if (mouseButtonDown)
-			{
-				if (hit)
-				{
-					SendMouseEvents.m_MouseDownHit[i] = hit;
-					SendMouseEvents.m_MouseDownHit[i].SendMessage("OnMouseDown");
-				}
-			}
-			else if (!mouseButton)
-			{
-				if (SendMouseEvents.m_MouseDownHit[i])
-				{
-					if (SendMouseEvents.HitInfo.Compare(hit, SendMouseEvents.m_MouseDownHit[i]))
-					{
-						SendMouseEvents.m_MouseDownHit[i].SendMessage("OnMouseUpAsButton");
-					}
-					SendMouseEvents.m_MouseDownHit[i].SendMessage("OnMouseUp");
-					SendMouseEvents.m_MouseDownHit[i] = default(SendMouseEvents.HitInfo);
-				}
-			}
-			else if (SendMouseEvents.m_MouseDownHit[i])
-			{
-				SendMouseEvents.m_MouseDownHit[i].SendMessage("OnMouseDrag");
-			}
-			if (SendMouseEvents.HitInfo.Compare(hit, SendMouseEvents.m_LastHit[i]))
-			{
-				if (hit)
-				{
-					hit.SendMessage("OnMouseOver");
-				}
-			}
-			else
-			{
-				if (SendMouseEvents.m_LastHit[i])
-				{
-					SendMouseEvents.m_LastHit[i].SendMessage("OnMouseExit");
-				}
-				if (hit)
-				{
-					hit.SendMessage("OnMouseEnter");
-					hit.SendMessage("OnMouseOver");
-				}
-			}
-			SendMouseEvents.m_LastHit[i] = hit;
-		}
-	}
+            public static bool Compare(SendMouseEvents.HitInfo lhs, SendMouseEvents.HitInfo rhs)
+            {
+                return ((lhs.target == rhs.target) && (lhs.camera == rhs.camera));
+            }
+        }
+    }
 }
+

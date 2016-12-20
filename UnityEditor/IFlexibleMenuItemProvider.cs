@@ -1,27 +1,19 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IFlexibleMenuItemProvider
-	{
-		int Count();
+    using System;
 
-		object GetItem(int index);
-
-		int Add(object obj);
-
-		void Replace(int index, object newPresetObject);
-
-		void Remove(int index);
-
-		object Create();
-
-		void Move(int index, int destIndex, bool insertAfterDestIndex);
-
-		string GetName(int index);
-
-		bool IsModificationAllowed(int index);
-
-		int[] GetSeperatorIndices();
-	}
+    internal interface IFlexibleMenuItemProvider
+    {
+        int Add(object obj);
+        int Count();
+        object Create();
+        object GetItem(int index);
+        string GetName(int index);
+        int[] GetSeperatorIndices();
+        bool IsModificationAllowed(int index);
+        void Move(int index, int destIndex, bool insertAfterDestIndex);
+        void Remove(int index);
+        void Replace(int index, object newPresetObject);
+    }
 }
+

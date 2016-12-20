@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal enum ShowAdditionalInfo
-	{
-		Preview,
-		ShaderProperties
-	}
+    using System;
+
+    internal enum ShowAdditionalInfo
+    {
+        Preview,
+        ShaderProperties
+    }
 }
+

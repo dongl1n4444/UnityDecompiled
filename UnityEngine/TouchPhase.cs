@@ -1,13 +1,17 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum TouchPhase
-	{
-		Began,
-		Moved,
-		Stationary,
-		Ended,
-		Canceled
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Describes phase of a finger touch.</para>
+    /// </summary>
+    public enum TouchPhase
+    {
+        Began,
+        Moved,
+        Stationary,
+        Ended,
+        Canceled
+    }
 }
+

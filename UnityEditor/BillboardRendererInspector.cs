@@ -1,34 +1,32 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(BillboardRenderer))]
-	internal class BillboardRendererInspector : RendererEditorBase
-	{
-		private string[] m_ExcludedProperties;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
 
-		public override void OnEnable()
-		{
-			base.OnEnable();
-			base.InitializeProbeFields();
-			List<string> list = new List<string>();
-			list.AddRange(new string[]
-			{
-				"m_Materials",
-				"m_LightmapParameters"
-			});
-			list.AddRange(RendererEditorBase.Probes.GetFieldsStringArray());
-			this.m_ExcludedProperties = list.ToArray();
-		}
+    [CanEditMultipleObjects, CustomEditor(typeof(BillboardRenderer))]
+    internal class BillboardRendererInspector : RendererEditorBase
+    {
+        private string[] m_ExcludedProperties;
 
-		public override void OnInspectorGUI()
-		{
-			base.serializedObject.Update();
-			Editor.DrawPropertiesExcluding(base.serializedObject, this.m_ExcludedProperties);
-			this.m_Probes.OnGUI(base.targets, (Renderer)base.target, false);
-			base.serializedObject.ApplyModifiedProperties();
-		}
-	}
+        public override void OnEnable()
+        {
+            base.OnEnable();
+            base.InitializeProbeFields();
+            List<string> list = new List<string>();
+            string[] collection = new string[] { "m_Materials", "m_LightmapParameters" };
+            list.AddRange(collection);
+            list.AddRange(RendererEditorBase.Probes.GetFieldsStringArray());
+            this.m_ExcludedProperties = list.ToArray();
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.serializedObject.Update();
+            Editor.DrawPropertiesExcluding(base.serializedObject, this.m_ExcludedProperties);
+            base.m_Probes.OnGUI(base.targets, (Renderer) base.target, false);
+            base.serializedObject.ApplyModifiedProperties();
+        }
+    }
 }
+

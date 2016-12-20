@@ -1,14 +1,15 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct ShaderVectorInfo
-	{
-		public string name;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		public int flags;
-
-		public Vector4 value;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ShaderVectorInfo
+    {
+        public string name;
+        public int flags;
+        public Vector4 value;
+    }
 }
+

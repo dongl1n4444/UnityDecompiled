@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum WrapModeFixedCurve
-	{
-		Clamp = 8,
-		Loop = 2,
-		PingPong = 4
-	}
+    using System;
+
+    internal enum WrapModeFixedCurve
+    {
+        Clamp = 8,
+        Loop = 2,
+        PingPong = 4
+    }
 }
+

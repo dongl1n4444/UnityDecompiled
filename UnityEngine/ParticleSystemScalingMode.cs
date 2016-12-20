@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemScalingMode
-	{
-		Hierarchy,
-		Local,
-		Shape
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Control how particle systems apply transform scale.</para>
+    /// </summary>
+    public enum ParticleSystemScalingMode
+    {
+        Hierarchy,
+        Local,
+        Shape
+    }
 }
+

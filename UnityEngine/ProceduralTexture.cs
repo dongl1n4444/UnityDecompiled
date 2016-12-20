@@ -1,32 +1,44 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class ProceduralTexture : Texture
-	{
-		public extern bool hasAlpha
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public extern TextureFormat format
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    /// <summary>
+    /// <para>Class for ProceduralTexture handling.</para>
+    /// </summary>
+    public sealed class ProceduralTexture : Texture
+    {
+        /// <summary>
+        /// <para>Grab pixel values from a ProceduralTexture.
+        /// </para>
+        /// </summary>
+        /// <param name="x">X-coord of the top-left corner of the rectangle to grab.</param>
+        /// <param name="y">Y-coord of the top-left corner of the rectangle to grab.</param>
+        /// <param name="blockWidth">Width of rectangle to grab.</param>
+        /// <param name="blockHeight">Height of the rectangle to grab.
+        /// Get the pixel values from a rectangular area of a ProceduralTexture into an array.
+        /// The block is specified by its x,y offset in the texture and by its width and height. The block is "flattened" into the array by scanning the pixel values across rows one by one.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern Color32[] GetPixels32(int x, int y, int blockWidth, int blockHeight);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern ProceduralMaterial GetProceduralMaterial();
+        /// <summary>
+        /// <para>The output type of this ProceduralTexture.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern ProceduralOutputType GetProceduralOutputType();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern bool HasBeenGenerated();
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern ProceduralOutputType GetProceduralOutputType();
+        /// <summary>
+        /// <para>The format of the pixel data in the texture (Read Only).</para>
+        /// </summary>
+        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern ProceduralMaterial GetProceduralMaterial();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern bool HasBeenGenerated();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern Color32[] GetPixels32(int x, int y, int blockWidth, int blockHeight);
-	}
+        /// <summary>
+        /// <para>Check whether the ProceduralMaterial that generates this ProceduralTexture is set to an output format with an alpha channel.</para>
+        /// </summary>
+        public bool hasAlpha { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

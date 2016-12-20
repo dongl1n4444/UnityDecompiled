@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemNoiseQuality
-	{
-		Low,
-		Medium,
-		High
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The quality of the generated noise.</para>
+    /// </summary>
+    public enum ParticleSystemNoiseQuality
+    {
+        Low,
+        Medium,
+        High
+    }
 }
+

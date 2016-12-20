@@ -1,347 +1,329 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class AnimationEventTimeLine
-	{
-		public class EventComparer : IComparer
-		{
-			int IComparer.Compare(object objX, object objY)
-			{
-				AnimationEvent animationEvent = (AnimationEvent)objX;
-				AnimationEvent animationEvent2 = (AnimationEvent)objY;
-				float time = animationEvent.time;
-				float time2 = animationEvent2.time;
-				int result;
-				if (time != time2)
-				{
-					result = (int)Mathf.Sign(time - time2);
-				}
-				else
-				{
-					int hashCode = animationEvent.GetHashCode();
-					int hashCode2 = animationEvent2.GetHashCode();
-					result = hashCode - hashCode2;
-				}
-				return result;
-			}
-		}
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-		private class EventLineContextMenuObject
-		{
-			public GameObject m_Animated;
+    [Serializable]
+    internal class AnimationEventTimeLine
+    {
+        private bool m_DirtyTooltip = false;
+        [NonSerialized]
+        private AnimationEvent[] m_EventsAtMouseDown;
+        private bool[] m_EventsSelected;
+        [NonSerialized]
+        private float[] m_EventTimes;
+        private int m_HoverEvent = -1;
+        private Vector2 m_InstantTooltipPoint = Vector2.zero;
+        private string m_InstantTooltipText = null;
 
-			public AnimationClip m_Clip;
+        public AnimationEventTimeLine(EditorWindow owner)
+        {
+        }
 
-			public float m_Time;
+        public void AddEvent(float time, GameObject rootGameObject, AnimationClip animationClip)
+        {
+            AnimationWindowEvent evt = AnimationWindowEvent.CreateAndEdit(rootGameObject, animationClip, time);
+            this.Select(evt);
+        }
 
-			public int m_Index;
+        private void CheckRectsOnMouseMove(Rect eventLineRect, AnimationEvent[] events, Rect[] hitRects)
+        {
+            Vector2 mousePosition = Event.current.mousePosition;
+            bool flag = false;
+            if (events.Length == hitRects.Length)
+            {
+                for (int i = hitRects.Length - 1; i >= 0; i--)
+                {
+                    if (hitRects[i].Contains(mousePosition))
+                    {
+                        flag = true;
+                        if (this.m_HoverEvent != i)
+                        {
+                            this.m_HoverEvent = i;
+                            this.m_InstantTooltipText = events[this.m_HoverEvent].functionName;
+                            this.m_InstantTooltipPoint = new Vector2((hitRects[this.m_HoverEvent].xMin + ((int) (hitRects[this.m_HoverEvent].width / 2f))) + eventLineRect.x, eventLineRect.yMax);
+                            this.m_DirtyTooltip = true;
+                        }
+                    }
+                }
+            }
+            if (!flag)
+            {
+                this.m_HoverEvent = -1;
+                this.m_InstantTooltipText = "";
+            }
+        }
 
-			public EventLineContextMenuObject(GameObject animated, AnimationClip clip, float time, int index)
-			{
-				this.m_Animated = animated;
-				this.m_Clip = clip;
-				this.m_Time = time;
-				this.m_Index = index;
-			}
-		}
+        private void DeleteEvents(AnimationClip clip, bool[] deleteIndices)
+        {
+            bool flag = false;
+            List<AnimationEvent> list = new List<AnimationEvent>(AnimationUtility.GetAnimationEvents(clip));
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (deleteIndices[i])
+                {
+                    list.RemoveAt(i);
+                    flag = true;
+                }
+            }
+            if (flag)
+            {
+                Undo.RegisterCompleteObjectUndo(clip, "Delete Event");
+                AnimationUtility.SetAnimationEvents(clip, list.ToArray());
+                this.m_EventsSelected = new bool[list.Count];
+                this.m_DirtyTooltip = true;
+            }
+        }
 
-		[NonSerialized]
-		private AnimationEvent[] m_EventsAtMouseDown;
+        public void DeselectAll()
+        {
+            this.m_EventsSelected = null;
+        }
 
-		[NonSerialized]
-		private float[] m_EventTimes;
+        public void DrawInstantTooltip(Rect position)
+        {
+            if ((this.m_InstantTooltipText != null) && (this.m_InstantTooltipText != ""))
+            {
+                GUIStyle style = "AnimationEventTooltip";
+                style.contentOffset = new Vector2(0f, 0f);
+                style.overflow = new RectOffset(10, 10, 0, 0);
+                Vector2 vector = style.CalcSize(new GUIContent(this.m_InstantTooltipText));
+                Rect rect = new Rect(this.m_InstantTooltipPoint.x - (vector.x * 0.5f), this.m_InstantTooltipPoint.y + 24f, vector.x, vector.y);
+                if (rect.xMax > position.width)
+                {
+                    rect.x = position.width - rect.width;
+                }
+                GUI.Label(rect, this.m_InstantTooltipText, style);
+                rect = new Rect(this.m_InstantTooltipPoint.x - 33f, this.m_InstantTooltipPoint.y, 7f, 25f);
+                GUI.Label(rect, "", "AnimationEventTooltipArrow");
+            }
+        }
 
-		private bool[] m_EventsSelected;
+        public void EventLineContextMenuAdd(object obj)
+        {
+            EventLineContextMenuObject obj2 = (EventLineContextMenuObject) obj;
+            AnimationWindowEvent evt = AnimationWindowEvent.CreateAndEdit(obj2.m_Animated, obj2.m_Clip, obj2.m_Time);
+            this.Select(evt);
+        }
 
-		private bool m_DirtyTooltip = false;
+        public void EventLineContextMenuDelete(object obj)
+        {
+            EventLineContextMenuObject obj2 = (EventLineContextMenuObject) obj;
+            AnimationClip clip = obj2.m_Clip;
+            if (clip != null)
+            {
+                int index = obj2.m_Index;
+                if (this.m_EventsSelected[index])
+                {
+                    this.DeleteEvents(clip, this.m_EventsSelected);
+                }
+                else
+                {
+                    bool[] deleteIndices = new bool[this.m_EventsSelected.Length];
+                    deleteIndices[index] = true;
+                    this.DeleteEvents(clip, deleteIndices);
+                }
+            }
+        }
 
-		private int m_HoverEvent = -1;
+        public void EventLineContextMenuEdit(object obj)
+        {
+            EventLineContextMenuObject obj2 = (EventLineContextMenuObject) obj;
+            AnimationWindowEvent evt = AnimationWindowEvent.Edit(obj2.m_Animated, obj2.m_Clip, obj2.m_Index);
+            this.Select(evt);
+        }
 
-		private string m_InstantTooltipText = null;
+        public void EventLineGUI(Rect rect, AnimationWindowState state)
+        {
+            if (state.selectedItem != null)
+            {
+                AnimationClip animationClip = state.selectedItem.animationClip;
+                GameObject rootGameObject = state.selectedItem.rootGameObject;
+                GUI.BeginGroup(rect);
+                Color color = GUI.color;
+                Rect rect2 = new Rect(0f, 0f, rect.width, rect.height);
+                float time = Mathf.Max((float) (((float) Mathf.RoundToInt(state.PixelToTime(Event.current.mousePosition.x, rect) * state.frameRate)) / state.frameRate), (float) 0f);
+                if (animationClip != null)
+                {
+                    int num8;
+                    float num9;
+                    float num10;
+                    AnimationEvent[] animationEvents = AnimationUtility.GetAnimationEvents(animationClip);
+                    Texture image = EditorGUIUtility.IconContent("Animation.EventMarker").image;
+                    Rect[] hitPositions = new Rect[animationEvents.Length];
+                    Rect[] positions = new Rect[animationEvents.Length];
+                    int num2 = 1;
+                    int num3 = 0;
+                    for (int i = 0; i < animationEvents.Length; i++)
+                    {
+                        AnimationEvent event2 = animationEvents[i];
+                        if (num3 == 0)
+                        {
+                            num2 = 1;
+                            while (((i + num2) < animationEvents.Length) && (animationEvents[i + num2].time == event2.time))
+                            {
+                                num2++;
+                            }
+                            num3 = num2;
+                        }
+                        num3--;
+                        float num5 = Mathf.Floor(state.FrameToPixel(event2.time * animationClip.frameRate, rect));
+                        int num6 = 0;
+                        if (num2 > 1)
+                        {
+                            float num7 = Mathf.Min((int) ((num2 - 1) * (image.width - 1)), (int) (((int) state.FrameDeltaToPixel(rect)) - (image.width * 2)));
+                            num6 = Mathf.FloorToInt(Mathf.Max((float) 0f, (float) (num7 - ((image.width - 1) * num3))));
+                        }
+                        Rect rect3 = new Rect((num5 + num6) - (image.width / 2), ((rect.height - 10f) * ((num3 - num2) + 1)) / ((float) Mathf.Max(1, num2 - 1)), (float) image.width, (float) image.height);
+                        hitPositions[i] = rect3;
+                        positions[i] = rect3;
+                    }
+                    if (this.m_DirtyTooltip)
+                    {
+                        if ((this.m_HoverEvent >= 0) && (this.m_HoverEvent < hitPositions.Length))
+                        {
+                            this.m_InstantTooltipText = AnimationWindowEventInspector.FormatEvent(rootGameObject, animationEvents[this.m_HoverEvent]);
+                            this.m_InstantTooltipPoint = new Vector2(((hitPositions[this.m_HoverEvent].xMin + ((int) (hitPositions[this.m_HoverEvent].width / 2f))) + rect.x) - 30f, rect.yMax);
+                        }
+                        this.m_DirtyTooltip = false;
+                    }
+                    if ((this.m_EventsSelected == null) || (this.m_EventsSelected.Length != animationEvents.Length))
+                    {
+                        this.m_EventsSelected = new bool[animationEvents.Length];
+                    }
+                    Vector2 zero = Vector2.zero;
+                    switch (EditorGUIExt.MultiSelection(rect, positions, new GUIContent(image), hitPositions, ref this.m_EventsSelected, null, out num8, out zero, out num9, out num10, GUIStyle.none))
+                    {
+                        case HighLevelEvent.DoubleClick:
+                            if (num8 == -1)
+                            {
+                                this.EventLineContextMenuAdd(new EventLineContextMenuObject(rootGameObject, animationClip, time, -1));
+                                break;
+                            }
+                            Selection.activeObject = AnimationWindowEvent.Edit(rootGameObject, animationClip, num8);
+                            break;
 
-		private Vector2 m_InstantTooltipPoint = Vector2.zero;
+                        case HighLevelEvent.ContextClick:
+                        {
+                            GenericMenu menu = new GenericMenu();
+                            EventLineContextMenuObject userData = new EventLineContextMenuObject(rootGameObject, animationClip, animationEvents[num8].time, num8);
+                            menu.AddItem(new GUIContent("Edit Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuEdit), userData);
+                            menu.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), userData);
+                            menu.AddItem(new GUIContent("Delete Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuDelete), userData);
+                            menu.ShowAsContext();
+                            this.m_InstantTooltipText = null;
+                            this.m_DirtyTooltip = true;
+                            state.Repaint();
+                            break;
+                        }
+                        case HighLevelEvent.BeginDrag:
+                            this.m_EventsAtMouseDown = animationEvents;
+                            this.m_EventTimes = new float[animationEvents.Length];
+                            for (int j = 0; j < animationEvents.Length; j++)
+                            {
+                                this.m_EventTimes[j] = animationEvents[j].time;
+                            }
+                            break;
 
-		public AnimationEventTimeLine(EditorWindow owner)
-		{
-		}
+                        case HighLevelEvent.Drag:
+                        {
+                            for (int k = animationEvents.Length - 1; k >= 0; k--)
+                            {
+                                if (this.m_EventsSelected[k])
+                                {
+                                    AnimationEvent event6 = this.m_EventsAtMouseDown[k];
+                                    event6.time = this.m_EventTimes[k] + (zero.x * state.PixelDeltaToTime(rect));
+                                    event6.time = Mathf.Max(0f, event6.time);
+                                    event6.time = ((float) Mathf.RoundToInt(event6.time * animationClip.frameRate)) / animationClip.frameRate;
+                                }
+                            }
+                            int[] items = new int[this.m_EventsSelected.Length];
+                            for (int m = 0; m < items.Length; m++)
+                            {
+                                items[m] = m;
+                            }
+                            Array.Sort(this.m_EventsAtMouseDown, items, new EventComparer());
+                            bool[] flagArray = (bool[]) this.m_EventsSelected.Clone();
+                            float[] numArray2 = (float[]) this.m_EventTimes.Clone();
+                            for (int n = 0; n < items.Length; n++)
+                            {
+                                this.m_EventsSelected[n] = flagArray[items[n]];
+                                this.m_EventTimes[n] = numArray2[items[n]];
+                            }
+                            Undo.RegisterCompleteObjectUndo(animationClip, "Move Event");
+                            AnimationUtility.SetAnimationEvents(animationClip, this.m_EventsAtMouseDown);
+                            this.m_DirtyTooltip = true;
+                            break;
+                        }
+                        case HighLevelEvent.Delete:
+                            this.DeleteEvents(animationClip, this.m_EventsSelected);
+                            break;
 
-		public void AddEvent(float time, GameObject rootGameObject, AnimationClip animationClip)
-		{
-			AnimationWindowEvent evt = AnimationWindowEvent.CreateAndEdit(rootGameObject, animationClip, time);
-			this.Select(evt);
-		}
+                        case HighLevelEvent.SelectionChanged:
+                            state.ClearKeySelections();
+                            if (num8 != -1)
+                            {
+                                Selection.activeObject = AnimationWindowEvent.Edit(rootGameObject, animationClip, num8);
+                            }
+                            break;
+                    }
+                    this.CheckRectsOnMouseMove(rect, animationEvents, hitPositions);
+                }
+                if ((Event.current.type == EventType.ContextClick) && rect2.Contains(Event.current.mousePosition))
+                {
+                    Event.current.Use();
+                    GenericMenu menu2 = new GenericMenu();
+                    menu2.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), new EventLineContextMenuObject(rootGameObject, animationClip, time, -1));
+                    menu2.ShowAsContext();
+                }
+                GUI.color = color;
+                GUI.EndGroup();
+            }
+        }
 
-		public void DeselectAll()
-		{
-			this.m_EventsSelected = null;
-		}
+        private void Select(AnimationWindowEvent evt)
+        {
+            this.m_EventsSelected = new bool[AnimationUtility.GetAnimationEvents(evt.clip).Length];
+            this.m_EventsSelected[evt.eventIndex] = true;
+            Selection.activeObject = evt;
+        }
 
-		private void Select(AnimationWindowEvent evt)
-		{
-			this.m_EventsSelected = new bool[AnimationUtility.GetAnimationEvents(evt.clip).Length];
-			this.m_EventsSelected[evt.eventIndex] = true;
-			Selection.activeObject = evt;
-		}
+        public class EventComparer : IComparer
+        {
+            int IComparer.Compare(object objX, object objY)
+            {
+                AnimationEvent event2 = (AnimationEvent) objX;
+                AnimationEvent event3 = (AnimationEvent) objY;
+                float time = event2.time;
+                float num2 = event3.time;
+                if (time != num2)
+                {
+                    return (int) Mathf.Sign(time - num2);
+                }
+                int hashCode = event2.GetHashCode();
+                int num5 = event3.GetHashCode();
+                return (hashCode - num5);
+            }
+        }
 
-		public void EventLineGUI(Rect rect, AnimationWindowState state)
-		{
-			if (!(state.selectedItem == null))
-			{
-				AnimationClip animationClip = state.selectedItem.animationClip;
-				GameObject rootGameObject = state.selectedItem.rootGameObject;
-				GUI.BeginGroup(rect);
-				Color color = GUI.color;
-				Rect rect2 = new Rect(0f, 0f, rect.width, rect.height);
-				float time = Mathf.Max((float)Mathf.RoundToInt(state.PixelToTime(Event.current.mousePosition.x, rect) * state.frameRate) / state.frameRate, 0f);
-				if (animationClip != null)
-				{
-					AnimationEvent[] animationEvents = AnimationUtility.GetAnimationEvents(animationClip);
-					Texture image = EditorGUIUtility.IconContent("Animation.EventMarker").image;
-					Rect[] array = new Rect[animationEvents.Length];
-					Rect[] array2 = new Rect[animationEvents.Length];
-					int num = 1;
-					int num2 = 0;
-					for (int i = 0; i < animationEvents.Length; i++)
-					{
-						AnimationEvent animationEvent = animationEvents[i];
-						if (num2 == 0)
-						{
-							num = 1;
-							while (i + num < animationEvents.Length && animationEvents[i + num].time == animationEvent.time)
-							{
-								num++;
-							}
-							num2 = num;
-						}
-						num2--;
-						float num3 = Mathf.Floor(state.FrameToPixel(animationEvent.time * animationClip.frameRate, rect));
-						int num4 = 0;
-						if (num > 1)
-						{
-							float num5 = (float)Mathf.Min((num - 1) * (image.width - 1), (int)(state.FrameDeltaToPixel(rect) - (float)(image.width * 2)));
-							num4 = Mathf.FloorToInt(Mathf.Max(0f, num5 - (float)((image.width - 1) * num2)));
-						}
-						Rect rect3 = new Rect(num3 + (float)num4 - (float)(image.width / 2), (rect.height - 10f) * (float)(num2 - num + 1) / (float)Mathf.Max(1, num - 1), (float)image.width, (float)image.height);
-						array[i] = rect3;
-						array2[i] = rect3;
-					}
-					if (this.m_DirtyTooltip)
-					{
-						if (this.m_HoverEvent >= 0 && this.m_HoverEvent < array.Length)
-						{
-							this.m_InstantTooltipText = AnimationWindowEventInspector.FormatEvent(rootGameObject, animationEvents[this.m_HoverEvent]);
-							this.m_InstantTooltipPoint = new Vector2(array[this.m_HoverEvent].xMin + (float)((int)(array[this.m_HoverEvent].width / 2f)) + rect.x - 30f, rect.yMax);
-						}
-						this.m_DirtyTooltip = false;
-					}
-					if (this.m_EventsSelected == null || this.m_EventsSelected.Length != animationEvents.Length)
-					{
-						this.m_EventsSelected = new bool[animationEvents.Length];
-					}
-					Vector2 zero = Vector2.zero;
-					int num6;
-					float num7;
-					float num8;
-					HighLevelEvent highLevelEvent = EditorGUIExt.MultiSelection(rect, array2, new GUIContent(image), array, ref this.m_EventsSelected, null, out num6, out zero, out num7, out num8, GUIStyle.none);
-					if (highLevelEvent != HighLevelEvent.None)
-					{
-						switch (highLevelEvent)
-						{
-						case HighLevelEvent.DoubleClick:
-							if (num6 != -1)
-							{
-								AnimationWindowEvent activeObject = AnimationWindowEvent.Edit(rootGameObject, animationClip, num6);
-								Selection.activeObject = activeObject;
-							}
-							else
-							{
-								this.EventLineContextMenuAdd(new AnimationEventTimeLine.EventLineContextMenuObject(rootGameObject, animationClip, time, -1));
-							}
-							break;
-						case HighLevelEvent.ContextClick:
-						{
-							GenericMenu genericMenu = new GenericMenu();
-							AnimationEventTimeLine.EventLineContextMenuObject userData = new AnimationEventTimeLine.EventLineContextMenuObject(rootGameObject, animationClip, animationEvents[num6].time, num6);
-							genericMenu.AddItem(new GUIContent("Edit Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuEdit), userData);
-							genericMenu.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), userData);
-							genericMenu.AddItem(new GUIContent("Delete Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuDelete), userData);
-							genericMenu.ShowAsContext();
-							this.m_InstantTooltipText = null;
-							this.m_DirtyTooltip = true;
-							state.Repaint();
-							break;
-						}
-						case HighLevelEvent.BeginDrag:
-							this.m_EventsAtMouseDown = animationEvents;
-							this.m_EventTimes = new float[animationEvents.Length];
-							for (int j = 0; j < animationEvents.Length; j++)
-							{
-								this.m_EventTimes[j] = animationEvents[j].time;
-							}
-							break;
-						case HighLevelEvent.Drag:
-						{
-							for (int k = animationEvents.Length - 1; k >= 0; k--)
-							{
-								if (this.m_EventsSelected[k])
-								{
-									AnimationEvent animationEvent2 = this.m_EventsAtMouseDown[k];
-									animationEvent2.time = this.m_EventTimes[k] + zero.x * state.PixelDeltaToTime(rect);
-									animationEvent2.time = Mathf.Max(0f, animationEvent2.time);
-									animationEvent2.time = (float)Mathf.RoundToInt(animationEvent2.time * animationClip.frameRate) / animationClip.frameRate;
-								}
-							}
-							int[] array3 = new int[this.m_EventsSelected.Length];
-							for (int l = 0; l < array3.Length; l++)
-							{
-								array3[l] = l;
-							}
-							Array.Sort(this.m_EventsAtMouseDown, array3, new AnimationEventTimeLine.EventComparer());
-							bool[] array4 = (bool[])this.m_EventsSelected.Clone();
-							float[] array5 = (float[])this.m_EventTimes.Clone();
-							for (int m = 0; m < array3.Length; m++)
-							{
-								this.m_EventsSelected[m] = array4[array3[m]];
-								this.m_EventTimes[m] = array5[array3[m]];
-							}
-							Undo.RegisterCompleteObjectUndo(animationClip, "Move Event");
-							AnimationUtility.SetAnimationEvents(animationClip, this.m_EventsAtMouseDown);
-							this.m_DirtyTooltip = true;
-							break;
-						}
-						case HighLevelEvent.Delete:
-							this.DeleteEvents(animationClip, this.m_EventsSelected);
-							break;
-						case HighLevelEvent.SelectionChanged:
-							state.ClearKeySelections();
-							if (num6 != -1)
-							{
-								AnimationWindowEvent activeObject2 = AnimationWindowEvent.Edit(rootGameObject, animationClip, num6);
-								Selection.activeObject = activeObject2;
-							}
-							break;
-						}
-					}
-					this.CheckRectsOnMouseMove(rect, animationEvents, array);
-				}
-				if (Event.current.type == EventType.ContextClick && rect2.Contains(Event.current.mousePosition))
-				{
-					Event.current.Use();
-					GenericMenu genericMenu2 = new GenericMenu();
-					genericMenu2.AddItem(new GUIContent("Add Animation Event"), false, new GenericMenu.MenuFunction2(this.EventLineContextMenuAdd), new AnimationEventTimeLine.EventLineContextMenuObject(rootGameObject, animationClip, time, -1));
-					genericMenu2.ShowAsContext();
-				}
-				GUI.color = color;
-				GUI.EndGroup();
-			}
-		}
+        private class EventLineContextMenuObject
+        {
+            public GameObject m_Animated;
+            public AnimationClip m_Clip;
+            public int m_Index;
+            public float m_Time;
 
-		public void DrawInstantTooltip(Rect position)
-		{
-			if (this.m_InstantTooltipText != null && this.m_InstantTooltipText != "")
-			{
-				GUIStyle gUIStyle = "AnimationEventTooltip";
-				gUIStyle.contentOffset = new Vector2(0f, 0f);
-				gUIStyle.overflow = new RectOffset(10, 10, 0, 0);
-				Vector2 vector = gUIStyle.CalcSize(new GUIContent(this.m_InstantTooltipText));
-				Rect position2 = new Rect(this.m_InstantTooltipPoint.x - vector.x * 0.5f, this.m_InstantTooltipPoint.y + 24f, vector.x, vector.y);
-				if (position2.xMax > position.width)
-				{
-					position2.x = position.width - position2.width;
-				}
-				GUI.Label(position2, this.m_InstantTooltipText, gUIStyle);
-				position2 = new Rect(this.m_InstantTooltipPoint.x - 33f, this.m_InstantTooltipPoint.y, 7f, 25f);
-				GUI.Label(position2, "", "AnimationEventTooltipArrow");
-			}
-		}
-
-		private void DeleteEvents(AnimationClip clip, bool[] deleteIndices)
-		{
-			bool flag = false;
-			List<AnimationEvent> list = new List<AnimationEvent>(AnimationUtility.GetAnimationEvents(clip));
-			for (int i = list.Count - 1; i >= 0; i--)
-			{
-				if (deleteIndices[i])
-				{
-					list.RemoveAt(i);
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				Undo.RegisterCompleteObjectUndo(clip, "Delete Event");
-				AnimationUtility.SetAnimationEvents(clip, list.ToArray());
-				this.m_EventsSelected = new bool[list.Count];
-				this.m_DirtyTooltip = true;
-			}
-		}
-
-		public void EventLineContextMenuAdd(object obj)
-		{
-			AnimationEventTimeLine.EventLineContextMenuObject eventLineContextMenuObject = (AnimationEventTimeLine.EventLineContextMenuObject)obj;
-			AnimationWindowEvent evt = AnimationWindowEvent.CreateAndEdit(eventLineContextMenuObject.m_Animated, eventLineContextMenuObject.m_Clip, eventLineContextMenuObject.m_Time);
-			this.Select(evt);
-		}
-
-		public void EventLineContextMenuEdit(object obj)
-		{
-			AnimationEventTimeLine.EventLineContextMenuObject eventLineContextMenuObject = (AnimationEventTimeLine.EventLineContextMenuObject)obj;
-			AnimationWindowEvent evt = AnimationWindowEvent.Edit(eventLineContextMenuObject.m_Animated, eventLineContextMenuObject.m_Clip, eventLineContextMenuObject.m_Index);
-			this.Select(evt);
-		}
-
-		public void EventLineContextMenuDelete(object obj)
-		{
-			AnimationEventTimeLine.EventLineContextMenuObject eventLineContextMenuObject = (AnimationEventTimeLine.EventLineContextMenuObject)obj;
-			AnimationClip clip = eventLineContextMenuObject.m_Clip;
-			if (!(clip == null))
-			{
-				int index = eventLineContextMenuObject.m_Index;
-				if (this.m_EventsSelected[index])
-				{
-					this.DeleteEvents(clip, this.m_EventsSelected);
-				}
-				else
-				{
-					bool[] array = new bool[this.m_EventsSelected.Length];
-					array[index] = true;
-					this.DeleteEvents(clip, array);
-				}
-			}
-		}
-
-		private void CheckRectsOnMouseMove(Rect eventLineRect, AnimationEvent[] events, Rect[] hitRects)
-		{
-			Vector2 mousePosition = Event.current.mousePosition;
-			bool flag = false;
-			if (events.Length == hitRects.Length)
-			{
-				for (int i = hitRects.Length - 1; i >= 0; i--)
-				{
-					if (hitRects[i].Contains(mousePosition))
-					{
-						flag = true;
-						if (this.m_HoverEvent != i)
-						{
-							this.m_HoverEvent = i;
-							this.m_InstantTooltipText = events[this.m_HoverEvent].functionName;
-							this.m_InstantTooltipPoint = new Vector2(hitRects[this.m_HoverEvent].xMin + (float)((int)(hitRects[this.m_HoverEvent].width / 2f)) + eventLineRect.x, eventLineRect.yMax);
-							this.m_DirtyTooltip = true;
-						}
-					}
-				}
-			}
-			if (!flag)
-			{
-				this.m_HoverEvent = -1;
-				this.m_InstantTooltipText = "";
-			}
-		}
-	}
+            public EventLineContextMenuObject(GameObject animated, AnimationClip clip, float time, int index)
+            {
+                this.m_Animated = animated;
+                this.m_Clip = clip;
+                this.m_Time = time;
+                this.m_Index = index;
+            }
+        }
+    }
 }
+

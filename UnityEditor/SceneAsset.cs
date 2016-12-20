@@ -1,9 +1,12 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public sealed class SceneAsset : UnityEngine.Object
-	{
-	}
+    using UnityEngine;
+
+    /// <summary>
+    /// <para>SceneAsset is used to reference scene objects in the Editor.</para>
+    /// </summary>
+    public sealed class SceneAsset : Object
+    {
+    }
 }
+

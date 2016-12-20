@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum EffectorForceMode2D
-	{
-		Constant,
-		InverseLinear,
-		InverseSquared
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The mode used to apply Effector2D forces.</para>
+    /// </summary>
+    public enum EffectorForceMode2D
+    {
+        Constant,
+        InverseLinear,
+        InverseSquared
+    }
 }
+

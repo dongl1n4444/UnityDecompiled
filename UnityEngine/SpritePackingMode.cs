@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum SpritePackingMode
-	{
-		Tight,
-		Rectangle
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Sprite packing modes for the Sprite Packer.</para>
+    /// </summary>
+    public enum SpritePackingMode
+    {
+        Tight,
+        Rectangle
+    }
 }
+

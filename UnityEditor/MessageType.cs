@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum MessageType
-	{
-		None,
-		Info,
-		Warning,
-		Error
-	}
+    using System;
+
+    /// <summary>
+    /// <para>User message types.</para>
+    /// </summary>
+    public enum MessageType
+    {
+        None,
+        Info,
+        Warning,
+        Error
+    }
 }
+

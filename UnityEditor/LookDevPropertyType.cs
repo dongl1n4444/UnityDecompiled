@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum LookDevPropertyType
-	{
-		Int,
-		Float
-	}
+    using System;
+
+    internal enum LookDevPropertyType
+    {
+        Int,
+        Float
+    }
 }
+

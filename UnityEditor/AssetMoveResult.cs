@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Flags]
-	public enum AssetMoveResult
-	{
-		DidNotMove = 0,
-		FailedMove = 1,
-		DidMove = 2
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Result of Asset move</para>
+    /// </summary>
+    [Flags]
+    public enum AssetMoveResult
+    {
+        DidNotMove,
+        FailedMove,
+        DidMove
+    }
 }
+

@@ -1,13 +1,10 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal interface IBounds
-	{
-		Rect boundingRect
-		{
-			get;
-		}
-	}
+    using UnityEngine;
+
+    internal interface IBounds
+    {
+        Rect boundingRect { get; }
+    }
 }
+

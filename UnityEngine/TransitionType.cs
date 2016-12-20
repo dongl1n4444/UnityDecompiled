@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum TransitionType
-	{
-		Normal = 1,
-		Entry,
-		Exit = 4
-	}
+    using System;
+
+    internal enum TransitionType
+    {
+        Entry = 2,
+        Exit = 4,
+        Normal = 1
+    }
 }
+

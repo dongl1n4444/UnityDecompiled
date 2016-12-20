@@ -1,87 +1,88 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class SketchUpDataSource : TreeViewDataSource
-	{
-		private SketchUpNodeInfo[] m_Nodes;
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-		private const int k_ProgressUpdateStep = 50;
+    internal class SketchUpDataSource : TreeViewDataSource
+    {
+        private const int k_ProgressUpdateStep = 50;
+        private SketchUpNodeInfo[] m_Nodes;
 
-		public SketchUpDataSource(TreeViewController treeView, SketchUpNodeInfo[] nodes) : base(treeView)
-		{
-			this.m_Nodes = nodes;
-			this.FetchData();
-		}
+        public SketchUpDataSource(TreeViewController treeView, SketchUpNodeInfo[] nodes) : base(treeView)
+        {
+            this.m_Nodes = nodes;
+            this.FetchData();
+        }
 
-		public int[] FetchEnableNodes()
-		{
-			List<int> list = new List<int>();
-			this.InternalFetchEnableNodes(this.m_RootItem as SketchUpNode, list);
-			return list.ToArray();
-		}
+        public override bool CanBeParent(TreeViewItem item)
+        {
+            return item.hasChildren;
+        }
 
-		private void InternalFetchEnableNodes(SketchUpNode node, List<int> enable)
-		{
-			if (node.Enabled)
-			{
-				enable.Add(node.Info.nodeIndex);
-			}
-			foreach (TreeViewItem current in node.children)
-			{
-				this.InternalFetchEnableNodes(current as SketchUpNode, enable);
-			}
-		}
+        public override void FetchData()
+        {
+            base.m_RootItem = new SketchUpNode(this.m_Nodes[0].nodeIndex, 0, null, this.m_Nodes[0].name, this.m_Nodes[0]);
+            List<SketchUpNode> list = new List<SketchUpNode> {
+                base.m_RootItem as SketchUpNode
+            };
+            this.SetExpanded(base.m_RootItem, true);
+            int nodeIndex = this.m_Nodes[0].nodeIndex;
+            for (int i = 1; i < this.m_Nodes.Length; i++)
+            {
+                SketchUpNodeInfo info = this.m_Nodes[i];
+                if ((info.parent >= 0) && (info.parent <= list.Count))
+                {
+                    if (info.parent >= i)
+                    {
+                        Debug.LogError("Parent node index is greater than child node");
+                    }
+                    else if (nodeIndex >= info.nodeIndex)
+                    {
+                        Debug.LogError("Node array is not sorted by nodeIndex");
+                    }
+                    else
+                    {
+                        SketchUpNode parent = list[info.parent];
+                        SketchUpNode item = new SketchUpNode(info.nodeIndex, parent.depth + 1, parent, info.name, info);
+                        parent.children.Add(item);
+                        this.SetExpanded(item, item.Info.enabled);
+                        list.Add(item);
+                        if ((i % 50) == 0)
+                        {
+                            EditorUtility.DisplayProgressBar("SketchUp Import", "Building Node Selection", ((float) i) / ((float) this.m_Nodes.Length));
+                        }
+                    }
+                }
+            }
+            EditorUtility.ClearProgressBar();
+            base.m_NeedRefreshRows = true;
+        }
 
-		public override void FetchData()
-		{
-			this.m_RootItem = new SketchUpNode(this.m_Nodes[0].nodeIndex, 0, null, this.m_Nodes[0].name, this.m_Nodes[0]);
-			List<SketchUpNode> list = new List<SketchUpNode>();
-			list.Add(this.m_RootItem as SketchUpNode);
-			this.SetExpanded(this.m_RootItem, true);
-			int nodeIndex = this.m_Nodes[0].nodeIndex;
-			for (int i = 1; i < this.m_Nodes.Length; i++)
-			{
-				SketchUpNodeInfo info = this.m_Nodes[i];
-				if (info.parent >= 0 && info.parent <= list.Count)
-				{
-					if (info.parent >= i)
-					{
-						Debug.LogError("Parent node index is greater than child node");
-					}
-					else if (nodeIndex >= info.nodeIndex)
-					{
-						Debug.LogError("Node array is not sorted by nodeIndex");
-					}
-					else
-					{
-						SketchUpNode sketchUpNode = list[info.parent];
-						SketchUpNode sketchUpNode2 = new SketchUpNode(info.nodeIndex, sketchUpNode.depth + 1, sketchUpNode, info.name, info);
-						sketchUpNode.children.Add(sketchUpNode2);
-						this.SetExpanded(sketchUpNode2, sketchUpNode2.Info.enabled);
-						list.Add(sketchUpNode2);
-						if (i % 50 == 0)
-						{
-							EditorUtility.DisplayProgressBar("SketchUp Import", "Building Node Selection", (float)i / (float)this.m_Nodes.Length);
-						}
-					}
-				}
-			}
-			EditorUtility.ClearProgressBar();
-			this.m_NeedRefreshRows = true;
-		}
+        public int[] FetchEnableNodes()
+        {
+            List<int> enable = new List<int>();
+            this.InternalFetchEnableNodes(base.m_RootItem as SketchUpNode, enable);
+            return enable.ToArray();
+        }
 
-		public override bool CanBeParent(TreeViewItem item)
-		{
-			return item.hasChildren;
-		}
+        private void InternalFetchEnableNodes(SketchUpNode node, List<int> enable)
+        {
+            if (node.Enabled)
+            {
+                enable.Add(node.Info.nodeIndex);
+            }
+            foreach (TreeViewItem item in node.children)
+            {
+                this.InternalFetchEnableNodes(item as SketchUpNode, enable);
+            }
+        }
 
-		public override bool IsRenamingItemAllowed(TreeViewItem item)
-		{
-			return false;
-		}
-	}
+        public override bool IsRenamingItemAllowed(TreeViewItem item)
+        {
+            return false;
+        }
+    }
 }
+

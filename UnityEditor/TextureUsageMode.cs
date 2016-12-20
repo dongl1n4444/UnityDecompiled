@@ -1,15 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum TextureUsageMode
-	{
-		Default,
-		LightmapDoubleLDR,
-		LightmapRGBM,
-		NormalmapDXT5nm,
-		NormalmapPlain,
-		RGBMEncoded,
-		AlwaysPadded
-	}
+    using System;
+
+    internal enum TextureUsageMode
+    {
+        Default,
+        LightmapDoubleLDR,
+        LightmapRGBM,
+        NormalmapDXT5nm,
+        NormalmapPlain,
+        RGBMEncoded,
+        AlwaysPadded
+    }
 }
+

@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum GameViewSizeType
-	{
-		AspectRatio,
-		FixedResolution
-	}
+    using System;
+
+    internal enum GameViewSizeType
+    {
+        AspectRatio,
+        FixedResolution
+    }
 }
+

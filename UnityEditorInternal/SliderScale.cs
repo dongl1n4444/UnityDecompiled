@@ -1,223 +1,244 @@
-using System;
-using UnityEditor;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class SliderScale
-	{
-		private static float s_StartScale;
+    using System;
+    using UnityEditor;
+    using UnityEngine;
 
-		private static float s_ScaleDrawLength = 1f;
+    internal class SliderScale
+    {
+        private static Vector2 s_CurrentMousePosition;
+        private static float s_ScaleDrawLength = 1f;
+        private static Vector2 s_StartMousePosition;
+        private static float s_StartScale;
+        private static float s_ValueDrag;
 
-		private static float s_ValueDrag;
+        public static float DoAxis(int id, float scale, Vector3 position, Vector3 direction, Quaternion rotation, float size, float snap)
+        {
+            Event current = Event.current;
+            switch (current.GetTypeForControl(id))
+            {
+                case EventType.MouseDown:
+                    if (((HandleUtility.nearestControl == id) && (current.button == 0)) || ((GUIUtility.keyboardControl == id) && (current.button == 2)))
+                    {
+                        int num = id;
+                        GUIUtility.keyboardControl = num;
+                        GUIUtility.hotControl = num;
+                        s_CurrentMousePosition = s_StartMousePosition = current.mousePosition;
+                        s_StartScale = scale;
+                        current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(1);
+                    }
+                    return scale;
 
-		private static Vector2 s_StartMousePosition;
+                case EventType.MouseUp:
+                    if ((GUIUtility.hotControl == id) && ((current.button == 0) || (current.button == 2)))
+                    {
+                        GUIUtility.hotControl = 0;
+                        current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(0);
+                    }
+                    return scale;
 
-		private static Vector2 s_CurrentMousePosition;
+                case EventType.MouseMove:
+                case EventType.KeyDown:
+                case EventType.KeyUp:
+                case EventType.ScrollWheel:
+                    return scale;
 
-		public static float DoAxis(int id, float scale, Vector3 position, Vector3 direction, Quaternion rotation, float size, float snap)
-		{
-			Event current = Event.current;
-			switch (current.GetTypeForControl(id))
-			{
-			case EventType.MouseDown:
-				if ((HandleUtility.nearestControl == id && current.button == 0) || (GUIUtility.keyboardControl == id && current.button == 2))
-				{
-					GUIUtility.keyboardControl = id;
-					GUIUtility.hotControl = id;
-					SliderScale.s_CurrentMousePosition = (SliderScale.s_StartMousePosition = current.mousePosition);
-					SliderScale.s_StartScale = scale;
-					current.Use();
-					EditorGUIUtility.SetWantsMouseJumping(1);
-				}
-				break;
-			case EventType.MouseUp:
-				if (GUIUtility.hotControl == id && (current.button == 0 || current.button == 2))
-				{
-					GUIUtility.hotControl = 0;
-					current.Use();
-					EditorGUIUtility.SetWantsMouseJumping(0);
-				}
-				break;
-			case EventType.MouseDrag:
-				if (GUIUtility.hotControl == id)
-				{
-					SliderScale.s_CurrentMousePosition += current.delta;
-					float num = 1f + HandleUtility.CalcLineTranslation(SliderScale.s_StartMousePosition, SliderScale.s_CurrentMousePosition, position, direction) / size;
-					num = Handles.SnapValue(num, snap);
-					scale = SliderScale.s_StartScale * num;
-					GUI.changed = true;
-					current.Use();
-				}
-				break;
-			case EventType.Repaint:
-			{
-				Color color = Color.white;
-				if (id == GUIUtility.keyboardControl)
-				{
-					color = Handles.color;
-					Handles.color = Handles.selectedColor;
-				}
-				float num2 = size;
-				if (GUIUtility.hotControl == id)
-				{
-					num2 = size * scale / SliderScale.s_StartScale;
-				}
-				Handles.CubeCap(id, position + direction * num2 * SliderScale.s_ScaleDrawLength, rotation, size * 0.1f);
-				Handles.DrawLine(position, position + direction * (num2 * SliderScale.s_ScaleDrawLength - size * 0.05f));
-				if (id == GUIUtility.keyboardControl)
-				{
-					Handles.color = color;
-				}
-				break;
-			}
-			case EventType.Layout:
-				HandleUtility.AddControl(id, HandleUtility.DistanceToLine(position, position + direction * size));
-				HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(position + direction * size, size * 0.2f));
-				break;
-			}
-			return scale;
-		}
+                case EventType.MouseDrag:
+                    if (GUIUtility.hotControl == id)
+                    {
+                        s_CurrentMousePosition += current.delta;
+                        float val = 1f + (HandleUtility.CalcLineTranslation(s_StartMousePosition, s_CurrentMousePosition, position, direction) / size);
+                        val = Handles.SnapValue(val, snap);
+                        scale = s_StartScale * val;
+                        GUI.changed = true;
+                        current.Use();
+                    }
+                    return scale;
 
-		public static float DoCenter(int id, float value, Vector3 position, Quaternion rotation, float size, Handles.DrawCapFunction capFunc, float snap)
-		{
-			Event current = Event.current;
-			switch (current.GetTypeForControl(id))
-			{
-			case EventType.MouseDown:
-				if ((HandleUtility.nearestControl == id && current.button == 0) || (GUIUtility.keyboardControl == id && current.button == 2))
-				{
-					GUIUtility.keyboardControl = id;
-					GUIUtility.hotControl = id;
-					SliderScale.s_StartScale = value;
-					SliderScale.s_ValueDrag = 0f;
-					current.Use();
-					EditorGUIUtility.SetWantsMouseJumping(1);
-				}
-				break;
-			case EventType.MouseUp:
-				if (GUIUtility.hotControl == id && (current.button == 0 || current.button == 2))
-				{
-					GUIUtility.hotControl = 0;
-					SliderScale.s_ScaleDrawLength = 1f;
-					current.Use();
-					EditorGUIUtility.SetWantsMouseJumping(0);
-				}
-				break;
-			case EventType.MouseDrag:
-				if (GUIUtility.hotControl == id)
-				{
-					SliderScale.s_ValueDrag += HandleUtility.niceMouseDelta * 0.01f;
-					value = (Handles.SnapValue(SliderScale.s_ValueDrag, snap) + 1f) * SliderScale.s_StartScale;
-					SliderScale.s_ScaleDrawLength = value / SliderScale.s_StartScale;
-					GUI.changed = true;
-					current.Use();
-				}
-				break;
-			case EventType.KeyDown:
-				if (GUIUtility.hotControl == id)
-				{
-					if (current.keyCode == KeyCode.Escape)
-					{
-						value = SliderScale.s_StartScale;
-						SliderScale.s_ScaleDrawLength = 1f;
-						GUIUtility.hotControl = 0;
-						GUI.changed = true;
-						current.Use();
-					}
-				}
-				break;
-			case EventType.Repaint:
-			{
-				Color color = Color.white;
-				if (id == GUIUtility.keyboardControl)
-				{
-					color = Handles.color;
-					Handles.color = Handles.selectedColor;
-				}
-				capFunc(id, position, rotation, size * 0.15f);
-				if (id == GUIUtility.keyboardControl)
-				{
-					Handles.color = color;
-				}
-				break;
-			}
-			case EventType.Layout:
-				HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(position, size * 0.15f));
-				break;
-			}
-			return value;
-		}
+                case EventType.Repaint:
+                {
+                    Color white = Color.white;
+                    if (id == GUIUtility.keyboardControl)
+                    {
+                        white = Handles.color;
+                        Handles.color = Handles.selectedColor;
+                    }
+                    float num3 = size;
+                    if (GUIUtility.hotControl == id)
+                    {
+                        num3 = (size * scale) / s_StartScale;
+                    }
+                    Handles.CubeCap(id, position + ((Vector3) ((direction * num3) * s_ScaleDrawLength)), rotation, size * 0.1f);
+                    Handles.DrawLine(position, position + ((Vector3) (direction * ((num3 * s_ScaleDrawLength) - (size * 0.05f)))));
+                    if (id == GUIUtility.keyboardControl)
+                    {
+                        Handles.color = white;
+                    }
+                    return scale;
+                }
+                case EventType.Layout:
+                    HandleUtility.AddControl(id, HandleUtility.DistanceToLine(position, position + ((Vector3) (direction * size))));
+                    HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(position + ((Vector3) (direction * size)), size * 0.2f));
+                    return scale;
+            }
+            return scale;
+        }
 
-		public static float DoCenter(int id, float value, Vector3 position, Quaternion rotation, float size, Handles.CapFunction capFunction, float snap)
-		{
-			Event current = Event.current;
-			switch (current.GetTypeForControl(id))
-			{
-			case EventType.MouseDown:
-				if ((HandleUtility.nearestControl == id && current.button == 0) || (GUIUtility.keyboardControl == id && current.button == 2))
-				{
-					GUIUtility.keyboardControl = id;
-					GUIUtility.hotControl = id;
-					SliderScale.s_StartScale = value;
-					SliderScale.s_ValueDrag = 0f;
-					current.Use();
-					EditorGUIUtility.SetWantsMouseJumping(1);
-				}
-				break;
-			case EventType.MouseUp:
-				if (GUIUtility.hotControl == id && (current.button == 0 || current.button == 2))
-				{
-					GUIUtility.hotControl = 0;
-					SliderScale.s_ScaleDrawLength = 1f;
-					current.Use();
-					EditorGUIUtility.SetWantsMouseJumping(0);
-				}
-				break;
-			case EventType.MouseDrag:
-				if (GUIUtility.hotControl == id)
-				{
-					SliderScale.s_ValueDrag += HandleUtility.niceMouseDelta * 0.01f;
-					value = (Handles.SnapValue(SliderScale.s_ValueDrag, snap) + 1f) * SliderScale.s_StartScale;
-					SliderScale.s_ScaleDrawLength = value / SliderScale.s_StartScale;
-					GUI.changed = true;
-					current.Use();
-				}
-				break;
-			case EventType.KeyDown:
-				if (GUIUtility.hotControl == id)
-				{
-					if (current.keyCode == KeyCode.Escape)
-					{
-						value = SliderScale.s_StartScale;
-						SliderScale.s_ScaleDrawLength = 1f;
-						GUIUtility.hotControl = 0;
-						GUI.changed = true;
-						current.Use();
-					}
-				}
-				break;
-			case EventType.Repaint:
-			{
-				Color color = Color.white;
-				if (id == GUIUtility.keyboardControl)
-				{
-					color = Handles.color;
-					Handles.color = Handles.selectedColor;
-				}
-				capFunction(id, position, rotation, size * 0.15f, EventType.Repaint);
-				if (id == GUIUtility.keyboardControl)
-				{
-					Handles.color = color;
-				}
-				break;
-			}
-			case EventType.Layout:
-				capFunction(id, position, rotation, size * 0.15f, EventType.Layout);
-				break;
-			}
-			return value;
-		}
-	}
+        public static float DoCenter(int id, float value, Vector3 position, Quaternion rotation, float size, Handles.CapFunction capFunction, float snap)
+        {
+            Event current = Event.current;
+            switch (current.GetTypeForControl(id))
+            {
+                case EventType.MouseDown:
+                    if (((HandleUtility.nearestControl == id) && (current.button == 0)) || ((GUIUtility.keyboardControl == id) && (current.button == 2)))
+                    {
+                        int num = id;
+                        GUIUtility.keyboardControl = num;
+                        GUIUtility.hotControl = num;
+                        s_StartScale = value;
+                        s_ValueDrag = 0f;
+                        current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(1);
+                    }
+                    return value;
+
+                case EventType.MouseUp:
+                    if ((GUIUtility.hotControl == id) && ((current.button == 0) || (current.button == 2)))
+                    {
+                        GUIUtility.hotControl = 0;
+                        s_ScaleDrawLength = 1f;
+                        current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(0);
+                    }
+                    return value;
+
+                case EventType.MouseMove:
+                case EventType.KeyUp:
+                case EventType.ScrollWheel:
+                    return value;
+
+                case EventType.MouseDrag:
+                    if (GUIUtility.hotControl == id)
+                    {
+                        s_ValueDrag += HandleUtility.niceMouseDelta * 0.01f;
+                        value = (Handles.SnapValue(s_ValueDrag, snap) + 1f) * s_StartScale;
+                        s_ScaleDrawLength = value / s_StartScale;
+                        GUI.changed = true;
+                        current.Use();
+                    }
+                    return value;
+
+                case EventType.KeyDown:
+                    if ((GUIUtility.hotControl == id) && (current.keyCode == KeyCode.Escape))
+                    {
+                        value = s_StartScale;
+                        s_ScaleDrawLength = 1f;
+                        GUIUtility.hotControl = 0;
+                        GUI.changed = true;
+                        current.Use();
+                    }
+                    return value;
+
+                case EventType.Repaint:
+                {
+                    Color white = Color.white;
+                    if (id == GUIUtility.keyboardControl)
+                    {
+                        white = Handles.color;
+                        Handles.color = Handles.selectedColor;
+                    }
+                    capFunction(id, position, rotation, size * 0.15f, EventType.Repaint);
+                    if (id == GUIUtility.keyboardControl)
+                    {
+                        Handles.color = white;
+                    }
+                    return value;
+                }
+                case EventType.Layout:
+                    capFunction(id, position, rotation, size * 0.15f, EventType.Layout);
+                    return value;
+            }
+            return value;
+        }
+
+        public static float DoCenter(int id, float value, Vector3 position, Quaternion rotation, float size, Handles.DrawCapFunction capFunc, float snap)
+        {
+            Event current = Event.current;
+            switch (current.GetTypeForControl(id))
+            {
+                case EventType.MouseDown:
+                    if (((HandleUtility.nearestControl == id) && (current.button == 0)) || ((GUIUtility.keyboardControl == id) && (current.button == 2)))
+                    {
+                        int num = id;
+                        GUIUtility.keyboardControl = num;
+                        GUIUtility.hotControl = num;
+                        s_StartScale = value;
+                        s_ValueDrag = 0f;
+                        current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(1);
+                    }
+                    return value;
+
+                case EventType.MouseUp:
+                    if ((GUIUtility.hotControl == id) && ((current.button == 0) || (current.button == 2)))
+                    {
+                        GUIUtility.hotControl = 0;
+                        s_ScaleDrawLength = 1f;
+                        current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(0);
+                    }
+                    return value;
+
+                case EventType.MouseMove:
+                case EventType.KeyUp:
+                case EventType.ScrollWheel:
+                    return value;
+
+                case EventType.MouseDrag:
+                    if (GUIUtility.hotControl == id)
+                    {
+                        s_ValueDrag += HandleUtility.niceMouseDelta * 0.01f;
+                        value = (Handles.SnapValue(s_ValueDrag, snap) + 1f) * s_StartScale;
+                        s_ScaleDrawLength = value / s_StartScale;
+                        GUI.changed = true;
+                        current.Use();
+                    }
+                    return value;
+
+                case EventType.KeyDown:
+                    if ((GUIUtility.hotControl == id) && (current.keyCode == KeyCode.Escape))
+                    {
+                        value = s_StartScale;
+                        s_ScaleDrawLength = 1f;
+                        GUIUtility.hotControl = 0;
+                        GUI.changed = true;
+                        current.Use();
+                    }
+                    return value;
+
+                case EventType.Repaint:
+                {
+                    Color white = Color.white;
+                    if (id == GUIUtility.keyboardControl)
+                    {
+                        white = Handles.color;
+                        Handles.color = Handles.selectedColor;
+                    }
+                    capFunc(id, position, rotation, size * 0.15f);
+                    if (id == GUIUtility.keyboardControl)
+                    {
+                        Handles.color = white;
+                    }
+                    return value;
+                }
+                case EventType.Layout:
+                    HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(position, size * 0.15f));
+                    return value;
+            }
+            return value;
+        }
+    }
 }
+

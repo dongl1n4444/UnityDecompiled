@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum HumanBodyPart
-	{
-		BodyStart,
-		LeftFingerStart = 24,
-		RightFingerStart = 39,
-		LastBone = 54
-	}
+    using System;
+
+    internal enum HumanBodyPart
+    {
+        BodyStart = 0,
+        LastBone = 0x36,
+        LeftFingerStart = 0x18,
+        RightFingerStart = 0x27
+    }
 }
+

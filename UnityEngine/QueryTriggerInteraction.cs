@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum QueryTriggerInteraction
-	{
-		UseGlobal,
-		Ignore,
-		Collide
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Overrides the global Physics.queriesHitTriggers.</para>
+    /// </summary>
+    public enum QueryTriggerInteraction
+    {
+        UseGlobal,
+        Ignore,
+        Collide
+    }
 }
+

@@ -1,8 +1,9 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal class ThreadAndSerializationSafe : Attribute
-	{
-	}
+    using System;
+
+    internal class ThreadAndSerializationSafe : Attribute
+    {
+    }
 }
+

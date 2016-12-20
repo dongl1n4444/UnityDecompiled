@@ -1,160 +1,159 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class LightProbeProxyVolume : Behaviour
-	{
-		public enum ResolutionMode
-		{
-			Automatic,
-			Custom
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public enum BoundingBoxMode
-		{
-			AutomaticLocal,
-			AutomaticWorld,
-			Custom
-		}
+    /// <summary>
+    /// <para>The Light Probe Proxy Volume component offers the possibility to use higher resolution lighting for large non-static GameObjects.</para>
+    /// </summary>
+    public sealed class LightProbeProxyVolume : Behaviour
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_boundsGlobal(out Bounds value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_originCustom(out Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_sizeCustom(out Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_originCustom(ref Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_sizeCustom(ref Vector3 value);
+        /// <summary>
+        /// <para>Triggers an update of the Light Probe Proxy Volume.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void Update();
 
-		public enum ProbePositionMode
-		{
-			CellCorner,
-			CellCenter
-		}
+        /// <summary>
+        /// <para>The bounding box mode for generating the 3D grid of interpolated Light Probes.</para>
+        /// </summary>
+        public BoundingBoxMode boundingBoxMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public enum RefreshMode
-		{
-			Automatic,
-			EveryFrame,
-			ViaScripting
-		}
+        /// <summary>
+        /// <para>The world-space bounding box in which the 3D grid of interpolated Light Probes is generated.</para>
+        /// </summary>
+        public Bounds boundsGlobal
+        {
+            get
+            {
+                Bounds bounds;
+                this.INTERNAL_get_boundsGlobal(out bounds);
+                return bounds;
+            }
+        }
 
-		public Bounds boundsGlobal
-		{
-			get
-			{
-				Bounds result;
-				this.INTERNAL_get_boundsGlobal(out result);
-				return result;
-			}
-		}
+        /// <summary>
+        /// <para>The 3D grid resolution on the z-axis.</para>
+        /// </summary>
+        public int gridResolutionX { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public Vector3 sizeCustom
-		{
-			get
-			{
-				Vector3 result;
-				this.INTERNAL_get_sizeCustom(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_sizeCustom(ref value);
-			}
-		}
+        /// <summary>
+        /// <para>The 3D grid resolution on the y-axis.</para>
+        /// </summary>
+        public int gridResolutionY { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public Vector3 originCustom
-		{
-			get
-			{
-				Vector3 result;
-				this.INTERNAL_get_originCustom(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_originCustom(ref value);
-			}
-		}
+        /// <summary>
+        /// <para>The 3D grid resolution on the z-axis.</para>
+        /// </summary>
+        public int gridResolutionZ { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern LightProbeProxyVolume.BoundingBoxMode boundingBoxMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Checks if Light Probe Proxy Volumes are supported.</para>
+        /// </summary>
+        public static bool isFeatureSupported { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern LightProbeProxyVolume.ResolutionMode resolutionMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The local-space origin of the bounding box in which the 3D grid of interpolated Light Probes is generated.</para>
+        /// </summary>
+        public Vector3 originCustom
+        {
+            get
+            {
+                Vector3 vector;
+                this.INTERNAL_get_originCustom(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_originCustom(ref value);
+            }
+        }
 
-		public extern LightProbeProxyVolume.ProbePositionMode probePositionMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Interpolated Light Probe density.</para>
+        /// </summary>
+        public float probeDensity { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern LightProbeProxyVolume.RefreshMode refreshMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The mode in which the interpolated Light Probe positions are generated.</para>
+        /// </summary>
+        public ProbePositionMode probePositionMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern float probeDensity
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Sets the way the Light Probe Proxy Volume refreshes.</para>
+        /// </summary>
+        public RefreshMode refreshMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern int gridResolutionX
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The resolution mode for generating the grid of interpolated Light Probes.</para>
+        /// </summary>
+        public ResolutionMode resolutionMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern int gridResolutionY
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The size of the bounding box in which the 3D grid of interpolated Light Probes is generated.</para>
+        /// </summary>
+        public Vector3 sizeCustom
+        {
+            get
+            {
+                Vector3 vector;
+                this.INTERNAL_get_sizeCustom(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_sizeCustom(ref value);
+            }
+        }
 
-		public extern int gridResolutionZ
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The bounding box mode for generating a grid of interpolated Light Probes.</para>
+        /// </summary>
+        public enum BoundingBoxMode
+        {
+            AutomaticLocal,
+            AutomaticWorld,
+            Custom
+        }
 
-		public static extern bool isFeatureSupported
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>The mode in which the interpolated Light Probe positions are generated.</para>
+        /// </summary>
+        public enum ProbePositionMode
+        {
+            CellCorner,
+            CellCenter
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_boundsGlobal(out Bounds value);
+        /// <summary>
+        /// <para>An enum describing the way a Light Probe Proxy Volume refreshes in the Player.</para>
+        /// </summary>
+        public enum RefreshMode
+        {
+            Automatic,
+            EveryFrame,
+            ViaScripting
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_sizeCustom(out Vector3 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_sizeCustom(ref Vector3 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_originCustom(out Vector3 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_originCustom(ref Vector3 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void Update();
-	}
+        /// <summary>
+        /// <para>The resolution mode for generating a grid of interpolated Light Probes.</para>
+        /// </summary>
+        public enum ResolutionMode
+        {
+            Automatic,
+            Custom
+        }
+    }
 }
+

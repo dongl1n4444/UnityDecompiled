@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Obsolete("AnimatorLayerBlendingMode is obsolete. Use UnityEditor.Animations.AnimatorLayerBlendingMode instead (UnityUpgradable) -> UnityEditor.Animations.AnimatorLayerBlendingMode", true)]
-	public enum AnimatorLayerBlendingMode
-	{
-		Override = -1,
-		Additive = -1
-	}
+    using System;
+
+    [Obsolete("AnimatorLayerBlendingMode is obsolete. Use UnityEditor.Animations.AnimatorLayerBlendingMode instead (UnityUpgradable) -> UnityEditor.Animations.AnimatorLayerBlendingMode", true)]
+    public enum AnimatorLayerBlendingMode
+    {
+        Additive = -1,
+        Override = -1
+    }
 }
+

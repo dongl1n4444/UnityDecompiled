@@ -1,57 +1,58 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class IncrementalInitialize
-	{
-		public enum State
-		{
-			PreInitialize,
-			Initialize,
-			Initialized
-		}
+    using System;
+    using UnityEngine;
 
-		[SerializeField]
-		private IncrementalInitialize.State m_InitState;
+    [Serializable]
+    internal class IncrementalInitialize
+    {
+        [NonSerialized]
+        private bool m_IncrementOnNextEvent;
+        [SerializeField]
+        private State m_InitState;
 
-		[NonSerialized]
-		private bool m_IncrementOnNextEvent;
+        public void OnEvent()
+        {
+            if (this.m_IncrementOnNextEvent)
+            {
+                this.m_InitState += 1;
+                this.m_IncrementOnNextEvent = false;
+            }
+            switch (this.m_InitState)
+            {
+                case State.PreInitialize:
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        this.m_IncrementOnNextEvent = true;
+                        HandleUtility.Repaint();
+                    }
+                    break;
 
-		public IncrementalInitialize.State state
-		{
-			get
-			{
-				return this.m_InitState;
-			}
-		}
+                case State.Initialize:
+                    this.m_IncrementOnNextEvent = true;
+                    break;
+            }
+        }
 
-		public void Restart()
-		{
-			this.m_InitState = IncrementalInitialize.State.PreInitialize;
-		}
+        public void Restart()
+        {
+            this.m_InitState = State.PreInitialize;
+        }
 
-		public void OnEvent()
-		{
-			if (this.m_IncrementOnNextEvent)
-			{
-				this.m_InitState++;
-				this.m_IncrementOnNextEvent = false;
-			}
-			IncrementalInitialize.State initState = this.m_InitState;
-			if (initState != IncrementalInitialize.State.PreInitialize)
-			{
-				if (initState == IncrementalInitialize.State.Initialize)
-				{
-					this.m_IncrementOnNextEvent = true;
-				}
-			}
-			else if (Event.current.type == EventType.Repaint)
-			{
-				this.m_IncrementOnNextEvent = true;
-				HandleUtility.Repaint();
-			}
-		}
-	}
+        public State state
+        {
+            get
+            {
+                return this.m_InitState;
+            }
+        }
+
+        public enum State
+        {
+            PreInitialize,
+            Initialize,
+            Initialized
+        }
+    }
 }
+

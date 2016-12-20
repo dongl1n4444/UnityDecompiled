@@ -1,18 +1,23 @@
-using System;
-using System.Reflection;
-
-namespace UnityEngineInternal
+﻿namespace UnityEngineInternal
 {
-	internal static class NetFxCoreExtensions
-	{
-		public static Delegate CreateDelegate(this MethodInfo self, Type delegateType, object target)
-		{
-			return Delegate.CreateDelegate(delegateType, target, self);
-		}
+    using System;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
 
-		public static MethodInfo GetMethodInfo(this Delegate self)
-		{
-			return self.Method;
-		}
-	}
+    [Extension]
+    internal static class NetFxCoreExtensions
+    {
+        [Extension]
+        public static Delegate CreateDelegate(MethodInfo self, Type delegateType, object target)
+        {
+            return Delegate.CreateDelegate(delegateType, target, self);
+        }
+
+        [Extension]
+        public static MethodInfo GetMethodInfo(Delegate self)
+        {
+            return self.Method;
+        }
+    }
 }
+

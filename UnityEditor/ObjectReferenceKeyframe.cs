@@ -1,12 +1,14 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public struct ObjectReferenceKeyframe
-	{
-		public float time;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		public UnityEngine.Object value;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ObjectReferenceKeyframe
+    {
+        public float time;
+        public Object value;
+    }
 }
+

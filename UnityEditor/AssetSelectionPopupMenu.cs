@@ -1,66 +1,70 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AssetSelectionPopupMenu
-	{
-		[CompilerGenerated]
-		private static GenericMenu.MenuFunction2 <>f__mg$cache0;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		public static void Show(Rect buttonRect, string[] classNames, int initialSelectedInstanceID)
-		{
-			GenericMenu genericMenu = new GenericMenu();
-			List<UnityEngine.Object> list = AssetSelectionPopupMenu.FindAssetsOfType(classNames);
-			if (list.Any<UnityEngine.Object>())
-			{
-				list.Sort((UnityEngine.Object result1, UnityEngine.Object result2) => EditorUtility.NaturalCompare(result1.name, result2.name));
-				foreach (UnityEngine.Object current in list)
-				{
-					GUIContent gUIContent = new GUIContent(current.name);
-					bool flag = current.GetInstanceID() == initialSelectedInstanceID;
-					GenericMenu arg_8E_0 = genericMenu;
-					GUIContent arg_8E_1 = gUIContent;
-					bool arg_8E_2 = flag;
-					if (AssetSelectionPopupMenu.<>f__mg$cache0 == null)
-					{
-						AssetSelectionPopupMenu.<>f__mg$cache0 = new GenericMenu.MenuFunction2(AssetSelectionPopupMenu.SelectCallback);
-					}
-					arg_8E_0.AddItem(arg_8E_1, arg_8E_2, AssetSelectionPopupMenu.<>f__mg$cache0, current);
-				}
-			}
-			else
-			{
-				genericMenu.AddDisabledItem(new GUIContent("No Audio Mixers found in this project"));
-			}
-			genericMenu.DropDown(buttonRect);
-		}
+    internal class AssetSelectionPopupMenu
+    {
+        [CompilerGenerated]
+        private static Comparison<Object> <>f__am$cache0;
+        [CompilerGenerated]
+        private static GenericMenu.MenuFunction2 <>f__mg$cache0;
 
-		private static void SelectCallback(object userData)
-		{
-			UnityEngine.Object @object = userData as UnityEngine.Object;
-			if (@object != null)
-			{
-				Selection.activeInstanceID = @object.GetInstanceID();
-			}
-		}
+        private static List<Object> FindAssetsOfType(string[] classNames)
+        {
+            HierarchyProperty property = new HierarchyProperty(HierarchyType.Assets);
+            SearchFilter filter = new SearchFilter {
+                classNames = classNames
+            };
+            property.SetSearchFilter(filter);
+            List<Object> list = new List<Object>();
+            while (property.Next(null))
+            {
+                list.Add(property.pptrValue);
+            }
+            return list;
+        }
 
-		private static List<UnityEngine.Object> FindAssetsOfType(string[] classNames)
-		{
-			HierarchyProperty hierarchyProperty = new HierarchyProperty(HierarchyType.Assets);
-			hierarchyProperty.SetSearchFilter(new SearchFilter
-			{
-				classNames = classNames
-			});
-			List<UnityEngine.Object> list = new List<UnityEngine.Object>();
-			while (hierarchyProperty.Next(null))
-			{
-				list.Add(hierarchyProperty.pptrValue);
-			}
-			return list;
-		}
-	}
+        private static void SelectCallback(object userData)
+        {
+            Object obj2 = userData as Object;
+            if (obj2 != null)
+            {
+                Selection.activeInstanceID = obj2.GetInstanceID();
+            }
+        }
+
+        public static void Show(Rect buttonRect, string[] classNames, int initialSelectedInstanceID)
+        {
+            GenericMenu menu = new GenericMenu();
+            List<Object> source = FindAssetsOfType(classNames);
+            if (Enumerable.Any<Object>(source))
+            {
+                if (<>f__am$cache0 == null)
+                {
+                    <>f__am$cache0 = (result1, result2) => EditorUtility.NaturalCompare(result1.name, result2.name);
+                }
+                source.Sort(<>f__am$cache0);
+                foreach (Object obj2 in source)
+                {
+                    GUIContent content = new GUIContent(obj2.name);
+                    bool on = obj2.GetInstanceID() == initialSelectedInstanceID;
+                    if (<>f__mg$cache0 == null)
+                    {
+                        <>f__mg$cache0 = new GenericMenu.MenuFunction2(AssetSelectionPopupMenu.SelectCallback);
+                    }
+                    menu.AddItem(content, on, <>f__mg$cache0, obj2);
+                }
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent("No Audio Mixers found in this project"));
+            }
+            menu.DropDown(buttonRect);
+        }
+    }
 }
+

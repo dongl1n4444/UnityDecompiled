@@ -1,69 +1,52 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ParticleSystemStyles
-	{
-		private static ParticleSystemStyles s_ParticleSystemStyles;
+    using System;
+    using UnityEngine;
 
-		public GUIStyle label = ParticleSystemStyles.FindStyle("ShurikenLabel");
+    internal class ParticleSystemStyles
+    {
+        public GUIStyle checkmark = FindStyle("ShurikenCheckMark");
+        public GUIStyle effectBgStyle = FindStyle("ShurikenEffectBg");
+        public GUIStyle emitterHeaderStyle = FindStyle("ShurikenEmitterTitle");
+        public GUIStyle label = FindStyle("ShurikenLabel");
+        public GUIStyle line = FindStyle("ShurikenLine");
+        public GUIStyle minMaxCurveStateDropDown = FindStyle("ShurikenDropdown");
+        public GUIStyle minus = FindStyle("ShurikenMinus");
+        public GUIStyle moduleBgStyle = FindStyle("ShurikenModuleBg");
+        public GUIStyle moduleHeaderStyle = FindStyle("ShurikenModuleTitle");
+        public GUIStyle modulePadding = new GUIStyle();
+        public GUIStyle numberField = FindStyle("ShurikenValue");
+        public GUIStyle objectField = FindStyle("ShurikenObjectField");
+        public GUIStyle plus = FindStyle("ShurikenPlus");
+        public GUIStyle popup = FindStyle("ShurikenPopUp");
+        private static ParticleSystemStyles s_ParticleSystemStyles;
+        public GUIStyle selectionMarker = FindStyle("IN ThumbnailShadow");
+        public GUIStyle toggle = FindStyle("ShurikenToggle");
+        public GUIStyle toolbarButtonLeftAlignText = new GUIStyle(FindStyle("ToolbarButton"));
+        public Texture2D warningIcon;
 
-		public GUIStyle numberField = ParticleSystemStyles.FindStyle("ShurikenValue");
+        private ParticleSystemStyles()
+        {
+            this.emitterHeaderStyle.clipping = TextClipping.Clip;
+            this.emitterHeaderStyle.padding.right = 0x2d;
+            this.warningIcon = EditorGUIUtility.LoadIcon("console.infoicon.sml");
+            this.toolbarButtonLeftAlignText.alignment = TextAnchor.MiddleLeft;
+            this.modulePadding.padding = new RectOffset(3, 3, 4, 2);
+        }
 
-		public GUIStyle objectField = ParticleSystemStyles.FindStyle("ShurikenObjectField");
+        private static GUIStyle FindStyle(string styleName)
+        {
+            return styleName;
+        }
 
-		public GUIStyle effectBgStyle = ParticleSystemStyles.FindStyle("ShurikenEffectBg");
-
-		public GUIStyle emitterHeaderStyle = ParticleSystemStyles.FindStyle("ShurikenEmitterTitle");
-
-		public GUIStyle moduleHeaderStyle = ParticleSystemStyles.FindStyle("ShurikenModuleTitle");
-
-		public GUIStyle moduleBgStyle = ParticleSystemStyles.FindStyle("ShurikenModuleBg");
-
-		public GUIStyle plus = ParticleSystemStyles.FindStyle("ShurikenPlus");
-
-		public GUIStyle minus = ParticleSystemStyles.FindStyle("ShurikenMinus");
-
-		public GUIStyle line = ParticleSystemStyles.FindStyle("ShurikenLine");
-
-		public GUIStyle checkmark = ParticleSystemStyles.FindStyle("ShurikenCheckMark");
-
-		public GUIStyle minMaxCurveStateDropDown = ParticleSystemStyles.FindStyle("ShurikenDropdown");
-
-		public GUIStyle toggle = ParticleSystemStyles.FindStyle("ShurikenToggle");
-
-		public GUIStyle popup = ParticleSystemStyles.FindStyle("ShurikenPopUp");
-
-		public GUIStyle selectionMarker = ParticleSystemStyles.FindStyle("IN ThumbnailShadow");
-
-		public GUIStyle toolbarButtonLeftAlignText = new GUIStyle(ParticleSystemStyles.FindStyle("ToolbarButton"));
-
-		public GUIStyle modulePadding = new GUIStyle();
-
-		public Texture2D warningIcon;
-
-		private ParticleSystemStyles()
-		{
-			this.emitterHeaderStyle.clipping = TextClipping.Clip;
-			this.emitterHeaderStyle.padding.right = 45;
-			this.warningIcon = EditorGUIUtility.LoadIcon("console.infoicon.sml");
-			this.toolbarButtonLeftAlignText.alignment = TextAnchor.MiddleLeft;
-			this.modulePadding.padding = new RectOffset(3, 3, 4, 2);
-		}
-
-		public static ParticleSystemStyles Get()
-		{
-			if (ParticleSystemStyles.s_ParticleSystemStyles == null)
-			{
-				ParticleSystemStyles.s_ParticleSystemStyles = new ParticleSystemStyles();
-			}
-			return ParticleSystemStyles.s_ParticleSystemStyles;
-		}
-
-		private static GUIStyle FindStyle(string styleName)
-		{
-			return styleName;
-		}
-	}
+        public static ParticleSystemStyles Get()
+        {
+            if (s_ParticleSystemStyles == null)
+            {
+                s_ParticleSystemStyles = new ParticleSystemStyles();
+            }
+            return s_ParticleSystemStyles;
+        }
+    }
 }
+

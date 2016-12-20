@@ -1,136 +1,146 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class AnimationClip : Motion
-	{
-		public extern float length
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		internal extern float startTime
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    /// <summary>
+    /// <para>Stores keyframe based animations.</para>
+    /// </summary>
+    public sealed class AnimationClip : Motion
+    {
+        /// <summary>
+        /// <para>Creates a new animation clip.</para>
+        /// </summary>
+        public AnimationClip()
+        {
+            Internal_CreateAnimationClip(this);
+        }
 
-		internal extern float stopTime
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Adds an animation event to the clip.</para>
+        /// </summary>
+        /// <param name="evt">AnimationEvent to add.</param>
+        public void AddEvent(AnimationEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException("evt");
+            }
+            this.AddEventInternal(evt);
+        }
 
-		public extern float frameRate
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void AddEventInternal(object evt);
+        /// <summary>
+        /// <para>Clears all curves from the clip.</para>
+        /// </summary>
+        public void ClearCurves()
+        {
+            INTERNAL_CALL_ClearCurves(this);
+        }
 
-		public extern WrapMode wrapMode
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Realigns quaternion keys to ensure shortest interpolation paths.</para>
+        /// </summary>
+        public void EnsureQuaternionContinuity()
+        {
+            INTERNAL_CALL_EnsureQuaternionContinuity(this);
+        }
 
-		public Bounds localBounds
-		{
-			get
-			{
-				Bounds result;
-				this.INTERNAL_get_localBounds(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_localBounds(ref value);
-			}
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern Array GetEventsInternal();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_ClearCurves(AnimationClip self);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_EnsureQuaternionContinuity(AnimationClip self);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_CreateAnimationClip([Writable] AnimationClip self);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_localBounds(out Bounds value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_localBounds(ref Bounds value);
+        /// <summary>
+        /// <para>Samples an animation at a given time for any animated properties.</para>
+        /// </summary>
+        /// <param name="go">The animated game object.</param>
+        /// <param name="time">The time to sample an animation.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SampleAnimation(GameObject go, float time);
+        /// <summary>
+        /// <para>Assigns the curve to animate a specific property.</para>
+        /// </summary>
+        /// <param name="relativePath">Path to the game object this curve applies to. The relativePath
+        /// is formatted similar to a pathname, e.g. "rootspineleftArm".  If relativePath
+        /// is empty it refers to the game object the animation clip is attached to.</param>
+        /// <param name="type">The class type of the component that is animated.</param>
+        /// <param name="propertyName">The name or path to the property being animated.</param>
+        /// <param name="curve">The animation curve.</param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern void SetCurve(string relativePath, System.Type type, string propertyName, AnimationCurve curve);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern void SetEventsInternal(Array value);
 
-		public new extern bool legacy
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Animation Events for this animation clip.</para>
+        /// </summary>
+        public AnimationEvent[] events
+        {
+            get
+            {
+                return (AnimationEvent[]) this.GetEventsInternal();
+            }
+            set
+            {
+                this.SetEventsInternal(value);
+            }
+        }
 
-		public extern bool humanMotion
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Frame rate at which keyframes are sampled. (Read Only)</para>
+        /// </summary>
+        public float frameRate { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public AnimationEvent[] events
-		{
-			get
-			{
-				return (AnimationEvent[])this.GetEventsInternal();
-			}
-			set
-			{
-				this.SetEventsInternal(value);
-			}
-		}
+        /// <summary>
+        /// <para>Returns true if the animation contains curve that drives a humanoid rig.</para>
+        /// </summary>
+        public bool humanMotion { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public AnimationClip()
-		{
-			AnimationClip.Internal_CreateAnimationClip(this);
-		}
+        /// <summary>
+        /// <para>Set to true if the AnimationClip will be used with the Legacy Animation component ( instead of the Animator ).</para>
+        /// </summary>
+        public bool legacy { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void SampleAnimation(GameObject go, float time);
+        /// <summary>
+        /// <para>Animation length in seconds. (Read Only)</para>
+        /// </summary>
+        public float length { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_CreateAnimationClip([Writable] AnimationClip self);
+        /// <summary>
+        /// <para>AABB of this Animation Clip in local space of Animation component that it is attached too.</para>
+        /// </summary>
+        public Bounds localBounds
+        {
+            get
+            {
+                Bounds bounds;
+                this.INTERNAL_get_localBounds(out bounds);
+                return bounds;
+            }
+            set
+            {
+                this.INTERNAL_set_localBounds(ref value);
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern void SetCurve(string relativePath, Type type, string propertyName, AnimationCurve curve);
+        internal float startTime { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public void EnsureQuaternionContinuity()
-		{
-			AnimationClip.INTERNAL_CALL_EnsureQuaternionContinuity(this);
-		}
+        internal float stopTime { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_EnsureQuaternionContinuity(AnimationClip self);
-
-		public void ClearCurves()
-		{
-			AnimationClip.INTERNAL_CALL_ClearCurves(this);
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_ClearCurves(AnimationClip self);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_localBounds(out Bounds value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_localBounds(ref Bounds value);
-
-		public void AddEvent(AnimationEvent evt)
-		{
-			if (evt == null)
-			{
-				throw new ArgumentNullException("evt");
-			}
-			this.AddEventInternal(evt);
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern void AddEventInternal(object evt);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern void SetEventsInternal(Array value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal extern Array GetEventsInternal();
-	}
+        /// <summary>
+        /// <para>Sets the default wrap mode used in the animation state.</para>
+        /// </summary>
+        public WrapMode wrapMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

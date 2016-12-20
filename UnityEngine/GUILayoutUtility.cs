@@ -1,525 +1,659 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Security;
-using UnityEngineInternal;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class GUILayoutUtility
-	{
-		internal sealed class LayoutCache
-		{
-			internal GUILayoutGroup topLevel = new GUILayoutGroup();
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using System.Security;
+    using UnityEngineInternal;
 
-			internal GenericStack layoutGroups = new GenericStack();
+    /// <summary>
+    /// <para>Utility functions for implementing and extending the GUILayout class.</para>
+    /// </summary>
+    public class GUILayoutUtility
+    {
+        internal static LayoutCache current = new LayoutCache();
+        internal static readonly Rect kDummyRect = new Rect(0f, 0f, 1f, 1f);
+        private static GUIStyle s_SpaceStyle;
+        private static Dictionary<int, LayoutCache> s_StoredLayouts = new Dictionary<int, LayoutCache>();
+        private static Dictionary<int, LayoutCache> s_StoredWindows = new Dictionary<int, LayoutCache>();
 
-			internal GUILayoutGroup windows = new GUILayoutGroup();
+        internal static void Begin(int instanceID)
+        {
+            LayoutCache cache = SelectIDList(instanceID, false);
+            if (Event.current.type == EventType.Layout)
+            {
+                current.topLevel = cache.topLevel = new GUILayoutGroup();
+                current.layoutGroups.Clear();
+                current.layoutGroups.Push(current.topLevel);
+                current.windows = cache.windows = new GUILayoutGroup();
+            }
+            else
+            {
+                current.topLevel = cache.topLevel;
+                current.layoutGroups = cache.layoutGroups;
+                current.windows = cache.windows;
+            }
+        }
 
-			internal LayoutCache()
-			{
-				this.layoutGroups.Push(this.topLevel);
-			}
+        [Obsolete("BeginGroup has no effect and will be removed", false)]
+        public static void BeginGroup(string GroupName)
+        {
+        }
 
-			internal LayoutCache(GUILayoutUtility.LayoutCache other)
-			{
-				this.topLevel = other.topLevel;
-				this.layoutGroups = other.layoutGroups;
-				this.windows = other.windows;
-			}
-		}
+        internal static GUILayoutGroup BeginLayoutArea(GUIStyle style, System.Type layoutType)
+        {
+            GUILayoutGroup next;
+            switch (Event.current.type)
+            {
+                case EventType.Used:
+                case EventType.Layout:
+                    next = CreateGUILayoutGroupInstanceOfType(layoutType);
+                    next.style = style;
+                    current.windows.Add(next);
+                    break;
 
-		private static Dictionary<int, GUILayoutUtility.LayoutCache> s_StoredLayouts = new Dictionary<int, GUILayoutUtility.LayoutCache>();
+                default:
+                    next = current.windows.GetNext() as GUILayoutGroup;
+                    if (next == null)
+                    {
+                        throw new ArgumentException("GUILayout: Mismatched LayoutGroup." + Event.current.type);
+                    }
+                    next.ResetCursor();
+                    GUIDebugger.LogLayoutGroupEntry(next.rect, next.margin, next.style, next.isVertical);
+                    break;
+            }
+            current.layoutGroups.Push(next);
+            current.topLevel = next;
+            return next;
+        }
 
-		private static Dictionary<int, GUILayoutUtility.LayoutCache> s_StoredWindows = new Dictionary<int, GUILayoutUtility.LayoutCache>();
+        internal static GUILayoutGroup BeginLayoutGroup(GUIStyle style, GUILayoutOption[] options, System.Type layoutType)
+        {
+            GUILayoutGroup next;
+            switch (Event.current.type)
+            {
+                case EventType.Used:
+                case EventType.Layout:
+                    next = CreateGUILayoutGroupInstanceOfType(layoutType);
+                    next.style = style;
+                    if (options != null)
+                    {
+                        next.ApplyOptions(options);
+                    }
+                    current.topLevel.Add(next);
+                    break;
 
-		internal static GUILayoutUtility.LayoutCache current = new GUILayoutUtility.LayoutCache();
+                default:
+                    next = current.topLevel.GetNext() as GUILayoutGroup;
+                    if (next == null)
+                    {
+                        throw new ArgumentException("GUILayout: Mismatched LayoutGroup." + Event.current.type);
+                    }
+                    next.ResetCursor();
+                    GUIDebugger.LogLayoutGroupEntry(next.rect, next.margin, next.style, next.isVertical);
+                    break;
+            }
+            current.layoutGroups.Push(next);
+            current.topLevel = next;
+            return next;
+        }
 
-		internal static readonly Rect kDummyRect = new Rect(0f, 0f, 1f, 1f);
+        internal static void BeginWindow(int windowID, GUIStyle style, GUILayoutOption[] options)
+        {
+            LayoutCache cache = SelectIDList(windowID, true);
+            if (Event.current.type == EventType.Layout)
+            {
+                current.topLevel = cache.topLevel = new GUILayoutGroup();
+                current.topLevel.style = style;
+                current.topLevel.windowID = windowID;
+                if (options != null)
+                {
+                    current.topLevel.ApplyOptions(options);
+                }
+                current.layoutGroups.Clear();
+                current.layoutGroups.Push(current.topLevel);
+                current.windows = cache.windows = new GUILayoutGroup();
+            }
+            else
+            {
+                current.topLevel = cache.topLevel;
+                current.layoutGroups = cache.layoutGroups;
+                current.windows = cache.windows;
+            }
+        }
 
-		private static GUIStyle s_SpaceStyle;
+        internal static void CleanupRoots()
+        {
+            s_SpaceStyle = null;
+            s_StoredLayouts = null;
+            s_StoredWindows = null;
+            current = null;
+        }
 
-		internal static GUILayoutGroup topLevel
-		{
-			get
-			{
-				return GUILayoutUtility.current.topLevel;
-			}
-		}
+        [SecuritySafeCritical]
+        private static GUILayoutGroup CreateGUILayoutGroupInstanceOfType(System.Type LayoutType)
+        {
+            if (!typeof(GUILayoutGroup).IsAssignableFrom(LayoutType))
+            {
+                throw new ArgumentException("LayoutType needs to be of type GUILayoutGroup");
+            }
+            return (GUILayoutGroup) Activator.CreateInstance(LayoutType);
+        }
 
-		internal static GUIStyle spaceStyle
-		{
-			get
-			{
-				if (GUILayoutUtility.s_SpaceStyle == null)
-				{
-					GUILayoutUtility.s_SpaceStyle = new GUIStyle();
-				}
-				GUILayoutUtility.s_SpaceStyle.stretchWidth = false;
-				return GUILayoutUtility.s_SpaceStyle;
-			}
-		}
+        internal static GUILayoutGroup DoBeginLayoutArea(GUIStyle style, System.Type layoutType)
+        {
+            return BeginLayoutArea(style, layoutType);
+        }
 
-		internal static void CleanupRoots()
-		{
-			GUILayoutUtility.s_SpaceStyle = null;
-			GUILayoutUtility.s_StoredLayouts = null;
-			GUILayoutUtility.s_StoredWindows = null;
-			GUILayoutUtility.current = null;
-		}
+        private static Rect DoGetAspectRect(float aspect, GUIStyle style, GUILayoutOption[] options)
+        {
+            switch (Event.current.type)
+            {
+                case EventType.Layout:
+                    current.topLevel.Add(new GUIAspectSizer(aspect, options));
+                    return kDummyRect;
 
-		internal static GUILayoutUtility.LayoutCache SelectIDList(int instanceID, bool isWindow)
-		{
-			Dictionary<int, GUILayoutUtility.LayoutCache> dictionary = (!isWindow) ? GUILayoutUtility.s_StoredLayouts : GUILayoutUtility.s_StoredWindows;
-			GUILayoutUtility.LayoutCache layoutCache;
-			if (!dictionary.TryGetValue(instanceID, out layoutCache))
-			{
-				layoutCache = new GUILayoutUtility.LayoutCache();
-				dictionary[instanceID] = layoutCache;
-			}
-			GUILayoutUtility.current.topLevel = layoutCache.topLevel;
-			GUILayoutUtility.current.layoutGroups = layoutCache.layoutGroups;
-			GUILayoutUtility.current.windows = layoutCache.windows;
-			return layoutCache;
-		}
+                case EventType.Used:
+                    return kDummyRect;
+            }
+            return current.topLevel.GetNext().rect;
+        }
 
-		internal static void Begin(int instanceID)
-		{
-			GUILayoutUtility.LayoutCache layoutCache = GUILayoutUtility.SelectIDList(instanceID, false);
-			if (Event.current.type == EventType.Layout)
-			{
-				GUILayoutUtility.current.topLevel = (layoutCache.topLevel = new GUILayoutGroup());
-				GUILayoutUtility.current.layoutGroups.Clear();
-				GUILayoutUtility.current.layoutGroups.Push(GUILayoutUtility.current.topLevel);
-				GUILayoutUtility.current.windows = (layoutCache.windows = new GUILayoutGroup());
-			}
-			else
-			{
-				GUILayoutUtility.current.topLevel = layoutCache.topLevel;
-				GUILayoutUtility.current.layoutGroups = layoutCache.layoutGroups;
-				GUILayoutUtility.current.windows = layoutCache.windows;
-			}
-		}
+        private static Rect DoGetRect(GUIContent content, GUIStyle style, GUILayoutOption[] options)
+        {
+            GUIUtility.CheckOnGUI();
+            switch (Event.current.type)
+            {
+                case EventType.Layout:
+                    if (style.isHeightDependantOnWidth)
+                    {
+                        current.topLevel.Add(new GUIWordWrapSizer(style, content, options));
+                    }
+                    else
+                    {
+                        Vector2 constraints = new Vector2(0f, 0f);
+                        if (options != null)
+                        {
+                            foreach (GUILayoutOption option in options)
+                            {
+                                switch (option.type)
+                                {
+                                    case GUILayoutOption.Type.maxHeight:
+                                        constraints.y = (float) option.value;
+                                        break;
 
-		internal static void BeginWindow(int windowID, GUIStyle style, GUILayoutOption[] options)
-		{
-			GUILayoutUtility.LayoutCache layoutCache = GUILayoutUtility.SelectIDList(windowID, true);
-			if (Event.current.type == EventType.Layout)
-			{
-				GUILayoutUtility.current.topLevel = (layoutCache.topLevel = new GUILayoutGroup());
-				GUILayoutUtility.current.topLevel.style = style;
-				GUILayoutUtility.current.topLevel.windowID = windowID;
-				if (options != null)
-				{
-					GUILayoutUtility.current.topLevel.ApplyOptions(options);
-				}
-				GUILayoutUtility.current.layoutGroups.Clear();
-				GUILayoutUtility.current.layoutGroups.Push(GUILayoutUtility.current.topLevel);
-				GUILayoutUtility.current.windows = (layoutCache.windows = new GUILayoutGroup());
-			}
-			else
-			{
-				GUILayoutUtility.current.topLevel = layoutCache.topLevel;
-				GUILayoutUtility.current.layoutGroups = layoutCache.layoutGroups;
-				GUILayoutUtility.current.windows = layoutCache.windows;
-			}
-		}
+                                    case GUILayoutOption.Type.maxWidth:
+                                        constraints.x = (float) option.value;
+                                        break;
+                                }
+                            }
+                        }
+                        Vector2 vector2 = style.CalcSizeWithConstraints(content, constraints);
+                        current.topLevel.Add(new GUILayoutEntry(vector2.x, vector2.x, vector2.y, vector2.y, style, options));
+                    }
+                    return kDummyRect;
 
-		[Obsolete("BeginGroup has no effect and will be removed", false)]
-		public static void BeginGroup(string GroupName)
-		{
-		}
+                case EventType.Used:
+                    return kDummyRect;
+            }
+            GUILayoutEntry next = current.topLevel.GetNext();
+            GUIDebugger.LogLayoutEntry(next.rect, next.margin, next.style);
+            return next.rect;
+        }
 
-		[Obsolete("EndGroup has no effect and will be removed", false)]
-		public static void EndGroup(string groupName)
-		{
-		}
+        private static Rect DoGetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style, GUILayoutOption[] options)
+        {
+            switch (Event.current.type)
+            {
+                case EventType.Layout:
+                    current.topLevel.Add(new GUILayoutEntry(minWidth, maxWidth, minHeight, maxHeight, style, options));
+                    return kDummyRect;
 
-		internal static void Layout()
-		{
-			if (GUILayoutUtility.current.topLevel.windowID == -1)
-			{
-				GUILayoutUtility.current.topLevel.CalcWidth();
-				GUILayoutUtility.current.topLevel.SetHorizontal(0f, Mathf.Min((float)Screen.width / GUIUtility.pixelsPerPoint, GUILayoutUtility.current.topLevel.maxWidth));
-				GUILayoutUtility.current.topLevel.CalcHeight();
-				GUILayoutUtility.current.topLevel.SetVertical(0f, Mathf.Min((float)Screen.height / GUIUtility.pixelsPerPoint, GUILayoutUtility.current.topLevel.maxHeight));
-				GUILayoutUtility.LayoutFreeGroup(GUILayoutUtility.current.windows);
-			}
-			else
-			{
-				GUILayoutUtility.LayoutSingleGroup(GUILayoutUtility.current.topLevel);
-				GUILayoutUtility.LayoutFreeGroup(GUILayoutUtility.current.windows);
-			}
-		}
+                case EventType.Used:
+                    return kDummyRect;
+            }
+            return current.topLevel.GetNext().rect;
+        }
 
-		internal static void LayoutFromEditorWindow()
-		{
-			GUILayoutUtility.current.topLevel.CalcWidth();
-			GUILayoutUtility.current.topLevel.SetHorizontal(0f, (float)Screen.width / GUIUtility.pixelsPerPoint);
-			GUILayoutUtility.current.topLevel.CalcHeight();
-			GUILayoutUtility.current.topLevel.SetVertical(0f, (float)Screen.height / GUIUtility.pixelsPerPoint);
-			GUILayoutUtility.LayoutFreeGroup(GUILayoutUtility.current.windows);
-		}
+        [Obsolete("EndGroup has no effect and will be removed", false)]
+        public static void EndGroup(string groupName)
+        {
+        }
 
-		internal static float LayoutFromInspector(float width)
-		{
-			float result;
-			if (GUILayoutUtility.current.topLevel != null && GUILayoutUtility.current.topLevel.windowID == -1)
-			{
-				GUILayoutUtility.current.topLevel.CalcWidth();
-				GUILayoutUtility.current.topLevel.SetHorizontal(0f, width);
-				GUILayoutUtility.current.topLevel.CalcHeight();
-				GUILayoutUtility.current.topLevel.SetVertical(0f, Mathf.Min((float)Screen.height / GUIUtility.pixelsPerPoint, GUILayoutUtility.current.topLevel.maxHeight));
-				float minHeight = GUILayoutUtility.current.topLevel.minHeight;
-				GUILayoutUtility.LayoutFreeGroup(GUILayoutUtility.current.windows);
-				result = minHeight;
-			}
-			else
-			{
-				if (GUILayoutUtility.current.topLevel != null)
-				{
-					GUILayoutUtility.LayoutSingleGroup(GUILayoutUtility.current.topLevel);
-				}
-				result = 0f;
-			}
-			return result;
-		}
+        internal static void EndLayoutGroup()
+        {
+            if ((Event.current.type != EventType.Layout) && (Event.current.type != EventType.Used))
+            {
+                GUIDebugger.LogLayoutEndGroup();
+            }
+            EventType type = Event.current.type;
+            current.layoutGroups.Pop();
+            current.topLevel = (0 >= current.layoutGroups.Count) ? null : ((GUILayoutGroup) current.layoutGroups.Peek());
+        }
 
-		internal static void LayoutFreeGroup(GUILayoutGroup toplevel)
-		{
-			using (List<GUILayoutEntry>.Enumerator enumerator = toplevel.entries.GetEnumerator())
-			{
-				while (enumerator.MoveNext())
-				{
-					GUILayoutGroup i = (GUILayoutGroup)enumerator.Current;
-					GUILayoutUtility.LayoutSingleGroup(i);
-				}
-			}
-			toplevel.ResetCursor();
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
+        /// </summary>
+        /// <param name="aspect">The aspect ratio of the element (width / height).</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes of the returned rectangle &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rect for the control.</para>
+        /// </returns>
+        public static Rect GetAspectRect(float aspect)
+        {
+            return DoGetAspectRect(aspect, GUIStyle.none, null);
+        }
 
-		private static void LayoutSingleGroup(GUILayoutGroup i)
-		{
-			if (!i.isWindow)
-			{
-				float minWidth = i.minWidth;
-				float maxWidth = i.maxWidth;
-				i.CalcWidth();
-				i.SetHorizontal(i.rect.x, Mathf.Clamp(i.maxWidth, minWidth, maxWidth));
-				float minHeight = i.minHeight;
-				float maxHeight = i.maxHeight;
-				i.CalcHeight();
-				i.SetVertical(i.rect.y, Mathf.Clamp(i.maxHeight, minHeight, maxHeight));
-			}
-			else
-			{
-				i.CalcWidth();
-				Rect rect = GUILayoutUtility.Internal_GetWindowRect(i.windowID);
-				i.SetHorizontal(rect.x, Mathf.Clamp(rect.width, i.minWidth, i.maxWidth));
-				i.CalcHeight();
-				i.SetVertical(rect.y, Mathf.Clamp(rect.height, i.minHeight, i.maxHeight));
-				GUILayoutUtility.Internal_MoveWindow(i.windowID, i.rect);
-			}
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
+        /// </summary>
+        /// <param name="aspect">The aspect ratio of the element (width / height).</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes of the returned rectangle &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rect for the control.</para>
+        /// </returns>
+        public static Rect GetAspectRect(float aspect, GUIStyle style)
+        {
+            return DoGetAspectRect(aspect, style, null);
+        }
 
-		[SecuritySafeCritical]
-		private static GUILayoutGroup CreateGUILayoutGroupInstanceOfType(Type LayoutType)
-		{
-			if (!typeof(GUILayoutGroup).IsAssignableFrom(LayoutType))
-			{
-				throw new ArgumentException("LayoutType needs to be of type GUILayoutGroup");
-			}
-			return (GUILayoutGroup)Activator.CreateInstance(LayoutType);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
+        /// </summary>
+        /// <param name="aspect">The aspect ratio of the element (width / height).</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes of the returned rectangle &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rect for the control.</para>
+        /// </returns>
+        public static Rect GetAspectRect(float aspect, params GUILayoutOption[] options)
+        {
+            return DoGetAspectRect(aspect, GUIStyle.none, options);
+        }
 
-		internal static GUILayoutGroup BeginLayoutGroup(GUIStyle style, GUILayoutOption[] options, Type layoutType)
-		{
-			EventType type = Event.current.type;
-			GUILayoutGroup gUILayoutGroup;
-			if (type != EventType.Used && type != EventType.Layout)
-			{
-				gUILayoutGroup = (GUILayoutUtility.current.topLevel.GetNext() as GUILayoutGroup);
-				if (gUILayoutGroup == null)
-				{
-					throw new ArgumentException("GUILayout: Mismatched LayoutGroup." + Event.current.type);
-				}
-				gUILayoutGroup.ResetCursor();
-				GUIDebugger.LogLayoutGroupEntry(gUILayoutGroup.rect, gUILayoutGroup.margin, gUILayoutGroup.style, gUILayoutGroup.isVertical);
-			}
-			else
-			{
-				gUILayoutGroup = GUILayoutUtility.CreateGUILayoutGroupInstanceOfType(layoutType);
-				gUILayoutGroup.style = style;
-				if (options != null)
-				{
-					gUILayoutGroup.ApplyOptions(options);
-				}
-				GUILayoutUtility.current.topLevel.Add(gUILayoutGroup);
-			}
-			GUILayoutUtility.current.layoutGroups.Push(gUILayoutGroup);
-			GUILayoutUtility.current.topLevel = gUILayoutGroup;
-			return gUILayoutGroup;
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
+        /// </summary>
+        /// <param name="aspect">The aspect ratio of the element (width / height).</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes of the returned rectangle &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rect for the control.</para>
+        /// </returns>
+        public static Rect GetAspectRect(float aspect, GUIStyle style, params GUILayoutOption[] options)
+        {
+            return DoGetAspectRect(aspect, GUIStyle.none, options);
+        }
 
-		internal static void EndLayoutGroup()
-		{
-			if (Event.current.type != EventType.Layout && Event.current.type != EventType.Used)
-			{
-				GUIDebugger.LogLayoutEndGroup();
-			}
-			EventType arg_31_0 = Event.current.type;
-			GUILayoutUtility.current.layoutGroups.Pop();
-			GUILayoutUtility.current.topLevel = ((0 >= GUILayoutUtility.current.layoutGroups.Count) ? null : ((GUILayoutGroup)GUILayoutUtility.current.layoutGroups.Peek()));
-		}
+        /// <summary>
+        /// <para>Get the rectangle last used by GUILayout for a control.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>The last used rectangle.</para>
+        /// </returns>
+        public static Rect GetLastRect()
+        {
+            switch (Event.current.type)
+            {
+                case EventType.Layout:
+                    return kDummyRect;
 
-		internal static GUILayoutGroup BeginLayoutArea(GUIStyle style, Type layoutType)
-		{
-			EventType type = Event.current.type;
-			GUILayoutGroup gUILayoutGroup;
-			if (type != EventType.Used && type != EventType.Layout)
-			{
-				gUILayoutGroup = (GUILayoutUtility.current.windows.GetNext() as GUILayoutGroup);
-				if (gUILayoutGroup == null)
-				{
-					throw new ArgumentException("GUILayout: Mismatched LayoutGroup." + Event.current.type);
-				}
-				gUILayoutGroup.ResetCursor();
-				GUIDebugger.LogLayoutGroupEntry(gUILayoutGroup.rect, gUILayoutGroup.margin, gUILayoutGroup.style, gUILayoutGroup.isVertical);
-			}
-			else
-			{
-				gUILayoutGroup = GUILayoutUtility.CreateGUILayoutGroupInstanceOfType(layoutType);
-				gUILayoutGroup.style = style;
-				GUILayoutUtility.current.windows.Add(gUILayoutGroup);
-			}
-			GUILayoutUtility.current.layoutGroups.Push(gUILayoutGroup);
-			GUILayoutUtility.current.topLevel = gUILayoutGroup;
-			return gUILayoutGroup;
-		}
+                case EventType.Used:
+                    return kDummyRect;
+            }
+            return current.topLevel.GetLast();
+        }
 
-		internal static GUILayoutGroup DoBeginLayoutArea(GUIStyle style, Type layoutType)
-		{
-			return GUILayoutUtility.BeginLayoutArea(style, layoutType);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
+        /// </summary>
+        /// <param name="width">The width of the area you want.</param>
+        /// <param name="height">The height of the area you want.</param>
+        /// <param name="style">An optional GUIStyle to layout for. If specified, the style's padding value will be added to your sizes &amp; its margin value will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rectanlge to put your control in.</para>
+        /// </returns>
+        public static Rect GetRect(float width, float height)
+        {
+            return DoGetRect(width, width, height, height, GUIStyle.none, null);
+        }
 
-		public static Rect GetRect(GUIContent content, GUIStyle style)
-		{
-			return GUILayoutUtility.DoGetRect(content, style, null);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle for displaying some contents with a specific style.</para>
+        /// </summary>
+        /// <param name="content">The content to make room for displaying.</param>
+        /// <param name="style">The GUIStyle to layout for.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>A rectangle that is large enough to contain content when rendered in style.</para>
+        /// </returns>
+        public static Rect GetRect(GUIContent content, GUIStyle style)
+        {
+            return DoGetRect(content, style, null);
+        }
 
-		public static Rect GetRect(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetRect(content, style, options);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
+        /// </summary>
+        /// <param name="width">The width of the area you want.</param>
+        /// <param name="height">The height of the area you want.</param>
+        /// <param name="style">An optional GUIStyle to layout for. If specified, the style's padding value will be added to your sizes &amp; its margin value will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rectanlge to put your control in.</para>
+        /// </returns>
+        public static Rect GetRect(float width, float height, GUIStyle style)
+        {
+            return DoGetRect(width, width, height, height, style, null);
+        }
 
-		private static Rect DoGetRect(GUIContent content, GUIStyle style, GUILayoutOption[] options)
-		{
-			GUIUtility.CheckOnGUI();
-			EventType type = Event.current.type;
-			Rect rect;
-			if (type != EventType.Layout)
-			{
-				if (type != EventType.Used)
-				{
-					GUILayoutEntry next = GUILayoutUtility.current.topLevel.GetNext();
-					GUIDebugger.LogLayoutEntry(next.rect, next.margin, next.style);
-					rect = next.rect;
-				}
-				else
-				{
-					rect = GUILayoutUtility.kDummyRect;
-				}
-			}
-			else
-			{
-				if (style.isHeightDependantOnWidth)
-				{
-					GUILayoutUtility.current.topLevel.Add(new GUIWordWrapSizer(style, content, options));
-				}
-				else
-				{
-					Vector2 constraints = new Vector2(0f, 0f);
-					if (options != null)
-					{
-						for (int i = 0; i < options.Length; i++)
-						{
-							GUILayoutOption gUILayoutOption = options[i];
-							GUILayoutOption.Type type2 = gUILayoutOption.type;
-							if (type2 != GUILayoutOption.Type.maxHeight)
-							{
-								if (type2 == GUILayoutOption.Type.maxWidth)
-								{
-									constraints.x = (float)gUILayoutOption.value;
-								}
-							}
-							else
-							{
-								constraints.y = (float)gUILayoutOption.value;
-							}
-						}
-					}
-					Vector2 vector = style.CalcSizeWithConstraints(content, constraints);
-					GUILayoutUtility.current.topLevel.Add(new GUILayoutEntry(vector.x, vector.x, vector.y, vector.y, style, options));
-				}
-				rect = GUILayoutUtility.kDummyRect;
-			}
-			return rect;
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
+        /// </summary>
+        /// <param name="width">The width of the area you want.</param>
+        /// <param name="height">The height of the area you want.</param>
+        /// <param name="style">An optional GUIStyle to layout for. If specified, the style's padding value will be added to your sizes &amp; its margin value will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rectanlge to put your control in.</para>
+        /// </returns>
+        public static Rect GetRect(float width, float height, params GUILayoutOption[] options)
+        {
+            return DoGetRect(width, width, height, height, GUIStyle.none, options);
+        }
 
-		public static Rect GetRect(float width, float height)
-		{
-			return GUILayoutUtility.DoGetRect(width, width, height, height, GUIStyle.none, null);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle for displaying some contents with a specific style.</para>
+        /// </summary>
+        /// <param name="content">The content to make room for displaying.</param>
+        /// <param name="style">The GUIStyle to layout for.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>A rectangle that is large enough to contain content when rendered in style.</para>
+        /// </returns>
+        public static Rect GetRect(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
+        {
+            return DoGetRect(content, style, options);
+        }
 
-		public static Rect GetRect(float width, float height, GUIStyle style)
-		{
-			return GUILayoutUtility.DoGetRect(width, width, height, height, style, null);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a flexible rect.</para>
+        /// </summary>
+        /// <param name="minWidth">The minimum width of the area passed back.</param>
+        /// <param name="maxWidth">The maximum width of the area passed back.</param>
+        /// <param name="minHeight">The minimum width of the area passed back.</param>
+        /// <param name="maxHeight">The maximum width of the area passed back.</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes requested &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
+        /// </returns>
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight)
+        {
+            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, null);
+        }
 
-		public static Rect GetRect(float width, float height, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetRect(width, width, height, height, GUIStyle.none, options);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
+        /// </summary>
+        /// <param name="width">The width of the area you want.</param>
+        /// <param name="height">The height of the area you want.</param>
+        /// <param name="style">An optional GUIStyle to layout for. If specified, the style's padding value will be added to your sizes &amp; its margin value will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>The rectanlge to put your control in.</para>
+        /// </returns>
+        public static Rect GetRect(float width, float height, GUIStyle style, params GUILayoutOption[] options)
+        {
+            return DoGetRect(width, width, height, height, style, options);
+        }
 
-		public static Rect GetRect(float width, float height, GUIStyle style, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetRect(width, width, height, height, style, options);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a flexible rect.</para>
+        /// </summary>
+        /// <param name="minWidth">The minimum width of the area passed back.</param>
+        /// <param name="maxWidth">The maximum width of the area passed back.</param>
+        /// <param name="minHeight">The minimum width of the area passed back.</param>
+        /// <param name="maxHeight">The maximum width of the area passed back.</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes requested &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
+        /// </returns>
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style)
+        {
+            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, null);
+        }
 
-		public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight)
-		{
-			return GUILayoutUtility.DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, null);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a flexible rect.</para>
+        /// </summary>
+        /// <param name="minWidth">The minimum width of the area passed back.</param>
+        /// <param name="maxWidth">The maximum width of the area passed back.</param>
+        /// <param name="minHeight">The minimum width of the area passed back.</param>
+        /// <param name="maxHeight">The maximum width of the area passed back.</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes requested &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
+        /// </returns>
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, params GUILayoutOption[] options)
+        {
+            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, options);
+        }
 
-		public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style)
-		{
-			return GUILayoutUtility.DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, null);
-		}
+        /// <summary>
+        /// <para>Reserve layout space for a flexible rect.</para>
+        /// </summary>
+        /// <param name="minWidth">The minimum width of the area passed back.</param>
+        /// <param name="maxWidth">The maximum width of the area passed back.</param>
+        /// <param name="minHeight">The minimum width of the area passed back.</param>
+        /// <param name="maxHeight">The maximum width of the area passed back.</param>
+        /// <param name="style">An optional style. If specified, the style's padding value will be added to the sizes requested &amp; the style's margin values will be used for spacing.</param>
+        /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
+        /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
+        /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
+        /// <returns>
+        /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
+        /// </returns>
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style, params GUILayoutOption[] options)
+        {
+            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, options);
+        }
 
-		public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, options);
-		}
+        internal static Rect GetWindowsBounds()
+        {
+            Rect rect;
+            INTERNAL_CALL_GetWindowsBounds(out rect);
+            return rect;
+        }
 
-		public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, options);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_GetWindowsBounds(out Rect value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_Internal_GetWindowRect(int windowID, out Rect value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_Internal_MoveWindow(int windowID, ref Rect r);
+        private static Rect Internal_GetWindowRect(int windowID)
+        {
+            Rect rect;
+            INTERNAL_CALL_Internal_GetWindowRect(windowID, out rect);
+            return rect;
+        }
 
-		private static Rect DoGetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style, GUILayoutOption[] options)
-		{
-			EventType type = Event.current.type;
-			Rect rect;
-			if (type != EventType.Layout)
-			{
-				if (type != EventType.Used)
-				{
-					rect = GUILayoutUtility.current.topLevel.GetNext().rect;
-				}
-				else
-				{
-					rect = GUILayoutUtility.kDummyRect;
-				}
-			}
-			else
-			{
-				GUILayoutUtility.current.topLevel.Add(new GUILayoutEntry(minWidth, maxWidth, minHeight, maxHeight, style, options));
-				rect = GUILayoutUtility.kDummyRect;
-			}
-			return rect;
-		}
+        private static void Internal_MoveWindow(int windowID, Rect r)
+        {
+            INTERNAL_CALL_Internal_MoveWindow(windowID, ref r);
+        }
 
-		public static Rect GetLastRect()
-		{
-			EventType type = Event.current.type;
-			Rect last;
-			if (type != EventType.Layout)
-			{
-				if (type != EventType.Used)
-				{
-					last = GUILayoutUtility.current.topLevel.GetLast();
-				}
-				else
-				{
-					last = GUILayoutUtility.kDummyRect;
-				}
-			}
-			else
-			{
-				last = GUILayoutUtility.kDummyRect;
-			}
-			return last;
-		}
+        internal static void Layout()
+        {
+            if (current.topLevel.windowID == -1)
+            {
+                current.topLevel.CalcWidth();
+                current.topLevel.SetHorizontal(0f, Mathf.Min(((float) Screen.width) / GUIUtility.pixelsPerPoint, current.topLevel.maxWidth));
+                current.topLevel.CalcHeight();
+                current.topLevel.SetVertical(0f, Mathf.Min(((float) Screen.height) / GUIUtility.pixelsPerPoint, current.topLevel.maxHeight));
+                LayoutFreeGroup(current.windows);
+            }
+            else
+            {
+                LayoutSingleGroup(current.topLevel);
+                LayoutFreeGroup(current.windows);
+            }
+        }
 
-		public static Rect GetAspectRect(float aspect)
-		{
-			return GUILayoutUtility.DoGetAspectRect(aspect, GUIStyle.none, null);
-		}
+        internal static void LayoutFreeGroup(GUILayoutGroup toplevel)
+        {
+            foreach (GUILayoutGroup group in toplevel.entries)
+            {
+                LayoutSingleGroup(group);
+            }
+            toplevel.ResetCursor();
+        }
 
-		public static Rect GetAspectRect(float aspect, GUIStyle style)
-		{
-			return GUILayoutUtility.DoGetAspectRect(aspect, style, null);
-		}
+        internal static void LayoutFromEditorWindow()
+        {
+            current.topLevel.CalcWidth();
+            current.topLevel.SetHorizontal(0f, ((float) Screen.width) / GUIUtility.pixelsPerPoint);
+            current.topLevel.CalcHeight();
+            current.topLevel.SetVertical(0f, ((float) Screen.height) / GUIUtility.pixelsPerPoint);
+            LayoutFreeGroup(current.windows);
+        }
 
-		public static Rect GetAspectRect(float aspect, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetAspectRect(aspect, GUIStyle.none, options);
-		}
+        internal static float LayoutFromInspector(float width)
+        {
+            if ((current.topLevel != null) && (current.topLevel.windowID == -1))
+            {
+                current.topLevel.CalcWidth();
+                current.topLevel.SetHorizontal(0f, width);
+                current.topLevel.CalcHeight();
+                current.topLevel.SetVertical(0f, Mathf.Min(((float) Screen.height) / GUIUtility.pixelsPerPoint, current.topLevel.maxHeight));
+                float minHeight = current.topLevel.minHeight;
+                LayoutFreeGroup(current.windows);
+                return minHeight;
+            }
+            if (current.topLevel != null)
+            {
+                LayoutSingleGroup(current.topLevel);
+            }
+            return 0f;
+        }
 
-		public static Rect GetAspectRect(float aspect, GUIStyle style, params GUILayoutOption[] options)
-		{
-			return GUILayoutUtility.DoGetAspectRect(aspect, GUIStyle.none, options);
-		}
+        private static void LayoutSingleGroup(GUILayoutGroup i)
+        {
+            if (!i.isWindow)
+            {
+                float minWidth = i.minWidth;
+                float maxWidth = i.maxWidth;
+                i.CalcWidth();
+                i.SetHorizontal(i.rect.x, Mathf.Clamp(i.maxWidth, minWidth, maxWidth));
+                float minHeight = i.minHeight;
+                float maxHeight = i.maxHeight;
+                i.CalcHeight();
+                i.SetVertical(i.rect.y, Mathf.Clamp(i.maxHeight, minHeight, maxHeight));
+            }
+            else
+            {
+                i.CalcWidth();
+                Rect rect = Internal_GetWindowRect(i.windowID);
+                i.SetHorizontal(rect.x, Mathf.Clamp(rect.width, i.minWidth, i.maxWidth));
+                i.CalcHeight();
+                i.SetVertical(rect.y, Mathf.Clamp(rect.height, i.minHeight, i.maxHeight));
+                Internal_MoveWindow(i.windowID, i.rect);
+            }
+        }
 
-		private static Rect DoGetAspectRect(float aspect, GUIStyle style, GUILayoutOption[] options)
-		{
-			EventType type = Event.current.type;
-			Rect rect;
-			if (type != EventType.Layout)
-			{
-				if (type != EventType.Used)
-				{
-					rect = GUILayoutUtility.current.topLevel.GetNext().rect;
-				}
-				else
-				{
-					rect = GUILayoutUtility.kDummyRect;
-				}
-			}
-			else
-			{
-				GUILayoutUtility.current.topLevel.Add(new GUIAspectSizer(aspect, options));
-				rect = GUILayoutUtility.kDummyRect;
-			}
-			return rect;
-		}
+        internal static LayoutCache SelectIDList(int instanceID, bool isWindow)
+        {
+            LayoutCache cache;
+            Dictionary<int, LayoutCache> dictionary = !isWindow ? s_StoredLayouts : s_StoredWindows;
+            if (!dictionary.TryGetValue(instanceID, out cache))
+            {
+                cache = new LayoutCache();
+                dictionary[instanceID] = cache;
+            }
+            current.topLevel = cache.topLevel;
+            current.layoutGroups = cache.layoutGroups;
+            current.windows = cache.windows;
+            return cache;
+        }
 
-		private static Rect Internal_GetWindowRect(int windowID)
-		{
-			Rect result;
-			GUILayoutUtility.INTERNAL_CALL_Internal_GetWindowRect(windowID, out result);
-			return result;
-		}
+        internal static GUIStyle spaceStyle
+        {
+            get
+            {
+                if (s_SpaceStyle == null)
+                {
+                    s_SpaceStyle = new GUIStyle();
+                }
+                s_SpaceStyle.stretchWidth = false;
+                return s_SpaceStyle;
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_Internal_GetWindowRect(int windowID, out Rect value);
+        internal static GUILayoutGroup topLevel
+        {
+            get
+            {
+                return current.topLevel;
+            }
+        }
 
-		private static void Internal_MoveWindow(int windowID, Rect r)
-		{
-			GUILayoutUtility.INTERNAL_CALL_Internal_MoveWindow(windowID, ref r);
-		}
+        internal sealed class LayoutCache
+        {
+            internal GenericStack layoutGroups;
+            internal GUILayoutGroup topLevel;
+            internal GUILayoutGroup windows;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_Internal_MoveWindow(int windowID, ref Rect r);
+            internal LayoutCache()
+            {
+                this.topLevel = new GUILayoutGroup();
+                this.layoutGroups = new GenericStack();
+                this.windows = new GUILayoutGroup();
+                this.layoutGroups.Push(this.topLevel);
+            }
 
-		internal static Rect GetWindowsBounds()
-		{
-			Rect result;
-			GUILayoutUtility.INTERNAL_CALL_GetWindowsBounds(out result);
-			return result;
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_GetWindowsBounds(out Rect value);
-	}
+            internal LayoutCache(GUILayoutUtility.LayoutCache other)
+            {
+                this.topLevel = new GUILayoutGroup();
+                this.layoutGroups = new GenericStack();
+                this.windows = new GUILayoutGroup();
+                this.topLevel = other.topLevel;
+                this.layoutGroups = other.layoutGroups;
+                this.windows = other.windows;
+            }
+        }
+    }
 }
+

@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemRenderSpace
-	{
-		View,
-		World,
-		Local,
-		Facing
-	}
+    using System;
+
+    /// <summary>
+    /// <para>How particles are aligned when rendered.</para>
+    /// </summary>
+    public enum ParticleSystemRenderSpace
+    {
+        View,
+        World,
+        Local,
+        Facing
+    }
 }
+

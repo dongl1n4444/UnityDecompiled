@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum SemanticMergeMode
-	{
-		Off,
-		Premerge,
-		Ask
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Behavior of semantic merge.</para>
+    /// </summary>
+    public enum SemanticMergeMode
+    {
+        Off,
+        Premerge,
+        Ask
+    }
 }
+

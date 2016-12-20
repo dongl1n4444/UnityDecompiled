@@ -1,10 +1,20 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum UserAuthorization
-	{
-		WebCam = 1,
-		Microphone
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Constants to pass to Application.RequestUserAuthorization.</para>
+    /// </summary>
+    public enum UserAuthorization
+    {
+        /// <summary>
+        /// <para>Request permission to use any audio input sources attached to the computer.</para>
+        /// </summary>
+        Microphone = 2,
+        /// <summary>
+        /// <para>Request permission to use any video input sources attached to the computer.</para>
+        /// </summary>
+        WebCam = 1
+    }
 }
+

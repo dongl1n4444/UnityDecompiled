@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface ICleanuppable
-	{
-		void Cleanup();
-	}
+    using System;
+
+    internal interface ICleanuppable
+    {
+        void Cleanup();
+    }
 }
+

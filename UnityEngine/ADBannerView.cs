@@ -1,112 +1,114 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[Obsolete("ADBannerView class is obsolete, Apple iAD service discontinued", true)]
-	public sealed class ADBannerView
-	{
-		public enum Layout
-		{
-			Top,
-			Bottom,
-			TopLeft = 0,
-			TopRight = 4,
-			TopCenter = 8,
-			BottomLeft = 1,
-			BottomRight = 5,
-			BottomCenter = 9,
-			CenterLeft = 2,
-			CenterRight = 6,
-			Center = 10,
-			Manual = -1
-		}
+    using System;
+    using System.Runtime.CompilerServices;
 
-		public enum Type
-		{
-			Banner,
-			MediumRect
-		}
+    [Obsolete("ADBannerView class is obsolete, Apple iAD service discontinued", true)]
+    public sealed class ADBannerView
+    {
+        public static  event BannerWasClickedDelegate onBannerWasClicked
+        {
+            add
+            {
+            }
+            remove
+            {
+            }
+        }
 
-		public delegate void BannerWasClickedDelegate();
+        public static  event BannerWasLoadedDelegate onBannerWasLoaded
+        {
+            add
+            {
+            }
+            remove
+            {
+            }
+        }
 
-		public delegate void BannerWasLoadedDelegate();
+        public ADBannerView(Type type, Layout layout)
+        {
+        }
 
-		public static event ADBannerView.BannerWasClickedDelegate onBannerWasClicked
-		{
-			add
-			{
-			}
-			remove
-			{
-			}
-		}
+        public static bool IsAvailable(Type type)
+        {
+            return false;
+        }
 
-		public static event ADBannerView.BannerWasLoadedDelegate onBannerWasLoaded
-		{
-			add
-			{
-			}
-			remove
-			{
-			}
-		}
+        public Layout layout
+        {
+            get
+            {
+                return Layout.Top;
+            }
+            set
+            {
+            }
+        }
 
-		public bool loaded
-		{
-			get
-			{
-				return false;
-			}
-		}
+        public bool loaded
+        {
+            get
+            {
+                return false;
+            }
+        }
 
-		public bool visible
-		{
-			get
-			{
-				return false;
-			}
-			set
-			{
-			}
-		}
+        public Vector2 position
+        {
+            get
+            {
+                return new Vector2();
+            }
+            set
+            {
+            }
+        }
 
-		public ADBannerView.Layout layout
-		{
-			get
-			{
-				return ADBannerView.Layout.Top;
-			}
-			set
-			{
-			}
-		}
+        public Vector2 size
+        {
+            get
+            {
+                return new Vector2();
+            }
+        }
 
-		public Vector2 position
-		{
-			get
-			{
-				return default(Vector2);
-			}
-			set
-			{
-			}
-		}
+        public bool visible
+        {
+            get
+            {
+                return false;
+            }
+            set
+            {
+            }
+        }
 
-		public Vector2 size
-		{
-			get
-			{
-				return default(Vector2);
-			}
-		}
+        public delegate void BannerWasClickedDelegate();
 
-		public ADBannerView(ADBannerView.Type type, ADBannerView.Layout layout)
-		{
-		}
+        public delegate void BannerWasLoadedDelegate();
 
-		public static bool IsAvailable(ADBannerView.Type type)
-		{
-			return false;
-		}
-	}
+        public enum Layout
+        {
+            Bottom = 1,
+            BottomCenter = 9,
+            BottomLeft = 1,
+            BottomRight = 5,
+            Center = 10,
+            CenterLeft = 2,
+            CenterRight = 6,
+            Manual = -1,
+            Top = 0,
+            TopCenter = 8,
+            TopLeft = 0,
+            TopRight = 4
+        }
+
+        public enum Type
+        {
+            Banner,
+            MediumRect
+        }
+    }
 }
+

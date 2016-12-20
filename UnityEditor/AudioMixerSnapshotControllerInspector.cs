@@ -1,13 +1,14 @@
-using System;
-using UnityEditor.Audio;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(AudioMixerSnapshotController))]
-	internal class AudioMixerSnapshotControllerInspector : Editor
-	{
-		public override void OnInspectorGUI()
-		{
-		}
-	}
+    using System;
+    using UnityEditor.Audio;
+
+    [CustomEditor(typeof(AudioMixerSnapshotController)), CanEditMultipleObjects]
+    internal class AudioMixerSnapshotControllerInspector : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+        }
+    }
 }
+

@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface ParticleEffectUIOwner
-	{
-		void Repaint();
-	}
+    using System;
+
+    internal interface ParticleEffectUIOwner
+    {
+        void Repaint();
+    }
 }
+

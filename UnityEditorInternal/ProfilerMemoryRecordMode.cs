@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum ProfilerMemoryRecordMode
-	{
-		None,
-		SampleOnly,
-		CallstackFast,
-		CallstackFull
-	}
+    using System;
+
+    public enum ProfilerMemoryRecordMode
+    {
+        None,
+        SampleOnly,
+        CallstackFast,
+        CallstackFull
+    }
 }
+

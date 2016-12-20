@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum EditorBehaviorMode
-	{
-		Mode3D,
-		Mode2D
-	}
+    using System;
+
+    public enum EditorBehaviorMode
+    {
+        Mode3D,
+        Mode2D
+    }
 }
+

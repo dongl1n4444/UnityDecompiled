@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct ShaderFloatInfo
-	{
-		public string name;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public int flags;
-
-		public float value;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ShaderFloatInfo
+    {
+        public string name;
+        public int flags;
+        public float value;
+    }
 }
+

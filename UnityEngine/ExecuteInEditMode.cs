@@ -1,8 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class ExecuteInEditMode : Attribute
-	{
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Makes all instances of a script execute in edit mode.</para>
+    /// </summary>
+    public sealed class ExecuteInEditMode : Attribute
+    {
+    }
 }
+

@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum ParticleSystemSortMode
-	{
-		None,
-		Distance,
-		OldestInFront,
-		YoungestInFront
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The sorting mode for particle systems.</para>
+    /// </summary>
+    public enum ParticleSystemSortMode
+    {
+        None,
+        Distance,
+        OldestInFront,
+        YoungestInFront
+    }
 }
+

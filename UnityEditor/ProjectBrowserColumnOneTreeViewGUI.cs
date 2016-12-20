@@ -1,166 +1,155 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ProjectBrowserColumnOneTreeViewGUI : AssetsTreeViewGUI
-	{
-		private const float k_DistBetweenRootTypes = 15f;
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.InteropServices;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-		private Texture2D k_FavoritesIcon = EditorGUIUtility.FindTexture("Favorite Icon");
+    internal class ProjectBrowserColumnOneTreeViewGUI : AssetsTreeViewGUI
+    {
+        private const float k_DistBetweenRootTypes = 15f;
+        private Texture2D k_FavoriteFilterIcon;
+        private Texture2D k_FavoriteFolderIcon;
+        private Texture2D k_FavoritesIcon;
+        private bool m_IsCreatingSavedFilter;
 
-		private Texture2D k_FavoriteFolderIcon = EditorGUIUtility.FindTexture("FolderFavorite Icon");
+        public ProjectBrowserColumnOneTreeViewGUI(TreeViewController treeView) : base(treeView)
+        {
+            this.k_FavoritesIcon = EditorGUIUtility.FindTexture("Favorite Icon");
+            this.k_FavoriteFolderIcon = EditorGUIUtility.FindTexture("FolderFavorite Icon");
+            this.k_FavoriteFilterIcon = EditorGUIUtility.FindTexture("Search Icon");
+            this.m_IsCreatingSavedFilter = false;
+        }
 
-		private Texture2D k_FavoriteFilterIcon = EditorGUIUtility.FindTexture("Search Icon");
+        internal virtual void BeginCreateSavedFilter(SearchFilter filter)
+        {
+            string displayName = "New Saved Search";
+            this.m_IsCreatingSavedFilter = true;
+            int id = SavedSearchFilters.AddSavedFilter(displayName, filter, GetListAreaGridSize());
+            base.m_TreeView.Frame(id, true, false);
+            base.m_TreeView.state.renameOverlay.BeginRename(displayName, id, 0f);
+        }
 
-		private bool m_IsCreatingSavedFilter = false;
+        public override void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
+        {
+            float y = base.m_TreeView.state.scrollPos.y;
+            float height = base.m_TreeView.GetTotalRect().height;
+            firstRowVisible = (int) Mathf.Floor(y / base.k_LineHeight);
+            lastRowVisible = firstRowVisible + ((int) Mathf.Ceil(height / base.k_LineHeight));
+            float num3 = 15f / base.k_LineHeight;
+            firstRowVisible -= (int) Mathf.Ceil(2f * num3);
+            lastRowVisible += (int) Mathf.Ceil(2f * num3);
+            firstRowVisible = Mathf.Max(firstRowVisible, 0);
+            lastRowVisible = Mathf.Min(lastRowVisible, base.m_TreeView.data.rowCount - 1);
+        }
 
-		public ProjectBrowserColumnOneTreeViewGUI(TreeViewController treeView) : base(treeView)
-		{
-		}
+        protected override Texture GetIconForItem(TreeViewItem item)
+        {
+            if ((item != null) && (item.icon != null))
+            {
+                return item.icon;
+            }
+            SearchFilterTreeItem item2 = item as SearchFilterTreeItem;
+            if (item2 != null)
+            {
+                if (this.IsVisibleRootNode(item))
+                {
+                    return this.k_FavoritesIcon;
+                }
+                if (item2.isFolder)
+                {
+                    return this.k_FavoriteFolderIcon;
+                }
+                return this.k_FavoriteFilterIcon;
+            }
+            return base.GetIconForItem(item);
+        }
 
-		public override Vector2 GetTotalSize()
-		{
-			Vector2 totalSize = base.GetTotalSize();
-			totalSize.y += 15f;
-			return totalSize;
-		}
+        public static float GetListAreaGridSize()
+        {
+            float listAreaGridSize = -1f;
+            if (ProjectBrowser.s_LastInteractedProjectBrowser != null)
+            {
+                listAreaGridSize = ProjectBrowser.s_LastInteractedProjectBrowser.listAreaGridSize;
+            }
+            return listAreaGridSize;
+        }
 
-		public override Rect GetRowRect(int row, float rowWidth)
-		{
-			IList<TreeViewItem> rows = this.m_TreeView.data.GetRows();
-			return new Rect(0f, this.GetTopPixelOfRow(row, rows), rowWidth, this.k_LineHeight);
-		}
+        public override int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
+        {
+            return (((int) Mathf.Floor(heightOfTreeView / base.k_LineHeight)) - 1);
+        }
 
-		private float GetTopPixelOfRow(int row, IList<TreeViewItem> rows)
-		{
-			float num = (float)row * this.k_LineHeight;
-			TreeViewItem treeViewItem = rows[row];
-			if (ProjectBrowser.GetItemType(treeViewItem.id) == ProjectBrowser.ItemType.Asset)
-			{
-				num += 15f;
-			}
-			return num;
-		}
+        public override Rect GetRowRect(int row, float rowWidth)
+        {
+            IList<TreeViewItem> rows = base.m_TreeView.data.GetRows();
+            return new Rect(0f, this.GetTopPixelOfRow(row, rows), rowWidth, base.k_LineHeight);
+        }
 
-		public override int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
-		{
-			return (int)Mathf.Floor(heightOfTreeView / this.k_LineHeight) - 1;
-		}
+        private float GetTopPixelOfRow(int row, IList<TreeViewItem> rows)
+        {
+            float num = row * base.k_LineHeight;
+            TreeViewItem item = rows[row];
+            if (ProjectBrowser.GetItemType(item.id) == ProjectBrowser.ItemType.Asset)
+            {
+                num += 15f;
+            }
+            return num;
+        }
 
-		public override void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
-		{
-			float y = this.m_TreeView.state.scrollPos.y;
-			float height = this.m_TreeView.GetTotalRect().height;
-			firstRowVisible = (int)Mathf.Floor(y / this.k_LineHeight);
-			lastRowVisible = firstRowVisible + (int)Mathf.Ceil(height / this.k_LineHeight);
-			float num = 15f / this.k_LineHeight;
-			firstRowVisible -= (int)Mathf.Ceil(2f * num);
-			lastRowVisible += (int)Mathf.Ceil(2f * num);
-			firstRowVisible = Mathf.Max(firstRowVisible, 0);
-			lastRowVisible = Mathf.Min(lastRowVisible, this.m_TreeView.data.rowCount - 1);
-		}
+        public override Vector2 GetTotalSize()
+        {
+            Vector2 totalSize = base.GetTotalSize();
+            totalSize.y += 15f;
+            return totalSize;
+        }
 
-		public override void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused)
-		{
-			bool useBoldFont = this.IsVisibleRootNode(item);
-			this.DoItemGUI(rowRect, row, item, selected, focused, useBoldFont);
-		}
+        private bool IsVisibleRootNode(TreeViewItem item)
+        {
+            return (base.m_TreeView.data as ProjectBrowserColumnOneTreeViewDataSource).IsVisibleRootNode(item);
+        }
 
-		private bool IsVisibleRootNode(TreeViewItem item)
-		{
-			return (this.m_TreeView.data as ProjectBrowserColumnOneTreeViewDataSource).IsVisibleRootNode(item);
-		}
+        public override void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused)
+        {
+            bool useBoldFont = this.IsVisibleRootNode(item);
+            this.DoItemGUI(rowRect, row, item, selected, focused, useBoldFont);
+        }
 
-		protected override Texture GetIconForItem(TreeViewItem item)
-		{
-			Texture result;
-			if (item != null && item.icon != null)
-			{
-				result = item.icon;
-			}
-			else
-			{
-				SearchFilterTreeItem searchFilterTreeItem = item as SearchFilterTreeItem;
-				if (searchFilterTreeItem != null)
-				{
-					if (this.IsVisibleRootNode(item))
-					{
-						result = this.k_FavoritesIcon;
-					}
-					else if (searchFilterTreeItem.isFolder)
-					{
-						result = this.k_FavoriteFolderIcon;
-					}
-					else
-					{
-						result = this.k_FavoriteFilterIcon;
-					}
-				}
-				else
-				{
-					result = base.GetIconForItem(item);
-				}
-			}
-			return result;
-		}
-
-		public static float GetListAreaGridSize()
-		{
-			float result = -1f;
-			if (ProjectBrowser.s_LastInteractedProjectBrowser != null)
-			{
-				result = ProjectBrowser.s_LastInteractedProjectBrowser.listAreaGridSize;
-			}
-			return result;
-		}
-
-		internal virtual void BeginCreateSavedFilter(SearchFilter filter)
-		{
-			string text = "New Saved Search";
-			this.m_IsCreatingSavedFilter = true;
-			int num = SavedSearchFilters.AddSavedFilter(text, filter, ProjectBrowserColumnOneTreeViewGUI.GetListAreaGridSize());
-			this.m_TreeView.Frame(num, true, false);
-			this.m_TreeView.state.renameOverlay.BeginRename(text, num, 0f);
-		}
-
-		protected override void RenameEnded()
-		{
-			int userData = base.GetRenameOverlay().userData;
-			ProjectBrowser.ItemType itemType = ProjectBrowser.GetItemType(userData);
-			if (this.m_IsCreatingSavedFilter)
-			{
-				this.m_IsCreatingSavedFilter = false;
-				if (base.GetRenameOverlay().userAcceptedRename)
-				{
-					SavedSearchFilters.SetName(userData, base.GetRenameOverlay().name);
-					this.m_TreeView.SetSelection(new int[]
-					{
-						userData
-					}, true);
-				}
-				else
-				{
-					SavedSearchFilters.RemoveSavedFilter(userData);
-				}
-			}
-			else if (itemType == ProjectBrowser.ItemType.SavedFilter)
-			{
-				if (base.GetRenameOverlay().userAcceptedRename)
-				{
-					SavedSearchFilters.SetName(userData, base.GetRenameOverlay().name);
-				}
-			}
-			else
-			{
-				base.RenameEnded();
-				if (base.GetRenameOverlay().userAcceptedRename)
-				{
-					this.m_TreeView.NotifyListenersThatSelectionChanged();
-				}
-			}
-		}
-	}
+        protected override void RenameEnded()
+        {
+            int userData = base.GetRenameOverlay().userData;
+            ProjectBrowser.ItemType itemType = ProjectBrowser.GetItemType(userData);
+            if (this.m_IsCreatingSavedFilter)
+            {
+                this.m_IsCreatingSavedFilter = false;
+                if (base.GetRenameOverlay().userAcceptedRename)
+                {
+                    SavedSearchFilters.SetName(userData, base.GetRenameOverlay().name);
+                    int[] selectedIDs = new int[] { userData };
+                    base.m_TreeView.SetSelection(selectedIDs, true);
+                }
+                else
+                {
+                    SavedSearchFilters.RemoveSavedFilter(userData);
+                }
+            }
+            else if (itemType == ProjectBrowser.ItemType.SavedFilter)
+            {
+                if (base.GetRenameOverlay().userAcceptedRename)
+                {
+                    SavedSearchFilters.SetName(userData, base.GetRenameOverlay().name);
+                }
+            }
+            else
+            {
+                base.RenameEnded();
+                if (base.GetRenameOverlay().userAcceptedRename)
+                {
+                    base.m_TreeView.NotifyListenersThatSelectionChanged();
+                }
+            }
+        }
+    }
 }
+

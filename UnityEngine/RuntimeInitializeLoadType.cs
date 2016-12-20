@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum RuntimeInitializeLoadType
-	{
-		AfterSceneLoad,
-		BeforeSceneLoad
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Set RuntimeInitializeOnLoadMethod type.</para>
+    /// </summary>
+    public enum RuntimeInitializeLoadType
+    {
+        AfterSceneLoad,
+        BeforeSceneLoad
+    }
 }
+

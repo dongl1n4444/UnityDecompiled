@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum ListViewOptions
-	{
-		wantsReordering = 1,
-		wantsExternalFiles,
-		wantsToStartCustomDrag = 4,
-		wantsToAcceptCustomDrag = 8
-	}
+    using System;
+
+    internal enum ListViewOptions
+    {
+        wantsExternalFiles = 2,
+        wantsReordering = 1,
+        wantsToAcceptCustomDrag = 8,
+        wantsToStartCustomDrag = 4
+    }
 }
+

@@ -1,8 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public abstract class GUIDrawer
-	{
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Base class for PropertyDrawer and DecoratorDrawer.</para>
+    /// </summary>
+    public abstract class GUIDrawer
+    {
+        protected GUIDrawer()
+        {
+        }
+    }
 }
+

@@ -1,64 +1,66 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	internal class ListViewState
-	{
-		private const int c_rowHeight = 16;
+    using System;
+    using UnityEngine;
 
-		public int row;
+    [Serializable]
+    internal class ListViewState
+    {
+        private const int c_rowHeight = 0x10;
+        public int column;
+        public int customDraggedFromID;
+        public int draggedFrom;
+        public int draggedTo;
+        public bool drawDropHere;
+        public Rect dropHereRect;
+        public string[] fileNames;
+        public int ID;
+        internal ListViewShared.InternalLayoutedListViewState ilvState;
+        public int row;
+        public int rowHeight;
+        public Vector2 scrollPos;
+        public bool selectionChanged;
+        public int totalRows;
 
-		public int column;
+        public ListViewState()
+        {
+            this.drawDropHere = false;
+            this.dropHereRect = new Rect(0f, 0f, 0f, 0f);
+            this.fileNames = null;
+            this.customDraggedFromID = 0;
+            this.ilvState = new ListViewShared.InternalLayoutedListViewState();
+            this.Init(0, 0x10);
+        }
 
-		public Vector2 scrollPos;
+        public ListViewState(int totalRows)
+        {
+            this.drawDropHere = false;
+            this.dropHereRect = new Rect(0f, 0f, 0f, 0f);
+            this.fileNames = null;
+            this.customDraggedFromID = 0;
+            this.ilvState = new ListViewShared.InternalLayoutedListViewState();
+            this.Init(totalRows, 0x10);
+        }
 
-		public int totalRows;
+        public ListViewState(int totalRows, int rowHeight)
+        {
+            this.drawDropHere = false;
+            this.dropHereRect = new Rect(0f, 0f, 0f, 0f);
+            this.fileNames = null;
+            this.customDraggedFromID = 0;
+            this.ilvState = new ListViewShared.InternalLayoutedListViewState();
+            this.Init(totalRows, rowHeight);
+        }
 
-		public int rowHeight;
-
-		public int ID;
-
-		public bool selectionChanged;
-
-		public int draggedFrom;
-
-		public int draggedTo;
-
-		public bool drawDropHere = false;
-
-		public Rect dropHereRect = new Rect(0f, 0f, 0f, 0f);
-
-		public string[] fileNames = null;
-
-		public int customDraggedFromID = 0;
-
-		internal ListViewShared.InternalLayoutedListViewState ilvState = new ListViewShared.InternalLayoutedListViewState();
-
-		public ListViewState()
-		{
-			this.Init(0, 16);
-		}
-
-		public ListViewState(int totalRows)
-		{
-			this.Init(totalRows, 16);
-		}
-
-		public ListViewState(int totalRows, int rowHeight)
-		{
-			this.Init(totalRows, rowHeight);
-		}
-
-		private void Init(int totalRows, int rowHeight)
-		{
-			this.row = -1;
-			this.column = 0;
-			this.scrollPos = Vector2.zero;
-			this.totalRows = totalRows;
-			this.rowHeight = rowHeight;
-			this.selectionChanged = false;
-		}
-	}
+        private void Init(int totalRows, int rowHeight)
+        {
+            this.row = -1;
+            this.column = 0;
+            this.scrollPos = Vector2.zero;
+            this.totalRows = totalRows;
+            this.rowHeight = rowHeight;
+            this.selectionChanged = false;
+        }
+    }
 }
+

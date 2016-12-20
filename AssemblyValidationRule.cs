@@ -1,24 +1,24 @@
-using System;
+﻿using System;
 using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
 internal class AssemblyValidationRule : Attribute
 {
-	public int Priority;
+    private readonly RuntimePlatform _platform;
+    public int Priority;
 
-	private readonly RuntimePlatform _platform;
+    public AssemblyValidationRule(RuntimePlatform platform)
+    {
+        this._platform = platform;
+        this.Priority = 0;
+    }
 
-	public RuntimePlatform Platform
-	{
-		get
-		{
-			return this._platform;
-		}
-	}
-
-	public AssemblyValidationRule(RuntimePlatform platform)
-	{
-		this._platform = platform;
-		this.Priority = 0;
-	}
+    public RuntimePlatform Platform
+    {
+        get
+        {
+            return this._platform;
+        }
+    }
 }
+

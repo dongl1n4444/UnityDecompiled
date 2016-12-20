@@ -1,15 +1,15 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class MuscleClipEditorUtilities
-	{
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern MuscleClipQualityInfo GetMuscleClipQualityInfo(AnimationClip clip, float startTime, float stopTime);
+    using System;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern void CalculateQualityCurves(AnimationClip clip, QualityCurvesTime time, Vector2[] poseCurve, Vector2[] rotationCurve, Vector2[] heightCurve, Vector2[] positionCurve);
-	}
+    internal sealed class MuscleClipEditorUtilities
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void CalculateQualityCurves(AnimationClip clip, QualityCurvesTime time, Vector2[] poseCurve, Vector2[] rotationCurve, Vector2[] heightCurve, Vector2[] positionCurve);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern MuscleClipQualityInfo GetMuscleClipQualityInfo(AnimationClip clip, float startTime, float stopTime);
+    }
 }
+

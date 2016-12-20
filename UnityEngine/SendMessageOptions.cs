@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum SendMessageOptions
-	{
-		RequireReceiver,
-		DontRequireReceiver
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Options for how to send a message.</para>
+    /// </summary>
+    public enum SendMessageOptions
+    {
+        RequireReceiver,
+        DontRequireReceiver
+    }
 }
+

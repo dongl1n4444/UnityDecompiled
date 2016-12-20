@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal enum DisableBatchingType
-	{
-		False,
-		True,
-		WhenLODFading
-	}
+    using System;
+
+    internal enum DisableBatchingType
+    {
+        False,
+        True,
+        WhenLODFading
+    }
 }
+

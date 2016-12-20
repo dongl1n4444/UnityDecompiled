@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal enum CPUArch
-	{
-		Any,
-		x86,
-		ARMv7
-	}
+    using System;
+
+    internal enum CPUArch
+    {
+        Any,
+        x86,
+        ARMv7
+    }
 }
+

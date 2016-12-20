@@ -1,641 +1,605 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal static class Json
-	{
-		private sealed class Parser : IDisposable
-		{
-			private enum TOKEN
-			{
-				NONE,
-				CURLY_OPEN,
-				CURLY_CLOSE,
-				SQUARED_OPEN,
-				SQUARED_CLOSE,
-				COLON,
-				COMMA,
-				STRING,
-				NUMBER,
-				TRUE,
-				FALSE,
-				NULL
-			}
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
 
-			private const string WORD_BREAK = "{}[],:\"";
+    internal static class Json
+    {
+        public static object Deserialize(string json)
+        {
+            if (json == null)
+            {
+                return null;
+            }
+            return Parser.Parse(json);
+        }
 
-			private StringReader json;
+        public static string Serialize(object obj)
+        {
+            return Serializer.Serialize(obj);
+        }
 
-			private char PeekChar
-			{
-				get
-				{
-					return Convert.ToChar(this.json.Peek());
-				}
-			}
+        private sealed class Parser : IDisposable
+        {
+            private StringReader json;
+            private const string WORD_BREAK = "{}[],:\"";
 
-			private char NextChar
-			{
-				get
-				{
-					return Convert.ToChar(this.json.Read());
-				}
-			}
+            private Parser(string jsonString)
+            {
+                this.json = new StringReader(jsonString);
+            }
 
-			private string NextWord
-			{
-				get
-				{
-					StringBuilder stringBuilder = new StringBuilder();
-					while (!Json.Parser.IsWordBreak(this.PeekChar))
-					{
-						stringBuilder.Append(this.NextChar);
-						if (this.json.Peek() == -1)
-						{
-							break;
-						}
-					}
-					return stringBuilder.ToString();
-				}
-			}
+            public void Dispose()
+            {
+                this.json.Dispose();
+                this.json = null;
+            }
 
-			private Json.Parser.TOKEN NextToken
-			{
-				get
-				{
-					this.EatWhitespace();
-					Json.Parser.TOKEN result;
-					if (this.json.Peek() != -1)
-					{
-						char peekChar = this.PeekChar;
-						switch (peekChar)
-						{
-						case ',':
-							this.json.Read();
-							result = Json.Parser.TOKEN.COMMA;
-							return result;
-						case '-':
-						case '0':
-						case '1':
-						case '2':
-						case '3':
-						case '4':
-						case '5':
-						case '6':
-						case '7':
-						case '8':
-						case '9':
-							result = Json.Parser.TOKEN.NUMBER;
-							return result;
-						case '.':
-						case '/':
-							IL_6C:
-							switch (peekChar)
-							{
-							case '[':
-								result = Json.Parser.TOKEN.SQUARED_OPEN;
-								return result;
-							case '\\':
-								IL_81:
-								switch (peekChar)
-								{
-								case '{':
-									result = Json.Parser.TOKEN.CURLY_OPEN;
-									return result;
-								case '|':
-									IL_96:
-									if (peekChar != '"')
-									{
-										string nextWord = this.NextWord;
-										if (nextWord != null)
-										{
-											if (nextWord == "false")
-											{
-												result = Json.Parser.TOKEN.FALSE;
-												return result;
-											}
-											if (nextWord == "true")
-											{
-												result = Json.Parser.TOKEN.TRUE;
-												return result;
-											}
-											if (nextWord == "null")
-											{
-												result = Json.Parser.TOKEN.NULL;
-												return result;
-											}
-										}
-										result = Json.Parser.TOKEN.NONE;
-										return result;
-									}
-									result = Json.Parser.TOKEN.STRING;
-									return result;
-								case '}':
-									this.json.Read();
-									result = Json.Parser.TOKEN.CURLY_CLOSE;
-									return result;
-								}
-								goto IL_96;
-							case ']':
-								this.json.Read();
-								result = Json.Parser.TOKEN.SQUARED_CLOSE;
-								return result;
-							}
-							goto IL_81;
-						case ':':
-							result = Json.Parser.TOKEN.COLON;
-							return result;
-						}
-						goto IL_6C;
-					}
-					result = Json.Parser.TOKEN.NONE;
-					return result;
-				}
-			}
+            private void EatWhitespace()
+            {
+                while (char.IsWhiteSpace(this.PeekChar))
+                {
+                    this.json.Read();
+                    if (this.json.Peek() == -1)
+                    {
+                        break;
+                    }
+                }
+            }
 
-			private Parser(string jsonString)
-			{
-				this.json = new StringReader(jsonString);
-			}
+            public static bool IsWordBreak(char c)
+            {
+                return (char.IsWhiteSpace(c) || ("{}[],:\"".IndexOf(c) != -1));
+            }
 
-			public static bool IsWordBreak(char c)
-			{
-				return char.IsWhiteSpace(c) || "{}[],:\"".IndexOf(c) != -1;
-			}
+            public static object Parse(string jsonString)
+            {
+                using (Json.Parser parser = new Json.Parser(jsonString))
+                {
+                    return parser.ParseValue();
+                }
+            }
 
-			public static object Parse(string jsonString)
-			{
-				object result;
-				using (Json.Parser parser = new Json.Parser(jsonString))
-				{
-					result = parser.ParseValue();
-				}
-				return result;
-			}
+            private List<object> ParseArray()
+            {
+                List<object> list = new List<object>();
+                this.json.Read();
+                bool flag = true;
+                while (flag)
+                {
+                    TOKEN nextToken = this.NextToken;
+                    switch (nextToken)
+                    {
+                        case TOKEN.SQUARED_CLOSE:
+                            flag = false;
+                            break;
 
-			public void Dispose()
-			{
-				this.json.Dispose();
-				this.json = null;
-			}
+                        case TOKEN.COMMA:
+                        {
+                            continue;
+                        }
+                        case TOKEN.NONE:
+                            return null;
 
-			private Dictionary<string, object> ParseObject()
-			{
-				Dictionary<string, object> dictionary = new Dictionary<string, object>();
-				this.json.Read();
-				while (true)
-				{
-					Json.Parser.TOKEN nextToken = this.NextToken;
-					switch (nextToken)
-					{
-					case Json.Parser.TOKEN.NONE:
-						goto IL_3A;
-					case Json.Parser.TOKEN.CURLY_OPEN:
-					{
-						IL_2E:
-						if (nextToken == Json.Parser.TOKEN.COMMA)
-						{
-							continue;
-						}
-						string text = this.ParseString();
-						if (text == null)
-						{
-							goto Block_2;
-						}
-						if (this.NextToken != Json.Parser.TOKEN.COLON)
-						{
-							goto Block_3;
-						}
-						this.json.Read();
-						dictionary[text] = this.ParseValue();
-						continue;
-					}
-					case Json.Parser.TOKEN.CURLY_CLOSE:
-						goto IL_46;
-					}
-					goto IL_2E;
-				}
-				IL_3A:
-				Dictionary<string, object> result = null;
-				return result;
-				IL_46:
-				result = dictionary;
-				return result;
-				Block_2:
-				result = null;
-				return result;
-				Block_3:
-				result = null;
-				return result;
-			}
+                        default:
+                        {
+                            object item = this.ParseByToken(nextToken);
+                            list.Add(item);
+                            break;
+                        }
+                    }
+                }
+                return list;
+            }
 
-			private List<object> ParseArray()
-			{
-				List<object> list = new List<object>();
-				this.json.Read();
-				bool flag = true;
-				List<object> result;
-				while (flag)
-				{
-					Json.Parser.TOKEN nextToken = this.NextToken;
-					switch (nextToken)
-					{
-					case Json.Parser.TOKEN.SQUARED_CLOSE:
-						flag = false;
-						continue;
-					case Json.Parser.TOKEN.COLON:
-						IL_36:
-						if (nextToken != Json.Parser.TOKEN.NONE)
-						{
-							object item = this.ParseByToken(nextToken);
-							list.Add(item);
-							continue;
-						}
-						result = null;
-						return result;
-					case Json.Parser.TOKEN.COMMA:
-						continue;
-					}
-					goto IL_36;
-				}
-				result = list;
-				return result;
-			}
+            private object ParseByToken(TOKEN token)
+            {
+                switch (token)
+                {
+                    case TOKEN.STRING:
+                        return this.ParseString();
 
-			private object ParseValue()
-			{
-				Json.Parser.TOKEN nextToken = this.NextToken;
-				return this.ParseByToken(nextToken);
-			}
+                    case TOKEN.NUMBER:
+                        return this.ParseNumber();
 
-			private object ParseByToken(Json.Parser.TOKEN token)
-			{
-				object result;
-				switch (token)
-				{
-				case Json.Parser.TOKEN.STRING:
-					result = this.ParseString();
-					break;
-				case Json.Parser.TOKEN.NUMBER:
-					result = this.ParseNumber();
-					break;
-				case Json.Parser.TOKEN.TRUE:
-					result = true;
-					break;
-				case Json.Parser.TOKEN.FALSE:
-					result = false;
-					break;
-				case Json.Parser.TOKEN.NULL:
-					result = null;
-					break;
-				default:
-					switch (token)
-					{
-					case Json.Parser.TOKEN.CURLY_OPEN:
-						result = this.ParseObject();
-						return result;
-					case Json.Parser.TOKEN.SQUARED_OPEN:
-						result = this.ParseArray();
-						return result;
-					}
-					result = null;
-					break;
-				}
-				return result;
-			}
+                    case TOKEN.TRUE:
+                        return true;
 
-			private string ParseString()
-			{
-				StringBuilder stringBuilder = new StringBuilder();
-				this.json.Read();
-				bool flag = true;
-				while (flag)
-				{
-					if (this.json.Peek() == -1)
-					{
-						break;
-					}
-					char nextChar = this.NextChar;
-					if (nextChar != '"')
-					{
-						if (nextChar != '\\')
-						{
-							stringBuilder.Append(nextChar);
-						}
-						else
-						{
-							if (this.json.Peek() != -1)
-							{
-								nextChar = this.NextChar;
-								switch (nextChar)
-								{
-								case 'r':
-									stringBuilder.Append('\r');
-									continue;
-								case 's':
-									IL_90:
-									if (nextChar == '"' || nextChar == '/' || nextChar == '\\')
-									{
-										stringBuilder.Append(nextChar);
-										continue;
-									}
-									if (nextChar == 'b')
-									{
-										stringBuilder.Append('\b');
-										continue;
-									}
-									if (nextChar == 'f')
-									{
-										stringBuilder.Append('\f');
-										continue;
-									}
-									if (nextChar != 'n')
-									{
-										continue;
-									}
-									stringBuilder.Append('\n');
-									continue;
-								case 't':
-									stringBuilder.Append('\t');
-									continue;
-								case 'u':
-								{
-									char[] array = new char[4];
-									for (int i = 0; i < 4; i++)
-									{
-										array[i] = this.NextChar;
-									}
-									stringBuilder.Append((char)Convert.ToInt32(new string(array), 16));
-									continue;
-								}
-								}
-								goto IL_90;
-							}
-							flag = false;
-						}
-					}
-					else
-					{
-						flag = false;
-					}
-				}
-				return stringBuilder.ToString();
-			}
+                    case TOKEN.FALSE:
+                        return false;
 
-			private object ParseNumber()
-			{
-				string nextWord = this.NextWord;
-				object result;
-				if (nextWord.IndexOf('.') == -1)
-				{
-					long num;
-					long.TryParse(nextWord, NumberStyles.Any, CultureInfo.InvariantCulture, out num);
-					result = num;
-				}
-				else
-				{
-					double num2;
-					double.TryParse(nextWord, NumberStyles.Any, CultureInfo.InvariantCulture, out num2);
-					result = num2;
-				}
-				return result;
-			}
+                    case TOKEN.NULL:
+                        return null;
 
-			private void EatWhitespace()
-			{
-				while (char.IsWhiteSpace(this.PeekChar))
-				{
-					this.json.Read();
-					if (this.json.Peek() == -1)
-					{
-						break;
-					}
-				}
-			}
-		}
+                    case TOKEN.CURLY_OPEN:
+                        return this.ParseObject();
 
-		private sealed class Serializer
-		{
-			private StringBuilder builder;
+                    case TOKEN.SQUARED_OPEN:
+                        return this.ParseArray();
+                }
+                return null;
+            }
 
-			private Serializer()
-			{
-				this.builder = new StringBuilder();
-			}
+            private object ParseNumber()
+            {
+                double num2;
+                string nextWord = this.NextWord;
+                if (nextWord.IndexOf('.') == -1)
+                {
+                    long num;
+                    long.TryParse(nextWord, NumberStyles.Any, CultureInfo.InvariantCulture, out num);
+                    return num;
+                }
+                double.TryParse(nextWord, NumberStyles.Any, CultureInfo.InvariantCulture, out num2);
+                return num2;
+            }
 
-			public static string Serialize(object obj)
-			{
-				Json.Serializer serializer = new Json.Serializer();
-				serializer.SerializeValue(obj);
-				return serializer.builder.ToString();
-			}
+            private Dictionary<string, object> ParseObject()
+            {
+                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                this.json.Read();
+                while (true)
+                {
+                    TOKEN nextToken = this.NextToken;
+                    switch (nextToken)
+                    {
+                        case TOKEN.NONE:
+                            return null;
 
-			private void SerializeValue(object value)
-			{
-				string str;
-				IList anArray;
-				IDictionary obj;
-				if (value == null)
-				{
-					this.builder.Append("null");
-				}
-				else if ((str = (value as string)) != null)
-				{
-					this.SerializeString(str);
-				}
-				else if (value is bool)
-				{
-					this.builder.Append((!(bool)value) ? "false" : "true");
-				}
-				else if ((anArray = (value as IList)) != null)
-				{
-					this.SerializeArray(anArray);
-				}
-				else if ((obj = (value as IDictionary)) != null)
-				{
-					this.SerializeObject(obj);
-				}
-				else if (value is char)
-				{
-					this.SerializeString(new string((char)value, 1));
-				}
-				else
-				{
-					this.SerializeOther(value);
-				}
-			}
+                        case TOKEN.CURLY_CLOSE:
+                            return dictionary;
+                    }
+                    if (nextToken != TOKEN.COMMA)
+                    {
+                        string str = this.ParseString();
+                        if (str == null)
+                        {
+                            return null;
+                        }
+                        if (this.NextToken != TOKEN.COLON)
+                        {
+                            return null;
+                        }
+                        this.json.Read();
+                        dictionary[str] = this.ParseValue();
+                    }
+                }
+            }
 
-			private void SerializeObject(IDictionary obj)
-			{
-				bool flag = true;
-				this.builder.Append('{');
-				IEnumerator enumerator = obj.Keys.GetEnumerator();
-				try
-				{
-					while (enumerator.MoveNext())
-					{
-						object current = enumerator.Current;
-						if (!flag)
-						{
-							this.builder.Append(',');
-						}
-						this.SerializeString(current.ToString());
-						this.builder.Append(':');
-						this.SerializeValue(obj[current]);
-						flag = false;
-					}
-				}
-				finally
-				{
-					IDisposable disposable;
-					if ((disposable = (enumerator as IDisposable)) != null)
-					{
-						disposable.Dispose();
-					}
-				}
-				this.builder.Append('}');
-			}
+            private string ParseString()
+            {
+                StringBuilder builder = new StringBuilder();
+                this.json.Read();
+                bool flag = true;
+                while (flag)
+                {
+                    char[] chArray;
+                    int num;
+                    if (this.json.Peek() == -1)
+                    {
+                        flag = false;
+                        break;
+                    }
+                    char nextChar = this.NextChar;
+                    if (nextChar == '"')
+                    {
+                        flag = false;
+                        continue;
+                    }
+                    if (nextChar != '\\')
+                    {
+                        goto Label_015F;
+                    }
+                    if (this.json.Peek() == -1)
+                    {
+                        flag = false;
+                        continue;
+                    }
+                    nextChar = this.NextChar;
+                    switch (nextChar)
+                    {
+                        case 'r':
+                        {
+                            builder.Append('\r');
+                            continue;
+                        }
+                        case 't':
+                        {
+                            builder.Append('\t');
+                            continue;
+                        }
+                        case 'u':
+                            chArray = new char[4];
+                            num = 0;
+                            goto Label_0138;
 
-			private void SerializeArray(IList anArray)
-			{
-				this.builder.Append('[');
-				bool flag = true;
-				IEnumerator enumerator = anArray.GetEnumerator();
-				try
-				{
-					while (enumerator.MoveNext())
-					{
-						object current = enumerator.Current;
-						if (!flag)
-						{
-							this.builder.Append(',');
-						}
-						this.SerializeValue(current);
-						flag = false;
-					}
-				}
-				finally
-				{
-					IDisposable disposable;
-					if ((disposable = (enumerator as IDisposable)) != null)
-					{
-						disposable.Dispose();
-					}
-				}
-				this.builder.Append(']');
-			}
+                        default:
+                        {
+                            if (((nextChar != '"') && (nextChar != '/')) && (nextChar != '\\'))
+                            {
+                                if (nextChar == 'b')
+                                {
+                                    break;
+                                }
+                                if (nextChar == 'f')
+                                {
+                                    goto Label_00DF;
+                                }
+                                if (nextChar == 'n')
+                                {
+                                    goto Label_00ED;
+                                }
+                            }
+                            else
+                            {
+                                builder.Append(nextChar);
+                            }
+                            continue;
+                        }
+                    }
+                    builder.Append('\b');
+                    continue;
+                Label_00DF:
+                    builder.Append('\f');
+                    continue;
+                Label_00ED:
+                    builder.Append('\n');
+                    continue;
+                Label_0126:
+                    chArray[num] = this.NextChar;
+                    num++;
+                Label_0138:
+                    if (num < 4)
+                    {
+                        goto Label_0126;
+                    }
+                    builder.Append((char) Convert.ToInt32(new string(chArray), 0x10));
+                    continue;
+                Label_015F:
+                    builder.Append(nextChar);
+                }
+                return builder.ToString();
+            }
 
-			private void SerializeString(string str)
-			{
-				this.builder.Append('"');
-				char[] array = str.ToCharArray();
-				char[] array2 = array;
-				for (int i = 0; i < array2.Length; i++)
-				{
-					char c = array2[i];
-					switch (c)
-					{
-					case '\b':
-						this.builder.Append("\\b");
-						goto IL_152;
-					case '\t':
-						this.builder.Append("\\t");
-						goto IL_152;
-					case '\n':
-						this.builder.Append("\\n");
-						goto IL_152;
-					case '\v':
-						IL_45:
-						if (c == '"')
-						{
-							this.builder.Append("\\\"");
-							goto IL_152;
-						}
-						if (c != '\\')
-						{
-							int num = Convert.ToInt32(c);
-							if (num >= 32 && num <= 126)
-							{
-								this.builder.Append(c);
-							}
-							else
-							{
-								this.builder.Append("\\u");
-								this.builder.Append(num.ToString("x4"));
-							}
-							goto IL_152;
-						}
-						this.builder.Append("\\\\");
-						goto IL_152;
-					case '\f':
-						this.builder.Append("\\f");
-						goto IL_152;
-					case '\r':
-						this.builder.Append("\\r");
-						goto IL_152;
-					}
-					goto IL_45;
-					IL_152:;
-				}
-				this.builder.Append('"');
-			}
+            private object ParseValue()
+            {
+                TOKEN nextToken = this.NextToken;
+                return this.ParseByToken(nextToken);
+            }
 
-			private void SerializeOther(object value)
-			{
-				if (value is float)
-				{
-					this.builder.Append(((float)value).ToString("R", CultureInfo.InvariantCulture));
-				}
-				else if (value is int || value is uint || value is long || value is sbyte || value is byte || value is short || value is ushort || value is ulong)
-				{
-					this.builder.Append(value);
-				}
-				else if (value is double || value is decimal)
-				{
-					this.builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.InvariantCulture));
-				}
-				else
-				{
-					Dictionary<string, object> dictionary = new Dictionary<string, object>();
-					List<FieldInfo> list = value.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public).ToList<FieldInfo>();
-					foreach (FieldInfo current in list)
-					{
-						dictionary.Add(current.Name, current.GetValue(value));
-					}
-					List<PropertyInfo> list2 = value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).ToList<PropertyInfo>();
-					foreach (PropertyInfo current2 in list2)
-					{
-						dictionary.Add(current2.Name, current2.GetValue(value, null));
-					}
-					this.SerializeObject(dictionary);
-				}
-			}
-		}
+            private char NextChar
+            {
+                get
+                {
+                    return Convert.ToChar(this.json.Read());
+                }
+            }
 
-		public static object Deserialize(string json)
-		{
-			object result;
-			if (json == null)
-			{
-				result = null;
-			}
-			else
-			{
-				result = Json.Parser.Parse(json);
-			}
-			return result;
-		}
+            private TOKEN NextToken
+            {
+                get
+                {
+                    this.EatWhitespace();
+                    if (this.json.Peek() != -1)
+                    {
+                        switch (this.PeekChar)
+                        {
+                            case ',':
+                                this.json.Read();
+                                return TOKEN.COMMA;
 
-		public static string Serialize(object obj)
-		{
-			return Json.Serializer.Serialize(obj);
-		}
-	}
+                            case '-':
+                            case '0':
+                            case '1':
+                            case '2':
+                            case '3':
+                            case '4':
+                            case '5':
+                            case '6':
+                            case '7':
+                            case '8':
+                            case '9':
+                                return TOKEN.NUMBER;
+
+                            case ':':
+                                return TOKEN.COLON;
+
+                            case '[':
+                                return TOKEN.SQUARED_OPEN;
+
+                            case ']':
+                                this.json.Read();
+                                return TOKEN.SQUARED_CLOSE;
+
+                            case '{':
+                                return TOKEN.CURLY_OPEN;
+
+                            case '}':
+                                this.json.Read();
+                                return TOKEN.CURLY_CLOSE;
+
+                            case '"':
+                                return TOKEN.STRING;
+                        }
+                        switch (this.NextWord)
+                        {
+                            case "false":
+                                return TOKEN.FALSE;
+
+                            case "true":
+                                return TOKEN.TRUE;
+
+                            case "null":
+                                return TOKEN.NULL;
+                        }
+                    }
+                    return TOKEN.NONE;
+                }
+            }
+
+            private string NextWord
+            {
+                get
+                {
+                    StringBuilder builder = new StringBuilder();
+                    while (!IsWordBreak(this.PeekChar))
+                    {
+                        builder.Append(this.NextChar);
+                        if (this.json.Peek() == -1)
+                        {
+                            break;
+                        }
+                    }
+                    return builder.ToString();
+                }
+            }
+
+            private char PeekChar
+            {
+                get
+                {
+                    return Convert.ToChar(this.json.Peek());
+                }
+            }
+
+            private enum TOKEN
+            {
+                NONE,
+                CURLY_OPEN,
+                CURLY_CLOSE,
+                SQUARED_OPEN,
+                SQUARED_CLOSE,
+                COLON,
+                COMMA,
+                STRING,
+                NUMBER,
+                TRUE,
+                FALSE,
+                NULL
+            }
+        }
+
+        private sealed class Serializer
+        {
+            private StringBuilder builder = new StringBuilder();
+
+            private Serializer()
+            {
+            }
+
+            public static string Serialize(object obj)
+            {
+                Json.Serializer serializer = new Json.Serializer();
+                serializer.SerializeValue(obj);
+                return serializer.builder.ToString();
+            }
+
+            private void SerializeArray(IList anArray)
+            {
+                this.builder.Append('[');
+                bool flag = true;
+                IEnumerator enumerator = anArray.GetEnumerator();
+                try
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        object current = enumerator.Current;
+                        if (!flag)
+                        {
+                            this.builder.Append(',');
+                        }
+                        this.SerializeValue(current);
+                        flag = false;
+                    }
+                }
+                finally
+                {
+                    IDisposable disposable = enumerator as IDisposable;
+                    if (disposable != null)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+                this.builder.Append(']');
+            }
+
+            private void SerializeObject(IDictionary obj)
+            {
+                bool flag = true;
+                this.builder.Append('{');
+                IEnumerator enumerator = obj.Keys.GetEnumerator();
+                try
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        object current = enumerator.Current;
+                        if (!flag)
+                        {
+                            this.builder.Append(',');
+                        }
+                        this.SerializeString(current.ToString());
+                        this.builder.Append(':');
+                        this.SerializeValue(obj[current]);
+                        flag = false;
+                    }
+                }
+                finally
+                {
+                    IDisposable disposable = enumerator as IDisposable;
+                    if (disposable != null)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+                this.builder.Append('}');
+            }
+
+            private void SerializeOther(object value)
+            {
+                if (value is float)
+                {
+                    this.builder.Append(((float) value).ToString("R", CultureInfo.InvariantCulture));
+                }
+                else if ((((value is int) || (value is uint)) || ((value is long) || (value is sbyte))) || (((value is byte) || (value is short)) || ((value is ushort) || (value is ulong))))
+                {
+                    this.builder.Append(value);
+                }
+                else if ((value is double) || (value is decimal))
+                {
+                    this.builder.Append(Convert.ToDouble(value).ToString("R", CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                    List<FieldInfo> list = Enumerable.ToList<FieldInfo>(value.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance));
+                    foreach (FieldInfo info in list)
+                    {
+                        dictionary.Add(info.Name, info.GetValue(value));
+                    }
+                    List<PropertyInfo> list2 = Enumerable.ToList<PropertyInfo>(value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance));
+                    foreach (PropertyInfo info2 in list2)
+                    {
+                        dictionary.Add(info2.Name, info2.GetValue(value, null));
+                    }
+                    this.SerializeObject(dictionary);
+                }
+            }
+
+            private void SerializeString(string str)
+            {
+                this.builder.Append('"');
+                char[] chArray = str.ToCharArray();
+                foreach (char ch in chArray)
+                {
+                    int num2;
+                    switch (ch)
+                    {
+                        case '\b':
+                        {
+                            this.builder.Append(@"\b");
+                            continue;
+                        }
+                        case '\t':
+                        {
+                            this.builder.Append(@"\t");
+                            continue;
+                        }
+                        case '\n':
+                        {
+                            this.builder.Append(@"\n");
+                            continue;
+                        }
+                        case '\f':
+                        {
+                            this.builder.Append(@"\f");
+                            continue;
+                        }
+                        case '\r':
+                        {
+                            this.builder.Append(@"\r");
+                            continue;
+                        }
+                        default:
+                        {
+                            if (ch != '"')
+                            {
+                                if (ch == '\\')
+                                {
+                                    break;
+                                }
+                                goto Label_00F4;
+                            }
+                            this.builder.Append("\\\"");
+                            continue;
+                        }
+                    }
+                    this.builder.Append(@"\\");
+                    continue;
+                Label_00F4:
+                    num2 = Convert.ToInt32(ch);
+                    if ((num2 >= 0x20) && (num2 <= 0x7e))
+                    {
+                        this.builder.Append(ch);
+                    }
+                    else
+                    {
+                        this.builder.Append(@"\u");
+                        this.builder.Append(num2.ToString("x4"));
+                    }
+                }
+                this.builder.Append('"');
+            }
+
+            private void SerializeValue(object value)
+            {
+                if (value == null)
+                {
+                    this.builder.Append("null");
+                }
+                else
+                {
+                    string str = value as string;
+                    if (str != null)
+                    {
+                        this.SerializeString(str);
+                    }
+                    else if (value is bool)
+                    {
+                        this.builder.Append(!((bool) value) ? "false" : "true");
+                    }
+                    else
+                    {
+                        IList anArray = value as IList;
+                        if (anArray != null)
+                        {
+                            this.SerializeArray(anArray);
+                        }
+                        else
+                        {
+                            IDictionary dictionary = value as IDictionary;
+                            if (dictionary != null)
+                            {
+                                this.SerializeObject(dictionary);
+                            }
+                            else if (value is char)
+                            {
+                                this.SerializeString(new string((char) value, 1));
+                            }
+                            else
+                            {
+                                this.SerializeOther(value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+

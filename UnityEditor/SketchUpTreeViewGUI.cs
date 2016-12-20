@@ -1,39 +1,41 @@
-using System;
-using UnityEditor.IMGUI.Controls;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class SketchUpTreeViewGUI : TreeViewGUI
-	{
-		private readonly Texture2D k_Root = EditorGUIUtility.FindTexture("DefaultAsset Icon");
+    using System;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEngine;
 
-		private readonly Texture2D k_Icon = EditorGUIUtility.FindTexture("Mesh Icon");
+    internal class SketchUpTreeViewGUI : TreeViewGUI
+    {
+        private readonly Texture2D k_Icon;
+        private readonly Texture2D k_Root;
 
-		public SketchUpTreeViewGUI(TreeViewController treeView) : base(treeView)
-		{
-			this.k_BaseIndent = 20f;
-		}
+        public SketchUpTreeViewGUI(TreeViewController treeView) : base(treeView)
+        {
+            this.k_Root = EditorGUIUtility.FindTexture("DefaultAsset Icon");
+            this.k_Icon = EditorGUIUtility.FindTexture("Mesh Icon");
+            base.k_BaseIndent = 20f;
+        }
 
-		protected override Texture GetIconForItem(TreeViewItem item)
-		{
-			return (item.children == null || item.children.Count <= 0) ? this.k_Icon : this.k_Root;
-		}
+        protected override Texture GetIconForItem(TreeViewItem item)
+        {
+            return (((item.children == null) || (item.children.Count <= 0)) ? this.k_Icon : this.k_Root);
+        }
 
-		protected override void RenameEnded()
-		{
-		}
+        public override void OnRowGUI(Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
+        {
+            this.DoItemGUI(rowRect, row, node, selected, focused, false);
+            SketchUpNode node2 = node as SketchUpNode;
+            Rect position = new Rect(2f, rowRect.y, rowRect.height, rowRect.height);
+            node2.Enabled = GUI.Toggle(position, node2.Enabled, GUIContent.none, SketchUpImportDlg.Styles.styles.toggleStyle);
+        }
 
-		protected override void SyncFakeItem()
-		{
-		}
+        protected override void RenameEnded()
+        {
+        }
 
-		public override void OnRowGUI(Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
-		{
-			this.DoItemGUI(rowRect, row, node, selected, focused, false);
-			SketchUpNode sketchUpNode = node as SketchUpNode;
-			Rect position = new Rect(2f, rowRect.y, rowRect.height, rowRect.height);
-			sketchUpNode.Enabled = GUI.Toggle(position, sketchUpNode.Enabled, GUIContent.none, SketchUpImportDlg.Styles.styles.toggleStyle);
-		}
-	}
+        protected override void SyncFakeItem()
+        {
+        }
+    }
 }
+

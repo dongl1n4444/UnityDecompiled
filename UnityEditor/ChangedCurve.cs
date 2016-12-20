@@ -1,27 +1,27 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class ChangedCurve
-	{
-		public AnimationCurve curve;
+    using System;
+    using UnityEngine;
 
-		public int curveId;
+    internal class ChangedCurve
+    {
+        public EditorCurveBinding binding;
+        public AnimationCurve curve;
+        public int curveId;
 
-		public EditorCurveBinding binding;
+        public ChangedCurve(AnimationCurve curve, int curveId, EditorCurveBinding binding)
+        {
+            this.curve = curve;
+            this.curveId = curveId;
+            this.binding = binding;
+        }
 
-		public ChangedCurve(AnimationCurve curve, int curveId, EditorCurveBinding binding)
-		{
-			this.curve = curve;
-			this.curveId = curveId;
-			this.binding = binding;
-		}
-
-		public override int GetHashCode()
-		{
-			int hashCode = this.curve.GetHashCode();
-			return 33 * hashCode + this.binding.GetHashCode();
-		}
-	}
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            hashCode = this.curve.GetHashCode();
+            return ((0x21 * hashCode) + this.binding.GetHashCode());
+        }
+    }
 }
+

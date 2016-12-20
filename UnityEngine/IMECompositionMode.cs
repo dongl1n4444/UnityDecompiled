@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum IMECompositionMode
-	{
-		Auto,
-		On,
-		Off
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Controls IME input.</para>
+    /// </summary>
+    public enum IMECompositionMode
+    {
+        Auto,
+        On,
+        Off
+    }
 }
+

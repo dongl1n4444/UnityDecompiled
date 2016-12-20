@@ -1,0 +1,239 @@
+﻿namespace Unity.IL2CPP.Building.ToolChains.Android
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+
+    internal class X86Settings : TargetArchitectureSettings
+    {
+        public override string ABI
+        {
+            get
+            {
+                return "x86";
+            }
+        }
+
+        public override string Arch
+        {
+            get
+            {
+                return "x86";
+            }
+        }
+
+        public override string BinPrefix
+        {
+            get
+            {
+                return "i686-linux-android";
+            }
+        }
+
+        public override IEnumerable<string> CxxFlags
+        {
+            get
+            {
+                return new <>c__Iterator0 { $PC = -2 };
+            }
+        }
+
+        public override IEnumerable<string> LDFlags
+        {
+            get
+            {
+                return new <>c__Iterator1 { $PC = -2 };
+            }
+        }
+
+        public override string Platform
+        {
+            get
+            {
+                return "i686-none-linux-android";
+            }
+        }
+
+        public override string TCPrefix
+        {
+            get
+            {
+                return "x86";
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        {
+            internal string $current;
+            internal bool $disposing;
+            internal int $PC;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                        this.$current = "-mtune=atom";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        goto Label_0090;
+
+                    case 1:
+                        this.$current = "-mssse3";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 2;
+                        }
+                        goto Label_0090;
+
+                    case 2:
+                        this.$current = "-mfpmath=sse";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 3;
+                        }
+                        goto Label_0090;
+
+                    case 3:
+                        this.$PC = -1;
+                        break;
+                }
+                return false;
+            Label_0090:
+                return true;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<string> IEnumerable<string>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new X86Settings.<>c__Iterator0();
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
+            }
+
+            string IEnumerator<string>.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return this.$current;
+                }
+            }
+
+            object IEnumerator.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return this.$current;
+                }
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <>c__Iterator1 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
+        {
+            internal string $current;
+            internal bool $disposing;
+            internal int $PC;
+
+            [DebuggerHidden]
+            public void Dispose()
+            {
+                this.$disposing = true;
+                this.$PC = -1;
+            }
+
+            public bool MoveNext()
+            {
+                uint num = (uint) this.$PC;
+                this.$PC = -1;
+                switch (num)
+                {
+                    case 0:
+                        this.$current = "-fuse-ld=bfd";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 1;
+                        }
+                        return true;
+
+                    case 1:
+                        this.$PC = -1;
+                        break;
+                }
+                return false;
+            }
+
+            [DebuggerHidden]
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator<string> IEnumerable<string>.GetEnumerator()
+            {
+                if (Interlocked.CompareExchange(ref this.$PC, 0, -2) == -2)
+                {
+                    return this;
+                }
+                return new X86Settings.<>c__Iterator1();
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
+            }
+
+            string IEnumerator<string>.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return this.$current;
+                }
+            }
+
+            object IEnumerator.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return this.$current;
+                }
+            }
+        }
+    }
+}
+

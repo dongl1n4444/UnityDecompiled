@@ -1,48 +1,49 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[Obsolete("iPhone class is deprecated. Please use iOS.Device instead (UnityUpgradable) -> UnityEngine.iOS.Device", true)]
-	public sealed class iPhone
-	{
-		public static iPhoneGeneration generation
-		{
-			get
-			{
-				return iPhoneGeneration.Unknown;
-			}
-		}
+    using System;
 
-		public static string vendorIdentifier
-		{
-			get
-			{
-				return null;
-			}
-		}
+    [Obsolete("iPhone class is deprecated. Please use iOS.Device instead (UnityUpgradable) -> UnityEngine.iOS.Device", true)]
+    public sealed class iPhone
+    {
+        public static void ResetNoBackupFlag(string path)
+        {
+        }
 
-		public static string advertisingIdentifier
-		{
-			get
-			{
-				return null;
-			}
-		}
+        public static void SetNoBackupFlag(string path)
+        {
+        }
 
-		public static bool advertisingTrackingEnabled
-		{
-			get
-			{
-				return false;
-			}
-		}
+        public static string advertisingIdentifier
+        {
+            get
+            {
+                return null;
+            }
+        }
 
-		public static void SetNoBackupFlag(string path)
-		{
-		}
+        public static bool advertisingTrackingEnabled
+        {
+            get
+            {
+                return false;
+            }
+        }
 
-		public static void ResetNoBackupFlag(string path)
-		{
-		}
-	}
+        public static iPhoneGeneration generation
+        {
+            get
+            {
+                return iPhoneGeneration.Unknown;
+            }
+        }
+
+        public static string vendorIdentifier
+        {
+            get
+            {
+                return null;
+            }
+        }
+    }
 }
+

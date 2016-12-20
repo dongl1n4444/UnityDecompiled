@@ -1,109 +1,105 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal class AndroidReflection
-	{
-		private const string RELECTION_HELPER_CLASS_NAME = "com/unity3d/player/ReflectionHelper";
+    using System;
 
-		private static IntPtr s_ReflectionHelperClass = AndroidJNI.NewGlobalRef(AndroidJNISafe.FindClass("com/unity3d/player/ReflectionHelper"));
+    internal class AndroidReflection
+    {
+        private const string RELECTION_HELPER_CLASS_NAME = "com/unity3d/player/ReflectionHelper";
+        private static IntPtr s_ReflectionHelperClass = AndroidJNI.NewGlobalRef(AndroidJNISafe.FindClass("com/unity3d/player/ReflectionHelper"));
+        private static IntPtr s_ReflectionHelperGetConstructorID = GetStaticMethodID("com/unity3d/player/ReflectionHelper", "getConstructorID", "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/reflect/Constructor;");
+        private static IntPtr s_ReflectionHelperGetFieldID = GetStaticMethodID("com/unity3d/player/ReflectionHelper", "getFieldID", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/reflect/Field;");
+        private static IntPtr s_ReflectionHelperGetMethodID = GetStaticMethodID("com/unity3d/player/ReflectionHelper", "getMethodID", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/reflect/Method;");
+        private static IntPtr s_ReflectionHelperNewProxyInstance = GetStaticMethodID("com/unity3d/player/ReflectionHelper", "newProxyInstance", "(ILjava/lang/Class;)Ljava/lang/Object;");
 
-		private static IntPtr s_ReflectionHelperGetConstructorID = AndroidReflection.GetStaticMethodID("com/unity3d/player/ReflectionHelper", "getConstructorID", "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/reflect/Constructor;");
+        public static IntPtr GetConstructorMember(IntPtr jclass, string signature)
+        {
+            IntPtr ptr;
+            jvalue[] args = new jvalue[2];
+            try
+            {
+                args[0].l = jclass;
+                args[1].l = AndroidJNISafe.NewStringUTF(signature);
+                ptr = AndroidJNISafe.CallStaticObjectMethod(s_ReflectionHelperClass, s_ReflectionHelperGetConstructorID, args);
+            }
+            finally
+            {
+                AndroidJNISafe.DeleteLocalRef(args[1].l);
+            }
+            return ptr;
+        }
 
-		private static IntPtr s_ReflectionHelperGetMethodID = AndroidReflection.GetStaticMethodID("com/unity3d/player/ReflectionHelper", "getMethodID", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/reflect/Method;");
+        public static IntPtr GetFieldMember(IntPtr jclass, string fieldName, string signature, bool isStatic)
+        {
+            IntPtr ptr;
+            jvalue[] args = new jvalue[4];
+            try
+            {
+                args[0].l = jclass;
+                args[1].l = AndroidJNISafe.NewStringUTF(fieldName);
+                args[2].l = AndroidJNISafe.NewStringUTF(signature);
+                args[3].z = isStatic;
+                ptr = AndroidJNISafe.CallStaticObjectMethod(s_ReflectionHelperClass, s_ReflectionHelperGetFieldID, args);
+            }
+            finally
+            {
+                AndroidJNISafe.DeleteLocalRef(args[1].l);
+                AndroidJNISafe.DeleteLocalRef(args[2].l);
+            }
+            return ptr;
+        }
 
-		private static IntPtr s_ReflectionHelperGetFieldID = AndroidReflection.GetStaticMethodID("com/unity3d/player/ReflectionHelper", "getFieldID", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/reflect/Field;");
+        public static IntPtr GetMethodMember(IntPtr jclass, string methodName, string signature, bool isStatic)
+        {
+            IntPtr ptr;
+            jvalue[] args = new jvalue[4];
+            try
+            {
+                args[0].l = jclass;
+                args[1].l = AndroidJNISafe.NewStringUTF(methodName);
+                args[2].l = AndroidJNISafe.NewStringUTF(signature);
+                args[3].z = isStatic;
+                ptr = AndroidJNISafe.CallStaticObjectMethod(s_ReflectionHelperClass, s_ReflectionHelperGetMethodID, args);
+            }
+            finally
+            {
+                AndroidJNISafe.DeleteLocalRef(args[1].l);
+                AndroidJNISafe.DeleteLocalRef(args[2].l);
+            }
+            return ptr;
+        }
 
-		private static IntPtr s_ReflectionHelperNewProxyInstance = AndroidReflection.GetStaticMethodID("com/unity3d/player/ReflectionHelper", "newProxyInstance", "(ILjava/lang/Class;)Ljava/lang/Object;");
+        private static IntPtr GetStaticMethodID(string clazz, string methodName, string signature)
+        {
+            IntPtr ptr2;
+            IntPtr ptr = AndroidJNISafe.FindClass(clazz);
+            try
+            {
+                ptr2 = AndroidJNISafe.GetStaticMethodID(ptr, methodName, signature);
+            }
+            finally
+            {
+                AndroidJNISafe.DeleteLocalRef(ptr);
+            }
+            return ptr2;
+        }
 
-		public static bool IsPrimitive(Type t)
-		{
-			return t.IsPrimitive;
-		}
+        public static bool IsAssignableFrom(System.Type t, System.Type from)
+        {
+            return t.IsAssignableFrom(from);
+        }
 
-		public static bool IsAssignableFrom(Type t, Type from)
-		{
-			return t.IsAssignableFrom(from);
-		}
+        public static bool IsPrimitive(System.Type t)
+        {
+            return t.IsPrimitive;
+        }
 
-		private static IntPtr GetStaticMethodID(string clazz, string methodName, string signature)
-		{
-			IntPtr intPtr = AndroidJNISafe.FindClass(clazz);
-			IntPtr staticMethodID;
-			try
-			{
-				staticMethodID = AndroidJNISafe.GetStaticMethodID(intPtr, methodName, signature);
-			}
-			finally
-			{
-				AndroidJNISafe.DeleteLocalRef(intPtr);
-			}
-			return staticMethodID;
-		}
-
-		public static IntPtr GetConstructorMember(IntPtr jclass, string signature)
-		{
-			jvalue[] array = new jvalue[2];
-			IntPtr result;
-			try
-			{
-				array[0].l = jclass;
-				array[1].l = AndroidJNISafe.NewStringUTF(signature);
-				result = AndroidJNISafe.CallStaticObjectMethod(AndroidReflection.s_ReflectionHelperClass, AndroidReflection.s_ReflectionHelperGetConstructorID, array);
-			}
-			finally
-			{
-				AndroidJNISafe.DeleteLocalRef(array[1].l);
-			}
-			return result;
-		}
-
-		public static IntPtr GetMethodMember(IntPtr jclass, string methodName, string signature, bool isStatic)
-		{
-			jvalue[] array = new jvalue[4];
-			IntPtr result;
-			try
-			{
-				array[0].l = jclass;
-				array[1].l = AndroidJNISafe.NewStringUTF(methodName);
-				array[2].l = AndroidJNISafe.NewStringUTF(signature);
-				array[3].z = isStatic;
-				result = AndroidJNISafe.CallStaticObjectMethod(AndroidReflection.s_ReflectionHelperClass, AndroidReflection.s_ReflectionHelperGetMethodID, array);
-			}
-			finally
-			{
-				AndroidJNISafe.DeleteLocalRef(array[1].l);
-				AndroidJNISafe.DeleteLocalRef(array[2].l);
-			}
-			return result;
-		}
-
-		public static IntPtr GetFieldMember(IntPtr jclass, string fieldName, string signature, bool isStatic)
-		{
-			jvalue[] array = new jvalue[4];
-			IntPtr result;
-			try
-			{
-				array[0].l = jclass;
-				array[1].l = AndroidJNISafe.NewStringUTF(fieldName);
-				array[2].l = AndroidJNISafe.NewStringUTF(signature);
-				array[3].z = isStatic;
-				result = AndroidJNISafe.CallStaticObjectMethod(AndroidReflection.s_ReflectionHelperClass, AndroidReflection.s_ReflectionHelperGetFieldID, array);
-			}
-			finally
-			{
-				AndroidJNISafe.DeleteLocalRef(array[1].l);
-				AndroidJNISafe.DeleteLocalRef(array[2].l);
-			}
-			return result;
-		}
-
-		public static IntPtr NewProxyInstance(int delegateHandle, IntPtr interfaze)
-		{
-			jvalue[] array = new jvalue[2];
-			array[0].i = delegateHandle;
-			array[1].l = interfaze;
-			return AndroidJNISafe.CallStaticObjectMethod(AndroidReflection.s_ReflectionHelperClass, AndroidReflection.s_ReflectionHelperNewProxyInstance, array);
-		}
-	}
+        public static IntPtr NewProxyInstance(int delegateHandle, IntPtr interfaze)
+        {
+            jvalue[] args = new jvalue[2];
+            args[0].i = delegateHandle;
+            args[1].l = interfaze;
+            return AndroidJNISafe.CallStaticObjectMethod(s_ReflectionHelperClass, s_ReflectionHelperNewProxyInstance, args);
+        }
+    }
 }
+

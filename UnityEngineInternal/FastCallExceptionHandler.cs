@@ -1,6 +1,8 @@
-using System;
-
-namespace UnityEngineInternal
+﻿namespace UnityEngineInternal
 {
-	public delegate void FastCallExceptionHandler(Exception ex);
+    using System;
+    using System.Runtime.CompilerServices;
+
+    public delegate void FastCallExceptionHandler(Exception ex);
 }
+

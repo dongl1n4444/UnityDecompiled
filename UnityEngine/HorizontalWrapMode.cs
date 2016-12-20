@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum HorizontalWrapMode
-	{
-		Wrap,
-		Overflow
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Wrapping modes for text that reaches the horizontal boundary.</para>
+    /// </summary>
+    public enum HorizontalWrapMode
+    {
+        Wrap,
+        Overflow
+    }
 }
+

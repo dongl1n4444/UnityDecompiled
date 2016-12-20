@@ -1,16 +1,17 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum LookDevOperationType
-	{
-		None,
-		GizmoTranslation,
-		GizmoRotationZone1,
-		GizmoRotationZone2,
-		GizmoAll,
-		BlendFactor,
-		RotateLight,
-		RotateEnvironment
-	}
+    using System;
+
+    internal enum LookDevOperationType
+    {
+        None,
+        GizmoTranslation,
+        GizmoRotationZone1,
+        GizmoRotationZone2,
+        GizmoAll,
+        BlendFactor,
+        RotateLight,
+        RotateEnvironment
+    }
 }
+

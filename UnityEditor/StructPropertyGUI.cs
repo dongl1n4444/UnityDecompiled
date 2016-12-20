@@ -1,35 +1,36 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class StructPropertyGUI
-	{
-		internal static void GenericStruct(Rect position, SerializedProperty property)
-		{
-			GUI.Label(EditorGUI.IndentedRect(position), property.displayName, EditorStyles.label);
-			position.y += 16f;
-			StructPropertyGUI.DoChildren(position, property);
-		}
+    using System;
+    using UnityEngine;
 
-		private static void DoChildren(Rect position, SerializedProperty property)
-		{
-			position.height = 16f;
-			EditorGUI.indentLevel++;
-			SerializedProperty serializedProperty = property.Copy();
-			SerializedProperty endProperty = serializedProperty.GetEndProperty();
-			serializedProperty.NextVisible(true);
-			while (!SerializedProperty.EqualContents(serializedProperty, endProperty))
-			{
-				EditorGUI.PropertyField(position, serializedProperty);
-				position.y += 16f;
-				if (!serializedProperty.NextVisible(false))
-				{
-					break;
-				}
-			}
-			EditorGUI.indentLevel--;
-			EditorGUILayout.Space();
-		}
-	}
+    internal class StructPropertyGUI
+    {
+        private static void DoChildren(Rect position, SerializedProperty property)
+        {
+            position.height = 16f;
+            EditorGUI.indentLevel++;
+            SerializedProperty x = property.Copy();
+            SerializedProperty endProperty = x.GetEndProperty();
+            x.NextVisible(true);
+            while (!SerializedProperty.EqualContents(x, endProperty))
+            {
+                EditorGUI.PropertyField(position, x);
+                position.y += 16f;
+                if (!x.NextVisible(false))
+                {
+                    break;
+                }
+            }
+            EditorGUI.indentLevel--;
+            EditorGUILayout.Space();
+        }
+
+        internal static void GenericStruct(Rect position, SerializedProperty property)
+        {
+            GUI.Label(EditorGUI.IndentedRect(position), property.displayName, EditorStyles.label);
+            position.y += 16f;
+            DoChildren(position, property);
+        }
+    }
 }
+

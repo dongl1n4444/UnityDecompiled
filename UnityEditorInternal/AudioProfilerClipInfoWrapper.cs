@@ -1,17 +1,17 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AudioProfilerClipInfoWrapper
-	{
-		public AudioProfilerClipInfo info;
+    using System;
 
-		public string assetName;
+    internal class AudioProfilerClipInfoWrapper
+    {
+        public string assetName;
+        public AudioProfilerClipInfo info;
 
-		public AudioProfilerClipInfoWrapper(AudioProfilerClipInfo info, string assetName)
-		{
-			this.info = info;
-			this.assetName = assetName;
-		}
-	}
+        public AudioProfilerClipInfoWrapper(AudioProfilerClipInfo info, string assetName)
+        {
+            this.info = info;
+            this.assetName = assetName;
+        }
+    }
 }
+

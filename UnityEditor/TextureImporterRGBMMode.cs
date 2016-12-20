@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum TextureImporterRGBMMode
-	{
-		Auto,
-		On,
-		Off,
-		Encoded
-	}
+    using System;
+
+    /// <summary>
+    /// <para>RGBM encoding mode for HDR textures in TextureImporter.</para>
+    /// </summary>
+    public enum TextureImporterRGBMMode
+    {
+        Auto,
+        On,
+        Off,
+        Encoded
+    }
 }
+

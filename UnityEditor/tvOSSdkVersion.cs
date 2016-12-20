@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum tvOSSdkVersion
-	{
-		Device,
-		Simulator
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Supported tvOS SDK versions.</para>
+    /// </summary>
+    public enum tvOSSdkVersion
+    {
+        Device,
+        Simulator
+    }
 }
+

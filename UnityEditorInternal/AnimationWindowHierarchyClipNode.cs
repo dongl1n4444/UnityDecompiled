@@ -1,12 +1,13 @@
-using System;
-using UnityEditor.IMGUI.Controls;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AnimationWindowHierarchyClipNode : AnimationWindowHierarchyNode
-	{
-		public AnimationWindowHierarchyClipNode(TreeViewItem parent, int setId, string name) : base(setId, (parent == null) ? -1 : (parent.depth + 1), parent, null, null, null, name)
-		{
-		}
-	}
+    using System;
+    using UnityEditor.IMGUI.Controls;
+
+    internal class AnimationWindowHierarchyClipNode : AnimationWindowHierarchyNode
+    {
+        public AnimationWindowHierarchyClipNode(TreeViewItem parent, int setId, string name) : base(setId, (parent == null) ? -1 : (parent.depth + 1), parent, null, null, null, name)
+        {
+        }
+    }
 }
+

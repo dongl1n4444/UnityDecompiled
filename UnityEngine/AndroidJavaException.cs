@@ -1,22 +1,23 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class AndroidJavaException : Exception
-	{
-		private string mJavaStackTrace;
+    using System;
 
-		public override string StackTrace
-		{
-			get
-			{
-				return this.mJavaStackTrace + base.StackTrace;
-			}
-		}
+    public sealed class AndroidJavaException : Exception
+    {
+        private string mJavaStackTrace;
 
-		internal AndroidJavaException(string message, string javaStackTrace) : base(message)
-		{
-			this.mJavaStackTrace = javaStackTrace;
-		}
-	}
+        internal AndroidJavaException(string message, string javaStackTrace) : base(message)
+        {
+            this.mJavaStackTrace = javaStackTrace;
+        }
+
+        public override string StackTrace
+        {
+            get
+            {
+                return (this.mJavaStackTrace + base.StackTrace);
+            }
+        }
+    }
 }
+

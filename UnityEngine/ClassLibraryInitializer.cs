@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal static class ClassLibraryInitializer
-	{
-		private static void Init()
-		{
-			UnityLogWriter.Init();
-		}
-	}
+    using System;
+
+    internal static class ClassLibraryInitializer
+    {
+        private static void Init()
+        {
+            UnityLogWriter.Init();
+        }
+    }
 }
+

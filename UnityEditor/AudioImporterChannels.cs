@@ -1,12 +1,13 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Obsolete("Setting and getting import channels is not used anymore (use forceToMono instead)", true)]
-	public enum AudioImporterChannels
-	{
-		Automatic,
-		Mono,
-		Stereo
-	}
+    using System;
+
+    [Obsolete("Setting and getting import channels is not used anymore (use forceToMono instead)", true)]
+    public enum AudioImporterChannels
+    {
+        Automatic,
+        Mono,
+        Stereo
+    }
 }
+

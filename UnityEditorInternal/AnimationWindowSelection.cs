@@ -1,303 +1,301 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Serializable]
-	internal class AnimationWindowSelection
-	{
-		[NonSerialized]
-		public Action onSelectionChanged;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using UnityEngine;
 
-		[SerializeField]
-		private bool m_Locked = false;
+    [Serializable]
+    internal class AnimationWindowSelection
+    {
+        [CompilerGenerated]
+        private static Func<AnimationWindowSelectionItem, bool> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<AnimationWindowSelectionItem, bool> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Action <>f__am$cache2;
+        private bool m_BatchOperations = false;
+        private List<AnimationWindowCurve> m_CurvesCache = null;
+        [SerializeField]
+        private bool m_Locked = false;
+        [SerializeField]
+        private List<AnimationWindowSelectionItem> m_Selection = new List<AnimationWindowSelectionItem>();
+        private bool m_SelectionChanged = false;
+        [NonSerialized]
+        public Action onSelectionChanged;
 
-		[SerializeField]
-		private List<AnimationWindowSelectionItem> m_Selection = new List<AnimationWindowSelectionItem>();
+        public AnimationWindowSelection()
+        {
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = new Action(null, (IntPtr) <AnimationWindowSelection>m__2);
+            }
+            this.onSelectionChanged = (Action) Delegate.Combine(this.onSelectionChanged, <>f__am$cache2);
+        }
 
-		private bool m_BatchOperations = false;
+        [CompilerGenerated]
+        private static void <AnimationWindowSelection>m__2()
+        {
+        }
 
-		private bool m_SelectionChanged = false;
+        public void Add(AnimationWindowSelectionItem newItem)
+        {
+            if (!this.locked && !this.m_Selection.Contains(newItem))
+            {
+                this.m_Selection.Add(newItem);
+                this.Notify();
+            }
+        }
 
-		private List<AnimationWindowCurve> m_CurvesCache = null;
+        public void BeginOperations()
+        {
+            if (this.m_BatchOperations)
+            {
+                Debug.LogWarning("AnimationWindowSelection: Already inside a BeginOperations/EndOperations block");
+            }
+            else
+            {
+                this.m_BatchOperations = true;
+                this.m_SelectionChanged = false;
+            }
+        }
 
-		public int count
-		{
-			get
-			{
-				return this.m_Selection.Count;
-			}
-		}
+        public void Clear()
+        {
+            if (!this.locked && (this.m_Selection.Count > 0))
+            {
+                foreach (AnimationWindowSelectionItem item in this.m_Selection)
+                {
+                    Object.DestroyImmediate(item);
+                }
+                this.m_Selection.Clear();
+                this.Notify();
+            }
+        }
 
-		public List<AnimationWindowCurve> curves
-		{
-			get
-			{
-				if (this.m_CurvesCache == null)
-				{
-					this.m_CurvesCache = new List<AnimationWindowCurve>();
-					foreach (AnimationWindowSelectionItem current in this.m_Selection)
-					{
-						this.m_CurvesCache.AddRange(current.curves);
-					}
-				}
-				return this.m_CurvesCache;
-			}
-		}
+        public void ClearCache()
+        {
+            this.m_CurvesCache = null;
+        }
 
-		public bool locked
-		{
-			get
-			{
-				return this.m_Locked;
-			}
-			set
-			{
-				this.m_Locked = value;
-			}
-		}
+        public void EndOperations()
+        {
+            if (this.m_BatchOperations)
+            {
+                if (this.m_SelectionChanged)
+                {
+                    this.onSelectionChanged.Invoke();
+                }
+                this.m_SelectionChanged = false;
+                this.m_BatchOperations = false;
+            }
+        }
 
-		public bool disabled
-		{
-			get
-			{
-				bool result;
-				if (this.m_Selection.Count > 0)
-				{
-					foreach (AnimationWindowSelectionItem current in this.m_Selection)
-					{
-						if (current.animationClip != null)
-						{
-							result = false;
-							return result;
-						}
-					}
-				}
-				result = true;
-				return result;
-			}
-		}
+        public bool Exists(Predicate<AnimationWindowSelectionItem> predicate)
+        {
+            return this.m_Selection.Exists(predicate);
+        }
 
-		public bool canRecord
-		{
-			get
-			{
-				bool result;
-				if (this.m_Selection.Count > 0)
-				{
-					result = !this.m_Selection.Any((AnimationWindowSelectionItem item) => !item.canRecord);
-				}
-				else
-				{
-					result = false;
-				}
-				return result;
-			}
-		}
+        public bool Exists(AnimationWindowSelectionItem itemToFind)
+        {
+            return this.m_Selection.Contains(itemToFind);
+        }
 
-		public bool canAddCurves
-		{
-			get
-			{
-				bool result;
-				if (this.m_Selection.Count > 0)
-				{
-					result = !this.m_Selection.Any((AnimationWindowSelectionItem item) => !item.canAddCurves);
-				}
-				else
-				{
-					result = false;
-				}
-				return result;
-			}
-		}
+        public AnimationWindowSelectionItem Find(Predicate<AnimationWindowSelectionItem> predicate)
+        {
+            return this.m_Selection.Find(predicate);
+        }
 
-		public AnimationWindowSelection()
-		{
-			this.onSelectionChanged = (Action)Delegate.Combine(this.onSelectionChanged, new Action(delegate
-			{
-			}));
-		}
+        public AnimationWindowSelectionItem First()
+        {
+            return Enumerable.First<AnimationWindowSelectionItem>(this.m_Selection);
+        }
 
-		public void BeginOperations()
-		{
-			if (this.m_BatchOperations)
-			{
-				Debug.LogWarning("AnimationWindowSelection: Already inside a BeginOperations/EndOperations block");
-			}
-			else
-			{
-				this.m_BatchOperations = true;
-				this.m_SelectionChanged = false;
-			}
-		}
+        public int GetRefreshHash()
+        {
+            int num = 0;
+            foreach (AnimationWindowSelectionItem item in this.m_Selection)
+            {
+                num ^= item.GetRefreshHash();
+            }
+            return num;
+        }
 
-		public void EndOperations()
-		{
-			if (this.m_BatchOperations)
-			{
-				if (this.m_SelectionChanged)
-				{
-					this.onSelectionChanged();
-				}
-				this.m_SelectionChanged = false;
-				this.m_BatchOperations = false;
-			}
-		}
+        public void Notify()
+        {
+            if (this.m_BatchOperations)
+            {
+                this.m_SelectionChanged = true;
+            }
+            else
+            {
+                this.onSelectionChanged.Invoke();
+            }
+        }
 
-		public void Notify()
-		{
-			if (this.m_BatchOperations)
-			{
-				this.m_SelectionChanged = true;
-			}
-			else
-			{
-				this.onSelectionChanged();
-			}
-		}
+        public void RangeAdd(AnimationWindowSelectionItem[] newItemArray)
+        {
+            if (!this.locked)
+            {
+                bool flag = false;
+                foreach (AnimationWindowSelectionItem item in newItemArray)
+                {
+                    if (!this.m_Selection.Contains(item))
+                    {
+                        this.m_Selection.Add(item);
+                        flag = true;
+                    }
+                }
+                if (flag)
+                {
+                    this.Notify();
+                }
+            }
+        }
 
-		public void Set(AnimationWindowSelectionItem newItem)
-		{
-			if (!this.locked)
-			{
-				this.BeginOperations();
-				this.Clear();
-				this.Add(newItem);
-				this.EndOperations();
-			}
-		}
+        public void Refresh()
+        {
+            this.ClearCache();
+            foreach (AnimationWindowSelectionItem item in this.m_Selection)
+            {
+                item.ClearCache();
+            }
+        }
 
-		public void Add(AnimationWindowSelectionItem newItem)
-		{
-			if (!this.locked)
-			{
-				if (!this.m_Selection.Contains(newItem))
-				{
-					this.m_Selection.Add(newItem);
-					this.Notify();
-				}
-			}
-		}
+        public void Set(AnimationWindowSelectionItem newItem)
+        {
+            if (!this.locked)
+            {
+                this.BeginOperations();
+                this.Clear();
+                this.Add(newItem);
+                this.EndOperations();
+            }
+        }
 
-		public void RangeAdd(AnimationWindowSelectionItem[] newItemArray)
-		{
-			if (!this.locked)
-			{
-				bool flag = false;
-				for (int i = 0; i < newItemArray.Length; i++)
-				{
-					AnimationWindowSelectionItem item = newItemArray[i];
-					if (!this.m_Selection.Contains(item))
-					{
-						this.m_Selection.Add(item);
-						flag = true;
-					}
-				}
-				if (flag)
-				{
-					this.Notify();
-				}
-			}
-		}
+        public void Synchronize()
+        {
+            if (this.m_Selection.Count > 0)
+            {
+                foreach (AnimationWindowSelectionItem item in this.m_Selection)
+                {
+                    item.Synchronize();
+                }
+            }
+            if (this.disabled)
+            {
+                this.m_Locked = false;
+            }
+        }
 
-		public void UpdateClip(AnimationWindowSelectionItem itemToUpdate, AnimationClip newClip)
-		{
-			if (this.m_Selection.Contains(itemToUpdate))
-			{
-				itemToUpdate.animationClip = newClip;
-				this.Notify();
-			}
-		}
+        public AnimationWindowSelectionItem[] ToArray()
+        {
+            return this.m_Selection.ToArray();
+        }
 
-		public void UpdateTimeOffset(AnimationWindowSelectionItem itemToUpdate, float timeOffset)
-		{
-			if (this.m_Selection.Contains(itemToUpdate))
-			{
-				itemToUpdate.timeOffset = timeOffset;
-			}
-		}
+        public void UpdateClip(AnimationWindowSelectionItem itemToUpdate, AnimationClip newClip)
+        {
+            if (this.m_Selection.Contains(itemToUpdate))
+            {
+                itemToUpdate.animationClip = newClip;
+                this.Notify();
+            }
+        }
 
-		public bool Exists(AnimationWindowSelectionItem itemToFind)
-		{
-			return this.m_Selection.Contains(itemToFind);
-		}
+        public void UpdateTimeOffset(AnimationWindowSelectionItem itemToUpdate, float timeOffset)
+        {
+            if (this.m_Selection.Contains(itemToUpdate))
+            {
+                itemToUpdate.timeOffset = timeOffset;
+            }
+        }
 
-		public bool Exists(Predicate<AnimationWindowSelectionItem> predicate)
-		{
-			return this.m_Selection.Exists(predicate);
-		}
+        public bool canAddCurves
+        {
+            get
+            {
+                if (this.m_Selection.Count > 0)
+                {
+                    if (<>f__am$cache1 == null)
+                    {
+                        <>f__am$cache1 = new Func<AnimationWindowSelectionItem, bool>(null, (IntPtr) <get_canAddCurves>m__1);
+                    }
+                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache1);
+                }
+                return false;
+            }
+        }
 
-		public AnimationWindowSelectionItem Find(Predicate<AnimationWindowSelectionItem> predicate)
-		{
-			return this.m_Selection.Find(predicate);
-		}
+        public bool canRecord
+        {
+            get
+            {
+                if (this.m_Selection.Count > 0)
+                {
+                    if (<>f__am$cache0 == null)
+                    {
+                        <>f__am$cache0 = new Func<AnimationWindowSelectionItem, bool>(null, (IntPtr) <get_canRecord>m__0);
+                    }
+                    return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache0);
+                }
+                return false;
+            }
+        }
 
-		public AnimationWindowSelectionItem First()
-		{
-			return this.m_Selection.First<AnimationWindowSelectionItem>();
-		}
+        public int count
+        {
+            get
+            {
+                return this.m_Selection.Count;
+            }
+        }
 
-		public int GetRefreshHash()
-		{
-			int num = 0;
-			foreach (AnimationWindowSelectionItem current in this.m_Selection)
-			{
-				num ^= current.GetRefreshHash();
-			}
-			return num;
-		}
+        public List<AnimationWindowCurve> curves
+        {
+            get
+            {
+                if (this.m_CurvesCache == null)
+                {
+                    this.m_CurvesCache = new List<AnimationWindowCurve>();
+                    foreach (AnimationWindowSelectionItem item in this.m_Selection)
+                    {
+                        this.m_CurvesCache.AddRange(item.curves);
+                    }
+                }
+                return this.m_CurvesCache;
+            }
+        }
 
-		public void Refresh()
-		{
-			this.ClearCache();
-			foreach (AnimationWindowSelectionItem current in this.m_Selection)
-			{
-				current.ClearCache();
-			}
-		}
+        public bool disabled
+        {
+            get
+            {
+                if (this.m_Selection.Count > 0)
+                {
+                    foreach (AnimationWindowSelectionItem item in this.m_Selection)
+                    {
+                        if (item.animationClip != null)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
 
-		public AnimationWindowSelectionItem[] ToArray()
-		{
-			return this.m_Selection.ToArray();
-		}
-
-		public void Clear()
-		{
-			if (!this.locked)
-			{
-				if (this.m_Selection.Count > 0)
-				{
-					foreach (AnimationWindowSelectionItem current in this.m_Selection)
-					{
-						UnityEngine.Object.DestroyImmediate(current);
-					}
-					this.m_Selection.Clear();
-					this.Notify();
-				}
-			}
-		}
-
-		public void ClearCache()
-		{
-			this.m_CurvesCache = null;
-		}
-
-		public void Synchronize()
-		{
-			if (this.m_Selection.Count > 0)
-			{
-				foreach (AnimationWindowSelectionItem current in this.m_Selection)
-				{
-					current.Synchronize();
-				}
-			}
-			if (this.disabled)
-			{
-				this.m_Locked = false;
-			}
-		}
-	}
+        public bool locked
+        {
+            get
+            {
+                return this.m_Locked;
+            }
+            set
+            {
+                this.m_Locked = value;
+            }
+        }
+    }
 }
+

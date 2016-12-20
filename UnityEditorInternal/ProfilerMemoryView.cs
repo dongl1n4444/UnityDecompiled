@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	public enum ProfilerMemoryView
-	{
-		Simple,
-		Detailed
-	}
+    using System;
+
+    public enum ProfilerMemoryView
+    {
+        Simple,
+        Detailed
+    }
 }
+

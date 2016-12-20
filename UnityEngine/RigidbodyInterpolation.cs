@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum RigidbodyInterpolation
-	{
-		None,
-		Interpolate,
-		Extrapolate
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Rigidbody interpolation mode.</para>
+    /// </summary>
+    public enum RigidbodyInterpolation
+    {
+        None,
+        Interpolate,
+        Extrapolate
+    }
 }
+

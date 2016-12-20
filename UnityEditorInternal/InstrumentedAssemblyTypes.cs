@@ -1,15 +1,16 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Flags]
-	public enum InstrumentedAssemblyTypes
-	{
-		None = 0,
-		System = 1,
-		Unity = 2,
-		Plugins = 4,
-		Script = 8,
-		All = 2147483647
-	}
+    using System;
+
+    [Flags]
+    public enum InstrumentedAssemblyTypes
+    {
+        All = 0x7fffffff,
+        None = 0,
+        Plugins = 4,
+        Script = 8,
+        System = 1,
+        Unity = 2
+    }
 }
+

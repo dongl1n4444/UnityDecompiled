@@ -1,19 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IBaseInspectView
-	{
-		void UpdateInstructions();
+    using System;
 
-		void DrawInstructionList();
-
-		void DrawSelectedInstructionDetails();
-
-		void Unselect();
-
-		void SelectRow(int index);
-
-		void ShowOverlay();
-	}
+    internal interface IBaseInspectView
+    {
+        void DrawInstructionList();
+        void DrawSelectedInstructionDetails();
+        void SelectRow(int index);
+        void ShowOverlay();
+        void Unselect();
+        void UpdateInstructions();
+    }
 }
+

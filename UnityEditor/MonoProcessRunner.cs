@@ -1,73 +1,79 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Threading;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class MonoProcessRunner
-	{
-		public StringBuilder Output = new StringBuilder("");
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Text;
+    using System.Threading;
 
-		public StringBuilder Error = new StringBuilder("");
+    internal class MonoProcessRunner
+    {
+        public StringBuilder Error = new StringBuilder("");
+        public StringBuilder Output = new StringBuilder("");
 
-		public bool Run(Process process)
-		{
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardError = true;
-			Thread thread = new Thread(new ParameterizedThreadStart(this.ReadOutput));
-			Thread thread2 = new Thread(new ParameterizedThreadStart(this.ReadErrors));
-			process.Start();
-			thread.Start(process);
-			thread2.Start(process);
-			bool result = process.WaitForExit(600000);
-			DateTime now = DateTime.Now;
-			while ((thread.IsAlive || thread2.IsAlive) && (DateTime.Now - now).TotalMilliseconds < 5.0)
-			{
-				Thread.Sleep(0);
-			}
-			if (thread.IsAlive)
-			{
-				thread.Abort();
-			}
-			if (thread2.IsAlive)
-			{
-				thread2.Abort();
-			}
-			thread.Join();
-			thread2.Join();
-			return result;
-		}
+        private void ReadErrors(object process)
+        {
+            Process process2 = process as Process;
+            try
+            {
+                using (StreamReader reader = process2.StandardError)
+                {
+                    this.Error.Append(reader.ReadToEnd());
+                }
+            }
+            catch (ThreadAbortException)
+            {
+            }
+        }
 
-		private void ReadOutput(object process)
-		{
-			Process process2 = process as Process;
-			try
-			{
-				using (StreamReader standardOutput = process2.StandardOutput)
-				{
-					this.Output.Append(standardOutput.ReadToEnd());
-				}
-			}
-			catch (ThreadAbortException)
-			{
-			}
-		}
+        private void ReadOutput(object process)
+        {
+            Process process2 = process as Process;
+            try
+            {
+                using (StreamReader reader = process2.StandardOutput)
+                {
+                    this.Output.Append(reader.ReadToEnd());
+                }
+            }
+            catch (ThreadAbortException)
+            {
+            }
+        }
 
-		private void ReadErrors(object process)
-		{
-			Process process2 = process as Process;
-			try
-			{
-				using (StreamReader standardError = process2.StandardError)
-				{
-					this.Error.Append(standardError.ReadToEnd());
-				}
-			}
-			catch (ThreadAbortException)
-			{
-			}
-		}
-	}
+        public bool Run(Process process)
+        {
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            Thread thread = new Thread(new ParameterizedThreadStart(this.ReadOutput));
+            Thread thread2 = new Thread(new ParameterizedThreadStart(this.ReadErrors));
+            process.Start();
+            thread.Start(process);
+            thread2.Start(process);
+            bool flag = process.WaitForExit(0x927c0);
+            DateTime now = DateTime.Now;
+        Label_0071:
+            if (thread.IsAlive || thread2.IsAlive)
+            {
+                TimeSpan span = (TimeSpan) (DateTime.Now - now);
+                if (span.TotalMilliseconds < 5.0)
+                {
+                    Thread.Sleep(0);
+                    goto Label_0071;
+                }
+            }
+            if (thread.IsAlive)
+            {
+                thread.Abort();
+            }
+            if (thread2.IsAlive)
+            {
+                thread2.Abort();
+            }
+            thread.Join();
+            thread2.Join();
+            return flag;
+        }
+    }
 }
+

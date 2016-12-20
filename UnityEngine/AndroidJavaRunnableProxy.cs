@@ -1,19 +1,20 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal class AndroidJavaRunnableProxy : AndroidJavaProxy
-	{
-		private AndroidJavaRunnable mRunnable;
+    using System;
 
-		public AndroidJavaRunnableProxy(AndroidJavaRunnable runnable) : base("java/lang/Runnable")
-		{
-			this.mRunnable = runnable;
-		}
+    internal class AndroidJavaRunnableProxy : AndroidJavaProxy
+    {
+        private AndroidJavaRunnable mRunnable;
 
-		public void run()
-		{
-			this.mRunnable();
-		}
-	}
+        public AndroidJavaRunnableProxy(AndroidJavaRunnable runnable) : base("java/lang/Runnable")
+        {
+            this.mRunnable = runnable;
+        }
+
+        public void run()
+        {
+            this.mRunnable();
+        }
+    }
 }
+

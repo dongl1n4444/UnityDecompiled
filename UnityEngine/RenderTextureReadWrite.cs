@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum RenderTextureReadWrite
-	{
-		Default,
-		Linear,
-		sRGB
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Color space conversion mode of a RenderTexture.</para>
+    /// </summary>
+    public enum RenderTextureReadWrite
+    {
+        Default,
+        Linear,
+        sRGB
+    }
 }
+

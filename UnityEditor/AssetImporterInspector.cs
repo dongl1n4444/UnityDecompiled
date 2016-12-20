@@ -1,287 +1,277 @@
-using System;
-using UnityEditorInternal;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal abstract class AssetImporterInspector : Editor
-	{
-		private ulong m_AssetTimeStamp = 0uL;
+    using System;
+    using UnityEditorInternal;
+    using UnityEngine;
 
-		private bool m_MightHaveModified = false;
+    internal abstract class AssetImporterInspector : Editor
+    {
+        private Editor m_AssetEditor;
+        private ulong m_AssetTimeStamp = 0L;
+        private bool m_MightHaveModified = false;
 
-		private Editor m_AssetEditor;
+        protected AssetImporterInspector()
+        {
+        }
 
-		internal virtual Editor assetEditor
-		{
-			get
-			{
-				return this.m_AssetEditor;
-			}
-			set
-			{
-				this.m_AssetEditor = value;
-			}
-		}
+        internal virtual void Apply()
+        {
+            base.serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
 
-		internal override string targetTitle
-		{
-			get
-			{
-				return string.Format("{0} Import Settings", (!(this.assetEditor == null)) ? this.assetEditor.targetTitle : string.Empty);
-			}
-		}
+        internal void ApplyAndImport()
+        {
+            this.Apply();
+            this.m_MightHaveModified = false;
+            ImportAssets(this.GetAssetPaths());
+            this.ResetValues();
+        }
 
-		internal override int referenceTargetIndex
-		{
-			get
-			{
-				return base.referenceTargetIndex;
-			}
-			set
-			{
-				base.referenceTargetIndex = value;
-				if (this.assetEditor != null)
-				{
-					this.assetEditor.referenceTargetIndex = value;
-				}
-			}
-		}
+        protected bool ApplyButton()
+        {
+            return this.ApplyButton("Apply");
+        }
 
-		internal override IPreviewable preview
-		{
-			get
-			{
-				IPreviewable result;
-				if (this.useAssetDrawPreview && this.assetEditor != null)
-				{
-					result = this.assetEditor;
-				}
-				else
-				{
-					result = base.preview;
-				}
-				return result;
-			}
-		}
+        protected bool ApplyButton(string buttonText)
+        {
+            if (GUILayout.Button(buttonText, new GUILayoutOption[0]))
+            {
+                this.ApplyAndImport();
+                return true;
+            }
+            return false;
+        }
 
-		protected virtual bool useAssetDrawPreview
-		{
-			get
-			{
-				return true;
-			}
-		}
+        protected void ApplyRevertGUI()
+        {
+            this.m_MightHaveModified = true;
+            EditorGUILayout.Space();
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.FlexibleSpace();
+            bool flag = false;
+            flag = this.ApplyRevertGUIButtons();
+            if (this.AssetWasUpdated() && (Event.current.type != EventType.Layout))
+            {
+                IPreviewable preview = this.preview;
+                if (preview != null)
+                {
+                    preview.ReloadPreviewInstances();
+                }
+                this.ResetTimeStamp();
+                this.ResetValues();
+                base.Repaint();
+            }
+            GUILayout.EndHorizontal();
+            if (flag)
+            {
+                GUIUtility.ExitGUI();
+            }
+        }
 
-		internal virtual bool showImportedObject
-		{
-			get
-			{
-				return true;
-			}
-		}
+        protected virtual bool ApplyRevertGUIButtons()
+        {
+            using (new EditorGUI.DisabledScope(!this.HasModified()))
+            {
+                this.RevertButton();
+                return this.ApplyButton();
+            }
+        }
 
-		internal override void OnHeaderIconGUI(Rect iconRect)
-		{
-			if (this.assetEditor != null)
-			{
-				this.assetEditor.OnHeaderIconGUI(iconRect);
-			}
-		}
+        internal bool AssetWasUpdated()
+        {
+            AssetImporter target = base.target as AssetImporter;
+            if (this.m_AssetTimeStamp == 0L)
+            {
+                this.ResetTimeStamp();
+            }
+            return ((target != null) && (this.m_AssetTimeStamp != target.assetTimeStamp));
+        }
 
-		internal override SerializedObject GetSerializedObjectInternal()
-		{
-			if (this.m_SerializedObject == null)
-			{
-				this.m_SerializedObject = SerializedObject.LoadFromCache(base.GetInstanceID());
-			}
-			if (this.m_SerializedObject == null)
-			{
-				this.m_SerializedObject = new SerializedObject(base.targets);
-			}
-			return this.m_SerializedObject;
-		}
+        internal virtual void Awake()
+        {
+            this.ResetTimeStamp();
+            this.ResetValues();
+        }
 
-		public virtual void OnDisable()
-		{
-			AssetImporter assetImporter = base.target as AssetImporter;
-			if (Unsupported.IsDestroyScriptableObject(this) && this.m_MightHaveModified && assetImporter != null && !InternalEditorUtility.ignoreInspectorChanges && this.HasModified() && !this.AssetWasUpdated())
-			{
-				string message = "Unapplied import settings for '" + assetImporter.assetPath + "'";
-				if (base.targets.Length > 1)
-				{
-					message = "Unapplied import settings for '" + base.targets.Length + "' files";
-				}
-				if (EditorUtility.DisplayDialog("Unapplied import settings", message, "Apply", "Revert"))
-				{
-					this.Apply();
-					this.m_MightHaveModified = false;
-					AssetImporterInspector.ImportAssets(this.GetAssetPaths());
-				}
-			}
-			if (this.m_SerializedObject != null && this.m_SerializedObject.hasModifiedProperties)
-			{
-				this.m_SerializedObject.Cache(base.GetInstanceID());
-				this.m_SerializedObject = null;
-			}
-		}
+        private string[] GetAssetPaths()
+        {
+            Object[] targets = base.targets;
+            string[] strArray = new string[targets.Length];
+            for (int i = 0; i < targets.Length; i++)
+            {
+                AssetImporter importer = targets[i] as AssetImporter;
+                strArray[i] = importer.assetPath;
+            }
+            return strArray;
+        }
 
-		internal virtual void Awake()
-		{
-			this.ResetTimeStamp();
-			this.ResetValues();
-		}
+        internal override SerializedObject GetSerializedObjectInternal()
+        {
+            if (base.m_SerializedObject == null)
+            {
+                base.m_SerializedObject = SerializedObject.LoadFromCache(base.GetInstanceID());
+            }
+            if (base.m_SerializedObject == null)
+            {
+                base.m_SerializedObject = new SerializedObject(base.targets);
+            }
+            return base.m_SerializedObject;
+        }
 
-		private string[] GetAssetPaths()
-		{
-			UnityEngine.Object[] targets = base.targets;
-			string[] array = new string[targets.Length];
-			for (int i = 0; i < targets.Length; i++)
-			{
-				AssetImporter assetImporter = targets[i] as AssetImporter;
-				array[i] = assetImporter.assetPath;
-			}
-			return array;
-		}
+        internal virtual bool HasModified()
+        {
+            return base.serializedObject.hasModifiedProperties;
+        }
 
-		internal virtual void ResetValues()
-		{
-			base.serializedObject.SetIsDifferentCacheDirty();
-			base.serializedObject.Update();
-		}
+        private static void ImportAssets(string[] paths)
+        {
+            foreach (string str in paths)
+            {
+                AssetDatabase.WriteImportSettingsIfDirty(str);
+            }
+            try
+            {
+                AssetDatabase.StartAssetEditing();
+                foreach (string str2 in paths)
+                {
+                    AssetDatabase.ImportAsset(str2);
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
+        }
 
-		internal virtual bool HasModified()
-		{
-			return base.serializedObject.hasModifiedProperties;
-		}
+        public virtual void OnDisable()
+        {
+            AssetImporter target = base.target as AssetImporter;
+            if (((Unsupported.IsDestroyScriptableObject(this) && this.m_MightHaveModified) && ((target != null) && !InternalEditorUtility.ignoreInspectorChanges)) && (this.HasModified() && !this.AssetWasUpdated()))
+            {
+                string message = "Unapplied import settings for '" + target.assetPath + "'";
+                if (base.targets.Length > 1)
+                {
+                    message = "Unapplied import settings for '" + base.targets.Length + "' files";
+                }
+                if (EditorUtility.DisplayDialog("Unapplied import settings", message, "Apply", "Revert"))
+                {
+                    this.Apply();
+                    this.m_MightHaveModified = false;
+                    ImportAssets(this.GetAssetPaths());
+                }
+            }
+            if ((base.m_SerializedObject != null) && base.m_SerializedObject.hasModifiedProperties)
+            {
+                base.m_SerializedObject.Cache(base.GetInstanceID());
+                base.m_SerializedObject = null;
+            }
+        }
 
-		internal virtual void Apply()
-		{
-			base.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-		}
+        internal override void OnHeaderIconGUI(Rect iconRect)
+        {
+            if (this.assetEditor != null)
+            {
+                this.assetEditor.OnHeaderIconGUI(iconRect);
+            }
+        }
 
-		internal bool AssetWasUpdated()
-		{
-			AssetImporter assetImporter = base.target as AssetImporter;
-			if (this.m_AssetTimeStamp == 0uL)
-			{
-				this.ResetTimeStamp();
-			}
-			return assetImporter != null && this.m_AssetTimeStamp != assetImporter.assetTimeStamp;
-		}
+        internal void ResetTimeStamp()
+        {
+            AssetImporter target = base.target as AssetImporter;
+            if (target != null)
+            {
+                this.m_AssetTimeStamp = target.assetTimeStamp;
+            }
+        }
 
-		internal void ResetTimeStamp()
-		{
-			AssetImporter assetImporter = base.target as AssetImporter;
-			if (assetImporter != null)
-			{
-				this.m_AssetTimeStamp = assetImporter.assetTimeStamp;
-			}
-		}
+        internal virtual void ResetValues()
+        {
+            base.serializedObject.SetIsDifferentCacheDirty();
+            base.serializedObject.Update();
+        }
 
-		internal void ApplyAndImport()
-		{
-			this.Apply();
-			this.m_MightHaveModified = false;
-			AssetImporterInspector.ImportAssets(this.GetAssetPaths());
-			this.ResetValues();
-		}
+        protected void RevertButton()
+        {
+            this.RevertButton("Revert");
+        }
 
-		private static void ImportAssets(string[] paths)
-		{
-			for (int i = 0; i < paths.Length; i++)
-			{
-				string path = paths[i];
-				AssetDatabase.WriteImportSettingsIfDirty(path);
-			}
-			try
-			{
-				AssetDatabase.StartAssetEditing();
-				for (int j = 0; j < paths.Length; j++)
-				{
-					string path2 = paths[j];
-					AssetDatabase.ImportAsset(path2);
-				}
-			}
-			finally
-			{
-				AssetDatabase.StopAssetEditing();
-			}
-		}
+        protected void RevertButton(string buttonText)
+        {
+            if (GUILayout.Button(buttonText, new GUILayoutOption[0]))
+            {
+                this.m_MightHaveModified = false;
+                this.ResetTimeStamp();
+                this.ResetValues();
+                if (this.HasModified())
+                {
+                    Debug.LogError("Importer reports modified values after reset.");
+                }
+            }
+        }
 
-		protected void RevertButton()
-		{
-			this.RevertButton("Revert");
-		}
+        internal virtual Editor assetEditor
+        {
+            get
+            {
+                return this.m_AssetEditor;
+            }
+            set
+            {
+                this.m_AssetEditor = value;
+            }
+        }
 
-		protected void RevertButton(string buttonText)
-		{
-			if (GUILayout.Button(buttonText, new GUILayoutOption[0]))
-			{
-				this.m_MightHaveModified = false;
-				this.ResetTimeStamp();
-				this.ResetValues();
-				if (this.HasModified())
-				{
-					Debug.LogError("Importer reports modified values after reset.");
-				}
-			}
-		}
+        internal override IPreviewable preview
+        {
+            get
+            {
+                if (this.useAssetDrawPreview && (this.assetEditor != null))
+                {
+                    return this.assetEditor;
+                }
+                return base.preview;
+            }
+        }
 
-		protected bool ApplyButton()
-		{
-			return this.ApplyButton("Apply");
-		}
+        internal override int referenceTargetIndex
+        {
+            get
+            {
+                return base.referenceTargetIndex;
+            }
+            set
+            {
+                base.referenceTargetIndex = value;
+                if (this.assetEditor != null)
+                {
+                    this.assetEditor.referenceTargetIndex = value;
+                }
+            }
+        }
 
-		protected bool ApplyButton(string buttonText)
-		{
-			bool result;
-			if (GUILayout.Button(buttonText, new GUILayoutOption[0]))
-			{
-				this.ApplyAndImport();
-				result = true;
-			}
-			else
-			{
-				result = false;
-			}
-			return result;
-		}
+        internal virtual bool showImportedObject
+        {
+            get
+            {
+                return true;
+            }
+        }
 
-		protected virtual bool ApplyRevertGUIButtons()
-		{
-			bool result;
-			using (new EditorGUI.DisabledScope(!this.HasModified()))
-			{
-				this.RevertButton();
-				result = this.ApplyButton();
-			}
-			return result;
-		}
+        internal override string targetTitle
+        {
+            get
+            {
+                return string.Format("{0} Import Settings", (this.assetEditor != null) ? this.assetEditor.targetTitle : string.Empty);
+            }
+        }
 
-		protected void ApplyRevertGUI()
-		{
-			this.m_MightHaveModified = true;
-			EditorGUILayout.Space();
-			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			GUILayout.FlexibleSpace();
-			bool flag = this.ApplyRevertGUIButtons();
-			if (this.AssetWasUpdated() && Event.current.type != EventType.Layout)
-			{
-				IPreviewable preview = this.preview;
-				if (preview != null)
-				{
-					preview.ReloadPreviewInstances();
-				}
-				this.ResetTimeStamp();
-				this.ResetValues();
-				base.Repaint();
-			}
-			GUILayout.EndHorizontal();
-			if (flag)
-			{
-				GUIUtility.ExitGUI();
-			}
-		}
-	}
+        protected virtual bool useAssetDrawPreview
+        {
+            get
+            {
+                return true;
+            }
+        }
+    }
 }
+

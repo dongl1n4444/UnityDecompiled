@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum TextureImporterCubemapConvolution
-	{
-		None,
-		Specular,
-		Diffuse
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Defines Cubemap convolution mode.</para>
+    /// </summary>
+    public enum TextureImporterCubemapConvolution
+    {
+        None,
+        Specular,
+        Diffuse
+    }
 }
+

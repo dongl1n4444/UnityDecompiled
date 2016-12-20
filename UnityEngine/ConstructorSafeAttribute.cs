@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
-	public class ConstructorSafeAttribute : Attribute
-	{
-	}
+    using System;
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple=false)]
+    public class ConstructorSafeAttribute : Attribute
+    {
+    }
 }
+

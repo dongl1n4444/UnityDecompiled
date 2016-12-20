@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum LightType
-	{
-		Spot,
-		Directional,
-		Point,
-		Area
-	}
+    using System;
+
+    /// <summary>
+    /// <para>The type of a Light.</para>
+    /// </summary>
+    public enum LightType
+    {
+        Spot,
+        Directional,
+        Point,
+        Area
+    }
 }
+

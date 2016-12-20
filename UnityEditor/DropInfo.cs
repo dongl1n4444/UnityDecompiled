@@ -1,28 +1,26 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class DropInfo
-	{
-		internal enum Type
-		{
-			Tab,
-			Pane,
-			Window
-		}
+    using System;
+    using UnityEngine;
 
-		public IDropArea dropArea;
+    internal class DropInfo
+    {
+        public IDropArea dropArea;
+        public Rect rect;
+        public Type type = Type.Window;
+        public object userData = null;
 
-		public object userData = null;
+        public DropInfo(IDropArea source)
+        {
+            this.dropArea = source;
+        }
 
-		public DropInfo.Type type = DropInfo.Type.Window;
-
-		public Rect rect;
-
-		public DropInfo(IDropArea source)
-		{
-			this.dropArea = source;
-		}
-	}
+        internal enum Type
+        {
+            Tab,
+            Pane,
+            Window
+        }
+    }
 }
+

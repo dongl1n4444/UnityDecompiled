@@ -1,68 +1,43 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class Motion : Object
-	{
-		public extern float averageDuration
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public extern float averageAngularSpeed
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+    /// <summary>
+    /// <para>Base class for AnimationClips and BlendTrees.</para>
+    /// </summary>
+    public class Motion : UnityEngine.Object
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_averageSpeed(out Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("ValidateIfRetargetable is not supported anymore. Use isHumanMotion instead.", true)]
+        public extern bool ValidateIfRetargetable(bool val);
 
-		public Vector3 averageSpeed
-		{
-			get
-			{
-				Vector3 result;
-				this.INTERNAL_get_averageSpeed(out result);
-				return result;
-			}
-		}
+        public float apparentSpeed { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern float apparentSpeed
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public float averageAngularSpeed { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern bool isLooping
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public float averageDuration { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public extern bool legacy
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public Vector3 averageSpeed
+        {
+            get
+            {
+                Vector3 vector;
+                this.INTERNAL_get_averageSpeed(out vector);
+                return vector;
+            }
+        }
 
-		public extern bool isHumanMotion
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        [Obsolete("isAnimatorMotion is not supported anymore. Use !legacy instead.", true)]
+        public bool isAnimatorMotion { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[Obsolete("isAnimatorMotion is not supported anymore. Use !legacy instead.", true)]
-		public extern bool isAnimatorMotion
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        public bool isHumanMotion { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_averageSpeed(out Vector3 value);
+        public bool isLooping { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[Obsolete("ValidateIfRetargetable is not supported anymore. Use isHumanMotion instead.", true)]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern bool ValidateIfRetargetable(bool val);
-	}
+        public bool legacy { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

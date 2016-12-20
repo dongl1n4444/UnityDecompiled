@@ -1,12 +1,16 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum OperatingSystemFamily
-	{
-		Other,
-		MacOSX,
-		Windows,
-		Linux
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Enumeration for SystemInfo.operatingSystemFamily.</para>
+    /// </summary>
+    public enum OperatingSystemFamily
+    {
+        Other,
+        MacOSX,
+        Windows,
+        Linux
+    }
 }
+

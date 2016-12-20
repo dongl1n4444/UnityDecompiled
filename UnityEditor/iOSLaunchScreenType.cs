@@ -1,13 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum iOSLaunchScreenType
-	{
-		Default,
-		ImageAndBackgroundRelative,
-		CustomXib,
-		None,
-		ImageAndBackgroundConstant
-	}
+    using System;
+
+    internal enum iOSLaunchScreenType
+    {
+        Default,
+        ImageAndBackgroundRelative,
+        CustomXib,
+        None,
+        ImageAndBackgroundConstant
+    }
 }
+

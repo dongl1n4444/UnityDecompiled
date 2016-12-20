@@ -1,25 +1,16 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal interface IGameViewSizeMenuUser
-	{
-		bool lowResolutionForAspectRatios
-		{
-			get;
-			set;
-		}
+    using System;
 
-		bool forceLowResolutionAspectRatios
-		{
-			get;
-		}
+    internal interface IGameViewSizeMenuUser
+    {
+        void SizeSelectionCallback(int indexClicked, object objectSelected);
 
-		bool showLowResolutionToggle
-		{
-			get;
-		}
+        bool forceLowResolutionAspectRatios { get; }
 
-		void SizeSelectionCallback(int indexClicked, object objectSelected);
-	}
+        bool lowResolutionForAspectRatios { get; set; }
+
+        bool showLowResolutionToggle { get; }
+    }
 }
+

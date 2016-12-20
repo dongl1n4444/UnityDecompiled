@@ -1,8 +1,10 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class Flare : Object
-	{
-	}
+    /// <summary>
+    /// <para>A flare asset. Read more about flares in the.</para>
+    /// </summary>
+    public sealed class Flare : Object
+    {
+    }
 }
+

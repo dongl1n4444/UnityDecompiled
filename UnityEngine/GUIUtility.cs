@@ -1,322 +1,360 @@
-using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public class GUIUtility
-	{
-		internal static int s_SkinMode;
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
-		internal static int s_OriginalID;
+    /// <summary>
+    /// <para>Utility class for making new GUI controls.</para>
+    /// </summary>
+    public class GUIUtility
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private static bool <guiIsExiting>k__BackingField;
+        internal static Vector2 s_EditorScreenPointOffset = Vector2.zero;
+        internal static bool s_HasKeyboardFocus = false;
+        internal static int s_OriginalID;
+        internal static int s_SkinMode;
 
-		internal static Vector2 s_EditorScreenPointOffset = Vector2.zero;
+        [RequiredByNativeCode]
+        internal static void BeginGUI(int skinMode, int instanceID, int useGUILayout)
+        {
+            s_SkinMode = skinMode;
+            s_OriginalID = instanceID;
+            GUI.skin = null;
+            guiIsExiting = false;
+            if (useGUILayout != 0)
+            {
+                GUILayoutUtility.SelectIDList(instanceID, false);
+                GUILayoutUtility.Begin(instanceID);
+            }
+            GUI.changed = false;
+        }
 
-		internal static bool s_HasKeyboardFocus = false;
+        internal static void CheckOnGUI()
+        {
+            if (Internal_GetGUIDepth() <= 0)
+            {
+                throw new ArgumentException("You can only call GUI functions from inside OnGUI.");
+            }
+        }
 
-		internal static float pixelsPerPoint
-		{
-			get
-			{
-				return GUIUtility.Internal_GetPixelsPerPoint();
-			}
-		}
+        internal static void CleanupRoots()
+        {
+        }
 
-		internal static bool guiIsExiting
-		{
-			get;
-			set;
-		}
+        [RequiredByNativeCode]
+        internal static void EndGUI(int layoutType)
+        {
+            try
+            {
+                if ((Event.current.type == EventType.Layout) && (layoutType != 0))
+                {
+                    if (layoutType == 1)
+                    {
+                        goto Label_0031;
+                    }
+                    if (layoutType == 2)
+                    {
+                        goto Label_003B;
+                    }
+                }
+                goto Label_0046;
+            Label_0031:
+                GUILayoutUtility.Layout();
+                goto Label_0046;
+            Label_003B:
+                GUILayoutUtility.LayoutFromEditorWindow();
+            Label_0046:
+                GUILayoutUtility.SelectIDList(s_OriginalID, false);
+                GUIContent.ClearStaticCache();
+            }
+            finally
+            {
+                Internal_ExitGUI();
+            }
+        }
 
-		public static int hotControl
-		{
-			get
-			{
-				return GUIUtility.Internal_GetHotControl();
-			}
-			set
-			{
-				GUIUtility.Internal_SetHotControl(value);
-			}
-		}
+        [RequiredByNativeCode]
+        internal static bool EndGUIFromException(Exception exception)
+        {
+            if (!ShouldRethrowException(exception))
+            {
+                return false;
+            }
+            Internal_ExitGUI();
+            return true;
+        }
 
-		public static extern int keyboardControl
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        public static void ExitGUI()
+        {
+            guiIsExiting = true;
+            throw new ExitGUIException();
+        }
 
-		public static extern string systemCopyBuffer
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        internal static GUISkin GetBuiltinSkin(int skin)
+        {
+            return (Internal_GetBuiltinSkin(skin) as GUISkin);
+        }
 
-		internal static extern bool mouseUsed
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool GetChanged();
+        /// <summary>
+        /// <para>Get a unique ID for a control.</para>
+        /// </summary>
+        /// <param name="focus"></param>
+        /// <param name="position"></param>
+        public static int GetControlID(FocusType focus)
+        {
+            return GetControlID(0, focus);
+        }
 
-		public static extern bool hasModalWindow
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Get a unique ID for a control, using an integer as a hint to help ensure correct matching of IDs to controls.</para>
+        /// </summary>
+        /// <param name="hint"></param>
+        /// <param name="focus"></param>
+        /// <param name="position"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetControlID(int hint, FocusType focus);
+        /// <summary>
+        /// <para>Get a unique ID for a control.</para>
+        /// </summary>
+        /// <param name="focus"></param>
+        /// <param name="position"></param>
+        public static int GetControlID(FocusType focus, Rect position)
+        {
+            return Internal_GetNextControlID2(0, focus, position);
+        }
 
-		internal static extern bool textFieldInput
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Get a unique ID for a control, using a the label content as a hint to help ensure correct matching of IDs to controls.</para>
+        /// </summary>
+        /// <param name="contents"></param>
+        /// <param name="focus"></param>
+        /// <param name="position"></param>
+        public static int GetControlID(GUIContent contents, FocusType focus)
+        {
+            return GetControlID(contents.hash, focus);
+        }
 
-		public static int GetControlID(FocusType focus)
-		{
-			return GUIUtility.GetControlID(0, focus);
-		}
+        /// <summary>
+        /// <para>Get a unique ID for a control, using an integer as a hint to help ensure correct matching of IDs to controls.</para>
+        /// </summary>
+        /// <param name="hint"></param>
+        /// <param name="focus"></param>
+        /// <param name="position"></param>
+        public static int GetControlID(int hint, FocusType focus, Rect position)
+        {
+            return Internal_GetNextControlID2(hint, focus, position);
+        }
 
-		public static int GetControlID(GUIContent contents, FocusType focus)
-		{
-			return GUIUtility.GetControlID(contents.hash, focus);
-		}
+        /// <summary>
+        /// <para>Get a unique ID for a control, using a the label content as a hint to help ensure correct matching of IDs to controls.</para>
+        /// </summary>
+        /// <param name="contents"></param>
+        /// <param name="focus"></param>
+        /// <param name="position"></param>
+        public static int GetControlID(GUIContent contents, FocusType focus, Rect position)
+        {
+            return Internal_GetNextControlID2(contents.hash, focus, position);
+        }
 
-		public static int GetControlID(FocusType focus, Rect position)
-		{
-			return GUIUtility.Internal_GetNextControlID2(0, focus, position);
-		}
+        internal static GUISkin GetDefaultSkin()
+        {
+            return Internal_GetDefaultSkin(s_SkinMode);
+        }
 
-		public static int GetControlID(int hint, FocusType focus, Rect position)
-		{
-			return GUIUtility.Internal_GetNextControlID2(hint, focus, position);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int GetPermanentControlID();
+        /// <summary>
+        /// <para>Get a state object from a controlID.</para>
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="controlID"></param>
+        public static object GetStateObject(System.Type t, int controlID)
+        {
+            return GUIStateObjects.GetStateObject(t, controlID);
+        }
 
-		public static int GetControlID(GUIContent contents, FocusType focus, Rect position)
-		{
-			return GUIUtility.Internal_GetNextControlID2(contents.hash, focus, position);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void GrabMouseControl(int id);
+        /// <summary>
+        /// <para>Convert a point from GUI position to screen space.</para>
+        /// </summary>
+        /// <param name="guiPoint"></param>
+        public static Vector2 GUIToScreenPoint(Vector2 guiPoint)
+        {
+            return (GUIClip.Unclip(guiPoint) + s_EditorScreenPointOffset);
+        }
 
-		public static object GetStateObject(Type t, int controlID)
-		{
-			return GUIStateObjects.GetStateObject(t, controlID);
-		}
+        internal static Rect GUIToScreenRect(Rect guiRect)
+        {
+            Vector2 vector = GUIToScreenPoint(new Vector2(guiRect.x, guiRect.y));
+            guiRect.x = vector.x;
+            guiRect.y = vector.y;
+            return guiRect;
+        }
 
-		public static object QueryStateObject(Type t, int controlID)
-		{
-			return GUIStateObjects.QueryStateObject(t, controlID);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern bool HasMouseControl(int id);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int INTERNAL_CALL_Internal_GetNextControlID2(int hint, FocusType focusType, ref Rect rect);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_ExitGUI();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern UnityEngine.Object Internal_GetBuiltinSkin(int skin);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern GUISkin Internal_GetDefaultSkin(int skinMode);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern int Internal_GetGUIDepth();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern int Internal_GetHotControl();
+        private static int Internal_GetNextControlID2(int hint, FocusType focusType, Rect rect)
+        {
+            return INTERNAL_CALL_Internal_GetNextControlID2(hint, focusType, ref rect);
+        }
 
-		public static void ExitGUI()
-		{
-			GUIUtility.guiIsExiting = true;
-			throw new ExitGUIException();
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern float Internal_GetPixelsPerPoint();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void Internal_SetHotControl(int value);
+        /// <summary>
+        /// <para>Get an existing state object from a controlID.</para>
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="controlID"></param>
+        public static object QueryStateObject(System.Type t, int controlID)
+        {
+            return GUIStateObjects.QueryStateObject(t, controlID);
+        }
 
-		internal static GUISkin GetDefaultSkin()
-		{
-			return GUIUtility.Internal_GetDefaultSkin(GUIUtility.s_SkinMode);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void ReleaseMouseControl();
+        /// <summary>
+        /// <para>Helper function to rotate the GUI around a point.</para>
+        /// </summary>
+        /// <param name="angle"></param>
+        /// <param name="pivotPoint"></param>
+        public static void RotateAroundPivot(float angle, Vector2 pivotPoint)
+        {
+            Matrix4x4 matrix = GUI.matrix;
+            GUI.matrix = Matrix4x4.identity;
+            Vector2 vector = GUIClip.Unclip(pivotPoint);
+            Matrix4x4 matrixx2 = Matrix4x4.TRS((Vector3) vector, Quaternion.Euler(0f, 0f, angle), Vector3.one) * Matrix4x4.TRS((Vector3) -vector, Quaternion.identity, Vector3.one);
+            GUI.matrix = matrixx2 * matrix;
+        }
 
-		internal static GUISkin GetBuiltinSkin(int skin)
-		{
-			return GUIUtility.Internal_GetBuiltinSkin(skin) as GUISkin;
-		}
+        /// <summary>
+        /// <para>Helper function to scale the GUI around a point.</para>
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <param name="pivotPoint"></param>
+        public static void ScaleAroundPivot(Vector2 scale, Vector2 pivotPoint)
+        {
+            Matrix4x4 matrix = GUI.matrix;
+            Vector2 vector = GUIClip.Unclip(pivotPoint);
+            Matrix4x4 matrixx2 = Matrix4x4.TRS((Vector3) vector, Quaternion.identity, new Vector3(scale.x, scale.y, 1f)) * Matrix4x4.TRS((Vector3) -vector, Quaternion.identity, Vector3.one);
+            GUI.matrix = matrixx2 * matrix;
+        }
 
-		internal static void CleanupRoots()
-		{
-		}
+        /// <summary>
+        /// <para>Convert a point from screen space to GUI position.</para>
+        /// </summary>
+        /// <param name="screenPoint"></param>
+        public static Vector2 ScreenToGUIPoint(Vector2 screenPoint)
+        {
+            return (GUIClip.Clip(screenPoint) - s_EditorScreenPointOffset);
+        }
 
-		[RequiredByNativeCode]
-		internal static void BeginGUI(int skinMode, int instanceID, int useGUILayout)
-		{
-			GUIUtility.s_SkinMode = skinMode;
-			GUIUtility.s_OriginalID = instanceID;
-			GUI.skin = null;
-			GUIUtility.guiIsExiting = false;
-			if (useGUILayout != 0)
-			{
-				GUILayoutUtility.SelectIDList(instanceID, false);
-				GUILayoutUtility.Begin(instanceID);
-			}
-			GUI.changed = false;
-		}
+        public static Rect ScreenToGUIRect(Rect screenRect)
+        {
+            Vector2 vector = ScreenToGUIPoint(new Vector2(screenRect.x, screenRect.y));
+            screenRect.x = vector.x;
+            screenRect.y = vector.y;
+            return screenRect;
+        }
 
-		[RequiredByNativeCode]
-		internal static void SetSkin(int skinMode)
-		{
-			GUIUtility.s_SkinMode = skinMode;
-			GUI.DoSetSkin(null);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SetChanged(bool changed);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void SetDidGUIWindowsEatLastEvent(bool value);
+        [RequiredByNativeCode]
+        internal static void SetSkin(int skinMode)
+        {
+            s_SkinMode = skinMode;
+            GUI.DoSetSkin(null);
+        }
 
-		[RequiredByNativeCode]
-		internal static void EndGUI(int layoutType)
-		{
-			try
-			{
-				if (Event.current.type == EventType.Layout)
-				{
-					if (layoutType != 0)
-					{
-						if (layoutType != 1)
-						{
-							if (layoutType == 2)
-							{
-								GUILayoutUtility.LayoutFromEditorWindow();
-							}
-						}
-						else
-						{
-							GUILayoutUtility.Layout();
-						}
-					}
-				}
-				GUILayoutUtility.SelectIDList(GUIUtility.s_OriginalID, false);
-				GUIContent.ClearStaticCache();
-			}
-			finally
-			{
-				GUIUtility.Internal_ExitGUI();
-			}
-		}
+        internal static bool ShouldRethrowException(Exception exception)
+        {
+            while ((exception is TargetInvocationException) && (exception.InnerException != null))
+            {
+                exception = exception.InnerException;
+            }
+            return (exception is ExitGUIException);
+        }
 
-		[RequiredByNativeCode]
-		internal static bool EndGUIFromException(Exception exception)
-		{
-			bool result;
-			if (!GUIUtility.ShouldRethrowException(exception))
-			{
-				result = false;
-			}
-			else
-			{
-				GUIUtility.Internal_ExitGUI();
-				result = true;
-			}
-			return result;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal static extern void UpdateUndoName();
 
-		internal static bool ShouldRethrowException(Exception exception)
-		{
-			while (exception is TargetInvocationException && exception.InnerException != null)
-			{
-				exception = exception.InnerException;
-			}
-			return exception is ExitGUIException;
-		}
+        internal static bool guiIsExiting
+        {
+            [CompilerGenerated]
+            get
+            {
+                return <guiIsExiting>k__BackingField;
+            }
+            [CompilerGenerated]
+            set
+            {
+                <guiIsExiting>k__BackingField = value;
+            }
+        }
 
-		internal static void CheckOnGUI()
-		{
-			if (GUIUtility.Internal_GetGUIDepth() <= 0)
-			{
-				throw new ArgumentException("You can only call GUI functions from inside OnGUI.");
-			}
-		}
+        /// <summary>
+        /// <para>A global property, which is true if a ModalWindow is being displayed, false otherwise.</para>
+        /// </summary>
+        public static bool hasModalWindow { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		public static Vector2 GUIToScreenPoint(Vector2 guiPoint)
-		{
-			return GUIClip.Unclip(guiPoint) + GUIUtility.s_EditorScreenPointOffset;
-		}
+        /// <summary>
+        /// <para>The controlID of the current hot control.</para>
+        /// </summary>
+        public static int hotControl
+        {
+            get
+            {
+                return Internal_GetHotControl();
+            }
+            set
+            {
+                Internal_SetHotControl(value);
+            }
+        }
 
-		internal static Rect GUIToScreenRect(Rect guiRect)
-		{
-			Vector2 vector = GUIUtility.GUIToScreenPoint(new Vector2(guiRect.x, guiRect.y));
-			guiRect.x = vector.x;
-			guiRect.y = vector.y;
-			return guiRect;
-		}
+        /// <summary>
+        /// <para>The controlID of the control that has keyboard focus.</para>
+        /// </summary>
+        public static int keyboardControl { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static Vector2 ScreenToGUIPoint(Vector2 screenPoint)
-		{
-			return GUIClip.Clip(screenPoint) - GUIUtility.s_EditorScreenPointOffset;
-		}
+        internal static bool mouseUsed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static Rect ScreenToGUIRect(Rect screenRect)
-		{
-			Vector2 vector = GUIUtility.ScreenToGUIPoint(new Vector2(screenRect.x, screenRect.y));
-			screenRect.x = vector.x;
-			screenRect.y = vector.y;
-			return screenRect;
-		}
+        internal static float pixelsPerPoint
+        {
+            get
+            {
+                return Internal_GetPixelsPerPoint();
+            }
+        }
 
-		public static void RotateAroundPivot(float angle, Vector2 pivotPoint)
-		{
-			Matrix4x4 matrix = GUI.matrix;
-			GUI.matrix = Matrix4x4.identity;
-			Vector2 vector = GUIClip.Unclip(pivotPoint);
-			Matrix4x4 lhs = Matrix4x4.TRS(vector, Quaternion.Euler(0f, 0f, angle), Vector3.one) * Matrix4x4.TRS(-vector, Quaternion.identity, Vector3.one);
-			GUI.matrix = lhs * matrix;
-		}
+        /// <summary>
+        /// <para>Get access to the system-wide pasteboard.</para>
+        /// </summary>
+        public static string systemCopyBuffer { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static void ScaleAroundPivot(Vector2 scale, Vector2 pivotPoint)
-		{
-			Matrix4x4 matrix = GUI.matrix;
-			Vector2 vector = GUIClip.Unclip(pivotPoint);
-			Matrix4x4 lhs = Matrix4x4.TRS(vector, Quaternion.identity, new Vector3(scale.x, scale.y, 1f)) * Matrix4x4.TRS(-vector, Quaternion.identity, Vector3.one);
-			GUI.matrix = lhs * matrix;
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern float Internal_GetPixelsPerPoint();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern int GetControlID(int hint, FocusType focus);
-
-		private static int Internal_GetNextControlID2(int hint, FocusType focusType, Rect rect)
-		{
-			return GUIUtility.INTERNAL_CALL_Internal_GetNextControlID2(hint, focusType, ref rect);
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern int INTERNAL_CALL_Internal_GetNextControlID2(int hint, FocusType focusType, ref Rect rect);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int GetPermanentControlID();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern int Internal_GetHotControl();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_SetHotControl(int value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void UpdateUndoName();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void GrabMouseControl(int id);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void ReleaseMouseControl();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool HasMouseControl(int id);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern bool GetChanged();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void SetChanged(bool changed);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern void SetDidGUIWindowsEatLastEvent(bool value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern GUISkin Internal_GetDefaultSkin(int skinMode);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern Object Internal_GetBuiltinSkin(int skin);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void Internal_ExitGUI();
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		internal static extern int Internal_GetGUIDepth();
-	}
+        internal static bool textFieldInput { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+    }
 }
+

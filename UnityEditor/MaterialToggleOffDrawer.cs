@@ -1,20 +1,21 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class MaterialToggleOffDrawer : MaterialToggleDrawer
-	{
-		public MaterialToggleOffDrawer()
-		{
-		}
+    using System;
 
-		public MaterialToggleOffDrawer(string keyword) : base(keyword)
-		{
-		}
+    internal class MaterialToggleOffDrawer : MaterialToggleDrawer
+    {
+        public MaterialToggleOffDrawer()
+        {
+        }
 
-		protected override void SetKeyword(MaterialProperty prop, bool on)
-		{
-			base.SetKeywordInternal(prop, !on, "_OFF");
-		}
-	}
+        public MaterialToggleOffDrawer(string keyword) : base(keyword)
+        {
+        }
+
+        protected override void SetKeyword(MaterialProperty prop, bool on)
+        {
+            base.SetKeywordInternal(prop, !on, "_OFF");
+        }
+    }
 }
+

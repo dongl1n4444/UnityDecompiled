@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum WebGLExceptionSupport
-	{
-		None,
-		ExplicitlyThrownExceptionsOnly,
-		Full
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Options for Exception support in WebGL.</para>
+    /// </summary>
+    public enum WebGLExceptionSupport
+    {
+        None,
+        ExplicitlyThrownExceptionsOnly,
+        Full
+    }
 }
+

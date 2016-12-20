@@ -1,40 +1,40 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
-using UnityEditorInternal;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AssetsTreeViewDragging : TreeViewDragging
-	{
-		public AssetsTreeViewDragging(TreeViewController treeView) : base(treeView)
-		{
-		}
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEditorInternal;
 
-		public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
-		{
-			DragAndDrop.PrepareStartDrag();
-			DragAndDrop.objectReferences = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
-			DragAndDrop.paths = ProjectWindowUtil.GetDragAndDropPaths(draggedItem.id, draggedItemIDs);
-			if (DragAndDrop.objectReferences.Length > 1)
-			{
-				DragAndDrop.StartDrag("<Multiple>");
-			}
-			else
-			{
-				string dragAndDropTitle = ObjectNames.GetDragAndDropTitle(InternalEditorUtility.GetObjectFromInstanceID(draggedItem.id));
-				DragAndDrop.StartDrag(dragAndDropTitle);
-			}
-		}
+    internal class AssetsTreeViewDragging : TreeViewDragging
+    {
+        public AssetsTreeViewDragging(TreeViewController treeView) : base(treeView)
+        {
+        }
 
-		public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
-		{
-			HierarchyProperty hierarchyProperty = new HierarchyProperty(HierarchyType.Assets);
-			if (parentItem == null || !hierarchyProperty.Find(parentItem.id, null))
-			{
-				hierarchyProperty = null;
-			}
-			return InternalEditorUtility.ProjectWindowDrag(hierarchyProperty, perform);
-		}
-	}
+        public override DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, TreeViewDragging.DropPosition dropPos)
+        {
+            HierarchyProperty property = new HierarchyProperty(HierarchyType.Assets);
+            if ((parentItem == null) || !property.Find(parentItem.id, null))
+            {
+                property = null;
+            }
+            return InternalEditorUtility.ProjectWindowDrag(property, perform);
+        }
+
+        public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
+        {
+            DragAndDrop.PrepareStartDrag();
+            DragAndDrop.objectReferences = ProjectWindowUtil.GetDragAndDropObjects(draggedItem.id, draggedItemIDs);
+            DragAndDrop.paths = ProjectWindowUtil.GetDragAndDropPaths(draggedItem.id, draggedItemIDs);
+            if (DragAndDrop.objectReferences.Length > 1)
+            {
+                DragAndDrop.StartDrag("<Multiple>");
+            }
+            else
+            {
+                DragAndDrop.StartDrag(ObjectNames.GetDragAndDropTitle(InternalEditorUtility.GetObjectFromInstanceID(draggedItem.id)));
+            }
+        }
+    }
 }
+

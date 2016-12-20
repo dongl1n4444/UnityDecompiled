@@ -1,12 +1,14 @@
-using System;
-using UnityEngine.Rendering;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal struct FrameDebuggerDepthState
-	{
-		public int depthWrite;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Rendering;
 
-		public CompareFunction depthFunc;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct FrameDebuggerDepthState
+    {
+        public int depthWrite;
+        public CompareFunction depthFunc;
+    }
 }
+

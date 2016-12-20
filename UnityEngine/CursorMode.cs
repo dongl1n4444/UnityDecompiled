@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum CursorMode
-	{
-		Auto,
-		ForceSoftware
-	}
+    using System;
+
+    /// <summary>
+    /// <para>How should the custom cursor be rendered.</para>
+    /// </summary>
+    public enum CursorMode
+    {
+        Auto,
+        ForceSoftware
+    }
 }
+

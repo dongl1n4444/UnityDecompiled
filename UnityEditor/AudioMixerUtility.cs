@@ -1,39 +1,38 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor.Audio;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AudioMixerUtility
-	{
-		public class VisitorFetchInstanceIDs
-		{
-			public List<int> instanceIDs = new List<int>();
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor.Audio;
 
-			public void Visitor(AudioMixerGroupController group)
-			{
-				this.instanceIDs.Add(group.GetInstanceID());
-			}
-		}
+    internal class AudioMixerUtility
+    {
+        public static void RepaintAudioMixerAndInspectors()
+        {
+            InspectorWindow.RepaintAllInspectors();
+            AudioMixerWindow.RepaintAudioMixerWindow();
+        }
 
-		public static void RepaintAudioMixerAndInspectors()
-		{
-			InspectorWindow.RepaintAllInspectors();
-			AudioMixerWindow.RepaintAudioMixerWindow();
-		}
+        public static void VisitGroupsRecursivly(AudioMixerGroupController group, Action<AudioMixerGroupController> visitorCallback)
+        {
+            foreach (AudioMixerGroupController controller in group.children)
+            {
+                VisitGroupsRecursivly(controller, visitorCallback);
+            }
+            if (visitorCallback != null)
+            {
+                visitorCallback(group);
+            }
+        }
 
-		public static void VisitGroupsRecursivly(AudioMixerGroupController group, Action<AudioMixerGroupController> visitorCallback)
-		{
-			AudioMixerGroupController[] children = group.children;
-			for (int i = 0; i < children.Length; i++)
-			{
-				AudioMixerGroupController group2 = children[i];
-				AudioMixerUtility.VisitGroupsRecursivly(group2, visitorCallback);
-			}
-			if (visitorCallback != null)
-			{
-				visitorCallback(group);
-			}
-		}
-	}
+        public class VisitorFetchInstanceIDs
+        {
+            public List<int> instanceIDs = new List<int>();
+
+            public void Visitor(AudioMixerGroupController group)
+            {
+                this.instanceIDs.Add(group.GetInstanceID());
+            }
+        }
+    }
 }
+

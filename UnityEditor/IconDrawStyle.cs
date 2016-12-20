@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum IconDrawStyle
-	{
-		NonTexture,
-		Texture
-	}
+    using System;
+
+    public enum IconDrawStyle
+    {
+        NonTexture,
+        Texture
+    }
 }
+

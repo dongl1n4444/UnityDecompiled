@@ -1,81 +1,75 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class RelativeJoint2D : Joint2D
-	{
-		public extern float maxForce
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public extern float maxTorque
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+    /// <summary>
+    /// <para>Keeps two Rigidbody2D at their relative orientations.</para>
+    /// </summary>
+    public sealed class RelativeJoint2D : Joint2D
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_linearOffset(out Vector2 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_get_target(out Vector2 value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void INTERNAL_set_linearOffset(ref Vector2 value);
 
-		public extern float correctionScale
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The current angular offset between the Rigidbody2D that the joint connects.</para>
+        /// </summary>
+        public float angularOffset { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern bool autoConfigureOffset
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Should both the linearOffset and angularOffset be calculated automatically?</para>
+        /// </summary>
+        public bool autoConfigureOffset { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public Vector2 linearOffset
-		{
-			get
-			{
-				Vector2 result;
-				this.INTERNAL_get_linearOffset(out result);
-				return result;
-			}
-			set
-			{
-				this.INTERNAL_set_linearOffset(ref value);
-			}
-		}
+        /// <summary>
+        /// <para>Scales both the linear and angular forces used to correct the required relative orientation.</para>
+        /// </summary>
+        public float correctionScale { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public extern float angularOffset
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>The current linear offset between the Rigidbody2D that the joint connects.</para>
+        /// </summary>
+        public Vector2 linearOffset
+        {
+            get
+            {
+                Vector2 vector;
+                this.INTERNAL_get_linearOffset(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_linearOffset(ref value);
+            }
+        }
 
-		public Vector2 target
-		{
-			get
-			{
-				Vector2 result;
-				this.INTERNAL_get_target(out result);
-				return result;
-			}
-		}
+        /// <summary>
+        /// <para>The maximum force that can be generated when trying to maintain the relative joint constraint.</para>
+        /// </summary>
+        public float maxForce { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_linearOffset(out Vector2 value);
+        /// <summary>
+        /// <para>The maximum torque that can be generated when trying to maintain the relative joint constraint.</para>
+        /// </summary>
+        public float maxTorque { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_set_linearOffset(ref Vector2 value);
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void INTERNAL_get_target(out Vector2 value);
-	}
+        /// <summary>
+        /// <para>The world-space position that is currently trying to be maintained.</para>
+        /// </summary>
+        public Vector2 target
+        {
+            get
+            {
+                Vector2 vector;
+                this.INTERNAL_get_target(out vector);
+                return vector;
+            }
+        }
+    }
 }
+

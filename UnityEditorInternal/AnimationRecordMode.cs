@@ -1,72 +1,72 @@
-using System;
-using UnityEditor;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AnimationRecordMode : IDisposable
-	{
-		private bool m_Recording;
+    using System;
+    using UnityEditor;
 
-		private bool m_IgnoreCallback;
+    internal class AnimationRecordMode : IDisposable
+    {
+        private bool m_IgnoreCallback;
+        private bool m_Recording;
 
-		public bool canEnable
-		{
-			get
-			{
-				bool flag = AnimationMode.InAnimationMode();
-				return !flag || (this.m_Recording && flag);
-			}
-		}
+        public AnimationRecordMode()
+        {
+            AnimationMode.animationModeChangedCallback = (AnimationMode.AnimationModeChangedCallback) Delegate.Combine(AnimationMode.animationModeChangedCallback, new AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
+        }
 
-		public bool enable
-		{
-			get
-			{
-				if (this.m_Recording)
-				{
-					this.m_Recording = AnimationMode.InAnimationMode();
-				}
-				return this.m_Recording;
-			}
-			set
-			{
-				if (value)
-				{
-					if (!AnimationMode.InAnimationMode())
-					{
-						this.m_IgnoreCallback = true;
-						AnimationMode.StartAnimationMode();
-						this.m_IgnoreCallback = false;
-						this.m_Recording = true;
-					}
-				}
-				else if (this.m_Recording)
-				{
-					this.m_IgnoreCallback = true;
-					AnimationMode.StopAnimationMode();
-					this.m_IgnoreCallback = false;
-					this.m_Recording = false;
-				}
-			}
-		}
+        public void Dispose()
+        {
+            this.enable = false;
+            AnimationMode.animationModeChangedCallback = (AnimationMode.AnimationModeChangedCallback) Delegate.Remove(AnimationMode.animationModeChangedCallback, new AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
+        }
 
-		public AnimationRecordMode()
-		{
-			AnimationMode.animationModeChangedCallback = (AnimationMode.AnimationModeChangedCallback)Delegate.Combine(AnimationMode.animationModeChangedCallback, new AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
-		}
+        private void StateChangedCallback(bool newValue)
+        {
+            if (!this.m_IgnoreCallback)
+            {
+                this.m_Recording = false;
+            }
+        }
 
-		public void Dispose()
-		{
-			this.enable = false;
-			AnimationMode.animationModeChangedCallback = (AnimationMode.AnimationModeChangedCallback)Delegate.Remove(AnimationMode.animationModeChangedCallback, new AnimationMode.AnimationModeChangedCallback(this.StateChangedCallback));
-		}
+        public bool canEnable
+        {
+            get
+            {
+                bool flag = AnimationMode.InAnimationMode();
+                return (!flag || (this.m_Recording && flag));
+            }
+        }
 
-		private void StateChangedCallback(bool newValue)
-		{
-			if (!this.m_IgnoreCallback)
-			{
-				this.m_Recording = false;
-			}
-		}
-	}
+        public bool enable
+        {
+            get
+            {
+                if (this.m_Recording)
+                {
+                    this.m_Recording = AnimationMode.InAnimationMode();
+                }
+                return this.m_Recording;
+            }
+            set
+            {
+                if (value)
+                {
+                    if (!AnimationMode.InAnimationMode())
+                    {
+                        this.m_IgnoreCallback = true;
+                        AnimationMode.StartAnimationMode();
+                        this.m_IgnoreCallback = false;
+                        this.m_Recording = true;
+                    }
+                }
+                else if (this.m_Recording)
+                {
+                    this.m_IgnoreCallback = true;
+                    AnimationMode.StopAnimationMode();
+                    this.m_IgnoreCallback = false;
+                    this.m_Recording = false;
+                }
+            }
+        }
+    }
 }
+

@@ -1,23 +1,22 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(Font))]
-	internal class FontInspector : Editor
-	{
-		public override void OnInspectorGUI()
-		{
-			UnityEngine.Object[] targets = base.targets;
-			for (int i = 0; i < targets.Length; i++)
-			{
-				UnityEngine.Object @object = targets[i];
-				if (@object.hideFlags == HideFlags.NotEditable)
-				{
-					return;
-				}
-			}
-			base.DrawDefaultInspector();
-		}
-	}
+    using System;
+    using UnityEngine;
+
+    [CustomEditor(typeof(Font)), CanEditMultipleObjects]
+    internal class FontInspector : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            foreach (Object obj2 in base.targets)
+            {
+                if (obj2.hideFlags == HideFlags.NotEditable)
+                {
+                    return;
+                }
+            }
+            base.DrawDefaultInspector();
+        }
+    }
 }
+

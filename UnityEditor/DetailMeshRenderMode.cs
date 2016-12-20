@@ -1,10 +1,11 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum DetailMeshRenderMode
-	{
-		VertexLit,
-		Grass
-	}
+    using System;
+
+    internal enum DetailMeshRenderMode
+    {
+        VertexLit,
+        Grass
+    }
 }
+

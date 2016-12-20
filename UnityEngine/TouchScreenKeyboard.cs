@@ -1,205 +1,253 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEngine.Internal;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class TouchScreenKeyboard
-	{
-		[NonSerialized]
-		internal IntPtr m_Ptr;
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
+    using UnityEngine.Internal;
 
-		public static bool isSupported
-		{
-			get
-			{
-				RuntimePlatform platform = Application.platform;
-				bool result;
-				switch (platform)
-				{
-				case RuntimePlatform.MetroPlayerX86:
-				case RuntimePlatform.MetroPlayerX64:
-				case RuntimePlatform.MetroPlayerARM:
-					result = false;
-					return result;
-				case RuntimePlatform.WP8Player:
-				case RuntimePlatform.BB10Player:
-				case RuntimePlatform.PSP2:
-				case RuntimePlatform.PS4:
-					IL_34:
-					switch (platform)
-					{
-					case RuntimePlatform.IPhonePlayer:
-					case RuntimePlatform.Android:
-						goto IL_61;
-					case RuntimePlatform.PS3:
-					case RuntimePlatform.XBOX360:
-						IL_4C:
-						if (platform != RuntimePlatform.WiiU && platform != RuntimePlatform.tvOS)
-						{
-							result = false;
-							return result;
-						}
-						goto IL_61;
-					}
-					goto IL_4C;
-				case RuntimePlatform.TizenPlayer:
-				case RuntimePlatform.PSM:
-					goto IL_61;
-				}
-				goto IL_34;
-				IL_61:
-				result = true;
-				return result;
-			}
-		}
+    /// <summary>
+    /// <para>Interface into the native iPhone, Android, Windows Phone and Windows Store Apps on-screen keyboards - it is not available on other platforms.</para>
+    /// </summary>
+    public sealed class TouchScreenKeyboard
+    {
+        [NonSerialized]
+        internal IntPtr m_Ptr;
 
-		public extern string text
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        public TouchScreenKeyboard(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline, bool secure, bool alert, string textPlaceholder)
+        {
+            TouchScreenKeyboard_InternalConstructorHelperArguments arguments = new TouchScreenKeyboard_InternalConstructorHelperArguments {
+                keyboardType = Convert.ToUInt32(keyboardType),
+                autocorrection = Convert.ToUInt32(autocorrection),
+                multiline = Convert.ToUInt32(multiline),
+                secure = Convert.ToUInt32(secure),
+                alert = Convert.ToUInt32(alert)
+            };
+            this.TouchScreenKeyboard_InternalConstructorHelper(ref arguments, text, textPlaceholder);
+        }
 
-		public static extern bool hideInput
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        private extern void Destroy();
+        ~TouchScreenKeyboard()
+        {
+            this.Destroy();
+        }
 
-		public extern bool active
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_get_area(out Rect value);
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        [ExcludeFromDocs]
+        public static TouchScreenKeyboard Open(string text)
+        {
+            string textPlaceholder = "";
+            bool alert = false;
+            bool secure = false;
+            bool multiline = false;
+            bool autocorrection = true;
+            TouchScreenKeyboardType keyboardType = TouchScreenKeyboardType.Default;
+            return Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		public extern bool done
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        [ExcludeFromDocs]
+        public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType)
+        {
+            string textPlaceholder = "";
+            bool alert = false;
+            bool secure = false;
+            bool multiline = false;
+            bool autocorrection = true;
+            return Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		public extern bool wasCanceled
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        [ExcludeFromDocs]
+        public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection)
+        {
+            string textPlaceholder = "";
+            bool alert = false;
+            bool secure = false;
+            bool multiline = false;
+            return Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		public extern int targetDisplay
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			set;
-		}
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        [ExcludeFromDocs]
+        public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline)
+        {
+            string textPlaceholder = "";
+            bool alert = false;
+            bool secure = false;
+            return Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		public static Rect area
-		{
-			get
-			{
-				Rect result;
-				TouchScreenKeyboard.INTERNAL_get_area(out result);
-				return result;
-			}
-		}
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        [ExcludeFromDocs]
+        public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline, bool secure)
+        {
+            string textPlaceholder = "";
+            bool alert = false;
+            return Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		public static extern bool visible
-		{
-			[MethodImpl(MethodImplOptions.InternalCall)]
-			get;
-		}
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        [ExcludeFromDocs]
+        public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline, bool secure, bool alert)
+        {
+            string textPlaceholder = "";
+            return Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		public TouchScreenKeyboard(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline, bool secure, bool alert, string textPlaceholder)
-		{
-			TouchScreenKeyboard_InternalConstructorHelperArguments touchScreenKeyboard_InternalConstructorHelperArguments = default(TouchScreenKeyboard_InternalConstructorHelperArguments);
-			touchScreenKeyboard_InternalConstructorHelperArguments.keyboardType = Convert.ToUInt32(keyboardType);
-			touchScreenKeyboard_InternalConstructorHelperArguments.autocorrection = Convert.ToUInt32(autocorrection);
-			touchScreenKeyboard_InternalConstructorHelperArguments.multiline = Convert.ToUInt32(multiline);
-			touchScreenKeyboard_InternalConstructorHelperArguments.secure = Convert.ToUInt32(secure);
-			touchScreenKeyboard_InternalConstructorHelperArguments.alert = Convert.ToUInt32(alert);
-			this.TouchScreenKeyboard_InternalConstructorHelper(ref touchScreenKeyboard_InternalConstructorHelperArguments, text, textPlaceholder);
-		}
+        /// <summary>
+        /// <para>Opens the native keyboard provided by OS on the screen.</para>
+        /// </summary>
+        /// <param name="text">Text to edit.</param>
+        /// <param name="keyboardType">Type of keyboard (eg, any text, numbers only, etc).</param>
+        /// <param name="autocorrection">Is autocorrection applied?</param>
+        /// <param name="multiline">Can more than one line of text be entered?</param>
+        /// <param name="secure">Is the text masked (for passwords, etc)?</param>
+        /// <param name="alert">Is the keyboard opened in alert mode?</param>
+        /// <param name="textPlaceholder">Text to be used if no other text is present.</param>
+        public static TouchScreenKeyboard Open(string text, [DefaultValue("TouchScreenKeyboardType.Default")] TouchScreenKeyboardType keyboardType, [DefaultValue("true")] bool autocorrection, [DefaultValue("false")] bool multiline, [DefaultValue("false")] bool secure, [DefaultValue("false")] bool alert, [DefaultValue("\"\"")] string textPlaceholder)
+        {
+            return new TouchScreenKeyboard(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
+        }
 
-		[ThreadAndSerializationSafe]
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void Destroy();
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern void TouchScreenKeyboard_InternalConstructorHelper(ref TouchScreenKeyboard_InternalConstructorHelperArguments arguments, string text, string textPlaceholder);
 
-		~TouchScreenKeyboard()
-		{
-			this.Destroy();
-		}
+        /// <summary>
+        /// <para>Is the keyboard visible or sliding into the position on the screen?</para>
+        /// </summary>
+        public bool active { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private extern void TouchScreenKeyboard_InternalConstructorHelper(ref TouchScreenKeyboard_InternalConstructorHelperArguments arguments, string text, string textPlaceholder);
+        /// <summary>
+        /// <para>Returns portion of the screen which is covered by the keyboard.</para>
+        /// </summary>
+        public static Rect area
+        {
+            get
+            {
+                Rect rect;
+                INTERNAL_get_area(out rect);
+                return rect;
+            }
+        }
 
-		[ExcludeFromDocs]
-		public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline, bool secure, bool alert)
-		{
-			string textPlaceholder = "";
-			return TouchScreenKeyboard.Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+        /// <summary>
+        /// <para>Specifies if input process was finished. (Read Only)</para>
+        /// </summary>
+        public bool done { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-		[ExcludeFromDocs]
-		public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline, bool secure)
-		{
-			string textPlaceholder = "";
-			bool alert = false;
-			return TouchScreenKeyboard.Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+        /// <summary>
+        /// <para>Will text input field above the keyboard be hidden when the keyboard is on screen?</para>
+        /// </summary>
+        public static bool hideInput { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[ExcludeFromDocs]
-		public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection, bool multiline)
-		{
-			string textPlaceholder = "";
-			bool alert = false;
-			bool secure = false;
-			return TouchScreenKeyboard.Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+        /// <summary>
+        /// <para>Is touch screen keyboard supported.</para>
+        /// </summary>
+        public static bool isSupported
+        {
+            get
+            {
+                RuntimePlatform platform = Application.platform;
+                switch (platform)
+                {
+                    case RuntimePlatform.MetroPlayerX86:
+                    case RuntimePlatform.MetroPlayerX64:
+                    case RuntimePlatform.MetroPlayerARM:
+                        return false;
 
-		[ExcludeFromDocs]
-		public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType, bool autocorrection)
-		{
-			string textPlaceholder = "";
-			bool alert = false;
-			bool secure = false;
-			bool multiline = false;
-			return TouchScreenKeyboard.Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+                    case RuntimePlatform.TizenPlayer:
+                    case RuntimePlatform.PSM:
+                    case RuntimePlatform.IPhonePlayer:
+                    case RuntimePlatform.Android:
+                        break;
 
-		[ExcludeFromDocs]
-		public static TouchScreenKeyboard Open(string text, TouchScreenKeyboardType keyboardType)
-		{
-			string textPlaceholder = "";
-			bool alert = false;
-			bool secure = false;
-			bool multiline = false;
-			bool autocorrection = true;
-			return TouchScreenKeyboard.Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+                    default:
+                        if ((platform != RuntimePlatform.WiiU) && (platform != RuntimePlatform.tvOS))
+                        {
+                            return false;
+                        }
+                        break;
+                }
+                return true;
+            }
+        }
 
-		[ExcludeFromDocs]
-		public static TouchScreenKeyboard Open(string text)
-		{
-			string textPlaceholder = "";
-			bool alert = false;
-			bool secure = false;
-			bool multiline = false;
-			bool autocorrection = true;
-			TouchScreenKeyboardType keyboardType = TouchScreenKeyboardType.Default;
-			return TouchScreenKeyboard.Open(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+        /// <summary>
+        /// <para>Specified on which display the software keyboard will appear.</para>
+        /// </summary>
+        public int targetDisplay { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		public static TouchScreenKeyboard Open(string text, [DefaultValue("TouchScreenKeyboardType.Default")] TouchScreenKeyboardType keyboardType, [DefaultValue("true")] bool autocorrection, [DefaultValue("false")] bool multiline, [DefaultValue("false")] bool secure, [DefaultValue("false")] bool alert, [DefaultValue("\"\"")] string textPlaceholder)
-		{
-			return new TouchScreenKeyboard(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
-		}
+        /// <summary>
+        /// <para>Returns the text displayed by the input field of the keyboard.</para>
+        /// </summary>
+        public string text { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_get_area(out Rect value);
-	}
+        /// <summary>
+        /// <para>Returns true whenever any keyboard is completely visible on the screen.</para>
+        /// </summary>
+        public static bool visible { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+
+        /// <summary>
+        /// <para>Specifies if input process was canceled. (Read Only)</para>
+        /// </summary>
+        public bool wasCanceled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+    }
 }
+

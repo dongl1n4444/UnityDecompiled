@@ -1,89 +1,83 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class EditorCache : IDisposable
-	{
-		private Dictionary<UnityEngine.Object, EditorWrapper> m_EditorCache;
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using UnityEngine;
 
-		private Dictionary<UnityEngine.Object, bool> m_UsedEditors;
+    internal class EditorCache : IDisposable
+    {
+        private Dictionary<Object, EditorWrapper> m_EditorCache;
+        private EditorFeatures m_Requirements;
+        private Dictionary<Object, bool> m_UsedEditors;
 
-		private EditorFeatures m_Requirements;
+        public EditorCache() : this(EditorFeatures.None)
+        {
+        }
 
-		public EditorWrapper this[UnityEngine.Object o]
-		{
-			get
-			{
-				this.m_UsedEditors[o] = true;
-				EditorWrapper result;
-				if (this.m_EditorCache.ContainsKey(o))
-				{
-					result = this.m_EditorCache[o];
-				}
-				else
-				{
-					EditorWrapper editorWrapper = EditorWrapper.Make(o, this.m_Requirements);
-					EditorWrapper editorWrapper2 = editorWrapper;
-					this.m_EditorCache[o] = editorWrapper2;
-					result = editorWrapper2;
-				}
-				return result;
-			}
-		}
+        public EditorCache(EditorFeatures requirements)
+        {
+            this.m_Requirements = requirements;
+            this.m_EditorCache = new Dictionary<Object, EditorWrapper>();
+            this.m_UsedEditors = new Dictionary<Object, bool>();
+        }
 
-		public EditorCache() : this(EditorFeatures.None)
-		{
-		}
+        public void CleanupAllEditors()
+        {
+            this.m_UsedEditors.Clear();
+            this.CleanupUntouchedEditors();
+        }
 
-		public EditorCache(EditorFeatures requirements)
-		{
-			this.m_Requirements = requirements;
-			this.m_EditorCache = new Dictionary<UnityEngine.Object, EditorWrapper>();
-			this.m_UsedEditors = new Dictionary<UnityEngine.Object, bool>();
-		}
+        public void CleanupUntouchedEditors()
+        {
+            List<Object> list = new List<Object>();
+            foreach (Object obj2 in this.m_EditorCache.Keys)
+            {
+                if (!this.m_UsedEditors.ContainsKey(obj2))
+                {
+                    list.Add(obj2);
+                }
+            }
+            if (this.m_EditorCache != null)
+            {
+                foreach (Object obj3 in list)
+                {
+                    EditorWrapper wrapper = this.m_EditorCache[obj3];
+                    this.m_EditorCache.Remove(obj3);
+                    if (wrapper != null)
+                    {
+                        wrapper.Dispose();
+                    }
+                }
+            }
+            this.m_UsedEditors.Clear();
+        }
 
-		public void CleanupUntouchedEditors()
-		{
-			List<UnityEngine.Object> list = new List<UnityEngine.Object>();
-			foreach (UnityEngine.Object current in this.m_EditorCache.Keys)
-			{
-				if (!this.m_UsedEditors.ContainsKey(current))
-				{
-					list.Add(current);
-				}
-			}
-			if (this.m_EditorCache != null)
-			{
-				foreach (UnityEngine.Object current2 in list)
-				{
-					EditorWrapper editorWrapper = this.m_EditorCache[current2];
-					this.m_EditorCache.Remove(current2);
-					if (editorWrapper != null)
-					{
-						editorWrapper.Dispose();
-					}
-				}
-			}
-			this.m_UsedEditors.Clear();
-		}
+        public void Dispose()
+        {
+            this.CleanupAllEditors();
+            GC.SuppressFinalize(this);
+        }
 
-		public void CleanupAllEditors()
-		{
-			this.m_UsedEditors.Clear();
-			this.CleanupUntouchedEditors();
-		}
+        ~EditorCache()
+        {
+            Debug.LogError("Failed to dispose EditorCache.");
+        }
 
-		public void Dispose()
-		{
-			this.CleanupAllEditors();
-			GC.SuppressFinalize(this);
-		}
-
-		~EditorCache()
-		{
-			Debug.LogError("Failed to dispose EditorCache.");
-		}
-	}
+        public EditorWrapper this[Object o]
+        {
+            get
+            {
+                this.m_UsedEditors[o] = true;
+                if (this.m_EditorCache.ContainsKey(o))
+                {
+                    return this.m_EditorCache[o];
+                }
+                EditorWrapper wrapper3 = EditorWrapper.Make(o, this.m_Requirements);
+                this.m_EditorCache[o] = wrapper3;
+                return wrapper3;
+            }
+        }
+    }
 }
+

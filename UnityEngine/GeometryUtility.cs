@@ -1,46 +1,66 @@
-using System;
-using System.Runtime.CompilerServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class GeometryUtility
-	{
-		public static Plane[] CalculateFrustumPlanes(Camera camera)
-		{
-			return GeometryUtility.CalculateFrustumPlanes(camera.projectionMatrix * camera.worldToCameraMatrix);
-		}
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
-		public static Plane[] CalculateFrustumPlanes(Matrix4x4 worldToProjectionMatrix)
-		{
-			Plane[] array = new Plane[6];
-			GeometryUtility.Internal_ExtractPlanes(array, worldToProjectionMatrix);
-			return array;
-		}
+    /// <summary>
+    /// <para>Utility class for common geometric functions.</para>
+    /// </summary>
+    public sealed class GeometryUtility
+    {
+        /// <summary>
+        /// <para>Calculates a bounding box given an array of positions and a transformation matrix.</para>
+        /// </summary>
+        /// <param name="positions"></param>
+        /// <param name="transform"></param>
+        public static Bounds CalculateBounds(Vector3[] positions, Matrix4x4 transform)
+        {
+            Bounds bounds;
+            INTERNAL_CALL_CalculateBounds(positions, ref transform, out bounds);
+            return bounds;
+        }
 
-		private static void Internal_ExtractPlanes(Plane[] planes, Matrix4x4 worldToProjectionMatrix)
-		{
-			GeometryUtility.INTERNAL_CALL_Internal_ExtractPlanes(planes, ref worldToProjectionMatrix);
-		}
+        /// <summary>
+        /// <para>Calculates frustum planes.</para>
+        /// </summary>
+        /// <param name="camera"></param>
+        public static Plane[] CalculateFrustumPlanes(Camera camera)
+        {
+            return CalculateFrustumPlanes(camera.projectionMatrix * camera.worldToCameraMatrix);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_Internal_ExtractPlanes(Plane[] planes, ref Matrix4x4 worldToProjectionMatrix);
+        /// <summary>
+        /// <para>Calculates frustum planes.</para>
+        /// </summary>
+        /// <param name="worldToProjectionMatrix"></param>
+        public static Plane[] CalculateFrustumPlanes(Matrix4x4 worldToProjectionMatrix)
+        {
+            Plane[] planes = new Plane[6];
+            Internal_ExtractPlanes(planes, worldToProjectionMatrix);
+            return planes;
+        }
 
-		public static bool TestPlanesAABB(Plane[] planes, Bounds bounds)
-		{
-			return GeometryUtility.INTERNAL_CALL_TestPlanesAABB(planes, ref bounds);
-		}
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_CalculateBounds(Vector3[] positions, ref Matrix4x4 transform, out Bounds value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern void INTERNAL_CALL_Internal_ExtractPlanes(Plane[] planes, ref Matrix4x4 worldToProjectionMatrix);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern bool INTERNAL_CALL_TestPlanesAABB(Plane[] planes, ref Bounds bounds);
+        private static void Internal_ExtractPlanes(Plane[] planes, Matrix4x4 worldToProjectionMatrix)
+        {
+            INTERNAL_CALL_Internal_ExtractPlanes(planes, ref worldToProjectionMatrix);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern bool INTERNAL_CALL_TestPlanesAABB(Plane[] planes, ref Bounds bounds);
-
-		public static Bounds CalculateBounds(Vector3[] positions, Matrix4x4 transform)
-		{
-			Bounds result;
-			GeometryUtility.INTERNAL_CALL_CalculateBounds(positions, ref transform, out result);
-			return result;
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		private static extern void INTERNAL_CALL_CalculateBounds(Vector3[] positions, ref Matrix4x4 transform, out Bounds value);
-	}
+        /// <summary>
+        /// <para>Returns true if bounds are inside the plane array.</para>
+        /// </summary>
+        /// <param name="planes"></param>
+        /// <param name="bounds"></param>
+        public static bool TestPlanesAABB(Plane[] planes, Bounds bounds)
+        {
+            return INTERNAL_CALL_TestPlanesAABB(planes, ref bounds);
+        }
+    }
 }
+

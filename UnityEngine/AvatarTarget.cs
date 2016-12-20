@@ -1,14 +1,18 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum AvatarTarget
-	{
-		Root,
-		Body,
-		LeftFoot,
-		RightFoot,
-		LeftHand,
-		RightHand
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Target.</para>
+    /// </summary>
+    public enum AvatarTarget
+    {
+        Root,
+        Body,
+        LeftFoot,
+        RightFoot,
+        LeftHand,
+        RightHand
+    }
 }
+

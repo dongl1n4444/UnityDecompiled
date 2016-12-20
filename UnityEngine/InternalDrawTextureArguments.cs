@@ -1,27 +1,21 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	internal struct InternalDrawTextureArguments
-	{
-		public Rect screenRect;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public Texture texture;
-
-		public Rect sourceRect;
-
-		public int leftBorder;
-
-		public int rightBorder;
-
-		public int topBorder;
-
-		public int bottomBorder;
-
-		public Color32 color;
-
-		public Material mat;
-
-		public int pass;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct InternalDrawTextureArguments
+    {
+        public Rect screenRect;
+        public Texture texture;
+        public Rect sourceRect;
+        public int leftBorder;
+        public int rightBorder;
+        public int topBorder;
+        public int bottomBorder;
+        public Color32 color;
+        public Material mat;
+        public int pass;
+    }
 }
+

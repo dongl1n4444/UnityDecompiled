@@ -1,25 +1,26 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal sealed class HorizontalLayout : IDisposable
-	{
-		private static readonly HorizontalLayout instance = new HorizontalLayout();
+    using System;
+    using UnityEngine;
 
-		private HorizontalLayout()
-		{
-		}
+    internal sealed class HorizontalLayout : IDisposable
+    {
+        private static readonly HorizontalLayout instance = new HorizontalLayout();
 
-		public static IDisposable DoLayout()
-		{
-			GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-			return HorizontalLayout.instance;
-		}
+        private HorizontalLayout()
+        {
+        }
 
-		void IDisposable.Dispose()
-		{
-			GUILayout.EndHorizontal();
-		}
-	}
+        public static IDisposable DoLayout()
+        {
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            return instance;
+        }
+
+        void IDisposable.Dispose()
+        {
+            GUILayout.EndHorizontal();
+        }
+    }
 }
+

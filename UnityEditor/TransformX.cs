@@ -1,14 +1,15 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal struct TransformX
-	{
-		public Vector3 position;
+    using System;
+    using System.Runtime.InteropServices;
+    using UnityEngine;
 
-		public Quaternion rotation;
-
-		public Vector3 scale;
-	}
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct TransformX
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+        public Vector3 scale;
+    }
 }
+

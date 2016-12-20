@@ -1,27 +1,24 @@
-using System;
-using UnityEditor.Audio;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal class AudioMixerGroupPopupContext
-	{
-		public AudioMixerController controller;
+    using System;
+    using UnityEditor.Audio;
 
-		public AudioMixerGroupController[] groups;
+    internal class AudioMixerGroupPopupContext
+    {
+        public AudioMixerController controller;
+        public AudioMixerGroupController[] groups;
 
-		public AudioMixerGroupPopupContext(AudioMixerController controller, AudioMixerGroupController group)
-		{
-			this.controller = controller;
-			this.groups = new AudioMixerGroupController[]
-			{
-				group
-			};
-		}
+        public AudioMixerGroupPopupContext(AudioMixerController controller, AudioMixerGroupController group)
+        {
+            this.controller = controller;
+            this.groups = new AudioMixerGroupController[] { group };
+        }
 
-		public AudioMixerGroupPopupContext(AudioMixerController controller, AudioMixerGroupController[] groups)
-		{
-			this.controller = controller;
-			this.groups = groups;
-		}
-	}
+        public AudioMixerGroupPopupContext(AudioMixerController controller, AudioMixerGroupController[] groups)
+        {
+            this.controller = controller;
+            this.groups = groups;
+        }
+    }
 }
+

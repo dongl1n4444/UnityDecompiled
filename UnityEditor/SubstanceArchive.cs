@@ -1,9 +1,12 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public sealed class SubstanceArchive : UnityEngine.Object
-	{
-	}
+    using UnityEngine;
+
+    /// <summary>
+    /// <para>Class for Substance Archive handling.</para>
+    /// </summary>
+    public sealed class SubstanceArchive : Object
+    {
+    }
 }
+

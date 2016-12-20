@@ -1,10 +1,10 @@
-using System;
-using UnityEngine;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CustomEditor(typeof(AudioChorusFilter))]
-	internal class AudioChorusFilterEditor : Editor
-	{
-	}
+    using UnityEngine;
+
+    [CustomEditor(typeof(AudioChorusFilter))]
+    internal class AudioChorusFilterEditor : Editor
+    {
+    }
 }
+

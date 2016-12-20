@@ -1,14 +1,15 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	internal enum LookDevMode
-	{
-		Single1,
-		Single2,
-		SideBySide,
-		Split,
-		Zone,
-		Count
-	}
+    using System;
+
+    internal enum LookDevMode
+    {
+        Single1,
+        Single2,
+        SideBySide,
+        Split,
+        Zone,
+        Count
+    }
 }
+

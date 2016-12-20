@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	internal class AnimationWindowHierarchyAddButtonNode : AnimationWindowHierarchyNode
-	{
-		public AnimationWindowHierarchyAddButtonNode() : base(0, -1, null, null, null, null, "")
-		{
-		}
-	}
+    using System;
+
+    internal class AnimationWindowHierarchyAddButtonNode : AnimationWindowHierarchyNode
+    {
+        public AnimationWindowHierarchyAddButtonNode() : base(0, -1, null, null, null, null, "")
+        {
+        }
+    }
 }
+

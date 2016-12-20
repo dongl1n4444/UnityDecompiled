@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum D3D9FullscreenMode
-	{
-		ExclusiveMode,
-		FullscreenWindow
-	}
+    using System;
+
+    /// <summary>
+    /// <para>Direct3D 9 fullscreen mode.</para>
+    /// </summary>
+    public enum D3D9FullscreenMode
+    {
+        ExclusiveMode,
+        FullscreenWindow
+    }
 }
+

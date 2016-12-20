@@ -1,11 +1,15 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public enum RenderMode
-	{
-		ScreenSpaceOverlay,
-		ScreenSpaceCamera,
-		WorldSpace
-	}
+    using System;
+
+    /// <summary>
+    /// <para>RenderMode for the Canvas.</para>
+    /// </summary>
+    public enum RenderMode
+    {
+        ScreenSpaceOverlay,
+        ScreenSpaceCamera,
+        WorldSpace
+    }
 }
+

@@ -1,14 +1,13 @@
-using System;
-using System.Runtime.InteropServices;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[Serializable]
-	[StructLayout(LayoutKind.Sequential)]
-	internal sealed class MaintDatabaseRecord
-	{
-		public string name;
+    using System;
+    using System.Runtime.InteropServices;
 
-		public string dbName;
-	}
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    internal sealed class MaintDatabaseRecord
+    {
+        public string name;
+        public string dbName;
+    }
 }
+

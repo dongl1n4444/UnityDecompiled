@@ -1,11 +1,12 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum PSMBuildSubtarget
-	{
-		DevAssistant,
-		Master,
-		Intermediate
-	}
+    using System;
+
+    public enum PSMBuildSubtarget
+    {
+        DevAssistant,
+        Master,
+        Intermediate
+    }
 }
+

@@ -1,27 +1,35 @@
-using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use AnimatorClipInfo instead (UnityUpgradable) -> AnimatorClipInfo", true)]
-	[StructLayout(LayoutKind.Sequential, Size = 1)]
-	public struct AnimationInfo
-	{
-		public AnimationClip clip
-		{
-			get
-			{
-				return null;
-			}
-		}
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.InteropServices;
 
-		public float weight
-		{
-			get
-			{
-				return 0f;
-			}
-		}
-	}
+    /// <summary>
+    /// <para>Information about what animation clips is played and its weight.</para>
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Size=1), Obsolete("Use AnimatorClipInfo instead (UnityUpgradable) -> AnimatorClipInfo", true), EditorBrowsable(EditorBrowsableState.Never)]
+    public struct AnimationInfo
+    {
+        /// <summary>
+        /// <para>Animation clip that is played.</para>
+        /// </summary>
+        public AnimationClip clip
+        {
+            get
+            {
+                return null;
+            }
+        }
+        /// <summary>
+        /// <para>The weight of the animation clip.</para>
+        /// </summary>
+        public float weight
+        {
+            get
+            {
+                return 0f;
+            }
+        }
+    }
 }
+

@@ -1,24 +1,13 @@
-using System;
+﻿using System;
 
 internal interface ICompilerSettings
 {
-	string[] LibPaths
-	{
-		get;
-	}
+    string CompilerPath { get; }
 
-	string CompilerPath
-	{
-		get;
-	}
+    string[] LibPaths { get; }
 
-	string LinkerPath
-	{
-		get;
-	}
+    string LinkerPath { get; }
 
-	string MachineSpecification
-	{
-		get;
-	}
+    string MachineSpecification { get; }
 }
+

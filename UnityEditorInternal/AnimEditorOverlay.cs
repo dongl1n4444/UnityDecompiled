@@ -1,102 +1,97 @@
-using System;
-using UnityEditor;
-using UnityEngine;
-
-namespace UnityEditorInternal
+﻿namespace UnityEditorInternal
 {
-	[Serializable]
-	internal class AnimEditorOverlay
-	{
-		public AnimationWindowState state;
+    using System;
+    using UnityEditor;
+    using UnityEngine;
 
-		private TimeCursorManipulator m_PlayHeadCursor;
+    [Serializable]
+    internal class AnimEditorOverlay
+    {
+        private Rect m_ContentRect;
+        private TimeCursorManipulator m_PlayHeadCursor;
+        private Rect m_Rect;
+        public AnimationWindowState state;
 
-		private Rect m_Rect;
+        public void HandleEvents()
+        {
+            this.Initialize();
+            this.m_PlayHeadCursor.HandleEvents();
+        }
 
-		private Rect m_ContentRect;
+        public void Initialize()
+        {
+            if (this.m_PlayHeadCursor == null)
+            {
+                this.m_PlayHeadCursor = new TimeCursorManipulator(AnimationWindowStyles.playHead);
+                this.m_PlayHeadCursor.onStartDrag = (AnimationWindowManipulator.OnStartDragDelegate) Delegate.Combine(this.m_PlayHeadCursor.onStartDrag, (manipulator, evt) => (evt.mousePosition.y <= (this.m_Rect.yMin + 20f)) && this.OnDragPlayHead(evt));
+                this.m_PlayHeadCursor.onDrag = (AnimationWindowManipulator.OnDragDelegate) Delegate.Combine(this.m_PlayHeadCursor.onDrag, (manipulator, evt) => this.OnDragPlayHead(evt));
+            }
+        }
 
-		public Rect rect
-		{
-			get
-			{
-				return this.m_Rect;
-			}
-		}
+        public float MousePositionToTime(Event evt)
+        {
+            float width = this.m_ContentRect.width;
+            float time = Mathf.Max((float) (((evt.mousePosition.x / width) * this.state.visibleTimeSpan) + this.state.minVisibleTime), (float) 0f);
+            return this.state.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToFrame);
+        }
 
-		public Rect contentRect
-		{
-			get
-			{
-				return this.m_ContentRect;
-			}
-		}
+        public float MousePositionToValue(Event evt)
+        {
+            float num2 = this.m_ContentRect.height - evt.mousePosition.y;
+            TimeArea timeArea = this.state.timeArea;
+            float num3 = timeArea.m_Scale.y * -1f;
+            float num4 = (timeArea.shownArea.yMin * num3) * -1f;
+            return ((num2 - num4) / num3);
+        }
 
-		public void Initialize()
-		{
-			if (this.m_PlayHeadCursor == null)
-			{
-				this.m_PlayHeadCursor = new TimeCursorManipulator(AnimationWindowStyles.playHead);
-				TimeCursorManipulator expr_23 = this.m_PlayHeadCursor;
-				expr_23.onStartDrag = (AnimationWindowManipulator.OnStartDragDelegate)Delegate.Combine(expr_23.onStartDrag, new AnimationWindowManipulator.OnStartDragDelegate((AnimationWindowManipulator manipulator, Event evt) => evt.mousePosition.y <= this.m_Rect.yMin + 20f && this.OnDragPlayHead(evt)));
-				TimeCursorManipulator expr_4A = this.m_PlayHeadCursor;
-				expr_4A.onDrag = (AnimationWindowManipulator.OnDragDelegate)Delegate.Combine(expr_4A.onDrag, new AnimationWindowManipulator.OnDragDelegate((AnimationWindowManipulator manipulator, Event evt) => this.OnDragPlayHead(evt)));
-			}
-		}
+        private bool OnDragPlayHead(Event evt)
+        {
+            this.state.currentTime = this.MousePositionToTime(evt);
+            this.state.recording = true;
+            this.state.playing = false;
+            this.state.ResampleAnimation();
+            return true;
+        }
 
-		public void OnGUI(Rect rect, Rect contentRect)
-		{
-			if (Event.current.type == EventType.Repaint)
-			{
-				this.m_Rect = rect;
-				this.m_ContentRect = contentRect;
-				this.Initialize();
-				this.m_PlayHeadCursor.OnGUI(this.m_Rect, this.m_Rect.xMin + this.TimeToPixel(this.state.currentTime));
-			}
-		}
+        public void OnGUI(Rect rect, Rect contentRect)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                this.m_Rect = rect;
+                this.m_ContentRect = contentRect;
+                this.Initialize();
+                this.m_PlayHeadCursor.OnGUI(this.m_Rect, this.m_Rect.xMin + this.TimeToPixel(this.state.currentTime));
+            }
+        }
 
-		public void HandleEvents()
-		{
-			this.Initialize();
-			this.m_PlayHeadCursor.HandleEvents();
-		}
+        public float TimeToPixel(float time)
+        {
+            return this.state.TimeToPixel(time);
+        }
 
-		private bool OnDragPlayHead(Event evt)
-		{
-			this.state.currentTime = this.MousePositionToTime(evt);
-			this.state.recording = true;
-			this.state.playing = false;
-			this.state.ResampleAnimation();
-			return true;
-		}
+        public float ValueToPixel(float value)
+        {
+            TimeArea timeArea = this.state.timeArea;
+            float num = timeArea.m_Scale.y * -1f;
+            float num2 = (timeArea.shownArea.yMin * num) * -1f;
+            return ((value * num) + num2);
+        }
 
-		public float MousePositionToTime(Event evt)
-		{
-			float width = this.m_ContentRect.width;
-			float time = Mathf.Max(evt.mousePosition.x / width * this.state.visibleTimeSpan + this.state.minVisibleTime, 0f);
-			return this.state.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToFrame);
-		}
+        public Rect contentRect
+        {
+            get
+            {
+                return this.m_ContentRect;
+            }
+        }
 
-		public float MousePositionToValue(Event evt)
-		{
-			float height = this.m_ContentRect.height;
-			float num = height - evt.mousePosition.y;
-			TimeArea timeArea = this.state.timeArea;
-			float num2 = timeArea.m_Scale.y * -1f;
-			float num3 = timeArea.shownArea.yMin * num2 * -1f;
-			return (num - num3) / num2;
-		}
-
-		public float TimeToPixel(float time)
-		{
-			return this.state.TimeToPixel(time);
-		}
-
-		public float ValueToPixel(float value)
-		{
-			TimeArea timeArea = this.state.timeArea;
-			float num = timeArea.m_Scale.y * -1f;
-			float num2 = timeArea.shownArea.yMin * num * -1f;
-			return value * num + num2;
-		}
-	}
+        public Rect rect
+        {
+            get
+            {
+                return this.m_Rect;
+            }
+        }
+    }
 }
+

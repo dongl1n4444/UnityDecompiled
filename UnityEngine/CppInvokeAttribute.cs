@@ -1,9 +1,10 @@
-using System;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-	internal class CppInvokeAttribute : Attribute
-	{
-	}
+    using System;
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
+    internal class CppInvokeAttribute : Attribute
+    {
+    }
 }
+

@@ -1,92 +1,115 @@
-using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using UnityEngine.Internal;
-using UnityEngine.Scripting;
-
-namespace UnityEngine
+﻿namespace UnityEngine
 {
-	public sealed class RemoteSettings
-	{
-		public delegate void UpdatedEventHandler();
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
+    using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
-		public static event RemoteSettings.UpdatedEventHandler Updated
-		{
-			add
-			{
-				RemoteSettings.UpdatedEventHandler updatedEventHandler = RemoteSettings.Updated;
-				RemoteSettings.UpdatedEventHandler updatedEventHandler2;
-				do
-				{
-					updatedEventHandler2 = updatedEventHandler;
-					updatedEventHandler = Interlocked.CompareExchange<RemoteSettings.UpdatedEventHandler>(ref RemoteSettings.Updated, (RemoteSettings.UpdatedEventHandler)Delegate.Combine(updatedEventHandler2, value), updatedEventHandler);
-				}
-				while (updatedEventHandler != updatedEventHandler2);
-			}
-			remove
-			{
-				RemoteSettings.UpdatedEventHandler updatedEventHandler = RemoteSettings.Updated;
-				RemoteSettings.UpdatedEventHandler updatedEventHandler2;
-				do
-				{
-					updatedEventHandler2 = updatedEventHandler;
-					updatedEventHandler = Interlocked.CompareExchange<RemoteSettings.UpdatedEventHandler>(ref RemoteSettings.Updated, (RemoteSettings.UpdatedEventHandler)Delegate.Remove(updatedEventHandler2, value), updatedEventHandler);
-				}
-				while (updatedEventHandler != updatedEventHandler2);
-			}
-		}
+    /// <summary>
+    /// <para>Accesses remote settings (common for all game instances).</para>
+    /// </summary>
+    public sealed class RemoteSettings
+    {
+        public static  event UpdatedEventHandler Updated;
 
-		[RequiredByNativeCode]
-		public static void CallOnUpdate()
-		{
-			RemoteSettings.UpdatedEventHandler updated = RemoteSettings.Updated;
-			if (updated != null)
-			{
-				updated();
-			}
-		}
+        [RequiredByNativeCode]
+        public static void CallOnUpdate()
+        {
+            UpdatedEventHandler updated = Updated;
+            if (updated != null)
+            {
+                updated();
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern int GetInt(string key, [DefaultValue("0")] int defaultValue);
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [ExcludeFromDocs]
+        public static bool GetBool(string key)
+        {
+            bool defaultValue = false;
+            return GetBool(key, defaultValue);
+        }
 
-		[ExcludeFromDocs]
-		public static int GetInt(string key)
-		{
-			int defaultValue = 0;
-			return RemoteSettings.GetInt(key, defaultValue);
-		}
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetBool(string key, [DefaultValue("false")] bool defaultValue);
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [ExcludeFromDocs]
+        public static float GetFloat(string key)
+        {
+            float defaultValue = 0f;
+            return GetFloat(key, defaultValue);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern float GetFloat(string key, [DefaultValue("0.0F")] float defaultValue);
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetFloat(string key, [DefaultValue("0.0F")] float defaultValue);
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [ExcludeFromDocs]
+        public static int GetInt(string key)
+        {
+            int defaultValue = 0;
+            return GetInt(key, defaultValue);
+        }
 
-		[ExcludeFromDocs]
-		public static float GetFloat(string key)
-		{
-			float defaultValue = 0f;
-			return RemoteSettings.GetFloat(key, defaultValue);
-		}
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GetInt(string key, [DefaultValue("0")] int defaultValue);
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [ExcludeFromDocs]
+        public static string GetString(string key)
+        {
+            string defaultValue = "";
+            return GetString(key, defaultValue);
+        }
 
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern string GetString(string key, [DefaultValue("\"\"")] string defaultValue);
+        /// <summary>
+        /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string GetString(string key, [DefaultValue("\"\"")] string defaultValue);
+        /// <summary>
+        /// <para>Returns true if key exists in the remote settings.</para>
+        /// </summary>
+        /// <param name="key"></param>
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool HasKey(string key);
 
-		[ExcludeFromDocs]
-		public static string GetString(string key)
-		{
-			string defaultValue = "";
-			return RemoteSettings.GetString(key, defaultValue);
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool GetBool(string key, [DefaultValue("false")] bool defaultValue);
-
-		[ExcludeFromDocs]
-		public static bool GetBool(string key)
-		{
-			bool defaultValue = false;
-			return RemoteSettings.GetBool(key, defaultValue);
-		}
-
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern bool HasKey(string key);
-	}
+        /// <summary>
+        /// <para>This event occurs when a new RemoteSettings is fetched and successfully parsed from the server.</para>
+        /// </summary>
+        public delegate void UpdatedEventHandler();
+    }
 }
+

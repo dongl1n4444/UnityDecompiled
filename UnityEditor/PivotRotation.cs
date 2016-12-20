@@ -1,10 +1,14 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	public enum PivotRotation
-	{
-		Local,
-		Global
-	}
+    using System;
+
+    /// <summary>
+    /// <para>How is the tool handle oriented.</para>
+    /// </summary>
+    public enum PivotRotation
+    {
+        Local,
+        Global
+    }
 }
+

@@ -1,9 +1,8 @@
-using System;
-
-namespace UnityEditor
+﻿namespace UnityEditor
 {
-	[CanEditMultipleObjects, CustomEditor(typeof(MonoScript))]
-	internal class MonoScriptInspector : TextAssetInspector
-	{
-	}
+    [CustomEditor(typeof(MonoScript)), CanEditMultipleObjects]
+    internal class MonoScriptInspector : TextAssetInspector
+    {
+    }
 }
+
