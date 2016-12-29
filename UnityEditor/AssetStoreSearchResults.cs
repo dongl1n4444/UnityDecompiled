@@ -119,16 +119,14 @@
             public string name;
             public int offset;
             public int limit;
-            public static AssetStoreSearchResults.Group Create()
-            {
-                return new AssetStoreSearchResults.Group { 
+            public static AssetStoreSearchResults.Group Create() => 
+                new AssetStoreSearchResults.Group { 
                     assets = new List<AssetStoreAsset>(),
                     label = "",
                     name = "",
                     offset = 0,
                     limit = -1
                 };
-            }
         }
     }
 }

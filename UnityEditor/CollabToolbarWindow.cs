@@ -103,23 +103,17 @@
         }
 
         [MenuItem("Window/Collab Toolbar", false, 0x7db, true)]
-        public static CollabToolbarWindow ShowToolbarWindow()
-        {
-            return EditorWindow.GetWindow<CollabToolbarWindow>(false, "Unity Collab Toolbar");
-        }
+        public static CollabToolbarWindow ShowToolbarWindow() => 
+            EditorWindow.GetWindow<CollabToolbarWindow>(false, "Unity Collab Toolbar");
 
         [MenuItem("Window/Collab Toolbar", true)]
-        public static bool ValidateShowToolbarWindow()
-        {
-            return (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
-        }
+        public static bool ValidateShowToolbarWindow() => 
+            (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
 
         internal override WebView webView
         {
-            get
-            {
-                return WebViewStatic.GetWebView();
-            }
+            get => 
+                WebViewStatic.GetWebView();
             set
             {
                 WebViewStatic.SetWebView(value);

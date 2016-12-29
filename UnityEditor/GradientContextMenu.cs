@@ -15,8 +15,8 @@
 
         private void Copy()
         {
-            Gradient gradient = (this.m_Prop1 == null) ? null : this.m_Prop1.gradientValue;
-            ParticleSystemClipboard.CopyGradient(gradient, null);
+            Gradient gradientValue = this.m_Prop1?.gradientValue;
+            ParticleSystemClipboard.CopyGradient(gradientValue, null);
         }
 
         private void Paste()

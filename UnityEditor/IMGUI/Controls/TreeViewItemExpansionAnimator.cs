@@ -80,10 +80,8 @@
             return false;
         }
 
-        private string DebugItemName(int row)
-        {
-            return this.m_Setup.treeView.data.GetRows()[row].displayName;
-        }
+        private string DebugItemName(int row) => 
+            this.m_Setup.treeView.data.GetRows()[row].displayName;
 
         private void EndClip()
         {
@@ -176,21 +174,11 @@
             }
         }
 
-        public float deltaHeight
-        {
-            get
-            {
-                return (this.m_Setup.rowsRect.height - (this.m_Setup.rowsRect.height * this.expandedValueNormalized));
-            }
-        }
+        public float deltaHeight =>
+            (this.m_Setup.rowsRect.height - (this.m_Setup.rowsRect.height * this.expandedValueNormalized));
 
-        public int endRow
-        {
-            get
-            {
-                return this.m_Setup.endRow;
-            }
-        }
+        public int endRow =>
+            this.m_Setup.endRow;
 
         public float expandedValueNormalized
         {
@@ -201,37 +189,17 @@
             }
         }
 
-        public bool isAnimating
-        {
-            get
-            {
-                return (this.m_Setup != null);
-            }
-        }
+        public bool isAnimating =>
+            (this.m_Setup != null);
 
-        public bool isExpanding
-        {
-            get
-            {
-                return this.m_Setup.expanding;
-            }
-        }
+        public bool isExpanding =>
+            this.m_Setup.expanding;
 
-        private bool printDebug
-        {
-            get
-            {
-                return (((s_Debug && (this.m_Setup != null)) && (this.m_Setup.treeView != null)) && (Event.current.type == EventType.Repaint));
-            }
-        }
+        private bool printDebug =>
+            (((s_Debug && (this.m_Setup != null)) && (this.m_Setup.treeView != null)) && (Event.current.type == EventType.Repaint));
 
-        public int startRow
-        {
-            get
-            {
-                return this.m_Setup.startRow;
-            }
-        }
+        public int startRow =>
+            this.m_Setup.startRow;
     }
 }
 

@@ -15,13 +15,8 @@
         /// <summary>
         /// <para>The address of the managed object that the GC handle is referencing.</para>
         /// </summary>
-        public ulong target
-        {
-            get
-            {
-                return this.m_Target;
-            }
-        }
+        public ulong target =>
+            this.m_Target;
     }
 }
 

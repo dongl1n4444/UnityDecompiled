@@ -25,10 +25,10 @@
             {
                 throw new InvalidOperationException("Calling static methods is not supported on interfaces!");
             }
-            MethodReference overridenInterfaceMethod = Extensions.GetOverridenInterfaceMethod(method, Extensions.GetStaticFactoryTypes(type));
+            MethodReference overridenInterfaceMethod = method.GetOverridenInterfaceMethod(type.GetStaticFactoryTypes());
             if (overridenInterfaceMethod == null)
             {
-                throw new InvalidOperationException(string.Format("Could not find overriden method for {0}", method.FullName));
+                throw new InvalidOperationException($"Could not find overriden method for {method.FullName}");
             }
             return overridenInterfaceMethod;
         }

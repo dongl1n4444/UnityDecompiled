@@ -18,7 +18,7 @@
         private static EditorApplication.CallbackFunction <>f__mg$cache1;
         [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache2;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static bool <active>k__BackingField;
         private const int kExpansionMovementSize = 5;
         private const float kPopupDuration = 0.33f;
@@ -75,10 +75,8 @@
         /// <returns>
         /// <para>true if the requested element was found; otherwise false.</para>
         /// </returns>
-        public static bool Highlight(string windowTitle, string text)
-        {
-            return Highlight(windowTitle, text, HighlightSearchMode.Auto);
-        }
+        public static bool Highlight(string windowTitle, string text) => 
+            Highlight(windowTitle, text, HighlightSearchMode.Auto);
 
         /// <summary>
         /// <para>Highlights an element in the editor.</para>
@@ -266,10 +264,8 @@
         public static bool active
         {
             [CompilerGenerated]
-            get
-            {
-                return <active>k__BackingField;
-            }
+            get => 
+                <active>k__BackingField;
             [CompilerGenerated]
             private set
             {
@@ -282,10 +278,8 @@
         /// </summary>
         public static Rect activeRect
         {
-            get
-            {
-                return internal_get_activeRect();
-            }
+            get => 
+                internal_get_activeRect();
             private set
             {
                 internal_set_activeRect(value);
@@ -297,10 +291,8 @@
         /// </summary>
         public static string activeText
         {
-            get
-            {
-                return internal_get_activeText();
-            }
+            get => 
+                internal_get_activeText();
             private set
             {
                 internal_set_activeText(value);
@@ -312,10 +304,8 @@
         /// </summary>
         public static bool activeVisible
         {
-            get
-            {
-                return internal_get_activeVisible();
-            }
+            get => 
+                internal_get_activeVisible();
             private set
             {
                 internal_set_activeVisible(value);

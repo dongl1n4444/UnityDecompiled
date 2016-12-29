@@ -30,10 +30,8 @@
             Internal_Create(this);
         }
 
-        public T AddEffectiveStateMachineBehaviour<T>(AnimatorState state, int layerIndex) where T: StateMachineBehaviour
-        {
-            return (this.AddEffectiveStateMachineBehaviour(typeof(T), state, layerIndex) as T);
-        }
+        public T AddEffectiveStateMachineBehaviour<T>(AnimatorState state, int layerIndex) where T: StateMachineBehaviour => 
+            (this.AddEffectiveStateMachineBehaviour(typeof(T), state, layerIndex) as T);
 
         /// <summary>
         /// <para>Adds a state machine behaviour class of type stateMachineBehaviourType to the AnimatorState for layer layerIndex. This function should be used when you are dealing with synchronized layer and would like to add a state machine behaviour on a synchronized layer. C# Users can use a generic version.</para>
@@ -42,10 +40,8 @@
         /// <param name="state"></param>
         /// <param name="layerIndex"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddEffectiveStateMachineBehaviour(Type stateMachineBehaviourType, AnimatorState state, int layerIndex)
-        {
-            return (StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType, state, layerIndex);
-        }
+        public StateMachineBehaviour AddEffectiveStateMachineBehaviour(Type stateMachineBehaviourType, AnimatorState state, int layerIndex) => 
+            ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType, state, layerIndex));
 
         /// <summary>
         /// <para>Utility function to add a layer to the controller.</para>
@@ -85,10 +81,8 @@
         /// </summary>
         /// <param name="motion">The Motion that will be in the AnimatorState.</param>
         /// <param name="layerIndex">The layer where the Motion will be added.</param>
-        public AnimatorState AddMotion(Motion motion)
-        {
-            return this.AddMotion(motion, 0);
-        }
+        public AnimatorState AddMotion(Motion motion) => 
+            this.AddMotion(motion, 0);
 
         /// <summary>
         /// <para>Utility function that creates a new state  with the motion in it.</para>
@@ -204,10 +198,8 @@
             return CreateAnimatorControllerAtPathWithClip(assetPath, clip);
         }
 
-        public AnimatorState CreateBlendTreeInController(string name, out BlendTree tree)
-        {
-            return this.CreateBlendTreeInController(name, out tree, 0);
-        }
+        public AnimatorState CreateBlendTreeInController(string name, out BlendTree tree) => 
+            this.CreateBlendTreeInController(name, out tree, 0);
 
         public AnimatorState CreateBlendTreeInController(string name, out BlendTree tree, int layerIndex)
         {
@@ -260,17 +252,13 @@
         /// <returns>
         /// <para>Returns the State Machine Behaviour edition context.</para>
         /// </returns>
-        public static StateMachineBehaviourContext[] FindStateMachineBehaviourContext(StateMachineBehaviour behaviour)
-        {
-            return Internal_FindStateMachineBehaviourContext(behaviour);
-        }
+        public static StateMachineBehaviourContext[] FindStateMachineBehaviourContext(StateMachineBehaviour behaviour) => 
+            Internal_FindStateMachineBehaviourContext(behaviour);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern MonoScript GetBehaviourMonoScript(AnimatorState state, int layerIndex, int behaviourIndex);
-        public T[] GetBehaviours<T>() where T: StateMachineBehaviour
-        {
-            return ConvertStateMachineBehaviour<T>(this.GetBehaviours(typeof(T)));
-        }
+        public T[] GetBehaviours<T>() where T: StateMachineBehaviour => 
+            ConvertStateMachineBehaviour<T>(this.GetBehaviours(typeof(T)));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern ScriptableObject[] GetBehaviours(Type type);
@@ -294,20 +282,16 @@
         /// </summary>
         /// <param name="state">The AnimatorState which we want the Behaviour list.</param>
         /// <param name="layerIndex">The layer that is queried.</param>
-        public StateMachineBehaviour[] GetStateEffectiveBehaviours(AnimatorState state, int layerIndex)
-        {
-            return this.Internal_GetEffectiveBehaviours(state, layerIndex);
-        }
+        public StateMachineBehaviour[] GetStateEffectiveBehaviours(AnimatorState state, int layerIndex) => 
+            this.Internal_GetEffectiveBehaviours(state, layerIndex);
 
         /// <summary>
         /// <para>Gets the effective Motion for the AnimatorState. The Motion is either stored in the AnimatorStateMachine or in the AnimatorLayer's ovverrides. Use this function to get the Motion that is effectively used.</para>
         /// </summary>
         /// <param name="state">The AnimatorState which we want the Motion.</param>
         /// <param name="layerIndex">The layer that is queried.</param>
-        public Motion GetStateEffectiveMotion(AnimatorState state)
-        {
-            return this.GetStateEffectiveMotion(state, 0);
-        }
+        public Motion GetStateEffectiveMotion(AnimatorState state) => 
+            this.GetStateEffectiveMotion(state, 0);
 
         /// <summary>
         /// <para>Gets the effective Motion for the AnimatorState. The Motion is either stored in the AnimatorStateMachine or in the AnimatorLayer's ovverrides. Use this function to get the Motion that is effectively used.</para>
@@ -468,13 +452,8 @@
         internal bool isAssetBundled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("layerCount is obsolete. Use layers.Length instead.", true)]
-        private int layerCount
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        private int layerCount =>
+            0;
 
         /// <summary>
         /// <para>The layers in the controller.</para>
@@ -482,13 +461,8 @@
         public AnimatorControllerLayer[] layers { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         [Obsolete("parameterCount is obsolete. Use parameters.Length instead.", true)]
-        private int parameterCount
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        private int parameterCount =>
+            0;
 
         /// <summary>
         /// <para>Parameters are used to communicate between scripting and the controller. They are used to drive transitions and blendtrees for example.</para>

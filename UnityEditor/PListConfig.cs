@@ -30,10 +30,8 @@
             this.xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<dict>\n</dict>\n</plist>\n";
         }
 
-        private static Regex GetRegex(string paramName)
-        {
-            return new Regex("(?<Part1><key>" + paramName + @"</key>\s*<string>)(?<Value>.*)</string>");
-        }
+        private static Regex GetRegex(string paramName) => 
+            new Regex("(?<Part1><key>" + paramName + @"</key>\s*<string>)(?<Value>.*)</string>");
 
         public void Save()
         {

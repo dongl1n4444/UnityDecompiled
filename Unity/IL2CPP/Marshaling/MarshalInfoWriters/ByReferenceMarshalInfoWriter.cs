@@ -25,39 +25,27 @@
             {
                 <>f__am$cache0 = new Func<MarshaledType, MarshaledType>(null, (IntPtr) <ByReferenceMarshalInfoWriter>m__0);
             }
-            this._marshaledTypes = Enumerable.ToArray<MarshaledType>(Enumerable.Select<MarshaledType, MarshaledType>(this._elementTypeMarshalInfoWriter.MarshaledTypes, <>f__am$cache0));
+            this._marshaledTypes = this._elementTypeMarshalInfoWriter.MarshaledTypes.Select<MarshaledType, MarshaledType>(<>f__am$cache0).ToArray<MarshaledType>();
         }
 
         [CompilerGenerated]
-        private static MarshaledType <ByReferenceMarshalInfoWriter>m__0(MarshaledType t)
-        {
-            return new MarshaledType(t.Name + "*", t.DecoratedName + "*", t.VariableName);
-        }
+        private static MarshaledType <ByReferenceMarshalInfoWriter>m__0(MarshaledType t) => 
+            new MarshaledType(t.Name + "*", t.DecoratedName + "*", t.VariableName);
 
-        public override bool CanMarshalTypeFromNative()
-        {
-            return this._elementTypeMarshalInfoWriter.CanMarshalTypeFromNative();
-        }
+        public override bool CanMarshalTypeFromNative() => 
+            this._elementTypeMarshalInfoWriter.CanMarshalTypeFromNative();
 
-        public override bool CanMarshalTypeToNative()
-        {
-            return this._elementTypeMarshalInfoWriter.CanMarshalTypeToNative();
-        }
+        public override bool CanMarshalTypeToNative() => 
+            this._elementTypeMarshalInfoWriter.CanMarshalTypeToNative();
 
-        public override string DecorateVariable(string unmarshaledParameterName, string marshaledVariableName)
-        {
-            return this._elementTypeMarshalInfoWriter.DecorateVariable(unmarshaledParameterName, marshaledVariableName);
-        }
+        public override string DecorateVariable(string unmarshaledParameterName, string marshaledVariableName) => 
+            this._elementTypeMarshalInfoWriter.DecorateVariable(unmarshaledParameterName, marshaledVariableName);
 
-        public override string GetMarshalingException()
-        {
-            return this._elementTypeMarshalInfoWriter.GetMarshalingException();
-        }
+        public override string GetMarshalingException() => 
+            this._elementTypeMarshalInfoWriter.GetMarshalingException();
 
-        public override string UndecorateVariable(string variableName)
-        {
-            return this._elementTypeMarshalInfoWriter.UndecorateVariable(variableName);
-        }
+        public override string UndecorateVariable(string variableName) => 
+            this._elementTypeMarshalInfoWriter.UndecorateVariable(variableName);
 
         public override void WriteDeclareAndAllocateObject(CppCodeWriter writer, string unmarshaledVariableName, string marshaledVariableName, IRuntimeMetadataAccess metadataAccess)
         {
@@ -82,7 +70,7 @@
             this._elementTypeMarshalInfoWriter.WriteMarshalCleanupEmptyVariable(writer, DefaultMarshalInfoWriter.Naming.Dereference(variableName), metadataAccess, DefaultMarshalInfoWriter.Naming.Dereference(managedVariableName));
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             this._elementTypeMarshalInfoWriter.WriteMarshalCleanupVariable(writer, DefaultMarshalInfoWriter.Naming.Dereference(variableName), metadataAccess, DefaultMarshalInfoWriter.Naming.Dereference(managedVariableName));
         }
@@ -94,20 +82,20 @@
 
         public override string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
         {
-            string name = string.Format("_{0}_empty", DefaultMarshalInfoWriter.CleanVariableName(variableName));
+            string name = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_empty";
             writer.WriteVariable(this._elementType, name);
             return DefaultMarshalInfoWriter.Naming.AddressOf(name);
         }
 
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
         {
-            string str = string.Format("_{0}_marshaled", variableName.GetNiceName());
+            string str = $"_{variableName.GetNiceName()}_marshaled";
             if ((((((ByReferenceType) base._typeRef).ElementType.MetadataType == MetadataType.Class) && !(this._elementTypeMarshalInfoWriter is UnmarshalableMarshalInfoWriter)) && (!(this._elementTypeMarshalInfoWriter is SafeHandleMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is ComObjectMarshalInfoWriter))) && (!(this._elementTypeMarshalInfoWriter is DelegateMarshalInfoWriter) && !(this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter)))
             {
                 this.WriteNativeVariableDeclarationOfType(writer, str);
                 return str;
             }
-            string str2 = string.Format("_{0}_empty", variableName.GetNiceName());
+            string str2 = $"_{variableName.GetNiceName()}_empty";
             this._elementTypeMarshalInfoWriter.WriteNativeVariableDeclarationOfType(writer, str2);
             foreach (MarshaledType type in this.MarshaledTypes)
             {
@@ -124,7 +112,7 @@
 
         public override string WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
         {
-            string unmarshaledVariableName = string.Format("_{0}_unmarshaled_dereferenced", DefaultMarshalInfoWriter.CleanVariableName(variableName));
+            string unmarshaledVariableName = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_unmarshaled_dereferenced";
             this._elementTypeMarshalInfoWriter.WriteDeclareAndAllocateObject(writer, unmarshaledVariableName, variableName, metadataAccess);
             this._elementTypeMarshalInfoWriter.WriteMarshalVariableFromNative(writer, DefaultMarshalInfoWriter.Naming.Dereference(variableName), new ManagedMarshalValue(unmarshaledVariableName), methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess);
             return DefaultMarshalInfoWriter.Naming.AddressOf(unmarshaledVariableName);
@@ -132,7 +120,7 @@
 
         public override void WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
         {
-            string unmarshaledVariableName = string.Format("_{0}_unmarshaled_dereferenced", DefaultMarshalInfoWriter.CleanVariableName(variableName));
+            string unmarshaledVariableName = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_unmarshaled_dereferenced";
             this._elementTypeMarshalInfoWriter.WriteDeclareAndAllocateObject(writer, unmarshaledVariableName, variableName, metadataAccess);
             this._elementTypeMarshalInfoWriter.WriteMarshalVariableFromNative(writer, DefaultMarshalInfoWriter.Naming.Dereference(variableName), new ManagedMarshalValue(unmarshaledVariableName), methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess);
             writer.WriteLine(destinationVariable.Dereferenced.Store(unmarshaledVariableName));
@@ -140,20 +128,15 @@
 
         public override void WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
         {
-            string variableName = string.Format("{0}_dereferenced", DefaultMarshalInfoWriter.CleanVariableName(destinationVariable));
+            string variableName = $"{DefaultMarshalInfoWriter.CleanVariableName(destinationVariable)}_dereferenced";
             this._elementTypeMarshalInfoWriter.WriteNativeVariableDeclarationOfType(writer, variableName);
             this._elementTypeMarshalInfoWriter.WriteMarshalVariableToNative(writer, sourceVariable.Dereferenced, variableName, managedVariableName, metadataAccess);
             object[] args = new object[] { destinationVariable, variableName };
             writer.WriteLine("{0} = &{1};", args);
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
     }
 }
 

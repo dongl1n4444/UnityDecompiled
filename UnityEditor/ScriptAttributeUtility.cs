@@ -41,7 +41,7 @@
             {
                 <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <BuildDrawerTypeForTypeDictionary>m__0);
             }
-            Type[] typeArray = Enumerable.ToArray<Type>(Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0));
+            Type[] typeArray = Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<Type>();
             foreach (Type type in EditorAssemblies.SubclassesOf(typeof(GUIDrawer)))
             {
                 object[] objArray2 = type.GetCustomAttributes(typeof(CustomPropertyDrawer), true);
@@ -159,9 +159,9 @@
                 string name = strArray[i];
                 if (((i < (strArray.Length - 1)) && (name == "Array")) && strArray[i + 1].StartsWith("data["))
                 {
-                    if (EditorExtensionMethods.IsArrayOrList(type))
+                    if (type.IsArrayOrList())
                     {
-                        type = EditorExtensionMethods.GetArrayOrListElementType(type);
+                        type = type.GetArrayOrListElementType();
                     }
                     i++;
                 }
@@ -251,11 +251,7 @@
                 return null;
             }
             MonoScript objectReferenceValue = property2.objectReferenceValue as MonoScript;
-            if (objectReferenceValue == null)
-            {
-                return null;
-            }
-            return objectReferenceValue.GetClass();
+            return objectReferenceValue?.GetClass();
         }
 
         private static void PopulateBuiltinAttributes()
@@ -291,10 +287,8 @@
         {
             internal CustomPropertyDrawer editor;
 
-            internal bool <>m__0(Type x)
-            {
-                return x.IsSubclassOf(this.editor.m_Type);
-            }
+            internal bool <>m__0(Type x) => 
+                x.IsSubclassOf(this.editor.m_Type);
         }
 
         [StructLayout(LayoutKind.Sequential)]

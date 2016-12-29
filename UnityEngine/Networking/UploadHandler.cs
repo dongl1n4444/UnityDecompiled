@@ -38,22 +38,15 @@
         /// <summary>
         /// <para>The raw data which will be transmitted to the remote server as body data. (Read Only)</para>
         /// </summary>
-        public byte[] data
-        {
-            get
-            {
-                return this.GetData();
-            }
-        }
+        public byte[] data =>
+            this.GetData();
         /// <summary>
         /// <para>Determines the default Content-Type header which will be transmitted with the outbound HTTP request.</para>
         /// </summary>
         public string contentType
         {
-            get
-            {
-                return this.GetContentType();
-            }
+            get => 
+                this.GetContentType();
             set
             {
                 this.SetContentType(value);
@@ -62,31 +55,20 @@
         /// <summary>
         /// <para>Returns the proportion of data uploaded to the remote server compared to the total amount of data to upload. (Read Only)</para>
         /// </summary>
-        public float progress
-        {
-            get
-            {
-                return this.GetProgress();
-            }
-        }
-        internal virtual byte[] GetData()
-        {
-            return null;
-        }
+        public float progress =>
+            this.GetProgress();
+        internal virtual byte[] GetData() => 
+            null;
 
-        internal virtual string GetContentType()
-        {
-            return "text/plain";
-        }
+        internal virtual string GetContentType() => 
+            "text/plain";
 
         internal virtual void SetContentType(string newContentType)
         {
         }
 
-        internal virtual float GetProgress()
-        {
-            return 0.5f;
-        }
+        internal virtual float GetProgress() => 
+            0.5f;
     }
 }
 

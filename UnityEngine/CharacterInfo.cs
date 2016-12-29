@@ -47,10 +47,8 @@
         /// </summary>
         public int advance
         {
-            get
-            {
-                return (int) this.width;
-            }
+            get => 
+                ((int) this.width);
             set
             {
                 this.width = value;
@@ -61,10 +59,8 @@
         /// </summary>
         public int glyphWidth
         {
-            get
-            {
-                return (int) this.vert.width;
-            }
+            get => 
+                ((int) this.vert.width);
             set
             {
                 this.vert.width = value;
@@ -75,10 +71,8 @@
         /// </summary>
         public int glyphHeight
         {
-            get
-            {
-                return (int) -this.vert.height;
-            }
+            get => 
+                ((int) -this.vert.height);
             set
             {
                 float height = this.vert.height;
@@ -91,10 +85,8 @@
         /// </summary>
         public int bearing
         {
-            get
-            {
-                return (int) this.vert.x;
-            }
+            get => 
+                ((int) this.vert.x);
             set
             {
                 this.vert.x = value;
@@ -105,10 +97,8 @@
         /// </summary>
         public int minY
         {
-            get
-            {
-                return (int) (this.vert.y + this.vert.height);
-            }
+            get => 
+                ((int) (this.vert.y + this.vert.height));
             set
             {
                 this.vert.height = value - this.vert.y;
@@ -119,10 +109,8 @@
         /// </summary>
         public int maxY
         {
-            get
-            {
-                return (int) this.vert.y;
-            }
+            get => 
+                ((int) this.vert.y);
             set
             {
                 float y = this.vert.y;
@@ -135,10 +123,8 @@
         /// </summary>
         public int minX
         {
-            get
-            {
-                return (int) this.vert.x;
-            }
+            get => 
+                ((int) this.vert.x);
             set
             {
                 float x = this.vert.x;
@@ -151,10 +137,8 @@
         /// </summary>
         public int maxX
         {
-            get
-            {
-                return (int) (this.vert.x + this.vert.width);
-            }
+            get => 
+                ((int) (this.vert.x + this.vert.width));
             set
             {
                 this.vert.width = value - this.vert.x;
@@ -162,10 +146,8 @@
         }
         internal Vector2 uvBottomLeftUnFlipped
         {
-            get
-            {
-                return new Vector2(this.uv.x, this.uv.y);
-            }
+            get => 
+                new Vector2(this.uv.x, this.uv.y);
             set
             {
                 Vector2 uvTopRightUnFlipped = this.uvTopRightUnFlipped;
@@ -177,10 +159,8 @@
         }
         internal Vector2 uvBottomRightUnFlipped
         {
-            get
-            {
-                return new Vector2(this.uv.x + this.uv.width, this.uv.y);
-            }
+            get => 
+                new Vector2(this.uv.x + this.uv.width, this.uv.y);
             set
             {
                 Vector2 uvTopRightUnFlipped = this.uvTopRightUnFlipped;
@@ -191,10 +171,8 @@
         }
         internal Vector2 uvTopRightUnFlipped
         {
-            get
-            {
-                return new Vector2(this.uv.x + this.uv.width, this.uv.y + this.uv.height);
-            }
+            get => 
+                new Vector2(this.uv.x + this.uv.width, this.uv.y + this.uv.height);
             set
             {
                 this.uv.width = value.x - this.uv.x;
@@ -203,10 +181,8 @@
         }
         internal Vector2 uvTopLeftUnFlipped
         {
-            get
-            {
-                return new Vector2(this.uv.x, this.uv.y + this.uv.height);
-            }
+            get => 
+                new Vector2(this.uv.x, this.uv.y + this.uv.height);
             set
             {
                 Vector2 uvTopRightUnFlipped = this.uvTopRightUnFlipped;
@@ -220,10 +196,8 @@
         /// </summary>
         public Vector2 uvBottomLeft
         {
-            get
-            {
-                return this.uvBottomLeftUnFlipped;
-            }
+            get => 
+                this.uvBottomLeftUnFlipped;
             set
             {
                 this.uvBottomLeftUnFlipped = value;
@@ -234,10 +208,8 @@
         /// </summary>
         public Vector2 uvBottomRight
         {
-            get
-            {
-                return (!this.flipped ? this.uvBottomRightUnFlipped : this.uvTopLeftUnFlipped);
-            }
+            get => 
+                (!this.flipped ? this.uvBottomRightUnFlipped : this.uvTopLeftUnFlipped);
             set
             {
                 if (this.flipped)
@@ -255,10 +227,8 @@
         /// </summary>
         public Vector2 uvTopRight
         {
-            get
-            {
-                return this.uvTopRightUnFlipped;
-            }
+            get => 
+                this.uvTopRightUnFlipped;
             set
             {
                 this.uvTopRightUnFlipped = value;
@@ -269,10 +239,8 @@
         /// </summary>
         public Vector2 uvTopLeft
         {
-            get
-            {
-                return (!this.flipped ? this.uvTopLeftUnFlipped : this.uvBottomRightUnFlipped);
-            }
+            get => 
+                (!this.flipped ? this.uvTopLeftUnFlipped : this.uvBottomRightUnFlipped);
             set
             {
                 if (this.flipped)

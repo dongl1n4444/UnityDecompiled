@@ -85,22 +85,16 @@
         }
 
         [ThreadAndSerializationSafe]
-        private static string CreateOrUpdateSecondaryTile(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText)
-        {
-            return INTERNAL_CALL_CreateOrUpdateSecondaryTile(sargs, bargs, ref backgroundColor, foregroundText);
-        }
+        private static string CreateOrUpdateSecondaryTile(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText) => 
+            INTERNAL_CALL_CreateOrUpdateSecondaryTile(sargs, bargs, ref backgroundColor, foregroundText);
 
         [ThreadAndSerializationSafe]
-        private static string CreateOrUpdateSecondaryTileArea(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText, Rect area)
-        {
-            return INTERNAL_CALL_CreateOrUpdateSecondaryTileArea(sargs, bargs, ref backgroundColor, foregroundText, ref area);
-        }
+        private static string CreateOrUpdateSecondaryTileArea(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText, Rect area) => 
+            INTERNAL_CALL_CreateOrUpdateSecondaryTileArea(sargs, bargs, ref backgroundColor, foregroundText, ref area);
 
         [ThreadAndSerializationSafe]
-        private static string CreateOrUpdateSecondaryTilePoint(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText, Vector2 pos)
-        {
-            return INTERNAL_CALL_CreateOrUpdateSecondaryTilePoint(sargs, bargs, ref backgroundColor, foregroundText, ref pos);
-        }
+        private static string CreateOrUpdateSecondaryTilePoint(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText, Vector2 pos) => 
+            INTERNAL_CALL_CreateOrUpdateSecondaryTilePoint(sargs, bargs, ref backgroundColor, foregroundText, ref pos);
 
         /// <summary>
         /// <para>Show a request to unpin secondary tile from start screen.</para>
@@ -236,15 +230,11 @@
         private static extern void INTERNAL_CALL_DeleteSecondaryArea(string tileId, ref Rect area);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_DeleteSecondaryPos(string tileId, ref Vector2 pos);
-        private static bool[] MakeSecondaryTileBargs(SecondaryTileData data)
-        {
-            return new bool[] { data.backgroundColorSet, data.lockScreenDisplayBadgeAndTileText, data.roamingEnabled, data.showNameOnSquare150x150Logo, data.showNameOnSquare310x310Logo, data.showNameOnWide310x150Logo };
-        }
+        private static bool[] MakeSecondaryTileBargs(SecondaryTileData data) => 
+            new bool[] { data.backgroundColorSet, data.lockScreenDisplayBadgeAndTileText, data.roamingEnabled, data.showNameOnSquare150x150Logo, data.showNameOnSquare310x310Logo, data.showNameOnWide310x150Logo };
 
-        private static string[] MakeSecondaryTileSargs(SecondaryTileData data)
-        {
-            return new string[] { data.arguments, data.displayName, data.lockScreenBadgeLogo, data.phoneticName, data.square150x150Logo, data.square30x30Logo, data.square310x310Logo, data.square70x70Logo, data.tileId, data.wide310x150Logo };
-        }
+        private static string[] MakeSecondaryTileSargs(SecondaryTileData data) => 
+            new string[] { data.arguments, data.displayName, data.lockScreenBadgeLogo, data.phoneticName, data.square150x150Logo, data.square30x30Logo, data.square310x310Logo, data.square70x70Logo, data.tileId, data.wide310x150Logo };
 
         /// <summary>
         /// <para>Starts periodic update of a  badge on a tile.
@@ -359,36 +349,21 @@
         /// <para>Whether secondary tile is pinned to start screen.
         /// </para>
         /// </summary>
-        public bool exists
-        {
-            get
-            {
-                return Exists(this.m_TileId);
-            }
-        }
+        public bool exists =>
+            Exists(this.m_TileId);
 
         /// <summary>
         /// <para>Whether secondary tile was approved (pinned to start screen) or rejected by user.
         /// </para>
         /// </summary>
-        public bool hasUserConsent
-        {
-            get
-            {
-                return HasUserConsent(this.m_TileId);
-            }
-        }
+        public bool hasUserConsent =>
+            HasUserConsent(this.m_TileId);
 
         /// <summary>
         /// <para>A unique string, identifying secondary tile</para>
         /// </summary>
-        public string id
-        {
-            get
-            {
-                return this.m_TileId;
-            }
-        }
+        public string id =>
+            this.m_TileId;
 
         /// <summary>
         /// <para>Returns applications main tile

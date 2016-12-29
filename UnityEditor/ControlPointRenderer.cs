@@ -85,7 +85,7 @@
         {
             if (this.m_RenderChunks.Count > 0)
             {
-                RenderChunk chunk = Enumerable.Last<RenderChunk>(this.m_RenderChunks);
+                RenderChunk chunk = this.m_RenderChunks.Last<RenderChunk>();
                 if ((chunk.vertices.Count + 4) > 0xfde8)
                 {
                     chunk = this.CreateRenderChunk();

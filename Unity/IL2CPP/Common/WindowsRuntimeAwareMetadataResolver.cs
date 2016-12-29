@@ -35,7 +35,7 @@
             {
                 <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <FindTypeInUnknownWinmd>m__1);
             }
-            IEnumerable<NPath> enumerable = Enumerable.Where<NPath>(Enumerable.SelectMany<NPath, NPath>(Enumerable.Where<NPath>(this._assemblyResolver.GetSearchDirectories(), <>f__am$cache0), <>f__am$cache1), new Func<NPath, bool>(this, (IntPtr) this.<FindTypeInUnknownWinmd>m__2));
+            IEnumerable<NPath> enumerable = this._assemblyResolver.GetSearchDirectories().Where<NPath>(<>f__am$cache0).SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(this, (IntPtr) this.<FindTypeInUnknownWinmd>m__2));
             foreach (NPath path in enumerable)
             {
                 AssemblyNameReference name = new AssemblyNameReference(path.FileNameWithoutExtension, new Version()) {
@@ -141,7 +141,7 @@
                     }
                     if (!assemblyName.IsWindowsRuntime)
                     {
-                        throw new InvalidOperationException(string.Format("Unable to resolve [{0}]{1}.", assemblyName.Name, type.FullName));
+                        throw new InvalidOperationException($"Unable to resolve [{assemblyName.Name}]{type.FullName}.");
                     }
                 }
                 return this.FindTypeInUnknownWinmd(assemblyName, type);
@@ -167,10 +167,8 @@
             throw new InvalidOperationException("type.Scope isn't a valid metadata scope!");
         }
 
-        private static string TypeFullName(TypeReference type)
-        {
-            return (!string.IsNullOrEmpty(type.Namespace) ? (type.Namespace + '.' + type.Name) : type.Name);
-        }
+        private static string TypeFullName(TypeReference type) => 
+            (!string.IsNullOrEmpty(type.Namespace) ? (type.Namespace + '.' + type.Name) : type.Name);
     }
 }
 

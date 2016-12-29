@@ -23,10 +23,8 @@
         /// <returns>
         /// <para>The object's data in JSON format.</para>
         /// </returns>
-        public static string ToJson(object obj)
-        {
-            return ToJson(obj, false);
-        }
+        public static string ToJson(object obj) => 
+            ToJson(obj, false);
 
         /// <summary>
         /// <para>Generate a JSON representation of an object.</para>

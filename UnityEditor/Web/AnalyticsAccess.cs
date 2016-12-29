@@ -23,25 +23,17 @@
             AnalyticsSettings.enabled = enabled;
         }
 
-        public override string GetServiceDisplayName()
-        {
-            return "Analytics";
-        }
+        public override string GetServiceDisplayName() => 
+            "Analytics";
 
-        public override string GetServiceName()
-        {
-            return "Analytics";
-        }
+        public override string GetServiceName() => 
+            "Analytics";
 
-        public override bool IsServiceEnabled()
-        {
-            return AnalyticsSettings.enabled;
-        }
+        public override bool IsServiceEnabled() => 
+            AnalyticsSettings.enabled;
 
-        public bool IsTestModeEnabled()
-        {
-            return AnalyticsSettings.testMode;
-        }
+        public bool IsTestModeEnabled() => 
+            AnalyticsSettings.testMode;
 
         public void SetTestModeEnabled(bool enabled)
         {

@@ -125,7 +125,7 @@
                 {
                     <>f__am$cache0 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <DuplicateGroups>m__0);
                 }
-                int[] selectedIDs = Enumerable.ToArray<int>(Enumerable.Select<AudioMixerGroupController, int>(list, <>f__am$cache0));
+                int[] selectedIDs = Enumerable.Select<AudioMixerGroupController, int>(list, <>f__am$cache0).ToArray<int>();
                 this.m_AudioGroupTree.SetSelection(selectedIDs, false);
                 this.m_AudioGroupTree.Frame(selectedIDs[selectedIDs.Length - 1], true, false);
             }
@@ -170,10 +170,8 @@
             return (this.m_AudioGroupTree.gui.GetTotalSize().y + 22f);
         }
 
-        private static string GetUniqueAudioMixerName(AudioMixerController controller)
-        {
-            return ("AudioMixer_" + controller.GetInstanceID());
-        }
+        private static string GetUniqueAudioMixerName(AudioMixerController controller) => 
+            ("AudioMixer_" + controller.GetInstanceID());
 
         private void HandleCommandEvents(int treeViewKeyboardControlID)
         {
@@ -237,7 +235,7 @@
                 {
                     <>f__am$cache1 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <InitSelection>m__1);
                 }
-                this.m_AudioGroupTree.SetSelection(Enumerable.ToArray<int>(Enumerable.Select<AudioMixerGroupController, int>(cachedSelection, <>f__am$cache1)), revealSelectionAndFrameLastSelected);
+                this.m_AudioGroupTree.SetSelection(Enumerable.Select<AudioMixerGroupController, int>(cachedSelection, <>f__am$cache1).ToArray<int>(), revealSelectionAndFrameLastSelected);
             }
         }
 
@@ -381,10 +379,8 @@
             this.ReloadTree();
         }
 
-        private static string PluralIfNeeded(int count)
-        {
-            return ((count <= 1) ? "" : "s");
-        }
+        private static string PluralIfNeeded(int count) => 
+            ((count <= 1) ? "" : "s");
 
         public void ReloadTree()
         {
@@ -419,21 +415,11 @@
             this.m_AudioGroupTree.SetUseScrollView(useScrollView);
         }
 
-        public AudioMixerController Controller
-        {
-            get
-            {
-                return this.m_Controller;
-            }
-        }
+        public AudioMixerController Controller =>
+            this.m_Controller;
 
-        public AudioMixerGroupController ScrollToItem
-        {
-            get
-            {
-                return this.m_ScrollToItem;
-            }
-        }
+        public AudioMixerGroupController ScrollToItem =>
+            this.m_ScrollToItem;
 
         private class Styles
         {

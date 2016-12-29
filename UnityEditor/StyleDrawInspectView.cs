@@ -66,16 +66,14 @@
             }
         }
 
-        protected override int GetInstructionCount()
-        {
-            return GUIViewDebuggerHelper.GetInstructionCount();
-        }
+        protected override int GetInstructionCount() => 
+            GUIViewDebuggerHelper.GetInstructionCount();
 
         internal override string GetInstructionListName(int index)
         {
             StackFrame[] managedStackTrace = GUIViewDebuggerHelper.GetManagedStackTrace(index);
             string instructionListName = this.GetInstructionListName(managedStackTrace);
-            return string.Format("{0}. {1}", index, instructionListName);
+            return $"{index}. {instructionListName}";
         }
 
         protected string GetInstructionListName(StackFrame[] stacktrace)
@@ -146,16 +144,14 @@
                         enterChildren = true;
                     }
                 }
-                Debug.Log(string.Format("Showing editable Style from GUISkin: {0}, IsPersistant: {1}", skin.name, EditorUtility.IsPersistent(skin)));
+                Debug.Log($"Showing editable Style from GUISkin: {skin.name}, IsPersistant: {EditorUtility.IsPersistent(skin)}");
             }
             serializedObject = new SerializedObject(this.m_CachedinstructionInfo.styleContainer);
             styleProperty = serializedObject.FindProperty("inspectedStyle");
         }
 
-        protected override bool HasSelectedinstruction()
-        {
-            return (this.m_Instruction != null);
-        }
+        protected override bool HasSelectedinstruction() => 
+            (this.m_Instruction != null);
 
         internal override void OnDoubleClickInstruction(int index)
         {

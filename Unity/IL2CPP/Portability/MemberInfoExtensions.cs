@@ -4,14 +4,10 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class MemberInfoExtensions
     {
-        [Extension]
-        public static int GetMetadataTokenPortable(MemberInfo info)
-        {
-            return info.MetadataToken;
-        }
+        public static int GetMetadataTokenPortable(this MemberInfo info) => 
+            info.MetadataToken;
     }
 }
 

@@ -49,7 +49,7 @@
                 {
                     break;
                 }
-                Console.WriteLine(string.Format("ADB - No device found, will retry {0} time(s).", num));
+                Console.WriteLine($"ADB - No device found, will retry {num} time(s).");
             }
             UnityEngine.Debug.LogWarning("ADB - No device found - output:\n" + str);
             return list;

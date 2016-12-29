@@ -19,10 +19,8 @@
             return this.CanBeReachedByDowncast(expectedType.get_ElementType(), actualType.get_ElementType());
         }
 
-        public override bool CanBeReachedByDowncast(IType expectedType, IType actualType)
-        {
-            return (((!expectedType.get_IsArray() || !actualType.get_IsArray()) || !this.IsDowncastAllowed()) ? base.CanBeReachedByDowncast(expectedType, actualType) : this.CanBeReachedByArrayDowncast((IArrayType) expectedType, (IArrayType) actualType));
-        }
+        public override bool CanBeReachedByDowncast(IType expectedType, IType actualType) => 
+            (((!expectedType.get_IsArray() || !actualType.get_IsArray()) || !this.IsDowncastAllowed()) ? base.CanBeReachedByDowncast(expectedType, actualType) : this.CanBeReachedByArrayDowncast((IArrayType) expectedType, (IArrayType) actualType));
 
         public override bool IsDowncastAllowed()
         {
@@ -36,10 +34,8 @@
 
         public bool Enabled
         {
-            get
-            {
-                return this.$Enabled$42;
-            }
+            get => 
+                this.$Enabled$42;
             set
             {
                 this.$Enabled$42 = value;

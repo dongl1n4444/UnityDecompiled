@@ -7,15 +7,11 @@
     [Serializable]
     public class UnityCallableResolutionService : CallableResolutionService
     {
-        public override bool CheckVarArgsParameter(IParameter[] parameters, ExpressionCollection args)
-        {
-            return (!UnityCallableResolutionServiceModule.IsArrayArgumentExplicitlyProvided(parameters, args) ? base.CheckVarArgsParameter(parameters, args) : true);
-        }
+        public override bool CheckVarArgsParameter(IParameter[] parameters, ExpressionCollection args) => 
+            (!UnityCallableResolutionServiceModule.IsArrayArgumentExplicitlyProvided(parameters, args) ? base.CheckVarArgsParameter(parameters, args) : true);
 
-        public override bool ShouldExpandArgs(IMethod method, ExpressionCollection args)
-        {
-            return (!UnityCallableResolutionServiceModule.IsArrayArgumentExplicitlyProvided(method.GetParameters(), args) ? base.ShouldExpandArgs(method, args) : false);
-        }
+        public override bool ShouldExpandArgs(IMethod method, ExpressionCollection args) => 
+            (!UnityCallableResolutionServiceModule.IsArrayArgumentExplicitlyProvided(method.GetParameters(), args) ? base.ShouldExpandArgs(method, args) : false);
     }
 }
 

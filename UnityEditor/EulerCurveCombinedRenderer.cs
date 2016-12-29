@@ -185,15 +185,11 @@
             return 0f;
         }
 
-        private Vector3 EvaluateEulerCurvesDirectly(float time)
-        {
-            return new Vector3(this.eulerX.Evaluate(time), this.eulerY.Evaluate(time), this.eulerZ.Evaluate(time));
-        }
+        private Vector3 EvaluateEulerCurvesDirectly(float time) => 
+            new Vector3(this.eulerX.Evaluate(time), this.eulerY.Evaluate(time), this.eulerZ.Evaluate(time));
 
-        private Quaternion EvaluateQuaternionCurvesDirectly(float time)
-        {
-            return new Quaternion(this.quaternionX.Evaluate(time), this.quaternionY.Evaluate(time), this.quaternionZ.Evaluate(time), this.quaternionW.Evaluate(time));
-        }
+        private Quaternion EvaluateQuaternionCurvesDirectly(float time) => 
+            new Quaternion(this.quaternionX.Evaluate(time), this.quaternionY.Evaluate(time), this.quaternionZ.Evaluate(time), this.quaternionW.Evaluate(time));
 
         public Bounds GetBounds(float minTime, float maxTime, int component)
         {
@@ -269,25 +265,17 @@
             return this.refEuler;
         }
 
-        public WrapMode PostWrapMode()
-        {
-            return this.postWrapMode;
-        }
+        public WrapMode PostWrapMode() => 
+            this.postWrapMode;
 
-        public WrapMode PreWrapMode()
-        {
-            return this.preWrapMode;
-        }
+        public WrapMode PreWrapMode() => 
+            this.preWrapMode;
 
-        public float RangeEnd()
-        {
-            return this.rangeEnd;
-        }
+        public float RangeEnd() => 
+            this.rangeEnd;
 
-        public float RangeStart()
-        {
-            return this.rangeStart;
-        }
+        public float RangeStart() => 
+            this.rangeStart;
 
         public void SetCustomRange(float start, float end)
         {
@@ -307,21 +295,11 @@
             this.postWrapMode = postWrap;
         }
 
-        private float rangeEnd
-        {
-            get
-            {
-                return ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.eulerX.length <= 0)) ? this.m_CustomRangeEnd : this.eulerX.keys[this.eulerX.length - 1].time);
-            }
-        }
+        private float rangeEnd =>
+            ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.eulerX.length <= 0)) ? this.m_CustomRangeEnd : this.eulerX.keys[this.eulerX.length - 1].time);
 
-        private float rangeStart
-        {
-            get
-            {
-                return ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.eulerX.length <= 0)) ? this.m_CustomRangeStart : this.eulerX.keys[0].time);
-            }
-        }
+        private float rangeStart =>
+            ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.eulerX.length <= 0)) ? this.m_CustomRangeStart : this.eulerX.keys[0].time);
     }
 }
 

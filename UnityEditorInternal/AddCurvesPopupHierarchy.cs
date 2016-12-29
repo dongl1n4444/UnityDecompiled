@@ -25,10 +25,8 @@
             }
         }
 
-        internal virtual bool IsRenamingNodeAllowed(TreeViewItem node)
-        {
-            return false;
-        }
+        internal virtual bool IsRenamingNodeAllowed(TreeViewItem node) => 
+            false;
 
         public void OnGUI(Rect position, EditorWindow owner)
         {

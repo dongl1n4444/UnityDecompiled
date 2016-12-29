@@ -9,15 +9,11 @@
         {
         }
 
-        public virtual string GetExtension(BuildTarget target, BuildOptions options)
-        {
-            return string.Empty;
-        }
+        public virtual string GetExtension(BuildTarget target, BuildOptions options) => 
+            string.Empty;
 
-        public virtual string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName)
-        {
-            return string.Empty;
-        }
+        public virtual string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName) => 
+            string.Empty;
 
         public virtual void LaunchPlayer(BuildLaunchPlayerArgs args)
         {
@@ -36,20 +32,14 @@
             }
         }
 
-        public virtual string PrepareForBuild(BuildOptions options, BuildTarget target)
-        {
-            return null;
-        }
+        public virtual string PrepareForBuild(BuildOptions options, BuildTarget target) => 
+            null;
 
-        public virtual bool SupportsInstallInBuildFolder()
-        {
-            return false;
-        }
+        public virtual bool SupportsInstallInBuildFolder() => 
+            false;
 
-        public virtual bool SupportsScriptsOnlyBuild()
-        {
-            return false;
-        }
+        public virtual bool SupportsScriptsOnlyBuild() => 
+            false;
     }
 }
 

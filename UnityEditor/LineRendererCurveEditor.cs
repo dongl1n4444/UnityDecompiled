@@ -39,10 +39,8 @@
             }
         }
 
-        public Vector2 GetAxisScalars()
-        {
-            return new Vector2(1f, this.m_WidthMultiplier.floatValue);
-        }
+        public Vector2 GetAxisScalars() => 
+            new Vector2(1f, this.m_WidthMultiplier.floatValue);
 
         private CurveWrapper GetCurveWrapper(AnimationCurve curve)
         {

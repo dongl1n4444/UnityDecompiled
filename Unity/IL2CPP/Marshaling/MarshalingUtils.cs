@@ -30,7 +30,7 @@
             {
                 return IsPrimitiveBlittable(typeDef, nativeType, storey.marshalType);
             }
-            return Enumerable.All<FieldDefinition>(typeDef.Fields, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            return typeDef.Fields.All<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
         }
 
         public static IEnumerable<DefaultMarshalInfoWriter> GetFieldMarshalInfoWriters(TypeDefinition type, MarshalType marshalType)
@@ -39,7 +39,7 @@
                 marshalType = marshalType,
                 type = type
             };
-            return Enumerable.Select<FieldDefinition, DefaultMarshalInfoWriter>(GetMarshaledFields(storey.type, storey.marshalType), new Func<FieldDefinition, DefaultMarshalInfoWriter>(storey, (IntPtr) this.<>m__0));
+            return GetMarshaledFields(storey.type, storey.marshalType).Select<FieldDefinition, DefaultMarshalInfoWriter>(new Func<FieldDefinition, DefaultMarshalInfoWriter>(storey, (IntPtr) this.<>m__0));
         }
 
         private static NativeType? GetFieldNativeType(FieldDefinition field)
@@ -61,12 +61,12 @@
             {
                 <>f__am$cache1 = new Func<TypeDefinition, IEnumerable<FieldDefinition>>(null, (IntPtr) <GetMarshaledFields>m__1);
             }
-            return Enumerable.SelectMany<TypeDefinition, FieldDefinition>(Enumerable.Where<TypeDefinition>(Extensions.GetTypeHierarchy(storey.type), new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache1);
+            return storey.type.GetTypeHierarchy().Where<TypeDefinition>(new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0)).SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache1);
         }
 
         public static MarshalType[] GetMarshalTypesForMarshaledType(TypeDefinition type)
         {
-            if ((type.IsWindowsRuntime || (WindowsRuntimeProjections.ProjectToWindowsRuntime(type) != type)) && ((type.MetadataType == MetadataType.ValueType) || Extensions.IsDelegate(type)))
+            if ((type.IsWindowsRuntime || (WindowsRuntimeProjections.ProjectToWindowsRuntime(type) != type)) && ((type.MetadataType == MetadataType.ValueType) || type.IsDelegate()))
             {
                 return new MarshalType[] { MarshalType.PInvoke };
             }
@@ -83,7 +83,7 @@
             }
             if (type.IsEnum)
             {
-                return IsPrimitiveBlittable(Extensions.GetUnderlyingEnumType(type).Resolve(), nativeType, marshalType);
+                return IsPrimitiveBlittable(type.GetUnderlyingEnumType().Resolve(), nativeType, marshalType);
             }
             return ((type.IsSequentialLayout || type.IsExplicitLayout) && AreFieldsBlittable(type, nativeType, marshalType));
         }
@@ -141,13 +141,11 @@
                 case MetadataType.UIntPtr:
                     return (((((NativeType) nativeType.GetValueOrDefault()) == NativeType.UInt) && nativeType.HasValue) || ((((NativeType) nativeType.GetValueOrDefault()) == NativeType.Int) && nativeType.HasValue));
             }
-            throw new ArgumentException(string.Format("{0} is not a primitive!", type.FullName));
+            throw new ArgumentException($"{type.FullName} is not a primitive!");
         }
 
-        internal static bool IsStringBuilder(TypeReference type)
-        {
-            return ((type.MetadataType == MetadataType.Class) && (type.FullName == "System.Text.StringBuilder"));
-        }
+        internal static bool IsStringBuilder(TypeReference type) => 
+            ((type.MetadataType == MetadataType.Class) && (type.FullName == "System.Text.StringBuilder"));
 
         public static string MarshalTypeToNiceString(MarshalType marshalType)
         {
@@ -162,7 +160,7 @@
                 case MarshalType.WindowsRuntime:
                     return "Windows Runtime";
             }
-            throw new ArgumentException(string.Format("Unexpected MarshalType value '{0}'.", marshalType), "marshalType");
+            throw new ArgumentException($"Unexpected MarshalType value '{marshalType}'.", "marshalType");
         }
 
         public static string MarshalTypeToString(MarshalType marshalType)
@@ -178,7 +176,7 @@
                 case MarshalType.WindowsRuntime:
                     return "windows_runtime";
             }
-            throw new ArgumentException(string.Format("Unexpected MarshalType value '{0}'.", marshalType), "marshalType");
+            throw new ArgumentException($"Unexpected MarshalType value '{marshalType}'.", "marshalType");
         }
 
         internal static IEnumerable<FieldDefinition> NonStaticFieldsOf(TypeDefinition typeDefinition)
@@ -187,7 +185,7 @@
             {
                 <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <NonStaticFieldsOf>m__0);
             }
-            return Enumerable.Where<FieldDefinition>(typeDefinition.Fields, <>f__am$cache0);
+            return typeDefinition.Fields.Where<FieldDefinition>(<>f__am$cache0);
         }
 
         internal static bool UseUnicodeAsDefaultMarshalingForStringParameters(MethodReference method)
@@ -201,10 +199,8 @@
         {
             internal MarshalType marshalType;
 
-            internal bool <>m__0(FieldDefinition field)
-            {
-                return (field.IsStatic || (Extensions.IsValueType(field.FieldType) && MarshalingUtils.IsBlittable(field.FieldType, MarshalingUtils.GetFieldNativeType(field), this.marshalType)));
-            }
+            internal bool <>m__0(FieldDefinition field) => 
+                (field.IsStatic || (field.FieldType.IsValueType() && MarshalingUtils.IsBlittable(field.FieldType, MarshalingUtils.GetFieldNativeType(field), this.marshalType)));
         }
 
         [CompilerGenerated]
@@ -213,10 +209,8 @@
             internal MarshalType marshalType;
             internal TypeDefinition type;
 
-            internal DefaultMarshalInfoWriter <>m__0(FieldDefinition f)
-            {
-                return MarshalDataCollector.MarshalInfoWriterFor(f.FieldType, this.marshalType, f.MarshalInfo, this.type.IsUnicodeClass, false, true, null);
-            }
+            internal DefaultMarshalInfoWriter <>m__0(FieldDefinition f) => 
+                MarshalDataCollector.MarshalInfoWriterFor(f.FieldType, this.marshalType, f.MarshalInfo, this.type.IsUnicodeClass, false, true, null);
         }
 
         [CompilerGenerated]
@@ -225,10 +219,8 @@
             internal MarshalType marshalType;
             internal TypeDefinition type;
 
-            internal bool <>m__0(TypeDefinition t)
-            {
-                return ((t == this.type) || MarshalDataCollector.MarshalInfoWriterFor(t, this.marshalType, null, false, false, false, null).HasNativeStructDefinition);
-            }
+            internal bool <>m__0(TypeDefinition t) => 
+                ((t == this.type) || MarshalDataCollector.MarshalInfoWriterFor(t, this.marshalType, null, false, false, false, null).HasNativeStructDefinition);
         }
     }
 }

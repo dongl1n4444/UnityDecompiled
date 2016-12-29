@@ -132,7 +132,7 @@
                     s_NameChunks = new string[(s_Names.Length / 100) + 1];
                     for (int i = 0; (i * 100) < s_Names.Length; i++)
                     {
-                        s_NameChunks[i] = string.Join(", ", Enumerable.ToArray<string>(Enumerable.Take<string>(Enumerable.Skip<string>(s_Names, i * 100), 100)));
+                        s_NameChunks[i] = string.Join(", ", s_Names.Skip<string>((i * 100)).Take<string>(100).ToArray<string>());
                     }
                 }
                 return s_NameChunks;

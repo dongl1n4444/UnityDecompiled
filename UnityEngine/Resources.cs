@@ -23,10 +23,8 @@
             return localArray2;
         }
 
-        public static T[] FindObjectsOfTypeAll<T>() where T: UnityEngine.Object
-        {
-            return ConvertObjects<T>(FindObjectsOfTypeAll(typeof(T)));
-        }
+        public static T[] FindObjectsOfTypeAll<T>() where T: UnityEngine.Object => 
+            ConvertObjects<T>(FindObjectsOfTypeAll(typeof(T)));
 
         /// <summary>
         /// <para>Returns a list of all objects of Type type.</para>
@@ -37,10 +35,8 @@
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.ArrayOfTypeReferencedByFirstArgument)]
         public static extern UnityEngine.Object[] FindObjectsOfTypeAll(System.Type type);
-        public static T GetBuiltinResource<T>(string path) where T: UnityEngine.Object
-        {
-            return (T) GetBuiltinResource(typeof(T), path);
-        }
+        public static T GetBuiltinResource<T>(string path) where T: UnityEngine.Object => 
+            ((T) GetBuiltinResource(typeof(T), path));
 
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
         public static extern UnityEngine.Object GetBuiltinResource(System.Type type, string path);
@@ -49,15 +45,11 @@
         /// </summary>
         /// <param name="path">Pathname of the target folder. When using the empty string (i.e., ""), the function will load the entire contents of the Resources folder.</param>
         /// <param name="systemTypeInstance">Type filter for objects returned.</param>
-        public static UnityEngine.Object Load(string path)
-        {
-            return Load(path, typeof(UnityEngine.Object));
-        }
+        public static UnityEngine.Object Load(string path) => 
+            Load(path, typeof(UnityEngine.Object));
 
-        public static T Load<T>(string path) where T: UnityEngine.Object
-        {
-            return (T) Load(path, typeof(T));
-        }
+        public static T Load<T>(string path) where T: UnityEngine.Object => 
+            ((T) Load(path, typeof(T)));
 
         /// <summary>
         /// <para>Loads an asset stored at path in a Resources folder.</para>
@@ -71,15 +63,11 @@
         /// </summary>
         /// <param name="path">Pathname of the target folder. When using the empty string (i.e., ""), the function will load the entire contents of the Resources folder.</param>
         /// <param name="systemTypeInstance">Type filter for objects returned.</param>
-        public static UnityEngine.Object[] LoadAll(string path)
-        {
-            return LoadAll(path, typeof(UnityEngine.Object));
-        }
+        public static UnityEngine.Object[] LoadAll(string path) => 
+            LoadAll(path, typeof(UnityEngine.Object));
 
-        public static T[] LoadAll<T>(string path) where T: UnityEngine.Object
-        {
-            return ConvertObjects<T>(LoadAll(path, typeof(T)));
-        }
+        public static T[] LoadAll<T>(string path) where T: UnityEngine.Object => 
+            ConvertObjects<T>(LoadAll(path, typeof(T)));
 
         /// <summary>
         /// <para>Loads all assets in a folder or file at path in a Resources folder.</para>
@@ -89,10 +77,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern UnityEngine.Object[] LoadAll(string path, System.Type systemTypeInstance);
         [Obsolete("Use AssetDatabase.LoadAssetAtPath<T>() instead (UnityUpgradable) -> * [UnityEditor] UnityEditor.AssetDatabase.LoadAssetAtPath<T>(*)", true)]
-        public static T LoadAssetAtPath<T>(string assetPath) where T: UnityEngine.Object
-        {
-            return null;
-        }
+        public static T LoadAssetAtPath<T>(string assetPath) where T: UnityEngine.Object => 
+            null;
 
         /// <summary>
         /// <para>Returns a resource at an asset path (Editor Only).</para>
@@ -100,10 +86,8 @@
         /// <param name="assetPath">Pathname of the target asset.</param>
         /// <param name="type">Type filter for objects returned.</param>
         [Obsolete("Use AssetDatabase.LoadAssetAtPath instead (UnityUpgradable) -> * [UnityEditor] UnityEditor.AssetDatabase.LoadAssetAtPath(*)", true), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
-        public static UnityEngine.Object LoadAssetAtPath(string assetPath, System.Type type)
-        {
-            return null;
-        }
+        public static UnityEngine.Object LoadAssetAtPath(string assetPath, System.Type type) => 
+            null;
 
         /// <summary>
         /// <para>Asynchronously loads an asset stored at path in a Resources folder.</para>
@@ -111,15 +95,11 @@
         /// <param name="path">Pathname of the target folder. When using the empty string (i.e., ""), the function will load the entire contents of the Resources folder.</param>
         /// <param name="systemTypeInstance">Type filter for objects returned.</param>
         /// <param name="type"></param>
-        public static ResourceRequest LoadAsync(string path)
-        {
-            return LoadAsync(path, typeof(UnityEngine.Object));
-        }
+        public static ResourceRequest LoadAsync(string path) => 
+            LoadAsync(path, typeof(UnityEngine.Object));
 
-        public static ResourceRequest LoadAsync<T>(string path) where T: UnityEngine.Object
-        {
-            return LoadAsync(path, typeof(T));
-        }
+        public static ResourceRequest LoadAsync<T>(string path) where T: UnityEngine.Object => 
+            LoadAsync(path, typeof(T));
 
         /// <summary>
         /// <para>Asynchronously loads an asset stored at path in a Resources folder.</para>

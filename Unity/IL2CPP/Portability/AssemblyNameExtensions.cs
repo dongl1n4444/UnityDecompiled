@@ -6,26 +6,16 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class AssemblyNameExtensions
     {
-        [Extension]
-        public static CultureInfo GetCultureInfoPortable(AssemblyName assembly)
-        {
-            return assembly.CultureInfo;
-        }
+        public static CultureInfo GetCultureInfoPortable(this AssemblyName assembly) => 
+            assembly.CultureInfo;
 
-        [Extension]
-        public static AssemblyHashAlgorithm GetHashAlgorithmPortable(AssemblyName assembly)
-        {
-            return assembly.HashAlgorithm;
-        }
+        public static AssemblyHashAlgorithm GetHashAlgorithmPortable(this AssemblyName assembly) => 
+            assembly.HashAlgorithm;
 
-        [Extension]
-        public static StrongNameKeyPair GetKeyPairPortable(AssemblyName assembly)
-        {
-            return assembly.KeyPair;
-        }
+        public static StrongNameKeyPair GetKeyPairPortable(this AssemblyName assembly) => 
+            assembly.KeyPair;
     }
 }
 

@@ -13,15 +13,11 @@
         private static Vector2 s_StartMousePosition;
         private static Vector3 s_StartPosition;
 
-        internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.CapFunction capFunction, float snap)
-        {
-            return Do(id, position, direction, direction, size, capFunction, snap);
-        }
+        internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.CapFunction capFunction, float snap) => 
+            Do(id, position, direction, direction, size, capFunction, snap);
 
-        internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.DrawCapFunction drawFunc, float snap)
-        {
-            return Do(id, position, direction, direction, size, drawFunc, snap);
-        }
+        internal static Vector3 Do(int id, Vector3 position, Vector3 direction, float size, Handles.DrawCapFunction drawFunc, float snap) => 
+            Do(id, position, direction, direction, size, drawFunc, snap);
 
         internal static Vector3 Do(int id, Vector3 position, Vector3 handleDirection, Vector3 slideDirection, float size, Handles.CapFunction capFunction, float snap)
         {

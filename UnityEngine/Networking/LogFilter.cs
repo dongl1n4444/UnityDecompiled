@@ -36,10 +36,8 @@
         /// </summary>
         public static int currentLogLevel
         {
-            get
-            {
-                return s_CurrentLogLevel;
-            }
+            get => 
+                s_CurrentLogLevel;
             set
             {
                 s_CurrentLogLevel = value;
@@ -49,62 +47,32 @@
         /// <summary>
         /// <para>Checks if debug logging is enabled.</para>
         /// </summary>
-        public static bool logDebug
-        {
-            get
-            {
-                return (s_CurrentLogLevel <= 1);
-            }
-        }
+        public static bool logDebug =>
+            (s_CurrentLogLevel <= 1);
 
-        internal static bool logDev
-        {
-            get
-            {
-                return (s_CurrentLogLevel <= 0);
-            }
-        }
+        internal static bool logDev =>
+            (s_CurrentLogLevel <= 0);
 
         /// <summary>
         /// <para>Checks if error logging is enabled.</para>
         /// </summary>
-        public static bool logError
-        {
-            get
-            {
-                return (s_CurrentLogLevel <= 4);
-            }
-        }
+        public static bool logError =>
+            (s_CurrentLogLevel <= 4);
 
-        public static bool logFatal
-        {
-            get
-            {
-                return (s_CurrentLogLevel <= 5);
-            }
-        }
+        public static bool logFatal =>
+            (s_CurrentLogLevel <= 5);
 
         /// <summary>
         /// <para>Checks if info level logging is enabled.</para>
         /// </summary>
-        public static bool logInfo
-        {
-            get
-            {
-                return (s_CurrentLogLevel <= 2);
-            }
-        }
+        public static bool logInfo =>
+            (s_CurrentLogLevel <= 2);
 
         /// <summary>
         /// <para>Checks if wanring level logging is enabled.</para>
         /// </summary>
-        public static bool logWarn
-        {
-            get
-            {
-                return (s_CurrentLogLevel <= 3);
-            }
-        }
+        public static bool logWarn =>
+            (s_CurrentLogLevel <= 3);
 
         /// <summary>
         /// <para>Control how verbose the network log messages are.</para>

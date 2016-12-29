@@ -175,10 +175,8 @@
         /// </summary>
         public BlockingObjects blockingObjects
         {
-            get
-            {
-                return this.m_BlockingObjects;
-            }
+            get => 
+                this.m_BlockingObjects;
             set
             {
                 this.m_BlockingObjects = value;
@@ -217,10 +215,8 @@
         /// </summary>
         public bool ignoreReversedGraphics
         {
-            get
-            {
-                return this.m_IgnoreReversedGraphics;
-            }
+            get => 
+                this.m_IgnoreReversedGraphics;
             set
             {
                 this.m_IgnoreReversedGraphics = value;

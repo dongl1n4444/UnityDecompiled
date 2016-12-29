@@ -112,37 +112,17 @@
             }
         }
 
-        internal List<NetworkConnection> connections
-        {
-            get
-            {
-                return this.m_Connections;
-            }
-        }
+        internal List<NetworkConnection> connections =>
+            this.m_Connections;
 
-        public int Count
-        {
-            get
-            {
-                return this.m_Connections.Count;
-            }
-        }
+        public int Count =>
+            this.m_Connections.Count;
 
-        internal List<NetworkConnection> localConnections
-        {
-            get
-            {
-                return this.m_LocalConnections;
-            }
-        }
+        internal List<NetworkConnection> localConnections =>
+            this.m_LocalConnections;
 
-        public int LocalIndex
-        {
-            get
-            {
-                return -this.m_LocalConnections.Count;
-            }
-        }
+        public int LocalIndex =>
+            -this.m_LocalConnections.Count;
     }
 }
 

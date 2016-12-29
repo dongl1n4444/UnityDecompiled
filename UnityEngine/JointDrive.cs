@@ -18,10 +18,8 @@
         [Obsolete("JointDriveMode is obsolete")]
         public JointDriveMode mode
         {
-            get
-            {
-                return JointDriveMode.None;
-            }
+            get => 
+                JointDriveMode.None;
             set
             {
             }
@@ -31,10 +29,8 @@
         /// </summary>
         public float positionSpring
         {
-            get
-            {
-                return this.m_PositionSpring;
-            }
+            get => 
+                this.m_PositionSpring;
             set
             {
                 this.m_PositionSpring = value;
@@ -45,10 +41,8 @@
         /// </summary>
         public float positionDamper
         {
-            get
-            {
-                return this.m_PositionDamper;
-            }
+            get => 
+                this.m_PositionDamper;
             set
             {
                 this.m_PositionDamper = value;
@@ -59,10 +53,8 @@
         /// </summary>
         public float maximumForce
         {
-            get
-            {
-                return this.m_MaximumForce;
-            }
+            get => 
+                this.m_MaximumForce;
             set
             {
                 this.m_MaximumForce = value;

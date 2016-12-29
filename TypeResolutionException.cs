@@ -10,12 +10,7 @@ internal class TypeResolutionException : Exception
         this._typeNameInfo = typeNameInfo;
     }
 
-    public TypeNameParseInfo TypeNameInfo
-    {
-        get
-        {
-            return this._typeNameInfo;
-        }
-    }
+    public TypeNameParseInfo TypeNameInfo =>
+        this._typeNameInfo;
 }
 

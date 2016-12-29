@@ -667,10 +667,8 @@
             return false;
         }
 
-        private HierarchyProperty GetActiveSelected()
-        {
-            return this.GetFirstSelected();
-        }
+        private HierarchyProperty GetActiveSelected() => 
+            this.GetFirstSelected();
 
         public string[] GetAllDeletedItemGUIDs()
         {
@@ -1054,10 +1052,8 @@
 
         private bool DeletedItemsToggle
         {
-            get
-            {
-                return this.m_DeletedItemsToggle;
-            }
+            get => 
+                this.m_DeletedItemsToggle;
             set
             {
                 this.m_DeletedItemsToggle = value;
@@ -1070,10 +1066,8 @@
 
         public SelectionType SelType
         {
-            get
-            {
-                return this.m_SelType;
-            }
+            get => 
+                this.m_SelType;
             set
             {
                 if ((this.m_SelType == SelectionType.DeletedItems) && (value != SelectionType.DeletedItems))

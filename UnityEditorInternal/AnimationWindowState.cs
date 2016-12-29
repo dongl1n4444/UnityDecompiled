@@ -233,20 +233,14 @@
             return (num.ToString() + ":" + num2.ToString().PadLeft(frameDigits, '0'));
         }
 
-        public float FrameDeltaToPixel(Rect rect)
-        {
-            return (rect.width / this.visibleFrameSpan);
-        }
+        public float FrameDeltaToPixel(Rect rect) => 
+            (rect.width / this.visibleFrameSpan);
 
-        public float FrameToPixel(float i, Rect rect)
-        {
-            return (((i - this.minVisibleFrame) * rect.width) / this.visibleFrameSpan);
-        }
+        public float FrameToPixel(float i, Rect rect) => 
+            (((i - this.minVisibleFrame) * rect.width) / this.visibleFrameSpan);
 
-        public float FrameToTime(float frame)
-        {
-            return (frame / this.frameRate);
-        }
+        public float FrameToTime(float frame) => 
+            (frame / this.frameRate);
 
         public List<AnimationWindowCurve> GetAffectedCurves(List<AnimationWindowKeyframe> keyframes)
         {
@@ -268,7 +262,7 @@
             {
                 foreach (DopeLine line in this.dopelines)
                 {
-                    if (!list.Contains(line) && Enumerable.Contains<AnimationWindowCurve>(line.curves, curve))
+                    if (!list.Contains(line) && line.curves.Contains<AnimationWindowCurve>(curve))
                     {
                         list.Add(line);
                     }
@@ -296,11 +290,7 @@
                 hierarchyNode = hierarchyNode
             };
             DopeLine line = Enumerable.FirstOrDefault<DopeLine>(this.dopelines, new Func<DopeLine, bool>(storey, (IntPtr) this.<>m__0));
-            if (line == null)
-            {
-                return null;
-            }
-            return line.keys;
+            return line?.keys;
         }
 
         public DopeLine GetDopeline(int selectedInstanceID)
@@ -315,10 +305,8 @@
             return null;
         }
 
-        private int GetRefreshHash()
-        {
-            return (((this.selection.GetRefreshHash() ^ ((this.hierarchyState == null) ? 0 : this.hierarchyState.expandedIDs.Count)) ^ ((this.hierarchyState == null) ? 0 : this.hierarchyState.GetTallInstancesCount())) ^ (!this.showCurveEditor ? 0 : 1));
-        }
+        private int GetRefreshHash() => 
+            (((this.selection.GetRefreshHash() ^ ((this.hierarchyState == null) ? 0 : this.hierarchyState.expandedIDs.Count)) ^ ((this.hierarchyState == null) ? 0 : this.hierarchyState.GetTallInstancesCount())) ^ (!this.showCurveEditor ? 0 : 1));
 
         public void HandleHierarchySelectionChanged(int[] selectedInstanceIDs, bool triggerSceneSelectionSync)
         {
@@ -329,15 +317,11 @@
             }
         }
 
-        public bool InLiveEdit()
-        {
-            return (this.m_LiveEditSnapshot != null);
-        }
+        public bool InLiveEdit() => 
+            (this.m_LiveEditSnapshot != null);
 
-        public bool KeyIsSelected(AnimationWindowKeyframe keyframe)
-        {
-            return this.selectedKeyHashes.Contains(keyframe.GetHash());
-        }
+        public bool KeyIsSelected(AnimationWindowKeyframe keyframe) => 
+            this.selectedKeyHashes.Contains(keyframe.GetHash());
 
         public void MoveSelectedKeys(float deltaTime, bool snapToFrame)
         {
@@ -462,12 +446,12 @@
             List<AnimationWindowCurve> source = new List<AnimationWindowCurve>();
             foreach (AnimationWindowKeyframe keyframe in s_KeyframeClipboard)
             {
-                if (!Enumerable.Any<AnimationWindowCurve>(source) || (Enumerable.Last<AnimationWindowCurve>(source) != keyframe.curve))
+                if (!source.Any<AnimationWindowCurve>() || (source.Last<AnimationWindowCurve>() != keyframe.curve))
                 {
                     source.Add(keyframe.curve);
                 }
             }
-            bool flag = Enumerable.Count<AnimationWindowCurve>(source) == Enumerable.Count<AnimationWindowCurve>(this.activeCurves);
+            bool flag = source.Count<AnimationWindowCurve>() == this.activeCurves.Count<AnimationWindowCurve>();
             int num2 = 0;
             foreach (AnimationWindowKeyframe keyframe2 in s_KeyframeClipboard)
             {
@@ -539,15 +523,11 @@
             }
         }
 
-        public float PixelDeltaToTime(Rect rect)
-        {
-            return (this.visibleTimeSpan / rect.width);
-        }
+        public float PixelDeltaToTime(Rect rect) => 
+            (this.visibleTimeSpan / rect.width);
 
-        public float PixelToTime(float pixel)
-        {
-            return this.PixelToTime(pixel, SnapMode.Disabled);
-        }
+        public float PixelToTime(float pixel) => 
+            this.PixelToTime(pixel, SnapMode.Disabled);
 
         public float PixelToTime(float pixel, SnapMode snap)
         {
@@ -555,10 +535,8 @@
             return this.SnapToFrame(num / this.pixelPerSecond, snap);
         }
 
-        public float PixelToTime(float pixelX, Rect rect)
-        {
-            return (((pixelX * this.visibleTimeSpan) / rect.width) + this.minVisibleTime);
-        }
+        public float PixelToTime(float pixelX, Rect rect) => 
+            (((pixelX * this.visibleTimeSpan) / rect.width) + this.minVisibleTime);
 
         private UndoPropertyModification[] PostprocessAnimationRecordingModifications(UndoPropertyModification[] modifications)
         {
@@ -659,7 +637,7 @@
                 }
                 for (int j = 0; j < source.Count; j++)
                 {
-                    KeyValuePair<int, AnimationWindowCurve> pair = Enumerable.ElementAt<KeyValuePair<int, AnimationWindowCurve>>(source, j);
+                    KeyValuePair<int, AnimationWindowCurve> pair = source.ElementAt<KeyValuePair<int, AnimationWindowCurve>>(j);
                     CurveWrapper wrapper = this.m_ActiveCurveWrappersCache[pair.Key];
                     if (wrapper.renderer != null)
                     {
@@ -850,10 +828,8 @@
             }
         }
 
-        public float SnapToFrame(float time, float fps)
-        {
-            return (Mathf.Round(time * fps) / fps);
-        }
+        public float SnapToFrame(float time, float fps) => 
+            (Mathf.Round(time * fps) / fps);
 
         public float SnapToFrame(float time, SnapMode snap)
         {
@@ -931,35 +907,23 @@
             }
         }
 
-        public float TimeToFrame(float time)
-        {
-            return (time * this.frameRate);
-        }
+        public float TimeToFrame(float time) => 
+            (time * this.frameRate);
 
-        public int TimeToFrameFloor(float time)
-        {
-            return Mathf.FloorToInt(this.TimeToFrame(time));
-        }
+        public int TimeToFrameFloor(float time) => 
+            Mathf.FloorToInt(this.TimeToFrame(time));
 
-        public int TimeToFrameRound(float time)
-        {
-            return Mathf.RoundToInt(this.TimeToFrame(time));
-        }
+        public int TimeToFrameRound(float time) => 
+            Mathf.RoundToInt(this.TimeToFrame(time));
 
-        public float TimeToPixel(float time)
-        {
-            return this.TimeToPixel(time, SnapMode.Disabled);
-        }
+        public float TimeToPixel(float time) => 
+            this.TimeToPixel(time, SnapMode.Disabled);
 
-        public float TimeToPixel(float time, SnapMode snap)
-        {
-            return ((this.SnapToFrame(time, snap) * this.pixelPerSecond) + this.zeroTimePixel);
-        }
+        public float TimeToPixel(float time, SnapMode snap) => 
+            ((this.SnapToFrame(time, snap) * this.pixelPerSecond) + this.zeroTimePixel);
 
-        public float TimeToPixel(float time, Rect rect)
-        {
-            return this.FrameToPixel(time * this.frameRate, rect);
-        }
+        public float TimeToPixel(float time, Rect rect) => 
+            this.FrameToPixel(time * this.frameRate, rect);
 
         public void TransformRippleKeys(Matrix4x4 matrix, float t1, float t2, bool flipX, bool snapToFrame)
         {
@@ -1181,7 +1145,7 @@
                             source.Add(AnimationWindowUtility.GetCurveWrapper(curve, curve.clip));
                         }
                     }
-                    if (!Enumerable.Any<CurveWrapper>(source))
+                    if (!source.Any<CurveWrapper>())
                     {
                         foreach (AnimationWindowCurve curve2 in this.allCurves)
                         {
@@ -1247,13 +1211,8 @@
             }
         }
 
-        public List<AnimationWindowCurve> allCurves
-        {
-            get
-            {
-                return this.selection.curves;
-            }
-        }
+        public List<AnimationWindowCurve> allCurves =>
+            this.selection.curves;
 
         public bool animatorIsOptimized
         {
@@ -1282,14 +1241,8 @@
 
         public float clipFrameRate
         {
-            get
-            {
-                if (this.activeAnimationClip == null)
-                {
-                    return 60f;
-                }
-                return this.activeAnimationClip.frameRate;
-            }
+            get => 
+                this.activeAnimationClip?.frameRate;
             set
             {
                 if (((this.activeAnimationClip != null) && (value > 0f)) && (value <= 10000f))
@@ -1319,10 +1272,8 @@
 
         public float currentTime
         {
-            get
-            {
-                return this.m_CurrentTime;
-            }
+            get => 
+                this.m_CurrentTime;
             set
             {
                 if (!Mathf.Approximately(this.m_CurrentTime, value))
@@ -1334,13 +1285,8 @@
             }
         }
 
-        public bool disabled
-        {
-            get
-            {
-                return this.selection.disabled;
-            }
-        }
+        public bool disabled =>
+            this.selection.disabled;
 
         public List<DopeLine> dopelines
         {
@@ -1377,10 +1323,8 @@
 
         public int frame
         {
-            get
-            {
-                return this.m_CurrentFrame;
-            }
+            get => 
+                this.m_CurrentFrame;
             set
             {
                 if (this.m_CurrentFrame != value)
@@ -1394,10 +1338,8 @@
 
         public float frameRate
         {
-            get
-            {
-                return this.m_FrameRate;
-            }
+            get => 
+                this.m_FrameRate;
             set
             {
                 if (this.m_FrameRate != value)
@@ -1413,78 +1355,39 @@
 
         public bool locked
         {
-            get
-            {
-                return this.selection.locked;
-            }
+            get => 
+                this.selection.locked;
             set
             {
                 this.selection.locked = value;
             }
         }
 
-        public float maxTime
-        {
-            get
-            {
-                return this.timeRange.y;
-            }
-        }
+        public float maxTime =>
+            this.timeRange.y;
 
-        public float maxVisibleFrame
-        {
-            get
-            {
-                return (this.maxVisibleTime * this.frameRate);
-            }
-        }
+        public float maxVisibleFrame =>
+            (this.maxVisibleTime * this.frameRate);
 
-        public float maxVisibleTime
-        {
-            get
-            {
-                return this.m_TimeArea.shownArea.xMax;
-            }
-        }
+        public float maxVisibleTime =>
+            this.m_TimeArea.shownArea.xMax;
 
-        public float minTime
-        {
-            get
-            {
-                return this.timeRange.x;
-            }
-        }
+        public float minTime =>
+            this.timeRange.x;
 
-        public float minVisibleFrame
-        {
-            get
-            {
-                return (this.minVisibleTime * this.frameRate);
-            }
-        }
+        public float minVisibleFrame =>
+            (this.minVisibleTime * this.frameRate);
 
-        public float minVisibleTime
-        {
-            get
-            {
-                return this.m_TimeArea.shownArea.xMin;
-            }
-        }
+        public float minVisibleTime =>
+            this.m_TimeArea.shownArea.xMin;
 
-        public float pixelPerSecond
-        {
-            get
-            {
-                return this.timeArea.m_Scale.x;
-            }
-        }
+        public float pixelPerSecond =>
+            this.timeArea.m_Scale.x;
 
         public bool playing
         {
-            get
-            {
-                return AnimationMode.InAnimationPlaybackMode();
-            }
+            get => 
+                AnimationMode.InAnimationPlaybackMode();
             set
             {
                 if (value && !AnimationMode.InAnimationPlaybackMode())
@@ -1502,10 +1405,8 @@
 
         public AnimationWindowPolicy policy
         {
-            get
-            {
-                return this.m_Policy;
-            }
+            get => 
+                this.m_Policy;
             set
             {
                 this.m_Policy = value;
@@ -1514,10 +1415,8 @@
 
         public bool recording
         {
-            get
-            {
-                return ((this.m_Recording != null) && this.m_Recording.enable);
-            }
+            get => 
+                ((this.m_Recording != null) && this.m_Recording.enable);
             set
             {
                 if (this.canRecord && (this.m_Recording != null))
@@ -1542,10 +1441,8 @@
 
         public RefreshType refresh
         {
-            get
-            {
-                return this.m_Refresh;
-            }
+            get => 
+                this.m_Refresh;
             set
             {
                 if (this.m_Refresh < value)
@@ -1604,15 +1501,8 @@
 
         private HashSet<int> selectedKeyHashes
         {
-            get
-            {
-                if (this.m_KeySelection == null)
-                {
-                    this.m_KeySelection = ScriptableObject.CreateInstance<AnimationWindowKeySelection>();
-                    this.m_KeySelection.hideFlags = HideFlags.HideAndDontSave;
-                }
-                return this.m_KeySelection.selectedKeyHashes;
-            }
+            get => 
+                this.m_KeySelection?.selectedKeyHashes;
             set
             {
                 if (this.m_KeySelection == null)
@@ -1658,28 +1548,16 @@
             }
         }
 
-        public bool syncTimeDuringDrag
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool syncTimeDuringDrag =>
+            false;
 
-        public AnimationKeyTime time
-        {
-            get
-            {
-                return AnimationKeyTime.Frame(this.frame, this.frameRate);
-            }
-        }
+        public AnimationKeyTime time =>
+            AnimationKeyTime.Frame(this.frame, this.frameRate);
 
         public TimeArea timeArea
         {
-            get
-            {
-                return this.m_TimeArea;
-            }
+            get => 
+                this.m_TimeArea;
             set
             {
                 this.m_TimeArea = value;
@@ -1688,10 +1566,8 @@
 
         public TimeArea.TimeFormat timeFormat
         {
-            get
-            {
-                return this.m_TimeFormat;
-            }
+            get => 
+                this.m_TimeFormat;
             set
             {
                 this.m_TimeFormat = value;
@@ -1718,39 +1594,22 @@
             }
         }
 
-        public float visibleFrameSpan
-        {
-            get
-            {
-                return (this.visibleTimeSpan * this.frameRate);
-            }
-        }
+        public float visibleFrameSpan =>
+            (this.visibleTimeSpan * this.frameRate);
 
-        public float visibleTimeSpan
-        {
-            get
-            {
-                return (this.maxVisibleTime - this.minVisibleTime);
-            }
-        }
+        public float visibleTimeSpan =>
+            (this.maxVisibleTime - this.minVisibleTime);
 
-        public float zeroTimePixel
-        {
-            get
-            {
-                return ((this.timeArea.shownArea.xMin * this.timeArea.m_Scale.x) * -1f);
-            }
-        }
+        public float zeroTimePixel =>
+            ((this.timeArea.shownArea.xMin * this.timeArea.m_Scale.x) * -1f);
 
         [CompilerGenerated]
         private sealed class <CurveWasModified>c__AnonStorey0
         {
             internal AnimationClip clip;
 
-            internal bool <>m__0(AnimationWindowSelectionItem item)
-            {
-                return (item.animationClip == this.clip);
-            }
+            internal bool <>m__0(AnimationWindowSelectionItem item) => 
+                (item.animationClip == this.clip);
         }
 
         [CompilerGenerated]
@@ -1758,10 +1617,8 @@
         {
             internal AnimationWindowHierarchyNode hierarchyNode;
 
-            internal bool <>m__0(DopeLine e)
-            {
-                return (e.hierarchyNodeID == this.hierarchyNode.id);
-            }
+            internal bool <>m__0(DopeLine e) => 
+                (e.hierarchyNodeID == this.hierarchyNode.id);
         }
 
         [CompilerGenerated]
@@ -1769,10 +1626,8 @@
         {
             internal CurveWrapper curveWrapper;
 
-            internal bool <>m__0(AnimationWindowCurve c)
-            {
-                return (c.GetHashCode() == this.curveWrapper.id);
-            }
+            internal bool <>m__0(AnimationWindowCurve c) => 
+                (c.GetHashCode() == this.curveWrapper.id);
         }
 
         [CompilerGenerated]
@@ -1781,15 +1636,11 @@
             internal AnimationWindowState $this;
             internal AnimationWindowKeyframe other;
 
-            internal bool <>m__0(AnimationWindowState.LiveEditKeyframe liveEditKey)
-            {
-                return (liveEditKey.key == this.other);
-            }
+            internal bool <>m__0(AnimationWindowState.LiveEditKeyframe liveEditKey) => 
+                (liveEditKey.key == this.other);
 
-            internal bool <>m__1(AnimationWindowState.LiveEditKeyframe liveEditKey)
-            {
-                return (AnimationKeyTime.Time(liveEditKey.key.time, this.$this.frameRate).frame == AnimationKeyTime.Time(this.other.time, this.$this.frameRate).frame);
-            }
+            internal bool <>m__1(AnimationWindowState.LiveEditKeyframe liveEditKey) => 
+                (AnimationKeyTime.Time(liveEditKey.key.time, this.$this.frameRate).frame == AnimationKeyTime.Time(this.other.time, this.$this.frameRate).frame);
         }
 
         [CompilerGenerated]
@@ -1797,10 +1648,8 @@
         {
             internal AnimationWindowKeyframe selectedKey;
 
-            internal bool <>m__0(AnimationWindowState.LiveEditCurve snapshot)
-            {
-                return (snapshot.curve == this.selectedKey.curve);
-            }
+            internal bool <>m__0(AnimationWindowState.LiveEditCurve snapshot) => 
+                (snapshot.curve == this.selectedKey.curve);
         }
 
         private class LiveEditCurve

@@ -33,10 +33,8 @@
             this.filterLogType = LogType.Log;
         }
 
-        private static string GetString(object message)
-        {
-            return ((message == null) ? "Null" : message.ToString());
-        }
+        private static string GetString(object message) => 
+            ((message == null) ? "Null" : message.ToString());
 
         /// <summary>
         /// <para>Check logging is enabled based on the LogType.</para>
@@ -45,10 +43,8 @@
         /// <returns>
         /// <para>Retrun true in case logs of LogType will be logged otherwise returns false.</para>
         /// </returns>
-        public bool IsLogTypeAllowed(LogType logType)
-        {
-            return (this.logEnabled && ((logType <= this.filterLogType) || (logType == LogType.Exception)));
-        }
+        public bool IsLogTypeAllowed(LogType logType) => 
+            (this.logEnabled && ((logType <= this.filterLogType) || (logType == LogType.Exception)));
 
         /// <summary>
         /// <para>Logs message to the Unity Console using default logger.</para>

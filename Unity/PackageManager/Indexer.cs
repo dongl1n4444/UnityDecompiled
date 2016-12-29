@@ -68,20 +68,13 @@
             }
         }
 
-        public string IndexCache
-        {
-            get
-            {
-                return Path.Combine(this.cachePath, this.cacheName);
-            }
-        }
+        public string IndexCache =>
+            Path.Combine(this.cachePath, this.cacheName);
 
         public List<IvyModule> Packages
         {
-            get
-            {
-                return this.packages;
-            }
+            get => 
+                this.packages;
             set
             {
                 this.packages = value;

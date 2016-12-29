@@ -37,15 +37,15 @@ internal abstract class PostProcessWinRT
     public readonly string StagingAreaDataManaged;
     protected readonly string VisualStudioName;
 
-    public PostProcessWinRT(BuildPostProcessArgs args, WSASDK sdk, [Optional, DefaultParameterValue(null)] string stagingArea)
+    public PostProcessWinRT(BuildPostProcessArgs args, WSASDK sdk, string stagingArea = null)
     {
         this._args = args;
         this._sdk = sdk;
-        this.PlayerPackage = Utility.ConvertToWindowsPath(this._args.playerPackage);
+        this.PlayerPackage = this._args.playerPackage.ConvertToWindowsPath();
         if (stagingArea == null)
         {
         }
-        this.StagingArea = Utility.ConvertToWindowsPath(args.stagingArea);
+        this.StagingArea = args.stagingArea.ConvertToWindowsPath();
         this.StagingAreaData = Utility.CombinePath(this.StagingArea, "Data");
         this.StagingAreaDataManaged = Utility.CombinePath(this.StagingAreaData, "Managed");
         this.VisualStudioName = Utility.GetVsName();
@@ -58,7 +58,7 @@ internal abstract class PostProcessWinRT
         }
         else
         {
-            this.InstallPath = Utility.ConvertToWindowsPath(args.installPath);
+            this.InstallPath = args.installPath.ConvertToWindowsPath();
         }
     }
 
@@ -107,7 +107,7 @@ internal abstract class PostProcessWinRT
         }
         if (!flag)
         {
-            throw new UnityException(string.Format("Windows 8 or newer is required to build {0}.", this.Target));
+            throw new UnityException($"Windows 8 or newer is required to build {this.Target}.");
         }
     }
 
@@ -369,7 +369,7 @@ internal abstract class PostProcessWinRT
         string[] textArray2 = new string[] { "#include \"Resource.h\"", "IDC_HIDDEN_CURSOR             CURSOR                  \"hiddenCursor.cur\"", !flag ? "" : "IDC_DEFAULT_CURSOR             CURSOR                  \"defaultCursor.cur\"" };
         File.WriteAllText(str2, string.Join("\r\n", textArray2));
         string resourceCompilerPath = this.GetResourceCompilerPath();
-        string arguments = string.Format("/fo \"{0}\" \"{1}\"", str4, str2);
+        string arguments = $"/fo "{str4}" "{str2}"";
         if (Utility.RunAndWait(resourceCompilerPath, arguments, out str7, null) != 0)
         {
             string[] textArray3 = new string[] { "Failed to compile windows resources:\n", resourceCompilerPath, " ", arguments, " \n", str7 };
@@ -410,70 +410,48 @@ internal abstract class PostProcessWinRT
     }
 
     [DebuggerHidden]
-    protected virtual IEnumerable<string> GetAdditionalReferenceAssembliesDirectories()
-    {
-        return new <GetAdditionalReferenceAssembliesDirectories>c__Iterator1 { 
+    protected virtual IEnumerable<string> GetAdditionalReferenceAssembliesDirectories() => 
+        new <GetAdditionalReferenceAssembliesDirectories>c__Iterator1 { 
             $this = this,
             $PC = -2
         };
-    }
 
-    protected virtual string GetAlternativeReferenceRewritterMappings()
-    {
-        return null;
-    }
+    protected virtual string GetAlternativeReferenceRewritterMappings() => 
+        null;
 
-    protected virtual IEnumerable<string> GetAssembliesIgnoredByReferenceRewriter()
-    {
-        return new string[] { "UnityEngine", "WinRTLegacy", "Boo.Lang", "UnityScript.Lang" };
-    }
+    protected virtual IEnumerable<string> GetAssembliesIgnoredByReferenceRewriter() => 
+        new string[] { "UnityEngine", "WinRTLegacy", "Boo.Lang", "UnityScript.Lang" };
 
-    protected virtual IEnumerable<string> GetAssembliesIgnoredBySerializationWeaver()
-    {
-        return new string[] { "WinRTLegacy", "Boo.Lang", "UnityScript.Lang" };
-    }
+    protected virtual IEnumerable<string> GetAssembliesIgnoredBySerializationWeaver() => 
+        new string[] { "WinRTLegacy", "Boo.Lang", "UnityScript.Lang" };
 
     protected abstract string GetAssemblyConverterPlatform();
-    protected virtual IEnumerable<string> GetCompatibleBuiltinPlugins()
-    {
-        return new string[] { "UnityEngine.Networking", "UnityEngine.UI" };
-    }
+    protected virtual IEnumerable<string> GetCompatibleBuiltinPlugins() => 
+        new string[] { "UnityEngine.Networking", "UnityEngine.UI" };
 
-    protected virtual string GetIgnoredReferenceRewriterTypes()
-    {
-        return null;
-    }
+    protected virtual string GetIgnoredReferenceRewriterTypes() => 
+        null;
 
     [DebuggerHidden]
-    protected virtual IEnumerable<string> GetIgnoreOutputAssembliesForReferenceRewriter()
-    {
-        return new <GetIgnoreOutputAssembliesForReferenceRewriter>c__Iterator2 { $PC = -2 };
-    }
+    protected virtual IEnumerable<string> GetIgnoreOutputAssembliesForReferenceRewriter() => 
+        new <GetIgnoreOutputAssembliesForReferenceRewriter>c__Iterator2 { $PC = -2 };
 
-    protected virtual IEnumerable<string> GetLangAssemblies()
-    {
-        return new string[] { "Boo.Lang.dll", "UnityScript.Lang.dll" };
-    }
+    protected virtual IEnumerable<string> GetLangAssemblies() => 
+        new string[] { "Boo.Lang.dll", "UnityScript.Lang.dll" };
 
     protected abstract string GetPlatformAssemblyPath();
-    protected virtual string GetPlayerFilesSourceDirectory()
-    {
-        return Utility.CombinePath(this.PlayerPackage, "Players");
-    }
+    protected virtual string GetPlayerFilesSourceDirectory() => 
+        Utility.CombinePath(this.PlayerPackage, "Players");
 
-    protected virtual string GetPlayerFilesTargetDirectory()
-    {
-        return Utility.CombinePath(this.InstallPath, "Players");
-    }
+    protected virtual string GetPlayerFilesTargetDirectory() => 
+        Utility.CombinePath(this.InstallPath, "Players");
 
     [DebuggerHidden]
-    protected virtual IEnumerable<string> GetReferenceAssembliesDirectories()
-    {
-        return new <GetReferenceAssembliesDirectories>c__Iterator0 { 
+    protected virtual IEnumerable<string> GetReferenceAssembliesDirectories() => 
+        new <GetReferenceAssembliesDirectories>c__Iterator0 { 
             $this = this,
             $PC = -2
         };
-    }
 
     protected abstract string GetReferenceAssembliesDirectory();
     protected static string GetReferenceAssembliesDirectory(string path)
@@ -494,20 +472,14 @@ internal abstract class PostProcessWinRT
         throw new NotImplementedException("GetResourceCompilerPath should be implemented in a child class");
     }
 
-    protected virtual string GetSDKNotFoundErrorMessage()
-    {
-        return null;
-    }
+    protected virtual string GetSDKNotFoundErrorMessage() => 
+        null;
 
-    protected virtual IEnumerable<string> GetUnityAssemblies()
-    {
-        return new string[] { "UnityEngine.dll", "WinRTLegacy.dll" };
-    }
+    protected virtual IEnumerable<string> GetUnityAssemblies() => 
+        new string[] { "UnityEngine.dll", "WinRTLegacy.dll" };
 
-    protected virtual IEnumerable<string> GetUnityPluginOverwrites()
-    {
-        return new string[] { "UnityEngine.Networking.dll" };
-    }
+    protected virtual IEnumerable<string> GetUnityPluginOverwrites() => 
+        new string[] { "UnityEngine.Networking.dll" };
 
     private static string JoinStrings(IEnumerable<string> strings)
     {
@@ -643,11 +615,12 @@ internal abstract class PostProcessWinRT
         }
         if (Utility.RunAndWait(fileName, arguments, out str4, null) != 0)
         {
-            throw new UnityException(string.Format("Failed to run assembly converter with command {0}.\n{1}", arguments, str4));
+            throw new UnityException($"Failed to run assembly converter with command {arguments}.
+{str4}");
         }
         if (!string.IsNullOrEmpty(str4))
         {
-            UnityEngine.Debug.LogError(string.Format("Assembly converter: {0}", str4));
+            UnityEngine.Debug.LogError($"Assembly converter: {str4}");
         }
     }
 
@@ -686,7 +659,7 @@ internal abstract class PostProcessWinRT
                         <RunReferenceRewriter>c__AnonStorey7 storey2 = new <RunReferenceRewriter>c__AnonStorey7();
                         string archReferencePath = storey.library.GetArchReferencePath(str9);
                         archReferencePath = Path.Combine(this.StagingArea, archReferencePath);
-                        string arguments = string.Format("--target=\"{0}\" --additionalreferences={1} --platform=\"{2}\" --support=\"{3}\" --supportpartialns=Unity.Partial --system=System --dbg=pdb", new object[] { archReferencePath, str4, platformAssemblyPath, str5 });
+                        string arguments = $"--target="{archReferencePath}" --additionalreferences={str4} --platform="{platformAssemblyPath}" --support="{str5}" --supportpartialns=Unity.Partial --system=System --dbg=pdb";
                         if (!string.IsNullOrEmpty(str2))
                         {
                             arguments = arguments + " --framework=" + str2;
@@ -709,7 +682,8 @@ internal abstract class PostProcessWinRT
                         }
                         if (Utility.RunAndWait(fileName, arguments, out storey2.output, null) != 0)
                         {
-                            throw new UnityException(string.Format("Failed to run reference rewriter with command {0}.\n{1}", arguments, storey2.output));
+                            throw new UnityException($"Failed to run reference rewriter with command {arguments}.
+{storey2.output}");
                         }
                         if (string.IsNullOrEmpty(storey2.output))
                         {
@@ -721,11 +695,12 @@ internal abstract class PostProcessWinRT
                             string[] strArray = storey2.output.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                             if (strArray.Length > 0)
                             {
-                                UnityEngine.Debug.LogError(string.Format("Reference Rewriter found some errors while running with command {0}.\n{1}", arguments, storey2.output));
+                                UnityEngine.Debug.LogError($"Reference Rewriter found some errors while running with command {arguments}.
+{storey2.output}");
                             }
                             foreach (string str12 in strArray)
                             {
-                                UnityEngine.Debug.LogError(string.Format("Reference rewriter: {0}", str12));
+                                UnityEngine.Debug.LogError($"Reference rewriter: {str12}");
                             }
                         }
                     }
@@ -742,7 +717,7 @@ internal abstract class PostProcessWinRT
         Utility.CreateDirectory(path);
         IEnumerable<string> assembliesIgnoredBySerializationWeaver = this.GetAssembliesIgnoredBySerializationWeaver();
         string referenceAssembliesDirectory = this.GetReferenceAssembliesDirectory();
-        string[] strArray = Enumerable.ToArray<string>(this.GetAdditionalReferenceAssembliesDirectories());
+        string[] strArray = this.GetAdditionalReferenceAssembliesDirectories().ToArray<string>();
         using (IEnumerator<Library> enumerator = this.Libraries.GetEnumerator())
         {
             while (enumerator.MoveNext())
@@ -757,10 +732,10 @@ internal abstract class PostProcessWinRT
                         string str9;
                         string archReferencePath = storey.library.GetArchReferencePath(str5);
                         archReferencePath = Path.Combine(this.StagingAreaDataManaged, archReferencePath);
-                        string arguments = string.Format("\"{0}\" -pdb -verbose -unity-engine=\"{1}\" \"{2}\"", archReferencePath, str2, path);
+                        string arguments = $""{archReferencePath}" -pdb -verbose -unity-engine="{str2}" "{path}"";
                         if (!string.IsNullOrEmpty(referenceAssembliesDirectory))
                         {
-                            arguments = arguments + string.Format(" -additionalAssemblyPath=\"{0}\"", referenceAssembliesDirectory);
+                            arguments = arguments + $" -additionalAssemblyPath="{referenceAssembliesDirectory}"";
                         }
                         else
                         {
@@ -768,11 +743,12 @@ internal abstract class PostProcessWinRT
                         }
                         foreach (string str8 in strArray)
                         {
-                            arguments = arguments + string.Format(" -additionalAssemblyPath=\"{0}\"", str8);
+                            arguments = arguments + $" -additionalAssemblyPath="{str8}"";
                         }
                         if (Utility.RunAndWait(fileName, arguments, out str9, null) != 0)
                         {
-                            throw new UnityException(string.Format("Failed to run serialization weaver with command {0}.\n{1}", arguments, str9));
+                            throw new UnityException($"Failed to run serialization weaver with command {arguments}.
+{str9}");
                         }
                         DeletePlugin(archReferencePath);
                         string str10 = Path.ChangeExtension(archReferencePath, ".pdb");
@@ -810,82 +786,35 @@ internal abstract class PostProcessWinRT
         PlayerSettings.GetSerializedObject().Update();
     }
 
-    protected virtual bool UseIL2CPP()
-    {
-        return false;
-    }
+    protected virtual bool UseIL2CPP() => 
+        false;
 
-    protected bool AutoRunPlayer
-    {
-        get
-        {
-            return ((this.Options & BuildOptions.AutoRunPlayer) != BuildOptions.CompressTextures);
-        }
-    }
+    protected bool AutoRunPlayer =>
+        ((this.Options & BuildOptions.AutoRunPlayer) != BuildOptions.CompressTextures);
 
-    protected string CompanyName
-    {
-        get
-        {
-            return this._args.companyName;
-        }
-    }
+    protected string CompanyName =>
+        this._args.companyName;
 
-    protected bool Development
-    {
-        get
-        {
-            return ((this.Options & BuildOptions.Development) != BuildOptions.CompressTextures);
-        }
-    }
+    protected bool Development =>
+        ((this.Options & BuildOptions.Development) != BuildOptions.CompressTextures);
 
-    protected BuildOptions Options
-    {
-        get
-        {
-            return this._args.options;
-        }
-    }
+    protected BuildOptions Options =>
+        this._args.options;
 
-    protected Guid ProductGUID
-    {
-        get
-        {
-            return this._args.productGUID;
-        }
-    }
+    protected Guid ProductGUID =>
+        this._args.productGUID;
 
-    protected string ProductName
-    {
-        get
-        {
-            return this._args.productName;
-        }
-    }
+    protected string ProductName =>
+        this._args.productName;
 
-    protected bool SourceBuild
-    {
-        get
-        {
-            return ((this.Options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures);
-        }
-    }
+    protected bool SourceBuild =>
+        ((this.Options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures);
 
-    protected BuildTarget Target
-    {
-        get
-        {
-            return this._args.target;
-        }
-    }
+    protected BuildTarget Target =>
+        this._args.target;
 
-    protected bool ThisIsABuildMachine
-    {
-        get
-        {
-            return (Environment.GetEnvironmentVariable("UNITY_THISISABUILDMACHINE") == "1");
-        }
-    }
+    protected bool ThisIsABuildMachine =>
+        (Environment.GetEnvironmentVariable("UNITY_THISISABUILDMACHINE") == "1");
 
     [CompilerGenerated]
     private sealed class <CopyPlayerFiles>c__AnonStorey9
@@ -906,10 +835,8 @@ internal abstract class PostProcessWinRT
             internal PostProcessWinRT.<CopyPlayerFiles>c__AnonStorey9 <>f__ref$9;
             internal string f;
 
-            internal bool <>m__0(string e)
-            {
-                return this.f.EndsWith(e, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string e) => 
+                this.f.EndsWith(e, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 
@@ -918,10 +845,8 @@ internal abstract class PostProcessWinRT
     {
         internal string pluginName;
 
-        internal bool <>m__0(string p)
-        {
-            return string.Equals(p, this.pluginName, StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string p) => 
+            string.Equals(p, this.pluginName, StringComparison.InvariantCultureIgnoreCase);
     }
 
     [CompilerGenerated]
@@ -929,10 +854,8 @@ internal abstract class PostProcessWinRT
     {
         internal string extension;
 
-        internal bool <>m__0(string e)
-        {
-            return string.Equals(this.extension, e, StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string e) => 
+            string.Equals(this.extension, e, StringComparison.InvariantCultureIgnoreCase);
     }
 
     [CompilerGenerated]
@@ -940,10 +863,8 @@ internal abstract class PostProcessWinRT
     {
         internal Library library;
 
-        internal bool <>m__0(string e)
-        {
-            return string.Equals(this.library.Name, e, StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string e) => 
+            string.Equals(this.library.Name, e, StringComparison.InvariantCultureIgnoreCase);
     }
 
     [CompilerGenerated]
@@ -1097,28 +1018,14 @@ internal abstract class PostProcessWinRT
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-        string IEnumerator<string>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        string IEnumerator<string>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 
     [CompilerGenerated]
@@ -1159,28 +1066,14 @@ internal abstract class PostProcessWinRT
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-        string IEnumerator<string>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        string IEnumerator<string>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 
     [CompilerGenerated]
@@ -1246,28 +1139,14 @@ internal abstract class PostProcessWinRT
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-        string IEnumerator<string>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        string IEnumerator<string>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 
     [CompilerGenerated]
@@ -1275,10 +1154,8 @@ internal abstract class PostProcessWinRT
     {
         internal Library library;
 
-        internal bool <>m__0(string a)
-        {
-            return string.Equals(a, this.library.Name, StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string a) => 
+            string.Equals(a, this.library.Name, StringComparison.InvariantCultureIgnoreCase);
     }
 
     [CompilerGenerated]
@@ -1286,10 +1163,8 @@ internal abstract class PostProcessWinRT
     {
         internal string output;
 
-        internal bool <>m__0(string a)
-        {
-            return (this.output.IndexOf(a, StringComparison.InvariantCultureIgnoreCase) != -1);
-        }
+        internal bool <>m__0(string a) => 
+            (this.output.IndexOf(a, StringComparison.InvariantCultureIgnoreCase) != -1);
     }
 
     [CompilerGenerated]
@@ -1297,10 +1172,8 @@ internal abstract class PostProcessWinRT
     {
         internal Library library;
 
-        internal bool <>m__0(string a)
-        {
-            return string.Equals(a, this.library.Name, StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string a) => 
+            string.Equals(a, this.library.Name, StringComparison.InvariantCultureIgnoreCase);
     }
 
     private enum Step

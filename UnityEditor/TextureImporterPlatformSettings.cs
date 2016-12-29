@@ -39,10 +39,8 @@
         /// </summary>
         public bool allowsAlphaSplitting
         {
-            get
-            {
-                return (this.m_AllowsAlphaSplitting != 0);
-            }
+            get => 
+                (this.m_AllowsAlphaSplitting != 0);
             set
             {
                 this.m_AllowsAlphaSplitting = !value ? 0 : 1;
@@ -54,10 +52,8 @@
         /// </summary>
         public int compressionQuality
         {
-            get
-            {
-                return this.m_CompressionQuality;
-            }
+            get => 
+                this.m_CompressionQuality;
             set
             {
                 this.m_CompressionQuality = value;
@@ -69,10 +65,8 @@
         /// </summary>
         public bool crunchedCompression
         {
-            get
-            {
-                return (this.m_CrunchedCompression != 0);
-            }
+            get => 
+                (this.m_CrunchedCompression != 0);
             set
             {
                 this.m_CrunchedCompression = !value ? 0 : 1;
@@ -84,10 +78,8 @@
         /// </summary>
         public TextureImporterFormat format
         {
-            get
-            {
-                return (TextureImporterFormat) this.m_TextureFormat;
-            }
+            get => 
+                ((TextureImporterFormat) this.m_TextureFormat);
             set
             {
                 this.m_TextureFormat = (int) value;
@@ -99,10 +91,8 @@
         /// </summary>
         public int maxTextureSize
         {
-            get
-            {
-                return this.m_MaxTextureSize;
-            }
+            get => 
+                this.m_MaxTextureSize;
             set
             {
                 this.m_MaxTextureSize = value;
@@ -114,10 +104,8 @@
         /// </summary>
         public string name
         {
-            get
-            {
-                return this.m_Name;
-            }
+            get => 
+                this.m_Name;
             set
             {
                 this.m_Name = value;
@@ -129,10 +117,8 @@
         /// </summary>
         public bool overridden
         {
-            get
-            {
-                return (this.m_Overridden != 0);
-            }
+            get => 
+                (this.m_Overridden != 0);
             set
             {
                 this.m_Overridden = !value ? 0 : 1;
@@ -144,10 +130,8 @@
         /// </summary>
         public TextureImporterCompression textureCompression
         {
-            get
-            {
-                return (TextureImporterCompression) this.m_TextureCompression;
-            }
+            get => 
+                ((TextureImporterCompression) this.m_TextureCompression);
             set
             {
                 this.m_TextureCompression = (int) value;

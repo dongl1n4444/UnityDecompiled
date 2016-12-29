@@ -49,13 +49,8 @@
         /// <summary>
         /// <para>Channel quality of service.</para>
         /// </summary>
-        public QosType QOS
-        {
-            get
-            {
-                return this.m_Type;
-            }
-        }
+        public QosType QOS =>
+            this.m_Type;
     }
 }
 

@@ -59,10 +59,8 @@
         public extern void ToggleMaximize();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void OnDomainReload();
-        public static implicit operator bool(WebView exists)
-        {
-            return ((exists != null) && !exists.IntPtrIsNull());
-        }
+        public static implicit operator bool(WebView exists) => 
+            ((exists != null) && !exists.IntPtrIsNull());
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool IntPtrIsNull();

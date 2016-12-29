@@ -9,10 +9,8 @@
         [NonSerialized]
         private static List<Expando> _expandos = new List<Expando>();
 
-        internal static bool $Purge$closure$5(Expando e)
-        {
-            return (e.Target == null);
-        }
+        internal static bool $Purge$closure$5(Expando e) => 
+            (e.Target == null);
 
         public static Expando GetExpandoFor(object o)
         {
@@ -30,7 +28,7 @@
         public static object GetExpandoProperty(object target, string name)
         {
             Expando expandoFor = GetExpandoFor(target);
-            return ((expandoFor != null) ? expandoFor[name] : null);
+            return expandoFor?[name];
         }
 
         public static Expando GetOrCreateExpandoFor(object o)
@@ -82,10 +80,8 @@
                 this.$$locals$16 = $$locals$16;
             }
 
-            public bool Invoke(Expando e)
-            {
-                return (e.Target == this.$$locals$16.$o);
-            }
+            public bool Invoke(Expando e) => 
+                (e.Target == this.$$locals$16.$o);
         }
 
         [Serializable]

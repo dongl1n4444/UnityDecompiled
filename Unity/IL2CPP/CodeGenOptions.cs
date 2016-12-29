@@ -57,13 +57,8 @@
             ForceSerialBetaOnly = false;
         }
 
-        public static bool EmitComments
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public static bool EmitComments =>
+            true;
     }
 }
 

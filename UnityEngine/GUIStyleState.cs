@@ -57,10 +57,8 @@
         /// </summary>
         public Texture2D background
         {
-            get
-            {
-                return this.GetBackgroundInternal();
-            }
+            get => 
+                this.GetBackgroundInternal();
             set
             {
                 this.SetBackgroundInternal(value);
@@ -72,10 +70,8 @@
         /// </summary>
         public Texture2D[] scaledBackgrounds
         {
-            get
-            {
-                return this.GetScaledBackgroundsInternal();
-            }
+            get => 
+                this.GetScaledBackgroundsInternal();
             set
             {
                 this.SetScaledBackgroundsInternal(value);

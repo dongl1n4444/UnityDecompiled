@@ -123,10 +123,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_RotateTowards(ref Vector3 current, ref Vector3 target, float maxRadiansDelta, float maxMagnitudeDelta, out Vector3 value);
         [Obsolete("Use Vector3.ProjectOnPlane instead.")]
-        public static Vector3 Exclude(Vector3 excludeThis, Vector3 fromThat)
-        {
-            return (fromThat - Project(fromThat, excludeThis));
-        }
+        public static Vector3 Exclude(Vector3 excludeThis, Vector3 fromThat) => 
+            (fromThat - Project(fromThat, excludeThis));
 
         /// <summary>
         /// <para>Linearly interpolates between two vectors.</para>
@@ -146,10 +144,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="t"></param>
-        public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, float t)
-        {
-            return new Vector3(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t));
-        }
+        public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, float t) => 
+            new Vector3(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t));
 
         /// <summary>
         /// <para>Moves a point current in a straight line towards a target point.</para>
@@ -261,10 +257,8 @@
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static Vector3 Scale(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
-        }
+        public static Vector3 Scale(Vector3 a, Vector3 b) => 
+            new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
 
         /// <summary>
         /// <para>Multiplies every component of this vector by the same component of scale.</para>
@@ -282,15 +276,11 @@
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static Vector3 Cross(Vector3 lhs, Vector3 rhs)
-        {
-            return new Vector3((lhs.y * rhs.z) - (lhs.z * rhs.y), (lhs.z * rhs.x) - (lhs.x * rhs.z), (lhs.x * rhs.y) - (lhs.y * rhs.x));
-        }
+        public static Vector3 Cross(Vector3 lhs, Vector3 rhs) => 
+            new Vector3((lhs.y * rhs.z) - (lhs.z * rhs.y), (lhs.z * rhs.x) - (lhs.x * rhs.z), (lhs.x * rhs.y) - (lhs.y * rhs.x));
 
-        public override int GetHashCode()
-        {
-            return ((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2));
-        }
+        public override int GetHashCode() => 
+            ((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2));
 
         public override bool Equals(object other)
         {
@@ -307,10 +297,8 @@
         /// </summary>
         /// <param name="inDirection"></param>
         /// <param name="inNormal"></param>
-        public static Vector3 Reflect(Vector3 inDirection, Vector3 inNormal)
-        {
-            return (((Vector3) ((-2f * Dot(inNormal, inDirection)) * inNormal)) + inDirection);
-        }
+        public static Vector3 Reflect(Vector3 inDirection, Vector3 inNormal) => 
+            (((Vector3) ((-2f * Dot(inNormal, inDirection)) * inNormal)) + inDirection);
 
         /// <summary>
         /// <para></para>
@@ -345,22 +333,15 @@
         /// <summary>
         /// <para>Returns this vector with a magnitude of 1 (Read Only).</para>
         /// </summary>
-        public Vector3 normalized
-        {
-            get
-            {
-                return Normalize(this);
-            }
-        }
+        public Vector3 normalized =>
+            Normalize(this);
         /// <summary>
         /// <para>Dot Product of two vectors.</para>
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static float Dot(Vector3 lhs, Vector3 rhs)
-        {
-            return (((lhs.x * rhs.x) + (lhs.y * rhs.y)) + (lhs.z * rhs.z));
-        }
+        public static float Dot(Vector3 lhs, Vector3 rhs) => 
+            (((lhs.x * rhs.x) + (lhs.y * rhs.y)) + (lhs.z * rhs.z));
 
         /// <summary>
         /// <para>Projects a vector onto another vector.</para>
@@ -382,20 +363,16 @@
         /// </summary>
         /// <param name="vector"></param>
         /// <param name="planeNormal"></param>
-        public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal)
-        {
-            return (vector - Project(vector, planeNormal));
-        }
+        public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal) => 
+            (vector - Project(vector, planeNormal));
 
         /// <summary>
         /// <para>Returns the angle in degrees between from and to.</para>
         /// </summary>
         /// <param name="from">The angle extends round from this vector.</param>
         /// <param name="to">The angle extends round to this vector.</param>
-        public static float Angle(Vector3 from, Vector3 to)
-        {
-            return (Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f);
-        }
+        public static float Angle(Vector3 from, Vector3 to) => 
+            (Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f);
 
         /// <summary>
         /// <para>Returns the distance between a and b.</para>
@@ -422,175 +399,101 @@
             return vector;
         }
 
-        public static float Magnitude(Vector3 a)
-        {
-            return Mathf.Sqrt(((a.x * a.x) + (a.y * a.y)) + (a.z * a.z));
-        }
+        public static float Magnitude(Vector3 a) => 
+            Mathf.Sqrt(((a.x * a.x) + (a.y * a.y)) + (a.z * a.z));
 
         /// <summary>
         /// <para>Returns the length of this vector (Read Only).</para>
         /// </summary>
-        public float magnitude
-        {
-            get
-            {
-                return Mathf.Sqrt(((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
-            }
-        }
-        public static float SqrMagnitude(Vector3 a)
-        {
-            return (((a.x * a.x) + (a.y * a.y)) + (a.z * a.z));
-        }
+        public float magnitude =>
+            Mathf.Sqrt(((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
+        public static float SqrMagnitude(Vector3 a) => 
+            (((a.x * a.x) + (a.y * a.y)) + (a.z * a.z));
 
         /// <summary>
         /// <para>Returns the squared length of this vector (Read Only).</para>
         /// </summary>
-        public float sqrMagnitude
-        {
-            get
-            {
-                return (((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
-            }
-        }
+        public float sqrMagnitude =>
+            (((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
         /// <summary>
         /// <para>Returns a vector that is made from the smallest components of two vectors.</para>
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static Vector3 Min(Vector3 lhs, Vector3 rhs)
-        {
-            return new Vector3(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
-        }
+        public static Vector3 Min(Vector3 lhs, Vector3 rhs) => 
+            new Vector3(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
 
         /// <summary>
         /// <para>Returns a vector that is made from the largest components of two vectors.</para>
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static Vector3 Max(Vector3 lhs, Vector3 rhs)
-        {
-            return new Vector3(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
-        }
+        public static Vector3 Max(Vector3 lhs, Vector3 rhs) => 
+            new Vector3(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
 
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 0, 0).</para>
         /// </summary>
-        public static Vector3 zero
-        {
-            get
-            {
-                return new Vector3(0f, 0f, 0f);
-            }
-        }
+        public static Vector3 zero =>
+            new Vector3(0f, 0f, 0f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(1, 1, 1).</para>
         /// </summary>
-        public static Vector3 one
-        {
-            get
-            {
-                return new Vector3(1f, 1f, 1f);
-            }
-        }
+        public static Vector3 one =>
+            new Vector3(1f, 1f, 1f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 0, 1).</para>
         /// </summary>
-        public static Vector3 forward
-        {
-            get
-            {
-                return new Vector3(0f, 0f, 1f);
-            }
-        }
+        public static Vector3 forward =>
+            new Vector3(0f, 0f, 1f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 0, -1).</para>
         /// </summary>
-        public static Vector3 back
-        {
-            get
-            {
-                return new Vector3(0f, 0f, -1f);
-            }
-        }
+        public static Vector3 back =>
+            new Vector3(0f, 0f, -1f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, 1, 0).</para>
         /// </summary>
-        public static Vector3 up
-        {
-            get
-            {
-                return new Vector3(0f, 1f, 0f);
-            }
-        }
+        public static Vector3 up =>
+            new Vector3(0f, 1f, 0f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(0, -1, 0).</para>
         /// </summary>
-        public static Vector3 down
-        {
-            get
-            {
-                return new Vector3(0f, -1f, 0f);
-            }
-        }
+        public static Vector3 down =>
+            new Vector3(0f, -1f, 0f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(-1, 0, 0).</para>
         /// </summary>
-        public static Vector3 left
-        {
-            get
-            {
-                return new Vector3(-1f, 0f, 0f);
-            }
-        }
+        public static Vector3 left =>
+            new Vector3(-1f, 0f, 0f);
         /// <summary>
         /// <para>Shorthand for writing Vector3(1, 0, 0).</para>
         /// </summary>
-        public static Vector3 right
-        {
-            get
-            {
-                return new Vector3(1f, 0f, 0f);
-            }
-        }
-        public static Vector3 operator +(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
-        }
+        public static Vector3 right =>
+            new Vector3(1f, 0f, 0f);
+        public static Vector3 operator +(Vector3 a, Vector3 b) => 
+            new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
 
-        public static Vector3 operator -(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
-        }
+        public static Vector3 operator -(Vector3 a, Vector3 b) => 
+            new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
 
-        public static Vector3 operator -(Vector3 a)
-        {
-            return new Vector3(-a.x, -a.y, -a.z);
-        }
+        public static Vector3 operator -(Vector3 a) => 
+            new Vector3(-a.x, -a.y, -a.z);
 
-        public static Vector3 operator *(Vector3 a, float d)
-        {
-            return new Vector3(a.x * d, a.y * d, a.z * d);
-        }
+        public static Vector3 operator *(Vector3 a, float d) => 
+            new Vector3(a.x * d, a.y * d, a.z * d);
 
-        public static Vector3 operator *(float d, Vector3 a)
-        {
-            return new Vector3(a.x * d, a.y * d, a.z * d);
-        }
+        public static Vector3 operator *(float d, Vector3 a) => 
+            new Vector3(a.x * d, a.y * d, a.z * d);
 
-        public static Vector3 operator /(Vector3 a, float d)
-        {
-            return new Vector3(a.x / d, a.y / d, a.z / d);
-        }
+        public static Vector3 operator /(Vector3 a, float d) => 
+            new Vector3(a.x / d, a.y / d, a.z / d);
 
-        public static bool operator ==(Vector3 lhs, Vector3 rhs)
-        {
-            return (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
-        }
+        public static bool operator ==(Vector3 lhs, Vector3 rhs) => 
+            (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
 
-        public static bool operator !=(Vector3 lhs, Vector3 rhs)
-        {
-            return (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
-        }
+        public static bool operator !=(Vector3 lhs, Vector3 rhs) => 
+            (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
 
         /// <summary>
         /// <para>Returns a nicely formatted string for this vector.</para>
@@ -613,18 +516,11 @@
         }
 
         [Obsolete("Use Vector3.forward instead.")]
-        public static Vector3 fwd
-        {
-            get
-            {
-                return new Vector3(0f, 0f, 1f);
-            }
-        }
+        public static Vector3 fwd =>
+            new Vector3(0f, 0f, 1f);
         [Obsolete("Use Vector3.Angle instead. AngleBetween uses radians instead of degrees and was deprecated for this reason")]
-        public static float AngleBetween(Vector3 from, Vector3 to)
-        {
-            return Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f));
-        }
+        public static float AngleBetween(Vector3 from, Vector3 to) => 
+            Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f));
     }
 }
 

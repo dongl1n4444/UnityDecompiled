@@ -20,10 +20,8 @@
         {
         }
 
-        protected override CompilerOutputParserBase CreateOutputParser()
-        {
-            return new MicrosoftCSharpCompilerOutputParser();
-        }
+        protected override CompilerOutputParserBase CreateOutputParser() => 
+            new MicrosoftCSharpCompilerOutputParser();
 
         private void FillNETCoreCompilerOptions(WSASDK wsaSDK, List<string> arguments, ref string argsPrefix)
         {
@@ -63,7 +61,7 @@
             }
             if (!File.Exists(platformAssemblyPath))
             {
-                throw new Exception(string.Format("'{0}' not found, do you have Windows {1} SDK installed?", platformAssemblyPath, str));
+                throw new Exception($"'{platformAssemblyPath}' not found, do you have Windows {str} SDK installed?");
             }
             arguments.Add("/reference:\"" + platformAssemblyPath + "\"");
             string[] additionalReferences = GetAdditionalReferences(wsaSDK);
@@ -136,10 +134,8 @@
             return _uwpReferences;
         }
 
-        private static ScriptingImplementation GetCurrentScriptingBackend()
-        {
-            return PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA);
-        }
+        private static ScriptingImplementation GetCurrentScriptingBackend() => 
+            PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA);
 
         internal static string GetNETCoreFrameworkReferencesDirectory(WSASDK wsaSDK)
         {
@@ -171,7 +167,7 @@
                 <GetNETWSAAssemblies>c__AnonStorey0 storey = new <GetNETWSAAssemblies>c__AnonStorey0 {
                     monoAssemblyDirectory = BuildPipeline.GetMonoLibDirectory(BuildTarget.WSAPlayer)
                 };
-                return Enumerable.ToArray<string>(Enumerable.Select<string, string>(GetReferencesFromMonoDistribution(), new Func<string, string>(storey, (IntPtr) this.<>m__0)));
+                return Enumerable.Select<string, string>(GetReferencesFromMonoDistribution(), new Func<string, string>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
             }
             if (wsaSDK != WSASDK.UWP)
             {
@@ -217,15 +213,11 @@
             return Path.Combine(windowsKitDirectory, @"References\CommonConfiguration\Neutral\Windows.winmd");
         }
 
-        private static string[] GetReferencesFromMonoDistribution()
-        {
-            return new string[] { "mscorlib.dll", "System.dll", "System.Core.dll", "System.Runtime.Serialization.dll", "System.Xml.dll", "System.Xml.Linq.dll", "UnityScript.dll", "UnityScript.Lang.dll", "Boo.Lang.dll" };
-        }
+        private static string[] GetReferencesFromMonoDistribution() => 
+            new string[] { "mscorlib.dll", "System.dll", "System.Core.dll", "System.Runtime.Serialization.dll", "System.Xml.dll", "System.Xml.Linq.dll", "UnityScript.dll", "UnityScript.Lang.dll", "Boo.Lang.dll" };
 
-        protected override string[] GetStreamContainingCompilerMessages()
-        {
-            return base.GetStandardOutput();
-        }
+        protected override string[] GetStreamContainingCompilerMessages() => 
+            base.GetStandardOutput();
 
         internal static string GetWindowsKitDirectory(WSASDK wsaSDK)
         {
@@ -283,12 +275,11 @@
 
         private Program StartCompilerImpl(List<string> arguments, string argsPrefix, bool msBuildCompiler)
         {
-            string str4;
             foreach (string str in this._island._references)
             {
                 arguments.Add("/reference:" + ScriptCompilerBase.PrepareFileName(str));
             }
-            foreach (string str2 in Enumerable.Distinct<string>(this._island._defines))
+            foreach (string str2 in this._island._defines.Distinct<string>())
             {
                 arguments.Add("/define:" + str2);
             }
@@ -296,28 +287,34 @@
             {
                 arguments.Add(ScriptCompilerBase.PrepareFileName(str3).Replace('/', '\\'));
             }
-            if (msBuildCompiler)
+            string[] components = new string[] { EditorApplication.applicationContentsPath, "Tools", "Roslyn", "CoreRun.exe" };
+            string path = Paths.Combine(components).Replace('/', '\\');
+            string[] textArray2 = new string[] { EditorApplication.applicationContentsPath, "Tools", "Roslyn", "csc.exe" };
+            string str5 = Paths.Combine(textArray2).Replace('/', '\\');
+            if (!File.Exists(path))
             {
-                str4 = Path.Combine(ProgramFilesDirectory, @"MSBuild\14.0\Bin\csc.exe");
+                ThrowCompilerNotFoundException(path);
             }
-            else
+            if (!File.Exists(str5))
             {
-                str4 = Path.Combine(WindowsDirectory, @"Microsoft.NET\Framework\v4.0.30319\Csc.exe");
-            }
-            if (!File.Exists(str4))
-            {
-                throw new Exception("'" + str4 + "' not found, either .NET 4.5 is not installed or your OS is not Windows 8/8.1.");
+                ThrowCompilerNotFoundException(str5);
             }
             base.AddCustomResponseFileIfPresent(arguments, "csc.rsp");
-            string str5 = CommandLineFormatter.GenerateResponseFile(arguments);
-            ProcessStartInfo si = new ProcessStartInfo {
-                Arguments = argsPrefix + "@" + str5,
-                FileName = str4,
-                CreateNoWindow = true
-            };
+            string str6 = CommandLineFormatter.GenerateResponseFile(arguments);
+            ProcessStartInfo info2 = new ProcessStartInfo();
+            string[] textArray3 = new string[] { "\"", str5, "\" ", argsPrefix, "@", str6 };
+            info2.Arguments = string.Concat(textArray3);
+            info2.FileName = path;
+            info2.CreateNoWindow = true;
+            ProcessStartInfo si = info2;
             Program program = new Program(si);
             program.Start();
             return program;
+        }
+
+        private static void ThrowCompilerNotFoundException(string path)
+        {
+            throw new Exception($"'{path}' not found. Is your Unity installation corrupted?");
         }
 
         internal static string ProgramFilesDirectory
@@ -346,23 +343,16 @@
             }
         }
 
-        internal static string WindowsDirectory
-        {
-            get
-            {
-                return Environment.GetEnvironmentVariable("windir");
-            }
-        }
+        internal static string WindowsDirectory =>
+            Environment.GetEnvironmentVariable("windir");
 
         [CompilerGenerated]
         private sealed class <GetNETWSAAssemblies>c__AnonStorey0
         {
             internal string monoAssemblyDirectory;
 
-            internal string <>m__0(string dll)
-            {
-                return Path.Combine(this.monoAssemblyDirectory, dll);
-            }
+            internal string <>m__0(string dll) => 
+                Path.Combine(this.monoAssemblyDirectory, dll);
         }
     }
 }

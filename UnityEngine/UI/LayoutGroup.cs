@@ -76,10 +76,8 @@
         /// </summary>
         public abstract void CalculateLayoutInputVertical();
         [DebuggerHidden]
-        private IEnumerator DelayedSetDirty(RectTransform rectTransform)
-        {
-            return new <DelayedSetDirty>c__Iterator0 { rectTransform = rectTransform };
-        }
+        private IEnumerator DelayedSetDirty(RectTransform rectTransform) => 
+            new <DelayedSetDirty>c__Iterator0 { rectTransform = rectTransform };
 
         /// <summary>
         /// <para>Returns the alignment on the specified axis as a fraction where 0 is lefttop, 0.5 is middle, and 1 is rightbottom.</para>
@@ -121,10 +119,8 @@
         /// <returns>
         /// <para>The flexible size.</para>
         /// </returns>
-        protected float GetTotalFlexibleSize(int axis)
-        {
-            return this.m_TotalFlexibleSize[axis];
-        }
+        protected float GetTotalFlexibleSize(int axis) => 
+            this.m_TotalFlexibleSize[axis];
 
         /// <summary>
         /// <para>The min size for the layout group on the given axis.</para>
@@ -133,10 +129,8 @@
         /// <returns>
         /// <para>The min size.</para>
         /// </returns>
-        protected float GetTotalMinSize(int axis)
-        {
-            return this.m_TotalMinSize[axis];
-        }
+        protected float GetTotalMinSize(int axis) => 
+            this.m_TotalMinSize[axis];
 
         /// <summary>
         /// <para>The preferred size for the layout group on the given axis.</para>
@@ -145,10 +139,8 @@
         /// <returns>
         /// <para>The preferred size.</para>
         /// </returns>
-        protected float GetTotalPreferredSize(int axis)
-        {
-            return this.m_TotalPreferredSize[axis];
-        }
+        protected float GetTotalPreferredSize(int axis) => 
+            this.m_TotalPreferredSize[axis];
 
         /// <summary>
         /// <para>Callback for when properties have been changed by animation.</para>
@@ -272,10 +264,8 @@
         /// </summary>
         public TextAnchor childAlignment
         {
-            get
-            {
-                return this.m_ChildAlignment;
-            }
+            get => 
+                this.m_ChildAlignment;
             set
             {
                 this.SetProperty<TextAnchor>(ref this.m_ChildAlignment, value);
@@ -285,75 +275,43 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float flexibleHeight
-        {
-            get
-            {
-                return this.GetTotalFlexibleSize(1);
-            }
-        }
+        public virtual float flexibleHeight =>
+            this.GetTotalFlexibleSize(1);
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float flexibleWidth
-        {
-            get
-            {
-                return this.GetTotalFlexibleSize(0);
-            }
-        }
+        public virtual float flexibleWidth =>
+            this.GetTotalFlexibleSize(0);
 
-        private bool isRootLayoutGroup
-        {
-            get
-            {
-                return ((base.transform.parent == null) || (base.transform.parent.GetComponent(typeof(ILayoutGroup)) == null));
-            }
-        }
+        private bool isRootLayoutGroup =>
+            ((base.transform.parent == null) || (base.transform.parent.GetComponent(typeof(ILayoutGroup)) == null));
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual int layoutPriority
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public virtual int layoutPriority =>
+            0;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float minHeight
-        {
-            get
-            {
-                return this.GetTotalMinSize(1);
-            }
-        }
+        public virtual float minHeight =>
+            this.GetTotalMinSize(1);
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float minWidth
-        {
-            get
-            {
-                return this.GetTotalMinSize(0);
-            }
-        }
+        public virtual float minWidth =>
+            this.GetTotalMinSize(0);
 
         /// <summary>
         /// <para>The padding to add around the child layout elements.</para>
         /// </summary>
         public RectOffset padding
         {
-            get
-            {
-                return this.m_Padding;
-            }
+            get => 
+                this.m_Padding;
             set
             {
                 this.SetProperty<RectOffset>(ref this.m_Padding, value);
@@ -363,32 +321,17 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float preferredHeight
-        {
-            get
-            {
-                return this.GetTotalPreferredSize(1);
-            }
-        }
+        public virtual float preferredHeight =>
+            this.GetTotalPreferredSize(1);
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float preferredWidth
-        {
-            get
-            {
-                return this.GetTotalPreferredSize(0);
-            }
-        }
+        public virtual float preferredWidth =>
+            this.GetTotalPreferredSize(0);
 
-        protected List<RectTransform> rectChildren
-        {
-            get
-            {
-                return this.m_RectChildren;
-            }
-        }
+        protected List<RectTransform> rectChildren =>
+            this.m_RectChildren;
 
         protected RectTransform rectTransform
         {
@@ -445,23 +388,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

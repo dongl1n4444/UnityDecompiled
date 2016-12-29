@@ -59,10 +59,8 @@
             throw new NotImplementedException();
         }
 
-        public bool IsIncluded(TestRunnerFilter filter)
-        {
-            return ((filter == null) || filter.Matches(this.name));
-        }
+        public bool IsIncluded(TestRunnerFilter filter) => 
+            ((filter == null) || filter.Matches(this.name));
 
         protected void KillGOTest(GameObject go)
         {
@@ -114,15 +112,13 @@
         }
 
         [DebuggerHidden]
-        protected virtual IEnumerator StartTimer(IEnumerator coroutineToBeKilled, float timeout, Action onTimeout)
-        {
-            return new <StartTimer>c__Iterator0 { 
+        protected virtual IEnumerator StartTimer(IEnumerator coroutineToBeKilled, float timeout, Action onTimeout) => 
+            new <StartTimer>c__Iterator0 { 
                 timeout = timeout,
                 coroutineToBeKilled = coroutineToBeKilled,
                 onTimeout = onTimeout,
                 $this = this
             };
-        }
 
         [CompilerGenerated]
         private sealed class <StartTimer>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
@@ -177,23 +173,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

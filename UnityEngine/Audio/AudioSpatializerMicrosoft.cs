@@ -37,23 +37,16 @@
             this.audioSource.SetSpatializerFloat(0, (float) this.m_RoomSize);
         }
 
-        private AudioSource audioSource
-        {
-            get
-            {
-                return base.GetComponent<AudioSource>();
-            }
-        }
+        private AudioSource audioSource =>
+            base.GetComponent<AudioSource>();
 
         /// <summary>
         /// <para>Describes room size to for audio effects.</para>
         /// </summary>
         public RoomSize roomSize
         {
-            get
-            {
-                return this.m_RoomSize;
-            }
+            get => 
+                this.m_RoomSize;
             set
             {
                 this.m_RoomSize = value;

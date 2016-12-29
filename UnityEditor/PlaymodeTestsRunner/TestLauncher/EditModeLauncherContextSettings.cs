@@ -54,10 +54,8 @@
             EditorUtility.ClearProgressBar();
         }
 
-        private static int RegisterUndo()
-        {
-            return Undo.GetCurrentGroup();
-        }
+        private static int RegisterUndo() => 
+            Undo.GetCurrentGroup();
 
         private void SetupProjectParameters()
         {

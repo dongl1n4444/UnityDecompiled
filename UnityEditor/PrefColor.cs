@@ -68,10 +68,8 @@
             }
         }
 
-        public static implicit operator UnityEngine.Color(PrefColor pcolor)
-        {
-            return pcolor.Color;
-        }
+        public static implicit operator UnityEngine.Color(PrefColor pcolor) => 
+            pcolor.Color;
 
         internal void ResetToDefault()
         {

@@ -28,20 +28,16 @@
             _platformRunners.TryGetValue(platform.GetType(), out runner);
             if (runner == null)
             {
-                throw new ArgumentException(string.Format("Can't find runner for platform {0}!", platform));
+                throw new ArgumentException($"Can't find runner for platform {platform}!");
             }
             return runner;
         }
 
-        public virtual string GetActivateSignature()
-        {
-            return "int main(int argc, const char* argv[]) { return EntryPoint(argc, argv); }";
-        }
+        public virtual string GetActivateSignature() => 
+            "int main(int argc, const char* argv[]) { return EntryPoint(argc, argv); }";
 
-        public virtual IEnumerable<string> GetAdditionalIncludes()
-        {
-            return new string[0];
-        }
+        public virtual IEnumerable<string> GetAdditionalIncludes() => 
+            new string[0];
 
         public virtual string Run(string executable)
         {
@@ -72,13 +68,8 @@
             }
         }
 
-        public virtual bool SupportsRunningWithParameters
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool SupportsRunningWithParameters =>
+            false;
     }
 }
 

@@ -14,13 +14,13 @@
 
         private static void InjectBaseTypeIfNeeded(TypeDefinition type)
         {
-            if (!Unity.IL2CPP.Extensions.IsIl2CppComObject(type))
+            if (!type.IsIl2CppComObject())
             {
                 if (type.BaseType == null)
                 {
-                    throw new InvalidOperationException(string.Format("COM import type '{0}' has no base type.", type.FullName));
+                    throw new InvalidOperationException($"COM import type '{type.FullName}' has no base type.");
                 }
-                if (Unity.IL2CPP.Extensions.IsSystemObject(type.BaseType))
+                if (type.BaseType.IsSystemObject())
                 {
                     type.BaseType = type.Module.ImportReference(TypeProvider.Il2CppComObjectTypeReference);
                 }
@@ -29,7 +29,7 @@
 
         private static void InjectFinalizer(TypeDefinition type)
         {
-            if (!Unity.IL2CPP.Extensions.IsAttribute(type))
+            if (!type.IsAttribute())
             {
                 MethodDefinition item = new MethodDefinition("Finalize", MethodAttributes.CompilerControlled | MethodAttributes.Family | MethodAttributes.HideBySig | MethodAttributes.Virtual, type.Module.TypeSystem.Void) {
                     HasThis = true,
@@ -41,7 +41,7 @@
 
         protected override void Visit(TypeDefinition type, Unity.Cecil.Visitor.Context context)
         {
-            if (Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeType(type) && !type.IsInterface)
+            if (type.IsComOrWindowsRuntimeType() && !type.IsInterface)
             {
                 InjectBaseTypeIfNeeded(type);
                 InjectFinalizer(type);

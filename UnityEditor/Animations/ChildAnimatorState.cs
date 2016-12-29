@@ -18,10 +18,8 @@
         /// </summary>
         public AnimatorState state
         {
-            get
-            {
-                return this.m_State;
-            }
+            get => 
+                this.m_State;
             set
             {
                 this.m_State = value;
@@ -32,10 +30,8 @@
         /// </summary>
         public Vector3 position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 this.m_Position = value;

@@ -158,7 +158,7 @@
         {
             bool flag = changedFlags == -1;
             StaticEditorFlags flags = !flag ? ((StaticEditorFlags) Enum.Parse(typeof(StaticEditorFlags), changedFlags.ToString())) : ((StaticEditorFlags) 0);
-            GameObjectUtility.ShouldIncludeChildren children = GameObjectUtility.DisplayUpdateChildrenDialogIfNeeded(Enumerable.OfType<GameObject>(targetObjects), "Change Static Flags", !flag ? ("Do you want to " + (!flagValue ? "disable" : "enable") + " the " + ObjectNames.NicifyVariableName(flags.ToString()) + " flag for all the child objects as well?") : ("Do you want to " + (!flagValue ? "disable" : "enable") + " the static flags for all the child objects as well?"));
+            GameObjectUtility.ShouldIncludeChildren children = GameObjectUtility.DisplayUpdateChildrenDialogIfNeeded(targetObjects.OfType<GameObject>(), "Change Static Flags", !flag ? ("Do you want to " + (!flagValue ? "disable" : "enable") + " the " + ObjectNames.NicifyVariableName(flags.ToString()) + " flag for all the child objects as well?") : ("Do you want to " + (!flagValue ? "disable" : "enable") + " the static flags for all the child objects as well?"));
             if (children == GameObjectUtility.ShouldIncludeChildren.Cancel)
             {
                 GUIUtility.ExitGUI();

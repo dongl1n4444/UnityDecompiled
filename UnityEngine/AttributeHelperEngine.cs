@@ -35,11 +35,7 @@
         private static int GetDefaultExecutionOrderFor(System.Type klass)
         {
             DefaultExecutionOrder customAttributeOfType = GetCustomAttributeOfType<DefaultExecutionOrder>(klass);
-            if (customAttributeOfType == null)
-            {
-                return 0;
-            }
-            return customAttributeOfType.order;
+            return customAttributeOfType?.order;
         }
 
         [RequiredByNativeCode]
@@ -96,11 +92,7 @@
                 }
                 klass = baseType;
             }
-            if (list == null)
-            {
-                return null;
-            }
-            return list.ToArray();
+            return list?.ToArray();
         }
     }
 }

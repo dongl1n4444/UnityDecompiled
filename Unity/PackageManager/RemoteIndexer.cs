@@ -92,7 +92,7 @@
                     {
                         <>f__am$cache0 = new Func<IvyModule, bool>(null, (IntPtr) <>m__1);
                     }
-                    this.$this.Packages = Enumerable.ToList<IvyModule>(Enumerable.Where<IvyModule>(((ModuleRepository) verifier.Result).Modules, <>f__am$cache0));
+                    this.$this.Packages = Enumerable.Where<IvyModule>(((ModuleRepository) verifier.Result).Modules, <>f__am$cache0).ToList<IvyModule>();
                     this.$this.CacheResult();
                     this.task1.Shared = false;
                     this.task1.CleanupArtifacts();
@@ -104,10 +104,8 @@
                 }
             }
 
-            private static bool <>m__1(IvyModule module)
-            {
-                return ((module.Info.Type != PackageType.PlaybackEngine) || ModuleManager.HaveLicenseForBuildTarget(module.Info.Module));
-            }
+            private static bool <>m__1(IvyModule module) => 
+                ((module.Info.Type != PackageType.PlaybackEngine) || ModuleManager.HaveLicenseForBuildTarget(module.Info.Module));
         }
     }
 }

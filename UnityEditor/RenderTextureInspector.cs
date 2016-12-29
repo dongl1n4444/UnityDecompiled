@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(RenderTexture)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(RenderTexture))]
     internal class RenderTextureInspector : TextureInspector
     {
         private static readonly GUIContent[] kRenderTextureAntiAliasing = new GUIContent[] { new GUIContent("None"), new GUIContent("2 samples"), new GUIContent("4 samples"), new GUIContent("8 samples") };
@@ -72,10 +72,8 @@
             base.serializedObject.ApplyModifiedProperties();
         }
 
-        private bool RenderTextureHasDepth()
-        {
-            return (TextureUtil.IsDepthRTFormat((RenderTextureFormat) this.m_ColorFormat.enumValueIndex) || (this.m_DepthFormat.enumValueIndex != 0));
-        }
+        private bool RenderTextureHasDepth() => 
+            (TextureUtil.IsDepthRTFormat((RenderTextureFormat) this.m_ColorFormat.enumValueIndex) || (this.m_DepthFormat.enumValueIndex != 0));
     }
 }
 

@@ -34,10 +34,8 @@
         [Inject]
         public static ITypeProviderService TypeProvider;
 
-        internal static int AlignmentPackingSizeFor(TypeDefinition typeDefinition)
-        {
-            return typeDefinition.PackingSize;
-        }
+        internal static int AlignmentPackingSizeFor(TypeDefinition typeDefinition) => 
+            typeDefinition.PackingSize;
 
         internal static int AlignmentSizeFor(TypeDefinition typeDefinition)
         {
@@ -57,10 +55,8 @@
             return 1;
         }
 
-        private static string BoundVariableNameFor(int i)
-        {
-            return string.Format("{0}Bound", (char) (0x69 + i));
-        }
+        private static string BoundVariableNameFor(int i) => 
+            $"{((char) (0x69 + i))}Bound";
 
         private static string BuildArrayBoundsVariables(StringBuilder stringBuilder, int rank, bool emitArrayBoundsCheck, int indentationLevel)
         {
@@ -151,11 +147,11 @@
                             writer.AddForwardDeclaration(resolver.Resolve(fieldType.ElementType));
                         }
                     }
-                    foreach (TypeReference reference2 in Extensions.GetAllFactoryTypes(type))
+                    foreach (TypeReference reference2 in type.GetAllFactoryTypes())
                     {
                         writer.AddForwardDeclaration(reference2);
                     }
-                    if (Extensions.IsDelegate(typeDefinition))
+                    if (typeDefinition.IsDelegate())
                     {
                         MethodDefinition[] definitionArray;
                         if (!typeDefinition.IsWindowsRuntime)
@@ -165,17 +161,17 @@
                             {
                                 <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__2);
                             }
-                            definitionArray1[0] = Enumerable.Single<MethodDefinition>(typeDefinition.Methods, <>f__am$cache2);
+                            definitionArray1[0] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache2);
                             if (<>f__am$cache3 == null)
                             {
                                 <>f__am$cache3 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__3);
                             }
-                            definitionArray1[1] = Enumerable.Single<MethodDefinition>(typeDefinition.Methods, <>f__am$cache3);
+                            definitionArray1[1] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache3);
                             if (<>f__am$cache4 == null)
                             {
                                 <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__4);
                             }
-                            definitionArray1[2] = Enumerable.Single<MethodDefinition>(typeDefinition.Methods, <>f__am$cache4);
+                            definitionArray1[2] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache4);
                             definitionArray = definitionArray1;
                         }
                         else
@@ -185,7 +181,7 @@
                             {
                                 <>f__am$cache5 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__5);
                             }
-                            definitionArray3[0] = Enumerable.Single<MethodDefinition>(typeDefinition.Methods, <>f__am$cache5);
+                            definitionArray3[0] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache5);
                             definitionArray = definitionArray3;
                         }
                         foreach (MethodDefinition definition3 in definitionArray)
@@ -198,12 +194,12 @@
                                 if (elementType.IsByReference)
                                 {
                                     ByReferenceType type3 = (ByReferenceType) elementType;
-                                    if (Extensions.IsValueType(type3.ElementType))
+                                    if (type3.ElementType.IsValueType())
                                     {
                                         elementType = type3.ElementType;
                                     }
                                 }
-                                if (Extensions.IsValueType(elementType))
+                                if (elementType.IsValueType())
                                 {
                                     writer.AddIncludeForTypeDefinition(elementType);
                                 }
@@ -227,11 +223,11 @@
         {
             if (fieldType == FieldType.Static)
             {
-                return Extensions.IsNormalStatic(field);
+                return field.IsNormalStatic();
             }
             if (fieldType == FieldType.ThreadStatic)
             {
-                return Extensions.IsThreadStatic(field);
+                return field.IsThreadStatic();
             }
             return !field.IsStatic;
         }
@@ -253,11 +249,11 @@
 
         private static string GetDeclaringTypeStructName(TypeReference declaringType, FieldReference field)
         {
-            if (Extensions.IsThreadStatic(field))
+            if (field.IsThreadStatic())
             {
                 return Naming.ForThreadFieldsStruct(declaringType);
             }
-            if (Extensions.IsNormalStatic(field))
+            if (field.IsNormalStatic())
             {
                 return Naming.ForStaticFieldsStruct(declaringType);
             }
@@ -266,17 +262,17 @@
 
         private static List<ComFieldWriteInstruction> MakeComFieldWriteInstructionsForType(CppCodeWriter writer, TypeReference type, TypeDefinition typeDefinition, FieldType fieldType)
         {
-            if (!Extensions.IsComOrWindowsRuntimeType(typeDefinition))
+            if (!typeDefinition.IsComOrWindowsRuntimeType())
             {
                 return new List<ComFieldWriteInstruction>();
             }
-            TypeReference[] referenceArray = (fieldType != FieldType.Static) ? Enumerable.ToArray<TypeReference>(Extensions.ImplementedComOrWindowsRuntimeInterfaces(typeDefinition)) : Enumerable.ToArray<TypeReference>(Extensions.GetAllFactoryTypes(typeDefinition));
+            TypeReference[] referenceArray = (fieldType != FieldType.Static) ? typeDefinition.ImplementedComOrWindowsRuntimeInterfaces().ToArray<TypeReference>() : typeDefinition.GetAllFactoryTypes().ToArray<TypeReference>();
             List<ComFieldWriteInstruction> list2 = new List<ComFieldWriteInstruction>(referenceArray.Length);
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
             bool flag = false;
             foreach (TypeReference reference in referenceArray)
             {
-                if (Extensions.IsIActivationFactory(reference))
+                if (reference.IsIActivationFactory())
                 {
                     flag = true;
                 }
@@ -296,7 +292,7 @@
             };
             List<FieldWriteInstruction> list = new List<FieldWriteInstruction>();
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
-            foreach (FieldDefinition definition in Enumerable.Where<FieldDefinition>(typeDefinition.Fields, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (FieldDefinition definition in typeDefinition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
             {
                 string str;
                 FieldReference reference;
@@ -331,20 +327,14 @@
             return ((typeDefinition.IsSequentialLayout && (typeDefinition.PackingSize != 0)) && (typeDefinition.PackingSize != -1));
         }
 
-        internal static bool NeedsPackingForManaged(TypeDefinition typeDefinition)
-        {
-            return NeedsPacking(typeDefinition, LayoutMode.Managed);
-        }
+        internal static bool NeedsPackingForManaged(TypeDefinition typeDefinition) => 
+            NeedsPacking(typeDefinition, LayoutMode.Managed);
 
-        internal static bool NeedsPackingForNative(TypeDefinition typeDefinition)
-        {
-            return NeedsPacking(typeDefinition, LayoutMode.Native);
-        }
+        internal static bool NeedsPackingForNative(TypeDefinition typeDefinition) => 
+            NeedsPacking(typeDefinition, LayoutMode.Native);
 
-        internal static bool NeedsPadding(TypeDefinition typeDefinition)
-        {
-            return (typeDefinition.ClassSize > 0);
-        }
+        internal static bool NeedsPadding(TypeDefinition typeDefinition) => 
+            (typeDefinition.ClassSize > 0);
 
         private static void WriteAccessSpecifier(CppCodeWriter writer, string accessSpecifier)
         {
@@ -388,7 +378,7 @@
                 }
                 object[] objArray6 = new object[] { Naming.ForArrayItems(), Naming.ForArrayIndexName() };
                 writer.WriteLine("{0}[{1}] = value;", objArray6);
-                writer.WriteWriteBarrierIfNeeded(elementType, string.Format("{0} + {1}", Naming.ForArrayItems(), Naming.ForArrayIndexName()), "value");
+                writer.WriteWriteBarrierIfNeeded(elementType, $"{Naming.ForArrayItems()} + {Naming.ForArrayIndexName()}", "value");
             }
         }
 
@@ -424,7 +414,7 @@
                 writer.WriteLine(block);
                 object[] objArray6 = new object[] { Naming.ForArrayItems(), Naming.ForArrayIndexName() };
                 writer.WriteLine("{0}[{1}] = value;", objArray6);
-                writer.WriteWriteBarrierIfNeeded(elementType, string.Format("{0} + {1}", Naming.ForArrayItems(), Naming.ForArrayIndexName()), "value");
+                writer.WriteWriteBarrierIfNeeded(elementType, $"{Naming.ForArrayItems()} + {Naming.ForArrayIndexName()}", "value");
             }
         }
 
@@ -467,7 +457,7 @@
 
         private static void WriteCLSID(CppCodeWriter writer, TypeDefinition type)
         {
-            if (type.IsImport && !Extensions.IsWindowsRuntimeProjection(type))
+            if (type.IsImport && !type.IsWindowsRuntimeProjection())
             {
                 WriteAccessSpecifier(writer, "public");
                 writer.WriteLine("static const Il2CppGuid CLSID;");
@@ -477,7 +467,7 @@
 
         private static void WriteComFieldGetters(CppCodeWriter writer, TypeReference declaringType, List<ComFieldWriteInstruction> fieldWriteInstructions)
         {
-            bool flag = Enumerable.Count<TypeReference>(Extensions.GetComposableFactoryTypes(declaringType)) > 0;
+            bool flag = declaringType.GetComposableFactoryTypes().Count<TypeReference>() > 0;
             for (int i = 0; i < fieldWriteInstructions.Count; i++)
             {
                 ComFieldWriteInstruction instruction = fieldWriteInstructions[i];
@@ -490,31 +480,31 @@
                     writer.WriteLine();
                 }
                 writer.AddIncludeForTypeDefinition(interfaceType);
-                writer.WriteLine(string.Format("inline {0}* {1}()", str, Naming.ForComTypeInterfaceFieldGetter(interfaceType)));
+                writer.WriteLine($"inline {str}* {Naming.ForComTypeInterfaceFieldGetter(interfaceType)}()");
                 using (new BlockWriter(writer, false))
                 {
-                    writer.WriteLine(string.Format("{0}* {1} = {2};", str, str3, str2));
-                    writer.WriteLine(string.Format("if ({0} == {1})", str3, Naming.Null));
+                    writer.WriteLine($"{str}* {str3} = {str2};");
+                    writer.WriteLine($"if ({str3} == {Naming.Null})");
                     using (new BlockWriter(writer, false))
                     {
-                        if (instruction.IsStatic && Extensions.IsIActivationFactory(interfaceType))
+                        if (instruction.IsStatic && interfaceType.IsIActivationFactory())
                         {
-                            writer.WriteLine(string.Format("il2cpp::utils::StringView<Il2CppNativeChar> className(IL2CPP_NATIVE_STRING(\"{0}\"));", declaringType.FullName));
+                            writer.WriteLine($"il2cpp::utils::StringView<Il2CppNativeChar> className(IL2CPP_NATIVE_STRING("{declaringType.FullName}"));");
                             writer.WriteStatement(Emit.Assign(str3, "il2cpp_codegen_windows_runtime_get_activation_factory(className)"));
                         }
                         else
                         {
                             string str4 = !instruction.IsStatic ? Naming.ForIl2CppComObjectIdentityField() : Emit.Call(Naming.ForComTypeInterfaceFieldGetter(TypeProvider.IActivationFactoryTypeReference));
-                            string left = string.Format(string.Format("const il2cpp_hresult_t {0}", Naming.ForInteropHResultVariable()), new object[0]);
-                            string right = string.Format(string.Format("{0}->QueryInterface({1}::IID, reinterpret_cast<void**>(&{2}))", str4, str, str3), new object[0]);
+                            string left = string.Format($"const il2cpp_hresult_t {Naming.ForInteropHResultVariable()}", new object[0]);
+                            string right = string.Format($"{str4}->QueryInterface({str}::IID, reinterpret_cast<void**>(&{str3}))", new object[0]);
                             writer.WriteStatement(Emit.Assign(left, right));
                             writer.WriteStatement(Emit.Call("il2cpp_codegen_com_raise_exception_if_failed", Naming.ForInteropHResultVariable()));
                         }
                         writer.WriteLine();
-                        writer.WriteLine(string.Format("if (il2cpp_codegen_atomic_compare_exchange_pointer<{0}>({1}, {2}, {3}) != {4})", new object[] { str, Naming.AddressOf(str2), str3, Naming.Null, Naming.Null }));
+                        writer.WriteLine($"if (il2cpp_codegen_atomic_compare_exchange_pointer<{str}>({Naming.AddressOf(str2)}, {str3}, {Naming.Null}) != {Naming.Null})");
                         using (new BlockWriter(writer, false))
                         {
-                            writer.WriteLine(string.Format("{0}->Release();", str3));
+                            writer.WriteLine($"{str3}->Release();");
                             writer.WriteStatement(Emit.Assign(str3, str2));
                         }
                         if (flag && !instruction.IsStatic)
@@ -522,11 +512,11 @@
                             writer.WriteLine("else if (!klass->is_import_or_windows_runtime)");
                             using (new BlockWriter(writer, false))
                             {
-                                writer.WriteLine(string.Format("{0}->Release();", str3));
+                                writer.WriteLine($"{str3}->Release();");
                             }
                         }
                     }
-                    writer.WriteLine(string.Format("return {0};", str3));
+                    writer.WriteLine($"return {str3};");
                 }
             }
         }
@@ -557,7 +547,7 @@
             }
         }
 
-        private static void WriteFieldInstruction(CppCodeWriter writer, TypeDefinition typeDefinition, bool needsPacking, bool explicitLayout, FieldWriteInstruction instruction, [Optional, DefaultParameterValue(false)] bool forAlignmentOnly)
+        private static void WriteFieldInstruction(CppCodeWriter writer, TypeDefinition typeDefinition, bool needsPacking, bool explicitLayout, FieldWriteInstruction instruction, bool forAlignmentOnly = false)
         {
             int num = AlignmentPackingSizeFor(typeDefinition);
             bool flag = needsPacking || ((forAlignmentOnly && (num != -1)) && (num != 0));
@@ -582,7 +572,7 @@
             {
                 writer.WriteCommentedLine(instruction.Field.FullName);
             }
-            writer.Write(string.Format("{0} {1}", instruction.FieldTypeName, instruction.FieldName + str));
+            writer.Write($"{instruction.FieldTypeName} {instruction.FieldName + str}");
             writer.WriteLine(";");
             if (explicitLayout)
             {
@@ -616,13 +606,13 @@
             }
             foreach (ComFieldWriteInstruction instruction2 in comFieldWriteInstructions)
             {
-                writer.WriteCommentedLine(string.Format("Cached pointer to {0}", instruction2.InterfaceType.FullName));
+                writer.WriteCommentedLine($"Cached pointer to {instruction2.InterfaceType.FullName}");
                 object[] args = new object[] { Naming.ForTypeNameOnly(instruction2.InterfaceType), Naming.ForComTypeInterfaceFieldName(instruction2.InterfaceType) };
                 writer.WriteLine("{0}* {1};", args);
             }
         }
 
-        private static void WriteFieldsWithAccessors(CppCodeWriter writer, TypeReference type, bool needsPacking, [Optional, DefaultParameterValue(0)] FieldType fieldType)
+        private static void WriteFieldsWithAccessors(CppCodeWriter writer, TypeReference type, bool needsPacking, FieldType fieldType = 0)
         {
             TypeDefinition typeDefinition = type.Resolve();
             List<FieldWriteInstruction> fieldWriteInstructions = MakeFieldWriteInstructionsForType(writer, type, typeDefinition, fieldType);
@@ -667,7 +657,7 @@
             {
                 writer.WriteClangWarningDisables();
                 writer.WriteLine();
-                if (Extensions.IsSystemObject(type))
+                if (type.IsSystemObject())
                 {
                     writer.WriteLine("struct Il2CppClass;");
                 }
@@ -684,7 +674,7 @@
                 {
                     str = "ALIGN_TYPE(" + num + ")";
                 }
-                if ((Extensions.IsSystemObject(type) || Extensions.IsSystemArray(type)) || Extensions.IsIl2CppComObject(type))
+                if ((type.IsSystemObject() || type.IsSystemArray()) || type.IsIl2CppComObject())
                 {
                     writer.AddInclude("object-internals.h");
                 }
@@ -705,7 +695,7 @@
                 {
                     <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteTypeDefinitionFor>m__0);
                 }
-                if (Enumerable.Any<FieldDefinition>(typeDefinition.Fields, <>f__am$cache0) || Extensions.StoresNonFieldsInStaticFields(typeDefinition))
+                if (typeDefinition.Fields.Any<FieldDefinition>(<>f__am$cache0) || typeDefinition.StoresNonFieldsInStaticFields())
                 {
                     writer.WriteLine();
                     object[] objArray3 = new object[] { Naming.ForStaticFieldsStruct(type) };
@@ -718,7 +708,7 @@
                 {
                     <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteTypeDefinitionFor>m__1);
                 }
-                if (Enumerable.Any<FieldDefinition>(typeDefinition.Fields, <>f__am$cache1))
+                if (typeDefinition.Fields.Any<FieldDefinition>(<>f__am$cache1))
                 {
                     writer.WriteLine();
                     object[] objArray4 = new object[] { Naming.ForThreadFieldsStruct(type) };
@@ -730,7 +720,7 @@
                 writer.WriteLine();
                 writer.WriteClangWarningEnables();
                 WriteNativeStructDefinitions(type, writer);
-                if (Extensions.NeedsComCallableWrapper(typeDefinition))
+                if (typeDefinition.NeedsComCallableWrapper())
                 {
                     new CCWWriter(typeDefinition).WriteTypeDefinition(writer);
                 }
@@ -742,10 +732,8 @@
         {
             internal TypeDefinitionWriter.FieldType fieldType;
 
-            internal bool <>m__0(FieldDefinition f)
-            {
-                return TypeDefinitionWriter.FieldMatches(f, this.fieldType);
-            }
+            internal bool <>m__0(FieldDefinition f) => 
+                TypeDefinitionWriter.FieldMatches(f, this.fieldType);
         }
 
         [StructLayout(LayoutKind.Sequential, Size=1)]

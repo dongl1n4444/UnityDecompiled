@@ -15,10 +15,8 @@
         public Dictionary<string, string> EnvVars;
         public NPath SourceFile;
 
-        public Shell.ExecuteResult Execute()
-        {
-            return Shell.Execute(this.ToExecuteArgs(), null);
-        }
+        public Shell.ExecuteResult Execute() => 
+            Shell.Execute(this.ToExecuteArgs(), null);
 
         public string Hash(string hashForAllHeaderFilesPossiblyInfluencingCompilation)
         {
@@ -58,7 +56,7 @@
                 str = this.CompilerExecutable.InQuotes();
             }
             return new Shell.ExecuteArgs { 
-                Arguments = ExtensionMethods.SeparateWithSpaces(this.Arguments),
+                Arguments = this.Arguments.SeparateWithSpaces(),
                 EnvVars = this.EnvVars,
                 Executable = str
             };

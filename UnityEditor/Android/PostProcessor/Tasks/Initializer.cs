@@ -53,13 +53,8 @@
             return ((defaultInterfaceOrientation == UIOrientation.AutoRotation) && flag2);
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Creating staging area";
-            }
-        }
+        public string Name =>
+            "Creating staging area";
     }
 }
 

@@ -82,7 +82,7 @@
             int layer = EditorGUI.LayerField(totalPosition, EditorGUIUtility.TempContent("Layer"), go.layer, s_Styles.layerPopup);
             if (EditorGUI.EndChangeCheck())
             {
-                GameObjectUtility.ShouldIncludeChildren children = GameObjectUtility.DisplayUpdateChildrenDialogIfNeeded(Enumerable.OfType<GameObject>(base.targets), "Change Layer", "Do you want to set layer to " + InternalEditorUtility.GetLayerName(layer) + " for all child objects as well?");
+                GameObjectUtility.ShouldIncludeChildren children = GameObjectUtility.DisplayUpdateChildrenDialogIfNeeded(base.targets.OfType<GameObject>(), "Change Layer", "Do you want to set layer to " + InternalEditorUtility.GetLayerName(layer) + " for all child objects as well?");
                 if (children != GameObjectUtility.ShouldIncludeChildren.Cancel)
                 {
                     this.m_Layer.intValue = layer;
@@ -382,10 +382,8 @@
             }
         }
 
-        private Object[] GetObjects(bool includeChildren)
-        {
-            return SceneModeUtility.GetObjects(base.targets, includeChildren);
-        }
+        private Object[] GetObjects(bool includeChildren) => 
+            SceneModeUtility.GetObjects(base.targets, includeChildren);
 
         public static void GetRenderableBoundsRecurse(ref Bounds bounds, GameObject go)
         {

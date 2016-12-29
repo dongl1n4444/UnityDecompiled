@@ -16,10 +16,8 @@
             this.m_Converter = new EnumConverter(type);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-        {
-            return this.m_Converter.ConvertFrom(context, culture, value);
-        }
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) => 
+            this.m_Converter.ConvertFrom(context, culture, value);
 
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
@@ -30,10 +28,8 @@
             return this.m_Converter.ConvertTo(context, culture, value, destinationType);
         }
 
-        public override bool IsValid(ITypeDescriptorContext context, object value)
-        {
-            return this.m_Converter.IsValid(context, value);
-        }
+        public override bool IsValid(ITypeDescriptorContext context, object value) => 
+            this.m_Converter.IsValid(context, value);
     }
 }
 

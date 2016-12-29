@@ -24,28 +24,16 @@
         public float vRangeMin = float.NegativeInfinity;
         public Color wrapColorMultiplier = Color.white;
 
-        public AnimationClip animationClip
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? null : this.m_SelectionBinding.animationClip);
-            }
-        }
+        public AnimationClip animationClip =>
+            this.m_SelectionBinding?.animationClip;
 
-        public bool animationIsEditable
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) || this.m_SelectionBinding.animationIsEditable);
-            }
-        }
+        public bool animationIsEditable =>
+            ((this.m_SelectionBinding == null) || this.m_SelectionBinding.animationIsEditable);
 
         public bool changed
         {
-            get
-            {
-                return this.m_Changed;
-            }
+            get => 
+                this.m_Changed;
             set
             {
                 this.m_Changed = value;
@@ -56,69 +44,40 @@
             }
         }
 
-        public bool clipIsEditable
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) || this.m_SelectionBinding.clipIsEditable);
-            }
-        }
+        public bool clipIsEditable =>
+            ((this.m_SelectionBinding == null) || this.m_SelectionBinding.clipIsEditable);
 
-        public AnimationCurve curve
-        {
-            get
-            {
-                return this.renderer.GetCurve();
-            }
-        }
+        public AnimationCurve curve =>
+            this.renderer.GetCurve();
 
         public CurveRenderer renderer
         {
-            get
-            {
-                return this.m_Renderer;
-            }
+            get => 
+                this.m_Renderer;
             set
             {
                 this.m_Renderer = value;
             }
         }
 
-        public GameObject rootGameObjet
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? null : this.m_SelectionBinding.rootGameObject);
-            }
-        }
+        public GameObject rootGameObjet =>
+            this.m_SelectionBinding?.rootGameObject;
 
         public ISelectionBinding selectionBindingInterface
         {
-            get
-            {
-                return this.m_SelectionBinding;
-            }
+            get => 
+                this.m_SelectionBinding;
             set
             {
                 this.m_SelectionBinding = value;
             }
         }
 
-        public int selectionID
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? 0 : this.m_SelectionBinding.id);
-            }
-        }
+        public int selectionID =>
+            ((this.m_SelectionBinding == null) ? 0 : this.m_SelectionBinding.id);
 
-        public float timeOffset
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? 0f : this.m_SelectionBinding.timeOffset);
-            }
-        }
+        public float timeOffset =>
+            ((this.m_SelectionBinding == null) ? 0f : this.m_SelectionBinding.timeOffset);
 
         public delegate Vector2 GetAxisScalarsCallback();
 

@@ -204,10 +204,8 @@
             return null;
         }
 
-        internal GUIContent GetLocalizedTitleContent()
-        {
-            return GetLocalizedTitleContentFromType(base.GetType());
-        }
+        internal GUIContent GetLocalizedTitleContent() => 
+            GetLocalizedTitleContentFromType(base.GetType());
 
         internal static GUIContent GetLocalizedTitleContentFromType(Type t)
         {
@@ -242,20 +240,14 @@
             return 0;
         }
 
-        public static T GetWindow<T>() where T: EditorWindow
-        {
-            return GetWindow<T>(false, null, true);
-        }
+        public static T GetWindow<T>() where T: EditorWindow => 
+            GetWindow<T>(false, null, true);
 
-        public static T GetWindow<T>(bool utility) where T: EditorWindow
-        {
-            return GetWindow<T>(utility, null, true);
-        }
+        public static T GetWindow<T>(bool utility) where T: EditorWindow => 
+            GetWindow<T>(utility, null, true);
 
-        public static T GetWindow<T>(string title) where T: EditorWindow
-        {
-            return GetWindow<T>(title, true);
-        }
+        public static T GetWindow<T>(string title) where T: EditorWindow => 
+            GetWindow<T>(title, true);
 
         /// <summary>
         /// <para>Returns the first EditorWindow of type t which is currently on the screen.</para>
@@ -273,25 +265,17 @@
             return GetWindow(t, utility, title, focus);
         }
 
-        public static T GetWindow<T>(params Type[] desiredDockNextTo) where T: EditorWindow
-        {
-            return GetWindow<T>(null, true, desiredDockNextTo);
-        }
+        public static T GetWindow<T>(params Type[] desiredDockNextTo) where T: EditorWindow => 
+            GetWindow<T>(null, true, desiredDockNextTo);
 
-        public static T GetWindow<T>(bool utility, string title) where T: EditorWindow
-        {
-            return GetWindow<T>(utility, title, true);
-        }
+        public static T GetWindow<T>(bool utility, string title) where T: EditorWindow => 
+            GetWindow<T>(utility, title, true);
 
-        public static T GetWindow<T>(string title, bool focus) where T: EditorWindow
-        {
-            return GetWindow<T>(false, title, focus);
-        }
+        public static T GetWindow<T>(string title, bool focus) where T: EditorWindow => 
+            GetWindow<T>(false, title, focus);
 
-        public static T GetWindow<T>(string title, params Type[] desiredDockNextTo) where T: EditorWindow
-        {
-            return GetWindow<T>(title, true, desiredDockNextTo);
-        }
+        public static T GetWindow<T>(string title, params Type[] desiredDockNextTo) where T: EditorWindow => 
+            GetWindow<T>(title, true, desiredDockNextTo);
 
         /// <summary>
         /// <para>Returns the first EditorWindow of type t which is currently on the screen.</para>
@@ -308,10 +292,8 @@
             return GetWindow(t, utility, title, focus);
         }
 
-        public static T GetWindow<T>(bool utility, string title, bool focus) where T: EditorWindow
-        {
-            return (GetWindow(typeof(T), utility, title, focus) as T);
-        }
+        public static T GetWindow<T>(bool utility, string title, bool focus) where T: EditorWindow => 
+            (GetWindow(typeof(T), utility, title, focus) as T);
 
         public static T GetWindow<T>(string title, bool focus, params Type[] desiredDockNextTo) where T: EditorWindow
         {
@@ -375,10 +357,8 @@
         /// <param name="utility">Set this to true, to create a floating utility window, false to create a normal window.</param>
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
         /// <param name="focus">Whether to give the window focus, if it already exists. (If GetWindow creates a new window, it will always get focus).</param>
-        public static EditorWindow GetWindow(Type t, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title, [DefaultValue("true")] bool focus)
-        {
-            return GetWindowPrivate(t, utility, title, focus);
-        }
+        public static EditorWindow GetWindow(Type t, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title, [DefaultValue("true")] bool focus) => 
+            GetWindowPrivate(t, utility, title, focus);
 
         internal static T GetWindowDontShow<T>() where T: EditorWindow
         {
@@ -413,10 +393,8 @@
             return window;
         }
 
-        public static T GetWindowWithRect<T>(Rect rect) where T: EditorWindow
-        {
-            return GetWindowWithRect<T>(rect, false, null, true);
-        }
+        public static T GetWindowWithRect<T>(Rect rect) where T: EditorWindow => 
+            GetWindowWithRect<T>(rect, false, null, true);
 
         /// <summary>
         /// <para>Returns the first EditorWindow of type t which is currently on the screen.</para>
@@ -433,10 +411,8 @@
             return GetWindowWithRect(t, rect, utility, title);
         }
 
-        public static T GetWindowWithRect<T>(Rect rect, bool utility) where T: EditorWindow
-        {
-            return GetWindowWithRect<T>(rect, utility, null, true);
-        }
+        public static T GetWindowWithRect<T>(Rect rect, bool utility) where T: EditorWindow => 
+            GetWindowWithRect<T>(rect, utility, null, true);
 
         /// <summary>
         /// <para>Returns the first EditorWindow of type t which is currently on the screen.</para>
@@ -452,10 +428,8 @@
             return GetWindowWithRect(t, rect, utility, title);
         }
 
-        public static T GetWindowWithRect<T>(Rect rect, bool utility, string title) where T: EditorWindow
-        {
-            return GetWindowWithRect<T>(rect, utility, title, true);
-        }
+        public static T GetWindowWithRect<T>(Rect rect, bool utility, string title) where T: EditorWindow => 
+            GetWindowWithRect<T>(rect, utility, title, true);
 
         /// <summary>
         /// <para>Returns the first EditorWindow of type t which is currently on the screen.</para>
@@ -464,10 +438,8 @@
         /// <param name="rect">The position on the screen where a newly created window will show.</param>
         /// <param name="utility">Set this to true, to create a floating utility window, false to create a normal window.</param>
         /// <param name="title">If GetWindow creates a new window, it will get this title. If this value is null, use the class name as title.</param>
-        public static EditorWindow GetWindowWithRect(Type t, Rect rect, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title)
-        {
-            return GetWindowWithRectPrivate(t, rect, utility, title);
-        }
+        public static EditorWindow GetWindowWithRect(Type t, Rect rect, [DefaultValue("false")] bool utility, [DefaultValue("null")] string title) => 
+            GetWindowWithRectPrivate(t, rect, utility, title);
 
         public static T GetWindowWithRect<T>(Rect rect, bool utility, string title, bool focus) where T: EditorWindow
         {
@@ -596,10 +568,8 @@
         /// <para>Sends an Event to a window.</para>
         /// </summary>
         /// <param name="e"></param>
-        public bool SendEvent(Event e)
-        {
-            return this.m_Parent.SendEvent(e);
-        }
+        public bool SendEvent(Event e) => 
+            this.m_Parent.SendEvent(e);
 
         internal void SetParentGameViewDimensions(Rect rect, Rect clippedRect, Vector2 targetSize)
         {
@@ -660,14 +630,8 @@
             this.m_Parent.window.m_DontSaveToLayout = true;
         }
 
-        internal Rect ShowAsDropDownFitToScreen(Rect buttonRect, Vector2 windowSize, PopupLocationHelper.PopupLocation[] locationPriorityOrder)
-        {
-            if (this.m_Parent == null)
-            {
-                return new Rect(buttonRect.x, buttonRect.yMax, windowSize.x, windowSize.y);
-            }
-            return this.m_Parent.window.GetDropDownRect(buttonRect, windowSize, windowSize, locationPriorityOrder);
-        }
+        internal Rect ShowAsDropDownFitToScreen(Rect buttonRect, Vector2 windowSize, PopupLocationHelper.PopupLocation[] locationPriorityOrder) => 
+            this.m_Parent?.window.GetDropDownRect(buttonRect, windowSize, windowSize, locationPriorityOrder);
 
         /// <summary>
         /// <para>Show the editor window in the auxiliary window.</para>
@@ -776,10 +740,8 @@
 
         public int antiAlias
         {
-            get
-            {
-                return this.m_AntiAlias;
-            }
+            get => 
+                this.m_AntiAlias;
             set
             {
                 this.m_AntiAlias = value;
@@ -791,10 +753,8 @@
         /// </summary>
         public bool autoRepaintOnSceneChange
         {
-            get
-            {
-                return this.m_AutoRepaintOnSceneChange;
-            }
+            get => 
+                this.m_AutoRepaintOnSceneChange;
             set
             {
                 this.m_AutoRepaintOnSceneChange = value;
@@ -804,30 +764,21 @@
 
         public int depthBufferBits
         {
-            get
-            {
-                return this.m_DepthBufferBits;
-            }
+            get => 
+                this.m_DepthBufferBits;
             set
             {
                 this.m_DepthBufferBits = value;
             }
         }
 
-        internal bool docked
-        {
-            get
-            {
-                return (((this.m_Parent != null) && (this.m_Parent.window != null)) && !this.m_Parent.window.IsNotDocked());
-            }
-        }
+        internal bool docked =>
+            (((this.m_Parent != null) && (this.m_Parent.window != null)) && !this.m_Parent.window.IsNotDocked());
 
         internal bool dontClearBackground
         {
-            get
-            {
-                return this.m_DontClearBackground;
-            }
+            get => 
+                this.m_DontClearBackground;
             set
             {
                 this.m_DontClearBackground = value;
@@ -854,23 +805,16 @@
             }
         }
 
-        internal bool hasFocus
-        {
-            get
-            {
-                return ((this.m_Parent != null) && (this.m_Parent.actualView == this));
-            }
-        }
+        internal bool hasFocus =>
+            ((this.m_Parent != null) && (this.m_Parent.actualView == this));
 
         /// <summary>
         /// <para>Is this window maximized.</para>
         /// </summary>
         public bool maximized
         {
-            get
-            {
-                return WindowLayout.IsMaximized(this);
-            }
+            get => 
+                WindowLayout.IsMaximized(this);
             set
             {
                 bool flag = WindowLayout.IsMaximized(this);
@@ -893,10 +837,8 @@
         /// </summary>
         public Vector2 maxSize
         {
-            get
-            {
-                return this.m_MaxSize;
-            }
+            get => 
+                this.m_MaxSize;
             set
             {
                 this.m_MaxSize = value;
@@ -909,10 +851,8 @@
         /// </summary>
         public Vector2 minSize
         {
-            get
-            {
-                return this.m_MinSize;
-            }
+            get => 
+                this.m_MinSize;
             set
             {
                 this.m_MinSize = value;
@@ -941,10 +881,8 @@
         /// </summary>
         public Rect position
         {
-            get
-            {
-                return this.m_Pos;
-            }
+            get => 
+                this.m_Pos;
             set
             {
                 this.m_Pos = value;
@@ -974,10 +912,8 @@
         [Obsolete("Use titleContent instead (it supports setting a title icon as well).")]
         public string title
         {
-            get
-            {
-                return this.titleContent.text;
-            }
+            get => 
+                this.titleContent.text;
             set
             {
                 this.titleContent = EditorGUIUtility.TextContent(value);
@@ -1017,10 +953,8 @@
         /// </summary>
         public bool wantsMouseMove
         {
-            get
-            {
-                return this.m_WantsMouseMove;
-            }
+            get => 
+                this.m_WantsMouseMove;
             set
             {
                 this.m_WantsMouseMove = value;
@@ -1033,10 +967,8 @@
         {
             internal Type desired;
 
-            internal bool <>m__0(EditorWindow pane)
-            {
-                return (pane.GetType() == this.desired);
-            }
+            internal bool <>m__0(EditorWindow pane) => 
+                (pane.GetType() == this.desired);
         }
     }
 }

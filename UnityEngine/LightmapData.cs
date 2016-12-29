@@ -18,10 +18,8 @@
         /// </summary>
         public Texture2D lightmapLight
         {
-            get
-            {
-                return this.m_Light;
-            }
+            get => 
+                this.m_Light;
             set
             {
                 this.m_Light = value;
@@ -32,10 +30,8 @@
         /// </summary>
         public Texture2D lightmapDir
         {
-            get
-            {
-                return this.m_Dir;
-            }
+            get => 
+                this.m_Dir;
             set
             {
                 this.m_Dir = value;
@@ -44,10 +40,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmap has been deprecated. Use LightmapData.lightmapLight instead (UnityUpgradable) -> lightmapLight", true)]
         public Texture2D lightmap
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -55,10 +49,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmapFar has been deprecated. Use LightmapData.lightmapLight instead (UnityUpgradable) -> lightmapLight", true)]
         public Texture2D lightmapFar
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -66,10 +58,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmapNear has been deprecated. Use LightmapData.lightmapDir instead (UnityUpgradable) -> lightmapDir", true)]
         public Texture2D lightmapNear
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }

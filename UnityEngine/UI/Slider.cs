@@ -112,10 +112,8 @@
         {
         }
 
-        private bool MayDrag(PointerEventData eventData)
-        {
-            return ((this.IsActive() && this.IsInteractable()) && (eventData.button == PointerEventData.InputButton.Left));
-        }
+        private bool MayDrag(PointerEventData eventData) => 
+            ((this.IsActive() && this.IsInteractable()) && (eventData.button == PointerEventData.InputButton.Left));
 
         protected override void OnDidApplyAnimationProperties()
         {
@@ -338,10 +336,8 @@
             }
         }
 
-        Transform ICanvasElement.get_transform()
-        {
-            return base.transform;
-        }
+        Transform ICanvasElement.get_transform() => 
+            base.transform;
 
         private void UpdateCachedReferences()
         {
@@ -434,23 +430,16 @@
             }
         }
 
-        private Axis axis
-        {
-            get
-            {
-                return (((this.m_Direction != Direction.LeftToRight) && (this.m_Direction != Direction.RightToLeft)) ? Axis.Vertical : Axis.Horizontal);
-            }
-        }
+        private Axis axis =>
+            (((this.m_Direction != Direction.LeftToRight) && (this.m_Direction != Direction.RightToLeft)) ? Axis.Vertical : Axis.Horizontal);
 
         /// <summary>
         /// <para>The direction of the slider, from minimum to maximum value.</para>
         /// </summary>
         public Direction direction
         {
-            get
-            {
-                return this.m_Direction;
-            }
+            get => 
+                this.m_Direction;
             set
             {
                 if (SetPropertyUtility.SetStruct<Direction>(ref this.m_Direction, value))
@@ -465,10 +454,8 @@
         /// </summary>
         public RectTransform fillRect
         {
-            get
-            {
-                return this.m_FillRect;
-            }
+            get => 
+                this.m_FillRect;
             set
             {
                 if (SetPropertyUtility.SetClass<RectTransform>(ref this.m_FillRect, value))
@@ -484,10 +471,8 @@
         /// </summary>
         public RectTransform handleRect
         {
-            get
-            {
-                return this.m_HandleRect;
-            }
+            get => 
+                this.m_HandleRect;
             set
             {
                 if (SetPropertyUtility.SetClass<RectTransform>(ref this.m_HandleRect, value))
@@ -503,10 +488,8 @@
         /// </summary>
         public float maxValue
         {
-            get
-            {
-                return this.m_MaxValue;
-            }
+            get => 
+                this.m_MaxValue;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_MaxValue, value))
@@ -522,10 +505,8 @@
         /// </summary>
         public float minValue
         {
-            get
-            {
-                return this.m_MinValue;
-            }
+            get => 
+                this.m_MinValue;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_MinValue, value))
@@ -560,31 +541,19 @@
         /// </summary>
         public SliderEvent onValueChanged
         {
-            get
-            {
-                return this.m_OnValueChanged;
-            }
+            get => 
+                this.m_OnValueChanged;
             set
             {
                 this.m_OnValueChanged = value;
             }
         }
 
-        private bool reverseValue
-        {
-            get
-            {
-                return ((this.m_Direction == Direction.RightToLeft) || (this.m_Direction == Direction.TopToBottom));
-            }
-        }
+        private bool reverseValue =>
+            ((this.m_Direction == Direction.RightToLeft) || (this.m_Direction == Direction.TopToBottom));
 
-        private float stepSize
-        {
-            get
-            {
-                return (!this.wholeNumbers ? ((this.maxValue - this.minValue) * 0.1f) : 1f);
-            }
-        }
+        private float stepSize =>
+            (!this.wholeNumbers ? ((this.maxValue - this.minValue) * 0.1f) : 1f);
 
         /// <summary>
         /// <para>The current value of the slider.</para>
@@ -610,10 +579,8 @@
         /// </summary>
         public bool wholeNumbers
         {
-            get
-            {
-                return this.m_WholeNumbers;
-            }
+            get => 
+                this.m_WholeNumbers;
             set
             {
                 if (SetPropertyUtility.SetStruct<bool>(ref this.m_WholeNumbers, value))

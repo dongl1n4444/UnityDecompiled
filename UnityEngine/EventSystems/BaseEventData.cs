@@ -22,23 +22,16 @@
         /// <summary>
         /// <para>A reference to the BaseInputModule that sent this event.</para>
         /// </summary>
-        public BaseInputModule currentInputModule
-        {
-            get
-            {
-                return this.m_EventSystem.currentInputModule;
-            }
-        }
+        public BaseInputModule currentInputModule =>
+            this.m_EventSystem.currentInputModule;
 
         /// <summary>
         /// <para>The object currently considered selected by the EventSystem.</para>
         /// </summary>
         public GameObject selectedObject
         {
-            get
-            {
-                return this.m_EventSystem.currentSelectedGameObject;
-            }
+            get => 
+                this.m_EventSystem.currentSelectedGameObject;
             set
             {
                 this.m_EventSystem.SetSelectedGameObject(value, this);

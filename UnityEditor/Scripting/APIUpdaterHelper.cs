@@ -37,10 +37,8 @@
         [CompilerGenerated]
         private static Func<CustomAttribute, bool> <>f__am$cache6;
 
-        private static string APIVersionArgument()
-        {
-            return (" --api-version " + Application.unityVersion + " ");
-        }
+        private static string APIVersionArgument() => 
+            (" --api-version " + Application.unityVersion + " ");
 
         private static string AssemblySearchPathArgument()
         {
@@ -116,15 +114,11 @@
             return Enumerable.FirstOrDefault<Type>(Enumerable.SelectMany<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache4), <>f__am$cache5), predicate);
         }
 
-        private static string GetUnityEditorManagedPath()
-        {
-            return Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Managed");
-        }
+        private static string GetUnityEditorManagedPath() => 
+            Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Managed");
 
-        private static bool IsError(int exitCode)
-        {
-            return ((exitCode & 0x80) != 0);
-        }
+        private static bool IsError(int exitCode) => 
+            ((exitCode & 0x80) != 0);
 
         private static bool IsIgnoredAssembly(AssemblyName assemblyName)
         {
@@ -242,16 +236,14 @@
             return (attribute.Namespace == namespaceName);
         }
 
-        private static string ResolveAssemblyPath(string assemblyPath)
-        {
-            return CommandLineFormatter.PrepareFileName(assemblyPath);
-        }
+        private static string ResolveAssemblyPath(string assemblyPath) => 
+            CommandLineFormatter.PrepareFileName(assemblyPath);
 
         public static void Run(string commaSeparatedListOfAssemblies)
         {
             char[] separator = new char[] { ',' };
             string[] source = commaSeparatedListOfAssemblies.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-            object[] args = new object[] { Enumerable.Count<string>(source) };
+            object[] args = new object[] { source.Count<string>() };
             APIUpdaterLogger.WriteToFile("Started to update {0} assemblie(s)", args);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -302,20 +294,16 @@
             return Enumerable.Any<CustomAttributeArgument>(targetFrameworkAttr.ConstructorArguments, new Func<CustomAttributeArgument, bool>(storey, (IntPtr) this.<>m__0));
         }
 
-        private static string TimeStampArgument()
-        {
-            return (" --timestamp " + DateTime.Now.Ticks + " ");
-        }
+        private static string TimeStampArgument() => 
+            (" --timestamp " + DateTime.Now.Ticks + " ");
 
         [CompilerGenerated]
         private sealed class <IsIgnoredAssembly>c__AnonStorey2
         {
             internal string name;
 
-            internal bool <>m__0(string candidate)
-            {
-                return Regex.IsMatch(this.name, candidate);
-            }
+            internal bool <>m__0(string candidate) => 
+                Regex.IsMatch(this.name, candidate);
         }
 
         [CompilerGenerated]
@@ -324,10 +312,8 @@
             internal string className;
             internal string namespaceName;
 
-            internal bool <>m__0(Type t)
-            {
-                return (((t.Name == this.className) && (t.Namespace == this.namespaceName)) && APIUpdaterHelper.IsUpdateable(t));
-            }
+            internal bool <>m__0(Type t) => 
+                (((t.Name == this.className) && (t.Namespace == this.namespaceName)) && APIUpdaterHelper.IsUpdateable(t));
         }
 
         [CompilerGenerated]
@@ -336,10 +322,8 @@
             internal string namespaceName;
             internal string typename;
 
-            internal bool <>m__0(Type t)
-            {
-                return ((t.Name == this.typename) && APIUpdaterHelper.NamespaceHasChanged(t, this.namespaceName));
-            }
+            internal bool <>m__0(Type t) => 
+                ((t.Name == this.typename) && APIUpdaterHelper.NamespaceHasChanged(t, this.namespaceName));
         }
 
         [CompilerGenerated]
@@ -347,10 +331,8 @@
         {
             internal Regex regex;
 
-            internal bool <>m__0(CustomAttributeArgument arg)
-            {
-                return ((arg.Type.FullName == typeof(string).FullName) && this.regex.IsMatch((string) arg.Value));
-            }
+            internal bool <>m__0(CustomAttributeArgument arg) => 
+                ((arg.Type.FullName == typeof(string).FullName) && this.regex.IsMatch((string) arg.Value));
         }
     }
 }

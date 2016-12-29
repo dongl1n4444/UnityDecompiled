@@ -57,10 +57,8 @@
             return (((selection.curveID == this.curveID) && (selection.key == this.key)) && (selection.type == this.type));
         }
 
-        public override int GetHashCode()
-        {
-            return (((this.curveID * 0x2d9) + (this.key * 0x1b)) + this.type);
-        }
+        public override int GetHashCode() => 
+            (((this.curveID * 0x2d9) + (this.key * 0x1b)) + this.type);
 
         internal enum SelectionType
         {

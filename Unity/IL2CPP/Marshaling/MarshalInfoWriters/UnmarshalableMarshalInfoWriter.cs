@@ -24,15 +24,11 @@
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(str, str) };
         }
 
-        public override bool CanMarshalTypeToNative()
-        {
-            return false;
-        }
+        public override bool CanMarshalTypeToNative() => 
+            false;
 
-        public override string GetMarshalingException()
-        {
-            return string.Format("il2cpp_codegen_get_marshal_directive_exception(\"Cannot marshal type '{0}'.\")", base._typeRef.FullName);
-        }
+        public override string GetMarshalingException() => 
+            $"il2cpp_codegen_get_marshal_directive_exception("Cannot marshal type '{base._typeRef.FullName}'.")";
 
         public override void WriteIncludesForFieldDeclaration(CppCodeWriter writer)
         {
@@ -49,39 +45,29 @@
 
         public override string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
         {
-            throw new InvalidOperationException(string.Format("Cannot marshal {0} from native!", base._typeRef.FullName));
+            throw new InvalidOperationException($"Cannot marshal {base._typeRef.FullName} from native!");
         }
 
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
         {
-            throw new InvalidOperationException(string.Format("Cannot marshal {0} to native!", base._typeRef.FullName));
+            throw new InvalidOperationException($"Cannot marshal {base._typeRef.FullName} to native!");
         }
 
         public override void WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
         {
-            throw new InvalidOperationException(string.Format("Cannot marshal {0} from native!", base._typeRef.FullName));
+            throw new InvalidOperationException($"Cannot marshal {base._typeRef.FullName} from native!");
         }
 
         public override void WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
         {
-            throw new InvalidOperationException(string.Format("Cannot marshal {0} to native!", base._typeRef.FullName));
+            throw new InvalidOperationException($"Cannot marshal {base._typeRef.FullName} to native!");
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
-        public override string NativeSize
-        {
-            get
-            {
-                return "-1";
-            }
-        }
+        public override string NativeSize =>
+            "-1";
     }
 }
 

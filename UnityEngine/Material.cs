@@ -48,10 +48,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void CopyPropertiesFromMaterial(Material mat);
         [Obsolete("Creating materials from shader source string will be removed in the future. Use Shader assets instead.")]
-        public static Material Create(string scriptContents)
-        {
-            return new Material(scriptContents);
-        }
+        public static Material Create(string scriptContents) => 
+            new Material(scriptContents);
 
         /// <summary>
         /// <para>Unset a shader keyword.</para>
@@ -88,30 +86,24 @@
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Color GetColor(string propertyName)
-        {
-            return this.GetColor(Shader.PropertyToID(propertyName));
-        }
+        public Color GetColor(string propertyName) => 
+            this.GetColor(Shader.PropertyToID(propertyName));
 
         /// <summary>
         /// <para>Get a named color array.</para>
         /// </summary>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
         /// <param name="name">The name of the property.</param>
-        public Color[] GetColorArray(int nameID)
-        {
-            return this.GetColorArrayImpl(nameID);
-        }
+        public Color[] GetColorArray(int nameID) => 
+            this.GetColorArrayImpl(nameID);
 
         /// <summary>
         /// <para>Get a named color array.</para>
         /// </summary>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
         /// <param name="name">The name of the property.</param>
-        public Color[] GetColorArray(string name)
-        {
-            return this.GetColorArray(Shader.PropertyToID(name));
-        }
+        public Color[] GetColorArray(string name) => 
+            this.GetColorArray(Shader.PropertyToID(name));
 
         public void GetColorArray(int nameID, List<Color> values)
         {
@@ -143,30 +135,24 @@
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public float GetFloat(string propertyName)
-        {
-            return this.GetFloat(Shader.PropertyToID(propertyName));
-        }
+        public float GetFloat(string propertyName) => 
+            this.GetFloat(Shader.PropertyToID(propertyName));
 
         /// <summary>
         /// <para>Get a named float array.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public float[] GetFloatArray(int nameID)
-        {
-            return this.GetFloatArrayImpl(nameID);
-        }
+        public float[] GetFloatArray(int nameID) => 
+            this.GetFloatArrayImpl(nameID);
 
         /// <summary>
         /// <para>Get a named float array.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public float[] GetFloatArray(string name)
-        {
-            return this.GetFloatArray(Shader.PropertyToID(name));
-        }
+        public float[] GetFloatArray(string name) => 
+            this.GetFloatArray(Shader.PropertyToID(name));
 
         public void GetFloatArray(int nameID, List<float> values)
         {
@@ -191,20 +177,16 @@
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public int GetInt(int nameID)
-        {
-            return (int) this.GetFloat(nameID);
-        }
+        public int GetInt(int nameID) => 
+            ((int) this.GetFloat(nameID));
 
         /// <summary>
         /// <para>Get a named integer value.</para>
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public int GetInt(string propertyName)
-        {
-            return (int) this.GetFloat(propertyName);
-        }
+        public int GetInt(string propertyName) => 
+            ((int) this.GetFloat(propertyName));
 
         /// <summary>
         /// <para>Get a named matrix value from the shader.</para>
@@ -223,30 +205,24 @@
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Matrix4x4 GetMatrix(string propertyName)
-        {
-            return this.GetMatrix(Shader.PropertyToID(propertyName));
-        }
+        public Matrix4x4 GetMatrix(string propertyName) => 
+            this.GetMatrix(Shader.PropertyToID(propertyName));
 
         /// <summary>
         /// <para>Get a named matrix array.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Matrix4x4[] GetMatrixArray(int nameID)
-        {
-            return this.GetMatrixArrayImpl(nameID);
-        }
+        public Matrix4x4[] GetMatrixArray(int nameID) => 
+            this.GetMatrixArrayImpl(nameID);
 
         /// <summary>
         /// <para>Get a named matrix array.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Matrix4x4[] GetMatrixArray(string name)
-        {
-            return this.GetMatrixArray(Shader.PropertyToID(name));
-        }
+        public Matrix4x4[] GetMatrixArray(string name) => 
+            this.GetMatrixArray(Shader.PropertyToID(name));
 
         public void GetMatrixArray(int nameID, List<Matrix4x4> values)
         {
@@ -305,10 +281,8 @@
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Texture GetTexture(string propertyName)
-        {
-            return this.GetTexture(Shader.PropertyToID(propertyName));
-        }
+        public Texture GetTexture(string propertyName) => 
+            this.GetTexture(Shader.PropertyToID(propertyName));
 
         /// <summary>
         /// <para>Gets the placement offset of texture propertyName.</para>
@@ -359,20 +333,16 @@
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Vector4[] GetVectorArray(int nameID)
-        {
-            return this.GetVectorArrayImpl(nameID);
-        }
+        public Vector4[] GetVectorArray(int nameID) => 
+            this.GetVectorArrayImpl(nameID);
 
         /// <summary>
         /// <para>Get a named vector array.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Vector4[] GetVectorArray(string name)
-        {
-            return this.GetVectorArray(Shader.PropertyToID(name));
-        }
+        public Vector4[] GetVectorArray(string name) => 
+            this.GetVectorArray(Shader.PropertyToID(name));
 
         public void GetVectorArray(int nameID, List<Vector4> values)
         {
@@ -404,10 +374,8 @@
         /// </summary>
         /// <param name="propertyName"></param>
         /// <param name="nameID"></param>
-        public bool HasProperty(string propertyName)
-        {
-            return this.HasProperty(Shader.PropertyToID(propertyName));
-        }
+        public bool HasProperty(string propertyName) => 
+            this.HasProperty(Shader.PropertyToID(propertyName));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_GetColor(Material self, int nameID, out Color value);
@@ -843,10 +811,8 @@
         /// </summary>
         public Color color
         {
-            get
-            {
-                return this.GetColor("_Color");
-            }
+            get => 
+                this.GetColor("_Color");
             set
             {
                 this.SetColor("_Color", value);
@@ -863,10 +829,8 @@
         /// </summary>
         public Texture mainTexture
         {
-            get
-            {
-                return this.GetTexture("_MainTex");
-            }
+            get => 
+                this.GetTexture("_MainTex");
             set
             {
                 this.SetTexture("_MainTex", value);
@@ -878,10 +842,8 @@
         /// </summary>
         public Vector2 mainTextureOffset
         {
-            get
-            {
-                return this.GetTextureOffset("_MainTex");
-            }
+            get => 
+                this.GetTextureOffset("_MainTex");
             set
             {
                 this.SetTextureOffset("_MainTex", value);
@@ -893,10 +855,8 @@
         /// </summary>
         public Vector2 mainTextureScale
         {
-            get
-            {
-                return this.GetTextureScale("_MainTex");
-            }
+            get => 
+                this.GetTextureScale("_MainTex");
             set
             {
                 this.SetTextureScale("_MainTex", value);

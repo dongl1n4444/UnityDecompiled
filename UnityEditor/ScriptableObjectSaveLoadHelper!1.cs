@@ -30,10 +30,8 @@
             return path;
         }
 
-        public T Create()
-        {
-            return ScriptableObject.CreateInstance<T>();
-        }
+        public T Create() => 
+            ScriptableObject.CreateInstance<T>();
 
         public T Load(string filePath)
         {
@@ -72,10 +70,8 @@
             }
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}, {1}, {2}", this.fileExtensionWithoutDot, this.saveType);
-        }
+        public override string ToString() => 
+            string.Format("{0}, {1}, {2}", this.fileExtensionWithoutDot, this.saveType);
 
         public string fileExtensionWithoutDot { get; private set; }
 

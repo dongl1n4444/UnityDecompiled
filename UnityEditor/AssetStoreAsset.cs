@@ -105,13 +105,8 @@
             }
         }
 
-        public bool HasLivePreview
-        {
-            get
-            {
-                return (this.previewAsset != null);
-            }
-        }
+        public bool HasLivePreview =>
+            (this.previewAsset != null);
 
         public Object Preview
         {

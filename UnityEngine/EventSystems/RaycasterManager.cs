@@ -15,10 +15,8 @@
             }
         }
 
-        public static List<BaseRaycaster> GetRaycasters()
-        {
-            return s_Raycasters;
-        }
+        public static List<BaseRaycaster> GetRaycasters() => 
+            s_Raycasters;
 
         public static void RemoveRaycasters(BaseRaycaster baseRaycaster)
         {

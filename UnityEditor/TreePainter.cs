@@ -31,10 +31,8 @@
             return (treeHeight * Random.Range((float) (1f - num), (float) (1f + num)));
         }
 
-        private static float GetTreeRotation()
-        {
-            return (!randomRotation ? 0f : Random.Range((float) 0f, (float) 6.283185f));
-        }
+        private static float GetTreeRotation() => 
+            (!randomRotation ? 0f : Random.Range((float) 0f, (float) 6.283185f));
 
         private static float GetTreeWidth()
         {

@@ -7,37 +7,23 @@
     {
         public bool active
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
         }
 
-        public static Rect area
-        {
-            get
-            {
-                return new Rect();
-            }
-        }
+        public static Rect area =>
+            new Rect();
 
-        public bool done
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool done =>
+            false;
 
         public static bool hideInput
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -45,22 +31,15 @@
 
         public string text
         {
-            get
-            {
-                return string.Empty;
-            }
+            get => 
+                string.Empty;
             set
             {
             }
         }
 
-        public static bool visible
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool visible =>
+            false;
     }
 }
 

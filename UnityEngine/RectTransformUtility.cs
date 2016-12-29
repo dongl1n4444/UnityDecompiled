@@ -15,10 +15,8 @@
         {
         }
 
-        public static Bounds CalculateRelativeRectTransformBounds(Transform trans)
-        {
-            return CalculateRelativeRectTransformBounds(trans, trans);
-        }
+        public static Bounds CalculateRelativeRectTransformBounds(Transform trans) => 
+            CalculateRelativeRectTransformBounds(trans, trans);
 
         public static Bounds CalculateRelativeRectTransformBounds(Transform root, Transform child)
         {
@@ -121,10 +119,8 @@
             }
         }
 
-        private static Vector2 GetTransposed(Vector2 input)
-        {
-            return new Vector2(input.y, input.x);
-        }
+        private static Vector2 GetTransposed(Vector2 input) => 
+            new Vector2(input.y, input.x);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_PixelAdjustPoint(ref Vector2 point, Transform elementTransform, Canvas canvas, out Vector2 value);
@@ -163,10 +159,8 @@
             return rect;
         }
 
-        public static bool RectangleContainsScreenPoint(RectTransform rect, Vector2 screenPoint)
-        {
-            return RectangleContainsScreenPoint(rect, screenPoint, null);
-        }
+        public static bool RectangleContainsScreenPoint(RectTransform rect, Vector2 screenPoint) => 
+            RectangleContainsScreenPoint(rect, screenPoint, null);
 
         /// <summary>
         /// <para>Does the RectTransform contain the screen point as seen from the given camera?</para>
@@ -177,10 +171,8 @@
         /// <returns>
         /// <para>True if the point is inside the rectangle.</para>
         /// </returns>
-        public static bool RectangleContainsScreenPoint(RectTransform rect, Vector2 screenPoint, Camera cam)
-        {
-            return INTERNAL_CALL_RectangleContainsScreenPoint(rect, ref screenPoint, cam);
-        }
+        public static bool RectangleContainsScreenPoint(RectTransform rect, Vector2 screenPoint, Camera cam) => 
+            INTERNAL_CALL_RectangleContainsScreenPoint(rect, ref screenPoint, cam);
 
         public static bool ScreenPointToLocalPointInRectangle(RectTransform rect, Vector2 screenPoint, Camera cam, out Vector2 localPoint)
         {
@@ -219,14 +211,8 @@
             return true;
         }
 
-        public static Vector2 WorldToScreenPoint(Camera cam, Vector3 worldPoint)
-        {
-            if (cam == null)
-            {
-                return new Vector2(worldPoint.x, worldPoint.y);
-            }
-            return cam.WorldToScreenPoint(worldPoint);
-        }
+        public static Vector2 WorldToScreenPoint(Camera cam, Vector3 worldPoint) => 
+            cam?.WorldToScreenPoint(worldPoint);
     }
 }
 

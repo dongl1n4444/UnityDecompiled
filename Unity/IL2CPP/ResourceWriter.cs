@@ -16,7 +16,7 @@
         private static List<ResourceRecord> GenerateResourceInfomation(AssemblyDefinition assembly)
         {
             List<ResourceRecord> list = new List<ResourceRecord>();
-            foreach (EmbeddedResource resource in Enumerable.OfType<EmbeddedResource>(assembly.MainModule.Resources))
+            foreach (EmbeddedResource resource in assembly.MainModule.Resources.OfType<EmbeddedResource>())
             {
                 byte[] resourceData = resource.GetResourceData();
                 list.Add(new ResourceRecord(resource.Name, resourceData.Length, resourceData));
@@ -24,10 +24,8 @@
             return list;
         }
 
-        private static int GetSizeOfNumberOfRecords()
-        {
-            return 4;
-        }
+        private static int GetSizeOfNumberOfRecords() => 
+            4;
 
         private static int GetSumOfAllRecordSizes(IEnumerable<ResourceRecord> resourceRecords)
         {
@@ -35,7 +33,7 @@
             {
                 <>f__am$cache0 = new Func<ResourceRecord, int>(null, (IntPtr) <GetSumOfAllRecordSizes>m__0);
             }
-            return Enumerable.Sum<ResourceRecord>(resourceRecords, <>f__am$cache0);
+            return resourceRecords.Sum<ResourceRecord>(<>f__am$cache0);
         }
 
         public static void WriteEmbeddedResources(AssemblyDefinition assembly, Stream stream)
@@ -72,10 +70,8 @@
                 this.data = data;
             }
 
-            public int GetRecordSize()
-            {
-                return ((4 + this.name.Length) + 4);
-            }
+            public int GetRecordSize() => 
+                ((4 + this.name.Length) + 4);
 
             public void WriteData(BinaryWriter writer)
             {

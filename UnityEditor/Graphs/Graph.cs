@@ -50,12 +50,10 @@
             }
         }
 
-        public virtual bool CanConnect(Slot fromSlot, Slot toSlot)
-        {
-            return true;
-        }
+        public virtual bool CanConnect(Slot fromSlot, Slot toSlot) => 
+            true;
 
-        public virtual void Clear([Optional, DefaultParameterValue(false)] bool destroyNodes)
+        public virtual void Clear(bool destroyNodes = false)
         {
             foreach (Node node in this.nodes)
             {
@@ -207,7 +205,7 @@
             {
                 <>f__am$cache0 = new Func<Node, int>(null, (IntPtr) <GetNodeIdsForSerialization>m__0);
             }
-            return Enumerable.ToArray<int>(Enumerable.Select<Node, int>(graph.nodes, <>f__am$cache0));
+            return Enumerable.Select<Node, int>(graph.nodes, <>f__am$cache0).ToArray<int>();
         }
 
         public virtual void OnEnable()
@@ -271,7 +269,7 @@
             this.m_InvalidEdges.RemoveAll(new Predicate<UnityEditor.Graphs.Edge>(storey.<>m__0));
         }
 
-        public virtual void RemoveNode(Node node, [Optional, DefaultParameterValue(false)] bool destroyNode)
+        public virtual void RemoveNode(Node node, bool destroyNode = false)
         {
             if (node == null)
             {
@@ -287,7 +285,7 @@
             this.Dirty();
         }
 
-        public virtual void RemoveNodes(List<Node> nodesToRemove, [Optional, DefaultParameterValue(false)] bool destroyNodes)
+        public virtual void RemoveNodes(List<Node> nodesToRemove, bool destroyNodes = false)
         {
             foreach (Node node in nodesToRemove)
             {
@@ -297,7 +295,7 @@
 
         private static void ResetGenericPropertyArgumentType(Slot toSlot)
         {
-            if ((toSlot != null) && ((toSlot.isInputDataSlot && (toSlot.node.genericType != null)) && (toSlot.node.isGeneric && (Enumerable.First<Slot>(toSlot.node.inputDataSlots) == toSlot))))
+            if ((toSlot != null) && ((toSlot.isInputDataSlot && (toSlot.node.genericType != null)) && (toSlot.node.isGeneric && (toSlot.node.inputDataSlots.First<Slot>() == toSlot))))
             {
                 toSlot.node.ResetGenericPropertyArgumentType();
             }
@@ -312,13 +310,13 @@
             {
                 throw new ArgumentException("Expected an input data slot");
             }
-            if (Enumerable.Count<UnityEditor.Graphs.Edge>(storey.s.edges) > 1)
+            if (storey.s.edges.Count<UnityEditor.Graphs.Edge>() > 1)
             {
                 throw new ArgumentException("Got input data slot with multiple input Edges. This should never happen.");
             }
-            if (Enumerable.Count<UnityEditor.Graphs.Edge>(storey.s.edges) == 1)
+            if (storey.s.edges.Count<UnityEditor.Graphs.Edge>() == 1)
             {
-                UnityEditor.Graphs.Edge item = Enumerable.First<UnityEditor.Graphs.Edge>(storey.s.edges);
+                UnityEditor.Graphs.Edge item = storey.s.edges.First<UnityEditor.Graphs.Edge>();
                 item.fromSlot.edges.Remove(item);
                 storey.s.edges.Clear();
                 this.edges.Remove(item);
@@ -359,8 +357,8 @@
             {
                 throw new ArgumentException("Expected an output data slot");
             }
-            List<UnityEditor.Graphs.Edge> list = Enumerable.ToList<UnityEditor.Graphs.Edge>(storey.s.edges);
-            List<UnityEditor.Graphs.Edge> list2 = Enumerable.ToList<UnityEditor.Graphs.Edge>(Enumerable.Where<UnityEditor.Graphs.Edge>(this.m_InvalidEdges, new Func<UnityEditor.Graphs.Edge, bool>(storey, (IntPtr) this.<>m__0)));
+            List<UnityEditor.Graphs.Edge> list = storey.s.edges.ToList<UnityEditor.Graphs.Edge>();
+            List<UnityEditor.Graphs.Edge> list2 = Enumerable.Where<UnityEditor.Graphs.Edge>(this.m_InvalidEdges, new Func<UnityEditor.Graphs.Edge, bool>(storey, (IntPtr) this.<>m__0)).ToList<UnityEditor.Graphs.Edge>();
             foreach (UnityEditor.Graphs.Edge edge in storey.s.edges)
             {
                 edge.toSlot.edges.RemoveAll(new Predicate<UnityEditor.Graphs.Edge>(storey.<>m__1));
@@ -395,7 +393,7 @@
 
         private static void SetGenericPropertyArgumentType(Slot toSlot, System.Type fromSlotType)
         {
-            if ((toSlot.isInputDataSlot && (toSlot.node.genericType == null)) && (toSlot.node.isGeneric && (Enumerable.First<Slot>(toSlot.node.inputDataSlots) == toSlot)))
+            if ((toSlot.isInputDataSlot && (toSlot.node.genericType == null)) && (toSlot.node.isGeneric && (toSlot.node.inputDataSlots.First<Slot>() == toSlot)))
             {
                 toSlot.node.SetGenericPropertyArgumentType(SerializedType.GenericType(fromSlotType));
             }
@@ -482,21 +480,11 @@
             }
         }
 
-        protected bool isAwake
-        {
-            get
-            {
-                return this.m_ImAwake;
-            }
-        }
+        protected bool isAwake =>
+            this.m_ImAwake;
 
-        public Node this[string name]
-        {
-            get
-            {
-                return this.GetNodeByName(name);
-            }
-        }
+        public Node this[string name] =>
+            this.GetNodeByName(name);
 
         [CompilerGenerated]
         private sealed class <Connect>c__AnonStorey1
@@ -504,20 +492,14 @@
             internal Slot fromSlot;
             internal Slot toSlot;
 
-            internal bool <>m__0(UnityEditor.Graphs.Edge edg)
-            {
-                return (edg.fromSlot == this.fromSlot);
-            }
+            internal bool <>m__0(UnityEditor.Graphs.Edge edg) => 
+                (edg.fromSlot == this.fromSlot);
 
-            internal bool <>m__1(UnityEditor.Graphs.Edge edg)
-            {
-                return (edg.toSlot == this.toSlot);
-            }
+            internal bool <>m__1(UnityEditor.Graphs.Edge edg) => 
+                (edg.toSlot == this.toSlot);
 
-            internal bool <>m__2(UnityEditor.Graphs.Edge edg)
-            {
-                return ((edg.fromSlot == this.fromSlot) && (edg.toSlot == this.toSlot));
-            }
+            internal bool <>m__2(UnityEditor.Graphs.Edge edg) => 
+                ((edg.fromSlot == this.fromSlot) && (edg.toSlot == this.toSlot));
         }
 
         [CompilerGenerated]
@@ -526,10 +508,8 @@
             internal Slot fromSlot;
             internal Slot toSlot;
 
-            internal bool <>m__0(UnityEditor.Graphs.Edge e)
-            {
-                return ((e.fromSlot == this.fromSlot) && (e.toSlot == this.toSlot));
-            }
+            internal bool <>m__0(UnityEditor.Graphs.Edge e) => 
+                ((e.fromSlot == this.fromSlot) && (e.toSlot == this.toSlot));
         }
 
         [CompilerGenerated]
@@ -537,10 +517,8 @@
         {
             internal Slot slot;
 
-            internal bool <>m__0(UnityEditor.Graphs.Edge e)
-            {
-                return ((e.fromSlot == this.slot) || (e.toSlot == this.slot));
-            }
+            internal bool <>m__0(UnityEditor.Graphs.Edge e) => 
+                ((e.fromSlot == this.slot) || (e.toSlot == this.slot));
         }
 
         [CompilerGenerated]
@@ -548,10 +526,8 @@
         {
             internal Slot s;
 
-            internal bool <>m__0(UnityEditor.Graphs.Edge e)
-            {
-                return (e.toSlot == this.s);
-            }
+            internal bool <>m__0(UnityEditor.Graphs.Edge e) => 
+                (e.toSlot == this.s);
         }
 
         [CompilerGenerated]
@@ -559,25 +535,17 @@
         {
             internal Slot s;
 
-            internal bool <>m__0(UnityEditor.Graphs.Edge e)
-            {
-                return (e.fromSlot == this.s);
-            }
+            internal bool <>m__0(UnityEditor.Graphs.Edge e) => 
+                (e.fromSlot == this.s);
 
-            internal bool <>m__1(UnityEditor.Graphs.Edge edg)
-            {
-                return (edg.fromSlot == this.s);
-            }
+            internal bool <>m__1(UnityEditor.Graphs.Edge edg) => 
+                (edg.fromSlot == this.s);
 
-            internal bool <>m__2(UnityEditor.Graphs.Edge e)
-            {
-                return (e.fromSlot == this.s);
-            }
+            internal bool <>m__2(UnityEditor.Graphs.Edge e) => 
+                (e.fromSlot == this.s);
 
-            internal bool <>m__3(UnityEditor.Graphs.Edge e)
-            {
-                return (e.fromSlot == this.s);
-            }
+            internal bool <>m__3(UnityEditor.Graphs.Edge e) => 
+                (e.fromSlot == this.s);
         }
     }
 }

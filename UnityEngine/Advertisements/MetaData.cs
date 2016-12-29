@@ -27,10 +27,8 @@
         /// <returns>
         /// <para>Stored metadata.</para>
         /// </returns>
-        public object Get(string key)
-        {
-            return this.m_MetaData[key];
-        }
+        public object Get(string key) => 
+            this.m_MetaData[key];
 
         /// <summary>
         /// <para>Sets new metadata fields.</para>
@@ -42,10 +40,8 @@
             this.m_MetaData[key] = value;
         }
 
-        internal string ToJSON()
-        {
-            return SimpleJson.SimpleJson.SerializeObject(this.m_MetaData);
-        }
+        internal string ToJSON() => 
+            SimpleJson.SimpleJson.SerializeObject(this.m_MetaData);
 
         /// <summary>
         /// <para>Metadata category.</para>
@@ -58,13 +54,8 @@
         /// <returns>
         /// <para>Stored metadata dictionary.</para>
         /// </returns>
-        public IDictionary<string, object> Values
-        {
-            get
-            {
-                return this.m_MetaData;
-            }
-        }
+        public IDictionary<string, object> Values =>
+            this.m_MetaData;
     }
 }
 

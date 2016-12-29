@@ -159,7 +159,7 @@
                     <>f__am$cache0 = new Func<EditorTestResult, bool>(null, (IntPtr) <RunFinished>m__0);
                 }
                 IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_Results, <>f__am$cache0);
-                if (!Enumerable.Any<EditorTestResult>(source))
+                if (!source.Any<EditorTestResult>())
                 {
                     EditorApplication.Exit(3);
                 }
@@ -169,7 +169,7 @@
                     {
                         <>f__am$cache1 = new Func<EditorTestResult, bool>(null, (IntPtr) <RunFinished>m__1);
                     }
-                    EditorApplication.Exit(!Enumerable.Any<EditorTestResult>(Enumerable.Where<EditorTestResult>(source, <>f__am$cache1)) ? 0 : 2);
+                    EditorApplication.Exit(!Enumerable.Where<EditorTestResult>(source, <>f__am$cache1).Any<EditorTestResult>() ? 0 : 2);
                 }
             }
 

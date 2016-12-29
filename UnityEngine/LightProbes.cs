@@ -36,10 +36,8 @@
         [Obsolete("coefficients property has been deprecated. Please use bakedProbes instead.", true)]
         public float[] coefficients
         {
-            get
-            {
-                return new float[0];
-            }
+            get => 
+                new float[0];
             set
             {
             }

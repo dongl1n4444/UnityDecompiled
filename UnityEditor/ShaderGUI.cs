@@ -32,10 +32,8 @@
         /// <returns>
         /// <para>The material property found, otherwise null.</para>
         /// </returns>
-        protected static MaterialProperty FindProperty(string propertyName, MaterialProperty[] properties)
-        {
-            return FindProperty(propertyName, properties, true);
-        }
+        protected static MaterialProperty FindProperty(string propertyName, MaterialProperty[] properties) => 
+            FindProperty(propertyName, properties, true);
 
         /// <summary>
         /// <para>Find shader properties.</para>

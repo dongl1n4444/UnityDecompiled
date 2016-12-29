@@ -36,7 +36,7 @@
                 MultiColumnHeaderState.Column column = this.state.columns[i];
                 if (column.allowToggleVisibility)
                 {
-                    menu.AddItem(new GUIContent(column.headerText), Enumerable.Contains<int>(this.state.visibleColumns, i), new GenericMenu.MenuFunction2(this.ToggleVisibility), i);
+                    menu.AddItem(new GUIContent(column.headerText), this.state.visibleColumns.Contains<int>(i), new GenericMenu.MenuFunction2(this.ToggleVisibility), i);
                 }
                 else
                 {
@@ -129,7 +129,7 @@
         {
             if ((columnIndex < 0) || (columnIndex >= this.state.columns.Length))
             {
-                throw new ArgumentOutOfRangeException("columnIndex", string.Format("columnIndex {0} is not valid when the current column count is {1}", columnIndex, this.state.columns.Length));
+                throw new ArgumentOutOfRangeException("columnIndex", $"columnIndex {columnIndex} is not valid when the current column count is {this.state.columns.Length}");
             }
             return this.state.columns[columnIndex];
         }
@@ -138,7 +138,7 @@
         {
             if ((visibleColumnIndex < 0) || (visibleColumnIndex >= this.m_ColumnRects.Length))
             {
-                throw new ArgumentException(string.Format("The provided visibleColumnIndex is invalid. Ensure the index ({0}) is within the number of visible columns ({1})", visibleColumnIndex, this.m_ColumnRects.Length), "visibleColumnIndex");
+                throw new ArgumentException($"The provided visibleColumnIndex is invalid. Ensure the index ({visibleColumnIndex}) is within the number of visible columns ({this.m_ColumnRects.Length})", "visibleColumnIndex");
             }
             return this.m_ColumnRects[visibleColumnIndex];
         }
@@ -155,10 +155,8 @@
             throw new ArgumentException("Invalid columnIndex: it is not part of the visible columns", "columnIndex");
         }
 
-        public bool IsSortedAscending(int columnIndex)
-        {
-            return this.GetColumn(columnIndex).sortedAscending;
-        }
+        public bool IsSortedAscending(int columnIndex) => 
+            this.GetColumn(columnIndex).sortedAscending;
 
         public virtual void OnGUI(Rect rect, float xScroll)
         {
@@ -342,10 +340,8 @@
 
         public bool canSort
         {
-            get
-            {
-                return this.m_CanSort;
-            }
+            get => 
+                this.m_CanSort;
             set
             {
                 this.m_CanSort = value;
@@ -355,10 +351,8 @@
 
         public float height
         {
-            get
-            {
-                return this.m_Height;
-            }
+            get => 
+                this.m_Height;
             set
             {
                 this.m_Height = value;
@@ -366,20 +360,13 @@
             }
         }
 
-        public int previousSortedColumnIndex
-        {
-            get
-            {
-                return this.state.previousSortedColumnIndex;
-            }
-        }
+        public int previousSortedColumnIndex =>
+            this.state.previousSortedColumnIndex;
 
         public int sortedColumnIndex
         {
-            get
-            {
-                return this.state.sortedColumnIndex;
-            }
+            get => 
+                this.state.sortedColumnIndex;
             set
             {
                 if (value != this.state.sortedColumnIndex)
@@ -392,10 +379,8 @@
 
         public MultiColumnHeaderState state
         {
-            get
-            {
-                return this.m_State;
-            }
+            get => 
+                this.m_State;
             set
             {
                 if (value == null)
@@ -408,21 +393,11 @@
 
         public static class DefaultGUI
         {
-            public static float defaultHeight
-            {
-                get
-                {
-                    return 27f;
-                }
-            }
+            public static float defaultHeight =>
+                27f;
 
-            public static float minimumHeight
-            {
-                get
-                {
-                    return 20f;
-                }
-            }
+            public static float minimumHeight =>
+                20f;
         }
 
         public static class DefaultStyles

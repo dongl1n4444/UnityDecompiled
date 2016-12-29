@@ -65,45 +65,20 @@
             return string.Concat(objArray1);
         }
 
-        public string id
-        {
-            get
-            {
-                return this.m_ID;
-            }
-        }
+        public string id =>
+            this.m_ID;
 
-        public Texture2D image
-        {
-            get
-            {
-                return this.m_Image;
-            }
-        }
+        public Texture2D image =>
+            this.m_Image;
 
-        public bool isFriend
-        {
-            get
-            {
-                return this.m_IsFriend;
-            }
-        }
+        public bool isFriend =>
+            this.m_IsFriend;
 
-        public UserState state
-        {
-            get
-            {
-                return this.m_State;
-            }
-        }
+        public UserState state =>
+            this.m_State;
 
-        public string userName
-        {
-            get
-            {
-                return this.m_UserName;
-            }
-        }
+        public string userName =>
+            this.m_UserName;
     }
 }
 

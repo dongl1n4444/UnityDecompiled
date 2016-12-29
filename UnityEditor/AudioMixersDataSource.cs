@@ -28,7 +28,7 @@
             base.m_NeedRefreshRows = true;
             if (list.Count > 0)
             {
-                List<AudioMixerItem> items = Enumerable.ToList<AudioMixerItem>(Enumerable.Select<AudioMixerController, AudioMixerItem>(list, new Func<AudioMixerController, AudioMixerItem>(this, (IntPtr) this.<FetchData>m__0)));
+                List<AudioMixerItem> items = Enumerable.Select<AudioMixerController, AudioMixerItem>(list, new Func<AudioMixerController, AudioMixerItem>(this, (IntPtr) this.<FetchData>m__0)).ToList<AudioMixerItem>();
                 foreach (AudioMixerItem item in items)
                 {
                     this.SetChildParentOfMixerItem(item, items);
@@ -46,7 +46,7 @@
         {
             if (controller.outputAudioMixerGroup != null)
             {
-                return string.Format("({0} of {1})", controller.outputAudioMixerGroup.name, controller.outputAudioMixerGroup.audioMixer.name);
+                return $"({controller.outputAudioMixerGroup.name} of {controller.outputAudioMixerGroup.audioMixer.name})";
             }
             return "(Audio Listener)";
         }
@@ -134,10 +134,8 @@
             }
         }
 
-        public override bool IsRenamingItemAllowed(TreeViewItem item)
-        {
-            return true;
-        }
+        public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+            true;
 
         private void SetChildParentOfMixerItem(AudioMixerItem item, List<AudioMixerItem> items)
         {

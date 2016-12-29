@@ -12,10 +12,8 @@
         [Obsolete("animatedTextureCount has been replaced by uvAnimationXTile and uvAnimationYTile.")]
         public int animatedTextureCount
         {
-            get
-            {
-                return this.uvAnimationXTile;
-            }
+            get => 
+                this.uvAnimationXTile;
             set
             {
                 this.uvAnimationXTile = value;
@@ -30,10 +28,8 @@
         [Obsolete("This function has been removed.", true)]
         public AnimationCurve heightCurve
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -51,10 +47,8 @@
 
         public float maxPartileSize
         {
-            get
-            {
-                return this.maxParticleSize;
-            }
+            get => 
+                this.maxParticleSize;
             set
             {
                 this.maxParticleSize = value;
@@ -69,10 +63,8 @@
         [Obsolete("This function has been removed.", true)]
         public AnimationCurve rotationCurve
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -103,10 +95,8 @@
         [Obsolete("This function has been removed.", true)]
         public AnimationCurve widthCurve
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }

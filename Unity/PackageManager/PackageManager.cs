@@ -138,10 +138,8 @@
             }
         }
 
-        private IEnumerable<IvyModule> GetCachedLocalModules()
-        {
-            return GetCachedModulesForIndex(this.LocalIndexer.IndexCache);
-        }
+        private IEnumerable<IvyModule> GetCachedLocalModules() => 
+            GetCachedModulesForIndex(this.LocalIndexer.IndexCache);
 
         private static IEnumerable<IvyModule> GetCachedModulesForIndex(string indexFile)
         {
@@ -159,10 +157,8 @@
             return new List<IvyModule>();
         }
 
-        private IEnumerable<IvyModule> GetCachedRemoteModules()
-        {
-            return GetCachedModulesForIndex(this.RemoteIndexer.IndexCache);
-        }
+        private IEnumerable<IvyModule> GetCachedRemoteModules() => 
+            GetCachedModulesForIndex(this.RemoteIndexer.IndexCache);
 
         private void Initialize()
         {
@@ -417,7 +413,7 @@
                     this.running = false;
                     remoteIndexer = this.RemoteIndexer;
                     localIndexer = this.LocalIndexer;
-                    serviceArray = Enumerable.ToArray<Installer>(this.Installers.Values);
+                    serviceArray = this.Installers.Values.ToArray<Installer>();
                     this.LocalIndexer = null;
                     this.RemoteIndexer = null;
                     this.Installers = null;
@@ -481,10 +477,8 @@
         internal static bool Ready
         {
             [CompilerGenerated]
-            get
-            {
-                return <Ready>k__BackingField;
-            }
+            get => 
+                <Ready>k__BackingField;
             [CompilerGenerated]
             private set
             {
@@ -496,13 +490,8 @@
 
         internal bool UpdateCheckRequested { get; private set; }
 
-        internal string Version
-        {
-            get
-            {
-                return ((this.moduleInfo == null) ? Assembly.GetExecutingAssembly().GetName().Version.ToString() : this.moduleInfo.Info.Version.ToString());
-            }
-        }
+        internal string Version =>
+            ((this.moduleInfo == null) ? Assembly.GetExecutingAssembly().GetName().Version.ToString() : this.moduleInfo.Info.Version.ToString());
     }
 }
 

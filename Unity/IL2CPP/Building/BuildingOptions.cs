@@ -34,16 +34,16 @@
                 {
                     if ((File.GetAttributes(str) & FileAttributes.Directory) != 0)
                     {
-                        throw new ArgumentException(string.Format("Cannot specify directory \"{0}\" as an additional library file.", str), "--additional-libraries");
+                        throw new ArgumentException($"Cannot specify directory "{str}" as an additional library file.", "--additional-libraries");
                     }
                 }
                 catch (FileNotFoundException exception)
                 {
-                    throw new ArgumentException(string.Format("Non-existent file \"{0}\" specified as an additional library file.", str), "--additional-libraries", exception);
+                    throw new ArgumentException($"Non-existent file "{str}" specified as an additional library file.", "--additional-libraries", exception);
                 }
                 catch (DirectoryNotFoundException exception2)
                 {
-                    throw new ArgumentException(string.Format("Non-existent directory \"{0}\" specified as an additional library file.  Cannot specify a directory as an additional library.", str), "--additional-libraries", exception2);
+                    throw new ArgumentException($"Non-existent directory "{str}" specified as an additional library file.  Cannot specify a directory as an additional library.", "--additional-libraries", exception2);
                 }
                 catch (ArgumentException)
                 {
@@ -51,7 +51,7 @@
                 }
                 catch (Exception exception3)
                 {
-                    throw new ArgumentException(string.Format("Unknown error with additional library parameter \"{0}\".", str), "--additional-libraries", exception3);
+                    throw new ArgumentException($"Unknown error with additional library parameter "{str}".", "--additional-libraries", exception3);
                 }
             }
         }

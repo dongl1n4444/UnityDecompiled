@@ -20,15 +20,11 @@
             baseType.Annotate(Implements);
         }
 
-        public static bool HasExtends(TypeReference baseType)
-        {
-            return baseType.ContainsAnnotation(Extends);
-        }
+        public static bool HasExtends(TypeReference baseType) => 
+            baseType.ContainsAnnotation(Extends);
 
-        public static bool HasImplements(TypeReference baseType)
-        {
-            return baseType.ContainsAnnotation(Implements);
-        }
+        public static bool HasImplements(TypeReference baseType) => 
+            baseType.ContainsAnnotation(Implements);
     }
 }
 

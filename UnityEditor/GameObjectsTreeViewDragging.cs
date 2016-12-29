@@ -15,7 +15,7 @@
     {
         [CompilerGenerated]
         private static Func<Scene, int> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowDragBetween>k__BackingField;
         private const string kSceneHeaderDragString = "SceneHeaderList";
 
@@ -129,8 +129,8 @@
                         {
                             <>f__am$cache0 = new Func<Scene, int>(null, (IntPtr) <DoDragScenes>m__0);
                         }
-                        Selection.instanceIDs = Enumerable.ToArray<int>(Enumerable.Select<Scene, int>(source, <>f__am$cache0));
-                        base.m_TreeView.Frame(Enumerable.Last<Scene>(source).handle, true, false);
+                        Selection.instanceIDs = Enumerable.Select<Scene, int>(source, <>f__am$cache0).ToArray<int>();
+                        base.m_TreeView.Frame(source.Last<Scene>().handle, true, false);
                     }
                 }
                 else

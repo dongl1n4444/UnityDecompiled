@@ -17,73 +17,38 @@
         /// <summary>
         /// <para>The index of the sphere that has changed.</para>
         /// </summary>
-        public int index
-        {
-            get
-            {
-                return this.m_Index;
-            }
-        }
+        public int index =>
+            this.m_Index;
         /// <summary>
         /// <para>Was the sphere considered visible by the most recent culling pass?</para>
         /// </summary>
-        public bool isVisible
-        {
-            get
-            {
-                return ((this.m_ThisState & 0x80) != 0);
-            }
-        }
+        public bool isVisible =>
+            ((this.m_ThisState & 0x80) != 0);
         /// <summary>
         /// <para>Was the sphere visible before the most recent culling pass?</para>
         /// </summary>
-        public bool wasVisible
-        {
-            get
-            {
-                return ((this.m_PrevState & 0x80) != 0);
-            }
-        }
+        public bool wasVisible =>
+            ((this.m_PrevState & 0x80) != 0);
         /// <summary>
         /// <para>Did this sphere change from being invisible to being visible in the most recent culling pass?</para>
         /// </summary>
-        public bool hasBecomeVisible
-        {
-            get
-            {
-                return (this.isVisible && !this.wasVisible);
-            }
-        }
+        public bool hasBecomeVisible =>
+            (this.isVisible && !this.wasVisible);
         /// <summary>
         /// <para>Did this sphere change from being visible to being invisible in the most recent culling pass?</para>
         /// </summary>
-        public bool hasBecomeInvisible
-        {
-            get
-            {
-                return (!this.isVisible && this.wasVisible);
-            }
-        }
+        public bool hasBecomeInvisible =>
+            (!this.isVisible && this.wasVisible);
         /// <summary>
         /// <para>The current distance band index of the sphere, after the most recent culling pass.</para>
         /// </summary>
-        public int currentDistance
-        {
-            get
-            {
-                return (this.m_ThisState & 0x7f);
-            }
-        }
+        public int currentDistance =>
+            (this.m_ThisState & 0x7f);
         /// <summary>
         /// <para>The distance band index of the sphere before the most recent culling pass.</para>
         /// </summary>
-        public int previousDistance
-        {
-            get
-            {
-                return (this.m_PrevState & 0x7f);
-            }
-        }
+        public int previousDistance =>
+            (this.m_PrevState & 0x7f);
     }
 }
 

@@ -35,7 +35,7 @@
             {
                 <>f__am$cache0 = new Func<GenericParameter, bool>(null, (IntPtr) <AreFullySharableGenericParameters>m__0);
             }
-            return Enumerable.All<GenericParameter>(genericParameters, <>f__am$cache0);
+            return genericParameters.All<GenericParameter>(<>f__am$cache0);
         }
 
         public bool CanShareMethod(MethodReference method)
@@ -58,7 +58,7 @@
             {
                 return false;
             }
-            if (Extensions.IsComOrWindowsRuntimeInterface(type))
+            if (type.IsComOrWindowsRuntimeInterface())
             {
                 return false;
             }
@@ -131,7 +131,7 @@
         {
             if (!method.HasGenericParameters && !method.DeclaringType.HasGenericParameters)
             {
-                throw new ArgumentException(string.Format("Attempting to get a fully shared method for method '{0}' which does not have any generic parameters", method.FullName));
+                throw new ArgumentException($"Attempting to get a fully shared method for method '{method.FullName}' which does not have any generic parameters");
             }
             TypeReference declaringType = !method.DeclaringType.HasGenericParameters ? ((TypeReference) method.DeclaringType) : ((TypeReference) this.GetFullySharedType(method.DeclaringType));
             MethodReference owner = new MethodReference(method.Name, method.ReturnType, declaringType);
@@ -157,7 +157,7 @@
             }
             if (owner.Resolve() == null)
             {
-                throw new Exception(string.Format("Failed to resolve shared generic instance method '{0}' constructed from method definition '{1}'", owner.FullName, method.FullName));
+                throw new Exception($"Failed to resolve shared generic instance method '{owner.FullName}' constructed from method definition '{method.FullName}'");
             }
             return owner;
         }
@@ -176,7 +176,7 @@
         {
             if (genericParameter.HasNotNullableValueTypeConstraint)
             {
-                throw new InvalidOperationException(string.Format("Attempting to share generic parameter '{0}' which has a value type constraint.", genericParameter.FullName));
+                throw new InvalidOperationException($"Attempting to share generic parameter '{genericParameter.FullName}' which has a value type constraint.");
             }
             return genericParameter.Module.TypeSystem.Object;
         }
@@ -229,18 +229,16 @@
             return type2;
         }
 
-        public TypeReference GetSharedTypeForGenericParameter(Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, GenericParameter genericParameter)
-        {
-            return this.GetUnderlyingSharedType(typeResolver.Resolve(genericParameter));
-        }
+        public TypeReference GetSharedTypeForGenericParameter(Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, GenericParameter genericParameter) => 
+            this.GetUnderlyingSharedType(typeResolver.Resolve(genericParameter));
 
         public TypeReference GetUnderlyingSharedType(TypeReference inflatedType)
         {
             if (this.IsGenericSharingForValueTypesEnabled)
             {
-                if (Extensions.IsEnum(inflatedType))
+                if (inflatedType.IsEnum())
                 {
-                    inflatedType = Extensions.GetUnderlyingEnumType(inflatedType);
+                    inflatedType = inflatedType.GetUnderlyingEnumType();
                 }
                 if (inflatedType.MetadataType == MetadataType.Boolean)
                 {
@@ -251,7 +249,7 @@
                     inflatedType = inflatedType.Module.TypeSystem.UInt16;
                 }
             }
-            if (Extensions.IsValueType(inflatedType))
+            if (inflatedType.IsValueType())
             {
                 if (inflatedType.IsGenericInstance)
                 {
@@ -262,20 +260,14 @@
             return inflatedType.Module.TypeSystem.Object;
         }
 
-        public bool IsSharedMethod(MethodReference method)
-        {
-            return (this.CanShareMethod(method) && Unity.IL2CPP.Common.MethodReferenceComparer.AreEqual(method, this.GetSharedMethod(method)));
-        }
+        public bool IsSharedMethod(MethodReference method) => 
+            (this.CanShareMethod(method) && Unity.IL2CPP.Common.MethodReferenceComparer.AreEqual(method, this.GetSharedMethod(method)));
 
-        public bool IsSharedType(GenericInstanceType type)
-        {
-            return (this.CanShareType(type) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual((TypeReference) type, (TypeReference) this.GetSharedType(type), TypeComparisonMode.Exact));
-        }
+        public bool IsSharedType(GenericInstanceType type) => 
+            (this.CanShareType(type) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual((TypeReference) type, (TypeReference) this.GetSharedType(type), TypeComparisonMode.Exact));
 
-        public bool NeedsTypeContextAsArgument(MethodReference method)
-        {
-            return (method.Resolve().IsStatic || Extensions.IsValueType(method.DeclaringType));
-        }
+        public bool NeedsTypeContextAsArgument(MethodReference method) => 
+            (method.Resolve().IsStatic || method.DeclaringType.IsValueType());
 
         public GenericSharingData RuntimeGenericContextFor(MethodDefinition method)
         {
@@ -307,16 +299,11 @@
             {
                 return false;
             }
-            return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(targetMethod.DeclaringType, Extensions.GetBaseType(invokingMethod.DeclaringType), TypeComparisonMode.Exact);
+            return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(targetMethod.DeclaringType, invokingMethod.DeclaringType.GetBaseType(), TypeComparisonMode.Exact);
         }
 
-        public bool IsGenericSharingForValueTypesEnabled
-        {
-            get
-            {
-                return CodeGenOptions.EnablePrimitiveValueTypeGenericSharing;
-            }
-        }
+        public bool IsGenericSharingForValueTypesEnabled =>
+            CodeGenOptions.EnablePrimitiveValueTypeGenericSharing;
     }
 }
 

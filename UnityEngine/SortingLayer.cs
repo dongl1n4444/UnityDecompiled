@@ -14,33 +14,18 @@
         /// <summary>
         /// <para>This is the unique id assigned to the layer. It is not an ordered running value and it should not be used to compare with other layers to determine the sorting order.</para>
         /// </summary>
-        public int id
-        {
-            get
-            {
-                return this.m_Id;
-            }
-        }
+        public int id =>
+            this.m_Id;
         /// <summary>
         /// <para>Returns the name of the layer as defined in the TagManager.</para>
         /// </summary>
-        public string name
-        {
-            get
-            {
-                return IDToName(this.m_Id);
-            }
-        }
+        public string name =>
+            IDToName(this.m_Id);
         /// <summary>
         /// <para>This is the relative value that indicates the sort order of this layer relative to the other layers.</para>
         /// </summary>
-        public int value
-        {
-            get
-            {
-                return GetLayerValueFromID(this.m_Id);
-            }
-        }
+        public int value =>
+            GetLayerValueFromID(this.m_Id);
         /// <summary>
         /// <para>Returns all the layers defined in this project.</para>
         /// </summary>

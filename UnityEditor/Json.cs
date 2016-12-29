@@ -20,10 +20,8 @@
             return Parser.Parse(json);
         }
 
-        public static string Serialize(object obj)
-        {
-            return Serializer.Serialize(obj);
-        }
+        public static string Serialize(object obj) => 
+            Serializer.Serialize(obj);
 
         private sealed class Parser : IDisposable
         {
@@ -53,10 +51,8 @@
                 }
             }
 
-            public static bool IsWordBreak(char c)
-            {
-                return (char.IsWhiteSpace(c) || ("{}[],:\"".IndexOf(c) != -1));
-            }
+            public static bool IsWordBreak(char c) => 
+                (char.IsWhiteSpace(c) || ("{}[],:\"".IndexOf(c) != -1));
 
             public static object Parse(string jsonString)
             {
@@ -273,13 +269,8 @@
                 return this.ParseByToken(nextToken);
             }
 
-            private char NextChar
-            {
-                get
-                {
-                    return Convert.ToChar(this.json.Read());
-                }
-            }
+            private char NextChar =>
+                Convert.ToChar(this.json.Read());
 
             private TOKEN NextToken
             {
@@ -360,13 +351,8 @@
                 }
             }
 
-            private char PeekChar
-            {
-                get
-                {
-                    return Convert.ToChar(this.json.Peek());
-                }
-            }
+            private char PeekChar =>
+                Convert.ToChar(this.json.Peek());
 
             private enum TOKEN
             {
@@ -477,12 +463,12 @@
                 else
                 {
                     Dictionary<string, object> dictionary = new Dictionary<string, object>();
-                    List<FieldInfo> list = Enumerable.ToList<FieldInfo>(value.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance));
+                    List<FieldInfo> list = value.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<FieldInfo>();
                     foreach (FieldInfo info in list)
                     {
                         dictionary.Add(info.Name, info.GetValue(value));
                     }
-                    List<PropertyInfo> list2 = Enumerable.ToList<PropertyInfo>(value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance));
+                    List<PropertyInfo> list2 = value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList<PropertyInfo>();
                     foreach (PropertyInfo info2 in list2)
                     {
                         dictionary.Add(info2.Name, info2.GetValue(value, null));

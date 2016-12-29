@@ -34,10 +34,8 @@
             return base.GetPropertyHeight(prop, label, editor);
         }
 
-        private static bool IsPropertyTypeSuitable(MaterialProperty prop)
-        {
-            return ((prop.type == MaterialProperty.PropType.Float) || (prop.type == MaterialProperty.PropType.Range));
-        }
+        private static bool IsPropertyTypeSuitable(MaterialProperty prop) => 
+            ((prop.type == MaterialProperty.PropType.Float) || (prop.type == MaterialProperty.PropType.Range));
 
         public override void OnGUI(Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
         {

@@ -105,13 +105,8 @@
             this.m_LastTime = timeSinceStartup;
         }
 
-        public bool isAnimating
-        {
-            get
-            {
-                return this.m_Animating;
-            }
-        }
+        public bool isAnimating =>
+            this.m_Animating;
 
         protected float lerpPosition
         {
@@ -123,20 +118,13 @@
             }
         }
 
-        protected T start
-        {
-            get
-            {
-                return this.m_Start;
-            }
-        }
+        protected T start =>
+            this.m_Start;
 
         public T target
         {
-            get
-            {
-                return this.m_Target;
-            }
+            get => 
+                this.m_Target;
             set
             {
                 if (!this.m_Target.Equals(value))
@@ -148,10 +136,8 @@
 
         public T value
         {
-            get
-            {
-                return this.GetValue();
-            }
+            get => 
+                this.GetValue();
             set
             {
                 this.StopAnim(value);

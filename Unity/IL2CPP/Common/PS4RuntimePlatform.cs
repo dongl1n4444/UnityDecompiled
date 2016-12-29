@@ -4,21 +4,11 @@
 
     public class PS4RuntimePlatform : RuntimePlatform
     {
-        public override bool ExecutesOnHostMachine
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool ExecutesOnHostMachine =>
+            false;
 
-        public override string Name
-        {
-            get
-            {
-                return "PS4";
-            }
-        }
+        public override string Name =>
+            "PS4";
     }
 }
 

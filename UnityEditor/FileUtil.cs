@@ -229,10 +229,8 @@
         /// <param name="to"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void MoveFileOrDirectory(string from, string to);
-        internal static string NiceWinPath(string unityPath)
-        {
-            return ((Application.platform != RuntimePlatform.WindowsEditor) ? unityPath : unityPath.Replace("/", @"\"));
-        }
+        internal static string NiceWinPath(string unityPath) => 
+            ((Application.platform != RuntimePlatform.WindowsEditor) ? unityPath : unityPath.Replace("/", @"\"));
 
         internal static string RemovePathPrefix(string fullPath, string prefix)
         {
@@ -353,20 +351,14 @@
             File.Copy(NiceWinPath(from), NiceWinPath(to), overwrite);
         }
 
-        internal static string UnityGetDirectoryName(string path)
-        {
-            return Path.GetDirectoryName(path.Replace("//", @"\\")).Replace(@"\\", "//");
-        }
+        internal static string UnityGetDirectoryName(string path) => 
+            Path.GetDirectoryName(path.Replace("//", @"\\")).Replace(@"\\", "//");
 
-        internal static string UnityGetFileName(string path)
-        {
-            return Path.GetFileName(path.Replace("//", @"\\")).Replace(@"\\", "//");
-        }
+        internal static string UnityGetFileName(string path) => 
+            Path.GetFileName(path.Replace("//", @"\\")).Replace(@"\\", "//");
 
-        internal static string UnityGetFileNameWithoutExtension(string path)
-        {
-            return Path.GetFileNameWithoutExtension(path.Replace("//", @"\\")).Replace(@"\\", "//");
-        }
+        internal static string UnityGetFileNameWithoutExtension(string path) => 
+            Path.GetFileNameWithoutExtension(path.Replace("//", @"\\")).Replace(@"\\", "//");
 
         internal static void WalkFilesystemRecursively(string path, Action<string> fileCallback, Func<string, bool> directoryCallback)
         {
@@ -388,10 +380,8 @@
         {
             internal Regex exclude;
 
-            internal bool <>m__0(string file)
-            {
-                return ((this.exclude == null) || !this.exclude.IsMatch(file));
-            }
+            internal bool <>m__0(string file) => 
+                ((this.exclude == null) || !this.exclude.IsMatch(file));
         }
 
         [CompilerGenerated]

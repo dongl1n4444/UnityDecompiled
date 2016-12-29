@@ -30,15 +30,11 @@
             this._methodDefinitionContext = methodDefinitionContext;
         }
 
-        public static Unity.IL2CPP.ILPreProcessor.TypeResolver For(TypeReference typeReference)
-        {
-            return (!typeReference.IsGenericInstance ? new Unity.IL2CPP.ILPreProcessor.TypeResolver() : new Unity.IL2CPP.ILPreProcessor.TypeResolver((GenericInstanceType) typeReference));
-        }
+        public static Unity.IL2CPP.ILPreProcessor.TypeResolver For(TypeReference typeReference) => 
+            (!typeReference.IsGenericInstance ? new Unity.IL2CPP.ILPreProcessor.TypeResolver() : new Unity.IL2CPP.ILPreProcessor.TypeResolver((GenericInstanceType) typeReference));
 
-        public static Unity.IL2CPP.ILPreProcessor.TypeResolver For(TypeReference typeReference, MethodReference methodReference)
-        {
-            return new Unity.IL2CPP.ILPreProcessor.TypeResolver(typeReference as GenericInstanceType, methodReference as GenericInstanceMethod);
-        }
+        public static Unity.IL2CPP.ILPreProcessor.TypeResolver For(TypeReference typeReference, MethodReference methodReference) => 
+            new Unity.IL2CPP.ILPreProcessor.TypeResolver(typeReference as GenericInstanceType, methodReference as GenericInstanceMethod);
 
         private TypeReference HandleOwnerlessInvalidILCode(GenericParameter genericParameter)
         {
@@ -49,15 +45,11 @@
             return genericParameter.Module.TypeSystem.Object;
         }
 
-        private bool IsDummy()
-        {
-            return ((this._typeDefinitionContext == null) && (this._methodDefinitionContext == null));
-        }
+        private bool IsDummy() => 
+            ((this._typeDefinitionContext == null) && (this._methodDefinitionContext == null));
 
-        internal Unity.IL2CPP.ILPreProcessor.TypeResolver Nested(GenericInstanceMethod genericInstanceMethod)
-        {
-            return new Unity.IL2CPP.ILPreProcessor.TypeResolver(this._typeDefinitionContext as GenericInstanceType, genericInstanceMethod);
-        }
+        internal Unity.IL2CPP.ILPreProcessor.TypeResolver Nested(GenericInstanceMethod genericInstanceMethod) => 
+            new Unity.IL2CPP.ILPreProcessor.TypeResolver(this._typeDefinitionContext as GenericInstanceType, genericInstanceMethod);
 
         public FieldReference Resolve(FieldReference field)
         {
@@ -109,10 +101,8 @@
             return owner;
         }
 
-        public TypeReference Resolve(TypeReference typeReference)
-        {
-            return this.Resolve(typeReference, true);
-        }
+        public TypeReference Resolve(TypeReference typeReference) => 
+            this.Resolve(typeReference, true);
 
         public TypeReference Resolve(TypeReference typeReference, bool includeTypeDefinitions)
         {
@@ -189,16 +179,14 @@
                 }
                 if (typeReference is TypeSpecification)
                 {
-                    throw new NotSupportedException(string.Format("The type {0} cannot be resolved correctly.", typeReference.FullName));
+                    throw new NotSupportedException($"The type {typeReference.FullName} cannot be resolved correctly.");
                 }
             }
             return typeReference;
         }
 
-        public TypeReference ResolveFieldType(FieldReference field)
-        {
-            return this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveFieldTypeIfNeeded(field));
-        }
+        public TypeReference ResolveFieldType(FieldReference field) => 
+            this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveFieldTypeIfNeeded(field));
 
         private TypeReference ResolveGenericParameter(GenericParameter genericParameter)
         {
@@ -213,20 +201,14 @@
             return ((genericParameter.Type != GenericParameterType.Type) ? ((this._methodDefinitionContext == null) ? genericParameter : this._methodDefinitionContext.GenericArguments[genericParameter.Position]) : this._typeDefinitionContext.GenericArguments[genericParameter.Position]);
         }
 
-        public TypeReference ResolveParameterType(MethodReference method, ParameterReference parameter)
-        {
-            return this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(method, parameter));
-        }
+        public TypeReference ResolveParameterType(MethodReference method, ParameterReference parameter) => 
+            this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(method, parameter));
 
-        public TypeReference ResolveReturnType(MethodReference method)
-        {
-            return this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method));
-        }
+        public TypeReference ResolveReturnType(MethodReference method) => 
+            this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method));
 
-        public TypeReference ResolveVariableType(MethodReference method, VariableReference variable)
-        {
-            return this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveVariableTypeIfNeeded(method, variable));
-        }
+        public TypeReference ResolveVariableType(MethodReference method, VariableReference variable) => 
+            this.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveVariableTypeIfNeeded(method, variable));
     }
 }
 

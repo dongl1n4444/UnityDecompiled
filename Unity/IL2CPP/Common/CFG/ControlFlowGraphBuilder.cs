@@ -132,15 +132,11 @@
             }
         }
 
-        private int ComputeNewStackHeight(int stackHeight, Instruction instruction)
-        {
-            return ((stackHeight + GetPushDelta(instruction)) - this.GetPopDelta(stackHeight, instruction));
-        }
+        private int ComputeNewStackHeight(int stackHeight, Instruction instruction) => 
+            ((stackHeight + GetPushDelta(instruction)) - this.GetPopDelta(stackHeight, instruction));
 
-        private BlockRange ComputeRange(Instruction start, Instruction end)
-        {
-            return new BlockRange(this.blocks[start.Offset], this.blocks[end.Offset]);
-        }
+        private BlockRange ComputeRange(Instruction start, Instruction end) => 
+            new BlockRange(this.blocks[start.Offset], this.blocks[end.Offset]);
 
         private void ConnectBlock(InstructionBlock block)
         {
@@ -196,7 +192,7 @@
                 case FlowControl.Throw:
                     return;
             }
-            throw new NotSupportedException(string.Format("Unhandled instruction flow behavior {0}: {1}", last.OpCode.FlowControl, Formatter.FormatInstruction(last)));
+            throw new NotSupportedException($"Unhandled instruction flow behavior {last.OpCode.FlowControl}: {Formatter.FormatInstruction(last)}");
         }
 
         private void ConnectBlocks()
@@ -232,20 +228,14 @@
             return block;
         }
 
-        private static Instruction GetBranchTarget(Instruction instruction)
-        {
-            return (Instruction) instruction.Operand;
-        }
+        private static Instruction GetBranchTarget(Instruction instruction) => 
+            ((Instruction) instruction.Operand);
 
-        private InstructionBlock GetBranchTargetBlock(Instruction instruction)
-        {
-            return this.GetBlock(GetBranchTarget(instruction));
-        }
+        private InstructionBlock GetBranchTargetBlock(Instruction instruction) => 
+            this.GetBlock(GetBranchTarget(instruction));
 
-        private static Instruction[] GetBranchTargets(Instruction instruction)
-        {
-            return (Instruction[]) instruction.Operand;
-        }
+        private static Instruction[] GetBranchTargets(Instruction instruction) => 
+            ((Instruction[]) instruction.Operand);
 
         private InstructionBlock[] GetBranchTargetsBlocks(Instruction instruction)
         {
@@ -346,10 +336,8 @@
             throw new ArgumentException(Formatter.FormatInstruction(instruction));
         }
 
-        private static bool HasMultipleBranches(Instruction instruction)
-        {
-            return (instruction.OpCode.Code == Code.Switch);
-        }
+        private static bool HasMultipleBranches(Instruction instruction) => 
+            (instruction.OpCode.Code == Code.Switch);
 
         private static bool IsBlockDelimiter(Instruction instruction)
         {
@@ -365,24 +353,14 @@
             return false;
         }
 
-        private bool IsCatchStart(Instruction instruction)
-        {
-            if (this.exception_objects_offsets == null)
-            {
-                return false;
-            }
-            return this.exception_objects_offsets.Contains(instruction.Offset);
-        }
+        private bool IsCatchStart(Instruction instruction) => 
+            this.exception_objects_offsets?.Contains(instruction.Offset);
 
-        private static bool IsVoid(TypeReference type)
-        {
-            return (type.MetadataType == MetadataType.Void);
-        }
+        private static bool IsVoid(TypeReference type) => 
+            (type.MetadataType == MetadataType.Void);
 
-        private bool IsVoidMethod()
-        {
-            return IsVoid(this.body.Method.ReturnType);
-        }
+        private bool IsVoidMethod() => 
+            IsVoid(this.body.Method.ReturnType);
 
         private void MarkBlockEnds(IList<Instruction> instructions)
         {

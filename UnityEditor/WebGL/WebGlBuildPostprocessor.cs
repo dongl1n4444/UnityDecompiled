@@ -276,7 +276,7 @@
             UnityType type = UnityType.FindTypeByName(name);
             if (type == null)
             {
-                throw new ArgumentException(string.Format("Could not map typename '{0}' to type info (WebGL class registration skipped classes)", name));
+                throw new ArgumentException($"Could not map typename '{name}' to type info (WebGL class registration skipped classes)");
             }
             return type;
         }
@@ -287,7 +287,7 @@
             {
                 minificationMap = CodeAnalysisUtils.ReadMinificationMap(filename + ".js.symbols");
             }
-            List<KeyValuePair<string, string>> list = Enumerable.ToList<KeyValuePair<string, string>>(minificationMap);
+            List<KeyValuePair<string, string>> list = minificationMap.ToList<KeyValuePair<string, string>>();
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = (a, b) => string.Compare(a.Value, b.Value);
@@ -362,7 +362,7 @@
             if (Application.platform == RuntimePlatform.LinuxEditor)
             {
                 return new ProcessStartInfo("gzip") { 
-                    Arguments = string.Format("-9 --keep -S gz \"{0}\"", file),
+                    Arguments = $"-9 --keep -S gz "{file}"",
                     WorkingDirectory = Directory.GetCurrentDirectory(),
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -519,10 +519,8 @@
             return list.ToArray();
         }
 
-        private WebGlIl2CppPlatformProvider GetPlatformProvider(BuildTarget target, string dataDirectory, bool developmentBuild, BuildReport buildReport)
-        {
-            return new WebGlIl2CppPlatformProvider(target, developmentBuild, dataDirectory, "build.js", buildReport);
-        }
+        private WebGlIl2CppPlatformProvider GetPlatformProvider(BuildTarget target, string dataDirectory, bool developmentBuild, BuildReport buildReport) => 
+            new WebGlIl2CppPlatformProvider(target, developmentBuild, dataDirectory, "build.js", buildReport);
 
         private static string GetTemplateFolder()
         {

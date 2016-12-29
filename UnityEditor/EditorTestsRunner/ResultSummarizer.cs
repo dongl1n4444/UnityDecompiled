@@ -77,101 +77,41 @@
             }
         }
 
-        public double duration
-        {
-            get
-            {
-                return this.m_Duration.TotalSeconds;
-            }
-        }
+        public double duration =>
+            this.m_Duration.TotalSeconds;
 
-        public int errors
-        {
-            get
-            {
-                return this.m_ErrorCount;
-            }
-        }
+        public int errors =>
+            this.m_ErrorCount;
 
-        public int failures
-        {
-            get
-            {
-                return this.m_FailureCount;
-            }
-        }
+        public int failures =>
+            this.m_FailureCount;
 
-        public int ignored
-        {
-            get
-            {
-                return this.m_IgnoreCount;
-            }
-        }
+        public int ignored =>
+            this.m_IgnoreCount;
 
-        public int inconclusive
-        {
-            get
-            {
-                return this.m_InconclusiveCount;
-            }
-        }
+        public int inconclusive =>
+            this.m_InconclusiveCount;
 
-        public int notRunnable
-        {
-            get
-            {
-                return this.m_NotRunnable;
-            }
-        }
+        public int notRunnable =>
+            this.m_NotRunnable;
 
-        public int passed
-        {
-            get
-            {
-                return this.m_SuccessCount;
-            }
-        }
+        public int passed =>
+            this.m_SuccessCount;
 
-        public int resultCount
-        {
-            get
-            {
-                return this.m_ResultCount;
-            }
-        }
+        public int resultCount =>
+            this.m_ResultCount;
 
-        public int skipped
-        {
-            get
-            {
-                return this.m_SkipCount;
-            }
-        }
+        public int skipped =>
+            this.m_SkipCount;
 
-        public bool success
-        {
-            get
-            {
-                return (this.m_FailureCount == 0);
-            }
-        }
+        public bool success =>
+            (this.m_FailureCount == 0);
 
-        public int testsNotRun
-        {
-            get
-            {
-                return ((this.m_SkipCount + this.m_IgnoreCount) + this.m_NotRunnable);
-            }
-        }
+        public int testsNotRun =>
+            ((this.m_SkipCount + this.m_IgnoreCount) + this.m_NotRunnable);
 
-        public int testsRun
-        {
-            get
-            {
-                return this.m_TestsRun;
-            }
-        }
+        public int testsRun =>
+            this.m_TestsRun;
     }
 }
 

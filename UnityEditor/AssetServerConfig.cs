@@ -45,10 +45,8 @@
 
         public string connectionSettings
         {
-            get
-            {
-                return this.fileContents["Maint Connection Settings"];
-            }
+            get => 
+                this.fileContents["Maint Connection Settings"];
             set
             {
                 this.fileContents["Maint Connection Settings"] = value;
@@ -57,10 +55,8 @@
 
         public string dbName
         {
-            get
-            {
-                return this.fileContents["Maint database name"];
-            }
+            get => 
+                this.fileContents["Maint database name"];
             set
             {
                 this.fileContents["Maint database name"] = value;
@@ -69,10 +65,8 @@
 
         public int portNumber
         {
-            get
-            {
-                return int.Parse(this.fileContents["Maint port number"]);
-            }
+            get => 
+                int.Parse(this.fileContents["Maint port number"]);
             set
             {
                 this.fileContents["Maint port number"] = value.ToString();
@@ -81,10 +75,8 @@
 
         public string projectName
         {
-            get
-            {
-                return this.fileContents["Maint project name"];
-            }
+            get => 
+                this.fileContents["Maint project name"];
             set
             {
                 this.fileContents["Maint project name"] = value;
@@ -93,10 +85,8 @@
 
         public string server
         {
-            get
-            {
-                return this.fileContents["Maint Server"];
-            }
+            get => 
+                this.fileContents["Maint Server"];
             set
             {
                 this.fileContents["Maint Server"] = value;
@@ -105,10 +95,8 @@
 
         public string settingsType
         {
-            get
-            {
-                return this.fileContents["Maint settings type"];
-            }
+            get => 
+                this.fileContents["Maint settings type"];
             set
             {
                 this.fileContents["Maint settings type"] = value;
@@ -117,10 +105,8 @@
 
         public float timeout
         {
-            get
-            {
-                return float.Parse(this.fileContents["Maint Timeout"], CultureInfo.InvariantCulture);
-            }
+            get => 
+                float.Parse(this.fileContents["Maint Timeout"], CultureInfo.InvariantCulture);
             set
             {
                 this.fileContents["Maint Timeout"] = value.ToString(CultureInfo.InvariantCulture);
@@ -129,10 +115,8 @@
 
         public string userName
         {
-            get
-            {
-                return this.fileContents["Maint UserName"];
-            }
+            get => 
+                this.fileContents["Maint UserName"];
             set
             {
                 this.fileContents["Maint UserName"] = value;

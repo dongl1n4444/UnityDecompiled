@@ -22,20 +22,14 @@
             return new MonoCSharpCompiler(island, runUpdater);
         }
 
-        internal static CSharpCompiler GetCSharpCompiler(BuildTarget targetPlatform, bool buildingForEditor, string assemblyName)
-        {
-            return ModuleManager.GetCompilationExtension(ModuleManager.GetTargetStringFromBuildTarget(targetPlatform)).GetCsCompiler(buildingForEditor, assemblyName);
-        }
+        internal static CSharpCompiler GetCSharpCompiler(BuildTarget targetPlatform, bool buildingForEditor, string assemblyName) => 
+            ModuleManager.GetCompilationExtension(ModuleManager.GetTargetStringFromBuildTarget(targetPlatform)).GetCsCompiler(buildingForEditor, assemblyName);
 
-        public override string GetExtensionICanCompile()
-        {
-            return "cs";
-        }
+        public override string GetExtensionICanCompile() => 
+            "cs";
 
-        public override string GetLanguageName()
-        {
-            return "CSharp";
-        }
+        public override string GetLanguageName() => 
+            "CSharp";
 
         public override string GetNamespace(string fileName, string definedSymbols)
         {

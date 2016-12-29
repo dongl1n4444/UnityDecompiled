@@ -248,10 +248,8 @@
             return (rotation - AngleAroundAxis(vector4 - pivot, cornerPos - pivot, handleDir));
         }
 
-        internal static Vector3 SideSlider(int id, Vector3 position, Vector3 sideVector, Vector3 direction, float size, Handles.CapFunction capFunction, float snap)
-        {
-            return SideSlider(id, position, sideVector, direction, size, capFunction, snap, 0f);
-        }
+        internal static Vector3 SideSlider(int id, Vector3 position, Vector3 sideVector, Vector3 direction, float size, Handles.CapFunction capFunction, float snap) => 
+            SideSlider(id, position, sideVector, direction, size, capFunction, snap, 0f);
 
         internal static Vector3 SideSlider(int id, Vector3 position, Vector3 sideVector, Vector3 direction, float size, Handles.CapFunction capFunction, float snap, float bias)
         {

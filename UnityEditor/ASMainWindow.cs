@@ -208,10 +208,8 @@
             base.Repaint();
         }
 
-        public bool CommitNeedsRefresh()
-        {
-            return (((this.sharedCommits == null) || (this.sharedDeletedItems == null)) || AssetServer.GetRefreshCommit());
-        }
+        public bool CommitNeedsRefresh() => 
+            (((this.sharedCommits == null) || (this.sharedDeletedItems == null)) || AssetServer.GetRefreshCommit());
 
         private void ContextMenuClick(object userData, string[] options, int selected)
         {
@@ -581,10 +579,8 @@
             }
         }
 
-        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck)
-        {
-            return ((flagToCheck & flags) != ChangeFlags.None);
-        }
+        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck) => 
+            ((flagToCheck & flags) != ChangeFlags.None);
 
         private void InitCommits()
         {
@@ -719,10 +715,8 @@
             }
         }
 
-        private bool IsLastOne(int f, int fl, ParentViewState st)
-        {
-            return (((st.folders.Length - 1) == f) && ((st.folders[f].files.Length - 1) == fl));
-        }
+        private bool IsLastOne(int f, int fl, ParentViewState st) => 
+            (((st.folders.Length - 1) == f) && ((st.folders[f].files.Length - 1) == fl));
 
         public void LogError(string errorStr)
         {
@@ -815,7 +809,7 @@
                         char[] separator = new char[] { '\n' };
                         string str = assets.message.Split(separator)[0];
                         str = (str.Length >= 0x2d) ? (str.Substring(0, 0x2a) + "...") : str;
-                        string tooltip = string.Format("[{0} {1}] {2}", assets.date, assets.owner, str);
+                        string tooltip = $"[{assets.date} {assets.owner}] {str}";
                         num4--;
                         st.Clear();
                         st.AddAssetItems(assets);
@@ -1048,10 +1042,8 @@
             this.selectedPage = Page.Update;
         }
 
-        private bool RightButton(string title)
-        {
-            return this.RightButton(title, constants.smallButton);
-        }
+        private bool RightButton(string title) => 
+            this.RightButton(title, constants.smallButton);
 
         private bool RightButton(string title, GUIStyle style)
         {
@@ -1407,10 +1399,8 @@
             return false;
         }
 
-        public bool UpdateNeedsRefresh()
-        {
-            return ((this.sharedChangesets == null) || AssetServer.GetRefreshUpdate());
-        }
+        public bool UpdateNeedsRefresh() => 
+            ((this.sharedChangesets == null) || AssetServer.GetRefreshUpdate());
 
         private bool WordWrappedLabelButton(string label, string buttonText)
         {
@@ -1422,20 +1412,13 @@
             return flag;
         }
 
-        public bool Error
-        {
-            get
-            {
-                return this.error;
-            }
-        }
+        public bool Error =>
+            this.error;
 
         public bool NeedsSetup
         {
-            get
-            {
-                return this.needsSetup;
-            }
+            get => 
+                this.needsSetup;
             set
             {
                 this.needsSetup = value;
@@ -1516,20 +1499,13 @@
                 return false;
             }
 
-            public string FilterText
-            {
-                get
-                {
-                    return this.m_FilterText;
-                }
-            }
+            public string FilterText =>
+                this.m_FilterText;
 
             public bool Show
             {
-                get
-                {
-                    return this.m_Show;
-                }
+                get => 
+                    this.m_Show;
                 set
                 {
                     this.m_Show = value;

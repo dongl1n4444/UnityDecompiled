@@ -49,15 +49,11 @@
         /// <returns>
         /// <para>Internal buffer.</para>
         /// </returns>
-        public byte[] AsArray()
-        {
-            return this.AsArraySegment().Array;
-        }
+        public byte[] AsArray() => 
+            this.AsArraySegment().Array;
 
-        internal ArraySegment<byte> AsArraySegment()
-        {
-            return this.m_Buffer.AsArraySegment();
-        }
+        internal ArraySegment<byte> AsArraySegment() => 
+            this.m_Buffer.AsArraySegment();
 
         /// <summary>
         /// <para>This fills out the size header of a message begun with StartMessage(), so that it can be send using Send() functions.</para>
@@ -840,13 +836,8 @@
         /// <summary>
         /// <para>The current position of the internal buffer.</para>
         /// </summary>
-        public short Position
-        {
-            get
-            {
-                return (short) this.m_Buffer.Position;
-            }
-        }
+        public short Position =>
+            ((short) this.m_Buffer.Position);
     }
 }
 

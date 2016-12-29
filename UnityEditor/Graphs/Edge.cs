@@ -82,10 +82,8 @@
 
         public Slot fromSlot
         {
-            get
-            {
-                return this.m_FromSlot;
-            }
+            get => 
+                this.m_FromSlot;
             set
             {
                 if (this.m_FromSlot != null)
@@ -104,10 +102,8 @@
 
         public string fromSlotName
         {
-            get
-            {
-                return this.m_FromSlotName;
-            }
+            get => 
+                this.m_FromSlotName;
             set
             {
                 this.m_FromSlotName = value;
@@ -116,10 +112,8 @@
 
         public Slot toSlot
         {
-            get
-            {
-                return this.m_ToSlot;
-            }
+            get => 
+                this.m_ToSlot;
             set
             {
                 if (this.m_ToSlot != null)
@@ -138,10 +132,8 @@
 
         public string toSlotName
         {
-            get
-            {
-                return this.m_ToSlotName;
-            }
+            get => 
+                this.m_ToSlotName;
             set
             {
                 this.m_ToSlotName = value;
@@ -153,10 +145,8 @@
         {
             internal string name;
 
-            internal bool <>m__0(Slot s)
-            {
-                return (s.name == this.name);
-            }
+            internal bool <>m__0(Slot s) => 
+                (s.name == this.name);
         }
     }
 }

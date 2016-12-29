@@ -176,10 +176,8 @@
 
         public float deltaTime
         {
-            get
-            {
-                return this.m_DeltaTime;
-            }
+            get => 
+                this.m_DeltaTime;
             set
             {
                 this.m_DeltaTime = value;
@@ -198,10 +196,8 @@
 
         public float normalizedTime
         {
-            get
-            {
-                return ((this.stopTime != this.startTime) ? ((this.currentTime - this.startTime) / (this.stopTime - this.startTime)) : 0f);
-            }
+            get => 
+                ((this.stopTime != this.startTime) ? ((this.currentTime - this.startTime) / (this.stopTime - this.startTime)) : 0f);
             set
             {
                 this.currentTime = (this.startTime * (1f - value)) + (this.stopTime * value);
@@ -210,10 +206,8 @@
 
         public bool playing
         {
-            get
-            {
-                return this.m_Playing;
-            }
+            get => 
+                this.m_Playing;
             set
             {
                 if (this.m_Playing != value)

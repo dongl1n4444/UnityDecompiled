@@ -152,10 +152,8 @@
 
         public bool debugMode
         {
-            get
-            {
-                return this.m_UnityAds.CallStatic<bool>("getDebugMode", new object[0]);
-            }
+            get => 
+                this.m_UnityAds.CallStatic<bool>("getDebugMode", new object[0]);
             set
             {
                 object[] args = new object[] { value };
@@ -163,29 +161,14 @@
             }
         }
 
-        public bool isInitialized
-        {
-            get
-            {
-                return this.m_UnityAds.CallStatic<bool>("isInitialized", new object[0]);
-            }
-        }
+        public bool isInitialized =>
+            this.m_UnityAds.CallStatic<bool>("isInitialized", new object[0]);
 
-        public bool isSupported
-        {
-            get
-            {
-                return this.m_UnityAds.CallStatic<bool>("isSupported", new object[0]);
-            }
-        }
+        public bool isSupported =>
+            this.m_UnityAds.CallStatic<bool>("isSupported", new object[0]);
 
-        public string version
-        {
-            get
-            {
-                return this.m_UnityAds.CallStatic<string>("getVersion", new object[0]);
-            }
-        }
+        public string version =>
+            this.m_UnityAds.CallStatic<string>("getVersion", new object[0]);
 
         [CompilerGenerated]
         private sealed class <onUnityAdsError>c__AnonStorey4

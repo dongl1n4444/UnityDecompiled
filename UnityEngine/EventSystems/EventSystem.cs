@@ -65,23 +65,15 @@
         /// <para>Is the pointer with the given ID over an EventSystem object?</para>
         /// </summary>
         /// <param name="pointerId">Pointer (touch / mouse) ID.</param>
-        public bool IsPointerOverGameObject()
-        {
-            return this.IsPointerOverGameObject(-1);
-        }
+        public bool IsPointerOverGameObject() => 
+            this.IsPointerOverGameObject(-1);
 
         /// <summary>
         /// <para>Is the pointer with the given ID over an EventSystem object?</para>
         /// </summary>
         /// <param name="pointerId">Pointer (touch / mouse) ID.</param>
-        public bool IsPointerOverGameObject(int pointerId)
-        {
-            if (this.m_CurrentInputModule == null)
-            {
-                return false;
-            }
-            return this.m_CurrentInputModule.IsPointerOverGameObject(pointerId);
-        }
+        public bool IsPointerOverGameObject(int pointerId) => 
+            this.m_CurrentInputModule?.IsPointerOverGameObject(pointerId);
 
         protected virtual void OnApplicationFocus(bool hasFocus)
         {
@@ -293,13 +285,8 @@
         /// <summary>
         /// <para>Returns true if the EventSystem is already in a SetSelectedGameObject.</para>
         /// </summary>
-        public bool alreadySelecting
-        {
-            get
-            {
-                return this.m_SelectionGuard;
-            }
-        }
+        public bool alreadySelecting =>
+            this.m_SelectionGuard;
 
         private BaseEventData baseEventDataCache
         {
@@ -319,10 +306,8 @@
         public static EventSystem current
         {
             [CompilerGenerated]
-            get
-            {
-                return <current>k__BackingField;
-            }
+            get => 
+                <current>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -333,34 +318,22 @@
         /// <summary>
         /// <para>The currently active EventSystems.BaseInputModule.</para>
         /// </summary>
-        public BaseInputModule currentInputModule
-        {
-            get
-            {
-                return this.m_CurrentInputModule;
-            }
-        }
+        public BaseInputModule currentInputModule =>
+            this.m_CurrentInputModule;
 
         /// <summary>
         /// <para>The GameObject currently considered active by the EventSystem.</para>
         /// </summary>
-        public GameObject currentSelectedGameObject
-        {
-            get
-            {
-                return this.m_CurrentSelected;
-            }
-        }
+        public GameObject currentSelectedGameObject =>
+            this.m_CurrentSelected;
 
         /// <summary>
         /// <para>The GameObject that was selected first.</para>
         /// </summary>
         public GameObject firstSelectedGameObject
         {
-            get
-            {
-                return this.m_FirstSelected;
-            }
+            get => 
+                this.m_FirstSelected;
             set
             {
                 this.m_FirstSelected = value;
@@ -368,23 +341,16 @@
         }
 
         [Obsolete("lastSelectedGameObject is no longer supported")]
-        public GameObject lastSelectedGameObject
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public GameObject lastSelectedGameObject =>
+            null;
 
         /// <summary>
         /// <para>The soft area for dragging in pixels.</para>
         /// </summary>
         public int pixelDragThreshold
         {
-            get
-            {
-                return this.m_DragThreshold;
-            }
+            get => 
+                this.m_DragThreshold;
             set
             {
                 this.m_DragThreshold = value;
@@ -396,10 +362,8 @@
         /// </summary>
         public bool sendNavigationEvents
         {
-            get
-            {
-                return this.m_sendNavigationEvents;
-            }
+            get => 
+                this.m_sendNavigationEvents;
             set
             {
                 this.m_sendNavigationEvents = value;

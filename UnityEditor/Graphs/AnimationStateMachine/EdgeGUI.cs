@@ -283,30 +283,20 @@
             return vectorArray;
         }
 
-        private static Vector3 GetEdgeStartPosition(UnityEditor.Graphs.Edge edge)
-        {
-            return GetNodeCenterFromSlot(edge.fromSlot);
-        }
+        private static Vector3 GetEdgeStartPosition(UnityEditor.Graphs.Edge edge) => 
+            GetNodeCenterFromSlot(edge.fromSlot);
 
-        private static Vector3 GetNodeCenterFromSlot(Slot slot)
-        {
-            return (Vector3) slot.node.position.center;
-        }
+        private static Vector3 GetNodeCenterFromSlot(Slot slot) => 
+            ((Vector3) slot.node.position.center);
 
-        private bool IsDragging()
-        {
-            return ((Event.current.type == EventType.MouseMove) && (this.m_DraggingEdge != null));
-        }
+        private bool IsDragging() => 
+            ((Event.current.type == EventType.MouseMove) && (this.m_DraggingEdge != null));
 
-        private static bool IsEdgeBeingDragged(UnityEditor.Graphs.Edge edge)
-        {
-            return (edge.toSlot == null);
-        }
+        private static bool IsEdgeBeingDragged(UnityEditor.Graphs.Edge edge) => 
+            (edge.toSlot == null);
 
-        private bool ShouldStopDragging()
-        {
-            return (((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape)) && (this.m_DraggingEdge != null));
-        }
+        private bool ShouldStopDragging() => 
+            (((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.Escape)) && (this.m_DraggingEdge != null));
 
         public void SlotDragging(Slot slot, bool allowEndDrag, bool allowMultiple)
         {
@@ -317,49 +307,24 @@
             }
         }
 
-        private static UnityEngine.Color defaultTransitionColor
-        {
-            get
-            {
-                return new UnityEngine.Color(0.6f, 0.4f, 0f, 1f);
-            }
-        }
+        private static UnityEngine.Color defaultTransitionColor =>
+            new UnityEngine.Color(0.6f, 0.4f, 0f, 1f);
 
         public List<int> edgeSelection { get; set; }
 
-        private static Vector3 edgeToSelfOffsetVector
-        {
-            get
-            {
-                return new Vector3(0f, 30f, 0f);
-            }
-        }
+        private static Vector3 edgeToSelfOffsetVector =>
+            new Vector3(0f, 30f, 0f);
 
         public UnityEditor.Graphs.GraphGUI host { get; set; }
 
-        private static UnityEngine.Color selectedEdgeColor
-        {
-            get
-            {
-                return new UnityEngine.Color(0.42f, 0.7f, 1f, 1f);
-            }
-        }
+        private static UnityEngine.Color selectedEdgeColor =>
+            new UnityEngine.Color(0.42f, 0.7f, 1f, 1f);
 
-        private static UnityEngine.Color selectorTransitionColor
-        {
-            get
-            {
-                return new UnityEngine.Color(0.5f, 0.5f, 0.5f, 1f);
-            }
-        }
+        private static UnityEngine.Color selectorTransitionColor =>
+            new UnityEngine.Color(0.5f, 0.5f, 0.5f, 1f);
 
-        private UnityEditor.Graphs.AnimationStateMachine.GraphGUI smHost
-        {
-            get
-            {
-                return (this.host as UnityEditor.Graphs.AnimationStateMachine.GraphGUI);
-            }
-        }
+        private UnityEditor.Graphs.AnimationStateMachine.GraphGUI smHost =>
+            (this.host as UnityEditor.Graphs.AnimationStateMachine.GraphGUI);
     }
 }
 

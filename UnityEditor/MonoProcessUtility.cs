@@ -36,25 +36,24 @@
             return target;
         }
 
-        public static string GetMonoPath(BuildTarget buildTarget)
-        {
-            return (BuildPipeline.GetMonoLibDirectory(buildTarget) + Path.PathSeparator + ".");
-        }
+        public static string GetMonoPath(BuildTarget buildTarget) => 
+            (BuildPipeline.GetMonoLibDirectory(buildTarget) + Path.PathSeparator + ".");
 
         public static Process PrepareMonoProcess(BuildTarget target, string workDir)
         {
             BuildTarget monoExecTarget = GetMonoExecTarget(target);
-            Process process = new Process {
-                StartInfo = { FileName = GetMonoExec(monoExecTarget) }
-            };
-            process.StartInfo.EnvironmentVariables["_WAPI_PROCESS_HANDLE_OFFSET"] = "5";
-            process.StartInfo.EnvironmentVariables["MONO_PATH"] = GetMonoPath(monoExecTarget);
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.WorkingDirectory = workDir;
-            return process;
+            return new Process { StartInfo = { 
+                FileName = GetMonoExec(monoExecTarget),
+                EnvironmentVariables = { 
+                    ["_WAPI_PROCESS_HANDLE_OFFSET"] = "5",
+                    ["MONO_PATH"] = GetMonoPath(monoExecTarget)
+                },
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+                WorkingDirectory = workDir
+            } };
         }
 
         public static string ProcessToString(Process process)

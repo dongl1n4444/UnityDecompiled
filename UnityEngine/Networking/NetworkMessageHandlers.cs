@@ -22,10 +22,8 @@
             return null;
         }
 
-        internal Dictionary<short, NetworkMessageDelegate> GetHandlers()
-        {
-            return this.m_MsgHandlers;
-        }
+        internal Dictionary<short, NetworkMessageDelegate> GetHandlers() => 
+            this.m_MsgHandlers;
 
         public void RegisterHandler(short msgType, NetworkMessageDelegate handler)
         {
@@ -55,7 +53,7 @@
                 }
                 if (LogFilter.logDebug)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterHandler id:", msgType, " handler:", DotNetCompatibility.GetMethodName(handler) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterHandler id:", msgType, " handler:", handler.GetMethodName() }));
                 }
                 this.m_MsgHandlers.Add(msgType, handler);
             }
@@ -74,7 +72,7 @@
             {
                 if (LogFilter.logDebug)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterHandlerSafe id:", msgType, " handler:", DotNetCompatibility.GetMethodName(handler) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterHandlerSafe id:", msgType, " handler:", handler.GetMethodName() }));
                 }
                 if (!this.m_MsgHandlers.ContainsKey(msgType))
                 {

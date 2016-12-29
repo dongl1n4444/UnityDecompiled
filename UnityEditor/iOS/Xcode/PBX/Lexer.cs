@@ -9,10 +9,8 @@
         private int pos;
         private string text;
 
-        private bool IsOperator(char ch)
-        {
-            return ((((ch == ';') || (ch == ',')) || ((ch == '=') || (ch == '('))) || (((ch == ')') || (ch == '{')) || (ch == '}')));
-        }
+        private bool IsOperator(char ch) => 
+            ((((ch == ';') || (ch == ',')) || ((ch == '=') || (ch == '('))) || (((ch == ')') || (ch == '{')) || (ch == '}')));
 
         public TokenList ScanAll()
         {

@@ -41,15 +41,11 @@
             this.a = a;
         }
 
-        public static implicit operator Color32(Color c)
-        {
-            return new Color32((byte) (Mathf.Clamp01(c.r) * 255f), (byte) (Mathf.Clamp01(c.g) * 255f), (byte) (Mathf.Clamp01(c.b) * 255f), (byte) (Mathf.Clamp01(c.a) * 255f));
-        }
+        public static implicit operator Color32(Color c) => 
+            new Color32((byte) (Mathf.Clamp01(c.r) * 255f), (byte) (Mathf.Clamp01(c.g) * 255f), (byte) (Mathf.Clamp01(c.b) * 255f), (byte) (Mathf.Clamp01(c.a) * 255f));
 
-        public static implicit operator Color(Color32 c)
-        {
-            return new Color(((float) c.r) / 255f, ((float) c.g) / 255f, ((float) c.b) / 255f, ((float) c.a) / 255f);
-        }
+        public static implicit operator Color(Color32 c) => 
+            new Color(((float) c.r) / 255f, ((float) c.g) / 255f, ((float) c.b) / 255f, ((float) c.a) / 255f);
 
         /// <summary>
         /// <para>Linearly interpolates between colors a and b by t.</para>
@@ -69,10 +65,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="t"></param>
-        public static Color32 LerpUnclamped(Color32 a, Color32 b, float t)
-        {
-            return new Color32((byte) (a.r + ((b.r - a.r) * t)), (byte) (a.g + ((b.g - a.g) * t)), (byte) (a.b + ((b.b - a.b) * t)), (byte) (a.a + ((b.a - a.a) * t)));
-        }
+        public static Color32 LerpUnclamped(Color32 a, Color32 b, float t) => 
+            new Color32((byte) (a.r + ((b.r - a.r) * t)), (byte) (a.g + ((b.g - a.g) * t)), (byte) (a.b + ((b.b - a.b) * t)), (byte) (a.a + ((b.a - a.a) * t)));
 
         /// <summary>
         /// <para>Returns a nicely formatted string of this color.</para>

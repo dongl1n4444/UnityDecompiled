@@ -56,15 +56,11 @@
             return num2;
         }
 
-        public int GetNodeCount()
-        {
-            return this.nodes.Length;
-        }
+        public int GetNodeCount() => 
+            this.nodes.Length;
 
-        public SplineNode[] GetNodes()
-        {
-            return this.nodes;
-        }
+        public SplineNode[] GetNodes() => 
+            this.nodes;
 
         public Vector3 GetPositionAtTime(float timeParam)
         {

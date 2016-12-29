@@ -7,25 +7,17 @@
     {
         private const int MaximumEmittedGenericDepth = 7;
 
-        public static bool CheckForMaximumRecursion(GenericInstanceType genericInstanceType)
-        {
-            return (RecursiveGenericDepthFor(genericInstanceType) >= 7);
-        }
+        public static bool CheckForMaximumRecursion(GenericInstanceType genericInstanceType) => 
+            (RecursiveGenericDepthFor(genericInstanceType) >= 7);
 
-        public static bool CheckForMaximumRecursionPlusTwo(GenericInstanceType genericInstanceType)
-        {
-            return (RecursiveGenericDepthFor(genericInstanceType) >= 9);
-        }
+        public static bool CheckForMaximumRecursionPlusTwo(GenericInstanceType genericInstanceType) => 
+            (RecursiveGenericDepthFor(genericInstanceType) >= 9);
 
-        public static bool IsGenericInstanceOfCompareExchange(MethodReference methodReference)
-        {
-            return (((methodReference.DeclaringType.Name == "Interlocked") && (methodReference.Name == "CompareExchange")) && methodReference.IsGenericInstance);
-        }
+        public static bool IsGenericInstanceOfCompareExchange(MethodReference methodReference) => 
+            (((methodReference.DeclaringType.Name == "Interlocked") && (methodReference.Name == "CompareExchange")) && methodReference.IsGenericInstance);
 
-        public static bool IsGenericInstanceOfExchange(MethodReference methodReference)
-        {
-            return (((methodReference.DeclaringType.Name == "Interlocked") && (methodReference.Name == "Exchange")) && methodReference.IsGenericInstance);
-        }
+        public static bool IsGenericInstanceOfExchange(MethodReference methodReference) => 
+            (((methodReference.DeclaringType.Name == "Interlocked") && (methodReference.Name == "Exchange")) && methodReference.IsGenericInstance);
 
         private static int MaximumDepthFor(int depth, TypeReference genericArgument, int maximumDepth)
         {
@@ -58,10 +50,8 @@
             return RecursiveGenericDepthFor(type, !type.HasGenericArguments ? 0 : 1);
         }
 
-        private static int RecursiveGenericDepthFor(ArrayType type, int depth)
-        {
-            return (depth + MaximumDepthFor(depth, type.ElementType, 0));
-        }
+        private static int RecursiveGenericDepthFor(ArrayType type, int depth) => 
+            (depth + MaximumDepthFor(depth, type.ElementType, 0));
 
         private static int RecursiveGenericDepthFor(GenericInstanceType type, int depth)
         {

@@ -91,7 +91,7 @@
         {
             foreach (PropertyInfo info in originType.GetProperties(bindingFlags))
             {
-                object originValue = TypeExtensions.GetValue(info, origin);
+                object originValue = info.GetValue(origin);
                 Type propertyType = info.PropertyType;
                 PropertyInfo property = targetType.GetProperty(info.Name, bindingFlags);
                 if (property != null)
@@ -113,13 +113,13 @@
 
         private static void CloneThing(MemberInfo thing, object target, object originValue, Type originValueType, Type targetValueType)
         {
-            if ((!TypeExtensions.CanWrite(thing) || ((originValue != null) && !targetValueType.IsAssignableFrom(originValueType))) && typeof(IList).IsAssignableFrom(originValueType))
+            if ((!thing.CanWrite() || ((originValue != null) && !targetValueType.IsAssignableFrom(originValueType))) && typeof(IList).IsAssignableFrom(originValueType))
             {
-                IList list = TypeExtensions.GetValue(thing, target) as IList;
-                if ((list == null) && TypeExtensions.CanWrite(thing))
+                IList list = thing.GetValue(target) as IList;
+                if ((list == null) && thing.CanWrite())
                 {
                     list = Activator.CreateInstance(targetValueType) as IList;
-                    TypeExtensions.SetValue(thing, target, list);
+                    thing.SetValue(target, list);
                 }
                 if (list != null)
                 {
@@ -147,7 +147,7 @@
                     return;
                 }
             }
-            if (TypeExtensions.CanWrite(thing))
+            if (thing.CanWrite())
             {
                 if ((originValue != null) && !targetValueType.IsAssignableFrom(originValueType))
                 {
@@ -156,7 +156,7 @@
                         Uri result = null;
                         if (Uri.TryCreate((string) originValue, UriKind.RelativeOrAbsolute, out result))
                         {
-                            TypeExtensions.SetValue(thing, target, result);
+                            thing.SetValue(target, result);
                         }
                     }
                     else if (targetValueType.IsAssignableFrom(typeof(string)) && originValueType.IsAssignableFrom(typeof(Uri)))
@@ -166,14 +166,14 @@
                         {
                             str = originValue.ToString();
                         }
-                        TypeExtensions.SetValue(thing, target, str);
+                        thing.SetValue(target, str);
                     }
                     else if (targetValueType.IsAssignableFrom(typeof(PackageVersion)) && originValueType.IsAssignableFrom(typeof(string)))
                     {
                         try
                         {
                             PackageVersion version = new PackageVersion((string) originValue);
-                            TypeExtensions.SetValue(thing, target, version);
+                            thing.SetValue(target, version);
                         }
                         catch
                         {
@@ -186,52 +186,52 @@
                         {
                             str2 = originValue.ToString();
                         }
-                        TypeExtensions.SetValue(thing, target, str2);
+                        thing.SetValue(target, str2);
                     }
                     else if (targetValueType.IsClass)
                     {
                         object obj4 = CloneObject(originValue, targetValueType);
                         if (obj4 == null)
                         {
-                            obj4 = TypeExtensions.GetValue(thing, target);
+                            obj4 = thing.GetValue(target);
                         }
                         if (obj4 != null)
                         {
-                            TypeExtensions.SetValue(thing, target, obj4);
+                            thing.SetValue(target, obj4);
                         }
                         else
                         {
-                            TypeExtensions.SetValue(thing, target, originValue);
+                            thing.SetValue(target, originValue);
                         }
                     }
                     else if (targetValueType.IsEnum)
                     {
-                        TypeExtensions.SetValue(thing, target, (int) originValue);
+                        thing.SetValue(target, (int) originValue);
                     }
                 }
                 else if (originValue == null)
                 {
-                    TypeExtensions.SetValue(thing, target, originValue);
+                    thing.SetValue(target, originValue);
                 }
                 else if (targetValueType.IsClass && (targetValueType != typeof(string)))
                 {
                     object obj5 = CloneObject(originValue, targetValueType);
                     if (obj5 == null)
                     {
-                        obj5 = TypeExtensions.GetValue(thing, target);
+                        obj5 = thing.GetValue(target);
                     }
                     if (obj5 != null)
                     {
-                        TypeExtensions.SetValue(thing, target, obj5);
+                        thing.SetValue(target, obj5);
                     }
                     else
                     {
-                        TypeExtensions.SetValue(thing, target, originValue);
+                        thing.SetValue(target, originValue);
                     }
                 }
                 else
                 {
-                    TypeExtensions.SetValue(thing, target, originValue);
+                    thing.SetValue(target, originValue);
                 }
             }
         }

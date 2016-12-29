@@ -77,7 +77,7 @@
             };
             int length = storey.errors.Length;
             GUILayout.Space(5f);
-            GUILayout.Label(string.Format("Errors ({0}):", length), EditorStyles.boldLabel, new GUILayoutOption[0]);
+            GUILayout.Label($"Errors ({length}):", EditorStyles.boldLabel, new GUILayoutOption[0]);
             int controlID = GUIUtility.GetControlID(kErrorViewHash, FocusType.Passive);
             float minHeight = Mathf.Min((float) ((length * 20f) + 40f), (float) 150f);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.MinHeight(minHeight) };

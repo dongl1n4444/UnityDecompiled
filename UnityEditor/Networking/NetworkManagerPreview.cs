@@ -17,10 +17,8 @@
         protected GUIContent m_ShowServerMessagesLabel;
         private GUIContent m_Title;
 
-        private static string FormatHandler(KeyValuePair<short, NetworkMessageDelegate> handler)
-        {
-            return string.Format("{0}:{1}()", handler.Value.Method.DeclaringType.Name, handler.Value.Method.Name);
-        }
+        private static string FormatHandler(KeyValuePair<short, NetworkMessageDelegate> handler) => 
+            $"{handler.Value.Method.DeclaringType.Name}:{handler.Value.Method.Name}()";
 
         private void GetNetworkInformation(NetworkManager man)
         {
@@ -36,10 +34,8 @@
             return this.m_Title;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (this.m_Manager != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (this.m_Manager != null);
 
         public override void Initialize(UnityEngine.Object[] targets)
         {

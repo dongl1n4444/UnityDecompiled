@@ -72,7 +72,7 @@
                 Console.WriteLine("Downloading {0} to {1}", this.uri, this.streamName);
             }
             base.Result = this.streamName;
-            using (WebResponse response = WebRequestExtensions.GetResponseWithoutException(this.request))
+            using (WebResponse response = this.request.GetResponseWithoutException())
             {
                 <TaskRunning>c__AnonStorey0 storey = new <TaskRunning>c__AnonStorey0 {
                     $this = this

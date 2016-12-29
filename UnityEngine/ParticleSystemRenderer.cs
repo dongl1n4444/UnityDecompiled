@@ -16,10 +16,8 @@
         /// <returns>
         /// <para>Whether all the queried streams are enabled or not.</para>
         /// </returns>
-        public bool AreVertexStreamsEnabled(ParticleSystemVertexStreams streams)
-        {
-            return (this.Internal_GetEnabledVertexStreams(streams) == streams);
-        }
+        public bool AreVertexStreamsEnabled(ParticleSystemVertexStreams streams) => 
+            (this.Internal_GetEnabledVertexStreams(streams) == streams);
 
         /// <summary>
         /// <para>Disable a set of vertex shader streams on the particle system renderer.
@@ -47,10 +45,8 @@
         /// <returns>
         /// <para>Returns the subset of the queried streams that are actually enabled.</para>
         /// </returns>
-        public ParticleSystemVertexStreams GetEnabledVertexStreams(ParticleSystemVertexStreams streams)
-        {
-            return this.Internal_GetEnabledVertexStreams(streams);
-        }
+        public ParticleSystemVertexStreams GetEnabledVertexStreams(ParticleSystemVertexStreams streams) => 
+            this.Internal_GetEnabledVertexStreams(streams);
 
         /// <summary>
         /// <para>Set the array of meshes used as particles.</para>
@@ -119,13 +115,8 @@
         /// <summary>
         /// <para>The number of meshes being used for particle rendering.</para>
         /// </summary>
-        public int meshCount
-        {
-            get
-            {
-                return this.Internal_GetMeshCount();
-            }
-        }
+        public int meshCount =>
+            this.Internal_GetMeshCount();
 
         /// <summary>
         /// <para>Clamp the minimum particle size.</para>

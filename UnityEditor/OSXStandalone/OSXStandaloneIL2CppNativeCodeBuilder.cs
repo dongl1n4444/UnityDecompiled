@@ -29,21 +29,11 @@
             }
         }
 
-        public override string CompilerArchitecture
-        {
-            get
-            {
-                return this._architecture;
-            }
-        }
+        public override string CompilerArchitecture =>
+            this._architecture;
 
-        public override string CompilerPlatform
-        {
-            get
-            {
-                return "MacOSX";
-            }
-        }
+        public override string CompilerPlatform =>
+            "MacOSX";
     }
 }
 

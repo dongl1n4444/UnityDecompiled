@@ -26,15 +26,11 @@
             this.m_Calls.Clear();
         }
 
-        public PersistentCall GetListener(int index)
-        {
-            return this.m_Calls[index];
-        }
+        public PersistentCall GetListener(int index) => 
+            this.m_Calls[index];
 
-        public IEnumerable<PersistentCall> GetListeners()
-        {
-            return this.m_Calls;
-        }
+        public IEnumerable<PersistentCall> GetListeners() => 
+            this.m_Calls;
 
         public void Initialize(InvokableCallList invokableList, UnityEventBase unityEventBase)
         {
@@ -128,13 +124,8 @@
             this.GetListener(index).UnregisterPersistentListener();
         }
 
-        public int Count
-        {
-            get
-            {
-                return this.m_Calls.Count;
-            }
-        }
+        public int Count =>
+            this.m_Calls.Count;
     }
 }
 

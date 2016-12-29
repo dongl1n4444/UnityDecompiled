@@ -106,10 +106,8 @@
             return storey.toDelete;
         }
 
-        private bool HasEmptyPendingChangesets()
-        {
-            return Provider.DeleteChangeSetsIsValid(this.GetEmptyChangeSetsCandidates());
-        }
+        private bool HasEmptyPendingChangesets() => 
+            Provider.DeleteChangeSetsIsValid(this.GetEmptyChangeSetsCandidates());
 
         private void InitStyles()
         {
@@ -553,10 +551,8 @@
         {
             internal ChangeSet cs;
 
-            internal bool <>m__0(ChangeSet elm)
-            {
-                return (elm.id == this.cs.id);
-            }
+            internal bool <>m__0(ChangeSet elm) => 
+                (elm.id == this.cs.id);
         }
 
         internal class Styles

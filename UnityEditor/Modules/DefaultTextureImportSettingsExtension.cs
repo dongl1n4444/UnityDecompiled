@@ -146,7 +146,7 @@
                     strArray = strArray2;
                     selectedValue = format;
                 }
-                else if (!Enumerable.SequenceEqual<int>(first, second) || !Enumerable.SequenceEqual<string>(strArray2, strArray))
+                else if (!first.SequenceEqual<int>(second) || !strArray2.SequenceEqual<string>(strArray))
                 {
                     flag = true;
                     break;

@@ -123,10 +123,8 @@
             return f;
         }
 
-        private SerializedProperty Get(string property)
-        {
-            return this.m_Property.FindPropertyRelative(property);
-        }
+        private SerializedProperty Get(string property) => 
+            this.m_Property.FindPropertyRelative(property);
 
         public AnimationCurve GetCurve(int index)
         {
@@ -388,30 +386,21 @@
 
         public float additiveReferencePoseFrame
         {
-            get
-            {
-                return this.Get("additiveReferencePoseFrame").floatValue;
-            }
+            get => 
+                this.Get("additiveReferencePoseFrame").floatValue;
             set
             {
                 this.Get("additiveReferencePoseFrame").floatValue = value;
             }
         }
 
-        public SerializedProperty bodyMaskProperty
-        {
-            get
-            {
-                return this.Get("bodyMask");
-            }
-        }
+        public SerializedProperty bodyMaskProperty =>
+            this.Get("bodyMask");
 
         public float cycleOffset
         {
-            get
-            {
-                return this.Get("cycleOffset").floatValue;
-            }
+            get => 
+                this.Get("cycleOffset").floatValue;
             set
             {
                 this.Get("cycleOffset").floatValue = value;
@@ -420,10 +409,8 @@
 
         public float firstFrame
         {
-            get
-            {
-                return this.Get("firstFrame").floatValue;
-            }
+            get => 
+                this.Get("firstFrame").floatValue;
             set
             {
                 this.Get("firstFrame").floatValue = value;
@@ -432,10 +419,8 @@
 
         public bool hasAdditiveReferencePose
         {
-            get
-            {
-                return this.Get("hasAdditiveReferencePose").boolValue;
-            }
+            get => 
+                this.Get("hasAdditiveReferencePose").boolValue;
             set
             {
                 this.Get("hasAdditiveReferencePose").boolValue = value;
@@ -444,10 +429,8 @@
 
         public bool heightFromFeet
         {
-            get
-            {
-                return this.Get("heightFromFeet").boolValue;
-            }
+            get => 
+                this.Get("heightFromFeet").boolValue;
             set
             {
                 this.Get("heightFromFeet").boolValue = value;
@@ -456,10 +439,8 @@
 
         public bool keepOriginalOrientation
         {
-            get
-            {
-                return this.Get("keepOriginalOrientation").boolValue;
-            }
+            get => 
+                this.Get("keepOriginalOrientation").boolValue;
             set
             {
                 this.Get("keepOriginalOrientation").boolValue = value;
@@ -468,10 +449,8 @@
 
         public bool keepOriginalPositionXZ
         {
-            get
-            {
-                return this.Get("keepOriginalPositionXZ").boolValue;
-            }
+            get => 
+                this.Get("keepOriginalPositionXZ").boolValue;
             set
             {
                 this.Get("keepOriginalPositionXZ").boolValue = value;
@@ -480,10 +459,8 @@
 
         public bool keepOriginalPositionY
         {
-            get
-            {
-                return this.Get("keepOriginalPositionY").boolValue;
-            }
+            get => 
+                this.Get("keepOriginalPositionY").boolValue;
             set
             {
                 this.Get("keepOriginalPositionY").boolValue = value;
@@ -492,10 +469,8 @@
 
         public float lastFrame
         {
-            get
-            {
-                return this.Get("lastFrame").floatValue;
-            }
+            get => 
+                this.Get("lastFrame").floatValue;
             set
             {
                 this.Get("lastFrame").floatValue = value;
@@ -504,10 +479,8 @@
 
         public float level
         {
-            get
-            {
-                return this.Get("level").floatValue;
-            }
+            get => 
+                this.Get("level").floatValue;
             set
             {
                 this.Get("level").floatValue = value;
@@ -516,10 +489,8 @@
 
         public bool loop
         {
-            get
-            {
-                return this.Get("loop").boolValue;
-            }
+            get => 
+                this.Get("loop").boolValue;
             set
             {
                 this.Get("loop").boolValue = value;
@@ -528,10 +499,8 @@
 
         public bool loopBlend
         {
-            get
-            {
-                return this.Get("loopBlend").boolValue;
-            }
+            get => 
+                this.Get("loopBlend").boolValue;
             set
             {
                 this.Get("loopBlend").boolValue = value;
@@ -540,10 +509,8 @@
 
         public bool loopBlendOrientation
         {
-            get
-            {
-                return this.Get("loopBlendOrientation").boolValue;
-            }
+            get => 
+                this.Get("loopBlendOrientation").boolValue;
             set
             {
                 this.Get("loopBlendOrientation").boolValue = value;
@@ -552,10 +519,8 @@
 
         public bool loopBlendPositionXZ
         {
-            get
-            {
-                return this.Get("loopBlendPositionXZ").boolValue;
-            }
+            get => 
+                this.Get("loopBlendPositionXZ").boolValue;
             set
             {
                 this.Get("loopBlendPositionXZ").boolValue = value;
@@ -564,10 +529,8 @@
 
         public bool loopBlendPositionY
         {
-            get
-            {
-                return this.Get("loopBlendPositionY").boolValue;
-            }
+            get => 
+                this.Get("loopBlendPositionY").boolValue;
             set
             {
                 this.Get("loopBlendPositionY").boolValue = value;
@@ -576,10 +539,8 @@
 
         public bool loopTime
         {
-            get
-            {
-                return this.Get("loopTime").boolValue;
-            }
+            get => 
+                this.Get("loopTime").boolValue;
             set
             {
                 this.Get("loopTime").boolValue = value;
@@ -588,50 +549,34 @@
 
         public AvatarMask maskSource
         {
-            get
-            {
-                return (this.Get("maskSource").objectReferenceValue as AvatarMask);
-            }
+            get => 
+                (this.Get("maskSource").objectReferenceValue as AvatarMask);
             set
             {
                 this.Get("maskSource").objectReferenceValue = value;
             }
         }
 
-        public SerializedProperty maskSourceProperty
-        {
-            get
-            {
-                return this.Get("maskSource");
-            }
-        }
+        public SerializedProperty maskSourceProperty =>
+            this.Get("maskSource");
 
         public ClipAnimationMaskType maskType
         {
-            get
-            {
-                return (ClipAnimationMaskType) this.Get("maskType").intValue;
-            }
+            get => 
+                ((ClipAnimationMaskType) this.Get("maskType").intValue);
             set
             {
                 this.Get("maskType").intValue = (int) value;
             }
         }
 
-        public SerializedProperty maskTypeProperty
-        {
-            get
-            {
-                return this.Get("maskType");
-            }
-        }
+        public SerializedProperty maskTypeProperty =>
+            this.Get("maskType");
 
         public bool mirror
         {
-            get
-            {
-                return this.Get("mirror").boolValue;
-            }
+            get => 
+                this.Get("mirror").boolValue;
             set
             {
                 this.Get("mirror").boolValue = value;
@@ -640,10 +585,8 @@
 
         public string name
         {
-            get
-            {
-                return this.Get("name").stringValue;
-            }
+            get => 
+                this.Get("name").stringValue;
             set
             {
                 this.Get("name").stringValue = value;
@@ -652,10 +595,8 @@
 
         public float orientationOffsetY
         {
-            get
-            {
-                return this.Get("orientationOffsetY").floatValue;
-            }
+            get => 
+                this.Get("orientationOffsetY").floatValue;
             set
             {
                 this.Get("orientationOffsetY").floatValue = value;
@@ -664,30 +605,21 @@
 
         public string takeName
         {
-            get
-            {
-                return this.Get("takeName").stringValue;
-            }
+            get => 
+                this.Get("takeName").stringValue;
             set
             {
                 this.Get("takeName").stringValue = value;
             }
         }
 
-        public SerializedProperty transformMaskProperty
-        {
-            get
-            {
-                return this.Get("transformMask");
-            }
-        }
+        public SerializedProperty transformMaskProperty =>
+            this.Get("transformMask");
 
         public int wrapMode
         {
-            get
-            {
-                return this.Get("wrapMode").intValue;
-            }
+            get => 
+                this.Get("wrapMode").intValue;
             set
             {
                 this.Get("wrapMode").intValue = value;

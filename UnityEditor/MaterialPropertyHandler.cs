@@ -141,7 +141,7 @@
                     {
                         if (handler2.m_PropertyDrawer != null)
                         {
-                            Debug.LogWarning(string.Format("Shader property {0} already has a property drawer", name), shader);
+                            Debug.LogWarning($"Shader property {name} already has a property drawer", shader);
                         }
                         handler2.m_PropertyDrawer = shaderPropertyDrawer;
                     }
@@ -170,10 +170,8 @@
             }
         }
 
-        public bool IsEmpty()
-        {
-            return ((this.m_PropertyDrawer == null) && ((this.m_DecoratorDrawers == null) || (this.m_DecoratorDrawers.Count == 0)));
-        }
+        public bool IsEmpty() => 
+            ((this.m_PropertyDrawer == null) && ((this.m_DecoratorDrawers == null) || (this.m_DecoratorDrawers.Count == 0)));
 
         public void OnGUI(ref Rect position, MaterialProperty prop, GUIContent label, MaterialEditor editor)
         {
@@ -206,13 +204,8 @@
             }
         }
 
-        public MaterialPropertyDrawer propertyDrawer
-        {
-            get
-            {
-                return this.m_PropertyDrawer;
-            }
-        }
+        public MaterialPropertyDrawer propertyDrawer =>
+            this.m_PropertyDrawer;
     }
 }
 

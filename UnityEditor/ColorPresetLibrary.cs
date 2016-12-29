@@ -21,10 +21,8 @@
             this.m_Presets.Add(new ColorPreset(preset, presetName));
         }
 
-        public override int Count()
-        {
-            return this.m_Presets.Count;
-        }
+        public override int Count() => 
+            this.m_Presets.Count;
 
         private static Texture2D CreateColorSwatchWithBorder(int width, int height, bool triangular)
         {
@@ -127,15 +125,11 @@
             GUI.color = color;
         }
 
-        public override string GetName(int index)
-        {
-            return this.m_Presets[index].name;
-        }
+        public override string GetName(int index) => 
+            this.m_Presets[index].name;
 
-        public override object GetPreset(int index)
-        {
-            return this.m_Presets[index].color;
-        }
+        public override object GetPreset(int index) => 
+            this.m_Presets[index].color;
 
         private void Init()
         {
@@ -238,10 +232,8 @@
 
             public Color color
             {
-                get
-                {
-                    return this.m_Color;
-                }
+                get => 
+                    this.m_Color;
                 set
                 {
                     this.m_Color = value;
@@ -250,10 +242,8 @@
 
             public string name
             {
-                get
-                {
-                    return this.m_Name;
-                }
+                get => 
+                    this.m_Name;
                 set
                 {
                     this.m_Name = value;

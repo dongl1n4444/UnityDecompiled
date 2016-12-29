@@ -4,7 +4,6 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class ResolutionExtensions
     {
         [CompilerGenerated]
@@ -12,8 +11,7 @@
         [CompilerGenerated]
         private static Func<MethodReference, MethodDefinition> <>f__am$cache1;
 
-        [Extension]
-        public static MethodDefinition CheckedResolve(MethodReference method)
+        public static MethodDefinition CheckedResolve(this MethodReference method)
         {
             if (<>f__am$cache1 == null)
             {
@@ -22,8 +20,7 @@
             return Resolve<MethodReference, MethodDefinition>(method, <>f__am$cache1);
         }
 
-        [Extension]
-        public static TypeDefinition CheckedResolve(TypeReference type)
+        public static TypeDefinition CheckedResolve(this TypeReference type)
         {
             if (<>f__am$cache0 == null)
             {

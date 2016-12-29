@@ -145,7 +145,7 @@
             for (int i = 0; i < filePath.Length; i++)
             {
                 char ch = filePath[i];
-                if (Enumerable.Contains<char>(s_InvalidPathChars, ch))
+                if (s_InvalidPathChars.Contains<char>(ch))
                 {
                     invalidChar = ch;
                     invalidCharIndex = i;
@@ -178,7 +178,7 @@
                 int num2;
                 if (!item.isFolder && HasInvalidCharInFilePath(item.destinationAssetPath, out ch, out num2))
                 {
-                    errorMessage = string.Format("Invalid character found in file path: '{0}'. Invalid ascii value: {1} (at character index {2}).", item.destinationAssetPath, (int) ch, num2);
+                    errorMessage = $"Invalid character found in file path: '{item.destinationAssetPath}'. Invalid ascii value: {(int) ch} (at character index {num2}).";
                     return false;
                 }
             }
@@ -334,29 +334,14 @@
             return true;
         }
 
-        public bool canReInstall
-        {
-            get
-            {
-                return this.m_ShowReInstall;
-            }
-        }
+        public bool canReInstall =>
+            this.m_ShowReInstall;
 
-        public bool doReInstall
-        {
-            get
-            {
-                return (this.m_ShowReInstall && this.m_ReInstallPackage);
-            }
-        }
+        public bool doReInstall =>
+            (this.m_ShowReInstall && this.m_ReInstallPackage);
 
-        public ImportPackageItem[] packageItems
-        {
-            get
-            {
-                return this.m_ImportPackageItems;
-            }
-        }
+        public ImportPackageItem[] packageItems =>
+            this.m_ImportPackageItems;
 
         internal class Constants
         {

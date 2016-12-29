@@ -33,20 +33,14 @@
             return lpszShortPath.ToString(0, capacity);
         }
 
-        public static bool IsLinux()
-        {
-            return Directory.Exists("/proc");
-        }
+        public static bool IsLinux() => 
+            Directory.Exists("/proc");
 
-        public static bool IsMac()
-        {
-            return (!IsLinux() && !IsWindows());
-        }
+        public static bool IsMac() => 
+            (!IsLinux() && !IsWindows());
 
-        public static bool IsWindows()
-        {
-            return ((((Environment.OSVersion.Platform == PlatformID.Win32NT) || (Environment.OSVersion.Platform == PlatformID.Win32S)) || (Environment.OSVersion.Platform == PlatformID.Win32Windows)) || (Environment.OSVersion.Platform == PlatformID.WinCE));
-        }
+        public static bool IsWindows() => 
+            ((((Environment.OSVersion.Platform == PlatformID.Win32NT) || (Environment.OSVersion.Platform == PlatformID.Win32S)) || (Environment.OSVersion.Platform == PlatformID.Win32Windows)) || (Environment.OSVersion.Platform == PlatformID.WinCE));
 
         public static void SetupBuildToolsDir()
         {

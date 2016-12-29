@@ -300,10 +300,8 @@
         [Obsolete("warning Don't use clipOffset - put things inside BeginGroup instead. This functionality will be removed in a later version.")]
         public Vector2 clipOffset
         {
-            get
-            {
-                return this.Internal_clipOffset;
-            }
+            get => 
+                this.Internal_clipOffset;
             set
             {
                 this.Internal_clipOffset = value;
@@ -314,10 +312,8 @@
         /// </summary>
         public Font font
         {
-            get
-            {
-                return this.GetFontInternal();
-            }
+            get => 
+                this.GetFontInternal();
             set
             {
                 this.SetFontInternal(value);
@@ -327,13 +323,8 @@
         /// <summary>
         /// <para>The height of one line of text with this style, measured in pixels. (Read Only)</para>
         /// </summary>
-        public float lineHeight
-        {
-            get
-            {
-                return Mathf.Round(Internal_GetLineHeight(this.m_Ptr));
-            }
-        }
+        public float lineHeight =>
+            Mathf.Round(Internal_GetLineHeight(this.m_Ptr));
         private static void Internal_Draw(IntPtr target, Rect position, GUIContent content, bool isHover, bool isActive, bool on, bool hasKeyboardFocus)
         {
             Internal_DrawArguments arguments = new Internal_DrawArguments {
@@ -552,15 +543,8 @@
             this.DrawWithTextSelection(position, content, controlID, firstSelectedCharacter, lastSelectedCharacter, false);
         }
 
-        public static implicit operator GUIStyle(string str)
-        {
-            if (GUISkin.current == null)
-            {
-                Debug.LogError("Unable to use a named GUIStyle without a current skin. Most likely you need to move your GUIStyle initialization code to OnGUI");
-                return GUISkin.error;
-            }
-            return GUISkin.current.GetStyle(str);
-        }
+        public static implicit operator GUIStyle(string str) => 
+            GUISkin.current?.GetStyle(str);
 
         /// <summary>
         /// <para>Shortcut for an empty GUIStyle.</para>
@@ -595,15 +579,11 @@
         /// <param name="position"></param>
         /// <param name="content"></param>
         /// <param name="cursorPixelPosition"></param>
-        public int GetCursorStringIndex(Rect position, GUIContent content, Vector2 cursorPixelPosition)
-        {
-            return Internal_GetCursorStringIndex(this.m_Ptr, position, content, cursorPixelPosition);
-        }
+        public int GetCursorStringIndex(Rect position, GUIContent content, Vector2 cursorPixelPosition) => 
+            Internal_GetCursorStringIndex(this.m_Ptr, position, content, cursorPixelPosition);
 
-        internal int GetNumCharactersThatFitWithinWidth(string text, float width)
-        {
-            return Internal_GetNumCharactersThatFitWithinWidth(this.m_Ptr, text, width);
-        }
+        internal int GetNumCharactersThatFitWithinWidth(string text, float width) => 
+            Internal_GetNumCharactersThatFitWithinWidth(this.m_Ptr, text, width);
 
         /// <summary>
         /// <para>Calculate the size of some content if it is rendered with this style.</para>
@@ -627,28 +607,19 @@
         /// <para>Calculate the size of an element formatted with this style, and a given space to content.</para>
         /// </summary>
         /// <param name="contentSize"></param>
-        public Vector2 CalcScreenSize(Vector2 contentSize)
-        {
-            return new Vector2((this.fixedWidth == 0f) ? Mathf.Ceil((contentSize.x + this.padding.left) + this.padding.right) : this.fixedWidth, (this.fixedHeight == 0f) ? Mathf.Ceil((contentSize.y + this.padding.top) + this.padding.bottom) : this.fixedHeight);
-        }
+        public Vector2 CalcScreenSize(Vector2 contentSize) => 
+            new Vector2((this.fixedWidth == 0f) ? Mathf.Ceil((contentSize.x + this.padding.left) + this.padding.right) : this.fixedWidth, (this.fixedHeight == 0f) ? Mathf.Ceil((contentSize.y + this.padding.top) + this.padding.bottom) : this.fixedHeight);
 
         /// <summary>
         /// <para>How tall this element will be when rendered with content and a specific width.</para>
         /// </summary>
         /// <param name="content"></param>
         /// <param name="width"></param>
-        public float CalcHeight(GUIContent content, float width)
-        {
-            return Internal_CalcHeight(this.m_Ptr, content, width);
-        }
+        public float CalcHeight(GUIContent content, float width) => 
+            Internal_CalcHeight(this.m_Ptr, content, width);
 
-        public bool isHeightDependantOnWidth
-        {
-            get
-            {
-                return ((this.fixedHeight == 0f) && (this.wordWrap && (this.imagePosition != ImagePosition.ImageOnly)));
-            }
-        }
+        public bool isHeightDependantOnWidth =>
+            ((this.fixedHeight == 0f) && (this.wordWrap && (this.imagePosition != ImagePosition.ImageOnly)));
         public void CalcMinMaxWidth(GUIContent content, out float minWidth, out float maxWidth)
         {
             Internal_CalcMinMaxWidth(this.m_Ptr, content, out minWidth, out maxWidth);
@@ -825,10 +796,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_Internal_GetCursorPixelPosition(IntPtr target, ref Rect position, GUIContent content, int cursorStringIndex, out Vector2 ret);
-        internal static int Internal_GetCursorStringIndex(IntPtr target, Rect position, GUIContent content, Vector2 cursorPixelPosition)
-        {
-            return INTERNAL_CALL_Internal_GetCursorStringIndex(target, ref position, content, ref cursorPixelPosition);
-        }
+        internal static int Internal_GetCursorStringIndex(IntPtr target, Rect position, GUIContent content, Vector2 cursorPixelPosition) => 
+            INTERNAL_CALL_Internal_GetCursorStringIndex(target, ref position, content, ref cursorPixelPosition);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int INTERNAL_CALL_Internal_GetCursorStringIndex(IntPtr target, ref Rect position, GUIContent content, ref Vector2 cursorPixelPosition);

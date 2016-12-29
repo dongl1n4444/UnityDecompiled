@@ -23,15 +23,11 @@
             return (x.Name == y.Name);
         }
 
-        public override bool Equals(FieldReference x, FieldReference y)
-        {
-            return AreEqual(x, y);
-        }
+        public override bool Equals(FieldReference x, FieldReference y) => 
+            AreEqual(x, y);
 
-        public override int GetHashCode(FieldReference obj)
-        {
-            return obj.FullName.GetHashCode();
-        }
+        public override int GetHashCode(FieldReference obj) => 
+            obj.FullName.GetHashCode();
     }
 }
 

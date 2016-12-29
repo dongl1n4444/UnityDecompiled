@@ -15,10 +15,8 @@
         private PreviewType m_PreviewType = PreviewType.RGB;
         private PreviewRenderUtility m_PreviewUtility;
 
-        public float GetMipLevelForRendering(Texture texture)
-        {
-            return Mathf.Min(this.m_MipLevel, (float) TextureUtil.GetMipmapCount(texture));
-        }
+        public float GetMipLevelForRendering(Texture texture) => 
+            Mathf.Min(this.m_MipLevel, (float) TextureUtil.GetMipmapCount(texture));
 
         private void InitPreview()
         {
@@ -173,10 +171,8 @@
 
         public float mipLevel
         {
-            get
-            {
-                return this.m_MipLevel;
-            }
+            get => 
+                this.m_MipLevel;
             set
             {
                 this.m_MipLevel = value;

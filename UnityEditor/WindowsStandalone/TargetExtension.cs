@@ -6,41 +6,23 @@
 
     internal class TargetExtension : DefaultPlatformSupportModule
     {
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new WindowsDesktopStandalonePostProcessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new WindowsDesktopStandalonePostProcessor();
 
-        public override IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return new WindowsStandaloneBuildWindowExtension();
-        }
+        public override IBuildWindowExtension CreateBuildWindowExtension() => 
+            new WindowsStandaloneBuildWindowExtension();
 
-        public override IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return new DesktopPluginImporterExtension();
-        }
+        public override IPluginImporterExtension CreatePluginImporterExtension() => 
+            new DesktopPluginImporterExtension();
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return new DesktopStandalonePostProcessor.ScriptingImplementations();
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            new DesktopStandalonePostProcessor.ScriptingImplementations();
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "WindowsStandaloneEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "WindowsStandaloneEditorExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "WindowsStandalone";
-            }
-        }
+        public override string TargetName =>
+            "WindowsStandalone";
     }
 }
 

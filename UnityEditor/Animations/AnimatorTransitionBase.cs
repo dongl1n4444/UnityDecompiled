@@ -33,10 +33,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string BuildTransitionName(string source, string destination);
-        public string GetDisplayName(Object source)
-        {
-            return (!(source is AnimatorState) ? this.GetDisplayNameStateMachineSource(source as AnimatorStateMachine) : this.GetDisplayNameStateSource(source as AnimatorState));
-        }
+        public string GetDisplayName(Object source) => 
+            (!(source is AnimatorState) ? this.GetDisplayNameStateMachineSource(source as AnimatorStateMachine) : this.GetDisplayNameStateSource(source as AnimatorState));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern string GetDisplayNameStateMachineSource(AnimatorStateMachine source);

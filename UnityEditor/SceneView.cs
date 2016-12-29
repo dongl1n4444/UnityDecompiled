@@ -664,15 +664,11 @@
             }
         }
 
-        internal static bool DoesCameraDrawModeSupportDeferred(DrawCameraMode mode)
-        {
-            return (((((((mode == DrawCameraMode.Normal) || (mode == DrawCameraMode.Textured)) || ((mode == DrawCameraMode.TexturedWire) || (mode == DrawCameraMode.ShadowCascades))) || (((mode == DrawCameraMode.RenderPaths) || (mode == DrawCameraMode.AlphaChannel)) || ((mode == DrawCameraMode.DeferredDiffuse) || (mode == DrawCameraMode.DeferredSpecular)))) || ((((mode == DrawCameraMode.DeferredSmoothness) || (mode == DrawCameraMode.DeferredNormal)) || ((mode == DrawCameraMode.Charting) || (mode == DrawCameraMode.Systems))) || (((mode == DrawCameraMode.Albedo) || (mode == DrawCameraMode.Emissive)) || ((mode == DrawCameraMode.Irradiance) || (mode == DrawCameraMode.Directionality))))) || ((mode == DrawCameraMode.Baked) || (mode == DrawCameraMode.Clustering))) || (mode == DrawCameraMode.LitClustering));
-        }
+        internal static bool DoesCameraDrawModeSupportDeferred(DrawCameraMode mode) => 
+            (((((((mode == DrawCameraMode.Normal) || (mode == DrawCameraMode.Textured)) || ((mode == DrawCameraMode.TexturedWire) || (mode == DrawCameraMode.ShadowCascades))) || (((mode == DrawCameraMode.RenderPaths) || (mode == DrawCameraMode.AlphaChannel)) || ((mode == DrawCameraMode.DeferredDiffuse) || (mode == DrawCameraMode.DeferredSpecular)))) || ((((mode == DrawCameraMode.DeferredSmoothness) || (mode == DrawCameraMode.DeferredNormal)) || ((mode == DrawCameraMode.Charting) || (mode == DrawCameraMode.Systems))) || (((mode == DrawCameraMode.Albedo) || (mode == DrawCameraMode.Emissive)) || ((mode == DrawCameraMode.Irradiance) || (mode == DrawCameraMode.Directionality))))) || ((mode == DrawCameraMode.Baked) || (mode == DrawCameraMode.Clustering))) || (mode == DrawCameraMode.LitClustering));
 
-        internal static bool DoesCameraDrawModeSupportHDR(DrawCameraMode mode)
-        {
-            return ((mode == DrawCameraMode.Textured) || (mode == DrawCameraMode.TexturedWire));
-        }
+        internal static bool DoesCameraDrawModeSupportHDR(DrawCameraMode mode) => 
+            ((mode == DrawCameraMode.Textured) || (mode == DrawCameraMode.TexturedWire));
 
         private void DoOnPreSceneGUICallbacks(Rect cameraRect)
         {
@@ -823,28 +819,14 @@
             return true;
         }
 
-        public static bool FrameLastActiveSceneView()
-        {
-            if (lastActiveSceneView == null)
-            {
-                return false;
-            }
-            return lastActiveSceneView.SendEvent(EditorGUIUtility.CommandEvent("FrameSelected"));
-        }
+        public static bool FrameLastActiveSceneView() => 
+            lastActiveSceneView?.SendEvent(EditorGUIUtility.CommandEvent("FrameSelected"));
 
-        public static bool FrameLastActiveSceneViewWithLock()
-        {
-            if (lastActiveSceneView == null)
-            {
-                return false;
-            }
-            return lastActiveSceneView.SendEvent(EditorGUIUtility.CommandEvent("FrameSelectedWithLock"));
-        }
+        public static bool FrameLastActiveSceneViewWithLock() => 
+            lastActiveSceneView?.SendEvent(EditorGUIUtility.CommandEvent("FrameSelectedWithLock"));
 
-        public bool FrameSelected()
-        {
-            return this.FrameSelected(false);
-        }
+        public bool FrameSelected() => 
+            this.FrameSelected(false);
 
         public bool FrameSelected(bool lockView)
         {
@@ -874,14 +856,8 @@
             return this.Frame(bounds);
         }
 
-        private Editor[] GetActiveEditors()
-        {
-            if (this.m_Tracker == null)
-            {
-                this.m_Tracker = ActiveEditorTracker.sharedTracker;
-            }
-            return this.m_Tracker.activeEditors;
-        }
+        private Editor[] GetActiveEditors() => 
+            this.m_Tracker?.activeEditors;
 
         public static Camera[] GetAllSceneCameras()
         {
@@ -928,10 +904,8 @@
             return ((Mathf.Atan(f) * 2f) * 57.29578f);
         }
 
-        internal float GetVerticalOrthoSize()
-        {
-            return ((this.size * 0.7071068f) / Mathf.Sqrt(this.m_Camera.aspect));
-        }
+        internal float GetVerticalOrthoSize() => 
+            ((this.size * 0.7071068f) / Mathf.Sqrt(this.m_Camera.aspect));
 
         private void Handle2DModeSwitch()
         {
@@ -1092,14 +1066,8 @@
             }
         }
 
-        internal bool IsSceneCameraDeferred()
-        {
-            if (this.m_Camera == null)
-            {
-                return false;
-            }
-            return ((this.m_Camera.actualRenderingPath == RenderingPath.DeferredLighting) || (this.m_Camera.actualRenderingPath == RenderingPath.DeferredShading));
-        }
+        internal bool IsSceneCameraDeferred() => 
+            ((this.m_Camera?.actualRenderingPath == RenderingPath.DeferredLighting) || (this.m_Camera?.actualRenderingPath == RenderingPath.DeferredShading));
 
         internal static bool IsUsingDeferredRenderingPath()
         {
@@ -1698,10 +1666,8 @@
             }
         }
 
-        private bool SceneCameraRendersIntoRT()
-        {
-            return ((this.m_Camera.targetTexture != null) || HandleUtility.CameraNeedsToRenderIntoRT(this.m_Camera));
-        }
+        private bool SceneCameraRendersIntoRT() => 
+            ((this.m_Camera.targetTexture != null) || HandleUtility.CameraNeedsToRenderIntoRT(this.m_Camera));
 
         internal bool SceneViewIsRenderingHDR()
         {
@@ -1950,28 +1916,20 @@
             }
         }
 
-        private bool UseSceneFiltering()
-        {
-            return (!string.IsNullOrEmpty(base.m_SearchFilter) || this.m_RequestedSceneViewFiltering);
-        }
+        private bool UseSceneFiltering() => 
+            (!string.IsNullOrEmpty(base.m_SearchFilter) || this.m_RequestedSceneViewFiltering);
 
         [MenuItem("GameObject/Toggle Active State &#a", true)]
-        internal static bool ValidateActivateSelection()
-        {
-            return (Selection.activeTransform != null);
-        }
+        internal static bool ValidateActivateSelection() => 
+            (Selection.activeTransform != null);
 
         [MenuItem("GameObject/Align View to Selected", true)]
-        internal static bool ValidateAlignViewToSelected()
-        {
-            return ((s_LastActiveSceneView != null) && (Selection.activeTransform != null));
-        }
+        internal static bool ValidateAlignViewToSelected() => 
+            ((s_LastActiveSceneView != null) && (Selection.activeTransform != null));
 
         [MenuItem("GameObject/Align With View %#f", true)]
-        internal static bool ValidateAlignWithView()
-        {
-            return ((s_LastActiveSceneView != null) && (Selection.activeTransform != null));
-        }
+        internal static bool ValidateAlignWithView() => 
+            ((s_LastActiveSceneView != null) && (Selection.activeTransform != null));
 
         [MenuItem("GameObject/Set as last sibling %-", true)]
         internal static bool ValidateMenuMoveToBack()
@@ -1996,18 +1954,11 @@
         }
 
         [MenuItem("GameObject/Move To View %&f", true)]
-        private static bool ValidateMoveToView()
-        {
-            return ((s_LastActiveSceneView != null) && (Selection.transforms.Length != 0));
-        }
+        private static bool ValidateMoveToView() => 
+            ((s_LastActiveSceneView != null) && (Selection.transforms.Length != 0));
 
-        public Camera camera
-        {
-            get
-            {
-                return this.m_Camera;
-            }
-        }
+        public Camera camera =>
+            this.m_Camera;
 
         internal float cameraDistance
         {
@@ -2022,36 +1973,19 @@
             }
         }
 
-        internal Vector3 cameraTargetPosition
-        {
-            get
-            {
-                return (this.m_Position.target + (this.m_Rotation.target * new Vector3(0f, 0f, this.cameraDistance)));
-            }
-        }
+        internal Vector3 cameraTargetPosition =>
+            (this.m_Position.target + (this.m_Rotation.target * new Vector3(0f, 0f, this.cameraDistance)));
 
-        internal Quaternion cameraTargetRotation
-        {
-            get
-            {
-                return this.m_Rotation.target;
-            }
-        }
+        internal Quaternion cameraTargetRotation =>
+            this.m_Rotation.target;
 
-        public static SceneView currentDrawingSceneView
-        {
-            get
-            {
-                return s_CurrentDrawingSceneView;
-            }
-        }
+        public static SceneView currentDrawingSceneView =>
+            s_CurrentDrawingSceneView;
 
         internal DraggingLockedState draggingLocked
         {
-            get
-            {
-                return this.m_DraggingLockedState;
-            }
+            get => 
+                this.m_DraggingLockedState;
             set
             {
                 this.m_DraggingLockedState = value;
@@ -2072,10 +2006,8 @@
 
         public bool in2DMode
         {
-            get
-            {
-                return this.m_2DMode;
-            }
+            get => 
+                this.m_2DMode;
             set
             {
                 if (((this.m_2DMode != value) && (Tools.viewTool != ViewTool.FPS)) && (Tools.viewTool != ViewTool.Orbit))
@@ -2088,10 +2020,8 @@
 
         public bool isRotationLocked
         {
-            get
-            {
-                return this.m_isRotationLocked;
-            }
+            get => 
+                this.m_isRotationLocked;
             set
             {
                 if (this.m_isRotationLocked != value)
@@ -2101,13 +2031,8 @@
             }
         }
 
-        public static SceneView lastActiveSceneView
-        {
-            get
-            {
-                return s_LastActiveSceneView;
-            }
-        }
+        public static SceneView lastActiveSceneView =>
+            s_LastActiveSceneView;
 
         public Quaternion lastSceneViewRotation
         {
@@ -2127,10 +2052,8 @@
 
         public bool orthographic
         {
-            get
-            {
-                return this.m_Ortho.value;
-            }
+            get => 
+                this.m_Ortho.value;
             set
             {
                 this.m_Ortho.value = value;
@@ -2139,10 +2062,8 @@
 
         public Vector3 pivot
         {
-            get
-            {
-                return this.m_Position.value;
-            }
+            get => 
+                this.m_Position.value;
             set
             {
                 this.m_Position.value = value;
@@ -2151,10 +2072,8 @@
 
         public DrawCameraMode renderMode
         {
-            get
-            {
-                return this.m_RenderMode;
-            }
+            get => 
+                this.m_RenderMode;
             set
             {
                 this.m_RenderMode = value;
@@ -2163,30 +2082,21 @@
 
         public Quaternion rotation
         {
-            get
-            {
-                return this.m_Rotation.value;
-            }
+            get => 
+                this.m_Rotation.value;
             set
             {
                 this.m_Rotation.value = value;
             }
         }
 
-        public static ArrayList sceneViews
-        {
-            get
-            {
-                return s_SceneViews;
-            }
-        }
+        public static ArrayList sceneViews =>
+            s_SceneViews;
 
         public float size
         {
-            get
-            {
-                return this.m_Size.value;
-            }
+            get => 
+                this.m_Size.value;
             set
             {
                 if (value > 40000f)
@@ -2199,10 +2109,8 @@
 
         internal bool viewIsLockedToObject
         {
-            get
-            {
-                return this.m_ViewIsLockedToObject;
-            }
+            get => 
+                this.m_ViewIsLockedToObject;
             set
             {
                 if (value)
@@ -2271,10 +2179,8 @@
                 this.showImageEffects = other.showImageEffects;
             }
 
-            public bool IsAllOn()
-            {
-                return (((this.showFog && this.showMaterialUpdate) && (this.showSkybox && this.showFlares)) && this.showImageEffects);
-            }
+            public bool IsAllOn() => 
+                (((this.showFog && this.showMaterialUpdate) && (this.showSkybox && this.showFlares)) && this.showImageEffects);
 
             public void Toggle(bool value)
             {

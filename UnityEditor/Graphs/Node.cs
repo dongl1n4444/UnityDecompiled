@@ -77,10 +77,8 @@
         {
         }
 
-        public Slot AddInputSlot(string name)
-        {
-            return this.AddInputSlot(name, null);
-        }
+        public Slot AddInputSlot(string name) => 
+            this.AddInputSlot(name, null);
 
         public Slot AddInputSlot(string name, System.Type type)
         {
@@ -117,10 +115,8 @@
             return this.ConstructAndAddProperty(s.dataTypeString, s.name);
         }
 
-        public Slot AddOutputSlot(string name)
-        {
-            return this.AddOutputSlot(name, null);
-        }
+        public Slot AddOutputSlot(string name) => 
+            this.AddOutputSlot(name, null);
 
         public Slot AddOutputSlot(string name, System.Type type)
         {
@@ -248,10 +244,8 @@
             return property;
         }
 
-        public object GetPropertyValue(string name)
-        {
-            return this.GetProperty(name).value;
-        }
+        public object GetPropertyValue(string name) => 
+            this.GetProperty(name).value;
 
         public string GetSettingPropertyTitle(Property property)
         {
@@ -268,10 +262,8 @@
             return this.m_SettingPropertyTitles[index];
         }
 
-        public object GetSlotValue(string slotName)
-        {
-            return this.GetPropertyValue(slotName);
-        }
+        public object GetSlotValue(string slotName) => 
+            this.GetPropertyValue(slotName);
 
         internal void HideProperty(Property p)
         {
@@ -288,15 +280,11 @@
         {
         }
 
-        public static Node Instance()
-        {
-            return Instance<Node>();
-        }
+        public static Node Instance() => 
+            Instance<Node>();
 
-        public static T Instance<T>() where T: Node, new()
-        {
-            return ScriptableObject.CreateInstance<T>();
-        }
+        public static T Instance<T>() where T: Node, new() => 
+            ScriptableObject.CreateInstance<T>();
 
         internal bool IsPropertyHidden(Property p)
         {
@@ -412,9 +400,9 @@
                 {
                     this.GetProperty(slot.name).ResetGenericArgumentType();
                     slot.ResetGenericArgumentType();
-                    while (Enumerable.Any<UnityEditor.Graphs.Edge>(slot.edges))
+                    while (slot.edges.Any<UnityEditor.Graphs.Edge>())
                     {
-                        this.graph.RemoveEdge(Enumerable.First<UnityEditor.Graphs.Edge>(slot.edges));
+                        this.graph.RemoveEdge(slot.edges.First<UnityEditor.Graphs.Edge>());
                     }
                 }
             }
@@ -425,9 +413,9 @@
             foreach (Slot slot2 in Enumerable.Where<Slot>(this.slots, <>f__am$cacheF))
             {
                 slot2.ResetGenericArgumentType();
-                while (Enumerable.Any<UnityEditor.Graphs.Edge>(slot2.edges))
+                while (slot2.edges.Any<UnityEditor.Graphs.Edge>())
                 {
-                    this.graph.RemoveEdge(Enumerable.First<UnityEditor.Graphs.Edge>(slot2.edges));
+                    this.graph.RemoveEdge(slot2.edges.First<UnityEditor.Graphs.Edge>());
                 }
             }
             this.Dirty();
@@ -505,7 +493,7 @@
         public object TryGetSlotPropertyValue(Slot slot)
         {
             Property property = this.TryGetProperty(slot.name);
-            return ((property != null) ? property.value : null);
+            return property?.value;
         }
 
         internal virtual void WakeUp(Graph owner)
@@ -531,10 +519,8 @@
 
         public System.Type genericType
         {
-            get
-            {
-                return SerializedType.FromString(this.m_GenericTypeString);
-            }
+            get => 
+                SerializedType.FromString(this.m_GenericTypeString);
             set
             {
                 this.m_GenericTypeString = SerializedType.ToString(value);
@@ -543,23 +529,16 @@
 
         public Graph graph
         {
-            get
-            {
-                return this.m_Graph;
-            }
+            get => 
+                this.m_Graph;
             set
             {
                 this.m_Graph = value;
             }
         }
 
-        public bool hasTitle
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.m_Title);
-            }
-        }
+        public bool hasTitle =>
+            !string.IsNullOrEmpty(this.m_Title);
 
         public IEnumerable<UnityEditor.Graphs.Edge> inputDataEdges
         {
@@ -633,13 +612,8 @@
             }
         }
 
-        public bool isDragging
-        {
-            get
-            {
-                return this.m_IsDragging;
-            }
-        }
+        public bool isDragging =>
+            this.m_IsDragging;
 
         public bool isGeneric
         {
@@ -664,33 +638,21 @@
             }
         }
 
-        public Slot this[int index]
-        {
-            get
-            {
-                return this.m_Slots[index];
-            }
-        }
+        public Slot this[int index] =>
+            this.m_Slots[index];
 
         public string nodeInvalidError
         {
-            get
-            {
-                return this.m_NodeInvalidError;
-            }
+            get => 
+                this.m_NodeInvalidError;
             set
             {
                 this.m_NodeInvalidError = value;
             }
         }
 
-        public bool nodeIsInvalid
-        {
-            get
-            {
-                return (this.m_NodeInvalidError != string.Empty);
-            }
-        }
+        public bool nodeIsInvalid =>
+            (this.m_NodeInvalidError != string.Empty);
 
         public IEnumerable<UnityEditor.Graphs.Edge> outputDataEdges
         {
@@ -764,36 +726,19 @@
             }
         }
 
-        public List<Property> properties
-        {
-            get
-            {
-                return this.m_Properties;
-            }
-        }
+        public List<Property> properties =>
+            this.m_Properties;
 
-        public IEnumerable<Property> settingProperties
-        {
-            get
-            {
-                return Enumerable.Select<int, Property>(this.m_SettingProperties, new Func<int, Property>(this, (IntPtr) this.<get_settingProperties>m__7));
-            }
-        }
+        public IEnumerable<Property> settingProperties =>
+            Enumerable.Select<int, Property>(this.m_SettingProperties, new Func<int, Property>(this, (IntPtr) this.<get_settingProperties>m__7));
 
-        public List<Slot> slots
-        {
-            get
-            {
-                return this.m_Slots;
-            }
-        }
+        public List<Slot> slots =>
+            this.m_Slots;
 
         public virtual string title
         {
-            get
-            {
-                return ((this.m_Title != string.Empty) ? this.m_Title : base.name);
-            }
+            get => 
+                ((this.m_Title != string.Empty) ? this.m_Title : base.name);
             set
             {
                 this.m_Title = value;
@@ -801,23 +746,16 @@
             }
         }
 
-        public virtual string windowTitle
-        {
-            get
-            {
-                return base.GetType().Name;
-            }
-        }
+        public virtual string windowTitle =>
+            base.GetType().Name;
 
         [CompilerGenerated]
         private sealed class <>c__AnonStorey0
         {
             internal string name;
 
-            internal bool <>m__0(Slot s)
-            {
-                return (s.name == this.name);
-            }
+            internal bool <>m__0(Slot s) => 
+                (s.name == this.name);
         }
 
         [CompilerGenerated]
@@ -825,10 +763,8 @@
         {
             internal string name;
 
-            internal bool <>m__0(Property p)
-            {
-                return (p.name == this.name);
-            }
+            internal bool <>m__0(Property p) => 
+                (p.name == this.name);
         }
     }
 }

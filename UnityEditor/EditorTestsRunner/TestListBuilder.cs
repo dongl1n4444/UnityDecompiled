@@ -37,19 +37,19 @@
                 return null;
             }
             IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_OldResultList, new Func<EditorTestResult, bool>(storey, (IntPtr) this.<>m__0));
-            if (Enumerable.Count<EditorTestResult>(source) == 0)
+            if (source.Count<EditorTestResult>() == 0)
             {
                 return null;
             }
-            if (Enumerable.Count<EditorTestResult>(source) > 1)
+            if (source.Count<EditorTestResult>() > 1)
             {
                 source = Enumerable.Where<EditorTestResult>(this.m_OldResultList, new Func<EditorTestResult, bool>(storey, (IntPtr) this.<>m__1));
-                if (Enumerable.Count<EditorTestResult>(source) == 0)
+                if (source.Count<EditorTestResult>() == 0)
                 {
                     return null;
                 }
             }
-            return Enumerable.First<EditorTestResult>(source);
+            return source.First<EditorTestResult>();
         }
 
         public TreeViewItem GetTests(TestSuite testSuite, TestFilterSettings renderingFilter)
@@ -162,21 +162,11 @@
             }
         }
 
-        public string[] categories
-        {
-            get
-            {
-                return Enumerable.ToArray<string>(this.m_CategoryList);
-            }
-        }
+        public string[] categories =>
+            this.m_CategoryList.ToArray<string>();
 
-        public List<EditorTestResult> newResultList
-        {
-            get
-            {
-                return this.m_NewResultList;
-            }
-        }
+        public List<EditorTestResult> newResultList =>
+            this.m_NewResultList;
 
         [CompilerGenerated]
         private sealed class <FindExistingResult>c__AnonStorey0
@@ -184,15 +174,11 @@
             internal string fullTestName;
             internal string id;
 
-            internal bool <>m__0(EditorTestResult t)
-            {
-                return (t.fullName == this.fullTestName);
-            }
+            internal bool <>m__0(EditorTestResult t) => 
+                (t.fullName == this.fullTestName);
 
-            internal bool <>m__1(EditorTestResult t)
-            {
-                return (t.id == this.id);
-            }
+            internal bool <>m__1(EditorTestResult t) => 
+                (t.id == this.id);
         }
     }
 }

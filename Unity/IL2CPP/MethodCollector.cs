@@ -38,64 +38,44 @@
         private static Func<KeyValuePair<TypeDefinition, int>, TypeDefinition> <>f__am$cache9;
 
         [CompilerGenerated]
-        private static int <GetCCWMarshalingFunctions>m__8(KeyValuePair<TypeDefinition, int> kvp)
-        {
-            return kvp.Value;
-        }
+        private static int <GetCCWMarshalingFunctions>m__8(KeyValuePair<TypeDefinition, int> kvp) => 
+            kvp.Value;
 
         [CompilerGenerated]
-        private static TypeDefinition <GetCCWMarshalingFunctions>m__9(KeyValuePair<TypeDefinition, int> kvp)
-        {
-            return kvp.Key;
-        }
+        private static TypeDefinition <GetCCWMarshalingFunctions>m__9(KeyValuePair<TypeDefinition, int> kvp) => 
+            kvp.Key;
 
         [CompilerGenerated]
-        private static int <GetMethods>m__0(KeyValuePair<MethodReference, int> kvp)
-        {
-            return kvp.Value;
-        }
+        private static int <GetMethods>m__0(KeyValuePair<MethodReference, int> kvp) => 
+            kvp.Value;
 
         [CompilerGenerated]
-        private static MethodReference <GetMethods>m__1(KeyValuePair<MethodReference, int> kvp)
-        {
-            return kvp.Key;
-        }
+        private static MethodReference <GetMethods>m__1(KeyValuePair<MethodReference, int> kvp) => 
+            kvp.Key;
 
         [CompilerGenerated]
-        private static int <GetReversePInvokeWrappers>m__2(KeyValuePair<MethodReference, int> kvp)
-        {
-            return kvp.Value;
-        }
+        private static int <GetReversePInvokeWrappers>m__2(KeyValuePair<MethodReference, int> kvp) => 
+            kvp.Value;
 
         [CompilerGenerated]
-        private static MethodReference <GetReversePInvokeWrappers>m__3(KeyValuePair<MethodReference, int> kvp)
-        {
-            return kvp.Key;
-        }
+        private static MethodReference <GetReversePInvokeWrappers>m__3(KeyValuePair<MethodReference, int> kvp) => 
+            kvp.Key;
 
         [CompilerGenerated]
-        private static int <GetTypeMarshalingFunctions>m__6(KeyValuePair<TypeDefinition, int> kvp)
-        {
-            return kvp.Value;
-        }
+        private static int <GetTypeMarshalingFunctions>m__6(KeyValuePair<TypeDefinition, int> kvp) => 
+            kvp.Value;
 
         [CompilerGenerated]
-        private static TypeDefinition <GetTypeMarshalingFunctions>m__7(KeyValuePair<TypeDefinition, int> kvp)
-        {
-            return kvp.Key;
-        }
+        private static TypeDefinition <GetTypeMarshalingFunctions>m__7(KeyValuePair<TypeDefinition, int> kvp) => 
+            kvp.Key;
 
         [CompilerGenerated]
-        private static int <GetWrappersForDelegateFromManagedToNative>m__4(KeyValuePair<MethodReference, int> kvp)
-        {
-            return kvp.Value;
-        }
+        private static int <GetWrappersForDelegateFromManagedToNative>m__4(KeyValuePair<MethodReference, int> kvp) => 
+            kvp.Value;
 
         [CompilerGenerated]
-        private static MethodReference <GetWrappersForDelegateFromManagedToNative>m__5(KeyValuePair<MethodReference, int> kvp)
-        {
-            return kvp.Key;
-        }
+        private static MethodReference <GetWrappersForDelegateFromManagedToNative>m__5(KeyValuePair<MethodReference, int> kvp) => 
+            kvp.Key;
 
         private void AssertComplete()
         {
@@ -190,7 +170,7 @@
             {
                 <>f__am$cache9 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetCCWMarshalingFunctions>m__9);
             }
-            return CollectionExtensions.AsReadOnlyPortable<TypeDefinition>(Enumerable.ToArray<TypeDefinition>(Enumerable.Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(Enumerable.OrderBy<KeyValuePair<TypeDefinition, int>, int>(this._ccwMarshalingFunctions, <>f__am$cache8), <>f__am$cache9)));
+            return this._ccwMarshalingFunctions.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache8).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache9).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
 
         int IMethodCollectorResults.GetMethodIndex(MethodReference method)
@@ -215,7 +195,7 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(null, (IntPtr) <GetMethods>m__1);
             }
-            return CollectionExtensions.AsReadOnlyPortable<MethodReference>(Enumerable.ToArray<MethodReference>(Enumerable.Select<KeyValuePair<MethodReference, int>, MethodReference>(Enumerable.OrderBy<KeyValuePair<MethodReference, int>, int>(this._methods, <>f__am$cache0), <>f__am$cache1)));
+            return this._methods.OrderBy<KeyValuePair<MethodReference, int>, int>(<>f__am$cache0).Select<KeyValuePair<MethodReference, int>, MethodReference>(<>f__am$cache1).ToArray<MethodReference>().AsReadOnlyPortable<MethodReference>();
         }
 
         int IMethodCollectorResults.GetReversePInvokeWrapperIndex(MethodReference method)
@@ -240,7 +220,7 @@
             {
                 <>f__am$cache3 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(null, (IntPtr) <GetReversePInvokeWrappers>m__3);
             }
-            return CollectionExtensions.AsReadOnlyPortable<MethodReference>(Enumerable.ToArray<MethodReference>(Enumerable.Select<KeyValuePair<MethodReference, int>, MethodReference>(Enumerable.OrderBy<KeyValuePair<MethodReference, int>, int>(this._reversePInvokeWrappers, <>f__am$cache2), <>f__am$cache3)));
+            return this._reversePInvokeWrappers.OrderBy<KeyValuePair<MethodReference, int>, int>(<>f__am$cache2).Select<KeyValuePair<MethodReference, int>, MethodReference>(<>f__am$cache3).ToArray<MethodReference>().AsReadOnlyPortable<MethodReference>();
         }
 
         ReadOnlyCollection<TypeDefinition> IMethodCollectorResults.GetTypeMarshalingFunctions()
@@ -254,7 +234,7 @@
             {
                 <>f__am$cache7 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetTypeMarshalingFunctions>m__7);
             }
-            return CollectionExtensions.AsReadOnlyPortable<TypeDefinition>(Enumerable.ToArray<TypeDefinition>(Enumerable.Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(Enumerable.OrderBy<KeyValuePair<TypeDefinition, int>, int>(this._typeMarshalingFunctions, <>f__am$cache6), <>f__am$cache7)));
+            return this._typeMarshalingFunctions.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache6).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache7).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
 
         int IMethodCollectorResults.GetTypeMarshalingFunctionsIndex(TypeDefinition type)
@@ -290,7 +270,7 @@
             {
                 <>f__am$cache5 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(null, (IntPtr) <GetWrappersForDelegateFromManagedToNative>m__5);
             }
-            return CollectionExtensions.AsReadOnlyPortable<MethodReference>(Enumerable.ToArray<MethodReference>(Enumerable.Select<KeyValuePair<MethodReference, int>, MethodReference>(Enumerable.OrderBy<KeyValuePair<MethodReference, int>, int>(this._delegateWrappersManagedToNative, <>f__am$cache4), <>f__am$cache5)));
+            return this._delegateWrappersManagedToNative.OrderBy<KeyValuePair<MethodReference, int>, int>(<>f__am$cache4).Select<KeyValuePair<MethodReference, int>, MethodReference>(<>f__am$cache5).ToArray<MethodReference>().AsReadOnlyPortable<MethodReference>();
         }
     }
 }

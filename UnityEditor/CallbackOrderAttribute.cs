@@ -15,13 +15,8 @@
         {
         }
 
-        internal int callbackOrder
-        {
-            get
-            {
-                return this.m_CallbackOrder;
-            }
-        }
+        internal int callbackOrder =>
+            this.m_CallbackOrder;
     }
 }
 

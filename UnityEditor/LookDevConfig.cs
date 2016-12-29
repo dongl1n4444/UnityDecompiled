@@ -92,15 +92,11 @@
             }
         }
 
-        public float GetFloatProperty(LookDevProperty property, LookDevEditionContext context)
-        {
-            return this.m_LookDevContexts[(int) context].GetProperty(property).floatValue;
-        }
+        public float GetFloatProperty(LookDevProperty property, LookDevEditionContext context) => 
+            this.m_LookDevContexts[(int) context].GetProperty(property).floatValue;
 
-        public int GetIntProperty(LookDevProperty property, LookDevEditionContext context)
-        {
-            return this.m_LookDevContexts[(int) context].GetProperty(property).intValue;
-        }
+        public int GetIntProperty(LookDevProperty property, LookDevEditionContext context) => 
+            this.m_LookDevContexts[(int) context].GetProperty(property).intValue;
 
         public int GetObjectLoDCount(LookDevEditionContext context)
         {
@@ -115,10 +111,8 @@
             return 1;
         }
 
-        public bool IsPropertyLinked(LookDevProperty type)
-        {
-            return this.m_LookDevProperties[(int) type].linked;
-        }
+        public bool IsPropertyLinked(LookDevProperty type) => 
+            this.m_LookDevProperties[(int) type].linked;
 
         public void OnDestroy()
         {
@@ -311,10 +305,8 @@
 
         public bool allowDifferentObjects
         {
-            get
-            {
-                return this.m_AllowDifferentObjects;
-            }
+            get => 
+                this.m_AllowDifferentObjects;
             set
             {
                 this.m_AllowDifferentObjects = value;
@@ -323,20 +315,13 @@
             }
         }
 
-        public CameraState[] cameraState
-        {
-            get
-            {
-                return this.m_CameraState;
-            }
-        }
+        public CameraState[] cameraState =>
+            this.m_CameraState;
 
         public CameraState cameraStateCommon
         {
-            get
-            {
-                return this.m_CameraStateCommon;
-            }
+            get => 
+                this.m_CameraStateCommon;
             set
             {
                 this.m_CameraStateCommon = value;
@@ -345,10 +330,8 @@
 
         public CameraState cameraStateLeft
         {
-            get
-            {
-                return this.m_CameraStateLeft;
-            }
+            get => 
+                this.m_CameraStateLeft;
             set
             {
                 this.m_CameraStateLeft = value;
@@ -357,54 +340,30 @@
 
         public CameraState cameraStateRight
         {
-            get
-            {
-                return this.m_CameraStateRight;
-            }
+            get => 
+                this.m_CameraStateRight;
             set
             {
                 this.m_CameraStateRight = value;
             }
         }
 
-        public LookDevEditionContext currentEditionContext
-        {
-            get
-            {
-                return this.m_CurrentContextEdition;
-            }
-        }
+        public LookDevEditionContext currentEditionContext =>
+            this.m_CurrentContextEdition;
 
-        public int currentEditionContextIndex
-        {
-            get
-            {
-                return this.m_CurrentEditionContextIndex;
-            }
-        }
+        public int currentEditionContextIndex =>
+            this.m_CurrentEditionContextIndex;
 
-        public LookDevContext currentLookDevContext
-        {
-            get
-            {
-                return this.m_LookDevContexts[this.m_CurrentEditionContextIndex];
-            }
-        }
+        public LookDevContext currentLookDevContext =>
+            this.m_LookDevContexts[this.m_CurrentEditionContextIndex];
 
-        public GameObject[] currentObject
-        {
-            get
-            {
-                return this.m_CurrentObject;
-            }
-        }
+        public GameObject[] currentObject =>
+            this.m_CurrentObject;
 
         public float dualViewBlendFactor
         {
-            get
-            {
-                return this.m_DualViewBlendFactor;
-            }
+            get => 
+                this.m_DualViewBlendFactor;
             set
             {
                 this.m_DualViewBlendFactor = value;
@@ -413,10 +372,8 @@
 
         public bool enableShadowCubemap
         {
-            get
-            {
-                return this.m_EnableShadowCubemap;
-            }
+            get => 
+                this.m_EnableShadowCubemap;
             set
             {
                 this.m_EnableShadowCubemap = value;
@@ -426,10 +383,8 @@
 
         public bool enableToneMap
         {
-            get
-            {
-                return this.m_EnableToneMap;
-            }
+            get => 
+                this.m_EnableToneMap;
             set
             {
                 this.m_EnableToneMap = value;
@@ -439,10 +394,8 @@
 
         public float envRotationSpeed
         {
-            get
-            {
-                return this.m_EnvRotationSpeed;
-            }
+            get => 
+                this.m_EnvRotationSpeed;
             set
             {
                 this.m_EnvRotationSpeed = value;
@@ -452,10 +405,8 @@
 
         public float exposureRange
         {
-            get
-            {
-                return this.m_ExposureRange;
-            }
+            get => 
+                this.m_ExposureRange;
             set
             {
                 this.m_ExposureRange = value;
@@ -465,30 +416,21 @@
 
         public GizmoInfo gizmo
         {
-            get
-            {
-                return this.m_Gizmo;
-            }
+            get => 
+                this.m_Gizmo;
             set
             {
                 this.m_Gizmo = value;
             }
         }
 
-        public LookDevContext[] lookDevContexts
-        {
-            get
-            {
-                return this.m_LookDevContexts;
-            }
-        }
+        public LookDevContext[] lookDevContexts =>
+            this.m_LookDevContexts;
 
         public LookDevMode lookDevMode
         {
-            get
-            {
-                return this.m_LookDevMode;
-            }
+            get => 
+                this.m_LookDevMode;
             set
             {
                 this.m_LookDevMode = value;
@@ -499,10 +441,8 @@
 
         public float objRotationSpeed
         {
-            get
-            {
-                return this.m_ObjRotationSpeed;
-            }
+            get => 
+                this.m_ObjRotationSpeed;
             set
             {
                 this.m_ObjRotationSpeed = value;
@@ -512,10 +452,8 @@
 
         public bool rotateEnvMode
         {
-            get
-            {
-                return this.m_RotateEnvMode;
-            }
+            get => 
+                this.m_RotateEnvMode;
             set
             {
                 this.m_RotateEnvMode = value;
@@ -524,10 +462,8 @@
 
         public bool rotateObjectMode
         {
-            get
-            {
-                return this.m_RotateObjectMode;
-            }
+            get => 
+                this.m_RotateObjectMode;
             set
             {
                 this.m_RotateObjectMode = value;
@@ -536,10 +472,8 @@
 
         public float shadowDistance
         {
-            get
-            {
-                return this.m_ShadowDistance;
-            }
+            get => 
+                this.m_ShadowDistance;
             set
             {
                 this.m_ShadowDistance = value;
@@ -549,10 +483,8 @@
 
         public bool showBalls
         {
-            get
-            {
-                return this.m_ShowBalls;
-            }
+            get => 
+                this.m_ShowBalls;
             set
             {
                 this.m_ShowBalls = value;
@@ -562,10 +494,8 @@
 
         public bool showControlWindows
         {
-            get
-            {
-                return this.m_ShowControlWindows;
-            }
+            get => 
+                this.m_ShowControlWindows;
             set
             {
                 this.m_ShowControlWindows = value;
@@ -575,10 +505,8 @@
 
         public bool sideBySideCameraLinked
         {
-            get
-            {
-                return this.m_SideBySideCameraLinked;
-            }
+            get => 
+                this.m_SideBySideCameraLinked;
             set
             {
                 this.m_SideBySideCameraLinked = value;

@@ -81,7 +81,7 @@
                 case DotNetProfile.Net45:
                     return "4.5";
             }
-            throw new InvalidOperationException(string.Format("Unknown profile : {0}", profile));
+            throw new InvalidOperationException($"Unknown profile : {profile}");
         }
 
         public NPath ProfilePath(DotNetProfile profile)
@@ -118,21 +118,11 @@
             return TwoSix.ProfilePath(profile);
         }
 
-        public NPath _Gmcs
-        {
-            get
-            {
-                return this._MonoExecutable("bin/gmcs");
-            }
-        }
+        public NPath _Gmcs =>
+            this._MonoExecutable("bin/gmcs");
 
-        public NPath Cli
-        {
-            get
-            {
-                return this._MonoExecutable("bin/cli");
-            }
-        }
+        public NPath Cli =>
+            this._MonoExecutable("bin/cli");
 
         public NPath ConfigPath
         {
@@ -143,21 +133,11 @@
             }
         }
 
-        public NPath Mcs
-        {
-            get
-            {
-                return this._MonoExecutable("bin/mcs");
-            }
-        }
+        public NPath Mcs =>
+            this._MonoExecutable("bin/mcs");
 
-        public NPath Root
-        {
-            get
-            {
-                return this._installRoot;
-            }
-        }
+        public NPath Root =>
+            this._installRoot;
     }
 }
 

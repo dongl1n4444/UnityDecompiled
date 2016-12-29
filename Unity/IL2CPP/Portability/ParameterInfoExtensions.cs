@@ -4,26 +4,16 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class ParameterInfoExtensions
     {
-        [Extension]
-        public static bool GetIsLcidPortable(ParameterInfo parameterInfo)
-        {
-            return parameterInfo.IsLcid;
-        }
+        public static bool GetIsLcidPortable(this ParameterInfo parameterInfo) => 
+            parameterInfo.IsLcid;
 
-        [Extension]
-        public static int GetMetadataTokenPortable(ParameterInfo parameterInfo)
-        {
-            return parameterInfo.MetadataToken;
-        }
+        public static int GetMetadataTokenPortable(this ParameterInfo parameterInfo) => 
+            parameterInfo.MetadataToken;
 
-        [Extension]
-        public static object GetRawDefaultValuePortable(ParameterInfo parameterInfo)
-        {
-            return parameterInfo.RawDefaultValue;
-        }
+        public static object GetRawDefaultValuePortable(this ParameterInfo parameterInfo) => 
+            parameterInfo.RawDefaultValue;
     }
 }
 

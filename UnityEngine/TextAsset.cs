@@ -8,10 +8,8 @@
     /// </summary>
     public class TextAsset : UnityEngine.Object
     {
-        public override string ToString()
-        {
-            return this.text;
-        }
+        public override string ToString() => 
+            this.text;
 
         /// <summary>
         /// <para>The raw bytes of the text asset. (Read Only)</para>

@@ -28,7 +28,7 @@
             {
                 return "-∞ dB";
             }
-            return string.Format("{0:0.00} dB", 20f * Mathf.Log10(vol));
+            return $"{(20f * Mathf.Log10(vol)):0.00} dB";
         }
 
         public static string GetColumnString(AudioProfilerGroupInfoWrapper info, ColumnIndices index)
@@ -71,22 +71,22 @@
                     return (!flag2 ? (((info.info.flags & 0x200) == 0) ? "NO" : "YES") : "");
 
                 case ColumnIndices.DistanceToListener:
-                    return (!flag2 ? (flag ? ((info.info.distanceToListener < 1000f) ? string.Format("{0:0.00} m", info.info.distanceToListener) : string.Format("{0:0.00} km", info.info.distanceToListener * 0.001f)) : "N/A") : "");
+                    return (!flag2 ? (flag ? ((info.info.distanceToListener < 1000f) ? $"{info.info.distanceToListener:0.00} m" : $"{(info.info.distanceToListener * 0.001f):0.00} km") : "N/A") : "");
 
                 case ColumnIndices.MinDist:
-                    return (!flag2 ? (flag ? ((info.info.minDist < 1000f) ? string.Format("{0:0.00} m", info.info.minDist) : string.Format("{0:0.00} km", info.info.minDist * 0.001f)) : "N/A") : "");
+                    return (!flag2 ? (flag ? ((info.info.minDist < 1000f) ? $"{info.info.minDist:0.00} m" : $"{(info.info.minDist * 0.001f):0.00} km") : "N/A") : "");
 
                 case ColumnIndices.MaxDist:
-                    return (!flag2 ? (flag ? ((info.info.maxDist < 1000f) ? string.Format("{0:0.00} m", info.info.maxDist) : string.Format("{0:0.00} km", info.info.maxDist * 0.001f)) : "N/A") : "");
+                    return (!flag2 ? (flag ? ((info.info.maxDist < 1000f) ? $"{info.info.maxDist:0.00} m" : $"{(info.info.maxDist * 0.001f):0.00} km") : "N/A") : "");
 
                 case ColumnIndices.Time:
-                    return (!flag2 ? string.Format("{0:0.00} s", info.info.time) : "");
+                    return (!flag2 ? $"{info.info.time:0.00} s" : "");
 
                 case ColumnIndices.Duration:
-                    return (!flag2 ? string.Format("{0:0.00} s", info.info.duration) : "");
+                    return (!flag2 ? $"{info.info.duration:0.00} s" : "");
 
                 case ColumnIndices.Frequency:
-                    return (!flag2 ? ((info.info.frequency < 1000f) ? string.Format("{0:0.00} Hz", info.info.frequency) : string.Format("{0:0.00} kHz", info.info.frequency * 0.001f)) : string.Format("{0:0.00} x", info.info.frequency));
+                    return (!flag2 ? ((info.info.frequency < 1000f) ? $"{info.info.frequency:0.00} Hz" : $"{(info.info.frequency * 0.001f):0.00} kHz") : $"{info.info.frequency:0.00} x");
 
                 case ColumnIndices.IsStream:
                     return (!flag2 ? (((info.info.flags & 0x80) == 0) ? "NO" : "YES") : "");
@@ -109,10 +109,8 @@
             return "Unknown";
         }
 
-        public static int GetLastColumnIndex()
-        {
-            return (!Unsupported.IsDeveloperBuild() ? 15 : 0x16);
-        }
+        public static int GetLastColumnIndex() => 
+            (!Unsupported.IsDeveloperBuild() ? 15 : 0x16);
 
         public class AudioProfilerGroupInfoComparer : IComparer<AudioProfilerGroupInfoWrapper>
         {

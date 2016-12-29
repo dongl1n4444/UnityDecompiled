@@ -13,13 +13,8 @@
             this._scriptId = scriptId;
         }
 
-        public int Script
-        {
-            get
-            {
-                return this._scriptId;
-            }
-        }
+        public int Script =>
+            this._scriptId;
     }
 }
 

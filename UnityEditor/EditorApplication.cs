@@ -382,16 +382,12 @@
         /// <para>Ask the user if they want to save the open scene.</para>
         /// </summary>
         [Obsolete("Use EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo")]
-        public static bool SaveCurrentSceneIfUserWantsTo()
-        {
-            return EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
-        }
+        public static bool SaveCurrentSceneIfUserWantsTo() => 
+            EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
         [Obsolete("This function is internal and no longer supported")]
-        internal static bool SaveCurrentSceneIfUserWantsToForce()
-        {
-            return false;
-        }
+        internal static bool SaveCurrentSceneIfUserWantsToForce() => 
+            false;
 
         /// <summary>
         /// <para>Save the open scene.</para>
@@ -402,10 +398,8 @@
         /// <para>True if the save succeeded, otherwise false.</para>
         /// </returns>
         [Obsolete("Use EditorSceneManager.SaveScene")]
-        public static bool SaveScene()
-        {
-            return EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), "", false);
-        }
+        public static bool SaveScene() => 
+            EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), "", false);
 
         /// <summary>
         /// <para>Save the open scene.</para>
@@ -416,10 +410,8 @@
         /// <para>True if the save succeeded, otherwise false.</para>
         /// </returns>
         [Obsolete("Use EditorSceneManager.SaveScene")]
-        public static bool SaveScene(string path)
-        {
-            return EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), path, false);
-        }
+        public static bool SaveScene(string path) => 
+            EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), path, false);
 
         /// <summary>
         /// <para>Save the open scene.</para>
@@ -430,10 +422,8 @@
         /// <para>True if the save succeeded, otherwise false.</para>
         /// </returns>
         [Obsolete("Use EditorSceneManager.SaveScene")]
-        public static bool SaveScene(string path, bool saveAsCopy)
-        {
-            return EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), path, saveAsCopy);
-        }
+        public static bool SaveScene(string path, bool saveAsCopy) => 
+            EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), path, saveAsCopy);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SetSceneRepaintDirty();
@@ -510,13 +500,8 @@
         /// <para>Is true if the currently open scene in the editor contains unsaved modifications.</para>
         /// </summary>
         [Obsolete("Use Scene.isDirty instead. Use EditorSceneManager.GetScene API to get each open scene")]
-        public static bool isSceneDirty
-        {
-            get
-            {
-                return SceneManager.GetActiveScene().isDirty;
-            }
-        }
+        public static bool isSceneDirty =>
+            SceneManager.GetActiveScene().isDirty;
 
         /// <summary>
         /// <para>This property is true if the Editor is currently refreshing the AssetDatabase. During this time, the editor checks to see if any files have changed, whether they need to be reimported, and reimports them. (Read Only)</para>
@@ -525,13 +510,8 @@
 
         internal static Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        internal static bool supportsHiDPI
-        {
-            get
-            {
-                return (Application.platform == RuntimePlatform.OSXEditor);
-            }
-        }
+        internal static bool supportsHiDPI =>
+            (Application.platform == RuntimePlatform.OSXEditor);
 
         internal static Object tagManager { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 

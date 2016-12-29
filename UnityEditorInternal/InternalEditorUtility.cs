@@ -233,10 +233,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetEngineAssemblyPath();
-        public static string GetExternalScriptEditor()
-        {
-            return EditorPrefs.GetString("kScriptsDefaultApp");
-        }
+        public static string GetExternalScriptEditor() => 
+            EditorPrefs.GetString("kScriptsDefaultApp");
 
         public static string GetExternalScriptEditorArgs()
         {
@@ -1003,10 +1001,8 @@
         public static extern string GetNoDiffToolsDetectedMessage();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern Object GetObjectFromInstanceID(int instanceID);
-        public static Camera[] GetSceneViewCameras()
-        {
-            return SceneView.GetAllSceneCameras();
-        }
+        public static Camera[] GetSceneViewCameras() => 
+            SceneView.GetAllSceneCameras();
 
         private static string GetScriptEditorArgsKey(string path)
         {
@@ -1048,10 +1044,8 @@
             return ScriptEditor.Other;
         }
 
-        public static ScriptEditor GetScriptEditorFromPreferences()
-        {
-            return GetScriptEditorFromPath(GetExternalScriptEditor());
-        }
+        public static ScriptEditor GetScriptEditorFromPreferences() => 
+            GetScriptEditorFromPath(GetExternalScriptEditor());
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetSortingLayerCount();
@@ -1144,15 +1138,13 @@
                 case DllType.WinMDNET40:
                     return true;
             }
-            throw new Exception(string.Format("Unknown dll type: {0}", type));
+            throw new Exception($"Unknown dll type: {type}");
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsInEditorFolder(string path);
-        public static bool IsScriptEditorSpecial(string path)
-        {
-            return (GetScriptEditorFromPath(path) != ScriptEditor.Other);
-        }
+        public static bool IsScriptEditorSpecial(string path) => 
+            (GetScriptEditorFromPath(path) != ScriptEditor.Other);
 
         internal static bool IsScriptOrAssembly(string filename)
         {
@@ -1241,10 +1233,8 @@
         internal static extern void PrepareDragAndDropTestingInternal(GUIView guiView);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern DragAndDropVisualMode ProjectWindowDrag(HierarchyProperty property, bool perform);
-        public static Color[] ReadScreenPixel(Vector2 pixelPos, int sizex, int sizey)
-        {
-            return INTERNAL_CALL_ReadScreenPixel(ref pixelPos, sizex, sizey);
-        }
+        public static Color[] ReadScreenPixel(Vector2 pixelPos, int sizex, int sizey) => 
+            INTERNAL_CALL_ReadScreenPixel(ref pixelPos, sizex, sizey);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void RegisterExtensionDll(string dllLocation, string guid);
@@ -1322,10 +1312,8 @@
             return false;
         }
 
-        public static bool SaveCursorToFile(string path, Texture2D image, Vector2 hotSpot)
-        {
-            return INTERNAL_CALL_SaveCursorToFile(path, image, ref hotSpot);
-        }
+        public static bool SaveCursorToFile(string path, Texture2D image, Vector2 hotSpot) => 
+            INTERNAL_CALL_SaveCursorToFile(path, image, ref hotSpot);
 
         public static void SaveEditorSettingsList(string prefix, string[] aList, int count)
         {
@@ -1342,10 +1330,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SaveToSerializedFileAndForget(Object[] obj, string path, bool allowTextSerialization);
-        public static DragAndDropVisualMode SceneViewDrag(Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform)
-        {
-            return INTERNAL_CALL_SceneViewDrag(dropUpon, ref worldPosition, ref viewportPosition, perform);
-        }
+        public static DragAndDropVisualMode SceneViewDrag(Object dropUpon, Vector3 worldPosition, Vector2 viewportPosition, bool perform) => 
+            INTERNAL_CALL_SceneViewDrag(dropUpon, ref worldPosition, ref viewportPosition, perform);
 
         public static void SetCustomLighting(Light[] lights, Color ambient)
         {

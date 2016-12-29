@@ -92,10 +92,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public int Cast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance)
-        {
-            return INTERNAL_CALL_Cast(this, ref direction, results, distance);
-        }
+        public int Cast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance) => 
+            INTERNAL_CALL_Cast(this, ref direction, results, distance);
 
         /// <summary>
         /// <para>Get a local space point given the point point in rigidBody global space.</para>
@@ -263,10 +261,8 @@
         /// <returns>
         /// <para>Whether the point overlapped any of the Rigidbody2D colliders.</para>
         /// </returns>
-        public bool OverlapPoint(Vector2 point)
-        {
-            return INTERNAL_CALL_OverlapPoint(this, ref point);
-        }
+        public bool OverlapPoint(Vector2 point) => 
+            INTERNAL_CALL_OverlapPoint(this, ref point);
 
         private static void Rigidbody2D_CUSTOM_INTERNAL_GetPoint(Rigidbody2D rigidbody, Vector2 point, out Vector2 value)
         {
@@ -389,10 +385,8 @@
         /// </summary>
         public bool isKinematic
         {
-            get
-            {
-                return (this.bodyType == RigidbodyType2D.Kinematic);
-            }
+            get => 
+                (this.bodyType == RigidbodyType2D.Kinematic);
             set
             {
                 this.bodyType = !value ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;

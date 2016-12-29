@@ -29,40 +29,26 @@
             this.hasIl2CppPlayers = File.Exists(Path.Combine(storey.playerPackage, @"Managed\il2cpp\UnityEngine.dll"));
         }
 
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new BuildPostprocessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new BuildPostprocessor();
 
-        public override IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return ((this.buildWindow != null) ? this.buildWindow : (this.buildWindow = new MetroBuildWindowExtension(this)));
-        }
+        public override IBuildWindowExtension CreateBuildWindowExtension() => 
+            ((this.buildWindow != null) ? this.buildWindow : (this.buildWindow = new MetroBuildWindowExtension(this)));
 
-        public override ICompilationExtension CreateCompilationExtension()
-        {
-            return ((base.compilationExtension != null) ? base.compilationExtension : (base.compilationExtension = new MetroCompilationExtension()));
-        }
+        public override ICompilationExtension CreateCompilationExtension() => 
+            ((base.compilationExtension != null) ? base.compilationExtension : (base.compilationExtension = new MetroCompilationExtension()));
 
-        public override IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return ((this.pluginImporterExtension != null) ? this.pluginImporterExtension : (this.pluginImporterExtension = new MetroPluginImporterExtension()));
-        }
+        public override IPluginImporterExtension CreatePluginImporterExtension() => 
+            ((this.pluginImporterExtension != null) ? this.pluginImporterExtension : (this.pluginImporterExtension = new MetroPluginImporterExtension()));
 
-        public override IProjectGeneratorExtension CreateProjectGeneratorExtension()
-        {
-            return ((this.projectGeneratorExtension != null) ? this.projectGeneratorExtension : (this.projectGeneratorExtension = new MetroProjectGeneratorExtension()));
-        }
+        public override IProjectGeneratorExtension CreateProjectGeneratorExtension() => 
+            ((this.projectGeneratorExtension != null) ? this.projectGeneratorExtension : (this.projectGeneratorExtension = new MetroProjectGeneratorExtension()));
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return ((this.scriptingImplementations != null) ? this.scriptingImplementations : (this.scriptingImplementations = new ScriptingImplementations()));
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            ((this.scriptingImplementations != null) ? this.scriptingImplementations : (this.scriptingImplementations = new ScriptingImplementations()));
 
-        public override ISettingEditorExtension CreateSettingsEditorExtension()
-        {
-            return new MetroSettingsEditorExtension();
-        }
+        public override ISettingEditorExtension CreateSettingsEditorExtension() => 
+            new MetroSettingsEditorExtension();
 
         public override void RegisterAdditionalUnityExtensions()
         {
@@ -95,39 +81,22 @@
             }
         }
 
-        public override string[] AssemblyReferencesForUserScripts
-        {
-            get
-            {
-                return this.assemblyReferencesForUserScripts;
-            }
-        }
+        public override string[] AssemblyReferencesForUserScripts =>
+            this.assemblyReferencesForUserScripts;
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "MetroEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "MetroEditorExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "Metro";
-            }
-        }
+        public override string TargetName =>
+            "Metro";
 
         [CompilerGenerated]
         private sealed class <TargetExtension>c__AnonStorey0
         {
             internal string playerPackage;
 
-            internal bool <>m__0(string dll)
-            {
-                return File.Exists(Path.Combine(this.playerPackage, dll));
-            }
+            internal bool <>m__0(string dll) => 
+                File.Exists(Path.Combine(this.playerPackage, dll));
         }
 
         [StructLayout(LayoutKind.Sequential)]

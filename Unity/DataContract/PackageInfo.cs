@@ -16,10 +16,8 @@
         public PackageVersion unityVersion;
         public PackageVersion version;
 
-        public override bool Equals(object other)
-        {
-            return (this == (other as PackageInfo));
-        }
+        public override bool Equals(object other) => 
+            (this == (other as PackageInfo));
 
         public override int GetHashCode()
         {
@@ -44,35 +42,24 @@
             return (a.GetHashCode() == z.GetHashCode());
         }
 
-        public static bool operator !=(PackageInfo a, PackageInfo z)
-        {
-            return !(a == z);
-        }
+        public static bool operator !=(PackageInfo a, PackageInfo z) => 
+            !(a == z);
 
-        public override string ToString()
-        {
-            return string.Format("{0} {1} ({2}) v{3} for Unity v{4}", new object[] { this.organisation, this.name, this.type, (this.version == null) ? null : this.version.text, (this.unityVersion == null) ? null : this.basePath });
-        }
+        public override string ToString() => 
+            $"{this.organisation} {this.name} ({this.type}) v{this.version?.text} for Unity v{((this.unityVersion == null) ? null : this.basePath)}";
 
         public Dictionary<string, PackageFileData> files
         {
-            get
-            {
-                return this.m_FileDict;
-            }
+            get => 
+                this.m_FileDict;
             set
             {
                 this.m_FileDict = value;
             }
         }
 
-        public string packageName
-        {
-            get
-            {
-                return string.Format("{0}.{1}", this.organisation, this.name);
-            }
-        }
+        public string packageName =>
+            $"{this.organisation}.{this.name}";
     }
 }
 

@@ -21,63 +21,33 @@
         /// <summary>
         /// <para>Is link valid (Read Only).</para>
         /// </summary>
-        public bool valid
-        {
-            get
-            {
-                return (this.m_Valid != 0);
-            }
-        }
+        public bool valid =>
+            (this.m_Valid != 0);
         /// <summary>
         /// <para>Is link active (Read Only).</para>
         /// </summary>
-        public bool activated
-        {
-            get
-            {
-                return (this.m_Activated != 0);
-            }
-        }
+        public bool activated =>
+            (this.m_Activated != 0);
         /// <summary>
         /// <para>Link type specifier (Read Only).</para>
         /// </summary>
-        public OffMeshLinkType linkType
-        {
-            get
-            {
-                return this.m_LinkType;
-            }
-        }
+        public OffMeshLinkType linkType =>
+            this.m_LinkType;
         /// <summary>
         /// <para>Link start world position (Read Only).</para>
         /// </summary>
-        public Vector3 startPos
-        {
-            get
-            {
-                return this.m_StartPos;
-            }
-        }
+        public Vector3 startPos =>
+            this.m_StartPos;
         /// <summary>
         /// <para>Link end world position (Read Only).</para>
         /// </summary>
-        public Vector3 endPos
-        {
-            get
-            {
-                return this.m_EndPos;
-            }
-        }
+        public Vector3 endPos =>
+            this.m_EndPos;
         /// <summary>
         /// <para>The OffMeshLink if the link type is a manually placed Offmeshlink (Read Only).</para>
         /// </summary>
-        public OffMeshLink offMeshLink
-        {
-            get
-            {
-                return this.GetOffMeshLinkInternal(this.m_InstanceID);
-            }
-        }
+        public OffMeshLink offMeshLink =>
+            this.GetOffMeshLinkInternal(this.m_InstanceID);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern OffMeshLink GetOffMeshLinkInternal(int instanceID);
     }

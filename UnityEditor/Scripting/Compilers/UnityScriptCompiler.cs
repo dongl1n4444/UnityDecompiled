@@ -18,15 +18,11 @@
         {
         }
 
-        protected override CompilerOutputParserBase CreateOutputParser()
-        {
-            return new UnityScriptCompilerOutputParser();
-        }
+        protected override CompilerOutputParserBase CreateOutputParser() => 
+            new UnityScriptCompilerOutputParser();
 
-        protected override string[] GetStreamContainingCompilerMessages()
-        {
-            return base.GetStandardOutput();
-        }
+        protected override string[] GetStreamContainingCompilerMessages() => 
+            base.GetStandardOutput();
 
         protected override Program StartCompiler()
         {
@@ -46,7 +42,7 @@
             {
                 arguments.Add("-pragmas:strict,downcast");
             }
-            foreach (string str in Enumerable.Distinct<string>(this._island._defines))
+            foreach (string str in this._island._defines.Distinct<string>())
             {
                 arguments.Add("-define:" + str);
             }
@@ -60,7 +56,7 @@
             }
             else if (!BuildPipeline.IsUnityScriptEvalSupported(this._island._target))
             {
-                arguments.Add(string.Format("-disable-eval:eval is not supported on the current build target ({0}).", this._island._target));
+                arguments.Add($"-disable-eval:eval is not supported on the current build target ({this._island._target}).");
             }
             foreach (string str3 in this._island._files)
             {
@@ -70,10 +66,8 @@
             return base.StartCompiler(this._island._target, compiler, arguments);
         }
 
-        private bool StrictBuildTarget()
-        {
-            return (Array.IndexOf<string>(this._island._defines, "ENABLE_DUCK_TYPING") == -1);
-        }
+        private bool StrictBuildTarget() => 
+            (Array.IndexOf<string>(this._island._defines, "ENABLE_DUCK_TYPING") == -1);
     }
 }
 

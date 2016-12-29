@@ -94,10 +94,8 @@
             throw new ExitGUIException();
         }
 
-        internal static GUISkin GetBuiltinSkin(int skin)
-        {
-            return (Internal_GetBuiltinSkin(skin) as GUISkin);
-        }
+        internal static GUISkin GetBuiltinSkin(int skin) => 
+            (Internal_GetBuiltinSkin(skin) as GUISkin);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool GetChanged();
@@ -106,10 +104,8 @@
         /// </summary>
         /// <param name="focus"></param>
         /// <param name="position"></param>
-        public static int GetControlID(FocusType focus)
-        {
-            return GetControlID(0, focus);
-        }
+        public static int GetControlID(FocusType focus) => 
+            GetControlID(0, focus);
 
         /// <summary>
         /// <para>Get a unique ID for a control, using an integer as a hint to help ensure correct matching of IDs to controls.</para>
@@ -124,10 +120,8 @@
         /// </summary>
         /// <param name="focus"></param>
         /// <param name="position"></param>
-        public static int GetControlID(FocusType focus, Rect position)
-        {
-            return Internal_GetNextControlID2(0, focus, position);
-        }
+        public static int GetControlID(FocusType focus, Rect position) => 
+            Internal_GetNextControlID2(0, focus, position);
 
         /// <summary>
         /// <para>Get a unique ID for a control, using a the label content as a hint to help ensure correct matching of IDs to controls.</para>
@@ -135,10 +129,8 @@
         /// <param name="contents"></param>
         /// <param name="focus"></param>
         /// <param name="position"></param>
-        public static int GetControlID(GUIContent contents, FocusType focus)
-        {
-            return GetControlID(contents.hash, focus);
-        }
+        public static int GetControlID(GUIContent contents, FocusType focus) => 
+            GetControlID(contents.hash, focus);
 
         /// <summary>
         /// <para>Get a unique ID for a control, using an integer as a hint to help ensure correct matching of IDs to controls.</para>
@@ -146,10 +138,8 @@
         /// <param name="hint"></param>
         /// <param name="focus"></param>
         /// <param name="position"></param>
-        public static int GetControlID(int hint, FocusType focus, Rect position)
-        {
-            return Internal_GetNextControlID2(hint, focus, position);
-        }
+        public static int GetControlID(int hint, FocusType focus, Rect position) => 
+            Internal_GetNextControlID2(hint, focus, position);
 
         /// <summary>
         /// <para>Get a unique ID for a control, using a the label content as a hint to help ensure correct matching of IDs to controls.</para>
@@ -157,15 +147,11 @@
         /// <param name="contents"></param>
         /// <param name="focus"></param>
         /// <param name="position"></param>
-        public static int GetControlID(GUIContent contents, FocusType focus, Rect position)
-        {
-            return Internal_GetNextControlID2(contents.hash, focus, position);
-        }
+        public static int GetControlID(GUIContent contents, FocusType focus, Rect position) => 
+            Internal_GetNextControlID2(contents.hash, focus, position);
 
-        internal static GUISkin GetDefaultSkin()
-        {
-            return Internal_GetDefaultSkin(s_SkinMode);
-        }
+        internal static GUISkin GetDefaultSkin() => 
+            Internal_GetDefaultSkin(s_SkinMode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetPermanentControlID();
@@ -174,10 +160,8 @@
         /// </summary>
         /// <param name="t"></param>
         /// <param name="controlID"></param>
-        public static object GetStateObject(System.Type t, int controlID)
-        {
-            return GUIStateObjects.GetStateObject(t, controlID);
-        }
+        public static object GetStateObject(System.Type t, int controlID) => 
+            GUIStateObjects.GetStateObject(t, controlID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void GrabMouseControl(int id);
@@ -185,10 +169,8 @@
         /// <para>Convert a point from GUI position to screen space.</para>
         /// </summary>
         /// <param name="guiPoint"></param>
-        public static Vector2 GUIToScreenPoint(Vector2 guiPoint)
-        {
-            return (GUIClip.Unclip(guiPoint) + s_EditorScreenPointOffset);
-        }
+        public static Vector2 GUIToScreenPoint(Vector2 guiPoint) => 
+            (GUIClip.Unclip(guiPoint) + s_EditorScreenPointOffset);
 
         internal static Rect GUIToScreenRect(Rect guiRect)
         {
@@ -212,10 +194,8 @@
         internal static extern int Internal_GetGUIDepth();
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int Internal_GetHotControl();
-        private static int Internal_GetNextControlID2(int hint, FocusType focusType, Rect rect)
-        {
-            return INTERNAL_CALL_Internal_GetNextControlID2(hint, focusType, ref rect);
-        }
+        private static int Internal_GetNextControlID2(int hint, FocusType focusType, Rect rect) => 
+            INTERNAL_CALL_Internal_GetNextControlID2(hint, focusType, ref rect);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float Internal_GetPixelsPerPoint();
@@ -226,10 +206,8 @@
         /// </summary>
         /// <param name="t"></param>
         /// <param name="controlID"></param>
-        public static object QueryStateObject(System.Type t, int controlID)
-        {
-            return GUIStateObjects.QueryStateObject(t, controlID);
-        }
+        public static object QueryStateObject(System.Type t, int controlID) => 
+            GUIStateObjects.QueryStateObject(t, controlID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void ReleaseMouseControl();
@@ -264,10 +242,8 @@
         /// <para>Convert a point from screen space to GUI position.</para>
         /// </summary>
         /// <param name="screenPoint"></param>
-        public static Vector2 ScreenToGUIPoint(Vector2 screenPoint)
-        {
-            return (GUIClip.Clip(screenPoint) - s_EditorScreenPointOffset);
-        }
+        public static Vector2 ScreenToGUIPoint(Vector2 screenPoint) => 
+            (GUIClip.Clip(screenPoint) - s_EditorScreenPointOffset);
 
         public static Rect ScreenToGUIRect(Rect screenRect)
         {
@@ -303,10 +279,8 @@
         internal static bool guiIsExiting
         {
             [CompilerGenerated]
-            get
-            {
-                return <guiIsExiting>k__BackingField;
-            }
+            get => 
+                <guiIsExiting>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -324,10 +298,8 @@
         /// </summary>
         public static int hotControl
         {
-            get
-            {
-                return Internal_GetHotControl();
-            }
+            get => 
+                Internal_GetHotControl();
             set
             {
                 Internal_SetHotControl(value);
@@ -341,13 +313,8 @@
 
         internal static bool mouseUsed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-        internal static float pixelsPerPoint
-        {
-            get
-            {
-                return Internal_GetPixelsPerPoint();
-            }
-        }
+        internal static float pixelsPerPoint =>
+            Internal_GetPixelsPerPoint();
 
         /// <summary>
         /// <para>Get access to the system-wide pasteboard.</para>

@@ -26,29 +26,24 @@
 
         protected override void WriteMarshalCleanupFunction(CppCodeWriter writer)
         {
-            string uniqueIdentifier = string.Format("{0}_{1}_MarshalCleanupMethodDefinition", DefaultMarshalInfoWriter.Naming.ForType(base._type), MarshalingUtils.MarshalTypeToString(base._marshalType));
+            string uniqueIdentifier = $"{DefaultMarshalInfoWriter.Naming.ForType(base._type)}_{MarshalingUtils.MarshalTypeToString(base._marshalType)}_MarshalCleanupMethodDefinition";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, base._marshalCleanupFunctionDeclaration, base._marshalToNativeFunctionName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteMarshalCleanupFunction>m__2), uniqueIdentifier);
         }
 
         protected override void WriteMarshalFromNativeMethodDefinition(CppCodeWriter writer)
         {
-            string uniqueIdentifier = string.Format("{0}_{1}_FromNativeMethodDefinition", DefaultMarshalInfoWriter.Naming.ForType(base._type), MarshalingUtils.MarshalTypeToString(base._marshalType));
+            string uniqueIdentifier = $"{DefaultMarshalInfoWriter.Naming.ForType(base._type)}_{MarshalingUtils.MarshalTypeToString(base._marshalType)}_FromNativeMethodDefinition";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, base._marshalFromNativeFunctionDeclaration, base._marshalFromNativeFunctionName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteMarshalFromNativeMethodDefinition>m__1), uniqueIdentifier);
         }
 
         protected override void WriteMarshalToNativeMethodDefinition(CppCodeWriter writer)
         {
-            string uniqueIdentifier = string.Format("{0}_{1}_ToNativeMethodDefinition", DefaultMarshalInfoWriter.Naming.ForType(base._type), MarshalingUtils.MarshalTypeToString(base._marshalType));
+            string uniqueIdentifier = $"{DefaultMarshalInfoWriter.Naming.ForType(base._type)}_{MarshalingUtils.MarshalTypeToString(base._marshalType)}_ToNativeMethodDefinition";
             MethodWriter.WriteMethodWithMetadataInitialization(writer, base._marshalToNativeFunctionDeclaration, base._marshalToNativeFunctionName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteMarshalToNativeMethodDefinition>m__0), uniqueIdentifier);
         }
 
-        public override int NativeSizeWithoutPointers
-        {
-            get
-            {
-                return this._nativeSizeWithoutPointers;
-            }
-        }
+        public override int NativeSizeWithoutPointers =>
+            this._nativeSizeWithoutPointers;
     }
 }
 

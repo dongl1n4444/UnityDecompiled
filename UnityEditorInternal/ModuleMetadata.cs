@@ -24,7 +24,7 @@
             {
                 <>f__am$cache0 = new Func<int, UnityType>(null, (IntPtr) <GetModuleTypes>m__0);
             }
-            return Enumerable.ToArray<UnityType>(Enumerable.Select<int, UnityType>(GetModuleClasses(moduleName), <>f__am$cache0));
+            return Enumerable.Select<int, UnityType>(GetModuleClasses(moduleName), <>f__am$cache0).ToArray<UnityType>();
         }
     }
 }

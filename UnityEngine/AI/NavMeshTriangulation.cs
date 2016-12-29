@@ -28,13 +28,8 @@
         /// <para>NavMeshLayer values for the navmesh triangulation.</para>
         /// </summary>
         [Obsolete("Use areas instead.")]
-        public int[] layers
-        {
-            get
-            {
-                return this.areas;
-            }
-        }
+        public int[] layers =>
+            this.areas;
     }
 }
 

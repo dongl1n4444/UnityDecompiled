@@ -39,7 +39,7 @@
                     source.Add(definition);
                 }
             }
-            return Enumerable.ToArray<AssemblyDefinition>(source);
+            return source.ToArray<AssemblyDefinition>();
         }
 
         public IEnumerable<AssemblyDefinition> GetReferencedAssembliesFor(AssemblyDefinition assembly)
@@ -56,7 +56,7 @@
         private static IEnumerable<AssemblyDefinition> ResolveWindowsRuntimeReferences(AssemblyDefinition assembly)
         {
             TypeReferenceVisitor visitor = new TypeReferenceVisitor(assembly.MainModule);
-            Unity.Cecil.Visitor.Extensions.Accept(assembly, visitor);
+            assembly.Accept(visitor);
             return visitor.ResolvedAssemblies;
         }
 
@@ -80,7 +80,7 @@
                         TypeDefinition definition = typeReference.Resolve();
                         if (definition == null)
                         {
-                            throw new InvalidProgramException(string.Format("Failed to resolve [{0}]{1}.", scope.Name, typeReference.FullName));
+                            throw new InvalidProgramException($"Failed to resolve [{scope.Name}]{typeReference.FullName}.");
                         }
                         this._resolvedAssemblies.Add(definition.Module.Assembly);
                     }
@@ -88,13 +88,8 @@
                 }
             }
 
-            public IEnumerable<AssemblyDefinition> ResolvedAssemblies
-            {
-                get
-                {
-                    return this._resolvedAssemblies;
-                }
-            }
+            public IEnumerable<AssemblyDefinition> ResolvedAssemblies =>
+                this._resolvedAssemblies;
         }
     }
 }

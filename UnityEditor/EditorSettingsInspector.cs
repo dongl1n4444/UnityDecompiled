@@ -485,10 +485,8 @@
         {
             internal string selectedValue;
 
-            internal bool <>m__0(EditorSettingsInspector.PopupElement typeElem)
-            {
-                return (typeElem.id == this.selectedValue);
-            }
+            internal bool <>m__0(EditorSettingsInspector.PopupElement typeElem) => 
+                (typeElem.id == this.selectedValue);
         }
 
         [CompilerGenerated]
@@ -496,10 +494,8 @@
         {
             internal string logLevel;
 
-            internal bool <>m__0(string item)
-            {
-                return (item.ToLower() == this.logLevel);
-            }
+            internal bool <>m__0(string item) => 
+                (item.ToLower() == this.logLevel);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -519,13 +515,8 @@
                 this.requiresTeamLicense = requiresTeamLicense;
             }
 
-            public bool Enabled
-            {
-                get
-                {
-                    return (!this.requiresTeamLicense || InternalEditorUtility.HasTeamLicense());
-                }
-            }
+            public bool Enabled =>
+                (!this.requiresTeamLicense || InternalEditorUtility.HasTeamLicense());
         }
     }
 }

@@ -74,7 +74,7 @@
                         goto Label_0088;
                     }
                 }
-                Debug.LogWarning(string.Format("Unknown cpu architecture for .so library ({0})", assetPath));
+                Debug.LogWarning($"Unknown cpu architecture for .so library ({assetPath})");
             }
             return;
         Label_0088:
@@ -115,13 +115,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Process plugins";
-            }
-        }
+        public string Name =>
+            "Process plugins";
     }
 }
 

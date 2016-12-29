@@ -39,7 +39,7 @@
                 bool flag = true;
                 for (int j = 0; j < this.m_SelectedKeywords.Count; j++)
                 {
-                    if (!Enumerable.Contains<string>(this.m_Data.keywords[i], this.m_SelectedKeywords[j]))
+                    if (!this.m_Data.keywords[i].Contains<string>(this.m_SelectedKeywords[j]))
                     {
                         flag = false;
                         break;
@@ -60,15 +60,11 @@
             this.m_AvailableKeywords.Sort();
         }
 
-        private float CalcVerticalSpaceForKeywords()
-        {
-            return Mathf.Floor((base.position.height - 120f) / 4f);
-        }
+        private float CalcVerticalSpaceForKeywords() => 
+            Mathf.Floor((base.position.height - 120f) / 4f);
 
-        private float CalcVerticalSpaceForVariants()
-        {
-            return ((base.position.height - 120f) / 2f);
-        }
+        private float CalcVerticalSpaceForVariants() => 
+            ((base.position.height - 120f) / 2f);
 
         private void Draw(Rect windowRect)
         {
@@ -100,7 +96,7 @@
                 }
                 if (this.m_FilteredVariants.Count > b)
                 {
-                    GUI.Label(rect, string.Format("[{0} more variants skipped]", this.m_FilteredVariants.Count - b), EditorStyles.miniLabel);
+                    GUI.Label(rect, $"[{this.m_FilteredVariants.Count - b} more variants skipped]", EditorStyles.miniLabel);
                     rect.y += rect.height;
                 }
             }
@@ -113,7 +109,7 @@
             rect.height = 16f;
             using (new EditorGUI.DisabledScope(this.m_SelectedVariants.Count == 0))
             {
-                if (GUI.Button(rect, string.Format("Add {0} selected variants", this.m_SelectedVariants.Count)))
+                if (GUI.Button(rect, $"Add {this.m_SelectedVariants.Count} selected variants"))
                 {
                     Undo.RecordObject(this.m_Data.collection, "Add variant");
                     for (int j = 0; j < this.m_SelectedVariants.Count; j++)
@@ -135,7 +131,7 @@
             {
                 <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <DrawKeywordsList>m__0);
             }
-            List<string> items = Enumerable.ToList<string>(Enumerable.Select<string, string>(keywords, <>f__am$cache0));
+            List<string> items = Enumerable.Select<string, string>(keywords, <>f__am$cache0).ToList<string>();
             GUI.BeginGroup(rect);
             Rect rect2 = new Rect(4f, 0f, rect.width, rect.height);
             List<Rect> list2 = EditorGUIUtility.GetFlowLayoutedRects(rect2, EditorStyles.miniButton, 2f, 2f, items);

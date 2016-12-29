@@ -146,7 +146,7 @@
             {
                 <>f__am$cache3 = new Func<PopupList.ListElement, string>(null, (IntPtr) <AssetLabelListCallback>m__3);
             }
-            this.m_SearchFilter.assetLabels = Enumerable.ToArray<string>(Enumerable.Select<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, <>f__am$cache2), <>f__am$cache3));
+            this.m_SearchFilter.assetLabels = Enumerable.Select<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, <>f__am$cache2), <>f__am$cache3).ToArray<string>();
             this.m_SearchFieldText = this.m_SearchFilter.FilterToSearchFieldString();
             this.TopBarSearchSettingsChanged();
             base.Repaint();
@@ -558,10 +558,8 @@
             }
         }
 
-        private float DrawLocalAssetHeader(Rect r)
-        {
-            return 0f;
-        }
+        private float DrawLocalAssetHeader(Rect r) => 
+            0f;
 
         internal static int[] DuplicateFolders(int[] instanceIDs)
         {
@@ -654,7 +652,7 @@
                     }
                 }
             }
-            this.m_SearchFilter.folders = Enumerable.ToArray<string>(source);
+            this.m_SearchFilter.folders = source.ToArray<string>();
         }
 
         private void EnsureValidSetup()
@@ -828,10 +826,8 @@
             return "Assets";
         }
 
-        public static List<ProjectBrowser> GetAllProjectBrowsers()
-        {
-            return s_ProjectBrowsers;
-        }
+        public static List<ProjectBrowser> GetAllProjectBrowsers() => 
+            s_ProjectBrowsers;
 
         private string GetAnalyticsSizeLabel(float size)
         {
@@ -900,10 +896,8 @@
             return ItemType.Asset;
         }
 
-        private float GetListHeaderHeight()
-        {
-            return ((this.m_SearchFilter.GetState() != SearchFilter.State.EmptySearchFilter) ? 18f : 0f);
-        }
+        private float GetListHeaderHeight() => 
+            ((this.m_SearchFilter.GetState() != SearchFilter.State.EmptySearchFilter) ? 18f : 0f);
 
         private static List<string> GetMainPaths(List<int> instanceIDs)
         {
@@ -971,10 +965,8 @@
             return SearchViewState.NotSearching;
         }
 
-        private bool GetShouldShowFoldersFirst()
-        {
-            return (Application.platform != RuntimePlatform.OSXEditor);
-        }
+        private bool GetShouldShowFoldersFirst() => 
+            (Application.platform != RuntimePlatform.OSXEditor);
 
         private static int[] GetTreeViewFolderSelection()
         {
@@ -986,10 +978,8 @@
             return new int[0];
         }
 
-        private string[] GetTypesDisplayNames()
-        {
-            return new string[] { "AnimationClip", "AudioClip", "AudioMixer", "Font", "GUISkin", "Material", "Mesh", "Model", "PhysicMaterial", "Prefab", "Scene", "Script", "Shader", "Sprite", "Texture" };
-        }
+        private string[] GetTypesDisplayNames() => 
+            new string[] { "AnimationClip", "AudioClip", "AudioMixer", "Font", "GUISkin", "Material", "Mesh", "Model", "PhysicMaterial", "Prefab", "Scene", "Script", "Shader", "Sprite", "Texture" };
 
         private bool HandleCommandEvents()
         {
@@ -1247,10 +1237,8 @@
             }
         }
 
-        public bool Initialized()
-        {
-            return (this.m_ListArea != null);
-        }
+        public bool Initialized() => 
+            (this.m_ListArea != null);
 
         private void InitListArea()
         {
@@ -1349,10 +1337,8 @@
             return new List<string>(this.m_SearchFilter.folders).Contains(assetPath);
         }
 
-        private bool IsShowingFolderContents()
-        {
-            return (this.m_SearchFilter.folders.Length > 0);
-        }
+        private bool IsShowingFolderContents() => 
+            (this.m_SearchFilter.folders.Length > 0);
 
         private void ListAreaItemSelectedCallback(bool doubleClicked)
         {
@@ -2033,7 +2019,7 @@
                     }
                 }
             }
-            this.m_SearchFilter.folders = ProjectWindowUtil.GetBaseFolders(Enumerable.ToArray<string>(source));
+            this.m_SearchFilter.folders = ProjectWindowUtil.GetBaseFolders(source.ToArray<string>());
         }
 
         private void SetSearchViewState(SearchViewState state)
@@ -2342,7 +2328,7 @@
             {
                 <>f__am$cache1 = new Func<PopupList.ListElement, string>(null, (IntPtr) <TypeListCallback>m__1);
             }
-            string[] strArray = Enumerable.ToArray<string>(Enumerable.Select<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_ObjectTypes.m_ListElements, <>f__am$cache0), <>f__am$cache1));
+            string[] strArray = Enumerable.Select<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_ObjectTypes.m_ListElements, <>f__am$cache0), <>f__am$cache1).ToArray<string>();
             for (int i = 0; i < strArray.Length; i++)
             {
                 strArray[i] = strArray[i];
@@ -2396,20 +2382,13 @@
             return true;
         }
 
-        public float listAreaGridSize
-        {
-            get
-            {
-                return (float) this.m_ListArea.gridSize;
-            }
-        }
+        public float listAreaGridSize =>
+            ((float) this.m_ListArea.gridSize);
 
         private bool useTreeViewSelectionInsteadOfMainSelection
         {
-            get
-            {
-                return this.m_UseTreeViewSelectionInsteadOfMainSelection;
-            }
+            get => 
+                this.m_UseTreeViewSelectionInsteadOfMainSelection;
             set
             {
                 this.m_UseTreeViewSelectionInsteadOfMainSelection = value;
@@ -2552,10 +2531,8 @@
             public GUIStyle toolbarBack = "ObjectPickerToolbar";
             public GUIStyle topBarBg = "ProjectBrowserTopBarBg";
 
-            private static GUIStyle GetStyle(string styleName)
-            {
-                return styleName;
-            }
+            private static GUIStyle GetStyle(string styleName) => 
+                styleName;
         }
 
         private enum ViewMode

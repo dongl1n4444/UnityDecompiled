@@ -102,10 +102,8 @@
         /// </summary>
         public FitMode horizontalFit
         {
-            get
-            {
-                return this.m_HorizontalFit;
-            }
+            get => 
+                this.m_HorizontalFit;
             set
             {
                 if (SetPropertyUtility.SetStruct<FitMode>(ref this.m_HorizontalFit, value))
@@ -132,10 +130,8 @@
         /// </summary>
         public FitMode verticalFit
         {
-            get
-            {
-                return this.m_VerticalFit;
-            }
+            get => 
+                this.m_VerticalFit;
             set
             {
                 if (SetPropertyUtility.SetStruct<FitMode>(ref this.m_VerticalFit, value))

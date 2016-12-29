@@ -17,10 +17,8 @@
         protected Object[] m_Targets;
         private static Styles s_Styles;
 
-        private static float AbsRatioDiff(float x, float y)
-        {
-            return Mathf.Max((float) (x / y), (float) (y / x));
-        }
+        private static float AbsRatioDiff(float x, float y) => 
+            Mathf.Max((float) (x / y), (float) (y / x));
 
         /// <summary>
         /// <para>This is the first entry point for Preview Drawing.</para>
@@ -86,7 +84,7 @@
                 defaultPreview.ResetTarget();
                 if (Event.current.type == EventType.Repaint)
                 {
-                    infoString = string.Format("Previewing {0} of {1} Objects", num5, targets.Length);
+                    infoString = $"Previewing {num5} of {targets.Length} Objects";
                 }
             }
             else
@@ -98,7 +96,8 @@
                     if (infoString != string.Empty)
                     {
                         infoString = infoString.Replace("\n", "   ");
-                        infoString = string.Format("{0}\n{1}", defaultPreview.target.name, infoString);
+                        infoString = $"{defaultPreview.target.name}
+{infoString}";
                     }
                 }
             }
@@ -141,10 +140,8 @@
         /// <summary>
         /// <para>Implement this method to show object information on top of the object preview.</para>
         /// </summary>
-        public virtual string GetInfoString()
-        {
-            return "";
-        }
+        public virtual string GetInfoString() => 
+            "";
 
         /// <summary>
         /// <para>Override this method if you want to change the label of the Preview area.</para>
@@ -176,10 +173,8 @@
         /// <returns>
         /// <para>True if this component can be Previewed in its current state.</para>
         /// </returns>
-        public virtual bool HasPreviewGUI()
-        {
-            return false;
-        }
+        public virtual bool HasPreviewGUI() => 
+            false;
 
         /// <summary>
         /// <para>Called when the Preview gets created with the objects being previewed.</para>
@@ -248,13 +243,8 @@
         /// <summary>
         /// <para>The object currently being previewed.</para>
         /// </summary>
-        public virtual Object target
-        {
-            get
-            {
-                return this.m_Targets[this.m_ReferenceTargetIndex];
-            }
-        }
+        public virtual Object target =>
+            this.m_Targets[this.m_ReferenceTargetIndex];
 
         private class Styles
         {

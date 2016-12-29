@@ -28,10 +28,8 @@
             }
         }
 
-        protected override IEnumerable<Node> ExpandGeneratorImpl(MacroStatement deferred)
-        {
-            return new $ExpandGeneratorImpl$279(deferred, this);
-        }
+        protected override IEnumerable<Node> ExpandGeneratorImpl(MacroStatement deferred) => 
+            new $ExpandGeneratorImpl$279(deferred, this);
 
         [CompilerGenerated]
         protected override Statement ExpandImpl(MacroStatement deferred)
@@ -51,10 +49,8 @@
                 this.$self_$295 = self_;
             }
 
-            public override IEnumerator<Node> GetEnumerator()
-            {
-                return new $(this.$deferred$294, this.$self_$295);
-            }
+            public override IEnumerator<Node> GetEnumerator() => 
+                new $(this.$deferred$294, this.$self_$295);
 
             [Serializable, CompilerGenerated]
             internal sealed class $ : GenericGeneratorEnumerator<Node>, IEnumerator

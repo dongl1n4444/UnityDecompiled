@@ -206,10 +206,8 @@
             return this.GetShadersListForNodeType(NodeType.BarkNode);
         }
 
-        public static string GetUIString(string id)
-        {
-            return LocalizationDatabase.GetLocalizedString(id);
-        }
+        public static string GetUIString(string id) => 
+            LocalizationDatabase.GetLocalizedString(id);
 
         private int GUIShowError(string uniqueID, List<string> list, GUIContent message, GUIContent button, Texture2D icon)
         {
@@ -291,10 +289,8 @@
             return false;
         }
 
-        private static bool HasOptimizedShaderAndNameContains(Shader shader, string name)
-        {
-            return ((GetOptimizedShaderName(shader) != null) && shader.name.ToLower().Contains(name));
-        }
+        private static bool HasOptimizedShaderAndNameContains(Shader shader, string name) => 
+            ((GetOptimizedShaderName(shader) != null) && shader.name.ToLower().Contains(name));
 
         private static bool IsMaterialCorrect(Material material)
         {
@@ -305,20 +301,14 @@
             return true;
         }
 
-        public static bool IsTreeBarkShader(Shader shader)
-        {
-            return HasOptimizedShaderAndNameContains(shader, "bark");
-        }
+        public static bool IsTreeBarkShader(Shader shader) => 
+            HasOptimizedShaderAndNameContains(shader, "bark");
 
-        public static bool IsTreeLeafShader(Shader shader)
-        {
-            return HasOptimizedShaderAndNameContains(shader, "leaves");
-        }
+        public static bool IsTreeLeafShader(Shader shader) => 
+            HasOptimizedShaderAndNameContains(shader, "leaves");
 
-        private static bool IsTreeShader(Shader shader)
-        {
-            return (IsTreeBarkShader(shader) || IsTreeLeafShader(shader));
-        }
+        private static bool IsTreeShader(Shader shader) => 
+            (IsTreeBarkShader(shader) || IsTreeLeafShader(shader));
 
         public bool NodeHasWrongMaterial(TreeGroup group)
         {
@@ -396,21 +386,11 @@
             }
         }
 
-        internal static Shader DefaultOptimizedBarkShader
-        {
-            get
-            {
-                return Shader.Find("Hidden/Nature/Tree Creator Bark Optimized");
-            }
-        }
+        internal static Shader DefaultOptimizedBarkShader =>
+            Shader.Find("Hidden/Nature/Tree Creator Bark Optimized");
 
-        internal static Shader DefaultOptimizedLeafShader
-        {
-            get
-            {
-                return Shader.Find("Hidden/Nature/Tree Creator Leaves Optimized");
-            }
-        }
+        internal static Shader DefaultOptimizedLeafShader =>
+            Shader.Find("Hidden/Nature/Tree Creator Leaves Optimized");
 
         public enum NodeType
         {

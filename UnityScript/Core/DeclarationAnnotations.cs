@@ -13,10 +13,8 @@
             d.Annotate(NewVariableAnnotation);
         }
 
-        public static bool ShouldForceNewVariableFor(Declaration d)
-        {
-            return d.ContainsAnnotation(NewVariableAnnotation);
-        }
+        public static bool ShouldForceNewVariableFor(Declaration d) => 
+            d.ContainsAnnotation(NewVariableAnnotation);
     }
 }
 

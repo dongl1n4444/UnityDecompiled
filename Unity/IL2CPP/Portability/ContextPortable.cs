@@ -5,13 +5,8 @@
 
     public static class ContextPortable
     {
-        public static int DefaultContextIdPortable
-        {
-            get
-            {
-                return Context.DefaultContext.ContextID;
-            }
-        }
+        public static int DefaultContextIdPortable =>
+            Context.DefaultContext.ContextID;
     }
 }
 

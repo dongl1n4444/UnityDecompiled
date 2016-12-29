@@ -161,13 +161,8 @@
             AudioMixerUtility.RepaintAudioMixerAndInspectors();
         }
 
-        private static AudioMixerDrawUtils.Styles styles
-        {
-            get
-            {
-                return AudioMixerDrawUtils.styles;
-            }
-        }
+        private static AudioMixerDrawUtils.Styles styles =>
+            AudioMixerDrawUtils.styles;
 
         private class ExposedParamContext
         {

@@ -41,10 +41,8 @@
         [Obsolete("Use PhysicMaterial.bounciness instead", true)]
         public float bouncyness
         {
-            get
-            {
-                return this.bounciness;
-            }
+            get => 
+                this.bounciness;
             set
             {
                 this.bounciness = value;
@@ -70,10 +68,8 @@
         [Obsolete("Anisotropic friction is no longer supported since Unity 5.0.", true)]
         public Vector3 frictionDirection
         {
-            get
-            {
-                return Vector3.zero;
-            }
+            get => 
+                Vector3.zero;
             set
             {
             }
@@ -85,10 +81,8 @@
         [Obsolete("Anisotropic friction is no longer supported since Unity 5.0.", true)]
         public Vector3 frictionDirection2
         {
-            get
-            {
-                return Vector3.zero;
-            }
+            get => 
+                Vector3.zero;
             set
             {
             }

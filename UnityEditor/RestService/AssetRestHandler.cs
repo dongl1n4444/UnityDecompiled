@@ -41,10 +41,10 @@
                 {
                     throw new RestRequestException(HttpStatusCode.BadRequest, "AssetNotFound");
                 }
-                JSONValue value2 = new JSONValue();
-                value2["file"] = assetPath;
-                value2["contents"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(obj2.ToString()));
-                return value2;
+                return new JSONValue { 
+                    ["file"] = assetPath,
+                    ["contents"] = Convert.ToBase64String(Encoding.UTF8.GetBytes(obj2.ToString()))
+                };
             }
 
             protected override JSONValue HandleDelete(Request request, JSONValue payload)

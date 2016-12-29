@@ -6,7 +6,7 @@
     using UnityEditor.Sprites;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(PolygonCollider2D))]
+    [CustomEditor(typeof(PolygonCollider2D)), CanEditMultipleObjects]
     internal class PolygonCollider2DEditor : Collider2DEditorBase
     {
         [CompilerGenerated]

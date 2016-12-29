@@ -17,10 +17,8 @@
         public float rootSpread = 5f;
         public int shadowTextureQuality = 3;
 
-        public override bool CanHaveSubGroups()
-        {
-            return true;
-        }
+        public override bool CanHaveSubGroups() => 
+            true;
 
         public void SetRootMatrix(Matrix4x4 m)
         {
@@ -39,85 +37,35 @@
             base.UpdateParameters();
         }
 
-        internal override string DistributionModeString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string DistributionModeString =>
+            null;
 
-        internal override string EdgeTurbulenceString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string EdgeTurbulenceString =>
+            null;
 
-        internal override string FrequencyString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string FrequencyString =>
+            null;
 
-        internal override string GroupSeedString
-        {
-            get
-            {
-                return Styles.groupSeedString;
-            }
-        }
+        internal override string GroupSeedString =>
+            Styles.groupSeedString;
 
-        internal override string GrowthAngleString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string GrowthAngleString =>
+            null;
 
-        internal override string GrowthScaleString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string GrowthScaleString =>
+            null;
 
-        internal override string MainTurbulenceString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string MainTurbulenceString =>
+            null;
 
-        internal override string MainWindString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string MainWindString =>
+            null;
 
-        internal override string TwirlString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string TwirlString =>
+            null;
 
-        internal override string WhorledStepString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal override string WhorledStepString =>
+            null;
 
         private static class Styles
         {

@@ -19,10 +19,8 @@
         /// <returns>
         /// <para>True if this component can be Previewed in its current state.</para>
         /// </returns>
-        public override bool HasPreviewGUI()
-        {
-            return Application.isPlaying;
-        }
+        public override bool HasPreviewGUI() => 
+            Application.isPlaying;
 
         /// <summary>
         /// <para>See Editor.OnInspectorGUI.</para>
@@ -54,10 +52,8 @@
         /// <summary>
         /// <para>Does this edit require to be repainted constantly in its current state?</para>
         /// </summary>
-        public override bool RequiresConstantRepaint()
-        {
-            return Application.isPlaying;
-        }
+        public override bool RequiresConstantRepaint() => 
+            Application.isPlaying;
 
         protected GUIStyle previewLabelStyle
         {

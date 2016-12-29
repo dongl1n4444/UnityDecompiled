@@ -69,10 +69,8 @@
         /// <returns>
         /// <para>Hash code of id.</para>
         /// </returns>
-        public override int GetHashCode()
-        {
-            return this.id.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.id.GetHashCode();
 
         /// <summary>
         /// <para>Unity IAP product ID. Potentially independent of store IDs.</para>

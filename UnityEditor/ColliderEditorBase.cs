@@ -63,13 +63,8 @@
             EditMode.onEditModeStartDelegate = (EditMode.OnEditModeStartFunc) Delegate.Combine(EditMode.onEditModeStartDelegate, new EditMode.OnEditModeStartFunc(this.OnEditModeStart));
         }
 
-        public bool editingCollider
-        {
-            get
-            {
-                return ((EditMode.editMode == EditMode.SceneViewEditMode.Collider) && EditMode.IsOwner(this));
-            }
-        }
+        public bool editingCollider =>
+            ((EditMode.editMode == EditMode.SceneViewEditMode.Collider) && EditMode.IsOwner(this));
     }
 }
 

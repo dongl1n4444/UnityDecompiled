@@ -15,10 +15,8 @@
             this.settings = settings;
         }
 
-        public IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target, bool isDevelopmentBuild, string dataDirectory)
-        {
-            return new iOSIl2CppPlatformProvider(target, isDevelopmentBuild, dataDirectory);
-        }
+        public IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target, bool isDevelopmentBuild, string dataDirectory) => 
+            new iOSIl2CppPlatformProvider(target, isDevelopmentBuild, dataDirectory);
 
         public override void LaunchPlayer(BuildLaunchPlayerArgs args)
         {
@@ -30,10 +28,8 @@
             PostProcessiPhonePlayer.PostProcess(this.settings, args);
         }
 
-        public override bool SupportsInstallInBuildFolder()
-        {
-            return true;
-        }
+        public override bool SupportsInstallInBuildFolder() => 
+            true;
     }
 }
 

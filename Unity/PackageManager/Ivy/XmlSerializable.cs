@@ -21,10 +21,8 @@
         private static Dictionary<Type, XmlSerializer> serializerCache = new Dictionary<Type, XmlSerializer>();
         private static Dictionary<string, Type> typeMappings = new Dictionary<string, Type>();
 
-        public virtual XmlSchema GetSchema()
-        {
-            return null;
-        }
+        public virtual XmlSchema GetSchema() => 
+            null;
 
         internal static XmlSerializer GetSerializer(Type type)
         {
@@ -364,10 +362,8 @@
         {
             internal FieldInfo field;
 
-            internal object <>m__0(object who)
-            {
-                return this.field.GetValue(who);
-            }
+            internal object <>m__0(object who) => 
+                this.field.GetValue(who);
 
             internal void <>m__1(object who, object what)
             {
@@ -388,10 +384,8 @@
             internal XmlSerializable.<ProcessType>c__AnonStorey3 <>f__ref$3;
             internal PropertyInfo prop;
 
-            internal object <>m__0(object who)
-            {
-                return this.prop.GetGetMethod(true).Invoke(who, null);
-            }
+            internal object <>m__0(object who) => 
+                this.prop.GetGetMethod(true).Invoke(who, null);
 
             internal void <>m__1(object who, object what)
             {

@@ -43,13 +43,11 @@
         /// </summary>
         /// <param name="eventData"></param>
         [DebuggerHidden]
-        protected IEnumerator ClickRepeat(PointerEventData eventData)
-        {
-            return new <ClickRepeat>c__Iterator0 { 
+        protected IEnumerator ClickRepeat(PointerEventData eventData) => 
+            new <ClickRepeat>c__Iterator0 { 
                 eventData = eventData,
                 $this = this
             };
-        }
 
         /// <summary>
         /// <para>See member in base class.</para>
@@ -113,10 +111,8 @@
         {
         }
 
-        private bool MayDrag(PointerEventData eventData)
-        {
-            return ((this.IsActive() && this.IsInteractable()) && (eventData.button == PointerEventData.InputButton.Left));
-        }
+        private bool MayDrag(PointerEventData eventData) => 
+            ((this.IsActive() && this.IsInteractable()) && (eventData.button == PointerEventData.InputButton.Left));
 
         /// <summary>
         /// <para>Handling for when the scrollbar value is begin being dragged.</para>
@@ -325,10 +321,8 @@
             }
         }
 
-        Transform ICanvasElement.get_transform()
-        {
-            return base.transform;
-        }
+        Transform ICanvasElement.get_transform() => 
+            base.transform;
 
         private void UpdateCachedReferences()
         {
@@ -403,23 +397,16 @@
             }
         }
 
-        private Axis axis
-        {
-            get
-            {
-                return (((this.m_Direction != Direction.LeftToRight) && (this.m_Direction != Direction.RightToLeft)) ? Axis.Vertical : Axis.Horizontal);
-            }
-        }
+        private Axis axis =>
+            (((this.m_Direction != Direction.LeftToRight) && (this.m_Direction != Direction.RightToLeft)) ? Axis.Vertical : Axis.Horizontal);
 
         /// <summary>
         /// <para>The direction of the scrollbar from minimum to maximum value.</para>
         /// </summary>
         public Direction direction
         {
-            get
-            {
-                return this.m_Direction;
-            }
+            get => 
+                this.m_Direction;
             set
             {
                 if (SetPropertyUtility.SetStruct<Direction>(ref this.m_Direction, value))
@@ -434,10 +421,8 @@
         /// </summary>
         public RectTransform handleRect
         {
-            get
-            {
-                return this.m_HandleRect;
-            }
+            get => 
+                this.m_HandleRect;
             set
             {
                 if (SetPropertyUtility.SetClass<RectTransform>(ref this.m_HandleRect, value))
@@ -453,10 +438,8 @@
         /// </summary>
         public int numberOfSteps
         {
-            get
-            {
-                return this.m_NumberOfSteps;
-            }
+            get => 
+                this.m_NumberOfSteps;
             set
             {
                 if (SetPropertyUtility.SetStruct<int>(ref this.m_NumberOfSteps, value))
@@ -472,33 +455,24 @@
         /// </summary>
         public ScrollEvent onValueChanged
         {
-            get
-            {
-                return this.m_OnValueChanged;
-            }
+            get => 
+                this.m_OnValueChanged;
             set
             {
                 this.m_OnValueChanged = value;
             }
         }
 
-        private bool reverseValue
-        {
-            get
-            {
-                return ((this.m_Direction == Direction.RightToLeft) || (this.m_Direction == Direction.TopToBottom));
-            }
-        }
+        private bool reverseValue =>
+            ((this.m_Direction == Direction.RightToLeft) || (this.m_Direction == Direction.TopToBottom));
 
         /// <summary>
         /// <para>The size of the scrollbar handle where 1 means it fills the entire scrollbar.</para>
         /// </summary>
         public float size
         {
-            get
-            {
-                return this.m_Size;
-            }
+            get => 
+                this.m_Size;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_Size, Mathf.Clamp01(value)))
@@ -508,13 +482,8 @@
             }
         }
 
-        private float stepSize
-        {
-            get
-            {
-                return ((this.m_NumberOfSteps <= 1) ? 0.1f : (1f / ((float) (this.m_NumberOfSteps - 1))));
-            }
-        }
+        private float stepSize =>
+            ((this.m_NumberOfSteps <= 1) ? 0.1f : (1f / ((float) (this.m_NumberOfSteps - 1))));
 
         /// <summary>
         /// <para>The current value of the scrollbar, between 0 and 1.</para>
@@ -595,23 +564,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         private enum Axis

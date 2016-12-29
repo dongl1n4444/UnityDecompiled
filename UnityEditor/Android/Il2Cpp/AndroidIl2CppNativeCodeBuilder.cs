@@ -31,16 +31,11 @@
             return Path.Combine(path, Path.GetFileName(outputFileRelativePath));
         }
 
-        public override IEnumerable<string> AdditionalIl2CPPArguments
-        {
-            get
-            {
-                return new <>c__Iterator0 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public override IEnumerable<string> AdditionalIl2CPPArguments =>
+            new <>c__Iterator0 { 
+                $this=this,
+                $PC=-2
+            };
 
         public static string AndroidNdkVersionString
         {
@@ -68,21 +63,11 @@
             }
         }
 
-        public override string CompilerArchitecture
-        {
-            get
-            {
-                return this.m_DeviceType.Architecture;
-            }
-        }
+        public override string CompilerArchitecture =>
+            this.m_DeviceType.Architecture;
 
-        public override string CompilerPlatform
-        {
-            get
-            {
-                return "Android";
-            }
-        }
+        public override string CompilerPlatform =>
+            "Android";
 
         [CompilerGenerated]
         private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -106,7 +91,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.$current = string.Format("--tool-chain-path=\"{0}\"", this.$this.m_NdkRootDir);
+                        this.$current = $"--tool-chain-path="{this.$this.m_NdkRootDir}"";
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -137,28 +122,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

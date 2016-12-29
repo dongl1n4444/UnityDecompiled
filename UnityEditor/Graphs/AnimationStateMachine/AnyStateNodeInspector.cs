@@ -9,10 +9,8 @@
     {
         private SourceNodeTransitionEditor m_TransitionsEditor = null;
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_TransitionsEditor != null) && this.m_TransitionsEditor.HasPreviewGUI());
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_TransitionsEditor != null) && this.m_TransitionsEditor.HasPreviewGUI());
 
         private void Init()
         {

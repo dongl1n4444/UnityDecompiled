@@ -8,7 +8,7 @@
     using UnityEngine.Events;
     using UnityEngine.Rendering;
 
-    [CustomEditor(typeof(LightProbeProxyVolume)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(LightProbeProxyVolume))]
     internal class LightProbeProxyVolumeEditor : Editor
     {
         internal static Color kGizmoLightProbeProxyVolumeColor = new Color(1f, 0.8980392f, 0.5803922f, 0.5019608f);
@@ -107,10 +107,8 @@
             return new Bounds();
         }
 
-        private bool IsLightProbeVolumeProxyEditMode(EditMode.SceneViewEditMode editMode)
-        {
-            return ((editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeBox) || (editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin));
-        }
+        private bool IsLightProbeVolumeProxyEditMode(EditMode.SceneViewEditMode editMode) => 
+            ((editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeBox) || (editMode == EditMode.SceneViewEditMode.LightProbeProxyVolumeOrigin));
 
         public void OnDisable()
         {
@@ -265,13 +263,8 @@
             this.SetOptions(this.m_ShowNoLightProbesWarning, initialize, this.noLightProbesWarningValue);
         }
 
-        private bool boundingBoxOptionsValue
-        {
-            get
-            {
-                return (!this.m_BoundingBoxMode.hasMultipleDifferentValues && (this.m_BoundingBoxMode.intValue == 2));
-            }
-        }
+        private bool boundingBoxOptionsValue =>
+            (!this.m_BoundingBoxMode.hasMultipleDifferentValues && (this.m_BoundingBoxMode.intValue == 2));
 
         private bool componentUnusedWarningValue
         {
@@ -283,13 +276,8 @@
             }
         }
 
-        private bool noLightProbesWarningValue
-        {
-            get
-            {
-                return ((LightmapSettings.lightProbes == null) || (LightmapSettings.lightProbes.count == 0));
-            }
-        }
+        private bool noLightProbesWarningValue =>
+            ((LightmapSettings.lightProbes == null) || (LightmapSettings.lightProbes.count == 0));
 
         private bool noRendererWarningValue
         {
@@ -300,34 +288,19 @@
             }
         }
 
-        private bool resolutionProbesOptionValue
-        {
-            get
-            {
-                return (!this.m_ResolutionMode.hasMultipleDifferentValues && (this.m_ResolutionMode.intValue == 0));
-            }
-        }
+        private bool resolutionProbesOptionValue =>
+            (!this.m_ResolutionMode.hasMultipleDifferentValues && (this.m_ResolutionMode.intValue == 0));
 
-        private bool resolutionXYZOptionValue
-        {
-            get
-            {
-                return (!this.m_ResolutionMode.hasMultipleDifferentValues && (this.m_ResolutionMode.intValue == 1));
-            }
-        }
+        private bool resolutionXYZOptionValue =>
+            (!this.m_ResolutionMode.hasMultipleDifferentValues && (this.m_ResolutionMode.intValue == 1));
 
-        private bool sceneViewEditing
-        {
-            get
-            {
-                return (this.IsLightProbeVolumeProxyEditMode(EditMode.editMode) && EditMode.IsOwner(this));
-            }
-        }
+        private bool sceneViewEditing =>
+            (this.IsLightProbeVolumeProxyEditMode(EditMode.editMode) && EditMode.IsOwner(this));
 
         private static class Styles
         {
             public static string baseSceneEditingToolText = "<color=grey>Light Probe Proxy Volume Scene Editing Mode:</color> ";
-            public static GUIContent[] bbMode = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.BoundingBoxMode)), new Func<string, string>(null, (IntPtr) <bbMode>m__0))), new Func<string, GUIContent>(null, (IntPtr) <bbMode>m__1)));
+            public static GUIContent[] bbMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.BoundingBoxMode)), new Func<string, string>(null, (IntPtr) <bbMode>m__0)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <bbMode>m__1)).ToArray<GUIContent>();
             public static GUIContent bbModeText = EditorGUIUtility.TextContent("Bounding Box Mode|The mode in which the bounding box is computed. A 3D grid of interpolated light probes will be generated inside this bounding box.\n\nAutomatic Local - the local-space bounding box of the Renderer is used.\n\nAutomatic Global - a bounding box is computed which encloses the current Renderer and all the Renderers down the hierarchy that have the Light Probes property set to Use Proxy Volume. The bounding box will be world-space aligned.\n\nCustom - a custom bounding box is used. The bounding box is specified in the local-space of the game object.");
             public static GUIContent bbSettingsText = EditorGUIUtility.TextContent("Bounding Box Settings");
             public static GUIContent componentUnsuportedOnTreesNote = EditorGUIUtility.TextContent("Tree rendering doesn't support Light Probe Proxy Volume components.");
@@ -335,11 +308,11 @@
             public static GUIContent noLightProbes = EditorGUIUtility.TextContent("The scene doesn't contain any light probes. Add light probes using Light Probe Group components (menu: Component->Rendering->Light Probe Group).");
             public static GUIContent noRendererNode = EditorGUIUtility.TextContent("The component is unused by this game object because there is no Renderer component attached.");
             public static GUIContent originText = EditorGUIUtility.TextContent("Origin");
-            public static GUIContent[] probePositionMode = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ProbePositionMode)), new Func<string, string>(null, (IntPtr) <probePositionMode>m__4))), new Func<string, GUIContent>(null, (IntPtr) <probePositionMode>m__5)));
+            public static GUIContent[] probePositionMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ProbePositionMode)), new Func<string, string>(null, (IntPtr) <probePositionMode>m__4)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <probePositionMode>m__5)).ToArray<GUIContent>();
             public static GUIContent probePositionText = EditorGUIUtility.TextContent("Probe Position Mode|The mode in which the interpolated probe positions are generated.\n\nCellCorner - divide the volume in cells and generate interpolated probe positions in the corner/edge of the cells.\n\nCellCenter - divide the volume in cells and generate interpolated probe positions in the center of the cells.");
-            public static GUIContent[] refreshMode = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.RefreshMode)), new Func<string, string>(null, (IntPtr) <refreshMode>m__6))), new Func<string, GUIContent>(null, (IntPtr) <refreshMode>m__7)));
+            public static GUIContent[] refreshMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.RefreshMode)), new Func<string, string>(null, (IntPtr) <refreshMode>m__6)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <refreshMode>m__7)).ToArray<GUIContent>();
             public static GUIContent refreshModeText = EditorGUIUtility.TextContent("Refresh Mode");
-            public static GUIContent[] resMode = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ResolutionMode)), new Func<string, string>(null, (IntPtr) <resMode>m__2))), new Func<string, GUIContent>(null, (IntPtr) <resMode>m__3)));
+            public static GUIContent[] resMode = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeProxyVolume.ResolutionMode)), new Func<string, string>(null, (IntPtr) <resMode>m__2)).ToArray<string>(), new Func<string, GUIContent>(null, (IntPtr) <resMode>m__3)).ToArray<GUIContent>();
             public static GUIContent resModeText = EditorGUIUtility.TextContent("Resolution Mode|The mode in which the resolution of the 3D grid of interpolated light probes is specified:\n\nAutomatic - the resolution on each axis is computed using a user-specified number of interpolated light probes per unit area(Density).\n\nCustom - the user can specify a different resolution on each axis.");
             public static GUIContent resolutionXText = new GUIContent("X");
             public static GUIContent resolutionYText = new GUIContent("Y");
@@ -350,7 +323,7 @@
             public static GUIContent sizeText = EditorGUIUtility.TextContent("Size");
             public static GUIContent[] toolContents = new GUIContent[] { EditorGUIUtility.IconContent("EditCollider"), EditorGUIUtility.IconContent("MoveTool", "|Move the selected objects.") };
             public static GUIContent[] toolNames = new GUIContent[] { new GUIContent(baseSceneEditingToolText + "Box Bounds", ""), new GUIContent(baseSceneEditingToolText + "Box Origin", "") };
-            public static GUIContent[] volTextureSizes = Enumerable.ToArray<GUIContent>(Enumerable.Select<int, GUIContent>(volTextureSizesValues, new Func<int, GUIContent>(null, (IntPtr) <volTextureSizes>m__8)));
+            public static GUIContent[] volTextureSizes = Enumerable.Select<int, GUIContent>(volTextureSizesValues, new Func<int, GUIContent>(null, (IntPtr) <volTextureSizes>m__8)).ToArray<GUIContent>();
             public static int[] volTextureSizesValues = new int[] { 1, 2, 4, 8, 0x10, 0x20 };
             public static GUIContent volumeResolutionText = EditorGUIUtility.TextContent("Proxy Volume Resolution|Specifies the resolution of the 3D grid of interpolated light probes. Higher resolution/density means better lighting but the CPU cost will increase.");
 
@@ -360,58 +333,40 @@
             }
 
             [CompilerGenerated]
-            private static string <bbMode>m__0(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <bbMode>m__0(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static GUIContent <bbMode>m__1(string x)
-            {
-                return new GUIContent(x);
-            }
+            private static GUIContent <bbMode>m__1(string x) => 
+                new GUIContent(x);
 
             [CompilerGenerated]
-            private static string <probePositionMode>m__4(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <probePositionMode>m__4(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static GUIContent <probePositionMode>m__5(string x)
-            {
-                return new GUIContent(x);
-            }
+            private static GUIContent <probePositionMode>m__5(string x) => 
+                new GUIContent(x);
 
             [CompilerGenerated]
-            private static string <refreshMode>m__6(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <refreshMode>m__6(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static GUIContent <refreshMode>m__7(string x)
-            {
-                return new GUIContent(x);
-            }
+            private static GUIContent <refreshMode>m__7(string x) => 
+                new GUIContent(x);
 
             [CompilerGenerated]
-            private static string <resMode>m__2(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <resMode>m__2(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static GUIContent <resMode>m__3(string x)
-            {
-                return new GUIContent(x);
-            }
+            private static GUIContent <resMode>m__3(string x) => 
+                new GUIContent(x);
 
             [CompilerGenerated]
-            private static GUIContent <volTextureSizes>m__8(int n)
-            {
-                return new GUIContent(n.ToString());
-            }
+            private static GUIContent <volTextureSizes>m__8(int n) => 
+                new GUIContent(n.ToString());
         }
     }
 }

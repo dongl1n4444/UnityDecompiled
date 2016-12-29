@@ -23,10 +23,8 @@
             }
         }
 
-        public static implicit operator float(SavedFloat s)
-        {
-            return s.value;
-        }
+        public static implicit operator float(SavedFloat s) => 
+            s.value;
 
         public float value
         {

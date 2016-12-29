@@ -190,7 +190,7 @@
             {
                 if (LogFilter.logDebug)
                 {
-                    Debug.Log(string.Concat(new object[] { "Registering custom prefab '", prefab.name, "' as asset:", component.assetId, " ", DotNetCompatibility.GetMethodName(spawnHandler), "/", DotNetCompatibility.GetMethodName(unspawnHandler) }));
+                    Debug.Log(string.Concat(new object[] { "Registering custom prefab '", prefab.name, "' as asset:", component.assetId, " ", spawnHandler.GetMethodName(), "/", unspawnHandler.GetMethodName() }));
                 }
                 s_SpawnHandlers[component.assetId] = spawnHandler;
                 s_UnspawnHandlers[component.assetId] = unspawnHandler;
@@ -210,17 +210,15 @@
             {
                 if (LogFilter.logDebug)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterSpawnHandler asset '", assetId, "' ", DotNetCompatibility.GetMethodName(spawnHandler), "/", DotNetCompatibility.GetMethodName(unspawnHandler) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterSpawnHandler asset '", assetId, "' ", spawnHandler.GetMethodName(), "/", unspawnHandler.GetMethodName() }));
                 }
                 s_SpawnHandlers[assetId] = spawnHandler;
                 s_UnspawnHandlers[assetId] = unspawnHandler;
             }
         }
 
-        internal bool RemoveLocalObject(NetworkInstanceId netId)
-        {
-            return this.m_LocalObjects.Remove(netId);
-        }
+        internal bool RemoveLocalObject(NetworkInstanceId netId) => 
+            this.m_LocalObjects.Remove(netId);
 
         internal bool RemoveLocalObjectAndDestroy(NetworkInstanceId netId)
         {
@@ -288,37 +286,17 @@
             s_UnspawnHandlers.Remove(assetId);
         }
 
-        internal static Dictionary<NetworkHash128, GameObject> guidToPrefab
-        {
-            get
-            {
-                return s_GuidToPrefab;
-            }
-        }
+        internal static Dictionary<NetworkHash128, GameObject> guidToPrefab =>
+            s_GuidToPrefab;
 
-        internal Dictionary<NetworkInstanceId, NetworkIdentity> localObjects
-        {
-            get
-            {
-                return this.m_LocalObjects;
-            }
-        }
+        internal Dictionary<NetworkInstanceId, NetworkIdentity> localObjects =>
+            this.m_LocalObjects;
 
-        internal static Dictionary<NetworkHash128, SpawnDelegate> spawnHandlers
-        {
-            get
-            {
-                return s_SpawnHandlers;
-            }
-        }
+        internal static Dictionary<NetworkHash128, SpawnDelegate> spawnHandlers =>
+            s_SpawnHandlers;
 
-        internal static Dictionary<NetworkHash128, UnSpawnDelegate> unspawnHandlers
-        {
-            get
-            {
-                return s_UnspawnHandlers;
-            }
-        }
+        internal static Dictionary<NetworkHash128, UnSpawnDelegate> unspawnHandlers =>
+            s_UnspawnHandlers;
     }
 }
 

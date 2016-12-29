@@ -29,7 +29,7 @@
 
         protected XmlElement AppendElement(XmlElement node, string tag, string attribute)
         {
-            if (node.SelectSingleNode(string.Format(".//{0}[@{1}]", tag, attribute), this.nsMgr) != null)
+            if (node.SelectSingleNode($".//{tag}[@{attribute}]", this.nsMgr) != null)
             {
                 return null;
             }
@@ -38,7 +38,7 @@
 
         protected XmlElement AppendElement(XmlElement node, string tag, string attribute, string attributeValue)
         {
-            if (node.SelectSingleNode(string.Format(".//{0}[@{1}='{2}']", tag, attribute, attributeValue), this.nsMgr) != null)
+            if (node.SelectSingleNode($".//{tag}[@{attribute}='{attributeValue}']", this.nsMgr) != null)
             {
                 return null;
             }
@@ -54,7 +54,7 @@
 
         public void PatchStringRes(string tag, string attrib, string value)
         {
-            XmlNode node = base.SelectSingleNode(string.Format("//{0}[@name='{1}']", tag, attrib), this.nsMgr);
+            XmlNode node = base.SelectSingleNode($"//{tag}[@name='{attrib}']", this.nsMgr);
             if (node == null)
             {
                 node = base.DocumentElement.AppendChild(base.CreateElement(tag));
@@ -66,10 +66,8 @@
             node.InnerText = value;
         }
 
-        public string Save()
-        {
-            return this.SaveAs(this.m_Path);
-        }
+        public string Save() => 
+            this.SaveAs(this.m_Path);
 
         public string SaveAs(string path)
         {

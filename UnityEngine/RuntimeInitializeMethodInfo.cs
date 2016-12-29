@@ -12,10 +12,8 @@
         private bool m_IsUnityClass = false;
         internal string fullClassName
         {
-            get
-            {
-                return this.m_FullClassName;
-            }
+            get => 
+                this.m_FullClassName;
             set
             {
                 this.m_FullClassName = value;
@@ -23,10 +21,8 @@
         }
         internal string methodName
         {
-            get
-            {
-                return this.m_MethodName;
-            }
+            get => 
+                this.m_MethodName;
             set
             {
                 this.m_MethodName = value;
@@ -34,10 +30,8 @@
         }
         internal int orderNumber
         {
-            get
-            {
-                return this.m_OrderNumber;
-            }
+            get => 
+                this.m_OrderNumber;
             set
             {
                 this.m_OrderNumber = value;
@@ -45,10 +39,8 @@
         }
         internal bool isUnityClass
         {
-            get
-            {
-                return this.m_IsUnityClass;
-            }
+            get => 
+                this.m_IsUnityClass;
             set
             {
                 this.m_IsUnityClass = value;

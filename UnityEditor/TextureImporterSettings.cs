@@ -136,10 +136,8 @@
         /// </summary>
         public bool alphaIsTransparency
         {
-            get
-            {
-                return (this.m_AlphaIsTransparency != 0);
-            }
+            get => 
+                (this.m_AlphaIsTransparency != 0);
             set
             {
                 this.m_AlphaIsTransparency = !value ? 0 : 1;
@@ -151,10 +149,8 @@
         /// </summary>
         public TextureImporterAlphaSource alphaSource
         {
-            get
-            {
-                return (TextureImporterAlphaSource) this.m_AlphaSource;
-            }
+            get => 
+                ((TextureImporterAlphaSource) this.m_AlphaSource);
             set
             {
                 this.m_AlphaSource = (int) value;
@@ -166,10 +162,8 @@
         /// </summary>
         public int aniso
         {
-            get
-            {
-                return this.m_Aniso;
-            }
+            get => 
+                this.m_Aniso;
             set
             {
                 this.m_Aniso = value;
@@ -181,10 +175,8 @@
         /// </summary>
         public bool borderMipmap
         {
-            get
-            {
-                return (this.m_BorderMipMap != 0);
-            }
+            get => 
+                (this.m_BorderMipMap != 0);
             set
             {
                 this.m_BorderMipMap = !value ? 0 : 1;
@@ -194,10 +186,8 @@
         [Obsolete("Texture compression can only be overridden on a per platform basis. See [[TextureImporter.compressionQuality]] for Default platform or [[TextureImporterPlatformSettings]]")]
         public int compressionQuality
         {
-            get
-            {
-                return this.m_CompressionQuality;
-            }
+            get => 
+                this.m_CompressionQuality;
             set
             {
                 this.m_CompressionQuality = value;
@@ -207,10 +197,8 @@
 
         private int compressionQualitySet
         {
-            get
-            {
-                return this.m_CompressionQualitySet;
-            }
+            get => 
+                this.m_CompressionQualitySet;
             set
             {
                 this.m_CompressionQualitySet = value;
@@ -222,10 +210,8 @@
         /// </summary>
         public bool convertToNormalMap
         {
-            get
-            {
-                return (this.m_ConvertToNormalMap != 0);
-            }
+            get => 
+                (this.m_ConvertToNormalMap != 0);
             set
             {
                 this.m_ConvertToNormalMap = !value ? 0 : 1;
@@ -237,10 +223,8 @@
         /// </summary>
         public TextureImporterCubemapConvolution cubemapConvolution
         {
-            get
-            {
-                return (TextureImporterCubemapConvolution) this.m_CubemapConvolution;
-            }
+            get => 
+                ((TextureImporterCubemapConvolution) this.m_CubemapConvolution);
             set
             {
                 this.m_CubemapConvolution = (int) value;
@@ -253,10 +237,8 @@
         [Obsolete("Not used anymore. The right values are automatically picked by the importer.")]
         public float cubemapConvolutionExponent
         {
-            get
-            {
-                return this.m_CubemapConvolutionExponent;
-            }
+            get => 
+                this.m_CubemapConvolutionExponent;
             set
             {
                 this.m_CubemapConvolutionExponent = value;
@@ -269,10 +251,8 @@
         [Obsolete("Not used anymore. The right values are automatically picked by the importer.")]
         public int cubemapConvolutionSteps
         {
-            get
-            {
-                return this.m_CubemapConvolutionSteps;
-            }
+            get => 
+                this.m_CubemapConvolutionSteps;
             set
             {
                 this.m_CubemapConvolutionSteps = value;
@@ -284,10 +264,8 @@
         /// </summary>
         public bool fadeOut
         {
-            get
-            {
-                return (this.m_FadeOut != 0);
-            }
+            get => 
+                (this.m_FadeOut != 0);
             set
             {
                 this.m_FadeOut = !value ? 0 : 1;
@@ -299,10 +277,8 @@
         /// </summary>
         public FilterMode filterMode
         {
-            get
-            {
-                return (FilterMode) this.m_FilterMode;
-            }
+            get => 
+                ((FilterMode) this.m_FilterMode);
             set
             {
                 this.m_FilterMode = (int) value;
@@ -314,10 +290,8 @@
         /// </summary>
         public TextureImporterGenerateCubemap generateCubemap
         {
-            get
-            {
-                return (TextureImporterGenerateCubemap) this.m_GenerateCubemap;
-            }
+            get => 
+                ((TextureImporterGenerateCubemap) this.m_GenerateCubemap);
             set
             {
                 this.m_GenerateCubemap = (int) value;
@@ -327,10 +301,8 @@
         [Obsolete("Texture mips are now always generated in linear space")]
         public bool generateMipsInLinearSpace
         {
-            get
-            {
-                return true;
-            }
+            get => 
+                true;
             set
             {
             }
@@ -342,10 +314,8 @@
         [Obsolete("Use UnityEditor.TextureImporter.alphaSource instead")]
         public bool grayscaleToAlpha
         {
-            get
-            {
-                return (this.alphaSource == TextureImporterAlphaSource.FromGrayScale);
-            }
+            get => 
+                (this.alphaSource == TextureImporterAlphaSource.FromGrayScale);
             set
             {
                 if (value)
@@ -364,10 +334,8 @@
         /// </summary>
         public float heightmapScale
         {
-            get
-            {
-                return this.m_HeightScale;
-            }
+            get => 
+                this.m_HeightScale;
             set
             {
                 this.m_HeightScale = value;
@@ -377,10 +345,8 @@
         [Obsolete("Check importer.textureType against TextureImporterType.Lightmap instead. Getter will work as expected. Setter will set textureType to Lightmap if true, nothing otherwise.")]
         public bool lightmap
         {
-            get
-            {
-                return (this.textureType == TextureImporterType.Lightmap);
-            }
+            get => 
+                (this.textureType == TextureImporterType.Lightmap);
             set
             {
                 if (value)
@@ -397,10 +363,8 @@
         [Obsolete("Use sRGBTexture instead")]
         public bool linearTexture
         {
-            get
-            {
-                return !this.sRGBTexture;
-            }
+            get => 
+                !this.sRGBTexture;
             set
             {
                 this.sRGBTexture = !value;
@@ -410,10 +374,8 @@
         [Obsolete("Texture max size can only be overridden on a per platform basis. See [[TextureImporter.maxTextureSize]] for Default platform or [[TextureImporterPlatformSettings]]")]
         public int maxTextureSize
         {
-            get
-            {
-                return this.m_MaxTextureSize;
-            }
+            get => 
+                this.m_MaxTextureSize;
             set
             {
                 this.m_MaxTextureSize = value;
@@ -423,10 +385,8 @@
 
         private int maxTextureSizeSet
         {
-            get
-            {
-                return this.m_MaxTextureSizeSet;
-            }
+            get => 
+                this.m_MaxTextureSizeSet;
             set
             {
                 this.m_MaxTextureSizeSet = value;
@@ -438,10 +398,8 @@
         /// </summary>
         public float mipmapBias
         {
-            get
-            {
-                return this.m_MipBias;
-            }
+            get => 
+                this.m_MipBias;
             set
             {
                 this.m_MipBias = value;
@@ -453,10 +411,8 @@
         /// </summary>
         public bool mipmapEnabled
         {
-            get
-            {
-                return (this.m_EnableMipMap != 0);
-            }
+            get => 
+                (this.m_EnableMipMap != 0);
             set
             {
                 this.m_EnableMipMap = !value ? 0 : 1;
@@ -468,10 +424,8 @@
         /// </summary>
         public int mipmapFadeDistanceEnd
         {
-            get
-            {
-                return this.m_MipMapFadeDistanceEnd;
-            }
+            get => 
+                this.m_MipMapFadeDistanceEnd;
             set
             {
                 this.m_MipMapFadeDistanceEnd = value;
@@ -483,10 +437,8 @@
         /// </summary>
         public int mipmapFadeDistanceStart
         {
-            get
-            {
-                return this.m_MipMapFadeDistanceStart;
-            }
+            get => 
+                this.m_MipMapFadeDistanceStart;
             set
             {
                 this.m_MipMapFadeDistanceStart = value;
@@ -498,10 +450,8 @@
         /// </summary>
         public TextureImporterMipFilter mipmapFilter
         {
-            get
-            {
-                return (TextureImporterMipFilter) this.m_MipMapMode;
-            }
+            get => 
+                ((TextureImporterMipFilter) this.m_MipMapMode);
             set
             {
                 this.m_MipMapMode = (int) value;
@@ -511,10 +461,8 @@
         [Obsolete("Check importer.textureType against TextureImporterType.NormalMap instead. Getter will work as expected. Setter will set textureType to NormalMap if true, nothing otherwise")]
         public bool normalMap
         {
-            get
-            {
-                return (this.textureType == TextureImporterType.NormalMap);
-            }
+            get => 
+                (this.textureType == TextureImporterType.NormalMap);
             set
             {
                 if (value)
@@ -533,10 +481,8 @@
         /// </summary>
         public TextureImporterNormalFilter normalMapFilter
         {
-            get
-            {
-                return (TextureImporterNormalFilter) this.m_NormalMapFilter;
-            }
+            get => 
+                ((TextureImporterNormalFilter) this.m_NormalMapFilter);
             set
             {
                 this.m_NormalMapFilter = (int) value;
@@ -548,10 +494,8 @@
         /// </summary>
         public TextureImporterNPOTScale npotScale
         {
-            get
-            {
-                return (TextureImporterNPOTScale) this.m_NPOTScale;
-            }
+            get => 
+                ((TextureImporterNPOTScale) this.m_NPOTScale);
             set
             {
                 this.m_NPOTScale = (int) value;
@@ -563,10 +507,8 @@
         /// </summary>
         public bool readable
         {
-            get
-            {
-                return (this.m_IsReadable != 0);
-            }
+            get => 
+                (this.m_IsReadable != 0);
             set
             {
                 this.m_IsReadable = !value ? 0 : 1;
@@ -579,10 +521,8 @@
         [Obsolete("RGBM is no longer a user's choice but has become an implementation detail hidden to the user.")]
         public TextureImporterRGBMMode rgbm
         {
-            get
-            {
-                return (TextureImporterRGBMMode) this.m_RGBM;
-            }
+            get => 
+                ((TextureImporterRGBMMode) this.m_RGBM);
             set
             {
                 this.m_RGBM = (int) value;
@@ -591,10 +531,8 @@
 
         public bool seamlessCubemap
         {
-            get
-            {
-                return (this.m_SeamlessCubemap != 0);
-            }
+            get => 
+                (this.m_SeamlessCubemap != 0);
             set
             {
                 this.m_SeamlessCubemap = !value ? 0 : 1;
@@ -606,10 +544,8 @@
         /// </summary>
         public int spriteAlignment
         {
-            get
-            {
-                return this.m_Alignment;
-            }
+            get => 
+                this.m_Alignment;
             set
             {
                 this.m_Alignment = value;
@@ -621,10 +557,8 @@
         /// </summary>
         public Vector4 spriteBorder
         {
-            get
-            {
-                return this.m_SpriteBorder;
-            }
+            get => 
+                this.m_SpriteBorder;
             set
             {
                 this.m_SpriteBorder = value;
@@ -636,10 +570,8 @@
         /// </summary>
         public uint spriteExtrude
         {
-            get
-            {
-                return this.m_SpriteExtrude;
-            }
+            get => 
+                this.m_SpriteExtrude;
             set
             {
                 this.m_SpriteExtrude = value;
@@ -648,10 +580,8 @@
 
         public SpriteMeshType spriteMeshType
         {
-            get
-            {
-                return (SpriteMeshType) this.m_SpriteMeshType;
-            }
+            get => 
+                ((SpriteMeshType) this.m_SpriteMeshType);
             set
             {
                 this.m_SpriteMeshType = (int) value;
@@ -663,10 +593,8 @@
         /// </summary>
         public int spriteMode
         {
-            get
-            {
-                return this.m_SpriteMode;
-            }
+            get => 
+                this.m_SpriteMode;
             set
             {
                 this.m_SpriteMode = value;
@@ -678,10 +606,8 @@
         /// </summary>
         public Vector2 spritePivot
         {
-            get
-            {
-                return this.m_SpritePivot;
-            }
+            get => 
+                this.m_SpritePivot;
             set
             {
                 this.m_SpritePivot = value;
@@ -693,10 +619,8 @@
         /// </summary>
         public float spritePixelsPerUnit
         {
-            get
-            {
-                return this.m_SpritePixelsToUnits;
-            }
+            get => 
+                this.m_SpritePixelsToUnits;
             set
             {
                 this.m_SpritePixelsToUnits = value;
@@ -709,10 +633,8 @@
         [Obsolete("Use spritePixelsPerUnit property instead.")]
         public float spritePixelsToUnits
         {
-            get
-            {
-                return this.m_SpritePixelsToUnits;
-            }
+            get => 
+                this.m_SpritePixelsToUnits;
             set
             {
                 this.m_SpritePixelsToUnits = value;
@@ -725,10 +647,8 @@
         /// </summary>
         public float spriteTessellationDetail
         {
-            get
-            {
-                return this.m_SpriteTessellationDetail;
-            }
+            get => 
+                this.m_SpriteTessellationDetail;
             set
             {
                 this.m_SpriteTessellationDetail = value;
@@ -740,10 +660,8 @@
         /// </summary>
         public bool sRGBTexture
         {
-            get
-            {
-                return (this.m_sRGBTexture != 0);
-            }
+            get => 
+                (this.m_sRGBTexture != 0);
             set
             {
                 this.m_sRGBTexture = !value ? 0 : 1;
@@ -753,10 +671,8 @@
         [Obsolete("Texture format can only be overridden on a per platform basis. See [[TextureImporterPlatformSettings]]")]
         public TextureImporterFormat textureFormat
         {
-            get
-            {
-                return (TextureImporterFormat) this.m_TextureFormat;
-            }
+            get => 
+                ((TextureImporterFormat) this.m_TextureFormat);
             set
             {
                 this.m_TextureFormat = (int) this.textureFormat;
@@ -766,10 +682,8 @@
 
         private int textureFormatSet
         {
-            get
-            {
-                return this.m_TextureFormatSet;
-            }
+            get => 
+                this.m_TextureFormatSet;
             set
             {
                 this.m_TextureFormatSet = value;
@@ -781,10 +695,8 @@
         /// </summary>
         public TextureImporterShape textureShape
         {
-            get
-            {
-                return (TextureImporterShape) this.m_TextureShape;
-            }
+            get => 
+                ((TextureImporterShape) this.m_TextureShape);
             set
             {
                 this.m_TextureShape = (int) value;
@@ -796,10 +708,8 @@
         /// </summary>
         public TextureImporterType textureType
         {
-            get
-            {
-                return (TextureImporterType) this.m_TextureType;
-            }
+            get => 
+                ((TextureImporterType) this.m_TextureType);
             set
             {
                 this.m_TextureType = (int) value;
@@ -811,10 +721,8 @@
         /// </summary>
         public TextureWrapMode wrapMode
         {
-            get
-            {
-                return (TextureWrapMode) this.m_WrapMode;
-            }
+            get => 
+                ((TextureWrapMode) this.m_WrapMode);
             set
             {
                 this.m_WrapMode = (int) value;

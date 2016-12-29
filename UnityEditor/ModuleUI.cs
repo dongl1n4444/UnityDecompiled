@@ -82,10 +82,8 @@
             }
         }
 
-        private static float FloatDraggable(Rect rect, SerializedProperty floatProp, float remap, float dragWidth)
-        {
-            return FloatDraggable(rect, floatProp, remap, dragWidth, "g7");
-        }
+        private static float FloatDraggable(Rect rect, SerializedProperty floatProp, float remap, float dragWidth) => 
+            FloatDraggable(rect, floatProp, remap, dragWidth, "g7");
 
         public static float FloatDraggable(Rect rect, float floatValue, float remap, float dragWidth, string formatString)
         {
@@ -114,25 +112,17 @@
             return num2;
         }
 
-        private static Color GetColor(SerializedMinMaxCurve mmCurve)
-        {
-            return mmCurve.m_Module.m_ParticleSystemUI.m_ParticleEffectUI.GetParticleSystemCurveEditor().GetCurveColor(mmCurve.maxCurve);
-        }
+        private static Color GetColor(SerializedMinMaxCurve mmCurve) => 
+            mmCurve.m_Module.m_ParticleSystemUI.m_ParticleEffectUI.GetParticleSystemCurveEditor().GetCurveColor(mmCurve.maxCurve);
 
-        protected static Rect GetControlRect(int height, params GUILayoutOption[] layoutOptions)
-        {
-            return GUILayoutUtility.GetRect(0f, (float) height, s_ControlRectStyle, layoutOptions);
-        }
+        protected static Rect GetControlRect(int height, params GUILayoutOption[] layoutOptions) => 
+            GUILayoutUtility.GetRect(0f, (float) height, s_ControlRectStyle, layoutOptions);
 
-        protected ParticleSystem GetParticleSystem()
-        {
-            return (this.m_Enabled.serializedObject.targetObject as ParticleSystem);
-        }
+        protected ParticleSystem GetParticleSystem() => 
+            (this.m_Enabled.serializedObject.targetObject as ParticleSystem);
 
-        public ParticleSystemCurveEditor GetParticleSystemCurveEditor()
-        {
-            return this.m_ParticleSystemUI.m_ParticleEffectUI.GetParticleSystemCurveEditor();
-        }
+        public ParticleSystemCurveEditor GetParticleSystemCurveEditor() => 
+            this.m_ParticleSystemUI.m_ParticleEffectUI.GetParticleSystemCurveEditor();
 
         private static Rect GetPopupRect(Rect position)
         {
@@ -140,10 +130,8 @@
             return position;
         }
 
-        public virtual float GetXAxisScalar()
-        {
-            return 1f;
-        }
+        public virtual float GetXAxisScalar() => 
+            1f;
 
         public static bool GUIBoolAsPopup(GUIContent label, SerializedProperty boolProp, string[] options, params GUILayoutOption[] layoutOptions)
         {
@@ -193,20 +181,14 @@
             }
         }
 
-        public static Enum GUIEnumMask(GUIContent label, Enum enumValue, params GUILayoutOption[] layoutOptions)
-        {
-            return EditorGUI.EnumMaskField(PrefixLabel(GetControlRect(13, layoutOptions), label), enumValue, ParticleSystemStyles.Get().popup);
-        }
+        public static Enum GUIEnumMask(GUIContent label, Enum enumValue, params GUILayoutOption[] layoutOptions) => 
+            EditorGUI.EnumMaskField(PrefixLabel(GetControlRect(13, layoutOptions), label), enumValue, ParticleSystemStyles.Get().popup);
 
-        public static float GUIFloat(string label, SerializedProperty floatProp, params GUILayoutOption[] layoutOptions)
-        {
-            return GUIFloat(GUIContent.Temp(label), floatProp, layoutOptions);
-        }
+        public static float GUIFloat(string label, SerializedProperty floatProp, params GUILayoutOption[] layoutOptions) => 
+            GUIFloat(GUIContent.Temp(label), floatProp, layoutOptions);
 
-        public static float GUIFloat(GUIContent guiContent, SerializedProperty floatProp, params GUILayoutOption[] layoutOptions)
-        {
-            return GUIFloat(guiContent, floatProp, "g7", layoutOptions);
-        }
+        public static float GUIFloat(GUIContent guiContent, SerializedProperty floatProp, params GUILayoutOption[] layoutOptions) => 
+            GUIFloat(guiContent, floatProp, "g7", layoutOptions);
 
         public static float GUIFloat(GUIContent guiContent, float floatValue, string formatString, params GUILayoutOption[] layoutOptions)
         {
@@ -248,15 +230,11 @@
             return intProp.intValue;
         }
 
-        public static int GUIIntDraggable(GUIContent label, int intValue, params GUILayoutOption[] layoutOptions)
-        {
-            return IntDraggable(GUILayoutUtility.GetRect((float) 0f, (float) 13f, layoutOptions), label, intValue, EditorGUIUtility.labelWidth);
-        }
+        public static int GUIIntDraggable(GUIContent label, int intValue, params GUILayoutOption[] layoutOptions) => 
+            IntDraggable(GUILayoutUtility.GetRect((float) 0f, (float) 13f, layoutOptions), label, intValue, EditorGUIUtility.labelWidth);
 
-        public static int GUIIntDraggable(GUIContent label, SerializedProperty intProp, params GUILayoutOption[] layoutOptions)
-        {
-            return GUIIntDraggable(label, intProp.intValue, layoutOptions);
-        }
+        public static int GUIIntDraggable(GUIContent label, SerializedProperty intProp, params GUILayoutOption[] layoutOptions) => 
+            GUIIntDraggable(label, intProp.intValue, layoutOptions);
 
         public static void GUIIntDraggableX2(GUIContent mainLabel, GUIContent label1, SerializedProperty intProp1, GUIContent label2, SerializedProperty intProp2, params GUILayoutOption[] layoutOptions)
         {
@@ -311,10 +289,8 @@
             return num;
         }
 
-        public static int GUIMask(GUIContent label, int intValue, string[] options, params GUILayoutOption[] layoutOptions)
-        {
-            return EditorGUI.MaskField(PrefixLabel(GetControlRect(13, layoutOptions), label), label, intValue, options, ParticleSystemStyles.Get().popup);
-        }
+        public static int GUIMask(GUIContent label, int intValue, string[] options, params GUILayoutOption[] layoutOptions) => 
+            EditorGUI.MaskField(PrefixLabel(GetControlRect(13, layoutOptions), label), label, intValue, options, ParticleSystemStyles.Get().popup);
 
         public void GUIMinMaxColor(GUIContent label, SerializedMinMaxColor minMaxColor, params GUILayoutOption[] layoutOptions)
         {
@@ -548,15 +524,11 @@
             }
         }
 
-        public static int GUIPopup(string name, SerializedProperty intProp, string[] options, params GUILayoutOption[] layoutOptions)
-        {
-            return GUIPopup(GUIContent.Temp(name), intProp, options, layoutOptions);
-        }
+        public static int GUIPopup(string name, SerializedProperty intProp, string[] options, params GUILayoutOption[] layoutOptions) => 
+            GUIPopup(GUIContent.Temp(name), intProp, options, layoutOptions);
 
-        public static int GUIPopup(GUIContent label, int intValue, string[] options, params GUILayoutOption[] layoutOptions)
-        {
-            return EditorGUI.Popup(PrefixLabel(GetControlRect(13, layoutOptions), label), intValue, options, ParticleSystemStyles.Get().popup);
-        }
+        public static int GUIPopup(GUIContent label, int intValue, string[] options, params GUILayoutOption[] layoutOptions) => 
+            EditorGUI.Popup(PrefixLabel(GetControlRect(13, layoutOptions), label), intValue, options, ParticleSystemStyles.Get().popup);
 
         public static int GUIPopup(GUIContent label, SerializedProperty intProp, string[] options, params GUILayoutOption[] layoutOptions)
         {
@@ -576,10 +548,8 @@
             floatProp.floatValue = EditorGUILayout.Slider(name, floatProp.floatValue * remap, a, b, options) / remap;
         }
 
-        public static bool GUIToggle(string label, SerializedProperty boolProp, params GUILayoutOption[] layoutOptions)
-        {
-            return GUIToggle(GUIContent.Temp(label), boolProp, layoutOptions);
-        }
+        public static bool GUIToggle(string label, SerializedProperty boolProp, params GUILayoutOption[] layoutOptions) => 
+            GUIToggle(GUIContent.Temp(label), boolProp, layoutOptions);
 
         public static bool GUIToggle(GUIContent guiContent, bool boolValue, params GUILayoutOption[] layoutOptions)
         {
@@ -587,10 +557,8 @@
             return boolValue;
         }
 
-        public static bool GUIToggle(GUIContent guiContent, SerializedProperty boolProp, params GUILayoutOption[] layoutOptions)
-        {
-            return Toggle(PrefixLabel(GetControlRect(13, layoutOptions), guiContent), boolProp);
-        }
+        public static bool GUIToggle(GUIContent guiContent, SerializedProperty boolProp, params GUILayoutOption[] layoutOptions) => 
+            Toggle(PrefixLabel(GetControlRect(13, layoutOptions), guiContent), boolProp);
 
         public static void GUIToggleWithFloatField(string name, SerializedProperty boolProp, SerializedProperty floatProp, bool invertToggle, params GUILayoutOption[] layoutOptions)
         {
@@ -762,10 +730,8 @@
             GUI.Label(rect, guiContent, ParticleSystemStyles.Get().label);
         }
 
-        protected static bool MinusButton(Rect position)
-        {
-            return GUI.Button(new Rect(position.x - 2f, position.y - 2f, 12f, 13f), GUIContent.none, "OL Minus");
-        }
+        protected static bool MinusButton(Rect position) => 
+            GUI.Button(new Rect(position.x - 2f, position.y - 2f, 12f, 13f), GUIContent.none, "OL Minus");
 
         public abstract void OnInspectorGUI(ParticleSystem s);
         protected virtual void OnModuleDisable()
@@ -809,10 +775,8 @@
             return null;
         }
 
-        protected static bool PlusButton(Rect position)
-        {
-            return GUI.Button(new Rect(position.x - 2f, position.y - 2f, 12f, 13f), GUIContent.none, "OL Plus");
-        }
+        protected static bool PlusButton(Rect position) => 
+            GUI.Button(new Rect(position.x - 2f, position.y - 2f, 12f, 13f), GUIContent.none, "OL Plus");
 
         private static Rect PrefixLabel(Rect totalPosition, GUIContent label)
         {
@@ -934,20 +898,13 @@
         {
         }
 
-        public string displayName
-        {
-            get
-            {
-                return this.m_DisplayName;
-            }
-        }
+        public string displayName =>
+            this.m_DisplayName;
 
         public bool enabled
         {
-            get
-            {
-                return this.m_Enabled.boolValue;
-            }
+            get => 
+                this.m_Enabled.boolValue;
             set
             {
                 if (this.m_Enabled.boolValue != value)
@@ -967,30 +924,21 @@
 
         public bool foldout
         {
-            get
-            {
-                return (this.m_VisibilityState == VisibilityState.VisibleAndFoldedOut);
-            }
+            get => 
+                (this.m_VisibilityState == VisibilityState.VisibleAndFoldedOut);
             set
             {
                 this.SetVisibilityState(!value ? VisibilityState.VisibleAndFolded : VisibilityState.VisibleAndFoldedOut);
             }
         }
 
-        public string toolTip
-        {
-            get
-            {
-                return this.m_ToolTip;
-            }
-        }
+        public string toolTip =>
+            this.m_ToolTip;
 
         public bool visibleUI
         {
-            get
-            {
-                return (this.m_VisibilityState != VisibilityState.NotVisible);
-            }
+            get => 
+                (this.m_VisibilityState != VisibilityState.NotVisible);
             set
             {
                 this.SetVisibilityState(!value ? VisibilityState.NotVisible : VisibilityState.VisibleAndFolded);

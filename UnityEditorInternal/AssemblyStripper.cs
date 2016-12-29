@@ -36,10 +36,10 @@
             foreach (string str in nativeModules)
             {
                 string moduleWhitelist = GetModuleWhitelist(str, moduleStrippingInformationFolder);
-                if (File.Exists(moduleWhitelist) && !Enumerable.Contains<string>(blacklists, moduleWhitelist))
+                if (File.Exists(moduleWhitelist) && !blacklists.Contains<string>(moduleWhitelist))
                 {
                     string[] second = new string[] { moduleWhitelist };
-                    blacklists = Enumerable.Concat<string>(blacklists, second);
+                    blacklists = blacklists.Concat<string>(second);
                     flag = true;
                 }
             }
@@ -49,7 +49,7 @@
         internal static void GenerateInternalCallSummaryFile(string icallSummaryPath, string managedAssemblyFolderPath, string strippedDLLPath)
         {
             string exe = Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/InternalCallRegistrationWriter/InternalCallRegistrationWriter.exe");
-            string args = string.Format("-assembly=\"{0}\" -output=\"{1}\" -summary=\"{2}\"", Path.Combine(strippedDLLPath, "UnityEngine.dll"), Path.Combine(managedAssemblyFolderPath, "UnityICallRegistration.cpp"), icallSummaryPath);
+            string args = $"-assembly="{Path.Combine(strippedDLLPath, "UnityEngine.dll")}" -output="{Path.Combine(managedAssemblyFolderPath, "UnityICallRegistration.cpp")}" -summary="{icallSummaryPath}"";
             Runner.RunManagedProgram(exe, args);
         }
 
@@ -64,7 +64,7 @@
             IEnumerable<IGrouping<string, RuntimeClassRegistry.MethodDescription>> enumerable = Enumerable.GroupBy<RuntimeClassRegistry.MethodDescription, string>(rcr.GetMethodsToPreserve(), <>f__am$cache5);
             foreach (IGrouping<string, RuntimeClassRegistry.MethodDescription> grouping in enumerable)
             {
-                builder.AppendLine(string.Format("\t<assembly fullname=\"{0}\">", grouping.Key));
+                builder.AppendLine($"	<assembly fullname="{grouping.Key}">");
                 if (<>f__am$cache6 == null)
                 {
                     <>f__am$cache6 = new Func<RuntimeClassRegistry.MethodDescription, string>(null, (IntPtr) <GetMethodPreserveBlacklistContents>m__6);
@@ -72,10 +72,10 @@
                 IEnumerable<IGrouping<string, RuntimeClassRegistry.MethodDescription>> enumerable2 = Enumerable.GroupBy<RuntimeClassRegistry.MethodDescription, string>(grouping, <>f__am$cache6);
                 foreach (IGrouping<string, RuntimeClassRegistry.MethodDescription> grouping2 in enumerable2)
                 {
-                    builder.AppendLine(string.Format("\t\t<type fullname=\"{0}\">", grouping2.Key));
+                    builder.AppendLine($"		<type fullname="{grouping2.Key}">");
                     foreach (RuntimeClassRegistry.MethodDescription description in grouping2)
                     {
-                        builder.AppendLine(string.Format("\t\t\t<method name=\"{0}\"/>", description.methodName));
+                        builder.AppendLine($"			<method name="{description.methodName}"/>");
                     }
                     builder.AppendLine("\t\t</type>");
                 }
@@ -97,7 +97,7 @@
                 rcr = rcr,
                 managedDir = managedDir
             };
-            return Enumerable.ToList<string>(Enumerable.Select<string, string>(Enumerable.Where<string>(storey.rcr.GetUserAssemblies(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1)));
+            return Enumerable.Select<string, string>(Enumerable.Where<string>(storey.rcr.GetUserAssemblies(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1)).ToList<string>();
         }
 
         internal static IEnumerable<string> GetUserBlacklistFiles()
@@ -131,14 +131,14 @@
             if (rcr != null)
             {
                 string[] second = new string[] { WriteMethodsToPreserveBlackList(stagingAreaData, rcr), MonoAssemblyStripping.GenerateLinkXmlToPreserveDerivedTypes(stagingAreaData, managedAssemblyFolderPath, rcr) };
-                first = Enumerable.Concat<string>(first, second);
+                first = first.Concat<string>(second);
             }
             if (!doStripping)
             {
                 foreach (string str3 in Directory.GetFiles(platformProvider.moduleStrippingInformationFolder, "*.xml"))
                 {
                     string[] textArray2 = new string[] { str3 };
-                    first = Enumerable.Concat<string>(first, textArray2);
+                    first = first.Concat<string>(textArray2);
                 }
             }
             string fullPath = Path.GetFullPath(Path.Combine(managedAssemblyFolderPath, "tempStrip"));
@@ -212,7 +212,7 @@
             {
                 Console.WriteLine("UserBlackList: " + str);
             }
-            additionalBlacklist = Enumerable.Concat<string>(additionalBlacklist, userBlacklistFiles);
+            additionalBlacklist = additionalBlacklist.Concat<string>(userBlacklistFiles);
             List<string> args = new List<string> {
                 "--api " + PlayerSettings.apiCompatibilityLevel.ToString(),
                 "-out \"" + outputFolder + "\"",
@@ -248,45 +248,20 @@
             return path;
         }
 
-        private static string BlacklistPath
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(MonoLinkerPath), "Core.xml");
-            }
-        }
+        private static string BlacklistPath =>
+            Path.Combine(Path.GetDirectoryName(MonoLinkerPath), "Core.xml");
 
-        private static string[] Il2CppBlacklistPaths
-        {
-            get
-            {
-                return new string[] { Path.Combine("..", "platform_native_link.xml") };
-            }
-        }
+        private static string[] Il2CppBlacklistPaths =>
+            new string[] { Path.Combine("..", "platform_native_link.xml") };
 
-        private static string ModulesWhitelistPath
-        {
-            get
-            {
-                return Path.Combine(Path.GetDirectoryName(MonoLinkerPath), "ModuleStrippingInformation");
-            }
-        }
+        private static string ModulesWhitelistPath =>
+            Path.Combine(Path.GetDirectoryName(MonoLinkerPath), "ModuleStrippingInformation");
 
-        private static string MonoLinker2Path
-        {
-            get
-            {
-                return Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedByteCodeStripper2/UnusedBytecodeStripper2.exe");
-            }
-        }
+        private static string MonoLinker2Path =>
+            Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedByteCodeStripper2/UnusedBytecodeStripper2.exe");
 
-        private static string MonoLinkerPath
-        {
-            get
-            {
-                return Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedBytecodeStripper.exe");
-            }
-        }
+        private static string MonoLinkerPath =>
+            Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/UnusedBytecodeStripper.exe");
 
         [CompilerGenerated]
         private sealed class <GetUserAssemblies>c__AnonStorey1
@@ -294,15 +269,11 @@
             internal string managedDir;
             internal RuntimeClassRegistry rcr;
 
-            internal bool <>m__0(string s)
-            {
-                return this.rcr.IsDLLUsed(s);
-            }
+            internal bool <>m__0(string s) => 
+                this.rcr.IsDLLUsed(s);
 
-            internal string <>m__1(string s)
-            {
-                return Path.Combine(this.managedDir, s);
-            }
+            internal string <>m__1(string s) => 
+                Path.Combine(this.managedDir, s);
         }
 
         [CompilerGenerated]
@@ -310,10 +281,8 @@
         {
             internal string workingDirectory;
 
-            internal string <>m__0(string s)
-            {
-                return (!Path.IsPathRooted(s) ? Path.Combine(this.workingDirectory, s) : s);
-            }
+            internal string <>m__0(string s) => 
+                (!Path.IsPathRooted(s) ? Path.Combine(this.workingDirectory, s) : s);
         }
     }
 }

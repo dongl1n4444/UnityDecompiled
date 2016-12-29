@@ -14,7 +14,7 @@
     /// <summary>
     /// <para>The Unity Material Editor.</para>
     /// </summary>
-    [CanEditMultipleObjects, CustomEditor(typeof(Material))]
+    [CustomEditor(typeof(Material)), CanEditMultipleObjects]
     public class MaterialEditor : Editor
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -142,10 +142,8 @@
         /// <param name="label">Label for the property.</param>
         /// <param name="position"></param>
         /// <param name="prop"></param>
-        public Color ColorProperty(MaterialProperty prop, string label)
-        {
-            return this.ColorPropertyInternal(prop, new GUIContent(label));
-        }
+        public Color ColorProperty(MaterialProperty prop, string label) => 
+            this.ColorPropertyInternal(prop, new GUIContent(label));
 
         /// <summary>
         /// <para>Draw a property field for a color shader property.</para>
@@ -153,10 +151,8 @@
         /// <param name="label">Label for the property.</param>
         /// <param name="position"></param>
         /// <param name="prop"></param>
-        public Color ColorProperty(Rect position, MaterialProperty prop, string label)
-        {
-            return this.ColorPropertyInternal(position, prop, new GUIContent(label));
-        }
+        public Color ColorProperty(Rect position, MaterialProperty prop, string label) => 
+            this.ColorPropertyInternal(position, prop, new GUIContent(label));
 
         internal Color ColorPropertyInternal(MaterialProperty prop, GUIContent label)
         {
@@ -317,10 +313,8 @@
             }
         }
 
-        private static bool DoesPreviewAllowRotation(PreviewType type)
-        {
-            return (type != PreviewType.Plane);
-        }
+        private static bool DoesPreviewAllowRotation(PreviewType type) => 
+            (type != PreviewType.Plane);
 
         internal static int DoIntRangeProperty(Rect position, MaterialProperty prop, GUIContent label)
         {
@@ -456,10 +450,8 @@
         /// <param name="label">Label for the property.</param>
         /// <param name="prop"></param>
         /// <param name="position"></param>
-        public float FloatProperty(MaterialProperty prop, string label)
-        {
-            return this.FloatPropertyInternal(prop, new GUIContent(label));
-        }
+        public float FloatProperty(MaterialProperty prop, string label) => 
+            this.FloatPropertyInternal(prop, new GUIContent(label));
 
         /// <summary>
         /// <para>Draw a property field for a float shader property.</para>
@@ -467,10 +459,8 @@
         /// <param name="label">Label for the property.</param>
         /// <param name="prop"></param>
         /// <param name="position"></param>
-        public float FloatProperty(Rect position, MaterialProperty prop, string label)
-        {
-            return this.FloatPropertyInternal(position, prop, new GUIContent(label));
-        }
+        public float FloatProperty(Rect position, MaterialProperty prop, string label) => 
+            this.FloatPropertyInternal(position, prop, new GUIContent(label));
 
         internal float FloatPropertyInternal(MaterialProperty prop, GUIContent label)
         {
@@ -524,10 +514,8 @@
             return color;
         }
 
-        private Rect GetControlRectForSingleLine()
-        {
-            return EditorGUILayout.GetControlRect(true, 18f, EditorStyles.layerMaskField, new GUILayoutOption[0]);
-        }
+        private Rect GetControlRectForSingleLine() => 
+            EditorGUILayout.GetControlRect(true, 18f, EditorStyles.layerMaskField, new GUILayoutOption[0]);
 
         /// <summary>
         /// <para>Calculate height needed for the property, ignoring custom drawers.</para>
@@ -567,10 +555,8 @@
         /// <returns>
         /// <para>A sub rect of the input Rect.</para>
         /// </returns>
-        public static Rect GetFlexibleRectBetweenLabelAndField(Rect r)
-        {
-            return new Rect(r.x + EditorGUIUtility.labelWidth, r.y, ((r.width - EditorGUIUtility.labelWidth) - EditorGUIUtility.fieldWidth) - 5f, EditorGUIUtility.singleLineHeight);
-        }
+        public static Rect GetFlexibleRectBetweenLabelAndField(Rect r) => 
+            new Rect(r.x + EditorGUIUtility.labelWidth, r.y, ((r.width - EditorGUIUtility.labelWidth) - EditorGUIUtility.fieldWidth) - 5f, EditorGUIUtility.singleLineHeight);
 
         [Obsolete("Use GetMaterialProperty instead.")]
         public float GetFloat(string propertyName, out bool hasMixedValue)
@@ -609,10 +595,8 @@
         /// <returns>
         /// <para>A sub rect of the input Rect.</para>
         /// </returns>
-        public static Rect GetLeftAlignedFieldRect(Rect r)
-        {
-            return new Rect(r.x + EditorGUIUtility.labelWidth, r.y, EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight);
-        }
+        public static Rect GetLeftAlignedFieldRect(Rect r) => 
+            new Rect(r.x + EditorGUIUtility.labelWidth, r.y, EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight);
 
         /// <summary>
         /// <para>Get shader property information of the passed materials.</para>
@@ -694,10 +678,8 @@
         /// </summary>
         /// <param name="prop"></param>
         /// <param name="label"></param>
-        public float GetPropertyHeight(MaterialProperty prop)
-        {
-            return this.GetPropertyHeight(prop, prop.displayName);
-        }
+        public float GetPropertyHeight(MaterialProperty prop) => 
+            this.GetPropertyHeight(prop, prop.displayName);
 
         /// <summary>
         /// <para>Calculate height needed for the property.</para>
@@ -743,10 +725,8 @@
             return EditorGUILayout.GetControlRect(true, height + GetDefaultPropertyHeight(prop), EditorStyles.layerMaskField, new GUILayoutOption[0]);
         }
 
-        private Rect GetPropertyRect(MaterialProperty prop, GUIContent label, bool ignoreDrawer)
-        {
-            return this.GetPropertyRect(prop, label.text, ignoreDrawer);
-        }
+        private Rect GetPropertyRect(MaterialProperty prop, GUIContent label, bool ignoreDrawer) => 
+            this.GetPropertyRect(prop, label.text, ignoreDrawer);
 
         /// <summary>
         /// <para>Utility method for GUI layouting ShaderGUI. This is the rect after the label which can be used for multiple properties. The input rect can be fetched by calling: EditorGUILayout.GetControlRect.</para>
@@ -755,10 +735,8 @@
         /// <returns>
         /// <para>A sub rect of the input Rect.</para>
         /// </returns>
-        public static Rect GetRectAfterLabelWidth(Rect r)
-        {
-            return new Rect(r.x + EditorGUIUtility.labelWidth, r.y, r.width - EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-        }
+        public static Rect GetRectAfterLabelWidth(Rect r) => 
+            new Rect(r.x + EditorGUIUtility.labelWidth, r.y, r.width - EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
 
         /// <summary>
         /// <para>Utility method for GUI layouting ShaderGUI.</para>
@@ -767,10 +745,8 @@
         /// <returns>
         /// <para>A sub rect of the input Rect.</para>
         /// </returns>
-        public static Rect GetRightAlignedFieldRect(Rect r)
-        {
-            return new Rect(r.xMax - EditorGUIUtility.fieldWidth, r.y, EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight);
-        }
+        public static Rect GetRightAlignedFieldRect(Rect r) => 
+            new Rect(r.xMax - EditorGUIUtility.fieldWidth, r.y, EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight);
 
         [Obsolete("Use GetMaterialProperty instead.")]
         public Texture GetTexture(string propertyName, out bool hasMixedValue)
@@ -788,10 +764,8 @@
             return texture;
         }
 
-        private static float GetTextureFieldHeight()
-        {
-            return 64f;
-        }
+        private static float GetTextureFieldHeight() => 
+            64f;
 
         [Obsolete("Use MaterialProperty instead.")]
         public Vector2 GetTextureOffset(string propertyName, out bool hasMixedValueX, out bool hasMixedValueY)
@@ -1000,10 +974,8 @@
         /// <returns>
         /// <para>True if this component can be Previewed in its current state.</para>
         /// </returns>
-        public sealed override bool HasPreviewGUI()
-        {
-            return true;
-        }
+        public sealed override bool HasPreviewGUI() => 
+            true;
 
         /// <summary>
         /// <para>Make a help box with a message and button. Returns true, if button was pressed.</para>
@@ -1443,10 +1415,8 @@
         /// <param name="label">Label for the property.</param>
         /// <param name="prop">The property to edit.</param>
         /// <param name="position">Position and size of the range slider control.</param>
-        public float RangeProperty(MaterialProperty prop, string label)
-        {
-            return this.RangePropertyInternal(prop, new GUIContent(label));
-        }
+        public float RangeProperty(MaterialProperty prop, string label) => 
+            this.RangePropertyInternal(prop, new GUIContent(label));
 
         /// <summary>
         /// <para>Draw a range slider for a range shader property.</para>
@@ -1454,10 +1424,8 @@
         /// <param name="label">Label for the property.</param>
         /// <param name="prop">The property to edit.</param>
         /// <param name="position">Position and size of the range slider control.</param>
-        public float RangeProperty(Rect position, MaterialProperty prop, string label)
-        {
-            return this.RangePropertyInternal(position, prop, new GUIContent(label));
-        }
+        public float RangeProperty(Rect position, MaterialProperty prop, string label) => 
+            this.RangePropertyInternal(position, prop, new GUIContent(label));
 
         [Obsolete("Use RangeProperty with MaterialProperty instead.")]
         public float RangeProperty(string propertyName, string label, float v2, float v3)
@@ -1554,10 +1522,8 @@
         /// <summary>
         /// <para>Does this edit require to be repainted constantly in its current state?</para>
         /// </summary>
-        public override bool RequiresConstantRepaint()
-        {
-            return (this.m_TimeUpdate == 1);
-        }
+        public override bool RequiresConstantRepaint() => 
+            (this.m_TimeUpdate == 1);
 
         [Obsolete("Use MaterialProperty instead.")]
         public void SetColor(string propertyName, Color value)
@@ -1862,10 +1828,8 @@
         /// <param name="prop"></param>
         /// <param name="position"></param>
         /// <param name="tooltip"></param>
-        public Texture TextureProperty(Rect position, MaterialProperty prop, string label, bool scaleOffset)
-        {
-            return this.TextureProperty(position, prop, label, string.Empty, scaleOffset);
-        }
+        public Texture TextureProperty(Rect position, MaterialProperty prop, string label, bool scaleOffset) => 
+            this.TextureProperty(position, prop, label, string.Empty, scaleOffset);
 
         /// <summary>
         /// <para>Draw a property field for a texture shader property.</para>
@@ -1896,7 +1860,7 @@
         {
             if (prop.type != MaterialProperty.PropType.Texture)
             {
-                throw new ArgumentException(string.Format("The MaterialProperty '{0}' should be of type 'Texture' (its type is '{1})'", prop.name, prop.type));
+                throw new ArgumentException($"The MaterialProperty '{prop.name}' should be of type 'Texture' (its type is '{prop.type})'");
             }
             this.m_DesiredTexdim = prop.textureDimension;
             Type textureTypeFromDimension = GetTextureTypeFromDimension(this.m_DesiredTexdim);
@@ -1954,10 +1918,8 @@
         /// <returns>
         /// <para>Returns the Rect used.</para>
         /// </returns>
-        public Rect TexturePropertySingleLine(GUIContent label, MaterialProperty textureProp)
-        {
-            return this.TexturePropertySingleLine(label, textureProp, null, null);
-        }
+        public Rect TexturePropertySingleLine(GUIContent label, MaterialProperty textureProp) => 
+            this.TexturePropertySingleLine(label, textureProp, null, null);
 
         /// <summary>
         /// <para>Method for showing a texture property control with additional inlined properites.</para>
@@ -1969,10 +1931,8 @@
         /// <returns>
         /// <para>Returns the Rect used.</para>
         /// </returns>
-        public Rect TexturePropertySingleLine(GUIContent label, MaterialProperty textureProp, MaterialProperty extraProperty1)
-        {
-            return this.TexturePropertySingleLine(label, textureProp, extraProperty1, null);
-        }
+        public Rect TexturePropertySingleLine(GUIContent label, MaterialProperty textureProp, MaterialProperty extraProperty1) => 
+            this.TexturePropertySingleLine(label, textureProp, extraProperty1, null);
 
         /// <summary>
         /// <para>Method for showing a texture property control with additional inlined properites.</para>
@@ -2121,10 +2081,8 @@
         /// <param name="position">Rect to draw this control in.</param>
         /// <param name="property">Property to draw.</param>
         /// <param name="partOfTexturePropertyControl">If this control should be rendered under large texture property control use 'true'. If this control should be shown seperately use 'false'.</param>
-        public float TextureScaleOffsetProperty(Rect position, MaterialProperty property)
-        {
-            return this.TextureScaleOffsetProperty(position, property, true);
-        }
+        public float TextureScaleOffsetProperty(Rect position, MaterialProperty property) => 
+            this.TextureScaleOffsetProperty(position, property, true);
 
         /// <summary>
         /// <para>TODO.</para>
@@ -2132,10 +2090,8 @@
         /// <param name="position"></param>
         /// <param name="scaleOffset"></param>
         /// <param name="partOfTexturePropertyControl"></param>
-        public static Vector4 TextureScaleOffsetProperty(Rect position, Vector4 scaleOffset)
-        {
-            return TextureScaleOffsetProperty(position, scaleOffset, 0, false);
-        }
+        public static Vector4 TextureScaleOffsetProperty(Rect position, Vector4 scaleOffset) => 
+            TextureScaleOffsetProperty(position, scaleOffset, 0, false);
 
         /// <summary>
         /// <para>Draws tiling and offset properties for a texture.</para>
@@ -2163,10 +2119,8 @@
         /// <param name="position"></param>
         /// <param name="scaleOffset"></param>
         /// <param name="partOfTexturePropertyControl"></param>
-        public static Vector4 TextureScaleOffsetProperty(Rect position, Vector4 scaleOffset, bool partOfTexturePropertyControl)
-        {
-            return TextureScaleOffsetProperty(position, scaleOffset, 0, partOfTexturePropertyControl);
-        }
+        public static Vector4 TextureScaleOffsetProperty(Rect position, Vector4 scaleOffset, bool partOfTexturePropertyControl) => 
+            TextureScaleOffsetProperty(position, scaleOffset, 0, partOfTexturePropertyControl);
 
         internal static Vector4 TextureScaleOffsetProperty(Rect position, Vector4 scaleOffset, int mixedValueMask, bool partOfTexturePropertyControl)
         {
@@ -2261,13 +2215,8 @@
         /// <summary>
         /// <para>Is the current material expanded.</para>
         /// </summary>
-        public bool isVisible
-        {
-            get
-            {
-                return (this.forceVisible || this.m_IsVisible);
-            }
-        }
+        public bool isVisible =>
+            (this.forceVisible || this.m_IsVisible);
 
         private class ForwardApplyMaterialModification
         {
@@ -2280,10 +2229,8 @@
                 this.isMaterialEditable = inIsMaterialEditable;
             }
 
-            public bool DidModifyAnimationModeMaterialProperty(MaterialProperty property, int changedMask, object previousValue)
-            {
-                return (MaterialAnimationUtility.ApplyMaterialModificationToAnimationRecording(property, changedMask, this.renderer, previousValue) || !this.isMaterialEditable);
-            }
+            public bool DidModifyAnimationModeMaterialProperty(MaterialProperty property, int changedMask, object previousValue) => 
+                (MaterialAnimationUtility.ApplyMaterialModificationToAnimationRecording(property, changedMask, this.renderer, previousValue) || !this.isMaterialEditable);
         }
 
         private enum PreviewType
@@ -2297,10 +2244,8 @@
         {
             private ReflectionProbe m_SelectedReflectionProbe;
 
-            public override Vector2 GetWindowSize()
-            {
-                return new Vector2(170f, 48f);
-            }
+            public override Vector2 GetWindowSize() => 
+                new Vector2(170f, 48f);
 
             public void OnDisable()
             {
@@ -2319,13 +2264,8 @@
                 this.m_SelectedReflectionProbe = EditorGUILayout.ObjectField("", this.m_SelectedReflectionProbe, typeof(ReflectionProbe), true, new GUILayoutOption[0]) as ReflectionProbe;
             }
 
-            public Transform Target
-            {
-                get
-                {
-                    return ((this.m_SelectedReflectionProbe == null) ? null : this.m_SelectedReflectionProbe.transform);
-                }
-            }
+            public Transform Target =>
+                this.m_SelectedReflectionProbe?.transform;
         }
 
         private static class Styles

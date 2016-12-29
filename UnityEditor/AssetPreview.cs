@@ -15,10 +15,8 @@
         internal static extern void ClearTemporaryAssetPreviews();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void DeletePreviewTextureManagerByID(int clientID);
-        internal static Texture2D GetAssetPreview(int instanceID)
-        {
-            return GetAssetPreview(instanceID, 0);
-        }
+        internal static Texture2D GetAssetPreview(int instanceID) => 
+            GetAssetPreview(instanceID, 0);
 
         /// <summary>
         /// <para>Returns a preview texture for an asset.</para>
@@ -54,17 +52,13 @@
             return INTERNAL_GetMiniTypeThumbnailFromType(type);
         }
 
-        internal static Texture2D GetMiniTypeThumbnail(Object obj)
-        {
-            return INTERNAL_GetMiniTypeThumbnailFromObject(obj);
-        }
+        internal static Texture2D GetMiniTypeThumbnail(Object obj) => 
+            INTERNAL_GetMiniTypeThumbnailFromObject(obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Texture2D GetMiniTypeThumbnailFromClassID(int classID);
-        internal static bool HasAnyNewPreviewTexturesAvailable()
-        {
-            return HasAnyNewPreviewTexturesAvailable(0);
-        }
+        internal static bool HasAnyNewPreviewTexturesAvailable() => 
+            HasAnyNewPreviewTexturesAvailable(0);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool HasAnyNewPreviewTexturesAvailable(int clientID);
@@ -76,20 +70,16 @@
         /// <para>Loading previews is asynchronous so it is useful to know if a specific asset preview is in the process of being loaded so client code e.g can repaint while waiting for the loading to finish.</para>
         /// </summary>
         /// <param name="instanceID">InstanceID of the assset that a preview has been requested for by: AssetPreview.GetAssetPreview().</param>
-        public static bool IsLoadingAssetPreview(int instanceID)
-        {
-            return IsLoadingAssetPreview(instanceID, 0);
-        }
+        public static bool IsLoadingAssetPreview(int instanceID) => 
+            IsLoadingAssetPreview(instanceID, 0);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool IsLoadingAssetPreview(int instanceID, int clientID);
         /// <summary>
         /// <para>Loading previews is asynchronous so it is useful to know if any requested previews are in the process of being loaded so client code e.g can repaint while waiting.</para>
         /// </summary>
-        public static bool IsLoadingAssetPreviews()
-        {
-            return IsLoadingAssetPreviews(0);
-        }
+        public static bool IsLoadingAssetPreviews() => 
+            IsLoadingAssetPreviews(0);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool IsLoadingAssetPreviews(int clientID);

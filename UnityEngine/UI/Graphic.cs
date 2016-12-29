@@ -548,10 +548,8 @@
             }
         }
 
-        Transform ICanvasElement.get_transform()
-        {
-            return base.transform;
-        }
+        Transform ICanvasElement.get_transform() => 
+            base.transform;
 
         /// <summary>
         /// <para>Remove a listener from receiving notifications when the graphics layout is dirtied.</para>
@@ -643,10 +641,8 @@
         /// </summary>
         public virtual Color color
         {
-            get
-            {
-                return this.m_Color;
-            }
+            get => 
+                this.m_Color;
             set
             {
                 if (SetPropertyUtility.SetColor(ref this.m_Color, value))
@@ -674,45 +670,28 @@
         /// <summary>
         /// <para>Returns the default material for the graphic.</para>
         /// </summary>
-        public virtual Material defaultMaterial
-        {
-            get
-            {
-                return defaultGraphicMaterial;
-            }
-        }
+        public virtual Material defaultMaterial =>
+            defaultGraphicMaterial;
 
         /// <summary>
         /// <para>Absolute depth of the graphic in the hierarchy, used by rendering and events.</para>
         /// </summary>
-        public int depth
-        {
-            get
-            {
-                return this.canvasRenderer.absoluteDepth;
-            }
-        }
+        public int depth =>
+            this.canvasRenderer.absoluteDepth;
 
         /// <summary>
         /// <para>The graphic's texture. (Read Only).</para>
         /// </summary>
-        public virtual Texture mainTexture
-        {
-            get
-            {
-                return s_WhiteTexture;
-            }
-        }
+        public virtual Texture mainTexture =>
+            s_WhiteTexture;
 
         /// <summary>
         /// <para>The Material set by the user.</para>
         /// </summary>
         public virtual Material material
         {
-            get
-            {
-                return ((this.m_Material == null) ? this.defaultMaterial : this.m_Material);
-            }
+            get => 
+                ((this.m_Material == null) ? this.defaultMaterial : this.m_Material);
             set
             {
                 if (this.m_Material != value)
@@ -747,10 +726,8 @@
         /// </summary>
         public virtual bool raycastTarget
         {
-            get
-            {
-                return this.m_RaycastTarget;
-            }
+            get => 
+                this.m_RaycastTarget;
             set
             {
                 this.m_RaycastTarget = value;

@@ -91,13 +91,8 @@
             base.TaskUpdateProgress(task, num2 + (progress * num));
         }
 
-        public IvyModule Package
-        {
-            get
-            {
-                return this.package;
-            }
-        }
+        public IvyModule Package =>
+            this.package;
     }
 }
 

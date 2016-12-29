@@ -24,10 +24,8 @@
         [Obsolete("Use stringParameter instead")]
         public string data
         {
-            get
-            {
-                return this.m_StringParameter;
-            }
+            get => 
+                this.m_StringParameter;
             set
             {
                 this.m_StringParameter = value;
@@ -38,10 +36,8 @@
         /// </summary>
         public string stringParameter
         {
-            get
-            {
-                return this.m_StringParameter;
-            }
+            get => 
+                this.m_StringParameter;
             set
             {
                 this.m_StringParameter = value;
@@ -52,10 +48,8 @@
         /// </summary>
         public float floatParameter
         {
-            get
-            {
-                return this.m_FloatParameter;
-            }
+            get => 
+                this.m_FloatParameter;
             set
             {
                 this.m_FloatParameter = value;
@@ -66,10 +60,8 @@
         /// </summary>
         public int intParameter
         {
-            get
-            {
-                return this.m_IntParameter;
-            }
+            get => 
+                this.m_IntParameter;
             set
             {
                 this.m_IntParameter = value;
@@ -80,10 +72,8 @@
         /// </summary>
         public UnityEngine.Object objectReferenceParameter
         {
-            get
-            {
-                return this.m_ObjectReferenceParameter;
-            }
+            get => 
+                this.m_ObjectReferenceParameter;
             set
             {
                 this.m_ObjectReferenceParameter = value;
@@ -94,10 +84,8 @@
         /// </summary>
         public string functionName
         {
-            get
-            {
-                return this.m_FunctionName;
-            }
+            get => 
+                this.m_FunctionName;
             set
             {
                 this.m_FunctionName = value;
@@ -108,10 +96,8 @@
         /// </summary>
         public float time
         {
-            get
-            {
-                return this.m_Time;
-            }
+            get => 
+                this.m_Time;
             set
             {
                 this.m_Time = value;
@@ -122,10 +108,8 @@
         /// </summary>
         public SendMessageOptions messageOptions
         {
-            get
-            {
-                return (SendMessageOptions) this.m_MessageOptions;
-            }
+            get => 
+                ((SendMessageOptions) this.m_MessageOptions);
             set
             {
                 this.m_MessageOptions = (int) value;
@@ -134,23 +118,13 @@
         /// <summary>
         /// <para>Returns true if this Animation event has been fired by an Animation component.</para>
         /// </summary>
-        public bool isFiredByLegacy
-        {
-            get
-            {
-                return (this.m_Source == AnimationEventSource.Legacy);
-            }
-        }
+        public bool isFiredByLegacy =>
+            (this.m_Source == AnimationEventSource.Legacy);
         /// <summary>
         /// <para>Returns true if this Animation event has been fired by an Animator component.</para>
         /// </summary>
-        public bool isFiredByAnimator
-        {
-            get
-            {
-                return (this.m_Source == AnimationEventSource.Animator);
-            }
-        }
+        public bool isFiredByAnimator =>
+            (this.m_Source == AnimationEventSource.Animator);
         /// <summary>
         /// <para>The animation state that fired this event (Read Only).</para>
         /// </summary>

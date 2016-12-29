@@ -47,10 +47,8 @@
         [Obsolete("AudioReverbFilter.lFReference is obsolete. Use lfReference instead (UnityUpgradable) -> lfReference", true), EditorBrowsable(EditorBrowsableState.Never)]
         public float lFReference
         {
-            get
-            {
-                return this.lfReference;
-            }
+            get => 
+                this.lfReference;
             set
             {
             }

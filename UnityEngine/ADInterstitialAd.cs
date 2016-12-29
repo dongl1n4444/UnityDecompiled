@@ -36,21 +36,11 @@
         {
         }
 
-        public static bool isAvailable
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool isAvailable =>
+            false;
 
-        public bool loaded
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool loaded =>
+            false;
 
         public delegate void InterstitialWasLoadedDelegate();
     }

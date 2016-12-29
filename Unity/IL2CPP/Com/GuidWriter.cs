@@ -18,10 +18,8 @@
             this._writer = writer;
         }
 
-        public TableInfo WriteGuids(ICollection<TypeDefinition> types)
-        {
-            return MetadataWriter.WriteTable<TypeDefinition>(this._writer, "extern const Il2CppGuid*", "g_Guids", types, new Func<TypeDefinition, string>(this, (IntPtr) this.<WriteGuids>m__0));
-        }
+        public TableInfo WriteGuids(ICollection<TypeDefinition> types) => 
+            MetadataWriter.WriteTable<TypeDefinition>(this._writer, "extern const Il2CppGuid*", "g_Guids", types, new Func<TypeDefinition, string>(this, (IntPtr) this.<WriteGuids>m__0));
     }
 }
 

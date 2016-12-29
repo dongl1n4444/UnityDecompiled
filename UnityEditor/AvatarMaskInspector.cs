@@ -173,10 +173,8 @@
             this.FillNodeInfos();
         }
 
-        public bool IsMaskEmpty()
-        {
-            return (this.m_NodeInfos.Length == 0);
-        }
+        public bool IsMaskEmpty() => 
+            (this.m_NodeInfos.Length == 0);
 
         public bool IsMaskUpToDate()
         {
@@ -461,10 +459,8 @@
 
         public bool canImport
         {
-            get
-            {
-                return this.m_CanImport;
-            }
+            get => 
+                this.m_CanImport;
             set
             {
                 this.m_CanImport = value;
@@ -473,10 +469,8 @@
 
         public AnimationClipInfoProperties clipInfo
         {
-            get
-            {
-                return this.m_ClipInfo;
-            }
+            get => 
+                this.m_ClipInfo;
             set
             {
                 this.m_ClipInfo = value;
@@ -520,10 +514,8 @@
 
         public bool showBody
         {
-            get
-            {
-                return this.m_ShowBodyMask;
-            }
+            get => 
+                this.m_ShowBodyMask;
             set
             {
                 this.m_ShowBodyMask = value;
@@ -535,10 +527,8 @@
         {
             internal string fullPath;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.fullPath == s);
-            }
+            internal bool <>m__0(string s) => 
+                (this.fullPath == s);
         }
 
         [CompilerGenerated]
@@ -546,10 +536,8 @@
         {
             internal string path;
 
-            internal bool <>m__0(string s)
-            {
-                return (s == this.path);
-            }
+            internal bool <>m__0(string s) => 
+                (s == this.path);
         }
 
         [StructLayout(LayoutKind.Sequential)]

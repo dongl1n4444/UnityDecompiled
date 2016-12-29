@@ -62,10 +62,8 @@
             }
         }
 
-        public static Type GetTypeOf(object o)
-        {
-            return ((o != null) ? o.GetType() : null);
-        }
+        public static Type GetTypeOf(object o) => 
+            o?.GetType();
 
         public static object Invoke(object target, string name, object[] args, Type scriptBaseType)
         {
@@ -95,10 +93,8 @@
             }
         }
 
-        public static bool IsValueTypeArray(object obj)
-        {
-            return ((obj is System.Array) ? obj.GetType().GetElementType().IsValueType : false);
-        }
+        public static bool IsValueTypeArray(object obj) => 
+            ((obj is System.Array) ? obj.GetType().GetElementType().IsValueType : false);
 
         public static void PropagateValueTypeChanges(ValueTypeChange[] changes)
         {
@@ -226,13 +222,8 @@
 
             public abstract override bool Propagate();
 
-            public bool IsValid
-            {
-                get
-                {
-                    return (this.Value is ValueType);
-                }
-            }
+            public bool IsValid =>
+                (this.Value is ValueType);
         }
     }
 }

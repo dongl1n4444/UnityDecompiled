@@ -18,10 +18,8 @@
         }
 
         [MenuItem("CONTEXT/TerrainEngineTrees/Edit Tree", true)]
-        internal static bool EditTreeCheck(MenuCommand item)
-        {
-            return (TreePainter.selectedTree >= 0);
-        }
+        internal static bool EditTreeCheck(MenuCommand item) => 
+            (TreePainter.selectedTree >= 0);
 
         [MenuItem("CONTEXT/TerrainEngineTrees/Remove Tree")]
         internal static void RemoveTree(MenuCommand item)
@@ -31,10 +29,8 @@
         }
 
         [MenuItem("CONTEXT/TerrainEngineTrees/Remove Tree", true)]
-        internal static bool RemoveTreeCheck(MenuCommand item)
-        {
-            return (TreePainter.selectedTree >= 0);
-        }
+        internal static bool RemoveTreeCheck(MenuCommand item) => 
+            (TreePainter.selectedTree >= 0);
     }
 }
 

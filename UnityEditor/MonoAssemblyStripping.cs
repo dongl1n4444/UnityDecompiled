@@ -25,7 +25,7 @@
                 {
                     <>f__am$cache0 = new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(null, (IntPtr) <CollectAssembliesRecursive>m__0);
                 }
-                source.UnionWith(Enumerable.SelectMany<AssemblyDefinition, AssemblyDefinition>(Enumerable.ToArray<AssemblyDefinition>(source), <>f__am$cache0));
+                source.UnionWith(Enumerable.SelectMany<AssemblyDefinition, AssemblyDefinition>(source.ToArray<AssemblyDefinition>(), <>f__am$cache0));
             }
             return source;
         }
@@ -107,7 +107,7 @@
                 writer.WriteLine("<assembly fullname=\"UnityEngine\">");
                 foreach (string str2 in usedClasses.GetAllManagedClassesAsString())
                 {
-                    writer.WriteLine(string.Format("<type fullname=\"UnityEngine.{0}\" preserve=\"{1}\"/>", str2, usedClasses.GetRetentionLevel(str2)));
+                    writer.WriteLine($"<type fullname="UnityEngine.{str2}" preserve="{usedClasses.GetRetentionLevel(str2)}"/>");
                 }
                 writer.WriteLine("</assembly>");
                 DefaultAssemblyResolver resolver = new DefaultAssemblyResolver();
@@ -123,7 +123,7 @@
                     {
                         foreach (string str4 in usedClasses.GetAllManagedClassesAsString())
                         {
-                            writer.WriteLine(string.Format("<type fullname=\"UnityEngine.{0}\" preserve=\"{1}\"/>", str4, usedClasses.GetRetentionLevel(str4)));
+                            writer.WriteLine($"<type fullname="UnityEngine.{str4}" preserve="{usedClasses.GetRetentionLevel(str4)}"/>");
                         }
                     }
                     GenerateBlackListTypeXML(writer, definition.MainModule.Types, usedClasses.GetAllManagedBaseClassesAsString());
@@ -270,20 +270,16 @@
             FileUtil.CopyFileOrDirectory(src, dst);
         }
 
-        private static string StripperExe()
-        {
-            return "Tools/UnusedBytecodeStripper.exe";
-        }
+        private static string StripperExe() => 
+            "Tools/UnusedBytecodeStripper.exe";
 
         [CompilerGenerated]
         private sealed class <CollectAssembliesRecursive>c__AnonStorey1
         {
             internal AssemblyDefinition assembly;
 
-            internal AssemblyDefinition <>m__0(AssemblyNameReference a)
-            {
-                return this.assembly.MainModule.AssemblyResolver.Resolve(a);
-            }
+            internal AssemblyDefinition <>m__0(AssemblyNameReference a) => 
+                this.assembly.MainModule.AssemblyResolver.Resolve(a);
         }
 
         [CompilerGenerated]
@@ -292,10 +288,8 @@
             internal DefaultAssemblyResolver resolver;
             internal RuntimeClassRegistry usedClasses;
 
-            internal bool <>m__0(string s)
-            {
-                return this.usedClasses.IsDLLUsed(s);
-            }
+            internal bool <>m__0(string s) => 
+                this.usedClasses.IsDLLUsed(s);
 
             internal AssemblyDefinition <>m__1(string file)
             {
@@ -308,15 +302,11 @@
 
         private class AssemblyDefinitionComparer : IEqualityComparer<AssemblyDefinition>
         {
-            public bool Equals(AssemblyDefinition x, AssemblyDefinition y)
-            {
-                return (x.FullName == y.FullName);
-            }
+            public bool Equals(AssemblyDefinition x, AssemblyDefinition y) => 
+                (x.FullName == y.FullName);
 
-            public int GetHashCode(AssemblyDefinition obj)
-            {
-                return obj.FullName.GetHashCode();
-            }
+            public int GetHashCode(AssemblyDefinition obj) => 
+                obj.FullName.GetHashCode();
         }
     }
 }

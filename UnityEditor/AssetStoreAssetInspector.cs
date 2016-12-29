@@ -40,15 +40,11 @@
             return "";
         }
 
-        public override GUIContent GetPreviewTitle()
-        {
-            return GUIContent.Temp("Asset Store Preview");
-        }
+        public override GUIContent GetPreviewTitle() => 
+            GUIContent.Temp("Asset Store Preview");
 
-        public override bool HasPreviewGUI()
-        {
-            return ((base.target != null) && (AssetStoreAssetSelection.Count != 0));
-        }
+        public override bool HasPreviewGUI() => 
+            ((base.target != null) && (AssetStoreAssetSelection.Count != 0));
 
         private void ImportPackage(AssetStoreAsset asset)
         {
@@ -89,7 +85,7 @@
             {
                 if (firstAsset.previewInfo != null)
                 {
-                    AssetStore.Open(string.Format("content/{0}/directpurchase", firstAsset.packageID));
+                    AssetStore.Open($"content/{firstAsset.packageID}/directpurchase");
                 }
             }
             else if (paymentAvailability == PaymentAvailability.BasketNotEmpty)
@@ -102,7 +98,7 @@
                     }
                     else
                     {
-                        AssetStore.Open(string.Format("content/{0}/basketpurchase", firstAsset.packageID));
+                        AssetStore.Open($"content/{firstAsset.packageID}/basketpurchase");
                     }
                 }
             }
@@ -130,7 +126,7 @@
             {
                 return "<error>";
             }
-            return string.Format("{0:#.##} {1}", num, strArray[index]);
+            return $"{num:#.##} {strArray[index]}";
         }
 
         private void LoginAndImport(AssetStoreAsset asset)
@@ -208,7 +204,7 @@
             }
             if (firstAsset != null)
             {
-                base.target.name = string.Format("Asset Store: {0}", firstAsset.name);
+                base.target.name = $"Asset Store: {firstAsset.name}";
             }
             else
             {
@@ -396,8 +392,8 @@
         {
             if (activeAsset.id != 0)
             {
-                AssetStore.Open(string.Format("content/{0}?assetID={1}", activeAsset.packageID, activeAsset.id));
-                UsabilityAnalytics.Track(string.Format("/AssetStore/ViewInStore/{0}/{1}", activeAsset.packageID, activeAsset.id));
+                AssetStore.Open($"content/{activeAsset.packageID}?assetID={activeAsset.id}");
+                UsabilityAnalytics.Track($"/AssetStore/ViewInStore/{activeAsset.packageID}/{activeAsset.id}");
             }
         }
 
@@ -434,10 +430,8 @@
         public static bool OfflineNoticeEnabled
         {
             [CompilerGenerated]
-            get
-            {
-                return <OfflineNoticeEnabled>k__BackingField;
-            }
+            get => 
+                <OfflineNoticeEnabled>k__BackingField;
             [CompilerGenerated]
             set
             {

@@ -12,13 +12,8 @@
     public struct AnimationPlayable
     {
         internal Playable handle;
-        internal Playable node
-        {
-            get
-            {
-                return this.handle;
-            }
-        }
+        internal Playable node =>
+            this.handle;
         /// <summary>
         /// <para>Call this method to release the resources allocated by the Playable.</para>
         /// </summary>
@@ -148,61 +143,37 @@
         /// <summary>
         /// <para>A Null AnimationPlayable used to create empty input connections.</para>
         /// </summary>
-        public static AnimationPlayable Null
-        {
-            get
-            {
-                return new AnimationPlayable { handle = { m_Version = 10 } };
-            }
-        }
-        public static bool operator ==(AnimationPlayable x, Playable y)
-        {
-            return Playables.Equals((Playable) x, y);
-        }
+        public static AnimationPlayable Null =>
+            new AnimationPlayable { handle={ m_Version=10 } };
+        public static bool operator ==(AnimationPlayable x, Playable y) => 
+            Playables.Equals((Playable) x, y);
 
-        public static bool operator !=(AnimationPlayable x, Playable y)
-        {
-            return !Playables.Equals((Playable) x, y);
-        }
+        public static bool operator !=(AnimationPlayable x, Playable y) => 
+            !Playables.Equals((Playable) x, y);
 
-        public override unsafe bool Equals(object p)
-        {
-            return Playables.Equals(*((Playable*) this), p);
-        }
+        public override unsafe bool Equals(object p) => 
+            Playables.Equals(*((Playable*) this), p);
 
-        public override int GetHashCode()
-        {
-            return this.node.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.node.GetHashCode();
 
-        public static implicit operator Playable(AnimationPlayable b)
-        {
-            return b.node;
-        }
+        public static implicit operator Playable(AnimationPlayable b) => 
+            b.node;
 
         /// <summary>
         /// <para>Returns true if the Playable is valid. A playable can be invalid if it was disposed. This is different from a Null playable..</para>
         /// </summary>
-        public unsafe bool IsValid()
-        {
-            return Playables.IsValid(*((Playable*) this));
-        }
+        public unsafe bool IsValid() => 
+            Playables.IsValid(*((Playable*) this));
 
-        public T CastTo<T>() where T: struct
-        {
-            return this.handle.CastTo<T>();
-        }
+        public T CastTo<T>() where T: struct => 
+            this.handle.CastTo<T>();
 
         /// <summary>
         /// <para>The count of inputs on the Playable. This count includes slots that aren't connected to anything.</para>
         /// </summary>
-        public int inputCount
-        {
-            get
-            {
-                return Playables.GetInputCountValidated(*((Playable*) this), base.GetType());
-            }
-        }
+        public int inputCount =>
+            Playables.GetInputCountValidated(*((Playable*) this), base.GetType());
         /// <summary>
         /// <para>Returns the Playable connected at the specified index.</para>
         /// </summary>
@@ -210,21 +181,14 @@
         /// <returns>
         /// <para>Playable connected at the index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected.</para>
         /// </returns>
-        public unsafe Playable GetInput(int inputPort)
-        {
-            return Playables.GetInputValidated(*((Playable*) this), inputPort, base.GetType());
-        }
+        public unsafe Playable GetInput(int inputPort) => 
+            Playables.GetInputValidated(*((Playable*) this), inputPort, base.GetType());
 
         /// <summary>
         /// <para>The count of ouputs on the Playable.  Currently only 1 output is supported.</para>
         /// </summary>
-        public int outputCount
-        {
-            get
-            {
-                return Playables.GetOutputCountValidated(*((Playable*) this), base.GetType());
-            }
-        }
+        public int outputCount =>
+            Playables.GetOutputCountValidated(*((Playable*) this), base.GetType());
         /// <summary>
         /// <para>Returns the Playable connected at the specified output index.</para>
         /// </summary>
@@ -232,10 +196,8 @@
         /// <returns>
         /// <para>Playable connected at the output index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected.</para>
         /// </returns>
-        public unsafe Playable GetOutput(int outputPort)
-        {
-            return Playables.GetOutputValidated(*((Playable*) this), outputPort, base.GetType());
-        }
+        public unsafe Playable GetOutput(int outputPort) => 
+            Playables.GetOutputValidated(*((Playable*) this), outputPort, base.GetType());
 
         /// <summary>
         /// <para>Get the weight of the Playable at a specified index.</para>
@@ -244,10 +206,8 @@
         /// <returns>
         /// <para>Weight of the input Playable. Returns -1 if there is no input connected at this input index.</para>
         /// </returns>
-        public unsafe float GetInputWeight(int index)
-        {
-            return Playables.GetInputWeightValidated(*((Playable*) this), index, base.GetType());
-        }
+        public unsafe float GetInputWeight(int index) => 
+            Playables.GetInputWeightValidated(*((Playable*) this), index, base.GetType());
 
         /// <summary>
         /// <para>Set the weight of an input.</para>
@@ -264,10 +224,8 @@
         /// </summary>
         public PlayState state
         {
-            get
-            {
-                return Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetPlayStateValidated(*((Playable*) this), value, base.GetType());
@@ -278,10 +236,8 @@
         /// </summary>
         public double time
         {
-            get
-            {
-                return Playables.GetTimeValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetTimeValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetTimeValidated(*((Playable*) this), value, base.GetType());
@@ -292,10 +248,8 @@
         /// </summary>
         public double duration
         {
-            get
-            {
-                return Playables.GetDurationValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetDurationValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetDurationValidated(*((Playable*) this), value, base.GetType());

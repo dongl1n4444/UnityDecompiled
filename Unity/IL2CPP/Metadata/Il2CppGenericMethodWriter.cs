@@ -24,10 +24,8 @@
         {
         }
 
-        private string FormatGenericMethod(MethodReference method, IMetadataCollection metadataCollection)
-        {
-            return string.Format("{{ {0}, {1}, {2} }}", metadataCollection.GetMethodIndex(method.Resolve()), !method.DeclaringType.IsGenericInstance ? -1 : ((int) IIl2CppGenericInstCollector.Items[((GenericInstanceType) method.DeclaringType).GenericArguments.ToArray()]), !method.IsGenericInstance ? -1 : ((int) IIl2CppGenericInstCollector.Items[((GenericInstanceMethod) method).GenericArguments.ToArray()]));
-        }
+        private string FormatGenericMethod(MethodReference method, IMetadataCollection metadataCollection) => 
+            $"{{ {metadataCollection.GetMethodIndex(method.Resolve())}, {(!method.DeclaringType.IsGenericInstance ? -1 : ((int) IIl2CppGenericInstCollector.Items[((GenericInstanceType) method.DeclaringType).GenericArguments.ToArray()]))}, {(!method.IsGenericInstance ? -1 : ((int) IIl2CppGenericInstCollector.Items[((GenericInstanceMethod) method).GenericArguments.ToArray()]))} }}";
 
         public TableInfo WriteIl2CppGenericMethodDefinitions(IMetadataCollection metadataCollection)
         {
@@ -40,7 +38,7 @@
             {
                 <>f__am$cache0 = new Func<KeyValuePair<MethodReference, uint>, uint>(null, (IntPtr) <WriteIl2CppGenericMethodDefinitions>m__0);
             }
-            return MetadataWriter.WriteTable<KeyValuePair<MethodReference, uint>>(base.Writer, "extern const Il2CppMethodSpec", "g_Il2CppMethodSpecTable", Enumerable.ToArray<KeyValuePair<MethodReference, uint>>(Enumerable.OrderBy<KeyValuePair<MethodReference, uint>, uint>(Il2CppGenericMethodCollector.Items, <>f__am$cache0)), new Func<KeyValuePair<MethodReference, uint>, int, string>(storey, (IntPtr) this.<>m__0));
+            return MetadataWriter.WriteTable<KeyValuePair<MethodReference, uint>>(base.Writer, "extern const Il2CppMethodSpec", "g_Il2CppMethodSpecTable", Il2CppGenericMethodCollector.Items.OrderBy<KeyValuePair<MethodReference, uint>, uint>(<>f__am$cache0).ToArray<KeyValuePair<MethodReference, uint>>(), new Func<KeyValuePair<MethodReference, uint>, int, string>(storey, (IntPtr) this.<>m__0));
         }
 
         [CompilerGenerated]
@@ -49,10 +47,8 @@
             internal Il2CppGenericMethodWriter $this;
             internal IMetadataCollection metadataCollection;
 
-            internal string <>m__0(KeyValuePair<MethodReference, uint> item, int index)
-            {
-                return this.$this.FormatGenericMethod(item.Key, this.metadataCollection);
-            }
+            internal string <>m__0(KeyValuePair<MethodReference, uint> item, int index) => 
+                this.$this.FormatGenericMethod(item.Key, this.metadataCollection);
         }
     }
 }

@@ -83,10 +83,8 @@
             }
         }
 
-        private bool doesReferenceNetworkClasses(AssemblyReferenceChecker checker)
-        {
-            return ((((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(Ping).FullName))) || checker.HasReferenceToType(typeof(UnityWebRequest).FullName));
-        }
+        private bool doesReferenceNetworkClasses(AssemblyReferenceChecker checker) => 
+            ((((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(Ping).FullName))) || checker.HasReferenceToType(typeof(UnityWebRequest).FullName));
 
         public void Execute(PostProcessorContext context)
         {
@@ -246,7 +244,7 @@
             char[] separator = new char[] { '.' };
             foreach (string str in packageName.Split(separator))
             {
-                if (Enumerable.Contains<string>(ReservedJavaKeywords, str))
+                if (ReservedJavaKeywords.Contains<string>(str))
                 {
                     return false;
                 }
@@ -281,11 +279,11 @@
             int minSdkVersion = (int) PlayerSettings.Android.minSdkVersion;
             string glEsVersion = "0x00020000";
             GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(platform);
-            if (Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES3) && (minSdkVersion >= 0x12))
+            if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && (minSdkVersion >= 0x12))
             {
                 glEsVersion = "0x00030000";
             }
-            if (Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES2))
+            if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2))
             {
                 glEsVersion = "0x00020000";
             }
@@ -315,7 +313,7 @@
             }
             if (!flag)
             {
-                Debug.LogWarning(string.Format("Unable to find unity activity in manifest. You need to make sure orientation attribute is set to {0} manually.", orientationAttr));
+                Debug.LogWarning($"Unable to find unity activity in manifest. You need to make sure orientation attribute is set to {orientationAttr} manually.");
             }
             manifestXML.SetApplicationFlag("isGame", PlayerSettings.Android.androidIsGame);
             if (PlayerSettings.Android.androidBannerEnabled)
@@ -454,13 +452,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Creating Android manifest";
-            }
-        }
+        public string Name =>
+            "Creating Android manifest";
     }
 }
 

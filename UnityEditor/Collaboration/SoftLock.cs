@@ -14,34 +14,14 @@
         {
         }
 
-        public string userID
-        {
-            get
-            {
-                return this.m_UserID;
-            }
-        }
-        public string machineID
-        {
-            get
-            {
-                return this.m_MachineID;
-            }
-        }
-        public string displayName
-        {
-            get
-            {
-                return this.m_DisplayName;
-            }
-        }
-        public ulong timeStamp
-        {
-            get
-            {
-                return this.m_TimeStamp;
-            }
-        }
+        public string userID =>
+            this.m_UserID;
+        public string machineID =>
+            this.m_MachineID;
+        public string displayName =>
+            this.m_DisplayName;
+        public ulong timeStamp =>
+            this.m_TimeStamp;
     }
 }
 

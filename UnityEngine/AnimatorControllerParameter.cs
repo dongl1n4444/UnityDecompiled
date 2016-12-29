@@ -21,20 +21,16 @@
             return (((((parameter != null) && (this.m_Name == parameter.m_Name)) && ((this.m_Type == parameter.m_Type) && (this.m_DefaultFloat == parameter.m_DefaultFloat))) && (this.m_DefaultInt == parameter.m_DefaultInt)) && (this.m_DefaultBool == parameter.m_DefaultBool));
         }
 
-        public override int GetHashCode()
-        {
-            return this.name.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.name.GetHashCode();
 
         /// <summary>
         /// <para>The default bool value for the parameter.</para>
         /// </summary>
         public bool defaultBool
         {
-            get
-            {
-                return this.m_DefaultBool;
-            }
+            get => 
+                this.m_DefaultBool;
             set
             {
                 this.m_DefaultBool = value;
@@ -46,10 +42,8 @@
         /// </summary>
         public float defaultFloat
         {
-            get
-            {
-                return this.m_DefaultFloat;
-            }
+            get => 
+                this.m_DefaultFloat;
             set
             {
                 this.m_DefaultFloat = value;
@@ -61,10 +55,8 @@
         /// </summary>
         public int defaultInt
         {
-            get
-            {
-                return this.m_DefaultInt;
-            }
+            get => 
+                this.m_DefaultInt;
             set
             {
                 this.m_DefaultInt = value;
@@ -76,10 +68,8 @@
         /// </summary>
         public string name
         {
-            get
-            {
-                return this.m_Name;
-            }
+            get => 
+                this.m_Name;
             set
             {
                 this.m_Name = value;
@@ -89,23 +79,16 @@
         /// <summary>
         /// <para>Returns the hash of the parameter based on its name.</para>
         /// </summary>
-        public int nameHash
-        {
-            get
-            {
-                return Animator.StringToHash(this.m_Name);
-            }
-        }
+        public int nameHash =>
+            Animator.StringToHash(this.m_Name);
 
         /// <summary>
         /// <para>The type of the parameter.</para>
         /// </summary>
         public AnimatorControllerParameterType type
         {
-            get
-            {
-                return this.m_Type;
-            }
+            get => 
+                this.m_Type;
             set
             {
                 this.m_Type = value;

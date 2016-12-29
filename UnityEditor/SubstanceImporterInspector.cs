@@ -95,10 +95,8 @@
             }
         }
 
-        private SubstanceImporter GetImporter()
-        {
-            return (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(base.target)) as SubstanceImporter);
-        }
+        private SubstanceImporter GetImporter() => 
+            (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(base.target)) as SubstanceImporter);
 
         public override string GetInfoString()
         {
@@ -159,10 +157,8 @@
             return materials;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (this.GetSelectedMaterialInspector() != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (this.GetSelectedMaterialInspector() != null);
 
         private void Init()
         {

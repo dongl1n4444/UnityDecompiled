@@ -222,21 +222,11 @@
             }
         }
 
-        public static string presetsEditorPrefID
-        {
-            get
-            {
-                return "Gradient";
-            }
-        }
+        public static string presetsEditorPrefID =>
+            "Gradient";
 
-        public static bool visible
-        {
-            get
-            {
-                return (s_GradientPicker != null);
-            }
-        }
+        public static bool visible =>
+            (s_GradientPicker != null);
     }
 }
 

@@ -39,24 +39,22 @@
             this._marshaledTypeName = GetMarshaledTypeName(type, marshalType);
             this._marshaledDecoratedTypeName = !this.TreatAsValueType() ? (this._marshaledTypeName + "*") : this._marshaledTypeName;
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(this._marshaledTypeName, this._marshaledDecoratedTypeName) };
-            this._marshalToNativeFunctionName = string.Format("{0}_marshal{1}", str, str2);
-            this._marshalFromNativeFunctionName = string.Format("{0}_marshal{1}_back", str, str2);
-            this._marshalCleanupFunctionName = string.Format("{0}_marshal{1}_cleanup", str, str2);
-            this._marshalToNativeFunctionDeclaration = string.Format("extern \"C\" void {0}(const {1}& unmarshaled, {2}& marshaled)", this.MarshalToNativeFunctionName, str, this._marshaledTypeName);
-            this._marshalFromNativeFunctionDeclaration = string.Format("extern \"C\" void {0}(const {1}& marshaled, {2}& unmarshaled)", this._marshalFromNativeFunctionName, this._marshaledTypeName, str);
-            this._marshalCleanupFunctionDeclaration = string.Format("extern \"C\" void {0}({1}& marshaled)", this.MarshalCleanupFunctionName, this._marshaledTypeName);
+            this._marshalToNativeFunctionName = $"{str}_marshal{str2}";
+            this._marshalFromNativeFunctionName = $"{str}_marshal{str2}_back";
+            this._marshalCleanupFunctionName = $"{str}_marshal{str2}_cleanup";
+            this._marshalToNativeFunctionDeclaration = $"extern "C" void {this.MarshalToNativeFunctionName}(const {str}& unmarshaled, {this._marshaledTypeName}& marshaled)";
+            this._marshalFromNativeFunctionDeclaration = $"extern "C" void {this._marshalFromNativeFunctionName}(const {this._marshaledTypeName}& marshaled, {str}& unmarshaled)";
+            this._marshalCleanupFunctionDeclaration = $"extern "C" void {this.MarshalCleanupFunctionName}({this._marshaledTypeName}& marshaled)";
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <CustomMarshalInfoWriter>m__0);
             }
-            this._defaultConstructor = Enumerable.SingleOrDefault<MethodDefinition>(this._type.Methods, <>f__am$cache0);
+            this._defaultConstructor = this._type.Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache0);
         }
 
         [CompilerGenerated]
-        private static bool <CustomMarshalInfoWriter>m__0(MethodDefinition ctor)
-        {
-            return ((ctor.Name == ".ctor") && (ctor.Parameters.Count == 0));
-        }
+        private static bool <CustomMarshalInfoWriter>m__0(MethodDefinition ctor) => 
+            ((ctor.Name == ".ctor") && (ctor.Parameters.Count == 0));
 
         public override string DecorateVariable(string unmarshaledParameterName, string marshaledVariableName)
         {
@@ -94,7 +92,7 @@
             }
             else
             {
-                writer.WriteStatement(Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_missing_method_exception(\"A parameterless constructor is required for type '{0}'.\")", typeDefinition.FullName)));
+                writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_missing_method_exception("A parameterless constructor is required for type '{typeDefinition.FullName}'.")"));
             }
             writeMarshalFromNativeCode.Invoke();
             if (emitNullCheck)
@@ -117,12 +115,10 @@
             }
         }
 
-        private static string GetMarshaledTypeName(TypeReference type, MarshalType marshalType)
-        {
-            return string.Format("{0}_marshaled_{1}", DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(type), MarshalingUtils.MarshalTypeToString(marshalType));
-        }
+        private static string GetMarshaledTypeName(TypeReference type, MarshalType marshalType) => 
+            $"{DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(type)}_marshaled_{MarshalingUtils.MarshalTypeToString(marshalType)}";
 
-        protected static DefaultMarshalInfoWriter MarshalInfoWriterFor(TypeReference type, MarshalType marshalType, MarshalInfo marshalInfo, bool useUnicodeCharSet, [Optional, DefaultParameterValue(false)] bool forFieldMarshaling)
+        protected static DefaultMarshalInfoWriter MarshalInfoWriterFor(TypeReference type, MarshalType marshalType, MarshalInfo marshalInfo, bool useUnicodeCharSet, bool forFieldMarshaling = false)
         {
             TypeReference reference = type;
             MarshalType type2 = marshalType;
@@ -134,14 +130,12 @@
 
         private void PopulateFields()
         {
-            this._fields = Enumerable.ToArray<FieldDefinition>(MarshalingUtils.GetMarshaledFields(this._type, this._marshalType));
-            this._fieldMarshalInfoWriters = Enumerable.ToArray<DefaultMarshalInfoWriter>(MarshalingUtils.GetFieldMarshalInfoWriters(this._type, this._marshalType));
+            this._fields = MarshalingUtils.GetMarshaledFields(this._type, this._marshalType).ToArray<FieldDefinition>();
+            this._fieldMarshalInfoWriters = MarshalingUtils.GetFieldMarshalInfoWriters(this._type, this._marshalType).ToArray<DefaultMarshalInfoWriter>();
         }
 
-        public override bool TreatAsValueType()
-        {
-            return (this._type.IsValueType || (((this._type.MetadataType == MetadataType.Class) && (this._marshalType == MarshalType.PInvoke)) && this._forFieldMarshaling));
-        }
+        public override bool TreatAsValueType() => 
+            (this._type.IsValueType || (((this._type.MetadataType == MetadataType.Class) && (this._marshalType == MarshalType.PInvoke)) && this._forFieldMarshaling));
 
         public override string UndecorateVariable(string variableName)
         {
@@ -197,7 +191,7 @@
         }
 
         protected abstract void WriteMarshalCleanupFunction(CppCodeWriter writer);
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             if (this.TreatAsValueType())
             {
@@ -220,7 +214,7 @@
         {
             if (!this.TreatAsValueType())
             {
-                string str = string.Format("_{0}_empty", DefaultMarshalInfoWriter.CleanVariableName(variableName));
+                string str = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_empty";
                 object[] args = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(this._type), str, DefaultMarshalInfoWriter.Naming.AddressOf(variableName), metadataAccess.TypeInfoFor(this._type), DefaultMarshalInfoWriter.Naming.Null };
                 writer.WriteLine("{0} {1} = ({2} != {4}) ? ({0})il2cpp_codegen_object_new({3}) : {4};", args);
                 return str;
@@ -232,7 +226,7 @@
         public override void WriteMarshalFunctionDeclarations(CppCodeWriter writer)
         {
             writer.AddForwardDeclaration(this._type);
-            writer.AddForwardDeclaration(string.Format("struct {0}", this._marshaledTypeName));
+            writer.AddForwardDeclaration($"struct {this._marshaledTypeName}");
             writer.WriteLine();
             writer.WriteCommentedLine("Methods for marshaling");
             object[] args = new object[] { DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(this._type) };
@@ -319,7 +313,7 @@
                 object[] objArray2 = new object[] { TypeDefinitionWriter.FieldLayoutPackingSizeFor(this._type) };
                 writer.WriteLine("#pragma pack(push, tp, {0})", objArray2);
             }
-            object[] objArray3 = new object[] { this._marshaledTypeName, (((this._type.BaseType == null) || Extensions.IsSpecialSystemBaseType(this._type.BaseType)) || !MarshalDataCollector.MarshalInfoWriterFor(this._type.BaseType, this._marshalType, null, false, false, false, null).HasNativeStructDefinition) ? string.Empty : string.Format(" : public {0}", GetMarshaledTypeName(this._type.BaseType, this._marshalType)) };
+            object[] objArray3 = new object[] { this._marshaledTypeName, (((this._type.BaseType == null) || this._type.BaseType.IsSpecialSystemBaseType()) || !MarshalDataCollector.MarshalInfoWriterFor(this._type.BaseType, this._marshalType, null, false, false, false, null).HasNativeStructDefinition) ? string.Empty : $" : public {GetMarshaledTypeName(this._type.BaseType, this._marshalType)}" };
             writer.WriteLine("struct {0}{1}", objArray3);
             writer.BeginBlock();
             using (new TypeDefinitionPaddingWriter(writer, this._type))
@@ -374,45 +368,20 @@
             }
         }
 
-        public sealed override bool HasNativeStructDefinition
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public sealed override bool HasNativeStructDefinition =>
+            true;
 
-        public sealed override string MarshalCleanupFunctionName
-        {
-            get
-            {
-                return this._marshalCleanupFunctionName;
-            }
-        }
+        public sealed override string MarshalCleanupFunctionName =>
+            this._marshalCleanupFunctionName;
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
-        public sealed override string MarshalFromNativeFunctionName
-        {
-            get
-            {
-                return this._marshalFromNativeFunctionName;
-            }
-        }
+        public sealed override string MarshalFromNativeFunctionName =>
+            this._marshalFromNativeFunctionName;
 
-        public sealed override string MarshalToNativeFunctionName
-        {
-            get
-            {
-                return this._marshalToNativeFunctionName;
-            }
-        }
+        public sealed override string MarshalToNativeFunctionName =>
+            this._marshalToNativeFunctionName;
 
         [CompilerGenerated]
         private sealed class <WriteMarshalVariableFromNative>c__AnonStorey0

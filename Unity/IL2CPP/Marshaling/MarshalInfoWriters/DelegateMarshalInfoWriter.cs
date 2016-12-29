@@ -16,7 +16,7 @@
             this._marshaledTypes = new MarshaledType[] { new MarshaledType("Il2CppMethodPointer", "Il2CppMethodPointer") };
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
         }
 
@@ -42,13 +42,8 @@
             writer.WriteLine("{0} {1} = NULL;", args);
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
     }
 }
 

@@ -6,10 +6,8 @@
     [CustomPropertyDrawer(typeof(SpaceAttribute))]
     internal sealed class SpaceDrawer : DecoratorDrawer
     {
-        public override float GetHeight()
-        {
-            return (base.attribute as SpaceAttribute).height;
-        }
+        public override float GetHeight() => 
+            (base.attribute as SpaceAttribute).height;
     }
 }
 

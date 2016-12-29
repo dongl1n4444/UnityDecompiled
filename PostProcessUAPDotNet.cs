@@ -18,7 +18,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     [CompilerGenerated]
     private static Func<string, string> <>f__am$cache2;
 
-    public PostProcessUAPDotNet(BuildPostProcessArgs args, [Optional, DefaultParameterValue(null)] string stagingArea) : base(args, stagingArea)
+    public PostProcessUAPDotNet(BuildPostProcessArgs args, string stagingArea = null) : base(args, stagingArea)
     {
     }
 
@@ -51,10 +51,8 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         return str;
     }
 
-    protected override string GetAssemblyConverterPlatform()
-    {
-        return "uap";
-    }
+    protected override string GetAssemblyConverterPlatform() => 
+        "uap";
 
     protected override IEnumerable<string> GetLangAssemblies()
     {
@@ -65,10 +63,8 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         return Enumerable.Select<string, string>(base.GetLangAssemblies(), <>f__am$cache0);
     }
 
-    protected override string GetPlayerFilesSourceDirectory()
-    {
-        return base.GetPlayerFilesSourceDirectory(Path.Combine("UAP", "dotnet"));
-    }
+    protected override string GetPlayerFilesSourceDirectory() => 
+        base.GetPlayerFilesSourceDirectory(Path.Combine("UAP", "dotnet"));
 
     protected override string GetReferenceAssembliesDirectory()
     {
@@ -79,15 +75,11 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         return _referenceAssembliesDirectory;
     }
 
-    protected override string GetTemplateDirectorySource()
-    {
-        return ((EditorUserBuildSettings.wsaUWPBuildType != WSAUWPBuildType.XAML) ? Utility.CombinePath(new string[] { base.PlayerPackage, "Templates", "UWP_D3D" }) : base.GetTemplateDirectorySource("Windows81"));
-    }
+    protected override string GetTemplateDirectorySource() => 
+        ((EditorUserBuildSettings.wsaUWPBuildType != WSAUWPBuildType.XAML) ? Utility.CombinePath(new string[] { base.PlayerPackage, "Templates", "UWP_D3D" }) : base.GetTemplateDirectorySource("Windows81"));
 
-    protected override IEnumerable<string> GetUnityAssemblies()
-    {
-        return new string[] { @"UAP\UnityEngine.dll", @"UAP\WinRTLegacy.dll" };
-    }
+    protected override IEnumerable<string> GetUnityAssemblies() => 
+        new string[] { @"UAP\UnityEngine.dll", @"UAP\WinRTLegacy.dll" };
 
     protected override IEnumerable<string> GetUnityPluginOverwrites()
     {
@@ -102,7 +94,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     {
         string str6;
         string fileName = Utility.CombinePath(base.PlayerPackage, @"Tools\AssemblyConverter.exe");
-        string arguments = string.Format("-metadata=0 -platform={0} -lock=\"{1}\" {2}", this.GetAssemblyConverterPlatform(), @"UWP\project.lock.json", assembly);
+        string arguments = $"-metadata=0 -platform={this.GetAssemblyConverterPlatform()} -lock="{@"UWP\project.lock.json"}" {assembly}";
         HashSet<string> set = new HashSet<string> {
             Path.GetDirectoryName(assembly)
         };
@@ -122,11 +114,12 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         }
         if (Utility.RunAndWait(fileName, arguments, out str6, null) != 0)
         {
-            throw new UnityException(string.Format("Failed to run assembly converter with command {0}.\n{1}", arguments, str6));
+            throw new UnityException($"Failed to run assembly converter with command {arguments}.
+{str6}");
         }
         if (!string.IsNullOrEmpty(str6))
         {
-            Debug.LogError(string.Format("Assembly converter: {0}", str6));
+            Debug.LogError($"Assembly converter: {str6}");
         }
     }
 }

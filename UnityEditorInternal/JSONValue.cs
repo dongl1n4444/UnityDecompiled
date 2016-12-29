@@ -14,60 +14,38 @@
             this.data = o;
         }
 
-        public bool IsString()
-        {
-            return (this.data is string);
-        }
+        public bool IsString() => 
+            (this.data is string);
 
-        public bool IsFloat()
-        {
-            return (this.data is float);
-        }
+        public bool IsFloat() => 
+            (this.data is float);
 
-        public bool IsList()
-        {
-            return (this.data is List<JSONValue>);
-        }
+        public bool IsList() => 
+            (this.data is List<JSONValue>);
 
-        public bool IsDict()
-        {
-            return (this.data is Dictionary<string, JSONValue>);
-        }
+        public bool IsDict() => 
+            (this.data is Dictionary<string, JSONValue>);
 
-        public bool IsBool()
-        {
-            return (this.data is bool);
-        }
+        public bool IsBool() => 
+            (this.data is bool);
 
-        public bool IsNull()
-        {
-            return (this.data == null);
-        }
+        public bool IsNull() => 
+            (this.data == null);
 
-        public static implicit operator JSONValue(string s)
-        {
-            return new JSONValue(s);
-        }
+        public static implicit operator JSONValue(string s) => 
+            new JSONValue(s);
 
-        public static implicit operator JSONValue(float s)
-        {
-            return new JSONValue(s);
-        }
+        public static implicit operator JSONValue(float s) => 
+            new JSONValue(s);
 
-        public static implicit operator JSONValue(bool s)
-        {
-            return new JSONValue(s);
-        }
+        public static implicit operator JSONValue(bool s) => 
+            new JSONValue(s);
 
-        public static implicit operator JSONValue(int s)
-        {
-            return new JSONValue((float) s);
-        }
+        public static implicit operator JSONValue(int s) => 
+            new JSONValue((float) s);
 
-        public object AsObject()
-        {
-            return this.data;
-        }
+        public object AsObject() => 
+            this.data;
 
         public string AsString(bool nothrow)
         {
@@ -82,10 +60,8 @@
             return "";
         }
 
-        public string AsString()
-        {
-            return this.AsString(false);
-        }
+        public string AsString() => 
+            this.AsString(false);
 
         public float AsFloat(bool nothrow)
         {
@@ -100,10 +76,8 @@
             return 0f;
         }
 
-        public float AsFloat()
-        {
-            return this.AsFloat(false);
-        }
+        public float AsFloat() => 
+            this.AsFloat(false);
 
         public bool AsBool(bool nothrow)
         {
@@ -118,10 +92,8 @@
             return false;
         }
 
-        public bool AsBool()
-        {
-            return this.AsBool(false);
-        }
+        public bool AsBool() => 
+            this.AsBool(false);
 
         public List<JSONValue> AsList(bool nothrow)
         {
@@ -136,10 +108,8 @@
             return null;
         }
 
-        public List<JSONValue> AsList()
-        {
-            return this.AsList(false);
-        }
+        public List<JSONValue> AsList() => 
+            this.AsList(false);
 
         public Dictionary<string, JSONValue> AsDict(bool nothrow)
         {
@@ -154,47 +124,31 @@
             return null;
         }
 
-        public Dictionary<string, JSONValue> AsDict()
-        {
-            return this.AsDict(false);
-        }
+        public Dictionary<string, JSONValue> AsDict() => 
+            this.AsDict(false);
 
-        public static JSONValue NewString(string val)
-        {
-            return new JSONValue(val);
-        }
+        public static JSONValue NewString(string val) => 
+            new JSONValue(val);
 
-        public static JSONValue NewFloat(float val)
-        {
-            return new JSONValue(val);
-        }
+        public static JSONValue NewFloat(float val) => 
+            new JSONValue(val);
 
-        public static JSONValue NewDict()
-        {
-            return new JSONValue(new Dictionary<string, JSONValue>());
-        }
+        public static JSONValue NewDict() => 
+            new JSONValue(new Dictionary<string, JSONValue>());
 
-        public static JSONValue NewList()
-        {
-            return new JSONValue(new List<JSONValue>());
-        }
+        public static JSONValue NewList() => 
+            new JSONValue(new List<JSONValue>());
 
-        public static JSONValue NewBool(bool val)
-        {
-            return new JSONValue(val);
-        }
+        public static JSONValue NewBool(bool val) => 
+            new JSONValue(val);
 
-        public static JSONValue NewNull()
-        {
-            return new JSONValue(null);
-        }
+        public static JSONValue NewNull() => 
+            new JSONValue(null);
 
         public JSONValue this[string index]
         {
-            get
-            {
-                return this.AsDict()[index];
-            }
+            get => 
+                this.AsDict()[index];
             set
             {
                 if (this.data == null)

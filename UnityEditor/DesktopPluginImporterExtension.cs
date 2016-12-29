@@ -28,7 +28,7 @@
             bool flag3 = ((buildTargetByName == BuildTarget.StandaloneLinux) || (buildTargetByName == BuildTarget.StandaloneLinux64)) || (buildTargetByName == BuildTarget.StandaloneLinuxUniversal);
             if ((!flag3 && !flag2) && !flag)
             {
-                throw new Exception(string.Format("Failed to resolve standalone platform, platform string '{0}', resolved target '{1}'", platformName, buildTargetByName.ToString()));
+                throw new Exception($"Failed to resolve standalone platform, platform string '{platformName}', resolved target '{buildTargetByName.ToString()}'");
             }
             if (flag && !this.IsUsableOnWindows(imp))
             {
@@ -89,10 +89,8 @@
             return list.ToArray();
         }
 
-        private bool IsUsableOnLinux(PluginImporter imp)
-        {
-            return (!imp.isNativePlugin || (Path.GetExtension(imp.assetPath).ToLower() == ".so"));
-        }
+        private bool IsUsableOnLinux(PluginImporter imp) => 
+            (!imp.isNativePlugin || (Path.GetExtension(imp.assetPath).ToLower() == ".so"));
 
         private bool IsUsableOnOSX(PluginImporter imp)
         {
@@ -109,10 +107,8 @@
             return false;
         }
 
-        private bool IsUsableOnWindows(PluginImporter imp)
-        {
-            return (!imp.isNativePlugin || (Path.GetExtension(imp.assetPath).ToLower() == ".dll"));
-        }
+        private bool IsUsableOnWindows(PluginImporter imp) => 
+            (!imp.isNativePlugin || (Path.GetExtension(imp.assetPath).ToLower() == ".dll"));
 
         public override void OnPlatformSettingsGUI(PluginImporterInspector inspector)
         {

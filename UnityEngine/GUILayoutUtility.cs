@@ -141,10 +141,8 @@
             return (GUILayoutGroup) Activator.CreateInstance(LayoutType);
         }
 
-        internal static GUILayoutGroup DoBeginLayoutArea(GUIStyle style, System.Type layoutType)
-        {
-            return BeginLayoutArea(style, layoutType);
-        }
+        internal static GUILayoutGroup DoBeginLayoutArea(GUIStyle style, System.Type layoutType) => 
+            BeginLayoutArea(style, layoutType);
 
         private static Rect DoGetAspectRect(float aspect, GUIStyle style, GUILayoutOption[] options)
         {
@@ -243,10 +241,8 @@
         /// <returns>
         /// <para>The rect for the control.</para>
         /// </returns>
-        public static Rect GetAspectRect(float aspect)
-        {
-            return DoGetAspectRect(aspect, GUIStyle.none, null);
-        }
+        public static Rect GetAspectRect(float aspect) => 
+            DoGetAspectRect(aspect, GUIStyle.none, null);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
@@ -259,10 +255,8 @@
         /// <returns>
         /// <para>The rect for the control.</para>
         /// </returns>
-        public static Rect GetAspectRect(float aspect, GUIStyle style)
-        {
-            return DoGetAspectRect(aspect, style, null);
-        }
+        public static Rect GetAspectRect(float aspect, GUIStyle style) => 
+            DoGetAspectRect(aspect, style, null);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
@@ -275,10 +269,8 @@
         /// <returns>
         /// <para>The rect for the control.</para>
         /// </returns>
-        public static Rect GetAspectRect(float aspect, params GUILayoutOption[] options)
-        {
-            return DoGetAspectRect(aspect, GUIStyle.none, options);
-        }
+        public static Rect GetAspectRect(float aspect, params GUILayoutOption[] options) => 
+            DoGetAspectRect(aspect, GUIStyle.none, options);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle with a specific aspect ratio.</para>
@@ -291,10 +283,8 @@
         /// <returns>
         /// <para>The rect for the control.</para>
         /// </returns>
-        public static Rect GetAspectRect(float aspect, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoGetAspectRect(aspect, GUIStyle.none, options);
-        }
+        public static Rect GetAspectRect(float aspect, GUIStyle style, params GUILayoutOption[] options) => 
+            DoGetAspectRect(aspect, GUIStyle.none, options);
 
         /// <summary>
         /// <para>Get the rectangle last used by GUILayout for a control.</para>
@@ -327,10 +317,8 @@
         /// <returns>
         /// <para>The rectanlge to put your control in.</para>
         /// </returns>
-        public static Rect GetRect(float width, float height)
-        {
-            return DoGetRect(width, width, height, height, GUIStyle.none, null);
-        }
+        public static Rect GetRect(float width, float height) => 
+            DoGetRect(width, width, height, height, GUIStyle.none, null);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle for displaying some contents with a specific style.</para>
@@ -343,10 +331,8 @@
         /// <returns>
         /// <para>A rectangle that is large enough to contain content when rendered in style.</para>
         /// </returns>
-        public static Rect GetRect(GUIContent content, GUIStyle style)
-        {
-            return DoGetRect(content, style, null);
-        }
+        public static Rect GetRect(GUIContent content, GUIStyle style) => 
+            DoGetRect(content, style, null);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
@@ -360,10 +346,8 @@
         /// <returns>
         /// <para>The rectanlge to put your control in.</para>
         /// </returns>
-        public static Rect GetRect(float width, float height, GUIStyle style)
-        {
-            return DoGetRect(width, width, height, height, style, null);
-        }
+        public static Rect GetRect(float width, float height, GUIStyle style) => 
+            DoGetRect(width, width, height, height, style, null);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
@@ -377,10 +361,8 @@
         /// <returns>
         /// <para>The rectanlge to put your control in.</para>
         /// </returns>
-        public static Rect GetRect(float width, float height, params GUILayoutOption[] options)
-        {
-            return DoGetRect(width, width, height, height, GUIStyle.none, options);
-        }
+        public static Rect GetRect(float width, float height, params GUILayoutOption[] options) => 
+            DoGetRect(width, width, height, height, GUIStyle.none, options);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle for displaying some contents with a specific style.</para>
@@ -393,10 +375,8 @@
         /// <returns>
         /// <para>A rectangle that is large enough to contain content when rendered in style.</para>
         /// </returns>
-        public static Rect GetRect(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoGetRect(content, style, options);
-        }
+        public static Rect GetRect(GUIContent content, GUIStyle style, params GUILayoutOption[] options) => 
+            DoGetRect(content, style, options);
 
         /// <summary>
         /// <para>Reserve layout space for a flexible rect.</para>
@@ -412,10 +392,8 @@
         /// <returns>
         /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
         /// </returns>
-        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight)
-        {
-            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, null);
-        }
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight) => 
+            DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, null);
 
         /// <summary>
         /// <para>Reserve layout space for a rectangle with a fixed content area.</para>
@@ -429,10 +407,8 @@
         /// <returns>
         /// <para>The rectanlge to put your control in.</para>
         /// </returns>
-        public static Rect GetRect(float width, float height, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoGetRect(width, width, height, height, style, options);
-        }
+        public static Rect GetRect(float width, float height, GUIStyle style, params GUILayoutOption[] options) => 
+            DoGetRect(width, width, height, height, style, options);
 
         /// <summary>
         /// <para>Reserve layout space for a flexible rect.</para>
@@ -448,10 +424,8 @@
         /// <returns>
         /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
         /// </returns>
-        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style)
-        {
-            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, null);
-        }
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style) => 
+            DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, null);
 
         /// <summary>
         /// <para>Reserve layout space for a flexible rect.</para>
@@ -467,10 +441,8 @@
         /// <returns>
         /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
         /// </returns>
-        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, params GUILayoutOption[] options)
-        {
-            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, options);
-        }
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, params GUILayoutOption[] options) => 
+            DoGetRect(minWidth, maxWidth, minHeight, maxHeight, GUIStyle.none, options);
 
         /// <summary>
         /// <para>Reserve layout space for a flexible rect.</para>
@@ -486,10 +458,8 @@
         /// <returns>
         /// <para>A rectangle with size between minWidth &amp; maxWidth on both axes.</para>
         /// </returns>
-        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, options);
-        }
+        public static Rect GetRect(float minWidth, float maxWidth, float minHeight, float maxHeight, GUIStyle style, params GUILayoutOption[] options) => 
+            DoGetRect(minWidth, maxWidth, minHeight, maxHeight, style, options);
 
         internal static Rect GetWindowsBounds()
         {
@@ -622,13 +592,8 @@
             }
         }
 
-        internal static GUILayoutGroup topLevel
-        {
-            get
-            {
-                return current.topLevel;
-            }
-        }
+        internal static GUILayoutGroup topLevel =>
+            current.topLevel;
 
         internal sealed class LayoutCache
         {

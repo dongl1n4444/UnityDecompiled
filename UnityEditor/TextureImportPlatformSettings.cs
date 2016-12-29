@@ -60,7 +60,7 @@
             {
                 <>f__am$cache0 = new Func<Object, TextureImporter>(null, (IntPtr) <TextureImportPlatformSettings>m__0);
             }
-            this.m_Importers = Enumerable.ToArray<TextureImporter>(Enumerable.Select<Object, TextureImporter>(inspector.targets, <>f__am$cache0));
+            this.m_Importers = Enumerable.Select<Object, TextureImporter>(inspector.targets, <>f__am$cache0).ToArray<TextureImporter>();
             for (int i = 0; i < this.importers.Length; i++)
             {
                 TextureImporterPlatformSettings platformTextureSettings = this.importers[i].GetPlatformTextureSettings(name);
@@ -104,10 +104,8 @@
         }
 
         [CompilerGenerated]
-        private static TextureImporter <TextureImportPlatformSettings>m__0(Object x)
-        {
-            return (x as TextureImporter);
-        }
+        private static TextureImporter <TextureImportPlatformSettings>m__0(Object x) => 
+            (x as TextureImporter);
 
         public void Apply()
         {
@@ -164,10 +162,8 @@
             return dest;
         }
 
-        public virtual bool HasChanged()
-        {
-            return this.m_HasChanged;
-        }
+        public virtual bool HasChanged() => 
+            this.m_HasChanged;
 
         public void SetAllowsAlphaSplitForAll(bool value)
         {
@@ -294,157 +290,62 @@
             }
         }
 
-        public bool allAreOverridden
-        {
-            get
-            {
-                return (this.isDefault || (this.overridden && !this.m_OverriddenIsDifferent));
-            }
-        }
+        public bool allAreOverridden =>
+            (this.isDefault || (this.overridden && !this.m_OverriddenIsDifferent));
 
-        public bool allowsAlphaSplitIsDifferent
-        {
-            get
-            {
-                return this.m_AlphaSplitIsDifferent;
-            }
-        }
+        public bool allowsAlphaSplitIsDifferent =>
+            this.m_AlphaSplitIsDifferent;
 
-        public bool allowsAlphaSplitting
-        {
-            get
-            {
-                return this.m_PlatformSettings.allowsAlphaSplitting;
-            }
-        }
+        public bool allowsAlphaSplitting =>
+            this.m_PlatformSettings.allowsAlphaSplitting;
 
-        public int compressionQuality
-        {
-            get
-            {
-                return this.m_PlatformSettings.compressionQuality;
-            }
-        }
+        public int compressionQuality =>
+            this.m_PlatformSettings.compressionQuality;
 
-        public bool compressionQualityIsDifferent
-        {
-            get
-            {
-                return this.m_CompressionQualityIsDifferent;
-            }
-        }
+        public bool compressionQualityIsDifferent =>
+            this.m_CompressionQualityIsDifferent;
 
-        public bool crunchedCompression
-        {
-            get
-            {
-                return this.m_PlatformSettings.crunchedCompression;
-            }
-        }
+        public bool crunchedCompression =>
+            this.m_PlatformSettings.crunchedCompression;
 
-        public bool crunchedCompressionIsDifferent
-        {
-            get
-            {
-                return this.m_CrunchedCompressionIsDifferent;
-            }
-        }
+        public bool crunchedCompressionIsDifferent =>
+            this.m_CrunchedCompressionIsDifferent;
 
-        public TextureImporterFormat format
-        {
-            get
-            {
-                return this.m_PlatformSettings.format;
-            }
-        }
+        public TextureImporterFormat format =>
+            this.m_PlatformSettings.format;
 
-        public TextureImporter[] importers
-        {
-            get
-            {
-                return this.m_Importers;
-            }
-        }
+        public TextureImporter[] importers =>
+            this.m_Importers;
 
-        public bool isDefault
-        {
-            get
-            {
-                return (this.name == TextureImporterInspector.s_DefaultPlatformName);
-            }
-        }
+        public bool isDefault =>
+            (this.name == TextureImporterInspector.s_DefaultPlatformName);
 
-        public int maxTextureSize
-        {
-            get
-            {
-                return this.m_PlatformSettings.maxTextureSize;
-            }
-        }
+        public int maxTextureSize =>
+            this.m_PlatformSettings.maxTextureSize;
 
-        public bool maxTextureSizeIsDifferent
-        {
-            get
-            {
-                return this.m_MaxTextureSizeIsDifferent;
-            }
-        }
+        public bool maxTextureSizeIsDifferent =>
+            this.m_MaxTextureSizeIsDifferent;
 
-        public string name
-        {
-            get
-            {
-                return this.m_PlatformSettings.name;
-            }
-        }
+        public string name =>
+            this.m_PlatformSettings.name;
 
-        public bool overridden
-        {
-            get
-            {
-                return this.m_PlatformSettings.overridden;
-            }
-        }
+        public bool overridden =>
+            this.m_PlatformSettings.overridden;
 
-        public bool overriddenIsDifferent
-        {
-            get
-            {
-                return this.m_OverriddenIsDifferent;
-            }
-        }
+        public bool overriddenIsDifferent =>
+            this.m_OverriddenIsDifferent;
 
-        public TextureImporterPlatformSettings platformTextureSettings
-        {
-            get
-            {
-                return this.m_PlatformSettings;
-            }
-        }
+        public TextureImporterPlatformSettings platformTextureSettings =>
+            this.m_PlatformSettings;
 
-        public TextureImporterCompression textureCompression
-        {
-            get
-            {
-                return this.m_PlatformSettings.textureCompression;
-            }
-        }
+        public TextureImporterCompression textureCompression =>
+            this.m_PlatformSettings.textureCompression;
 
-        public bool textureCompressionIsDifferent
-        {
-            get
-            {
-                return this.m_TextureCompressionIsDifferent;
-            }
-        }
+        public bool textureCompressionIsDifferent =>
+            this.m_TextureCompressionIsDifferent;
 
-        public bool textureFormatIsDifferent
-        {
-            get
-            {
-                return this.m_TextureFormatIsDifferent;
-            }
-        }
+        public bool textureFormatIsDifferent =>
+            this.m_TextureFormatIsDifferent;
     }
 }
 

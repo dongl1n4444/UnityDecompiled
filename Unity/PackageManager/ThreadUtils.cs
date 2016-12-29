@@ -15,21 +15,14 @@
             MainThread = Thread.CurrentThread.ManagedThreadId;
         }
 
-        public static bool InMainThread
-        {
-            get
-            {
-                return ((MainThread == 0) || (Thread.CurrentThread.ManagedThreadId == MainThread));
-            }
-        }
+        public static bool InMainThread =>
+            ((MainThread == 0) || (Thread.CurrentThread.ManagedThreadId == MainThread));
 
         public static int MainThread
         {
             [CompilerGenerated]
-            get
-            {
-                return <MainThread>k__BackingField;
-            }
+            get => 
+                <MainThread>k__BackingField;
             [CompilerGenerated]
             set
             {

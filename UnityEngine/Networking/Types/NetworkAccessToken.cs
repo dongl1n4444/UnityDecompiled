@@ -38,10 +38,8 @@
         /// <summary>
         /// <para>Accessor to get an encoded string from the m_array data.</para>
         /// </summary>
-        public string GetByteString()
-        {
-            return Convert.ToBase64String(this.array);
-        }
+        public string GetByteString() => 
+            Convert.ToBase64String(this.array);
 
         /// <summary>
         /// <para>Checks if the token is a valid set of data with respect to default values (returns true if the values are not default, does not validate the token is a current legitimate token with respect to the server's auth framework).</para>

@@ -30,13 +30,8 @@
             return count;
         }
 
-        public ReadOnlyDictionary<FieldReference, uint> Fields
-        {
-            get
-            {
-                return ExtensionMethods.AsReadOnly<FieldReference, uint>(this._fields);
-            }
-        }
+        public ReadOnlyDictionary<FieldReference, uint> Fields =>
+            this._fields.AsReadOnly<FieldReference, uint>();
     }
 }
 

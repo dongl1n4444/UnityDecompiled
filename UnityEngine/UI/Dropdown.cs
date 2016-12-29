@@ -170,24 +170,18 @@
         /// <returns>
         /// <para>The obtained dropdown list.</para>
         /// </returns>
-        protected virtual GameObject CreateDropdownList(GameObject template)
-        {
-            return UnityEngine.Object.Instantiate<GameObject>(template);
-        }
+        protected virtual GameObject CreateDropdownList(GameObject template) => 
+            UnityEngine.Object.Instantiate<GameObject>(template);
 
-        protected virtual DropdownItem CreateItem(DropdownItem itemTemplate)
-        {
-            return UnityEngine.Object.Instantiate<DropdownItem>(itemTemplate);
-        }
+        protected virtual DropdownItem CreateItem(DropdownItem itemTemplate) => 
+            UnityEngine.Object.Instantiate<DropdownItem>(itemTemplate);
 
         [DebuggerHidden]
-        private IEnumerator DelayedDestroyDropdownList(float delay)
-        {
-            return new <DelayedDestroyDropdownList>c__Iterator0 { 
+        private IEnumerator DelayedDestroyDropdownList(float delay) => 
+            new <DelayedDestroyDropdownList>c__Iterator0 { 
                 delay = delay,
                 $this = this
             };
-        }
 
         /// <summary>
         /// <para>Override this method to implement a different way to dispose of a blocker GameObject that blocks clicks to other controls while the dropdown list is open.</para>
@@ -523,10 +517,8 @@
         /// </summary>
         public Image captionImage
         {
-            get
-            {
-                return this.m_CaptionImage;
-            }
+            get => 
+                this.m_CaptionImage;
             set
             {
                 this.m_CaptionImage = value;
@@ -539,10 +531,8 @@
         /// </summary>
         public Text captionText
         {
-            get
-            {
-                return this.m_CaptionText;
-            }
+            get => 
+                this.m_CaptionText;
             set
             {
                 this.m_CaptionText = value;
@@ -555,10 +545,8 @@
         /// </summary>
         public Image itemImage
         {
-            get
-            {
-                return this.m_ItemImage;
-            }
+            get => 
+                this.m_ItemImage;
             set
             {
                 this.m_ItemImage = value;
@@ -571,10 +559,8 @@
         /// </summary>
         public Text itemText
         {
-            get
-            {
-                return this.m_ItemText;
-            }
+            get => 
+                this.m_ItemText;
             set
             {
                 this.m_ItemText = value;
@@ -587,10 +573,8 @@
         /// </summary>
         public DropdownEvent onValueChanged
         {
-            get
-            {
-                return this.m_OnValueChanged;
-            }
+            get => 
+                this.m_OnValueChanged;
             set
             {
                 this.m_OnValueChanged = value;
@@ -602,10 +586,8 @@
         /// </summary>
         public List<OptionData> options
         {
-            get
-            {
-                return this.m_Options.options;
-            }
+            get => 
+                this.m_Options.options;
             set
             {
                 this.m_Options.options = value;
@@ -618,10 +600,8 @@
         /// </summary>
         public RectTransform template
         {
-            get
-            {
-                return this.m_Template;
-            }
+            get => 
+                this.m_Template;
             set
             {
                 this.m_Template = value;
@@ -634,10 +614,8 @@
         /// </summary>
         public int value
         {
-            get
-            {
-                return this.m_Value;
-            }
+            get => 
+                this.m_Value;
             set
             {
                 if (!Application.isPlaying || ((value != this.m_Value) && (this.options.Count != 0)))
@@ -705,23 +683,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -771,10 +737,8 @@
 
             public Image image
             {
-                get
-                {
-                    return this.m_Image;
-                }
+                get => 
+                    this.m_Image;
                 set
                 {
                     this.m_Image = value;
@@ -783,10 +747,8 @@
 
             public RectTransform rectTransform
             {
-                get
-                {
-                    return this.m_RectTransform;
-                }
+                get => 
+                    this.m_RectTransform;
                 set
                 {
                     this.m_RectTransform = value;
@@ -795,10 +757,8 @@
 
             public Text text
             {
-                get
-                {
-                    return this.m_Text;
-                }
+                get => 
+                    this.m_Text;
                 set
                 {
                     this.m_Text = value;
@@ -807,10 +767,8 @@
 
             public Toggle toggle
             {
-                get
-                {
-                    return this.m_Toggle;
-                }
+                get => 
+                    this.m_Toggle;
                 set
                 {
                     this.m_Toggle = value;
@@ -874,10 +832,8 @@
             /// </summary>
             public Sprite image
             {
-                get
-                {
-                    return this.m_Image;
-                }
+                get => 
+                    this.m_Image;
                 set
                 {
                     this.m_Image = value;
@@ -889,10 +845,8 @@
             /// </summary>
             public string text
             {
-                get
-                {
-                    return this.m_Text;
-                }
+                get => 
+                    this.m_Text;
                 set
                 {
                     this.m_Text = value;
@@ -919,10 +873,8 @@
             /// </summary>
             public List<Dropdown.OptionData> options
             {
-                get
-                {
-                    return this.m_Options;
-                }
+                get => 
+                    this.m_Options;
                 set
                 {
                     this.m_Options = value;

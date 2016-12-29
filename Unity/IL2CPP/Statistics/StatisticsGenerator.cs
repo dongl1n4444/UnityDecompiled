@@ -35,13 +35,13 @@
             {
                 <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <CollectGeneratedFileInfo>m__0);
             }
-            List<string> source = Enumerable.ToList<string>(Enumerable.Select<NPath, string>(Enumerable.Where<NPath>(outputDirectory.Files(false), <>f__mg$cache0), <>f__am$cache0));
+            List<string> source = outputDirectory.Files(false).Where<NPath>(<>f__mg$cache0).Select<NPath, string>(<>f__am$cache0).ToList<string>();
             source.Sort();
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<string, FileInfo>(null, (IntPtr) <CollectGeneratedFileInfo>m__1);
             }
-            return Enumerable.ToList<FileInfo>(Enumerable.Select<string, FileInfo>(source, <>f__am$cache1));
+            return source.Select<string, FileInfo>(<>f__am$cache1).ToList<FileInfo>();
         }
 
         private static void CopyGeneratedFilesIntoStatsOutput(NPath statsOutputDirectory, NPath generatedCppDirectory)
@@ -61,7 +61,7 @@
 
         public static NPath DetermineAndSetupOutputDirectory()
         {
-            NPath path = Extensions.ToNPath(StatisticsOptions.StatsOutputDir);
+            NPath path = StatisticsOptions.StatsOutputDir.ToNPath();
             if (!path.Exists(""))
             {
                 path.CreateDirectory();
@@ -100,7 +100,7 @@
         private static void WriteAssemblyConversionTimes(TextWriter writer, ProfilerSnapshot profilerSnapshot)
         {
             writer.WriteLine("----Assembly Conversion Times----");
-            List<TinyProfiler.TimedSection> list = Enumerable.ToList<TinyProfiler.TimedSection>(profilerSnapshot.GetSectionsByLabel("Convert"));
+            List<TinyProfiler.TimedSection> list = profilerSnapshot.GetSectionsByLabel("Convert").ToList<TinyProfiler.TimedSection>();
             list.Sort(new TimedSectionSummaryComparer());
             foreach (TinyProfiler.TimedSection section in list)
             {
@@ -119,7 +119,7 @@
         private static void WriteGeneralLog(TextWriter writer, IEnumerable<string> commandLineArguments, IEnumerable<NPath> assembliesConverted)
         {
             writer.WriteLine("----IL2CPP Arguments----");
-            writer.WriteLine(ExtensionMethods.SeparateWithSpaces(commandLineArguments));
+            writer.WriteLine(commandLineArguments.SeparateWithSpaces());
             writer.WriteLine();
             writer.WriteLine("----Assemblies Converted-----");
             foreach (NPath path in assembliesConverted)
@@ -143,10 +143,10 @@
         private static void WriteMiscTimes(TextWriter writer, ProfilerSnapshot profilerSnapshot)
         {
             writer.WriteLine("----Misc Timing----");
-            writer.WriteLine("\tPreProcessStage: {0}", Enumerable.First<TinyProfiler.TimedSection>(profilerSnapshot.GetSectionsByLabel("PreProcessStage")).Duration);
-            writer.WriteLine("\tGenericsCollector.Collect: {0}", Enumerable.First<TinyProfiler.TimedSection>(profilerSnapshot.GetSectionsByLabel("GenericsCollector.Collect")).Duration);
-            writer.WriteLine("\tWriteGenerics: {0}", Enumerable.First<TinyProfiler.TimedSection>(profilerSnapshot.GetSectionsByLabel("WriteGenerics")).Duration);
-            writer.WriteLine("\tAllAssemblyConversion: {0}", Enumerable.First<TinyProfiler.TimedSection>(profilerSnapshot.GetSectionsByLabel("AllAssemblyConversion")).Duration);
+            writer.WriteLine("\tPreProcessStage: {0}", profilerSnapshot.GetSectionsByLabel("PreProcessStage").First<TinyProfiler.TimedSection>().Duration);
+            writer.WriteLine("\tGenericsCollector.Collect: {0}", profilerSnapshot.GetSectionsByLabel("GenericsCollector.Collect").First<TinyProfiler.TimedSection>().Duration);
+            writer.WriteLine("\tWriteGenerics: {0}", profilerSnapshot.GetSectionsByLabel("WriteGenerics").First<TinyProfiler.TimedSection>().Duration);
+            writer.WriteLine("\tAllAssemblyConversion: {0}", profilerSnapshot.GetSectionsByLabel("AllAssemblyConversion").First<TinyProfiler.TimedSection>().Duration);
             writer.WriteLine();
         }
 
@@ -176,10 +176,8 @@
 
         private class TimedSectionSummaryComparer : IComparer<TinyProfiler.TimedSection>
         {
-            public int Compare(TinyProfiler.TimedSection x, TinyProfiler.TimedSection y)
-            {
-                return x.Summary.CompareTo(y.Summary);
-            }
+            public int Compare(TinyProfiler.TimedSection x, TinyProfiler.TimedSection y) => 
+                x.Summary.CompareTo(y.Summary);
         }
     }
 }

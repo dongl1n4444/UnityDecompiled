@@ -242,15 +242,11 @@
             return value.ToString("N" + numberOfDecimalsForMinimumDifference);
         }
 
-        public float FrameToPixel(float i, float frameRate, Rect rect)
-        {
-            return this.FrameToPixel(i, frameRate, rect, base.shownArea);
-        }
+        public float FrameToPixel(float i, float frameRate, Rect rect) => 
+            this.FrameToPixel(i, frameRate, rect, base.shownArea);
 
-        private float FrameToPixel(float i, float frameRate, Rect rect, Rect theShownArea)
-        {
-            return (((i - (theShownArea.xMin * frameRate)) * rect.width) / (theShownArea.width * frameRate));
-        }
+        private float FrameToPixel(float i, float frameRate, Rect rect, Rect theShownArea) => 
+            (((i - (theShownArea.xMin * frameRate)) * rect.width) / (theShownArea.width * frameRate));
 
         private static void InitStyles()
         {
@@ -385,17 +381,13 @@
             GUI.color = color;
         }
 
-        public float ValueField(Rect rect, int id, float value)
-        {
-            return EditorGUI.DoFloatField(EditorGUI.s_RecycledEditor, rect, new Rect(0f, 0f, 0f, 0f), id, value, EditorGUI.kFloatFieldFormatString, EditorStyles.numberField, false);
-        }
+        public float ValueField(Rect rect, int id, float value) => 
+            EditorGUI.DoFloatField(EditorGUI.s_RecycledEditor, rect, new Rect(0f, 0f, 0f, 0f), id, value, EditorGUI.kFloatFieldFormatString, EditorStyles.numberField, false);
 
         public TickHandler hTicks
         {
-            get
-            {
-                return this.m_HTicks;
-            }
+            get => 
+                this.m_HTicks;
             set
             {
                 this.m_HTicks = value;
@@ -404,10 +396,8 @@
 
         public TickHandler vTicks
         {
-            get
-            {
-                return this.m_VTicks;
-            }
+            get => 
+                this.m_VTicks;
             set
             {
                 this.m_VTicks = value;

@@ -16,23 +16,19 @@
         }
 
         [DebuggerHidden]
-        internal override IEnumerator Execute(PlaymodeTestsController controller)
-        {
-            return new <Execute>c__Iterator0 { 
+        internal override IEnumerator Execute(PlaymodeTestsController controller) => 
+            new <Execute>c__Iterator0 { 
                 controller = controller,
                 $this = this
             };
-        }
 
-        public override TestResult GetResult()
-        {
-            return new TestResult(base.name) { 
+        public override TestResult GetResult() => 
+            new TestResult(base.name) { 
                 resultType = !base.m_TestFailed ? TestResult.ResultType.Success : TestResult.ResultType.Failed,
                 messages = base.m_CurrentTestMessageBuilder.ToString(),
                 stacktrace = base.m_CurrentTestStacktraceBuilder.ToString(),
                 duration = base.m_Duration
             };
-        }
 
         protected bool IsMBTestFinished()
         {
@@ -101,23 +97,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
 
             private sealed class <Execute>c__AnonStorey1
             {

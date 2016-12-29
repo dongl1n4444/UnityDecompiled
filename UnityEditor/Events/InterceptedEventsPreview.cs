@@ -27,10 +27,8 @@
         private static List<GUIContent> s_PossibleEvents = null;
 
         [DebuggerHidden]
-        private static IEnumerable<System.Type> GetAccessibleTypesInLoadedAssemblies()
-        {
-            return new <GetAccessibleTypesInLoadedAssemblies>c__Iterator0 { $PC = -2 };
-        }
+        private static IEnumerable<System.Type> GetAccessibleTypesInLoadedAssemblies() => 
+            new <GetAccessibleTypesInLoadedAssemblies>c__Iterator0 { $PC = -2 };
 
         protected static List<ComponentInterceptedEvents> GetEventsInfo(GameObject gameObject)
         {
@@ -73,7 +71,7 @@
                             {
                                 <>f__am$cache0 = new Func<int, string>(null, (IntPtr) <GetEventsInfo>m__0);
                             }
-                            events.interceptedEvents = Enumerable.ToArray<int>(Enumerable.OrderBy<int, string>(list2, <>f__am$cache0));
+                            events.interceptedEvents = Enumerable.OrderBy<int, string>(list2, <>f__am$cache0).ToArray<int>();
                         }
                         s_ComponentEvents2.Add(key, events);
                     }
@@ -100,22 +98,20 @@
             return this.m_Title;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_TargetEvents != null) && this.m_InterceptsAnyEvent);
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_TargetEvents != null) && this.m_InterceptsAnyEvent);
 
         public override void Initialize(UnityEngine.Object[] targets)
         {
             base.Initialize(targets);
-            this.m_TargetEvents = new Dictionary<GameObject, List<ComponentInterceptedEvents>>(Enumerable.Count<UnityEngine.Object>(targets));
+            this.m_TargetEvents = new Dictionary<GameObject, List<ComponentInterceptedEvents>>(targets.Count<UnityEngine.Object>());
             this.m_InterceptsAnyEvent = false;
             for (int i = 0; i < targets.Length; i++)
             {
                 GameObject gameObject = targets[i] as GameObject;
                 List<ComponentInterceptedEvents> eventsInfo = GetEventsInfo(gameObject);
                 this.m_TargetEvents.Add(gameObject, eventsInfo);
-                if (Enumerable.Any<ComponentInterceptedEvents>(eventsInfo))
+                if (eventsInfo.Any<ComponentInterceptedEvents>())
                 {
                     this.m_InterceptsAnyEvent = true;
                 }
@@ -297,28 +293,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<System.Type>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<System.Type>.GetEnumerator();
 
-            System.Type IEnumerator<System.Type>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            System.Type IEnumerator<System.Type>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         protected class ComponentInterceptedEvents

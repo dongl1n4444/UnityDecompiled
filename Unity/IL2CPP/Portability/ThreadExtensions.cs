@@ -5,47 +5,37 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
 
-    [Extension]
     public static class ThreadExtensions
     {
-        [Extension]
-        public static CultureInfo GetCurrentCulturePortable(Thread thread)
-        {
-            return thread.CurrentCulture;
-        }
+        public static CultureInfo GetCurrentCulturePortable(this Thread thread) => 
+            thread.CurrentCulture;
 
-        [Extension]
-        public static CultureInfo GetCurrentUICulturePortable(Thread thread)
-        {
-            return thread.CurrentUICulture;
-        }
+        public static CultureInfo GetCurrentUICulturePortable(this Thread thread) => 
+            thread.CurrentUICulture;
 
-        [Extension]
-        public static void InterruptPortable(Thread thread)
+        public static void InterruptPortable(this Thread thread)
         {
             thread.Interrupt();
         }
 
-        [Extension, Obsolete]
-        public static void ResumePortable(Thread thread)
+        [Obsolete]
+        public static void ResumePortable(this Thread thread)
         {
             thread.Resume();
         }
 
-        [Extension]
-        public static void SetCurrentCulturePortable(Thread thread, CultureInfo info)
+        public static void SetCurrentCulturePortable(this Thread thread, CultureInfo info)
         {
             thread.CurrentCulture = info;
         }
 
-        [Extension]
-        public static void SetCurrentUICulturePortable(Thread thread, CultureInfo info)
+        public static void SetCurrentUICulturePortable(this Thread thread, CultureInfo info)
         {
             thread.CurrentUICulture = info;
         }
 
-        [Extension, Obsolete]
-        public static void SuspendPortable(Thread thread)
+        [Obsolete]
+        public static void SuspendPortable(this Thread thread)
         {
             thread.Suspend();
         }

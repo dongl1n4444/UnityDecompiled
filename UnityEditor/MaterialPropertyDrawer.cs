@@ -26,10 +26,8 @@
         /// <param name="prop">The MaterialProperty to make the custom GUI for.</param>
         /// <param name="label">The label of this property.</param>
         /// <param name="editor">Current material editor.</param>
-        public virtual float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
-        {
-            return 16f;
-        }
+        public virtual float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor) => 
+            16f;
 
         /// <summary>
         /// <para>Override this method to make your own GUI for the property.</para>

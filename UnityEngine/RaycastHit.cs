@@ -29,10 +29,8 @@
         /// </summary>
         public Vector3 point
         {
-            get
-            {
-                return this.m_Point;
-            }
+            get => 
+                this.m_Point;
             set
             {
                 this.m_Point = value;
@@ -43,10 +41,8 @@
         /// </summary>
         public Vector3 normal
         {
-            get
-            {
-                return this.m_Normal;
-            }
+            get => 
+                this.m_Normal;
             set
             {
                 this.m_Normal = value;
@@ -57,10 +53,8 @@
         /// </summary>
         public Vector3 barycentricCoordinate
         {
-            get
-            {
-                return new Vector3(1f - (this.m_UV.y + this.m_UV.x), this.m_UV.x, this.m_UV.y);
-            }
+            get => 
+                new Vector3(1f - (this.m_UV.y + this.m_UV.x), this.m_UV.x, this.m_UV.y);
             set
             {
                 this.m_UV = value;
@@ -71,10 +65,8 @@
         /// </summary>
         public float distance
         {
-            get
-            {
-                return this.m_Distance;
-            }
+            get => 
+                this.m_Distance;
             set
             {
                 this.m_Distance = value;
@@ -83,13 +75,8 @@
         /// <summary>
         /// <para>The index of the triangle that was hit.</para>
         /// </summary>
-        public int triangleIndex
-        {
-            get
-            {
-                return this.m_FaceID;
-            }
-        }
+        public int triangleIndex =>
+            this.m_FaceID;
         /// <summary>
         /// <para>The uv texture coordinate at the impact point.</para>
         /// </summary>
@@ -145,23 +132,13 @@
         /// <summary>
         /// <para>The Collider that was hit.</para>
         /// </summary>
-        public Collider collider
-        {
-            get
-            {
-                return this.m_Collider;
-            }
-        }
+        public Collider collider =>
+            this.m_Collider;
         /// <summary>
         /// <para>The Rigidbody of the collider that was hit. If the collider is not attached to a rigidbody then it is null.</para>
         /// </summary>
-        public Rigidbody rigidbody
-        {
-            get
-            {
-                return ((this.collider == null) ? null : this.collider.attachedRigidbody);
-            }
-        }
+        public Rigidbody rigidbody =>
+            this.collider?.attachedRigidbody;
         /// <summary>
         /// <para>The Transform of the rigidbody or collider that was hit.</para>
         /// </summary>

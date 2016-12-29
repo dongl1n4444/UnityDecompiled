@@ -27,10 +27,8 @@
             }
         }
 
-        public bool Contains(SpriteRect spriteRect)
-        {
-            return ((this.m_Rects != null) && this.m_Rects.Contains(spriteRect));
-        }
+        public bool Contains(SpriteRect spriteRect) => 
+            ((this.m_Rects != null) && this.m_Rects.Contains(spriteRect));
 
         public int GetIndex(SpriteRect spriteRect)
         {
@@ -86,10 +84,8 @@
         {
             internal SpriteRect spriteRect;
 
-            internal bool <>m__0(SpriteRect p)
-            {
-                return p.Equals(this.spriteRect);
-            }
+            internal bool <>m__0(SpriteRect p) => 
+                p.Equals(this.spriteRect);
         }
     }
 }

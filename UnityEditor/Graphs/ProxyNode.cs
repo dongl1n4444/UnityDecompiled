@@ -20,13 +20,8 @@
             return node;
         }
 
-        public bool isIn
-        {
-            get
-            {
-                return this.m_IsIn;
-            }
-        }
+        public bool isIn =>
+            this.m_IsIn;
     }
 }
 

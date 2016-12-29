@@ -20,10 +20,8 @@
             this.state = animationWindowState;
         }
 
-        private AnimationWindowHierarchyClipNode AddClipNodeToHierarchy(AnimationWindowSelectionItem selectedItem, AnimationWindowCurve[] curves, AnimationWindowHierarchyNode parentNode)
-        {
-            return new AnimationWindowHierarchyClipNode(parentNode, selectedItem.id, selectedItem.animationClip.name) { curves = curves };
-        }
+        private AnimationWindowHierarchyClipNode AddClipNodeToHierarchy(AnimationWindowSelectionItem selectedItem, AnimationWindowCurve[] curves, AnimationWindowHierarchyNode parentNode) => 
+            new AnimationWindowHierarchyClipNode(parentNode, selectedItem.id, selectedItem.animationClip.name) { curves = curves };
 
         private AnimationWindowHierarchyPropertyGroupNode AddPropertyGroupToHierarchy(AnimationWindowSelectionItem selectedItem, AnimationWindowCurve[] curves, AnimationWindowHierarchyNode parentNode)
         {
@@ -122,10 +120,8 @@
             }
         }
 
-        private AnimationWindowHierarchyNode GetEmptyRootNode()
-        {
-            return new AnimationWindowHierarchyNode(0, -1, null, null, "", "", "root");
-        }
+        private AnimationWindowHierarchyNode GetEmptyRootNode() => 
+            new AnimationWindowHierarchyNode(0, -1, null, null, "", "", "root");
 
         public Texture2D GetIcon(AnimationWindowSelectionItem selectedItem, EditorCurveBinding curveBinding)
         {

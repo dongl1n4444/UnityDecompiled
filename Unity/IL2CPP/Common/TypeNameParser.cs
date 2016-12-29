@@ -136,7 +136,7 @@
             this.SkipWhites();
         }
 
-        private bool Next([Optional, DefaultParameterValue(false)] bool skipWhites)
+        private bool Next(bool skipWhites = false)
         {
             this._p++;
             if (skipWhites)
@@ -146,7 +146,7 @@
             return !this.IsEOL;
         }
 
-        private bool NextWillBe(char v, [Optional, DefaultParameterValue(false)] bool skipWhites)
+        private bool NextWillBe(char v, bool skipWhites = false)
         {
             if (this.IsEOL)
             {
@@ -171,7 +171,7 @@
             return (this._data[this._p + num] == v);
         }
 
-        private bool Parse([Optional, DefaultParameterValue(true)] bool acceptAssemblyName)
+        private bool Parse(bool acceptAssemblyName = true)
         {
             this._acceptAssemblyName = acceptAssemblyName;
             int arity = 0;
@@ -606,13 +606,8 @@
             }
         }
 
-        private bool IsEOL
-        {
-            get
-            {
-                return (this._p >= this._end);
-            }
-        }
+        private bool IsEOL =>
+            (this._p >= this._end);
     }
 }
 

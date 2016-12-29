@@ -7,27 +7,12 @@
     public struct iPhoneAccelerationEvent
     {
         [Obsolete("timeDelta property is deprecated. Please use AccelerationEvent.deltaTime instead (UnityUpgradable) -> AccelerationEvent.deltaTime", true)]
-        public float timeDelta
-        {
-            get
-            {
-                return 0f;
-            }
-        }
-        public Vector3 acceleration
-        {
-            get
-            {
-                return new Vector3();
-            }
-        }
-        public float deltaTime
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public float timeDelta =>
+            0f;
+        public Vector3 acceleration =>
+            new Vector3();
+        public float deltaTime =>
+            -1f;
     }
 }
 

@@ -9,34 +9,24 @@
         {
         }
 
-        public virtual bool CanShowUnitySplashScreen()
-        {
-            return false;
-        }
+        public virtual bool CanShowUnitySplashScreen() => 
+            false;
 
         public virtual void ConfigurationSectionGUI()
         {
         }
 
-        public virtual bool HasBundleIdentifier()
-        {
-            return true;
-        }
+        public virtual bool HasBundleIdentifier() => 
+            true;
 
-        public virtual bool HasIdentificationGUI()
-        {
-            return false;
-        }
+        public virtual bool HasIdentificationGUI() => 
+            false;
 
-        public virtual bool HasPublishSection()
-        {
-            return true;
-        }
+        public virtual bool HasPublishSection() => 
+            true;
 
-        public virtual bool HasResolutionSection()
-        {
-            return false;
-        }
+        public virtual bool HasResolutionSection() => 
+            false;
 
         public virtual void IconSectionGUI()
         {
@@ -62,25 +52,17 @@
         {
         }
 
-        public virtual bool SupportsDynamicBatching()
-        {
-            return true;
-        }
+        public virtual bool SupportsDynamicBatching() => 
+            true;
 
-        public virtual bool SupportsOrientation()
-        {
-            return false;
-        }
+        public virtual bool SupportsOrientation() => 
+            false;
 
-        public virtual bool SupportsStaticBatching()
-        {
-            return true;
-        }
+        public virtual bool SupportsStaticBatching() => 
+            true;
 
-        public virtual bool UsesStandardIcons()
-        {
-            return true;
-        }
+        public virtual bool UsesStandardIcons() => 
+            true;
     }
 }
 

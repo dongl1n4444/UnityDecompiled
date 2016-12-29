@@ -71,10 +71,8 @@
         }
 
         [MenuItem("Window/Collab History", true)]
-        public static bool ValidateShowHistoryWindow()
-        {
-            return ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && CollabAccess.Instance.IsServiceEnabled());
-        }
+        public static bool ValidateShowHistoryWindow() => 
+            ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && CollabAccess.Instance.IsServiceEnabled());
     }
 }
 

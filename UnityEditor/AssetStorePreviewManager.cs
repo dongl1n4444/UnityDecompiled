@@ -171,10 +171,8 @@
             return storey.client;
         }
 
-        public static string StatsString()
-        {
-            return string.Format("Reqs: {0}, Ok: {1}, Abort: {2}, CacheDel: {3}, Cache: {4}/{5}, CacheHit: {6}", new object[] { Instance.Requested, Instance.m_Success, Instance.m_Aborted, Instance.m_CacheRemove, CachedAssetStoreImages.Count, Instance.m_MaxCachedAssetStoreImages, Instance.CacheHit });
-        }
+        public static string StatsString() => 
+            $"Reqs: {Instance.Requested}, Ok: {Instance.m_Success}, Abort: {Instance.m_Aborted}, CacheDel: {Instance.m_CacheRemove}, Cache: {CachedAssetStoreImages.Count}/{Instance.m_MaxCachedAssetStoreImages}, CacheHit: {Instance.CacheHit}";
 
         public static CachedAssetStoreImage TextureFromUrl(string url, string label, int textureSize, GUIStyle labelStyle, GUIStyle iconStyle, bool onlyCached)
         {
@@ -249,13 +247,8 @@
             }
         }
 
-        public static bool CacheFull
-        {
-            get
-            {
-                return (CachedAssetStoreImages.Count >= MaxCachedImages);
-            }
-        }
+        public static bool CacheFull =>
+            (CachedAssetStoreImages.Count >= MaxCachedImages);
 
         public static int Downloading
         {
@@ -288,10 +281,8 @@
 
         public static int MaxCachedImages
         {
-            get
-            {
-                return Instance.m_MaxCachedAssetStoreImages;
-            }
+            get => 
+                Instance.m_MaxCachedAssetStoreImages;
             set
             {
                 Instance.m_MaxCachedAssetStoreImages = value;
@@ -353,13 +344,8 @@
             public double lastUsed;
             public int requestedWidth;
 
-            public Color color
-            {
-                get
-                {
-                    return Color.Lerp(new Color(1f, 1f, 1f, 0f), new Color(1f, 1f, 1f, 1f), Mathf.Min(1f, (float) ((EditorApplication.timeSinceStartup - this.lastFetched) / 0.5)));
-                }
-            }
+            public Color color =>
+                Color.Lerp(new Color(1f, 1f, 1f, 0f), new Color(1f, 1f, 1f, 1f), Mathf.Min(1f, (float) ((EditorApplication.timeSinceStartup - this.lastFetched) / 0.5)));
         }
     }
 }

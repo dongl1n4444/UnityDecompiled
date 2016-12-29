@@ -7,10 +7,8 @@
     {
         private Dictionary<string, object> _data = new Dictionary<string, object>();
 
-        public T Get<T>(string key)
-        {
-            return (T) this._data[key];
-        }
+        public T Get<T>(string key) => 
+            ((T) this._data[key]);
 
         public void Set<T>(string key, T value)
         {

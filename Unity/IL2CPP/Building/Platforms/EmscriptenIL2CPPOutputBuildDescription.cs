@@ -13,7 +13,7 @@
 
         protected override IEnumerable<string> BoehmDefines()
         {
-            List<string> list = Enumerable.ToList<string>(base.BoehmDefines());
+            List<string> list = base.BoehmDefines().ToList<string>();
             list.Remove("GC_THREADS=1");
             list.Remove("USE_MMAP=1");
             list.Remove("USE_MUNMAP=1");

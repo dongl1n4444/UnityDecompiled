@@ -90,19 +90,15 @@
         /// <param name="format">Format of underlying texture object.</param>
         /// <param name="mipmap">Does the texture have mipmaps?</param>
         /// <param name="linear">Is texture using linear color space?</param>
-        public static Texture2D CreateExternalTexture(int width, int height, TextureFormat format, bool mipmap, bool linear, IntPtr nativeTex)
-        {
-            return new Texture2D(width, height, format, mipmap, linear, nativeTex);
-        }
+        public static Texture2D CreateExternalTexture(int width, int height, TextureFormat format, bool mipmap, bool linear, IntPtr nativeTex) => 
+            new Texture2D(width, height, format, mipmap, linear, nativeTex);
 
         /// <summary>
         /// <para>Encodes this texture into JPG format.</para>
         /// </summary>
         /// <param name="quality">JPG quality to encode with, 1..100 (default 75).</param>
-        public byte[] EncodeToJPG()
-        {
-            return this.EncodeToJPG(0x4b);
-        }
+        public byte[] EncodeToJPG() => 
+            this.EncodeToJPG(0x4b);
 
         /// <summary>
         /// <para>Encodes this texture into JPG format.</para>
@@ -316,10 +312,8 @@
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public bool Resize(int width, int height)
-        {
-            return this.Internal_ResizeWH(width, height);
-        }
+        public bool Resize(int width, int height) => 
+            this.Internal_ResizeWH(width, height);
 
         /// <summary>
         /// <para>Resizes the texture.</para>

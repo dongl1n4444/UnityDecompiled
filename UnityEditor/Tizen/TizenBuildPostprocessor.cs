@@ -6,10 +6,8 @@
 
     internal class TizenBuildPostprocessor : DefaultBuildPostprocessor
     {
-        public override string GetExtension(BuildTarget target, BuildOptions options)
-        {
-            return "tpk";
-        }
+        public override string GetExtension(BuildTarget target, BuildOptions options) => 
+            "tpk";
 
         public override void PostProcess(BuildPostProcessArgs args)
         {

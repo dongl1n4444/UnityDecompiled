@@ -24,10 +24,8 @@
         /// <returns>
         /// <para>The height in pixels.</para>
         /// </returns>
-        public virtual float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return 16f;
-        }
+        public virtual float GetPropertyHeight(SerializedProperty property, GUIContent label) => 
+            16f;
 
         internal float GetPropertyHeightSafe(SerializedProperty property, GUIContent label)
         {
@@ -59,24 +57,14 @@
         /// <summary>
         /// <para>The PropertyAttribute for the property. Not applicable for custom class drawers. (Read Only)</para>
         /// </summary>
-        public PropertyAttribute attribute
-        {
-            get
-            {
-                return this.m_Attribute;
-            }
-        }
+        public PropertyAttribute attribute =>
+            this.m_Attribute;
 
         /// <summary>
         /// <para>The reflection FieldInfo for the member this property represents. (Read Only)</para>
         /// </summary>
-        public FieldInfo fieldInfo
-        {
-            get
-            {
-                return this.m_FieldInfo;
-            }
-        }
+        public FieldInfo fieldInfo =>
+            this.m_FieldInfo;
     }
 }
 

@@ -43,10 +43,8 @@
             return base.GetAdditionalIncludes();
         }
 
-        public override Shell.ExecuteResult RunAndMakeExecuteResult(string executable)
-        {
-            return this.RunAndMakeExecuteResult(executable, string.Empty);
-        }
+        public override Shell.ExecuteResult RunAndMakeExecuteResult(string executable) => 
+            this.RunAndMakeExecuteResult(executable, string.Empty);
 
         public override Shell.ExecuteResult RunAndMakeExecuteResult(string executable, string arguments)
         {
@@ -59,13 +57,8 @@
             return Shell.Execute(executeArgs, null);
         }
 
-        public override bool SupportsRunningWithParameters
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool SupportsRunningWithParameters =>
+            true;
     }
 }
 

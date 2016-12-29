@@ -77,7 +77,7 @@
             rect11.height = 16f;
             rect11.width = offset.right;
             rect11.y += (rect10.height - rect11.height) / 2f;
-            GUI.Label(rect5, string.Format("({0},{1})", instructionRect.x, instructionRect.y), this.styles.centeredLabel);
+            GUI.Label(rect5, $"({instructionRect.x},{instructionRect.y})", this.styles.centeredLabel);
             Handles.color = new Color(1f, 1f, 1f, 0.5f);
             Vector3 vector = new Vector3(rect8.x, rect9.y);
             Vector3 vector2 = new Vector3(rect8.x, rect9.yMax);
@@ -105,7 +105,7 @@
             vector2.y = rect10.yMax;
             Handles.DrawLine(vector, vector2);
             GUI.Label(rect11, instructionRect.height.ToString());
-            GUI.Label(rect6, string.Format("({0},{1})", instructionRect.xMax, instructionRect.yMax), this.styles.centeredLabel);
+            GUI.Label(rect6, $"({instructionRect.xMax},{instructionRect.yMax})", this.styles.centeredLabel);
             GUI.Box(position, GUIContent.none);
         }
 
@@ -173,7 +173,7 @@
                 {
                     if (!string.IsNullOrEmpty(frame.sourceFile))
                     {
-                        GUILayout.Label(string.Format("{0} [{1}:{2}]", frame.signature, frame.sourceFile, frame.lineNumber), GUIViewDebuggerWindow.s_Styles.stackframeStyle, new GUILayoutOption[0]);
+                        GUILayout.Label($"{frame.signature} [{frame.sourceFile}:{frame.lineNumber}]", GUIViewDebuggerWindow.s_Styles.stackframeStyle, new GUILayoutOption[0]);
                     }
                 }
             }
@@ -181,10 +181,8 @@
 
         protected abstract int GetInstructionCount();
         internal abstract string GetInstructionListName(int index);
-        protected virtual bool HasSelectedinstruction()
-        {
-            return (this.m_ListViewState.row >= 0);
-        }
+        protected virtual bool HasSelectedinstruction() => 
+            (this.m_ListViewState.row >= 0);
 
         internal abstract void OnDoubleClickInstruction(int index);
         internal abstract void OnSelectedInstructionChanged(int newSelectionIndex);

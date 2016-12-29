@@ -30,13 +30,8 @@
             this._list[this._current] = newValue;
         }
 
-        public override object Current
-        {
-            get
-            {
-                return this._list[this._current];
-            }
-        }
+        public override object Current =>
+            this._list[this._current];
     }
 }
 

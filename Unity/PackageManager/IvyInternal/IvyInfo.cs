@@ -37,13 +37,8 @@
         public string Version;
 
         [XmlIgnore]
-        public List<Unity.PackageManager.IvyInternal.IvyRepository> Repositories
-        {
-            get
-            {
-                return this.repositories;
-            }
-        }
+        public List<Unity.PackageManager.IvyInternal.IvyRepository> Repositories =>
+            this.repositories;
 
         [XmlElement("repository")]
         private List<Unity.PackageManager.IvyInternal.IvyRepository> xmlRepositories

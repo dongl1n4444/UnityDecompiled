@@ -17,7 +17,7 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
     private List<string> CppPlugins;
     private RuntimeClassRegistry usedClassRegistry;
 
-    public PostProcessUAPIl2Cpp(BuildPostProcessArgs args, [Optional, DefaultParameterValue(null)] string stagingArea) : base(args, stagingArea)
+    public PostProcessUAPIl2Cpp(BuildPostProcessArgs args, string stagingArea = null) : base(args, stagingArea)
     {
         this.CppPlugins = new List<string>();
         this.usedClassRegistry = args.usedClassRegistry;
@@ -27,7 +27,7 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
     {
         if (this.GetPlatformAssemblyPath() == null)
         {
-            throw new UnityException(string.Format("{0}{1}{2}", "Platform assembly not found.", Environment.NewLine, this.GetSDKNotFoundErrorMessage()));
+            throw new UnityException($"{"Platform assembly not found."}{Environment.NewLine}{this.GetSDKNotFoundErrorMessage()}");
         }
     }
 
@@ -91,15 +91,11 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
         throw new NotSupportedException();
     }
 
-    protected override IEnumerable<string> GetLangAssemblies()
-    {
-        return new string[0];
-    }
+    protected override IEnumerable<string> GetLangAssemblies() => 
+        new string[0];
 
-    protected override string GetPlayerFilesSourceDirectory()
-    {
-        return base.GetPlayerFilesSourceDirectory(Path.Combine("UAP", "il2cpp"));
-    }
+    protected override string GetPlayerFilesSourceDirectory() => 
+        base.GetPlayerFilesSourceDirectory(Path.Combine("UAP", "il2cpp"));
 
     protected override string GetReferenceAssembliesDirectory()
     {
@@ -113,15 +109,11 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
         return Utility.CombinePath(paths);
     }
 
-    protected override IEnumerable<string> GetUnityAssemblies()
-    {
-        return new string[] { @"il2cpp\UnityEngine.dll" };
-    }
+    protected override IEnumerable<string> GetUnityAssemblies() => 
+        new string[] { @"il2cpp\UnityEngine.dll" };
 
-    protected override IEnumerable<string> GetUnityPluginOverwrites()
-    {
-        return new string[0];
-    }
+    protected override IEnumerable<string> GetUnityPluginOverwrites() => 
+        new string[0];
 
     protected override void RunIL2CPP()
     {
@@ -162,20 +154,16 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
         Utility.CopyDirectoryContents(platformProvider.il2CppFolder, Path.Combine(path, "IL2CPP"), true);
     }
 
-    protected override bool UseIL2CPP()
-    {
-        return true;
-    }
+    protected override bool UseIL2CPP() => 
+        true;
 
     [CompilerGenerated]
     private sealed class <CopyPlugins>c__AnonStorey0
     {
         internal string pluginExtension;
 
-        internal bool <>m__0(string e)
-        {
-            return string.Equals(e, this.pluginExtension, StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string e) => 
+            string.Equals(e, this.pluginExtension, StringComparison.InvariantCultureIgnoreCase);
     }
 }
 

@@ -23,20 +23,14 @@
             UnityConnectServiceCollection.instance.EnableService(name, enabled);
         }
 
-        public override string GetServiceDisplayName()
-        {
-            return "Services";
-        }
+        public override string GetServiceDisplayName() => 
+            "Services";
 
-        public override string GetServiceName()
-        {
-            return "Hub";
-        }
+        public override string GetServiceName() => 
+            "Hub";
 
-        public UnityConnectServiceCollection.ServiceInfo[] GetServices()
-        {
-            return UnityConnectServiceCollection.instance.GetAllServiceInfos();
-        }
+        public UnityConnectServiceCollection.ServiceInfo[] GetServices() => 
+            UnityConnectServiceCollection.instance.GetAllServiceInfos();
 
         [MenuItem("Window/Services %0", false, 0x7cf)]
         private static void ShowMyWindow()
@@ -49,13 +43,8 @@
             UnityConnectServiceCollection.instance.ShowService(name, true);
         }
 
-        public static HubAccess instance
-        {
-            get
-            {
-                return s_Instance;
-            }
-        }
+        public static HubAccess instance =>
+            s_Instance;
     }
 }
 

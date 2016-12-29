@@ -29,7 +29,7 @@
                 object[] args = new object[] { InvStr(keyframe.time), InvStr(keyframe.value), InvStr(keyframe.inTangent), InvStr(keyframe.outTangent) };
                 builder.AppendFormat("new UnityEngine.Keyframe({0}F, {1}F, {2}F, {3}F)", args);
             }
-            return new CodeSnippetExpression(string.Format("new {0}(new UnityEngine.Keyframe[] {{{1}}}) {{postWrapMode = UnityEngine.WrapMode.{2}, preWrapMode = UnityEngine.WrapMode.{3}}}", new object[] { this.m_Type.FullName, builder, curve.postWrapMode, curve.preWrapMode }));
+            return new CodeSnippetExpression($"new {this.m_Type.FullName}(new UnityEngine.Keyframe[] {{{builder}}}) {{postWrapMode = UnityEngine.WrapMode.{curve.postWrapMode}, preWrapMode = UnityEngine.WrapMode.{curve.preWrapMode}}}");
         }
 
         private static string AnimationCurveToString(object value)
@@ -81,10 +81,8 @@
             return AnimationCurveToString(value);
         }
 
-        private static string InvStr(float val)
-        {
-            return val.ToString(CultureInfo.InvariantCulture);
-        }
+        private static string InvStr(float val) => 
+            val.ToString(CultureInfo.InvariantCulture);
 
         public override bool IsValid(ITypeDescriptorContext context, object value)
         {
@@ -134,10 +132,8 @@
             return true;
         }
 
-        private static float ParseKeyVal(string[] keyvals, Val val)
-        {
-            return float.Parse(keyvals[(int) val], CultureInfo.InvariantCulture);
-        }
+        private static float ParseKeyVal(string[] keyvals, Val val) => 
+            float.Parse(keyvals[(int) val], CultureInfo.InvariantCulture);
 
         private enum Val
         {

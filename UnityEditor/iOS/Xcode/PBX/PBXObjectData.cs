@@ -15,10 +15,8 @@
             return this.m_Properties;
         }
 
-        internal PBXElementDict GetPropertiesWhenSerializing()
-        {
-            return this.m_Properties;
-        }
+        internal PBXElementDict GetPropertiesWhenSerializing() => 
+            this.m_Properties;
 
         protected List<string> GetPropertyList(string name)
         {
@@ -38,11 +36,7 @@
         protected string GetPropertyString(string name)
         {
             PBXElement element = this.m_Properties[name];
-            if (element == null)
-            {
-                return null;
-            }
-            return element.AsString();
+            return element?.AsString();
         }
 
         internal void SetPropertiesWhenSerializing(PBXElementDict props)
@@ -86,21 +80,11 @@
         {
         }
 
-        internal virtual PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal virtual PropertyCommentChecker checker =>
+            checkerData;
 
-        internal virtual bool shouldCompact
-        {
-            get
-            {
-                return false;
-            }
-        }
+        internal virtual bool shouldCompact =>
+            false;
     }
 }
 

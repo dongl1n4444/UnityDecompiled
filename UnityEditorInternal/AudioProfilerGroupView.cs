@@ -24,10 +24,8 @@
             this.m_TreeViewState = state;
         }
 
-        public int GetNumItemsInData()
-        {
-            return this.m_Backend.items.Count;
-        }
+        public int GetNumItemsInData() => 
+            this.m_Backend.items.Count;
 
         public void Init(Rect rect, AudioProfilerGroupViewBackend backend)
         {
@@ -105,10 +103,8 @@
                 this.FetchData();
             }
 
-            public override bool CanBeParent(TreeViewItem item)
-            {
-                return item.hasChildren;
-            }
+            public override bool CanBeParent(TreeViewItem item) => 
+                item.hasChildren;
 
             public override void FetchData()
             {
@@ -144,10 +140,8 @@
                 }
             }
 
-            public override bool IsRenamingItemAllowed(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+                false;
         }
 
         internal class AudioProfilerGroupTreeViewItem : TreeViewItem
@@ -235,10 +229,8 @@
                 base.k_IconWidth = 0f;
             }
 
-            protected override Texture GetIconForItem(TreeViewItem item)
-            {
-                return null;
-            }
+            protected override Texture GetIconForItem(TreeViewItem item) => 
+                null;
 
             public override Vector2 GetTotalSize()
             {
@@ -283,13 +275,8 @@
             {
             }
 
-            private float[] columnWidths
-            {
-                get
-                {
-                    return base.m_TreeView.state.columnWidths;
-                }
-            }
+            private float[] columnWidths =>
+                base.m_TreeView.state.columnWidths;
         }
     }
 }

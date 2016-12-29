@@ -353,11 +353,11 @@
                 GUI.color = new Color(1f, 1f, 1f, 0.4f);
                 for (num3 = 0f; num3 <= frameTime; num3 += num2)
                 {
-                    Chart.DoLabel(this.m_TimeArea.TimeToPixel(num3, r) + 2f, r.yMax - 12f, string.Format("{0:f1}ms", num3), 0f);
+                    Chart.DoLabel(this.m_TimeArea.TimeToPixel(num3, r) + 2f, r.yMax - 12f, $"{num3:f1}ms", 0f);
                 }
                 GUI.color = new Color(1f, 1f, 1f, 1f);
                 num3 = frameTime;
-                Chart.DoLabel(this.m_TimeArea.TimeToPixel(num3, r) + 2f, r.yMax - 12f, string.Format("{0:f1}ms ({1:f0}FPS)", num3, 1000f / num3), 0f);
+                Chart.DoLabel(this.m_TimeArea.TimeToPixel(num3, r) + 2f, r.yMax - 12f, $"{num3:f1}ms ({1000f / num3:f0}FPS)", 0f);
             }
         }
 
@@ -470,7 +470,7 @@
                         }
                         if (width > 200f)
                         {
-                            name = name + string.Format(" ({0:f2}ms)", durationMS);
+                            name = name + $" ({durationMS:f2}ms)";
                         }
                     }
                     GUI.color = color4;
@@ -595,10 +595,8 @@
             this.m_TimeArea.SetShownHRangeInsideMargins(selectedTime - (selectedDur * 0.2f), selectedTime + (selectedDur * 1.2f));
         }
 
-        private static float TimeToPixelCached(float time, float rectWidthDivShownWidth, float shownX, float rectX)
-        {
-            return (((time - shownX) * rectWidthDivShownWidth) + rectX);
-        }
+        private static float TimeToPixelCached(float time, float rectWidthDivShownWidth, float shownX, float rectX) => 
+            (((time - shownX) * rectWidthDivShownWidth) + rectX);
 
         private void UpdateAnimatedFoldout()
         {
@@ -654,15 +652,11 @@
             internal ProfilerTimelineGUI.<CalculateBars>c__AnonStorey1 <>f__ref$1;
             internal string groupname;
 
-            internal bool <>m__0(ProfilerTimelineGUI.GroupInfo g)
-            {
-                return (g.name == this.groupname);
-            }
+            internal bool <>m__0(ProfilerTimelineGUI.GroupInfo g) => 
+                (g.name == this.groupname);
 
-            internal bool <>m__1(ProfilerTimelineGUI.ThreadInfo t)
-            {
-                return (t.threadIndex == this.<>f__ref$1.i);
-            }
+            internal bool <>m__1(ProfilerTimelineGUI.ThreadInfo t) => 
+                (t.threadIndex == this.<>f__ref$1.i);
         }
 
         [CompilerGenerated]

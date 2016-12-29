@@ -72,10 +72,8 @@
         {
             internal Process p;
 
-            internal bool <>m__0()
-            {
-                return this.p.HasExited;
-            }
+            internal bool <>m__0() => 
+                this.p.HasExited;
         }
     }
 }

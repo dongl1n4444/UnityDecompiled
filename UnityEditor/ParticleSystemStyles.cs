@@ -34,10 +34,8 @@
             this.modulePadding.padding = new RectOffset(3, 3, 4, 2);
         }
 
-        private static GUIStyle FindStyle(string styleName)
-        {
-            return styleName;
-        }
+        private static GUIStyle FindStyle(string styleName) => 
+            styleName;
 
         public static ParticleSystemStyles Get()
         {

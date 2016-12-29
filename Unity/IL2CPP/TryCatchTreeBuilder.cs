@@ -21,15 +21,11 @@
             this._tryCatchInfos = tryCatchInfos;
         }
 
-        private static InstructionBlock BlockFor(Context context)
-        {
-            return ((context.Type != ContextType.Block) ? null : context.Block);
-        }
+        private static InstructionBlock BlockFor(Context context) => 
+            ((context.Type != ContextType.Block) ? null : context.Block);
 
-        internal ExceptionSupport.Node Build()
-        {
-            return (!this._methodBody.HasExceptionHandlers ? this.BuildTreeWithNoExceptionHandlers() : this.BuildTreeWithExceptionHandlers());
-        }
+        internal ExceptionSupport.Node Build() => 
+            (!this._methodBody.HasExceptionHandlers ? this.BuildTreeWithNoExceptionHandlers() : this.BuildTreeWithExceptionHandlers());
 
         private ExceptionSupport.Node BuildTreeWithExceptionHandlers()
         {
@@ -61,7 +57,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Finally,
-                        Handler = Enumerable.Single<ExceptionHandler>(this._methodBody.ExceptionHandlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0))
                     };
                     this._contextStack.Push(item);
                 }
@@ -69,7 +65,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Fault,
-                        Handler = Enumerable.Single<ExceptionHandler>(this._methodBody.ExceptionHandlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1))
                     };
                     this._contextStack.Push(item);
                 }
@@ -77,7 +73,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Catch,
-                        Handler = Enumerable.Single<ExceptionHandler>(this._methodBody.ExceptionHandlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2))
                     };
                     this._contextStack.Push(item);
                 }
@@ -163,10 +159,8 @@
             return null;
         }
 
-        private static ExceptionSupport.Node MakeRoot(ExceptionSupport.Node[] children)
-        {
-            return new ExceptionSupport.Node(null, ExceptionSupport.NodeType.Root, null, children, null);
-        }
+        private static ExceptionSupport.Node MakeRoot(ExceptionSupport.Node[] children) => 
+            new ExceptionSupport.Node(null, ExceptionSupport.NodeType.Root, null, children, null);
 
         private static ExceptionSupport.Node MergeAndBuildRootNode(Context context)
         {
@@ -225,20 +219,14 @@
         {
             internal Instruction firstInstr;
 
-            internal bool <>m__0(ExceptionHandler h)
-            {
-                return ((h.HandlerType == ExceptionHandlerType.Finally) && (h.HandlerStart == this.firstInstr));
-            }
+            internal bool <>m__0(ExceptionHandler h) => 
+                ((h.HandlerType == ExceptionHandlerType.Finally) && (h.HandlerStart == this.firstInstr));
 
-            internal bool <>m__1(ExceptionHandler h)
-            {
-                return ((h.HandlerType == ExceptionHandlerType.Fault) && (h.HandlerStart == this.firstInstr));
-            }
+            internal bool <>m__1(ExceptionHandler h) => 
+                ((h.HandlerType == ExceptionHandlerType.Fault) && (h.HandlerStart == this.firstInstr));
 
-            internal bool <>m__2(ExceptionHandler h)
-            {
-                return ((h.HandlerType == ExceptionHandlerType.Catch) && (h.HandlerStart == this.firstInstr));
-            }
+            internal bool <>m__2(ExceptionHandler h) => 
+                ((h.HandlerType == ExceptionHandlerType.Catch) && (h.HandlerStart == this.firstInstr));
         }
 
         internal class Context

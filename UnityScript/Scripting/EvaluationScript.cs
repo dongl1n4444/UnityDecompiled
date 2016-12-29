@@ -5,10 +5,8 @@
     [Serializable]
     public class EvaluationScript
     {
-        public override object Run()
-        {
-            return null;
-        }
+        public override object Run() => 
+            null;
     }
 }
 

@@ -31,10 +31,8 @@
             return str;
         }
 
-        public static bool CanDevirtualizeMethodCall(MethodDefinition method)
-        {
-            return ((!method.IsVirtual || method.DeclaringType.IsSealed) || method.IsFinal);
-        }
+        public static bool CanDevirtualizeMethodCall(MethodDefinition method) => 
+            ((!method.IsVirtual || method.DeclaringType.IsSealed) || method.IsFinal);
 
         private static string FormatHiddenMethodArgument(ParameterFormat format)
         {
@@ -58,10 +56,8 @@
             throw new ArgumentOutOfRangeException("format");
         }
 
-        private static string FormatParameterAsVoidPointer(string parameterName)
-        {
-            return ("void* " + parameterName);
-        }
+        private static string FormatParameterAsVoidPointer(string parameterName) => 
+            ("void* " + parameterName);
 
         private static string FormatParameterName(TypeReference parameterType, string parameterName, ParameterFormat format)
         {
@@ -81,34 +77,30 @@
             return (str + parameterName);
         }
 
-        public static string FormatParameters(MethodReference method, [Optional, DefaultParameterValue(0)] ParameterFormat format, [Optional, DefaultParameterValue(false)] bool forceNoStaticThis, [Optional, DefaultParameterValue(false)] bool includeHiddenMethodInfo)
+        public static string FormatParameters(MethodReference method, ParameterFormat format = 0, bool forceNoStaticThis = false, bool includeHiddenMethodInfo = false)
         {
-            List<string> elements = Enumerable.ToList<string>(ParametersFor(method, format, forceNoStaticThis, includeHiddenMethodInfo, false));
-            return ((elements.Count != 0) ? EnumerableExtensions.AggregateWithComma(elements) : string.Empty);
+            List<string> elements = ParametersFor(method, format, forceNoStaticThis, includeHiddenMethodInfo, false).ToList<string>();
+            return ((elements.Count != 0) ? elements.AggregateWithComma() : string.Empty);
         }
 
         private static string FormatThis(ParameterFormat format, TypeReference thisType)
         {
             if (format == ParameterFormat.WithNameCastThis)
             {
-                return string.Format("({0}){1}", Naming.ForVariable(thisType), Naming.ThisParameterName);
+                return $"({Naming.ForVariable(thisType)}){Naming.ThisParameterName}";
             }
             if (format == ParameterFormat.WithNameUnboxThis)
             {
-                return string.Format("({0})UnBox({1})", Naming.ForVariable(thisType), Naming.ThisParameterName);
+                return $"({Naming.ForVariable(thisType)})UnBox({Naming.ThisParameterName})";
             }
             return FormatParameterName(thisType, Naming.ThisParameterName, format);
         }
 
-        public static string GetICallMethodVariable(MethodDefinition method)
-        {
-            return string.Format("{0} (*{1}_ftn) ({2})", Naming.ForVariable(method.ReturnType), Naming.ForMethodNameOnly(method), FormatParameters(method, ParameterFormat.WithType, method.IsStatic, false));
-        }
+        public static string GetICallMethodVariable(MethodDefinition method) => 
+            $"{Naming.ForVariable(method.ReturnType)} (*{Naming.ForMethodNameOnly(method)}_ftn) ({FormatParameters(method, ParameterFormat.WithType, method.IsStatic, false)})";
 
-        public static string GetMethodPointer(MethodReference method)
-        {
-            return GetMethodPointer(method, ParameterFormat.WithType);
-        }
+        public static string GetMethodPointer(MethodReference method) => 
+            GetMethodPointer(method, ParameterFormat.WithType);
 
         public static string GetMethodPointer(MethodReference method, ParameterFormat parameterFormat)
         {
@@ -130,10 +122,8 @@
             return GetMethodSignature(Naming.ForMethodNameOnly(method), Naming.ForVariable(typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveReturnTypeIfNeeded(method))), FormatParameters(method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", attributes);
         }
 
-        internal static string GetMethodSignature(string name, string returnType, string parameters, [Optional, DefaultParameterValue("")] string specifiers, [Optional, DefaultParameterValue("")] string attributes)
-        {
-            return string.Format("{0} {1} {2} {3} ({4})", new object[] { specifiers, attributes, returnType, name, parameters });
-        }
+        internal static string GetMethodSignature(string name, string returnType, string parameters, string specifiers = "", string attributes = "") => 
+            $"{specifiers} {attributes} {returnType} {name} ({parameters})";
 
         public static string GetSharedMethodSignature(CppCodeWriter writer, MethodReference method)
         {
@@ -161,7 +151,7 @@
             {
                 return false;
             }
-            if (Extensions.IsSystemArray(method.DeclaringType) && ((method.Name == "GetGenericValueImpl") || (method.Name == "SetGenericValueImpl")))
+            if (method.DeclaringType.IsSystemArray() && ((method.Name == "GetGenericValueImpl") || (method.Name == "SetGenericValueImpl")))
             {
                 return false;
             }
@@ -180,15 +170,12 @@
             return true;
         }
 
-        private static bool NeedsUnusedThisParameterForStaticMethod(MethodReference methodDefinition)
-        {
-            return methodDefinition.Resolve().IsStatic;
-        }
+        private static bool NeedsUnusedThisParameterForStaticMethod(MethodReference methodDefinition) => 
+            methodDefinition.Resolve().IsStatic;
 
         [DebuggerHidden]
-        public static IEnumerable<string> ParametersFor(MethodReference methodDefinition, [Optional, DefaultParameterValue(0)] ParameterFormat format, [Optional, DefaultParameterValue(false)] bool forceNoStaticThis, [Optional, DefaultParameterValue(false)] bool includeHiddenMethodInfo, [Optional, DefaultParameterValue(false)] bool useVoidPointerForThis)
-        {
-            return new <ParametersFor>c__Iterator0 { 
+        public static IEnumerable<string> ParametersFor(MethodReference methodDefinition, ParameterFormat format = 0, bool forceNoStaticThis = false, bool includeHiddenMethodInfo = false, bool useVoidPointerForThis = false) => 
+            new <ParametersFor>c__Iterator0 { 
                 methodDefinition = methodDefinition,
                 forceNoStaticThis = forceNoStaticThis,
                 format = format,
@@ -196,18 +183,15 @@
                 includeHiddenMethodInfo = includeHiddenMethodInfo,
                 $PC = -2
             };
-        }
 
-        private static string ParameterStringFor(MethodReference methodDefinition, ParameterFormat format, ParameterDefinition parameterDefinition)
-        {
-            return FormatParameterName(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodDefinition.DeclaringType).Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(methodDefinition, parameterDefinition)), Naming.ForParameterName(parameterDefinition), format);
-        }
+        private static string ParameterStringFor(MethodReference methodDefinition, ParameterFormat format, ParameterDefinition parameterDefinition) => 
+            FormatParameterName(Unity.IL2CPP.ILPreProcessor.TypeResolver.For(methodDefinition.DeclaringType).Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(methodDefinition, parameterDefinition)), Naming.ForParameterName(parameterDefinition), format);
 
         private static void RecordIncludes(CppCodeWriter writer, MethodReference method, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
         {
             if (method.HasThis)
             {
-                writer.AddIncludesForTypeReference(!Extensions.IsComOrWindowsRuntimeInterface(method.DeclaringType) ? method.DeclaringType : TypeProvider.SystemObject, false);
+                writer.AddIncludesForTypeReference(!method.DeclaringType.IsComOrWindowsRuntimeInterface() ? method.DeclaringType : TypeProvider.SystemObject, false);
             }
             if (method.ReturnType.MetadataType != MetadataType.Void)
             {
@@ -271,7 +255,7 @@
                         {
                             break;
                         }
-                        this.$current = string.Format("{0} {1}", MethodSignatureWriter.FormatThis(this.format, this.methodDefinition.Module.TypeSystem.Object), Formatter.Comment("static, unused"));
+                        this.$current = $"{MethodSignatureWriter.FormatThis(this.format, this.methodDefinition.Module.TypeSystem.Object)} {Formatter.Comment("static, unused")}";
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -328,11 +312,11 @@
                 if (((this.format != ParameterFormat.WithNameNoThis) && (this.format != ParameterFormat.WithTypeNoThis)) && ((this.format != ParameterFormat.WithTypeAndNameNoThis) && this.methodDefinition.HasThis))
                 {
                     this.<thisType>__0 = this.methodDefinition.DeclaringType;
-                    if (Extensions.IsValueType(this.<thisType>__0))
+                    if (this.<thisType>__0.IsValueType())
                     {
                         this.<thisType>__0 = new PointerType(this.<thisType>__0);
                     }
-                    else if (Extensions.IsSpecialSystemBaseType(this.<thisType>__0))
+                    else if (this.<thisType>__0.IsSpecialSystemBaseType())
                     {
                         this.<thisType>__0 = this.methodDefinition.Module.TypeSystem.Object;
                     }
@@ -408,28 +392,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

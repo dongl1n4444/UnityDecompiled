@@ -109,7 +109,7 @@
                 {
                     if (surface.gameObject == null)
                     {
-                        Debug.LogError(string.Format("A SpatialMappingRenderer component can not apply baked data to a surface with id \"{0}\" because its GameObject is null.", bakedData.id.handle));
+                        Debug.LogError($"A SpatialMappingRenderer component can not apply baked data to a surface with id "{bakedData.id.handle}" because its GameObject is null.");
                     }
                     else
                     {
@@ -143,10 +143,8 @@
         /// </summary>
         public Material occlusionMaterial
         {
-            get
-            {
-                return this.m_OcclusionMaterial;
-            }
+            get => 
+                this.m_OcclusionMaterial;
             set
             {
                 this.m_OcclusionMaterial = value;
@@ -158,10 +156,8 @@
         /// </summary>
         public RenderState renderState
         {
-            get
-            {
-                return this.m_CurrentRenderState;
-            }
+            get => 
+                this.m_CurrentRenderState;
             set
             {
                 this.m_CurrentRenderState = value;
@@ -174,10 +170,8 @@
         /// </summary>
         public Material visualMaterial
         {
-            get
-            {
-                return this.m_VisualMaterial;
-            }
+            get => 
+                this.m_VisualMaterial;
             set
             {
                 this.m_VisualMaterial = value;

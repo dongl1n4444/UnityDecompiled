@@ -65,7 +65,7 @@
             Console.WriteLine("Building {0} with {1}.{2}\tOutput directory: {3}{2}\tCache directory: {4}", arg);
             if (!this.CanBuildInCurrentEnvironment())
             {
-                throw new InvalidOperationException(string.Format("Builder is unable to build using selected toolchain ({0}) or architecture ({1})!", this._cppToolChain.GetType().Name, this._cppToolChain.Architecture));
+                throw new InvalidOperationException($"Builder is unable to build using selected toolchain ({this._cppToolChain.GetType().Name}) or architecture ({this._cppToolChain.Architecture})!");
             }
             using (TinyProfiler.Section("BuildBinary", ""))
             {
@@ -78,11 +78,11 @@
                 }
                 using (TinyProfiler.Section("FindFilesToCompile", ""))
                 {
-                    instructionArray = Enumerable.ToArray<CppCompilationInstruction>(Enumerable.Concat<CppCompilationInstruction>(this._programBuildDescription.CppCompileInstructions, toolChainContext.ExtraCompileInstructions));
+                    instructionArray = this._programBuildDescription.CppCompileInstructions.Concat<CppCompilationInstruction>(toolChainContext.ExtraCompileInstructions).ToArray<CppCompilationInstruction>();
                     foreach (CppCompilationInstruction instruction in instructionArray)
                     {
-                        instruction.Defines = Enumerable.Concat<string>(instruction.Defines, this._cppToolChain.ToolChainDefines());
-                        instruction.IncludePaths = Enumerable.Concat<NPath>(Enumerable.Concat<NPath>(instruction.IncludePaths, this._cppToolChain.ToolChainIncludePaths()), toolChainContext.ExtraIncludeDirectories);
+                        instruction.Defines = instruction.Defines.Concat<string>(this._cppToolChain.ToolChainDefines());
+                        instruction.IncludePaths = instruction.IncludePaths.Concat<NPath>(this._cppToolChain.ToolChainIncludePaths()).Concat<NPath>(toolChainContext.ExtraIncludeDirectories);
                     }
                 }
                 using (TinyProfiler.Section("Calculate header hashes", ""))
@@ -127,23 +127,23 @@
                 {
                     <>f__am$cache2 = new Func<CppCompilationInstruction, long>(null, (IntPtr) <BuildAllCppFiles>m__2);
                 }
-                IEnumerable<ProvideObjectResult> source = ParallelFor.RunWithResult<CppCompilationInstruction, ProvideObjectResult>(Enumerable.ToArray<CppCompilationInstruction>(Enumerable.OrderByDescending<CppCompilationInstruction, long>(sourceFilesToCompile, <>f__am$cache2)), new Func<CppCompilationInstruction, ProvideObjectResult>(this, (IntPtr) this.ProvideObjectFile));
-                IEnumerable<CompilationResult> enumerable2 = Enumerable.OfType<CompilationResult>(source);
+                IEnumerable<ProvideObjectResult> source = ParallelFor.RunWithResult<CppCompilationInstruction, ProvideObjectResult>(sourceFilesToCompile.OrderByDescending<CppCompilationInstruction, long>(<>f__am$cache2).ToArray<CppCompilationInstruction>(), new Func<CppCompilationInstruction, ProvideObjectResult>(this, (IntPtr) this.ProvideObjectFile));
+                IEnumerable<CompilationResult> enumerable2 = source.OfType<CompilationResult>();
                 if (<>f__am$cache3 == null)
                 {
                     <>f__am$cache3 = new Func<CompilationResult, bool>(null, (IntPtr) <BuildAllCppFiles>m__3);
                 }
-                CompilationResult result = Enumerable.FirstOrDefault<CompilationResult>(enumerable2, <>f__am$cache3);
+                CompilationResult result = enumerable2.FirstOrDefault<CompilationResult>(<>f__am$cache3);
                 if (result != null)
                 {
                     throw new BuilderFailedException(result.InterestingOutput + Environment.NewLine + "Invocation was: " + result.Invocation.Summary());
                 }
-                Console.WriteLine(string.Concat(new object[] { "ObjectFiles: ", Enumerable.Count<ProvideObjectResult>(source), " of which compiled: ", Enumerable.Count<CompilationResult>(enumerable2) }));
+                Console.WriteLine(string.Concat(new object[] { "ObjectFiles: ", source.Count<ProvideObjectResult>(), " of which compiled: ", enumerable2.Count<CompilationResult>() }));
                 if (<>f__am$cache4 == null)
                 {
                     <>f__am$cache4 = new Func<CompilationResult, TimeSpan>(null, (IntPtr) <BuildAllCppFiles>m__4);
                 }
-                foreach (CompilationResult result2 in Enumerable.Take<CompilationResult>(Enumerable.OrderByDescending<CompilationResult, TimeSpan>(enumerable2, <>f__am$cache4), 10))
+                foreach (CompilationResult result2 in enumerable2.OrderByDescending<CompilationResult, TimeSpan>(<>f__am$cache4).Take<CompilationResult>(10))
                 {
                     Console.WriteLine("\tTime Compile: {0} milliseconds {1}", result2.Duration.TotalMilliseconds, result2.Invocation.SourceFile.FileName);
                 }
@@ -152,19 +152,15 @@
                 {
                     <>f__am$cache5 = new Func<ProvideObjectResult, NPath>(null, (IntPtr) <BuildAllCppFiles>m__5);
                 }
-                return Enumerable.ToArray<NPath>(Enumerable.Select<ProvideObjectResult, NPath>(source, <>f__am$cache5));
+                return source.Select<ProvideObjectResult, NPath>(<>f__am$cache5).ToArray<NPath>();
             }
         }
 
-        private BuilderFailedException BuilderFailedExceptionForFailedLinkerExecution(LinkerResult result, Shell.ExecuteArgs executableInvocation)
-        {
-            return new BuilderFailedException(string.Format("{0} {1}{2}{2}{3}", new object[] { executableInvocation.Executable, executableInvocation.Arguments, Environment.NewLine, result.InterestingOutput }));
-        }
+        private BuilderFailedException BuilderFailedExceptionForFailedLinkerExecution(LinkerResult result, Shell.ExecuteArgs executableInvocation) => 
+            new BuilderFailedException(string.Format("{0} {1}{2}{2}{3}", new object[] { executableInvocation.Executable, executableInvocation.Arguments, Environment.NewLine, result.InterestingOutput }));
 
-        public bool CanBuildInCurrentEnvironment()
-        {
-            return this._cppToolChain.CanBuildInCurrentEnvironment();
-        }
+        public bool CanBuildInCurrentEnvironment() => 
+            this._cppToolChain.CanBuildInCurrentEnvironment();
 
         private void CleanWorkingDirectory(IEnumerable<NPath> compiledObjectFiles)
         {
@@ -179,7 +175,7 @@
             {
                 <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <CleanWorkingDirectory>m__1);
             }
-            NPath[] pathArray = Enumerable.ToArray<NPath>(Enumerable.Where<NPath>(Enumerable.SelectMany<NPath, NPath>(Enumerable.Distinct<NPath>(Enumerable.Select<NPath, NPath>(storey.compiledObjectFiles, <>f__am$cache0)), <>f__am$cache1), new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)));
+            NPath[] pathArray = storey.compiledObjectFiles.Select<NPath, NPath>(<>f__am$cache0).Distinct<NPath>().SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
             foreach (NPath path in pathArray)
             {
                 try
@@ -197,10 +193,8 @@
             Console.WriteLine("Cleaned up {0} object files.", pathArray.Length);
         }
 
-        public static CppToolChain CppToolChainFor(RuntimePlatform platform, Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors)
-        {
-            return PlatformSupport.For(platform).MakeCppToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
-        }
+        public static CppToolChain CppToolChainFor(RuntimePlatform platform, Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+            PlatformSupport.For(platform).MakeCppToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
 
         public static CppProgramBuilder Create(RuntimePlatform platform, ProgramBuildDescription programBuildDescription, bool verbose, Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool forceRebuild, bool treatWarningsAsErrors)
         {
@@ -220,7 +214,7 @@
                 {
                     <>f__am$cache6 = new Func<NPath, bool>(null, (IntPtr) <FindStaticLibrary>m__6);
                 }
-                path = Enumerable.Single<NPath>(Enumerable.Select<NPath, NPath>(this._cppToolChain.ToolChainLibraryPaths(), new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)), <>f__am$cache6);
+                path = this._cppToolChain.ToolChainLibraryPaths().Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).Single<NPath>(<>f__am$cache6);
             }
             catch
             {
@@ -232,7 +226,7 @@
                 {
                     <>f__am$cache8 = new Func<string, string, string>(null, (IntPtr) <FindStaticLibrary>m__8);
                 }
-                throw new Exception(string.Format("Could not locate the exact path of {0} inside these directories:{1}\t{2}", storey.staticLib, Environment.NewLine, Enumerable.Aggregate<string>(Enumerable.Select<NPath, string>(this._cppToolChain.ToolChainLibraryPaths(), <>f__am$cache7), <>f__am$cache8)));
+                throw new Exception($"Could not locate the exact path of {storey.staticLib} inside these directories:{Environment.NewLine}	{this._cppToolChain.ToolChainLibraryPaths().Select<NPath, string>(<>f__am$cache7).Aggregate<string>(<>f__am$cache8)}");
             }
             return path;
         }
@@ -254,7 +248,7 @@
                 {
                     builder.Append(path.FileName);
                 }
-                foreach (NPath path2 in Enumerable.Where<NPath>(linkerInvocation.FilesInfluencingOutcome, new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (NPath path2 in linkerInvocation.FilesInfluencingOutcome.Where<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)))
                 {
                     builder.Append(HashTools.HashOfFile(!path2.IsRelative ? path2 : this.FindStaticLibrary(path2)));
                 }
@@ -285,7 +279,7 @@
                 NPath path = this._workingDirectory.Combine(append);
                 if (!this._forceRebuild && path.DirectoryExists(""))
                 {
-                    Extensions.Copy(path.Files(false), this._programBuildDescription.OutputFile.Parent);
+                    path.Files(false).Copy(this._programBuildDescription.OutputFile.Parent);
                 }
                 else
                 {
@@ -309,7 +303,7 @@
                     {
                         throw this.BuilderFailedExceptionForFailedLinkerExecution(result2, invocation2.ExecuteArgs);
                     }
-                    Extensions.Copy(path.Files(false), this._programBuildDescription.OutputFile.Parent);
+                    path.Files(false).Copy(this._programBuildDescription.OutputFile.Parent);
                     if (this._verbose)
                     {
                         Console.WriteLine(result.StdOut.Trim());
@@ -349,7 +343,7 @@
             {
                 return new ProvideObjectResult { ObjectFile = objectFile };
             }
-            invocation.Arguments = Enumerable.Concat<string>(invocation.Arguments, this._cppToolChain.OutputArgumentFor(objectFile));
+            invocation.Arguments = invocation.Arguments.Concat<string>(this._cppToolChain.OutputArgumentFor(objectFile));
             using (TinyProfiler.Section("Compile", cppCompilationInstruction.SourceFile.FileName))
             {
                 result3 = invocation.Execute();
@@ -375,7 +369,7 @@
                     <>f__ref$0 = this,
                     objectFile = objectFile
                 };
-                return !Enumerable.Any<NPath>(this.compiledObjectFiles, new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.compiledObjectFiles.Any<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
             }
 
             private sealed class <CleanWorkingDirectory>c__AnonStorey1
@@ -383,10 +377,8 @@
                 internal CppProgramBuilder.<CleanWorkingDirectory>c__AnonStorey0 <>f__ref$0;
                 internal NPath objectFile;
 
-                internal bool <>m__0(NPath compiledObjectFile)
-                {
-                    return string.Equals(this.objectFile.FileNameWithoutExtension, compiledObjectFile.FileNameWithoutExtension, StringComparison.OrdinalIgnoreCase);
-                }
+                internal bool <>m__0(NPath compiledObjectFile) => 
+                    string.Equals(this.objectFile.FileNameWithoutExtension, compiledObjectFile.FileNameWithoutExtension, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -413,7 +405,7 @@
                     <>f__ref$2 = this,
                     file = file
                 };
-                return !Enumerable.Any<NPath>(this.objectFiles, new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.objectFiles.Any<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
             }
 
             private sealed class <HashLinkerInvocation>c__AnonStorey3
@@ -421,10 +413,8 @@
                 internal CppProgramBuilder.<HashLinkerInvocation>c__AnonStorey2 <>f__ref$2;
                 internal NPath file;
 
-                internal bool <>m__0(NPath o)
-                {
-                    return (this.file == o);
-                }
+                internal bool <>m__0(NPath o) => 
+                    (this.file == o);
             }
         }
 

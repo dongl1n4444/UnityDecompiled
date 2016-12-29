@@ -5,13 +5,8 @@
 
     public static class UnitySourceCode
     {
-        public static bool Available
-        {
-            get
-            {
-                return (Paths.UnityRoot != null);
-            }
-        }
+        public static bool Available =>
+            (Paths.UnityRoot != null);
 
         public static class Paths
         {
@@ -22,11 +17,11 @@
                 string environmentVariable = Environment.GetEnvironmentVariable("IL2CPP_UNITY_ROOT");
                 if (!string.IsNullOrEmpty(environmentVariable))
                 {
-                    _unityRoot = Extensions.ToNPath(environmentVariable);
+                    _unityRoot = environmentVariable.ToNPath();
                 }
                 else
                 {
-                    _unityRoot = (CommonPaths.Il2CppRoot == null) ? null : CommonPaths.Il2CppRoot.ParentContaining("build.pl");
+                    _unityRoot = CommonPaths.Il2CppRoot?.ParentContaining("build.pl");
                 }
             }
 
@@ -49,13 +44,8 @@
                 }
             }
 
-            public static NPath UnityRoot
-            {
-                get
-                {
-                    return _unityRoot;
-                }
-            }
+            public static NPath UnityRoot =>
+                _unityRoot;
 
             public static NPath UnusedBytecodeStripper
             {

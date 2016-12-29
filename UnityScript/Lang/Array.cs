@@ -96,20 +96,14 @@
             this.Clear();
         }
 
-        public override object Coerce(Type toType)
-        {
-            return (!toType.IsArray ? this : this.ToBuiltin(toType.GetElementType()));
-        }
+        public override object Coerce(Type toType) => 
+            (!toType.IsArray ? this : this.ToBuiltin(toType.GetElementType()));
 
-        public UnityScript.Lang.Array concat(ICollection value, params object[] items)
-        {
-            return this.ConcatImpl(value, items);
-        }
+        public UnityScript.Lang.Array concat(ICollection value, params object[] items) => 
+            this.ConcatImpl(value, items);
 
-        public UnityScript.Lang.Array Concat(ICollection value, params object[] items)
-        {
-            return this.ConcatImpl(value, items);
-        }
+        public UnityScript.Lang.Array Concat(ICollection value, params object[] items) => 
+            this.ConcatImpl(value, items);
 
         private UnityScript.Lang.Array ConcatImpl(ICollection value, IEnumerable items)
         {
@@ -151,39 +145,27 @@
             }
         }
 
-        public string join(string seperator)
-        {
-            return Builtins.join(this.InnerList, seperator);
-        }
+        public string join(string seperator) => 
+            Builtins.join(this.InnerList, seperator);
 
-        public string Join(string seperator)
-        {
-            return Builtins.join(this.InnerList, seperator);
-        }
+        public string Join(string seperator) => 
+            Builtins.join(this.InnerList, seperator);
 
-        private int NormalizeIndex(int index)
-        {
-            return ((index < 0) ? (index + this.InnerList.Count) : index);
-        }
+        private int NormalizeIndex(int index) => 
+            ((index < 0) ? (index + this.InnerList.Count) : index);
 
         protected override void OnValidate(object newValue)
         {
         }
 
-        public static implicit operator UnityScript.Lang.Array(System.Array a)
-        {
-            return ((a != null) ? new UnityScript.Lang.Array(a as IEnumerable) : null);
-        }
+        public static implicit operator UnityScript.Lang.Array(System.Array a) => 
+            ((a != null) ? new UnityScript.Lang.Array(a as IEnumerable) : null);
 
-        public static implicit operator UnityScript.Lang.Array(IEnumerable e)
-        {
-            return ((e != null) ? new UnityScript.Lang.Array(e) : null);
-        }
+        public static implicit operator UnityScript.Lang.Array(IEnumerable e) => 
+            ((e != null) ? new UnityScript.Lang.Array(e) : null);
 
-        public object pop()
-        {
-            return this.Pop();
-        }
+        public object pop() => 
+            this.Pop();
 
         public object Pop()
         {
@@ -199,20 +181,14 @@
             return this.InnerList.Count;
         }
 
-        public int push(object value, params object[] items)
-        {
-            return this.AddImpl(value, items);
-        }
+        public int push(object value, params object[] items) => 
+            this.AddImpl(value, items);
 
-        public int Push(object value)
-        {
-            return this.push(value);
-        }
+        public int Push(object value) => 
+            this.push(value);
 
-        public int Push(object value, params object[] items)
-        {
-            return this.AddImpl(value, items);
-        }
+        public int Push(object value, params object[] items) => 
+            this.AddImpl(value, items);
 
         public void remove(object obj)
         {
@@ -236,10 +212,8 @@
             return this;
         }
 
-        public object shift()
-        {
-            return this.Shift();
-        }
+        public object shift() => 
+            this.Shift();
 
         public object Shift()
         {
@@ -249,20 +223,14 @@
             return obj2;
         }
 
-        public UnityScript.Lang.Array slice(int start)
-        {
-            return this.Slice(start);
-        }
+        public UnityScript.Lang.Array slice(int start) => 
+            this.Slice(start);
 
-        public UnityScript.Lang.Array slice(int start, int end)
-        {
-            return this.Slice(start, end);
-        }
+        public UnityScript.Lang.Array slice(int start, int end) => 
+            this.Slice(start, end);
 
-        public UnityScript.Lang.Array Slice(int start)
-        {
-            return this.Slice(start, this.InnerList.Count);
-        }
+        public UnityScript.Lang.Array Slice(int start) => 
+            this.Slice(start, this.InnerList.Count);
 
         public UnityScript.Lang.Array Slice(int start, int end)
         {
@@ -316,30 +284,20 @@
             this.InnerList.InsertRange(index, (ICollection) items);
         }
 
-        public System.Array ToBuiltin(Type type)
-        {
-            return this.InnerList.ToArray(type);
-        }
+        public System.Array ToBuiltin(Type type) => 
+            this.InnerList.ToArray(type);
 
-        public string toString()
-        {
-            return this.ToString();
-        }
+        public string toString() => 
+            this.ToString();
 
-        public override string ToString()
-        {
-            return this.Join(",");
-        }
+        public override string ToString() => 
+            this.Join(",");
 
-        public int unshift(object value, params object[] items)
-        {
-            return this.UnshiftImpl(value, items);
-        }
+        public int unshift(object value, params object[] items) => 
+            this.UnshiftImpl(value, items);
 
-        public int Unshift(object value, params object[] items)
-        {
-            return this.UnshiftImpl(value, items);
-        }
+        public int Unshift(object value, params object[] items) => 
+            this.UnshiftImpl(value, items);
 
         private int UnshiftImpl(object value, IEnumerable items)
         {
@@ -354,10 +312,8 @@
 
         public object this[int index]
         {
-            get
-            {
-                return this.InnerList[index];
-            }
+            get => 
+                this.InnerList[index];
             set
             {
                 this.EnsureCapacity(index + 1);
@@ -367,10 +323,8 @@
 
         public int length
         {
-            get
-            {
-                return this.Count;
-            }
+            get => 
+                this.Count;
             set
             {
                 this.EnsureCapacity(value);
@@ -394,10 +348,8 @@
                 this._comparison = comparison;
             }
 
-            public override int Compare(object lhs, object rhs)
-            {
-                return this._comparison(lhs, rhs);
-            }
+            public override int Compare(object lhs, object rhs) => 
+                this._comparison(lhs, rhs);
         }
     }
 }

@@ -21,10 +21,8 @@
         /// </summary>
         public Texture2D texture
         {
-            get
-            {
-                return this.m_Texture;
-            }
+            get => 
+                this.m_Texture;
             set
             {
                 this.m_Texture = value;
@@ -35,10 +33,8 @@
         /// </summary>
         public Texture2D normalMap
         {
-            get
-            {
-                return this.m_NormalMap;
-            }
+            get => 
+                this.m_NormalMap;
             set
             {
                 this.m_NormalMap = value;
@@ -49,10 +45,8 @@
         /// </summary>
         public Vector2 tileSize
         {
-            get
-            {
-                return this.m_TileSize;
-            }
+            get => 
+                this.m_TileSize;
             set
             {
                 this.m_TileSize = value;
@@ -63,10 +57,8 @@
         /// </summary>
         public Vector2 tileOffset
         {
-            get
-            {
-                return this.m_TileOffset;
-            }
+            get => 
+                this.m_TileOffset;
             set
             {
                 this.m_TileOffset = value;
@@ -74,10 +66,8 @@
         }
         public Color specular
         {
-            get
-            {
-                return new Color(this.m_SpecularMetallic.x, this.m_SpecularMetallic.y, this.m_SpecularMetallic.z);
-            }
+            get => 
+                new Color(this.m_SpecularMetallic.x, this.m_SpecularMetallic.y, this.m_SpecularMetallic.z);
             set
             {
                 this.m_SpecularMetallic.x = value.r;
@@ -90,10 +80,8 @@
         /// </summary>
         public float metallic
         {
-            get
-            {
-                return this.m_SpecularMetallic.w;
-            }
+            get => 
+                this.m_SpecularMetallic.w;
             set
             {
                 this.m_SpecularMetallic.w = value;
@@ -104,10 +92,8 @@
         /// </summary>
         public float smoothness
         {
-            get
-            {
-                return this.m_Smoothness;
-            }
+            get => 
+                this.m_Smoothness;
             set
             {
                 this.m_Smoothness = value;

@@ -21,10 +21,8 @@
         /// </summary>
         public static WillFlushUndoRecord willFlushUndoRecord;
 
-        public static T AddComponent<T>(GameObject gameObject) where T: Component
-        {
-            return (AddComponent(gameObject, typeof(T)) as T);
-        }
+        public static T AddComponent<T>(GameObject gameObject) where T: Component => 
+            (AddComponent(gameObject, typeof(T)) as T);
 
         /// <summary>
         /// <para>Adds a component to the game object and registers an undo operation for this action.</para>

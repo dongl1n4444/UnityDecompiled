@@ -35,15 +35,11 @@
             return -1;
         }
 
-        public float GetPeriodOfLevel(int level)
-        {
-            return this.m_TickModulos[Mathf.Clamp(this.m_SmallestTick + level, 0, this.m_TickModulos.Length - 1)];
-        }
+        public float GetPeriodOfLevel(int level) => 
+            this.m_TickModulos[Mathf.Clamp(this.m_SmallestTick + level, 0, this.m_TickModulos.Length - 1)];
 
-        public float GetStrengthOfLevel(int level)
-        {
-            return this.m_TickStrengths[this.m_SmallestTick + level];
-        }
+        public float GetStrengthOfLevel(int level) => 
+            this.m_TickStrengths[this.m_SmallestTick + level];
 
         public float[] GetTicksAtLevel(int level, bool excludeTicksFromHigherlevels)
         {
@@ -182,13 +178,8 @@
             }
         }
 
-        public int tickLevels
-        {
-            get
-            {
-                return ((this.m_BiggestTick - this.m_SmallestTick) + 1);
-            }
-        }
+        public int tickLevels =>
+            ((this.m_BiggestTick - this.m_SmallestTick) + 1);
     }
 }
 

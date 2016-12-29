@@ -3426,10 +3426,8 @@
             return ((this._loopStack.Count != 0) ? ((string) RuntimeServices.Coerce(obj2, typeof(string))) : null);
         }
 
-        public bool GlobalVariablesBecomeFields()
-        {
-            return this.UnityScriptParameters.GlobalVariablesBecomeFields;
-        }
+        public bool GlobalVariablesBecomeFields() => 
+            this.UnityScriptParameters.GlobalVariablesBecomeFields;
 
         public HashLiteralExpression hash_literal()
         {
@@ -3875,10 +3873,8 @@
             return (name == type.get_Name());
         }
 
-        public bool IsLabelInUse(Node node)
-        {
-            return node.ContainsAnnotation("LabelInUse");
-        }
+        public bool IsLabelInUse(Node node) => 
+            node.ContainsAnnotation("LabelInUse");
 
         protected void KeywordCannotBeUsedAsAnIdentifier(IToken token)
         {
@@ -4114,10 +4110,8 @@
             }
         }
 
-        public string MacroName(string baseName)
-        {
-            return new StringBuilder("UnityScript.Macros.").Append(RuntimeServices.Mid(baseName, 0, 1).ToUpper()).Append(baseName.Substring(1)).ToString();
-        }
+        public string MacroName(string baseName) => 
+            new StringBuilder("UnityScript.Macros.").Append(RuntimeServices.Mid(baseName, 0, 1).ToUpper()).Append(baseName.Substring(1)).ToString();
 
         public Token member()
         {
@@ -5222,10 +5216,8 @@
             return null;
         }
 
-        public static Expression ParseExpression(string expression, string fileName, Boo.Lang.Compiler.CompilerContext context)
-        {
-            return ParseExpression(new StringReader(expression), fileName, context);
-        }
+        public static Expression ParseExpression(string expression, string fileName, Boo.Lang.Compiler.CompilerContext context) => 
+            ParseExpression(new StringReader(expression), fileName, context);
 
         public static IntegerLiteralExpression ParseIntegerLiteralExpression(IToken token, string s, bool isLong)
         {
@@ -6672,10 +6664,8 @@
             }
         }
 
-        public static LexicalInfo ToLexicalInfo(IToken token)
-        {
-            return new LexicalInfo(token.getFilename(), token.getLine(), token.getColumn());
-        }
+        public static LexicalInfo ToLexicalInfo(IToken token) => 
+            new LexicalInfo(token.getFilename(), token.getLine(), token.getColumn());
 
         public static SourceLocation ToSourceLocation(IToken token)
         {
@@ -7200,23 +7190,16 @@
 
         public Boo.Lang.Compiler.CompilerContext CompilerContext
         {
-            get
-            {
-                return this._context;
-            }
+            get => 
+                this._context;
             set
             {
                 this._context = value;
             }
         }
 
-        public UnityScriptCompilerParameters UnityScriptParameters
-        {
-            get
-            {
-                return (UnityScriptCompilerParameters) this._context.get_Parameters();
-            }
-        }
+        public UnityScriptCompilerParameters UnityScriptParameters =>
+            ((UnityScriptCompilerParameters) this._context.get_Parameters());
     }
 }
 

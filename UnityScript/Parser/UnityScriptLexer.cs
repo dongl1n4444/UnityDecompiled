@@ -2891,10 +2891,8 @@
 
         public bool PreserveComments
         {
-            get
-            {
-                return this.$PreserveComments$26;
-            }
+            get => 
+                this.$PreserveComments$26;
             set
             {
                 this.$PreserveComments$26 = value;

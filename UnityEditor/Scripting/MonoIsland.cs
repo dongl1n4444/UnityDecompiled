@@ -27,10 +27,8 @@
             this._output = output;
         }
 
-        public string GetExtensionOfSourceFiles()
-        {
-            return ((this._files.Length <= 0) ? "NA" : ScriptCompilers.GetExtensionOfSourceFile(this._files[0]));
-        }
+        public string GetExtensionOfSourceFiles() => 
+            ((this._files.Length <= 0) ? "NA" : ScriptCompilers.GetExtensionOfSourceFile(this._files[0]));
     }
 }
 

@@ -73,7 +73,7 @@
 
         private void MakeTransitionCallback()
         {
-            base.graphGUI.edgeGUI.BeginSlotDragging(Enumerable.First<Slot>(base.outputSlots), true, false);
+            base.graphGUI.edgeGUI.BeginSlotDragging(base.outputSlots.First<Slot>(), true, false);
         }
 
         public override void NodeUI(UnityEditor.Graphs.GraphGUI host)
@@ -82,7 +82,7 @@
             Assert.NotNull(base.graphGUI);
             if (UnityEditor.Graphs.AnimationStateMachine.Node.IsLeftClick())
             {
-                host.edgeGUI.EndSlotDragging(Enumerable.First<Slot>(base.inputSlots), true);
+                host.edgeGUI.EndSlotDragging(base.inputSlots.First<Slot>(), true);
             }
             if (UnityEditor.Graphs.AnimationStateMachine.Node.IsDoubleClick())
             {
@@ -120,33 +120,21 @@
             }
         }
 
-        public override UnityEngine.Object selectionObject
-        {
-            get
-            {
-                return this.stateMachine;
-            }
-        }
+        public override UnityEngine.Object selectionObject =>
+            this.stateMachine;
 
         public override string title
         {
-            get
-            {
-                return (base.title + this.stateMachine.name);
-            }
+            get => 
+                (base.title + this.stateMachine.name);
             set
             {
                 base.title = value;
             }
         }
 
-        public override UnityEngine.Object undoableObject
-        {
-            get
-            {
-                return AnimatorControllerTool.tool.stateMachineGraph.activeStateMachine;
-            }
-        }
+        public override UnityEngine.Object undoableObject =>
+            AnimatorControllerTool.tool.stateMachineGraph.activeStateMachine;
     }
 }
 

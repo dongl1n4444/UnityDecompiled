@@ -24,7 +24,7 @@
                 {
                     <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <OptimizationWriter>m__0);
                 }
-                args[0] = Enumerable.Aggregate<string>(this._platformsWithOptimizationsDisabled, <>f__am$cache0);
+                args[0] = this._platformsWithOptimizationsDisabled.Aggregate<string>(<>f__am$cache0);
                 this._writer.WriteLine("#if {0}", args);
                 this._writer.WriteLine("IL2CPP_DISABLE_OPTIMIZATIONS");
                 this._writer.WriteLine("#endif");
@@ -32,10 +32,8 @@
         }
 
         [CompilerGenerated]
-        private static string <OptimizationWriter>m__0(string x, string y)
-        {
-            return (x + " || " + y);
-        }
+        private static string <OptimizationWriter>m__0(string x, string y) => 
+            (x + " || " + y);
 
         public void Dispose()
         {
@@ -46,7 +44,7 @@
                 {
                     <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <Dispose>m__1);
                 }
-                args[0] = Enumerable.Aggregate<string>(this._platformsWithOptimizationsDisabled, <>f__am$cache1);
+                args[0] = this._platformsWithOptimizationsDisabled.Aggregate<string>(<>f__am$cache1);
                 this._writer.WriteLine("#if {0}", args);
                 this._writer.WriteLine("IL2CPP_ENABLE_OPTIMIZATIONS");
                 this._writer.WriteLine("#endif");

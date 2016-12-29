@@ -140,7 +140,7 @@
             {
                 <>f__am$cache0 = new Func<string, JSONValue>(null, (IntPtr) <ToJSON>m__0);
             }
-            return new JSONValue(Enumerable.ToList<JSONValue>(Enumerable.Select<string, JSONValue>(strings, <>f__am$cache0)));
+            return new JSONValue(Enumerable.Select<string, JSONValue>(strings, <>f__am$cache0).ToList<JSONValue>());
         }
     }
 }

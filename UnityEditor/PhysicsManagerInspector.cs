@@ -9,10 +9,8 @@
         private Vector2 scrollPos;
         private bool show = true;
 
-        private bool GetValue(int layerA, int layerB)
-        {
-            return !Physics.GetIgnoreLayerCollision(layerA, layerB);
-        }
+        private bool GetValue(int layerA, int layerB) => 
+            !Physics.GetIgnoreLayerCollision(layerA, layerB);
 
         public override void OnInspectorGUI()
         {

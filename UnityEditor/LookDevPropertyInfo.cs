@@ -18,23 +18,16 @@
 
         public bool linked
         {
-            get
-            {
-                return this.m_Linked;
-            }
+            get => 
+                this.m_Linked;
             set
             {
                 this.m_Linked = value;
             }
         }
 
-        public LookDevPropertyType propertyType
-        {
-            get
-            {
-                return this.m_PropertyType;
-            }
-        }
+        public LookDevPropertyType propertyType =>
+            this.m_PropertyType;
     }
 }
 

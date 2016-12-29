@@ -87,10 +87,8 @@
             return null;
         }
 
-        public bool IsValid()
-        {
-            return ((this.target != null) && !string.IsNullOrEmpty(this.methodName));
-        }
+        public bool IsValid() => 
+            ((this.target != null) && !string.IsNullOrEmpty(this.methodName));
 
         public void RegisterPersistentListener(UnityEngine.Object ttarget, string mmethodName)
         {
@@ -104,53 +102,34 @@
             this.m_Target = null;
         }
 
-        public ArgumentCache arguments
-        {
-            get
-            {
-                return this.m_Arguments;
-            }
-        }
+        public ArgumentCache arguments =>
+            this.m_Arguments;
 
         public UnityEventCallState callState
         {
-            get
-            {
-                return this.m_CallState;
-            }
+            get => 
+                this.m_CallState;
             set
             {
                 this.m_CallState = value;
             }
         }
 
-        public string methodName
-        {
-            get
-            {
-                return this.m_MethodName;
-            }
-        }
+        public string methodName =>
+            this.m_MethodName;
 
         public PersistentListenerMode mode
         {
-            get
-            {
-                return this.m_Mode;
-            }
+            get => 
+                this.m_Mode;
             set
             {
                 this.m_Mode = value;
             }
         }
 
-        public UnityEngine.Object target
-        {
-            get
-            {
-                return this.m_Target;
-            }
-        }
+        public UnityEngine.Object target =>
+            this.m_Target;
     }
 }
 

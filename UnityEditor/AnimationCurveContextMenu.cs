@@ -22,10 +22,10 @@
 
         private void Copy()
         {
-            AnimationCurve animCurve = (this.m_Prop1 == null) ? null : this.m_Prop1.animationCurveValue;
-            AnimationCurve curve2 = (this.m_Prop2 == null) ? null : this.m_Prop2.animationCurveValue;
+            AnimationCurve animationCurveValue = this.m_Prop1?.animationCurveValue;
+            AnimationCurve curve2 = this.m_Prop2?.animationCurveValue;
             float scalar = (this.m_Scalar == null) ? 1f : this.m_Scalar.floatValue;
-            ParticleSystemClipboard.CopyAnimationCurves(animCurve, curve2, scalar);
+            ParticleSystemClipboard.CopyAnimationCurves(animationCurveValue, curve2, scalar);
         }
 
         private void Paste()

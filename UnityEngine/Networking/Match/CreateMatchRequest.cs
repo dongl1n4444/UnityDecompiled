@@ -25,10 +25,8 @@
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private uint <size>k__BackingField;
 
-        public override bool IsValid()
-        {
-            return ((base.IsValid() && (this.size >= 2)) && ((this.matchAttributes != null) ? (this.matchAttributes.Count <= 10) : true));
-        }
+        public override bool IsValid() => 
+            ((base.IsValid() && (this.size >= 2)) && ((this.matchAttributes != null) ? (this.matchAttributes.Count <= 10) : true));
 
         public override string ToString()
         {

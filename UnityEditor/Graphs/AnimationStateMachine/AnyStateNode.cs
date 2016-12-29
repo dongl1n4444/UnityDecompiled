@@ -43,7 +43,7 @@
 
         private void MakeTransitionCallback()
         {
-            base.graphGUI.edgeGUI.BeginSlotDragging(Enumerable.First<Slot>(base.outputSlots), true, false);
+            base.graphGUI.edgeGUI.BeginSlotDragging(base.outputSlots.First<Slot>(), true, false);
         }
 
         public override void NodeUI(UnityEditor.Graphs.GraphGUI host)
@@ -66,21 +66,11 @@
             AnimatorControllerTool.tool.stateMachineGraph.activeStateMachine.anyStatePosition = (Vector3) new Vector2(this.position.x, this.position.y);
         }
 
-        public override UnityEngine.Object selectionObject
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public override UnityEngine.Object selectionObject =>
+            this;
 
-        public override UnityEngine.Object undoableObject
-        {
-            get
-            {
-                return AnimatorControllerTool.tool.stateMachineGraph.rootStateMachine;
-            }
-        }
+        public override UnityEngine.Object undoableObject =>
+            AnimatorControllerTool.tool.stateMachineGraph.rootStateMachine;
     }
 }
 

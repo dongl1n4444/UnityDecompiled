@@ -105,7 +105,7 @@
             {
                 <>f__am$cache0 = new Func<Object, Rigidbody2D>(null, (IntPtr) <ShouldShowDensity>m__0);
             }
-            if (Enumerable.Count<Rigidbody2D>(Enumerable.Distinct<Rigidbody2D>(Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache0))) > 1)
+            if (Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache0).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
             {
                 return false;
             }

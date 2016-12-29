@@ -59,10 +59,8 @@
             }
         }
 
-        public static bool ContainsAsset(int id)
-        {
-            return ((s_SelectedAssets != null) && s_SelectedAssets.ContainsKey(id));
-        }
+        public static bool ContainsAsset(int id) => 
+            ((s_SelectedAssets != null) && s_SelectedAssets.ContainsKey(id));
 
         private static void DownloadStaticPreview(AssetStoreAsset searchResult)
         {
@@ -136,21 +134,11 @@
             return textured2;
         }
 
-        public static int Count
-        {
-            get
-            {
-                return ((s_SelectedAssets != null) ? s_SelectedAssets.Count : 0);
-            }
-        }
+        public static int Count =>
+            ((s_SelectedAssets != null) ? s_SelectedAssets.Count : 0);
 
-        public static bool Empty
-        {
-            get
-            {
-                return ((s_SelectedAssets != null) ? (s_SelectedAssets.Count == 0) : true);
-            }
-        }
+        public static bool Empty =>
+            ((s_SelectedAssets != null) ? (s_SelectedAssets.Count == 0) : true);
 
         [CompilerGenerated]
         private sealed class <AddAsset>c__AnonStorey0

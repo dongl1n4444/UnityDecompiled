@@ -100,20 +100,13 @@
             this.m_LastKnownFileType = base.GetPropertyString("lastKnownFileType");
         }
 
-        public bool isFolderReference
-        {
-            get
-            {
-                return ((this.m_LastKnownFileType != null) && (this.m_LastKnownFileType == "folder"));
-            }
-        }
+        public bool isFolderReference =>
+            ((this.m_LastKnownFileType != null) && (this.m_LastKnownFileType == "folder"));
 
         public string path
         {
-            get
-            {
-                return this.m_Path;
-            }
+            get => 
+                this.m_Path;
             set
             {
                 this.m_ExplicitFileType = null;
@@ -122,13 +115,8 @@
             }
         }
 
-        internal override bool shouldCompact
-        {
-            get
-            {
-                return true;
-            }
-        }
+        internal override bool shouldCompact =>
+            true;
     }
 }
 

@@ -72,23 +72,16 @@
         /// <summary>
         /// <para>Returns the attitude (ie, orientation in space) of the device.</para>
         /// </summary>
-        public Quaternion attitude
-        {
-            get
-            {
-                return attitude_Internal(this.m_GyroIndex);
-            }
-        }
+        public Quaternion attitude =>
+            attitude_Internal(this.m_GyroIndex);
 
         /// <summary>
         /// <para>Sets or retrieves the enabled status of this gyroscope.</para>
         /// </summary>
         public bool enabled
         {
-            get
-            {
-                return getEnabled_Internal(this.m_GyroIndex);
-            }
+            get => 
+                getEnabled_Internal(this.m_GyroIndex);
             set
             {
                 setEnabled_Internal(this.m_GyroIndex, value);
@@ -98,45 +91,28 @@
         /// <summary>
         /// <para>Returns the gravity acceleration vector expressed in the device's reference frame.</para>
         /// </summary>
-        public Vector3 gravity
-        {
-            get
-            {
-                return gravity_Internal(this.m_GyroIndex);
-            }
-        }
+        public Vector3 gravity =>
+            gravity_Internal(this.m_GyroIndex);
 
         /// <summary>
         /// <para>Returns rotation rate as measured by the device's gyroscope.</para>
         /// </summary>
-        public Vector3 rotationRate
-        {
-            get
-            {
-                return rotationRate_Internal(this.m_GyroIndex);
-            }
-        }
+        public Vector3 rotationRate =>
+            rotationRate_Internal(this.m_GyroIndex);
 
         /// <summary>
         /// <para>Returns unbiased rotation rate as measured by the device's gyroscope.</para>
         /// </summary>
-        public Vector3 rotationRateUnbiased
-        {
-            get
-            {
-                return rotationRateUnbiased_Internal(this.m_GyroIndex);
-            }
-        }
+        public Vector3 rotationRateUnbiased =>
+            rotationRateUnbiased_Internal(this.m_GyroIndex);
 
         /// <summary>
         /// <para>Sets or retrieves gyroscope interval in seconds.</para>
         /// </summary>
         public float updateInterval
         {
-            get
-            {
-                return getUpdateInterval_Internal(this.m_GyroIndex);
-            }
+            get => 
+                getUpdateInterval_Internal(this.m_GyroIndex);
             set
             {
                 setUpdateInterval_Internal(this.m_GyroIndex, value);
@@ -146,13 +122,8 @@
         /// <summary>
         /// <para>Returns the acceleration that the user is giving to the device.</para>
         /// </summary>
-        public Vector3 userAcceleration
-        {
-            get
-            {
-                return userAcceleration_Internal(this.m_GyroIndex);
-            }
-        }
+        public Vector3 userAcceleration =>
+            userAcceleration_Internal(this.m_GyroIndex);
     }
 }
 

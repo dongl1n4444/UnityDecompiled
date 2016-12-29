@@ -4,10 +4,8 @@
 
     internal class DefaultSolutionSynchronizationSettings : ISolutionSynchronizationSettings
     {
-        protected virtual string FrameworksPath()
-        {
-            return string.Empty;
-        }
+        protected virtual string FrameworksPath() => 
+            string.Empty;
 
         public virtual string GetProjectFooterTemplate(ScriptingLanguage language)
         {
@@ -26,37 +24,17 @@
             return string.Join("\r\n", textArray1);
         }
 
-        public virtual string[] Defines
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public virtual string[] Defines =>
+            new string[0];
 
-        public virtual string EditorAssemblyPath
-        {
-            get
-            {
-                return "/Managed/UnityEditor.dll";
-            }
-        }
+        public virtual string EditorAssemblyPath =>
+            "/Managed/UnityEditor.dll";
 
-        public virtual string EngineAssemblyPath
-        {
-            get
-            {
-                return "/Managed/UnityEngine.dll";
-            }
-        }
+        public virtual string EngineAssemblyPath =>
+            "/Managed/UnityEngine.dll";
 
-        public virtual string MonoLibFolder
-        {
-            get
-            {
-                return (this.FrameworksPath() + "/Mono/lib/mono/unity/");
-            }
-        }
+        public virtual string MonoLibFolder =>
+            (this.FrameworksPath() + "/Mono/lib/mono/unity/");
 
         public virtual string SolutionProjectConfigurationTemplate
         {
@@ -88,13 +66,8 @@
             }
         }
 
-        public virtual int VisualStudioVersion
-        {
-            get
-            {
-                return 9;
-            }
-        }
+        public virtual int VisualStudioVersion =>
+            9;
     }
 }
 

@@ -78,7 +78,7 @@
                 {
                     <>f__am$cache0 = new Func<KeyValuePair<string, string>, string>(null, (IntPtr) <Begin>m__1);
                 }
-                string[] headers = Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, string>, string>(this.header, <>f__am$cache0));
+                string[] headers = Enumerable.Select<KeyValuePair<string, string>, string>(this.header, <>f__am$cache0).ToArray<string>();
                 this.m_Handle = SubmitClientRequest(this.tag, this.m_ToUrl, headers, this.m_Method, this.m_FromData, new RequestDoneCallback(this.Done), new RequestProgressCallback(this.Progress));
             }
         }
@@ -112,15 +112,11 @@
         private static extern Texture2D GetTextureByHandle(IntPtr handle);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_SubmitClientRequest(string tag, string url, string[] headers, string method, string data, RequestDoneCallback doneDelegate, RequestProgressCallback progressDelegate, out IntPtr value);
-        public bool IsAborted()
-        {
-            return (this.state == State.ABORTED);
-        }
+        public bool IsAborted() => 
+            (this.state == State.ABORTED);
 
-        public bool IsDone()
-        {
-            return IsDone(this.state);
-        }
+        public bool IsDone() => 
+            IsDone(this.state);
 
         public static bool IsDone(State state)
         {
@@ -135,15 +131,11 @@
             return false;
         }
 
-        public bool IsSuccess()
-        {
-            return (this.state == State.DONE_OK);
-        }
+        public bool IsSuccess() => 
+            (this.state == State.DONE_OK);
 
-        public static bool IsSuccess(State state)
-        {
-            return (state == State.DONE_OK);
-        }
+        public static bool IsSuccess(State state) => 
+            (state == State.DONE_OK);
 
         private void Progress(State status, int bytesDone, int bytesTotal)
         {
@@ -170,13 +162,8 @@
             return ptr;
         }
 
-        public byte[] bytes
-        {
-            get
-            {
-                return GetBytesByHandle(this.m_Handle);
-            }
-        }
+        public byte[] bytes =>
+            GetBytesByHandle(this.m_Handle);
 
         public string postData
         {
@@ -198,7 +185,7 @@
         {
             set
             {
-                this.postData = string.Join("&", Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, string>, string>(value, new Func<KeyValuePair<string, string>, string>(this, (IntPtr) this.<set_postDictionary>m__0))));
+                this.postData = string.Join("&", Enumerable.Select<KeyValuePair<string, string>, string>(value, new Func<KeyValuePair<string, string>, string>(this, (IntPtr) this.<set_postDictionary>m__0)).ToArray<string>());
             }
         }
 
@@ -222,21 +209,11 @@
             }
         }
 
-        public Texture2D texture
-        {
-            get
-            {
-                return GetTextureByHandle(this.m_Handle);
-            }
-        }
+        public Texture2D texture =>
+            GetTextureByHandle(this.m_Handle);
 
-        public string url
-        {
-            get
-            {
-                return this.m_ToUrl;
-            }
-        }
+        public string url =>
+            this.m_ToUrl;
 
         public delegate void DoneCallback(AsyncHTTPClient client);
 

@@ -168,7 +168,7 @@
             <FindNode>c__AnonStorey0 storey = new <FindNode>c__AnonStorey0 {
                 motion = motion
             };
-            return Enumerable.FirstOrDefault<UnityEditor.Graphs.AnimationBlendTree.Node>(Enumerable.Cast<UnityEditor.Graphs.AnimationBlendTree.Node>(base.nodes), new Func<UnityEditor.Graphs.AnimationBlendTree.Node, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<UnityEditor.Graphs.AnimationBlendTree.Node>(base.nodes.Cast<UnityEditor.Graphs.AnimationBlendTree.Node>(), new Func<UnityEditor.Graphs.AnimationBlendTree.Node, bool>(storey, (IntPtr) this.<>m__0));
         }
 
         private T GetComponentFromSelection<T>() where T: Component
@@ -189,10 +189,8 @@
             return hgui;
         }
 
-        private T GetObjectFromSelection<T>() where T: UnityEngine.Object
-        {
-            return (Selection.activeObject as T);
-        }
+        private T GetObjectFromSelection<T>() where T: UnityEngine.Object => 
+            (Selection.activeObject as T);
 
         public float GetParameterValue(string parameterName)
         {
@@ -275,20 +273,13 @@
             this.PopulateParameterValues();
         }
 
-        public bool liveLink
-        {
-            get
-            {
-                return (((EditorApplication.isPlaying && (this.previewAvatar != null)) && this.previewAvatar.enabled) && this.previewAvatar.gameObject.activeInHierarchy);
-            }
-        }
+        public bool liveLink =>
+            (((EditorApplication.isPlaying && (this.previewAvatar != null)) && this.previewAvatar.enabled) && this.previewAvatar.gameObject.activeInHierarchy);
 
         public BlendTree rootBlendTree
         {
-            get
-            {
-                return this.m_RootBlendTree;
-            }
+            get => 
+                this.m_RootBlendTree;
             set
             {
                 if (this.m_RootBlendTree != value)
@@ -301,10 +292,8 @@
 
         public UnityEditor.Graphs.AnimationBlendTree.Node rootNode
         {
-            get
-            {
-                return this.m_RootNode;
-            }
+            get => 
+                this.m_RootNode;
             private set
             {
                 this.m_RootNode = value;
@@ -316,10 +305,8 @@
         {
             internal Motion motion;
 
-            internal bool <>m__0(UnityEditor.Graphs.AnimationBlendTree.Node node)
-            {
-                return (node.motion == this.motion);
-            }
+            internal bool <>m__0(UnityEditor.Graphs.AnimationBlendTree.Node node) => 
+                (node.motion == this.motion);
         }
     }
 }

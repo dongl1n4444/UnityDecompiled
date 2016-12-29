@@ -17,62 +17,22 @@
         private int m_COPPA;
         private int m_COPPALock;
         private int m_MoveLock;
-        public bool valid
-        {
-            get
-            {
-                return (this.m_Valid != 0);
-            }
-        }
-        public bool buildAllowed
-        {
-            get
-            {
-                return (this.m_BuildAllowed != 0);
-            }
-        }
-        public bool projectBound
-        {
-            get
-            {
-                return (this.m_ProjectBound != 0);
-            }
-        }
-        public string projectGUID
-        {
-            get
-            {
-                return this.m_ProjectGUID;
-            }
-        }
-        public string projectName
-        {
-            get
-            {
-                return this.m_ProjectName;
-            }
-        }
-        public string organizationId
-        {
-            get
-            {
-                return this.m_OrganizationID;
-            }
-        }
-        public string organizationName
-        {
-            get
-            {
-                return this.m_OrganizationName;
-            }
-        }
-        public string organizationForeignKey
-        {
-            get
-            {
-                return this.m_OrganizationForeignKey;
-            }
-        }
+        public bool valid =>
+            (this.m_Valid != 0);
+        public bool buildAllowed =>
+            (this.m_BuildAllowed != 0);
+        public bool projectBound =>
+            (this.m_ProjectBound != 0);
+        public string projectGUID =>
+            this.m_ProjectGUID;
+        public string projectName =>
+            this.m_ProjectName;
+        public string organizationId =>
+            this.m_OrganizationID;
+        public string organizationName =>
+            this.m_OrganizationName;
+        public string organizationForeignKey =>
+            this.m_OrganizationForeignKey;
         public COPPACompliance COPPA
         {
             get
@@ -88,20 +48,10 @@
                 return COPPACompliance.COPPAUndefined;
             }
         }
-        public bool coppaLock
-        {
-            get
-            {
-                return (this.m_COPPALock != 0);
-            }
-        }
-        public bool moveLock
-        {
-            get
-            {
-                return (this.m_MoveLock != 0);
-            }
-        }
+        public bool coppaLock =>
+            (this.m_COPPALock != 0);
+        public bool moveLock =>
+            (this.m_MoveLock != 0);
     }
 }
 

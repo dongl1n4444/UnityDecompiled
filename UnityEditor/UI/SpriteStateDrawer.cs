@@ -11,10 +11,8 @@
     [CustomPropertyDrawer(typeof(SpriteState), true)]
     public class SpriteStateDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
-        {
-            return ((3f * EditorGUIUtility.singleLineHeight) + (2f * EditorGUIUtility.standardVerticalSpacing));
-        }
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label) => 
+            ((3f * EditorGUIUtility.singleLineHeight) + (2f * EditorGUIUtility.standardVerticalSpacing));
 
         public override void OnGUI(Rect rect, SerializedProperty prop, GUIContent label)
         {

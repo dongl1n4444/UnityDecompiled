@@ -32,13 +32,8 @@
         /// <summary>
         /// <para>Is the event used?</para>
         /// </summary>
-        public virtual bool used
-        {
-            get
-            {
-                return this.m_Used;
-            }
-        }
+        public virtual bool used =>
+            this.m_Used;
     }
 }
 

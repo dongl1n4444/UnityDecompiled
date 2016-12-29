@@ -54,26 +54,20 @@
             this._signatures.Clear();
         }
 
-        private static string FormatParameterName(TypeReference parameterType, string parameterName)
-        {
-            return ((string.Empty + Naming.ForVariable(parameterType)) + " " + parameterName);
-        }
+        private static string FormatParameterName(TypeReference parameterType, string parameterName) => 
+            ((string.Empty + Naming.ForVariable(parameterType)) + " " + parameterName);
 
-        private static string FormatParameters(IEnumerable<TypeReference> inputParams)
-        {
-            return EnumerableExtensions.AggregateWithComma(Enumerable.ToList<string>(ParametersFor(inputParams)));
-        }
+        private static string FormatParameters(IEnumerable<TypeReference> inputParams) => 
+            ParametersFor(inputParams).ToList<string>().AggregateWithComma();
 
         private static string GetMethodSignature(CppCodeWriter writer, TypeReference[] signature, int index)
         {
             RecordIncludes(writer, signature);
-            return MethodSignatureWriter.GetMethodSignature(string.Format("UnresolvedVirtualCall_{0}", index), Naming.ForVariable(signature[0]), FormatParameters(Enumerable.Skip<TypeReference>(signature, 1)), "static", "");
+            return MethodSignatureWriter.GetMethodSignature($"UnresolvedVirtualCall_{index}", Naming.ForVariable(signature[0]), FormatParameters(signature.Skip<TypeReference>(1)), "static", "");
         }
 
-        private static string MethodNameFor(KeyValuePair<TypeReference[], int> kvp)
-        {
-            return string.Format("(const Il2CppMethodPointer) UnresolvedVirtualCall_{0}", kvp.Value);
-        }
+        private static string MethodNameFor(KeyValuePair<TypeReference[], int> kvp) => 
+            $"(const Il2CppMethodPointer) UnresolvedVirtualCall_{kvp.Value}";
 
         private static TypeReference[] MethodToSignature(MethodReference method)
         {
@@ -92,13 +86,11 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<string> ParametersFor(IEnumerable<TypeReference> inputParams)
-        {
-            return new <ParametersFor>c__Iterator0 { 
+        private static IEnumerable<string> ParametersFor(IEnumerable<TypeReference> inputParams) => 
+            new <ParametersFor>c__Iterator0 { 
                 inputParams = inputParams,
                 $PC = -2
             };
-        }
 
         private static void RecordIncludes(CppCodeWriter writer, TypeReference[] signature)
         {
@@ -106,7 +98,7 @@
             {
                 writer.AddIncludesForTypeReference(signature[0], false);
             }
-            foreach (TypeReference reference in Enumerable.Skip<TypeReference>(signature, 1))
+            foreach (TypeReference reference in signature.Skip<TypeReference>(1))
             {
                 writer.AddIncludesForTypeReference(reference, true);
             }
@@ -114,7 +106,7 @@
 
         private static TypeReference TypeFor(TypeReference type)
         {
-            if (type.IsByReference || !Unity.IL2CPP.Extensions.IsValueType(type))
+            if (type.IsByReference || !type.IsValueType())
             {
                 return type.Module.TypeSystem.Object;
             }
@@ -126,9 +118,9 @@
             {
                 return type.Module.TypeSystem.Int16;
             }
-            if (Unity.IL2CPP.Extensions.IsEnum(type))
+            if (type.IsEnum())
             {
-                return Unity.IL2CPP.Extensions.GetUnderlyingEnumType(type);
+                return type.GetUnderlyingEnumType();
             }
             return type;
         }
@@ -144,7 +136,7 @@
                 {
                     <>f__am$cache0 = new Func<KeyValuePair<TypeReference[], int>, int>(null, (IntPtr) <WriteUnresolvedStubs>m__0);
                 }
-                KeyValuePair<TypeReference[], int>[] source = Enumerable.ToArray<KeyValuePair<TypeReference[], int>>(Enumerable.OrderBy<KeyValuePair<TypeReference[], int>, int>(this._signatures, <>f__am$cache0));
+                KeyValuePair<TypeReference[], int>[] source = this._signatures.OrderBy<KeyValuePair<TypeReference[], int>, int>(<>f__am$cache0).ToArray<KeyValuePair<TypeReference[], int>>();
                 foreach (KeyValuePair<TypeReference[], int> pair in source)
                 {
                     writer.WriteLine(GetMethodSignature(writer, pair.Key, pair.Value));
@@ -160,14 +152,14 @@
                 {
                     <>f__mg$cache0 = new Func<KeyValuePair<TypeReference[], int>, string>(null, (IntPtr) MethodNameFor);
                 }
-                info.MethodPointersInfo = writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_UnresolvedVirtualMethodPointers", Enumerable.Select<KeyValuePair<TypeReference[], int>, string>(source, <>f__mg$cache0), false);
+                info.MethodPointersInfo = writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_UnresolvedVirtualMethodPointers", source.Select<KeyValuePair<TypeReference[], int>, string>(<>f__mg$cache0), false);
                 List<Unity.IL2CPP.IoCServices.Range> list = new List<Unity.IL2CPP.IoCServices.Range>();
                 int num2 = 0;
                 if (<>f__am$cache1 == null)
                 {
                     <>f__am$cache1 = new Func<KeyValuePair<TypeReference[], int>, TypeReference[]>(null, <WriteUnresolvedStubs>m__1);
                 }
-                foreach (TypeReference[] referenceArray in Enumerable.Select<KeyValuePair<TypeReference[], int>, TypeReference[]>(source, <>f__am$cache1))
+                foreach (TypeReference[] referenceArray in source.Select<KeyValuePair<TypeReference[], int>, TypeReference[]>(<>f__am$cache1))
                 {
                     int length = referenceArray.Length;
                     list.Add(new Unity.IL2CPP.IoCServices.Range(num2, length));
@@ -182,18 +174,13 @@
                 {
                     <>f__am$cache3 = new Func<TypeReference, int>(null, (IntPtr) <WriteUnresolvedStubs>m__3);
                 }
-                info.SignatureTypesInfo = CollectionExtensions.AsReadOnlyPortable<int>(Enumerable.ToArray<int>(Enumerable.Select<TypeReference, int>(Enumerable.SelectMany<KeyValuePair<TypeReference[], int>, TypeReference>(source, <>f__am$cache2), <>f__am$cache3)));
+                info.SignatureTypesInfo = source.SelectMany<KeyValuePair<TypeReference[], int>, TypeReference>(<>f__am$cache2).Select<TypeReference, int>(<>f__am$cache3).ToArray<int>().AsReadOnlyPortable<int>();
                 return info;
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return this._signatures.Count;
-            }
-        }
+        public int Count =>
+            this._signatures.Count;
 
         [CompilerGenerated]
         private sealed class <ParametersFor>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -313,28 +300,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

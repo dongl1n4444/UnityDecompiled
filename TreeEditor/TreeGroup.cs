@@ -76,10 +76,8 @@
             }
         }
 
-        public virtual bool CanHaveSubGroups()
-        {
-            return true;
-        }
+        public virtual bool CanHaveSubGroups() => 
+            true;
 
         public bool CheckExternalChanges()
         {
@@ -164,10 +162,8 @@
             return (materials.Count - 1);
         }
 
-        public virtual float GetRadiusAtTime(TreeNode node, float t, bool includeModifications)
-        {
-            return 0f;
-        }
+        public virtual float GetRadiusAtTime(TreeNode node, float t, bool includeModifications) => 
+            0f;
 
         public Matrix4x4 GetRootMatrix()
         {
@@ -189,10 +185,8 @@
             return parentGroup.nodes[0].size;
         }
 
-        internal virtual bool HasExternalChanges()
-        {
-            return false;
-        }
+        internal virtual bool HasExternalChanges() => 
+            false;
 
         public void Lock()
         {
@@ -473,84 +467,37 @@
             }
         }
 
-        internal virtual string DistributionModeString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string DistributionModeString =>
+            null;
 
-        internal virtual string EdgeTurbulenceString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string EdgeTurbulenceString =>
+            null;
 
-        internal virtual string FrequencyString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string FrequencyString =>
+            null;
 
-        internal virtual string GroupSeedString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string GroupSeedString =>
+            null;
 
-        internal virtual string GrowthAngleString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string GrowthAngleString =>
+            null;
 
-        internal virtual string GrowthScaleString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string GrowthScaleString =>
+            null;
 
-        internal virtual string MainTurbulenceString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string MainTurbulenceString =>
+            null;
 
-        internal virtual string MainWindString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string MainWindString =>
+            null;
 
-        internal virtual string TwirlString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string TwirlString =>
+            null;
 
         public int uniqueID
         {
-            get
-            {
-                return this._uniqueID;
-            }
+            get => 
+                this._uniqueID;
             set
             {
                 if (this._uniqueID == -1)
@@ -560,13 +507,8 @@
             }
         }
 
-        internal virtual string WhorledStepString
-        {
-            get
-            {
-                return null;
-            }
-        }
+        internal virtual string WhorledStepString =>
+            null;
 
         public enum BuildFlag
         {

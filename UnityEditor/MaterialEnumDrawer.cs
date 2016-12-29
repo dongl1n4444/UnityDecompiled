@@ -23,7 +23,7 @@
             {
                 <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <MaterialEnumDrawer>m__0);
             }
-            Type[] typeArray = Enumerable.ToArray<Type>(Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0));
+            Type[] typeArray = Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<Type>();
             try
             {
                 Type enumType = Enumerable.FirstOrDefault<Type>(typeArray, new Func<Type, bool>(storey, (IntPtr) this.<>m__0));
@@ -105,10 +105,8 @@
         }
 
         [CompilerGenerated]
-        private static IEnumerable<Type> <MaterialEnumDrawer>m__0(Assembly x)
-        {
-            return AssemblyHelper.GetTypesFromAssembly(x);
-        }
+        private static IEnumerable<Type> <MaterialEnumDrawer>m__0(Assembly x) => 
+            AssemblyHelper.GetTypesFromAssembly(x);
 
         public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
         {
@@ -145,10 +143,8 @@
         {
             internal string enumName;
 
-            internal bool <>m__0(Type x)
-            {
-                return (x.IsSubclassOf(typeof(Enum)) && ((x.Name == this.enumName) || (x.FullName == this.enumName)));
-            }
+            internal bool <>m__0(Type x) => 
+                (x.IsSubclassOf(typeof(Enum)) && ((x.Name == this.enumName) || (x.FullName == this.enumName)));
         }
     }
 }

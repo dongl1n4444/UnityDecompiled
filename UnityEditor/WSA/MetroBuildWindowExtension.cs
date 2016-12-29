@@ -83,7 +83,7 @@
             {
                 str4 = "il2cpp";
             }
-            format = Path.Combine(playbackEngineDirectory, string.Format(@"Players\UAP\{0}\{{0}}\debug", str4));
+            format = Path.Combine(playbackEngineDirectory, $"Players\UAP\{str4}\{{0}}\debug");
             str3 = Path.Combine(playbackEngineDirectory, string.Format(@"SourceBuild\{0}\{0}\bin\{{0}}\Debug\AppX", Application.productName));
             string[] strArray = new string[] { "x86", "x64" };
             foreach (string str5 in strArray)
@@ -105,10 +105,8 @@
             }
         }
 
-        public override bool EnabledBuildAndRunButton()
-        {
-            return (this.EnabledBuildButton() && !EditorUserBuildSettings.wsaGenerateReferenceProjects);
-        }
+        public override bool EnabledBuildAndRunButton() => 
+            (this.EnabledBuildButton() && !EditorUserBuildSettings.wsaGenerateReferenceProjects);
 
         public override bool EnabledBuildButton()
         {
@@ -127,10 +125,8 @@
             return this.targetExtension.hasIl2CppPlayers;
         }
 
-        public override bool ShouldDrawScriptDebuggingCheckbox()
-        {
-            return false;
-        }
+        public override bool ShouldDrawScriptDebuggingCheckbox() => 
+            false;
 
         public override void ShowPlatformBuildOptions()
         {
@@ -180,13 +176,8 @@
             }
         }
 
-        private ScriptingImplementation CurrentScriptingBackend
-        {
-            get
-            {
-                return PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA);
-            }
-        }
+        private ScriptingImplementation CurrentScriptingBackend =>
+            PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA);
     }
 }
 

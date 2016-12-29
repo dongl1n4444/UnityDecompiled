@@ -53,13 +53,11 @@
                 return this._default.FieldInfo(field);
             }
             string str2 = this.TypeInfoFor(field.DeclaringType);
-            return string.Format("IL2CPP_RGCTX_FIELD_INFO({0},{1})", str2, Naming.GetFieldIndex(field, false));
+            return $"IL2CPP_RGCTX_FIELD_INFO({str2},{Naming.GetFieldIndex(field, false)})";
         }
 
-        private static string FormatGenericContextErrorMessage(string name)
-        {
-            return string.Format("Unable to retrieve the runtime generic context for '{0}'.", name);
-        }
+        private static string FormatGenericContextErrorMessage(string name) => 
+            $"Unable to retrieve the runtime generic context for '{name}'.";
 
         public static RuntimeGenericAccess GetRGCTXAccess(MethodReference method, MethodReference enclosingMethod)
         {
@@ -106,11 +104,11 @@
         private string GetTypeRgctxDataExpression()
         {
             string argument = "method->declaring_type";
-            if (!this._methodReference.HasThis || Extensions.IsValueType(this._methodReference.DeclaringType))
+            if (!this._methodReference.HasThis || this._methodReference.DeclaringType.IsValueType())
             {
                 argument = Naming.ForInitializedTypeInfo(argument);
             }
-            return string.Format("{0}->rgctx_data", argument);
+            return $"{argument}->rgctx_data";
         }
 
         public string HiddenMethodInfo(MethodReference method)
@@ -300,10 +298,8 @@
             return this.RetreiveType(storey.type, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Static);
         }
 
-        public string StringLiteral(string literal)
-        {
-            return this._default.StringLiteral(literal);
-        }
+        public string StringLiteral(string literal) => 
+            this._default.StringLiteral(literal);
 
         public string TypeInfoFor(TypeReference type)
         {
@@ -320,10 +316,8 @@
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference elementType;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.ArrayInfo(this.elementType);
-            }
+            internal string <>m__0() => 
+                this.$this._default.ArrayInfo(this.elementType);
         }
 
         [CompilerGenerated]
@@ -332,15 +326,11 @@
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference method;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.HiddenMethodInfo(this.method);
-            }
+            internal string <>m__0() => 
+                this.$this._default.HiddenMethodInfo(this.method);
 
-            internal string <>m__1(int index)
-            {
-                return Emit.Call("IL2CPP_RGCTX_METHOD_INFO", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
-            }
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_METHOD_INFO", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
@@ -349,10 +339,8 @@
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference type;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.Il2CppTypeFor(this.type);
-            }
+            internal string <>m__0() => 
+                this.$this._default.Il2CppTypeFor(this.type);
         }
 
         [CompilerGenerated]
@@ -362,20 +350,14 @@
             internal MethodReference method;
             internal MethodReference methodReference;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.Method(this.method);
-            }
+            internal string <>m__0() => 
+                this.$this._default.Method(this.method);
 
-            internal string <>m__1(int index)
-            {
-                return ("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(this.methodReference), Emit.Call("IL2CPP_RGCTX_METHOD_INFO", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture)) + "->methodPointer") + ")");
-            }
+            internal string <>m__1(int index) => 
+                ("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(this.methodReference), Emit.Call("IL2CPP_RGCTX_METHOD_INFO", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture)) + "->methodPointer") + ")");
 
-            internal string <>m__2(int index)
-            {
-                return ("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(this.methodReference), Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture)) + "->methodPointer") + ")");
-            }
+            internal string <>m__2(int index) => 
+                ("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(this.methodReference), Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture)) + "->methodPointer") + ")");
         }
 
         [CompilerGenerated]
@@ -384,15 +366,11 @@
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference method;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.MethodInfo(this.method);
-            }
+            internal string <>m__0() => 
+                this.$this._default.MethodInfo(this.method);
 
-            internal string <>m__1(int index)
-            {
-                return Emit.Call("IL2CPP_RGCTX_METHOD_INFO", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
-            }
+            internal string <>m__1(int index) => 
+                Emit.Call("IL2CPP_RGCTX_METHOD_INFO", this.$this.GetTypeRgctxDataExpression(), index.ToString(CultureInfo.InvariantCulture));
         }
 
         [CompilerGenerated]
@@ -401,10 +379,8 @@
             internal SharedRuntimeMetadataAccess $this;
             internal MethodReference ctor;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.Newobj(this.ctor);
-            }
+            internal string <>m__0() => 
+                this.$this._default.Newobj(this.ctor);
         }
 
         [CompilerGenerated]
@@ -413,10 +389,8 @@
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference type;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.SizeOf(this.type);
-            }
+            internal string <>m__0() => 
+                this.$this._default.SizeOf(this.type);
         }
 
         [CompilerGenerated]
@@ -425,10 +399,8 @@
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference type;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.StaticData(this.type);
-            }
+            internal string <>m__0() => 
+                this.$this._default.StaticData(this.type);
         }
 
         [CompilerGenerated]
@@ -437,10 +409,8 @@
             internal SharedRuntimeMetadataAccess $this;
             internal TypeReference type;
 
-            internal string <>m__0()
-            {
-                return this.$this._default.TypeInfoFor(this.type);
-            }
+            internal string <>m__0() => 
+                this.$this._default.TypeInfoFor(this.type);
         }
     }
 }

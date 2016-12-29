@@ -28,10 +28,10 @@
                 base.FlushCache();
             }
             IEnumerable<object> source = Locator.QueryAllModules();
-            if (Enumerable.Any<object>(source))
+            if (source.Any<object>())
             {
-                IEnumerable<IvyModule> second = Enumerable.Cast<IvyModule>(source);
-                IEnumerable<IvyModule> first = Enumerable.Intersect<IvyModule>(base.Packages, second);
+                IEnumerable<IvyModule> second = source.Cast<IvyModule>();
+                IEnumerable<IvyModule> first = base.Packages.Intersect<IvyModule>(second);
                 foreach (IvyModule module in first)
                 {
                     foreach (IvyModule module2 in second)
@@ -43,10 +43,10 @@
                         }
                     }
                 }
-                base.Packages = Enumerable.ToList<IvyModule>(Enumerable.Union<IvyModule>(first, Enumerable.Except<IvyModule>(second, first)));
+                base.Packages = first.Union<IvyModule>(second.Except<IvyModule>(first)).ToList<IvyModule>();
                 this.CacheResult();
             }
-            else if (!Enumerable.Any<IvyModule>(base.Packages))
+            else if (!base.Packages.Any<IvyModule>())
             {
                 List<IvyModule> list = new List<IvyModule>();
                 if (<>f__am$cache0 == null)
@@ -71,10 +71,8 @@
         }
 
         [CompilerGenerated]
-        private static bool <LocalIndexer>m__0(Assembly a)
-        {
-            return (GetAssemblyLocationSafe(a) != null);
-        }
+        private static bool <LocalIndexer>m__0(Assembly a) => 
+            (GetAssemblyLocationSafe(a) != null);
 
         private static string GetAssemblyLocationSafe(Assembly a)
         {
@@ -145,10 +143,8 @@
                 internal LocalIndexer.<TaskStarting>c__AnonStorey1 <>f__ref$1;
                 internal ManualResetEvent scanDone;
 
-                internal bool <>m__0()
-                {
-                    return !this.<>f__ref$1.$this.CancelRequested;
-                }
+                internal bool <>m__0() => 
+                    !this.<>f__ref$1.$this.CancelRequested;
 
                 internal void <>m__1()
                 {

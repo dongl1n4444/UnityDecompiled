@@ -40,7 +40,7 @@
             {
                 return value;
             }
-            if ((Enumerable.First<char>(value) == '"') && (Enumerable.Last<char>(value) == '"'))
+            if ((value.First<char>() == '"') && (value.Last<char>() == '"'))
             {
                 return value;
             }
@@ -140,13 +140,8 @@
             }
         }
 
-        public string name
-        {
-            get
-            {
-                return base.GetPropertyString("name");
-            }
-        }
+        public string name =>
+            base.GetPropertyString("name");
     }
 }
 

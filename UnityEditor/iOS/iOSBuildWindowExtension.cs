@@ -18,15 +18,11 @@
             kOptionDescriptions = new GUIContent[] { EditorGUIUtility.TextContent("Release"), EditorGUIUtility.TextContent("Debug") };
         }
 
-        public override bool EnabledBuildAndRunButton()
-        {
-            return (!Unsupported.IsDeveloperBuild() || PostProcessiPhonePlayer.CheckIfPlayerLibIsBuilt());
-        }
+        public override bool EnabledBuildAndRunButton() => 
+            (!Unsupported.IsDeveloperBuild() || PostProcessiPhonePlayer.CheckIfPlayerLibIsBuilt());
 
-        public override bool EnabledBuildButton()
-        {
-            return ((!Unsupported.IsDeveloperBuild() || EditorUserBuildSettings.symlinkLibraries) || PostProcessiPhonePlayer.CheckIfPlayerLibIsBuilt());
-        }
+        public override bool EnabledBuildButton() => 
+            ((!Unsupported.IsDeveloperBuild() || EditorUserBuildSettings.symlinkLibraries) || PostProcessiPhonePlayer.CheckIfPlayerLibIsBuilt());
 
         public override void ShowInternalPlatformBuildOptions()
         {

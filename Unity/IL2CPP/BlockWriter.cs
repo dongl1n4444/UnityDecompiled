@@ -8,7 +8,7 @@
         private readonly bool _semicolon;
         private readonly CodeWriter _writer;
 
-        public BlockWriter(CodeWriter writer, [Optional, DefaultParameterValue(false)] bool semicolon)
+        public BlockWriter(CodeWriter writer, bool semicolon = false)
         {
             this._writer = writer;
             this._semicolon = semicolon;

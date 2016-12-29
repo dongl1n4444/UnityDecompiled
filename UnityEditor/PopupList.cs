@@ -72,10 +72,8 @@
             this.SelectCompletionWithIndex(index);
         }
 
-        private string CurrentDisplayedText()
-        {
-            return ((this.m_EnteredTextCompletion == "") ? this.m_EnteredText : this.m_EnteredTextCompletion);
-        }
+        private string CurrentDisplayedText() => 
+            ((this.m_EnteredTextCompletion == "") ? this.m_EnteredText : this.m_EnteredTextCompletion);
 
         private void DrawCustomTextField(EditorWindow editorWindow, Rect windowRect)
         {
@@ -262,15 +260,11 @@
             return (((num * 16f) + 20f) + (!this.m_Data.m_AllowCustom ? 0f : 16f));
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(this.GetWindowWidth(), this.GetWindowHeight());
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(this.GetWindowWidth(), this.GetWindowHeight());
 
-        public virtual float GetWindowWidth()
-        {
-            return 150f;
-        }
+        public virtual float GetWindowWidth() => 
+            150f;
 
         public override void OnClose()
         {
@@ -336,7 +330,7 @@
                 IEnumerable<string> source = Enumerable.Select<ListElement, string>(this.m_Data.GetFilteredList(this.m_EnteredText), <>f__am$cache0);
                 if ((this.m_EnteredTextCompletion != "") && this.m_EnteredTextCompletion.StartsWith(this.m_EnteredText, StringComparison.OrdinalIgnoreCase))
                 {
-                    this.m_SelectedCompletionIndex = Enumerable.Count<string>(Enumerable.TakeWhile<string>(source, new Func<string, bool>(this, (IntPtr) this.<UpdateCompletion>m__1)));
+                    this.m_SelectedCompletionIndex = Enumerable.TakeWhile<string>(source, new Func<string, bool>(this, (IntPtr) this.<UpdateCompletion>m__1)).Count<string>();
                 }
                 else
                 {
@@ -344,11 +338,11 @@
                     {
                         this.m_SelectedCompletionIndex = 0;
                     }
-                    else if (this.m_SelectedCompletionIndex >= Enumerable.Count<string>(source))
+                    else if (this.m_SelectedCompletionIndex >= source.Count<string>())
                     {
-                        this.m_SelectedCompletionIndex = Enumerable.Count<string>(source) - 1;
+                        this.m_SelectedCompletionIndex = source.Count<string>() - 1;
                     }
-                    this.m_EnteredTextCompletion = Enumerable.FirstOrDefault<string>(Enumerable.DefaultIfEmpty<string>(Enumerable.Skip<string>(source, this.m_SelectedCompletionIndex), ""));
+                    this.m_EnteredTextCompletion = source.Skip<string>(this.m_SelectedCompletionIndex).DefaultIfEmpty<string>("").FirstOrDefault<string>();
                 }
                 this.AdjustRecycledEditorSelectionToCompletion();
             }
@@ -400,9 +394,9 @@
                 IEnumerable<PopupList.ListElement> source = this.BuildQuery(prefix);
                 if (this.m_MaxCount > 0)
                 {
-                    source = Enumerable.Take<PopupList.ListElement>(source, this.m_MaxCount);
+                    source = source.Take<PopupList.ListElement>(this.m_MaxCount);
                 }
-                return Enumerable.Count<PopupList.ListElement>(source);
+                return source.Count<PopupList.ListElement>();
             }
 
             public IEnumerable<PopupList.ListElement> GetFilteredList(string prefix)
@@ -414,7 +408,7 @@
                     {
                         <>f__am$cache0 = new Func<PopupList.ListElement, float>(null, (IntPtr) <GetFilteredList>m__0);
                     }
-                    enumerable = Enumerable.Take<PopupList.ListElement>(Enumerable.OrderByDescending<PopupList.ListElement, float>(enumerable, <>f__am$cache0), this.m_MaxCount);
+                    enumerable = Enumerable.OrderByDescending<PopupList.ListElement, float>(enumerable, <>f__am$cache0).Take<PopupList.ListElement>(this.m_MaxCount);
                 }
                 if (this.m_SortAlphabetically)
                 {
@@ -454,10 +448,8 @@
             {
                 internal string prefix;
 
-                internal bool <>m__0(PopupList.ListElement element)
-                {
-                    return element.m_Content.text.StartsWith(this.prefix, StringComparison.OrdinalIgnoreCase);
-                }
+                internal bool <>m__0(PopupList.ListElement element) => 
+                    element.m_Content.text.StartsWith(this.prefix, StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -505,10 +497,8 @@
 
             public bool enabled
             {
-                get
-                {
-                    return this.m_Enabled;
-                }
+                get => 
+                    this.m_Enabled;
                 set
                 {
                     this.m_Enabled = value;
@@ -517,10 +507,8 @@
 
             public float filterScore
             {
-                get
-                {
-                    return (!this.m_WasSelected ? this.m_FilterScore : float.MaxValue);
-                }
+                get => 
+                    (!this.m_WasSelected ? this.m_FilterScore : float.MaxValue);
                 set
                 {
                     this.m_FilterScore = value;
@@ -530,10 +518,8 @@
 
             public bool partiallySelected
             {
-                get
-                {
-                    return this.m_PartiallySelected;
-                }
+                get => 
+                    this.m_PartiallySelected;
                 set
                 {
                     this.m_PartiallySelected = value;
@@ -546,10 +532,8 @@
 
             public bool selected
             {
-                get
-                {
-                    return this.m_Selected;
-                }
+                get => 
+                    this.m_Selected;
                 set
                 {
                     this.m_Selected = value;
@@ -562,10 +546,8 @@
 
             public string text
             {
-                get
-                {
-                    return this.m_Content.text;
-                }
+                get => 
+                    this.m_Content.text;
                 set
                 {
                     this.m_Content.text = value;

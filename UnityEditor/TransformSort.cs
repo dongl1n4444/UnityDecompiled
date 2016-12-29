@@ -14,13 +14,8 @@
         /// <summary>
         /// <para>Content to visualize the transform sorting method.</para>
         /// </summary>
-        public override GUIContent content
-        {
-            get
-            {
-                return this.m_Content;
-            }
-        }
+        public override GUIContent content =>
+            this.m_Content;
     }
 }
 

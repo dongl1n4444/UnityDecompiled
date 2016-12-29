@@ -18,7 +18,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
     protected readonly bool _generateReferenceProjects;
     protected readonly ProjectImages _images;
 
-    public PostProcessWSA(BuildPostProcessArgs args, WSASDK sdk, [Optional, DefaultParameterValue(null)] string stagingArea) : base(args, sdk, stagingArea)
+    public PostProcessWSA(BuildPostProcessArgs args, WSASDK sdk, string stagingArea = null) : base(args, sdk, stagingArea)
     {
         this._generateReferenceProjects = EditorUserBuildSettings.wsaGenerateReferenceProjects;
         this._images = new ProjectImages();
@@ -43,7 +43,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
                 }
                 else if (!string.Equals(a, Path.GetExtension(str3), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new Exception(string.Format("Inconsistency between images in the same group ({0}). All images should be either PNG or JPEG!", str));
+                    throw new Exception($"Inconsistency between images in the same group ({str}). All images should be either PNG or JPEG!");
                 }
             }
         }
@@ -108,7 +108,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
                 Version toolsVersion = this.GetToolsVersion();
                 if (projectFileToolsVersion != toolsVersion)
                 {
-                    throw new UnityException(string.Format("Build path contains project which is incompatible with current one. Expected tools version '{0}', was '{1}'", toolsVersion, projectFileToolsVersion));
+                    throw new UnityException($"Build path contains project which is incompatible with current one. Expected tools version '{toolsVersion}', was '{projectFileToolsVersion}'");
                 }
             }
         }
@@ -275,10 +275,8 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         }
     }
 
-    protected override string GetAlternativeReferenceRewritterMappings()
-    {
-        return "System.Xml.Serialization";
-    }
+    protected override string GetAlternativeReferenceRewritterMappings() => 
+        "System.Xml.Serialization";
 
     protected override IEnumerable<string> GetAssembliesIgnoredBySerializationWeaver()
     {
@@ -286,7 +284,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         if (this._generateReferenceProjects)
         {
             string[] second = new string[] { Utility.AssemblyCSharpName + ".dll", Utility.AssemblyCSharpFirstPassName + ".dll" };
-            assembliesIgnoredBySerializationWeaver = Enumerable.Union<string>(assembliesIgnoredBySerializationWeaver, second);
+            assembliesIgnoredBySerializationWeaver = assembliesIgnoredBySerializationWeaver.Union<string>(second);
         }
         return assembliesIgnoredBySerializationWeaver;
     }
@@ -301,8 +299,8 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         }
         if (!defaultSplashScreens.TryGetValue(PlayerSettings.SplashScreen.unityLogoStyle, out str))
         {
-            Debug.LogWarning(string.Format("No splash screen for {0} available", PlayerSettings.SplashScreen.unityLogoStyle));
-            str = Enumerable.First<KeyValuePair<PlayerSettings.SplashScreen.UnityLogoStyle, string>>(defaultSplashScreens).Value;
+            Debug.LogWarning($"No splash screen for {PlayerSettings.SplashScreen.unityLogoStyle} available");
+            str = defaultSplashScreens.First<KeyValuePair<PlayerSettings.SplashScreen.UnityLogoStyle, string>>().Value;
         }
         return str;
     }
@@ -318,10 +316,8 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         return _defaultSplashScreens;
     }
 
-    protected override string GetIgnoredReferenceRewriterTypes()
-    {
-        return "System.IConvertible,mscorlib";
-    }
+    protected override string GetIgnoredReferenceRewriterTypes() => 
+        "System.IConvertible,mscorlib";
 
     protected override IEnumerable<string> GetIgnoreOutputAssembliesForReferenceRewriter()
     {
@@ -329,15 +325,13 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         if (base.ThisIsABuildMachine)
         {
             string[] second = new string[] { Utility.AssemblyCSharpName + ".dll", Utility.AssemblyCSharpFirstPassName + ".dll", Utility.AssemblyUnityScriptName + ".dll", Utility.AssemblyUnityScriptFirstPassName + ".dll" };
-            ignoreOutputAssembliesForReferenceRewriter = Enumerable.Union<string>(ignoreOutputAssembliesForReferenceRewriter, second);
+            ignoreOutputAssembliesForReferenceRewriter = ignoreOutputAssembliesForReferenceRewriter.Union<string>(second);
         }
         return ignoreOutputAssembliesForReferenceRewriter;
     }
 
-    protected override string GetPlatformAssemblyPath()
-    {
-        return MicrosoftCSharpCompiler.GetPlatformAssemblyPath(base._sdk);
-    }
+    protected override string GetPlatformAssemblyPath() => 
+        MicrosoftCSharpCompiler.GetPlatformAssemblyPath(base._sdk);
 
     protected string GetPlayerFilesSourceDirectory(string path)
     {
@@ -365,15 +359,13 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         }
         catch (Exception exception)
         {
-            throw new Exception(string.Format("Failed to extract ToolsVersion while reading '{0}'", path), exception);
+            throw new Exception($"Failed to extract ToolsVersion while reading '{path}'", exception);
         }
         return version;
     }
 
-    protected static string GetReferenceAssembliesDirectory(WSASDK sdk)
-    {
-        return PostProcessWinRT.GetReferenceAssembliesDirectory(MicrosoftCSharpCompiler.GetNETCoreFrameworkReferencesDirectory(sdk));
-    }
+    protected static string GetReferenceAssembliesDirectory(WSASDK sdk) => 
+        PostProcessWinRT.GetReferenceAssembliesDirectory(MicrosoftCSharpCompiler.GetNETCoreFrameworkReferencesDirectory(sdk));
 
     protected abstract string GetTemplateDirectorySource();
     protected string GetTemplateDirectorySource(string directory)
@@ -382,22 +374,18 @@ internal abstract class PostProcessWSA : PostProcessWinRT
         return Utility.CombinePath(paths);
     }
 
-    protected virtual string GetTemplateDirectoryTarget()
-    {
-        return base.StagingArea;
-    }
+    protected virtual string GetTemplateDirectoryTarget() => 
+        base.StagingArea;
 
     protected abstract Version GetToolsVersion();
     public override void RunAssemblyConverter()
     {
     }
 
-    protected virtual Dictionary<WSASDK, LibraryCollection> TEMP_GetLibraryCollections()
-    {
-        return new Dictionary<WSASDK, LibraryCollection>(1) { { 
+    protected virtual Dictionary<WSASDK, LibraryCollection> TEMP_GetLibraryCollections() => 
+        new Dictionary<WSASDK, LibraryCollection>(1) { { 
             base._sdk,
             base.Libraries
         } };
-    }
 }
 

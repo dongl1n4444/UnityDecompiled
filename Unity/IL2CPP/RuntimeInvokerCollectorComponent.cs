@@ -84,14 +84,14 @@
             {
                 <>f__am$cache0 = new Func<KeyValuePair<TypeReference[], int>, string>(null, (IntPtr) <GetInvokers>m__0);
             }
-            return CollectionExtensions.AsReadOnlyPortable<string>(Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<TypeReference[], int>, string>(this._runtimeInvokerData, <>f__am$cache0)));
+            return this._runtimeInvokerData.Select<KeyValuePair<TypeReference[], int>, string>(<>f__am$cache0).ToArray<string>().AsReadOnlyPortable<string>();
         }
 
         private static TypeReference InvokerParameterTypeFor(TypeReference type)
         {
             if (!type.IsByReference)
             {
-                if (!Unity.IL2CPP.Extensions.IsValueType(type))
+                if (!type.IsValueType())
                 {
                     return type.Module.TypeSystem.Object;
                 }
@@ -123,9 +123,9 @@
                 {
                     return type.Module.TypeSystem.IntPtr;
                 }
-                if (Unity.IL2CPP.Extensions.IsEnum(type))
+                if (type.IsEnum())
                 {
-                    return Unity.IL2CPP.Extensions.GetUnderlyingEnumType(type);
+                    return type.GetUnderlyingEnumType();
                 }
             }
             return type;
@@ -133,7 +133,7 @@
 
         private static TypeReference InvokerReturnTypeFor(TypeReference type)
         {
-            if (!type.IsByReference && !Unity.IL2CPP.Extensions.IsValueType(type))
+            if (!type.IsByReference && !type.IsValueType())
             {
                 return type.Module.TypeSystem.Object;
             }
@@ -151,21 +151,21 @@
                 string[] textArray1 = new string[] { "*((", Naming.ForVariable(new PointerType(type)), ")", param, ")" };
                 return string.Concat(textArray1);
             }
-            if ((((type.MetadataType == MetadataType.String) || (type.MetadataType == MetadataType.Class)) || (((type.MetadataType == MetadataType.Array) || (type.MetadataType == MetadataType.Pointer)) || (type.MetadataType == MetadataType.Object))) && !Unity.IL2CPP.Extensions.IsValueType(type))
+            if ((((type.MetadataType == MetadataType.String) || (type.MetadataType == MetadataType.Class)) || (((type.MetadataType == MetadataType.Array) || (type.MetadataType == MetadataType.Pointer)) || (type.MetadataType == MetadataType.Object))) && !type.IsValueType())
             {
                 return Emit.Cast(type, param);
             }
-            if ((type.MetadataType == MetadataType.GenericInstance) && !Unity.IL2CPP.Extensions.IsValueType(type))
+            if ((type.MetadataType == MetadataType.GenericInstance) && !type.IsValueType())
             {
                 return Emit.Cast(type, param);
             }
-            if (!Unity.IL2CPP.Extensions.IsValueType(type))
+            if (!type.IsValueType())
             {
                 throw new Exception();
             }
-            if (Unity.IL2CPP.Extensions.IsEnum(type))
+            if (type.IsEnum())
             {
-                return LoadParameter(Unity.IL2CPP.Extensions.GetUnderlyingEnumType(type), param);
+                return LoadParameter(type.GetUnderlyingEnumType(), param);
             }
             string[] textArray2 = new string[] { "*((", Naming.ForVariable(new PointerType(type)), ")", param, ")" };
             return string.Concat(textArray2);
@@ -193,7 +193,7 @@
                 {
                     <>f__am$cache1 = new Func<KeyValuePair<TypeReference[], int>, int>(null, (IntPtr) <Write>m__1);
                 }
-                KeyValuePair<TypeReference[], int>[] items = Enumerable.ToArray<KeyValuePair<TypeReference[], int>>(Enumerable.OrderBy<KeyValuePair<TypeReference[], int>, int>(this._runtimeInvokerData, <>f__am$cache1));
+                KeyValuePair<TypeReference[], int>[] items = this._runtimeInvokerData.OrderBy<KeyValuePair<TypeReference[], int>, int>(<>f__am$cache1).ToArray<KeyValuePair<TypeReference[], int>>();
                 foreach (KeyValuePair<TypeReference[], int> pair in items)
                 {
                     TypeReference[] key = pair.Key;
@@ -251,7 +251,7 @@
             }
             else
             {
-                writer.Write(!Unity.IL2CPP.Extensions.IsValueType(returnType) ? "ret" : "Box(il2cpp_codegen_class_from_type (method->return_type), &ret)");
+                writer.Write(!returnType.IsValueType() ? "ret" : "Box(il2cpp_codegen_class_from_type (method->return_type), &ret)");
             }
             writer.WriteLine(";");
         }

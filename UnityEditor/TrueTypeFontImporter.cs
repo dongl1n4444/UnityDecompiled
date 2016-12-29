@@ -58,10 +58,8 @@
         [Obsolete("FontRenderModes are no longer supported.", true)]
         private int fontRenderMode
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }
@@ -90,10 +88,8 @@
         [Obsolete("Per-Font styles are no longer supported. Set the style in the rendering component, or import a styled version of the font.", true)]
         private FontStyle style
         {
-            get
-            {
-                return FontStyle.Normal;
-            }
+            get => 
+                FontStyle.Normal;
             set
             {
             }
@@ -102,10 +98,8 @@
         [Obsolete("use2xBehaviour is deprecated. Use ascentCalculationMode instead")]
         private bool use2xBehaviour
         {
-            get
-            {
-                return (this.ascentCalculationMode == AscentCalculationMode.Legacy2x);
-            }
+            get => 
+                (this.ascentCalculationMode == AscentCalculationMode.Legacy2x);
             set
             {
                 if (value)

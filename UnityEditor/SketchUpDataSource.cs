@@ -16,10 +16,8 @@
             this.FetchData();
         }
 
-        public override bool CanBeParent(TreeViewItem item)
-        {
-            return item.hasChildren;
-        }
+        public override bool CanBeParent(TreeViewItem item) => 
+            item.hasChildren;
 
         public override void FetchData()
         {
@@ -79,10 +77,8 @@
             }
         }
 
-        public override bool IsRenamingItemAllowed(TreeViewItem item)
-        {
-            return false;
-        }
+        public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+            false;
     }
 }
 

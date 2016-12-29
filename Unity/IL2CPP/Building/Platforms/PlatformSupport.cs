@@ -27,7 +27,7 @@
             {
                 try
                 {
-                    first = Enumerable.Concat<Type>(first, AssemblyExtensions.GetTypesPortable(assembly));
+                    first = first.Concat<Type>(assembly.GetTypesPortable());
                 }
                 catch (ReflectionTypeLoadException)
                 {
@@ -47,21 +47,17 @@
             PlatformSupport support;
             if (!TryFor(runtimePlatform, out support))
             {
-                throw new InvalidOperationException(string.Format("Could not find platform support for {0} runtime platform. Is platform plugin present?", runtimePlatform.Name));
+                throw new InvalidOperationException($"Could not find platform support for {runtimePlatform.Name} runtime platform. Is platform plugin present?");
             }
             return support;
         }
 
-        public virtual CppToolChain MakeCppToolChain(BuildingOptions buildingOptions)
-        {
-            return this.MakeCppToolChain(buildingOptions.Architecture, buildingOptions.Configuration, buildingOptions.TreatWarningsAsErrors);
-        }
+        public virtual CppToolChain MakeCppToolChain(BuildingOptions buildingOptions) => 
+            this.MakeCppToolChain(buildingOptions.Architecture, buildingOptions.Configuration, buildingOptions.TreatWarningsAsErrors);
 
         public abstract CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors);
-        public virtual ProgramBuildDescription PostProcessProgramBuildDescription(ProgramBuildDescription programBuildDescription)
-        {
-            return programBuildDescription;
-        }
+        public virtual ProgramBuildDescription PostProcessProgramBuildDescription(ProgramBuildDescription programBuildDescription) => 
+            programBuildDescription;
 
         public virtual void RegisterRunner()
         {
@@ -74,7 +70,7 @@
             {
                 <>f__am$cache0 = new Func<Type, bool>(null, (IntPtr) <TryFor>m__0);
             }
-            IEnumerable<Type> enumerable = Enumerable.Where<Type>(AllTypes(), <>f__am$cache0);
+            IEnumerable<Type> enumerable = AllTypes().Where<Type>(<>f__am$cache0);
             foreach (Type type in enumerable)
             {
                 PlatformSupport support2 = (PlatformSupport) Activator.CreateInstance(type);

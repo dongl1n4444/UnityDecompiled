@@ -56,10 +56,8 @@
         /// <returns>
         /// <para>The value read.</para>
         /// </returns>
-        public bool ReadBoolean()
-        {
-            return (this.m_buf.ReadByte() == 1);
-        }
+        public bool ReadBoolean() => 
+            (this.m_buf.ReadByte() == 1);
 
         /// <summary>
         /// <para>Reads a byte from the stream.</para>
@@ -67,10 +65,8 @@
         /// <returns>
         /// <para>The value read.</para>
         /// </returns>
-        public byte ReadByte()
-        {
-            return this.m_buf.ReadByte();
-        }
+        public byte ReadByte() => 
+            this.m_buf.ReadByte();
 
         /// <summary>
         /// <para>Reads a number of bytes from the stream.</para>
@@ -112,10 +108,8 @@
         /// <returns>
         /// <para>Value read.</para>
         /// </returns>
-        public char ReadChar()
-        {
-            return (char) this.m_buf.ReadByte();
-        }
+        public char ReadChar() => 
+            ((char) this.m_buf.ReadByte());
 
         /// <summary>
         /// <para>Reads a unity Color objects.</para>
@@ -123,10 +117,8 @@
         /// <returns>
         /// <para>The color read from the stream.</para>
         /// </returns>
-        public Color ReadColor()
-        {
-            return new Color(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
-        }
+        public Color ReadColor() => 
+            new Color(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
 
         /// <summary>
         /// <para>Reads a unity color32 objects.</para>
@@ -134,10 +126,8 @@
         /// <returns>
         /// <para>The colo read from the stream.</para>
         /// </returns>
-        public Color32 ReadColor32()
-        {
-            return new Color32(this.ReadByte(), this.ReadByte(), this.ReadByte(), this.ReadByte());
-        }
+        public Color32 ReadColor32() => 
+            new Color32(this.ReadByte(), this.ReadByte(), this.ReadByte(), this.ReadByte());
 
         /// <summary>
         /// <para>Reads a decimal from the stream.</para>
@@ -145,10 +135,8 @@
         /// <returns>
         /// <para>Value read.</para>
         /// </returns>
-        public decimal ReadDecimal()
-        {
-            return new decimal(new int[] { this.ReadInt32(), this.ReadInt32(), this.ReadInt32(), this.ReadInt32() });
-        }
+        public decimal ReadDecimal() => 
+            new decimal(new int[] { this.ReadInt32(), this.ReadInt32(), this.ReadInt32(), this.ReadInt32() });
 
         /// <summary>
         /// <para>Reads a double from the stream.</para>
@@ -156,10 +144,8 @@
         /// <returns>
         /// <para>Value read.</para>
         /// </returns>
-        public double ReadDouble()
-        {
-            return FloatConversion.ToDouble(this.ReadUInt64());
-        }
+        public double ReadDouble() => 
+            FloatConversion.ToDouble(this.ReadUInt64());
 
         /// <summary>
         /// <para>Reads a reference to a GameObject from the stream.</para>
@@ -254,9 +240,8 @@
         /// <returns>
         /// <para>The matrix read from the stream.</para>
         /// </returns>
-        public Matrix4x4 ReadMatrix4x4()
-        {
-            return new Matrix4x4 { 
+        public Matrix4x4 ReadMatrix4x4() => 
+            new Matrix4x4 { 
                 m00 = this.ReadSingle(),
                 m01 = this.ReadSingle(),
                 m02 = this.ReadSingle(),
@@ -274,7 +259,6 @@
                 m32 = this.ReadSingle(),
                 m33 = this.ReadSingle()
             };
-        }
 
         public TMsg ReadMessage<TMsg>() where TMsg: MessageBase, new()
         {
@@ -317,10 +301,8 @@
         /// <returns>
         /// <para>The NetworkInstanceId read.</para>
         /// </returns>
-        public NetworkInstanceId ReadNetworkId()
-        {
-            return new NetworkInstanceId(this.ReadPackedUInt32());
-        }
+        public NetworkInstanceId ReadNetworkId() => 
+            new NetworkInstanceId(this.ReadPackedUInt32());
 
         /// <summary>
         /// <para>Reads a reference to a NetworkIdentity from the stream.</para>
@@ -344,15 +326,7 @@
             {
                 obj2 = ClientScene.FindLocalObject(netId);
             }
-            if (obj2 == null)
-            {
-                if (LogFilter.logDebug)
-                {
-                    Debug.Log("ReadNetworkIdentity netId:" + netId + "go: null");
-                }
-                return null;
-            }
-            return obj2.GetComponent<NetworkIdentity>();
+            return obj2?.GetComponent<NetworkIdentity>();
         }
 
         /// <summary>
@@ -453,10 +427,8 @@
         /// <returns>
         /// <para>The plane read from the stream.</para>
         /// </returns>
-        public Plane ReadPlane()
-        {
-            return new Plane(this.ReadVector3(), this.ReadSingle());
-        }
+        public Plane ReadPlane() => 
+            new Plane(this.ReadVector3(), this.ReadSingle());
 
         /// <summary>
         /// <para>Reads a Unity Quaternion object.</para>
@@ -464,10 +436,8 @@
         /// <returns>
         /// <para>The quaternion read from the stream.</para>
         /// </returns>
-        public Quaternion ReadQuaternion()
-        {
-            return new Quaternion(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
-        }
+        public Quaternion ReadQuaternion() => 
+            new Quaternion(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
 
         /// <summary>
         /// <para>Reads a Unity Ray object.</para>
@@ -475,10 +445,8 @@
         /// <returns>
         /// <para>The ray read from the stream.</para>
         /// </returns>
-        public Ray ReadRay()
-        {
-            return new Ray(this.ReadVector3(), this.ReadVector3());
-        }
+        public Ray ReadRay() => 
+            new Ray(this.ReadVector3(), this.ReadVector3());
 
         /// <summary>
         /// <para>Reads a Unity Rect object.</para>
@@ -486,10 +454,8 @@
         /// <returns>
         /// <para>The rect read from the stream.</para>
         /// </returns>
-        public Rect ReadRect()
-        {
-            return new Rect(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
-        }
+        public Rect ReadRect() => 
+            new Rect(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
 
         /// <summary>
         /// <para>Reads a signed byte from the stream.</para>
@@ -497,10 +463,8 @@
         /// <returns>
         /// <para>Value read.</para>
         /// </returns>
-        public sbyte ReadSByte()
-        {
-            return (sbyte) this.m_buf.ReadByte();
-        }
+        public sbyte ReadSByte() => 
+            ((sbyte) this.m_buf.ReadByte());
 
         /// <summary>
         /// <para>Reads a NetworkSceneId from the stream.</para>
@@ -508,10 +472,8 @@
         /// <returns>
         /// <para>The NetworkSceneId read.</para>
         /// </returns>
-        public NetworkSceneId ReadSceneId()
-        {
-            return new NetworkSceneId(this.ReadPackedUInt32());
-        }
+        public NetworkSceneId ReadSceneId() => 
+            new NetworkSceneId(this.ReadPackedUInt32());
 
         /// <summary>
         /// <para>Reads a float from the stream.</para>
@@ -519,10 +481,8 @@
         /// <returns>
         /// <para>Value read.</para>
         /// </returns>
-        public float ReadSingle()
-        {
-            return FloatConversion.ToSingle(this.ReadUInt32());
-        }
+        public float ReadSingle() => 
+            FloatConversion.ToSingle(this.ReadUInt32());
 
         /// <summary>
         /// <para>Reads a string from the stream. (max of 32k bytes).</para>
@@ -563,15 +523,7 @@
                 return null;
             }
             GameObject obj2 = ClientScene.FindLocalObject(netId);
-            if (obj2 == null)
-            {
-                if (LogFilter.logDebug)
-                {
-                    Debug.Log("ReadTransform netId:" + netId);
-                }
-                return null;
-            }
-            return obj2.transform;
+            return obj2?.transform;
         }
 
         /// <summary>
@@ -635,10 +587,8 @@
         /// <returns>
         /// <para>The vector read from the stream.</para>
         /// </returns>
-        public Vector2 ReadVector2()
-        {
-            return new Vector2(this.ReadSingle(), this.ReadSingle());
-        }
+        public Vector2 ReadVector2() => 
+            new Vector2(this.ReadSingle(), this.ReadSingle());
 
         /// <summary>
         /// <para>Reads a Unity Vector3 objects.</para>
@@ -646,10 +596,8 @@
         /// <returns>
         /// <para>The vector read from the stream.</para>
         /// </returns>
-        public Vector3 ReadVector3()
-        {
-            return new Vector3(this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
-        }
+        public Vector3 ReadVector3() => 
+            new Vector3(this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
 
         /// <summary>
         /// <para>Reads a Unity Vector4 object.</para>
@@ -657,10 +605,8 @@
         /// <returns>
         /// <para>The vector read from the stream.</para>
         /// </returns>
-        public Vector4 ReadVector4()
-        {
-            return new Vector4(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
-        }
+        public Vector4 ReadVector4() => 
+            new Vector4(this.ReadSingle(), this.ReadSingle(), this.ReadSingle(), this.ReadSingle());
 
         internal void Replace(byte[] buffer)
         {
@@ -681,32 +627,20 @@
         /// <returns>
         /// <para>Buffer contents.</para>
         /// </returns>
-        public override string ToString()
-        {
-            return this.m_buf.ToString();
-        }
+        public override string ToString() => 
+            this.m_buf.ToString();
 
         /// <summary>
         /// <para>The current length of the buffer.</para>
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                return this.m_buf.Length;
-            }
-        }
+        public int Length =>
+            this.m_buf.Length;
 
         /// <summary>
         /// <para>The current position within the buffer.</para>
         /// </summary>
-        public uint Position
-        {
-            get
-            {
-                return this.m_buf.Position;
-            }
-        }
+        public uint Position =>
+            this.m_buf.Position;
     }
 }
 

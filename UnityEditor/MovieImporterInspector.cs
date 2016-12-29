@@ -18,25 +18,17 @@
             target.linearTexture = this.m_linearTexture;
         }
 
-        private double GetAudioBitrateForQuality(double f)
-        {
-            return (56000.0 + (200000.0 * f));
-        }
+        private double GetAudioBitrateForQuality(double f) => 
+            (56000.0 + (200000.0 * f));
 
-        private double GetAudioQualityForBitrate(double f)
-        {
-            return ((f - 56000.0) / 200000.0);
-        }
+        private double GetAudioQualityForBitrate(double f) => 
+            ((f - 56000.0) / 200000.0);
 
-        private double GetVideoBitrateForQuality(double f)
-        {
-            return (100000.0 + (8000000.0 * f));
-        }
+        private double GetVideoBitrateForQuality(double f) => 
+            (100000.0 + (8000000.0 * f));
 
-        private double GetVideoQualityForBitrate(double f)
-        {
-            return ((f - 100000.0) / 8000000.0);
-        }
+        private double GetVideoQualityForBitrate(double f) => 
+            ((f - 100000.0) / 8000000.0);
 
         internal override bool HasModified()
         {
@@ -76,13 +68,8 @@
             this.m_duration = target.duration;
         }
 
-        internal override bool showImportedObject
-        {
-            get
-            {
-                return false;
-            }
-        }
+        internal override bool showImportedObject =>
+            false;
     }
 }
 

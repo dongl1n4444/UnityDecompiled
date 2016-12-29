@@ -26,7 +26,7 @@
         [CompilerGenerated]
         private static Func<int, int, string> <>f__am$cache5;
 
-        public VirtualInvokerCollector([Optional, DefaultParameterValue(false)] bool processGenerics)
+        public VirtualInvokerCollector(bool processGenerics = false)
         {
             this._processGenerics = processGenerics;
         }
@@ -39,7 +39,7 @@
                 <>f__am$cache3 = new Func<int, int, string>(null, (IntPtr) <CallParametersFor>m__3);
             }
             string[] second = new string[] { "invokeData.method" };
-            return EnumerableExtensions.AggregateWithComma(Enumerable.Concat<string>(Enumerable.Concat<string>(first, Enumerable.Select<int, string>(Enumerable.Range(1, data.ParameterCount), <>f__am$cache3)), second));
+            return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache3)).Concat<string>(second).AggregateWithComma();
         }
 
         private static string FunctionPointerParametersFor(InvokerData data)
@@ -50,7 +50,7 @@
                 <>f__am$cache5 = new Func<int, int, string>(null, (IntPtr) <FunctionPointerParametersFor>m__5);
             }
             string[] second = new string[] { "const MethodInfo*" };
-            return EnumerableExtensions.AggregateWithComma(Enumerable.Concat<string>(Enumerable.Concat<string>(first, Enumerable.Select<int, string>(Enumerable.Range(1, data.ParameterCount), <>f__am$cache5)), second));
+            return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache5)).Concat<string>(second).AggregateWithComma();
         }
 
         private static string InvokeParametersFor(InvokerData data, bool isGeneric)
@@ -60,19 +60,17 @@
             {
                 <>f__am$cache4 = new Func<int, int, string>(null, (IntPtr) <InvokeParametersFor>m__4);
             }
-            return EnumerableExtensions.AggregateWithComma(Enumerable.Concat<string>(first, Enumerable.Select<int, string>(Enumerable.Range(1, data.ParameterCount), <>f__am$cache4)));
+            return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache4)).AggregateWithComma();
         }
 
         public void Process(AssemblyDefinition assembly)
         {
             InvokerVisitor visitor = new InvokerVisitor(this._invokerData, this._processGenerics);
-            Unity.Cecil.Visitor.Extensions.Accept(assembly, visitor);
+            assembly.Accept(visitor);
         }
 
-        private static string ReturnTypeFor(InvokerData data)
-        {
-            return (!data.VoidReturn ? "R" : "void");
-        }
+        private static string ReturnTypeFor(InvokerData data) => 
+            (!data.VoidReturn ? "R" : "void");
 
         private static string TemplateParametersFor(InvokerData data)
         {
@@ -88,7 +86,7 @@
             {
                 <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <TemplateParametersFor>m__2);
             }
-            return EnumerableExtensions.AggregateWithComma(Enumerable.Select<string, string>(Enumerable.Concat<string>(!data.VoidReturn ? ((IEnumerable<string>) new string[] { "R" }) : Enumerable.Empty<string>(), Enumerable.Select<int, string>(Enumerable.Range(1, data.ParameterCount), <>f__am$cache1)), <>f__am$cache2));
+            return (!data.VoidReturn ? ((IEnumerable<string>) new string[] { "R" }) : Enumerable.Empty<string>()).Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache1)).Select<string, string>(<>f__am$cache2).AggregateWithComma();
         }
 
         public void Write(NPath path)
@@ -100,7 +98,7 @@
                 {
                     <>f__am$cache0 = new Func<InvokerData, int>(null, (IntPtr) <Write>m__0);
                 }
-                foreach (InvokerData data in Enumerable.OrderBy<InvokerData, int>(this._invokerData, <>f__am$cache0))
+                foreach (InvokerData data in this._invokerData.OrderBy<InvokerData, int>(<>f__am$cache0))
                 {
                     string str = !data.VoidReturn ? "Func" : "Action";
                     string str2 = TemplateParametersFor(data);

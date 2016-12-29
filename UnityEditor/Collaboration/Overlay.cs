@@ -57,10 +57,8 @@
             return Collab.CollabStates.kCollabNone;
         }
 
-        protected static bool HasState(Collab.CollabStates assetStates, Collab.CollabStates includesState)
-        {
-            return ((assetStates & includesState) == includesState);
-        }
+        protected static bool HasState(Collab.CollabStates assetStates, Collab.CollabStates includesState) => 
+            ((assetStates & includesState) == includesState);
 
         protected static void LoadOverlays()
         {

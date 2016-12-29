@@ -99,10 +99,8 @@
             }
         }
 
-        private XmlElement AppendTopAndroidNameTag(string tag, string value)
-        {
-            return this.AppendTopAndroidNameTag(tag, value, null);
-        }
+        private XmlElement AppendTopAndroidNameTag(string tag, string value) => 
+            this.AppendTopAndroidNameTag(tag, value, null);
 
         private XmlElement AppendTopAndroidNameTag(string tag, string value, List<XmlAttribute> attributes)
         {
@@ -129,10 +127,8 @@
             return attribute;
         }
 
-        public XmlElement GetActivity(string name)
-        {
-            return (XmlElement) base.SelectSingleNode(string.Format("/manifest/application/activity[@android:name='{0}']", name), base.nsMgr);
-        }
+        public XmlElement GetActivity(string name) => 
+            ((XmlElement) base.SelectSingleNode($"/manifest/application/activity[@android:name='{name}']", base.nsMgr));
 
         public string GetActivityWithLaunchIntent()
         {
@@ -140,10 +136,8 @@
             return ((node == null) ? "" : node.Attributes["android:name"].Value);
         }
 
-        public bool HasLeanbackLauncherActivity()
-        {
-            return (base.SelectSingleNode("/manifest/application/activity/intent-filter/category[@android:name='android.intent.category.LEANBACK_LAUNCHER']", base.nsMgr) != null);
-        }
+        public bool HasLeanbackLauncherActivity() => 
+            (base.SelectSingleNode("/manifest/application/activity/intent-filter/category[@android:name='android.intent.category.LEANBACK_LAUNCHER']", base.nsMgr) != null);
 
         public void OverrideTheme(string theme)
         {
@@ -187,10 +181,8 @@
             this.ApplicationElement.Attributes.Append(this.CreateAndroidAttribute(name, !value ? "false" : "true"));
         }
 
-        public bool SetConfigChanges(string activity, string configChanges)
-        {
-            return this.SetActivityAndroidAttribute(activity, "configChanges", configChanges);
-        }
+        public bool SetConfigChanges(string activity, string configChanges) => 
+            this.SetActivityAndroidAttribute(activity, "configChanges", configChanges);
 
         public void SetDebuggable(bool debuggable)
         {
@@ -202,15 +194,11 @@
             base.DocumentElement.Attributes.Append(this.CreateAndroidAttribute("installLocation", location));
         }
 
-        public bool SetLaunchMode(string activity, string launchMode)
-        {
-            return this.SetActivityAndroidAttribute(activity, "launchMode", launchMode);
-        }
+        public bool SetLaunchMode(string activity, string launchMode) => 
+            this.SetActivityAndroidAttribute(activity, "launchMode", launchMode);
 
-        public bool SetOrientation(string activity, string orientation)
-        {
-            return this.SetActivityAndroidAttribute(activity, "screenOrientation", orientation);
-        }
+        public bool SetOrientation(string activity, string orientation) => 
+            this.SetActivityAndroidAttribute(activity, "screenOrientation", orientation);
 
         public void SetVersion(string versionName, int versionCode)
         {
@@ -241,10 +229,8 @@
 
         public string packageName
         {
-            get
-            {
-                return base.DocumentElement.GetAttribute("package");
-            }
+            get => 
+                base.DocumentElement.GetAttribute("package");
             set
             {
                 base.DocumentElement.SetAttribute("package", value);

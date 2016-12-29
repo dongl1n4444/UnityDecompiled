@@ -149,7 +149,7 @@
                         {
                             int num14 = node6.x - ((num7 + num5) / 2);
                             int num15 = (node7 == null) ? node7.y : (node7.y + ((int) ((((num14 - node7.x) - (num5 * 0.5f)) * (node6.y - node7.y)) / ((float) ((node6.x - node7.x) - num5)))));
-                            this.DrawRectClipped(new Rect((float) (num14 - (num3 / 2)), (float) (num15 - (num4 / 2)), (float) num3, (float) num4), new Color(1f, 0.3f, 0.2f, (highlightAudibleDSPChains && !node6.audible) ? 0.4f : 1f), string.Format("{0:0.00}%", 100f * info3.weight), clippingRect, zoomFactor);
+                            this.DrawRectClipped(new Rect((float) (num14 - (num3 / 2)), (float) (num15 - (num4 / 2)), (float) num3, (float) num4), new Color(1f, 0.3f, 0.2f, (highlightAudibleDSPChains && !node6.audible) ? 0.4f : 1f), $"{100f * info3.weight:0.00}%", clippingRect, zoomFactor);
                         }
                     }
                     foreach (KeyValuePair<int, AudioProfilerDSPNode> pair2 in dictionary)
@@ -164,7 +164,7 @@
                             bool flag2 = (info4.flags & 1) != 0;
                             bool flag3 = (info4.flags & 2) != 0;
                             Color col = new Color((flag2 && !flag3) ? Mathf.Clamp((float) ((2f * num17) * num16), (float) 0f, (float) 1f) : 0.5f, (flag2 && !flag3) ? Mathf.Clamp((float) (2f - ((2f * num17) * num16)), (float) 0f, (float) 1f) : 0.5f, !flag3 ? (!flag2 ? 0.5f : 0f) : 1f, (highlightAudibleDSPChains && !node8.audible) ? 0.4f : 1f);
-                            audioProfilerNameByOffset = audioProfilerNameByOffset.Replace("ChannelGroup", "Group").Replace("FMOD Channel", "Channel").Replace("FMOD WaveTable Unit", "Wavetable").Replace("FMOD Resampler Unit", "Resampler").Replace("FMOD Channel DSPHead Unit", "Channel DSP").Replace("FMOD Channel DSPHead Unit", "Channel DSP") + string.Format(" ({0:0.00}%)", num16);
+                            audioProfilerNameByOffset = audioProfilerNameByOffset.Replace("ChannelGroup", "Group").Replace("FMOD Channel", "Channel").Replace("FMOD WaveTable Unit", "Wavetable").Replace("FMOD Resampler Unit", "Resampler").Replace("FMOD Channel DSPHead Unit", "Channel DSP").Replace("FMOD Channel DSPHead Unit", "Channel DSP") + $" ({num16:0.00}%)";
                             this.DrawRectClipped(new Rect(node8.x - (num5 * 0.5f), node8.y - (num6 * 0.5f), (float) num5, (float) num6), col, audioProfilerNameByOffset, clippingRect, zoomFactor);
                             if (node8.audible)
                             {

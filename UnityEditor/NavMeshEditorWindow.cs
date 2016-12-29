@@ -108,10 +108,8 @@
             EditorGUILayout.Space();
         }
 
-        private int Bit(int a, int b)
-        {
-            return ((a & (1 << (b & 0x1f))) >> b);
-        }
+        private int Bit(int a, int b) => 
+            ((a & (1 << (b & 0x1f))) >> b);
 
         private static void DisplayAgentControls(Object target, SceneView sceneView)
         {

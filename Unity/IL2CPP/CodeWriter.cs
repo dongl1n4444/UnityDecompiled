@@ -39,7 +39,7 @@
             this.Indent(1);
         }
 
-        public void Dedent([Optional, DefaultParameterValue(1)] int count)
+        public void Dedent(int count = 1)
         {
             if (count > this._indent)
             {
@@ -61,7 +61,7 @@
             this.Writer.Dispose();
         }
 
-        public void EndBlock([Optional, DefaultParameterValue(false)] bool semicolon)
+        public void EndBlock(bool semicolon = false)
         {
             this.Dedent(1);
             if (semicolon)
@@ -74,7 +74,7 @@
             }
         }
 
-        public void EndBlock(string comment, [Optional, DefaultParameterValue(false)] bool semicolon)
+        public void EndBlock(string comment, bool semicolon = false)
         {
             this.Dedent(1);
             this.Write("}");
@@ -86,7 +86,7 @@
             this.WriteLine(comment);
         }
 
-        public void Indent([Optional, DefaultParameterValue(1)] int count)
+        public void Indent(int count = 1)
         {
             this._indent += count;
             if (this._indent < this._indentStrings.Length)
@@ -163,7 +163,7 @@
 
         public void WriteStatement(string block)
         {
-            this.WriteLine(string.Format("{0};", block));
+            this.WriteLine($"{block};");
         }
 
         public void WriteUnindented(string block, params object[] args)
@@ -175,13 +175,8 @@
             this.Writer.Write(block + "\n");
         }
 
-        public int IndentationLevel
-        {
-            get
-            {
-                return this._indent;
-            }
-        }
+        public int IndentationLevel =>
+            this._indent;
 
         public StreamWriter Writer { get; private set; }
     }

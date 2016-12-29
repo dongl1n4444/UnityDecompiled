@@ -105,10 +105,8 @@
         {
             internal float defaultValue;
 
-            internal float <>m__0(RectTransform _)
-            {
-                return this.defaultValue;
-            }
+            internal float <>m__0(RectTransform _) => 
+                this.defaultValue;
         }
     }
 }

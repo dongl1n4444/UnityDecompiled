@@ -202,10 +202,8 @@
             return base.FindItem(id);
         }
 
-        public override TreeViewItem GetItem(int row)
-        {
-            return base.m_Rows[row];
-        }
+        public override TreeViewItem GetItem(int row) => 
+            base.m_Rows[row];
 
         protected override HashSet<int> GetParentsAbove(int id)
         {
@@ -392,20 +390,14 @@
             }
         }
 
-        public override bool IsRevealed(int id)
-        {
-            return (this.GetRow(id) != -1);
-        }
+        public override bool IsRevealed(int id) => 
+            (this.GetRow(id) != -1);
 
-        private bool IsSceneHeader(HierarchyProperty property)
-        {
-            return (property.pptrValue == null);
-        }
+        private bool IsSceneHeader(HierarchyProperty property) => 
+            (property.pptrValue == null);
 
-        private bool IsUsingAlphaSort()
-        {
-            return (this.sortingState.GetType() == typeof(AlphabeticalSorting));
-        }
+        private bool IsUsingAlphaSort() => 
+            (this.sortingState.GetType() == typeof(AlphabeticalSorting));
 
         private bool IsValidHierarchyInstanceID(int instanceID)
         {
@@ -472,36 +464,19 @@
             }
         }
 
-        public bool isFetchAIssue
-        {
-            get
-            {
-                return (this.m_DelayedFetches >= 5);
-            }
-        }
+        public bool isFetchAIssue =>
+            (this.m_DelayedFetches >= 5);
 
-        public override int rowCount
-        {
-            get
-            {
-                return this.m_RowCount;
-            }
-        }
+        public override int rowCount =>
+            this.m_RowCount;
 
-        public List<GameObjectTreeViewItem> sceneHeaderItems
-        {
-            get
-            {
-                return this.m_StickySceneHeaderItems;
-            }
-        }
+        public List<GameObjectTreeViewItem> sceneHeaderItems =>
+            this.m_StickySceneHeaderItems;
 
         public int searchMode
         {
-            get
-            {
-                return this.m_SearchMode;
-            }
+            get => 
+                this.m_SearchMode;
             set
             {
                 this.m_SearchMode = value;
@@ -510,10 +485,8 @@
 
         public string searchString
         {
-            get
-            {
-                return this.m_SearchString;
-            }
+            get => 
+                this.m_SearchString;
             set
             {
                 this.m_SearchString = value;

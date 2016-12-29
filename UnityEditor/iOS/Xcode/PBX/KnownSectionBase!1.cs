@@ -30,25 +30,17 @@
             this.m_Entries[local.guid] = local;
         }
 
-        public IEnumerable<KeyValuePair<string, T>> GetEntries()
-        {
-            return this.m_Entries;
-        }
+        public IEnumerable<KeyValuePair<string, T>> GetEntries() => 
+            this.m_Entries;
 
-        public IEnumerable<string> GetGuids()
-        {
-            return this.m_Entries.Keys;
-        }
+        public IEnumerable<string> GetGuids() => 
+            this.m_Entries.Keys;
 
-        public IEnumerable<T> GetObjects()
-        {
-            return this.m_Entries.Values;
-        }
+        public IEnumerable<T> GetObjects() => 
+            this.m_Entries.Values;
 
-        public bool HasEntry(string guid)
-        {
-            return this.m_Entries.ContainsKey(guid);
-        }
+        public bool HasEntry(string guid) => 
+            this.m_Entries.ContainsKey(guid);
 
         public void RemoveEntry(string guid)
         {

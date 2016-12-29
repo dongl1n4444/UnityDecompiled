@@ -25,13 +25,8 @@
             this.binding = _binding;
         }
 
-        public Keyframe keyframe
-        {
-            get
-            {
-                return this.curve[this.key];
-            }
-        }
+        public Keyframe keyframe =>
+            this.curve[this.key];
     }
 }
 

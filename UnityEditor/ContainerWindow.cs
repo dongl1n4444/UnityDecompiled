@@ -123,37 +123,20 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_FitRectToScreen(ref Rect defaultRect, bool forceCompletelyVisible, bool useMouseScreen, out Rect value);
-        internal static bool macEditor
-        {
-            get
-            {
-                return (Application.platform == RuntimePlatform.OSXEditor);
-            }
-        }
+        internal static bool macEditor =>
+            (Application.platform == RuntimePlatform.OSXEditor);
         private void __internalAwake()
         {
             base.hideFlags = HideFlags.DontSave;
         }
 
-        internal ShowMode showMode
-        {
-            get
-            {
-                return (ShowMode) this.m_ShowMode;
-            }
-        }
-        internal static bool IsPopup(ShowMode mode)
-        {
-            return ((mode == ShowMode.PopupMenu) || (ShowMode.PopupMenuWithKeyboardFocus == mode));
-        }
+        internal ShowMode showMode =>
+            ((ShowMode) this.m_ShowMode);
+        internal static bool IsPopup(ShowMode mode) => 
+            ((mode == ShowMode.PopupMenu) || (ShowMode.PopupMenuWithKeyboardFocus == mode));
 
-        internal bool isPopup
-        {
-            get
-            {
-                return IsPopup((ShowMode) this.m_ShowMode);
-            }
-        }
+        internal bool isPopup =>
+            IsPopup((ShowMode) this.m_ShowMode);
         internal void ShowPopup()
         {
             this.m_ShowMode = 1;
@@ -167,13 +150,8 @@
             this.Internal_BringLiveAfterCreation(false, false);
         }
 
-        private static Color skinBackgroundColor
-        {
-            get
-            {
-                return (!EditorGUIUtility.isProSkin ? Color.gray.AlphaMultiplied(0.32f) : Color.gray.RGBMultiplied((float) 0.3f).AlphaMultiplied(0.5f));
-            }
-        }
+        private static Color skinBackgroundColor =>
+            (!EditorGUIUtility.isProSkin ? Color.gray.AlphaMultiplied(0.32f) : Color.gray.RGBMultiplied((float) 0.3f).AlphaMultiplied(0.5f));
         public void Show(ShowMode showMode, bool loadPosition, bool displayImmediately)
         {
             if (showMode == ShowMode.AuxWindow)
@@ -252,10 +230,8 @@
             Object.DestroyImmediate(this, true);
         }
 
-        internal bool IsNotDocked()
-        {
-            return (((this.m_ShowMode == 2) || (this.m_ShowMode == 5)) || ((((this.rootView is SplitView) && (this.rootView.children.Length == 1)) && ((this.rootView.children.Length == 1) && (this.rootView.children[0] is DockArea))) && (((DockArea) this.rootView.children[0]).m_Panes.Count == 1)));
-        }
+        internal bool IsNotDocked() => 
+            (((this.m_ShowMode == 2) || (this.m_ShowMode == 5)) || ((((this.rootView is SplitView) && (this.rootView.children.Length == 1)) && ((this.rootView.children.Length == 1) && (this.rootView.children[0] is DockArea))) && (((DockArea) this.rootView.children[0]).m_Panes.Count == 1)));
 
         private string NotDockedWindowID()
         {
@@ -317,10 +293,8 @@
 
         public string title
         {
-            get
-            {
-                return this.m_Title;
-            }
+            get => 
+                this.m_Title;
             set
             {
                 this.m_Title = value;
@@ -350,10 +324,8 @@
 
         public View rootView
         {
-            get
-            {
-                return this.m_RootView;
-            }
+            get => 
+                this.m_RootView;
             set
             {
                 this.m_RootView = value;
@@ -374,20 +346,14 @@
                 return (this.rootView as SplitView);
             }
         }
-        internal string DebugHierarchy()
-        {
-            return this.rootView.DebugHierarchy(0);
-        }
+        internal string DebugHierarchy() => 
+            this.rootView.DebugHierarchy(0);
 
-        internal Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize, PopupLocationHelper.PopupLocation[] locationPriorityOrder)
-        {
-            return PopupLocationHelper.GetDropDownRect(buttonRect, minSize, maxSize, this, locationPriorityOrder);
-        }
+        internal Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize, PopupLocationHelper.PopupLocation[] locationPriorityOrder) => 
+            PopupLocationHelper.GetDropDownRect(buttonRect, minSize, maxSize, this, locationPriorityOrder);
 
-        internal Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize)
-        {
-            return PopupLocationHelper.GetDropDownRect(buttonRect, minSize, maxSize, this);
-        }
+        internal Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize) => 
+            PopupLocationHelper.GetDropDownRect(buttonRect, minSize, maxSize, this);
 
         internal Rect FitPopupWindowRectToScreen(Rect rect, float minimumHeight)
         {

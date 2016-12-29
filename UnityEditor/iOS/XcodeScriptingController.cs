@@ -23,15 +23,11 @@
         {
         }
 
-        public string GetMobileDeviceList(string projectPath)
-        {
-            return "";
-        }
+        public string GetMobileDeviceList(string projectPath) => 
+            "";
 
-        public bool InitializeXcodeApplication(string buildToolsDir)
-        {
-            return XCodeUtils.InitializeScriptingXcodeApplication();
-        }
+        public bool InitializeXcodeApplication(string buildToolsDir) => 
+            XCodeUtils.InitializeScriptingXcodeApplication();
 
         public void Log(string msg, params object[] param)
         {

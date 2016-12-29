@@ -9,13 +9,8 @@
         {
         }
 
-        public virtual GUIContent content
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual GUIContent content =>
+            null;
     }
 }
 

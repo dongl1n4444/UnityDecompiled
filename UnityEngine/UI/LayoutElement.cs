@@ -94,10 +94,8 @@
         /// </summary>
         public virtual float flexibleHeight
         {
-            get
-            {
-                return this.m_FlexibleHeight;
-            }
+            get => 
+                this.m_FlexibleHeight;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_FlexibleHeight, value))
@@ -112,10 +110,8 @@
         /// </summary>
         public virtual float flexibleWidth
         {
-            get
-            {
-                return this.m_FlexibleWidth;
-            }
+            get => 
+                this.m_FlexibleWidth;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_FlexibleWidth, value))
@@ -130,10 +126,8 @@
         /// </summary>
         public virtual bool ignoreLayout
         {
-            get
-            {
-                return this.m_IgnoreLayout;
-            }
+            get => 
+                this.m_IgnoreLayout;
             set
             {
                 if (SetPropertyUtility.SetStruct<bool>(ref this.m_IgnoreLayout, value))
@@ -146,23 +140,16 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual int layoutPriority
-        {
-            get
-            {
-                return 1;
-            }
-        }
+        public virtual int layoutPriority =>
+            1;
 
         /// <summary>
         /// <para>The minimum height this layout element may be allocated.</para>
         /// </summary>
         public virtual float minHeight
         {
-            get
-            {
-                return this.m_MinHeight;
-            }
+            get => 
+                this.m_MinHeight;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_MinHeight, value))
@@ -177,10 +164,8 @@
         /// </summary>
         public virtual float minWidth
         {
-            get
-            {
-                return this.m_MinWidth;
-            }
+            get => 
+                this.m_MinWidth;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_MinWidth, value))
@@ -195,10 +180,8 @@
         /// </summary>
         public virtual float preferredHeight
         {
-            get
-            {
-                return this.m_PreferredHeight;
-            }
+            get => 
+                this.m_PreferredHeight;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_PreferredHeight, value))
@@ -213,10 +196,8 @@
         /// </summary>
         public virtual float preferredWidth
         {
-            get
-            {
-                return this.m_PreferredWidth;
-            }
+            get => 
+                this.m_PreferredWidth;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_PreferredWidth, value))

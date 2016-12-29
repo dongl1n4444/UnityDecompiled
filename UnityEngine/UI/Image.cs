@@ -833,23 +833,16 @@
             }
         }
 
-        private Sprite activeSprite
-        {
-            get
-            {
-                return ((this.m_OverrideSprite == null) ? this.sprite : this.m_OverrideSprite);
-            }
-        }
+        private Sprite activeSprite =>
+            ((this.m_OverrideSprite == null) ? this.sprite : this.m_OverrideSprite);
 
         /// <summary>
         /// <para>The alpha threshold specifies the minimum alpha a pixel must have for the event to considered a "hit" on the Image.</para>
         /// </summary>
         public float alphaHitTestMinimumThreshold
         {
-            get
-            {
-                return this.m_AlphaHitTestMinimumThreshold;
-            }
+            get => 
+                this.m_AlphaHitTestMinimumThreshold;
             set
             {
                 this.m_AlphaHitTestMinimumThreshold = value;
@@ -877,10 +870,8 @@
         [Obsolete("eventAlphaThreshold has been deprecated. Use eventMinimumAlphaThreshold instead (UnityUpgradable) -> alphaHitTestMinimumThreshold")]
         public float eventAlphaThreshold
         {
-            get
-            {
-                return (1f - this.alphaHitTestMinimumThreshold);
-            }
+            get => 
+                (1f - this.alphaHitTestMinimumThreshold);
             set
             {
                 this.alphaHitTestMinimumThreshold = 1f - value;
@@ -892,10 +883,8 @@
         /// </summary>
         public float fillAmount
         {
-            get
-            {
-                return this.m_FillAmount;
-            }
+            get => 
+                this.m_FillAmount;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_FillAmount, Mathf.Clamp01(value)))
@@ -910,10 +899,8 @@
         /// </summary>
         public bool fillCenter
         {
-            get
-            {
-                return this.m_FillCenter;
-            }
+            get => 
+                this.m_FillCenter;
             set
             {
                 if (SetPropertyUtility.SetStruct<bool>(ref this.m_FillCenter, value))
@@ -928,10 +915,8 @@
         /// </summary>
         public bool fillClockwise
         {
-            get
-            {
-                return this.m_FillClockwise;
-            }
+            get => 
+                this.m_FillClockwise;
             set
             {
                 if (SetPropertyUtility.SetStruct<bool>(ref this.m_FillClockwise, value))
@@ -946,10 +931,8 @@
         /// </summary>
         public FillMethod fillMethod
         {
-            get
-            {
-                return this.m_FillMethod;
-            }
+            get => 
+                this.m_FillMethod;
             set
             {
                 if (SetPropertyUtility.SetStruct<FillMethod>(ref this.m_FillMethod, value))
@@ -965,10 +948,8 @@
         /// </summary>
         public int fillOrigin
         {
-            get
-            {
-                return this.m_FillOrigin;
-            }
+            get => 
+                this.m_FillOrigin;
             set
             {
                 if (SetPropertyUtility.SetStruct<int>(ref this.m_FillOrigin, value))
@@ -981,65 +962,32 @@
         /// <summary>
         /// <para>See ILayoutElement.flexibleHeight.</para>
         /// </summary>
-        public virtual float flexibleHeight
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleHeight =>
+            -1f;
 
         /// <summary>
         /// <para>See ILayoutElement.flexibleWidth.</para>
         /// </summary>
-        public virtual float flexibleWidth
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleWidth =>
+            -1f;
 
         /// <summary>
         /// <para>True if the sprite used has borders.</para>
         /// </summary>
-        public bool hasBorder
-        {
-            get
-            {
-                return ((this.activeSprite != null) && (this.activeSprite.border.sqrMagnitude > 0f));
-            }
-        }
+        public bool hasBorder =>
+            ((this.activeSprite != null) && (this.activeSprite.border.sqrMagnitude > 0f));
 
         /// <summary>
         /// <para>See ILayoutElement.layoutPriority.</para>
         /// </summary>
-        public virtual int layoutPriority
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public virtual int layoutPriority =>
+            0;
 
         /// <summary>
         /// <para>The image's texture. (ReadOnly).</para>
         /// </summary>
-        public override Texture mainTexture
-        {
-            get
-            {
-                if (this.activeSprite == null)
-                {
-                    if ((this.material != null) && (this.material.mainTexture != null))
-                    {
-                        return this.material.mainTexture;
-                    }
-                    return Graphic.s_WhiteTexture;
-                }
-                return this.activeSprite.texture;
-            }
-        }
+        public override Texture mainTexture =>
+            this.activeSprite?.texture;
 
         /// <summary>
         /// <para>The specified Material used by this Image. The default Material is used instead if one wasn't specified.</para>
@@ -1067,34 +1015,22 @@
         /// <summary>
         /// <para>See ILayoutElement.minHeight.</para>
         /// </summary>
-        public virtual float minHeight
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public virtual float minHeight =>
+            0f;
 
         /// <summary>
         /// <para>See ILayoutElement.minWidth.</para>
         /// </summary>
-        public virtual float minWidth
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public virtual float minWidth =>
+            0f;
 
         /// <summary>
         /// <para>Set an override sprite to be used for rendering.</para>
         /// </summary>
         public Sprite overrideSprite
         {
-            get
-            {
-                return this.activeSprite;
-            }
+            get => 
+                this.activeSprite;
             set
             {
                 if (SetPropertyUtility.SetClass<Sprite>(ref this.m_OverrideSprite, value))
@@ -1165,10 +1101,8 @@
         /// </summary>
         public bool preserveAspect
         {
-            get
-            {
-                return this.m_PreserveAspect;
-            }
+            get => 
+                this.m_PreserveAspect;
             set
             {
                 if (SetPropertyUtility.SetStruct<bool>(ref this.m_PreserveAspect, value))
@@ -1183,10 +1117,8 @@
         /// </summary>
         public Sprite sprite
         {
-            get
-            {
-                return this.m_Sprite;
-            }
+            get => 
+                this.m_Sprite;
             set
             {
                 if (SetPropertyUtility.SetClass<Sprite>(ref this.m_Sprite, value))
@@ -1201,10 +1133,8 @@
         /// </summary>
         public Type type
         {
-            get
-            {
-                return this.m_Type;
-            }
+            get => 
+                this.m_Type;
             set
             {
                 if (SetPropertyUtility.SetStruct<Type>(ref this.m_Type, value))

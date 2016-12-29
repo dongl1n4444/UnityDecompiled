@@ -10,40 +10,26 @@
         public GUIContent debugBuild = EditorGUIUtility.TextContent("Development Build");
         public GUIContent webGLUsePreBuiltUnityEngine = EditorGUIUtility.TextContent("Use pre-built Engine");
 
-        public override bool EnabledBuildAndRunButton()
-        {
-            return this.EnabledBuildButton();
-        }
+        public override bool EnabledBuildAndRunButton() => 
+            this.EnabledBuildButton();
 
-        public override bool EnabledBuildButton()
-        {
-            return (this.Is64Bit() && !this.IsLinear());
-        }
+        public override bool EnabledBuildButton() => 
+            (this.Is64Bit() && !this.IsLinear());
 
-        private bool Is64Bit()
-        {
-            return (IntPtr.Size == 8);
-        }
+        private bool Is64Bit() => 
+            (IntPtr.Size == 8);
 
-        private bool IsLinear()
-        {
-            return (PlayerSettings.colorSpace == ColorSpace.Linear);
-        }
+        private bool IsLinear() => 
+            (PlayerSettings.colorSpace == ColorSpace.Linear);
 
-        public override bool ShouldDrawDevelopmentPlayerCheckbox()
-        {
-            return false;
-        }
+        public override bool ShouldDrawDevelopmentPlayerCheckbox() => 
+            false;
 
-        public override bool ShouldDrawProfilerCheckbox()
-        {
-            return this.Is64Bit();
-        }
+        public override bool ShouldDrawProfilerCheckbox() => 
+            this.Is64Bit();
 
-        public override bool ShouldDrawScriptDebuggingCheckbox()
-        {
-            return false;
-        }
+        public override bool ShouldDrawScriptDebuggingCheckbox() => 
+            false;
 
         public override void ShowPlatformBuildOptions()
         {

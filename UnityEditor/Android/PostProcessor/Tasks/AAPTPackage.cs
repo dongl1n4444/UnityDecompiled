@@ -25,11 +25,12 @@
                 str = " -0 \"\"";
             }
             string str2 = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~";
-            string args = string.Format("package -v -f -F {0} -A {1}{2} --ignore-assets \"{3}\"", new object[] { apkName, directory, str, str2 });
+            string args = $"package -v -f -F {apkName} -A {directory}{str} --ignore-assets "{str2}"";
             string str4 = TasksCommon.Exec(tools.AAPT, args, this._stagingArea, "Android Asset Packaging Tool failed.", 3);
             if (!str4.Contains("Found 0 custom asset files") && (!str4.Contains("Done!") || !File.Exists(Path.Combine(this._stagingArea, apkName))))
             {
-                Debug.LogError(string.Format("Android Asset Packaging Tool failed: {0} {1} \n {2}", tools.AAPT, args, str4));
+                Debug.LogError($"Android Asset Packaging Tool failed: {tools.AAPT} {args} 
+ {str4}");
                 CancelPostProcess.AbortBuildPointToConsole("AAPT Failed!", "Android Asset Packaging Tool failed.");
             }
         }
@@ -41,16 +42,16 @@
             if (flag || flag2)
             {
                 string str = Path.Combine(Environment.CurrentDirectory, this._stagingArea);
-                string[] first = new string[] { "apk", string.Format("{0}/main.obb", str), "-u" };
+                string[] first = new string[] { "apk", $"{str}/main.obb", "-u" };
                 if (flag)
                 {
-                    string[] second = new string[] { "-z", string.Format("{0}/obb.ap_", str) };
-                    first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, second));
+                    string[] second = new string[] { "-z", $"{str}/obb.ap_" };
+                    first = first.Concat<string>(second).ToArray<string>();
                 }
                 if (flag2)
                 {
-                    string[] textArray3 = new string[] { "-z", string.Format("{0}/rawobb.ap_", str) };
-                    first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, textArray3));
+                    string[] textArray3 = new string[] { "-z", $"{str}/rawobb.ap_" };
+                    first = first.Concat<string>(textArray3).ToArray<string>();
                 }
                 string message = TasksCommon.SDKTool(context, first, this._stagingArea, "Failed to build OBB.");
                 string fileName = Path.Combine(this._stagingArea, "main.obb");
@@ -121,13 +122,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "AAPT: Compiling all assets into one archive";
-            }
-        }
+        public string Name =>
+            "AAPT: Compiling all assets into one archive";
     }
 }
 

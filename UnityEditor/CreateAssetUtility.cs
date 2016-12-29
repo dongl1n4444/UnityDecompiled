@@ -65,10 +65,8 @@
             ProjectWindowUtil.EndNameEditAction(endAction, instanceID, pathName, resourceFile);
         }
 
-        public bool IsCreatingNewAsset()
-        {
-            return !string.IsNullOrEmpty(this.m_Path);
-        }
+        public bool IsCreatingNewAsset() => 
+            !string.IsNullOrEmpty(this.m_Path);
 
         private static bool IsPathDataValid(string filePath)
         {
@@ -79,53 +77,23 @@
             return (AssetDatabase.GetMainAssetInstanceID(Path.GetDirectoryName(filePath)) != 0);
         }
 
-        public EndNameEditAction endAction
-        {
-            get
-            {
-                return this.m_EndAction;
-            }
-        }
+        public EndNameEditAction endAction =>
+            this.m_EndAction;
 
-        public string extension
-        {
-            get
-            {
-                return Path.GetExtension(this.m_Path);
-            }
-        }
+        public string extension =>
+            Path.GetExtension(this.m_Path);
 
-        public string folder
-        {
-            get
-            {
-                return Path.GetDirectoryName(this.m_Path);
-            }
-        }
+        public string folder =>
+            Path.GetDirectoryName(this.m_Path);
 
-        public Texture2D icon
-        {
-            get
-            {
-                return this.m_Icon;
-            }
-        }
+        public Texture2D icon =>
+            this.m_Icon;
 
-        public int instanceID
-        {
-            get
-            {
-                return this.m_InstanceID;
-            }
-        }
+        public int instanceID =>
+            this.m_InstanceID;
 
-        public string originalName
-        {
-            get
-            {
-                return Path.GetFileNameWithoutExtension(this.m_Path);
-            }
-        }
+        public string originalName =>
+            Path.GetFileNameWithoutExtension(this.m_Path);
     }
 }
 

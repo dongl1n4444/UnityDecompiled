@@ -30,7 +30,7 @@
         {
             if (_entryPoint == null)
             {
-                string str = string.Format("Entry point not found in assembly '{0}'.", _executable.FullName);
+                string str = $"Entry point not found in assembly '{_executable.FullName}'.";
                 object[] arguments = new object[] { str };
                 writer.WriteStatement(Emit.RaiseManagedException("il2cpp_codegen_get_missing_method_exception(\"{0}\")", arguments));
                 return false;
@@ -67,14 +67,14 @@
             }
             if (!flag2)
             {
-                string str4 = string.Format("Entry point method for type '{0}' has invalid signature.", _entryPoint.DeclaringType.FullName);
+                string str4 = $"Entry point method for type '{_entryPoint.DeclaringType.FullName}' has invalid signature.";
                 object[] objArray4 = new object[] { str4 };
                 writer.WriteStatement(Emit.RaiseManagedException("il2cpp_codegen_get_missing_method_exception(\"{0}\")", objArray4));
                 return false;
             }
             if (_entryPoint.DeclaringType.HasGenericParameters)
             {
-                string str5 = string.Format("Entry point method is defined on a generic type '{0}'.", _entryPoint.DeclaringType.FullName);
+                string str5 = $"Entry point method is defined on a generic type '{_entryPoint.DeclaringType.FullName}'.";
                 object[] objArray5 = new object[] { str5 };
                 writer.WriteStatement(Emit.RaiseManagedException("il2cpp_codegen_get_missing_method_exception(\"{0}\")", objArray5));
                 return false;

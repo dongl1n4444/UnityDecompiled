@@ -52,15 +52,11 @@
             return true;
         }
 
-        private bool CheckCanAccessSubmeshIndices(int submesh)
-        {
-            return this.CheckCanAccessSubmesh(submesh, false);
-        }
+        private bool CheckCanAccessSubmeshIndices(int submesh) => 
+            this.CheckCanAccessSubmesh(submesh, false);
 
-        private bool CheckCanAccessSubmeshTriangles(int submesh)
-        {
-            return this.CheckCanAccessSubmesh(submesh, true);
-        }
+        private bool CheckCanAccessSubmeshTriangles(int submesh) => 
+            this.CheckCanAccessSubmesh(submesh, true);
 
         [ExcludeFromDocs]
         public void Clear()
@@ -122,10 +118,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Array ExtractArrayFromList(object list);
-        private T[] GetAllocArrayFromChannel<T>(InternalShaderChannel channel)
-        {
-            return this.GetAllocArrayFromChannel<T>(channel, InternalVertexChannelType.Float, DefaultDimensionForChannel(channel));
-        }
+        private T[] GetAllocArrayFromChannel<T>(InternalShaderChannel channel) => 
+            this.GetAllocArrayFromChannel<T>(channel, InternalVertexChannelType.Float, DefaultDimensionForChannel(channel));
 
         private T[] GetAllocArrayFromChannel<T>(InternalShaderChannel channel, InternalVertexChannelType format, int dim)
         {
@@ -186,10 +180,8 @@
         /// <para>Returns the index buffer for the sub-Mesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
-        public int[] GetIndices(int submesh)
-        {
-            return (!this.CheckCanAccessSubmeshIndices(submesh) ? new int[0] : this.GetIndicesImpl(submesh));
-        }
+        public int[] GetIndices(int submesh) => 
+            (!this.CheckCanAccessSubmeshIndices(submesh) ? new int[0] : this.GetIndicesImpl(submesh));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int[] GetIndicesImpl(int submesh);
@@ -230,10 +222,8 @@
         /// <para>Returns the triangle list for the sub-Mesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
-        public int[] GetTriangles(int submesh)
-        {
-            return (!this.CheckCanAccessSubmeshTriangles(submesh) ? new int[0] : this.GetTrianglesImpl(submesh));
-        }
+        public int[] GetTriangles(int submesh) => 
+            (!this.CheckCanAccessSubmeshTriangles(submesh) ? new int[0] : this.GetTrianglesImpl(submesh));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int[] GetTrianglesImpl(int submesh);
@@ -336,15 +326,11 @@
         public extern void RecalculateNormals();
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void ResizeList(object list, int size);
-        private int SafeLength(Array values)
-        {
-            return ((values == null) ? 0 : values.Length);
-        }
+        private int SafeLength(Array values) => 
+            ((values == null) ? 0 : values.Length);
 
-        private int SafeLength<T>(List<T> values)
-        {
-            return ((values == null) ? 0 : values.Count);
-        }
+        private int SafeLength<T>(List<T> values) => 
+            ((values == null) ? 0 : values.Count);
 
         private void SetArrayForChannel<T>(InternalShaderChannel channel, T[] values)
         {
@@ -555,10 +541,8 @@
         /// </summary>
         public Color[] colors
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Color>(InternalShaderChannel.Color);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Color>(InternalShaderChannel.Color);
             set
             {
                 this.SetArrayForChannel<Color>(InternalShaderChannel.Color, value);
@@ -570,10 +554,8 @@
         /// </summary>
         public Color32[] colors32
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Color32>(InternalShaderChannel.Color, InternalVertexChannelType.Color, 1);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Color32>(InternalShaderChannel.Color, InternalVertexChannelType.Color, 1);
             set
             {
                 this.SetArrayForChannel<Color32>(InternalShaderChannel.Color, InternalVertexChannelType.Color, 1, value);
@@ -590,10 +572,8 @@
         /// </summary>
         public Vector3[] normals
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector3>(InternalShaderChannel.Normal);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector3>(InternalShaderChannel.Normal);
             set
             {
                 this.SetArrayForChannel<Vector3>(InternalShaderChannel.Normal, value);
@@ -610,10 +590,8 @@
         /// </summary>
         public Vector4[] tangents
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector4>(InternalShaderChannel.Tangent);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector4>(InternalShaderChannel.Tangent);
             set
             {
                 this.SetArrayForChannel<Vector4>(InternalShaderChannel.Tangent, value);
@@ -652,10 +630,8 @@
         /// </summary>
         public Vector2[] uv
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord0);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord0);
             set
             {
                 this.SetArrayForChannel<Vector2>(InternalShaderChannel.TexCoord0, value);
@@ -665,10 +641,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property Mesh.uv1 has been deprecated. Use Mesh.uv2 instead (UnityUpgradable) -> uv2", true)]
         public Vector2[] uv1
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -679,10 +653,8 @@
         /// </summary>
         public Vector2[] uv2
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord1);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord1);
             set
             {
                 this.SetArrayForChannel<Vector2>(InternalShaderChannel.TexCoord1, value);
@@ -694,10 +666,8 @@
         /// </summary>
         public Vector2[] uv3
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord2);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord2);
             set
             {
                 this.SetArrayForChannel<Vector2>(InternalShaderChannel.TexCoord2, value);
@@ -709,10 +679,8 @@
         /// </summary>
         public Vector2[] uv4
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord3);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector2>(InternalShaderChannel.TexCoord3);
             set
             {
                 this.SetArrayForChannel<Vector2>(InternalShaderChannel.TexCoord3, value);
@@ -734,10 +702,8 @@
         /// </summary>
         public Vector3[] vertices
         {
-            get
-            {
-                return this.GetAllocArrayFromChannel<Vector3>(InternalShaderChannel.Vertex);
-            }
+            get => 
+                this.GetAllocArrayFromChannel<Vector3>(InternalShaderChannel.Vertex);
             set
             {
                 this.SetArrayForChannel<Vector3>(InternalShaderChannel.Vertex, value);

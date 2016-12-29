@@ -242,13 +242,8 @@
             }
         }
 
-        public ClassInfo[] ClassInfoArray
-        {
-            get
-            {
-                return this.classes_.ToArray();
-            }
-        }
+        public ClassInfo[] ClassInfoArray =>
+            this.classes_.ToArray();
 
         [CompilerGenerated]
         private sealed class <AddType>c__AnonStorey0
@@ -256,10 +251,8 @@
             internal AssemblyTypeInfoGenerator $this;
             internal TypeReference typeRef;
 
-            internal bool <>m__0(AssemblyTypeInfoGenerator.ClassInfo x)
-            {
-                return (x.name == this.$this.GetMonoEmbeddedFullTypeNameFor(this.typeRef));
-            }
+            internal bool <>m__0(AssemblyTypeInfoGenerator.ClassInfo x) => 
+                (x.name == this.$this.GetMonoEmbeddedFullTypeNameFor(this.typeRef));
         }
 
         [CompilerGenerated]
@@ -268,10 +261,8 @@
             internal AssemblyTypeInfoGenerator $this;
             internal Dictionary<TypeReference, TypeReference> genericInstanceTypeMap;
 
-            internal TypeReference <>m__0(TypeReference x)
-            {
-                return this.$this.ResolveGenericInstanceType(x, this.genericInstanceTypeMap);
-            }
+            internal TypeReference <>m__0(TypeReference x) => 
+                this.$this.ResolveGenericInstanceType(x, this.genericInstanceTypeMap);
         }
 
         private class AssemblyResolver : BaseAssemblyResolver

@@ -100,13 +100,14 @@
                 <>f__am$cache0 = new Func<ProductDefinition, Product>(null, (IntPtr) <FetchAdditionalProducts>m__0);
             }
             this.products.AddProducts(Enumerable.Select<ProductDefinition, Product>(products, <>f__am$cache0));
-            this.m_Store.RetrieveProducts(new ReadOnlyCollection<ProductDefinition>(Enumerable.ToList<ProductDefinition>(products)));
+            this.m_Store.RetrieveProducts(new ReadOnlyCollection<ProductDefinition>(products.ToList<ProductDefinition>()));
         }
 
         private string FormatUnifiedReceipt(string platformReceipt, string transactionId)
         {
-            Dictionary<string, object> json = new Dictionary<string, object>();
-            json["Store"] = this.m_StoreName;
+            Dictionary<string, object> json = new Dictionary<string, object> {
+                ["Store"] = this.m_StoreName
+            };
             if (transactionId == null)
             {
             }
@@ -126,9 +127,9 @@
             {
                 <>f__am$cache1 = new Func<ProductDefinition, Product>(null, (IntPtr) <Initialize>m__1);
             }
-            Product[] productArray = Enumerable.ToArray<Product>(Enumerable.Select<ProductDefinition, Product>(products, <>f__am$cache1));
+            Product[] productArray = Enumerable.Select<ProductDefinition, Product>(products, <>f__am$cache1).ToArray<Product>();
             this.products = new ProductCollection(productArray);
-            ReadOnlyCollection<ProductDefinition> onlys = new ReadOnlyCollection<ProductDefinition>(Enumerable.ToList<ProductDefinition>(products));
+            ReadOnlyCollection<ProductDefinition> onlys = new ReadOnlyCollection<ProductDefinition>(products.ToList<ProductDefinition>());
             this.m_Store.RetrieveProducts(onlys);
         }
 

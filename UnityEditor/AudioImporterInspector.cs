@@ -82,13 +82,11 @@
         }
 
         [DebuggerHidden]
-        private IEnumerable<AudioImporter> GetAllAudioImporterTargets()
-        {
-            return new <GetAllAudioImporterTargets>c__Iterator0 { 
+        private IEnumerable<AudioImporter> GetAllAudioImporterTargets() => 
+            new <GetAllAudioImporterTargets>c__Iterator0 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         private AudioCompressionFormat[] GetFormatsForPlatform(BuildTargetGroup platform)
         {
@@ -141,10 +139,10 @@
             status.multiCompressionFormat = false;
             status.multiQuality = false;
             status.multiConversionMode = false;
-            if (Enumerable.Any<AudioImporter>(this.GetAllAudioImporterTargets()))
+            if (this.GetAllAudioImporterTargets().Any<AudioImporter>())
             {
                 AudioImporterSampleSettings defaultSampleSettings;
-                AudioImporter importer = Enumerable.First<AudioImporter>(this.GetAllAudioImporterTargets());
+                AudioImporter importer = this.GetAllAudioImporterTargets().First<AudioImporter>();
                 if (platform == BuildTargetGroup.Unknown)
                 {
                     defaultSampleSettings = importer.defaultSampleSettings;
@@ -154,7 +152,7 @@
                     defaultSampleSettings = importer.Internal_GetOverrideSampleSettings(platform);
                 }
                 AudioImporter[] second = new AudioImporter[] { importer };
-                foreach (AudioImporter importer2 in Enumerable.Except<AudioImporter>(this.GetAllAudioImporterTargets(), second))
+                foreach (AudioImporter importer2 in this.GetAllAudioImporterTargets().Except<AudioImporter>(second))
                 {
                     AudioImporterSampleSettings settings2;
                     if (platform == BuildTargetGroup.Unknown)
@@ -180,12 +178,12 @@
         {
             bool flag = false;
             bool flag2 = false;
-            if (Enumerable.Any<AudioImporter>(this.GetAllAudioImporterTargets()))
+            if (this.GetAllAudioImporterTargets().Any<AudioImporter>())
             {
-                AudioImporter importer = Enumerable.First<AudioImporter>(this.GetAllAudioImporterTargets());
+                AudioImporter importer = this.GetAllAudioImporterTargets().First<AudioImporter>();
                 flag2 = importer.Internal_ContainsSampleSettingsOverride(platform);
                 AudioImporter[] second = new AudioImporter[] { importer };
-                foreach (AudioImporter importer2 in Enumerable.Except<AudioImporter>(this.GetAllAudioImporterTargets(), second))
+                foreach (AudioImporter importer2 in this.GetAllAudioImporterTargets().Except<AudioImporter>(second))
                 {
                     bool flag3 = importer2.Internal_ContainsSampleSettingsOverride(platform);
                     if (flag3 != flag2)
@@ -420,9 +418,9 @@
 
         private bool ResetSettingsFromBackend()
         {
-            if (Enumerable.Any<AudioImporter>(this.GetAllAudioImporterTargets()))
+            if (this.GetAllAudioImporterTargets().Any<AudioImporter>())
             {
-                AudioImporter importer = Enumerable.First<AudioImporter>(this.GetAllAudioImporterTargets());
+                AudioImporter importer = this.GetAllAudioImporterTargets().First<AudioImporter>();
                 this.m_DefaultSampleSettings.settings = importer.defaultSampleSettings;
                 this.m_DefaultSampleSettings.ClearChangedFlags();
                 this.m_SampleSettingOverrides = new Dictionary<BuildTargetGroup, SampleSettingProperties>();
@@ -623,28 +621,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<UnityEditor.AudioImporter>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<UnityEditor.AudioImporter>.GetEnumerator();
 
-            AudioImporter IEnumerator<AudioImporter>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            AudioImporter IEnumerator<AudioImporter>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -677,10 +661,8 @@
             public bool compressionFormatChanged;
             public bool qualityChanged;
             public bool conversionModeChanged;
-            public bool HasModified()
-            {
-                return ((((this.overrideIsForced || this.loadTypeChanged) || (this.sampleRateSettingChanged || this.sampleRateOverrideChanged)) || (this.compressionFormatChanged || this.qualityChanged)) || this.conversionModeChanged);
-            }
+            public bool HasModified() => 
+                ((((this.overrideIsForced || this.loadTypeChanged) || (this.sampleRateSettingChanged || this.sampleRateOverrideChanged)) || (this.compressionFormatChanged || this.qualityChanged)) || this.conversionModeChanged);
 
             public void ClearChangedFlags()
             {

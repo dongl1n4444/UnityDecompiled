@@ -9,10 +9,8 @@
 
         public static bool copyPDBFiles
         {
-            get
-            {
-                return (EditorUserBuildSettings.GetPlatformSettings(DesktopStandaloneUserBuildSettings.PlatformName, kSettingCopyPDBFiles).ToLower() == "true");
-            }
+            get => 
+                (EditorUserBuildSettings.GetPlatformSettings(DesktopStandaloneUserBuildSettings.PlatformName, kSettingCopyPDBFiles).ToLower() == "true");
             set
             {
                 EditorUserBuildSettings.SetPlatformSettings(DesktopStandaloneUserBuildSettings.PlatformName, kSettingCopyPDBFiles, value.ToString().ToLower());

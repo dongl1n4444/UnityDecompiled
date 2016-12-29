@@ -403,18 +403,11 @@
             }
         }
 
-        public override bool UseDefaultMargins()
-        {
-            return false;
-        }
+        public override bool UseDefaultMargins() => 
+            false;
 
-        internal Avatar avatar
-        {
-            get
-            {
-                return (base.target as Avatar);
-            }
-        }
+        internal Avatar avatar =>
+            (base.target as Avatar);
 
         protected AvatarSubEditor editor
         {
@@ -453,13 +446,8 @@
             }
         }
 
-        public GameObject prefab
-        {
-            get
-            {
-                return (AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GetAssetPath(base.target)) as GameObject);
-            }
-        }
+        public GameObject prefab =>
+            (AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GetAssetPath(base.target)) as GameObject);
 
         private static Styles styles
         {

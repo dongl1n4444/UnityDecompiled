@@ -113,21 +113,11 @@
             this.m_ShowWarningMessage.target = this.IsWarningMessageEmpty;
         }
 
-        private bool IsWarningMessageEmpty
-        {
-            get
-            {
-                return ((this.m_WarningMessage != null) && (this.m_WarningMessage.stringValue.Length > 0));
-            }
-        }
+        private bool IsWarningMessageEmpty =>
+            ((this.m_WarningMessage != null) && (this.m_WarningMessage.stringValue.Length > 0));
 
-        private string WarningMessage
-        {
-            get
-            {
-                return ((this.m_WarningMessage == null) ? "" : this.m_WarningMessage.stringValue);
-            }
-        }
+        private string WarningMessage =>
+            ((this.m_WarningMessage == null) ? "" : this.m_WarningMessage.stringValue);
 
         private class Styles
         {

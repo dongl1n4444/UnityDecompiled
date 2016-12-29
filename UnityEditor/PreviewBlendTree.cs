@@ -74,10 +74,8 @@
             }
         }
 
-        public bool HasPreviewGUI()
-        {
-            return true;
-        }
+        public bool HasPreviewGUI() => 
+            true;
 
         public void Init(BlendTree blendTree, Animator animator)
         {
@@ -200,13 +198,8 @@
             }
         }
 
-        public Animator PreviewAnimator
-        {
-            get
-            {
-                return this.m_AvatarPreview.Animator;
-            }
-        }
+        public Animator PreviewAnimator =>
+            this.m_AvatarPreview.Animator;
     }
 }
 

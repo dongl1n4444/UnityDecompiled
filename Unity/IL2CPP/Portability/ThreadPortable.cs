@@ -6,29 +6,14 @@
 
     public static class ThreadPortable
     {
-        public static Context CurrentContext
-        {
-            get
-            {
-                return Thread.CurrentContext;
-            }
-        }
+        public static Context CurrentContext =>
+            Thread.CurrentContext;
 
-        public static int CurrentContextIdPortable
-        {
-            get
-            {
-                return Thread.CurrentContext.ContextID;
-            }
-        }
+        public static int CurrentContextIdPortable =>
+            Thread.CurrentContext.ContextID;
 
-        public static bool HasCurrentContext
-        {
-            get
-            {
-                return (Thread.CurrentContext != null);
-            }
-        }
+        public static bool HasCurrentContext =>
+            (Thread.CurrentContext != null);
     }
 }
 

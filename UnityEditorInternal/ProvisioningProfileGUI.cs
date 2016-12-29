@@ -29,10 +29,8 @@
             return provisioningProfile;
         }
 
-        private static bool GetBoolForAutomaticSigningValue(int signingValue)
-        {
-            return (signingValue == 1);
-        }
+        private static bool GetBoolForAutomaticSigningValue(int signingValue) => 
+            (signingValue == 1);
 
         private static int GetDefaultAutomaticSigningValue(SerializedProperty prop, string editorPropKey)
         {
@@ -54,10 +52,8 @@
             return stringValue;
         }
 
-        private static int GetIntValueForAutomaticSigningBool(bool automaticallySign)
-        {
-            return (!automaticallySign ? 2 : 1);
-        }
+        private static int GetIntValueForAutomaticSigningBool(bool automaticallySign) => 
+            (!automaticallySign ? 2 : 1);
 
         internal static bool GetProvisioningProfileId(string filePath, out ProvisioningProfile provisioningProfile)
         {

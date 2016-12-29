@@ -32,10 +32,8 @@
             return BuildHumanAvatarMono(go, humanDescription);
         }
 
-        private static Avatar BuildHumanAvatarMono(GameObject go, HumanDescription monoHumanDescription)
-        {
-            return INTERNAL_CALL_BuildHumanAvatarMono(go, ref monoHumanDescription);
-        }
+        private static Avatar BuildHumanAvatarMono(GameObject go, HumanDescription monoHumanDescription) => 
+            INTERNAL_CALL_BuildHumanAvatarMono(go, ref monoHumanDescription);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Avatar INTERNAL_CALL_BuildHumanAvatarMono(GameObject go, ref HumanDescription monoHumanDescription);

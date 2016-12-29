@@ -11,10 +11,8 @@
         /// <para>Get the GUI element at a specific screen position.</para>
         /// </summary>
         /// <param name="screenPosition"></param>
-        public GUIElement HitTest(Vector3 screenPosition)
-        {
-            return INTERNAL_CALL_HitTest(this, ref screenPosition);
-        }
+        public GUIElement HitTest(Vector3 screenPosition) => 
+            INTERNAL_CALL_HitTest(this, ref screenPosition);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern GUIElement INTERNAL_CALL_HitTest(GUILayer self, ref Vector3 screenPosition);

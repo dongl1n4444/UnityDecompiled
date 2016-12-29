@@ -171,13 +171,8 @@
         /// <summary>
         /// <para>(Read Only) Gets the number of persisted world anchors in this WorldAnchorStore.</para>
         /// </summary>
-        public int anchorCount
-        {
-            get
-            {
-                return GetAnchorCount_Internal(this.m_NativePtr);
-            }
-        }
+        public int anchorCount =>
+            GetAnchorCount_Internal(this.m_NativePtr);
 
         /// <summary>
         /// <para>The handler for when getting the WorldAnchorStore from GetAsync.</para>

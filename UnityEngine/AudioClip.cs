@@ -30,10 +30,8 @@
         /// <returns>
         /// <para>A reference to the created AudioClip.</para>
         /// </returns>
-        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool stream)
-        {
-            return Create(name, lengthSamples, channels, frequency, stream, (PCMReaderCallback) null, (PCMSetPositionCallback) null);
-        }
+        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool stream) => 
+            Create(name, lengthSamples, channels, frequency, stream, (PCMReaderCallback) null, (PCMSetPositionCallback) null);
 
         /// <summary>
         /// <para>Creates a user AudioClip with a name and with the given length in samples, channels and frequency.</para>
@@ -50,21 +48,15 @@
         /// <para>A reference to the created AudioClip.</para>
         /// </returns>
         [Obsolete("The _3D argument of AudioClip is deprecated. Use the spatialBlend property of AudioSource instead to morph between 2D and 3D playback.")]
-        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool _3D, bool stream)
-        {
-            return Create(name, lengthSamples, channels, frequency, stream);
-        }
+        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool _3D, bool stream) => 
+            Create(name, lengthSamples, channels, frequency, stream);
 
-        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool stream, PCMReaderCallback pcmreadercallback)
-        {
-            return Create(name, lengthSamples, channels, frequency, stream, pcmreadercallback, null);
-        }
+        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool stream, PCMReaderCallback pcmreadercallback) => 
+            Create(name, lengthSamples, channels, frequency, stream, pcmreadercallback, null);
 
         [Obsolete("The _3D argument of AudioClip is deprecated. Use the spatialBlend property of AudioSource instead to morph between 2D and 3D playback.")]
-        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool _3D, bool stream, PCMReaderCallback pcmreadercallback)
-        {
-            return Create(name, lengthSamples, channels, frequency, stream, pcmreadercallback, null);
-        }
+        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool _3D, bool stream, PCMReaderCallback pcmreadercallback) => 
+            Create(name, lengthSamples, channels, frequency, stream, pcmreadercallback, null);
 
         public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool stream, PCMReaderCallback pcmreadercallback, PCMSetPositionCallback pcmsetpositioncallback)
         {
@@ -98,10 +90,8 @@
         }
 
         [Obsolete("The _3D argument of AudioClip is deprecated. Use the spatialBlend property of AudioSource instead to morph between 2D and 3D playback.")]
-        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool _3D, bool stream, PCMReaderCallback pcmreadercallback, PCMSetPositionCallback pcmsetpositioncallback)
-        {
-            return Create(name, lengthSamples, channels, frequency, stream, pcmreadercallback, pcmsetpositioncallback);
-        }
+        public static AudioClip Create(string name, int lengthSamples, int channels, int frequency, bool _3D, bool stream, PCMReaderCallback pcmreadercallback, PCMSetPositionCallback pcmsetpositioncallback) => 
+            Create(name, lengthSamples, channels, frequency, stream, pcmreadercallback, pcmsetpositioncallback);
 
         /// <summary>
         /// <para>Fills an array with sample data from the clip.</para>

@@ -59,15 +59,11 @@
             return false;
         }
 
-        public bool CheckKeyInDict(string key)
-        {
-            return this.CheckContained(key);
-        }
+        public bool CheckKeyInDict(string key) => 
+            this.CheckContained(key);
 
-        public bool CheckStringValueInArray(string value)
-        {
-            return this.CheckContained(value);
-        }
+        public bool CheckStringValueInArray(string value) => 
+            this.CheckContained(value);
 
         public bool CheckStringValueInDict(string key, string value)
         {

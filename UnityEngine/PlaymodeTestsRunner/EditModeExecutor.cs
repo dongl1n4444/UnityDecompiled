@@ -59,20 +59,16 @@
             };
         }
 
-        private IEnumerator HandleEnumerableTest(object instance, MethodInfo m)
-        {
-            return (m.Invoke(instance, null) as IEnumerator);
-        }
+        private IEnumerator HandleEnumerableTest(object instance, MethodInfo m) => 
+            (m.Invoke(instance, null) as IEnumerator);
 
         [DebuggerHidden]
-        private IEnumerator HandleVoidTest(object instance, MethodInfo m)
-        {
-            return new <HandleVoidTest>c__Iterator0 { 
+        private IEnumerator HandleVoidTest(object instance, MethodInfo m) => 
+            new <HandleVoidTest>c__Iterator0 { 
                 m = m,
                 instance = instance,
                 $this = this
             };
-        }
 
         [CompilerGenerated]
         private sealed class <HandleVoidTest>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
@@ -127,23 +123,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

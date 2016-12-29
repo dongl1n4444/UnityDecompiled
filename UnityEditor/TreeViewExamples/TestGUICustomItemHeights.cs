@@ -37,10 +37,8 @@
             }
         }
 
-        protected override Vector2 GetSizeOfRow(TreeViewItem item)
-        {
-            return new Vector2(base.m_TreeView.GetTotalRect().width, !item.hasChildren ? 36f : 20f);
-        }
+        protected override Vector2 GetSizeOfRow(TreeViewItem item) => 
+            new Vector2(base.m_TreeView.GetTotalRect().width, !item.hasChildren ? 36f : 20f);
 
         public override void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused)
         {

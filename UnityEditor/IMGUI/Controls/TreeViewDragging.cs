@@ -23,10 +23,8 @@
             this.m_TreeView = treeView;
         }
 
-        public virtual bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition)
-        {
-            return true;
-        }
+        public virtual bool CanStartDrag(TreeViewItem targetItem, List<int> draggedItemIDs, Vector2 mouseDownPosition) => 
+            true;
 
         public abstract DragAndDropVisualMode DoDrag(TreeViewItem parentItem, TreeViewItem targetItem, bool perform, DropPosition dropPosition);
         public virtual void DragCleanup(bool revertExpanded)
@@ -188,13 +186,11 @@
             {
                 <>f__am$cache0 = new Func<TreeViewItem, int>(null, (IntPtr) <GetCurrentExpanded>m__1);
             }
-            return Enumerable.ToList<int>(Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(this.m_TreeView.data.GetRows(), new Func<TreeViewItem, bool>(this, (IntPtr) this.<GetCurrentExpanded>m__0)), <>f__am$cache0));
+            return Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(this.m_TreeView.data.GetRows(), new Func<TreeViewItem, bool>(this, (IntPtr) this.<GetCurrentExpanded>m__0)), <>f__am$cache0).ToList<int>();
         }
 
-        public int GetDropTargetControlID()
-        {
-            return this.m_DropData.dropTargetControlID;
-        }
+        public int GetDropTargetControlID() => 
+            this.m_DropData.dropTargetControlID;
 
         internal static int GetInsertionIndex(TreeViewItem parentItem, TreeViewItem targetItem, DropPosition dropPosition)
         {
@@ -223,10 +219,8 @@
             return -1;
         }
 
-        public int GetRowMarkerControlID()
-        {
-            return this.m_DropData.rowMarkerControlID;
-        }
+        public int GetRowMarkerControlID() => 
+            this.m_DropData.rowMarkerControlID;
 
         protected virtual void HandleAutoExpansion(int itemControlID, TreeViewItem targetItem, Rect targetItemRect, float betweenHalfHeight, Vector2 currentMousePos)
         {

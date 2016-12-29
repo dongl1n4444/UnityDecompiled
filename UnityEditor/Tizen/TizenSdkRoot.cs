@@ -57,10 +57,8 @@
             return "";
         }
 
-        internal static bool IsSdkDir(string path)
-        {
-            return Directory.Exists(Path.Combine(path, "tools"));
-        }
+        internal static bool IsSdkDir(string path) => 
+            Directory.Exists(Path.Combine(path, "tools"));
     }
 }
 

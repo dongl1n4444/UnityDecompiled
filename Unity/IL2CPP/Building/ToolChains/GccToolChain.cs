@@ -18,10 +18,8 @@
         {
         }
 
-        public override bool CanBuildInCurrentEnvironment()
-        {
-            return PlatformUtils.IsLinux();
-        }
+        public override bool CanBuildInCurrentEnvironment() => 
+            PlatformUtils.IsLinux();
 
         public override NPath CompilerExecutableFor(NPath sourceFile)
         {
@@ -32,43 +30,31 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction)
-        {
-            return new <CompilerFlagsFor>c__Iterator2 { 
+        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction) => 
+            new <CompilerFlagsFor>c__Iterator2 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        private IEnumerable<string> DefaultCompilerFlagsFor(CppCompilationInstruction sourceFile)
-        {
-            return new <DefaultCompilerFlagsFor>c__Iterator3 { 
+        private IEnumerable<string> DefaultCompilerFlagsFor(CppCompilationInstruction sourceFile) => 
+            new <DefaultCompilerFlagsFor>c__Iterator3 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override bool DynamicLibrariesHaveToSitNextToExecutable()
-        {
-            return true;
-        }
+        public override bool DynamicLibrariesHaveToSitNextToExecutable() => 
+            true;
 
-        public override string ExecutableExtension()
-        {
-            return "";
-        }
+        public override string ExecutableExtension() => 
+            "";
 
-        protected override string GetInterestingOutputFromCompilationShellResult(Shell.ExecuteResult shellResult)
-        {
-            return shellResult.StdErr;
-        }
+        protected override string GetInterestingOutputFromCompilationShellResult(Shell.ExecuteResult shellResult) => 
+            shellResult.StdErr;
 
-        protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult)
-        {
-            return shellResult.StdErr;
-        }
+        protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult) => 
+            shellResult.StdErr;
 
         protected virtual List<string> GetLinkerArgs(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags)
         {
@@ -82,10 +68,10 @@
             {
                 list.Add("-shared");
             }
-            list.AddRange(Extensions.InQuotes(objectFiles, SlashMode.Native));
-            list.AddRange(Extensions.InQuotes(staticLibraries, SlashMode.Native));
-            list.AddRange(ExtensionMethods.InQuotes(this.ToolChainStaticLibraries()));
-            if (Enumerable.Count<NPath>(dynamicLibraries) > 1)
+            list.AddRange(objectFiles.InQuotes(SlashMode.Native));
+            list.AddRange(staticLibraries.InQuotes(SlashMode.Native));
+            list.AddRange(this.ToolChainStaticLibraries().InQuotes());
+            if (dynamicLibraries.Count<NPath>() > 1)
             {
                 throw new ArgumentException("We've never tried to link to more than one shared library on linux. there be rpath dragons");
             }
@@ -104,10 +90,8 @@
             return list;
         }
 
-        public virtual NPath LinkerExecutableFor()
-        {
-            return new NPath("/usr/bin/g++");
-        }
+        public virtual NPath LinkerExecutableFor() => 
+            new NPath("/usr/bin/g++");
 
         public override CppProgramBuilder.LinkerInvocation MakeLinkerInvocation(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags, CppToolChainContext toolChainContext)
         {
@@ -115,43 +99,30 @@
             CppProgramBuilder.LinkerInvocation invocation = new CppProgramBuilder.LinkerInvocation();
             Shell.ExecuteArgs args = new Shell.ExecuteArgs {
                 Executable = this.LinkerExecutableFor().ToString(),
-                Arguments = ExtensionMethods.SeparateWithSpaces(inputs)
+                Arguments = inputs.SeparateWithSpaces()
             };
             invocation.ExecuteArgs = args;
             invocation.ArgumentsInfluencingOutcome = inputs;
-            invocation.FilesInfluencingOutcome = Enumerable.Concat<NPath>(objectFiles, staticLibraries);
+            invocation.FilesInfluencingOutcome = objectFiles.Concat<NPath>(staticLibraries);
             return invocation;
         }
 
-        public override string ObjectExtension()
-        {
-            return ".o";
-        }
+        public override string ObjectExtension() => 
+            ".o";
 
-        public override IEnumerable<string> OutputArgumentFor(NPath objectFile)
-        {
-            return new string[] { "-o", objectFile.InQuotes() };
-        }
+        public override IEnumerable<string> OutputArgumentFor(NPath objectFile) => 
+            new string[] { "-o", objectFile.InQuotes() };
 
         [DebuggerHidden]
-        public override IEnumerable<string> ToolChainDefines()
-        {
-            return new <ToolChainDefines>c__Iterator0 { $PC = -2 };
-        }
+        public override IEnumerable<string> ToolChainDefines() => 
+            new <ToolChainDefines>c__Iterator0 { $PC = -2 };
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> ToolChainIncludePaths()
-        {
-            return new <ToolChainIncludePaths>c__Iterator1 { $PC = -2 };
-        }
+        public override IEnumerable<NPath> ToolChainIncludePaths() => 
+            new <ToolChainIncludePaths>c__Iterator1 { $PC = -2 };
 
-        public override string DynamicLibraryExtension
-        {
-            get
-            {
-                return ".so";
-            }
-        }
+        public override string DynamicLibraryExtension =>
+            ".so";
 
         [CompilerGenerated]
         private sealed class <CompilerFlagsFor>c__Iterator2 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -355,28 +326,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -522,28 +479,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -584,28 +527,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -646,28 +575,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

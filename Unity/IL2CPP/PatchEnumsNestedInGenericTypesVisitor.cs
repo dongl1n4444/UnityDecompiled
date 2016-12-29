@@ -8,7 +8,7 @@
     {
         protected override void Visit(GenericInstanceType genericInstanceType, Unity.Cecil.Visitor.Context context)
         {
-            if (Unity.IL2CPP.Extensions.IsEnum(genericInstanceType))
+            if (genericInstanceType.IsEnum())
             {
                 ModuleDefinition module = genericInstanceType.Module;
                 for (int i = 0; i < genericInstanceType.GenericArguments.Count; i++)

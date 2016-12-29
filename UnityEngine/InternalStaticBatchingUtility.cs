@@ -149,7 +149,7 @@
                 {
                     MeshFilter component = (MeshFilter) container2.gameObject.GetComponent(typeof(MeshFilter));
                     component.sharedMesh = combinedMesh;
-                    int subMeshCount = Enumerable.Count<MeshSubsetCombineUtility.SubMeshInstance>(container2.subMeshInstances);
+                    int subMeshCount = container2.subMeshInstances.Count<MeshSubsetCombineUtility.SubMeshInstance>();
                     Renderer renderer = container2.gameObject.GetComponent<Renderer>();
                     renderer.SetStaticBatchInfo(firstSubMesh, subMeshCount);
                     renderer.staticBatchRootTransform = staticBatchRootTransform;
@@ -167,14 +167,8 @@
 
         internal class SortGO : IComparer
         {
-            private static int GetLightmapIndex(Renderer renderer)
-            {
-                if (renderer == null)
-                {
-                    return -1;
-                }
-                return renderer.lightmapIndex;
-            }
+            private static int GetLightmapIndex(Renderer renderer) => 
+                renderer?.lightmapIndex;
 
             private static int GetMaterialId(Renderer renderer)
             {
@@ -192,11 +186,7 @@
                     return null;
                 }
                 MeshFilter component = go.GetComponent(typeof(MeshFilter)) as MeshFilter;
-                if (component == null)
-                {
-                    return null;
-                }
-                return component.GetComponent<Renderer>();
+                return component?.GetComponent<Renderer>();
             }
 
             int IComparer.Compare(object a, object b)

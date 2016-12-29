@@ -67,10 +67,8 @@
             WindowChange.Open(new AssetList(), false);
         }
 
-        private static bool NewChangeSetTest(int userDatad)
-        {
-            return Provider.isActive;
-        }
+        private static bool NewChangeSetTest(int userDatad) => 
+            Provider.isActive;
 
         private static void Resolve(int userData)
         {
@@ -81,10 +79,8 @@
             }
         }
 
-        private static bool ResolveTest(int userData)
-        {
-            return (ListControl.FromID(userData).SelectedChangeSets.Count > 0);
-        }
+        private static bool ResolveTest(int userData) => 
+            (ListControl.FromID(userData).SelectedChangeSets.Count > 0);
 
         private static void Revert(int userData)
         {
@@ -95,10 +91,8 @@
             }
         }
 
-        private static bool RevertTest(int userData)
-        {
-            return (ListControl.FromID(userData).SelectedChangeSets.Count > 0);
-        }
+        private static bool RevertTest(int userData) => 
+            (ListControl.FromID(userData).SelectedChangeSets.Count > 0);
 
         private static void RevertUnchanged(int userData)
         {
@@ -106,10 +100,8 @@
             Provider.InvalidateCache();
         }
 
-        private static bool RevertUnchangedTest(int userData)
-        {
-            return (ListControl.FromID(userData).SelectedChangeSets.Count > 0);
-        }
+        private static bool RevertUnchangedTest(int userData) => 
+            (ListControl.FromID(userData).SelectedChangeSets.Count > 0);
 
         private static void Submit(int userData)
         {

@@ -24,10 +24,8 @@
         /// </summary>
         public float weight0
         {
-            get
-            {
-                return this.m_Weight0;
-            }
+            get => 
+                this.m_Weight0;
             set
             {
                 this.m_Weight0 = value;
@@ -38,10 +36,8 @@
         /// </summary>
         public float weight1
         {
-            get
-            {
-                return this.m_Weight1;
-            }
+            get => 
+                this.m_Weight1;
             set
             {
                 this.m_Weight1 = value;
@@ -52,10 +48,8 @@
         /// </summary>
         public float weight2
         {
-            get
-            {
-                return this.m_Weight2;
-            }
+            get => 
+                this.m_Weight2;
             set
             {
                 this.m_Weight2 = value;
@@ -66,10 +60,8 @@
         /// </summary>
         public float weight3
         {
-            get
-            {
-                return this.m_Weight3;
-            }
+            get => 
+                this.m_Weight3;
             set
             {
                 this.m_Weight3 = value;
@@ -80,10 +72,8 @@
         /// </summary>
         public int boneIndex0
         {
-            get
-            {
-                return this.m_BoneIndex0;
-            }
+            get => 
+                this.m_BoneIndex0;
             set
             {
                 this.m_BoneIndex0 = value;
@@ -94,10 +84,8 @@
         /// </summary>
         public int boneIndex1
         {
-            get
-            {
-                return this.m_BoneIndex1;
-            }
+            get => 
+                this.m_BoneIndex1;
             set
             {
                 this.m_BoneIndex1 = value;
@@ -108,10 +96,8 @@
         /// </summary>
         public int boneIndex2
         {
-            get
-            {
-                return this.m_BoneIndex2;
-            }
+            get => 
+                this.m_BoneIndex2;
             set
             {
                 this.m_BoneIndex2 = value;
@@ -122,19 +108,15 @@
         /// </summary>
         public int boneIndex3
         {
-            get
-            {
-                return this.m_BoneIndex3;
-            }
+            get => 
+                this.m_BoneIndex3;
             set
             {
                 this.m_BoneIndex3 = value;
             }
         }
-        public override int GetHashCode()
-        {
-            return (((((((this.boneIndex0.GetHashCode() ^ (this.boneIndex1.GetHashCode() << 2)) ^ (this.boneIndex2.GetHashCode() >> 2)) ^ (this.boneIndex3.GetHashCode() >> 1)) ^ (this.weight0.GetHashCode() << 5)) ^ (this.weight1.GetHashCode() << 4)) ^ (this.weight2.GetHashCode() >> 4)) ^ (this.weight3.GetHashCode() >> 3));
-        }
+        public override int GetHashCode() => 
+            (((((((this.boneIndex0.GetHashCode() ^ (this.boneIndex1.GetHashCode() << 2)) ^ (this.boneIndex2.GetHashCode() >> 2)) ^ (this.boneIndex3.GetHashCode() >> 1)) ^ (this.weight0.GetHashCode() << 5)) ^ (this.weight1.GetHashCode() << 4)) ^ (this.weight2.GetHashCode() >> 4)) ^ (this.weight3.GetHashCode() >> 3));
 
         public override bool Equals(object other)
         {
@@ -157,15 +139,11 @@
             return (ReflectorVariable0 ? vector.Equals(new Vector4(weight.weight0, weight.weight1, weight.weight2, weight.weight3)) : false);
         }
 
-        public static bool operator ==(BoneWeight lhs, BoneWeight rhs)
-        {
-            return ((((lhs.boneIndex0 == rhs.boneIndex0) && (lhs.boneIndex1 == rhs.boneIndex1)) && ((lhs.boneIndex2 == rhs.boneIndex2) && (lhs.boneIndex3 == rhs.boneIndex3))) && (new Vector4(lhs.weight0, lhs.weight1, lhs.weight2, lhs.weight3) == new Vector4(rhs.weight0, rhs.weight1, rhs.weight2, rhs.weight3)));
-        }
+        public static bool operator ==(BoneWeight lhs, BoneWeight rhs) => 
+            ((((lhs.boneIndex0 == rhs.boneIndex0) && (lhs.boneIndex1 == rhs.boneIndex1)) && ((lhs.boneIndex2 == rhs.boneIndex2) && (lhs.boneIndex3 == rhs.boneIndex3))) && (new Vector4(lhs.weight0, lhs.weight1, lhs.weight2, lhs.weight3) == new Vector4(rhs.weight0, rhs.weight1, rhs.weight2, rhs.weight3)));
 
-        public static bool operator !=(BoneWeight lhs, BoneWeight rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static bool operator !=(BoneWeight lhs, BoneWeight rhs) => 
+            !(lhs == rhs);
     }
 }
 

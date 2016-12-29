@@ -8,10 +8,8 @@
     {
         private static string k_Indent = "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t";
 
-        private static string GetIndent(int indent)
-        {
-            return k_Indent.Substring(0, indent);
-        }
+        private static string GetIndent(int indent) => 
+            k_Indent.Substring(0, indent);
 
         public static PBXElementArray ParseArrayAST(ArrayAST ast, TokenList tokens, string text)
         {

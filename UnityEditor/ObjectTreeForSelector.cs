@@ -29,7 +29,7 @@
 
         private void BottomBar(Rect bottomRect)
         {
-            int id = Enumerable.FirstOrDefault<int>(this.m_TreeView.GetSelection());
+            int id = this.m_TreeView.GetSelection().FirstOrDefault<int>();
             if (id != this.m_LastSelectedID)
             {
                 this.m_LastSelectedID = id;
@@ -130,10 +130,8 @@
             return new int[0];
         }
 
-        private Rect GetTreeViewRect(Rect position)
-        {
-            return new Rect(0f, 27f, position.width, (position.height - 17f) - 27f);
-        }
+        private Rect GetTreeViewRect(Rect position) => 
+            new Rect(0f, 27f, position.width, (position.height - 17f) - 27f);
 
         private void HandleCommandEvents()
         {
@@ -207,10 +205,8 @@
             }
         }
 
-        public bool IsInitialized()
-        {
-            return (this.m_Owner != null);
-        }
+        public bool IsInitialized() => 
+            (this.m_Owner != null);
 
         public void OnGUI(Rect position)
         {

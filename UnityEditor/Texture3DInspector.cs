@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Texture3D))]
+    [CustomEditor(typeof(Texture3D)), CanEditMultipleObjects]
     internal class Texture3DInspector : TextureInspector
     {
         private Material m_Material;
@@ -14,7 +14,7 @@
         public override string GetInfoString()
         {
             Texture3D target = base.target as Texture3D;
-            return string.Format("{0}x{1}x{2} {3} {4}", new object[] { target.width, target.height, target.depth, TextureUtil.GetTextureFormatString(target.format), EditorUtility.FormatBytes(TextureUtil.GetRuntimeMemorySize(target)) });
+            return $"{target.width}x{target.height}x{target.depth} {TextureUtil.GetTextureFormatString(target.format)} {EditorUtility.FormatBytes(TextureUtil.GetRuntimeMemorySize(target))}";
         }
 
         private void InitPreview()

@@ -24,10 +24,8 @@
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetHelpURLForObject(Object obj);
-        internal static string GetNiceHelpNameForObject(Object obj)
-        {
-            return GetNiceHelpNameForObject(obj, true);
-        }
+        internal static string GetNiceHelpNameForObject(Object obj) => 
+            GetNiceHelpNameForObject(obj, true);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetNiceHelpNameForObject(Object obj, bool defaultToMonoBehaviour);
@@ -35,10 +33,8 @@
         /// <para>Is there a help page for this object?</para>
         /// </summary>
         /// <param name="obj"></param>
-        public static bool HasHelpForObject(Object obj)
-        {
-            return HasHelpForObject(obj, true);
-        }
+        public static bool HasHelpForObject(Object obj) => 
+            HasHelpForObject(obj, true);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool HasHelpForObject(Object obj, bool defaultToMonoBehaviour);

@@ -53,7 +53,7 @@
                 this.m_TestListTree.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_TestListTree.itemDoubleClickedCallback, new Action<int>(this.TestDoubleClickCallback));
                 this.m_TestListTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TestListTree.contextClickItemCallback, new Action<int>(this.TestContextClick));
                 TestListTreeViewDataSource data = new TestListTreeViewDataSource(this.m_TestListTree, this);
-                if (!Enumerable.Any<TestResult>(this.newResultList))
+                if (!this.newResultList.Any<TestResult>())
                 {
                     data.ExpandTreeOnCreation();
                 }
@@ -206,10 +206,8 @@
         {
             internal TestResult result;
 
-            internal bool <>m__0(TestResult r)
-            {
-                return (r.id == this.result.id);
-            }
+            internal bool <>m__0(TestResult r) => 
+                (r.id == this.result.id);
         }
     }
 }

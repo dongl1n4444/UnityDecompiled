@@ -20,10 +20,8 @@
             return true;
         }
 
-        public override bool IsMethodTestSupported()
-        {
-            return true;
-        }
+        public override bool IsMethodTestSupported() => 
+            true;
     }
 }
 

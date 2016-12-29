@@ -37,10 +37,8 @@
         [Obsolete("LightmapEditorSettings.aoAmount has been deprecated.", false)]
         public static float aoAmount
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -49,10 +47,8 @@
         [Obsolete("LightmapEditorSettings.aoContrast has been deprecated.", false)]
         public static float aoContrast
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -68,10 +64,8 @@
         [Obsolete("LightmapEditorSettings.bounceBoost has been deprecated.", false)]
         public static float bounceBoost
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -80,10 +74,8 @@
         [Obsolete("LightmapEditorSettings.bounceIntensity has been deprecated.", false)]
         public static float bounceIntensity
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -92,10 +84,8 @@
         [Obsolete("LightmapEditorSettings.bounces has been deprecated.", false)]
         public static int bounces
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }
@@ -104,10 +94,8 @@
         [Obsolete("LightmapEditorSettings.finalGatherContrastThreshold has been deprecated.", false)]
         public static float finalGatherContrastThreshold
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -116,10 +104,8 @@
         [Obsolete("LightmapEditorSettings.finalGatherGradientThreshold has been deprecated.", false)]
         public static float finalGatherGradientThreshold
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -128,10 +114,8 @@
         [Obsolete("LightmapEditorSettings.finalGatherInterpolationPoints has been deprecated.", false)]
         public static int finalGatherInterpolationPoints
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }
@@ -140,10 +124,8 @@
         [Obsolete("LightmapEditorSettings.finalGatherRays has been deprecated.", false)]
         public static int finalGatherRays
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }
@@ -152,10 +134,8 @@
         [Obsolete("LightmapEditorSettings.lastUsedResolution has been deprecated.", false)]
         public static float lastUsedResolution
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -164,10 +144,8 @@
         [Obsolete("LightmapEditorSettings.lockAtlas has been deprecated.", false)]
         public static bool lockAtlas
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -191,10 +169,8 @@
         [Obsolete("LightmapEditorSettings.quality has been deprecated.", false)]
         public static LightmapBakeQuality quality
         {
-            get
-            {
-                return LightmapBakeQuality.High;
-            }
+            get => 
+                LightmapBakeQuality.High;
             set
             {
             }
@@ -213,10 +189,8 @@
         [Obsolete("resolution is now called realtimeResolution (UnityUpgradable) -> realtimeResolution", false)]
         public static float resolution
         {
-            get
-            {
-                return realtimeResolution;
-            }
+            get => 
+                realtimeResolution;
             set
             {
                 realtimeResolution = value;
@@ -226,10 +200,8 @@
         [Obsolete("LightmapEditorSettings.skyLightColor has been deprecated.", false)]
         public static Color skyLightColor
         {
-            get
-            {
-                return Color.black;
-            }
+            get => 
+                Color.black;
             set
             {
             }
@@ -238,10 +210,8 @@
         [Obsolete("LightmapEditorSettings.skyLightIntensity has been deprecated.", false)]
         public static float skyLightIntensity
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }

@@ -54,21 +54,21 @@ internal class ApplicationLauncherImpl
                 if (PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) == ScriptingImplementation.WinRTDotNET)
                 {
                     EditorUtility.DisplayProgressBar("Deploying Player", "Running NuGet", 0.25f);
-                    string str = string.Format("restore \"{0}/{1}/project.json\" -NonInteractive -Source https://api.nuget.org/v3/index.json", this.installPath, this.GetProjectName());
+                    string str = $"restore "{this.installPath}/{this.GetProjectName()}/project.json" -NonInteractive -Source https://api.nuget.org/v3/index.json";
                     this.RunNuGet(str);
                 }
                 break;
         }
-        string args = string.Format("\"{0}\\{1}.sln\" /nologo /maxcpucount /p:Configuration={2} /p:Platform={3} /p:SolutionDir=\"{4}\\\\\" /t:Build /clp:Verbosity=minimal", new object[] { this.installPath, this.packageName, this.configuration, this.platform, this.installPath.Replace(@"\", @"\\") });
+        string args = $""{this.installPath}\{this.packageName}.sln" /nologo /maxcpucount /p:Configuration={this.configuration} /p:Platform={this.platform} /p:SolutionDir="{this.installPath.Replace(@"\", @"\\")}\\" /t:Build /clp:Verbosity=minimal";
         this.KillRunningAppInstances();
-        EditorUtility.DisplayProgressBar("Deploying Player", string.Format("Building solution with Visual Studio version {0}, {1}|{2}", Utility.GetVSVersion(), this.configuration, this.platform), 0.5f);
+        EditorUtility.DisplayProgressBar("Deploying Player", $"Building solution with Visual Studio version {Utility.GetVSVersion()}, {this.configuration}|{this.platform}", 0.5f);
         this.RunMSBuild(args);
     }
 
     private void BuildUsingMSBuild(bool registerAppxLayout)
     {
         string vSProjectPath = this.GetVSProjectPath();
-        this.RunMSBuild(string.Format("\"{0}\" /nologo /maxcpucount /p:Configuration={1} /p:Platform={2} /p:SolutionDir=\"{3}\\\\\" /t:Publish{4} /clp:Verbosity=minimal", new object[] { vSProjectPath, this.configuration, this.platform, this.installPath.Replace(@"\", @"\\"), !registerAppxLayout ? "" : ";RegisterAppxLayout" }));
+        this.RunMSBuild($""{vSProjectPath}" /nologo /maxcpucount /p:Configuration={this.configuration} /p:Platform={this.platform} /p:SolutionDir="{this.installPath.Replace(@"\", @"\\")}\\" /t:Publish{!registerAppxLayout ? "" : ";RegisterAppxLayout"} /clp:Verbosity=minimal");
     }
 
     private static void DetermineBuildPlatform(WSASDK wsaSDK, WSABuildAndRunDeployTarget deployTarget, out string buildPlatform)
@@ -97,7 +97,7 @@ internal class ApplicationLauncherImpl
                 buildPlatform = "x86";
                 return;
         }
-        throw new Exception(string.Format("Could not determine build platform for selected wsaSDK: {0}", wsaSDK));
+        throw new Exception($"Could not determine build platform for selected wsaSDK: {wsaSDK}");
     }
 
     private string GetArgumentForPlayerRunner()
@@ -148,7 +148,7 @@ internal class ApplicationLauncherImpl
                 throw new NotImplementedException("Specify correct configuration flags for " + this.deployTarget.ToString());
 
             default:
-                throw new Exception(string.Format("Invalid Windows Store Apps SDK: {0}", this.wsaSDK));
+                throw new Exception($"Invalid Windows Store Apps SDK: {this.wsaSDK}");
         }
     Label_00F1:
         str = null;
@@ -199,7 +199,7 @@ internal class ApplicationLauncherImpl
                 break;
             }
             default:
-                throw new Exception(string.Format("Invalid configuration flags: 0x{0:X}", num));
+                throw new Exception($"Invalid configuration flags: 0x{num:X}");
         }
         storey.configurationToLookFor = !this.configuration.Equals("Release", StringComparison.InvariantCultureIgnoreCase) ? ("_" + this.configuration) : "";
         string str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appx", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
@@ -220,10 +220,8 @@ internal class ApplicationLauncherImpl
         return path;
     }
 
-    private string GetProjectExt()
-    {
-        return "csproj";
-    }
+    private string GetProjectExt() => 
+        "csproj";
 
     private string GetProjectName()
     {
@@ -237,7 +235,7 @@ internal class ApplicationLauncherImpl
         {
             if (wsaSDK != WSASDK.PhoneSDK81)
             {
-                throw new Exception(string.Format("Invalid Windows Store Apps SDK for universal app: {0}", this.wsaSDK));
+                throw new Exception($"Invalid Windows Store Apps SDK for universal app: {this.wsaSDK}");
             }
         }
         else
@@ -252,7 +250,7 @@ internal class ApplicationLauncherImpl
         string environmentVariable = Environment.GetEnvironmentVariable(vsEnvVariable);
         if (string.IsNullOrEmpty(environmentVariable))
         {
-            throw new Exception(string.Format("Failed to find '{0}' env variable, ensure that it exists", vsEnvVariable));
+            throw new Exception($"Failed to find '{vsEnvVariable}' env variable, ensure that it exists");
         }
         string path = Path.Combine(environmentVariable, @"..\IDE\devenv.com");
         if (!File.Exists(path))
@@ -302,12 +300,12 @@ internal class ApplicationLauncherImpl
                 "1"
             }
         };
-        this.RunVS2015(string.Format("\"{0}\\{1}.sln\" /deploy \"{2}|{3}\"", new object[] { this.installPath.Replace(@"\", @"\\"), this.packageName, this.configuration, this.platform }), environmentVariables);
+        this.RunVS2015($""{this.installPath.Replace(@"\", @"\\")}\{this.packageName}.sln" /deploy "{this.configuration}|{this.platform}"", environmentVariables);
     }
 
     public void Run()
     {
-        string commandLine = string.Format("\"{0}\"", this.GetArgumentForPlayerRunner());
+        string commandLine = $""{this.GetArgumentForPlayerRunner()}"";
         switch (this.wsaSDK)
         {
             case WSASDK.SDK80:
@@ -336,7 +334,7 @@ internal class ApplicationLauncherImpl
                 }
                 throw new NotImplementedException("Run operation not implemented or " + this.deployTarget.ToString());
         }
-        throw new Exception(string.Format("Unknown Windows Store Apps SDK for deployment: {0}", this.wsaSDK));
+        throw new Exception($"Unknown Windows Store Apps SDK for deployment: {this.wsaSDK}");
     }
 
     private void RunMSBuild(string args)
@@ -351,7 +349,9 @@ internal class ApplicationLauncherImpl
             }
             else
             {
-                str = string.Format("Failed to build Visual Studio project using arguments '{0} {1}'.\nOutput:{2}\n", mSBuildExePath, args, str);
+                str = $"Failed to build Visual Studio project using arguments '{mSBuildExePath} {args}'.
+Output:{str}
+";
             }
             throw new Exception(str);
         }
@@ -363,7 +363,9 @@ internal class ApplicationLauncherImpl
         string nuGetPath = this.GetNuGetPath();
         if (Utility.RunAndWait(nuGetPath, args, out str, null) != 0)
         {
-            throw new Exception(string.Format("Failed to run NuGet using arguments '{0} {1}'.\nOutput:{2}\n", nuGetPath, args, str));
+            throw new Exception($"Failed to run NuGet using arguments '{nuGetPath} {args}'.
+Output:{str}
+");
         }
     }
 
@@ -397,7 +399,9 @@ internal class ApplicationLauncherImpl
             }
             else
             {
-                str = string.Format("Failed to build Visual Studio project using arguments '{0} {1}'.\nOutput:{2}\n", vSDevEnvPath, args, str);
+                str = $"Failed to build Visual Studio project using arguments '{vSDevEnvPath} {args}'.
+Output:{str}
+";
             }
             throw new Exception(str);
         }
@@ -409,15 +413,11 @@ internal class ApplicationLauncherImpl
         internal ApplicationLauncherImpl $this;
         internal string configurationToLookFor;
 
-        internal bool <>m__0(string x)
-        {
-            return x.EndsWith(this.$this.platform + this.configurationToLookFor + ".appx", StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__0(string x) => 
+            x.EndsWith(this.$this.platform + this.configurationToLookFor + ".appx", StringComparison.InvariantCultureIgnoreCase);
 
-        internal bool <>m__1(string x)
-        {
-            return x.EndsWith(this.$this.platform + this.configurationToLookFor + ".appxbundle", StringComparison.InvariantCultureIgnoreCase);
-        }
+        internal bool <>m__1(string x) => 
+            x.EndsWith(this.$this.platform + this.configurationToLookFor + ".appxbundle", StringComparison.InvariantCultureIgnoreCase);
     }
 }
 

@@ -22,23 +22,19 @@
         }
 
         [DebuggerHidden]
-        internal override IEnumerator Execute(PlaymodeTestsController controller)
-        {
-            return new <Execute>c__Iterator0 { 
+        internal override IEnumerator Execute(PlaymodeTestsController controller) => 
+            new <Execute>c__Iterator0 { 
                 controller = controller,
                 $this = this
             };
-        }
 
         [DebuggerHidden]
-        private IEnumerator ExMethod(IEnumerator e, float timeout)
-        {
-            return new <ExMethod>c__Iterator2 { 
+        private IEnumerator ExMethod(IEnumerator e, float timeout) => 
+            new <ExMethod>c__Iterator2 { 
                 e = e,
                 timeout = timeout,
                 $this = this
             };
-        }
 
         private object GetInstanceOfTestObject(MethodInfo m)
         {
@@ -61,15 +57,13 @@
         }
 
         [DebuggerHidden]
-        private IEnumerator HandleEnumerableTest(object instance, MethodInfo m, System.Type type)
-        {
-            return new <HandleEnumerableTest>c__Iterator1 { 
+        private IEnumerator HandleEnumerableTest(object instance, MethodInfo m, System.Type type) => 
+            new <HandleEnumerableTest>c__Iterator1 { 
                 type = type,
                 m = m,
                 instance = instance,
                 $this = this
             };
-        }
 
         private void HandleVoidTest(object instance, MethodInfo m)
         {
@@ -200,23 +194,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -284,23 +266,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -376,23 +346,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

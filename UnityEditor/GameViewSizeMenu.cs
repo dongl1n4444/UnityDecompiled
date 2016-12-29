@@ -44,21 +44,11 @@
             }
         }
 
-        private float contentOffset
-        {
-            get
-            {
-                return (this.frameHeight + 2f);
-            }
-        }
+        private float contentOffset =>
+            (this.frameHeight + 2f);
 
-        private float frameHeight
-        {
-            get
-            {
-                return 30f;
-            }
-        }
+        private float frameHeight =>
+            30f;
     }
 }
 

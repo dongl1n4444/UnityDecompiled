@@ -316,10 +316,8 @@
         /// <summary>
         /// <para>UI.Selectable.IsInteractable.</para>
         /// </summary>
-        public virtual bool IsInteractable()
-        {
-            return (this.m_GroupsAllowInteraction && this.m_Interactable);
-        }
+        public virtual bool IsInteractable() => 
+            (this.m_GroupsAllowInteraction && this.m_Interactable);
 
         /// <summary>
         /// <para>Whether the current selectable is being pressed.</para>
@@ -339,10 +337,8 @@
         /// </summary>
         /// <param name="eventData"></param>
         [Obsolete("Is Pressed no longer requires eventData", false)]
-        protected bool IsPressed(BaseEventData eventData)
-        {
-            return this.IsPressed();
-        }
+        protected bool IsPressed(BaseEventData eventData) => 
+            this.IsPressed();
 
         private void Navigate(AxisEventData eventData, Selectable sel)
         {
@@ -595,23 +591,16 @@
         /// <summary>
         /// <para>List of all the selectable objects currently active in the scene.</para>
         /// </summary>
-        public static List<Selectable> allSelectables
-        {
-            get
-            {
-                return s_List;
-            }
-        }
+        public static List<Selectable> allSelectables =>
+            s_List;
 
         /// <summary>
         /// <para>The AnimationTriggers for this selectable object.</para>
         /// </summary>
         public AnimationTriggers animationTriggers
         {
-            get
-            {
-                return this.m_AnimationTriggers;
-            }
+            get => 
+                this.m_AnimationTriggers;
             set
             {
                 if (SetPropertyUtility.SetClass<AnimationTriggers>(ref this.m_AnimationTriggers, value))
@@ -624,23 +613,16 @@
         /// <summary>
         /// <para>Convenience function to get the Animator component on the GameObject.</para>
         /// </summary>
-        public Animator animator
-        {
-            get
-            {
-                return base.GetComponent<Animator>();
-            }
-        }
+        public Animator animator =>
+            base.GetComponent<Animator>();
 
         /// <summary>
         /// <para>The ColorBlock for this selectable object.</para>
         /// </summary>
         public ColorBlock colors
         {
-            get
-            {
-                return this.m_Colors;
-            }
+            get => 
+                this.m_Colors;
             set
             {
                 if (SetPropertyUtility.SetStruct<ColorBlock>(ref this.m_Colors, value))
@@ -650,13 +632,8 @@
             }
         }
 
-        protected SelectionState currentSelectionState
-        {
-            get
-            {
-                return this.m_CurrentSelectionState;
-            }
-        }
+        protected SelectionState currentSelectionState =>
+            this.m_CurrentSelectionState;
 
         private bool hasSelection { get; set; }
 
@@ -665,10 +642,8 @@
         /// </summary>
         public Image image
         {
-            get
-            {
-                return (this.m_TargetGraphic as Image);
-            }
+            get => 
+                (this.m_TargetGraphic as Image);
             set
             {
                 this.m_TargetGraphic = value;
@@ -680,10 +655,8 @@
         /// </summary>
         public bool interactable
         {
-            get
-            {
-                return this.m_Interactable;
-            }
+            get => 
+                this.m_Interactable;
             set
             {
                 if (SetPropertyUtility.SetStruct<bool>(ref this.m_Interactable, value))
@@ -706,10 +679,8 @@
         /// </summary>
         public Navigation navigation
         {
-            get
-            {
-                return this.m_Navigation;
-            }
+            get => 
+                this.m_Navigation;
             set
             {
                 if (SetPropertyUtility.SetStruct<Navigation>(ref this.m_Navigation, value))
@@ -724,10 +695,8 @@
         /// </summary>
         public SpriteState spriteState
         {
-            get
-            {
-                return this.m_SpriteState;
-            }
+            get => 
+                this.m_SpriteState;
             set
             {
                 if (SetPropertyUtility.SetStruct<SpriteState>(ref this.m_SpriteState, value))
@@ -742,10 +711,8 @@
         /// </summary>
         public Graphic targetGraphic
         {
-            get
-            {
-                return this.m_TargetGraphic;
-            }
+            get => 
+                this.m_TargetGraphic;
             set
             {
                 if (SetPropertyUtility.SetClass<Graphic>(ref this.m_TargetGraphic, value))
@@ -760,10 +727,8 @@
         /// </summary>
         public Transition transition
         {
-            get
-            {
-                return this.m_Transition;
-            }
+            get => 
+                this.m_Transition;
             set
             {
                 if (SetPropertyUtility.SetStruct<Transition>(ref this.m_Transition, value))

@@ -16,20 +16,14 @@
             this.m_Value = value;
         }
 
-        public static implicit operator string(ExternalVersionControl d)
-        {
-            return d.ToString();
-        }
+        public static implicit operator string(ExternalVersionControl d) => 
+            d.ToString();
 
-        public static implicit operator ExternalVersionControl(string d)
-        {
-            return new ExternalVersionControl(d);
-        }
+        public static implicit operator ExternalVersionControl(string d) => 
+            new ExternalVersionControl(d);
 
-        public override string ToString()
-        {
-            return this.m_Value;
-        }
+        public override string ToString() => 
+            this.m_Value;
 
         static ExternalVersionControl()
         {

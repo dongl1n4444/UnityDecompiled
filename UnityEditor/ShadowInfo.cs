@@ -34,10 +34,8 @@
 
         public float latitude
         {
-            get
-            {
-                return this.m_Latitude;
-            }
+            get => 
+                this.m_Latitude;
             set
             {
                 this.m_Latitude = value;
@@ -47,10 +45,8 @@
 
         public float longitude
         {
-            get
-            {
-                return this.m_Longitude;
-            }
+            get => 
+                this.m_Longitude;
             set
             {
                 this.m_Longitude = value;
@@ -60,10 +56,8 @@
 
         public Color shadowColor
         {
-            get
-            {
-                return this.m_ShadowColor;
-            }
+            get => 
+                this.m_ShadowColor;
             set
             {
                 this.m_ShadowColor = value;
@@ -72,10 +66,8 @@
 
         public float shadowIntensity
         {
-            get
-            {
-                return this.m_ShadowIntensity;
-            }
+            get => 
+                this.m_ShadowIntensity;
             set
             {
                 this.m_ShadowIntensity = value;

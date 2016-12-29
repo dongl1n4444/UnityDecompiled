@@ -15,13 +15,8 @@
         /// <summary>
         /// <para>Asset object being loaded (Read Only).</para>
         /// </summary>
-        public UnityEngine.Object asset
-        {
-            get
-            {
-                return Resources.Load(this.m_Path, this.m_Type);
-            }
-        }
+        public UnityEngine.Object asset =>
+            Resources.Load(this.m_Path, this.m_Type);
     }
 }
 

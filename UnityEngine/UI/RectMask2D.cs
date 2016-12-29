@@ -54,10 +54,8 @@
         /// </summary>
         /// <param name="sp"></param>
         /// <param name="eventCamera"></param>
-        public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
-        {
-            return (!base.isActiveAndEnabled || RectTransformUtility.RectangleContainsScreenPoint(this.rectTransform, sp, eventCamera));
-        }
+        public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera) => 
+            (!base.isActiveAndEnabled || RectTransformUtility.RectangleContainsScreenPoint(this.rectTransform, sp, eventCamera));
 
         protected override void OnCanvasHierarchyChanged()
         {

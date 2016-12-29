@@ -19,29 +19,14 @@
             {
                 return false;
             }
-            if (this.DefaultValue == null)
-            {
-                return (attribute.Value == null);
-            }
-            return this.DefaultValue.Equals(attribute.Value);
+            return this.DefaultValue?.Equals(attribute.Value);
         }
 
-        public override int GetHashCode()
-        {
-            if (this.DefaultValue == null)
-            {
-                return base.GetHashCode();
-            }
-            return this.DefaultValue.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.DefaultValue?.GetHashCode();
 
-        public object Value
-        {
-            get
-            {
-                return this.DefaultValue;
-            }
-        }
+        public object Value =>
+            this.DefaultValue;
     }
 }
 

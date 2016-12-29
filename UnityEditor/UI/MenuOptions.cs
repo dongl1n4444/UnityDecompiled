@@ -148,16 +148,15 @@
 
         public static GameObject GetOrCreateCanvasGameObject()
         {
-            GameObject activeGameObject = Selection.activeGameObject;
-            Canvas canvas = (activeGameObject == null) ? null : activeGameObject.GetComponentInParent<Canvas>();
-            if ((canvas != null) && canvas.gameObject.activeInHierarchy)
+            Canvas componentInParent = Selection.activeGameObject?.GetComponentInParent<Canvas>();
+            if ((componentInParent != null) && componentInParent.gameObject.activeInHierarchy)
             {
-                return canvas.gameObject;
+                return componentInParent.gameObject;
             }
-            canvas = UnityEngine.Object.FindObjectOfType(typeof(Canvas)) as Canvas;
-            if ((canvas != null) && canvas.gameObject.activeInHierarchy)
+            componentInParent = UnityEngine.Object.FindObjectOfType(typeof(Canvas)) as Canvas;
+            if ((componentInParent != null) && componentInParent.gameObject.activeInHierarchy)
             {
-                return canvas.gameObject;
+                return componentInParent.gameObject;
             }
             return CreateNewUI();
         }

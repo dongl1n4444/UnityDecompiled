@@ -171,37 +171,17 @@
             return (height - ((value * num2) + num3));
         }
 
-        public Rect contentRect
-        {
-            get
-            {
-                return new Rect(0f, 0f, this.m_TimeArea.drawRect.width, this.m_TimeArea.drawRect.height);
-            }
-        }
+        public Rect contentRect =>
+            new Rect(0f, 0f, this.m_TimeArea.drawRect.width, this.m_TimeArea.drawRect.height);
 
-        public bool rippleTimeClutch
-        {
-            get
-            {
-                return this.m_RippleTimeClutch;
-            }
-        }
+        public bool rippleTimeClutch =>
+            this.m_RippleTimeClutch;
 
-        public Styles styles
-        {
-            get
-            {
-                return this.m_Styles;
-            }
-        }
+        public Styles styles =>
+            this.m_Styles;
 
-        public TimeArea timeArea
-        {
-            get
-            {
-                return this.m_TimeArea;
-            }
-        }
+        public TimeArea timeArea =>
+            this.m_TimeArea;
 
         internal class Styles
         {

@@ -11,12 +11,8 @@
         [CompilerGenerated]
         private static Func<JSONValue, string> <>f__am$cache0;
 
-        protected override JSONValue HandleGet(Request request, JSONValue payload)
-        {
-            JSONValue value2 = new JSONValue();
-            value2["documents"] = Handler.ToJSON(ScriptEditorSettings.OpenDocuments);
-            return value2;
-        }
+        protected override JSONValue HandleGet(Request request, JSONValue payload) => 
+            new JSONValue { ["documents"] = Handler.ToJSON(ScriptEditorSettings.OpenDocuments) };
 
         protected override JSONValue HandlePost(Request request, JSONValue payload)
         {
@@ -25,7 +21,7 @@
             {
                 value2 = payload["documents"];
             }
-            ScriptEditorSettings.OpenDocuments = (<>f__am$cache0 != null) ? new List<string>() : Enumerable.ToList<string>(Enumerable.Select<JSONValue, string>(value2.AsList(), <>f__am$cache0));
+            ScriptEditorSettings.OpenDocuments = (<>f__am$cache0 != null) ? new List<string>() : Enumerable.Select<JSONValue, string>(value2.AsList(), <>f__am$cache0).ToList<string>();
             ScriptEditorSettings.Save();
             return new JSONValue();
         }

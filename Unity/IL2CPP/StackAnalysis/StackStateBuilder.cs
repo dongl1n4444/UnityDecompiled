@@ -30,7 +30,7 @@
             this._methodDefinition = methodDefinition;
             this._typeResolver = typeResolver;
             this._simulationStack = new Stack<Entry>();
-            foreach (Entry entry in Enumerable.Reverse<Entry>(initialState.Entries))
+            foreach (Entry entry in initialState.Entries.Reverse<Entry>())
             {
                 this._simulationStack.Push(entry.Clone());
             }
@@ -367,8 +367,8 @@
 
                     case Code.Ldind_I:
                     {
-                        TypeReference elementType = Enumerable.First<TypeReference>(this.PopEntry().Types).GetElementType();
-                        if (Extensions.IsIntegralPointerType(elementType))
+                        TypeReference elementType = this.PopEntry().Types.First<TypeReference>().GetElementType();
+                        if (elementType.IsIntegralPointerType())
                         {
                             this.PushStackEntry(elementType);
                         }
@@ -390,7 +390,7 @@
 
                     case Code.Ldind_Ref:
                     {
-                        ByReferenceType type = (ByReferenceType) Enumerable.First<TypeReference>(this.PopEntry().Types);
+                        ByReferenceType type = (ByReferenceType) this.PopEntry().Types.First<TypeReference>();
                         this.PushStackEntry(type.ElementType);
                         break;
                     }
@@ -723,8 +723,8 @@
                     case Code.Ldelem_I:
                     {
                         this.PopEntry();
-                        TypeReference typeReference = Enumerable.First<TypeReference>(this.PopEntry().Types).GetElementType();
-                        if (Extensions.IsIntegralPointerType(typeReference))
+                        TypeReference typeReference = this.PopEntry().Types.First<TypeReference>().GetElementType();
+                        if (typeReference.IsIntegralPointerType())
                         {
                             this.PushStackEntry(typeReference);
                         }
@@ -747,10 +747,10 @@
                         TypeReference reference8;
                         this.PopEntry();
                         Entry entry11 = this.PopEntry();
-                        TypeReference reference7 = Enumerable.Single<TypeReference>(entry11.Types);
+                        TypeReference reference7 = entry11.Types.Single<TypeReference>();
                         if ((reference7 is ArrayType) || (reference7 is TypeSpecification))
                         {
-                            reference8 = ArrayUtilities.ArrayElementTypeOf(Enumerable.Single<TypeReference>(entry11.Types));
+                            reference8 = ArrayUtilities.ArrayElementTypeOf(entry11.Types.Single<TypeReference>());
                         }
                         else
                         {
@@ -1050,7 +1050,7 @@
                         break;
                 }
             }
-            foreach (Entry entry18 in Enumerable.Reverse<Entry>(this._simulationStack))
+            foreach (Entry entry18 in this._simulationStack.Reverse<Entry>())
             {
                 state.Entries.Push(entry18.Clone());
             }
@@ -1097,11 +1097,11 @@
         {
             foreach (TypeReference reference in entry.Types)
             {
-                if (Extensions.IsSameType(reference, this.NativeIntTypeReference))
+                if (reference.IsSameType(this.NativeIntTypeReference))
                 {
                     return true;
                 }
-                if (Extensions.IsSameType(reference, this.NativeUIntTypeReference))
+                if (reference.IsSameType(this.NativeUIntTypeReference))
                 {
                     return true;
                 }
@@ -1125,7 +1125,7 @@
         {
             Entry entry = this.PopEntry();
             Entry entry2 = this.PopEntry();
-            return new Entry { Types = { getResultType(Enumerable.First<TypeReference>(entry2.Types), Enumerable.First<TypeReference>(entry.Types), TypeProvider) } };
+            return new Entry { Types = { getResultType(entry2.Types.First<TypeReference>(), entry.Types.First<TypeReference>(), TypeProvider) } };
         }
 
         private void HandleStackStateForUnbox(Instruction instruction)
@@ -1179,10 +1179,8 @@
             this.PushStackEntry(new ByReferenceType(this._typeResolver.Resolve(variable.VariableType)));
         }
 
-        private Entry PopEntry()
-        {
-            return this._simulationStack.Pop();
-        }
+        private Entry PopEntry() => 
+            this._simulationStack.Pop();
 
         private void PushNullStackEntry()
         {
@@ -1196,17 +1194,15 @@
                 throw new ArgumentNullException("typeReference");
             }
             TypeDefinition definition = typeReference.Resolve();
-            if (Extensions.ContainsGenericParameters(typeReference) && ((definition == null) || !definition.IsEnum))
+            if (typeReference.ContainsGenericParameters() && ((definition == null) || !definition.IsEnum))
             {
                 throw new NotImplementedException();
             }
             this._simulationStack.Push(Entry.For(typeReference));
         }
 
-        private bool ReturnsValue()
-        {
-            return ((this._methodDefinition.ReturnType != null) && (this._methodDefinition.ReturnType.MetadataType != MetadataType.Void));
-        }
+        private bool ReturnsValue() => 
+            ((this._methodDefinition.ReturnType != null) && (this._methodDefinition.ReturnType.MetadataType != MetadataType.Void));
 
         private void SetupCatchBlockIfNeeded(Instruction instruction)
         {
@@ -1216,7 +1212,7 @@
             MethodBody body = this._methodDefinition.Body;
             if (body.HasExceptionHandlers)
             {
-                foreach (ExceptionHandler handler in Enumerable.Where<ExceptionHandler>(body.ExceptionHandlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (ExceptionHandler handler in body.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)))
                 {
                     if (handler.HandlerType == ExceptionHandlerType.Catch)
                     {
@@ -1242,7 +1238,7 @@
                 return this.ObjectTypeReference;
             }
             TypeReference reference2 = this._typeResolver.Resolve(typeReference);
-            if (Extensions.IsValueType(reference2))
+            if (reference2.IsValueType())
             {
                 return this.ObjectTypeReference;
             }
@@ -1266,116 +1262,52 @@
             return TypeProvider.RuntimeMethodHandleTypeReference;
         }
 
-        public static StackState StackStateFor(IEnumerable<Instruction> instructions, StackState initialState, MethodDefinition methodDefinition, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
-        {
-            return new StackStateBuilder(methodDefinition, initialState, typeResolver).Build(instructions);
-        }
+        public static StackState StackStateFor(IEnumerable<Instruction> instructions, StackState initialState, MethodDefinition methodDefinition, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver) => 
+            new StackStateBuilder(methodDefinition, initialState, typeResolver).Build(instructions);
 
-        private TypeReference DoubleTypeReference
-        {
-            get
-            {
-                return TypeProvider.DoubleTypeReference;
-            }
-        }
+        private TypeReference DoubleTypeReference =>
+            TypeProvider.DoubleTypeReference;
 
-        private TypeReference Int32TypeReference
-        {
-            get
-            {
-                return TypeProvider.Int32TypeReference;
-            }
-        }
+        private TypeReference Int32TypeReference =>
+            TypeProvider.Int32TypeReference;
 
-        private TypeReference Int64TypeReference
-        {
-            get
-            {
-                return TypeProvider.Int64TypeReference;
-            }
-        }
+        private TypeReference Int64TypeReference =>
+            TypeProvider.Int64TypeReference;
 
-        private TypeReference IntPtrTypeReference
-        {
-            get
-            {
-                return TypeProvider.IntPtrTypeReference;
-            }
-        }
+        private TypeReference IntPtrTypeReference =>
+            TypeProvider.IntPtrTypeReference;
 
-        private TypeReference NativeIntTypeReference
-        {
-            get
-            {
-                return TypeProvider.NativeIntTypeReference;
-            }
-        }
+        private TypeReference NativeIntTypeReference =>
+            TypeProvider.NativeIntTypeReference;
 
-        private TypeReference NativeUIntTypeReference
-        {
-            get
-            {
-                return TypeProvider.NativeUIntTypeReference;
-            }
-        }
+        private TypeReference NativeUIntTypeReference =>
+            TypeProvider.NativeUIntTypeReference;
 
-        private TypeReference ObjectTypeReference
-        {
-            get
-            {
-                return TypeProvider.ObjectTypeReference;
-            }
-        }
+        private TypeReference ObjectTypeReference =>
+            TypeProvider.ObjectTypeReference;
 
-        private TypeReference SByteTypeReference
-        {
-            get
-            {
-                return TypeProvider.SByteTypeReference;
-            }
-        }
+        private TypeReference SByteTypeReference =>
+            TypeProvider.SByteTypeReference;
 
-        private TypeReference SingleTypeReference
-        {
-            get
-            {
-                return TypeProvider.SingleTypeReference;
-            }
-        }
+        private TypeReference SingleTypeReference =>
+            TypeProvider.SingleTypeReference;
 
-        private TypeReference StringTypeReference
-        {
-            get
-            {
-                return TypeProvider.StringTypeReference;
-            }
-        }
+        private TypeReference StringTypeReference =>
+            TypeProvider.StringTypeReference;
 
-        private TypeReference UInt32TypeReference
-        {
-            get
-            {
-                return TypeProvider.UInt32TypeReference;
-            }
-        }
+        private TypeReference UInt32TypeReference =>
+            TypeProvider.UInt32TypeReference;
 
-        private TypeReference UIntPtrTypeReference
-        {
-            get
-            {
-                return TypeProvider.UIntPtrTypeReference;
-            }
-        }
+        private TypeReference UIntPtrTypeReference =>
+            TypeProvider.UIntPtrTypeReference;
 
         [CompilerGenerated]
         private sealed class <SetupCatchBlockIfNeeded>c__AnonStorey0
         {
             internal Instruction instruction;
 
-            internal bool <>m__0(ExceptionHandler h)
-            {
-                return (h.HandlerStart.Offset == this.instruction.Offset);
-            }
+            internal bool <>m__0(ExceptionHandler h) => 
+                (h.HandlerStart.Offset == this.instruction.Offset);
         }
     }
 }

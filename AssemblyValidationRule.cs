@@ -13,12 +13,7 @@ internal class AssemblyValidationRule : Attribute
         this.Priority = 0;
     }
 
-    public RuntimePlatform Platform
-    {
-        get
-        {
-            return this._platform;
-        }
-    }
+    public RuntimePlatform Platform =>
+        this._platform;
 }
 

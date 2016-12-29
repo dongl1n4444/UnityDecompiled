@@ -135,7 +135,7 @@
                     EditorUtility.DisplayDialog("Purchase failed", str + " This purchase has been cancelled.", "Add this item to basket", "Cancel");
                 }
             });
-            UsabilityAnalytics.Track(string.Format("/AssetStore/InstaBuy/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+            UsabilityAnalytics.Track($"/AssetStore/InstaBuy/{this.m_Asset.packageID}/{this.m_Asset.id}");
         }
 
         private void DownloadingGUI()
@@ -302,7 +302,7 @@
                 GUI.color = color;
             }
             GUILayout.Label("Package: " + previewInfo.packageName, EditorStyles.wordWrappedLabel, new GUILayoutOption[0]);
-            GUILayout.Label(string.Format("Credit card: {0} (expires {1})", this.m_PaymentMethodCard, this.m_PaymentMethodExpire), EditorStyles.wordWrappedLabel, new GUILayoutOption[0]);
+            GUILayout.Label($"Credit card: {this.m_PaymentMethodCard} (expires {this.m_PaymentMethodExpire})", EditorStyles.wordWrappedLabel, new GUILayoutOption[0]);
             GUILayout.Space(8f);
             EditorGUILayout.LabelField("Amount", this.m_PriceText, new GUILayoutOption[0]);
             this.m_Password = EditorGUILayout.PasswordField("Password", this.m_Password, new GUILayoutOption[0]);
@@ -314,8 +314,8 @@
             GUILayout.Space(8f);
             if (GUILayout.Button("Just put to basket...", new GUILayoutOption[0]))
             {
-                AssetStore.Open(string.Format("content/{0}/basketpurchase", this.m_Asset.packageID));
-                UsabilityAnalytics.Track(string.Format("/AssetStore/PutToBasket/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+                AssetStore.Open($"content/{this.m_Asset.packageID}/basketpurchase");
+                UsabilityAnalytics.Track($"/AssetStore/PutToBasket/{this.m_Asset.packageID}/{this.m_Asset.id}");
                 this.m_Asset = null;
                 base.Close();
                 GUIUtility.ExitGUI();
@@ -323,7 +323,7 @@
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Cancel", new GUILayoutOption[0]))
             {
-                UsabilityAnalytics.Track(string.Format("/AssetStore/CancelInstaBuy/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+                UsabilityAnalytics.Track($"/AssetStore/CancelInstaBuy/{this.m_Asset.packageID}/{this.m_Asset.id}");
                 this.m_Asset = null;
                 base.Close();
                 GUIUtility.ExitGUI();
@@ -368,15 +368,15 @@
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Close", new GUILayoutOption[0]))
             {
-                UsabilityAnalytics.Track(string.Format("/AssetStore/DeclinedAbort/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+                UsabilityAnalytics.Track($"/AssetStore/DeclinedAbort/{this.m_Asset.packageID}/{this.m_Asset.id}");
                 this.m_Asset = null;
                 base.Close();
             }
             GUILayout.Space(5f);
             if (GUILayout.Button("Put to basket", new GUILayoutOption[0]))
             {
-                AssetStore.Open(string.Format("content/{0}/basketpurchase", this.m_Asset.packageID));
-                UsabilityAnalytics.Track(string.Format("/AssetStore/DeclinedPutToBasket/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+                AssetStore.Open($"content/{this.m_Asset.packageID}/basketpurchase");
+                UsabilityAnalytics.Track($"/AssetStore/DeclinedPutToBasket/{this.m_Asset.packageID}/{this.m_Asset.id}");
                 this.m_Asset = null;
                 base.Close();
             }
@@ -415,14 +415,14 @@
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Close", new GUILayoutOption[0]))
             {
-                UsabilityAnalytics.Track(string.Format("/AssetStore/PurchaseOk/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+                UsabilityAnalytics.Track($"/AssetStore/PurchaseOk/{this.m_Asset.packageID}/{this.m_Asset.id}");
                 this.m_Asset = null;
                 base.Close();
             }
             GUILayout.Space(5f);
             if (GUILayout.Button("Import package", new GUILayoutOption[0]))
             {
-                UsabilityAnalytics.Track(string.Format("/AssetStore/PurchaseOkImport/{0}/{1}", this.m_Asset.packageID, this.m_Asset.id));
+                UsabilityAnalytics.Track($"/AssetStore/PurchaseOkImport/{this.m_Asset.packageID}/{this.m_Asset.id}");
                 this.m_BuildAttempts = 1;
                 this.m_Asset.previewInfo.buildProgress = 0f;
                 this.m_Purchasing = PurchaseStatus.StartBuild;
@@ -452,7 +452,7 @@
             window.m_PaymentMethodCard = paymentMethodCard;
             window.m_PaymentMethodExpire = paymentMethodExpire;
             window.m_PriceText = priceText;
-            UsabilityAnalytics.Track(string.Format("/AssetStore/ShowInstaBuy/{0}/{1}", window.m_Asset.packageID, window.m_Asset.id));
+            UsabilityAnalytics.Track($"/AssetStore/ShowInstaBuy/{window.m_Asset.packageID}/{window.m_Asset.id}");
             return window;
         }
 
@@ -468,7 +468,7 @@
                 window.m_Purchasing = PurchaseStatus.StartBuild;
                 window.m_BuildAttempts = 1;
                 asset.previewInfo.buildProgress = 0f;
-                UsabilityAnalytics.Track(string.Format("/AssetStore/ShowInstaFree/{0}/{1}", window.m_Asset.packageID, window.m_Asset.id));
+                UsabilityAnalytics.Track($"/AssetStore/ShowInstaFree/{window.m_Asset.packageID}/{window.m_Asset.id}");
             }
         }
 

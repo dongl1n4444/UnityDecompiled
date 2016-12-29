@@ -40,11 +40,7 @@
         private Vector2 GetParentSize()
         {
             RectTransform parent = base.parent as RectTransform;
-            if (parent == null)
-            {
-                return Vector2.zero;
-            }
-            return parent.rect.size;
+            return parent?.rect.size;
         }
 
         internal Rect GetRectInParentSpace()
@@ -223,10 +219,8 @@
         /// </summary>
         public Vector2 offsetMax
         {
-            get
-            {
-                return (this.anchoredPosition + Vector2.Scale(this.sizeDelta, Vector2.one - this.pivot));
-            }
+            get => 
+                (this.anchoredPosition + Vector2.Scale(this.sizeDelta, Vector2.one - this.pivot));
             set
             {
                 Vector2 a = value - (this.anchoredPosition + Vector2.Scale(this.sizeDelta, Vector2.one - this.pivot));
@@ -240,10 +234,8 @@
         /// </summary>
         public Vector2 offsetMin
         {
-            get
-            {
-                return (this.anchoredPosition - Vector2.Scale(this.sizeDelta, this.pivot));
-            }
+            get => 
+                (this.anchoredPosition - Vector2.Scale(this.sizeDelta, this.pivot));
             set
             {
                 Vector2 a = value - (this.anchoredPosition - Vector2.Scale(this.sizeDelta, this.pivot));

@@ -35,10 +35,10 @@
             {
                 <>f__am$cache0 = new Func<Type, bool>(null, (IntPtr) <ExecuteMethodThroughReflection>m__0);
             }
-            MethodInfo method = Enumerable.First<Type>(Enumerable.Where<Type>(Enumerable.Select<Assembly, Type>(EditorAssemblies.loadedAssemblies, new Func<Assembly, Type>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0)).GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+            MethodInfo method = Enumerable.Where<Type>(Enumerable.Select<Assembly, Type>(EditorAssemblies.loadedAssemblies, new Func<Assembly, Type>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0).First<Type>().GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
             if (method == null)
             {
-                throw new ArgumentException(string.Format("cannot find method {0} in type {1}", name, storey.typename));
+                throw new ArgumentException($"cannot find method {name} in type {storey.typename}");
             }
             if (method.GetParameters().Length > 0)
             {
@@ -53,10 +53,8 @@
         {
             internal string typename;
 
-            internal Type <>m__0(Assembly a)
-            {
-                return a.GetType(this.typename, false);
-            }
+            internal Type <>m__0(Assembly a) => 
+                a.GetType(this.typename, false);
         }
 
         private class EditorEvaluationDomainProvider : SimpleEvaluationDomainProvider
@@ -89,7 +87,7 @@
                     <>f__am$cache2 = new Func<Assembly, bool>(null, (IntPtr) <GetAssemblyReferences>m__2);
                 }
                 IEnumerable<Assembly> second = Enumerable.Where<Assembly>(Enumerable.Select<AssemblyName, Assembly>(Enumerable.SelectMany<Assembly, AssemblyName>(loadedAssemblies, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2);
-                return Enumerable.ToArray<Assembly>(Enumerable.Concat<Assembly>(loadedAssemblies, second));
+                return loadedAssemblies.Concat<Assembly>(second).ToArray<Assembly>();
             }
 
             private static Assembly TryToLoad(AssemblyName a)

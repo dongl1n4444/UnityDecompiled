@@ -365,10 +365,8 @@
             GUI.Label(rect, "End", styles.numberStyle);
         }
 
-        private AnimationClipInfoProperties GetAnimationClipInfoAtIndex(int index)
-        {
-            return new AnimationClipInfoProperties(this.m_ClipAnimations.GetArrayElementAtIndex(index));
-        }
+        private AnimationClipInfoProperties GetAnimationClipInfoAtIndex(int index) => 
+            new AnimationClipInfoProperties(this.m_ClipAnimations.GetArrayElementAtIndex(index));
 
         private AnimationClipInfoProperties GetSelectedClipInfo()
         {
@@ -379,10 +377,8 @@
             return null;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_AnimationClipEditor != null) && this.m_AnimationClipEditor.HasPreviewGUI());
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_AnimationClipEditor != null) && this.m_AnimationClipEditor.HasPreviewGUI());
 
         private void InitMask(AnimationClipInfoProperties clipInfo)
         {
@@ -397,10 +393,8 @@
             }
         }
 
-        private bool IsDeprecatedMultiAnimationRootImport()
-        {
-            return ((this.animationType == ModelImporterAnimationType.Legacy) && ((this.legacyGenerateAnimations == ModelImporterGenerateAnimations.InOriginalRoots) || (this.legacyGenerateAnimations == ModelImporterGenerateAnimations.InNodes)));
-        }
+        private bool IsDeprecatedMultiAnimationRootImport() => 
+            ((this.animationType == ModelImporterAnimationType.Legacy) && ((this.legacyGenerateAnimations == ModelImporterGenerateAnimations.InOriginalRoots) || (this.legacyGenerateAnimations == ModelImporterGenerateAnimations.InNodes)));
 
         private string MakeUniqueClipName(string name, int row)
         {
@@ -726,10 +720,8 @@
 
         private ModelImporterAnimationType animationType
         {
-            get
-            {
-                return (ModelImporterAnimationType) this.m_AnimationType.intValue;
-            }
+            get => 
+                ((ModelImporterAnimationType) this.m_AnimationType.intValue);
             set
             {
                 this.m_AnimationType.intValue = (int) value;
@@ -738,10 +730,8 @@
 
         private ModelImporterGenerateAnimations legacyGenerateAnimations
         {
-            get
-            {
-                return (ModelImporterGenerateAnimations) this.m_LegacyGenerateAnimations.intValue;
-            }
+            get => 
+                ((ModelImporterGenerateAnimations) this.m_LegacyGenerateAnimations.intValue);
             set
             {
                 this.m_LegacyGenerateAnimations.intValue = (int) value;
@@ -752,20 +742,13 @@
 
         public int pivotNodeIndex { get; set; }
 
-        private string[] referenceTransformPaths
-        {
-            get
-            {
-                return this.singleImporter.transformPaths;
-            }
-        }
+        private string[] referenceTransformPaths =>
+            this.singleImporter.transformPaths;
 
         public int selectedClipIndex
         {
-            get
-            {
-                return this.m_SelectedClipIndexDoNotUseDirectly;
-            }
+            get => 
+                this.m_SelectedClipIndexDoNotUseDirectly;
             set
             {
                 this.m_SelectedClipIndexDoNotUseDirectly = value;
@@ -776,13 +759,8 @@
             }
         }
 
-        private ModelImporter singleImporter
-        {
-            get
-            {
-                return (base.targets[0] as ModelImporter);
-            }
-        }
+        private ModelImporter singleImporter =>
+            (base.targets[0] as ModelImporter);
 
         private class Styles
         {

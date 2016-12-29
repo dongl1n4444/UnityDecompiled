@@ -26,10 +26,8 @@
         /// <param name="name">Name of child to be found.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern Transform Find(string name);
-        public Transform FindChild(string name)
-        {
-            return this.Find(name);
-        }
+        public Transform FindChild(string name) => 
+            this.Find(name);
 
         /// <summary>
         /// <para>Returns a transform child by index.</para>
@@ -42,10 +40,8 @@
         public extern Transform GetChild(int index);
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Transform.childCount instead.")]
         public extern int GetChildCount();
-        public IEnumerator GetEnumerator()
-        {
-            return new Enumerator(this);
-        }
+        public IEnumerator GetEnumerator() => 
+            new Enumerator(this);
 
         internal Vector3 GetLocalEulerAngles(RotationOrder order)
         {
@@ -128,10 +124,8 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Vector3 InverseTransformDirection(float x, float y, float z)
-        {
-            return this.InverseTransformDirection(new Vector3(x, y, z));
-        }
+        public Vector3 InverseTransformDirection(float x, float y, float z) => 
+            this.InverseTransformDirection(new Vector3(x, y, z));
 
         /// <summary>
         /// <para>Transforms position from world space to local space.</para>
@@ -150,10 +144,8 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Vector3 InverseTransformPoint(float x, float y, float z)
-        {
-            return this.InverseTransformPoint(new Vector3(x, y, z));
-        }
+        public Vector3 InverseTransformPoint(float x, float y, float z) => 
+            this.InverseTransformPoint(new Vector3(x, y, z));
 
         /// <summary>
         /// <para>Transforms a vector from world space to local space. The opposite of Transform.TransformVector.</para>
@@ -172,10 +164,8 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Vector3 InverseTransformVector(float x, float y, float z)
-        {
-            return this.InverseTransformVector(new Vector3(x, y, z));
-        }
+        public Vector3 InverseTransformVector(float x, float y, float z) => 
+            this.InverseTransformVector(new Vector3(x, y, z));
 
         /// <summary>
         /// <para>Is this transform a child of parent?</para>
@@ -406,10 +396,8 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Vector3 TransformDirection(float x, float y, float z)
-        {
-            return this.TransformDirection(new Vector3(x, y, z));
-        }
+        public Vector3 TransformDirection(float x, float y, float z) => 
+            this.TransformDirection(new Vector3(x, y, z));
 
         /// <summary>
         /// <para>Transforms position from local space to world space.</para>
@@ -428,10 +416,8 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Vector3 TransformPoint(float x, float y, float z)
-        {
-            return this.TransformPoint(new Vector3(x, y, z));
-        }
+        public Vector3 TransformPoint(float x, float y, float z) => 
+            this.TransformPoint(new Vector3(x, y, z));
 
         /// <summary>
         /// <para>Transforms vector from local space to world space.</para>
@@ -450,10 +436,8 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public Vector3 TransformVector(float x, float y, float z)
-        {
-            return this.TransformVector(new Vector3(x, y, z));
-        }
+        public Vector3 TransformVector(float x, float y, float z) => 
+            this.TransformVector(new Vector3(x, y, z));
 
         /// <summary>
         /// <para>Moves the transform in the direction and distance of translation.</para>
@@ -549,10 +533,8 @@
         /// </summary>
         public Vector3 eulerAngles
         {
-            get
-            {
-                return this.rotation.eulerAngles;
-            }
+            get => 
+                this.rotation.eulerAngles;
             set
             {
                 this.rotation = Quaternion.Euler(value);
@@ -564,10 +546,8 @@
         /// </summary>
         public Vector3 forward
         {
-            get
-            {
-                return (Vector3) (this.rotation * Vector3.forward);
-            }
+            get => 
+                ((Vector3) (this.rotation * Vector3.forward));
             set
             {
                 this.rotation = Quaternion.LookRotation(value);
@@ -594,10 +574,8 @@
         /// </summary>
         public Vector3 localEulerAngles
         {
-            get
-            {
-                return this.localRotation.eulerAngles;
-            }
+            get => 
+                this.localRotation.eulerAngles;
             set
             {
                 this.localRotation = Quaternion.Euler(value);
@@ -686,10 +664,8 @@
         /// </summary>
         public Transform parent
         {
-            get
-            {
-                return this.parentInternal;
-            }
+            get => 
+                this.parentInternal;
             set
             {
                 if (this is RectTransform)
@@ -724,10 +700,8 @@
         /// </summary>
         public Vector3 right
         {
-            get
-            {
-                return (Vector3) (this.rotation * Vector3.right);
-            }
+            get => 
+                ((Vector3) (this.rotation * Vector3.right));
             set
             {
                 this.rotation = Quaternion.FromToRotation(Vector3.right, value);
@@ -763,10 +737,8 @@
         /// </summary>
         public Vector3 up
         {
-            get
-            {
-                return (Vector3) (this.rotation * Vector3.up);
-            }
+            get => 
+                ((Vector3) (this.rotation * Vector3.up));
             set
             {
                 this.rotation = Quaternion.FromToRotation(Vector3.up, value);
@@ -807,13 +779,8 @@
                 this.currentIndex = -1;
             }
 
-            public object Current
-            {
-                get
-                {
-                    return this.outer.GetChild(this.currentIndex);
-                }
-            }
+            public object Current =>
+                this.outer.GetChild(this.currentIndex);
         }
     }
 }

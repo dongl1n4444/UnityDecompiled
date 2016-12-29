@@ -17,10 +17,8 @@
             this.height = height;
         }
 
-        public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor)
-        {
-            return this.height;
-        }
+        public override float GetPropertyHeight(MaterialProperty prop, string label, MaterialEditor editor) => 
+            this.height;
 
         public override void OnGUI(Rect position, MaterialProperty prop, string label, MaterialEditor editor)
         {

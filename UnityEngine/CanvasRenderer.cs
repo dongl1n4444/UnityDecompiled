@@ -67,10 +67,8 @@
         /// <returns>
         /// <para>Result.</para>
         /// </returns>
-        public Material GetMaterial()
-        {
-            return this.GetMaterial(0);
-        }
+        public Material GetMaterial() => 
+            this.GetMaterial(0);
 
         /// <summary>
         /// <para>Gets the current Material assigned to the CanvasRenderer.</para>

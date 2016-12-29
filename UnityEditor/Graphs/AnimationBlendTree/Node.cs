@@ -127,13 +127,8 @@
             }
         }
 
-        public BlendTree blendTree
-        {
-            get
-            {
-                return (this.motion as BlendTree);
-            }
-        }
+        public BlendTree blendTree =>
+            (this.motion as BlendTree);
 
         public int childIndex
         {
@@ -147,28 +142,16 @@
             }
         }
 
-        public bool controllerDirty
-        {
-            get
-            {
-                return this.m_ControllerIsDirty;
-            }
-        }
+        public bool controllerDirty =>
+            this.m_ControllerIsDirty;
 
-        public bool isLeaf
-        {
-            get
-            {
-                return (this.children.Count == 0);
-            }
-        }
+        public bool isLeaf =>
+            (this.children.Count == 0);
 
         public UnityEditor.Graphs.AnimationBlendTree.Node parent
         {
-            get
-            {
-                return this.m_Parent;
-            }
+            get => 
+                this.m_Parent;
             set
             {
                 if (this.m_Parent != null)
@@ -180,21 +163,11 @@
             }
         }
 
-        public UnityEngine.Color weightColor
-        {
-            get
-            {
-                return UnityEngine.Color.Lerp(new UnityEngine.Color(0.8f, 0.8f, 0.8f, 1f), UnityEngine.Color.white, Mathf.Pow(this.weight, 0.5f));
-            }
-        }
+        public UnityEngine.Color weightColor =>
+            UnityEngine.Color.Lerp(new UnityEngine.Color(0.8f, 0.8f, 0.8f, 1f), UnityEngine.Color.white, Mathf.Pow(this.weight, 0.5f));
 
-        public UnityEngine.Color weightEdgeColor
-        {
-            get
-            {
-                return UnityEngine.Color.Lerp(UnityEngine.Color.white, new UnityEngine.Color(0.42f, 0.7f, 1f, 1f), Mathf.Pow(this.weight, 0.5f));
-            }
-        }
+        public UnityEngine.Color weightEdgeColor =>
+            UnityEngine.Color.Lerp(UnityEngine.Color.white, new UnityEngine.Color(0.42f, 0.7f, 1f, 1f), Mathf.Pow(this.weight, 0.5f));
     }
 }
 

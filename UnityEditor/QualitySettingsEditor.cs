@@ -183,7 +183,7 @@
                 {
                     <>f__am$cache0 = new Func<QualitySetting, string>(null, (IntPtr) <DoQualityLevelSelection>m__0);
                 }
-                num3 = EditorGUI.Popup(rect7, num3, Enumerable.ToArray<string>(Enumerable.Select<QualitySetting, string>(qualitySettings, <>f__am$cache0)), Styles.kDefaultDropdown);
+                num3 = EditorGUI.Popup(rect7, num3, Enumerable.Select<QualitySetting, string>(qualitySettings, <>f__am$cache0).ToArray<string>(), Styles.kDefaultDropdown);
                 platformDefaultQualitySettings[platform3.name] = num3;
             }
             GUILayout.EndHorizontal();
@@ -228,8 +228,9 @@
                     }
                     else
                     {
-                        Vector3 vector2 = new Vector3();
-                        vector2[0] = normalizedCascadePartitions[0];
+                        Vector3 vector2 = new Vector3 {
+                            [0] = normalizedCascadePartitions[0]
+                        };
                         vector2[1] = vector2[0] + normalizedCascadePartitions[1];
                         vector2[2] = vector2[1] + normalizedCascadePartitions[2];
                         shadowCascadeSplit.vector3Value = vector2;

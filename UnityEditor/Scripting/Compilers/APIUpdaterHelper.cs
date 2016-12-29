@@ -65,7 +65,7 @@
             {
                 <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <ReportAPIUpdaterFailure>m__1);
             }
-            ScriptUpdatingManager.ReportGroupedAPIUpdaterFailure(string.Format("APIUpdater encountered some issues and was not able to finish.{0}{1}", Environment.NewLine, Enumerable.Aggregate<string, string>(errorOutput, "", <>f__am$cache1)));
+            ScriptUpdatingManager.ReportGroupedAPIUpdaterFailure($"APIUpdater encountered some issues and was not able to finish.{Environment.NewLine}{Enumerable.Aggregate<string, string>(errorOutput, "", <>f__am$cache1)}");
         }
 
         private static void RunUpdatingProgram(string executable, string arguments)
@@ -96,7 +96,7 @@
                     <>f__am$cache2 = new Func<Asset, bool>(null, (IntPtr) <UpdateFilesInVCIfNeeded>m__2);
                 }
                 IEnumerable<Asset> source = Enumerable.Where<Asset>(task.assetList, <>f__am$cache2);
-                if (!task.success || Enumerable.Any<Asset>(source))
+                if (!task.success || source.Any<Asset>())
                 {
                     object[] args = new object[1];
                     if (<>f__am$cache3 == null)

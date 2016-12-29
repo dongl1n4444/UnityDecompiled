@@ -9,37 +9,25 @@
         {
         }
 
-        public PlistElementArray AsArray()
-        {
-            return (PlistElementArray) this;
-        }
+        public PlistElementArray AsArray() => 
+            ((PlistElementArray) this);
 
-        public bool AsBoolean()
-        {
-            return ((PlistElementBoolean) this).value;
-        }
+        public bool AsBoolean() => 
+            ((PlistElementBoolean) this).value;
 
-        public PlistElementDict AsDict()
-        {
-            return (PlistElementDict) this;
-        }
+        public PlistElementDict AsDict() => 
+            ((PlistElementDict) this);
 
-        public int AsInteger()
-        {
-            return ((PlistElementInteger) this).value;
-        }
+        public int AsInteger() => 
+            ((PlistElementInteger) this).value;
 
-        public string AsString()
-        {
-            return ((PlistElementString) this).value;
-        }
+        public string AsString() => 
+            ((PlistElementString) this).value;
 
         public PlistElement this[string key]
         {
-            get
-            {
-                return this.AsDict()[key];
-            }
+            get => 
+                this.AsDict()[key];
             set
             {
                 this.AsDict()[key] = value;

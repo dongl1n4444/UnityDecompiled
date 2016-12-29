@@ -8,10 +8,8 @@
 
     internal class EmscriptenPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors)
-        {
-            return new EmscriptenToolChain(architecture, buildConfiguration, false);
-        }
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+            new EmscriptenToolChain(architecture, buildConfiguration, false);
 
         public override ProgramBuildDescription PostProcessProgramBuildDescription(ProgramBuildDescription programBuildDescription)
         {
@@ -23,10 +21,8 @@
             return new EmscriptenIL2CPPOutputBuildDescription(buildDescription);
         }
 
-        public override bool Supports(RuntimePlatform platform)
-        {
-            return (platform is WebGLRuntimePlatform);
-        }
+        public override bool Supports(RuntimePlatform platform) => 
+            (platform is WebGLRuntimePlatform);
     }
 }
 

@@ -47,10 +47,10 @@
                 }
                 elements.Add(string.Format(!includeTypeNames ? "{1}" : "{0}* {1}", marshaledTypes[marshaledTypes.Length - 1].DecoratedName, Naming.ForComInterfaceReturnParameterName()));
             }
-            return EnumerableExtensions.AggregateWithComma(elements);
+            return elements.AggregateWithComma();
         }
 
-        public static string GetSignature(MethodReference method, MethodReference interfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, [Optional, DefaultParameterValue(null)] string typeName)
+        public static string GetSignature(MethodReference method, MethodReference interfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, string typeName = null)
         {
             StringBuilder builder = new StringBuilder();
             MarshalType marshalType = !interfaceMethod.DeclaringType.Resolve().IsWindowsRuntime ? MarshalType.COM : MarshalType.WindowsRuntime;

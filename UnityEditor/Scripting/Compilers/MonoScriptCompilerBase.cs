@@ -16,10 +16,8 @@
             this.runUpdater = runUpdater;
         }
 
-        protected string GetProfileDirectory()
-        {
-            return MonoInstallationFinder.GetProfileDirectory(this._island._target, this._island._classlib_profile);
-        }
+        protected string GetProfileDirectory() => 
+            MonoInstallationFinder.GetProfileDirectory(this._island._target, this._island._classlib_profile);
 
         protected ManagedProgram StartCompiler(BuildTarget target, string compiler, List<string> arguments)
         {

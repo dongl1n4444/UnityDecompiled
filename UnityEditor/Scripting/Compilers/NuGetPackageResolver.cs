@@ -23,10 +23,8 @@
             this.TargetMoniker = "UAP,Version=v10.0";
         }
 
-        private string ConvertToWindowsPath(string path)
-        {
-            return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-        }
+        private string ConvertToWindowsPath(string path) => 
+            path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
         private string GetPackagesPath()
         {
@@ -64,7 +62,7 @@
                     string path = Path.Combine(Path.Combine(str2, str3), str4);
                     if (!Directory.Exists(path))
                     {
-                        throw new Exception(string.Format("Package directory not found: \"{0}\".", path));
+                        throw new Exception($"Package directory not found: "{path}".");
                     }
                     foreach (string str6 in dictionary5.Keys)
                     {
@@ -73,7 +71,7 @@
                             string str7 = Path.Combine(path, this.ConvertToWindowsPath(str6));
                             if (!File.Exists(str7))
                             {
-                                throw new Exception(string.Format("Reference not found: \"{0}\".", str7));
+                                throw new Exception($"Reference not found: "{str7}".");
                             }
                             list.Add(str7);
                         }

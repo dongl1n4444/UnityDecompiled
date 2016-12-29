@@ -16,7 +16,7 @@ internal class PostProcessStore81 : PostProcessWSA
     [CompilerGenerated]
     private static Func<string, string> <>f__am$cache0;
 
-    public PostProcessStore81(BuildPostProcessArgs args, [Optional, DefaultParameterValue(null)] string stagingArea) : base(args, WSASDK.SDK81, stagingArea)
+    public PostProcessStore81(BuildPostProcessArgs args, string stagingArea = null) : base(args, WSASDK.SDK81, stagingArea)
     {
     }
 
@@ -80,25 +80,17 @@ internal class PostProcessStore81 : PostProcessWSA
         base._images.storeSplashScreenImage = base.CheckImageConsistencyAndGetName(textArray7);
     }
 
-    protected override ManifestWSA CreateManifestBuilder()
-    {
-        return new ManifestStore81();
-    }
+    protected override ManifestWSA CreateManifestBuilder() => 
+        new ManifestStore81();
 
-    protected override string GetAssemblyConverterPlatform()
-    {
-        return "wsa81";
-    }
+    protected override string GetAssemblyConverterPlatform() => 
+        "wsa81";
 
-    protected override string GetPlayerFilesSourceDirectory()
-    {
-        return base.GetPlayerFilesSourceDirectory("Windows81");
-    }
+    protected override string GetPlayerFilesSourceDirectory() => 
+        base.GetPlayerFilesSourceDirectory("Windows81");
 
-    protected override string GetPlayerFilesTargetDirectory()
-    {
-        return base.GetPlayerFilesTargetDirectory("Windows81");
-    }
+    protected override string GetPlayerFilesTargetDirectory() => 
+        base.GetPlayerFilesTargetDirectory("Windows81");
 
     protected override string GetReferenceAssembliesDirectory()
     {
@@ -109,30 +101,20 @@ internal class PostProcessStore81 : PostProcessWSA
         return _referenceAssembliesDirectory;
     }
 
-    protected override string GetResourceCompilerPath()
-    {
-        return Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
-    }
+    protected override string GetResourceCompilerPath() => 
+        Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
 
-    protected override string GetSDKNotFoundErrorMessage()
-    {
-        return "Make sure Visual Studio 2013 is installed.";
-    }
+    protected override string GetSDKNotFoundErrorMessage() => 
+        "Make sure Visual Studio 2013 is installed.";
 
-    protected override string GetTemplateDirectorySource()
-    {
-        return base.GetTemplateDirectorySource("Windows81");
-    }
+    protected override string GetTemplateDirectorySource() => 
+        base.GetTemplateDirectorySource("Windows81");
 
-    protected override Version GetToolsVersion()
-    {
-        return new Version(12, 0);
-    }
+    protected override Version GetToolsVersion() => 
+        new Version(12, 0);
 
-    protected override IEnumerable<string> GetUnityAssemblies()
-    {
-        return new string[] { @"Store81\UnityEngine.dll", "WinRTLegacy.dll" };
-    }
+    protected override IEnumerable<string> GetUnityAssemblies() => 
+        new string[] { @"Store81\UnityEngine.dll", "WinRTLegacy.dll" };
 
     protected override IEnumerable<string> GetUnityPluginOverwrites()
     {

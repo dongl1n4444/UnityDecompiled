@@ -6,9 +6,9 @@
 
     public interface IIl2CppTypeCollectorWriterService
     {
-        void Add(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs);
-        int GetIndex(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs);
-        int GetOrCreateIndex(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs);
+        void Add(TypeReference type, int attrs = 0);
+        int GetIndex(TypeReference type, int attrs = 0);
+        int GetOrCreateIndex(TypeReference type, int attrs = 0);
     }
 }
 

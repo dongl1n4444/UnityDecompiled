@@ -54,7 +54,7 @@
             {
                 <>f__am$cache0 = new Func<MarshaledType, string>(null, (IntPtr) <FormatParametersForTypedef>m__0);
             }
-            return EnumerableExtensions.AggregateWithComma(Enumerable.Select<MarshaledType, string>(base._marshaledParameterTypes, <>f__am$cache0));
+            return base._marshaledParameterTypes.Select<MarshaledType, string>(<>f__am$cache0).AggregateWithComma();
         }
 
         private string GetCallingConvention()
@@ -88,9 +88,9 @@
             string functionCallParametersExpression = base.GetFunctionCallParametersExpression(localVariableNames);
             if (this.ShouldInternalizeMethod())
             {
-                return string.Format("reinterpret_cast<{0}>({1})({2})", InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerTypedef(), this._pinvokeInfo.EntryPoint, functionCallParametersExpression);
+                return $"reinterpret_cast<{InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerTypedef()}>({this._pinvokeInfo.EntryPoint})({functionCallParametersExpression})";
             }
-            return string.Format("{0}({1})", InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerVariable(), functionCallParametersExpression);
+            return $"{InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerVariable()}({functionCallParametersExpression})";
         }
 
         private string GetParameterSize(MarshaledParameter parameter)
@@ -98,7 +98,7 @@
             DefaultMarshalInfoWriter writer = base.MarshalInfoWriterFor(parameter);
             if ((writer.NativeSize == "-1") && (parameter.ParameterType.MetadataType != MetadataType.Array))
             {
-                throw new NotSupportedException(string.Format("Cannot marshal parameter {0} of type {1} for P/Invoke.", parameter.NameInGeneratedCode, parameter.ParameterType.FullName));
+                throw new NotSupportedException($"Cannot marshal parameter {parameter.NameInGeneratedCode} of type {parameter.ParameterType.FullName} for P/Invoke.");
             }
             switch (parameter.ParameterType.MetadataType)
             {
@@ -114,10 +114,8 @@
             return writer.NativeSize;
         }
 
-        private string GetPInvokeMethodVariable()
-        {
-            return string.Format("{0} ({1} *{2}) ({3})", new object[] { base._marshaledReturnType.DecoratedName, this.GetCallingConvention(), InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerTypedef(), this.FormatParametersForTypedef() });
-        }
+        private string GetPInvokeMethodVariable() => 
+            $"{base._marshaledReturnType.DecoratedName} ({this.GetCallingConvention()} *{InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerTypedef()}) ({this.FormatParametersForTypedef()})";
 
         private bool ShouldInternalizeMethod()
         {
@@ -127,19 +125,17 @@
                 return false;
             }
             string name = this._pinvokeInfo.Module.Name;
-            return ((name == "__Internal") || (_internalizedMethods.TryGetValue(name, out strArray) && Enumerable.Any<string>(strArray, new Func<string, bool>(this, (IntPtr) this.<ShouldInternalizeMethod>m__1))));
+            return ((name == "__Internal") || (_internalizedMethods.TryGetValue(name, out strArray) && strArray.Any<string>(new Func<string, bool>(this, (IntPtr) this.<ShouldInternalizeMethod>m__1))));
         }
 
-        private bool UseUnicodeCharSetForPInvokeInWindowsCallResolution()
-        {
-            return !this._pinvokeInfo.IsCharSetAnsi;
-        }
+        private bool UseUnicodeCharSetForPInvokeInWindowsCallResolution() => 
+            !this._pinvokeInfo.IsCharSetAnsi;
 
         public void WriteExternMethodeDeclarationForInternalPInvoke(CppCodeWriter writer)
         {
             if (this.ShouldInternalizeMethod())
             {
-                writer.WriteInternalPInvokeDeclaration(this._pinvokeInfo.EntryPoint, string.Format("extern \"C\" {0} {1} {2}({3});", new object[] { base._marshaledReturnType.DecoratedName, this.GetCallingConvention(), this._pinvokeInfo.EntryPoint, this.FormatParametersForTypedef() }));
+                writer.WriteInternalPInvokeDeclaration(this._pinvokeInfo.EntryPoint, $"extern "C" {base._marshaledReturnType.DecoratedName} {this.GetCallingConvention()} {this._pinvokeInfo.EntryPoint}({this.FormatParametersForTypedef()});");
             }
         }
 
@@ -186,7 +182,7 @@
                 object[] objArray6 = new object[] { InteropMethodBodyWriter.Naming.ForPInvokeFunctionPointerVariable() };
                 writer.WriteLine("if ({0} == NULL)", objArray6);
                 writer.BeginBlock();
-                writer.WriteStatement(Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_not_supported_exception(\"Unable to find method for p/invoke: '{0}'\")", base.GetMethodName())));
+                writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_not_supported_exception("Unable to find method for p/invoke: '{base.GetMethodName()}'")"));
                 writer.EndBlock(false);
                 writer.EndBlock(false);
                 writer.WriteLine();

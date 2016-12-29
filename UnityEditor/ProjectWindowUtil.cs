@@ -254,15 +254,8 @@
             }
         }
 
-        internal static string GetActiveFolderPath()
-        {
-            ProjectBrowser projectBrowserIfExists = GetProjectBrowserIfExists();
-            if (projectBrowserIfExists == null)
-            {
-                return "Assets";
-            }
-            return projectBrowserIfExists.GetActiveFolderPath();
-        }
+        internal static string GetActiveFolderPath() => 
+            GetProjectBrowserIfExists()?.GetActiveFolderPath();
 
         public static int[] GetAncestors(int instanceID)
         {
@@ -383,20 +376,14 @@
             return new string[0];
         }
 
-        private static ProjectBrowser GetProjectBrowserIfExists()
-        {
-            return ProjectBrowser.s_LastInteractedProjectBrowser;
-        }
+        private static ProjectBrowser GetProjectBrowserIfExists() => 
+            ProjectBrowser.s_LastInteractedProjectBrowser;
 
-        internal static bool IsFavoritesItem(int instanceID)
-        {
-            return (instanceID >= k_FavoritesStartInstanceID);
-        }
+        internal static bool IsFavoritesItem(int instanceID) => 
+            (instanceID >= k_FavoritesStartInstanceID);
 
-        public static bool IsFolder(int instanceID)
-        {
-            return AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(instanceID));
-        }
+        public static bool IsFolder(int instanceID) => 
+            AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(instanceID));
 
         public static void ShowCreatedAsset(Object o)
         {

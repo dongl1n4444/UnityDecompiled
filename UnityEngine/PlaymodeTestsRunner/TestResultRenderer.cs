@@ -45,7 +45,7 @@
                     {
                         <>f__am$cache0 = new Func<TestResult, string>(null, (IntPtr) <Draw>m__0);
                     }
-                    GUILayout.TextArea(str + "<b><size=18>Code-based tests</size></b>\n" + string.Join("\n", Enumerable.ToArray<string>(Enumerable.Select<TestResult, string>(this.m_FailedTestCollection, <>f__am$cache0))), Styles.FailedMessagesStyle, new GUILayoutOption[0]);
+                    GUILayout.TextArea(str + "<b><size=18>Code-based tests</size></b>\n" + string.Join("\n", Enumerable.Select<TestResult, string>(this.m_FailedTestCollection, <>f__am$cache0).ToArray<string>()), Styles.FailedMessagesStyle, new GUILayoutOption[0]);
                     GUILayout.EndScrollView();
                 }
                 if (GUILayout.Button("Close", new GUILayoutOption[0]))
@@ -55,10 +55,8 @@
             }
         }
 
-        public int FailureCount()
-        {
-            return this.m_FailureCount;
-        }
+        public int FailureCount() => 
+            this.m_FailureCount;
 
         public void ShowResults()
         {

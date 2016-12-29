@@ -57,10 +57,8 @@
             EditorGUILayout.EndScrollView();
         }
 
-        protected override int GetInstructionCount()
-        {
-            return this.m_LayoutInstructions.Count;
-        }
+        protected override int GetInstructionCount() => 
+            this.m_LayoutInstructions.Count;
 
         internal override string GetInstructionListName(int index)
         {

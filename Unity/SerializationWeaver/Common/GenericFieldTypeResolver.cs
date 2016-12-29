@@ -33,7 +33,7 @@
             if (typeReference.IsGenericParameter)
             {
                 GenericParameter parameter = (GenericParameter) typeReference;
-                return Enumerable.ElementAt<TypeReference>(this.GenericArguments, parameter.Position);
+                return this.GenericArguments.ElementAt<TypeReference>(parameter.Position);
             }
             if (typeReference.IsGenericInstance)
             {
@@ -61,18 +61,11 @@
             return typeReference;
         }
 
-        public TypeReference TypeOf(FieldReference fieldDefinition)
-        {
-            return this.ResolveGenericParameters(fieldDefinition.FieldType);
-        }
+        public TypeReference TypeOf(FieldReference fieldDefinition) => 
+            this.ResolveGenericParameters(fieldDefinition.FieldType);
 
-        public IEnumerable<TypeReference> GenericArguments
-        {
-            get
-            {
-                return this._genericArguments.Peek();
-            }
-        }
+        public IEnumerable<TypeReference> GenericArguments =>
+            this._genericArguments.Peek();
     }
 }
 

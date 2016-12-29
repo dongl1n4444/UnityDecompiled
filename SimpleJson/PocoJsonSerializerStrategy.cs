@@ -26,10 +26,8 @@
             this.SetCache = new ReflectionUtils.ThreadSafeDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>>(new ReflectionUtils.ThreadSafeDictionaryValueFactory<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>>(this.SetterValueFactory));
         }
 
-        internal virtual ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key)
-        {
-            return ReflectionUtils.GetContructor(key, !key.IsArray ? EmptyTypes : ArrayConstructorParameterTypes);
-        }
+        internal virtual ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key) => 
+            ReflectionUtils.GetContructor(key, !key.IsArray ? EmptyTypes : ArrayConstructorParameterTypes);
 
         public virtual object DeserializeObject(object value, Type type)
         {
@@ -194,15 +192,11 @@
             return dictionary;
         }
 
-        protected virtual string MapClrMemberNameToJsonFieldName(string clrPropertyName)
-        {
-            return clrPropertyName;
-        }
+        protected virtual string MapClrMemberNameToJsonFieldName(string clrPropertyName) => 
+            clrPropertyName;
 
-        protected virtual object SerializeEnum(Enum p)
-        {
-            return Convert.ToDouble(p, CultureInfo.InvariantCulture);
-        }
+        protected virtual object SerializeEnum(Enum p) => 
+            Convert.ToDouble(p, CultureInfo.InvariantCulture);
 
         internal virtual IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> SetterValueFactory(Type type)
         {
@@ -264,10 +258,8 @@
             return flag;
         }
 
-        public virtual bool TrySerializeNonPrimitiveObject(object input, out object output)
-        {
-            return (this.TrySerializeKnownTypes(input, out output) || this.TrySerializeUnknownTypes(input, out output));
-        }
+        public virtual bool TrySerializeNonPrimitiveObject(object input, out object output) => 
+            (this.TrySerializeKnownTypes(input, out output) || this.TrySerializeUnknownTypes(input, out output));
 
         protected virtual bool TrySerializeUnknownTypes(object input, out object output)
         {

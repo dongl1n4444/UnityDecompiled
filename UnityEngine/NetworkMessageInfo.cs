@@ -17,23 +17,13 @@
         /// <summary>
         /// <para>The time stamp when the Message was sent in seconds.</para>
         /// </summary>
-        public double timestamp
-        {
-            get
-            {
-                return this.m_TimeStamp;
-            }
-        }
+        public double timestamp =>
+            this.m_TimeStamp;
         /// <summary>
         /// <para>The player who sent this network message (owner).</para>
         /// </summary>
-        public NetworkPlayer sender
-        {
-            get
-            {
-                return this.m_Sender;
-            }
-        }
+        public NetworkPlayer sender =>
+            this.m_Sender;
         /// <summary>
         /// <para>The NetworkView who sent this message.</para>
         /// </summary>

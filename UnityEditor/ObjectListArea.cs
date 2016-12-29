@@ -230,10 +230,8 @@
             return new Vector2((rect.center.x - (width / 2f)) + this.m_Ping.m_PingStyle.padding.left, (rect.yMax - s_Styles.resultsGridLabel.fixedHeight) + 3f);
         }
 
-        public bool CanShowThumbnails()
-        {
-            return this.m_AllowThumbnails;
-        }
+        public bool CanShowThumbnails() => 
+            this.m_AllowThumbnails;
 
         private void CenterRect(Rect r)
         {
@@ -438,10 +436,8 @@
             }
         }
 
-        internal int GetAssetPreviewManagerID()
-        {
-            return this.m_Owner.GetInstanceID();
-        }
+        internal int GetAssetPreviewManagerID() => 
+            this.m_Owner.GetInstanceID();
 
         public string GetAssetStoreButtonText()
         {
@@ -465,10 +461,8 @@
             return str;
         }
 
-        private CreateAssetUtility GetCreateAssetUtility()
-        {
-            return this.m_State.m_CreateAssetUtility;
-        }
+        private CreateAssetUtility GetCreateAssetUtility() => 
+            this.m_State.m_CreateAssetUtility;
 
         protected string GetCroppedLabelText(int instanceID, string fullText, float cropWidth)
         {
@@ -553,10 +547,8 @@
             return 0;
         }
 
-        private RenameOverlay GetRenameOverlay()
-        {
-            return this.m_State.m_RenameOverlay;
-        }
+        private RenameOverlay GetRenameOverlay() => 
+            this.m_State.m_RenameOverlay;
 
         private int GetSelectedAssetIdx()
         {
@@ -590,15 +582,11 @@
             return -1;
         }
 
-        public int[] GetSelection()
-        {
-            return this.m_State.m_SelectedInstanceIDs.ToArray();
-        }
+        public int[] GetSelection() => 
+            this.m_State.m_SelectedInstanceIDs.ToArray();
 
-        internal float GetVisibleWidth()
-        {
-            return this.m_VisibleRect.width;
-        }
+        internal float GetVisibleWidth() => 
+            this.m_VisibleRect.width;
 
         public void HandleKeyboard(bool checkKeyboardControl)
         {
@@ -837,10 +825,8 @@
             }
         }
 
-        private bool HasFocus()
-        {
-            return (!this.allowFocusRendering || ((this.m_KeyboardControlID == GUIUtility.keyboardControl) && this.m_Owner.m_Parent.hasFocus));
-        }
+        private bool HasFocus() => 
+            (!this.allowFocusRendering || ((this.m_KeyboardControlID == GUIUtility.keyboardControl) && this.m_Owner.m_Parent.hasFocus));
 
         public void Init(Rect rect, HierarchyType hierarchyType, SearchFilter searchFilter, bool checkThumbnails)
         {
@@ -903,10 +889,8 @@
             }
         }
 
-        public bool IsLastClickedItemVisible()
-        {
-            return (this.GetSelectedAssetIdx() >= 0);
-        }
+        public bool IsLastClickedItemVisible() => 
+            (this.GetSelectedAssetIdx() >= 0);
 
         private bool IsListMode()
         {
@@ -919,29 +903,21 @@
 
         private bool IsLocalAssetsCurrentlySelected()
         {
-            int instanceID = Enumerable.FirstOrDefault<int>(this.m_State.m_SelectedInstanceIDs);
+            int instanceID = this.m_State.m_SelectedInstanceIDs.FirstOrDefault<int>();
             return ((instanceID != 0) && (this.m_LocalAssets.IndexOf(instanceID) != -1));
         }
 
-        private bool IsObjectSelector()
-        {
-            return this.m_LocalAssets.ShowNone;
-        }
+        private bool IsObjectSelector() => 
+            this.m_LocalAssets.ShowNone;
 
-        private bool IsPreviewIconExpansionModifierPressed()
-        {
-            return Event.current.alt;
-        }
+        private bool IsPreviewIconExpansionModifierPressed() => 
+            Event.current.alt;
 
-        public bool IsSelected(int instanceID)
-        {
-            return this.m_State.m_SelectedInstanceIDs.Contains(instanceID);
-        }
+        public bool IsSelected(int instanceID) => 
+            this.m_State.m_SelectedInstanceIDs.Contains(instanceID);
 
-        public bool IsShowing(int instanceID)
-        {
-            return (this.m_LocalAssets.IndexOf(instanceID) >= 0);
-        }
+        public bool IsShowing(int instanceID) => 
+            (this.m_LocalAssets.IndexOf(instanceID) >= 0);
 
         public bool IsShowingAny(int[] instanceIDs)
         {
@@ -1354,10 +1330,8 @@
             this.Repaint();
         }
 
-        private bool ShowAssetStoreHitsWhileSearchingLocalAssets()
-        {
-            return EditorPrefs.GetBool("ShowAssetStoreSearchHits", true);
-        }
+        private bool ShowAssetStoreHitsWhileSearchingLocalAssets() => 
+            EditorPrefs.GetBool("ShowAssetStoreSearchHits", true);
 
         public void ShowObjectsInList(int[] instanceIDs)
         {
@@ -1429,10 +1403,8 @@
 
         public Action assetStoreSearchEnded
         {
-            get
-            {
-                return this.m_AssetStoreSearchEnded;
-            }
+            get => 
+                this.m_AssetStoreSearchEnded;
             set
             {
                 this.m_AssetStoreSearchEnded = value;
@@ -1441,10 +1413,8 @@
 
         public Func<Rect, float> drawLocalAssetHeader
         {
-            get
-            {
-                return this.m_DrawLocalAssetHeader;
-            }
+            get => 
+                this.m_DrawLocalAssetHeader;
             set
             {
                 this.m_DrawLocalAssetHeader = value;
@@ -1455,10 +1425,8 @@
 
         public Action gotKeyboardFocus
         {
-            get
-            {
-                return this.m_GotKeyboardFocus;
-            }
+            get => 
+                this.m_GotKeyboardFocus;
             set
             {
                 this.m_GotKeyboardFocus = value;
@@ -1467,10 +1435,8 @@
 
         public int gridSize
         {
-            get
-            {
-                return this.m_State.m_GridSize;
-            }
+            get => 
+                this.m_State.m_GridSize;
             set
             {
                 if (this.m_State.m_GridSize != value)
@@ -1483,10 +1449,8 @@
 
         public Action<bool> itemSelectedCallback
         {
-            get
-            {
-                return this.m_ItemSelectedCallback;
-            }
+            get => 
+                this.m_ItemSelectedCallback;
             set
             {
                 this.m_ItemSelectedCallback = value;
@@ -1495,46 +1459,27 @@
 
         public Action keyboardCallback
         {
-            get
-            {
-                return this.m_KeyboardInputCallback;
-            }
+            get => 
+                this.m_KeyboardInputCallback;
             set
             {
                 this.m_KeyboardInputCallback = value;
             }
         }
 
-        public int maxGridSize
-        {
-            get
-            {
-                return this.m_MaxGridSize;
-            }
-        }
+        public int maxGridSize =>
+            this.m_MaxGridSize;
 
-        public int minGridSize
-        {
-            get
-            {
-                return this.m_MinGridSize;
-            }
-        }
+        public int minGridSize =>
+            this.m_MinGridSize;
 
-        public int numItemsDisplayed
-        {
-            get
-            {
-                return this.m_LocalAssets.ItemCount;
-            }
-        }
+        public int numItemsDisplayed =>
+            this.m_LocalAssets.ItemCount;
 
         public Action repaintCallback
         {
-            get
-            {
-                return this.m_RepaintWantedCallback;
-            }
+            get => 
+                this.m_RepaintWantedCallback;
             set
             {
                 this.m_RepaintWantedCallback = value;
@@ -1665,10 +1610,8 @@
                 internal ObjectListArea.<QueryAssetStore>c__AnonStorey0 <>f__ref$0;
                 internal AssetStoreSearchResults.Group inGroup;
 
-                internal bool <>m__0(ObjectListArea.AssetStoreGroup g)
-                {
-                    return (g.Name == this.inGroup.name);
-                }
+                internal bool <>m__0(ObjectListArea.AssetStoreGroup g) => 
+                    (g.Name == this.inGroup.name);
             }
 
             private sealed class <QueryAssetStore>c__AnonStorey2
@@ -1676,10 +1619,8 @@
                 internal ObjectListArea.<QueryAssetStore>c__AnonStorey0 <>f__ref$0;
                 internal string k;
 
-                internal bool <>m__0(ObjectListArea.AssetStoreGroup g)
-                {
-                    return (g.Name == this.k);
-                }
+                internal bool <>m__0(ObjectListArea.AssetStoreGroup g) => 
+                    (g.Name == this.k);
             }
         }
 
@@ -1716,7 +1657,7 @@
                 {
                     if ((selectedIdx < (base.m_Grid.rows * base.m_Grid.columns)) && (selectedIdx > this.ItemCount))
                     {
-                        return Enumerable.Last<AssetStoreAsset>(this.m_Assets);
+                        return this.m_Assets.Last<AssetStoreAsset>();
                     }
                     int num = 0;
                     foreach (AssetStoreAsset asset2 in this.m_Assets)
@@ -1944,43 +1885,29 @@
 
             public List<AssetStoreAsset> Assets
             {
-                get
-                {
-                    return this.m_Assets;
-                }
+                get => 
+                    this.m_Assets;
                 set
                 {
                     this.m_Assets = value;
                 }
             }
 
-            public override int ItemCount
-            {
-                get
-                {
-                    return Math.Min(this.m_Assets.Count, base.ItemsWantedShown);
-                }
-            }
+            public override int ItemCount =>
+                Math.Min(this.m_Assets.Count, base.ItemsWantedShown);
 
             public override bool ListMode
             {
-                get
-                {
-                    return this.m_ListMode;
-                }
+                get => 
+                    this.m_ListMode;
                 set
                 {
                     this.m_ListMode = value;
                 }
             }
 
-            public string Name
-            {
-                get
-                {
-                    return this.m_Name;
-                }
-            }
+            public string Name =>
+                this.m_Name;
 
             public bool NeedItems
             {
@@ -2143,10 +2070,8 @@
                 return num3;
             }
 
-            protected virtual float GetHeaderHeight()
-            {
-                return this.kGroupSeparatorHeight;
-            }
+            protected virtual float GetHeaderHeight() => 
+                this.kGroupSeparatorHeight;
 
             protected float GetHeaderYPosInScrollArea(float yOffset)
             {
@@ -2173,10 +2098,8 @@
                 return list.ToArray();
             }
 
-            private Object[] GetSelectedReferences()
-            {
-                return Selection.objects;
-            }
+            private Object[] GetSelectedReferences() => 
+                Selection.objects;
 
             protected virtual void HandleUnusedDragEvents(float yOffset)
             {
@@ -2199,13 +2122,8 @@
             public abstract void UpdateFilter(HierarchyType hierarchyType, SearchFilter searchFilter, bool showFoldersFirst);
             public abstract void UpdateHeight();
 
-            public float Height
-            {
-                get
-                {
-                    return this.m_Height;
-                }
-            }
+            public float Height =>
+                this.m_Height;
 
             public abstract int ItemCount { get; }
 
@@ -2215,10 +2133,8 @@
 
             public bool visiblePreference
             {
-                get
-                {
-                    return (string.IsNullOrEmpty(this.m_GroupSeparatorTitle) || EditorPrefs.GetBool(this.m_GroupSeparatorTitle, true));
-                }
+                get => 
+                    (string.IsNullOrEmpty(this.m_GroupSeparatorTitle) || EditorPrefs.GetBool(this.m_GroupSeparatorTitle, true));
                 set
                 {
                     if (!string.IsNullOrEmpty(this.m_GroupSeparatorTitle))
@@ -2832,15 +2748,11 @@
                 ObjectListArea.s_Styles.subAssetBgMiddle.Draw(position, GUIContent.none, false, false, false, false);
             }
 
-            internal static int GetControlIDFromInstanceID(int instanceID)
-            {
-                return (instanceID + 0x5f5e100);
-            }
+            internal static int GetControlIDFromInstanceID(int instanceID) => 
+                (instanceID + 0x5f5e100);
 
-            protected override float GetHeaderHeight()
-            {
-                return 0f;
-            }
+            protected override float GetHeaderHeight() => 
+                0f;
 
             public List<int> GetInstanceIDs()
             {
@@ -3294,15 +3206,11 @@
                 return false;
             }
 
-            private bool IsCreatingAtThisIndex(int itemIdx)
-            {
-                return (base.m_Owner.m_State.m_NewAssetIndexInList == itemIdx);
-            }
+            private bool IsCreatingAtThisIndex(int itemIdx) => 
+                (base.m_Owner.m_State.m_NewAssetIndexInList == itemIdx);
 
-            private bool IsExpanded(int instanceID)
-            {
-                return (base.m_Owner.m_State.m_ExpandedInstanceIDs.IndexOf(instanceID) >= 0);
-            }
+            private bool IsExpanded(int instanceID) => 
+                (base.m_Owner.m_State.m_ExpandedInstanceIDs.IndexOf(instanceID) >= 0);
 
             private bool IsRenaming(int instanceID)
             {
@@ -3483,13 +3391,8 @@
                 }
             }
 
-            public bool HasBuiltinResources
-            {
-                get
-                {
-                    return (this.m_CurrentBuiltinResources.Length > 0);
-                }
-            }
+            public bool HasBuiltinResources =>
+                (this.m_CurrentBuiltinResources.Length > 0);
 
             public override int ItemCount
             {
@@ -3505,10 +3408,8 @@
 
             public override bool ListMode
             {
-                get
-                {
-                    return this.m_ListMode;
-                }
+                get => 
+                    this.m_ListMode;
                 set
                 {
                     this.m_ListMode = value;
@@ -3517,30 +3418,18 @@
 
             public override bool NeedsRepaint
             {
-                get
-                {
-                    return false;
-                }
+                get => 
+                    false;
                 protected set
                 {
                 }
             }
 
-            public SearchFilter searchFilter
-            {
-                get
-                {
-                    return this.m_FilteredHierarchy.searchFilter;
-                }
-            }
+            public SearchFilter searchFilter =>
+                this.m_FilteredHierarchy.searchFilter;
 
-            public bool ShowNone
-            {
-                get
-                {
-                    return this.m_ShowNoneItem;
-                }
-            }
+            public bool ShowNone =>
+                this.m_ShowNoneItem;
 
             private class ItemFader
             {
@@ -3633,10 +3522,8 @@
                 this.resultsLabel.alignment = TextAnchor.MiddleLeft;
             }
 
-            private static GUIStyle GetStyle(string styleName)
-            {
-                return styleName;
-            }
+            private static GUIStyle GetStyle(string styleName) => 
+                styleName;
         }
     }
 }

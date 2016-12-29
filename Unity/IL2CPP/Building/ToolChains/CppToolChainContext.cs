@@ -19,21 +19,11 @@
             this._extraIncludeDirectories.Add(includeDirectory);
         }
 
-        public IEnumerable<CppCompilationInstruction> ExtraCompileInstructions
-        {
-            get
-            {
-                return this._extraCompileInstructions;
-            }
-        }
+        public IEnumerable<CppCompilationInstruction> ExtraCompileInstructions =>
+            this._extraCompileInstructions;
 
-        public IEnumerable<NPath> ExtraIncludeDirectories
-        {
-            get
-            {
-                return this._extraIncludeDirectories;
-            }
-        }
+        public IEnumerable<NPath> ExtraIncludeDirectories =>
+            this._extraIncludeDirectories;
     }
 }
 

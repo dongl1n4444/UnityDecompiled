@@ -3,11 +3,9 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class Extensions
     {
-        [Extension]
-        public static bool operator ==(char lhs, string rhs)
+        public static bool operator ==(this char lhs, string rhs)
         {
             bool flag1 = 1 == rhs.Length;
             if (!flag1)
@@ -17,20 +15,13 @@
             return (lhs == rhs[0]);
         }
 
-        [Extension]
-        public static bool operator ==(string lhs, char rhs)
-        {
-            return (rhs == lhs);
-        }
+        public static bool operator ==(this string lhs, char rhs) => 
+            (rhs == lhs);
 
-        [Extension]
-        public static implicit operator bool(Enum e)
-        {
-            return (((IConvertible) e).ToInt32(null) != 0);
-        }
+        public static implicit operator bool(this Enum e) => 
+            (((IConvertible) e).ToInt32(null) != 0);
 
-        [Extension]
-        public static bool operator !=(char lhs, string rhs)
+        public static bool operator !=(this char lhs, string rhs)
         {
             bool flag1 = 1 != rhs.Length;
             if (flag1)
@@ -40,29 +31,16 @@
             return (lhs != rhs[0]);
         }
 
-        [Extension]
-        public static bool operator !=(string lhs, char rhs)
-        {
-            return (rhs != lhs);
-        }
+        public static bool operator !=(this string lhs, char rhs) => 
+            (rhs != lhs);
 
         [Extension]
-        public static int this[System.Array a]
-        {
-            get
-            {
-                return a.Length;
-            }
-        }
+        public static int this[System.Array a] =>
+            a.Length;
 
         [Extension]
-        public static int this[string s]
-        {
-            get
-            {
-                return s.Length;
-            }
-        }
+        public static int this[string s] =>
+            s.Length;
     }
 }
 

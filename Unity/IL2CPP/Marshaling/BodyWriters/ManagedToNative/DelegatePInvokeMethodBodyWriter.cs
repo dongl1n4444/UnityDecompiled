@@ -18,7 +18,7 @@
                 return false;
             }
             TypeDefinition declaringType = base._methodDefinition.DeclaringType;
-            if (!Extensions.IsDelegate(declaringType))
+            if (!declaringType.IsDelegate())
             {
                 return false;
             }

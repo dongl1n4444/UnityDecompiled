@@ -95,10 +95,8 @@
         internal extern void GenerateNoisePreviewTexture(Texture2D dst);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern int GenerateRandomSeed();
-        public int GetCustomParticleData(List<Vector4> customData, ParticleSystemCustomData streamIndex)
-        {
-            return this.GetCustomParticleDataInternal(customData, (int) streamIndex);
-        }
+        public int GetCustomParticleData(List<Vector4> customData, ParticleSystemCustomData streamIndex) => 
+            this.GetCustomParticleDataInternal(customData, (int) streamIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern int GetCustomParticleDataInternal(object customData, int streamIndex);
@@ -323,35 +321,20 @@
         /// <summary>
         /// <para>Access the particle system collision module.</para>
         /// </summary>
-        public CollisionModule collision
-        {
-            get
-            {
-                return new CollisionModule(this);
-            }
-        }
+        public CollisionModule collision =>
+            new CollisionModule(this);
 
         /// <summary>
         /// <para>Access the particle system color by lifetime module.</para>
         /// </summary>
-        public ColorBySpeedModule colorBySpeed
-        {
-            get
-            {
-                return new ColorBySpeedModule(this);
-            }
-        }
+        public ColorBySpeedModule colorBySpeed =>
+            new ColorBySpeedModule(this);
 
         /// <summary>
         /// <para>Access the particle system color over lifetime module.</para>
         /// </summary>
-        public ColorOverLifetimeModule colorOverLifetime
-        {
-            get
-            {
-                return new ColorOverLifetimeModule(this);
-            }
-        }
+        public ColorOverLifetimeModule colorOverLifetime =>
+            new ColorOverLifetimeModule(this);
 
         /// <summary>
         /// <para>The duration of the particle system in seconds (Read Only).</para>
@@ -362,13 +345,8 @@
         /// <summary>
         /// <para>Access the particle system emission module.</para>
         /// </summary>
-        public EmissionModule emission
-        {
-            get
-            {
-                return new EmissionModule(this);
-            }
-        }
+        public EmissionModule emission =>
+            new EmissionModule(this);
 
         /// <summary>
         /// <para>The rate of emission.</para>
@@ -376,10 +354,8 @@
         [Obsolete("emissionRate property is deprecated. Use emission.rateOverTime, emission.rateOverDistance, emission.rateOverTimeMultiplier or emission.rateOverDistanceMultiplier instead.")]
         public float emissionRate
         {
-            get
-            {
-                return this.emission.rateOverTimeMultiplier;
-            }
+            get => 
+                this.emission.rateOverTimeMultiplier;
             set
             {
                 this.emission.rateOverTime = value;
@@ -392,10 +368,8 @@
         [Obsolete("enableEmission property is deprecated. Use emission.enabled instead.")]
         public bool enableEmission
         {
-            get
-            {
-                return this.emission.enabled;
-            }
+            get => 
+                this.emission.enabled;
             set
             {
                 this.emission.enabled = value;
@@ -405,24 +379,14 @@
         /// <summary>
         /// <para>Access the particle system external forces module.</para>
         /// </summary>
-        public ExternalForcesModule externalForces
-        {
-            get
-            {
-                return new ExternalForcesModule(this);
-            }
-        }
+        public ExternalForcesModule externalForces =>
+            new ExternalForcesModule(this);
 
         /// <summary>
         /// <para>Access the particle system force over lifetime module.</para>
         /// </summary>
-        public ForceOverLifetimeModule forceOverLifetime
-        {
-            get
-            {
-                return new ForceOverLifetimeModule(this);
-            }
-        }
+        public ForceOverLifetimeModule forceOverLifetime =>
+            new ForceOverLifetimeModule(this);
 
         /// <summary>
         /// <para>Scale being applied to the gravity defined by Physics.gravity.</para>
@@ -433,13 +397,8 @@
         /// <summary>
         /// <para>Access the particle system velocity inheritance module.</para>
         /// </summary>
-        public InheritVelocityModule inheritVelocity
-        {
-            get
-            {
-                return new InheritVelocityModule(this);
-            }
-        }
+        public InheritVelocityModule inheritVelocity =>
+            new InheritVelocityModule(this);
 
         /// <summary>
         /// <para>Is the particle system currently emitting particles? A particle system may stop emitting when its emission module has finished, it has been paused or if the system has been stopped using ParticleSystem.Stop|Stop with the ParticleSystemStopBehavior.StopEmitting|StopEmitting flag. Resume emitting by calling ParticleSystem.Play|Play.</para>
@@ -464,24 +423,14 @@
         /// <summary>
         /// <para>Access the particle system lights module.</para>
         /// </summary>
-        public LightsModule lights
-        {
-            get
-            {
-                return new LightsModule(this);
-            }
-        }
+        public LightsModule lights =>
+            new LightsModule(this);
 
         /// <summary>
         /// <para>Access the particle system limit velocity over lifetime module.</para>
         /// </summary>
-        public LimitVelocityOverLifetimeModule limitVelocityOverLifetime
-        {
-            get
-            {
-                return new LimitVelocityOverLifetimeModule(this);
-            }
-        }
+        public LimitVelocityOverLifetimeModule limitVelocityOverLifetime =>
+            new LimitVelocityOverLifetimeModule(this);
 
         /// <summary>
         /// <para>Is the particle system looping?</para>
@@ -492,13 +441,8 @@
         /// <summary>
         /// <para>Access the main particle system settings.</para>
         /// </summary>
-        public MainModule main
-        {
-            get
-            {
-                return new MainModule(this);
-            }
-        }
+        public MainModule main =>
+            new MainModule(this);
 
         /// <summary>
         /// <para>The maximum number of particles to emit.</para>
@@ -509,13 +453,8 @@
         /// <summary>
         /// <para>Access the particle system noise module.</para>
         /// </summary>
-        public NoiseModule noise
-        {
-            get
-            {
-                return new NoiseModule(this);
-            }
-        }
+        public NoiseModule noise =>
+            new NoiseModule(this);
 
         /// <summary>
         /// <para>The current number of particles (Read Only).</para>
@@ -542,33 +481,18 @@
         /// <summary>
         /// <para>Access the particle system rotation by speed  module.</para>
         /// </summary>
-        public RotationBySpeedModule rotationBySpeed
-        {
-            get
-            {
-                return new RotationBySpeedModule(this);
-            }
-        }
+        public RotationBySpeedModule rotationBySpeed =>
+            new RotationBySpeedModule(this);
 
         /// <summary>
         /// <para>Access the particle system rotation over lifetime module.</para>
         /// </summary>
-        public RotationOverLifetimeModule rotationOverLifetime
-        {
-            get
-            {
-                return new RotationOverLifetimeModule(this);
-            }
-        }
+        public RotationOverLifetimeModule rotationOverLifetime =>
+            new RotationOverLifetimeModule(this);
 
         [Obsolete("safeCollisionEventSize has been deprecated. Use GetSafeCollisionEventSize() instead (UnityUpgradable) -> ParticlePhysicsExtensions.GetSafeCollisionEventSize(UnityEngine.ParticleSystem)", false)]
-        public int safeCollisionEventSize
-        {
-            get
-            {
-                return ParticleSystemExtensionsImpl.GetSafeCollisionEventSize(this);
-            }
-        }
+        public int safeCollisionEventSize =>
+            ParticleSystemExtensionsImpl.GetSafeCollisionEventSize(this);
 
         /// <summary>
         /// <para>The scaling mode applied to particle sizes and positions.</para>
@@ -579,13 +503,8 @@
         /// <summary>
         /// <para>Access the particle system shape module.</para>
         /// </summary>
-        public ShapeModule shape
-        {
-            get
-            {
-                return new ShapeModule(this);
-            }
-        }
+        public ShapeModule shape =>
+            new ShapeModule(this);
 
         /// <summary>
         /// <para>This selects the space in which to simulate particles. It can be either world or local space.</para>
@@ -596,24 +515,14 @@
         /// <summary>
         /// <para>Access the particle system size by speed module.</para>
         /// </summary>
-        public SizeBySpeedModule sizeBySpeed
-        {
-            get
-            {
-                return new SizeBySpeedModule(this);
-            }
-        }
+        public SizeBySpeedModule sizeBySpeed =>
+            new SizeBySpeedModule(this);
 
         /// <summary>
         /// <para>Access the particle system size over lifetime module.</para>
         /// </summary>
-        public SizeOverLifetimeModule sizeOverLifetime
-        {
-            get
-            {
-                return new SizeOverLifetimeModule(this);
-            }
-        }
+        public SizeOverLifetimeModule sizeOverLifetime =>
+            new SizeOverLifetimeModule(this);
 
         /// <summary>
         /// <para>The initial color of particles when emitted.</para>
@@ -684,24 +593,14 @@
         /// <summary>
         /// <para>Access the particle system sub emitters module.</para>
         /// </summary>
-        public SubEmittersModule subEmitters
-        {
-            get
-            {
-                return new SubEmittersModule(this);
-            }
-        }
+        public SubEmittersModule subEmitters =>
+            new SubEmittersModule(this);
 
         /// <summary>
         /// <para>Access the particle system texture sheet animation module.</para>
         /// </summary>
-        public TextureSheetAnimationModule textureSheetAnimation
-        {
-            get
-            {
-                return new TextureSheetAnimationModule(this);
-            }
-        }
+        public TextureSheetAnimationModule textureSheetAnimation =>
+            new TextureSheetAnimationModule(this);
 
         /// <summary>
         /// <para>Playback position in seconds.</para>
@@ -711,24 +610,14 @@
         /// <summary>
         /// <para>Access the particle system trails module.</para>
         /// </summary>
-        public TrailModule trails
-        {
-            get
-            {
-                return new TrailModule(this);
-            }
-        }
+        public TrailModule trails =>
+            new TrailModule(this);
 
         /// <summary>
         /// <para>Access the particle system trigger module.</para>
         /// </summary>
-        public TriggerModule trigger
-        {
-            get
-            {
-                return new TriggerModule(this);
-            }
-        }
+        public TriggerModule trigger =>
+            new TriggerModule(this);
 
         /// <summary>
         /// <para>Controls whether the Particle System uses an automatically-generated random number to seed the random number generator.</para>
@@ -738,13 +627,8 @@
         /// <summary>
         /// <para>Access the particle system velocity over lifetime module.</para>
         /// </summary>
-        public VelocityOverLifetimeModule velocityOverLifetime
-        {
-            get
-            {
-                return new VelocityOverLifetimeModule(this);
-            }
-        }
+        public VelocityOverLifetimeModule velocityOverLifetime =>
+            new VelocityOverLifetimeModule(this);
 
         [CompilerGenerated]
         private sealed class <Simulate>c__AnonStorey0
@@ -753,10 +637,8 @@
             internal bool restart;
             internal float t;
 
-            internal bool <>m__0(ParticleSystem ps)
-            {
-                return ParticleSystem.Internal_Simulate(ps, this.t, this.restart, this.fixedTimeStep);
-            }
+            internal bool <>m__0(ParticleSystem ps) => 
+                ParticleSystem.Internal_Simulate(ps, this.t, this.restart, this.fixedTimeStep);
         }
 
         [CompilerGenerated]
@@ -764,10 +646,8 @@
         {
             internal ParticleSystemStopBehavior stopBehavior;
 
-            internal bool <>m__0(ParticleSystem ps)
-            {
-                return ParticleSystem.Internal_Stop(ps, this.stopBehavior);
-            }
+            internal bool <>m__0(ParticleSystem ps) => 
+                ParticleSystem.Internal_Stop(ps, this.stopBehavior);
         }
 
         /// <summary>
@@ -812,10 +692,8 @@
             /// </summary>
             public float time
             {
-                get
-                {
-                    return this.m_Time;
-                }
+                get => 
+                    this.m_Time;
                 set
                 {
                     this.m_Time = value;
@@ -826,10 +704,8 @@
             /// </summary>
             public short minCount
             {
-                get
-                {
-                    return this.m_MinCount;
-                }
+                get => 
+                    this.m_MinCount;
                 set
                 {
                     this.m_MinCount = value;
@@ -840,10 +716,8 @@
             /// </summary>
             public short maxCount
             {
-                get
-                {
-                    return this.m_MaxCount;
-                }
+                get => 
+                    this.m_MaxCount;
                 set
                 {
                     this.m_MaxCount = value;
@@ -854,34 +728,14 @@
         [StructLayout(LayoutKind.Sequential, Size=1), Obsolete("ParticleSystem.CollisionEvent has been deprecated. Use ParticleCollisionEvent instead (UnityUpgradable) -> ParticleCollisionEvent", true)]
         public struct CollisionEvent
         {
-            public Vector3 intersection
-            {
-                get
-                {
-                    return new Vector3();
-                }
-            }
-            public Vector3 normal
-            {
-                get
-                {
-                    return new Vector3();
-                }
-            }
-            public Vector3 velocity
-            {
-                get
-                {
-                    return new Vector3();
-                }
-            }
-            public Collider collider
-            {
-                get
-                {
-                    return null;
-                }
-            }
+            public Vector3 intersection =>
+                new Vector3();
+            public Vector3 normal =>
+                new Vector3();
+            public Vector3 velocity =>
+                new Vector3();
+            public Collider collider =>
+                null;
         }
 
         /// <summary>
@@ -901,10 +755,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -915,10 +767,8 @@
             /// </summary>
             public ParticleSystemCollisionType type
             {
-                get
-                {
-                    return (ParticleSystemCollisionType) GetType(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemCollisionType) GetType(this.m_ParticleSystem));
                 set
                 {
                     SetType(this.m_ParticleSystem, (int) value);
@@ -929,10 +779,8 @@
             /// </summary>
             public ParticleSystemCollisionMode mode
             {
-                get
-                {
-                    return (ParticleSystemCollisionMode) GetMode(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemCollisionMode) GetMode(this.m_ParticleSystem));
                 set
                 {
                     SetMode(this.m_ParticleSystem, (int) value);
@@ -959,10 +807,8 @@
             /// </summary>
             public float dampenMultiplier
             {
-                get
-                {
-                    return GetDampenMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetDampenMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetDampenMultiplier(this.m_ParticleSystem, value);
@@ -989,10 +835,8 @@
             /// </summary>
             public float bounceMultiplier
             {
-                get
-                {
-                    return GetBounceMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetBounceMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetBounceMultiplier(this.m_ParticleSystem, value);
@@ -1019,10 +863,8 @@
             /// </summary>
             public float lifetimeLossMultiplier
             {
-                get
-                {
-                    return GetLifetimeLossMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetLifetimeLossMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetLifetimeLossMultiplier(this.m_ParticleSystem, value);
@@ -1033,10 +875,8 @@
             /// </summary>
             public float minKillSpeed
             {
-                get
-                {
-                    return GetMinKillSpeed(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMinKillSpeed(this.m_ParticleSystem);
                 set
                 {
                     SetMinKillSpeed(this.m_ParticleSystem, value);
@@ -1047,10 +887,8 @@
             /// </summary>
             public float maxKillSpeed
             {
-                get
-                {
-                    return GetMaxKillSpeed(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMaxKillSpeed(this.m_ParticleSystem);
                 set
                 {
                     SetMaxKillSpeed(this.m_ParticleSystem, value);
@@ -1061,10 +899,8 @@
             /// </summary>
             public LayerMask collidesWith
             {
-                get
-                {
-                    return GetCollidesWith(this.m_ParticleSystem);
-                }
+                get => 
+                    GetCollidesWith(this.m_ParticleSystem);
                 set
                 {
                     SetCollidesWith(this.m_ParticleSystem, (int) value);
@@ -1075,10 +911,8 @@
             /// </summary>
             public bool enableDynamicColliders
             {
-                get
-                {
-                    return GetEnableDynamicColliders(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnableDynamicColliders(this.m_ParticleSystem);
                 set
                 {
                     SetEnableDynamicColliders(this.m_ParticleSystem, value);
@@ -1089,10 +923,8 @@
             /// </summary>
             public bool enableInteriorCollisions
             {
-                get
-                {
-                    return GetEnableInteriorCollisions(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnableInteriorCollisions(this.m_ParticleSystem);
                 set
                 {
                     SetEnableInteriorCollisions(this.m_ParticleSystem, value);
@@ -1103,10 +935,8 @@
             /// </summary>
             public int maxCollisionShapes
             {
-                get
-                {
-                    return GetMaxCollisionShapes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMaxCollisionShapes(this.m_ParticleSystem);
                 set
                 {
                     SetMaxCollisionShapes(this.m_ParticleSystem, value);
@@ -1117,10 +947,8 @@
             /// </summary>
             public ParticleSystemCollisionQuality quality
             {
-                get
-                {
-                    return (ParticleSystemCollisionQuality) GetQuality(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemCollisionQuality) GetQuality(this.m_ParticleSystem));
                 set
                 {
                     SetQuality(this.m_ParticleSystem, (int) value);
@@ -1131,10 +959,8 @@
             /// </summary>
             public float voxelSize
             {
-                get
-                {
-                    return GetVoxelSize(this.m_ParticleSystem);
-                }
+                get => 
+                    GetVoxelSize(this.m_ParticleSystem);
                 set
                 {
                     SetVoxelSize(this.m_ParticleSystem, value);
@@ -1145,10 +971,8 @@
             /// </summary>
             public float radiusScale
             {
-                get
-                {
-                    return GetRadiusScale(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRadiusScale(this.m_ParticleSystem);
                 set
                 {
                     SetRadiusScale(this.m_ParticleSystem, value);
@@ -1159,10 +983,8 @@
             /// </summary>
             public bool sendCollisionMessages
             {
-                get
-                {
-                    return GetUsesCollisionMessages(this.m_ParticleSystem);
-                }
+                get => 
+                    GetUsesCollisionMessages(this.m_ParticleSystem);
                 set
                 {
                     SetUsesCollisionMessages(this.m_ParticleSystem, value);
@@ -1185,21 +1007,14 @@
             /// <returns>
             /// <para>The plane.</para>
             /// </returns>
-            public Transform GetPlane(int index)
-            {
-                return GetPlane(this.m_ParticleSystem, index);
-            }
+            public Transform GetPlane(int index) => 
+                GetPlane(this.m_ParticleSystem, index);
 
             /// <summary>
             /// <para>The maximum number of planes it is possible to set as colliders.</para>
             /// </summary>
-            public int maxPlaneCount
-            {
-                get
-                {
-                    return GetMaxPlaneCount(this.m_ParticleSystem);
-                }
-            }
+            public int maxPlaneCount =>
+                GetMaxPlaneCount(this.m_ParticleSystem);
             [MethodImpl(MethodImplOptions.InternalCall)]
             private static extern void SetEnabled(ParticleSystem system, bool value);
             [MethodImpl(MethodImplOptions.InternalCall)]
@@ -1301,10 +1116,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -1331,10 +1144,8 @@
             /// </summary>
             public Vector2 range
             {
-                get
-                {
-                    return GetRange(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRange(this.m_ParticleSystem);
                 set
                 {
                     SetRange(this.m_ParticleSystem, value);
@@ -1383,10 +1194,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -1435,10 +1244,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -1465,10 +1272,8 @@
             /// </summary>
             public float rateOverTimeMultiplier
             {
-                get
-                {
-                    return GetRateOverTimeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRateOverTimeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRateOverTimeMultiplier(this.m_ParticleSystem, value);
@@ -1495,10 +1300,8 @@
             /// </summary>
             public float rateOverDistanceMultiplier
             {
-                get
-                {
-                    return GetRateOverDistanceMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRateOverDistanceMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRateOverDistanceMultiplier(this.m_ParticleSystem, value);
@@ -1514,31 +1317,22 @@
                 SetBursts(this.m_ParticleSystem, bursts, size);
             }
 
-            public int GetBursts(ParticleSystem.Burst[] bursts)
-            {
-                return GetBursts(this.m_ParticleSystem, bursts);
-            }
+            public int GetBursts(ParticleSystem.Burst[] bursts) => 
+                GetBursts(this.m_ParticleSystem, bursts);
 
             /// <summary>
             /// <para>The current number of bursts.</para>
             /// </summary>
-            public int burstCount
-            {
-                get
-                {
-                    return GetBurstCount(this.m_ParticleSystem);
-                }
-            }
+            public int burstCount =>
+                GetBurstCount(this.m_ParticleSystem);
             /// <summary>
             /// <para>The emission type.</para>
             /// </summary>
             [Obsolete("ParticleSystemEmissionType no longer does anything. Time and Distance based emission are now both always active.")]
             public ParticleSystemEmissionType type
             {
-                get
-                {
-                    return ParticleSystemEmissionType.Time;
-                }
+                get => 
+                    ParticleSystemEmissionType.Time;
                 set
                 {
                 }
@@ -1566,10 +1360,8 @@
             [Obsolete("rateMultiplier property is deprecated. Use rateOverTimeMultiplier or rateOverDistanceMultiplier instead.")]
             public float rateMultiplier
             {
-                get
-                {
-                    return GetRateOverTimeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRateOverTimeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRateOverTimeMultiplier(this.m_ParticleSystem, value);
@@ -1625,10 +1417,8 @@
             /// </summary>
             public Vector3 position
             {
-                get
-                {
-                    return this.m_Particle.position;
-                }
+                get => 
+                    this.m_Particle.position;
                 set
                 {
                     this.m_Particle.position = value;
@@ -1640,10 +1430,8 @@
             /// </summary>
             public bool applyShapeToPosition
             {
-                get
-                {
-                    return this.m_ApplyShapeToPosition;
-                }
+                get => 
+                    this.m_ApplyShapeToPosition;
                 set
                 {
                     this.m_ApplyShapeToPosition = value;
@@ -1654,10 +1442,8 @@
             /// </summary>
             public Vector3 velocity
             {
-                get
-                {
-                    return this.m_Particle.velocity;
-                }
+                get => 
+                    this.m_Particle.velocity;
                 set
                 {
                     this.m_Particle.velocity = value;
@@ -1669,10 +1455,8 @@
             /// </summary>
             public float startLifetime
             {
-                get
-                {
-                    return this.m_Particle.startLifetime;
-                }
+                get => 
+                    this.m_Particle.startLifetime;
                 set
                 {
                     this.m_Particle.startLifetime = value;
@@ -1684,10 +1468,8 @@
             /// </summary>
             public float startSize
             {
-                get
-                {
-                    return this.m_Particle.startSize;
-                }
+                get => 
+                    this.m_Particle.startSize;
                 set
                 {
                     this.m_Particle.startSize = value;
@@ -1699,10 +1481,8 @@
             /// </summary>
             public Vector3 startSize3D
             {
-                get
-                {
-                    return this.m_Particle.startSize3D;
-                }
+                get => 
+                    this.m_Particle.startSize3D;
                 set
                 {
                     this.m_Particle.startSize3D = value;
@@ -1714,10 +1494,8 @@
             /// </summary>
             public Vector3 axisOfRotation
             {
-                get
-                {
-                    return this.m_Particle.axisOfRotation;
-                }
+                get => 
+                    this.m_Particle.axisOfRotation;
                 set
                 {
                     this.m_Particle.axisOfRotation = value;
@@ -1729,10 +1507,8 @@
             /// </summary>
             public float rotation
             {
-                get
-                {
-                    return this.m_Particle.rotation;
-                }
+                get => 
+                    this.m_Particle.rotation;
                 set
                 {
                     this.m_Particle.rotation = value;
@@ -1744,10 +1520,8 @@
             /// </summary>
             public Vector3 rotation3D
             {
-                get
-                {
-                    return this.m_Particle.rotation3D;
-                }
+                get => 
+                    this.m_Particle.rotation3D;
                 set
                 {
                     this.m_Particle.rotation3D = value;
@@ -1759,10 +1533,8 @@
             /// </summary>
             public float angularVelocity
             {
-                get
-                {
-                    return this.m_Particle.angularVelocity;
-                }
+                get => 
+                    this.m_Particle.angularVelocity;
                 set
                 {
                     this.m_Particle.angularVelocity = value;
@@ -1774,10 +1546,8 @@
             /// </summary>
             public Vector3 angularVelocity3D
             {
-                get
-                {
-                    return this.m_Particle.angularVelocity3D;
-                }
+                get => 
+                    this.m_Particle.angularVelocity3D;
                 set
                 {
                     this.m_Particle.angularVelocity3D = value;
@@ -1789,10 +1559,8 @@
             /// </summary>
             public Color32 startColor
             {
-                get
-                {
-                    return this.m_Particle.startColor;
-                }
+                get => 
+                    this.m_Particle.startColor;
                 set
                 {
                     this.m_Particle.startColor = value;
@@ -1804,10 +1572,8 @@
             /// </summary>
             public uint randomSeed
             {
-                get
-                {
-                    return this.m_Particle.randomSeed;
-                }
+                get => 
+                    this.m_Particle.randomSeed;
                 set
                 {
                     this.m_Particle.randomSeed = value;
@@ -1904,10 +1670,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -1918,10 +1682,8 @@
             /// </summary>
             public float multiplier
             {
-                get
-                {
-                    return GetMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetMultiplier(this.m_ParticleSystem, value);
@@ -1954,10 +1716,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -2016,10 +1776,8 @@
             /// </summary>
             public float xMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -2030,10 +1788,8 @@
             /// </summary>
             public float yMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -2044,10 +1800,8 @@
             /// </summary>
             public float zMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -2058,10 +1812,8 @@
             /// </summary>
             public ParticleSystemSimulationSpace space
             {
-                get
-                {
-                    return (!GetWorldSpace(this.m_ParticleSystem) ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World);
-                }
+                get => 
+                    (!GetWorldSpace(this.m_ParticleSystem) ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World);
                 set
                 {
                     SetWorldSpace(this.m_ParticleSystem, value == ParticleSystemSimulationSpace.World);
@@ -2072,10 +1824,8 @@
             /// </summary>
             public bool randomized
             {
-                get
-                {
-                    return GetRandomized(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRandomized(this.m_ParticleSystem);
                 set
                 {
                     SetRandomized(this.m_ParticleSystem, value);
@@ -2136,10 +1886,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -2150,10 +1898,8 @@
             /// </summary>
             public ParticleSystemInheritVelocityMode mode
             {
-                get
-                {
-                    return (ParticleSystemInheritVelocityMode) GetMode(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemInheritVelocityMode) GetMode(this.m_ParticleSystem));
                 set
                 {
                     SetMode(this.m_ParticleSystem, (int) value);
@@ -2180,10 +1926,8 @@
             /// </summary>
             public float curveMultiplier
             {
-                get
-                {
-                    return GetCurveMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetCurveMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetCurveMultiplier(this.m_ParticleSystem, value);
@@ -2226,10 +1970,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -2240,10 +1982,8 @@
             /// </summary>
             public float ratio
             {
-                get
-                {
-                    return GetRatio(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRatio(this.m_ParticleSystem);
                 set
                 {
                     SetRatio(this.m_ParticleSystem, value);
@@ -2254,10 +1994,8 @@
             /// </summary>
             public bool useRandomDistribution
             {
-                get
-                {
-                    return GetUseRandomDistribution(this.m_ParticleSystem);
-                }
+                get => 
+                    GetUseRandomDistribution(this.m_ParticleSystem);
                 set
                 {
                     SetUseRandomDistribution(this.m_ParticleSystem, value);
@@ -2268,10 +2006,8 @@
             /// </summary>
             public Light light
             {
-                get
-                {
-                    return GetLightPrefab(this.m_ParticleSystem);
-                }
+                get => 
+                    GetLightPrefab(this.m_ParticleSystem);
                 set
                 {
                     SetLightPrefab(this.m_ParticleSystem, value);
@@ -2282,10 +2018,8 @@
             /// </summary>
             public bool useParticleColor
             {
-                get
-                {
-                    return GetUseParticleColor(this.m_ParticleSystem);
-                }
+                get => 
+                    GetUseParticleColor(this.m_ParticleSystem);
                 set
                 {
                     SetUseParticleColor(this.m_ParticleSystem, value);
@@ -2296,10 +2030,8 @@
             /// </summary>
             public bool sizeAffectsRange
             {
-                get
-                {
-                    return GetSizeAffectsRange(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSizeAffectsRange(this.m_ParticleSystem);
                 set
                 {
                     SetSizeAffectsRange(this.m_ParticleSystem, value);
@@ -2310,10 +2042,8 @@
             /// </summary>
             public bool alphaAffectsIntensity
             {
-                get
-                {
-                    return GetAlphaAffectsIntensity(this.m_ParticleSystem);
-                }
+                get => 
+                    GetAlphaAffectsIntensity(this.m_ParticleSystem);
                 set
                 {
                     SetAlphaAffectsIntensity(this.m_ParticleSystem, value);
@@ -2340,10 +2070,8 @@
             /// </summary>
             public float rangeMultiplier
             {
-                get
-                {
-                    return GetRangeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRangeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRangeMultiplier(this.m_ParticleSystem, value);
@@ -2370,10 +2098,8 @@
             /// </summary>
             public float intensityMultiplier
             {
-                get
-                {
-                    return GetIntensityMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetIntensityMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetIntensityMultiplier(this.m_ParticleSystem, value);
@@ -2384,10 +2110,8 @@
             /// </summary>
             public int maxLights
             {
-                get
-                {
-                    return GetMaxLights(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMaxLights(this.m_ParticleSystem);
                 set
                 {
                     SetMaxLights(this.m_ParticleSystem, value);
@@ -2460,10 +2184,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -2490,10 +2212,8 @@
             /// </summary>
             public float limitXMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -2520,10 +2240,8 @@
             /// </summary>
             public float limitYMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -2550,10 +2268,8 @@
             /// </summary>
             public float limitZMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -2580,10 +2296,8 @@
             /// </summary>
             public float limitMultiplier
             {
-                get
-                {
-                    return GetMagnitudeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMagnitudeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetMagnitudeMultiplier(this.m_ParticleSystem, value);
@@ -2594,10 +2308,8 @@
             /// </summary>
             public float dampen
             {
-                get
-                {
-                    return GetDampen(this.m_ParticleSystem);
-                }
+                get => 
+                    GetDampen(this.m_ParticleSystem);
                 set
                 {
                     SetDampen(this.m_ParticleSystem, value);
@@ -2608,10 +2320,8 @@
             /// </summary>
             public bool separateAxes
             {
-                get
-                {
-                    return GetSeparateAxes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSeparateAxes(this.m_ParticleSystem);
                 set
                 {
                     SetSeparateAxes(this.m_ParticleSystem, value);
@@ -2622,10 +2332,8 @@
             /// </summary>
             public ParticleSystemSimulationSpace space
             {
-                get
-                {
-                    return (!GetWorldSpace(this.m_ParticleSystem) ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World);
-                }
+                get => 
+                    (!GetWorldSpace(this.m_ParticleSystem) ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World);
                 set
                 {
                     SetWorldSpace(this.m_ParticleSystem, value == ParticleSystemSimulationSpace.World);
@@ -2698,10 +2406,8 @@
             /// </summary>
             public float duration
             {
-                get
-                {
-                    return GetDuration(this.m_ParticleSystem);
-                }
+                get => 
+                    GetDuration(this.m_ParticleSystem);
                 set
                 {
                     SetDuration(this.m_ParticleSystem, value);
@@ -2712,10 +2418,8 @@
             /// </summary>
             public bool loop
             {
-                get
-                {
-                    return GetLoop(this.m_ParticleSystem);
-                }
+                get => 
+                    GetLoop(this.m_ParticleSystem);
                 set
                 {
                     SetLoop(this.m_ParticleSystem, value);
@@ -2726,10 +2430,8 @@
             /// </summary>
             public bool prewarm
             {
-                get
-                {
-                    return GetPrewarm(this.m_ParticleSystem);
-                }
+                get => 
+                    GetPrewarm(this.m_ParticleSystem);
                 set
                 {
                     SetPrewarm(this.m_ParticleSystem, value);
@@ -2756,10 +2458,8 @@
             /// </summary>
             public float startDelayMultiplier
             {
-                get
-                {
-                    return GetStartDelayMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartDelayMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartDelayMultiplier(this.m_ParticleSystem, value);
@@ -2786,10 +2486,8 @@
             /// </summary>
             public float startLifetimeMultiplier
             {
-                get
-                {
-                    return GetStartLifetimeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartLifetimeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartLifetimeMultiplier(this.m_ParticleSystem, value);
@@ -2816,10 +2514,8 @@
             /// </summary>
             public float startSpeedMultiplier
             {
-                get
-                {
-                    return GetStartSpeedMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartSpeedMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartSpeedMultiplier(this.m_ParticleSystem, value);
@@ -2830,10 +2526,8 @@
             /// </summary>
             public bool startSize3D
             {
-                get
-                {
-                    return GetStartSize3D(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartSize3D(this.m_ParticleSystem);
                 set
                 {
                     SetStartSize3D(this.m_ParticleSystem, value);
@@ -2860,10 +2554,8 @@
             /// </summary>
             public float startSizeMultiplier
             {
-                get
-                {
-                    return GetStartSizeXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartSizeXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartSizeXMultiplier(this.m_ParticleSystem, value);
@@ -2890,10 +2582,8 @@
             /// </summary>
             public float startSizeXMultiplier
             {
-                get
-                {
-                    return GetStartSizeXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartSizeXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartSizeXMultiplier(this.m_ParticleSystem, value);
@@ -2920,10 +2610,8 @@
             /// </summary>
             public float startSizeYMultiplier
             {
-                get
-                {
-                    return GetStartSizeYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartSizeYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartSizeYMultiplier(this.m_ParticleSystem, value);
@@ -2950,10 +2638,8 @@
             /// </summary>
             public float startSizeZMultiplier
             {
-                get
-                {
-                    return GetStartSizeZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartSizeZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartSizeZMultiplier(this.m_ParticleSystem, value);
@@ -2964,10 +2650,8 @@
             /// </summary>
             public bool startRotation3D
             {
-                get
-                {
-                    return GetStartRotation3D(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartRotation3D(this.m_ParticleSystem);
                 set
                 {
                     SetStartRotation3D(this.m_ParticleSystem, value);
@@ -2994,10 +2678,8 @@
             /// </summary>
             public float startRotationMultiplier
             {
-                get
-                {
-                    return GetStartRotationZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartRotationZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartRotationZMultiplier(this.m_ParticleSystem, value);
@@ -3024,10 +2706,8 @@
             /// </summary>
             public float startRotationXMultiplier
             {
-                get
-                {
-                    return GetStartRotationXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartRotationXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartRotationXMultiplier(this.m_ParticleSystem, value);
@@ -3054,10 +2734,8 @@
             /// </summary>
             public float startRotationYMultiplier
             {
-                get
-                {
-                    return GetStartRotationYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartRotationYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartRotationYMultiplier(this.m_ParticleSystem, value);
@@ -3084,10 +2762,8 @@
             /// </summary>
             public float startRotationZMultiplier
             {
-                get
-                {
-                    return GetStartRotationZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartRotationZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartRotationZMultiplier(this.m_ParticleSystem, value);
@@ -3098,10 +2774,8 @@
             /// </summary>
             public float randomizeRotationDirection
             {
-                get
-                {
-                    return GetRandomizeRotationDirection(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRandomizeRotationDirection(this.m_ParticleSystem);
                 set
                 {
                     SetRandomizeRotationDirection(this.m_ParticleSystem, value);
@@ -3144,10 +2818,8 @@
             /// </summary>
             public float gravityModifierMultiplier
             {
-                get
-                {
-                    return GetGravityModifierMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetGravityModifierMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetGravityModifierMultiplier(this.m_ParticleSystem, value);
@@ -3158,10 +2830,8 @@
             /// </summary>
             public ParticleSystemSimulationSpace simulationSpace
             {
-                get
-                {
-                    return GetSimulationSpace(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSimulationSpace(this.m_ParticleSystem);
                 set
                 {
                     SetSimulationSpace(this.m_ParticleSystem, value);
@@ -3172,10 +2842,8 @@
             /// </summary>
             public Transform customSimulationSpace
             {
-                get
-                {
-                    return GetCustomSimulationSpace(this.m_ParticleSystem);
-                }
+                get => 
+                    GetCustomSimulationSpace(this.m_ParticleSystem);
                 set
                 {
                     SetCustomSimulationSpace(this.m_ParticleSystem, value);
@@ -3186,10 +2854,8 @@
             /// </summary>
             public float simulationSpeed
             {
-                get
-                {
-                    return GetSimulationSpeed(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSimulationSpeed(this.m_ParticleSystem);
                 set
                 {
                     SetSimulationSpeed(this.m_ParticleSystem, value);
@@ -3200,10 +2866,8 @@
             /// </summary>
             public ParticleSystemScalingMode scalingMode
             {
-                get
-                {
-                    return GetScalingMode(this.m_ParticleSystem);
-                }
+                get => 
+                    GetScalingMode(this.m_ParticleSystem);
                 set
                 {
                     SetScalingMode(this.m_ParticleSystem, value);
@@ -3214,10 +2878,8 @@
             /// </summary>
             public bool playOnAwake
             {
-                get
-                {
-                    return GetPlayOnAwake(this.m_ParticleSystem);
-                }
+                get => 
+                    GetPlayOnAwake(this.m_ParticleSystem);
                 set
                 {
                     SetPlayOnAwake(this.m_ParticleSystem, value);
@@ -3228,10 +2890,8 @@
             /// </summary>
             public int maxParticles
             {
-                get
-                {
-                    return GetMaxParticles(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMaxParticles(this.m_ParticleSystem);
                 set
                 {
                     SetMaxParticles(this.m_ParticleSystem, value);
@@ -3454,10 +3114,8 @@
             /// </summary>
             public ParticleSystemCurveMode mode
             {
-                get
-                {
-                    return this.m_Mode;
-                }
+                get => 
+                    this.m_Mode;
                 set
                 {
                     this.m_Mode = value;
@@ -3466,10 +3124,8 @@
             [Obsolete("Please use MinMaxCurve.curveMultiplier instead. (UnityUpgradable) -> UnityEngine.ParticleSystem/MinMaxCurve.curveMultiplier")]
             public float curveScalar
             {
-                get
-                {
-                    return this.m_CurveMultiplier;
-                }
+                get => 
+                    this.m_CurveMultiplier;
                 set
                 {
                     this.m_CurveMultiplier = value;
@@ -3480,10 +3136,8 @@
             /// </summary>
             public float curveMultiplier
             {
-                get
-                {
-                    return this.m_CurveMultiplier;
-                }
+                get => 
+                    this.m_CurveMultiplier;
                 set
                 {
                     this.m_CurveMultiplier = value;
@@ -3494,10 +3148,8 @@
             /// </summary>
             public AnimationCurve curveMax
             {
-                get
-                {
-                    return this.m_CurveMax;
-                }
+                get => 
+                    this.m_CurveMax;
                 set
                 {
                     this.m_CurveMax = value;
@@ -3508,10 +3160,8 @@
             /// </summary>
             public AnimationCurve curveMin
             {
-                get
-                {
-                    return this.m_CurveMin;
-                }
+                get => 
+                    this.m_CurveMin;
                 set
                 {
                     this.m_CurveMin = value;
@@ -3522,10 +3172,8 @@
             /// </summary>
             public float constantMax
             {
-                get
-                {
-                    return this.m_ConstantMax;
-                }
+                get => 
+                    this.m_ConstantMax;
                 set
                 {
                     this.m_ConstantMax = value;
@@ -3536,10 +3184,8 @@
             /// </summary>
             public float constantMin
             {
-                get
-                {
-                    return this.m_ConstantMin;
-                }
+                get => 
+                    this.m_ConstantMin;
                 set
                 {
                     this.m_ConstantMin = value;
@@ -3550,10 +3196,8 @@
             /// </summary>
             public float constant
             {
-                get
-                {
-                    return this.m_ConstantMax;
-                }
+                get => 
+                    this.m_ConstantMax;
                 set
                 {
                     this.m_ConstantMax = value;
@@ -3564,10 +3208,8 @@
             /// </summary>
             public AnimationCurve curve
             {
-                get
-                {
-                    return this.m_CurveMax;
-                }
+                get => 
+                    this.m_CurveMax;
                 set
                 {
                     this.m_CurveMax = value;
@@ -3581,10 +3223,8 @@
             /// <returns>
             /// <para>Calculated curve/constant value.</para>
             /// </returns>
-            public float Evaluate(float time)
-            {
-                return this.Evaluate(time, 1f);
-            }
+            public float Evaluate(float time) => 
+                this.Evaluate(time, 1f);
 
             /// <summary>
             /// <para>Manually query the curve to calculate values based on what mode it is in.</para>
@@ -3614,10 +3254,8 @@
                 return b;
             }
 
-            public static implicit operator ParticleSystem.MinMaxCurve(float constant)
-            {
-                return new ParticleSystem.MinMaxCurve(constant);
-            }
+            public static implicit operator ParticleSystem.MinMaxCurve(float constant) => 
+                new ParticleSystem.MinMaxCurve(constant);
         }
 
         /// <summary>
@@ -3691,10 +3329,8 @@
             /// </summary>
             public ParticleSystemGradientMode mode
             {
-                get
-                {
-                    return this.m_Mode;
-                }
+                get => 
+                    this.m_Mode;
                 set
                 {
                     this.m_Mode = value;
@@ -3705,10 +3341,8 @@
             /// </summary>
             public Gradient gradientMax
             {
-                get
-                {
-                    return this.m_GradientMax;
-                }
+                get => 
+                    this.m_GradientMax;
                 set
                 {
                     this.m_GradientMax = value;
@@ -3719,10 +3353,8 @@
             /// </summary>
             public Gradient gradientMin
             {
-                get
-                {
-                    return this.m_GradientMin;
-                }
+                get => 
+                    this.m_GradientMin;
                 set
                 {
                     this.m_GradientMin = value;
@@ -3733,10 +3365,8 @@
             /// </summary>
             public Color colorMax
             {
-                get
-                {
-                    return this.m_ColorMax;
-                }
+                get => 
+                    this.m_ColorMax;
                 set
                 {
                     this.m_ColorMax = value;
@@ -3747,10 +3377,8 @@
             /// </summary>
             public Color colorMin
             {
-                get
-                {
-                    return this.m_ColorMin;
-                }
+                get => 
+                    this.m_ColorMin;
                 set
                 {
                     this.m_ColorMin = value;
@@ -3761,10 +3389,8 @@
             /// </summary>
             public Color color
             {
-                get
-                {
-                    return this.m_ColorMax;
-                }
+                get => 
+                    this.m_ColorMax;
                 set
                 {
                     this.m_ColorMax = value;
@@ -3775,10 +3401,8 @@
             /// </summary>
             public Gradient gradient
             {
-                get
-                {
-                    return this.m_GradientMax;
-                }
+                get => 
+                    this.m_GradientMax;
                 set
                 {
                     this.m_GradientMax = value;
@@ -3792,10 +3416,8 @@
             /// <returns>
             /// <para>Calculated gradient/color value.</para>
             /// </returns>
-            public Color Evaluate(float time)
-            {
-                return this.Evaluate(time, 1f);
-            }
+            public Color Evaluate(float time) => 
+                this.Evaluate(time, 1f);
 
             /// <summary>
             /// <para>Manually query the gradient to calculate colors based on what mode it is in.</para>
@@ -3825,15 +3447,11 @@
                 return b;
             }
 
-            public static implicit operator ParticleSystem.MinMaxGradient(Color color)
-            {
-                return new ParticleSystem.MinMaxGradient(color);
-            }
+            public static implicit operator ParticleSystem.MinMaxGradient(Color color) => 
+                new ParticleSystem.MinMaxGradient(color);
 
-            public static implicit operator ParticleSystem.MinMaxGradient(Gradient gradient)
-            {
-                return new ParticleSystem.MinMaxGradient(gradient);
-            }
+            public static implicit operator ParticleSystem.MinMaxGradient(Gradient gradient) => 
+                new ParticleSystem.MinMaxGradient(gradient);
         }
 
         /// <summary>
@@ -3855,10 +3473,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -3869,10 +3485,8 @@
             /// </summary>
             public bool separateAxes
             {
-                get
-                {
-                    return GetSeparateAxes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSeparateAxes(this.m_ParticleSystem);
                 set
                 {
                     SetSeparateAxes(this.m_ParticleSystem, value);
@@ -3899,10 +3513,8 @@
             /// </summary>
             public float strengthMultiplier
             {
-                get
-                {
-                    return GetStrengthXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStrengthXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStrengthXMultiplier(this.m_ParticleSystem, value);
@@ -3929,10 +3541,8 @@
             /// </summary>
             public float strengthXMultiplier
             {
-                get
-                {
-                    return GetStrengthXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStrengthXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStrengthXMultiplier(this.m_ParticleSystem, value);
@@ -3959,10 +3569,8 @@
             /// </summary>
             public float strengthYMultiplier
             {
-                get
-                {
-                    return GetStrengthYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStrengthYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStrengthYMultiplier(this.m_ParticleSystem, value);
@@ -3989,10 +3597,8 @@
             /// </summary>
             public float strengthZMultiplier
             {
-                get
-                {
-                    return GetStrengthZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStrengthZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStrengthZMultiplier(this.m_ParticleSystem, value);
@@ -4003,10 +3609,8 @@
             /// </summary>
             public float frequency
             {
-                get
-                {
-                    return GetFrequency(this.m_ParticleSystem);
-                }
+                get => 
+                    GetFrequency(this.m_ParticleSystem);
                 set
                 {
                     SetFrequency(this.m_ParticleSystem, value);
@@ -4017,10 +3621,8 @@
             /// </summary>
             public bool damping
             {
-                get
-                {
-                    return GetDamping(this.m_ParticleSystem);
-                }
+                get => 
+                    GetDamping(this.m_ParticleSystem);
                 set
                 {
                     SetDamping(this.m_ParticleSystem, value);
@@ -4031,10 +3633,8 @@
             /// </summary>
             public int octaveCount
             {
-                get
-                {
-                    return GetOctaveCount(this.m_ParticleSystem);
-                }
+                get => 
+                    GetOctaveCount(this.m_ParticleSystem);
                 set
                 {
                     SetOctaveCount(this.m_ParticleSystem, value);
@@ -4045,10 +3645,8 @@
             /// </summary>
             public float octaveMultiplier
             {
-                get
-                {
-                    return GetOctaveMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetOctaveMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetOctaveMultiplier(this.m_ParticleSystem, value);
@@ -4059,10 +3657,8 @@
             /// </summary>
             public float octaveScale
             {
-                get
-                {
-                    return GetOctaveScale(this.m_ParticleSystem);
-                }
+                get => 
+                    GetOctaveScale(this.m_ParticleSystem);
                 set
                 {
                     SetOctaveScale(this.m_ParticleSystem, value);
@@ -4073,10 +3669,8 @@
             /// </summary>
             public ParticleSystemNoiseQuality quality
             {
-                get
-                {
-                    return (ParticleSystemNoiseQuality) GetQuality(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemNoiseQuality) GetQuality(this.m_ParticleSystem));
                 set
                 {
                     SetQuality(this.m_ParticleSystem, (int) value);
@@ -4103,10 +3697,8 @@
             /// </summary>
             public float scrollSpeedMultiplier
             {
-                get
-                {
-                    return GetScrollSpeedMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetScrollSpeedMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetScrollSpeedMultiplier(this.m_ParticleSystem, value);
@@ -4117,10 +3709,8 @@
             /// </summary>
             public bool remapEnabled
             {
-                get
-                {
-                    return GetRemapEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRemapEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetRemapEnabled(this.m_ParticleSystem, value);
@@ -4147,10 +3737,8 @@
             /// </summary>
             public float remapMultiplier
             {
-                get
-                {
-                    return GetRemapXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRemapXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRemapXMultiplier(this.m_ParticleSystem, value);
@@ -4177,10 +3765,8 @@
             /// </summary>
             public float remapXMultiplier
             {
-                get
-                {
-                    return GetRemapXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRemapXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRemapXMultiplier(this.m_ParticleSystem, value);
@@ -4207,10 +3793,8 @@
             /// </summary>
             public float remapYMultiplier
             {
-                get
-                {
-                    return GetRemapYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRemapYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRemapYMultiplier(this.m_ParticleSystem, value);
@@ -4237,10 +3821,8 @@
             /// </summary>
             public float remapZMultiplier
             {
-                get
-                {
-                    return GetRemapZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRemapZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetRemapZMultiplier(this.m_ParticleSystem, value);
@@ -4365,10 +3947,8 @@
             /// </summary>
             public Vector3 position
             {
-                get
-                {
-                    return this.m_Position;
-                }
+                get => 
+                    this.m_Position;
                 set
                 {
                     this.m_Position = value;
@@ -4379,10 +3959,8 @@
             /// </summary>
             public Vector3 velocity
             {
-                get
-                {
-                    return this.m_Velocity;
-                }
+                get => 
+                    this.m_Velocity;
                 set
                 {
                     this.m_Velocity = value;
@@ -4394,10 +3972,8 @@
             [Obsolete("Please use Particle.remainingLifetime instead. (UnityUpgradable) -> UnityEngine.ParticleSystem/Particle.remainingLifetime")]
             public float lifetime
             {
-                get
-                {
-                    return this.m_Lifetime;
-                }
+                get => 
+                    this.m_Lifetime;
                 set
                 {
                     this.m_Lifetime = value;
@@ -4408,10 +3984,8 @@
             /// </summary>
             public float remainingLifetime
             {
-                get
-                {
-                    return this.m_Lifetime;
-                }
+                get => 
+                    this.m_Lifetime;
                 set
                 {
                     this.m_Lifetime = value;
@@ -4422,10 +3996,8 @@
             /// </summary>
             public float startLifetime
             {
-                get
-                {
-                    return this.m_StartLifetime;
-                }
+                get => 
+                    this.m_StartLifetime;
                 set
                 {
                     this.m_StartLifetime = value;
@@ -4436,10 +4008,8 @@
             /// </summary>
             public float startSize
             {
-                get
-                {
-                    return this.m_StartSize.x;
-                }
+                get => 
+                    this.m_StartSize.x;
                 set
                 {
                     this.m_StartSize = new Vector3(value, value, value);
@@ -4450,10 +4020,8 @@
             /// </summary>
             public Vector3 startSize3D
             {
-                get
-                {
-                    return this.m_StartSize;
-                }
+                get => 
+                    this.m_StartSize;
                 set
                 {
                     this.m_StartSize = value;
@@ -4461,10 +4029,8 @@
             }
             public Vector3 axisOfRotation
             {
-                get
-                {
-                    return this.m_AxisOfRotation;
-                }
+                get => 
+                    this.m_AxisOfRotation;
                 set
                 {
                     this.m_AxisOfRotation = value;
@@ -4475,10 +4041,8 @@
             /// </summary>
             public float rotation
             {
-                get
-                {
-                    return (this.m_Rotation.z * 57.29578f);
-                }
+                get => 
+                    (this.m_Rotation.z * 57.29578f);
                 set
                 {
                     this.m_Rotation = new Vector3(0f, 0f, value * 0.01745329f);
@@ -4489,10 +4053,8 @@
             /// </summary>
             public Vector3 rotation3D
             {
-                get
-                {
-                    return (Vector3) (this.m_Rotation * 57.29578f);
-                }
+                get => 
+                    ((Vector3) (this.m_Rotation * 57.29578f));
                 set
                 {
                     this.m_Rotation = (Vector3) (value * 0.01745329f);
@@ -4503,10 +4065,8 @@
             /// </summary>
             public float angularVelocity
             {
-                get
-                {
-                    return (this.m_AngularVelocity.z * 57.29578f);
-                }
+                get => 
+                    (this.m_AngularVelocity.z * 57.29578f);
                 set
                 {
                     this.m_AngularVelocity.z = value * 0.01745329f;
@@ -4517,10 +4077,8 @@
             /// </summary>
             public Vector3 angularVelocity3D
             {
-                get
-                {
-                    return (Vector3) (this.m_AngularVelocity * 57.29578f);
-                }
+                get => 
+                    ((Vector3) (this.m_AngularVelocity * 57.29578f));
                 set
                 {
                     this.m_AngularVelocity = (Vector3) (value * 0.01745329f);
@@ -4531,10 +4089,8 @@
             /// </summary>
             public Color32 startColor
             {
-                get
-                {
-                    return this.m_StartColor;
-                }
+                get => 
+                    this.m_StartColor;
                 set
                 {
                     this.m_StartColor = value;
@@ -4546,10 +4102,8 @@
             [Obsolete("randomValue property is deprecated. Use randomSeed instead to control random behavior of particles.")]
             public float randomValue
             {
-                get
-                {
-                    return BitConverter.ToSingle(BitConverter.GetBytes(this.m_RandomSeed), 0);
-                }
+                get => 
+                    BitConverter.ToSingle(BitConverter.GetBytes(this.m_RandomSeed), 0);
                 set
                 {
                     this.m_RandomSeed = BitConverter.ToUInt32(BitConverter.GetBytes(value), 0);
@@ -4560,10 +4114,8 @@
             /// </summary>
             public uint randomSeed
             {
-                get
-                {
-                    return this.m_RandomSeed;
-                }
+                get => 
+                    this.m_RandomSeed;
                 set
                 {
                     this.m_RandomSeed = value;
@@ -4576,10 +4128,8 @@
             /// <returns>
             /// <para>Current size.</para>
             /// </returns>
-            public float GetCurrentSize(ParticleSystem system)
-            {
-                return GetCurrentSize(system, ref this);
-            }
+            public float GetCurrentSize(ParticleSystem system) => 
+                GetCurrentSize(system, ref this);
 
             /// <summary>
             /// <para>Calculate the current 3D size of the particle by applying the relevant curves to its startSize3D property.</para>
@@ -4588,10 +4138,8 @@
             /// <returns>
             /// <para>Current size.</para>
             /// </returns>
-            public Vector3 GetCurrentSize3D(ParticleSystem system)
-            {
-                return GetCurrentSize3D(system, ref this);
-            }
+            public Vector3 GetCurrentSize3D(ParticleSystem system) => 
+                GetCurrentSize3D(system, ref this);
 
             /// <summary>
             /// <para>Calculate the current color of the particle by applying the relevant curves to its startColor property.</para>
@@ -4600,10 +4148,8 @@
             /// <returns>
             /// <para>Current color.</para>
             /// </returns>
-            public Color32 GetCurrentColor(ParticleSystem system)
-            {
-                return GetCurrentColor(system, ref this);
-            }
+            public Color32 GetCurrentColor(ParticleSystem system) => 
+                GetCurrentColor(system, ref this);
 
             [MethodImpl(MethodImplOptions.InternalCall)]
             private static extern float GetCurrentSize(ParticleSystem system, ref ParticleSystem.Particle particle);
@@ -4628,10 +4174,8 @@
             [Obsolete("size property is deprecated. Use startSize or GetCurrentSize() instead.")]
             public float size
             {
-                get
-                {
-                    return this.m_StartSize.x;
-                }
+                get => 
+                    this.m_StartSize.x;
                 set
                 {
                     this.m_StartSize = new Vector3(value, value, value);
@@ -4640,10 +4184,8 @@
             [Obsolete("color property is deprecated. Use startColor or GetCurrentColor() instead.")]
             public Color32 color
             {
-                get
-                {
-                    return this.m_StartColor;
-                }
+                get => 
+                    this.m_StartColor;
                 set
                 {
                     this.m_StartColor = value;
@@ -4668,10 +4210,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -4698,10 +4238,8 @@
             /// </summary>
             public float xMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -4728,10 +4266,8 @@
             /// </summary>
             public float yMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -4758,10 +4294,8 @@
             /// </summary>
             public float zMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -4772,10 +4306,8 @@
             /// </summary>
             public bool separateAxes
             {
-                get
-                {
-                    return GetSeparateAxes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSeparateAxes(this.m_ParticleSystem);
                 set
                 {
                     SetSeparateAxes(this.m_ParticleSystem, value);
@@ -4786,10 +4318,8 @@
             /// </summary>
             public Vector2 range
             {
-                get
-                {
-                    return GetRange(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRange(this.m_ParticleSystem);
                 set
                 {
                     SetRange(this.m_ParticleSystem, value);
@@ -4862,10 +4392,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -4892,10 +4420,8 @@
             /// </summary>
             public float xMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -4922,10 +4448,8 @@
             /// </summary>
             public float yMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -4952,10 +4476,8 @@
             /// </summary>
             public float zMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -4966,10 +4488,8 @@
             /// </summary>
             public bool separateAxes
             {
-                get
-                {
-                    return GetSeparateAxes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSeparateAxes(this.m_ParticleSystem);
                 set
                 {
                     SetSeparateAxes(this.m_ParticleSystem, value);
@@ -5026,10 +4546,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -5040,10 +4558,8 @@
             /// </summary>
             public ParticleSystemShapeType shapeType
             {
-                get
-                {
-                    return (ParticleSystemShapeType) GetShapeType(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemShapeType) GetShapeType(this.m_ParticleSystem));
                 set
                 {
                     SetShapeType(this.m_ParticleSystem, (int) value);
@@ -5054,10 +4570,8 @@
             /// </summary>
             public float randomDirectionAmount
             {
-                get
-                {
-                    return GetRandomDirectionAmount(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRandomDirectionAmount(this.m_ParticleSystem);
                 set
                 {
                     SetRandomDirectionAmount(this.m_ParticleSystem, value);
@@ -5068,10 +4582,8 @@
             /// </summary>
             public float sphericalDirectionAmount
             {
-                get
-                {
-                    return GetSphericalDirectionAmount(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSphericalDirectionAmount(this.m_ParticleSystem);
                 set
                 {
                     SetSphericalDirectionAmount(this.m_ParticleSystem, value);
@@ -5082,10 +4594,8 @@
             /// </summary>
             public bool alignToDirection
             {
-                get
-                {
-                    return GetAlignToDirection(this.m_ParticleSystem);
-                }
+                get => 
+                    GetAlignToDirection(this.m_ParticleSystem);
                 set
                 {
                     SetAlignToDirection(this.m_ParticleSystem, value);
@@ -5096,10 +4606,8 @@
             /// </summary>
             public float radius
             {
-                get
-                {
-                    return GetRadius(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRadius(this.m_ParticleSystem);
                 set
                 {
                     SetRadius(this.m_ParticleSystem, value);
@@ -5110,10 +4618,8 @@
             /// </summary>
             public float angle
             {
-                get
-                {
-                    return GetAngle(this.m_ParticleSystem);
-                }
+                get => 
+                    GetAngle(this.m_ParticleSystem);
                 set
                 {
                     SetAngle(this.m_ParticleSystem, value);
@@ -5124,10 +4630,8 @@
             /// </summary>
             public float length
             {
-                get
-                {
-                    return GetLength(this.m_ParticleSystem);
-                }
+                get => 
+                    GetLength(this.m_ParticleSystem);
                 set
                 {
                     SetLength(this.m_ParticleSystem, value);
@@ -5138,10 +4642,8 @@
             /// </summary>
             public Vector3 box
             {
-                get
-                {
-                    return GetBox(this.m_ParticleSystem);
-                }
+                get => 
+                    GetBox(this.m_ParticleSystem);
                 set
                 {
                     SetBox(this.m_ParticleSystem, value);
@@ -5152,10 +4654,8 @@
             /// </summary>
             public ParticleSystemMeshShapeType meshShapeType
             {
-                get
-                {
-                    return (ParticleSystemMeshShapeType) GetMeshShapeType(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemMeshShapeType) GetMeshShapeType(this.m_ParticleSystem));
                 set
                 {
                     SetMeshShapeType(this.m_ParticleSystem, (int) value);
@@ -5166,10 +4666,8 @@
             /// </summary>
             public Mesh mesh
             {
-                get
-                {
-                    return GetMesh(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMesh(this.m_ParticleSystem);
                 set
                 {
                     SetMesh(this.m_ParticleSystem, value);
@@ -5180,10 +4678,8 @@
             /// </summary>
             public MeshRenderer meshRenderer
             {
-                get
-                {
-                    return GetMeshRenderer(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMeshRenderer(this.m_ParticleSystem);
                 set
                 {
                     SetMeshRenderer(this.m_ParticleSystem, value);
@@ -5194,10 +4690,8 @@
             /// </summary>
             public SkinnedMeshRenderer skinnedMeshRenderer
             {
-                get
-                {
-                    return GetSkinnedMeshRenderer(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSkinnedMeshRenderer(this.m_ParticleSystem);
                 set
                 {
                     SetSkinnedMeshRenderer(this.m_ParticleSystem, value);
@@ -5208,10 +4702,8 @@
             /// </summary>
             public bool useMeshMaterialIndex
             {
-                get
-                {
-                    return GetUseMeshMaterialIndex(this.m_ParticleSystem);
-                }
+                get => 
+                    GetUseMeshMaterialIndex(this.m_ParticleSystem);
                 set
                 {
                     SetUseMeshMaterialIndex(this.m_ParticleSystem, value);
@@ -5222,10 +4714,8 @@
             /// </summary>
             public int meshMaterialIndex
             {
-                get
-                {
-                    return GetMeshMaterialIndex(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMeshMaterialIndex(this.m_ParticleSystem);
                 set
                 {
                     SetMeshMaterialIndex(this.m_ParticleSystem, value);
@@ -5236,10 +4726,8 @@
             /// </summary>
             public bool useMeshColors
             {
-                get
-                {
-                    return GetUseMeshColors(this.m_ParticleSystem);
-                }
+                get => 
+                    GetUseMeshColors(this.m_ParticleSystem);
                 set
                 {
                     SetUseMeshColors(this.m_ParticleSystem, value);
@@ -5250,10 +4738,8 @@
             /// </summary>
             public float normalOffset
             {
-                get
-                {
-                    return GetNormalOffset(this.m_ParticleSystem);
-                }
+                get => 
+                    GetNormalOffset(this.m_ParticleSystem);
                 set
                 {
                     SetNormalOffset(this.m_ParticleSystem, value);
@@ -5264,10 +4750,8 @@
             /// </summary>
             public float meshScale
             {
-                get
-                {
-                    return GetMeshScale(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMeshScale(this.m_ParticleSystem);
                 set
                 {
                     SetMeshScale(this.m_ParticleSystem, value);
@@ -5278,10 +4762,8 @@
             /// </summary>
             public float arc
             {
-                get
-                {
-                    return GetArc(this.m_ParticleSystem);
-                }
+                get => 
+                    GetArc(this.m_ParticleSystem);
                 set
                 {
                     SetArc(this.m_ParticleSystem, value);
@@ -5293,10 +4775,8 @@
             [Obsolete("randomDirection property is deprecated. Use randomDirectionAmount instead.")]
             public bool randomDirection
             {
-                get
-                {
-                    return (GetRandomDirectionAmount(this.m_ParticleSystem) >= 0.5f);
-                }
+                get => 
+                    (GetRandomDirectionAmount(this.m_ParticleSystem) >= 0.5f);
                 set
                 {
                     SetRandomDirectionAmount(this.m_ParticleSystem, 1f);
@@ -5409,10 +4889,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -5439,10 +4917,8 @@
             /// </summary>
             public float sizeMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -5469,10 +4945,8 @@
             /// </summary>
             public float xMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -5499,10 +4973,8 @@
             /// </summary>
             public float yMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -5529,10 +5001,8 @@
             /// </summary>
             public float zMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -5543,10 +5013,8 @@
             /// </summary>
             public bool separateAxes
             {
-                get
-                {
-                    return GetSeparateAxes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSeparateAxes(this.m_ParticleSystem);
                 set
                 {
                     SetSeparateAxes(this.m_ParticleSystem, value);
@@ -5557,10 +5025,8 @@
             /// </summary>
             public Vector2 range
             {
-                get
-                {
-                    return GetRange(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRange(this.m_ParticleSystem);
                 set
                 {
                     SetRange(this.m_ParticleSystem, value);
@@ -5633,10 +5099,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -5663,10 +5127,8 @@
             /// </summary>
             public float sizeMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -5693,10 +5155,8 @@
             /// </summary>
             public float xMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -5723,10 +5183,8 @@
             /// </summary>
             public float yMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -5753,10 +5211,8 @@
             /// </summary>
             public float zMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -5767,10 +5223,8 @@
             /// </summary>
             public bool separateAxes
             {
-                get
-                {
-                    return GetSeparateAxes(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSeparateAxes(this.m_ParticleSystem);
                 set
                 {
                     SetSeparateAxes(this.m_ParticleSystem, value);
@@ -5827,10 +5281,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -5839,13 +5291,8 @@
             /// <summary>
             /// <para>The total number of sub-emitters.</para>
             /// </summary>
-            public int subEmittersCount
-            {
-                get
-                {
-                    return GetSubEmittersCount(this.m_ParticleSystem);
-                }
-            }
+            public int subEmittersCount =>
+                GetSubEmittersCount(this.m_ParticleSystem);
             /// <summary>
             /// <para>Add a new sub-emitter.</para>
             /// </summary>
@@ -5903,10 +5350,8 @@
             /// <returns>
             /// <para>The sub-emitter being requested.</para>
             /// </returns>
-            public ParticleSystem GetSubEmitterSystem(int index)
-            {
-                return GetSubEmitterSystem(this.m_ParticleSystem, index);
-            }
+            public ParticleSystem GetSubEmitterSystem(int index) => 
+                GetSubEmitterSystem(this.m_ParticleSystem, index);
 
             /// <summary>
             /// <para>Get the type of the sub-emitter at the given index.</para>
@@ -5915,10 +5360,8 @@
             /// <returns>
             /// <para>The type of the requested sub-emitter.</para>
             /// </returns>
-            public ParticleSystemSubEmitterType GetSubEmitterType(int index)
-            {
-                return (ParticleSystemSubEmitterType) GetSubEmitterType(this.m_ParticleSystem, index);
-            }
+            public ParticleSystemSubEmitterType GetSubEmitterType(int index) => 
+                ((ParticleSystemSubEmitterType) GetSubEmitterType(this.m_ParticleSystem, index));
 
             /// <summary>
             /// <para>Get the properties of the sub-emitter at the given index.</para>
@@ -5927,10 +5370,8 @@
             /// <returns>
             /// <para>The properties of the requested sub-emitter.</para>
             /// </returns>
-            public ParticleSystemSubEmitterProperties GetSubEmitterProperties(int index)
-            {
-                return (ParticleSystemSubEmitterProperties) GetSubEmitterProperties(this.m_ParticleSystem, index);
-            }
+            public ParticleSystemSubEmitterProperties GetSubEmitterProperties(int index) => 
+                ((ParticleSystemSubEmitterProperties) GetSubEmitterProperties(this.m_ParticleSystem, index));
 
             /// <summary>
             /// <para>Sub particle system which spawns at the locations of the birth of the particles from the parent system.</para>
@@ -5938,10 +5379,8 @@
             [Obsolete("birth0 property is deprecated. Use AddSubEmitter, RemoveSubEmitter, SetSubEmitterSystem and GetSubEmitterSystem instead.")]
             public ParticleSystem birth0
             {
-                get
-                {
-                    return GetBirth(this.m_ParticleSystem, 0);
-                }
+                get => 
+                    GetBirth(this.m_ParticleSystem, 0);
                 set
                 {
                     SetBirth(this.m_ParticleSystem, 0, value);
@@ -5953,10 +5392,8 @@
             [Obsolete("birth1 property is deprecated. Use AddSubEmitter, RemoveSubEmitter, SetSubEmitterSystem and GetSubEmitterSystem instead.")]
             public ParticleSystem birth1
             {
-                get
-                {
-                    return GetBirth(this.m_ParticleSystem, 1);
-                }
+                get => 
+                    GetBirth(this.m_ParticleSystem, 1);
                 set
                 {
                     SetBirth(this.m_ParticleSystem, 1, value);
@@ -5968,10 +5405,8 @@
             [Obsolete("collision0 property is deprecated. Use AddSubEmitter, RemoveSubEmitter, SetSubEmitterSystem and GetSubEmitterSystem instead.")]
             public ParticleSystem collision0
             {
-                get
-                {
-                    return GetCollision(this.m_ParticleSystem, 0);
-                }
+                get => 
+                    GetCollision(this.m_ParticleSystem, 0);
                 set
                 {
                     SetCollision(this.m_ParticleSystem, 0, value);
@@ -5983,10 +5418,8 @@
             [Obsolete("collision1 property is deprecated. Use AddSubEmitter, RemoveSubEmitter, SetSubEmitterSystem and GetSubEmitterSystem instead.")]
             public ParticleSystem collision1
             {
-                get
-                {
-                    return GetCollision(this.m_ParticleSystem, 1);
-                }
+                get => 
+                    GetCollision(this.m_ParticleSystem, 1);
                 set
                 {
                     SetCollision(this.m_ParticleSystem, 1, value);
@@ -5998,10 +5431,8 @@
             [Obsolete("death0 property is deprecated. Use AddSubEmitter, RemoveSubEmitter, SetSubEmitterSystem and GetSubEmitterSystem instead.")]
             public ParticleSystem death0
             {
-                get
-                {
-                    return GetDeath(this.m_ParticleSystem, 0);
-                }
+                get => 
+                    GetDeath(this.m_ParticleSystem, 0);
                 set
                 {
                     SetDeath(this.m_ParticleSystem, 0, value);
@@ -6013,10 +5444,8 @@
             [Obsolete("death1 property is deprecated. Use AddSubEmitter, RemoveSubEmitter, SetSubEmitterSystem and GetSubEmitterSystem instead.")]
             public ParticleSystem death1
             {
-                get
-                {
-                    return GetDeath(this.m_ParticleSystem, 1);
-                }
+                get => 
+                    GetDeath(this.m_ParticleSystem, 1);
                 set
                 {
                     SetDeath(this.m_ParticleSystem, 1, value);
@@ -6075,10 +5504,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -6089,10 +5516,8 @@
             /// </summary>
             public int numTilesX
             {
-                get
-                {
-                    return GetNumTilesX(this.m_ParticleSystem);
-                }
+                get => 
+                    GetNumTilesX(this.m_ParticleSystem);
                 set
                 {
                     SetNumTilesX(this.m_ParticleSystem, value);
@@ -6103,10 +5528,8 @@
             /// </summary>
             public int numTilesY
             {
-                get
-                {
-                    return GetNumTilesY(this.m_ParticleSystem);
-                }
+                get => 
+                    GetNumTilesY(this.m_ParticleSystem);
                 set
                 {
                     SetNumTilesY(this.m_ParticleSystem, value);
@@ -6117,10 +5540,8 @@
             /// </summary>
             public ParticleSystemAnimationType animation
             {
-                get
-                {
-                    return (ParticleSystemAnimationType) GetAnimationType(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemAnimationType) GetAnimationType(this.m_ParticleSystem));
                 set
                 {
                     SetAnimationType(this.m_ParticleSystem, (int) value);
@@ -6131,10 +5552,8 @@
             /// </summary>
             public bool useRandomRow
             {
-                get
-                {
-                    return GetUseRandomRow(this.m_ParticleSystem);
-                }
+                get => 
+                    GetUseRandomRow(this.m_ParticleSystem);
                 set
                 {
                     SetUseRandomRow(this.m_ParticleSystem, value);
@@ -6161,10 +5580,8 @@
             /// </summary>
             public float frameOverTimeMultiplier
             {
-                get
-                {
-                    return GetFrameOverTimeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetFrameOverTimeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetFrameOverTimeMultiplier(this.m_ParticleSystem, value);
@@ -6191,10 +5608,8 @@
             /// </summary>
             public float startFrameMultiplier
             {
-                get
-                {
-                    return GetStartFrameMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetStartFrameMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetStartFrameMultiplier(this.m_ParticleSystem, value);
@@ -6205,10 +5620,8 @@
             /// </summary>
             public int cycleCount
             {
-                get
-                {
-                    return GetCycleCount(this.m_ParticleSystem);
-                }
+                get => 
+                    GetCycleCount(this.m_ParticleSystem);
                 set
                 {
                     SetCycleCount(this.m_ParticleSystem, value);
@@ -6219,10 +5632,8 @@
             /// </summary>
             public int rowIndex
             {
-                get
-                {
-                    return GetRowIndex(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRowIndex(this.m_ParticleSystem);
                 set
                 {
                     SetRowIndex(this.m_ParticleSystem, value);
@@ -6233,10 +5644,8 @@
             /// </summary>
             public UVChannelFlags uvChannelMask
             {
-                get
-                {
-                    return (UVChannelFlags) GetUVChannelMask(this.m_ParticleSystem);
-                }
+                get => 
+                    ((UVChannelFlags) GetUVChannelMask(this.m_ParticleSystem));
                 set
                 {
                     SetUVChannelMask(this.m_ParticleSystem, (int) value);
@@ -6247,10 +5656,8 @@
             /// </summary>
             public float flipU
             {
-                get
-                {
-                    return GetFlipU(this.m_ParticleSystem);
-                }
+                get => 
+                    GetFlipU(this.m_ParticleSystem);
                 set
                 {
                     SetFlipU(this.m_ParticleSystem, value);
@@ -6261,10 +5668,8 @@
             /// </summary>
             public float flipV
             {
-                get
-                {
-                    return GetFlipV(this.m_ParticleSystem);
-                }
+                get => 
+                    GetFlipV(this.m_ParticleSystem);
                 set
                 {
                     SetFlipV(this.m_ParticleSystem, value);
@@ -6345,10 +5750,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -6359,10 +5762,8 @@
             /// </summary>
             public float ratio
             {
-                get
-                {
-                    return GetRatio(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRatio(this.m_ParticleSystem);
                 set
                 {
                     SetRatio(this.m_ParticleSystem, value);
@@ -6389,10 +5790,8 @@
             /// </summary>
             public float lifetimeMultiplier
             {
-                get
-                {
-                    return GetLifetimeMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetLifetimeMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetLifetimeMultiplier(this.m_ParticleSystem, value);
@@ -6403,10 +5802,8 @@
             /// </summary>
             public float minVertexDistance
             {
-                get
-                {
-                    return GetMinVertexDistance(this.m_ParticleSystem);
-                }
+                get => 
+                    GetMinVertexDistance(this.m_ParticleSystem);
                 set
                 {
                     SetMinVertexDistance(this.m_ParticleSystem, value);
@@ -6417,10 +5814,8 @@
             /// </summary>
             public ParticleSystemTrailTextureMode textureMode
             {
-                get
-                {
-                    return (ParticleSystemTrailTextureMode) GetTextureMode(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemTrailTextureMode) GetTextureMode(this.m_ParticleSystem));
                 set
                 {
                     SetTextureMode(this.m_ParticleSystem, (float) value);
@@ -6431,10 +5826,8 @@
             /// </summary>
             public bool worldSpace
             {
-                get
-                {
-                    return GetWorldSpace(this.m_ParticleSystem);
-                }
+                get => 
+                    GetWorldSpace(this.m_ParticleSystem);
                 set
                 {
                     SetWorldSpace(this.m_ParticleSystem, value);
@@ -6445,10 +5838,8 @@
             /// </summary>
             public bool dieWithParticles
             {
-                get
-                {
-                    return GetDieWithParticles(this.m_ParticleSystem);
-                }
+                get => 
+                    GetDieWithParticles(this.m_ParticleSystem);
                 set
                 {
                     SetDieWithParticles(this.m_ParticleSystem, value);
@@ -6459,10 +5850,8 @@
             /// </summary>
             public bool sizeAffectsWidth
             {
-                get
-                {
-                    return GetSizeAffectsWidth(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSizeAffectsWidth(this.m_ParticleSystem);
                 set
                 {
                     SetSizeAffectsWidth(this.m_ParticleSystem, value);
@@ -6473,10 +5862,8 @@
             /// </summary>
             public bool sizeAffectsLifetime
             {
-                get
-                {
-                    return GetSizeAffectsLifetime(this.m_ParticleSystem);
-                }
+                get => 
+                    GetSizeAffectsLifetime(this.m_ParticleSystem);
                 set
                 {
                     SetSizeAffectsLifetime(this.m_ParticleSystem, value);
@@ -6487,10 +5874,8 @@
             /// </summary>
             public bool inheritParticleColor
             {
-                get
-                {
-                    return GetInheritParticleColor(this.m_ParticleSystem);
-                }
+                get => 
+                    GetInheritParticleColor(this.m_ParticleSystem);
                 set
                 {
                     SetInheritParticleColor(this.m_ParticleSystem, value);
@@ -6533,10 +5918,8 @@
             /// </summary>
             public float widthOverTrailMultiplier
             {
-                get
-                {
-                    return GetWidthOverTrailMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetWidthOverTrailMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetWidthOverTrailMultiplier(this.m_ParticleSystem, value);
@@ -6637,10 +6020,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -6651,10 +6032,8 @@
             /// </summary>
             public ParticleSystemOverlapAction inside
             {
-                get
-                {
-                    return (ParticleSystemOverlapAction) GetInside(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemOverlapAction) GetInside(this.m_ParticleSystem));
                 set
                 {
                     SetInside(this.m_ParticleSystem, (int) value);
@@ -6665,10 +6044,8 @@
             /// </summary>
             public ParticleSystemOverlapAction outside
             {
-                get
-                {
-                    return (ParticleSystemOverlapAction) GetOutside(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemOverlapAction) GetOutside(this.m_ParticleSystem));
                 set
                 {
                     SetOutside(this.m_ParticleSystem, (int) value);
@@ -6679,10 +6056,8 @@
             /// </summary>
             public ParticleSystemOverlapAction enter
             {
-                get
-                {
-                    return (ParticleSystemOverlapAction) GetEnter(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemOverlapAction) GetEnter(this.m_ParticleSystem));
                 set
                 {
                     SetEnter(this.m_ParticleSystem, (int) value);
@@ -6693,10 +6068,8 @@
             /// </summary>
             public ParticleSystemOverlapAction exit
             {
-                get
-                {
-                    return (ParticleSystemOverlapAction) GetExit(this.m_ParticleSystem);
-                }
+                get => 
+                    ((ParticleSystemOverlapAction) GetExit(this.m_ParticleSystem));
                 set
                 {
                     SetExit(this.m_ParticleSystem, (int) value);
@@ -6707,10 +6080,8 @@
             /// </summary>
             public float radiusScale
             {
-                get
-                {
-                    return GetRadiusScale(this.m_ParticleSystem);
-                }
+                get => 
+                    GetRadiusScale(this.m_ParticleSystem);
                 set
                 {
                     SetRadiusScale(this.m_ParticleSystem, value);
@@ -6733,21 +6104,14 @@
             /// <returns>
             /// <para>The collider at the given index.</para>
             /// </returns>
-            public Component GetCollider(int index)
-            {
-                return GetCollider(this.m_ParticleSystem, index);
-            }
+            public Component GetCollider(int index) => 
+                GetCollider(this.m_ParticleSystem, index);
 
             /// <summary>
             /// <para>The maximum number of collision shapes that can be attached to this particle system trigger.</para>
             /// </summary>
-            public int maxColliderCount
-            {
-                get
-                {
-                    return GetMaxColliderCount(this.m_ParticleSystem);
-                }
-            }
+            public int maxColliderCount =>
+                GetMaxColliderCount(this.m_ParticleSystem);
             [MethodImpl(MethodImplOptions.InternalCall)]
             private static extern void SetEnabled(ParticleSystem system, bool value);
             [MethodImpl(MethodImplOptions.InternalCall)]
@@ -6797,10 +6161,8 @@
             /// </summary>
             public bool enabled
             {
-                get
-                {
-                    return GetEnabled(this.m_ParticleSystem);
-                }
+                get => 
+                    GetEnabled(this.m_ParticleSystem);
                 set
                 {
                     SetEnabled(this.m_ParticleSystem, value);
@@ -6859,10 +6221,8 @@
             /// </summary>
             public float xMultiplier
             {
-                get
-                {
-                    return GetXMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetXMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetXMultiplier(this.m_ParticleSystem, value);
@@ -6873,10 +6233,8 @@
             /// </summary>
             public float yMultiplier
             {
-                get
-                {
-                    return GetYMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetYMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetYMultiplier(this.m_ParticleSystem, value);
@@ -6887,10 +6245,8 @@
             /// </summary>
             public float zMultiplier
             {
-                get
-                {
-                    return GetZMultiplier(this.m_ParticleSystem);
-                }
+                get => 
+                    GetZMultiplier(this.m_ParticleSystem);
                 set
                 {
                     SetZMultiplier(this.m_ParticleSystem, value);
@@ -6901,10 +6257,8 @@
             /// </summary>
             public ParticleSystemSimulationSpace space
             {
-                get
-                {
-                    return (!GetWorldSpace(this.m_ParticleSystem) ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World);
-                }
+                get => 
+                    (!GetWorldSpace(this.m_ParticleSystem) ? ParticleSystemSimulationSpace.Local : ParticleSystemSimulationSpace.World);
                 set
                 {
                     SetWorldSpace(this.m_ParticleSystem, value == ParticleSystemSimulationSpace.World);

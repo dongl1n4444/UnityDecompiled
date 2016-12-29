@@ -30,10 +30,8 @@ internal abstract class NativeCompiler : INativeCompiler
         return Enumerable.Aggregate<string, string>(items, "", new Func<string, string, string>(storey, (IntPtr) this.<>m__0));
     }
 
-    protected internal static IEnumerable<string> AllSourceFilesIn(string directory)
-    {
-        return Enumerable.Concat<string>(Directory.GetFiles(directory, "*.cpp", SearchOption.AllDirectories), Directory.GetFiles(directory, "*.c", SearchOption.AllDirectories));
-    }
+    protected internal static IEnumerable<string> AllSourceFilesIn(string directory) => 
+        Directory.GetFiles(directory, "*.cpp", SearchOption.AllDirectories).Concat<string>(Directory.GetFiles(directory, "*.c", SearchOption.AllDirectories));
 
     public abstract void CompileDynamicLibrary(string outFile, IEnumerable<string> sources, IEnumerable<string> includePaths, IEnumerable<string> libraries, IEnumerable<string> libraryPaths);
     protected void Execute(string arguments, string compilerPath)
@@ -60,10 +58,8 @@ internal abstract class NativeCompiler : INativeCompiler
         return ((extension == "cpp") || (extension == "c"));
     }
 
-    protected string ObjectFileFor(string source)
-    {
-        return Path.ChangeExtension(source, this.objectFileExtension);
-    }
+    protected string ObjectFileFor(string source) => 
+        Path.ChangeExtension(source, this.objectFileExtension);
 
     internal static void ParallelFor<T>(T[] sources, Action<T> action)
     {
@@ -126,13 +122,8 @@ internal abstract class NativeCompiler : INativeCompiler
     {
     }
 
-    protected virtual string objectFileExtension
-    {
-        get
-        {
-            return "o";
-        }
-    }
+    protected virtual string objectFileExtension =>
+        "o";
 
     [CompilerGenerated]
     private sealed class <Aggregate>c__AnonStorey0
@@ -140,10 +131,8 @@ internal abstract class NativeCompiler : INativeCompiler
         internal string prefix;
         internal string suffix;
 
-        internal string <>m__0(string current, string additionalFile)
-        {
-            return (current + this.prefix + additionalFile + this.suffix);
-        }
+        internal string <>m__0(string current, string additionalFile) => 
+            (current + this.prefix + additionalFile + this.suffix);
     }
 
     [CompilerGenerated]

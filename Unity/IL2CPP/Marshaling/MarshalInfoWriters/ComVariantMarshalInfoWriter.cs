@@ -20,7 +20,7 @@
         {
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             object[] args = new object[] { variableName };
             writer.WriteLine("il2cpp_codegen_com_destroy_variant(&({0}));", args);
@@ -42,13 +42,8 @@
             writer.WriteLine("il2cpp_codegen_com_marshal_variant((Il2CppCodeGenObject*)({0}), &({1}));", args);
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
     }
 }
 

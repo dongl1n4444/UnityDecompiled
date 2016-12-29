@@ -16,10 +16,8 @@
 
         public bool pushUndo
         {
-            get
-            {
-                return this.impl.m_PushUndo;
-            }
+            get => 
+                this.impl.m_PushUndo;
             set
             {
                 this.impl.m_PushUndo = value;

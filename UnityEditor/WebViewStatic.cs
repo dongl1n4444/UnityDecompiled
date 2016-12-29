@@ -9,10 +9,8 @@
         [SerializeField]
         private WebView m_WebView;
 
-        public static WebView GetWebView()
-        {
-            return ScriptableSingleton<WebViewStatic>.instance.m_WebView;
-        }
+        public static WebView GetWebView() => 
+            ScriptableSingleton<WebViewStatic>.instance.m_WebView;
 
         public static void SetWebView(WebView webView)
         {

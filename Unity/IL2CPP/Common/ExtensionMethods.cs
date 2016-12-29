@@ -6,51 +6,38 @@
     using System.Runtime.CompilerServices;
     using System.Text;
 
-    [Extension]
     public static class ExtensionMethods
     {
         [CompilerGenerated]
         private static Func<string, string> <>f__am$cache0;
 
-        [Extension]
-        public static ReadOnlyHashSet<T> AsReadOnly<T>(HashSet<T> set)
-        {
-            return new ReadOnlyHashSet<T>(set);
-        }
+        public static ReadOnlyHashSet<T> AsReadOnly<T>(this HashSet<T> set) => 
+            new ReadOnlyHashSet<T>(set);
 
-        [Extension]
-        public static ReadOnlyDictionary<T, K> AsReadOnly<T, K>(IDictionary<T, K> dictionary)
-        {
-            return new ReadOnlyDictionary<T, K>(dictionary);
-        }
+        public static ReadOnlyDictionary<T, K> AsReadOnly<T, K>(this IDictionary<T, K> dictionary) => 
+            new ReadOnlyDictionary<T, K>(dictionary);
 
-        [Extension]
-        public static IEnumerable<string> InQuotes(IEnumerable<string> inputs)
+        public static IEnumerable<string> InQuotes(this IEnumerable<string> inputs)
         {
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <InQuotes>m__0);
             }
-            return Enumerable.Select<string, string>(inputs, <>f__am$cache0);
+            return inputs.Select<string, string>(<>f__am$cache0);
         }
 
-        [Extension]
-        public static string InQuotes(string input)
-        {
-            return ("\"" + input + "\"");
-        }
+        public static string InQuotes(this string input) => 
+            ("\"" + input + "\"");
 
-        [Extension]
-        public static IEnumerable<string> PrefixedWith(IEnumerable<string> inputs, string prefix)
+        public static IEnumerable<string> PrefixedWith(this IEnumerable<string> inputs, string prefix)
         {
             <PrefixedWith>c__AnonStorey0 storey = new <PrefixedWith>c__AnonStorey0 {
                 prefix = prefix
             };
-            return Enumerable.Select<string, string>(inputs, new Func<string, string>(storey, (IntPtr) this.<>m__0));
+            return inputs.Select<string, string>(new Func<string, string>(storey, (IntPtr) this.<>m__0));
         }
 
-        [Extension]
-        public static string SeparateWithSpaces(IEnumerable<string> inputs)
+        public static string SeparateWithSpaces(this IEnumerable<string> inputs)
         {
             StringBuilder builder = new StringBuilder();
             bool flag = true;
@@ -71,10 +58,8 @@
         {
             internal string prefix;
 
-            internal string <>m__0(string input)
-            {
-                return (this.prefix + input);
-            }
+            internal string <>m__0(string input) => 
+                (this.prefix + input);
         }
     }
 }

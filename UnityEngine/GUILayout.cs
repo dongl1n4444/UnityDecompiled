@@ -218,10 +218,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
 
         /// <summary>
         /// <para>Begin an automatically laid out scrollview.</para>
@@ -293,10 +291,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
 
         /// <summary>
         /// <para>Begin an automatically laid out scrollview.</para>
@@ -314,10 +310,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, false, false, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, false, false, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
 
         /// <summary>
         /// <para>Begin an automatically laid out scrollview.</para>
@@ -335,10 +329,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
 
         /// <summary>
         /// <para>Begin an automatically laid out scrollview.</para>
@@ -558,10 +550,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(string text, params GUILayoutOption[] options)
-        {
-            return DoButton(GUIContent.Temp(text), GUI.skin.button, options);
-        }
+        public static bool Button(string text, params GUILayoutOption[] options) => 
+            DoButton(GUIContent.Temp(text), GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -576,10 +566,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(GUIContent content, params GUILayoutOption[] options)
-        {
-            return DoButton(content, GUI.skin.button, options);
-        }
+        public static bool Button(GUIContent content, params GUILayoutOption[] options) => 
+            DoButton(content, GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -594,10 +582,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Texture image, params GUILayoutOption[] options)
-        {
-            return DoButton(GUIContent.Temp(image), GUI.skin.button, options);
-        }
+        public static bool Button(Texture image, params GUILayoutOption[] options) => 
+            DoButton(GUIContent.Temp(image), GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -612,10 +598,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(string text, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoButton(GUIContent.Temp(text), style, options);
-        }
+        public static bool Button(string text, GUIStyle style, params GUILayoutOption[] options) => 
+            DoButton(GUIContent.Temp(text), style, options);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -630,10 +614,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoButton(content, style, options);
-        }
+        public static bool Button(GUIContent content, GUIStyle style, params GUILayoutOption[] options) => 
+            DoButton(content, style, options);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -648,35 +630,27 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Texture image, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoButton(GUIContent.Temp(image), style, options);
-        }
+        public static bool Button(Texture image, GUIStyle style, params GUILayoutOption[] options) => 
+            DoButton(GUIContent.Temp(image), style, options);
 
         private static void DoBox(GUIContent content, GUIStyle style, GUILayoutOption[] options)
         {
             GUI.Box(GUILayoutUtility.GetRect(content, style, options), content, style);
         }
 
-        private static bool DoButton(GUIContent content, GUIStyle style, GUILayoutOption[] options)
-        {
-            return GUI.Button(GUILayoutUtility.GetRect(content, style, options), content, style);
-        }
+        private static bool DoButton(GUIContent content, GUIStyle style, GUILayoutOption[] options) => 
+            GUI.Button(GUILayoutUtility.GetRect(content, style, options), content, style);
 
-        private static float DoHorizontalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, GUILayoutOption[] options)
-        {
-            return GUI.HorizontalSlider(GUILayoutUtility.GetRect(GUIContent.Temp("mmmm"), slider, options), value, leftValue, rightValue, slider, thumb);
-        }
+        private static float DoHorizontalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, GUILayoutOption[] options) => 
+            GUI.HorizontalSlider(GUILayoutUtility.GetRect(GUIContent.Temp("mmmm"), slider, options), value, leftValue, rightValue, slider, thumb);
 
         private static void DoLabel(GUIContent content, GUIStyle style, GUILayoutOption[] options)
         {
             GUI.Label(GUILayoutUtility.GetRect(content, style, options), content, style);
         }
 
-        private static bool DoRepeatButton(GUIContent content, GUIStyle style, GUILayoutOption[] options)
-        {
-            return GUI.RepeatButton(GUILayoutUtility.GetRect(content, style, options), content, style);
-        }
+        private static bool DoRepeatButton(GUIContent content, GUIStyle style, GUILayoutOption[] options) => 
+            GUI.RepeatButton(GUILayoutUtility.GetRect(content, style, options), content, style);
 
         private static string DoTextField(string text, int maxLength, bool multiline, GUIStyle style, GUILayoutOption[] options)
         {
@@ -699,15 +673,11 @@
             return content.text;
         }
 
-        private static bool DoToggle(bool value, GUIContent content, GUIStyle style, GUILayoutOption[] options)
-        {
-            return GUI.Toggle(GUILayoutUtility.GetRect(content, style, options), value, content, style);
-        }
+        private static bool DoToggle(bool value, GUIContent content, GUIStyle style, GUILayoutOption[] options) => 
+            GUI.Toggle(GUILayoutUtility.GetRect(content, style, options), value, content, style);
 
-        private static float DoVerticalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, params GUILayoutOption[] options)
-        {
-            return GUI.VerticalSlider(GUILayoutUtility.GetRect(GUIContent.Temp("\n\n\n\n\n"), slider, options), value, leftValue, rightValue, slider, thumb);
-        }
+        private static float DoVerticalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, params GUILayoutOption[] options) => 
+            GUI.VerticalSlider(GUILayoutUtility.GetRect(GUIContent.Temp("\n\n\n\n\n"), slider, options), value, leftValue, rightValue, slider, thumb);
 
         private static Rect DoWindow(int id, Rect screenRect, GUI.WindowFunction func, GUIContent content, GUIStyle style, GUILayoutOption[] options)
         {
@@ -764,19 +734,15 @@
         /// <para>Option passed to a control to allow or disallow vertical expansion.</para>
         /// </summary>
         /// <param name="expand"></param>
-        public static GUILayoutOption ExpandHeight(bool expand)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.stretchHeight, !expand ? 0 : 1);
-        }
+        public static GUILayoutOption ExpandHeight(bool expand) => 
+            new GUILayoutOption(GUILayoutOption.Type.stretchHeight, !expand ? 0 : 1);
 
         /// <summary>
         /// <para>Option passed to a control to allow or disallow horizontal expansion.</para>
         /// </summary>
         /// <param name="expand"></param>
-        public static GUILayoutOption ExpandWidth(bool expand)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.stretchWidth, !expand ? 0 : 1);
-        }
+        public static GUILayoutOption ExpandWidth(bool expand) => 
+            new GUILayoutOption(GUILayoutOption.Type.stretchWidth, !expand ? 0 : 1);
 
         /// <summary>
         /// <para>Insert a flexible space element.</para>
@@ -802,10 +768,8 @@
         /// <para>Option passed to a control to give it an absolute height.</para>
         /// </summary>
         /// <param name="height"></param>
-        public static GUILayoutOption Height(float height)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.fixedHeight, height);
-        }
+        public static GUILayoutOption Height(float height) => 
+            new GUILayoutOption(GUILayoutOption.Type.fixedHeight, height);
 
         /// <summary>
         /// <para>Make a horizontal scrollbar.</para>
@@ -819,10 +783,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float HorizontalScrollbar(float value, float size, float leftValue, float rightValue, params GUILayoutOption[] options)
-        {
-            return HorizontalScrollbar(value, size, leftValue, rightValue, GUI.skin.horizontalScrollbar, options);
-        }
+        public static float HorizontalScrollbar(float value, float size, float leftValue, float rightValue, params GUILayoutOption[] options) => 
+            HorizontalScrollbar(value, size, leftValue, rightValue, GUI.skin.horizontalScrollbar, options);
 
         /// <summary>
         /// <para>Make a horizontal scrollbar.</para>
@@ -836,10 +798,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float HorizontalScrollbar(float value, float size, float leftValue, float rightValue, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return GUI.HorizontalScrollbar(GUILayoutUtility.GetRect(GUIContent.Temp("mmmm"), style, options), value, size, leftValue, rightValue, style);
-        }
+        public static float HorizontalScrollbar(float value, float size, float leftValue, float rightValue, GUIStyle style, params GUILayoutOption[] options) => 
+            GUI.HorizontalScrollbar(GUILayoutUtility.GetRect(GUIContent.Temp("mmmm"), style, options), value, size, leftValue, rightValue, style);
 
         /// <summary>
         /// <para>A horizontal slider the user can drag to change a value between a min and a max.</para>
@@ -853,10 +813,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float HorizontalSlider(float value, float leftValue, float rightValue, params GUILayoutOption[] options)
-        {
-            return DoHorizontalSlider(value, leftValue, rightValue, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, options);
-        }
+        public static float HorizontalSlider(float value, float leftValue, float rightValue, params GUILayoutOption[] options) => 
+            DoHorizontalSlider(value, leftValue, rightValue, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, options);
 
         /// <summary>
         /// <para>A horizontal slider the user can drag to change a value between a min and a max.</para>
@@ -870,10 +828,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float HorizontalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, params GUILayoutOption[] options)
-        {
-            return DoHorizontalSlider(value, leftValue, rightValue, slider, thumb, options);
-        }
+        public static float HorizontalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, params GUILayoutOption[] options) => 
+            DoHorizontalSlider(value, leftValue, rightValue, slider, thumb, options);
 
         /// <summary>
         /// <para>Make an auto-layout label.</para>
@@ -969,38 +925,30 @@
         /// <para>Option passed to a control to specify a maximum height.</para>
         /// </summary>
         /// <param name="maxHeight"></param>
-        public static GUILayoutOption MaxHeight(float maxHeight)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.maxHeight, maxHeight);
-        }
+        public static GUILayoutOption MaxHeight(float maxHeight) => 
+            new GUILayoutOption(GUILayoutOption.Type.maxHeight, maxHeight);
 
         /// <summary>
         /// <para>Option passed to a control to specify a maximum width.</para>
         /// </summary>
         /// <param name="maxWidth"></param>
-        public static GUILayoutOption MaxWidth(float maxWidth)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.maxWidth, maxWidth);
-        }
+        public static GUILayoutOption MaxWidth(float maxWidth) => 
+            new GUILayoutOption(GUILayoutOption.Type.maxWidth, maxWidth);
 
         /// <summary>
         /// <para>Option passed to a control to specify a minimum height.</para>
         /// </summary>
         /// <param name="minHeight"></param>
-        public static GUILayoutOption MinHeight(float minHeight)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.minHeight, minHeight);
-        }
+        public static GUILayoutOption MinHeight(float minHeight) => 
+            new GUILayoutOption(GUILayoutOption.Type.minHeight, minHeight);
 
         /// <summary>
         /// <para>Option passed to a control to specify a minimum width.
         /// </para>
         /// </summary>
         /// <param name="minWidth"></param>
-        public static GUILayoutOption MinWidth(float minWidth)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.minWidth, minWidth);
-        }
+        public static GUILayoutOption MinWidth(float minWidth) => 
+            new GUILayoutOption(GUILayoutOption.Type.minWidth, minWidth);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1013,10 +961,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(string password, char maskChar, params GUILayoutOption[] options)
-        {
-            return PasswordField(password, maskChar, -1, GUI.skin.textField, options);
-        }
+        public static string PasswordField(string password, char maskChar, params GUILayoutOption[] options) => 
+            PasswordField(password, maskChar, -1, GUI.skin.textField, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1029,10 +975,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(string password, char maskChar, int maxLength, params GUILayoutOption[] options)
-        {
-            return PasswordField(password, maskChar, maxLength, GUI.skin.textField, options);
-        }
+        public static string PasswordField(string password, char maskChar, int maxLength, params GUILayoutOption[] options) => 
+            PasswordField(password, maskChar, maxLength, GUI.skin.textField, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1045,10 +989,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(string password, char maskChar, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return PasswordField(password, maskChar, -1, style, options);
-        }
+        public static string PasswordField(string password, char maskChar, GUIStyle style, params GUILayoutOption[] options) => 
+            PasswordField(password, maskChar, -1, style, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1061,10 +1003,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(string password, char maskChar, int maxLength, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return GUI.PasswordField(GUILayoutUtility.GetRect(GUIContent.Temp(GUI.PasswordFieldGetStrToShow(password, maskChar)), GUI.skin.textField, options), password, maskChar, maxLength, style);
-        }
+        public static string PasswordField(string password, char maskChar, int maxLength, GUIStyle style, params GUILayoutOption[] options) => 
+            GUI.PasswordField(GUILayoutUtility.GetRect(GUIContent.Temp(GUI.PasswordFieldGetStrToShow(password, maskChar)), GUI.skin.textField, options), password, maskChar, maxLength, style);
 
         /// <summary>
         /// <para>Make a repeating button. The button returns true as long as the user holds down the mouse.</para>
@@ -1079,10 +1019,8 @@
         /// <returns>
         /// <para>true when the holds down the mouse.</para>
         /// </returns>
-        public static bool RepeatButton(string text, params GUILayoutOption[] options)
-        {
-            return DoRepeatButton(GUIContent.Temp(text), GUI.skin.button, options);
-        }
+        public static bool RepeatButton(string text, params GUILayoutOption[] options) => 
+            DoRepeatButton(GUIContent.Temp(text), GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a repeating button. The button returns true as long as the user holds down the mouse.</para>
@@ -1097,10 +1035,8 @@
         /// <returns>
         /// <para>true when the holds down the mouse.</para>
         /// </returns>
-        public static bool RepeatButton(GUIContent content, params GUILayoutOption[] options)
-        {
-            return DoRepeatButton(content, GUI.skin.button, options);
-        }
+        public static bool RepeatButton(GUIContent content, params GUILayoutOption[] options) => 
+            DoRepeatButton(content, GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a repeating button. The button returns true as long as the user holds down the mouse.</para>
@@ -1115,10 +1051,8 @@
         /// <returns>
         /// <para>true when the holds down the mouse.</para>
         /// </returns>
-        public static bool RepeatButton(Texture image, params GUILayoutOption[] options)
-        {
-            return DoRepeatButton(GUIContent.Temp(image), GUI.skin.button, options);
-        }
+        public static bool RepeatButton(Texture image, params GUILayoutOption[] options) => 
+            DoRepeatButton(GUIContent.Temp(image), GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a repeating button. The button returns true as long as the user holds down the mouse.</para>
@@ -1133,10 +1067,8 @@
         /// <returns>
         /// <para>true when the holds down the mouse.</para>
         /// </returns>
-        public static bool RepeatButton(string text, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoRepeatButton(GUIContent.Temp(text), style, options);
-        }
+        public static bool RepeatButton(string text, GUIStyle style, params GUILayoutOption[] options) => 
+            DoRepeatButton(GUIContent.Temp(text), style, options);
 
         /// <summary>
         /// <para>Make a repeating button. The button returns true as long as the user holds down the mouse.</para>
@@ -1151,10 +1083,8 @@
         /// <returns>
         /// <para>true when the holds down the mouse.</para>
         /// </returns>
-        public static bool RepeatButton(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoRepeatButton(content, style, options);
-        }
+        public static bool RepeatButton(GUIContent content, GUIStyle style, params GUILayoutOption[] options) => 
+            DoRepeatButton(content, style, options);
 
         /// <summary>
         /// <para>Make a repeating button. The button returns true as long as the user holds down the mouse.</para>
@@ -1169,10 +1099,8 @@
         /// <returns>
         /// <para>true when the holds down the mouse.</para>
         /// </returns>
-        public static bool RepeatButton(Texture image, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoRepeatButton(GUIContent.Temp(image), style, options);
-        }
+        public static bool RepeatButton(Texture image, GUIStyle style, params GUILayoutOption[] options) => 
+            DoRepeatButton(GUIContent.Temp(image), style, options);
 
         /// <summary>
         /// <para>Make a Selection Grid.</para>
@@ -1190,10 +1118,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(int selected, string[] texts, int xCount, params GUILayoutOption[] options)
-        {
-            return SelectionGrid(selected, GUIContent.Temp(texts), xCount, GUI.skin.button, options);
-        }
+        public static int SelectionGrid(int selected, string[] texts, int xCount, params GUILayoutOption[] options) => 
+            SelectionGrid(selected, GUIContent.Temp(texts), xCount, GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a Selection Grid.</para>
@@ -1211,10 +1137,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(int selected, GUIContent[] content, int xCount, params GUILayoutOption[] options)
-        {
-            return SelectionGrid(selected, content, xCount, GUI.skin.button, options);
-        }
+        public static int SelectionGrid(int selected, GUIContent[] content, int xCount, params GUILayoutOption[] options) => 
+            SelectionGrid(selected, content, xCount, GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a Selection Grid.</para>
@@ -1232,10 +1156,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(int selected, Texture[] images, int xCount, params GUILayoutOption[] options)
-        {
-            return SelectionGrid(selected, GUIContent.Temp(images), xCount, GUI.skin.button, options);
-        }
+        public static int SelectionGrid(int selected, Texture[] images, int xCount, params GUILayoutOption[] options) => 
+            SelectionGrid(selected, GUIContent.Temp(images), xCount, GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a Selection Grid.</para>
@@ -1253,10 +1175,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(int selected, string[] texts, int xCount, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return SelectionGrid(selected, GUIContent.Temp(texts), xCount, style, options);
-        }
+        public static int SelectionGrid(int selected, string[] texts, int xCount, GUIStyle style, params GUILayoutOption[] options) => 
+            SelectionGrid(selected, GUIContent.Temp(texts), xCount, style, options);
 
         /// <summary>
         /// <para>Make a Selection Grid.</para>
@@ -1274,10 +1194,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(int selected, GUIContent[] contents, int xCount, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return GUI.SelectionGrid(GUIGridSizer.GetRect(contents, xCount, style, options), selected, contents, xCount, style);
-        }
+        public static int SelectionGrid(int selected, GUIContent[] contents, int xCount, GUIStyle style, params GUILayoutOption[] options) => 
+            GUI.SelectionGrid(GUIGridSizer.GetRect(contents, xCount, style, options), selected, contents, xCount, style);
 
         /// <summary>
         /// <para>Make a Selection Grid.</para>
@@ -1295,10 +1213,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(int selected, Texture[] images, int xCount, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return SelectionGrid(selected, GUIContent.Temp(images), xCount, style, options);
-        }
+        public static int SelectionGrid(int selected, Texture[] images, int xCount, GUIStyle style, params GUILayoutOption[] options) => 
+            SelectionGrid(selected, GUIContent.Temp(images), xCount, style, options);
 
         /// <summary>
         /// <para>Insert a space in the current layout group.</para>
@@ -1331,10 +1247,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextArea(string text, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, -1, true, GUI.skin.textArea, options);
-        }
+        public static string TextArea(string text, params GUILayoutOption[] options) => 
+            DoTextField(text, -1, true, GUI.skin.textArea, options);
 
         /// <summary>
         /// <para>Make a multi-line text field where the user can edit a string.</para>
@@ -1348,10 +1262,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextArea(string text, int maxLength, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, maxLength, true, GUI.skin.textArea, options);
-        }
+        public static string TextArea(string text, int maxLength, params GUILayoutOption[] options) => 
+            DoTextField(text, maxLength, true, GUI.skin.textArea, options);
 
         /// <summary>
         /// <para>Make a multi-line text field where the user can edit a string.</para>
@@ -1365,10 +1277,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextArea(string text, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, -1, true, style, options);
-        }
+        public static string TextArea(string text, GUIStyle style, params GUILayoutOption[] options) => 
+            DoTextField(text, -1, true, style, options);
 
         /// <summary>
         /// <para>Make a multi-line text field where the user can edit a string.</para>
@@ -1382,10 +1292,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextArea(string text, int maxLength, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, maxLength, true, style, options);
-        }
+        public static string TextArea(string text, int maxLength, GUIStyle style, params GUILayoutOption[] options) => 
+            DoTextField(text, maxLength, true, style, options);
 
         /// <summary>
         /// <para>Make a single-line text field where the user can edit a string.</para>
@@ -1399,10 +1307,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextField(string text, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, -1, false, GUI.skin.textField, options);
-        }
+        public static string TextField(string text, params GUILayoutOption[] options) => 
+            DoTextField(text, -1, false, GUI.skin.textField, options);
 
         /// <summary>
         /// <para>Make a single-line text field where the user can edit a string.</para>
@@ -1416,10 +1322,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextField(string text, int maxLength, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, maxLength, false, GUI.skin.textField, options);
-        }
+        public static string TextField(string text, int maxLength, params GUILayoutOption[] options) => 
+            DoTextField(text, maxLength, false, GUI.skin.textField, options);
 
         /// <summary>
         /// <para>Make a single-line text field where the user can edit a string.</para>
@@ -1433,10 +1337,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextField(string text, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, -1, false, style, options);
-        }
+        public static string TextField(string text, GUIStyle style, params GUILayoutOption[] options) => 
+            DoTextField(text, -1, false, style, options);
 
         /// <summary>
         /// <para>Make a single-line text field where the user can edit a string.</para>
@@ -1450,10 +1352,8 @@
         /// <returns>
         /// <para>The edited string.</para>
         /// </returns>
-        public static string TextField(string text, int maxLength, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoTextField(text, maxLength, true, style, options);
-        }
+        public static string TextField(string text, int maxLength, GUIStyle style, params GUILayoutOption[] options) => 
+            DoTextField(text, maxLength, true, style, options);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -1469,10 +1369,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(bool value, string text, params GUILayoutOption[] options)
-        {
-            return DoToggle(value, GUIContent.Temp(text), GUI.skin.toggle, options);
-        }
+        public static bool Toggle(bool value, string text, params GUILayoutOption[] options) => 
+            DoToggle(value, GUIContent.Temp(text), GUI.skin.toggle, options);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -1488,10 +1386,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(bool value, GUIContent content, params GUILayoutOption[] options)
-        {
-            return DoToggle(value, content, GUI.skin.toggle, options);
-        }
+        public static bool Toggle(bool value, GUIContent content, params GUILayoutOption[] options) => 
+            DoToggle(value, content, GUI.skin.toggle, options);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -1507,10 +1403,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(bool value, Texture image, params GUILayoutOption[] options)
-        {
-            return DoToggle(value, GUIContent.Temp(image), GUI.skin.toggle, options);
-        }
+        public static bool Toggle(bool value, Texture image, params GUILayoutOption[] options) => 
+            DoToggle(value, GUIContent.Temp(image), GUI.skin.toggle, options);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -1526,10 +1420,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(bool value, string text, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoToggle(value, GUIContent.Temp(text), style, options);
-        }
+        public static bool Toggle(bool value, string text, GUIStyle style, params GUILayoutOption[] options) => 
+            DoToggle(value, GUIContent.Temp(text), style, options);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -1545,10 +1437,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(bool value, GUIContent content, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoToggle(value, content, style, options);
-        }
+        public static bool Toggle(bool value, GUIContent content, GUIStyle style, params GUILayoutOption[] options) => 
+            DoToggle(value, content, style, options);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -1564,10 +1454,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(bool value, Texture image, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoToggle(value, GUIContent.Temp(image), style, options);
-        }
+        public static bool Toggle(bool value, Texture image, GUIStyle style, params GUILayoutOption[] options) => 
+            DoToggle(value, GUIContent.Temp(image), style, options);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -1584,10 +1472,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(int selected, string[] texts, params GUILayoutOption[] options)
-        {
-            return Toolbar(selected, GUIContent.Temp(texts), GUI.skin.button, options);
-        }
+        public static int Toolbar(int selected, string[] texts, params GUILayoutOption[] options) => 
+            Toolbar(selected, GUIContent.Temp(texts), GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -1604,10 +1490,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(int selected, GUIContent[] content, params GUILayoutOption[] options)
-        {
-            return Toolbar(selected, content, GUI.skin.button, options);
-        }
+        public static int Toolbar(int selected, GUIContent[] content, params GUILayoutOption[] options) => 
+            Toolbar(selected, content, GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -1624,10 +1508,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(int selected, Texture[] images, params GUILayoutOption[] options)
-        {
-            return Toolbar(selected, GUIContent.Temp(images), GUI.skin.button, options);
-        }
+        public static int Toolbar(int selected, Texture[] images, params GUILayoutOption[] options) => 
+            Toolbar(selected, GUIContent.Temp(images), GUI.skin.button, options);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -1644,10 +1526,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(int selected, string[] texts, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return Toolbar(selected, GUIContent.Temp(texts), style, options);
-        }
+        public static int Toolbar(int selected, string[] texts, GUIStyle style, params GUILayoutOption[] options) => 
+            Toolbar(selected, GUIContent.Temp(texts), style, options);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -1724,10 +1604,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(int selected, Texture[] images, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return Toolbar(selected, GUIContent.Temp(images), style, options);
-        }
+        public static int Toolbar(int selected, Texture[] images, GUIStyle style, params GUILayoutOption[] options) => 
+            Toolbar(selected, GUIContent.Temp(images), style, options);
 
         /// <summary>
         /// <para>Make a vertical scrollbar.</para>
@@ -1741,10 +1619,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float VerticalScrollbar(float value, float size, float topValue, float bottomValue, params GUILayoutOption[] options)
-        {
-            return VerticalScrollbar(value, size, topValue, bottomValue, GUI.skin.verticalScrollbar, options);
-        }
+        public static float VerticalScrollbar(float value, float size, float topValue, float bottomValue, params GUILayoutOption[] options) => 
+            VerticalScrollbar(value, size, topValue, bottomValue, GUI.skin.verticalScrollbar, options);
 
         /// <summary>
         /// <para>Make a vertical scrollbar.</para>
@@ -1758,10 +1634,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float VerticalScrollbar(float value, float size, float topValue, float bottomValue, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return GUI.VerticalScrollbar(GUILayoutUtility.GetRect(GUIContent.Temp("\n\n\n\n"), style, options), value, size, topValue, bottomValue, style);
-        }
+        public static float VerticalScrollbar(float value, float size, float topValue, float bottomValue, GUIStyle style, params GUILayoutOption[] options) => 
+            GUI.VerticalScrollbar(GUILayoutUtility.GetRect(GUIContent.Temp("\n\n\n\n"), style, options), value, size, topValue, bottomValue, style);
 
         /// <summary>
         /// <para>A vertical slider the user can drag to change a value between a min and a max.</para>
@@ -1777,10 +1651,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float VerticalSlider(float value, float leftValue, float rightValue, params GUILayoutOption[] options)
-        {
-            return DoVerticalSlider(value, leftValue, rightValue, GUI.skin.verticalSlider, GUI.skin.verticalSliderThumb, options);
-        }
+        public static float VerticalSlider(float value, float leftValue, float rightValue, params GUILayoutOption[] options) => 
+            DoVerticalSlider(value, leftValue, rightValue, GUI.skin.verticalSlider, GUI.skin.verticalSliderThumb, options);
 
         /// <summary>
         /// <para>A vertical slider the user can drag to change a value between a min and a max.</para>
@@ -1796,49 +1668,33 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float VerticalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, params GUILayoutOption[] options)
-        {
-            return DoVerticalSlider(value, leftValue, rightValue, slider, thumb, options);
-        }
+        public static float VerticalSlider(float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, params GUILayoutOption[] options) => 
+            DoVerticalSlider(value, leftValue, rightValue, slider, thumb, options);
 
         /// <summary>
         /// <para>Option passed to a control to give it an absolute width.</para>
         /// </summary>
         /// <param name="width"></param>
-        public static GUILayoutOption Width(float width)
-        {
-            return new GUILayoutOption(GUILayoutOption.Type.fixedWidth, width);
-        }
+        public static GUILayoutOption Width(float width) => 
+            new GUILayoutOption(GUILayoutOption.Type.fixedWidth, width);
 
-        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, string text, params GUILayoutOption[] options)
-        {
-            return DoWindow(id, screenRect, func, GUIContent.Temp(text), GUI.skin.window, options);
-        }
+        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, string text, params GUILayoutOption[] options) => 
+            DoWindow(id, screenRect, func, GUIContent.Temp(text), GUI.skin.window, options);
 
-        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, GUIContent content, params GUILayoutOption[] options)
-        {
-            return DoWindow(id, screenRect, func, content, GUI.skin.window, options);
-        }
+        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, GUIContent content, params GUILayoutOption[] options) => 
+            DoWindow(id, screenRect, func, content, GUI.skin.window, options);
 
-        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, Texture image, params GUILayoutOption[] options)
-        {
-            return DoWindow(id, screenRect, func, GUIContent.Temp(image), GUI.skin.window, options);
-        }
+        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, Texture image, params GUILayoutOption[] options) => 
+            DoWindow(id, screenRect, func, GUIContent.Temp(image), GUI.skin.window, options);
 
-        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, string text, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoWindow(id, screenRect, func, GUIContent.Temp(text), style, options);
-        }
+        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, string text, GUIStyle style, params GUILayoutOption[] options) => 
+            DoWindow(id, screenRect, func, GUIContent.Temp(text), style, options);
 
-        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, GUIContent content, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoWindow(id, screenRect, func, content, style, options);
-        }
+        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, GUIContent content, GUIStyle style, params GUILayoutOption[] options) => 
+            DoWindow(id, screenRect, func, content, style, options);
 
-        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, Texture image, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return DoWindow(id, screenRect, func, GUIContent.Temp(image), style, options);
-        }
+        public static Rect Window(int id, Rect screenRect, GUI.WindowFunction func, Texture image, GUIStyle style, params GUILayoutOption[] options) => 
+            DoWindow(id, screenRect, func, GUIContent.Temp(image), style, options);
 
         /// <summary>
         /// <para>Disposable helper class for managing BeginArea / EndArea.</para>

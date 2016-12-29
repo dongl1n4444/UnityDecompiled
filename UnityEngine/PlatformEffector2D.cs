@@ -14,10 +14,8 @@
         [Obsolete("PlatformEffector2D.oneWay has been deprecated. Use PlatformEffector2D.useOneWay instead (UnityUpgradable) -> useOneWay", true)]
         public bool oneWay
         {
-            get
-            {
-                return this.useOneWay;
-            }
+            get => 
+                this.useOneWay;
             set
             {
                 this.useOneWay = value;
@@ -35,10 +33,8 @@
         [Obsolete("PlatformEffector2D.sideAngleVariance has been deprecated. Use PlatformEffector2D.sideArc instead (UnityUpgradable) -> sideArc", true)]
         public float sideAngleVariance
         {
-            get
-            {
-                return this.sideArc;
-            }
+            get => 
+                this.sideArc;
             set
             {
                 this.sideArc = value;
@@ -56,10 +52,8 @@
         [Obsolete("PlatformEffector2D.sideBounce has been deprecated. Use PlatformEffector2D.useSideBounce instead (UnityUpgradable) -> useSideBounce", true)]
         public bool sideBounce
         {
-            get
-            {
-                return this.useSideBounce;
-            }
+            get => 
+                this.useSideBounce;
             set
             {
                 this.useSideBounce = value;
@@ -72,10 +66,8 @@
         [Obsolete("PlatformEffector2D.sideFriction has been deprecated. Use PlatformEffector2D.useSideFriction instead (UnityUpgradable) -> useSideFriction", true)]
         public bool sideFriction
         {
-            get
-            {
-                return this.useSideFriction;
-            }
+            get => 
+                this.useSideFriction;
             set
             {
                 this.useSideFriction = value;

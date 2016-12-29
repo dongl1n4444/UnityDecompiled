@@ -8,10 +8,8 @@
     {
         private Dictionary<string, PBXElement> m_PrivateValue = new Dictionary<string, PBXElement>();
 
-        public bool Contains(string key)
-        {
-            return this.values.ContainsKey(key);
-        }
+        public bool Contains(string key) => 
+            this.values.ContainsKey(key);
 
         public PBXElementArray CreateArray(string key)
         {
@@ -53,13 +51,8 @@
             }
         }
 
-        public IDictionary<string, PBXElement> values
-        {
-            get
-            {
-                return this.m_PrivateValue;
-            }
-        }
+        public IDictionary<string, PBXElement> values =>
+            this.m_PrivateValue;
     }
 }
 

@@ -18,20 +18,16 @@
             this._profilerData = profilerData;
         }
 
-        public static ProfilerSnapshot Capture()
-        {
-            return new ProfilerSnapshot(TinyProfiler.CaptureSnapshot());
-        }
+        public static ProfilerSnapshot Capture() => 
+            new ProfilerSnapshot(TinyProfiler.CaptureSnapshot());
 
         [DebuggerHidden]
-        public IEnumerable<TinyProfiler.TimedSection> GetSectionsByLabel(string label)
-        {
-            return new <GetSectionsByLabel>c__Iterator0 { 
+        public IEnumerable<TinyProfiler.TimedSection> GetSectionsByLabel(string label) => 
+            new <GetSectionsByLabel>c__Iterator0 { 
                 label = label,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <GetSectionsByLabel>c__Iterator0 : IEnumerable, IEnumerable<TinyProfiler.TimedSection>, IEnumerator, IDisposable, IEnumerator<TinyProfiler.TimedSection>
@@ -174,28 +170,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Unity.TinyProfiling.TinyProfiler.TimedSection>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Unity.TinyProfiling.TinyProfiler.TimedSection>.GetEnumerator();
 
-            TinyProfiler.TimedSection IEnumerator<TinyProfiler.TimedSection>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TinyProfiler.TimedSection IEnumerator<TinyProfiler.TimedSection>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

@@ -18,10 +18,8 @@
             this.InternalCreateFromString(clientPath);
         }
 
-        internal string AllStateToString()
-        {
-            return AllStateToString(this.state);
-        }
+        internal string AllStateToString() => 
+            AllStateToString(this.state);
 
         internal static string AllStateToString(States state)
         {
@@ -120,15 +118,11 @@
             return false;
         }
 
-        public bool IsState(States state)
-        {
-            return IsState(this.state, state);
-        }
+        public bool IsState(States state) => 
+            IsState(this.state, state);
 
-        internal static bool IsState(States isThisState, States partOfThisState)
-        {
-            return ((isThisState & partOfThisState) != States.None);
-        }
+        internal static bool IsState(States isThisState, States partOfThisState) => 
+            ((isThisState & partOfThisState) != States.None);
 
         /// <summary>
         /// <para>Loads the asset to memory.</para>
@@ -142,10 +136,8 @@
             return AssetDatabase.LoadAssetAtPath(this.path, typeof(Object));
         }
 
-        internal string StateToString()
-        {
-            return StateToString(this.state);
-        }
+        internal string StateToString() => 
+            StateToString(this.state);
 
         internal static string StateToString(States state)
         {
@@ -220,13 +212,8 @@
         [ThreadAndSerializationSafe]
         public bool isMeta { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        internal bool IsUnderVersionControl
-        {
-            get
-            {
-                return ((this.IsState(States.Synced) || this.IsState(States.OutOfSync)) || this.IsState(States.AddedLocal));
-            }
-        }
+        internal bool IsUnderVersionControl =>
+            ((this.IsState(States.Synced) || this.IsState(States.OutOfSync)) || this.IsState(States.AddedLocal));
 
         /// <summary>
         /// <para>Returns true if the asset is locked by the version control system.</para>
@@ -246,13 +233,8 @@
         [ThreadAndSerializationSafe]
         public string path { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        public string prettyPath
-        {
-            get
-            {
-                return this.path;
-            }
-        }
+        public string prettyPath =>
+            this.path;
 
         /// <summary>
         /// <para>Returns true is the asset is read only.</para>

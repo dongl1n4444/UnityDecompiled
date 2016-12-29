@@ -111,7 +111,7 @@
             }
             else
             {
-                GUILayout.Label(string.Format("Version {0}{1}{2}", Application.unityVersion, str, str2), new GUILayoutOption[0]);
+                GUILayout.Label($"Version {Application.unityVersion}{str}{str2}", new GUILayoutOption[0]);
             }
             if (Event.current.type != EventType.ValidateCommand)
             {

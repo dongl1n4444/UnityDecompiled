@@ -129,10 +129,8 @@
             }
         }
 
-        private static bool PassesFilter(DiagnosticSwitch diagnosticSwitch, string filterString)
-        {
-            return ((string.IsNullOrEmpty(s_FilterString) || diagnosticSwitch.name.ToLowerInvariant().Contains(filterString)) || diagnosticSwitch.description.ToLowerInvariant().Contains(filterString));
-        }
+        private static bool PassesFilter(DiagnosticSwitch diagnosticSwitch, string filterString) => 
+            ((string.IsNullOrEmpty(s_FilterString) || diagnosticSwitch.name.ToLowerInvariant().Contains(filterString)) || diagnosticSwitch.description.ToLowerInvariant().Contains(filterString));
 
         private class Resources
         {

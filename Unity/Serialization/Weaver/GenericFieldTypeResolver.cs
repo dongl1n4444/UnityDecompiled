@@ -20,7 +20,7 @@
             if (typeReference.IsGenericInstance)
             {
                 GenericInstanceType type = (GenericInstanceType) typeReference;
-                return (this.HasGenericParameters(type.ElementType) || Enumerable.Any<TypeReference>(type.GenericArguments, new Func<TypeReference, bool>(this, (IntPtr) this.HasGenericParameters)));
+                return (this.HasGenericParameters(type.ElementType) || type.GenericArguments.Any<TypeReference>(new Func<TypeReference, bool>(this, (IntPtr) this.HasGenericParameters)));
             }
             if (typeReference.IsArray)
             {
@@ -39,7 +39,7 @@
             <ResolveByName>c__AnonStorey0 storey = new <ResolveByName>c__AnonStorey0 {
                 genericParameter = genericParameter
             };
-            foreach (Context context in Enumerable.Where<Context>(Enumerable.Reverse<Context>(this._resolutionContext), new Func<Context, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (Context context in this._resolutionContext.Reverse<Context>().Where<Context>(new Func<Context, bool>(storey, (IntPtr) this.<>m__0)))
             {
                 return context.Resolve(storey.genericParameter);
             }
@@ -84,10 +84,8 @@
         {
             internal GenericParameter genericParameter;
 
-            internal bool <>m__0(GenericFieldTypeResolver.Context context)
-            {
-                return context.CanResolve(this.genericParameter);
-            }
+            internal bool <>m__0(GenericFieldTypeResolver.Context context) => 
+                context.CanResolve(this.genericParameter);
         }
 
         private class Context
@@ -118,7 +116,7 @@
                     TypeReference elementType = type.ElementType;
                     foreach (GenericParameter parameter in elementType.GenericParameters)
                     {
-                        TypeReference typeReference = Enumerable.ElementAt<TypeReference>(type.GenericArguments, parameter.Position);
+                        TypeReference typeReference = type.GenericArguments.ElementAt<TypeReference>(parameter.Position);
                         if (this._fieldTypeResolver.HasGenericParameters(typeReference))
                         {
                             this._scope[parameter.Name] = this._fieldTypeResolver.ResolveGenericParameters(typeReference);
@@ -131,15 +129,11 @@
                 }
             }
 
-            public bool CanResolve(GenericParameter genericParameter)
-            {
-                return (((TypeReference) genericParameter.Owner).FullName == this._typeReference.GetElementType().FullName);
-            }
+            public bool CanResolve(GenericParameter genericParameter) => 
+                (((TypeReference) genericParameter.Owner).FullName == this._typeReference.GetElementType().FullName);
 
-            public TypeReference Resolve(GenericParameter genericParameter)
-            {
-                return genericParameter.Module.ImportReference(this._scope[genericParameter.Name]);
-            }
+            public TypeReference Resolve(GenericParameter genericParameter) => 
+                genericParameter.Module.ImportReference(this._scope[genericParameter.Name]);
         }
     }
 }

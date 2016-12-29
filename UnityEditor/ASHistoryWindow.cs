@@ -781,15 +781,11 @@
             current.Use();
         }
 
-        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck)
-        {
-            return ((flagToCheck & flags) != ChangeFlags.None);
-        }
+        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck) => 
+            ((flagToCheck & flags) != ChangeFlags.None);
 
-        private bool IsComparableAssetSelected()
-        {
-            return (!this.m_FolderSelected && (this.m_ChangeLogSelectionGUID != string.Empty));
-        }
+        private bool IsComparableAssetSelected() => 
+            (!this.m_FolderSelected && (this.m_ChangeLogSelectionGUID != string.Empty));
 
         private void MarkBoldItemsByGUID(string guid)
         {
@@ -1041,10 +1037,8 @@
 
         private int ChangeLogSelectionRev
         {
-            get
-            {
-                return this.m_ChangeLogSelectionRev;
-            }
+            get => 
+                this.m_ChangeLogSelectionRev;
             set
             {
                 this.m_ChangeLogSelectionRev = value;

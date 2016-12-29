@@ -38,10 +38,8 @@
         public extern void ComputerDidWakeUp();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void ComputerGoesToSleep();
-        public bool DisplayDialog(string title, string message, string okBtn, string cancelBtn)
-        {
-            return EditorUtility.DisplayDialog(title, message, okBtn, cancelBtn);
-        }
+        public bool DisplayDialog(string title, string message, string okBtn, string cancelBtn) => 
+            EditorUtility.DisplayDialog(title, message, okBtn, cancelBtn);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetAccessToken();
@@ -78,15 +76,11 @@
             return "";
         }
 
-        public ConnectInfo GetConnectInfo()
-        {
-            return this.connectInfo;
-        }
+        public ConnectInfo GetConnectInfo() => 
+            this.connectInfo;
 
-        public string GetCoreConfigurationUrl()
-        {
-            return this.GetConfigurationURL(CloudConfigUrl.CloudCore);
-        }
+        public string GetCoreConfigurationUrl() => 
+            this.GetConfigurationURL(CloudConfigUrl.CloudCore);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetEnvironment();
@@ -98,19 +92,15 @@
         public extern string GetOrganizationName();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetProjectGUID();
-        public ProjectInfo GetProjectInfo()
-        {
-            return this.projectInfo;
-        }
+        public ProjectInfo GetProjectInfo() => 
+            this.projectInfo;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetProjectName();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetUserId();
-        public UserInfo GetUserInfo()
-        {
-            return this.userInfo;
-        }
+        public UserInfo GetUserInfo() => 
+            this.userInfo;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetUserName();
@@ -152,10 +142,8 @@
         public extern void OpenAuthorizedURLInWebBrowser(string url);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void RefreshProject();
-        public bool SetCOPPACompliance(int compliance)
-        {
-            return this.SetCOPPACompliance((COPPACompliance) compliance);
-        }
+        public bool SetCOPPACompliance(int compliance) => 
+            this.SetCOPPACompliance((COPPACompliance) compliance);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern bool SetCOPPACompliance(COPPACompliance compliance);
@@ -198,13 +186,8 @@
 
         public ConnectInfo connectInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        public static UnityConnect instance
-        {
-            get
-            {
-                return s_Instance;
-            }
-        }
+        public static UnityConnect instance =>
+            s_Instance;
 
         public int lastErrorCode { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 

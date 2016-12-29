@@ -56,59 +56,41 @@
             Debug.Log("BoolProperty: " + passedObject.BoolProperty);
         }
 
-        private string APrivateMethod(string input)
-        {
-            return "This method is private and not for CEF";
-        }
+        private string APrivateMethod(string input) => 
+            "This method is private and not for CEF";
 
-        public string[] ArrayReverse(string[] input)
-        {
-            return (string[]) Enumerable.Reverse<string>(input);
-        }
+        public string[] ArrayReverse(string[] input) => 
+            ((string[]) input.Reverse<string>());
 
         public void LogMessage(string message)
         {
             Debug.Log(message);
         }
 
-        public bool ReturnBool()
-        {
-            return true;
-        }
+        public bool ReturnBool() => 
+            true;
 
-        public bool[] ReturnBoolArray()
-        {
-            return new bool[] { true, false, true, false };
-        }
+        public bool[] ReturnBoolArray() => 
+            new bool[] { true, false, true, false };
 
-        public int ReturnInt()
-        {
-            return 5;
-        }
+        public int ReturnInt() => 
+            5;
 
-        public int[] ReturnNumberArray()
-        {
-            return new int[] { 1, 2, 3 };
-        }
+        public int[] ReturnNumberArray() => 
+            new int[] { 1, 2, 3 };
 
-        public TestObject ReturnObject()
-        {
-            return new TestObject { 
+        public TestObject ReturnObject() => 
+            new TestObject { 
                 NumberProperty = 5,
                 StringProperty = "Five",
                 BoolProperty = true
             };
-        }
 
-        public string ReturnString()
-        {
-            return "Five";
-        }
+        public string ReturnString() => 
+            "Five";
 
-        public string[] ReturnStringArray()
-        {
-            return new string[] { "One", "Two", "Three" };
-        }
+        public string[] ReturnStringArray() => 
+            new string[] { "One", "Two", "Three" };
 
         public static void RunTestScript(string path)
         {

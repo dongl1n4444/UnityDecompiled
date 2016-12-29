@@ -44,20 +44,16 @@
         {
         }
 
-        public static bool IsAvailable(Type type)
-        {
-            return false;
-        }
+        public static bool IsAvailable(Type type) => 
+            false;
 
         /// <summary>
         /// <para>Banner layout.</para>
         /// </summary>
         public Layout layout
         {
-            get
-            {
-                return Layout.Top;
-            }
+            get => 
+                Layout.Top;
             set
             {
             }
@@ -66,23 +62,16 @@
         /// <summary>
         /// <para>Checks if banner contents are loaded.</para>
         /// </summary>
-        public bool loaded
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool loaded =>
+            false;
 
         /// <summary>
         /// <para>The position of the banner view.</para>
         /// </summary>
         public Vector2 position
         {
-            get
-            {
-                return new Vector2();
-            }
+            get => 
+                new Vector2();
             set
             {
             }
@@ -91,23 +80,16 @@
         /// <summary>
         /// <para>The size of the banner view.</para>
         /// </summary>
-        public Vector2 size
-        {
-            get
-            {
-                return new Vector2();
-            }
-        }
+        public Vector2 size =>
+            new Vector2();
 
         /// <summary>
         /// <para>Banner visibility. Initially banner is not visible.</para>
         /// </summary>
         public bool visible
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }

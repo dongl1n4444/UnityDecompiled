@@ -164,7 +164,8 @@
             {
                 return str;
             }
-            return (str + string.Format("\nPadded to {0}x{1}", gPUWidth, gPUHeight));
+            return (str + $"
+Padded to {gPUWidth}x{gPUHeight}");
         }
 
         public float GetMipLevelForRendering()
@@ -180,10 +181,8 @@
             return Mathf.Min(this.m_MipLevel, (float) (TextureUtil.GetMipmapCount(base.target as Texture) - 1));
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.target != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.target != null);
 
         private bool IsCubemap()
         {
@@ -197,10 +196,8 @@
             return ((usageMode == TextureUsageMode.NormalmapPlain) || (usageMode == TextureUsageMode.NormalmapDXT5nm));
         }
 
-        private float Log2(float x)
-        {
-            return (float) (Math.Log((double) x) / Math.Log(2.0));
-        }
+        private float Log2(float x) => 
+            ((float) (Math.Log((double) x) / Math.Log(2.0)));
 
         protected virtual void OnDisable()
         {
@@ -274,8 +271,8 @@
                 if ((viewRect.width > 32f) && (viewRect.height > 32f))
                 {
                     TextureImporter atPath = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(target)) as TextureImporter;
-                    SpriteMetaData[] dataArray = (atPath == null) ? null : atPath.spritesheet;
-                    if ((dataArray != null) && (atPath.spriteImportMode == SpriteImportMode.Multiple))
+                    SpriteMetaData[] spritesheet = atPath?.spritesheet;
+                    if ((spritesheet != null) && (atPath.spriteImportMode == SpriteImportMode.Multiple))
                     {
                         Rect outScreenRect = new Rect();
                         Rect outSourceRect = new Rect();
@@ -289,7 +286,7 @@
                         GL.MultMatrix(Handles.matrix);
                         GL.Begin(1);
                         GL.Color(new Color(1f, 1f, 1f, 0.5f));
-                        foreach (SpriteMetaData data in dataArray)
+                        foreach (SpriteMetaData data in spritesheet)
                         {
                             Rect rect = data.rect;
                             Rect rect5 = new Rect {

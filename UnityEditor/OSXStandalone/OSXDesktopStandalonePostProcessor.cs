@@ -30,10 +30,8 @@
             FileUtil.DeleteFileOrDirectory(this.m_PostProcessArgs.installPath);
         }
 
-        public string GetExtension(BuildTarget target, BuildOptions options)
-        {
-            return "app";
-        }
+        public string GetExtension(BuildTarget target, BuildOptions options) => 
+            "app";
 
         protected override IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target)
         {
@@ -53,10 +51,8 @@
             return new OSXStandaloneIl2CppPlatformProvider(target, this.StagingAreaContents + "/Data", base.Development);
         }
 
-        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName)
-        {
-            return string.Empty;
-        }
+        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName) => 
+            string.Empty;
 
         protected override string GetVariationName()
         {
@@ -65,7 +61,7 @@
             {
                 str = "il2cpp";
             }
-            return string.Format("{0}_{1}", base.GetVariationName(), str);
+            return $"{base.GetVariationName()}_{str}";
         }
 
         public void LaunchPlayer(BuildLaunchPlayerArgs args)
@@ -132,10 +128,8 @@
             throw new NotImplementedException();
         }
 
-        public string PrepareForBuild(BuildOptions options, BuildTarget target)
-        {
-            return null;
-        }
+        public string PrepareForBuild(BuildOptions options, BuildTarget target) => 
+            null;
 
         protected override void RenameFilesInStagingArea()
         {
@@ -206,47 +200,23 @@
             writer.Close();
         }
 
-        public bool SupportsInstallInBuildFolder()
-        {
-            return true;
-        }
+        public bool SupportsInstallInBuildFolder() => 
+            true;
 
-        public bool SupportsScriptsOnlyBuild()
-        {
-            return false;
-        }
+        public bool SupportsScriptsOnlyBuild() => 
+            false;
 
-        protected override string DestinationFolderForInstallingIntoBuildsFolder
-        {
-            get
-            {
-                return ("build/MacStandaloneSupport/Variations/" + this.GetVariationName() + "/UnityPlayer.app/Contents/Resources/Data");
-            }
-        }
+        protected override string DestinationFolderForInstallingIntoBuildsFolder =>
+            ("build/MacStandaloneSupport/Variations/" + this.GetVariationName() + "/UnityPlayer.app/Contents/Resources/Data");
 
-        private string InstallNameWithoutExtension
-        {
-            get
-            {
-                return FileUtil.UnityGetFileNameWithoutExtension(this.m_PostProcessArgs.installPath);
-            }
-        }
+        private string InstallNameWithoutExtension =>
+            FileUtil.UnityGetFileNameWithoutExtension(this.m_PostProcessArgs.installPath);
 
-        private string StagingAreaContents
-        {
-            get
-            {
-                return (base.StagingArea + "/UnityPlayer.app/Contents");
-            }
-        }
+        private string StagingAreaContents =>
+            (base.StagingArea + "/UnityPlayer.app/Contents");
 
-        protected override string StagingAreaPluginsFolder
-        {
-            get
-            {
-                return (this.StagingAreaContents + "/Plugins");
-            }
-        }
+        protected override string StagingAreaPluginsFolder =>
+            (this.StagingAreaContents + "/Plugins");
     }
 }
 

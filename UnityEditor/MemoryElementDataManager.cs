@@ -131,15 +131,11 @@
             return false;
         }
 
-        private static int SortByMemoryClassName(ObjectInfo x, ObjectInfo y)
-        {
-            return y.className.CompareTo(x.className);
-        }
+        private static int SortByMemoryClassName(ObjectInfo x, ObjectInfo y) => 
+            y.className.CompareTo(x.className);
 
-        private static int SortByMemorySize(MemoryElement x, MemoryElement y)
-        {
-            return y.totalMemory.CompareTo(x.totalMemory);
-        }
+        private static int SortByMemorySize(MemoryElement x, MemoryElement y) => 
+            y.totalMemory.CompareTo(x.totalMemory);
 
         private enum ObjectTypeFilter
         {

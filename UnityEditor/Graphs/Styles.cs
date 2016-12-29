@@ -51,7 +51,7 @@
 
         public static GUIStyle GetNodeStyle(string styleName, Color color, bool on)
         {
-            string key = string.Format("flow {0} {1}{2}", styleName, (int) color, !on ? "" : " on");
+            string key = $"flow {styleName} {(int) color}{!on ? "" : " on"}";
             if (!m_NodeStyleCache.ContainsKey(key))
             {
                 m_NodeStyleCache[key] = key;

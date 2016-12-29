@@ -49,10 +49,8 @@
         /// <returns>
         /// <para>The generate Font object.</para>
         /// </returns>
-        public static Font CreateDynamicFontFromOSFont(string fontname, int size)
-        {
-            return new Font(new string[] { fontname }, size);
-        }
+        public static Font CreateDynamicFontFromOSFont(string fontname, int size) => 
+            new Font(new string[] { fontname }, size);
 
         /// <summary>
         /// <para>Creates a Font object which lets you render a font installed on the user machine.</para>
@@ -63,10 +61,8 @@
         /// <returns>
         /// <para>The generate Font object.</para>
         /// </returns>
-        public static Font CreateDynamicFontFromOSFont(string[] fontnames, int size)
-        {
-            return new Font(fontnames, size);
-        }
+        public static Font CreateDynamicFontFromOSFont(string[] fontnames, int size) => 
+            new Font(fontnames, size);
 
         [ExcludeFromDocs]
         public bool GetCharacterInfo(char ch, out CharacterInfo info)
@@ -89,10 +85,8 @@
         /// <para>Returns the maximum number of verts that the text generator may return for a given string.</para>
         /// </summary>
         /// <param name="str">Input string.</param>
-        public static int GetMaxVertsForString(string str)
-        {
-            return ((str.Length * 4) + 4);
-        }
+        public static int GetMaxVertsForString(string str) => 
+            ((str.Length * 4) + 4);
 
         /// <summary>
         /// <para>Get names of fonts installed on the machine.</para>
@@ -188,10 +182,8 @@
         [Obsolete("Font.textureRebuildCallback has been deprecated. Use Font.textureRebuilt instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public FontTextureRebuildCallback textureRebuildCallback
         {
-            get
-            {
-                return this.m_FontTextureRebuildCallback;
-            }
+            get => 
+                this.m_FontTextureRebuildCallback;
             set
             {
                 this.m_FontTextureRebuildCallback = value;

@@ -39,10 +39,8 @@
             this.m_Dictionary.Clear();
         }
 
-        public bool Contains(T item)
-        {
-            return this.m_Dictionary.ContainsKey(item);
-        }
+        public bool Contains(T item) => 
+            this.m_Dictionary.ContainsKey(item);
 
         public void CopyTo(T[] array, int arrayIndex)
         {
@@ -122,33 +120,19 @@
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.GetEnumerator();
 
-        public int Count
-        {
-            get
-            {
-                return this.m_List.Count;
-            }
-        }
+        public int Count =>
+            this.m_List.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly =>
+            false;
 
         public T this[int index]
         {
-            get
-            {
-                return this.m_List[index];
-            }
+            get => 
+                this.m_List[index];
             set
             {
                 T key = this.m_List[index];

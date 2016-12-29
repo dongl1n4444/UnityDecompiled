@@ -44,10 +44,8 @@
             this.m_FunctionsList = new PopupList(this.m_FunctionsListInputData);
         }
 
-        public static bool FunctionHasInstrumentationPopup(string funcName)
-        {
-            return ((s_InstrumentableFunctions != null) && s_InstrumentableFunctions.ContainsKey(funcName));
-        }
+        public static bool FunctionHasInstrumentationPopup(string funcName) => 
+            ((s_InstrumentableFunctions != null) && s_InstrumentableFunctions.ContainsKey(funcName));
 
         public override Vector2 GetWindowSize()
         {
@@ -226,13 +224,8 @@
             ProfilerDriver.QueryInstrumentableFunctions();
         }
 
-        public static bool InstrumentationEnabled
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool InstrumentationEnabled =>
+            false;
 
         private class InputData : PopupList.InputData
         {
@@ -253,10 +246,8 @@
             {
                 internal string prefix;
 
-                internal bool <>m__0(PopupList.ListElement element)
-                {
-                    return element.m_Content.text.Contains(this.prefix);
-                }
+                internal bool <>m__0(PopupList.ListElement element) => 
+                    element.m_Content.text.Contains(this.prefix);
             }
         }
     }

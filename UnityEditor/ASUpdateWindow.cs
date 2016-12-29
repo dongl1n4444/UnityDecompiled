@@ -272,15 +272,11 @@
             return list.ToArray();
         }
 
-        public int GetSelectedRevisionNumber()
-        {
-            return (((this.pv.lv.row <= (this.lv.totalRows - 1)) && (this.lv.row >= 0)) ? this.changesets[this.lv.row].changeset : -1);
-        }
+        public int GetSelectedRevisionNumber() => 
+            (((this.pv.lv.row <= (this.lv.totalRows - 1)) && (this.lv.row >= 0)) ? this.changesets[this.lv.row].changeset : -1);
 
-        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck)
-        {
-            return ((flagToCheck & flags) != ChangeFlags.None);
-        }
+        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck) => 
+            ((flagToCheck & flags) != ChangeFlags.None);
 
         public void OnSelectionChange()
         {
@@ -499,21 +495,11 @@
             SplitterGUILayout.EndHorizontalSplit();
         }
 
-        public bool CanContinue
-        {
-            get
-            {
-                return this.asResolveWin.CanContinue();
-            }
-        }
+        public bool CanContinue =>
+            this.asResolveWin.CanContinue();
 
-        public bool ShowingConflicts
-        {
-            get
-            {
-                return this.showingConflicts;
-            }
-        }
+        public bool ShowingConflicts =>
+            this.showingConflicts;
 
         internal class Constants
         {

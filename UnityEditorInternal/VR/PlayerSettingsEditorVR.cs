@@ -30,13 +30,13 @@
         {
             <AddVRDeviceElement>c__AnonStorey0 storey = new <AddVRDeviceElement>c__AnonStorey0();
             VRDeviceInfoEditor[] editorArray = this.m_AllVRDevicesForBuildTarget[target];
-            storey.enabledDevices = Enumerable.ToList<string>(VREditor.GetVREnabledDevicesOnTargetGroup(target));
+            storey.enabledDevices = VREditor.GetVREnabledDevicesOnTargetGroup(target).ToList<string>();
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<VRDeviceInfoEditor, string>(null, (IntPtr) <AddVRDeviceElement>m__0);
             }
-            string[] options = Enumerable.ToArray<string>(Enumerable.Select<VRDeviceInfoEditor, string>(editorArray, <>f__am$cache0));
-            bool[] enabled = Enumerable.ToArray<bool>(Enumerable.Select<VRDeviceInfoEditor, bool>(editorArray, new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)));
+            string[] options = Enumerable.Select<VRDeviceInfoEditor, string>(editorArray, <>f__am$cache0).ToArray<string>();
+            bool[] enabled = Enumerable.Select<VRDeviceInfoEditor, bool>(editorArray, new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<bool>();
             EditorUtility.DisplayCustomMenu(rect, options, enabled, null, new EditorUtility.SelectMenuItemFunction(this.AddVRDeviceMenuSelected), target);
         }
 
@@ -44,7 +44,7 @@
         {
             string str;
             BuildTargetGroup targetGroup = (BuildTargetGroup) userData;
-            List<string> list = Enumerable.ToList<string>(VREditor.GetVREnabledDevicesOnTargetGroup(targetGroup));
+            List<string> list = VREditor.GetVREnabledDevicesOnTargetGroup(targetGroup).ToList<string>();
             if (!this.m_MapVRUIStringToDeviceKey.TryGetValue(options[selected], out str))
             {
                 str = options[selected];
@@ -151,14 +151,14 @@
 
         private void RemoveVRDeviceElement(BuildTargetGroup target, ReorderableList list)
         {
-            List<string> list2 = Enumerable.ToList<string>(VREditor.GetVREnabledDevicesOnTargetGroup(target));
+            List<string> list2 = VREditor.GetVREnabledDevicesOnTargetGroup(target).ToList<string>();
             list2.RemoveAt(list.index);
             this.ApplyChangedVRDeviceList(target, list2.ToArray());
         }
 
         private void ReorderVRDeviceElement(BuildTargetGroup target, ReorderableList list)
         {
-            string[] devices = Enumerable.ToArray<string>(Enumerable.Cast<string>(list.list));
+            string[] devices = list.list.Cast<string>().ToArray<string>();
             this.ApplyChangedVRDeviceList(target, devices);
         }
 
@@ -231,10 +231,8 @@
                 internal PlayerSettingsEditorVR.<AddVRDeviceElement>c__AnonStorey0 <>f__ref$0;
                 internal VRDeviceInfoEditor d;
 
-                internal bool <>m__0(string enabledDeviceName)
-                {
-                    return (this.d.deviceNameKey == enabledDeviceName);
-                }
+                internal bool <>m__0(string enabledDeviceName) => 
+                    (this.d.deviceNameKey == enabledDeviceName);
             }
         }
 
@@ -264,10 +262,8 @@
                 this.$this.DrawVRDeviceElement(this.targetGroup, rect, index, isActive, isFocused);
             }
 
-            internal float <>m__4(int index)
-            {
-                return this.$this.GetVRDeviceElementHeight(this.targetGroup, index);
-            }
+            internal float <>m__4(int index) => 
+                this.$this.GetVRDeviceElementHeight(this.targetGroup, index);
 
             internal void <>m__5(ReorderableList list)
             {

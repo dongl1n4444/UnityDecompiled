@@ -55,10 +55,8 @@
         /// <returns>
         /// <para>Hashcode.</para>
         /// </returns>
-        public override int GetHashCode()
-        {
-            return this.definition.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.definition.GetHashCode();
 
         /// <summary>
         /// <para>Determine if this product is available to purchase according to the store subsystem.</para>
@@ -73,13 +71,8 @@
         /// <summary>
         /// <para>Owned Non Consumables and Subscriptions should always have receipts.</para>
         /// </summary>
-        public bool hasReceipt
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.receipt);
-            }
-        }
+        public bool hasReceipt =>
+            !string.IsNullOrEmpty(this.receipt);
 
         /// <summary>
         /// <para>Localized metadata provided by the store system.</para>

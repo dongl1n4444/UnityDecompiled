@@ -183,7 +183,7 @@
             IList<TreeViewItem> rows = this.m_TreeView.data.GetRows();
             foreach (TreeViewItem item in rows)
             {
-                if (Enumerable.Contains<int>(selectedIDs, item.id))
+                if (selectedIDs.Contains<int>(item.id))
                 {
                     PackageImportTreeViewItem item2 = item as PackageImportTreeViewItem;
                     if (item2 != null)
@@ -210,29 +210,14 @@
             this.ComputeEnabledStateForFolders();
         }
 
-        public bool canReInstall
-        {
-            get
-            {
-                return this.m_PackageImport.canReInstall;
-            }
-        }
+        public bool canReInstall =>
+            this.m_PackageImport.canReInstall;
 
-        public bool doReInstall
-        {
-            get
-            {
-                return this.m_PackageImport.doReInstall;
-            }
-        }
+        public bool doReInstall =>
+            this.m_PackageImport.doReInstall;
 
-        public ImportPackageItem[] packageItems
-        {
-            get
-            {
-                return this.m_PackageImport.packageItems;
-            }
-        }
+        public ImportPackageItem[] packageItems =>
+            this.m_PackageImport.packageItems;
 
         public enum EnabledState
         {
@@ -352,10 +337,8 @@
                 return base.IsExpandable(item);
             }
 
-            public override bool IsRenamingItemAllowed(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+                false;
         }
 
         private class PackageImportTreeViewGUI : TreeViewGUI
@@ -418,7 +401,7 @@
                 Toggle(this.m_PackageImportView.packageItems, pitem, toggleRect);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    if ((base.m_TreeView.GetSelection().Length <= 1) || !Enumerable.Contains<int>(base.m_TreeView.GetSelection(), pitem.id))
+                    if ((base.m_TreeView.GetSelection().Length <= 1) || !base.m_TreeView.GetSelection().Contains<int>(pitem.id))
                     {
                         int[] selectedIDs = new int[] { pitem.id };
                         base.m_TreeView.SetSelection(selectedIDs, false);
@@ -567,10 +550,8 @@
 
             public PackageImportTreeView.EnabledState enableState
             {
-                get
-                {
-                    return this.m_EnableState;
-                }
+                get => 
+                    this.m_EnableState;
                 set
                 {
                     if ((this.item == null) || !this.item.projectAsset)
@@ -597,10 +578,8 @@
                 this.m_Preview = preview;
             }
 
-            public override Vector2 GetWindowSize()
-            {
-                return this.kPreviewSize;
-            }
+            public override Vector2 GetWindowSize() => 
+                this.kPreviewSize;
 
             public override void OnGUI(Rect rect)
             {

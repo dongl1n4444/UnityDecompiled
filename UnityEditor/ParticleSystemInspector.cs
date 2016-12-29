@@ -22,15 +22,11 @@
             this.m_ParticleEffectUI = null;
         }
 
-        public override GUIContent GetPreviewTitle()
-        {
-            return this.m_PreviewTitle;
-        }
+        public override GUIContent GetPreviewTitle() => 
+            this.m_PreviewTitle;
 
-        public override bool HasPreviewGUI()
-        {
-            return (this.ShouldShowInspector() && (Selection.objects.Length == 1));
-        }
+        public override bool HasPreviewGUI() => 
+            (this.ShouldShowInspector() && (Selection.objects.Length == 1));
 
         private void HierarchyOrProjectWindowWasChanged()
         {
@@ -205,10 +201,8 @@
             }
         }
 
-        public override bool UseDefaultMargins()
-        {
-            return false;
-        }
+        public override bool UseDefaultMargins() => 
+            false;
 
         public static GUIContent playBackTitle
         {

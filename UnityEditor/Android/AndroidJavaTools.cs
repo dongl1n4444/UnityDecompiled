@@ -51,10 +51,8 @@
             Console.WriteLine("");
         }
 
-        public static string Exe(string command)
-        {
-            return (command = command + ((Application.platform != RuntimePlatform.WindowsEditor) ? "" : ".exe"));
-        }
+        public static string Exe(string command) => 
+            (command = command + ((Application.platform != RuntimePlatform.WindowsEditor) ? "" : ".exe"));
 
         private static string GuessJDKLocation()
         {
@@ -148,13 +146,13 @@
                 string[] strArray = str.Split(separator);
                 if ((((strArray.Length <= 1) || (Convert.ToUInt32(strArray[0]) != 1)) || (Convert.ToUInt32(strArray[1]) < 7)) && ((strArray.Length <= 0) || (Convert.ToUInt32(strArray[0]) < 7)))
                 {
-                    throw new Exception(string.Format("Incompatible java version: {0} ('{1}')", str, javaExe));
+                    throw new Exception($"Incompatible java version: {str} ('{javaExe}')");
                 }
                 return true;
             }
             catch (Exception exception)
             {
-                Console.WriteLine(string.Format("Failed java version detection for '{0}'", javaExe));
+                Console.WriteLine($"Failed java version detection for '{javaExe}'");
                 Console.WriteLine(exception);
             }
             return false;
@@ -187,13 +185,8 @@
             }
         }
 
-        public static string JDKDownloadUrl
-        {
-            get
-            {
-                return "http://www.oracle.com/technetwork/java/javase/downloads/index.html";
-            }
-        }
+        public static string JDKDownloadUrl =>
+            "http://www.oracle.com/technetwork/java/javase/downloads/index.html";
     }
 }
 

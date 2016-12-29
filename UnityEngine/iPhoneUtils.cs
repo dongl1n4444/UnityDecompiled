@@ -40,22 +40,12 @@
         }
 
         [Obsolete("isApplicationGenuine property is deprecated. Please use Application.genuine instead (UnityUpgradable) -> Application.genuine")]
-        public static bool isApplicationGenuine
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool isApplicationGenuine =>
+            false;
 
         [Obsolete("isApplicationGenuineAvailable property is deprecated. Please use Application.genuineCheckAvailable instead (UnityUpgradable) -> Application.genuineCheckAvailable")]
-        public static bool isApplicationGenuineAvailable
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool isApplicationGenuineAvailable =>
+            false;
     }
 }
 

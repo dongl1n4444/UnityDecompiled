@@ -27,10 +27,8 @@
             this.m_TreeView = treeView;
         }
 
-        protected virtual float AddSpaceBefore(TreeViewItem item)
-        {
-            return 0f;
-        }
+        protected virtual float AddSpaceBefore(TreeViewItem item) => 
+            0f;
 
         public virtual void BeginPingItem(TreeViewItem item, float topPixelOfRow, float availableWidth)
         {
@@ -84,10 +82,8 @@
         {
         }
 
-        public virtual float GetContentIndent(TreeViewItem item)
-        {
-            return (this.GetFoldoutIndent(item) + this.m_FoldoutWidth);
-        }
+        public virtual float GetContentIndent(TreeViewItem item) => 
+            (this.GetFoldoutIndent(item) + this.m_FoldoutWidth);
 
         public void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
         {
@@ -154,15 +150,11 @@
             return (int) Mathf.Floor(heightOfTreeView / 30f);
         }
 
-        public Rect GetRectForFraming(int row)
-        {
-            return this.GetRowRect(row, 1f);
-        }
+        public Rect GetRectForFraming(int row) => 
+            this.GetRowRect(row, 1f);
 
-        public Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
-        {
-            return new Rect();
-        }
+        public Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item) => 
+            new Rect();
 
         public Rect GetRowRect(int row, float rowWidth)
         {
@@ -174,10 +166,8 @@
             return this.m_RowRects[row];
         }
 
-        protected virtual Vector2 GetSizeOfRow(TreeViewItem item)
-        {
-            return new Vector2(this.m_TreeView.GetTotalRect().width, 16f);
-        }
+        protected virtual Vector2 GetSizeOfRow(TreeViewItem item) => 
+            new Vector2(this.m_TreeView.GetTotalRect().width, 16f);
 
         public Vector2 GetTotalSize()
         {
@@ -197,21 +187,11 @@
 
         public float bottomRowMargin { virtual get; private set; }
 
-        public virtual float halfDropBetweenHeight
-        {
-            get
-            {
-                return 8f;
-            }
-        }
+        public virtual float halfDropBetweenHeight =>
+            8f;
 
-        protected float indentWidth
-        {
-            get
-            {
-                return this.m_IndentWidth;
-            }
-        }
+        protected float indentWidth =>
+            this.m_IndentWidth;
 
         public float topRowMargin { virtual get; private set; }
     }

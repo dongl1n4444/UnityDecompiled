@@ -17,43 +17,23 @@
         /// <summary>
         /// <para>The point of contact between the two colliders in world space.</para>
         /// </summary>
-        public Vector2 point
-        {
-            get
-            {
-                return this.m_Point;
-            }
-        }
+        public Vector2 point =>
+            this.m_Point;
         /// <summary>
         /// <para>Surface normal at the contact point.</para>
         /// </summary>
-        public Vector2 normal
-        {
-            get
-            {
-                return this.m_Normal;
-            }
-        }
+        public Vector2 normal =>
+            this.m_Normal;
         /// <summary>
         /// <para>The collider attached to the object receiving the collision message.</para>
         /// </summary>
-        public Collider2D collider
-        {
-            get
-            {
-                return this.m_Collider;
-            }
-        }
+        public Collider2D collider =>
+            this.m_Collider;
         /// <summary>
         /// <para>The incoming collider involved in the collision at this contact point.</para>
         /// </summary>
-        public Collider2D otherCollider
-        {
-            get
-            {
-                return this.m_OtherCollider;
-            }
-        }
+        public Collider2D otherCollider =>
+            this.m_OtherCollider;
     }
 }
 

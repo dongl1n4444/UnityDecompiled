@@ -271,7 +271,7 @@
                 catch (Exception exception)
                 {
                     IEventSystemHandler handler = results[i];
-                    Debug.LogException(new Exception(string.Format("Type {0} expected {1} received.", typeof(T).Name, handler.GetType().Name), exception));
+                    Debug.LogException(new Exception($"Type {typeof(T).Name} expected {handler.GetType().Name} received.", exception));
                     continue;
                 }
                 try
@@ -368,7 +368,7 @@
         {
             if (!(data is T))
             {
-                throw new ArgumentException(string.Format("Invalid type: {0} passed to event expecting {1}", data.GetType(), typeof(T)));
+                throw new ArgumentException($"Invalid type: {data.GetType()} passed to event expecting {typeof(T)}");
             }
             return (data as T);
         }
@@ -376,189 +376,104 @@
         /// <summary>
         /// <para>IBeginDragHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IBeginDragHandler> beginDragHandler
-        {
-            get
-            {
-                return s_BeginDragHandler;
-            }
-        }
+        public static EventFunction<IBeginDragHandler> beginDragHandler =>
+            s_BeginDragHandler;
 
         /// <summary>
         /// <para>ICancelHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<ICancelHandler> cancelHandler
-        {
-            get
-            {
-                return s_CancelHandler;
-            }
-        }
+        public static EventFunction<ICancelHandler> cancelHandler =>
+            s_CancelHandler;
 
         /// <summary>
         /// <para>IDeselectHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IDeselectHandler> deselectHandler
-        {
-            get
-            {
-                return s_DeselectHandler;
-            }
-        }
+        public static EventFunction<IDeselectHandler> deselectHandler =>
+            s_DeselectHandler;
 
         /// <summary>
         /// <para>IDragHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IDragHandler> dragHandler
-        {
-            get
-            {
-                return s_DragHandler;
-            }
-        }
+        public static EventFunction<IDragHandler> dragHandler =>
+            s_DragHandler;
 
         /// <summary>
         /// <para>IDropHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IDropHandler> dropHandler
-        {
-            get
-            {
-                return s_DropHandler;
-            }
-        }
+        public static EventFunction<IDropHandler> dropHandler =>
+            s_DropHandler;
 
         /// <summary>
         /// <para>IEndDragHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IEndDragHandler> endDragHandler
-        {
-            get
-            {
-                return s_EndDragHandler;
-            }
-        }
+        public static EventFunction<IEndDragHandler> endDragHandler =>
+            s_EndDragHandler;
 
         /// <summary>
         /// <para>IInitializePotentialDragHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IInitializePotentialDragHandler> initializePotentialDrag
-        {
-            get
-            {
-                return s_InitializePotentialDragHandler;
-            }
-        }
+        public static EventFunction<IInitializePotentialDragHandler> initializePotentialDrag =>
+            s_InitializePotentialDragHandler;
 
         /// <summary>
         /// <para>IMoveHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IMoveHandler> moveHandler
-        {
-            get
-            {
-                return s_MoveHandler;
-            }
-        }
+        public static EventFunction<IMoveHandler> moveHandler =>
+            s_MoveHandler;
 
         /// <summary>
         /// <para>IPointerClickHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IPointerClickHandler> pointerClickHandler
-        {
-            get
-            {
-                return s_PointerClickHandler;
-            }
-        }
+        public static EventFunction<IPointerClickHandler> pointerClickHandler =>
+            s_PointerClickHandler;
 
         /// <summary>
         /// <para>IPointerDownHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IPointerDownHandler> pointerDownHandler
-        {
-            get
-            {
-                return s_PointerDownHandler;
-            }
-        }
+        public static EventFunction<IPointerDownHandler> pointerDownHandler =>
+            s_PointerDownHandler;
 
         /// <summary>
         /// <para>IPointerEnterHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IPointerEnterHandler> pointerEnterHandler
-        {
-            get
-            {
-                return s_PointerEnterHandler;
-            }
-        }
+        public static EventFunction<IPointerEnterHandler> pointerEnterHandler =>
+            s_PointerEnterHandler;
 
         /// <summary>
         /// <para>IPointerExitHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IPointerExitHandler> pointerExitHandler
-        {
-            get
-            {
-                return s_PointerExitHandler;
-            }
-        }
+        public static EventFunction<IPointerExitHandler> pointerExitHandler =>
+            s_PointerExitHandler;
 
         /// <summary>
         /// <para>IPointerUpHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IPointerUpHandler> pointerUpHandler
-        {
-            get
-            {
-                return s_PointerUpHandler;
-            }
-        }
+        public static EventFunction<IPointerUpHandler> pointerUpHandler =>
+            s_PointerUpHandler;
 
         /// <summary>
         /// <para>IScrollHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IScrollHandler> scrollHandler
-        {
-            get
-            {
-                return s_ScrollHandler;
-            }
-        }
+        public static EventFunction<IScrollHandler> scrollHandler =>
+            s_ScrollHandler;
 
         /// <summary>
         /// <para>ISelectHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<ISelectHandler> selectHandler
-        {
-            get
-            {
-                return s_SelectHandler;
-            }
-        }
+        public static EventFunction<ISelectHandler> selectHandler =>
+            s_SelectHandler;
 
         /// <summary>
         /// <para>ISubmitHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<ISubmitHandler> submitHandler
-        {
-            get
-            {
-                return s_SubmitHandler;
-            }
-        }
+        public static EventFunction<ISubmitHandler> submitHandler =>
+            s_SubmitHandler;
 
         /// <summary>
         /// <para>IUpdateSelectedHandler execute helper function.</para>
         /// </summary>
-        public static EventFunction<IUpdateSelectedHandler> updateSelectedHandler
-        {
-            get
-            {
-                return s_UpdateSelectedHandler;
-            }
-        }
+        public static EventFunction<IUpdateSelectedHandler> updateSelectedHandler =>
+            s_UpdateSelectedHandler;
 
         public delegate void EventFunction<T1>(T1 handler, BaseEventData eventData);
     }

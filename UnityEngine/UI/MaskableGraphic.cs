@@ -171,10 +171,8 @@
             }
         }
 
-        GameObject IClippable.get_gameObject()
-        {
-            return base.gameObject;
-        }
+        GameObject IClippable.get_gameObject() => 
+            base.gameObject;
 
         private void UpdateClipParent()
         {
@@ -207,10 +205,8 @@
         /// </summary>
         public bool maskable
         {
-            get
-            {
-                return this.m_Maskable;
-            }
+            get => 
+                this.m_Maskable;
             set
             {
                 if (value != this.m_Maskable)
@@ -227,10 +223,8 @@
         /// </summary>
         public CullStateChangedEvent onCullStateChanged
         {
-            get
-            {
-                return this.m_OnCullStateChanged;
-            }
+            get => 
+                this.m_OnCullStateChanged;
             set
             {
                 this.m_OnCullStateChanged = value;

@@ -10,10 +10,8 @@
         public const string MonoBleedingEdgeInstallation = "MonoBleedingEdge";
         public const string MonoInstallation = "Mono";
 
-        public static string GetEtcDirectory(string monoInstallation)
-        {
-            return Path.Combine(GetMonoInstallation(monoInstallation), Path.Combine("etc", "mono"));
-        }
+        public static string GetEtcDirectory(string monoInstallation) => 
+            Path.Combine(GetMonoInstallation(monoInstallation), Path.Combine("etc", "mono"));
 
         public static string GetFrameWorksFolder()
         {
@@ -25,30 +23,20 @@
             return Path.Combine(Path.GetDirectoryName(str), "Data");
         }
 
-        public static string GetMonoInstallation()
-        {
-            return GetMonoInstallation("Mono");
-        }
+        public static string GetMonoInstallation() => 
+            GetMonoInstallation("Mono");
 
-        public static string GetMonoInstallation(string monoName)
-        {
-            return Path.Combine(GetFrameWorksFolder(), monoName);
-        }
+        public static string GetMonoInstallation(string monoName) => 
+            Path.Combine(GetFrameWorksFolder(), monoName);
 
-        public static string GetProfileDirectory(BuildTarget target, string profile)
-        {
-            return Path.Combine(GetMonoInstallation(), Path.Combine("lib", Path.Combine("mono", profile)));
-        }
+        public static string GetProfileDirectory(BuildTarget target, string profile) => 
+            Path.Combine(GetMonoInstallation(), Path.Combine("lib", Path.Combine("mono", profile)));
 
-        public static string GetProfileDirectory(BuildTarget target, string profile, string monoInstallation)
-        {
-            return Path.Combine(GetMonoInstallation(monoInstallation), Path.Combine("lib", Path.Combine("mono", profile)));
-        }
+        public static string GetProfileDirectory(BuildTarget target, string profile, string monoInstallation) => 
+            Path.Combine(GetMonoInstallation(monoInstallation), Path.Combine("lib", Path.Combine("mono", profile)));
 
-        public static string GetProfilesDirectory(string monoInstallation)
-        {
-            return Path.Combine(GetMonoInstallation(monoInstallation), Path.Combine("lib", "mono"));
-        }
+        public static string GetProfilesDirectory(string monoInstallation) => 
+            Path.Combine(GetMonoInstallation(monoInstallation), Path.Combine("lib", "mono"));
     }
 }
 

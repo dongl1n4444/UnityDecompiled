@@ -161,10 +161,8 @@
             this.project.project.AddReference(gr.guid, fileRef.guid);
         }
 
-        public string AddFile(string path, string projectPath)
-        {
-            return this.AddFileImpl(path, projectPath, PBXSourceTree.Source, false);
-        }
+        public string AddFile(string path, string projectPath) => 
+            this.AddFileImpl(path, projectPath, PBXSourceTree.Source, false);
 
         public string AddFile(string path, string projectPath, PBXSourceTree sourceTree)
         {
@@ -217,10 +215,8 @@
             this.AddBuildFileImpl(targetGuid, fileGuid, false, compileFlags);
         }
 
-        public string AddFolderReference(string path, string projectPath)
-        {
-            return this.AddFileImpl(path, projectPath, PBXSourceTree.Source, true);
-        }
+        public string AddFolderReference(string path, string projectPath) => 
+            this.AddFileImpl(path, projectPath, PBXSourceTree.Source, true);
 
         public string AddFolderReference(string path, string projectPath, PBXSourceTree sourceTree)
         {
@@ -256,40 +252,28 @@
             this.m_Data.BuildFilesAdd(targetGuid, buildFile);
         }
 
-        private PBXBuildFileData BuildFilesGet(string guid)
-        {
-            return this.m_Data.BuildFilesGet(guid);
-        }
+        private PBXBuildFileData BuildFilesGet(string guid) => 
+            this.m_Data.BuildFilesGet(guid);
 
-        private IEnumerable<PBXBuildFileData> BuildFilesGetAll()
-        {
-            return this.m_Data.BuildFilesGetAll();
-        }
+        private IEnumerable<PBXBuildFileData> BuildFilesGetAll() => 
+            this.m_Data.BuildFilesGetAll();
 
-        private PBXBuildFileData BuildFilesGetForSourceFile(string targetGuid, string fileGuid)
-        {
-            return this.m_Data.BuildFilesGetForSourceFile(targetGuid, fileGuid);
-        }
+        private PBXBuildFileData BuildFilesGetForSourceFile(string targetGuid, string fileGuid) => 
+            this.m_Data.BuildFilesGetForSourceFile(targetGuid, fileGuid);
 
         private void BuildFilesRemove(string targetGuid, string fileGuid)
         {
             this.m_Data.BuildFilesRemove(targetGuid, fileGuid);
         }
 
-        private FileGUIDListBase BuildSectionAny(PBXNativeTargetData target, string path, bool isFolderRef)
-        {
-            return this.m_Data.BuildSectionAny(target, path, isFolderRef);
-        }
+        private FileGUIDListBase BuildSectionAny(PBXNativeTargetData target, string path, bool isFolderRef) => 
+            this.m_Data.BuildSectionAny(target, path, isFolderRef);
 
-        public bool ContainsFileByProjectPath(string path)
-        {
-            return (this.FindFileGuidByProjectPath(path) != null);
-        }
+        public bool ContainsFileByProjectPath(string path) => 
+            (this.FindFileGuidByProjectPath(path) != null);
 
-        public bool ContainsFileByRealPath(string path)
-        {
-            return (this.FindFileGuidByRealPath(path) != null);
-        }
+        public bool ContainsFileByRealPath(string path) => 
+            (this.FindFileGuidByRealPath(path) != null);
 
         public bool ContainsFileByRealPath(string path, PBXSourceTree sourceTree)
         {
@@ -363,20 +347,14 @@
             this.m_Data.FileRefsAdd(realPath, projectPath, parent, fileRef);
         }
 
-        private PBXFileReferenceData FileRefsGet(string guid)
-        {
-            return this.m_Data.FileRefsGet(guid);
-        }
+        private PBXFileReferenceData FileRefsGet(string guid) => 
+            this.m_Data.FileRefsGet(guid);
 
-        private PBXFileReferenceData FileRefsGetByProjectPath(string path)
-        {
-            return this.m_Data.FileRefsGetByProjectPath(path);
-        }
+        private PBXFileReferenceData FileRefsGetByProjectPath(string path) => 
+            this.m_Data.FileRefsGetByProjectPath(path);
 
-        private PBXFileReferenceData FileRefsGetByRealPath(string path, PBXSourceTree sourceTree)
-        {
-            return this.m_Data.FileRefsGetByRealPath(path, sourceTree);
-        }
+        private PBXFileReferenceData FileRefsGetByRealPath(string path, PBXSourceTree sourceTree) => 
+            this.m_Data.FileRefsGetByRealPath(path, sourceTree);
 
         private void FileRefsRemove(string guid)
         {
@@ -479,25 +457,17 @@
             return null;
         }
 
-        public static string GetPBXProjectPath(string buildPath)
-        {
-            return PBXPath.Combine(buildPath, "Unity-iPhone.xcodeproj/project.pbxproj");
-        }
+        public static string GetPBXProjectPath(string buildPath) => 
+            PBXPath.Combine(buildPath, "Unity-iPhone.xcodeproj/project.pbxproj");
 
-        internal PBXProjectObjectData GetProjectInternal()
-        {
-            return this.project.project;
-        }
+        internal PBXProjectObjectData GetProjectInternal() => 
+            this.project.project;
 
-        public static string GetUnityTargetName()
-        {
-            return "Unity-iPhone";
-        }
+        public static string GetUnityTargetName() => 
+            "Unity-iPhone";
 
-        public static string GetUnityTestTargetName()
-        {
-            return "Unity-iPhone Tests";
-        }
+        public static string GetUnityTestTargetName() => 
+            "Unity-iPhone Tests";
 
         private void GroupsAdd(string projectPath, PBXGroupData parent, PBXGroupData gr)
         {
@@ -509,50 +479,34 @@
             this.m_Data.GroupsAddDuplicate(gr);
         }
 
-        private PBXGroupData GroupsGet(string guid)
-        {
-            return this.m_Data.GroupsGet(guid);
-        }
+        private PBXGroupData GroupsGet(string guid) => 
+            this.m_Data.GroupsGet(guid);
 
-        private PBXGroupData GroupsGetByChild(string childGuid)
-        {
-            return this.m_Data.GroupsGetByChild(childGuid);
-        }
+        private PBXGroupData GroupsGetByChild(string childGuid) => 
+            this.m_Data.GroupsGetByChild(childGuid);
 
-        private PBXGroupData GroupsGetByProjectPath(string sourceGroup)
-        {
-            return this.m_Data.GroupsGetByProjectPath(sourceGroup);
-        }
+        private PBXGroupData GroupsGetByProjectPath(string sourceGroup) => 
+            this.m_Data.GroupsGetByProjectPath(sourceGroup);
 
-        private PBXGroupData GroupsGetMainGroup()
-        {
-            return this.m_Data.GroupsGetMainGroup();
-        }
+        private PBXGroupData GroupsGetMainGroup() => 
+            this.m_Data.GroupsGetMainGroup();
 
         private void GroupsRemove(string guid)
         {
             this.m_Data.GroupsRemove(guid);
         }
 
-        public bool HasFramework(string framework)
-        {
-            return this.ContainsFileByRealPath("System/Library/Frameworks/" + framework);
-        }
+        public bool HasFramework(string framework) => 
+            this.ContainsFileByRealPath("System/Library/Frameworks/" + framework);
 
-        public static bool IsBuildable(string ext)
-        {
-            return FileTypeUtils.IsBuildableFile(ext);
-        }
+        public static bool IsBuildable(string ext) => 
+            FileTypeUtils.IsBuildableFile(ext);
 
-        public static bool IsKnownExtension(string ext)
-        {
-            return FileTypeUtils.IsKnownExtension(ext);
-        }
+        public static bool IsKnownExtension(string ext) => 
+            FileTypeUtils.IsKnownExtension(ext);
 
-        internal string ProjectGuid()
-        {
-            return this.project.project.guid;
-        }
+        internal string ProjectGuid() => 
+            this.project.project.guid;
 
         public void ReadFromFile(string path)
         {
@@ -994,114 +948,47 @@
             sw.Write(this.WriteToString());
         }
 
-        public string WriteToString()
-        {
-            return this.m_Data.WriteToString();
-        }
+        public string WriteToString() => 
+            this.m_Data.WriteToString();
 
-        private KnownSectionBase<XCBuildConfigurationData> buildConfigs
-        {
-            get
-            {
-                return this.m_Data.buildConfigs;
-            }
-        }
+        private KnownSectionBase<XCBuildConfigurationData> buildConfigs =>
+            this.m_Data.buildConfigs;
 
-        private KnownSectionBase<XCConfigurationListData> configs
-        {
-            get
-            {
-                return this.m_Data.configs;
-            }
-        }
+        private KnownSectionBase<XCConfigurationListData> configs =>
+            this.m_Data.configs;
 
-        private KnownSectionBase<PBXContainerItemProxyData> containerItems
-        {
-            get
-            {
-                return this.m_Data.containerItems;
-            }
-        }
+        private KnownSectionBase<PBXContainerItemProxyData> containerItems =>
+            this.m_Data.containerItems;
 
-        private KnownSectionBase<PBXCopyFilesBuildPhaseData> copyFiles
-        {
-            get
-            {
-                return this.m_Data.copyFiles;
-            }
-        }
+        private KnownSectionBase<PBXCopyFilesBuildPhaseData> copyFiles =>
+            this.m_Data.copyFiles;
 
-        private KnownSectionBase<PBXFrameworksBuildPhaseData> frameworks
-        {
-            get
-            {
-                return this.m_Data.frameworks;
-            }
-        }
+        private KnownSectionBase<PBXFrameworksBuildPhaseData> frameworks =>
+            this.m_Data.frameworks;
 
-        private KnownSectionBase<PBXNativeTargetData> nativeTargets
-        {
-            get
-            {
-                return this.m_Data.nativeTargets;
-            }
-        }
+        private KnownSectionBase<PBXNativeTargetData> nativeTargets =>
+            this.m_Data.nativeTargets;
 
-        private PBXProjectSection project
-        {
-            get
-            {
-                return this.m_Data.project;
-            }
-        }
+        private PBXProjectSection project =>
+            this.m_Data.project;
 
-        private KnownSectionBase<PBXReferenceProxyData> references
-        {
-            get
-            {
-                return this.m_Data.references;
-            }
-        }
+        private KnownSectionBase<PBXReferenceProxyData> references =>
+            this.m_Data.references;
 
-        private KnownSectionBase<PBXResourcesBuildPhaseData> resources
-        {
-            get
-            {
-                return this.m_Data.resources;
-            }
-        }
+        private KnownSectionBase<PBXResourcesBuildPhaseData> resources =>
+            this.m_Data.resources;
 
-        private KnownSectionBase<PBXShellScriptBuildPhaseData> shellScripts
-        {
-            get
-            {
-                return this.m_Data.shellScripts;
-            }
-        }
+        private KnownSectionBase<PBXShellScriptBuildPhaseData> shellScripts =>
+            this.m_Data.shellScripts;
 
-        private KnownSectionBase<PBXSourcesBuildPhaseData> sources
-        {
-            get
-            {
-                return this.m_Data.sources;
-            }
-        }
+        private KnownSectionBase<PBXSourcesBuildPhaseData> sources =>
+            this.m_Data.sources;
 
-        private KnownSectionBase<PBXTargetDependencyData> targetDependencies
-        {
-            get
-            {
-                return this.m_Data.targetDependencies;
-            }
-        }
+        private KnownSectionBase<PBXTargetDependencyData> targetDependencies =>
+            this.m_Data.targetDependencies;
 
-        private KnownSectionBase<PBXVariantGroupData> variantGroups
-        {
-            get
-            {
-                return this.m_Data.variantGroups;
-            }
-        }
+        private KnownSectionBase<PBXVariantGroupData> variantGroups =>
+            this.m_Data.variantGroups;
     }
 }
 

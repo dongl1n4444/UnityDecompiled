@@ -18,10 +18,8 @@
             return fullText;
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(230f, 140f);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(230f, 140f);
 
         public override void OnClose()
         {

@@ -14,15 +14,11 @@
             this.$from = from;
         }
 
-        public static EvaluationContextNamespace.EntityMapper Adapt(__EvaluationContextNamespace_Resolve$callable15$92_13__ from)
-        {
-            return new EvaluationContextNamespace.EntityMapper(new $adaptor$__EvaluationContextNamespace_Resolve$callable15$92_13__$EntityMapper$5(from).Invoke);
-        }
+        public static EvaluationContextNamespace.EntityMapper Adapt(__EvaluationContextNamespace_Resolve$callable15$92_13__ from) => 
+            new EvaluationContextNamespace.EntityMapper(new $adaptor$__EvaluationContextNamespace_Resolve$callable15$92_13__$EntityMapper$5(from).Invoke);
 
-        public EvaluationContextEntity Invoke(IEntity entity)
-        {
-            return this.$from(entity);
-        }
+        public EvaluationContextEntity Invoke(IEntity entity) => 
+            this.$from(entity);
     }
 }
 

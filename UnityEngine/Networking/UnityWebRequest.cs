@@ -95,10 +95,8 @@
         /// <returns>
         /// <para>A UnityWebRequest object configured to retrieve data from uri.</para>
         /// </returns>
-        public static UnityWebRequest Get(string uri)
-        {
-            return new UnityWebRequest(uri, "GET", new DownloadHandlerBuffer(), null);
-        }
+        public static UnityWebRequest Get(string uri) => 
+            new UnityWebRequest(uri, "GET", new DownloadHandlerBuffer(), null);
 
         /// <summary>
         /// <para>Creates a UnityWebRequest configured for HTTP DELETE.</para>
@@ -107,10 +105,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to send an HTTP DELETE request.</para>
         /// </returns>
-        public static UnityWebRequest Delete(string uri)
-        {
-            return new UnityWebRequest(uri, "DELETE");
-        }
+        public static UnityWebRequest Delete(string uri) => 
+            new UnityWebRequest(uri, "DELETE");
 
         /// <summary>
         /// <para>Creates a UnityWebRequest configured to send a HTTP HEAD request.</para>
@@ -119,10 +115,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to transmit a HTTP HEAD request.</para>
         /// </returns>
-        public static UnityWebRequest Head(string uri)
-        {
-            return new UnityWebRequest(uri, "HEAD");
-        }
+        public static UnityWebRequest Head(string uri) => 
+            new UnityWebRequest(uri, "HEAD");
 
         /// <summary>
         /// <para>Create a UnityWebRequest intended to download an image via HTTP GET and create a Texture based on the retrieved data.</para>
@@ -132,10 +126,8 @@
         /// <returns>
         /// <para>A UnityWebRequest properly configured to download an image and convert it to a Texture.</para>
         /// </returns>
-        public static UnityWebRequest GetTexture(string uri)
-        {
-            return GetTexture(uri, false);
-        }
+        public static UnityWebRequest GetTexture(string uri) => 
+            GetTexture(uri, false);
 
         /// <summary>
         /// <para>Create a UnityWebRequest intended to download an image via HTTP GET and create a Texture based on the retrieved data.</para>
@@ -145,10 +137,8 @@
         /// <returns>
         /// <para>A UnityWebRequest properly configured to download an image and convert it to a Texture.</para>
         /// </returns>
-        public static UnityWebRequest GetTexture(string uri, bool nonReadable)
-        {
-            return new UnityWebRequest(uri, "GET", new DownloadHandlerTexture(nonReadable), null);
-        }
+        public static UnityWebRequest GetTexture(string uri, bool nonReadable) => 
+            new UnityWebRequest(uri, "GET", new DownloadHandlerTexture(nonReadable), null);
 
         /// <summary>
         /// <para>Create a UnityWebRequest intended to download an audio clip via HTTP GET and create an AudioClip based on the retrieved data.</para>
@@ -158,15 +148,11 @@
         /// <returns>
         /// <para>A UnityWebRequest properly configured to download an audio clip and convert it to an AudioClip.</para>
         /// </returns>
-        public static UnityWebRequest GetAudioClip(string uri, AudioType audioType)
-        {
-            return new UnityWebRequest(uri, "GET", new DownloadHandlerAudioClip(uri, audioType), null);
-        }
+        public static UnityWebRequest GetAudioClip(string uri, AudioType audioType) => 
+            new UnityWebRequest(uri, "GET", new DownloadHandlerAudioClip(uri, audioType), null);
 
-        public static UnityWebRequest GetAssetBundle(string uri)
-        {
-            return GetAssetBundle(uri, 0);
-        }
+        public static UnityWebRequest GetAssetBundle(string uri) => 
+            GetAssetBundle(uri, 0);
 
         /// <summary>
         /// <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
@@ -180,10 +166,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
         /// </returns>
-        public static UnityWebRequest GetAssetBundle(string uri, uint crc)
-        {
-            return new UnityWebRequest(uri, "GET", new DownloadHandlerAssetBundle(uri, crc), null);
-        }
+        public static UnityWebRequest GetAssetBundle(string uri, uint crc) => 
+            new UnityWebRequest(uri, "GET", new DownloadHandlerAssetBundle(uri, crc), null);
 
         /// <summary>
         /// <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
@@ -197,10 +181,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
         /// </returns>
-        public static UnityWebRequest GetAssetBundle(string uri, uint version, uint crc)
-        {
-            return new UnityWebRequest(uri, "GET", new DownloadHandlerAssetBundle(uri, version, crc), null);
-        }
+        public static UnityWebRequest GetAssetBundle(string uri, uint version, uint crc) => 
+            new UnityWebRequest(uri, "GET", new DownloadHandlerAssetBundle(uri, version, crc), null);
 
         /// <summary>
         /// <para>Creates a UnityWebRequest optimized for downloading a Unity Asset Bundle via HTTP GET.</para>
@@ -214,10 +196,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to downloading a Unity Asset Bundle.</para>
         /// </returns>
-        public static UnityWebRequest GetAssetBundle(string uri, Hash128 hash, uint crc)
-        {
-            return new UnityWebRequest(uri, "GET", new DownloadHandlerAssetBundle(uri, hash, crc), null);
-        }
+        public static UnityWebRequest GetAssetBundle(string uri, Hash128 hash, uint crc) => 
+            new UnityWebRequest(uri, "GET", new DownloadHandlerAssetBundle(uri, hash, crc), null);
 
         /// <summary>
         /// <para>Create a UnityWebRequest configured to upload raw data to a remote server via HTTP PUT.</para>
@@ -229,10 +209,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to transmit bodyData to uri via HTTP PUT.</para>
         /// </returns>
-        public static UnityWebRequest Put(string uri, byte[] bodyData)
-        {
-            return new UnityWebRequest(uri, "PUT", new DownloadHandlerBuffer(), new UploadHandlerRaw(bodyData));
-        }
+        public static UnityWebRequest Put(string uri, byte[] bodyData) => 
+            new UnityWebRequest(uri, "PUT", new DownloadHandlerBuffer(), new UploadHandlerRaw(bodyData));
 
         /// <summary>
         /// <para>Create a UnityWebRequest configured to upload raw data to a remote server via HTTP PUT.</para>
@@ -244,10 +222,8 @@
         /// <returns>
         /// <para>A UnityWebRequest configured to transmit bodyData to uri via HTTP PUT.</para>
         /// </returns>
-        public static UnityWebRequest Put(string uri, string bodyData)
-        {
-            return new UnityWebRequest(uri, "PUT", new DownloadHandlerBuffer(), new UploadHandlerRaw(Encoding.UTF8.GetBytes(bodyData)));
-        }
+        public static UnityWebRequest Put(string uri, string bodyData) => 
+            new UnityWebRequest(uri, "PUT", new DownloadHandlerBuffer(), new UploadHandlerRaw(Encoding.UTF8.GetBytes(bodyData)));
 
         /// <summary>
         /// <para>Create a UnityWebRequest configured to send form data to a server via HTTP POST.</para>
@@ -483,10 +459,8 @@
         /// <returns>
         /// <para>An AsyncOperation indicating the progress/completion state of the UnityWebRequest. Yield this object to wait until the UnityWebRequest is done.</para>
         /// </returns>
-        public AsyncOperation Send()
-        {
-            return this.InternalBegin();
-        }
+        public AsyncOperation Send() => 
+            this.InternalBegin();
 
         /// <summary>
         /// <para>If in progress, halts the UnityWebRequest as soon as possible.</para>
@@ -569,10 +543,8 @@
         /// </summary>
         public string url
         {
-            get
-            {
-                return this.InternalGetUrl();
-            }
+            get => 
+                this.InternalGetUrl();
             set
             {
                 string localUrl = "http://localhost/";

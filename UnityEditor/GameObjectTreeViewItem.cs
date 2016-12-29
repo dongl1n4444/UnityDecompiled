@@ -22,10 +22,8 @@
 
         public virtual int colorCode
         {
-            get
-            {
-                return this.m_ColorCode;
-            }
+            get => 
+                this.m_ColorCode;
             set
             {
                 this.m_ColorCode = value;
@@ -59,10 +57,8 @@
 
         public virtual Object objectPPTR
         {
-            get
-            {
-                return this.m_ObjectPPTR;
-            }
+            get => 
+                this.m_ObjectPPTR;
             set
             {
                 this.m_ObjectPPTR = value;
@@ -71,10 +67,8 @@
 
         public Scene scene
         {
-            get
-            {
-                return this.m_UnityScene;
-            }
+            get => 
+                this.m_UnityScene;
             set
             {
                 this.m_UnityScene = value;
@@ -83,10 +77,8 @@
 
         public virtual bool shouldDisplay
         {
-            get
-            {
-                return this.m_ShouldDisplay;
-            }
+            get => 
+                this.m_ShouldDisplay;
             set
             {
                 this.m_ShouldDisplay = value;

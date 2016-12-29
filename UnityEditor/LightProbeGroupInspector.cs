@@ -40,10 +40,8 @@
             }
         }
 
-        public bool HasFrameBounds()
-        {
-            return (this.m_Editor.SelectedCount > 0);
-        }
+        public bool HasFrameBounds() => 
+            (this.m_Editor.SelectedCount > 0);
 
         private void InternalOnSceneView()
         {
@@ -95,10 +93,8 @@
             EditMode.onEditModeEndDelegate = (EditMode.OnEditModeStopFunc) Delegate.Combine(EditMode.onEditModeEndDelegate, new EditMode.OnEditModeStopFunc(this.EditModeEnded));
         }
 
-        public Bounds OnGetFrameBounds()
-        {
-            return this.m_Editor.selectedProbeBounds;
-        }
+        public Bounds OnGetFrameBounds() => 
+            this.m_Editor.selectedProbeBounds;
 
         public override void OnInspectorGUI()
         {

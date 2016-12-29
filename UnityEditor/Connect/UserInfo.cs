@@ -15,69 +15,24 @@
         private string m_OrganizationForeignKeys;
         private string m_AccessToken;
         private int m_AccessTokenValiditySeconds;
-        public bool valid
-        {
-            get
-            {
-                return (this.m_Valid != 0);
-            }
-        }
-        public string userId
-        {
-            get
-            {
-                return this.m_UserId;
-            }
-        }
-        public string userName
-        {
-            get
-            {
-                return this.m_UserName;
-            }
-        }
-        public string displayName
-        {
-            get
-            {
-                return this.m_DisplayName;
-            }
-        }
-        public string primaryOrg
-        {
-            get
-            {
-                return this.m_PrimaryOrg;
-            }
-        }
-        public bool whitelisted
-        {
-            get
-            {
-                return (this.m_Whitelisted != 0);
-            }
-        }
-        public string organizationForeignKeys
-        {
-            get
-            {
-                return this.m_OrganizationForeignKeys;
-            }
-        }
-        public string accessToken
-        {
-            get
-            {
-                return this.m_AccessToken;
-            }
-        }
-        public int accessTokenValiditySeconds
-        {
-            get
-            {
-                return this.m_AccessTokenValiditySeconds;
-            }
-        }
+        public bool valid =>
+            (this.m_Valid != 0);
+        public string userId =>
+            this.m_UserId;
+        public string userName =>
+            this.m_UserName;
+        public string displayName =>
+            this.m_DisplayName;
+        public string primaryOrg =>
+            this.m_PrimaryOrg;
+        public bool whitelisted =>
+            (this.m_Whitelisted != 0);
+        public string organizationForeignKeys =>
+            this.m_OrganizationForeignKeys;
+        public string accessToken =>
+            this.m_AccessToken;
+        public int accessTokenValiditySeconds =>
+            this.m_AccessTokenValiditySeconds;
     }
 }
 

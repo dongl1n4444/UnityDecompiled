@@ -143,10 +143,8 @@
             return this.ClampedCurrentValue();
         }
 
-        private EventType CurrentEventType()
-        {
-            return this.CurrentEvent().GetTypeForControl(this.id);
-        }
+        private EventType CurrentEventType() => 
+            this.CurrentEvent().GetTypeForControl(this.id);
 
         private int CurrentScrollTroughSide()
         {
@@ -155,15 +153,11 @@
             return ((num <= num2) ? -1 : 1);
         }
 
-        private bool IsEmptySlider()
-        {
-            return (this.start == this.end);
-        }
+        private bool IsEmptySlider() => 
+            (this.start == this.end);
 
-        private bool SupportsPageMovements()
-        {
-            return ((this.size != 0f) && GUI.usePageScrollbars);
-        }
+        private bool SupportsPageMovements() => 
+            ((this.size != 0f) && GUI.usePageScrollbars);
 
         private float PageMovementValue()
         {
@@ -189,10 +183,8 @@
             return (this.ThumbRect().yMax - this.position.y);
         }
 
-        private Event CurrentEvent()
-        {
-            return Event.current;
-        }
+        private Event CurrentEvent() => 
+            Event.current;
 
         private float ValueForCurrentMousePosition()
         {
@@ -203,15 +195,11 @@
             return ((((this.MousePosition() - (this.ThumbRect().height * 0.5f)) / this.ValuesPerPixel()) + this.start) - (this.size * 0.5f));
         }
 
-        private float Clamp(float value)
-        {
-            return Mathf.Clamp(value, this.MinValue(), this.MaxValue());
-        }
+        private float Clamp(float value) => 
+            Mathf.Clamp(value, this.MinValue(), this.MaxValue());
 
-        private Rect ThumbSelectionRect()
-        {
-            return this.ThumbRect();
-        }
+        private Rect ThumbSelectionRect() => 
+            this.ThumbRect();
 
         private void StartDraggingWithValue(float dragStartValue)
         {
@@ -221,15 +209,11 @@
             state.isDragging = true;
         }
 
-        private UnityEngine.SliderState SliderState()
-        {
-            return (UnityEngine.SliderState) GUIUtility.GetStateObject(typeof(UnityEngine.SliderState), this.id);
-        }
+        private UnityEngine.SliderState SliderState() => 
+            ((UnityEngine.SliderState) GUIUtility.GetStateObject(typeof(UnityEngine.SliderState), this.id));
 
-        private Rect ThumbRect()
-        {
-            return (!this.horiz ? this.VerticalThumbRect() : this.HorizontalThumbRect());
-        }
+        private Rect ThumbRect() => 
+            (!this.horiz ? this.VerticalThumbRect() : this.HorizontalThumbRect());
 
         private Rect VerticalThumbRect()
         {
@@ -251,10 +235,8 @@
             return new Rect(((((this.ClampedCurrentValue() + this.size) - this.start) * num) + this.position.x) + this.slider.padding.left, this.position.y, (this.size * -num) + this.ThumbSize(), this.position.height);
         }
 
-        private float ClampedCurrentValue()
-        {
-            return this.Clamp(this.currentValue);
-        }
+        private float ClampedCurrentValue() => 
+            this.Clamp(this.currentValue);
 
         private float MousePosition()
         {
@@ -283,15 +265,11 @@
             return ((this.thumb.fixedHeight == 0f) ? ((float) this.thumb.padding.vertical) : this.thumb.fixedHeight);
         }
 
-        private float MaxValue()
-        {
-            return (Mathf.Max(this.start, this.end) - this.size);
-        }
+        private float MaxValue() => 
+            (Mathf.Max(this.start, this.end) - this.size);
 
-        private float MinValue()
-        {
-            return Mathf.Min(this.start, this.end);
-        }
+        private float MinValue() => 
+            Mathf.Min(this.start, this.end);
     }
 }
 

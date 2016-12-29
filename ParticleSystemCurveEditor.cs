@@ -221,10 +221,8 @@ internal class ParticleSystemCurveEditor
         }
     }
 
-    private int FindIndex(SerializedProperty prop)
-    {
-        return this.FindIndex(null, prop);
-    }
+    private int FindIndex(SerializedProperty prop) => 
+        this.FindIndex(null, prop);
 
     private int FindIndex(SerializedProperty min, SerializedProperty max)
     {
@@ -340,15 +338,11 @@ internal class ParticleSystemCurveEditor
         }
     }
 
-    public bool IsAdded(SerializedProperty max)
-    {
-        return (this.FindIndex(null, max) != -1);
-    }
+    public bool IsAdded(SerializedProperty max) => 
+        (this.FindIndex(null, max) != -1);
 
-    public bool IsAdded(SerializedProperty min, SerializedProperty max)
-    {
-        return (this.FindIndex(min, max) != -1);
-    }
+    public bool IsAdded(SerializedProperty min, SerializedProperty max) => 
+        (this.FindIndex(min, max) != -1);
 
     public void OnDestroy()
     {
@@ -558,10 +552,8 @@ internal class ParticleSystemCurveEditor
         }
     }
 
-    private static bool SameColor(Color c1, Color c2)
-    {
-        return (((Mathf.Abs((float) (c1.r - c2.r)) < 0.01f) && (Mathf.Abs((float) (c1.g - c2.g)) < 0.01f)) && (Mathf.Abs((float) (c1.b - c2.b)) < 0.01f));
-    }
+    private static bool SameColor(Color c1, Color c2) => 
+        (((Mathf.Abs((float) (c1.r - c2.r)) < 0.01f) && (Mathf.Abs((float) (c1.g - c2.g)) < 0.01f)) && (Mathf.Abs((float) (c1.b - c2.b)) < 0.01f));
 
     private void SaveChangedCurves()
     {
@@ -728,10 +720,8 @@ internal class ParticleSystemCurveEditor
             }
         }
 
-        public bool IsRegion()
-        {
-            return (this.m_Min != null);
-        }
+        public bool IsRegion() => 
+            (this.m_Min != null);
     }
 
     internal class Styles

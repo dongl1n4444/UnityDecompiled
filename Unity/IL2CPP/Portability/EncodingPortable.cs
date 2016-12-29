@@ -5,10 +5,8 @@
 
     public static class EncodingPortable
     {
-        public static Encoding GetDefaultPortable()
-        {
-            return Encoding.Default;
-        }
+        public static Encoding GetDefaultPortable() => 
+            Encoding.Default;
     }
 }
 

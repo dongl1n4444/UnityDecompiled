@@ -73,10 +73,8 @@
             File.WriteAllText(fileName, oldText.Insert(fixPos, str));
         }
 
-        private static bool FileNeedsPragmaFixing(string fileName)
-        {
-            return CheckOrFixPragmas(fileName, true);
-        }
+        private static bool FileNeedsPragmaFixing(string fileName) => 
+            CheckOrFixPragmas(fileName, true);
 
         public static void FixFiles(string[] filesToFix)
         {
@@ -114,10 +112,8 @@
             CheckOrFixPragmas(fileName, false);
         }
 
-        private static bool HasWinLineEndings(string text)
-        {
-            return (text.IndexOf("\r\n") != -1);
-        }
+        private static bool HasWinLineEndings(string text) => 
+            (text.IndexOf("\r\n") != -1);
 
         private static void LooseComments(StringBuilder sb)
         {
@@ -145,20 +141,16 @@
             }
         }
 
-        private static Match PragmaMatch(StringBuilder sb, string pragma)
-        {
-            return new Regex(@"#\s*pragma\s*" + pragma).Match(sb.ToString());
-        }
+        private static Match PragmaMatch(StringBuilder sb, string pragma) => 
+            new Regex(@"#\s*pragma\s*" + pragma).Match(sb.ToString());
 
         [DebuggerHidden]
-        private static IEnumerable<string> SearchRecursive(string dir, string mask)
-        {
-            return new <SearchRecursive>c__Iterator0 { 
+        private static IEnumerable<string> SearchRecursive(string dir, string mask) => 
+            new <SearchRecursive>c__Iterator0 { 
                 dir = dir,
                 mask = mask,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <SearchRecursive>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -296,28 +288,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

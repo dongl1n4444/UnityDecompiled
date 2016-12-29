@@ -201,735 +201,360 @@
             }
         }
 
-        internal static GUIStyle assetLabel
-        {
-            get
-            {
-                return s_Current.m_AssetLabel;
-            }
-        }
+        internal static GUIStyle assetLabel =>
+            s_Current.m_AssetLabel;
 
-        internal static GUIStyle assetLabelIcon
-        {
-            get
-            {
-                return s_Current.m_AssetLabelIcon;
-            }
-        }
+        internal static GUIStyle assetLabelIcon =>
+            s_Current.m_AssetLabelIcon;
 
-        internal static GUIStyle assetLabelPartial
-        {
-            get
-            {
-                return s_Current.m_AssetLabelPartial;
-            }
-        }
+        internal static GUIStyle assetLabelPartial =>
+            s_Current.m_AssetLabelPartial;
 
         /// <summary>
         /// <para>Bold font.</para>
         /// </summary>
-        public static Font boldFont
-        {
-            get
-            {
-                return s_Current.m_BoldFont;
-            }
-        }
+        public static Font boldFont =>
+            s_Current.m_BoldFont;
 
         /// <summary>
         /// <para>Style for bold label.</para>
         /// </summary>
-        public static GUIStyle boldLabel
-        {
-            get
-            {
-                return s_Current.m_BoldLabel;
-            }
-        }
+        public static GUIStyle boldLabel =>
+            s_Current.m_BoldLabel;
 
         /// <summary>
         /// <para>Style for label with small font which is centered and grey.</para>
         /// </summary>
-        public static GUIStyle centeredGreyMiniLabel
-        {
-            get
-            {
-                return s_Current.m_CenteredGreyMiniLabel;
-            }
-        }
+        public static GUIStyle centeredGreyMiniLabel =>
+            s_Current.m_CenteredGreyMiniLabel;
 
         /// <summary>
         /// <para>Style used for headings for Color fields.</para>
         /// </summary>
-        public static GUIStyle colorField
-        {
-            get
-            {
-                return s_Current.m_ColorField;
-            }
-        }
+        public static GUIStyle colorField =>
+            s_Current.m_ColorField;
 
-        internal static GUIStyle colorPickerBox
-        {
-            get
-            {
-                return s_Current.m_ColorPickerBox;
-            }
-        }
+        internal static GUIStyle colorPickerBox =>
+            s_Current.m_ColorPickerBox;
 
-        internal static GUIStyle dropDownList
-        {
-            get
-            {
-                return s_Current.m_DropDownList;
-            }
-        }
+        internal static GUIStyle dropDownList =>
+            s_Current.m_DropDownList;
 
         /// <summary>
         /// <para>Style used for headings for EditorGUI.Foldout.</para>
         /// </summary>
-        public static GUIStyle foldout
-        {
-            get
-            {
-                return s_Current.m_Foldout;
-            }
-        }
+        public static GUIStyle foldout =>
+            s_Current.m_Foldout;
 
         /// <summary>
         /// <para>Style used for headings for EditorGUI.Foldout.</para>
         /// </summary>
-        public static GUIStyle foldoutPreDrop
-        {
-            get
-            {
-                return s_Current.m_FoldoutPreDrop;
-            }
-        }
+        public static GUIStyle foldoutPreDrop =>
+            s_Current.m_FoldoutPreDrop;
 
-        internal static GUIStyle foldoutSelected
-        {
-            get
-            {
-                return s_Current.m_FoldoutSelected;
-            }
-        }
+        internal static GUIStyle foldoutSelected =>
+            s_Current.m_FoldoutSelected;
 
         /// <summary>
         /// <para>Style used for background box for EditorGUI.HelpBox.</para>
         /// </summary>
-        public static GUIStyle helpBox
-        {
-            get
-            {
-                return s_Current.m_HelpBox;
-            }
-        }
+        public static GUIStyle helpBox =>
+            s_Current.m_HelpBox;
 
-        internal static GUIStyle iconButton
-        {
-            get
-            {
-                return s_Current.m_IconButton;
-            }
-        }
+        internal static GUIStyle iconButton =>
+            s_Current.m_IconButton;
 
-        internal static GUIStyle inspectorBig
-        {
-            get
-            {
-                return s_Current.m_InspectorBig;
-            }
-        }
+        internal static GUIStyle inspectorBig =>
+            s_Current.m_InspectorBig;
 
         /// <summary>
         /// <para>Wrap content in a vertical group with this style to get the default margins used in the Inspector.</para>
         /// </summary>
-        public static GUIStyle inspectorDefaultMargins
-        {
-            get
-            {
-                return s_Current.m_InspectorDefaultMargins;
-            }
-        }
+        public static GUIStyle inspectorDefaultMargins =>
+            s_Current.m_InspectorDefaultMargins;
 
         /// <summary>
         /// <para>Wrap content in a vertical group with this style to get full width margins in the Inspector.</para>
         /// </summary>
-        public static GUIStyle inspectorFullWidthMargins
-        {
-            get
-            {
-                return s_Current.m_InspectorFullWidthMargins;
-            }
-        }
+        public static GUIStyle inspectorFullWidthMargins =>
+            s_Current.m_InspectorFullWidthMargins;
 
-        internal static GUIStyle inspectorTitlebar
-        {
-            get
-            {
-                return s_Current.m_InspectorTitlebar;
-            }
-        }
+        internal static GUIStyle inspectorTitlebar =>
+            s_Current.m_InspectorTitlebar;
 
-        internal static GUIStyle inspectorTitlebarText
-        {
-            get
-            {
-                return s_Current.m_InspectorTitlebarText;
-            }
-        }
+        internal static GUIStyle inspectorTitlebarText =>
+            s_Current.m_InspectorTitlebarText;
 
-        internal static Vector2 knobSize
-        {
-            get
-            {
-                return s_Current.m_KnobSize;
-            }
-        }
+        internal static Vector2 knobSize =>
+            s_Current.m_KnobSize;
 
         /// <summary>
         /// <para>Style used for the labelled on all EditorGUI overloads that take a prefix label.</para>
         /// </summary>
-        public static GUIStyle label
-        {
-            get
-            {
-                return s_Current.m_Label;
-            }
-        }
+        public static GUIStyle label =>
+            s_Current.m_Label;
 
         /// <summary>
         /// <para>Style for label with large font.</para>
         /// </summary>
-        public static GUIStyle largeLabel
-        {
-            get
-            {
-                return s_Current.m_LargeLabel;
-            }
-        }
+        public static GUIStyle largeLabel =>
+            s_Current.m_LargeLabel;
 
         /// <summary>
         /// <para>Style used for headings for Layer masks.</para>
         /// </summary>
-        public static GUIStyle layerMaskField
-        {
-            get
-            {
-                return s_Current.m_LayerMaskField;
-            }
-        }
+        public static GUIStyle layerMaskField =>
+            s_Current.m_LayerMaskField;
 
-        internal static GUIStyle linkLabel
-        {
-            get
-            {
-                return s_Current.m_LinkLabel;
-            }
-        }
+        internal static GUIStyle linkLabel =>
+            s_Current.m_LinkLabel;
 
         /// <summary>
         /// <para>Mini Bold font.</para>
         /// </summary>
-        public static Font miniBoldFont
-        {
-            get
-            {
-                return s_Current.m_MiniBoldFont;
-            }
-        }
+        public static Font miniBoldFont =>
+            s_Current.m_MiniBoldFont;
 
         /// <summary>
         /// <para>Style for mini bold label.</para>
         /// </summary>
-        public static GUIStyle miniBoldLabel
-        {
-            get
-            {
-                return s_Current.m_MiniBoldLabel;
-            }
-        }
+        public static GUIStyle miniBoldLabel =>
+            s_Current.m_MiniBoldLabel;
 
         /// <summary>
         /// <para>Style used for a standalone small button.</para>
         /// </summary>
-        public static GUIStyle miniButton
-        {
-            get
-            {
-                return s_Current.m_MiniButton;
-            }
-        }
+        public static GUIStyle miniButton =>
+            s_Current.m_MiniButton;
 
         /// <summary>
         /// <para>Style used for the leftmost button in a horizontal button group.</para>
         /// </summary>
-        public static GUIStyle miniButtonLeft
-        {
-            get
-            {
-                return s_Current.m_MiniButtonLeft;
-            }
-        }
+        public static GUIStyle miniButtonLeft =>
+            s_Current.m_MiniButtonLeft;
 
         /// <summary>
         /// <para>Style used for the middle buttons in a horizontal group.</para>
         /// </summary>
-        public static GUIStyle miniButtonMid
-        {
-            get
-            {
-                return s_Current.m_MiniButtonMid;
-            }
-        }
+        public static GUIStyle miniButtonMid =>
+            s_Current.m_MiniButtonMid;
 
         /// <summary>
         /// <para>Style used for the rightmost button in a horizontal group.</para>
         /// </summary>
-        public static GUIStyle miniButtonRight
-        {
-            get
-            {
-                return s_Current.m_MiniButtonRight;
-            }
-        }
+        public static GUIStyle miniButtonRight =>
+            s_Current.m_MiniButtonRight;
 
         /// <summary>
         /// <para>Mini font.</para>
         /// </summary>
-        public static Font miniFont
-        {
-            get
-            {
-                return s_Current.m_MiniFont;
-            }
-        }
+        public static Font miniFont =>
+            s_Current.m_MiniFont;
 
-        internal static Vector2 miniKnobSize
-        {
-            get
-            {
-                return s_Current.m_MiniKnobSize;
-            }
-        }
+        internal static Vector2 miniKnobSize =>
+            s_Current.m_MiniKnobSize;
 
         /// <summary>
         /// <para>Style for label with small font.</para>
         /// </summary>
-        public static GUIStyle miniLabel
-        {
-            get
-            {
-                return s_Current.m_MiniLabel;
-            }
-        }
+        public static GUIStyle miniLabel =>
+            s_Current.m_MiniLabel;
 
         /// <summary>
         /// <para>Smaller text field.</para>
         /// </summary>
-        public static GUIStyle miniTextField
-        {
-            get
-            {
-                return s_Current.m_MiniTextField;
-            }
-        }
+        public static GUIStyle miniTextField =>
+            s_Current.m_MiniTextField;
 
-        internal static GUIStyle minMaxHorizontalSliderThumb
-        {
-            get
-            {
-                return s_Current.m_MinMaxHorizontalSliderThumb;
-            }
-        }
+        internal static GUIStyle minMaxHorizontalSliderThumb =>
+            s_Current.m_MinMaxHorizontalSliderThumb;
 
-        internal static GUIStyle notificationBackground
-        {
-            get
-            {
-                return s_Current.m_NotificationBackground;
-            }
-        }
+        internal static GUIStyle notificationBackground =>
+            s_Current.m_NotificationBackground;
 
-        internal static GUIStyle notificationText
-        {
-            get
-            {
-                return s_Current.m_NotificationText;
-            }
-        }
+        internal static GUIStyle notificationText =>
+            s_Current.m_NotificationText;
 
         /// <summary>
         /// <para>Style used for field editors for numbers.</para>
         /// </summary>
-        public static GUIStyle numberField
-        {
-            get
-            {
-                return s_Current.m_NumberField;
-            }
-        }
+        public static GUIStyle numberField =>
+            s_Current.m_NumberField;
 
         /// <summary>
         /// <para>Style used for headings for object fields.</para>
         /// </summary>
-        public static GUIStyle objectField
-        {
-            get
-            {
-                return s_Current.m_ObjectField;
-            }
-        }
+        public static GUIStyle objectField =>
+            s_Current.m_ObjectField;
 
         /// <summary>
         /// <para>Style used for object fields that have a thumbnail (e.g Textures). </para>
         /// </summary>
-        public static GUIStyle objectFieldMiniThumb
-        {
-            get
-            {
-                return s_Current.m_ObjectFieldMiniThumb;
-            }
-        }
+        public static GUIStyle objectFieldMiniThumb =>
+            s_Current.m_ObjectFieldMiniThumb;
 
         /// <summary>
         /// <para>Style used for headings for the Select button in object fields.</para>
         /// </summary>
-        public static GUIStyle objectFieldThumb
-        {
-            get
-            {
-                return s_Current.m_ObjectFieldThumb;
-            }
-        }
+        public static GUIStyle objectFieldThumb =>
+            s_Current.m_ObjectFieldThumb;
 
         /// <summary>
         /// <para>Style used for EditorGUI.Popup, EditorGUI.EnumPopup,.</para>
         /// </summary>
-        public static GUIStyle popup
-        {
-            get
-            {
-                return s_Current.m_Popup;
-            }
-        }
+        public static GUIStyle popup =>
+            s_Current.m_Popup;
 
-        internal static GUIStyle progressBarBack
-        {
-            get
-            {
-                return s_Current.m_ProgressBarBack;
-            }
-        }
+        internal static GUIStyle progressBarBack =>
+            s_Current.m_ProgressBarBack;
 
-        internal static GUIStyle progressBarBar
-        {
-            get
-            {
-                return s_Current.m_ProgressBarBar;
-            }
-        }
+        internal static GUIStyle progressBarBar =>
+            s_Current.m_ProgressBarBar;
 
-        internal static GUIStyle progressBarText
-        {
-            get
-            {
-                return s_Current.m_ProgressBarText;
-            }
-        }
+        internal static GUIStyle progressBarText =>
+            s_Current.m_ProgressBarText;
 
         /// <summary>
         /// <para>Style used for a radio button.</para>
         /// </summary>
-        public static GUIStyle radioButton
-        {
-            get
-            {
-                return s_Current.m_RadioButton;
-            }
-        }
+        public static GUIStyle radioButton =>
+            s_Current.m_RadioButton;
 
-        internal static GUIStyle searchField
-        {
-            get
-            {
-                return s_Current.m_SearchField;
-            }
-        }
+        internal static GUIStyle searchField =>
+            s_Current.m_SearchField;
 
-        internal static GUIStyle searchFieldCancelButton
-        {
-            get
-            {
-                return s_Current.m_SearchFieldCancelButton;
-            }
-        }
+        internal static GUIStyle searchFieldCancelButton =>
+            s_Current.m_SearchFieldCancelButton;
 
-        internal static GUIStyle searchFieldCancelButtonEmpty
-        {
-            get
-            {
-                return s_Current.m_SearchFieldCancelButtonEmpty;
-            }
-        }
+        internal static GUIStyle searchFieldCancelButtonEmpty =>
+            s_Current.m_SearchFieldCancelButtonEmpty;
 
-        internal static GUIStyle selectionRect
-        {
-            get
-            {
-                return s_Current.m_SelectionRect;
-            }
-        }
+        internal static GUIStyle selectionRect =>
+            s_Current.m_SelectionRect;
 
         /// <summary>
         /// <para>Standard font.</para>
         /// </summary>
-        public static Font standardFont
-        {
-            get
-            {
-                return s_Current.m_StandardFont;
-            }
-        }
+        public static Font standardFont =>
+            s_Current.m_StandardFont;
 
         [Obsolete("structHeadingLabel is deprecated, use EditorStyles.label instead.")]
-        public static GUIStyle structHeadingLabel
-        {
-            get
-            {
-                return s_Current.m_Label;
-            }
-        }
+        public static GUIStyle structHeadingLabel =>
+            s_Current.m_Label;
 
         /// <summary>
         /// <para>Style used for EditorGUI.TextArea.</para>
         /// </summary>
-        public static GUIStyle textArea
-        {
-            get
-            {
-                return s_Current.m_TextArea;
-            }
-        }
+        public static GUIStyle textArea =>
+            s_Current.m_TextArea;
 
         /// <summary>
         /// <para>Style used for EditorGUI.TextField.</para>
         /// </summary>
-        public static GUIStyle textField
-        {
-            get
-            {
-                return s_Current.m_TextField;
-            }
-        }
+        public static GUIStyle textField =>
+            s_Current.m_TextField;
 
-        internal static GUIStyle textFieldDropDown
-        {
-            get
-            {
-                return s_Current.m_TextFieldDropDown;
-            }
-        }
+        internal static GUIStyle textFieldDropDown =>
+            s_Current.m_TextFieldDropDown;
 
-        internal static GUIStyle textFieldDropDownText
-        {
-            get
-            {
-                return s_Current.m_TextFieldDropDownText;
-            }
-        }
+        internal static GUIStyle textFieldDropDownText =>
+            s_Current.m_TextFieldDropDownText;
 
         /// <summary>
         /// <para>Style used for headings for EditorGUI.Toggle.</para>
         /// </summary>
-        public static GUIStyle toggle
-        {
-            get
-            {
-                return s_Current.m_Toggle;
-            }
-        }
+        public static GUIStyle toggle =>
+            s_Current.m_Toggle;
 
         /// <summary>
         /// <para>Style used for headings for EditorGUILayout.BeginToggleGroup.</para>
         /// </summary>
-        public static GUIStyle toggleGroup
-        {
-            get
-            {
-                return s_Current.m_ToggleGroup;
-            }
-        }
+        public static GUIStyle toggleGroup =>
+            s_Current.m_ToggleGroup;
 
-        internal static GUIStyle toggleMixed
-        {
-            get
-            {
-                return s_Current.m_ToggleMixed;
-            }
-        }
+        internal static GUIStyle toggleMixed =>
+            s_Current.m_ToggleMixed;
 
         /// <summary>
         /// <para>Toolbar background from top of windows.</para>
         /// </summary>
-        public static GUIStyle toolbar
-        {
-            get
-            {
-                return s_Current.m_Toolbar;
-            }
-        }
+        public static GUIStyle toolbar =>
+            s_Current.m_Toolbar;
 
         /// <summary>
         /// <para>Style for Button and Toggles in toolbars.</para>
         /// </summary>
-        public static GUIStyle toolbarButton
-        {
-            get
-            {
-                return s_Current.m_ToolbarButton;
-            }
-        }
+        public static GUIStyle toolbarButton =>
+            s_Current.m_ToolbarButton;
 
         /// <summary>
         /// <para>Toolbar Dropdown.</para>
         /// </summary>
-        public static GUIStyle toolbarDropDown
-        {
-            get
-            {
-                return s_Current.m_ToolbarDropDown;
-            }
-        }
+        public static GUIStyle toolbarDropDown =>
+            s_Current.m_ToolbarDropDown;
 
         /// <summary>
         /// <para>Toolbar Popup.</para>
         /// </summary>
-        public static GUIStyle toolbarPopup
-        {
-            get
-            {
-                return s_Current.m_ToolbarPopup;
-            }
-        }
+        public static GUIStyle toolbarPopup =>
+            s_Current.m_ToolbarPopup;
 
-        internal static GUIStyle toolbarSearchField
-        {
-            get
-            {
-                return s_Current.m_ToolbarSearchField;
-            }
-        }
+        internal static GUIStyle toolbarSearchField =>
+            s_Current.m_ToolbarSearchField;
 
-        internal static GUIStyle toolbarSearchFieldCancelButton
-        {
-            get
-            {
-                return s_Current.m_ToolbarSearchFieldCancelButton;
-            }
-        }
+        internal static GUIStyle toolbarSearchFieldCancelButton =>
+            s_Current.m_ToolbarSearchFieldCancelButton;
 
-        internal static GUIStyle toolbarSearchFieldCancelButtonEmpty
-        {
-            get
-            {
-                return s_Current.m_ToolbarSearchFieldCancelButtonEmpty;
-            }
-        }
+        internal static GUIStyle toolbarSearchFieldCancelButtonEmpty =>
+            s_Current.m_ToolbarSearchFieldCancelButtonEmpty;
 
-        internal static GUIStyle toolbarSearchFieldPopup
-        {
-            get
-            {
-                return s_Current.m_ToolbarSearchFieldPopup;
-            }
-        }
+        internal static GUIStyle toolbarSearchFieldPopup =>
+            s_Current.m_ToolbarSearchFieldPopup;
 
         /// <summary>
         /// <para>Toolbar text field.</para>
         /// </summary>
-        public static GUIStyle toolbarTextField
-        {
-            get
-            {
-                return s_Current.m_ToolbarTextField;
-            }
-        }
+        public static GUIStyle toolbarTextField =>
+            s_Current.m_ToolbarTextField;
 
-        internal static GUIStyle tooltip
-        {
-            get
-            {
-                return s_Current.m_Tooltip;
-            }
-        }
+        internal static GUIStyle tooltip =>
+            s_Current.m_Tooltip;
 
         /// <summary>
         /// <para>Style for white bold label.</para>
         /// </summary>
-        public static GUIStyle whiteBoldLabel
-        {
-            get
-            {
-                return s_Current.m_WhiteBoldLabel;
-            }
-        }
+        public static GUIStyle whiteBoldLabel =>
+            s_Current.m_WhiteBoldLabel;
 
         /// <summary>
         /// <para>Style for white label.</para>
         /// </summary>
-        public static GUIStyle whiteLabel
-        {
-            get
-            {
-                return s_Current.m_WhiteLabel;
-            }
-        }
+        public static GUIStyle whiteLabel =>
+            s_Current.m_WhiteLabel;
 
         /// <summary>
         /// <para>Style for white large label.</para>
         /// </summary>
-        public static GUIStyle whiteLargeLabel
-        {
-            get
-            {
-                return s_Current.m_WhiteLargeLabel;
-            }
-        }
+        public static GUIStyle whiteLargeLabel =>
+            s_Current.m_WhiteLargeLabel;
 
         /// <summary>
         /// <para>Style for white mini label.</para>
         /// </summary>
-        public static GUIStyle whiteMiniLabel
-        {
-            get
-            {
-                return s_Current.m_WhiteMiniLabel;
-            }
-        }
+        public static GUIStyle whiteMiniLabel =>
+            s_Current.m_WhiteMiniLabel;
 
         /// <summary>
         /// <para>Style for word wrapped label.</para>
         /// </summary>
-        public static GUIStyle wordWrappedLabel
-        {
-            get
-            {
-                return s_Current.m_WordWrappedLabel;
-            }
-        }
+        public static GUIStyle wordWrappedLabel =>
+            s_Current.m_WordWrappedLabel;
 
         /// <summary>
         /// <para>Style for word wrapped mini label.</para>
         /// </summary>
-        public static GUIStyle wordWrappedMiniLabel
-        {
-            get
-            {
-                return s_Current.m_WordWrappedMiniLabel;
-            }
-        }
+        public static GUIStyle wordWrappedMiniLabel =>
+            s_Current.m_WordWrappedMiniLabel;
     }
 }
 

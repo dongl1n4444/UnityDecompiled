@@ -23,10 +23,8 @@
         /// </summary>
         public float min
         {
-            get
-            {
-                return this.m_Min;
-            }
+            get => 
+                this.m_Min;
             set
             {
                 this.m_Min = value;
@@ -37,10 +35,8 @@
         /// </summary>
         public float max
         {
-            get
-            {
-                return this.m_Max;
-            }
+            get => 
+                this.m_Max;
             set
             {
                 this.m_Max = value;
@@ -51,10 +47,8 @@
         /// </summary>
         public float bounciness
         {
-            get
-            {
-                return this.m_Bounciness;
-            }
+            get => 
+                this.m_Bounciness;
             set
             {
                 this.m_Bounciness = value;
@@ -65,10 +59,8 @@
         /// </summary>
         public float bounceMinVelocity
         {
-            get
-            {
-                return this.m_BounceMinVelocity;
-            }
+            get => 
+                this.m_BounceMinVelocity;
             set
             {
                 this.m_BounceMinVelocity = value;
@@ -79,10 +71,8 @@
         /// </summary>
         public float contactDistance
         {
-            get
-            {
-                return this.m_ContactDistance;
-            }
+            get => 
+                this.m_ContactDistance;
             set
             {
                 this.m_ContactDistance = value;

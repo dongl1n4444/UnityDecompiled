@@ -187,10 +187,8 @@
             }
         }
 
-        public static List<AnimEditor> GetAllAnimationWindows()
-        {
-            return s_AnimationWindows;
-        }
+        public static List<AnimEditor> GetAllAnimationWindows() => 
+            s_AnimationWindows;
 
         private void HandleCopyPaste()
         {
@@ -955,44 +953,22 @@
             }
         }
 
-        private float contentWidth
-        {
-            get
-            {
-                return (float) this.m_HorizontalSplitter.realSizes[1];
-            }
-        }
+        private float contentWidth =>
+            ((float) this.m_HorizontalSplitter.realSizes[1]);
 
-        internal CurveEditor curveEditor
-        {
-            get
-            {
-                return this.m_CurveEditor;
-            }
-        }
+        internal CurveEditor curveEditor =>
+            this.m_CurveEditor;
 
-        internal DopeSheetEditor dopeSheetEditor
-        {
-            get
-            {
-                return this.m_DopeSheet;
-            }
-        }
+        internal DopeSheetEditor dopeSheetEditor =>
+            this.m_DopeSheet;
 
-        private float hierarchyWidth
-        {
-            get
-            {
-                return (float) this.m_HorizontalSplitter.realSizes[0];
-            }
-        }
+        private float hierarchyWidth =>
+            ((float) this.m_HorizontalSplitter.realSizes[0]);
 
         public bool locked
         {
-            get
-            {
-                return this.m_State.locked;
-            }
+            get => 
+                this.m_State.locked;
             set
             {
                 this.m_State.locked = value;
@@ -1001,10 +977,8 @@
 
         public AnimationWindowPolicy policy
         {
-            get
-            {
-                return this.m_State.policy;
-            }
+            get => 
+                this.m_State.policy;
             set
             {
                 this.m_State.policy = value;
@@ -1013,46 +987,27 @@
 
         public AnimationWindowSelectionItem selectedItem
         {
-            get
-            {
-                return this.m_State.selectedItem;
-            }
+            get => 
+                this.m_State.selectedItem;
             set
             {
                 this.m_State.selectedItem = value;
             }
         }
 
-        public AnimationWindowSelection selection
-        {
-            get
-            {
-                return this.m_State.selection;
-            }
-        }
+        public AnimationWindowSelection selection =>
+            this.m_State.selection;
 
-        public AnimationWindowState state
-        {
-            get
-            {
-                return this.m_State;
-            }
-        }
+        public AnimationWindowState state =>
+            this.m_State;
 
-        public bool stateDisabled
-        {
-            get
-            {
-                return this.m_State.disabled;
-            }
-        }
+        public bool stateDisabled =>
+            this.m_State.disabled;
 
         private bool triggerFraming
         {
-            get
-            {
-                return (((this.policy == null) || this.policy.triggerFramingOnSelection) && this.m_TriggerFraming);
-            }
+            get => 
+                (((this.policy == null) || this.policy.triggerFramingOnSelection) && this.m_TriggerFraming);
             set
             {
                 this.m_TriggerFraming = value;

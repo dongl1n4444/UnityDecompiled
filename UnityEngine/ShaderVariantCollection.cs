@@ -18,10 +18,8 @@
             Internal_Create(this);
         }
 
-        public bool Add(ShaderVariant variant)
-        {
-            return this.AddInternal(variant.shader, variant.passType, variant.keywords);
-        }
+        public bool Add(ShaderVariant variant) => 
+            this.AddInternal(variant.shader, variant.passType, variant.keywords);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool AddInternal(Shader shader, PassType passType, string[] keywords);
@@ -30,19 +28,15 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void Clear();
-        public bool Contains(ShaderVariant variant)
-        {
-            return this.ContainsInternal(variant.shader, variant.passType, variant.keywords);
-        }
+        public bool Contains(ShaderVariant variant) => 
+            this.ContainsInternal(variant.shader, variant.passType, variant.keywords);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool ContainsInternal(Shader shader, PassType passType, string[] keywords);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Create([Writable] ShaderVariantCollection mono);
-        public bool Remove(ShaderVariant variant)
-        {
-            return this.RemoveInternal(variant.shader, variant.passType, variant.keywords);
-        }
+        public bool Remove(ShaderVariant variant) => 
+            this.RemoveInternal(variant.shader, variant.passType, variant.keywords);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool RemoveInternal(Shader shader, PassType passType, string[] keywords);

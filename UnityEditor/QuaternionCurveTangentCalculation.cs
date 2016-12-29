@@ -39,10 +39,8 @@
             }
         }
 
-        private Vector3 EvaluateEulerCurvesDirectly(float time)
-        {
-            return new Vector3(this.eulerX.Evaluate(time), this.eulerY.Evaluate(time), this.eulerZ.Evaluate(time));
-        }
+        private Vector3 EvaluateEulerCurvesDirectly(float time) => 
+            new Vector3(this.eulerX.Evaluate(time), this.eulerY.Evaluate(time), this.eulerZ.Evaluate(time));
 
         public float CalculateLinearTangent(int fromIndex, int toIndex, int componentIndex)
         {

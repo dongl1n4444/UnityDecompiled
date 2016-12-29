@@ -50,37 +50,17 @@
             }
         }
 
-        public CloudServiceAccess serviceJsGlobalObject
-        {
-            get
-            {
-                return this.m_JavascriptGlobalObject;
-            }
-        }
+        public CloudServiceAccess serviceJsGlobalObject =>
+            this.m_JavascriptGlobalObject;
 
-        public string serviceJsGlobalObjectName
-        {
-            get
-            {
-                return this.m_JsGlobalObjectName;
-            }
-        }
+        public string serviceJsGlobalObjectName =>
+            this.m_JsGlobalObjectName;
 
-        public string serviceName
-        {
-            get
-            {
-                return this.m_ServiceName;
-            }
-        }
+        public string serviceName =>
+            this.m_ServiceName;
 
-        public string serviceUrl
-        {
-            get
-            {
-                return UnityConnectPrefs.FixUrl(this.m_HtmlSourcePath, this.m_ServiceName);
-            }
-        }
+        public string serviceUrl =>
+            UnityConnectPrefs.FixUrl(this.m_HtmlSourcePath, this.m_ServiceName);
     }
 }
 

@@ -45,7 +45,7 @@
                 {
                     <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <ConvertPlayerDlltoCpp>m__1);
                 }
-                string[] strArray = Enumerable.ToArray<string>(Enumerable.Select<string, string>(Directory.GetFiles("Assets", "il2cpp_extra_types.txt", SearchOption.AllDirectories), <>f__am$cache1));
+                string[] strArray = Enumerable.Select<string, string>(Directory.GetFiles("Assets", "il2cpp_extra_types.txt", SearchOption.AllDirectories), <>f__am$cache1).ToArray<string>();
                 List<string> arguments = new List<string> { "--convert-to-cpp" };
                 if (this.m_PlatformProvider.emitNullChecks)
                 {
@@ -77,18 +77,18 @@
                     Il2CppNativeCodeBuilderUtils.ClearAndPrepareCacheDirectory(builder);
                     arguments.AddRange(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths));
                 }
-                arguments.Add(string.Format("--map-file-parser=\"{0}\"", GetMapFileParserPath()));
+                arguments.Add($"--map-file-parser="{GetMapFileParserPath()}"");
                 if (strArray.Length > 0)
                 {
                     foreach (string str in strArray)
                     {
-                        arguments.Add(string.Format("--extra-types.file=\"{0}\"", str));
+                        arguments.Add($"--extra-types.file="{str}"");
                     }
                 }
                 string path = Path.Combine(this.m_PlatformProvider.il2CppFolder, "il2cpp_default_extra_types.txt");
                 if (File.Exists(path))
                 {
-                    arguments.Add(string.Format("--extra-types.file=\"{0}\"", path));
+                    arguments.Add($"--extra-types.file="{path}"");
                 }
                 string environmentVariable = PlayerSettings.GetAdditionalIl2CppArgs();
                 if (!string.IsNullOrEmpty(environmentVariable))
@@ -106,7 +106,7 @@
                     <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <ConvertPlayerDlltoCpp>m__2);
                 }
                 arguments.AddRange(Enumerable.Select<string, string>(list2, <>f__am$cache2));
-                arguments.Add(string.Format("--generatedcppdir=\"{0}\"", Path.GetFullPath(outputDirectory)));
+                arguments.Add($"--generatedcppdir="{Path.GetFullPath(outputDirectory)}"");
                 if (EditorUtility.DisplayCancelableProgressBar("Building Player", "Converting managed assemblies to C++", 0.3f))
                 {
                     throw new OperationCanceledException();
@@ -129,25 +129,17 @@
             return Enumerable.Select<string, string>(Enumerable.Where<string>(assemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1));
         }
 
-        public string GetCppOutputDirectoryInStagingArea()
-        {
-            return GetCppOutputPath(this.m_TempFolder);
-        }
+        public string GetCppOutputDirectoryInStagingArea() => 
+            GetCppOutputPath(this.m_TempFolder);
 
-        public static string GetCppOutputPath(string tempFolder)
-        {
-            return Path.Combine(tempFolder, "il2cppOutput");
-        }
+        public static string GetCppOutputPath(string tempFolder) => 
+            Path.Combine(tempFolder, "il2cppOutput");
 
-        private string GetIl2CppExe()
-        {
-            return (this.m_PlatformProvider.il2CppFolder + "/build/il2cpp.exe");
-        }
+        private string GetIl2CppExe() => 
+            (this.m_PlatformProvider.il2CppFolder + "/build/il2cpp.exe");
 
-        private static string GetMapFileParserPath()
-        {
-            return Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, (Application.platform != RuntimePlatform.WindowsEditor) ? "Tools/MapFileParser/MapFileParser" : @"Tools\MapFileParser\MapFileParser.exe"));
-        }
+        private static string GetMapFileParserPath() => 
+            Path.GetFullPath(Path.Combine(EditorApplication.applicationContentsPath, (Application.platform != RuntimePlatform.WindowsEditor) ? "Tools/MapFileParser/MapFileParser" : @"Tools\MapFileParser\MapFileParser.exe"));
 
         private HashSet<string> GetUserAssemblies(string managedDir)
         {
@@ -164,9 +156,9 @@
         internal List<string> GetUserAssembliesToConvert(string managedDir)
         {
             HashSet<string> userAssemblies = this.GetUserAssemblies(managedDir);
-            userAssemblies.Add(Enumerable.Single<string>(Directory.GetFiles(managedDir, "UnityEngine.dll", SearchOption.TopDirectoryOnly)));
+            userAssemblies.Add(Directory.GetFiles(managedDir, "UnityEngine.dll", SearchOption.TopDirectoryOnly).Single<string>());
             userAssemblies.UnionWith(this.FilterUserAssemblies(Directory.GetFiles(managedDir, "*.dll", SearchOption.TopDirectoryOnly), new Predicate<string>(this.m_linkXmlReader.IsDLLUsed), managedDir));
-            return Enumerable.ToList<string>(userAssemblies);
+            return userAssemblies.ToList<string>();
         }
 
         private string OutputFileRelativePath()
@@ -209,9 +201,9 @@
             if (builder != null)
             {
                 Il2CppNativeCodeBuilderUtils.ClearAndPrepareCacheDirectory(builder);
-                List<string> arguments = Enumerable.ToList<string>(Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths));
-                arguments.Add(string.Format("--map-file-parser=\"{0}\"", GetMapFileParserPath()));
-                arguments.Add(string.Format("--generatedcppdir=\"{0}\"", Path.GetFullPath(this.GetCppOutputDirectoryInStagingArea())));
+                List<string> arguments = Il2CppNativeCodeBuilderUtils.AddBuilderArguments(builder, this.OutputFileRelativePath(), this.m_PlatformProvider.includePaths).ToList<string>();
+                arguments.Add($"--map-file-parser="{GetMapFileParserPath()}"");
+                arguments.Add($"--generatedcppdir="{Path.GetFullPath(this.GetCppOutputDirectoryInStagingArea())}"");
                 Action<ProcessStartInfo> setupStartInfo = new Action<ProcessStartInfo>(builder.SetupStartInfo);
                 string fullPath = Path.GetFullPath(Path.Combine(this.m_StagingAreaData, "Managed"));
                 this.RunIl2CppWithArguments(arguments, setupStartInfo, fullPath);
@@ -236,15 +228,11 @@
             internal Predicate<string> isUsed;
             internal string managedDir;
 
-            internal bool <>m__0(string assembly)
-            {
-                return this.isUsed(assembly);
-            }
+            internal bool <>m__0(string assembly) => 
+                this.isUsed(assembly);
 
-            internal string <>m__1(string usedAssembly)
-            {
-                return Path.Combine(this.managedDir, usedAssembly);
-            }
+            internal string <>m__1(string usedAssembly) => 
+                Path.Combine(this.managedDir, usedAssembly);
         }
     }
 }

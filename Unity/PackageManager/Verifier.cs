@@ -13,10 +13,8 @@
             return this.Verify();
         }
 
-        public virtual bool Verify()
-        {
-            return true;
-        }
+        public virtual bool Verify() => 
+            true;
     }
 }
 

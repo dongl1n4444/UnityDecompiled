@@ -536,10 +536,8 @@
 
         private ModelImporterAnimationType animationType
         {
-            get
-            {
-                return (ModelImporterAnimationType) this.m_AnimationType.intValue;
-            }
+            get => 
+                ((ModelImporterAnimationType) this.m_AnimationType.intValue);
             set
             {
                 this.m_AnimationType.intValue = (int) value;
@@ -567,13 +565,8 @@
 
         public int rootIndex { get; set; }
 
-        private ModelImporter singleImporter
-        {
-            get
-            {
-                return (base.targets[0] as ModelImporter);
-            }
-        }
+        private ModelImporter singleImporter =>
+            (base.targets[0] as ModelImporter);
 
         [StructLayout(LayoutKind.Sequential)]
         private struct MappingRelevantSettings
@@ -581,13 +574,8 @@
             public bool humanoid;
             public bool copyAvatar;
             public bool hasNoAnimation;
-            public bool usesOwnAvatar
-            {
-                get
-                {
-                    return (this.humanoid && !this.copyAvatar);
-                }
-            }
+            public bool usesOwnAvatar =>
+                (this.humanoid && !this.copyAvatar);
         }
 
         private class Styles

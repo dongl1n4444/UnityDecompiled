@@ -89,15 +89,11 @@
             this.m_ListArea.Init(this.listPosition, hierarchyType, searchFilter, true);
         }
 
-        public static Object GetCurrentObject()
-        {
-            return EditorUtility.InstanceIDToObject(get.GetSelectedInstanceID());
-        }
+        public static Object GetCurrentObject() => 
+            EditorUtility.InstanceIDToObject(get.GetSelectedInstanceID());
 
-        public static Object GetInitialObject()
-        {
-            return get.m_OriginalSelection;
-        }
+        public static Object GetInitialObject() => 
+            get.m_OriginalSelection;
 
         private Scene GetSceneFromObject(Object obj)
         {
@@ -190,10 +186,8 @@
             }
         }
 
-        private bool IsUsingTreeView()
-        {
-            return this.m_ObjectTreeWithSearch.IsInitialized();
-        }
+        private bool IsUsingTreeView() => 
+            this.m_ObjectTreeWithSearch.IsInitialized();
 
         private void ItemWasDoubleClicked()
         {
@@ -428,15 +422,11 @@
             }
         }
 
-        private bool PreviewIsOpen()
-        {
-            return (this.m_PreviewSize >= 37f);
-        }
+        private bool PreviewIsOpen() => 
+            (this.m_PreviewSize >= 37f);
 
-        private bool PreviewIsWide()
-        {
-            return (((base.position.width - this.m_PreviewSize) - 5f) > Mathf.Min((float) ((this.m_PreviewSize * 2f) - 20f), (float) 256f));
-        }
+        private bool PreviewIsWide() => 
+            (((base.position.width - this.m_PreviewSize) - 5f) > Mathf.Min((float) ((this.m_PreviewSize * 2f) - 20f), (float) 256f));
 
         private void ResizeBottomPartOfWindow()
         {
@@ -546,10 +536,8 @@
             this.m_ShowWidePreview.target = flag3;
         }
 
-        private static bool ShouldTreeViewBeUsed(string className)
-        {
-            return (className == "AudioMixerGroup");
-        }
+        private static bool ShouldTreeViewBeUsed(string className) => 
+            (className == "AudioMixerGroup");
 
         public void Show(Object obj, Type requiredType, SerializedProperty property, bool allowSceneObjects)
         {
@@ -663,13 +651,8 @@
             }
         }
 
-        public List<int> allowedInstanceIDs
-        {
-            get
-            {
-                return this.m_AllowedIDs;
-            }
-        }
+        public List<int> allowedInstanceIDs =>
+            this.m_AllowedIDs;
 
         public static ObjectSelector get
         {
@@ -691,28 +674,16 @@
             }
         }
 
-        public static bool isVisible
-        {
-            get
-            {
-                return (s_SharedObjectSelector != null);
-            }
-        }
+        public static bool isVisible =>
+            (s_SharedObjectSelector != null);
 
-        private Rect listPosition
-        {
-            get
-            {
-                return new Rect(0f, this.m_ToolbarHeight, base.position.width, Mathf.Max((float) 0f, (float) (this.m_TopSize - this.m_ToolbarHeight)));
-            }
-        }
+        private Rect listPosition =>
+            new Rect(0f, this.m_ToolbarHeight, base.position.width, Mathf.Max((float) 0f, (float) (this.m_TopSize - this.m_ToolbarHeight)));
 
         internal string searchFilter
         {
-            get
-            {
-                return this.m_SearchFilter;
-            }
+            get => 
+                this.m_SearchFilter;
             set
             {
                 this.m_SearchFilter = value;

@@ -83,10 +83,8 @@
         /// <returns>
         /// <para>The number of items in the menu.</para>
         /// </returns>
-        public int GetItemCount()
-        {
-            return this.menuItems.Count;
-        }
+        public int GetItemCount() => 
+            this.menuItems.Count;
 
         internal void Popup(Rect position, int selectedIndex)
         {

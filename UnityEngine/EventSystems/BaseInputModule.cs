@@ -42,10 +42,8 @@
         /// <param name="x">X movement.</param>
         /// <param name="y">Y movement.</param>
         /// <param name="deadZone">Dead zone.</param>
-        protected static MoveDirection DetermineMoveDirection(float x, float y)
-        {
-            return DetermineMoveDirection(x, y, 0.6f);
-        }
+        protected static MoveDirection DetermineMoveDirection(float x, float y) => 
+            DetermineMoveDirection(x, y, 0.6f);
 
         /// <summary>
         /// <para>Given an input movement, determine the best MoveDirection.</para>
@@ -195,19 +193,15 @@
         /// <returns>
         /// <para>Is the module supported.</para>
         /// </returns>
-        public virtual bool IsModuleSupported()
-        {
-            return true;
-        }
+        public virtual bool IsModuleSupported() => 
+            true;
 
         /// <summary>
         /// <para>Is the pointer with the given ID over an EventSystem object?</para>
         /// </summary>
         /// <param name="pointerId">Pointer ID.</param>
-        public virtual bool IsPointerOverGameObject(int pointerId)
-        {
-            return false;
-        }
+        public virtual bool IsPointerOverGameObject(int pointerId) => 
+            false;
 
         /// <summary>
         /// <para>See MonoBehaviour.OnDisable.</para>
@@ -238,10 +232,8 @@
         /// <returns>
         /// <para>Should the module be activated.</para>
         /// </returns>
-        public virtual bool ShouldActivateModule()
-        {
-            return (base.enabled && base.gameObject.activeInHierarchy);
-        }
+        public virtual bool ShouldActivateModule() => 
+            (base.enabled && base.gameObject.activeInHierarchy);
 
         /// <summary>
         /// <para>Update the internal state of the Module.</para>
@@ -250,13 +242,8 @@
         {
         }
 
-        protected EventSystem eventSystem
-        {
-            get
-            {
-                return this.m_EventSystem;
-            }
-        }
+        protected EventSystem eventSystem =>
+            this.m_EventSystem;
 
         /// <summary>
         /// <para>The current BaseInput being used by the input module.</para>

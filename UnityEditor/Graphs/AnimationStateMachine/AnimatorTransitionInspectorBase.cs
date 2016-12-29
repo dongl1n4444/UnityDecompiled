@@ -273,10 +273,8 @@
             GUI.Label(rect, "Mute");
         }
 
-        public override GUIContent GetPreviewTitle()
-        {
-            return s_Styles.previewTitle;
-        }
+        public override GUIContent GetPreviewTitle() => 
+            s_Styles.previewTitle;
 
         protected virtual void InitSerializedProperties()
         {
@@ -316,8 +314,8 @@
             }
             this.m_TransitionList.drawHeaderCallback = <>f__mg$cache0;
             this.m_TransitionList.index = 0;
-            this.m_PreviewObject = (AnimatorControllerTool.tool == null) ? null : AnimatorControllerTool.tool.previewAnimator;
-            this.m_Controller = (AnimatorControllerTool.tool == null) ? null : AnimatorControllerTool.tool.animatorController;
+            this.m_PreviewObject = AnimatorControllerTool.tool?.previewAnimator;
+            this.m_Controller = AnimatorControllerTool.tool?.animatorController;
             if (this.m_Controller != null)
             {
                 this.m_LayerIndex = AnimatorControllerTool.tool.selectedLayerIndex;

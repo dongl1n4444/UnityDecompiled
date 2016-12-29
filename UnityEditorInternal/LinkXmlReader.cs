@@ -23,10 +23,8 @@
             }
         }
 
-        public bool IsDLLUsed(string assemblyFileName)
-        {
-            return this._assembliesInALinkXmlFile.Contains(Path.GetFileNameWithoutExtension(assemblyFileName));
-        }
+        public bool IsDLLUsed(string assemblyFileName) => 
+            this._assembliesInALinkXmlFile.Contains(Path.GetFileNameWithoutExtension(assemblyFileName));
     }
 }
 

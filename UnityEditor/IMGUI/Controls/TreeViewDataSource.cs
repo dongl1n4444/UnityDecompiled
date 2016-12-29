@@ -31,15 +31,11 @@
             this.onVisibleRowsChanged = null;
         }
 
-        public virtual bool CanBeMultiSelected(TreeViewItem item)
-        {
-            return true;
-        }
+        public virtual bool CanBeMultiSelected(TreeViewItem item) => 
+            true;
 
-        public virtual bool CanBeParent(TreeViewItem item)
-        {
-            return true;
-        }
+        public virtual bool CanBeParent(TreeViewItem item) => 
+            true;
 
         protected virtual List<TreeViewItem> ExpandedRows(TreeViewItem root)
         {
@@ -49,20 +45,14 @@
         }
 
         public abstract void FetchData();
-        public virtual TreeViewItem FindItem(int id)
-        {
-            return TreeViewUtility.FindItem(id, this.m_RootItem);
-        }
+        public virtual TreeViewItem FindItem(int id) => 
+            TreeViewUtility.FindItem(id, this.m_RootItem);
 
-        public virtual int[] GetExpandedIDs()
-        {
-            return this.expandedIDs.ToArray();
-        }
+        public virtual int[] GetExpandedIDs() => 
+            this.expandedIDs.ToArray();
 
-        public virtual TreeViewItem GetItem(int row)
-        {
-            return this.GetRows()[row];
-        }
+        public virtual TreeViewItem GetItem(int row) => 
+            this.GetRows()[row];
 
         public virtual int GetRow(int id)
         {
@@ -98,10 +88,8 @@
             }
         }
 
-        public virtual bool HasFakeItem()
-        {
-            return (this.m_FakeItem != null);
-        }
+        public virtual bool HasFakeItem() => 
+            (this.m_FakeItem != null);
 
         public virtual void InitIfNeeded()
         {
@@ -146,25 +134,17 @@
             return item.hasChildren;
         }
 
-        public virtual bool IsExpanded(int id)
-        {
-            return (this.expandedIDs.BinarySearch(id) >= 0);
-        }
+        public virtual bool IsExpanded(int id) => 
+            (this.expandedIDs.BinarySearch(id) >= 0);
 
-        public virtual bool IsExpanded(TreeViewItem item)
-        {
-            return this.IsExpanded(item.id);
-        }
+        public virtual bool IsExpanded(TreeViewItem item) => 
+            this.IsExpanded(item.id);
 
-        public virtual bool IsRenamingItemAllowed(TreeViewItem item)
-        {
-            return true;
-        }
+        public virtual bool IsRenamingItemAllowed(TreeViewItem item) => 
+            true;
 
-        public virtual bool IsRevealed(int id)
-        {
-            return (TreeViewController.GetIndexOfID(this.GetRows(), id) >= 0);
-        }
+        public virtual bool IsRevealed(int id) => 
+            (TreeViewController.GetIndexOfID(this.GetRows(), id) >= 0);
 
         public virtual void OnExpandedStateChanged()
         {
@@ -315,7 +295,7 @@
                 {
                     source.ExceptWith(parentsBelowItem);
                 }
-                this.SetExpandedIDs(Enumerable.ToArray<int>(source));
+                this.SetExpandedIDs(source.ToArray<int>());
             }
         }
 
@@ -323,33 +303,21 @@
 
         protected List<int> expandedIDs
         {
-            get
-            {
-                return this.m_TreeView.state.expandedIDs;
-            }
+            get => 
+                this.m_TreeView.state.expandedIDs;
             set
             {
                 this.m_TreeView.state.expandedIDs = value;
             }
         }
 
-        public TreeViewItem root
-        {
-            get
-            {
-                return this.m_RootItem;
-            }
-        }
+        public TreeViewItem root =>
+            this.m_RootItem;
 
         public bool rootIsCollapsable { get; set; }
 
-        public virtual int rowCount
-        {
-            get
-            {
-                return this.GetRows().Count;
-            }
-        }
+        public virtual int rowCount =>
+            this.GetRows().Count;
 
         public bool showRootItem { get; set; }
     }

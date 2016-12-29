@@ -33,10 +33,8 @@
             return comparer.Equals(x.Module.Assembly, y.Module.Assembly);
         }
 
-        public int GetHashCode(MethodDefinition obj)
-        {
-            return obj.FullName.GetHashCode();
-        }
+        public int GetHashCode(MethodDefinition obj) => 
+            obj.FullName.GetHashCode();
     }
 }
 

@@ -10,39 +10,33 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
 
-    [Extension]
     public static class CecilExtensions
     {
         [CompilerGenerated]
         private static Func<ModuleDefinition, IEnumerable<TypeDefinition>> <>f__am$cache0;
 
-        [Extension]
-        public static IEnumerable<TypeDefinition> AllDefinedTypes(AssemblyDefinition assemblyDefinition)
+        public static IEnumerable<TypeDefinition> AllDefinedTypes(this AssemblyDefinition assemblyDefinition)
         {
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<ModuleDefinition, IEnumerable<TypeDefinition>>(null, (IntPtr) <AllDefinedTypes>m__0);
             }
-            return Enumerable.SelectMany<ModuleDefinition, TypeDefinition>(assemblyDefinition.Modules, <>f__am$cache0);
+            return assemblyDefinition.Modules.SelectMany<ModuleDefinition, TypeDefinition>(<>f__am$cache0);
         }
 
-        [Extension, DebuggerHidden]
-        public static IEnumerable<TypeDefinition> AllDefinedTypes(ModuleDefinition moduleDefinition)
-        {
-            return new <AllDefinedTypes>c__Iterator0 { 
+        [DebuggerHidden]
+        public static IEnumerable<TypeDefinition> AllDefinedTypes(this ModuleDefinition moduleDefinition) => 
+            new <AllDefinedTypes>c__Iterator0 { 
                 moduleDefinition = moduleDefinition,
                 $PC = -2
             };
-        }
 
-        [Extension, DebuggerHidden]
-        public static IEnumerable<TypeDefinition> AllDefinedTypes(TypeDefinition typeDefinition)
-        {
-            return new <AllDefinedTypes>c__Iterator1 { 
+        [DebuggerHidden]
+        public static IEnumerable<TypeDefinition> AllDefinedTypes(this TypeDefinition typeDefinition) => 
+            new <AllDefinedTypes>c__Iterator1 { 
                 typeDefinition = typeDefinition,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <AllDefinedTypes>c__Iterator0 : IEnumerable, IEnumerable<TypeDefinition>, IEnumerator, IDisposable, IEnumerator<TypeDefinition>
@@ -116,7 +110,7 @@
                     switch (num)
                     {
                         case 1:
-                            this.$locvar1 = CecilExtensions.AllDefinedTypes(this.<typeDefinition>__0).GetEnumerator();
+                            this.$locvar1 = this.<typeDefinition>__0.AllDefinedTypes().GetEnumerator();
                             num = 0xfffffffd;
                             goto Label_00A5;
 
@@ -191,28 +185,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
 
-            TypeDefinition IEnumerator<TypeDefinition>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeDefinition IEnumerator<TypeDefinition>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -287,7 +267,7 @@
                     switch (num)
                     {
                         case 1:
-                            this.$locvar1 = CecilExtensions.AllDefinedTypes(this.<nestedType>__0).GetEnumerator();
+                            this.$locvar1 = this.<nestedType>__0.AllDefinedTypes().GetEnumerator();
                             num = 0xfffffffd;
                             goto Label_00A5;
 
@@ -362,28 +342,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
 
-            TypeDefinition IEnumerator<TypeDefinition>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeDefinition IEnumerator<TypeDefinition>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

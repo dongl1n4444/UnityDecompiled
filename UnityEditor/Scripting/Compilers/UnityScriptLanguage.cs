@@ -6,20 +6,14 @@
 
     internal class UnityScriptLanguage : SupportedLanguage
     {
-        public override ScriptCompilerBase CreateCompiler(MonoIsland island, bool buildingForEditor, BuildTarget targetPlatform, bool runUpdater)
-        {
-            return new UnityScriptCompiler(island, runUpdater);
-        }
+        public override ScriptCompilerBase CreateCompiler(MonoIsland island, bool buildingForEditor, BuildTarget targetPlatform, bool runUpdater) => 
+            new UnityScriptCompiler(island, runUpdater);
 
-        public override string GetExtensionICanCompile()
-        {
-            return "js";
-        }
+        public override string GetExtensionICanCompile() => 
+            "js";
 
-        public override string GetLanguageName()
-        {
-            return "UnityScript";
-        }
+        public override string GetLanguageName() => 
+            "UnityScript";
     }
 }
 

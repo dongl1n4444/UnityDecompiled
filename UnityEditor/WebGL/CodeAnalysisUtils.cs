@@ -45,10 +45,8 @@
             processOther(code.Substring(startIndex));
         }
 
-        private static bool IsWordCharacter(char ch)
-        {
-            return (((((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z'))) || (((ch >= '0') && (ch <= '9')) || (ch == '_'))) || (ch == '$'));
-        }
+        private static bool IsWordCharacter(char ch) => 
+            (((((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z'))) || (((ch >= '0') && (ch <= '9')) || (ch == '_'))) || (ch == '$'));
 
         public static Dictionary<string, string> ReadMinificationMap(string mapPath)
         {
@@ -110,7 +108,7 @@
                 }
             }
             str = storey.patchedCode.ToString();
-            Console.WriteLine("" + Enumerable.Count<KeyValuePair<string, string>>(storey.functionReplacement) + " functions replaced.");
+            Console.WriteLine("" + storey.functionReplacement.Count<KeyValuePair<string, string>>() + " functions replaced.");
             return str;
         }
 

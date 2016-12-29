@@ -20,99 +20,52 @@
         /// <summary>
         /// <para>The controller that hit the collider.</para>
         /// </summary>
-        public CharacterController controller
-        {
-            get
-            {
-                return this.m_Controller;
-            }
-        }
+        public CharacterController controller =>
+            this.m_Controller;
         /// <summary>
         /// <para>The collider that was hit by the controller.</para>
         /// </summary>
-        public Collider collider
-        {
-            get
-            {
-                return this.m_Collider;
-            }
-        }
+        public Collider collider =>
+            this.m_Collider;
         /// <summary>
         /// <para>The rigidbody that was hit by the controller.</para>
         /// </summary>
-        public Rigidbody rigidbody
-        {
-            get
-            {
-                return this.m_Collider.attachedRigidbody;
-            }
-        }
+        public Rigidbody rigidbody =>
+            this.m_Collider.attachedRigidbody;
         /// <summary>
         /// <para>The game object that was hit by the controller.</para>
         /// </summary>
-        public GameObject gameObject
-        {
-            get
-            {
-                return this.m_Collider.gameObject;
-            }
-        }
+        public GameObject gameObject =>
+            this.m_Collider.gameObject;
         /// <summary>
         /// <para>The transform that was hit by the controller.</para>
         /// </summary>
-        public Transform transform
-        {
-            get
-            {
-                return this.m_Collider.transform;
-            }
-        }
+        public Transform transform =>
+            this.m_Collider.transform;
         /// <summary>
         /// <para>The impact point in world space.</para>
         /// </summary>
-        public Vector3 point
-        {
-            get
-            {
-                return this.m_Point;
-            }
-        }
+        public Vector3 point =>
+            this.m_Point;
         /// <summary>
         /// <para>The normal of the surface we collided with in world space.</para>
         /// </summary>
-        public Vector3 normal
-        {
-            get
-            {
-                return this.m_Normal;
-            }
-        }
+        public Vector3 normal =>
+            this.m_Normal;
         /// <summary>
         /// <para>The direction the CharacterController was moving in when the collision occured.</para>
         /// </summary>
-        public Vector3 moveDirection
-        {
-            get
-            {
-                return this.m_MoveDirection;
-            }
-        }
+        public Vector3 moveDirection =>
+            this.m_MoveDirection;
         /// <summary>
         /// <para>How far the character has travelled until it hit the collider.</para>
         /// </summary>
-        public float moveLength
-        {
-            get
-            {
-                return this.m_MoveLength;
-            }
-        }
+        public float moveLength =>
+            this.m_MoveLength;
         private bool push
         {
-            get
-            {
-                return (this.m_Push != 0);
-            }
+            get => 
+                (this.m_Push != 0);
             set
             {
                 this.m_Push = !value ? 0 : 1;

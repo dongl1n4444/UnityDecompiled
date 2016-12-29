@@ -16,10 +16,8 @@
         /// </summary>
         public float min
         {
-            get
-            {
-                return this.m_LowerTranslation;
-            }
+            get => 
+                this.m_LowerTranslation;
             set
             {
                 this.m_LowerTranslation = value;
@@ -30,10 +28,8 @@
         /// </summary>
         public float max
         {
-            get
-            {
-                return this.m_UpperTranslation;
-            }
+            get => 
+                this.m_UpperTranslation;
             set
             {
                 this.m_UpperTranslation = value;

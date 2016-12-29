@@ -122,7 +122,7 @@
             {
                 <>f__am$cache2 = new Func<IGrouping<Edge, Edge>, Edge>(null, (IntPtr) <FindUniqueEdges>m__2);
             }
-            return Enumerable.ToArray<Edge>(Enumerable.Select<IGrouping<Edge, Edge>, Edge>(Enumerable.Where<IGrouping<Edge, Edge>>(Enumerable.GroupBy<Edge, Edge>(edgeArray, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2));
+            return Enumerable.Select<IGrouping<Edge, Edge>, Edge>(Enumerable.Where<IGrouping<Edge, Edge>>(Enumerable.GroupBy<Edge, Edge>(edgeArray, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<Edge>();
         }
 
         private void OnAtlasNameListChanged()
@@ -190,12 +190,12 @@
                     {
                         <OnSelectionChange>c__AnonStorey0 storey = new <OnSelectionChange>c__AnonStorey0();
                         Packer.GetAtlasDataForSprite(activeObject, out storey.selAtlasName, out storey.selAtlasTexture);
-                        int num = Enumerable.ToList<string>(this.m_AtlasNames).FindIndex(new Predicate<string>(storey.<>m__0));
+                        int num = this.m_AtlasNames.ToList<string>().FindIndex(new Predicate<string>(storey.<>m__0));
                         if (num == -1)
                         {
                             return;
                         }
-                        int num2 = Enumerable.ToList<Texture2D>(Packer.GetTexturesForAtlas(storey.selAtlasName)).FindIndex(new Predicate<Texture2D>(storey.<>m__1));
+                        int num2 = Packer.GetTexturesForAtlas(storey.selAtlasName).ToList<Texture2D>().FindIndex(new Predicate<Texture2D>(storey.<>m__1));
                         if (num2 == -1)
                         {
                             return;
@@ -228,7 +228,7 @@
                 this.m_PageNames = new string[texturesForAtlas.Length];
                 for (int i = 0; i < texturesForAtlas.Length; i++)
                 {
-                    this.m_PageNames[i] = string.Format("Page {0}", i + 1);
+                    this.m_PageNames[i] = $"Page {i + 1}";
                 }
             }
             else
@@ -244,7 +244,7 @@
         private void RefreshState()
         {
             string[] atlasNames = Packer.atlasNames;
-            if (!Enumerable.SequenceEqual<string>(atlasNames, this.m_AtlasNames))
+            if (!atlasNames.SequenceEqual<string>(this.m_AtlasNames))
             {
                 if (atlasNames.Length == 0)
                 {
@@ -307,15 +307,11 @@
             internal string selAtlasName;
             internal Texture2D selAtlasTexture;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.selAtlasName == s);
-            }
+            internal bool <>m__0(string s) => 
+                (this.selAtlasName == s);
 
-            internal bool <>m__1(Texture2D t)
-            {
-                return (this.selAtlasTexture == t);
-            }
+            internal bool <>m__1(Texture2D t) => 
+                (this.selAtlasTexture == t);
         }
 
         [StructLayout(LayoutKind.Sequential)]

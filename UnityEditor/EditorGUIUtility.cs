@@ -113,10 +113,8 @@
             return evt;
         }
 
-        internal static Rect DragZoneRect(Rect position)
-        {
-            return new Rect(position.x, position.y, labelWidth, position.height);
-        }
+        internal static Rect DragZoneRect(Rect position) => 
+            new Rect(position.x, position.y, labelWidth, position.height);
 
         /// <summary>
         /// <para>Draw a color swatch.</para>
@@ -346,10 +344,8 @@
             return s_BasicTextureStyle;
         }
 
-        internal static bool GetBoldDefaultFont()
-        {
-            return (s_FontIsBold == 1);
-        }
+        internal static bool GetBoldDefaultFont() => 
+            (s_FontIsBold == 1);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern Object GetBuiltinExtraResource(Type type, string path);
@@ -359,10 +355,8 @@
         /// <para>Get one of the built-in GUI skins, which can be the game view, inspector or scene view skin as chosen by the parameter.</para>
         /// </summary>
         /// <param name="skin"></param>
-        public static GUISkin GetBuiltinSkin(EditorSkin skin)
-        {
-            return GUIUtility.GetBuiltinSkin((int) skin);
-        }
+        public static GUISkin GetBuiltinSkin(EditorSkin skin) => 
+            GUIUtility.GetBuiltinSkin((int) skin);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern AssetBundle GetEditorAssetBundle();
@@ -452,18 +446,14 @@
         /// <summary>
         /// <para>The controlID of the currently showing object picker.</para>
         /// </summary>
-        public static int GetObjectPickerControlID()
-        {
-            return ObjectSelector.get.objectSelectorID;
-        }
+        public static int GetObjectPickerControlID() => 
+            ObjectSelector.get.objectSelectorID;
 
         /// <summary>
         /// <para>The object currently selected in the object picker.</para>
         /// </summary>
-        public static Object GetObjectPickerObject()
-        {
-            return ObjectSelector.GetCurrentObject();
-        }
+        public static Object GetObjectPickerObject() => 
+            ObjectSelector.GetCurrentObject();
 
         internal static Color GetPasteboardColor()
         {
@@ -530,33 +520,25 @@
             return GUIView.current.hasFocus;
         }
 
-        internal static bool HasHolddownKeyModifiers(Event evt)
-        {
-            return (((evt.shift | evt.control) | evt.alt) | evt.command);
-        }
+        internal static bool HasHolddownKeyModifiers(Event evt) => 
+            (((evt.shift | evt.control) | evt.alt) | evt.command);
 
         /// <summary>
         /// <para>Does a given class have per-object thumbnails?</para>
         /// </summary>
         /// <param name="objType"></param>
-        public static bool HasObjectThumbnail(Type objType)
-        {
-            return ((objType != null) && ((objType.IsSubclassOf(typeof(Texture)) || (objType == typeof(Texture))) || (objType == typeof(Sprite))));
-        }
+        public static bool HasObjectThumbnail(Type objType) => 
+            ((objType != null) && ((objType.IsSubclassOf(typeof(Texture)) || (objType == typeof(Texture))) || (objType == typeof(Sprite))));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool HasPasteboardColor();
         [Obsolete("EditorGUIUtility.HSVToRGB is obsolete. Use Color.HSVToRGB instead (UnityUpgradable) -> [UnityEngine] UnityEngine.Color.HSVToRGB(*)", true)]
-        public static Color HSVToRGB(float H, float S, float V)
-        {
-            return Color.HSVToRGB(H, S, V);
-        }
+        public static Color HSVToRGB(float H, float S, float V) => 
+            Color.HSVToRGB(H, S, V);
 
         [Obsolete("EditorGUIUtility.HSVToRGB is obsolete. Use Color.HSVToRGB instead (UnityUpgradable) -> [UnityEngine] UnityEngine.Color.HSVToRGB(*)", true)]
-        public static Color HSVToRGB(float H, float S, float V, bool hdr)
-        {
-            return Color.HSVToRGB(H, S, V, hdr);
-        }
+        public static Color HSVToRGB(float H, float S, float V, bool hdr) => 
+            Color.HSVToRGB(H, S, V, hdr);
 
         /// <summary>
         /// <para>Fetch the GUIContent from the Unity builtin resources with the given name.</para>
@@ -644,10 +626,8 @@
         /// <para>Load a built-in resource.</para>
         /// </summary>
         /// <param name="path"></param>
-        public static Object Load(string path)
-        {
-            return Load(path, typeof(Object));
-        }
+        public static Object Load(string path) => 
+            Load(path, typeof(Object));
 
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
         private static Object Load(string filename, Type type)
@@ -688,10 +668,8 @@
             return textured;
         }
 
-        internal static Texture2D LoadIcon(string name)
-        {
-            return LoadIconForSkin(name, skinIndex);
-        }
+        internal static Texture2D LoadIcon(string name) => 
+            LoadIconForSkin(name, skinIndex);
 
         internal static Texture2D LoadIconForSkin(string name, int skinIndex)
         {
@@ -707,7 +685,7 @@
             string directoryName = Path.GetDirectoryName(name);
             if (!string.IsNullOrEmpty(directoryName))
             {
-                str = string.Format("{0}/{1}", directoryName, str);
+                str = $"{directoryName}/{str}";
             }
             Texture2D textured2 = LoadGeneratedIconOrNormalIcon(str);
             if (textured2 == null)
@@ -1150,13 +1128,8 @@
             s_ContextWidth = 0f;
         }
 
-        internal static GUIContent blankContent
-        {
-            get
-            {
-                return s_BlankContent;
-            }
-        }
+        internal static GUIContent blankContent =>
+            s_BlankContent;
 
         internal static float contextWidth
         {
@@ -1173,23 +1146,16 @@
         /// <summary>
         /// <para>The width of the GUI area for the current EditorWindow or other view.</para>
         /// </summary>
-        public static float currentViewWidth
-        {
-            get
-            {
-                return GUIView.current.position.width;
-            }
-        }
+        public static float currentViewWidth =>
+            GUIView.current.position.width;
 
         /// <summary>
         /// <para>Is a text field currently editing text?</para>
         /// </summary>
         public static bool editingTextField
         {
-            get
-            {
-                return EditorGUI.RecycledTextEditor.s_ActuallyEditing;
-            }
+            get => 
+                EditorGUI.RecycledTextEditor.s_ActuallyEditing;
             set
             {
                 EditorGUI.RecycledTextEditor.s_ActuallyEditing = value;
@@ -1232,10 +1198,8 @@
         /// </summary>
         public static bool hierarchyMode
         {
-            get
-            {
-                return s_HierarchyMode;
-            }
+            get => 
+                s_HierarchyMode;
             set
             {
                 s_HierarchyMode = value;
@@ -1257,13 +1221,8 @@
         /// <summary>
         /// <para>Is the user currently using the pro skin? (Read Only)</para>
         /// </summary>
-        public static bool isProSkin
-        {
-            get
-            {
-                return (skinIndex == 1);
-            }
-        }
+        public static bool isProSkin =>
+            (skinIndex == 1);
 
         /// <summary>
         /// <para>The width in pixels reserved for labels of Editor GUI controls.</para>
@@ -1288,66 +1247,36 @@
             }
         }
 
-        internal static EventType magnifyGestureEventType
-        {
-            get
-            {
-                return (EventType) 0x3e8;
-            }
-        }
+        internal static EventType magnifyGestureEventType =>
+            ((EventType) 0x3e8);
 
         /// <summary>
         /// <para>The scale of GUI points relative to screen pixels for the current view
         /// 
         /// This value is the number of screen pixels per point of interface space. For instance, 2.0 on retina displays. Note that the value may differ from one view to the next if the views are on monitors with different UI scales.</para>
         /// </summary>
-        public static float pixelsPerPoint
-        {
-            get
-            {
-                return GUIUtility.pixelsPerPoint;
-            }
-        }
+        public static float pixelsPerPoint =>
+            GUIUtility.pixelsPerPoint;
 
-        internal static EventType rotateGestureEventType
-        {
-            get
-            {
-                return (EventType) 0x3ea;
-            }
-        }
+        internal static EventType rotateGestureEventType =>
+            ((EventType) 0x3ea);
 
         /// <summary>
         /// <para>Get the height used for a single Editor control such as a one-line EditorGUI.TextField or EditorGUI.Popup.</para>
         /// </summary>
-        public static float singleLineHeight
-        {
-            get
-            {
-                return 16f;
-            }
-        }
+        public static float singleLineHeight =>
+            16f;
 
         internal static int skinIndex { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         /// <summary>
         /// <para>Get the height used by default for vertical spacing between controls.</para>
         /// </summary>
-        public static float standardVerticalSpacing
-        {
-            get
-            {
-                return 2f;
-            }
-        }
+        public static float standardVerticalSpacing =>
+            2f;
 
-        internal static EventType swipeGestureEventType
-        {
-            get
-            {
-                return (EventType) 0x3e9;
-            }
-        }
+        internal static EventType swipeGestureEventType =>
+            ((EventType) 0x3e9);
 
         /// <summary>
         /// <para>The system copy buffer.</para>
@@ -1389,10 +1318,8 @@
         /// </summary>
         public static bool wideMode
         {
-            get
-            {
-                return s_WideMode;
-            }
+            get => 
+                s_WideMode;
             set
             {
                 s_WideMode = value;
@@ -1416,10 +1343,8 @@
                 this.proColor = proColor;
             }
 
-            public static implicit operator Color(EditorGUIUtility.SkinnedColor colorSkin)
-            {
-                return colorSkin.color;
-            }
+            public static implicit operator Color(EditorGUIUtility.SkinnedColor colorSkin) => 
+                colorSkin.color;
 
             public Color color
             {

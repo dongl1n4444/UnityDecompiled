@@ -43,10 +43,8 @@
             return expression2;
         }
 
-        public static bool EndsWithBreak(Block block)
-        {
-            return ((block.get_Statements().Count != 0) ? (block.get_Statements().get_Item(-1) is BreakStatement) : false);
-        }
+        public static bool EndsWithBreak(Block block) => 
+            ((block.get_Statements().Count != 0) ? (block.get_Statements().get_Item(-1) is BreakStatement) : false);
 
         public static GotoStatement NewGoto(LabelStatement label)
         {

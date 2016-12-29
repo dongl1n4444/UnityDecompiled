@@ -9,27 +9,19 @@
         {
         }
 
-        public PBXElementArray AsArray()
-        {
-            return (PBXElementArray) this;
-        }
+        public PBXElementArray AsArray() => 
+            ((PBXElementArray) this);
 
-        public PBXElementDict AsDict()
-        {
-            return (PBXElementDict) this;
-        }
+        public PBXElementDict AsDict() => 
+            ((PBXElementDict) this);
 
-        public string AsString()
-        {
-            return ((PBXElementString) this).value;
-        }
+        public string AsString() => 
+            ((PBXElementString) this).value;
 
         public PBXElement this[string key]
         {
-            get
-            {
-                return this.AsDict()[key];
-            }
+            get => 
+                this.AsDict()[key];
             set
             {
                 this.AsDict()[key] = value;

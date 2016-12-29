@@ -98,10 +98,8 @@
         /// <para>Can the streamed level be loaded?</para>
         /// </summary>
         /// <param name="levelName"></param>
-        public static bool CanStreamedLevelBeLoaded(string levelName)
-        {
-            return CanStreamedLevelBeLoadedByName(levelName);
-        }
+        public static bool CanStreamedLevelBeLoaded(string levelName) => 
+            CanStreamedLevelBeLoadedByName(levelName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool CanStreamedLevelBeLoadedByName(string levelName);
@@ -167,17 +165,13 @@
         /// <para>How far has the download progressed? [0...1].</para>
         /// </summary>
         /// <param name="levelName"></param>
-        public static float GetStreamProgressForLevel(string levelName)
-        {
-            return GetStreamProgressForLevelByName(levelName);
-        }
+        public static float GetStreamProgressForLevel(string levelName) => 
+            GetStreamProgressForLevelByName(levelName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetStreamProgressForLevelByName(string levelName);
-        internal static UserAuthorization GetUserAuthorizationRequestMode()
-        {
-            return (UserAuthorization) GetUserAuthorizationRequestMode_Internal();
-        }
+        internal static UserAuthorization GetUserAuthorizationRequestMode() => 
+            ((UserAuthorization) GetUserAuthorizationRequestMode_Internal());
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int GetUserAuthorizationRequestMode_Internal();
@@ -258,10 +252,8 @@
         /// <param name="index"></param>
         /// <param name="levelName"></param>
         [Obsolete("Use SceneManager.LoadSceneAsync")]
-        public static AsyncOperation LoadLevelAdditiveAsync(int index)
-        {
-            return SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
-        }
+        public static AsyncOperation LoadLevelAdditiveAsync(int index) => 
+            SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
 
         /// <summary>
         /// <para>Loads the level additively and asynchronously in the background.</para>
@@ -269,10 +261,8 @@
         /// <param name="index"></param>
         /// <param name="levelName"></param>
         [Obsolete("Use SceneManager.LoadSceneAsync")]
-        public static AsyncOperation LoadLevelAdditiveAsync(string levelName)
-        {
-            return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
-        }
+        public static AsyncOperation LoadLevelAdditiveAsync(string levelName) => 
+            SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
 
         /// <summary>
         /// <para>Loads the level asynchronously in the background.</para>
@@ -280,10 +270,8 @@
         /// <param name="index"></param>
         /// <param name="levelName"></param>
         [Obsolete("Use SceneManager.LoadSceneAsync")]
-        public static AsyncOperation LoadLevelAsync(int index)
-        {
-            return SceneManager.LoadSceneAsync(index, LoadSceneMode.Single);
-        }
+        public static AsyncOperation LoadLevelAsync(int index) => 
+            SceneManager.LoadSceneAsync(index, LoadSceneMode.Single);
 
         /// <summary>
         /// <para>Loads the level asynchronously in the background.</para>
@@ -291,10 +279,8 @@
         /// <param name="index"></param>
         /// <param name="levelName"></param>
         [Obsolete("Use SceneManager.LoadSceneAsync")]
-        public static AsyncOperation LoadLevelAsync(string levelName)
-        {
-            return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Single);
-        }
+        public static AsyncOperation LoadLevelAsync(string levelName) => 
+            SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Single);
 
         private static string ObjectToJSString(object o)
         {
@@ -435,10 +421,8 @@
         /// <para>Return true if the scene is unloaded.</para>
         /// </returns>
         [Obsolete("Use SceneManager.UnloadScene")]
-        public static bool UnloadLevel(int index)
-        {
-            return SceneManager.UnloadScene(index);
-        }
+        public static bool UnloadLevel(int index) => 
+            SceneManager.UnloadScene(index);
 
         /// <summary>
         /// <para>Unloads all GameObject associated with the given scene. Note that assets are currently not unloaded, in order to free up asset memory call Resources.UnloadAllUnusedAssets.</para>
@@ -449,19 +433,12 @@
         /// <para>Return true if the scene is unloaded.</para>
         /// </returns>
         [Obsolete("Use SceneManager.UnloadScene")]
-        public static bool UnloadLevel(string scenePath)
-        {
-            return SceneManager.UnloadScene(scenePath);
-        }
+        public static bool UnloadLevel(string scenePath) => 
+            SceneManager.UnloadScene(scenePath);
 
         [Obsolete("absoluteUrl is deprecated. Please use absoluteURL instead (UnityUpgradable) -> absoluteURL", true)]
-        public static string absoluteUrl
-        {
-            get
-            {
-                return absoluteURL;
-            }
-        }
+        public static string absoluteUrl =>
+            absoluteURL;
 
         /// <summary>
         /// <para>The absolute path to the web player data file (Read Only).</para>
@@ -584,13 +561,8 @@
         }
 
         [Obsolete("use Application.isEditor instead")]
-        public static bool isPlayer
-        {
-            get
-            {
-                return !isEditor;
-            }
-        }
+        public static bool isPlayer =>
+            !isEditor;
 
         /// <summary>
         /// <para>Returns true when in any kind of player (Read Only).</para>
@@ -613,37 +585,22 @@
         /// <para>The total number of levels available (Read Only).</para>
         /// </summary>
         [Obsolete("Use SceneManager.sceneCountInBuildSettings")]
-        public static int levelCount
-        {
-            get
-            {
-                return SceneManager.sceneCountInBuildSettings;
-            }
-        }
+        public static int levelCount =>
+            SceneManager.sceneCountInBuildSettings;
 
         /// <summary>
         /// <para>The level index that was last loaded (Read Only).</para>
         /// </summary>
         [Obsolete("Use SceneManager to determine what scenes have been loaded")]
-        public static int loadedLevel
-        {
-            get
-            {
-                return SceneManager.GetActiveScene().buildIndex;
-            }
-        }
+        public static int loadedLevel =>
+            SceneManager.GetActiveScene().buildIndex;
 
         /// <summary>
         /// <para>The name of the level that was last loaded (Read Only).</para>
         /// </summary>
         [Obsolete("Use SceneManager to determine what scenes have been loaded")]
-        public static string loadedLevelName
-        {
-            get
-            {
-                return SceneManager.GetActiveScene().name;
-            }
-        }
+        public static string loadedLevelName =>
+            SceneManager.GetActiveScene().name;
 
         /// <summary>
         /// <para>Contains the path to a persistent data directory (Read Only).</para>

@@ -124,15 +124,11 @@
             return str;
         }
 
-        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck)
-        {
-            return ((flagToCheck & flags) != ChangeFlags.None);
-        }
+        private bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck) => 
+            ((flagToCheck & flags) != ChangeFlags.None);
 
-        internal static bool IsAssetServerSetUp()
-        {
-            return (InternalEditorUtility.HasTeamLicense() && ASEditorBackend.SettingsAreValid());
-        }
+        internal static bool IsAssetServerSetUp() => 
+            (InternalEditorUtility.HasTeamLicense() && ASEditorBackend.SettingsAreValid());
 
         public void OnAssetStatusGUI(Rect r, int id, Object target, GUIStyle style)
         {

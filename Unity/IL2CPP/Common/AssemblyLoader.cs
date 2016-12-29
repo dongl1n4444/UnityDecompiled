@@ -15,7 +15,7 @@
         private readonly ReaderParameters _readerWithoutSymbolsParameters;
         private readonly AssemblyResolver _resolver;
 
-        public AssemblyLoader(IEnumerable<NPath> searchDirectories, [Optional, DefaultParameterValue(false)] bool readSymbols, [Optional, DefaultParameterValue(false)] bool applyWindowsRuntimeProjections)
+        public AssemblyLoader(IEnumerable<NPath> searchDirectories, bool readSymbols = false, bool applyWindowsRuntimeProjections = false)
         {
             this._resolver = new AssemblyResolver(this);
             foreach (NPath path in searchDirectories)
@@ -62,10 +62,8 @@
             return (AssemblyNameReference) scope;
         }
 
-        public bool IsAssemblyCached(string name)
-        {
-            return this._resolver.IsAssemblyCached(name);
-        }
+        public bool IsAssemblyCached(string name) => 
+            this._resolver.IsAssemblyCached(name);
 
         public AssemblyDefinition Load(string name)
         {

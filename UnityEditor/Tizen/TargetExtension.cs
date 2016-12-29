@@ -5,40 +5,28 @@
 
     internal class TargetExtension : DefaultPlatformSupportModule
     {
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new TizenBuildPostprocessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new TizenBuildPostprocessor();
 
-        public override IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return null;
-        }
+        public override IBuildWindowExtension CreateBuildWindowExtension() => 
+            null;
 
         public override IDevice CreateDevice(string id)
         {
             throw new NotSupportedException();
         }
 
-        public override IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return null;
-        }
+        public override IPluginImporterExtension CreatePluginImporterExtension() => 
+            null;
 
-        public override IPreferenceWindowExtension CreatePreferenceWindowExtension()
-        {
-            return new TizenPreferenceWindowExtension();
-        }
+        public override IPreferenceWindowExtension CreatePreferenceWindowExtension() => 
+            new TizenPreferenceWindowExtension();
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return null;
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            null;
 
-        public override ISettingEditorExtension CreateSettingsEditorExtension()
-        {
-            return new TizenSettingsEditorExtension();
-        }
+        public override ISettingEditorExtension CreateSettingsEditorExtension() => 
+            new TizenSettingsEditorExtension();
 
         public override void OnActivate()
         {
@@ -56,21 +44,11 @@
         {
         }
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "TizenEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "TizenEditorExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "Tizen";
-            }
-        }
+        public override string TargetName =>
+            "Tizen";
     }
 }
 

@@ -27,13 +27,11 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<GameObject> GetAllOverlapping(Vector2 position)
-        {
-            return new <GetAllOverlapping>c__Iterator0 { 
+        private static IEnumerable<GameObject> GetAllOverlapping(Vector2 position) => 
+            new <GetAllOverlapping>c__Iterator0 { 
                 position = position,
                 $PC = -2
             };
-        }
 
         public static GameObject PickGameObject(Vector2 mousePosition)
         {
@@ -159,7 +157,7 @@
                 this.<go>__1 = HandleUtility.PickGameObject(this.position, false, this.<allOverlapping>__0.ToArray());
                 if (this.<go>__1 != null)
                 {
-                    if ((this.<allOverlapping>__0.Count <= 0) || (this.<go>__1 != Enumerable.Last<GameObject>(this.<allOverlapping>__0)))
+                    if ((this.<allOverlapping>__0.Count <= 0) || (this.<go>__1 != this.<allOverlapping>__0.Last<GameObject>()))
                     {
                         this.$current = this.<go>__1;
                         if (!this.$disposing)
@@ -192,28 +190,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<UnityEngine.GameObject>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<UnityEngine.GameObject>.GetEnumerator();
 
-            GameObject IEnumerator<GameObject>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            GameObject IEnumerator<GameObject>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

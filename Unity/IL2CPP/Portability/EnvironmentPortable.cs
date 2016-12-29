@@ -4,87 +4,48 @@
 
     public class EnvironmentPortable
     {
-        public static string GetApplicationDataDirectoryPortable()
-        {
-            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        }
+        public static string GetApplicationDataDirectoryPortable() => 
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-        public static string[] GetCommandLineArgsPortable()
-        {
-            return Environment.GetCommandLineArgs();
-        }
+        public static string[] GetCommandLineArgsPortable() => 
+            Environment.GetCommandLineArgs();
 
-        public static string GetDesktopDirectoryPortable()
-        {
-            return Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        }
+        public static string GetDesktopDirectoryPortable() => 
+            Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-        public static string[] GetLogicalDrivesPortable()
-        {
-            return Environment.GetLogicalDrives();
-        }
+        public static string[] GetLogicalDrivesPortable() => 
+            Environment.GetLogicalDrives();
 
-        public static string GetMyDocumentsPortable()
-        {
-            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        }
+        public static string GetMyDocumentsPortable() => 
+            Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-        public static string GetPersonalFolderPortable()
-        {
-            return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        }
+        public static string GetPersonalFolderPortable() => 
+            Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-        public static string CommandLinePortable
-        {
-            get
-            {
-                return Environment.CommandLine;
-            }
-        }
+        public static string CommandLinePortable =>
+            Environment.CommandLine;
 
-        public static string CurrentDirectoryPortable
-        {
-            get
-            {
-                return Environment.CurrentDirectory;
-            }
-        }
+        public static string CurrentDirectoryPortable =>
+            Environment.CurrentDirectory;
 
         public static int ExitCodePortable
         {
-            get
-            {
-                return Environment.ExitCode;
-            }
+            get => 
+                Environment.ExitCode;
             set
             {
                 Environment.ExitCode = value;
             }
         }
 
-        public static string MachineNamePortable
-        {
-            get
-            {
-                return Environment.MachineName;
-            }
-        }
+        public static string MachineNamePortable =>
+            Environment.MachineName;
 
-        public static Version OSVersionVersionPortable
-        {
-            get
-            {
-                return Environment.OSVersion.Version;
-            }
-        }
+        public static Version OSVersionVersionPortable =>
+            Environment.OSVersion.Version;
 
-        public static string UserNamePortable
-        {
-            get
-            {
-                return Environment.UserName;
-            }
-        }
+        public static string UserNamePortable =>
+            Environment.UserName;
     }
 }
 

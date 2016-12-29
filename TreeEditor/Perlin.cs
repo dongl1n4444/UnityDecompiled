@@ -18,20 +18,14 @@
             this.SetSeed(0);
         }
 
-        private float at2(float rx, float ry, float x, float y)
-        {
-            return ((rx * x) + (ry * y));
-        }
+        private float at2(float rx, float ry, float x, float y) => 
+            ((rx * x) + (ry * y));
 
-        private float at3(float rx, float ry, float rz, float x, float y, float z)
-        {
-            return (((rx * x) + (ry * y)) + (rz * z));
-        }
+        private float at3(float rx, float ry, float rz, float x, float y, float z) => 
+            (((rx * x) + (ry * y)) + (rz * z));
 
-        private float lerp(float t, float a, float b)
-        {
-            return (a + (t * (b - a)));
-        }
+        private float lerp(float t, float a, float b) => 
+            (a + (t * (b - a)));
 
         public float Noise(float arg)
         {
@@ -133,10 +127,8 @@
             z /= num;
         }
 
-        private float s_curve(float t)
-        {
-            return ((t * t) * (3f - (2f * t)));
-        }
+        private float s_curve(float t) => 
+            ((t * t) * (3f - (2f * t)));
 
         public void SetSeed(int seed)
         {

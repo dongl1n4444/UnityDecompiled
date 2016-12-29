@@ -15,15 +15,13 @@
             TypeSpecification specification = typeReference as TypeSpecification;
             if (specification == null)
             {
-                throw new ArgumentException(string.Format("{0} is not an array type", typeReference.FullName), "typeReference");
+                throw new ArgumentException($"{typeReference.FullName} is not an array type", "typeReference");
             }
             return ArrayElementTypeOf(specification.ElementType);
         }
 
-        internal static ModuleDefinition ModuleDefinitionForElementTypeOf(ArrayType arrayType)
-        {
-            return arrayType.ElementType.Resolve().Module;
-        }
+        internal static ModuleDefinition ModuleDefinitionForElementTypeOf(ArrayType arrayType) => 
+            arrayType.ElementType.Resolve().Module;
     }
 }
 

@@ -18,10 +18,8 @@
         private static LocalUser m_LocalUser = null;
         private List<UserProfile> m_Users = new List<UserProfile>();
 
-        public IAchievement CreateAchievement()
-        {
-            return new Achievement();
-        }
+        public IAchievement CreateAchievement() => 
+            new Achievement();
 
         private Texture2D CreateDummyTexture(int width, int height)
         {
@@ -38,10 +36,8 @@
             return textured;
         }
 
-        public ILeaderboard CreateLeaderboard()
-        {
-            return new Leaderboard();
-        }
+        public ILeaderboard CreateLeaderboard() => 
+            new Leaderboard();
 
         public void LoadAchievementDescriptions(Action<IAchievementDescription[]> callback)
         {

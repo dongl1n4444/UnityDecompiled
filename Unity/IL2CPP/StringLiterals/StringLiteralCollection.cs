@@ -31,10 +31,8 @@
             this._stringLiterals.Clear();
         }
 
-        public int GetIndex(string literal)
-        {
-            return this._stringLiterals[literal];
-        }
+        public int GetIndex(string literal) => 
+            this._stringLiterals[literal];
 
         public ReadOnlyCollection<string> GetStringLiterals()
         {
@@ -46,7 +44,7 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<string, int>, string>(null, (IntPtr) <GetStringLiterals>m__1);
             }
-            return CollectionExtensions.AsReadOnlyPortable<string>(Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, int>, string>(Enumerable.OrderBy<KeyValuePair<string, int>, int>(this._stringLiterals, <>f__am$cache0), <>f__am$cache1)));
+            return this._stringLiterals.OrderBy<KeyValuePair<string, int>, int>(<>f__am$cache0).Select<KeyValuePair<string, int>, string>(<>f__am$cache1).ToArray<string>().AsReadOnlyPortable<string>();
         }
     }
 }

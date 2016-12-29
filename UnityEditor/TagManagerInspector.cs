@@ -38,10 +38,8 @@
             return !InternalEditorUtility.IsSortingLayerDefault(index);
         }
 
-        private bool CanRemoveSortLayerEntry(ReorderableList list)
-        {
-            return this.CanEditSortLayerEntry(list.index);
-        }
+        private bool CanRemoveSortLayerEntry(ReorderableList list) => 
+            this.CanEditSortLayerEntry(list.index);
 
         private void CheckForRemovedTags()
         {
@@ -246,21 +244,11 @@
             Selection.activeObject = EditorApplication.tagManager;
         }
 
-        public TagManager tagManager
-        {
-            get
-            {
-                return (base.target as TagManager);
-            }
-        }
+        public TagManager tagManager =>
+            (base.target as TagManager);
 
-        internal override string targetTitle
-        {
-            get
-            {
-                return "Tags & Layers";
-            }
-        }
+        internal override string targetTitle =>
+            "Tags & Layers";
 
         private class EnterNamePopup : PopupWindowContent
         {
@@ -283,10 +271,8 @@
                 this.m_NewTagName = ObjectNames.GetUniqueName(list.ToArray(), this.m_NewTagName);
             }
 
-            public override Vector2 GetWindowSize()
-            {
-                return new Vector2(400f, 48f);
-            }
+            public override Vector2 GetWindowSize() => 
+                new Vector2(400f, 48f);
 
             public override void OnGUI(Rect windowRect)
             {

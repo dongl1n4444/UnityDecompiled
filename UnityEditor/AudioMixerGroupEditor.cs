@@ -70,10 +70,8 @@
             }
         }
 
-        public override bool UseDefaultMargins()
-        {
-            return false;
-        }
+        public override bool UseDefaultMargins() => 
+            false;
     }
 }
 

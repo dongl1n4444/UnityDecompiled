@@ -28,10 +28,8 @@
             return string.Concat(objArray1);
         }
 
-        public int GetNumItemsInData()
-        {
-            return this.m_BackendData.IDCounter;
-        }
+        public int GetNumItemsInData() => 
+            this.m_BackendData.IDCounter;
 
         public int GetNumItemsInTree()
         {

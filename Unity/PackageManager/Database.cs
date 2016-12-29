@@ -45,11 +45,11 @@
             IEnumerable<IvyModule> first = Enumerable.Empty<IvyModule>();
             if (this.localPackagesByName != null)
             {
-                first = Enumerable.Union<IvyModule>(first, this.localPackagesByName[packageName]);
+                first = first.Union<IvyModule>(this.localPackagesByName[packageName]);
             }
             if (this.remotePackagesByName != null)
             {
-                first = Enumerable.Union<IvyModule>(first, this.remotePackagesByName[packageName]);
+                first = first.Union<IvyModule>(this.remotePackagesByName[packageName]);
             }
             return first;
         }
@@ -72,7 +72,7 @@
                 {
                     <>f__am$cache4 = new Func<IGrouping<string, IvyModule>, IEnumerable<IvyModule>>(null, (IntPtr) <RefreshLocalPackages>m__4);
                 }
-                IvyModule[] moduleArray2 = Enumerable.ToArray<IvyModule>(Enumerable.SelectMany<IGrouping<string, IvyModule>, IvyModule>(this.localPackagesByName, <>f__am$cache4));
+                IvyModule[] moduleArray2 = Enumerable.SelectMany<IGrouping<string, IvyModule>, IvyModule>(this.localPackagesByName, <>f__am$cache4).ToArray<IvyModule>();
                 for (int i = 0; i < moduleArray2.Length; i++)
                 {
                     <RefreshLocalPackages>c__AnonStorey0 storey = new <RefreshLocalPackages>c__AnonStorey0 {
@@ -97,7 +97,7 @@
             this.RefreshNewPackages();
             if (this.OnUpdateLocal != null)
             {
-                this.OnUpdateLocal(Enumerable.ToArray<IvyModule>(this.NewestLocalPackages));
+                this.OnUpdateLocal(this.NewestLocalPackages.ToArray<IvyModule>());
             }
         }
 
@@ -112,7 +112,7 @@
                 this.packagesNewOrUpdated = Enumerable.Where<IvyModule>(Enumerable.Select<IGrouping<string, IvyModule>, IvyModule>(this.remotePackagesByName, <>f__am$cache8), new Func<IvyModule, bool>(this, (IntPtr) this.<RefreshNewPackages>m__9));
                 if (this.OnUpdateAvailable != null)
                 {
-                    this.OnUpdateAvailable(Enumerable.ToArray<IvyModule>(this.packagesNewOrUpdated));
+                    this.OnUpdateAvailable(this.packagesNewOrUpdated.ToArray<IvyModule>());
                 }
             }
         }
@@ -205,13 +205,8 @@
             }
         }
 
-        public IEnumerable<IvyModule> NewOrUpdatedPackages
-        {
-            get
-            {
-                return this.packagesNewOrUpdated;
-            }
-        }
+        public IEnumerable<IvyModule> NewOrUpdatedPackages =>
+            this.packagesNewOrUpdated;
 
         [CompilerGenerated]
         private sealed class <RefreshLocalPackages>c__AnonStorey0
@@ -234,10 +229,8 @@
         {
             internal PackageInfo package;
 
-            internal bool <>m__0(IGrouping<string, IvyModule> p)
-            {
-                return (p.Key == this.package.packageName);
-            }
+            internal bool <>m__0(IGrouping<string, IvyModule> p) => 
+                (p.Key == this.package.packageName);
         }
 
         [CompilerGenerated]
@@ -245,10 +238,8 @@
         {
             internal IvyModule module;
 
-            internal bool <>m__0(IGrouping<string, IvyModule> p)
-            {
-                return (p.Key == this.module.Name);
-            }
+            internal bool <>m__0(IGrouping<string, IvyModule> p) => 
+                (p.Key == this.module.Name);
         }
 
         [CompilerGenerated]
@@ -256,10 +247,8 @@
         {
             internal PackageInfo package;
 
-            internal bool <>m__0(IGrouping<string, IvyModule> n)
-            {
-                return (n.Key == this.package.packageName);
-            }
+            internal bool <>m__0(IGrouping<string, IvyModule> n) => 
+                (n.Key == this.package.packageName);
 
             internal bool <>m__1(IvyModule m)
             {
@@ -277,10 +266,8 @@
         {
             internal IvyModule package;
 
-            internal bool <>m__0(IGrouping<string, IvyModule> n)
-            {
-                return (n.Key == this.package.Name);
-            }
+            internal bool <>m__0(IGrouping<string, IvyModule> n) => 
+                (n.Key == this.package.Name);
 
             internal bool <>m__1(IvyModule m)
             {

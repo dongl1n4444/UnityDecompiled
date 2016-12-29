@@ -89,7 +89,7 @@
             }
             else
             {
-                Debug.LogError(string.Format("SpatialMappingContext unable to notify a component about a failure to cook surface {0}!", sd.id.handle));
+                Debug.LogError($"SpatialMappingContext unable to notify a component about a failure to cook surface {sd.id.handle}!");
             }
         }
 
@@ -138,7 +138,7 @@
                     {
                         if ((this.m_NextIndex == -1) || !this.m_InFlightRequests[this.m_NextIndex].IsClear())
                         {
-                            Debug.LogError(string.Format("SMContext:  next index {0} may not be clear!", this.m_NextIndex));
+                            Debug.LogError($"SMContext:  next index {this.m_NextIndex} may not be clear!");
                         }
                         else if (item.m_SurfaceObserver.RequestMeshAsync(data, new SurfaceObserver.SurfaceDataReadyDelegate(this.OnSurfaceDataReady)))
                         {
@@ -179,27 +179,20 @@
             }
             else
             {
-                Debug.LogError(string.Format("SMContext:  unable to update in flight record for an invalid index {0}!", inFlightIndex));
+                Debug.LogError($"SMContext:  unable to update in flight record for an invalid index {inFlightIndex}!");
             }
         }
 
-        public static SpatialMappingContext Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static SpatialMappingContext Instance =>
+            instance;
 
         [CompilerGenerated]
         private sealed class <DeregisterComponent>c__AnonStorey1
         {
             internal SpatialMappingBase smComponent;
 
-            internal bool <>m__0(SpatialMappingContext.SMComponentRecord record)
-            {
-                return (record.m_Component == this.smComponent);
-            }
+            internal bool <>m__0(SpatialMappingContext.SMComponentRecord record) => 
+                (record.m_Component == this.smComponent);
         }
 
         [CompilerGenerated]
@@ -207,10 +200,8 @@
         {
             internal SpatialMappingBase smComponent;
 
-            internal bool <>m__0(SpatialMappingContext.SMComponentRecord record)
-            {
-                return (record.m_Component == this.smComponent);
-            }
+            internal bool <>m__0(SpatialMappingContext.SMComponentRecord record) => 
+                (record.m_Component == this.smComponent);
         }
 
         public delegate bool GetHighestPriorityCallback(out SurfaceData dataRequest);
@@ -226,10 +217,8 @@
                 this.m_Requester.Clear();
             }
 
-            public bool IsClear()
-            {
-                return ((this.m_RequestData.id.handle == 0) && this.m_Requester.IsClear());
-            }
+            public bool IsClear() => 
+                ((this.m_RequestData.id.handle == 0) && this.m_Requester.IsClear());
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -255,10 +244,8 @@
                 this.m_SurfaceObserver = null;
             }
 
-            public bool IsClear()
-            {
-                return ((((this.m_Component == null) && (this.m_OnDataReady == null)) && (this.m_GetHighestPri == null)) && (this.m_SurfaceObserver == null));
-            }
+            public bool IsClear() => 
+                ((((this.m_Component == null) && (this.m_OnDataReady == null)) && (this.m_GetHighestPri == null)) && (this.m_SurfaceObserver == null));
         }
     }
 }

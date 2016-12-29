@@ -124,10 +124,8 @@
             return null;
         }
 
-        internal static IBuildAnalyzer GetBuildAnalyzer(BuildTarget target)
-        {
-            return GetBuildAnalyzer(GetTargetStringFromBuildTarget(target));
-        }
+        internal static IBuildAnalyzer GetBuildAnalyzer(BuildTarget target) => 
+            GetBuildAnalyzer(GetTargetStringFromBuildTarget(target));
 
         internal static IBuildPostprocessor GetBuildPostProcessor(string target)
         {
@@ -144,10 +142,8 @@
             return null;
         }
 
-        internal static IBuildPostprocessor GetBuildPostProcessor(BuildTarget target)
-        {
-            return GetBuildPostProcessor(GetTargetStringFromBuildTarget(target));
-        }
+        internal static IBuildPostprocessor GetBuildPostProcessor(BuildTarget target) => 
+            GetBuildPostProcessor(GetTargetStringFromBuildTarget(target));
 
         internal static IBuildWindowExtension GetBuildWindowExtension(string target)
         {
@@ -183,12 +179,7 @@
             {
                 throw new ApplicationException("Couldn't create device API for device: " + deviceId);
             }
-            IPlatformSupportModule module = FindPlatformSupportModule(device.module);
-            if (module == null)
-            {
-                throw new ApplicationException("Couldn't find module for target: " + device.module);
-            }
-            return module.CreateDevice(deviceId);
+            return FindPlatformSupportModule(device.module)?.CreateDevice(deviceId);
         }
 
         internal static GUIContent[] GetDisplayNames(string target)
@@ -261,15 +252,11 @@
             return null;
         }
 
-        internal static IPluginImporterExtension GetPluginImporterExtension(BuildTarget target)
-        {
-            return GetPluginImporterExtension(GetTargetStringFromBuildTarget(target));
-        }
+        internal static IPluginImporterExtension GetPluginImporterExtension(BuildTarget target) => 
+            GetPluginImporterExtension(GetTargetStringFromBuildTarget(target));
 
-        internal static IPluginImporterExtension GetPluginImporterExtension(BuildTargetGroup target)
-        {
-            return GetPluginImporterExtension(GetTargetStringFromBuildTargetGroup(target));
-        }
+        internal static IPluginImporterExtension GetPluginImporterExtension(BuildTargetGroup target) => 
+            GetPluginImporterExtension(GetTargetStringFromBuildTargetGroup(target));
 
         internal static List<IPreferenceWindowExtension> GetPreferenceWindowExtensions()
         {
@@ -441,10 +428,8 @@
             return new DefaultTextureImportSettingsExtension();
         }
 
-        internal static ITextureImportSettingsExtension GetTextureImportSettingsExtension(BuildTarget target)
-        {
-            return GetTextureImportSettingsExtension(GetTargetStringFromBuildTarget(target));
-        }
+        internal static ITextureImportSettingsExtension GetTextureImportSettingsExtension(BuildTarget target) => 
+            GetTextureImportSettingsExtension(GetTargetStringFromBuildTarget(target));
 
         internal static IUserAssembliesValidator GetUserAssembliesValidator(string target)
         {
@@ -497,7 +482,7 @@
             {
                 <>f__am$cache5 = new Func<KeyValuePair<string, PackageFileData>, string>(null, (IntPtr) <InitializePackageManager>m__5);
             }
-            string str = Enumerable.FirstOrDefault<string>(Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(package.files, <>f__am$cache4), <>f__am$cache5));
+            string str = Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(package.files, <>f__am$cache4), <>f__am$cache5).FirstOrDefault<string>();
             if ((str == null) || !File.Exists(Path.Combine(package.basePath, str)))
             {
                 return false;
@@ -508,7 +493,7 @@
 
         private static bool InitializePackageManager(Assembly assembly, PackageInfo package)
         {
-            s_PackageManager = Enumerable.FirstOrDefault<IPackageManagerModule>(AssemblyHelper.FindImplementors<IPackageManagerModule>(assembly));
+            s_PackageManager = AssemblyHelper.FindImplementors<IPackageManagerModule>(assembly).FirstOrDefault<IPackageManagerModule>();
             if (s_PackageManager == null)
             {
                 return false;
@@ -542,7 +527,7 @@
                     }
                     foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info2.files, <>f__am$cache6))
                     {
-                        if (!File.Exists(Paths.NormalizePath(Path.Combine(info2.basePath, pair.Key))))
+                        if (!File.Exists(Path.Combine(info2.basePath, pair.Key).NormalizePath()))
                         {
                             object[] args = new object[] { info2.basePath, info2.name };
                             Debug.LogWarningFormat("Missing assembly \t{0} for {1}. Player support may be incomplete.", args);
@@ -588,10 +573,8 @@
             }
         }
 
-        internal static bool IsPlatformSupported(BuildTarget target)
-        {
-            return (GetTargetStringFromBuildTarget(target) != null);
-        }
+        internal static bool IsPlatformSupported(BuildTarget target) => 
+            (GetTargetStringFromBuildTarget(target) != null);
 
         internal static bool IsPlatformSupportLoaded(string target)
         {
@@ -605,10 +588,8 @@
             return false;
         }
 
-        internal static bool IsRegisteredModule(string file)
-        {
-            return ((s_PackageManager != null) && (Paths.NormalizePath(s_PackageManager.GetType().Assembly.Location) == Paths.NormalizePath(file)));
-        }
+        internal static bool IsRegisteredModule(string file) => 
+            ((s_PackageManager != null) && (s_PackageManager.GetType().Assembly.Location.NormalizePath() == file.NormalizePath()));
 
         private static void LoadUnityExtensions()
         {
@@ -622,7 +603,7 @@
                 }
                 foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info.files, <>f__am$cache0))
                 {
-                    string path = Paths.NormalizePath(Path.Combine(info.basePath, pair.Key));
+                    string path = Path.Combine(info.basePath, pair.Key).NormalizePath();
                     if (!File.Exists(path))
                     {
                         object[] args = new object[] { pair.Key, info.name };
@@ -659,10 +640,8 @@
             }
         }
 
-        private static IEnumerable<IEditorModule> RegisterEditorModulesFromAssembly(Assembly assembly)
-        {
-            return AssemblyHelper.FindImplementors<IEditorModule>(assembly);
-        }
+        private static IEnumerable<IEditorModule> RegisterEditorModulesFromAssembly(Assembly assembly) => 
+            AssemblyHelper.FindImplementors<IEditorModule>(assembly);
 
         private static IEnumerable<T> RegisterModulesFromLoadedAssemblies<T>(Func<Assembly, IEnumerable<T>> processAssembly)
         {
@@ -704,7 +683,7 @@
             {
                 <>f__am$cache3 = new Func<Assembly, Type>(null, (IntPtr) <RegisterPackageManager>m__3);
             }
-            Type type = Enumerable.FirstOrDefault<Type>(Enumerable.Select<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3));
+            Type type = Enumerable.Select<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<Type>();
             try
             {
                 object[] args = new object[2];
@@ -761,16 +740,14 @@
                 {
                     <>f__mg$cache1 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(null, (IntPtr) RegisterPlatformSupportModulesFromAssembly);
                 }
-                s_PlatformModules = Enumerable.ToList<IPlatformSupportModule>(RegisterModulesFromLoadedAssemblies<IPlatformSupportModule>(<>f__mg$cache1));
+                s_PlatformModules = RegisterModulesFromLoadedAssemblies<IPlatformSupportModule>(<>f__mg$cache1).ToList<IPlatformSupportModule>();
                 stopwatch.Stop();
                 Console.WriteLine("Registered platform support modules in: " + stopwatch.Elapsed.TotalSeconds + "s.");
             }
         }
 
-        internal static IEnumerable<IPlatformSupportModule> RegisterPlatformSupportModulesFromAssembly(Assembly assembly)
-        {
-            return AssemblyHelper.FindImplementors<IPlatformSupportModule>(assembly);
-        }
+        internal static IEnumerable<IPlatformSupportModule> RegisterPlatformSupportModulesFromAssembly(Assembly assembly) => 
+            AssemblyHelper.FindImplementors<IPlatformSupportModule>(assembly);
 
         internal static void Shutdown()
         {
@@ -802,7 +779,7 @@
             }
             catch
             {
-                Debug.LogWarning(string.Format("Couldn't find build target for {0}", targetString));
+                Debug.LogWarning($"Couldn't find build target for {targetString}");
             }
             return false;
         }
@@ -851,7 +828,7 @@
                 try
                 {
                     IEnumerable<T> source = this.processAssembly.Invoke(assembly);
-                    if ((source != null) && Enumerable.Any<T>(source))
+                    if ((source != null) && source.Any<T>())
                     {
                         list.AddRange(source);
                     }

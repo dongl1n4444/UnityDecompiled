@@ -67,7 +67,7 @@
             }
         }
 
-        public void Remove([Optional, DefaultParameterValue(true)] bool rebuildGraph)
+        public void Remove(bool rebuildGraph = true)
         {
             if (this.sourceState != null)
             {
@@ -94,37 +94,17 @@
             }
         }
 
-        public string displayName
-        {
-            get
-            {
-                return this.m_DisplayName;
-            }
-        }
+        public string displayName =>
+            this.m_DisplayName;
 
-        public string fullName
-        {
-            get
-            {
-                return this.m_FullName;
-            }
-        }
+        public string fullName =>
+            this.m_FullName;
 
-        public bool isAnyStateTransition
-        {
-            get
-            {
-                return ((this.ownerStateMachine != null) && (this.transition is AnimatorStateTransition));
-            }
-        }
+        public bool isAnyStateTransition =>
+            ((this.ownerStateMachine != null) && (this.transition is AnimatorStateTransition));
 
-        public bool isDefaultTransition
-        {
-            get
-            {
-                return (((this.transition == null) && (this.sourceState == null)) && (this.sourceStateMachine == null));
-            }
-        }
+        public bool isDefaultTransition =>
+            (((this.transition == null) && (this.sourceState == null)) && (this.sourceStateMachine == null));
     }
 }
 

@@ -19,10 +19,8 @@
         /// </summary>
         public bool useDefaultValues
         {
-            get
-            {
-                return (this.m_UseDefaultValues != 0);
-            }
+            get => 
+                (this.m_UseDefaultValues != 0);
             set
             {
                 this.m_UseDefaultValues = !value ? 0 : 1;
@@ -33,10 +31,8 @@
         /// </summary>
         public Vector3 min
         {
-            get
-            {
-                return this.m_Min;
-            }
+            get => 
+                this.m_Min;
             set
             {
                 this.m_Min = value;
@@ -47,10 +43,8 @@
         /// </summary>
         public Vector3 max
         {
-            get
-            {
-                return this.m_Max;
-            }
+            get => 
+                this.m_Max;
             set
             {
                 this.m_Max = value;
@@ -61,10 +55,8 @@
         /// </summary>
         public Vector3 center
         {
-            get
-            {
-                return this.m_Center;
-            }
+            get => 
+                this.m_Center;
             set
             {
                 this.m_Center = value;
@@ -75,10 +67,8 @@
         /// </summary>
         public float axisLength
         {
-            get
-            {
-                return this.m_AxisLength;
-            }
+            get => 
+                this.m_AxisLength;
             set
             {
                 this.m_AxisLength = value;

@@ -35,12 +35,10 @@
             this._writer.EndBlock(semicolon);
         }
 
-        protected string Quote(object val)
-        {
-            return string.Format("\"{0}\"", val);
-        }
+        protected string Quote(object val) => 
+            $""{val}"";
 
-        internal static string TypeRepositoryTypeFor(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs)
+        internal static string TypeRepositoryTypeFor(TypeReference type, int attrs = 0)
         {
             Il2CppTypeCollectorWriter.Add(type, attrs);
             return Naming.AddressOf(Naming.ForIl2CppType(type, attrs));
@@ -56,7 +54,7 @@
             this._writer.Write(format, args);
         }
 
-        protected void WriteArrayInitializer(IEnumerable<string> initializers, [Optional, DefaultParameterValue(0)] ArrayTerminator terminator)
+        protected void WriteArrayInitializer(IEnumerable<string> initializers, ArrayTerminator terminator = 0)
         {
             this.BeginBlock();
             foreach (string str in initializers)
@@ -113,7 +111,7 @@
             {
                 return TableInfo.Empty;
             }
-            writer.WriteArrayInitializer(type, name, Enumerable.Select<T, string>(items, map), false);
+            writer.WriteArrayInitializer(type, name, items.Select<T, string>(map), false);
             return new TableInfo(items.Count, type, name);
         }
 
@@ -123,25 +121,15 @@
             {
                 return TableInfo.Empty;
             }
-            writer.WriteArrayInitializer(type, name, Enumerable.Select<T, string>(items, map), false);
+            writer.WriteArrayInitializer(type, name, items.Select<T, string>(map), false);
             return new TableInfo(items.Count, type, name);
         }
 
-        protected IDebuggerSupport DebuggerSupport
-        {
-            get
-            {
-                return this._debuggerSupport;
-            }
-        }
+        protected IDebuggerSupport DebuggerSupport =>
+            this._debuggerSupport;
 
-        protected CppCodeWriter Writer
-        {
-            get
-            {
-                return this._writer;
-            }
-        }
+        protected CppCodeWriter Writer =>
+            this._writer;
 
         public enum ArrayTerminator
         {

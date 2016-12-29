@@ -17,7 +17,7 @@
 
         public void Add(iOSDeviceRequirement requirement)
         {
-            SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, -1, Enumerable.ToArray<string>(requirement.values.Keys), Enumerable.ToArray<string>(requirement.values.Values));
+            SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, -1, requirement.values.Keys.ToArray<string>(), requirement.values.Values.ToArray<string>());
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -34,13 +34,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void SetOrAddDeviceRequirementForVariantNameImpl(string name, int index, string[] keys, string[] values);
 
-        public int count
-        {
-            get
-            {
-                return GetCountForVariantImpl(this.m_VariantName);
-            }
-        }
+        public int count =>
+            GetCountForVariantImpl(this.m_VariantName);
 
         public iOSDeviceRequirement this[int index]
         {
@@ -58,7 +53,7 @@
             }
             set
             {
-                SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, index, Enumerable.ToArray<string>(value.values.Keys), Enumerable.ToArray<string>(value.values.Values));
+                SetOrAddDeviceRequirementForVariantNameImpl(this.m_VariantName, index, value.values.Keys.ToArray<string>(), value.values.Values.ToArray<string>());
             }
         }
     }

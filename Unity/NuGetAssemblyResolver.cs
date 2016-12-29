@@ -25,7 +25,7 @@
                 string fileName = Path.GetFileName(str);
                 if (this._references.TryGetValue(fileName, out str3))
                 {
-                    throw new Exception(string.Format("Reference \"{0}\" already added as \"{1}\".", str, str3));
+                    throw new Exception($"Reference "{str}" already added as "{str3}".");
                 }
                 this._references.Add(fileName, str);
             }

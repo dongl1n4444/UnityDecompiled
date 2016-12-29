@@ -374,10 +374,8 @@
         /// <summary>
         /// <para>Is the rigidbody sleeping?</para>
         /// </summary>
-        public bool IsSleeping()
-        {
-            return INTERNAL_CALL_IsSleeping(this);
-        }
+        public bool IsSleeping() => 
+            INTERNAL_CALL_IsSleeping(this);
 
         /// <summary>
         /// <para>Moves the rigidbody to position.</para>
@@ -451,10 +449,8 @@
             return INTERNAL_CALL_SweepTest(this, ref direction, out hitInfo, maxDistance, useGlobal);
         }
 
-        public bool SweepTest(Vector3 direction, out RaycastHit hitInfo, [DefaultValue("Mathf.Infinity")] float maxDistance, [DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction)
-        {
-            return INTERNAL_CALL_SweepTest(this, ref direction, out hitInfo, maxDistance, queryTriggerInteraction);
-        }
+        public bool SweepTest(Vector3 direction, out RaycastHit hitInfo, [DefaultValue("Mathf.Infinity")] float maxDistance, [DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction) => 
+            INTERNAL_CALL_SweepTest(this, ref direction, out hitInfo, maxDistance, queryTriggerInteraction);
 
         [ExcludeFromDocs]
         public RaycastHit[] SweepTestAll(Vector3 direction)
@@ -480,10 +476,8 @@
         /// <returns>
         /// <para>An array of all colliders hit in the sweep.</para>
         /// </returns>
-        public RaycastHit[] SweepTestAll(Vector3 direction, [DefaultValue("Mathf.Infinity")] float maxDistance, [DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction)
-        {
-            return INTERNAL_CALL_SweepTestAll(this, ref direction, maxDistance, queryTriggerInteraction);
-        }
+        public RaycastHit[] SweepTestAll(Vector3 direction, [DefaultValue("Mathf.Infinity")] float maxDistance, [DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction) => 
+            INTERNAL_CALL_SweepTestAll(this, ref direction, maxDistance, queryTriggerInteraction);
 
         /// <summary>
         /// <para>Forces a rigidbody to wake up.</para>
@@ -670,10 +664,8 @@
         [Obsolete("Please use Rigidbody.solverIterations instead. (UnityUpgradable) -> solverIterations")]
         public int solverIterationCount
         {
-            get
-            {
-                return this.solverIterations;
-            }
+            get => 
+                this.solverIterations;
             set
             {
                 this.solverIterations = value;
@@ -688,10 +680,8 @@
         [Obsolete("Please use Rigidbody.solverVelocityIterations instead. (UnityUpgradable) -> solverVelocityIterations")]
         public int solverVelocityIterationCount
         {
-            get
-            {
-                return this.solverVelocityIterations;
-            }
+            get => 
+                this.solverVelocityIterations;
             set
             {
                 this.solverVelocityIterations = value;

@@ -81,20 +81,14 @@
         /// <para>Continue to generate characters even if the text runs out of bounds.</para>
         /// </summary>
         public bool generateOutOfBounds;
-        private bool CompareColors(Color left, Color right)
-        {
-            return (((Mathf.Approximately(left.r, right.r) && Mathf.Approximately(left.g, right.g)) && Mathf.Approximately(left.b, right.b)) && Mathf.Approximately(left.a, right.a));
-        }
+        private bool CompareColors(Color left, Color right) => 
+            (((Mathf.Approximately(left.r, right.r) && Mathf.Approximately(left.g, right.g)) && Mathf.Approximately(left.b, right.b)) && Mathf.Approximately(left.a, right.a));
 
-        private bool CompareVector2(Vector2 left, Vector2 right)
-        {
-            return (Mathf.Approximately(left.x, right.x) && Mathf.Approximately(left.y, right.y));
-        }
+        private bool CompareVector2(Vector2 left, Vector2 right) => 
+            (Mathf.Approximately(left.x, right.x) && Mathf.Approximately(left.y, right.y));
 
-        public bool Equals(TextGenerationSettings other)
-        {
-            return ((((((this.CompareColors(this.color, other.color) && (this.fontSize == other.fontSize)) && (Mathf.Approximately(this.scaleFactor, other.scaleFactor) && (this.resizeTextMinSize == other.resizeTextMinSize))) && (((this.resizeTextMaxSize == other.resizeTextMaxSize) && Mathf.Approximately(this.lineSpacing, other.lineSpacing)) && ((this.fontStyle == other.fontStyle) && (this.richText == other.richText)))) && ((((this.textAnchor == other.textAnchor) && (this.alignByGeometry == other.alignByGeometry)) && ((this.resizeTextForBestFit == other.resizeTextForBestFit) && (this.resizeTextMinSize == other.resizeTextMinSize))) && (((this.resizeTextMaxSize == other.resizeTextMaxSize) && (this.resizeTextForBestFit == other.resizeTextForBestFit)) && ((this.updateBounds == other.updateBounds) && (this.horizontalOverflow == other.horizontalOverflow))))) && (((this.verticalOverflow == other.verticalOverflow) && this.CompareVector2(this.generationExtents, other.generationExtents)) && this.CompareVector2(this.pivot, other.pivot))) && (this.font == other.font));
-        }
+        public bool Equals(TextGenerationSettings other) => 
+            ((((((this.CompareColors(this.color, other.color) && (this.fontSize == other.fontSize)) && (Mathf.Approximately(this.scaleFactor, other.scaleFactor) && (this.resizeTextMinSize == other.resizeTextMinSize))) && (((this.resizeTextMaxSize == other.resizeTextMaxSize) && Mathf.Approximately(this.lineSpacing, other.lineSpacing)) && ((this.fontStyle == other.fontStyle) && (this.richText == other.richText)))) && ((((this.textAnchor == other.textAnchor) && (this.alignByGeometry == other.alignByGeometry)) && ((this.resizeTextForBestFit == other.resizeTextForBestFit) && (this.resizeTextMinSize == other.resizeTextMinSize))) && (((this.resizeTextMaxSize == other.resizeTextMaxSize) && (this.resizeTextForBestFit == other.resizeTextForBestFit)) && ((this.updateBounds == other.updateBounds) && (this.horizontalOverflow == other.horizontalOverflow))))) && (((this.verticalOverflow == other.verticalOverflow) && this.CompareVector2(this.generationExtents, other.generationExtents)) && this.CompareVector2(this.pivot, other.pivot))) && (this.font == other.font));
     }
 }
 

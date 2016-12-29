@@ -33,10 +33,8 @@
         private SerializedProperty[] splashScreenProperties;
         private static readonly UnityEditor.iOS.SplashScreen[] splashScreenTypes = UnityEditor.iOS.SplashScreen.tvOSTypes;
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
         public override void ConfigurationSectionGUI()
         {
@@ -52,22 +50,18 @@
             }
         }
 
-        public override bool HasIdentificationGUI()
-        {
-            return true;
-        }
+        public override bool HasIdentificationGUI() => 
+            true;
 
-        public override bool HasPublishSection()
-        {
-            return false;
-        }
+        public override bool HasPublishSection() => 
+            false;
 
         public override void IconSectionGUI()
         {
-            this.m_SmallIconsLayers.textures = Enumerable.ToList<Texture2D>(PlayerSettings.tvOS.GetSmallIconLayers());
-            this.m_LargeIconsLayers.textures = Enumerable.ToList<Texture2D>(PlayerSettings.tvOS.GetLargeIconLayers());
-            this.m_TopShelfImageLayers.textures = Enumerable.ToList<Texture2D>(PlayerSettings.tvOS.GetTopShelfImageLayers());
-            this.m_TopShelfImageWideLayers.textures = Enumerable.ToList<Texture2D>(PlayerSettings.tvOS.GetTopShelfImageWideLayers());
+            this.m_SmallIconsLayers.textures = PlayerSettings.tvOS.GetSmallIconLayers().ToList<Texture2D>();
+            this.m_LargeIconsLayers.textures = PlayerSettings.tvOS.GetLargeIconLayers().ToList<Texture2D>();
+            this.m_TopShelfImageLayers.textures = PlayerSettings.tvOS.GetTopShelfImageLayers().ToList<Texture2D>();
+            this.m_TopShelfImageWideLayers.textures = PlayerSettings.tvOS.GetTopShelfImageWideLayers().ToList<Texture2D>();
             this.EnsureMinimumNumberOfTextures(this.m_SmallIconsLayers);
             this.EnsureMinimumNumberOfTextures(this.m_LargeIconsLayers);
             this.EnsureMinimumNumberOfTextures(this.m_TopShelfImageLayers);
@@ -141,10 +135,8 @@
             }
         }
 
-        public override bool UsesStandardIcons()
-        {
-            return false;
-        }
+        public override bool UsesStandardIcons() => 
+            false;
     }
 }
 

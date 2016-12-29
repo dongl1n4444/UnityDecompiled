@@ -24,10 +24,8 @@
         private static long s_LocalCacheServerUsedSize = -1L;
         private static bool s_PrefsLoaded;
 
-        private static bool IsCollabCacheEnabled()
-        {
-            return (s_EnableCollabCacheConfiguration || Application.HasARGV("enableCacheServer"));
-        }
+        private static bool IsCollabCacheEnabled() => 
+            (s_EnableCollabCacheConfiguration || Application.HasARGV("enableCacheServer"));
 
         [PreferenceItem("Cache Server")]
         public static void OnGUI()

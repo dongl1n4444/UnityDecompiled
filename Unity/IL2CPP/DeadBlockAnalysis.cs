@@ -8,7 +8,7 @@
     {
         public static void MarkBlocksDeadIfNeeded(InstructionBlock[] instructionBlocks)
         {
-            if (Enumerable.Count<InstructionBlock>(instructionBlocks) != 1)
+            if (instructionBlocks.Count<InstructionBlock>() != 1)
             {
                 foreach (InstructionBlock block in instructionBlocks)
                 {

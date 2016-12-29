@@ -33,28 +33,17 @@
             this._set = new HashSet<T>(values, comparer);
         }
 
-        public bool Contains(T item)
-        {
-            return this._set.Contains(item);
-        }
+        public bool Contains(T item) => 
+            this._set.Contains(item);
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return this._set.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => 
+            this._set.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.GetEnumerator();
 
-        public int Count
-        {
-            get
-            {
-                return this._set.Count;
-            }
-        }
+        public int Count =>
+            this._set.Count;
     }
 }
 

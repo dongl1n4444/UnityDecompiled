@@ -4,15 +4,14 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    [CompilerGlobalScope, Extension]
+    [CompilerGlobalScope]
     public sealed class UnityScriptCompilerModule
     {
         private UnityScriptCompilerModule()
         {
         }
 
-        [Extension]
-        public static void ReplaceOptional(CompilerPipeline pipeline, Type optionalPipelineStepType, ICompilerStep step)
+        public static void ReplaceOptional(this CompilerPipeline pipeline, Type optionalPipelineStepType, ICompilerStep step)
         {
             int num = pipeline.Find(optionalPipelineStepType);
             if (num >= 0)

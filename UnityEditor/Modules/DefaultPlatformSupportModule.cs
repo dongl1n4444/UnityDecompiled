@@ -12,66 +12,44 @@
         {
         }
 
-        public virtual IBuildAnalyzer CreateBuildAnalyzer()
-        {
-            return null;
-        }
+        public virtual IBuildAnalyzer CreateBuildAnalyzer() => 
+            null;
 
         public abstract IBuildPostprocessor CreateBuildPostprocessor();
-        public virtual IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return null;
-        }
+        public virtual IBuildWindowExtension CreateBuildWindowExtension() => 
+            null;
 
-        public virtual ICompilationExtension CreateCompilationExtension()
-        {
-            return ((this.compilationExtension == null) ? (this.compilationExtension = new DefaultCompilationExtension()) : this.compilationExtension);
-        }
+        public virtual ICompilationExtension CreateCompilationExtension() => 
+            ((this.compilationExtension == null) ? (this.compilationExtension = new DefaultCompilationExtension()) : this.compilationExtension);
 
         public virtual IDevice CreateDevice(string id)
         {
             throw new NotSupportedException();
         }
 
-        public virtual IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return null;
-        }
+        public virtual IPluginImporterExtension CreatePluginImporterExtension() => 
+            null;
 
-        public virtual IPreferenceWindowExtension CreatePreferenceWindowExtension()
-        {
-            return null;
-        }
+        public virtual IPreferenceWindowExtension CreatePreferenceWindowExtension() => 
+            null;
 
-        public virtual IProjectGeneratorExtension CreateProjectGeneratorExtension()
-        {
-            return null;
-        }
+        public virtual IProjectGeneratorExtension CreateProjectGeneratorExtension() => 
+            null;
 
-        public virtual IScriptingImplementations CreateScriptingImplementations()
-        {
-            return null;
-        }
+        public virtual IScriptingImplementations CreateScriptingImplementations() => 
+            null;
 
-        public virtual ISettingEditorExtension CreateSettingsEditorExtension()
-        {
-            return null;
-        }
+        public virtual ISettingEditorExtension CreateSettingsEditorExtension() => 
+            null;
 
-        public virtual ITextureImportSettingsExtension CreateTextureImportSettingsExtension()
-        {
-            return ((this.textureSettingsExtension == null) ? (this.textureSettingsExtension = new DefaultTextureImportSettingsExtension()) : this.textureSettingsExtension);
-        }
+        public virtual ITextureImportSettingsExtension CreateTextureImportSettingsExtension() => 
+            ((this.textureSettingsExtension == null) ? (this.textureSettingsExtension = new DefaultTextureImportSettingsExtension()) : this.textureSettingsExtension);
 
-        public virtual IUserAssembliesValidator CreateUserAssembliesValidatorExtension()
-        {
-            return null;
-        }
+        public virtual IUserAssembliesValidator CreateUserAssembliesValidatorExtension() => 
+            null;
 
-        public virtual GUIContent[] GetDisplayNames()
-        {
-            return null;
-        }
+        public virtual GUIContent[] GetDisplayNames() => 
+            null;
 
         public virtual void OnActivate()
         {
@@ -93,39 +71,19 @@
         {
         }
 
-        public virtual string[] AssemblyReferencesForEditorCsharpProject
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public virtual string[] AssemblyReferencesForEditorCsharpProject =>
+            new string[0];
 
-        public virtual string[] AssemblyReferencesForUserScripts
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public virtual string[] AssemblyReferencesForUserScripts =>
+            new string[0];
 
-        public virtual string ExtensionVersion
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual string ExtensionVersion =>
+            null;
 
         public abstract string JamTarget { get; }
 
-        public virtual string[] NativeLibraries
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public virtual string[] NativeLibraries =>
+            new string[0];
 
         public abstract string TargetName { get; }
     }

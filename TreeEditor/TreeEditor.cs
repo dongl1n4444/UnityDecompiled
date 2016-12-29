@@ -649,10 +649,8 @@
             return (num + GetMaterialFloat(material, "_ShadowOffsetScale"));
         }
 
-        private Rect GetHierachyNodeVisRect(Rect rect)
-        {
-            return new Rect(((rect.x + rect.width) - 13f) - 1f, rect.y + 11f, 13f, 11f);
-        }
+        private Rect GetHierachyNodeVisRect(Rect rect) => 
+            new Rect(((rect.x + rect.width) - 13f) - 1f, rect.y + 11f, 13f, 11f);
 
         private static float GetMaterialFloat(Material material, string propertyID)
         {
@@ -860,10 +858,8 @@
             return num2;
         }
 
-        private Rect GUIPropBegin()
-        {
-            return EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
-        }
+        private Rect GUIPropBegin() => 
+            EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
 
         private void GUIPropEnd()
         {
@@ -2188,10 +2184,8 @@
             }
         }
 
-        public override bool UseDefaultMargins()
-        {
-            return false;
-        }
+        public override bool UseDefaultMargins() => 
+            false;
 
         private void VerifySelection(TreeData treeData)
         {

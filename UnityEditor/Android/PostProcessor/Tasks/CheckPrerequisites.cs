@@ -11,10 +11,8 @@
     {
         public event ProgressHandler OnProgress;
 
-        private bool ArePasswordsProvided()
-        {
-            return ((PlayerSettings.Android.keyaliasName.Length == 0) || ((PlayerSettings.Android.keystorePass.Length != 0) && (PlayerSettings.Android.keyaliasPass.Length != 0)));
-        }
+        private bool ArePasswordsProvided() => 
+            ((PlayerSettings.Android.keyaliasName.Length == 0) || ((PlayerSettings.Android.keystorePass.Length != 0) && (PlayerSettings.Android.keyaliasPass.Length != 0)));
 
         private void CheckUnityLibraryForArchitecture(PostProcessorContext context, string arch)
         {
@@ -55,13 +53,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Checking prerequisutes";
-            }
-        }
+        public string Name =>
+            "Checking prerequisutes";
     }
 }
 

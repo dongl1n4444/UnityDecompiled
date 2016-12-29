@@ -27,25 +27,17 @@
         {
         }
 
-        public override bool CanMarshalAsInputParameter(MarshaledParameter parameter)
-        {
-            return base.MarshalInfoWriterFor(parameter).CanMarshalTypeFromNative();
-        }
+        public override bool CanMarshalAsInputParameter(MarshaledParameter parameter) => 
+            base.MarshalInfoWriterFor(parameter).CanMarshalTypeFromNative();
 
-        public override bool CanMarshalAsOutputParameter(MethodReturnType methodReturnType)
-        {
-            return base.MarshalInfoWriterFor(methodReturnType).CanMarshalTypeToNative();
-        }
+        public override bool CanMarshalAsOutputParameter(MethodReturnType methodReturnType) => 
+            base.MarshalInfoWriterFor(methodReturnType).CanMarshalTypeToNative();
 
-        public override bool CanMarshalAsOutputParameter(MarshaledParameter parameter)
-        {
-            return base.MarshalInfoWriterFor(parameter).CanMarshalTypeToNative();
-        }
+        public override bool CanMarshalAsOutputParameter(MarshaledParameter parameter) => 
+            base.MarshalInfoWriterFor(parameter).CanMarshalTypeToNative();
 
-        public override string GetPrettyCalleeName()
-        {
-            return "Managed method";
-        }
+        public override string GetPrettyCalleeName() => 
+            "Managed method";
 
         public override void WriteMarshalCleanupEmptyParameter(CppCodeWriter writer, string valueName, MarshaledParameter parameter, IRuntimeMetadataAccess metadataAccess)
         {

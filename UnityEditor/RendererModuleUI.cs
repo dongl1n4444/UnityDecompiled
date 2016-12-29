@@ -221,10 +221,8 @@
             }
         }
 
-        public bool IsMeshEmitter()
-        {
-            return ((this.m_RenderMode != null) && (this.m_RenderMode.intValue == 4));
-        }
+        public bool IsMeshEmitter() => 
+            ((this.m_RenderMode != null) && (this.m_RenderMode.intValue == 4));
 
         public override void OnInspectorGUI(ParticleSystem s)
         {
@@ -358,10 +356,8 @@
         {
             internal RendererModuleUI.StreamCallbackData data;
 
-            internal bool <>m__0(string item)
-            {
-                return (item == this.data.text);
-            }
+            internal bool <>m__0(string item) => 
+                (item == this.data.text);
         }
 
         private enum RenderMode

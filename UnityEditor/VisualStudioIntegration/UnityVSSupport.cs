@@ -108,10 +108,8 @@
             }
         }
 
-        private static string GetVstuBridgePathFromRegistry(string vsVersion, bool currentUser)
-        {
-            return (string) Registry.GetValue(string.Format(@"{0}\Software\Microsoft\Microsoft Visual Studio {1} Tools for Unity", !currentUser ? "HKEY_LOCAL_MACHINE" : "HKEY_CURRENT_USER", vsVersion), "UnityExtensionPath", null);
-        }
+        private static string GetVstuBridgePathFromRegistry(string vsVersion, bool currentUser) => 
+            ((string) Registry.GetValue($"{!currentUser ? "HKEY_LOCAL_MACHINE" : "HKEY_CURRENT_USER"}\Software\Microsoft\Microsoft Visual Studio {vsVersion} Tools for Unity", "UnityExtensionPath", null));
 
         public static void Initialize()
         {
@@ -183,7 +181,7 @@
                 vsVersion = VisualStudioVersion.Invalid;
                 return false;
             }
-            KeyValuePair<VisualStudioVersion, string>[] pairArray = Enumerable.ToArray<KeyValuePair<VisualStudioVersion, string>>(Enumerable.Where<KeyValuePair<VisualStudioVersion, string>>(SyncVS.InstalledVisualStudios, new Func<KeyValuePair<VisualStudioVersion, string>, bool>(storey, (IntPtr) this.<>m__0)));
+            KeyValuePair<VisualStudioVersion, string>[] pairArray = Enumerable.Where<KeyValuePair<VisualStudioVersion, string>>(SyncVS.InstalledVisualStudios, new Func<KeyValuePair<VisualStudioVersion, string>, bool>(storey, (IntPtr) this.<>m__0)).ToArray<KeyValuePair<VisualStudioVersion, string>>();
             if (pairArray.Length > 0)
             {
                 vsVersion = pairArray[0].Key;
@@ -218,10 +216,8 @@
             }
         }
 
-        public static bool ShouldUnityVSBeActive()
-        {
-            return m_ShouldUnityVSBeActive;
-        }
+        public static bool ShouldUnityVSBeActive() => 
+            m_ShouldUnityVSBeActive;
 
         private static bool TryGetVisualStudioVersion(string externalEditor, out VisualStudioVersion vsVersion)
         {
@@ -260,10 +256,8 @@
         {
             internal string externalEditor;
 
-            internal bool <>m__0(KeyValuePair<VisualStudioVersion, string> kvp)
-            {
-                return Paths.AreEqual(kvp.Value, this.externalEditor, true);
-            }
+            internal bool <>m__0(KeyValuePair<VisualStudioVersion, string> kvp) => 
+                Paths.AreEqual(kvp.Value, this.externalEditor, true);
         }
     }
 }

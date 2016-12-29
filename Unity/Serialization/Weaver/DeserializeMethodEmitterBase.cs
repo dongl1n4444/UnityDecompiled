@@ -273,34 +273,26 @@
             }
         }
 
-        private MethodReference ListConstructorRefFor(TypeReference typeReference)
-        {
-            return new MethodReference(".ctor", base.Import(typeof(void)), MethodEmitterBase.TypeReferenceFor(typeReference)) { 
+        private MethodReference ListConstructorRefFor(TypeReference typeReference) => 
+            new MethodReference(".ctor", base.Import(typeof(void)), MethodEmitterBase.TypeReferenceFor(typeReference)) { 
                 HasThis = true,
                 Parameters = { base.ParamDef("count", typeof(int)) }
             };
-        }
 
         private void Newarr(TypeReference elementType)
         {
             base.Processor.Emit(OpCodes.Newarr, elementType);
         }
 
-        private string ReadMethodNameFor(FieldReference fieldDef)
-        {
-            return this.ReadMethodNameFor(base.TypeOf(fieldDef));
-        }
+        private string ReadMethodNameFor(FieldReference fieldDef) => 
+            this.ReadMethodNameFor(base.TypeOf(fieldDef));
 
-        protected string ReadMethodNameFor(TypeReference typeRef)
-        {
-            return ("Read" + base.MethodSuffixFor(typeRef));
-        }
+        protected string ReadMethodNameFor(TypeReference typeRef) => 
+            ("Read" + base.MethodSuffixFor(typeRef));
 
         protected abstract void ReadSequenceLength(string fieldName);
-        protected override bool ShouldProcess(FieldDefinition fieldDefinition)
-        {
-            return base.WillUnitySerialize(fieldDefinition);
-        }
+        protected override bool ShouldProcess(FieldDefinition fieldDefinition) => 
+            base.WillUnitySerialize(fieldDefinition);
 
         private void Stelem_Any(TypeReference elementTypeRef)
         {

@@ -57,10 +57,8 @@
             return (str + "\n" + InternalMeshUtil.GetVertexFormat(target));
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.target != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.target != null);
 
         private void Init()
         {

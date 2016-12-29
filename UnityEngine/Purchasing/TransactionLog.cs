@@ -40,10 +40,8 @@
             return builder.ToString();
         }
 
-        private string GetRecordPath(string transactionID)
-        {
-            return Path.Combine(this.persistentDataPath, ComputeHash(transactionID));
-        }
+        private string GetRecordPath(string transactionID) => 
+            Path.Combine(this.persistentDataPath, ComputeHash(transactionID));
 
         public bool HasRecordOf(string transactionID)
         {

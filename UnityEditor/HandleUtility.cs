@@ -126,10 +126,8 @@
             return ((GetParametrization(vector5, vector3, vector4) - num3) * num);
         }
 
-        internal static float CalcRayPlaceOffset(Transform[] objects, Vector3 normal)
-        {
-            return INTERNAL_CALL_CalcRayPlaceOffset(objects, ref normal);
-        }
+        internal static float CalcRayPlaceOffset(Transform[] objects, Vector3 normal) => 
+            INTERNAL_CALL_CalcRayPlaceOffset(objects, ref normal);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool CameraNeedsToRenderIntoRT(Camera camera);
@@ -203,10 +201,8 @@
         /// <param name="endPosition"></param>
         /// <param name="startTangent"></param>
         /// <param name="endTangent"></param>
-        public static float DistancePointBezier(Vector3 point, Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent)
-        {
-            return INTERNAL_CALL_DistancePointBezier(ref point, ref startPosition, ref endPosition, ref startTangent, ref endTangent);
-        }
+        public static float DistancePointBezier(Vector3 point, Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent) => 
+            INTERNAL_CALL_DistancePointBezier(ref point, ref startPosition, ref endPosition, ref startTangent, ref endTangent);
 
         /// <summary>
         /// <para>Calculate distance between a point and a line.</para>
@@ -214,10 +210,8 @@
         /// <param name="point"></param>
         /// <param name="lineStart"></param>
         /// <param name="lineEnd"></param>
-        public static float DistancePointLine(Vector3 point, Vector3 lineStart, Vector3 lineEnd)
-        {
-            return Vector3.Magnitude(ProjectPointLine(point, lineStart, lineEnd) - point);
-        }
+        public static float DistancePointLine(Vector3 point, Vector3 lineStart, Vector3 lineEnd) => 
+            Vector3.Magnitude(ProjectPointLine(point, lineStart, lineEnd) - point);
 
         /// <summary>
         /// <para>Distance from a point p in 2d to a line defined by two points a and b.</para>
@@ -302,10 +296,8 @@
             return (magnitude - radius);
         }
 
-        internal static float DistanceToDiamond(Vector3 position, Quaternion rotation, float size)
-        {
-            return DistanceToDiamondInternal(position, rotation, size, Event.current.mousePosition);
-        }
+        internal static float DistanceToDiamond(Vector3 position, Quaternion rotation, float size) => 
+            DistanceToDiamondInternal(position, rotation, size, Event.current.mousePosition);
 
         internal static float DistanceToDiamondInternal(Vector3 position, Quaternion rotation, float size, Vector2 mousePosition)
         {
@@ -401,10 +393,8 @@
         /// <param name="position"></param>
         /// <param name="rotation"></param>
         /// <param name="size"></param>
-        public static float DistanceToRectangle(Vector3 position, Quaternion rotation, float size)
-        {
-            return DistanceToRectangleInternal(position, rotation, new Vector2(size, size));
-        }
+        public static float DistanceToRectangle(Vector3 position, Quaternion rotation, float size) => 
+            DistanceToRectangleInternal(position, rotation, new Vector2(size, size));
 
         internal static float DistanceToRectangleInternal(Vector3 position, Quaternion rotation, Vector2 size)
         {
@@ -564,34 +554,24 @@
         private static extern GameObject[] INTERNAL_CALL_Internal_PickRectObjects(Camera cam, ref Rect rect, bool selectPrefabRoots);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_IntersectRayMesh(ref Ray ray, Mesh mesh, ref Matrix4x4 matrix, out RaycastHit hit);
-        private static bool Internal_FindNearestVertex(Camera cam, Vector2 screenPoint, Transform[] objectsToSearch, Transform[] ignoreObjects, out Vector3 vertex)
-        {
-            return INTERNAL_CALL_Internal_FindNearestVertex(cam, ref screenPoint, objectsToSearch, ignoreObjects, out vertex);
-        }
+        private static bool Internal_FindNearestVertex(Camera cam, Vector2 screenPoint, Transform[] objectsToSearch, Transform[] ignoreObjects, out Vector3 vertex) => 
+            INTERNAL_CALL_Internal_FindNearestVertex(cam, ref screenPoint, objectsToSearch, ignoreObjects, out vertex);
 
-        internal static GameObject Internal_PickClosestGO(Camera cam, int layers, Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex)
-        {
-            return INTERNAL_CALL_Internal_PickClosestGO(cam, layers, ref position, ignore, filter, out materialIndex);
-        }
+        internal static GameObject Internal_PickClosestGO(Camera cam, int layers, Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex) => 
+            INTERNAL_CALL_Internal_PickClosestGO(cam, layers, ref position, ignore, filter, out materialIndex);
 
-        internal static GameObject[] Internal_PickRectObjects(Camera cam, Rect rect, bool selectPrefabRoots)
-        {
-            return INTERNAL_CALL_Internal_PickRectObjects(cam, ref rect, selectPrefabRoots);
-        }
+        internal static GameObject[] Internal_PickRectObjects(Camera cam, Rect rect, bool selectPrefabRoots) => 
+            INTERNAL_CALL_Internal_PickRectObjects(cam, ref rect, selectPrefabRoots);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_Repaint();
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_SetHandleWireTextureIndex(int textureIndex);
-        internal static bool IntersectRayMesh(Ray ray, Mesh mesh, Matrix4x4 matrix, out RaycastHit hit)
-        {
-            return INTERNAL_CALL_IntersectRayMesh(ref ray, mesh, ref matrix, out hit);
-        }
+        internal static bool IntersectRayMesh(Ray ray, Mesh mesh, Matrix4x4 matrix, out RaycastHit hit) => 
+            INTERNAL_CALL_IntersectRayMesh(ref ray, mesh, ref matrix, out hit);
 
-        public static GameObject PickGameObject(Vector2 position, out int materialIndex)
-        {
-            return PickGameObject(position, null, out materialIndex);
-        }
+        public static GameObject PickGameObject(Vector2 position, out int materialIndex) => 
+            PickGameObject(position, null, out materialIndex);
 
         /// <summary>
         /// <para>Pick game object closest to specified position.</para>
@@ -599,20 +579,14 @@
         /// <param name="selectPrefabRoot">Select prefab.</param>
         /// <param name="materialIndex">Returns index into material array of the Renderer component that is closest to specified position.</param>
         /// <param name="position"></param>
-        public static GameObject PickGameObject(Vector2 position, bool selectPrefabRoot)
-        {
-            return PickGameObject(position, selectPrefabRoot, null);
-        }
+        public static GameObject PickGameObject(Vector2 position, bool selectPrefabRoot) => 
+            PickGameObject(position, selectPrefabRoot, null);
 
-        public static GameObject PickGameObject(Vector2 position, GameObject[] ignore, out int materialIndex)
-        {
-            return PickGameObject(position, ignore, null, out materialIndex);
-        }
+        public static GameObject PickGameObject(Vector2 position, GameObject[] ignore, out int materialIndex) => 
+            PickGameObject(position, ignore, null, out materialIndex);
 
-        public static GameObject PickGameObject(Vector2 position, bool selectPrefabRoot, GameObject[] ignore)
-        {
-            return PickGameObject(position, selectPrefabRoot, ignore, null);
-        }
+        public static GameObject PickGameObject(Vector2 position, bool selectPrefabRoot, GameObject[] ignore) => 
+            PickGameObject(position, selectPrefabRoot, ignore, null);
 
         internal static GameObject PickGameObject(Vector2 position, GameObject[] ignore, GameObject[] filter, out int materialIndex)
         {
@@ -660,10 +634,8 @@
         /// <para>Pick GameObjects that lie within a specified screen rectangle.</para>
         /// </summary>
         /// <param name="rect">An screen rectangle specified with pixel coordinates.</param>
-        public static GameObject[] PickRectObjects(Rect rect)
-        {
-            return PickRectObjects(rect, true);
-        }
+        public static GameObject[] PickRectObjects(Rect rect) => 
+            PickRectObjects(rect, true);
 
         /// <summary>
         /// <para></para>
@@ -687,10 +659,8 @@
         /// <param name="point"></param>
         /// <param name="linePoint"></param>
         /// <param name="lineDirection"></param>
-        public static float PointOnLineParameter(Vector3 point, Vector3 linePoint, Vector3 lineDirection)
-        {
-            return (Vector3.Dot(lineDirection, point - linePoint) / lineDirection.sqrMagnitude);
-        }
+        public static float PointOnLineParameter(Vector3 point, Vector3 linePoint, Vector3 lineDirection) => 
+            (Vector3.Dot(lineDirection, point - linePoint) / lineDirection.sqrMagnitude);
 
         /// <summary>
         /// <para>Retrieve all camera settings.</para>
@@ -870,13 +840,8 @@
         /// <summary>
         /// <para>Get standard acceleration for dragging values (Read Only).</para>
         /// </summary>
-        public static float acceleration
-        {
-            get
-            {
-                return ((!Event.current.shift ? ((float) 1) : ((float) 4)) * (!Event.current.alt ? 1f : 0.25f));
-            }
-        }
+        public static float acceleration =>
+            ((!Event.current.shift ? ((float) 1) : ((float) 4)) * (!Event.current.alt ? 1f : 0.25f));
 
         private static Material handleDottedWireMaterial
         {
@@ -910,10 +875,8 @@
 
         public static int nearestControl
         {
-            get
-            {
-                return ((s_NearestDistance > 5f) ? 0 : s_NearestControl);
-            }
+            get => 
+                ((s_NearestDistance > 5f) ? 0 : s_NearestControl);
             set
             {
                 s_NearestControl = value;

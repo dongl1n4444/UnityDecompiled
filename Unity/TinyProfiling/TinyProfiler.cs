@@ -24,10 +24,8 @@
         [ThreadStatic]
         private static List<TimedSection> ts_sections;
 
-        public static ReadOnlyCollection<ThreadContext> CaptureSnapshot()
-        {
-            return new List<ThreadContext>(s_threadContexts).AsReadOnly();
-        }
+        public static ReadOnlyCollection<ThreadContext> CaptureSnapshot() => 
+            new List<ThreadContext>(s_threadContexts).AsReadOnly();
 
         private static void CloseSection(int index)
         {
@@ -70,7 +68,7 @@
             <GetTimeForSection>c__AnonStorey0 storey = new <GetTimeForSection>c__AnonStorey0 {
                 sectionLabel = sectionLabel
             };
-            TimedSection section = Enumerable.FirstOrDefault<TimedSection>(Enumerable.Where<TimedSection>(ts_sections, new Func<TimedSection, bool>(storey, (IntPtr) this.<>m__0)));
+            TimedSection section = ts_sections.Where<TimedSection>(new Func<TimedSection, bool>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<TimedSection>();
             if (section.Duration == 0.0)
             {
                 throw new ArgumentException("TimedSection is not valid, or hasn't been closed.");
@@ -101,7 +99,7 @@
             }
         }
 
-        public static IDisposable Section(string label, [Optional, DefaultParameterValue("")] string details)
+        public static IDisposable Section(string label, string details = "")
         {
             if (ts_sections == null)
             {
@@ -133,7 +131,7 @@
 
         private static void WriteGraph()
         {
-            using (Stream stream = TypeExtensions.GetAssemblyPortable(typeof(TinyProfiler)).GetManifestResourceStream("TinyProfiler.SVGPan.js"))
+            using (Stream stream = typeof(TinyProfiler).GetAssemblyPortable().GetManifestResourceStream("TinyProfiler.SVGPan.js"))
             {
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
@@ -149,10 +147,8 @@
         {
             internal string sectionLabel;
 
-            internal bool <>m__0(TinyProfiler.TimedSection s)
-            {
-                return (s.Label == this.sectionLabel);
-            }
+            internal bool <>m__0(TinyProfiler.TimedSection s) => 
+                (s.Label == this.sectionLabel);
         }
 
         public class ThreadContext

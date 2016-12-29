@@ -23,10 +23,8 @@
         /// </summary>
         public Vector3 position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 this.m_Position = value;
@@ -37,10 +35,8 @@
         /// </summary>
         public Vector3 velocity
         {
-            get
-            {
-                return this.m_Velocity;
-            }
+            get => 
+                this.m_Velocity;
             set
             {
                 this.m_Velocity = value;
@@ -51,10 +47,8 @@
         /// </summary>
         public float energy
         {
-            get
-            {
-                return this.m_Energy;
-            }
+            get => 
+                this.m_Energy;
             set
             {
                 this.m_Energy = value;
@@ -65,10 +59,8 @@
         /// </summary>
         public float startEnergy
         {
-            get
-            {
-                return this.m_StartEnergy;
-            }
+            get => 
+                this.m_StartEnergy;
             set
             {
                 this.m_StartEnergy = value;
@@ -79,10 +71,8 @@
         /// </summary>
         public float size
         {
-            get
-            {
-                return this.m_Size;
-            }
+            get => 
+                this.m_Size;
             set
             {
                 this.m_Size = value;
@@ -93,10 +83,8 @@
         /// </summary>
         public float rotation
         {
-            get
-            {
-                return this.m_Rotation;
-            }
+            get => 
+                this.m_Rotation;
             set
             {
                 this.m_Rotation = value;
@@ -107,10 +95,8 @@
         /// </summary>
         public float angularVelocity
         {
-            get
-            {
-                return this.m_AngularVelocity;
-            }
+            get => 
+                this.m_AngularVelocity;
             set
             {
                 this.m_AngularVelocity = value;
@@ -121,10 +107,8 @@
         /// </summary>
         public Color color
         {
-            get
-            {
-                return this.m_Color;
-            }
+            get => 
+                this.m_Color;
             set
             {
                 this.m_Color = value;

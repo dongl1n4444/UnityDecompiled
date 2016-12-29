@@ -26,10 +26,8 @@
         {
         }
 
-        public virtual bool IsValid()
-        {
-            return (this.sourceId != SourceID.Invalid);
-        }
+        public virtual bool IsValid() => 
+            (this.sourceId != SourceID.Invalid);
 
         public override string ToString()
         {

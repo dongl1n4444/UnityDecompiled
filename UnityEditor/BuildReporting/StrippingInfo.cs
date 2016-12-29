@@ -56,10 +56,8 @@
             return info2;
         }
 
-        public static string ModuleName(string module)
-        {
-            return (module + " Module");
-        }
+        public static string ModuleName(string module) => 
+            (module + " Module");
 
         public void OnAfterDeserialize()
         {

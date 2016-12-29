@@ -25,17 +25,11 @@
         private Vector2 GetParentSize()
         {
             RectTransform parent = this.rectTransform.parent as RectTransform;
-            if (parent == null)
-            {
-                return Vector2.zero;
-            }
-            return parent.rect.size;
+            return parent?.rect.size;
         }
 
-        private float GetSizeDeltaToProduceSize(float size, int axis)
-        {
-            return (size - (this.GetParentSize()[axis] * (this.rectTransform.anchorMax[axis] - this.rectTransform.anchorMin[axis])));
-        }
+        private float GetSizeDeltaToProduceSize(float size, int axis) => 
+            (size - (this.GetParentSize()[axis] * (this.rectTransform.anchorMax[axis] - this.rectTransform.anchorMin[axis])));
 
         /// <summary>
         /// <para>See MonoBehaviour.OnDisable.</para>
@@ -139,10 +133,8 @@
         /// </summary>
         public AspectMode aspectMode
         {
-            get
-            {
-                return this.m_AspectMode;
-            }
+            get => 
+                this.m_AspectMode;
             set
             {
                 if (SetPropertyUtility.SetStruct<AspectMode>(ref this.m_AspectMode, value))
@@ -157,10 +149,8 @@
         /// </summary>
         public float aspectRatio
         {
-            get
-            {
-                return this.m_AspectRatio;
-            }
+            get => 
+                this.m_AspectRatio;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_AspectRatio, value))

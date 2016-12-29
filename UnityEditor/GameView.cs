@@ -231,7 +231,7 @@
                 float newZoom = Mathf.Pow(10f, num);
                 this.SnapZoom(newZoom);
             }
-            GUIContent content = EditorGUIUtility.TempContent(string.Format("{0}x", this.m_ZoomArea.scale.y.ToString("G2")));
+            GUIContent content = EditorGUIUtility.TempContent($"{this.m_ZoomArea.scale.y.ToString("G2")}x");
             content.tooltip = Styles.zoomSliderContent.tooltip;
             GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.Width(30f) };
             GUILayout.Label(content, EditorStyles.miniLabel, optionArray2);
@@ -316,10 +316,8 @@
             return new Vector2(640f, 480f);
         }
 
-        internal static Vector2 GetSizeOfMainGameView()
-        {
-            return GetMainGameViewTargetSize();
-        }
+        internal static Vector2 GetSizeOfMainGameView() => 
+            GetMainGameViewTargetSize();
 
         private void InitializeZoomArea()
         {
@@ -328,10 +326,8 @@
             this.m_ZoomArea.upDirection = ZoomableArea.YDirection.Negative;
         }
 
-        public bool IsShowingGizmos()
-        {
-            return this.m_Gizmos;
-        }
+        public bool IsShowingGizmos() => 
+            this.m_Gizmos;
 
         private void LoadRenderDoc()
         {
@@ -494,7 +490,8 @@
             {
                 GUI.Label(this.warningPosition, GUIContent.none, EditorStyles.notificationBackground);
                 string str = !this.ShouldShowMultiDisplayOption() ? string.Empty : DisplayUtility.GetDisplayNames()[this.m_TargetDisplay].text;
-                string t = string.Format("{0}\nNo cameras rendering", str);
+                string t = $"{str}
+No cameras rendering";
                 EditorGUI.DoDropShadowLabel(this.warningPosition, EditorGUIUtility.TempContent(t), EditorStyles.notificationText, 0.3f);
             }
             if (this.m_Stats)
@@ -617,34 +614,17 @@
             EditorApplication.SetSceneRepaintDirty();
         }
 
-        private Vector2 WindowToGameMousePosition(Vector2 windowMousePosition)
-        {
-            return (Vector2) ((windowMousePosition + this.gameMouseOffset) * this.gameMouseScale);
-        }
+        private Vector2 WindowToGameMousePosition(Vector2 windowMousePosition) => 
+            ((Vector2) ((windowMousePosition + this.gameMouseOffset) * this.gameMouseScale));
 
-        private Rect clippedTargetInParent
-        {
-            get
-            {
-                return Rect.MinMaxRect(Mathf.Max(this.targetInParent.xMin, this.viewInParent.xMin), Mathf.Max(this.targetInParent.yMin, this.viewInParent.yMin), Mathf.Min(this.targetInParent.xMax, this.viewInParent.xMax), Mathf.Min(this.targetInParent.yMax, this.viewInParent.yMax));
-            }
-        }
+        private Rect clippedTargetInParent =>
+            Rect.MinMaxRect(Mathf.Max(this.targetInParent.xMin, this.viewInParent.xMin), Mathf.Max(this.targetInParent.yMin, this.viewInParent.yMin), Mathf.Min(this.targetInParent.xMax, this.viewInParent.xMax), Mathf.Min(this.targetInParent.yMax, this.viewInParent.yMax));
 
-        private GameViewSize currentGameViewSize
-        {
-            get
-            {
-                return ScriptableSingleton<GameViewSizes>.instance.currentGroup.GetGameViewSize(this.selectedSizeIndex);
-            }
-        }
+        private GameViewSize currentGameViewSize =>
+            ScriptableSingleton<GameViewSizes>.instance.currentGroup.GetGameViewSize(this.selectedSizeIndex);
 
-        private static GameViewSizeGroupType currentSizeGroupType
-        {
-            get
-            {
-                return ScriptableSingleton<GameViewSizes>.instance.currentGroupType;
-            }
-        }
+        private static GameViewSizeGroupType currentSizeGroupType =>
+            ScriptableSingleton<GameViewSizes>.instance.currentGroupType;
 
         private Rect deviceFlippedTargetInView
         {
@@ -661,36 +641,19 @@
             }
         }
 
-        public bool forceLowResolutionAspectRatios
-        {
-            get
-            {
-                return (EditorGUIUtility.pixelsPerPoint == 1f);
-            }
-        }
+        public bool forceLowResolutionAspectRatios =>
+            (EditorGUIUtility.pixelsPerPoint == 1f);
 
-        private Vector2 gameMouseOffset
-        {
-            get
-            {
-                return (-this.viewInWindow.position - this.targetInView.position);
-            }
-        }
+        private Vector2 gameMouseOffset =>
+            (-this.viewInWindow.position - this.targetInView.position);
 
-        private float gameMouseScale
-        {
-            get
-            {
-                return (EditorGUIUtility.pixelsPerPoint / this.m_ZoomArea.scale.y);
-            }
-        }
+        private float gameMouseScale =>
+            (EditorGUIUtility.pixelsPerPoint / this.m_ZoomArea.scale.y);
 
         public bool lowResolutionForAspectRatios
         {
-            get
-            {
-                return this.m_LowResolutionForAspectRatios[(int) currentSizeGroupType];
-            }
+            get => 
+                this.m_LowResolutionForAspectRatios[(int) currentSizeGroupType];
             set
             {
                 if (value != this.m_LowResolutionForAspectRatios[(int) currentSizeGroupType])
@@ -703,23 +666,16 @@
 
         public bool maximizeOnPlay
         {
-            get
-            {
-                return this.m_MaximizeOnPlay;
-            }
+            get => 
+                this.m_MaximizeOnPlay;
             set
             {
                 this.m_MaximizeOnPlay = value;
             }
         }
 
-        private float maxScale
-        {
-            get
-            {
-                return Mathf.Max(5f * EditorGUIUtility.pixelsPerPoint, this.ScaleThatFitsTargetInView(this.targetSize, this.viewInWindow.size));
-            }
-        }
+        private float maxScale =>
+            Mathf.Max(5f * EditorGUIUtility.pixelsPerPoint, this.ScaleThatFitsTargetInView(this.targetSize, this.viewInWindow.size));
 
         private float minScale
         {
@@ -736,47 +692,25 @@
 
         private int selectedSizeIndex
         {
-            get
-            {
-                return this.m_SelectedSizes[(int) currentSizeGroupType];
-            }
+            get => 
+                this.m_SelectedSizes[(int) currentSizeGroupType];
             set
             {
                 this.m_SelectedSizes[(int) currentSizeGroupType] = value;
             }
         }
 
-        public bool showLowResolutionToggle
-        {
-            get
-            {
-                return EditorApplication.supportsHiDPI;
-            }
-        }
+        public bool showLowResolutionToggle =>
+            EditorApplication.supportsHiDPI;
 
-        private Rect targetInContent
-        {
-            get
-            {
-                return EditorGUIUtility.PixelsToPoints(new Rect((Vector2) (-0.5f * this.targetSize), this.targetSize));
-            }
-        }
+        private Rect targetInContent =>
+            EditorGUIUtility.PixelsToPoints(new Rect((Vector2) (-0.5f * this.targetSize), this.targetSize));
 
-        private Rect targetInParent
-        {
-            get
-            {
-                return new Rect(this.targetInView.position + this.viewInParent.position, this.targetInView.size);
-            }
-        }
+        private Rect targetInParent =>
+            new Rect(this.targetInView.position + this.viewInParent.position, this.targetInView.size);
 
-        private Rect targetInView
-        {
-            get
-            {
-                return new Rect(this.m_ZoomArea.DrawingToViewTransformPoint(this.targetInContent.position), this.m_ZoomArea.DrawingToViewTransformVector(this.targetInContent.size));
-            }
-        }
+        private Rect targetInView =>
+            new Rect(this.m_ZoomArea.DrawingToViewTransformPoint(this.targetInContent.position), this.m_ZoomArea.DrawingToViewTransformVector(this.targetInContent.size));
 
         internal Vector2 targetSize
         {
@@ -799,21 +733,11 @@
             }
         }
 
-        private Rect viewInWindow
-        {
-            get
-            {
-                return new Rect(0f, 17f, base.position.width, base.position.height - 17f);
-            }
-        }
+        private Rect viewInWindow =>
+            new Rect(0f, 17f, base.position.width, base.position.height - 17f);
 
-        private Rect warningPosition
-        {
-            get
-            {
-                return new Rect((Vector2) ((this.viewInWindow.size - this.kWarningSize) * 0.5f), this.kWarningSize);
-            }
-        }
+        private Rect warningPosition =>
+            new Rect((Vector2) ((this.viewInWindow.size - this.kWarningSize) * 0.5f), this.kWarningSize);
 
         internal static class Styles
         {

@@ -77,10 +77,8 @@
         /// <returns>
         /// <para>The same as DownloadHandlerAssetBundle.assetBundle</para>
         /// </returns>
-        public static AssetBundle GetContent(UnityWebRequest www)
-        {
-            return DownloadHandler.GetCheckedDownloader<DownloadHandlerAssetBundle>(www).assetBundle;
-        }
+        public static AssetBundle GetContent(UnityWebRequest www) => 
+            DownloadHandler.GetCheckedDownloader<DownloadHandlerAssetBundle>(www).assetBundle;
     }
 }
 

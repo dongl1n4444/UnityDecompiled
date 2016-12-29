@@ -115,7 +115,7 @@
             for (int i = 0; i < length; i++)
             {
                 ParameterInfo info = method.methodInfo.GetParameters()[i];
-                builder.Append(string.Format("{0}", GetTypeName(info.ParameterType)));
+                builder.Append($"{GetTypeName(info.ParameterType)}");
                 if (i < (length - 1))
                 {
                     builder.Append(", ");
@@ -172,7 +172,7 @@
                 {
                     <>f__am$cache4 = new Func<ParameterInfo, Type>(null, (IntPtr) <BuildPopupList>m__4);
                 }
-                Type[] delegateArgumentsTypes = Enumerable.ToArray<Type>(Enumerable.Select<ParameterInfo, Type>(dummyEvent.GetType().GetMethod("Invoke").GetParameters(), <>f__am$cache4));
+                Type[] delegateArgumentsTypes = Enumerable.Select<ParameterInfo, Type>(dummyEvent.GetType().GetMethod("Invoke").GetParameters(), <>f__am$cache4).ToArray<Type>();
                 GeneratePopUpForType(menu, gameObject, false, listener, delegateArgumentsTypes);
                 if (gameObject is GameObject)
                 {
@@ -197,7 +197,7 @@
                     {
                         <>f__am$cache9 = new Func<IGrouping<string, string>, string>(null, (IntPtr) <BuildPopupList>m__9);
                     }
-                    List<string> list = Enumerable.ToList<string>(Enumerable.Select<IGrouping<string, string>, string>(Enumerable.Where<IGrouping<string, string>>(Enumerable.GroupBy<string, string>(Enumerable.Select<Component, string>(Enumerable.Where<Component>(components, <>f__am$cache5), <>f__am$cache6), <>f__am$cache7), <>f__am$cache8), <>f__am$cache9));
+                    List<string> list = Enumerable.Select<IGrouping<string, string>, string>(Enumerable.Where<IGrouping<string, string>>(Enumerable.GroupBy<string, string>(Enumerable.Select<Component, string>(Enumerable.Where<Component>(components, <>f__am$cache5), <>f__am$cache6), <>f__am$cache7), <>f__am$cache8), <>f__am$cache9).ToList<string>();
                     foreach (Component component in components)
                     {
                         if (component != null)
@@ -220,12 +220,12 @@
                 {
                     <>f__am$cache1 = new Func<MethodInfo, bool>(null, (IntPtr) <CalculateMethodMap>m__1);
                 }
-                List<MethodInfo> list2 = Enumerable.ToList<MethodInfo>(Enumerable.Where<MethodInfo>(type.GetMethods(), <>f__am$cache1));
+                List<MethodInfo> list2 = Enumerable.Where<MethodInfo>(type.GetMethods(), <>f__am$cache1).ToList<MethodInfo>();
                 if (<>f__am$cache2 == null)
                 {
                     <>f__am$cache2 = new Func<PropertyInfo, bool>(null, (IntPtr) <CalculateMethodMap>m__2);
                 }
-                IEnumerable<PropertyInfo> enumerable2 = Enumerable.Where<PropertyInfo>(Enumerable.AsEnumerable<PropertyInfo>(type.GetProperties()), <>f__am$cache2);
+                IEnumerable<PropertyInfo> enumerable2 = Enumerable.Where<PropertyInfo>(type.GetProperties().AsEnumerable<PropertyInfo>(), <>f__am$cache2);
                 if (<>f__am$cache3 == null)
                 {
                     <>f__am$cache3 = new Func<PropertyInfo, MethodInfo>(null, (IntPtr) <CalculateMethodMap>m__3);
@@ -380,7 +380,7 @@
                         {
                             name = objectReferenceValue.GetType().Name;
                         }
-                        builder.Append(string.Format("<Missing {0}.{1}>", name, property6.stringValue));
+                        builder.Append($"<Missing {name}.{property6.stringValue}>");
                     }
                     else
                     {
@@ -428,7 +428,7 @@
                     {
                         <>f__am$cacheA = new Func<Type, string>(null, (IntPtr) <GeneratePopUpForType>m__A);
                     }
-                    menu.AddDisabledItem(new GUIContent(targetName + "/Dynamic " + string.Join(", ", Enumerable.ToArray<string>(Enumerable.Select<Type, string>(delegateArgumentsTypes, <>f__am$cacheA)))));
+                    menu.AddDisabledItem(new GUIContent(targetName + "/Dynamic " + string.Join(", ", Enumerable.Select<Type, string>(delegateArgumentsTypes, <>f__am$cacheA).ToArray<string>())));
                     AddMethodsToMenu(menu, listener, methods, targetName);
                     flag = true;
                 }
@@ -478,7 +478,7 @@
             {
                 <>f__am$cache0 = new Func<ParameterInfo, Type>(null, (IntPtr) <GetEventParams>m__0);
             }
-            Type[] typeArray = Enumerable.ToArray<Type>(Enumerable.Select<ParameterInfo, Type>(info.GetParameters(), <>f__am$cache0));
+            Type[] typeArray = Enumerable.Select<ParameterInfo, Type>(info.GetParameters(), <>f__am$cache0).ToArray<Type>();
             for (int i = 0; i < typeArray.Length; i++)
             {
                 builder.Append(typeArray[i].Name);
@@ -497,15 +497,15 @@
             {
                 if (methodName.StartsWith("set_"))
                 {
-                    return string.Format("{0}/{1}", targetName, methodName.Substring(4));
+                    return $"{targetName}/{methodName.Substring(4)}";
                 }
-                return string.Format("{0}/{1}", targetName, methodName);
+                return $"{targetName}/{methodName}";
             }
             if (methodName.StartsWith("set_"))
             {
                 return string.Format("{0}/{2} {1}", targetName, methodName.Substring(4), args);
             }
-            return string.Format("{0}/{1} ({2})", targetName, methodName, args);
+            return $"{targetName}/{methodName} ({args})";
         }
 
         private static void GetMethodsForTargetAndMode(Object target, Type[] delegateArgumentsTypes, List<ValidMethodMap> methods, PersistentListenerMode mode)
@@ -519,10 +519,8 @@
             }
         }
 
-        private static PersistentListenerMode GetMode(SerializedProperty mode)
-        {
-            return (PersistentListenerMode) mode.enumValueIndex;
-        }
+        private static PersistentListenerMode GetMode(SerializedProperty mode) => 
+            ((PersistentListenerMode) mode.enumValueIndex);
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {

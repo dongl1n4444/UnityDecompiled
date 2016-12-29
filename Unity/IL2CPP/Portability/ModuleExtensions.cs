@@ -4,20 +4,13 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class ModuleExtensions
     {
-        [Extension]
-        public static int GetMetadataTokenPortable(Module module)
-        {
-            return module.MetadataToken;
-        }
+        public static int GetMetadataTokenPortable(this Module module) => 
+            module.MetadataToken;
 
-        [Extension]
-        public static Type[] GetTypesPortable(Module module)
-        {
-            return module.GetTypes();
-        }
+        public static Type[] GetTypesPortable(this Module module) => 
+            module.GetTypes();
     }
 }
 

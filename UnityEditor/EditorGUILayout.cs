@@ -58,10 +58,8 @@
         /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect BeginHorizontal(params GUILayoutOption[] options)
-        {
-            return BeginHorizontal(GUIContent.none, GUIStyle.none, options);
-        }
+        public static Rect BeginHorizontal(params GUILayoutOption[] options) => 
+            BeginHorizontal(GUIContent.none, GUIStyle.none, options);
 
         /// <summary>
         /// <para>Begin a horizontal group and get its rect back.</para>
@@ -71,10 +69,8 @@
         /// properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect BeginHorizontal(GUIStyle style, params GUILayoutOption[] options)
-        {
-            return BeginHorizontal(GUIContent.none, style, options);
-        }
+        public static Rect BeginHorizontal(GUIStyle style, params GUILayoutOption[] options) => 
+            BeginHorizontal(GUIContent.none, style, options);
 
         internal static Rect BeginHorizontal(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -87,10 +83,8 @@
             return group.rect;
         }
 
-        internal static Vector2 BeginHorizontalScrollView(Vector2 scrollPosition, params GUILayoutOption[] options)
-        {
-            return BeginHorizontalScrollView(scrollPosition, false, GUI.skin.horizontalScrollbar, GUI.skin.scrollView, options);
-        }
+        internal static Vector2 BeginHorizontalScrollView(Vector2 scrollPosition, params GUILayoutOption[] options) => 
+            BeginHorizontalScrollView(scrollPosition, false, GUI.skin.horizontalScrollbar, GUI.skin.scrollView, options);
 
         internal static Vector2 BeginHorizontalScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, GUIStyle horizontalScrollbar, GUIStyle background, params GUILayoutOption[] options)
         {
@@ -110,10 +104,8 @@
             return EditorGUIInternal.DoBeginScrollViewForward(group.rect, scrollPosition, new Rect(0f, 0f, group.clientWidth, group.clientHeight), alwaysShowHorizontal, false, horizontalScrollbar, GUI.skin.verticalScrollbar, background);
         }
 
-        internal static int BeginPlatformGrouping(BuildPlayerWindow.BuildPlatform[] platforms, GUIContent defaultTab)
-        {
-            return BeginPlatformGrouping(platforms, defaultTab, GUI.skin.box);
-        }
+        internal static int BeginPlatformGrouping(BuildPlayerWindow.BuildPlatform[] platforms, GUIContent defaultTab) => 
+            BeginPlatformGrouping(platforms, defaultTab, GUI.skin.box);
 
         internal static int BeginPlatformGrouping(BuildPlayerWindow.BuildPlatform[] platforms, GUIContent defaultTab, GUIStyle style)
         {
@@ -206,10 +198,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, false, false, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
 
         public static Vector2 BeginScrollView(Vector2 scrollPosition, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -242,10 +232,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
 
         /// <summary>
         /// <para>Begin an automatically layouted scrollview.</para>
@@ -262,15 +250,11 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Vector2 scrollPosition, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, false, false, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        public static Vector2 BeginScrollView(Vector2 scrollPosition, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, false, false, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
 
-        internal static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options)
-        {
-            return BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        internal static Vector2 BeginScrollView(Vector2 scrollPosition, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, params GUILayoutOption[] options) => 
+            BeginScrollView(scrollPosition, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, GUI.skin.scrollView, options);
 
         /// <summary>
         /// <para>Begin an automatically layouted scrollview.</para>
@@ -311,10 +295,8 @@
         /// <returns>
         /// <para>The enabled state selected by the user.</para>
         /// </returns>
-        public static bool BeginToggleGroup(string label, bool toggle)
-        {
-            return BeginToggleGroup(EditorGUIUtility.TempContent(label), toggle);
-        }
+        public static bool BeginToggleGroup(string label, bool toggle) => 
+            BeginToggleGroup(EditorGUIUtility.TempContent(label), toggle);
 
         /// <summary>
         /// <para>Begin a vertical group with a toggle to enable or disable all the controls within at once.</para>
@@ -340,10 +322,8 @@
         /// Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect BeginVertical(params GUILayoutOption[] options)
-        {
-            return BeginVertical(GUIContent.none, GUIStyle.none, options);
-        }
+        public static Rect BeginVertical(params GUILayoutOption[] options) => 
+            BeginVertical(GUIContent.none, GUIStyle.none, options);
 
         /// <summary>
         /// <para>Begin a vertical group and get its rect back.</para>
@@ -353,10 +333,8 @@
         /// Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect BeginVertical(GUIStyle style, params GUILayoutOption[] options)
-        {
-            return BeginVertical(GUIContent.none, style, options);
-        }
+        public static Rect BeginVertical(GUIStyle style, params GUILayoutOption[] options) => 
+            BeginVertical(GUIContent.none, style, options);
 
         internal static Rect BeginVertical(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -369,10 +347,8 @@
             return group.rect;
         }
 
-        internal static Vector2 BeginVerticalScrollView(Vector2 scrollPosition, params GUILayoutOption[] options)
-        {
-            return BeginVerticalScrollView(scrollPosition, false, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
-        }
+        internal static Vector2 BeginVerticalScrollView(Vector2 scrollPosition, params GUILayoutOption[] options) => 
+            BeginVerticalScrollView(scrollPosition, false, GUI.skin.verticalScrollbar, GUI.skin.scrollView, options);
 
         internal static Vector2 BeginVerticalScrollView(Vector2 scrollPosition, bool alwaysShowVertical, GUIStyle verticalScrollbar, GUIStyle background, params GUILayoutOption[] options)
         {
@@ -448,10 +424,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Bounds BoundsField(string label, Bounds value, params GUILayoutOption[] options)
-        {
-            return BoundsField(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static Bounds BoundsField(string label, Bounds value, params GUILayoutOption[] options) => 
+            BoundsField(EditorGUIUtility.TempContent(label), value, options);
 
         /// <summary>
         /// <para>Make Center &amp; Extents field for entering a Bounds.</para>
@@ -993,10 +967,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the int field.</para>
         /// </returns>
-        public static int DelayedIntField(int value, params GUILayoutOption[] options)
-        {
-            return DelayedIntField(value, EditorStyles.numberField, options);
-        }
+        public static int DelayedIntField(int value, params GUILayoutOption[] options) => 
+            DelayedIntField(value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a delayed text field for entering integers.</para>
@@ -1041,10 +1013,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the int field.</para>
         /// </returns>
-        public static int DelayedIntField(string label, int value, params GUILayoutOption[] options)
-        {
-            return DelayedIntField(label, value, EditorStyles.numberField, options);
-        }
+        public static int DelayedIntField(string label, int value, params GUILayoutOption[] options) => 
+            DelayedIntField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a delayed text field for entering integers.</para>
@@ -1072,10 +1042,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the int field.</para>
         /// </returns>
-        public static int DelayedIntField(GUIContent label, int value, params GUILayoutOption[] options)
-        {
-            return DelayedIntField(label, value, EditorStyles.numberField, options);
-        }
+        public static int DelayedIntField(GUIContent label, int value, params GUILayoutOption[] options) => 
+            DelayedIntField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a delayed text field for entering integers.</para>
@@ -1248,15 +1216,11 @@
             return EditorGUI.DelayedTextField(position, label, text, style);
         }
 
-        internal static string DelayedTextFieldDropDown(string text, string[] dropDownElement)
-        {
-            return DelayedTextFieldDropDown(GUIContent.none, text, dropDownElement);
-        }
+        internal static string DelayedTextFieldDropDown(string text, string[] dropDownElement) => 
+            DelayedTextFieldDropDown(GUIContent.none, text, dropDownElement);
 
-        internal static string DelayedTextFieldDropDown(GUIContent label, string text, string[] dropDownElement)
-        {
-            return EditorGUI.DelayedTextFieldDropDown(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.textFieldDropDownText), label, text, dropDownElement);
-        }
+        internal static string DelayedTextFieldDropDown(GUIContent label, string text, string[] dropDownElement) => 
+            EditorGUI.DelayedTextFieldDropDown(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.textFieldDropDownText), label, text, dropDownElement);
 
         /// <summary>
         /// <para>Make a text field for entering double values.</para>
@@ -1601,20 +1565,14 @@
             return EnumMaskPopup(label, selected, out num, out flag, style, options);
         }
 
-        internal static Enum EnumMaskPopup(string label, Enum selected, out int changedFlags, out bool changedToValue, params GUILayoutOption[] options)
-        {
-            return EnumMaskPopup(EditorGUIUtility.TempContent(label), selected, out changedFlags, out changedToValue, options);
-        }
+        internal static Enum EnumMaskPopup(string label, Enum selected, out int changedFlags, out bool changedToValue, params GUILayoutOption[] options) => 
+            EnumMaskPopup(EditorGUIUtility.TempContent(label), selected, out changedFlags, out changedToValue, options);
 
-        internal static Enum EnumMaskPopup(GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, params GUILayoutOption[] options)
-        {
-            return EnumMaskPopup(label, selected, out changedFlags, out changedToValue, EditorStyles.popup, options);
-        }
+        internal static Enum EnumMaskPopup(GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, params GUILayoutOption[] options) => 
+            EnumMaskPopup(label, selected, out changedFlags, out changedToValue, EditorStyles.popup, options);
 
-        internal static Enum EnumMaskPopup(string label, Enum selected, out int changedFlags, out bool changedToValue, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return EnumMaskPopup(EditorGUIUtility.TempContent(label), selected, out changedFlags, out changedToValue, style, options);
-        }
+        internal static Enum EnumMaskPopup(string label, Enum selected, out int changedFlags, out bool changedToValue, GUIStyle style, params GUILayoutOption[] options) => 
+            EnumMaskPopup(EditorGUIUtility.TempContent(label), selected, out changedFlags, out changedToValue, style, options);
 
         internal static Enum EnumMaskPopup(GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -1634,10 +1592,8 @@
         /// <returns>
         /// <para>The enum option that has been selected by the user.</para>
         /// </returns>
-        public static Enum EnumPopup(Enum selected, params GUILayoutOption[] options)
-        {
-            return EnumPopup(selected, EditorStyles.popup, options);
-        }
+        public static Enum EnumPopup(Enum selected, params GUILayoutOption[] options) => 
+            EnumPopup(selected, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an enum popup selection field.</para>
@@ -1669,10 +1625,8 @@
         /// <returns>
         /// <para>The enum option that has been selected by the user.</para>
         /// </returns>
-        public static Enum EnumPopup(string label, Enum selected, params GUILayoutOption[] options)
-        {
-            return EnumPopup(label, selected, EditorStyles.popup, options);
-        }
+        public static Enum EnumPopup(string label, Enum selected, params GUILayoutOption[] options) => 
+            EnumPopup(label, selected, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an enum popup selection field.</para>
@@ -1686,10 +1640,8 @@
         /// <returns>
         /// <para>The enum option that has been selected by the user.</para>
         /// </returns>
-        public static Enum EnumPopup(GUIContent label, Enum selected, params GUILayoutOption[] options)
-        {
-            return EnumPopup(label, selected, EditorStyles.popup, options);
-        }
+        public static Enum EnumPopup(GUIContent label, Enum selected, params GUILayoutOption[] options) => 
+            EnumPopup(label, selected, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an enum popup selection field.</para>
@@ -1886,10 +1838,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(bool foldout, string content, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return Foldout(foldout, EditorGUIUtility.TempContent(content), false, style);
-        }
+        public static bool Foldout(bool foldout, string content, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            Foldout(foldout, EditorGUIUtility.TempContent(content), false, style);
 
         [ExcludeFromDocs]
         public static bool Foldout(bool foldout, GUIContent content, bool toggleOnLabelClick)
@@ -1908,10 +1858,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(bool foldout, GUIContent content, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return Foldout(foldout, content, false, style);
-        }
+        public static bool Foldout(bool foldout, GUIContent content, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            Foldout(foldout, content, false, style);
 
         /// <summary>
         /// <para>Make a label with a foldout arrow to the left of it.</para>
@@ -1923,10 +1871,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(bool foldout, string content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return Foldout(foldout, EditorGUIUtility.TempContent(content), toggleOnLabelClick, style);
-        }
+        public static bool Foldout(bool foldout, string content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            Foldout(foldout, EditorGUIUtility.TempContent(content), toggleOnLabelClick, style);
 
         /// <summary>
         /// <para>Make a label with a foldout arrow to the left of it.</para>
@@ -1938,10 +1884,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(bool foldout, GUIContent content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return FoldoutInternal(foldout, content, toggleOnLabelClick, style);
-        }
+        public static bool Foldout(bool foldout, GUIContent content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            FoldoutInternal(foldout, content, toggleOnLabelClick, style);
 
         internal static bool FoldoutInternal(bool foldout, GUIContent content, bool toggleOnLabelClick, GUIStyle style)
         {
@@ -1949,10 +1893,8 @@
             return EditorGUI.Foldout(position, foldout, content, toggleOnLabelClick, style);
         }
 
-        internal static bool FoldoutTitlebar(bool foldout, GUIContent label)
-        {
-            return EditorGUI.FoldoutTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), label, foldout);
-        }
+        internal static bool FoldoutTitlebar(bool foldout, GUIContent label) => 
+            EditorGUI.FoldoutTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), label, foldout);
 
         internal static void GameViewSizePopup(GameViewSizeGroupType groupType, int selectedIndex, IGameViewSizeMenuUser gameView, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -1969,10 +1911,8 @@
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect GetControlRect(params GUILayoutOption[] options)
-        {
-            return GetControlRect(true, 16f, EditorStyles.layerMaskField, options);
-        }
+        public static Rect GetControlRect(params GUILayoutOption[] options) => 
+            GetControlRect(true, 16f, EditorStyles.layerMaskField, options);
 
         /// <summary>
         /// <para>Get a rect for an Editor control.</para>
@@ -1983,10 +1923,8 @@
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect GetControlRect(bool hasLabel, params GUILayoutOption[] options)
-        {
-            return GetControlRect(hasLabel, 16f, EditorStyles.layerMaskField, options);
-        }
+        public static Rect GetControlRect(bool hasLabel, params GUILayoutOption[] options) => 
+            GetControlRect(hasLabel, 16f, EditorStyles.layerMaskField, options);
 
         /// <summary>
         /// <para>Get a rect for an Editor control.</para>
@@ -1997,10 +1935,8 @@
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect GetControlRect(bool hasLabel, float height, params GUILayoutOption[] options)
-        {
-            return GetControlRect(hasLabel, height, EditorStyles.layerMaskField, options);
-        }
+        public static Rect GetControlRect(bool hasLabel, float height, params GUILayoutOption[] options) => 
+            GetControlRect(hasLabel, height, EditorStyles.layerMaskField, options);
 
         /// <summary>
         /// <para>Get a rect for an Editor control.</para>
@@ -2011,15 +1947,11 @@
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static Rect GetControlRect(bool hasLabel, float height, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return GUILayoutUtility.GetRect(!hasLabel ? EditorGUIUtility.fieldWidth : kLabelFloatMinW, kLabelFloatMaxW, height, height, style, options);
-        }
+        public static Rect GetControlRect(bool hasLabel, float height, GUIStyle style, params GUILayoutOption[] options) => 
+            GUILayoutUtility.GetRect(!hasLabel ? EditorGUIUtility.fieldWidth : kLabelFloatMinW, kLabelFloatMaxW, height, height, style, options);
 
-        internal static Rect GetSliderRect(bool hasLabel, params GUILayoutOption[] options)
-        {
-            return GUILayoutUtility.GetRect(!hasLabel ? EditorGUIUtility.fieldWidth : kLabelFloatMinW, (kLabelFloatMaxW + 5f) + 100f, 16f, 16f, EditorStyles.numberField, options);
-        }
+        internal static Rect GetSliderRect(bool hasLabel, params GUILayoutOption[] options) => 
+            GUILayoutUtility.GetRect(!hasLabel ? EditorGUIUtility.fieldWidth : kLabelFloatMinW, (kLabelFloatMaxW + 5f) + 100f, 16f, 16f, EditorStyles.numberField, options);
 
         internal static Rect GetToggleRect(bool hasLabel, params GUILayoutOption[] options)
         {
@@ -2085,10 +2017,8 @@
             LabelField(!wide ? EditorGUIUtility.blankContent : GUIContent.none, EditorGUIUtility.TempContent(message, EditorGUIUtility.GetHelpIcon(type)), EditorStyles.helpBox, new GUILayoutOption[0]);
         }
 
-        internal static Color HexColorTextField(GUIContent label, Color color, bool showAlpha, params GUILayoutOption[] options)
-        {
-            return HexColorTextField(label, color, showAlpha, EditorStyles.textField, options);
-        }
+        internal static Color HexColorTextField(GUIContent label, Color color, bool showAlpha, params GUILayoutOption[] options) => 
+            HexColorTextField(label, color, showAlpha, EditorStyles.textField, options);
 
         internal static Color HexColorTextField(GUIContent label, Color color, bool showAlpha, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -2116,10 +2046,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(bool foldout, Object targetObj)
-        {
-            return InspectorTitlebar(foldout, targetObj, true);
-        }
+        public static bool InspectorTitlebar(bool foldout, Object targetObj) => 
+            InspectorTitlebar(foldout, targetObj, true);
 
         /// <summary>
         /// <para>Make an inspector-window-like titlebar.</para>
@@ -2130,20 +2058,14 @@
         /// <returns>
         /// <para>The foldout state selected by the user.</para>
         /// </returns>
-        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs)
-        {
-            return InspectorTitlebar(foldout, targetObjs, true);
-        }
+        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs) => 
+            InspectorTitlebar(foldout, targetObjs, true);
 
-        public static bool InspectorTitlebar(bool foldout, Object targetObj, bool expandable)
-        {
-            return EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObj, expandable);
-        }
+        public static bool InspectorTitlebar(bool foldout, Object targetObj, bool expandable) => 
+            EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObj, expandable);
 
-        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs, bool expandable)
-        {
-            return EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObjs, expandable);
-        }
+        public static bool InspectorTitlebar(bool foldout, Object[] targetObjs, bool expandable) => 
+            EditorGUI.InspectorTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), foldout, targetObjs, expandable);
 
         /// <summary>
         /// <para>Make a text field for entering integers.</para>
@@ -2157,10 +2079,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static int IntField(int value, params GUILayoutOption[] options)
-        {
-            return IntField(value, EditorStyles.numberField, options);
-        }
+        public static int IntField(int value, params GUILayoutOption[] options) => 
+            IntField(value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a text field for entering integers.</para>
@@ -2192,10 +2112,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static int IntField(string label, int value, params GUILayoutOption[] options)
-        {
-            return IntField(label, value, EditorStyles.numberField, options);
-        }
+        public static int IntField(string label, int value, params GUILayoutOption[] options) => 
+            IntField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a text field for entering integers.</para>
@@ -2209,10 +2127,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static int IntField(GUIContent label, int value, params GUILayoutOption[] options)
-        {
-            return IntField(label, value, EditorStyles.numberField, options);
-        }
+        public static int IntField(GUIContent label, int value, params GUILayoutOption[] options) => 
+            IntField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a text field for entering integers.</para>
@@ -2264,10 +2180,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(int selectedValue, string[] displayedOptions, int[] optionValues, params GUILayoutOption[] options)
-        {
-            return IntPopup(selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
-        }
+        public static int IntPopup(int selectedValue, string[] displayedOptions, int[] optionValues, params GUILayoutOption[] options) => 
+            IntPopup(selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -2283,10 +2197,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(int selectedValue, GUIContent[] displayedOptions, int[] optionValues, params GUILayoutOption[] options)
-        {
-            return IntPopup(selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
-        }
+        public static int IntPopup(int selectedValue, GUIContent[] displayedOptions, int[] optionValues, params GUILayoutOption[] options) => 
+            IntPopup(selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -2358,10 +2270,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(string label, int selectedValue, string[] displayedOptions, int[] optionValues, params GUILayoutOption[] options)
-        {
-            return IntPopup(label, selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
-        }
+        public static int IntPopup(string label, int selectedValue, string[] displayedOptions, int[] optionValues, params GUILayoutOption[] options) => 
+            IntPopup(label, selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -2394,10 +2304,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(GUIContent label, int selectedValue, GUIContent[] displayedOptions, int[] optionValues, params GUILayoutOption[] options)
-        {
-            return IntPopup(label, selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
-        }
+        public static int IntPopup(GUIContent label, int selectedValue, GUIContent[] displayedOptions, int[] optionValues, params GUILayoutOption[] options) => 
+            IntPopup(label, selectedValue, displayedOptions, optionValues, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -2560,10 +2468,8 @@
             return EditorGUI.IntSlider(position, label, value, leftValue, rightValue);
         }
 
-        internal static Event KeyEventField(Event e, params GUILayoutOption[] options)
-        {
-            return EditorGUI.KeyEventField(GUILayoutUtility.GetRect(EditorGUIUtility.TempContent("[Please press a key]"), GUI.skin.textField, options), e);
-        }
+        internal static Event KeyEventField(Event e, params GUILayoutOption[] options) => 
+            EditorGUI.KeyEventField(GUILayoutUtility.GetRect(EditorGUIUtility.TempContent("[Please press a key]"), GUI.skin.textField, options), e);
 
         public static float Knob(Vector2 knobSize, float value, float minValue, float maxValue, string unit, Color backgroundColor, Color activeColor, bool showValue, params GUILayoutOption[] options)
         {
@@ -2710,10 +2616,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(int layer, params GUILayoutOption[] options)
-        {
-            return LayerField(layer, EditorStyles.popup, options);
-        }
+        public static int LayerField(int layer, params GUILayoutOption[] options) => 
+            LayerField(layer, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -2745,10 +2649,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(string label, int layer, params GUILayoutOption[] options)
-        {
-            return LayerField(EditorGUIUtility.TempContent(label), layer, EditorStyles.popup, options);
-        }
+        public static int LayerField(string label, int layer, params GUILayoutOption[] options) => 
+            LayerField(EditorGUIUtility.TempContent(label), layer, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -2762,10 +2664,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(GUIContent label, int layer, params GUILayoutOption[] options)
-        {
-            return LayerField(label, layer, EditorStyles.popup, options);
-        }
+        public static int LayerField(GUIContent label, int layer, params GUILayoutOption[] options) => 
+            LayerField(label, layer, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -2779,10 +2679,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(string label, int layer, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return LayerField(EditorGUIUtility.TempContent(label), layer, style, options);
-        }
+        public static int LayerField(string label, int layer, GUIStyle style, params GUILayoutOption[] options) => 
+            LayerField(EditorGUIUtility.TempContent(label), layer, style, options);
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -2808,10 +2706,8 @@
             EditorGUI.LayerMaskField(position, property, label);
         }
 
-        internal static bool LinkLabel(string label, params GUILayoutOption[] options)
-        {
-            return LinkLabel(EditorGUIUtility.TempContent(label), options);
-        }
+        internal static bool LinkLabel(string label, params GUILayoutOption[] options) => 
+            LinkLabel(EditorGUIUtility.TempContent(label), options);
 
         internal static bool LinkLabel(GUIContent label, params GUILayoutOption[] options)
         {
@@ -2837,10 +2733,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static long LongField(long value, params GUILayoutOption[] options)
-        {
-            return LongField(value, EditorStyles.numberField, options);
-        }
+        public static long LongField(long value, params GUILayoutOption[] options) => 
+            LongField(value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a text field for entering long integers.</para>
@@ -2872,10 +2766,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static long LongField(string label, long value, params GUILayoutOption[] options)
-        {
-            return LongField(label, value, EditorStyles.numberField, options);
-        }
+        public static long LongField(string label, long value, params GUILayoutOption[] options) => 
+            LongField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a text field for entering long integers.</para>
@@ -2889,10 +2781,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static long LongField(GUIContent label, long value, params GUILayoutOption[] options)
-        {
-            return LongField(label, value, EditorStyles.numberField, options);
-        }
+        public static long LongField(GUIContent label, long value, params GUILayoutOption[] options) => 
+            LongField(label, value, EditorStyles.numberField, options);
 
         /// <summary>
         /// <para>Make a text field for entering long integers.</para>
@@ -3144,10 +3034,8 @@
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Object obj, Type objType, params GUILayoutOption[] options)
-        {
-            return ObjectField(obj, objType, true, options);
-        }
+        public static Object ObjectField(Object obj, Type objType, params GUILayoutOption[] options) => 
+            ObjectField(obj, objType, true, options);
 
         /// <summary>
         /// <para>Make a field to receive any object type.</para>
@@ -3160,10 +3048,8 @@
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(string label, Object obj, Type objType, params GUILayoutOption[] options)
-        {
-            return ObjectField(label, obj, objType, true, options);
-        }
+        public static Object ObjectField(string label, Object obj, Type objType, params GUILayoutOption[] options) => 
+            ObjectField(label, obj, objType, true, options);
 
         /// <summary>
         /// <para>Make a field to receive any object type.</para>
@@ -3192,10 +3078,8 @@
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(GUIContent label, Object obj, Type objType, params GUILayoutOption[] options)
-        {
-            return ObjectField(label, obj, objType, true, options);
-        }
+        public static Object ObjectField(GUIContent label, Object obj, Type objType, params GUILayoutOption[] options) => 
+            ObjectField(label, obj, objType, true, options);
 
         /// <summary>
         /// <para>Make a field to receive any object type.</para>
@@ -3229,10 +3113,8 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(string label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options)
-        {
-            return ObjectField(EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects, options);
-        }
+        public static Object ObjectField(string label, Object obj, Type objType, bool allowSceneObjects, params GUILayoutOption[] options) => 
+            ObjectField(EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects, options);
 
         /// <summary>
         /// <para>Make a field to receive any object type.</para>
@@ -3274,10 +3156,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(string password, params GUILayoutOption[] options)
-        {
-            return PasswordField(password, EditorStyles.textField, options);
-        }
+        public static string PasswordField(string password, params GUILayoutOption[] options) => 
+            PasswordField(password, EditorStyles.textField, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -3291,10 +3171,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(string label, string password, params GUILayoutOption[] options)
-        {
-            return PasswordField(EditorGUIUtility.TempContent(label), password, EditorStyles.textField, options);
-        }
+        public static string PasswordField(string label, string password, params GUILayoutOption[] options) => 
+            PasswordField(EditorGUIUtility.TempContent(label), password, EditorStyles.textField, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -3326,10 +3204,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(GUIContent label, string password, params GUILayoutOption[] options)
-        {
-            return PasswordField(label, password, EditorStyles.textField, options);
-        }
+        public static string PasswordField(GUIContent label, string password, params GUILayoutOption[] options) => 
+            PasswordField(label, password, EditorStyles.textField, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -3343,10 +3219,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(string label, string password, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return PasswordField(EditorGUIUtility.TempContent(label), password, style, options);
-        }
+        public static string PasswordField(string label, string password, GUIStyle style, params GUILayoutOption[] options) => 
+            PasswordField(EditorGUIUtility.TempContent(label), password, style, options);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -3379,10 +3253,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(int selectedIndex, string[] displayedOptions, params GUILayoutOption[] options)
-        {
-            return Popup(selectedIndex, displayedOptions, EditorStyles.popup, options);
-        }
+        public static int Popup(int selectedIndex, string[] displayedOptions, params GUILayoutOption[] options) => 
+            Popup(selectedIndex, displayedOptions, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a generic popup selection field.</para>
@@ -3397,10 +3269,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(int selectedIndex, GUIContent[] displayedOptions, params GUILayoutOption[] options)
-        {
-            return Popup(selectedIndex, displayedOptions, EditorStyles.popup, options);
-        }
+        public static int Popup(int selectedIndex, GUIContent[] displayedOptions, params GUILayoutOption[] options) => 
+            Popup(selectedIndex, displayedOptions, EditorStyles.popup, options);
 
         internal static void Popup(SerializedProperty property, GUIContent[] displayedOptions, params GUILayoutOption[] options)
         {
@@ -3458,10 +3328,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(string label, int selectedIndex, string[] displayedOptions, params GUILayoutOption[] options)
-        {
-            return Popup(label, selectedIndex, displayedOptions, EditorStyles.popup, options);
-        }
+        public static int Popup(string label, int selectedIndex, string[] displayedOptions, params GUILayoutOption[] options) => 
+            Popup(label, selectedIndex, displayedOptions, EditorStyles.popup, options);
 
         internal static void Popup(SerializedProperty property, GUIContent[] displayedOptions, GUIContent label, params GUILayoutOption[] options)
         {
@@ -3482,10 +3350,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(GUIContent label, int selectedIndex, GUIContent[] displayedOptions, params GUILayoutOption[] options)
-        {
-            return Popup(label, selectedIndex, displayedOptions, EditorStyles.popup, options);
-        }
+        public static int Popup(GUIContent label, int selectedIndex, GUIContent[] displayedOptions, params GUILayoutOption[] options) => 
+            Popup(label, selectedIndex, displayedOptions, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a generic popup selection field.</para>
@@ -3525,10 +3391,8 @@
             return EditorGUI.Popup(position, label, selectedIndex, displayedOptions, style);
         }
 
-        internal static float PowerSlider(string label, float value, float leftValue, float rightValue, float power, params GUILayoutOption[] options)
-        {
-            return PowerSlider(EditorGUIUtility.TempContent(label), value, leftValue, rightValue, power, options);
-        }
+        internal static float PowerSlider(string label, float value, float leftValue, float rightValue, float power, params GUILayoutOption[] options) => 
+            PowerSlider(EditorGUIUtility.TempContent(label), value, leftValue, rightValue, power, options);
 
         internal static float PowerSlider(GUIContent label, float value, float leftValue, float rightValue, float power, params GUILayoutOption[] options)
         {
@@ -3643,10 +3507,8 @@
         /// <returns>
         /// <para>True if the property has children and is expanded and includeChildren was set to false; otherwise false.</para>
         /// </returns>
-        public static bool PropertyField(SerializedProperty property, params GUILayoutOption[] options)
-        {
-            return PropertyField(property, null, false, options);
-        }
+        public static bool PropertyField(SerializedProperty property, params GUILayoutOption[] options) => 
+            PropertyField(property, null, false, options);
 
         /// <summary>
         /// <para>Make a field for SerializedProperty.</para>
@@ -3660,10 +3522,8 @@
         /// <returns>
         /// <para>True if the property has children and is expanded and includeChildren was set to false; otherwise false.</para>
         /// </returns>
-        public static bool PropertyField(SerializedProperty property, bool includeChildren, params GUILayoutOption[] options)
-        {
-            return PropertyField(property, null, includeChildren, options);
-        }
+        public static bool PropertyField(SerializedProperty property, bool includeChildren, params GUILayoutOption[] options) => 
+            PropertyField(property, null, includeChildren, options);
 
         /// <summary>
         /// <para>Make a field for SerializedProperty.</para>
@@ -3677,10 +3537,8 @@
         /// <returns>
         /// <para>True if the property has children and is expanded and includeChildren was set to false; otherwise false.</para>
         /// </returns>
-        public static bool PropertyField(SerializedProperty property, GUIContent label, params GUILayoutOption[] options)
-        {
-            return PropertyField(property, label, false, options);
-        }
+        public static bool PropertyField(SerializedProperty property, GUIContent label, params GUILayoutOption[] options) => 
+            PropertyField(property, label, false, options);
 
         /// <summary>
         /// <para>Make a field for SerializedProperty.</para>
@@ -3694,10 +3552,8 @@
         /// <returns>
         /// <para>True if the property has children and is expanded and includeChildren was set to false; otherwise false.</para>
         /// </returns>
-        public static bool PropertyField(SerializedProperty property, GUIContent label, bool includeChildren, params GUILayoutOption[] options)
-        {
-            return ScriptAttributeUtility.GetHandler(property).OnGUILayout(property, label, includeChildren, options);
-        }
+        public static bool PropertyField(SerializedProperty property, GUIContent label, bool includeChildren, params GUILayoutOption[] options) => 
+            ScriptAttributeUtility.GetHandler(property).OnGUILayout(property, label, includeChildren, options);
 
         /// <summary>
         /// <para>Make an X, Y, W &amp; H field for entering a Rect.</para>
@@ -3727,10 +3583,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Rect RectField(string label, Rect value, params GUILayoutOption[] options)
-        {
-            return RectField(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static Rect RectField(string label, Rect value, params GUILayoutOption[] options) => 
+            RectField(EditorGUIUtility.TempContent(label), value, options);
 
         /// <summary>
         /// <para>Make an X, Y, W &amp; H field for entering a Rect.</para>
@@ -3831,10 +3685,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float Slider(string label, float value, float leftValue, float rightValue, params GUILayoutOption[] options)
-        {
-            return Slider(EditorGUIUtility.TempContent(label), value, leftValue, rightValue, options);
-        }
+        public static float Slider(string label, float value, float leftValue, float rightValue, params GUILayoutOption[] options) => 
+            Slider(EditorGUIUtility.TempContent(label), value, leftValue, rightValue, options);
 
         /// <summary>
         /// <para>Make a slider the user can drag to change a value between a min and a max.</para>
@@ -3918,10 +3770,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(string tag, params GUILayoutOption[] options)
-        {
-            return TagField(tag, EditorStyles.popup, options);
-        }
+        public static string TagField(string tag, params GUILayoutOption[] options) => 
+            TagField(tag, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a tag selection field.</para>
@@ -3935,10 +3785,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(string label, string tag, params GUILayoutOption[] options)
-        {
-            return TagField(EditorGUIUtility.TempContent(label), tag, EditorStyles.popup, options);
-        }
+        public static string TagField(string label, string tag, params GUILayoutOption[] options) => 
+            TagField(EditorGUIUtility.TempContent(label), tag, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a tag selection field.</para>
@@ -3970,10 +3818,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(GUIContent label, string tag, params GUILayoutOption[] options)
-        {
-            return TagField(label, tag, EditorStyles.popup, options);
-        }
+        public static string TagField(GUIContent label, string tag, params GUILayoutOption[] options) => 
+            TagField(label, tag, EditorStyles.popup, options);
 
         /// <summary>
         /// <para>Make a tag selection field.</para>
@@ -3987,10 +3833,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(string label, string tag, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return TagField(EditorGUIUtility.TempContent(label), tag, style, options);
-        }
+        public static string TagField(string label, string tag, GUIStyle style, params GUILayoutOption[] options) => 
+            TagField(EditorGUIUtility.TempContent(label), tag, style, options);
 
         /// <summary>
         /// <para>Make a tag selection field.</para>
@@ -4035,10 +3879,8 @@
         /// <returns>
         /// <para>The text entered by the user.</para>
         /// </returns>
-        public static string TextArea(string text, params GUILayoutOption[] options)
-        {
-            return TextArea(text, EditorStyles.textField, options);
-        }
+        public static string TextArea(string text, params GUILayoutOption[] options) => 
+            TextArea(text, EditorStyles.textField, options);
 
         /// <summary>
         /// <para>Make a text area.</para>
@@ -4165,15 +4007,11 @@
             return EditorGUI.TextField(position, label, text, style);
         }
 
-        internal static string TextFieldDropDown(string text, string[] dropDownElement)
-        {
-            return TextFieldDropDown(GUIContent.none, text, dropDownElement);
-        }
+        internal static string TextFieldDropDown(string text, string[] dropDownElement) => 
+            TextFieldDropDown(GUIContent.none, text, dropDownElement);
 
-        internal static string TextFieldDropDown(GUIContent label, string text, string[] dropDownElement)
-        {
-            return EditorGUI.TextFieldDropDown(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.textField), label, text, dropDownElement);
-        }
+        internal static string TextFieldDropDown(GUIContent label, string text, string[] dropDownElement) => 
+            EditorGUI.TextFieldDropDown(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.textField), label, text, dropDownElement);
 
         /// <summary>
         /// <para>Make a toggle.</para>
@@ -4229,10 +4067,8 @@
         /// <returns>
         /// <para>The selected state of the toggle.</para>
         /// </returns>
-        public static bool Toggle(string label, bool value, params GUILayoutOption[] options)
-        {
-            return Toggle(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static bool Toggle(string label, bool value, params GUILayoutOption[] options) => 
+            Toggle(EditorGUIUtility.TempContent(label), value, options);
 
         /// <summary>
         /// <para>Make a toggle.</para>
@@ -4268,10 +4104,8 @@
         /// <returns>
         /// <para>The selected state of the toggle.</para>
         /// </returns>
-        public static bool Toggle(string label, bool value, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return Toggle(EditorGUIUtility.TempContent(label), value, style, options);
-        }
+        public static bool Toggle(string label, bool value, GUIStyle style, params GUILayoutOption[] options) => 
+            Toggle(EditorGUIUtility.TempContent(label), value, style, options);
 
         /// <summary>
         /// <para>Make a toggle.</para>
@@ -4302,10 +4136,8 @@
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static bool ToggleLeft(string label, bool value, params GUILayoutOption[] options)
-        {
-            return ToggleLeft(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static bool ToggleLeft(string label, bool value, params GUILayoutOption[] options) => 
+            ToggleLeft(EditorGUIUtility.TempContent(label), value, options);
 
         /// <summary>
         /// <para>Make a toggle field where the toggle is to the left and the label immediately to the right of it.</para>
@@ -4331,10 +4163,8 @@
         /// <param name="options">An optional list of layout options that specify extra layouting properties. Any values passed in here will override settings defined by the style.&lt;br&gt;
         /// See Also: GUILayout.Width, GUILayout.Height, GUILayout.MinWidth, GUILayout.MaxWidth, GUILayout.MinHeight, 
         /// GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
-        public static bool ToggleLeft(string label, bool value, GUIStyle labelStyle, params GUILayoutOption[] options)
-        {
-            return ToggleLeft(EditorGUIUtility.TempContent(label), value, labelStyle, options);
-        }
+        public static bool ToggleLeft(string label, bool value, GUIStyle labelStyle, params GUILayoutOption[] options) => 
+            ToggleLeft(EditorGUIUtility.TempContent(label), value, labelStyle, options);
 
         /// <summary>
         /// <para>Make a toggle field where the toggle is to the left and the label immediately to the right of it.</para>
@@ -4351,10 +4181,8 @@
             return EditorGUI.ToggleLeft(position, label, value, labelStyle);
         }
 
-        internal static bool ToggleTitlebar(bool foldout, GUIContent label, ref bool toggleValue)
-        {
-            return EditorGUI.ToggleTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), label, foldout, ref toggleValue);
-        }
+        internal static bool ToggleTitlebar(bool foldout, GUIContent label, ref bool toggleValue) => 
+            EditorGUI.ToggleTitlebar(GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.inspectorTitlebar), label, foldout, ref toggleValue);
 
         internal static bool ToggleTitlebar(bool foldout, GUIContent label, SerializedProperty property)
         {
@@ -4391,10 +4219,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Vector2 Vector2Field(string label, Vector2 value, params GUILayoutOption[] options)
-        {
-            return Vector2Field(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static Vector2 Vector2Field(string label, Vector2 value, params GUILayoutOption[] options) => 
+            Vector2Field(EditorGUIUtility.TempContent(label), value, options);
 
         /// <summary>
         /// <para>Make an X &amp; Y field for entering a Vector2.</para>
@@ -4424,10 +4250,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Vector3 Vector3Field(string label, Vector3 value, params GUILayoutOption[] options)
-        {
-            return Vector3Field(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static Vector3 Vector3Field(string label, Vector3 value, params GUILayoutOption[] options) => 
+            Vector3Field(EditorGUIUtility.TempContent(label), value, options);
 
         /// <summary>
         /// <para>Make an X, Y &amp; Z field for entering a Vector3.</para>
@@ -4458,10 +4282,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Vector4 Vector4Field(string label, Vector4 value, params GUILayoutOption[] options)
-        {
-            return Vector4Field(EditorGUIUtility.TempContent(label), value, options);
-        }
+        public static Vector4 Vector4Field(string label, Vector4 value, params GUILayoutOption[] options) => 
+            Vector4Field(EditorGUIUtility.TempContent(label), value, options);
 
         public static Vector4 Vector4Field(GUIContent label, Vector4 value, params GUILayoutOption[] options)
         {
@@ -4481,21 +4303,11 @@
             EditorGUI.VUMeter.HorizontalMeter(position, value, ref data, EditorGUI.VUMeter.horizontalVUTexture, Color.grey);
         }
 
-        internal static float kLabelFloatMaxW
-        {
-            get
-            {
-                return ((EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth) + 5f);
-            }
-        }
+        internal static float kLabelFloatMaxW =>
+            ((EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth) + 5f);
 
-        internal static float kLabelFloatMinW
-        {
-            get
-            {
-                return ((EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth) + 5f);
-            }
-        }
+        internal static float kLabelFloatMinW =>
+            ((EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth) + 5f);
 
         /// <summary>
         /// <para>Begins a group that can be be hidden/shown and the transition will be animated.</para>
@@ -4763,7 +4575,7 @@
         /// </summary>
         public class VerticalScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Rect <rect>k__BackingField;
 
             /// <summary>
@@ -4810,7 +4622,7 @@
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <handleScrollWheel>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Vector2 <scrollPosition>k__BackingField;
 
             public VerticalScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options)

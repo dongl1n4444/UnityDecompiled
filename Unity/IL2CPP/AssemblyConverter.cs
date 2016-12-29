@@ -154,7 +154,7 @@
             {
                 using (TinyProfiler.Section("ApplyDefaultMarshalAsAttributeVisitor in assembly", definition.Name.Name))
                 {
-                    Unity.Cecil.Visitor.Extensions.Accept(definition, visitor);
+                    definition.Accept(visitor);
                 }
             }
         }
@@ -183,7 +183,7 @@
                         {
                             <>f__am$cache7 = new Func<string, bool>(null, (IntPtr) <BuildExtraTypesList>m__8);
                         }
-                        foreach (string str3 in Enumerable.Where<string>(Enumerable.Select<string, string>(File.ReadAllLines(str2), <>f__am$cache6), <>f__am$cache7))
+                        foreach (string str3 in File.ReadAllLines(str2).Select<string, string>(<>f__am$cache6).Where<string>(<>f__am$cache7))
                         {
                             if ((!str3.StartsWith(";") && !str3.StartsWith("#")) && !str3.StartsWith("//"))
                             {
@@ -207,13 +207,13 @@
             while (source.Count > count)
             {
                 count = source.Count;
-                source.UnionWith(Enumerable.SelectMany<AssemblyDefinition, AssemblyDefinition>(Enumerable.ToArray<AssemblyDefinition>(source), new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(AssemblyDependencies, (IntPtr) AssemblyDependencies.GetReferencedAssembliesFor)));
+                source.UnionWith(source.ToArray<AssemblyDefinition>().SelectMany<AssemblyDefinition, AssemblyDefinition>(new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(AssemblyDependencies, (IntPtr) AssemblyDependencies.GetReferencedAssembliesFor)));
             }
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <CollectAssembliesRecursive>m__2);
             }
-            if (!Enumerable.Any<AssemblyDefinition>(source, <>f__am$cache1))
+            if (!source.Any<AssemblyDefinition>(<>f__am$cache1))
             {
                 AssemblyDefinition[] other = new AssemblyDefinition[] { this._assemblyLoader.Load("mscorlib") };
                 source.UnionWith(other);
@@ -223,7 +223,7 @@
 
         private void CollectAssembliesToConvert()
         {
-            this._assembliesOrderedByDependency = Enumerable.ToList<AssemblyDefinition>(this.CollectAssembliesRecursive(Enumerable.Select<NPath, AssemblyDefinition>(this._assemblies, new Func<NPath, AssemblyDefinition>(this, (IntPtr) this.<CollectAssembliesToConvert>m__1))));
+            this._assembliesOrderedByDependency = this.CollectAssembliesRecursive(this._assemblies.Select<NPath, AssemblyDefinition>(new Func<NPath, AssemblyDefinition>(this, (IntPtr) this.<CollectAssembliesToConvert>m__1))).ToList<AssemblyDefinition>();
             this._assembliesOrderedByDependency.Sort(new AssemblyDependencyComparer(AssemblyDependencyComparer.MaximumDepthForEachAssembly(this._assembliesOrderedByDependency)));
         }
 
@@ -234,7 +234,7 @@
 
         private void Convert(AssemblyDefinition assemblyDefinition, InflatedCollectionCollector allGenerics, AttributeCollection attributeCollection, MethodCollector methodCollector, IMetadataCollection metadataCollection)
         {
-            TypeDefinition[] typeList = Enumerable.ToArray<TypeDefinition>(GetAllTypes(assemblyDefinition.MainModule.Types));
+            TypeDefinition[] typeList = GetAllTypes(assemblyDefinition.MainModule.Types).ToArray<TypeDefinition>();
             new SourceWriter(this._vTableBuilder, this._debuggerSupport, this._outputDir).Write(assemblyDefinition, allGenerics, this._outputDir, typeList, attributeCollection, methodCollector, metadataCollection);
         }
 
@@ -258,7 +258,7 @@
             {
                 foreach (string str in assemblyDirectories)
                 {
-                    list.AddRange(GetAssembliesInDirectory(NiceIO.Extensions.ToNPath(str)));
+                    list.AddRange(GetAssembliesInDirectory(str.ToNPath()));
                 }
             }
             if (explicitAssemblies != null)
@@ -270,13 +270,11 @@
         }
 
         [DebuggerHidden]
-        public static IEnumerable<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> typeDefinitions)
-        {
-            return new <GetAllTypes>c__Iterator0 { 
+        public static IEnumerable<TypeDefinition> GetAllTypes(IEnumerable<TypeDefinition> typeDefinitions) => 
+            new <GetAllTypes>c__Iterator0 { 
                 typeDefinitions = typeDefinitions,
                 $PC = -2
             };
-        }
 
         private static IEnumerable<NPath> GetAssembliesInDirectory(NPath assemblyDirectory)
         {
@@ -284,7 +282,7 @@
             {
                 <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <GetAssembliesInDirectory>m__0);
             }
-            return Enumerable.Where<NPath>(assemblyDirectory.Files(false), <>f__am$cache0);
+            return assemblyDirectory.Files(false).Where<NPath>(<>f__am$cache0);
         }
 
         private NPath GetPathFor(string filename, string extension)
@@ -300,7 +298,7 @@
             {
                 using (TinyProfiler.Section("ModifyCOMAndWindowsRuntimeTypes in assembly", definition.Name.Name))
                 {
-                    Unity.Cecil.Visitor.Extensions.Accept(definition, visitor);
+                    definition.Accept(visitor);
                 }
             }
         }
@@ -312,7 +310,7 @@
             {
                 using (TinyProfiler.Section("PatchEnumsNestedInGenericTypes in assembly", definition.Name.Name))
                 {
-                    Unity.Cecil.Visitor.Extensions.Accept(definition, visitor);
+                    definition.Accept(visitor);
                 }
             }
         }
@@ -327,7 +325,7 @@
             {
                 <>f__am$cache2 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__3);
             }
-            AssemblyDefinition mscorlib = Enumerable.Single<AssemblyDefinition>(this._assembliesOrderedByDependency, <>f__am$cache2);
+            AssemblyDefinition mscorlib = this._assembliesOrderedByDependency.Single<AssemblyDefinition>(<>f__am$cache2);
             TypeProviderInitializer.Initialize(mscorlib);
             WindowsRuntimeProjectionsInitializer.Initialize(mscorlib.MainModule, CodeGenOptions.Dotnetprofile);
             this._outputDir.EnsureDirectoryExists("");
@@ -335,18 +333,18 @@
             {
                 <>f__am$cache3 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__4);
             }
-            AssemblyDefinition[] source = Enumerable.ToArray<AssemblyDefinition>(Enumerable.Where<AssemblyDefinition>(this._assembliesOrderedByDependency, <>f__am$cache3));
+            AssemblyDefinition[] source = this._assembliesOrderedByDependency.Where<AssemblyDefinition>(<>f__am$cache3).ToArray<AssemblyDefinition>();
             if (source.Length > 0)
             {
                 if (<>f__am$cache4 == null)
                 {
                     <>f__am$cache4 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__5);
                 }
-                AssemblyDefinition local1 = Enumerable.FirstOrDefault<AssemblyDefinition>(source, <>f__am$cache4);
+                AssemblyDefinition local1 = source.FirstOrDefault<AssemblyDefinition>(<>f__am$cache4);
                 if (local1 == null)
                 {
                 }
-                new DriverWriter(Enumerable.First<AssemblyDefinition>(source)).Write(this._outputDir);
+                new DriverWriter(source.First<AssemblyDefinition>()).Write(this._outputDir);
             }
             using (TinyProfiler.Section("PatchEnumsNestedInGenericTypes", ""))
             {
@@ -370,7 +368,7 @@
             }
             foreach (AssemblyDefinition definition5 in this._assembliesOrderedByDependency)
             {
-                Unity.Cecil.Visitor.Extensions.Accept(definition5, new GenericSharingVisitor());
+                definition5.Accept(new GenericSharingVisitor());
             }
             using (TinyProfiler.Section("WriteResources", ""))
             {
@@ -413,7 +411,7 @@
             {
                 <>f__am$cache5 = new Func<AssemblyDefinition, IEnumerable<TypeDefinition>>(null, (IntPtr) <PreProcessStage>m__6);
             }
-            allTypeDefinitions = Enumerable.ToArray<TypeDefinition>(GetAllTypes(Enumerable.SelectMany<AssemblyDefinition, TypeDefinition>(this._assembliesOrderedByDependency, <>f__am$cache5)));
+            allTypeDefinitions = GetAllTypes(this._assembliesOrderedByDependency.SelectMany<AssemblyDefinition, TypeDefinition>(<>f__am$cache5)).ToArray<TypeDefinition>();
             using (TinyProfiler.Section("CollectGenericVirtualMethods.Collect", ""))
             {
                 this.CollectGenericVirtualMethods(genericsCollectionCollector, allTypeDefinitions);
@@ -427,9 +425,9 @@
             path.CreateDirectory();
             foreach (AssemblyDefinition definition in this._assembliesOrderedByDependency)
             {
-                if (Enumerable.Any<Resource>(definition.MainModule.Resources))
+                if (definition.MainModule.Resources.Any<Resource>())
                 {
-                    string[] textArray2 = new string[] { string.Format("{0}-resources.dat", definition.MainModule.Name) };
+                    string[] textArray2 = new string[] { $"{definition.MainModule.Name}-resources.dat" };
                     using (FileStream stream = new FileStream(path.Combine(textArray2).ToString(), FileMode.Create, FileAccess.Write))
                     {
                         ResourceWriter.WriteEmbeddedResources(definition, stream);
@@ -593,28 +591,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
 
-            TypeDefinition IEnumerator<TypeDefinition>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeDefinition IEnumerator<TypeDefinition>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

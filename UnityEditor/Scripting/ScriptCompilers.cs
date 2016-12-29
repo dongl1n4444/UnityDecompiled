@@ -40,13 +40,11 @@
                     return language.CreateCompiler(island, buildingForEditor, targetPlatform, runUpdater);
                 }
             }
-            throw new ApplicationException(string.Format("Unable to find a suitable compiler for sources with extension '{0}' (Output assembly: {1})", island.GetExtensionOfSourceFiles(), island._output));
+            throw new ApplicationException($"Unable to find a suitable compiler for sources with extension '{island.GetExtensionOfSourceFiles()}' (Output assembly: {island._output})");
         }
 
-        public static string GetExtensionOfSourceFile(string file)
-        {
-            return Path.GetExtension(file).ToLower().Substring(1);
-        }
+        public static string GetExtensionOfSourceFile(string file) => 
+            Path.GetExtension(file).ToLower().Substring(1);
 
         internal static string GetNamespace(string file, string definedSymbols)
         {
@@ -71,7 +69,7 @@
             {
                 <>f__am$cache0 = new Func<SupportedLanguage, SupportedLanguageStruct>(null, (IntPtr) <GetSupportedLanguageStructs>m__0);
             }
-            return Enumerable.ToArray<SupportedLanguageStruct>(Enumerable.Select<SupportedLanguage, SupportedLanguageStruct>(_supportedLanguages, <>f__am$cache0));
+            return Enumerable.Select<SupportedLanguage, SupportedLanguageStruct>(_supportedLanguages, <>f__am$cache0).ToArray<SupportedLanguageStruct>();
         }
     }
 }

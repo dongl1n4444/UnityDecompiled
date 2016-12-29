@@ -175,13 +175,13 @@
 
         private static string FormatEventArguments(IEnumerable<Type> paramTypes, AnimationEvent evt)
         {
-            if (!Enumerable.Any<Type>(paramTypes))
+            if (!paramTypes.Any<Type>())
             {
                 return " ( )";
             }
-            if (Enumerable.Count<Type>(paramTypes) <= 1)
+            if (paramTypes.Count<Type>() <= 1)
             {
-                Type enumType = Enumerable.First<Type>(paramTypes);
+                Type enumType = paramTypes.First<Type>();
                 if (enumType == typeof(string))
                 {
                     return (" ( \"" + evt.stringParameter + "\" )");
@@ -267,7 +267,7 @@
                             }
                             else
                             {
-                                str = string.Format(" ( {0} )", method.parameterType.Name);
+                                str = $" ( {method.parameterType.Name} )";
                             }
                         }
                         list2.Add(method.name + str);
@@ -346,10 +346,8 @@
         {
             internal string name;
 
-            internal bool <>m__0(AnimationWindowEventMethod m)
-            {
-                return (m.name == this.name);
-            }
+            internal bool <>m__0(AnimationWindowEventMethod m) => 
+                (m.name == this.name);
         }
 
         [CompilerGenerated]
@@ -357,10 +355,8 @@
         {
             internal AnimationEvent evt;
 
-            internal bool <>m__0(AnimationWindowEventMethod method)
-            {
-                return (method.name == this.evt.functionName);
-            }
+            internal bool <>m__0(AnimationWindowEventMethod method) => 
+                (method.name == this.evt.functionName);
         }
     }
 }

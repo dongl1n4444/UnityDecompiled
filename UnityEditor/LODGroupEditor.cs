@@ -59,7 +59,7 @@
 
         private void AddGameObjectRenderers(IEnumerable<Renderer> toAdd, bool add)
         {
-            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
             if (!add)
             {
                 property.ClearArray();
@@ -104,7 +104,7 @@
             {
                 <>f__am$cache0 = new Func<Vector3, Vector2>(null, (IntPtr) <CalculateScreenRect>m__0);
             }
-            List<Vector2> list = Enumerable.ToList<Vector2>(Enumerable.Select<Vector3, Vector2>(points, <>f__am$cache0));
+            List<Vector2> list = Enumerable.Select<Vector3, Vector2>(points, <>f__am$cache0).ToList<Vector2>();
             Vector2 vector = new Vector2(float.MaxValue, float.MaxValue);
             Vector2 vector2 = new Vector2(float.MinValue, float.MinValue);
             foreach (Vector2 vector3 in list)
@@ -129,7 +129,7 @@
                 Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
                 bool flag = false;
                 List<MeshFilter> list = new List<MeshFilter>();
-                SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+                SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
                 for (int i = 0; i < property.arraySize; i++)
                 {
                     Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
@@ -309,7 +309,7 @@
                         current.Use();
                         float desiredPercentage = LODGroupGUI.GetCameraPercent(current.mousePosition, sliderPosition);
                         LODGroupGUI.SetSelectedLODLevelPercentage(desiredPercentage - 0.001f, this.m_SelectedLODSlider, lods);
-                        base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods[this.m_SelectedLODSlider].LODLevel)).floatValue = lods[this.m_SelectedLODSlider].RawScreenPercent;
+                        base.serializedObject.FindProperty($"m_LODs.Array.data[{lods[this.m_SelectedLODSlider].LODLevel}].screenRelativeHeight").floatValue = lods[this.m_SelectedLODSlider].RawScreenPercent;
                         this.UpdateLODDrag(desiredPercentage, this.m_LODGroup);
                     }
                     break;
@@ -337,7 +337,7 @@
                     if (lODLevel >= -1)
                     {
                         this.m_SelectedLOD = lODLevel;
-                        if (Enumerable.Count<Object>(DragAndDrop.objectReferences) > 0)
+                        if (DragAndDrop.objectReferences.Count<Object>() > 0)
                         {
                             DragAndDrop.visualMode = !this.m_IsPrefab ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None;
                             if (current.type == EventType.DragPerform)
@@ -355,14 +355,14 @@
                                 if (lODLevel == -1)
                                 {
                                     this.m_LODs.arraySize++;
-                                    SerializedProperty property2 = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods.Count));
+                                    SerializedProperty property2 = base.serializedObject.FindProperty($"m_LODs.Array.data[{lods.Count}].screenRelativeHeight");
                                     if (lods.Count == 0)
                                     {
                                         property2.floatValue = 0.5f;
                                     }
                                     else
                                     {
-                                        SerializedProperty property3 = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", lods.Count - 1));
+                                        SerializedProperty property3 = base.serializedObject.FindProperty($"m_LODs.Array.data[{lods.Count - 1}].screenRelativeHeight");
                                         property2.floatValue = property3.floatValue / 2f;
                                     }
                                     this.m_SelectedLOD = lods.Count;
@@ -441,7 +441,7 @@
                         LODGroupGUI.Styles.m_LODCameraLine.Draw(rect5, false, false, false, false);
                         GUI.backgroundColor = backgroundColor;
                         GUI.Label(position, LODGroupGUI.Styles.m_CameraIcon, GUIStyle.none);
-                        LODGroupGUI.Styles.m_LODSliderText.Draw(rect6, string.Format("{0:0}%", Mathf.Clamp01(activeRelativeScreenSize) * 100f), false, false, false, false);
+                        LODGroupGUI.Styles.m_LODSliderText.Draw(rect6, $"{Mathf.Clamp01(activeRelativeScreenSize) * 100f:0}%", false, false, false, false);
                         break;
                     }
                 }
@@ -450,7 +450,7 @@
 
         private void DrawRendererButton(Rect position, int rendererIndex)
         {
-            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
             Renderer objectReferenceValue = property.GetArrayElementAtIndex(rendererIndex).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
             Rect rect = new Rect(position.xMax - 20f, position.yMax - 20f, 20f, 20f);
             Event current = Event.current;
@@ -513,7 +513,7 @@
             {
                 EditorStyles.label.Draw(position, LODGroupGUI.Styles.m_RendersTitle, false, false, false, false);
             }
-            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
             int num2 = property.arraySize + 1;
             int num3 = Mathf.CeilToInt(((float) num2) / ((float) num));
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(true) };
@@ -551,10 +551,8 @@
             }
         }
 
-        private ModelImporter GetImporter()
-        {
-            return (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(base.target))) as ModelImporter);
-        }
+        private ModelImporter GetImporter() => 
+            (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(base.target))) as ModelImporter);
 
         public override string GetInfoString()
         {
@@ -563,7 +561,7 @@
                 return "";
             }
             List<Material> source = new List<Material>();
-            SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+            SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
             for (int i = 0; i < property.arraySize; i++)
             {
                 Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
@@ -573,7 +571,9 @@
                 }
             }
             LODVisualizationInformation information = LODUtility.CalculateVisualizationData(SceneView.lastActiveSceneView.camera, this.m_LODGroup, this.activeLOD);
-            return ((this.activeLOD == -1) ? "LOD: culled" : string.Format("{0} Renderer(s)\n{1} Triangle(s)\n{2} Material(s)", property.arraySize, information.triangleCount, Enumerable.Count<Material>(Enumerable.Distinct<Material>(source))));
+            return ((this.activeLOD == -1) ? "LOD: culled" : $"{property.arraySize} Renderer(s)
+{information.triangleCount} Triangle(s)
+{source.Distinct<Material>().Count<Material>()} Material(s)");
         }
 
         private IEnumerable<Renderer> GetRenderers(IEnumerable<GameObject> selectedGameObjects, bool searchChildren)
@@ -585,7 +585,7 @@
             IEnumerable<GameObject> first = Enumerable.Where<GameObject>(selectedGameObjects, new Func<GameObject, bool>(this, (IntPtr) this.<GetRenderers>m__5));
             IEnumerable<GameObject> source = Enumerable.Where<GameObject>(selectedGameObjects, new Func<GameObject, bool>(this, (IntPtr) this.<GetRenderers>m__6));
             List<GameObject> second = new List<GameObject>();
-            if ((Enumerable.Count<GameObject>(source) > 0) && EditorUtility.DisplayDialog("Reparent GameObjects", "Some objects are not children of the LODGroup GameObject. Do you want to reparent them and add them to the LODGroup?", "Yes, Reparent", "No, Use Only Existing Children"))
+            if ((source.Count<GameObject>() > 0) && EditorUtility.DisplayDialog("Reparent GameObjects", "Some objects are not children of the LODGroup GameObject. Do you want to reparent them and add them to the LODGroup?", "Yes, Reparent", "No, Use Only Existing Children"))
             {
                 foreach (GameObject obj2 in source)
                 {
@@ -606,7 +606,7 @@
                         second.Add(obj2);
                     }
                 }
-                first = Enumerable.Union<GameObject>(first, second);
+                first = first.Union<GameObject>(second);
             }
             List<Renderer> list2 = new List<Renderer>();
             foreach (GameObject obj4 in first)
@@ -656,7 +656,7 @@
                     }
                     if (flag)
                     {
-                        if (Enumerable.Count<Object>(DragAndDrop.objectReferences) > 0)
+                        if (DragAndDrop.objectReferences.Count<Object>() > 0)
                         {
                             DragAndDrop.visualMode = !this.m_IsPrefab ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.None;
                             if (storey.evt.type == EventType.DragPerform)
@@ -707,10 +707,8 @@
             }
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.target != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.target != null);
 
         private void InitPreview()
         {
@@ -739,7 +737,7 @@
                 }
                 if ((this.m_NumberOfLODs > 1) && (this.m_SelectedLOD == (this.m_NumberOfLODs - 2)))
                 {
-                    SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.m_NumberOfLODs - 1));
+                    SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.m_NumberOfLODs - 1}].renderers");
                     if ((property.arraySize == 1) && (property.GetArrayElementAtIndex(0).FindPropertyRelative("renderer").objectReferenceValue is BillboardRenderer))
                     {
                         return true;
@@ -790,7 +788,7 @@
             }
             if ((this.m_NumberOfLODs > 0) && (this.activeLOD >= 0))
             {
-                SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", this.activeLOD));
+                SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
                 for (int i = property.arraySize - 1; i >= 0; i--)
                 {
                     Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
@@ -812,14 +810,14 @@
             GUILayout.Space(16f);
             if (QualitySettings.lodBias != 1f)
             {
-                EditorGUILayout.HelpBox(string.Format("Active LOD bias is {0:0.0#}. Distances are adjusted accordingly.", QualitySettings.lodBias), MessageType.Warning);
+                EditorGUILayout.HelpBox($"Active LOD bias is {QualitySettings.lodBias:0.0#}. Distances are adjusted accordingly.", MessageType.Warning);
             }
             if (((this.m_NumberOfLODs > 0) && (this.activeLOD >= 0)) && (this.activeLOD < this.m_NumberOfLODs))
             {
                 this.m_ShowFadeTransitionWidth.target = this.IsLODUsingCrossFadeWidth(this.activeLOD);
                 if (EditorGUILayout.BeginFadeGroup(this.m_ShowFadeTransitionWidth.faded))
                 {
-                    EditorGUILayout.PropertyField(base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].fadeTransitionWidth", this.activeLOD)), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].fadeTransitionWidth"), new GUILayoutOption[0]);
                 }
                 EditorGUILayout.EndFadeGroup();
                 this.DrawRenderersInfo(EditorGUIUtility.currentViewWidth);
@@ -929,7 +927,7 @@
             List<LODLightmapScale> list = new List<LODLightmapScale>();
             for (int i = 0; i < this.m_NumberOfLODs; i++)
             {
-                SerializedProperty property = base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", i));
+                SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{i}].renderers");
                 List<SerializedProperty> renderers = new List<SerializedProperty>();
                 for (int k = 0; k < property.arraySize; k++)
                 {
@@ -939,7 +937,7 @@
                         renderers.Add(item);
                     }
                 }
-                float scale = (i != 0) ? base.serializedObject.FindProperty(string.Format("m_LODs.Array.data[{0}].screenRelativeHeight", i - 1)).floatValue : 1f;
+                float scale = (i != 0) ? base.serializedObject.FindProperty($"m_LODs.Array.data[{i - 1}].screenRelativeHeight").floatValue : 1f;
                 list.Add(new LODLightmapScale(scale, renderers));
             }
             for (int j = 0; j < this.m_NumberOfLODs; j++)
@@ -1000,23 +998,16 @@
             }
         }
 
-        private int activeLOD
-        {
-            get
-            {
-                return this.m_SelectedLOD;
-            }
-        }
+        private int activeLOD =>
+            this.m_SelectedLOD;
 
         [CompilerGenerated]
         private sealed class <HandleAddRenderer>c__AnonStorey0
         {
             internal Event evt;
 
-            internal bool <>m__0(Rect x)
-            {
-                return !x.Contains(this.evt.mousePosition);
-            }
+            internal bool <>m__0(Rect x) => 
+                !x.Contains(this.evt.mousePosition);
         }
 
         private class LODAction
@@ -1044,10 +1035,10 @@
                 {
                     foreach (LODGroupGUI.LODInfo info in this.m_LODs)
                     {
-                        int arraySize = this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", info.LODLevel)).arraySize;
+                        int arraySize = this.m_ObjectRef.FindProperty($"m_LODs.Array.data[{info.LODLevel}].renderers").arraySize;
                         if (info.m_RangePosition.Contains(this.m_ClickedPosition) && ((arraySize == 0) || EditorUtility.DisplayDialog("Delete LOD", "Are you sure you wish to delete this LOD?", "Yes", "No")))
                         {
-                            this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}]", info.LODLevel)).DeleteCommand();
+                            this.m_ObjectRef.FindProperty($"m_LODs.Array.data[{info.LODLevel}]").DeleteCommand();
                             this.m_ObjectRef.ApplyModifiedProperties();
                             if (this.m_Callback != null)
                             {
@@ -1081,7 +1072,7 @@
                     {
                         this.m_LODsProperty.InsertArrayElementAtIndex(index);
                     }
-                    this.m_ObjectRef.FindProperty(string.Format("m_LODs.Array.data[{0}].renderers", index)).arraySize = 0;
+                    this.m_ObjectRef.FindProperty($"m_LODs.Array.data[{index}].renderers").arraySize = 0;
                     this.m_LODsProperty.GetArrayElementAtIndex(index).FindPropertyRelative("screenRelativeHeight").floatValue = this.m_Percentage;
                     if (this.m_Callback != null)
                     {

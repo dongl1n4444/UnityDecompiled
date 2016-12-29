@@ -34,10 +34,8 @@
             this.m_OnResultUpdate = resultUpdated;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0} ({1})", this.name, this.fullName);
-        }
+        public override string ToString() => 
+            $"{this.name} ({this.fullName})";
 
         public void Update(TestResult result)
         {

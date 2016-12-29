@@ -166,25 +166,17 @@
             return true;
         }
 
-        public static bool Button(Vector3 position, Quaternion direction, float size, float pickSize, CapFunction capFunction)
-        {
-            return UnityEditorInternal.Button.Do(GUIUtility.GetControlID(s_ButtonHash, FocusType.Passive), position, direction, size, pickSize, capFunction);
-        }
+        public static bool Button(Vector3 position, Quaternion direction, float size, float pickSize, CapFunction capFunction) => 
+            UnityEditorInternal.Button.Do(GUIUtility.GetControlID(s_ButtonHash, FocusType.Passive), position, direction, size, pickSize, capFunction);
 
-        public static bool Button(Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc)
-        {
-            return UnityEditorInternal.Button.Do(GUIUtility.GetControlID(s_ButtonHash, FocusType.Passive), position, direction, size, pickSize, capFunc);
-        }
+        public static bool Button(Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc) => 
+            UnityEditorInternal.Button.Do(GUIUtility.GetControlID(s_ButtonHash, FocusType.Passive), position, direction, size, pickSize, capFunc);
 
-        internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, CapFunction capFunction)
-        {
-            return UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunction);
-        }
+        internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, CapFunction capFunction) => 
+            UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunction);
 
-        internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc)
-        {
-            return UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunc);
-        }
+        internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc) => 
+            UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunc);
 
         /// <summary>
         /// <para>Draw a camera-facing Circle. Pass this into handle functions.</para>
@@ -271,15 +263,11 @@
             }
         }
 
-        internal static Vector3 ConeFrustrumHandle(Quaternion rotation, Vector3 position, Vector3 radiusAngleRange)
-        {
-            return DoConeFrustrumHandle(rotation, position, radiusAngleRange);
-        }
+        internal static Vector3 ConeFrustrumHandle(Quaternion rotation, Vector3 position, Vector3 radiusAngleRange) => 
+            DoConeFrustrumHandle(rotation, position, radiusAngleRange);
 
-        internal static Vector2 ConeHandle(Quaternion rotation, Vector3 position, Vector2 angleAndRange, float angleScale, float rangeScale, bool handlesOnly)
-        {
-            return DoConeHandle(rotation, position, angleAndRange, angleScale, rangeScale, handlesOnly);
-        }
+        internal static Vector2 ConeHandle(Quaternion rotation, Vector3 position, Vector2 angleAndRange, float angleScale, float rangeScale, bool handlesOnly) => 
+            DoConeHandle(rotation, position, angleAndRange, angleScale, rangeScale, handlesOnly);
 
         /// <summary>
         /// <para>Draw a cone handle. Pass this into handle functions.</para>
@@ -392,15 +380,11 @@
         /// <returns>
         /// <para>The new rotation value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
-        public static Quaternion Disc(Quaternion rotation, Vector3 position, Vector3 axis, float size, bool cutoffPlane, float snap)
-        {
-            return UnityEditorInternal.Disc.Do(GUIUtility.GetControlID(s_DiscHash, FocusType.Keyboard), rotation, position, axis, size, cutoffPlane, snap);
-        }
+        public static Quaternion Disc(Quaternion rotation, Vector3 position, Vector3 axis, float size, bool cutoffPlane, float snap) => 
+            UnityEditorInternal.Disc.Do(GUIUtility.GetControlID(s_DiscHash, FocusType.Keyboard), rotation, position, axis, size, cutoffPlane, snap);
 
-        internal static float DistanceToPolygone(Vector3[] vertices)
-        {
-            return HandleUtility.DistanceToPolyLine(vertices);
-        }
+        internal static float DistanceToPolygone(Vector3[] vertices) => 
+            HandleUtility.DistanceToPolyLine(vertices);
 
         internal static void DoBoneHandle(Transform target)
         {
@@ -1793,15 +1777,11 @@
             GL.PopMatrix();
         }
 
-        public static Vector3 FreeMoveHandle(Vector3 position, Quaternion rotation, float size, Vector3 snap, CapFunction capFunction)
-        {
-            return FreeMove.Do(GUIUtility.GetControlID(s_FreeMoveHandleHash, FocusType.Keyboard), position, rotation, size, snap, capFunction);
-        }
+        public static Vector3 FreeMoveHandle(Vector3 position, Quaternion rotation, float size, Vector3 snap, CapFunction capFunction) => 
+            FreeMove.Do(GUIUtility.GetControlID(s_FreeMoveHandleHash, FocusType.Keyboard), position, rotation, size, snap, capFunction);
 
-        public static Vector3 FreeMoveHandle(Vector3 position, Quaternion rotation, float size, Vector3 snap, DrawCapFunction capFunc)
-        {
-            return FreeMove.Do(GUIUtility.GetControlID(s_FreeMoveHandleHash, FocusType.Keyboard), position, rotation, size, snap, capFunc);
-        }
+        public static Vector3 FreeMoveHandle(Vector3 position, Quaternion rotation, float size, Vector3 snap, DrawCapFunction capFunc) => 
+            FreeMove.Do(GUIUtility.GetControlID(s_FreeMoveHandleHash, FocusType.Keyboard), position, rotation, size, snap, capFunc);
 
         /// <summary>
         /// <para>Make an unconstrained rotation handle.</para>
@@ -1812,10 +1792,8 @@
         /// <returns>
         /// <para>The new rotation value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
-        public static Quaternion FreeRotateHandle(Quaternion rotation, Vector3 position, float size)
-        {
-            return FreeRotate.Do(GUIUtility.GetControlID(s_FreeRotateHandleHash, FocusType.Keyboard), rotation, position, size);
-        }
+        public static Quaternion FreeRotateHandle(Quaternion rotation, Vector3 position, float size) => 
+            FreeRotate.Do(GUIUtility.GetControlID(s_FreeRotateHandleHash, FocusType.Keyboard), rotation, position, size);
 
         internal static Vector3[] GetBoneVertices(Vector3 endPoint, Vector3 basePoint, float radius)
         {
@@ -1862,10 +1840,8 @@
         /// <returns>
         /// <para>The size of the Game view.</para>
         /// </returns>
-        public static Vector2 GetMainGameViewSize()
-        {
-            return GameView.GetMainGameViewTargetSize();
-        }
+        public static Vector2 GetMainGameViewSize() => 
+            GameView.GetMainGameViewTargetSize();
 
         internal static void Init()
         {
@@ -1977,10 +1953,8 @@
         private static extern void Internal_DrawCameraWithGrid(Camera cam, int renderMode, ref DrawGridParameters gridParam);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_FinishDrawingCamera(Camera cam);
-        private static Vector3[] Internal_MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division)
-        {
-            return INTERNAL_CALL_Internal_MakeBezierPoints(ref startPosition, ref endPosition, ref startTangent, ref endTangent, division);
-        }
+        private static Vector3[] Internal_MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division) => 
+            INTERNAL_CALL_Internal_MakeBezierPoints(ref startPosition, ref endPosition, ref startTangent, ref endTangent, division);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_SetCurrentCamera(Camera cam);
@@ -2064,10 +2038,8 @@
         /// <returns>
         /// <para>The array of the Bezier points.</para>
         /// </returns>
-        public static Vector3[] MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division)
-        {
-            return Internal_MakeBezierPoints(startPosition, endPosition, startTangent, endTangent, division);
-        }
+        public static Vector3[] MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division) => 
+            Internal_MakeBezierPoints(startPosition, endPosition, startTangent, endTangent, division);
 
         /// <summary>
         /// <para>Make a 3D Scene view position handle.</para>
@@ -2078,10 +2050,8 @@
         /// <para>The new value modified by the user's interaction with the handle. If the
         /// user has not moved the handle, it returns the same value that you passed into the function.</para>
         /// </returns>
-        public static Vector3 PositionHandle(Vector3 position, Quaternion rotation)
-        {
-            return DoPositionHandle(position, rotation);
-        }
+        public static Vector3 PositionHandle(Vector3 position, Quaternion rotation) => 
+            DoPositionHandle(position, rotation);
 
         /// <summary>
         /// <para>Make a Scene view radius handle.</para>
@@ -2093,10 +2063,8 @@
         /// <returns>
         /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
-        public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius)
-        {
-            return DoRadiusHandle(rotation, position, radius, false);
-        }
+        public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius) => 
+            DoRadiusHandle(rotation, position, radius, false);
 
         /// <summary>
         /// <para>Make a Scene view radius handle.</para>
@@ -2108,10 +2076,8 @@
         /// <returns>
         /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
-        public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius, bool handlesOnly)
-        {
-            return DoRadiusHandle(rotation, position, radius, handlesOnly);
-        }
+        public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius, bool handlesOnly) => 
+            DoRadiusHandle(rotation, position, radius, handlesOnly);
 
         public static void RectangleCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
@@ -2190,10 +2156,8 @@
         /// <para>The new rotation value modified by the user's interaction with the handle.
         /// If the user has not moved the handle, it returns the same value that you passed into the function.</para>
         /// </returns>
-        public static Quaternion RotationHandle(Quaternion rotation, Vector3 position)
-        {
-            return DoRotationHandle(rotation, position);
-        }
+        public static Quaternion RotationHandle(Quaternion rotation, Vector3 position) => 
+            DoRotationHandle(rotation, position);
 
         /// <summary>
         /// <para>Make a Scene view scale handle.</para>
@@ -2205,10 +2169,8 @@
         /// <returns>
         /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
-        public static Vector3 ScaleHandle(Vector3 scale, Vector3 position, Quaternion rotation, float size)
-        {
-            return DoScaleHandle(scale, position, rotation, size);
-        }
+        public static Vector3 ScaleHandle(Vector3 scale, Vector3 position, Quaternion rotation, float size) => 
+            DoScaleHandle(scale, position, rotation, size);
 
         /// <summary>
         /// <para>Make a directional scale slider.</para>
@@ -2222,20 +2184,14 @@
         /// <returns>
         /// <para>The value modified by the user's interaction with the handle.</para>
         /// </returns>
-        public static float ScaleSlider(float scale, Vector3 position, Vector3 direction, Quaternion rotation, float size, float snap)
-        {
-            return SliderScale.DoAxis(GUIUtility.GetControlID(s_ScaleSliderHash, FocusType.Keyboard), scale, position, direction, rotation, size, snap);
-        }
+        public static float ScaleSlider(float scale, Vector3 position, Vector3 direction, Quaternion rotation, float size, float snap) => 
+            SliderScale.DoAxis(GUIUtility.GetControlID(s_ScaleSliderHash, FocusType.Keyboard), scale, position, direction, rotation, size, snap);
 
-        public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, CapFunction capFunction, float snap)
-        {
-            return SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunction, snap);
-        }
+        public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, CapFunction capFunction, float snap) => 
+            SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunction, snap);
 
-        public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, DrawCapFunction capFunc, float snap)
-        {
-            return SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunc, snap);
-        }
+        public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, DrawCapFunction capFunc, float snap) => 
+            SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunc, snap);
 
         /// <summary>
         /// <para>Draw a camera facing selection frame.</para>
@@ -2383,15 +2339,11 @@
             return Slider(position, direction, HandleUtility.GetHandleSize(position), <>f__mg$cache0, -1f);
         }
 
-        public static Vector3 Slider(Vector3 position, Vector3 direction, float size, CapFunction capFunction, float snap)
-        {
-            return Slider1D.Do(GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard), position, direction, size, capFunction, snap);
-        }
+        public static Vector3 Slider(Vector3 position, Vector3 direction, float size, CapFunction capFunction, float snap) => 
+            Slider1D.Do(GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard), position, direction, size, capFunction, snap);
 
-        public static Vector3 Slider(Vector3 position, Vector3 direction, float size, DrawCapFunction drawFunc, float snap)
-        {
-            return Slider1D.Do(GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard), position, direction, size, drawFunc, snap);
-        }
+        public static Vector3 Slider(Vector3 position, Vector3 direction, float size, DrawCapFunction drawFunc, float snap) => 
+            Slider1D.Do(GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard), position, direction, size, drawFunc, snap);
 
         [ExcludeFromDocs]
         public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, float snap)
@@ -2435,35 +2387,23 @@
             return Slider2D(id, handlePos, handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
         }
 
-        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, float snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return Slider2D(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, new Vector2(snap, snap), drawHelper);
-        }
+        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, float snap, [DefaultValue("false")] bool drawHelper) => 
+            Slider2D(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, new Vector2(snap, snap), drawHelper);
 
-        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return UnityEditorInternal.Slider2D.Do(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
-        }
+        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
+            UnityEditorInternal.Slider2D.Do(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
 
-        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, float snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return Slider2D(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, new Vector2(snap, snap), drawHelper);
-        }
+        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, float snap, [DefaultValue("false")] bool drawHelper) => 
+            Slider2D(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, new Vector2(snap, snap), drawHelper);
 
-        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return UnityEditorInternal.Slider2D.Do(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
-        }
+        public static Vector3 Slider2D(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
+            UnityEditorInternal.Slider2D.Do(GUIUtility.GetControlID(s_Slider2DHash, FocusType.Keyboard), handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
 
-        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return UnityEditorInternal.Slider2D.Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
-        }
+        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
+            UnityEditorInternal.Slider2D.Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
 
-        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return UnityEditorInternal.Slider2D.Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
-        }
+        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
+            UnityEditorInternal.Slider2D.Do(id, handlePos, new Vector3(0f, 0f, 0f), handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
 
         [ExcludeFromDocs]
         public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap)
@@ -2479,15 +2419,11 @@
             return Slider2D(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
         }
 
-        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return UnityEditorInternal.Slider2D.Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
-        }
+        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, CapFunction capFunction, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
+            UnityEditorInternal.Slider2D.Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, capFunction, snap, drawHelper);
 
-        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper)
-        {
-            return UnityEditorInternal.Slider2D.Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
-        }
+        public static Vector3 Slider2D(int id, Vector3 handlePos, Vector3 offset, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, float handleSize, DrawCapFunction drawFunc, Vector2 snap, [DefaultValue("false")] bool drawHelper) => 
+            UnityEditorInternal.Slider2D.Do(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, drawFunc, snap, drawHelper);
 
         /// <summary>
         /// <para>Rounds the value val to the closest multiple of snap (snap can only be positive).</para>
@@ -2557,23 +2493,16 @@
         /// <summary>
         /// <para>Color to use for handles that represent the center of something.</para>
         /// </summary>
-        public static Color centerColor
-        {
-            get
-            {
-                return (Color) s_CenterColor;
-            }
-        }
+        public static Color centerColor =>
+            ((Color) s_CenterColor);
 
         /// <summary>
         /// <para>Look up or set the Color of the handles.</para>
         /// </summary>
         public static Color color
         {
-            get
-            {
-                return s_Color;
-            }
+            get => 
+                s_Color;
             set
             {
                 s_Color = value;
@@ -2585,44 +2514,30 @@
         /// </summary>
         public Camera currentCamera
         {
-            get
-            {
-                return Camera.current;
-            }
+            get => 
+                Camera.current;
             set
             {
                 Internal_SetCurrentCamera(value);
             }
         }
 
-        private static bool currentlyDragging
-        {
-            get
-            {
-                return (GUIUtility.hotControl != 0);
-            }
-        }
+        private static bool currentlyDragging =>
+            (GUIUtility.hotControl != 0);
 
         /// <summary>
         /// <para>The inverse of the matrix for all handle operations.</para>
         /// </summary>
-        public static Matrix4x4 inverseMatrix
-        {
-            get
-            {
-                return s_InverseMatrix;
-            }
-        }
+        public static Matrix4x4 inverseMatrix =>
+            s_InverseMatrix;
 
         /// <summary>
         /// <para>Are handles lit?</para>
         /// </summary>
         public static bool lighting
         {
-            get
-            {
-                return s_Lighting;
-            }
+            get => 
+                s_Lighting;
             set
             {
                 s_Lighting = value;
@@ -2634,10 +2549,8 @@
         /// </summary>
         public static Matrix4x4 matrix
         {
-            get
-            {
-                return s_Matrix;
-            }
+            get => 
+                s_Matrix;
             set
             {
                 s_Matrix = value;
@@ -2645,68 +2558,38 @@
             }
         }
 
-        internal static Color realHandleColor
-        {
-            get
-            {
-                return ((s_Color * new Color(1f, 1f, 1f, 0.5f)) + (!s_Lighting ? new Color(0f, 0f, 0f, 0f) : new Color(0f, 0f, 0f, 0.5f)));
-            }
-        }
+        internal static Color realHandleColor =>
+            ((s_Color * new Color(1f, 1f, 1f, 0.5f)) + (!s_Lighting ? new Color(0f, 0f, 0f, 0f) : new Color(0f, 0f, 0f, 0.5f)));
 
         /// <summary>
         /// <para>Soft color to use for for less interactive UI, or handles that are used rarely (or not at all).</para>
         /// </summary>
-        public static Color secondaryColor
-        {
-            get
-            {
-                return (Color) s_SecondaryColor;
-            }
-        }
+        public static Color secondaryColor =>
+            ((Color) s_SecondaryColor);
 
         /// <summary>
         /// <para>Color to use for the currently active handle.</para>
         /// </summary>
-        public static Color selectedColor
-        {
-            get
-            {
-                return (Color) s_SelectedColor;
-            }
-        }
+        public static Color selectedColor =>
+            ((Color) s_SelectedColor);
 
         /// <summary>
         /// <para>Color to use for handles that manipulate the X coordinate of something.</para>
         /// </summary>
-        public static Color xAxisColor
-        {
-            get
-            {
-                return (Color) s_XAxisColor;
-            }
-        }
+        public static Color xAxisColor =>
+            ((Color) s_XAxisColor);
 
         /// <summary>
         /// <para>Color to use for handles that manipulates the Y coordinate of something.</para>
         /// </summary>
-        public static Color yAxisColor
-        {
-            get
-            {
-                return (Color) s_YAxisColor;
-            }
-        }
+        public static Color yAxisColor =>
+            ((Color) s_YAxisColor);
 
         /// <summary>
         /// <para>Color to use for handles that manipulates the Z coordinate of something.</para>
         /// </summary>
-        public static Color zAxisColor
-        {
-            get
-            {
-                return (Color) s_ZAxisColor;
-            }
-        }
+        public static Color zAxisColor =>
+            ((Color) s_ZAxisColor);
 
         /// <summary>
         /// <para>The function to use for drawing the handle e.g. Handles.RectangleCap.</para>

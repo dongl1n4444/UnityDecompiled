@@ -26,10 +26,8 @@
         /// </summary>
         public Mode mode
         {
-            get
-            {
-                return this.m_Mode;
-            }
+            get => 
+                this.m_Mode;
             set
             {
                 this.m_Mode = value;
@@ -40,10 +38,8 @@
         /// </summary>
         public Selectable selectOnUp
         {
-            get
-            {
-                return this.m_SelectOnUp;
-            }
+            get => 
+                this.m_SelectOnUp;
             set
             {
                 this.m_SelectOnUp = value;
@@ -54,10 +50,8 @@
         /// </summary>
         public Selectable selectOnDown
         {
-            get
-            {
-                return this.m_SelectOnDown;
-            }
+            get => 
+                this.m_SelectOnDown;
             set
             {
                 this.m_SelectOnDown = value;
@@ -68,10 +62,8 @@
         /// </summary>
         public Selectable selectOnLeft
         {
-            get
-            {
-                return this.m_SelectOnLeft;
-            }
+            get => 
+                this.m_SelectOnLeft;
             set
             {
                 this.m_SelectOnLeft = value;
@@ -82,10 +74,8 @@
         /// </summary>
         public Selectable selectOnRight
         {
-            get
-            {
-                return this.m_SelectOnRight;
-            }
+            get => 
+                this.m_SelectOnRight;
             set
             {
                 this.m_SelectOnRight = value;
@@ -94,17 +84,10 @@
         /// <summary>
         /// <para>Return a Navigation with sensible default values.</para>
         /// </summary>
-        public static Navigation defaultNavigation
-        {
-            get
-            {
-                return new Navigation { m_Mode = Mode.Automatic };
-            }
-        }
-        public bool Equals(Navigation other)
-        {
-            return ((((this.mode == other.mode) && (this.selectOnUp == other.selectOnUp)) && ((this.selectOnDown == other.selectOnDown) && (this.selectOnLeft == other.selectOnLeft))) && (this.selectOnRight == other.selectOnRight));
-        }
+        public static Navigation defaultNavigation =>
+            new Navigation { m_Mode=Mode.Automatic };
+        public bool Equals(Navigation other) => 
+            ((((this.mode == other.mode) && (this.selectOnUp == other.selectOnUp)) && ((this.selectOnDown == other.selectOnDown) && (this.selectOnLeft == other.selectOnLeft))) && (this.selectOnRight == other.selectOnRight));
         /// <summary>
         /// <para>Navigation mode. Used by Selectable.</para>
         /// </summary>

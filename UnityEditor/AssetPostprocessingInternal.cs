@@ -556,10 +556,8 @@
         {
             internal string callbackName;
 
-            internal MethodInfo <>m__0(Type assetPostprocessorClass)
-            {
-                return assetPostprocessorClass.GetMethod(this.callbackName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-            }
+            internal MethodInfo <>m__0(Type assetPostprocessorClass) => 
+                assetPostprocessorClass.GetMethod(this.callbackName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
         }
 
         internal class CompareAssetImportPriority : IComparer

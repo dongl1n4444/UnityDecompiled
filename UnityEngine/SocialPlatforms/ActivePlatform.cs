@@ -6,10 +6,8 @@
     {
         private static ISocialPlatform _active;
 
-        private static ISocialPlatform SelectSocialPlatform()
-        {
-            return new Local();
-        }
+        private static ISocialPlatform SelectSocialPlatform() => 
+            new Local();
 
         internal static ISocialPlatform Instance
         {

@@ -39,13 +39,8 @@
             this.m_InitState = State.PreInitialize;
         }
 
-        public State state
-        {
-            get
-            {
-                return this.m_InitState;
-            }
-        }
+        public State state =>
+            this.m_InitState;
 
         public enum State
         {

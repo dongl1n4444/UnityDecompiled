@@ -48,10 +48,8 @@
             }
         }
 
-        public T AddComponent<T>() where T: Component
-        {
-            return (this.AddComponent(typeof(T)) as T);
-        }
+        public T AddComponent<T>() where T: Component => 
+            (this.AddComponent(typeof(T)) as T);
 
         /// <summary>
         /// <para>Adds a component class named className to the game object.</para>
@@ -68,10 +66,8 @@
         /// </summary>
         /// <param name="componentType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public Component AddComponent(System.Type componentType)
-        {
-            return this.Internal_AddComponentWithType(componentType);
-        }
+        public Component AddComponent(System.Type componentType) => 
+            this.Internal_AddComponentWithType(componentType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern Component AddComponentInternal(string className);
@@ -150,10 +146,8 @@
         /// <para>Returns one active GameObject tagged tag. Returns null if no GameObject was found.</para>
         /// </summary>
         /// <param name="tag">The tag to search for.</param>
-        public static GameObject FindWithTag(string tag)
-        {
-            return FindGameObjectWithTag(tag);
-        }
+        public static GameObject FindWithTag(string tag) => 
+            FindGameObjectWithTag(tag);
 
         [SecuritySafeCritical]
         public unsafe T GetComponent<T>()
@@ -167,10 +161,8 @@
         /// <para>Returns the component with name type if the game object has one attached, null if it doesn't.</para>
         /// </summary>
         /// <param name="type">The type of Component to retrieve.</param>
-        public Component GetComponent(string type)
-        {
-            return this.GetComponentByName(type);
-        }
+        public Component GetComponent(string type) => 
+            this.GetComponentByName(type);
 
         /// <summary>
         /// <para>Returns the component of Type type if the game object has one attached, null if it doesn't.</para>
@@ -189,10 +181,8 @@
             return this.GetComponentInChildren<T>(includeInactive);
         }
 
-        public T GetComponentInChildren<T>([DefaultValue("false")] bool includeInactive)
-        {
-            return (T) this.GetComponentInChildren(typeof(T), includeInactive);
-        }
+        public T GetComponentInChildren<T>([DefaultValue("false")] bool includeInactive) => 
+            ((T) this.GetComponentInChildren(typeof(T), includeInactive));
 
         /// <summary>
         /// <para>Returns the component of Type type in the GameObject or any of its children using depth first search.</para>
@@ -203,10 +193,8 @@
         /// <para>A component of the matching type, if found.</para>
         /// </returns>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public Component GetComponentInChildren(System.Type type)
-        {
-            return this.GetComponentInChildren(type, false);
-        }
+        public Component GetComponentInChildren(System.Type type) => 
+            this.GetComponentInChildren(type, false);
 
         /// <summary>
         /// <para>Returns the component of Type type in the GameObject or any of its children using depth first search.</para>
@@ -218,10 +206,8 @@
         /// </returns>
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
         public extern Component GetComponentInChildren(System.Type type, bool includeInactive);
-        public T GetComponentInParent<T>()
-        {
-            return (T) this.GetComponentInParent(typeof(T));
-        }
+        public T GetComponentInParent<T>() => 
+            ((T) this.GetComponentInParent(typeof(T)));
 
         /// <summary>
         /// <para>Returns the component of Type type in the GameObject or any of its parents.</para>
@@ -229,10 +215,8 @@
         /// <param name="type">Type of component to find.</param>
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
         public extern Component GetComponentInParent(System.Type type);
-        public T[] GetComponents<T>()
-        {
-            return (T[]) this.GetComponentsInternal(typeof(T), true, false, true, false, null);
-        }
+        public T[] GetComponents<T>() => 
+            ((T[]) this.GetComponentsInternal(typeof(T), true, false, true, false, null));
 
         public void GetComponents<T>(List<T> results)
         {
@@ -243,25 +227,19 @@
         /// <para>Returns all components of Type type in the GameObject.</para>
         /// </summary>
         /// <param name="type">The type of Component to retrieve.</param>
-        public Component[] GetComponents(System.Type type)
-        {
-            return (Component[]) this.GetComponentsInternal(type, false, false, true, false, null);
-        }
+        public Component[] GetComponents(System.Type type) => 
+            ((Component[]) this.GetComponentsInternal(type, false, false, true, false, null));
 
         public void GetComponents(System.Type type, List<Component> results)
         {
             this.GetComponentsInternal(type, false, false, true, false, results);
         }
 
-        public T[] GetComponentsInChildren<T>()
-        {
-            return this.GetComponentsInChildren<T>(false);
-        }
+        public T[] GetComponentsInChildren<T>() => 
+            this.GetComponentsInChildren<T>(false);
 
-        public T[] GetComponentsInChildren<T>(bool includeInactive)
-        {
-            return (T[]) this.GetComponentsInternal(typeof(T), true, true, includeInactive, false, null);
-        }
+        public T[] GetComponentsInChildren<T>(bool includeInactive) => 
+            ((T[]) this.GetComponentsInternal(typeof(T), true, true, includeInactive, false, null));
 
         public void GetComponentsInChildren<T>(List<T> results)
         {
@@ -290,20 +268,14 @@
         /// </summary>
         /// <param name="type">The type of Component to retrieve.</param>
         /// <param name="includeInactive">Should Components on inactive GameObjects be included in the found set?</param>
-        public Component[] GetComponentsInChildren(System.Type type, [DefaultValue("false")] bool includeInactive)
-        {
-            return (Component[]) this.GetComponentsInternal(type, false, true, includeInactive, false, null);
-        }
+        public Component[] GetComponentsInChildren(System.Type type, [DefaultValue("false")] bool includeInactive) => 
+            ((Component[]) this.GetComponentsInternal(type, false, true, includeInactive, false, null));
 
-        public T[] GetComponentsInParent<T>()
-        {
-            return this.GetComponentsInParent<T>(false);
-        }
+        public T[] GetComponentsInParent<T>() => 
+            this.GetComponentsInParent<T>(false);
 
-        public T[] GetComponentsInParent<T>(bool includeInactive)
-        {
-            return (T[]) this.GetComponentsInternal(typeof(T), true, true, includeInactive, true, null);
-        }
+        public T[] GetComponentsInParent<T>(bool includeInactive) => 
+            ((T[]) this.GetComponentsInternal(typeof(T), true, true, includeInactive, true, null));
 
         [ExcludeFromDocs]
         public Component[] GetComponentsInParent(System.Type type)
@@ -322,10 +294,8 @@
         /// </summary>
         /// <param name="type">The type of Component to retrieve.</param>
         /// <param name="includeInactive">Should inactive Components be included in the found set?</param>
-        public Component[] GetComponentsInParent(System.Type type, [DefaultValue("false")] bool includeInactive)
-        {
-            return (Component[]) this.GetComponentsInternal(type, false, true, includeInactive, true, null);
-        }
+        public Component[] GetComponentsInParent(System.Type type, [DefaultValue("false")] bool includeInactive) => 
+            ((Component[]) this.GetComponentsInternal(type, false, true, includeInactive, true, null));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern Array GetComponentsInternal(System.Type type, bool useSearchTypeAsArrayReturnType, bool recursive, bool includeInactive, bool reverse, object resultList);
@@ -536,13 +506,8 @@
             }
         }
 
-        public GameObject gameObject
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public GameObject gameObject =>
+            this;
 
         [Obsolete("Property guiElement has been deprecated. Use GetComponent<GUIElement>() instead. (UnityUpgradable)", true)]
         public Component guiElement

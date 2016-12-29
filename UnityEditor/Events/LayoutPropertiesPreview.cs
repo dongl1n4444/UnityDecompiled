@@ -38,11 +38,7 @@
         public override bool HasPreviewGUI()
         {
             GameObject target = this.target as GameObject;
-            if (target == null)
-            {
-                return false;
-            }
-            return (target.GetComponent(typeof(ILayoutElement)) != null);
+            return (target?.GetComponent(typeof(ILayoutElement)) != null);
         }
 
         public override void Initialize(UnityEngine.Object[] targets)

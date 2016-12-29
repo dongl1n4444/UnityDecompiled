@@ -4,13 +4,8 @@
 
     public class UnsupportedRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "Unsupported";
-            }
-        }
+        public override string Name =>
+            "Unsupported";
     }
 }
 

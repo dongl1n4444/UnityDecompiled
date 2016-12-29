@@ -25,19 +25,15 @@
         private SerializedProperty m_TizenProductURL;
         private SerializedProperty m_TizenProfileName;
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
         public override void ConfigurationSectionGUI()
         {
         }
 
-        public override bool HasIdentificationGUI()
-        {
-            return true;
-        }
+        public override bool HasIdentificationGUI() => 
+            true;
 
         public override void IdentificationSectionGUI()
         {
@@ -124,10 +120,8 @@
             this.m_IPhoneSplashScreen.objectReferenceValue = EditorGUILayout.ObjectField(EditorGUIUtility.TextContent("Mobile Splash Screen*"), (Texture2D) this.m_IPhoneSplashScreen.objectReferenceValue, typeof(Texture2D), false, new GUILayoutOption[0]);
         }
 
-        public override bool SupportsOrientation()
-        {
-            return true;
-        }
+        public override bool SupportsOrientation() => 
+            true;
     }
 }
 

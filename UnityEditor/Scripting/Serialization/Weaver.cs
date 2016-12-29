@@ -26,16 +26,14 @@
         [CompilerGenerated]
         private static Action<string> <>f__mg$cache1;
 
-        private static ICompilationExtension GetCompilationExtension()
-        {
-            return ModuleManager.GetCompilationExtension(ModuleManager.GetTargetStringFromBuildTarget(EditorUserBuildSettings.activeBuildTarget));
-        }
+        private static ICompilationExtension GetCompilationExtension() => 
+            ModuleManager.GetCompilationExtension(ModuleManager.GetTargetStringFromBuildTarget(EditorUserBuildSettings.activeBuildTarget));
 
         public static string[] GetReferences(MonoIsland island, string projectDirectory)
         {
             List<string> list = new List<string>();
             List<string> first = new List<string>();
-            foreach (string str in Enumerable.Union<string>(first, island._references))
+            foreach (string str in first.Union<string>(island._references))
             {
                 string fileName = Path.GetFileName(str);
                 if (string.IsNullOrEmpty(fileName) || (!fileName.Contains("UnityEditor.dll") && !fileName.Contains("UnityEngine.dll")))
@@ -50,21 +48,17 @@
             return list.ToArray();
         }
 
-        private static ManagedProgram ManagedProgramFor(string exe, string arguments)
-        {
-            return new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), null, exe, arguments, false, null);
-        }
+        private static ManagedProgram ManagedProgramFor(string exe, string arguments) => 
+            new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), null, exe, arguments, false, null);
 
         private static void QueryAssemblyPathsAndResolver(ICompilationExtension compilationExtension, string file, bool editor, out string[] assemblyPaths, out IAssemblyResolver assemblyResolver)
         {
             assemblyResolver = compilationExtension.GetAssemblyResolver(editor, file, null);
-            assemblyPaths = Enumerable.ToArray<string>(compilationExtension.GetCompilerExtraAssemblyPaths(editor, file));
+            assemblyPaths = compilationExtension.GetCompilerExtraAssemblyPaths(editor, file).ToArray<string>();
         }
 
-        private static ManagedProgram SerializationWeaverProgramWith(string arguments, string playerPackage)
-        {
-            return ManagedProgramFor(playerPackage + "/SerializationWeaver/SerializationWeaver.exe", arguments);
-        }
+        private static ManagedProgram SerializationWeaverProgramWith(string arguments, string playerPackage) => 
+            ManagedProgramFor(playerPackage + "/SerializationWeaver/SerializationWeaver.exe", arguments);
 
         public static bool ShouldWeave(string name)
         {

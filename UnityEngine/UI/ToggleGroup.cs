@@ -110,7 +110,7 @@
         {
             if ((toggle == null) || !this.m_Toggles.Contains(toggle))
             {
-                throw new ArgumentException(string.Format("Toggle {0} is not part of ToggleGroup {1}", new object[] { toggle, this }));
+                throw new ArgumentException($"Toggle {toggle} is not part of ToggleGroup {this}");
             }
         }
 
@@ -119,10 +119,8 @@
         /// </summary>
         public bool allowSwitchOff
         {
-            get
-            {
-                return this.m_AllowSwitchOff;
-            }
+            get => 
+                this.m_AllowSwitchOff;
             set
             {
                 this.m_AllowSwitchOff = value;

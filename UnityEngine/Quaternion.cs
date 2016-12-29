@@ -213,10 +213,8 @@
         /// </summary>
         public Vector3 eulerAngles
         {
-            get
-            {
-                return Internal_MakePositive((Vector3) (Internal_ToEulerRad(this) * 57.29578f));
-            }
+            get => 
+                Internal_MakePositive((Vector3) (Internal_ToEulerRad(this) * 57.29578f));
             set
             {
                 this = Internal_FromEulerRad((Vector3) (value * 0.01745329f));
@@ -228,19 +226,15 @@
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public static Quaternion Euler(float x, float y, float z)
-        {
-            return Internal_FromEulerRad((Vector3) (new Vector3(x, y, z) * 0.01745329f));
-        }
+        public static Quaternion Euler(float x, float y, float z) => 
+            Internal_FromEulerRad((Vector3) (new Vector3(x, y, z) * 0.01745329f));
 
         /// <summary>
         /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
         /// </summary>
         /// <param name="euler"></param>
-        public static Quaternion Euler(Vector3 euler)
-        {
-            return Internal_FromEulerRad((Vector3) (euler * 0.01745329f));
-        }
+        public static Quaternion Euler(Vector3 euler) => 
+            Internal_FromEulerRad((Vector3) (euler * 0.01745329f));
 
         private static Vector3 Internal_ToEulerRad(Quaternion rotation)
         {
@@ -268,16 +262,12 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_Internal_ToAxisAngleRad(ref Quaternion q, out Vector3 axis, out float angle);
         [Obsolete("Use Quaternion.Euler instead. This function was deprecated because it uses radians instead of degrees")]
-        public static Quaternion EulerRotation(float x, float y, float z)
-        {
-            return Internal_FromEulerRad(new Vector3(x, y, z));
-        }
+        public static Quaternion EulerRotation(float x, float y, float z) => 
+            Internal_FromEulerRad(new Vector3(x, y, z));
 
         [Obsolete("Use Quaternion.Euler instead. This function was deprecated because it uses radians instead of degrees")]
-        public static Quaternion EulerRotation(Vector3 euler)
-        {
-            return Internal_FromEulerRad(euler);
-        }
+        public static Quaternion EulerRotation(Vector3 euler) => 
+            Internal_FromEulerRad(euler);
 
         [Obsolete("Use Quaternion.Euler instead. This function was deprecated because it uses radians instead of degrees")]
         public void SetEulerRotation(float x, float y, float z)
@@ -292,22 +282,16 @@
         }
 
         [Obsolete("Use Quaternion.eulerAngles instead. This function was deprecated because it uses radians instead of degrees")]
-        public Vector3 ToEuler()
-        {
-            return Internal_ToEulerRad(this);
-        }
+        public Vector3 ToEuler() => 
+            Internal_ToEulerRad(this);
 
         [Obsolete("Use Quaternion.Euler instead. This function was deprecated because it uses radians instead of degrees")]
-        public static Quaternion EulerAngles(float x, float y, float z)
-        {
-            return Internal_FromEulerRad(new Vector3(x, y, z));
-        }
+        public static Quaternion EulerAngles(float x, float y, float z) => 
+            Internal_FromEulerRad(new Vector3(x, y, z));
 
         [Obsolete("Use Quaternion.Euler instead. This function was deprecated because it uses radians instead of degrees")]
-        public static Quaternion EulerAngles(Vector3 euler)
-        {
-            return Internal_FromEulerRad(euler);
-        }
+        public static Quaternion EulerAngles(Vector3 euler) => 
+            Internal_FromEulerRad(euler);
 
         [Obsolete("Use Quaternion.ToAngleAxis instead. This function was deprecated because it uses radians instead of degrees")]
         public void ToAxisAngle(out Vector3 axis, out float angle)
@@ -328,16 +312,12 @@
         }
 
         [Obsolete("Use Quaternion.eulerAngles instead. This function was deprecated because it uses radians instead of degrees")]
-        public static Vector3 ToEulerAngles(Quaternion rotation)
-        {
-            return Internal_ToEulerRad(rotation);
-        }
+        public static Vector3 ToEulerAngles(Quaternion rotation) => 
+            Internal_ToEulerRad(rotation);
 
         [Obsolete("Use Quaternion.eulerAngles instead. This function was deprecated because it uses radians instead of degrees")]
-        public Vector3 ToEulerAngles()
-        {
-            return Internal_ToEulerRad(this);
-        }
+        public Vector3 ToEulerAngles() => 
+            Internal_ToEulerRad(this);
 
         [Obsolete("Use Quaternion.AngleAxis instead. This function was deprecated because it uses radians instead of degrees")]
         public static Quaternion AxisAngle(Vector3 axis, float angle)
@@ -418,17 +398,10 @@
         /// <summary>
         /// <para>The identity rotation (Read Only).</para>
         /// </summary>
-        public static Quaternion identity
-        {
-            get
-            {
-                return new Quaternion(0f, 0f, 0f, 1f);
-            }
-        }
-        public static Quaternion operator *(Quaternion lhs, Quaternion rhs)
-        {
-            return new Quaternion((((lhs.w * rhs.x) + (lhs.x * rhs.w)) + (lhs.y * rhs.z)) - (lhs.z * rhs.y), (((lhs.w * rhs.y) + (lhs.y * rhs.w)) + (lhs.z * rhs.x)) - (lhs.x * rhs.z), (((lhs.w * rhs.z) + (lhs.z * rhs.w)) + (lhs.x * rhs.y)) - (lhs.y * rhs.x), (((lhs.w * rhs.w) - (lhs.x * rhs.x)) - (lhs.y * rhs.y)) - (lhs.z * rhs.z));
-        }
+        public static Quaternion identity =>
+            new Quaternion(0f, 0f, 0f, 1f);
+        public static Quaternion operator *(Quaternion lhs, Quaternion rhs) => 
+            new Quaternion((((lhs.w * rhs.x) + (lhs.x * rhs.w)) + (lhs.y * rhs.z)) - (lhs.z * rhs.y), (((lhs.w * rhs.y) + (lhs.y * rhs.w)) + (lhs.z * rhs.x)) - (lhs.x * rhs.z), (((lhs.w * rhs.z) + (lhs.z * rhs.w)) + (lhs.x * rhs.y)) - (lhs.y * rhs.x), (((lhs.w * rhs.w) - (lhs.x * rhs.x)) - (lhs.y * rhs.y)) - (lhs.z * rhs.z));
 
         public static Vector3 operator *(Quaternion rotation, Vector3 point)
         {
@@ -451,25 +424,19 @@
             return vector;
         }
 
-        public static bool operator ==(Quaternion lhs, Quaternion rhs)
-        {
-            return (Dot(lhs, rhs) > 0.999999f);
-        }
+        public static bool operator ==(Quaternion lhs, Quaternion rhs) => 
+            (Dot(lhs, rhs) > 0.999999f);
 
-        public static bool operator !=(Quaternion lhs, Quaternion rhs)
-        {
-            return (Dot(lhs, rhs) <= 0.999999f);
-        }
+        public static bool operator !=(Quaternion lhs, Quaternion rhs) => 
+            (Dot(lhs, rhs) <= 0.999999f);
 
         /// <summary>
         /// <para>The dot product between two rotations.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static float Dot(Quaternion a, Quaternion b)
-        {
-            return ((((a.x * b.x) + (a.y * b.y)) + (a.z * b.z)) + (a.w * b.w));
-        }
+        public static float Dot(Quaternion a, Quaternion b) => 
+            ((((a.x * b.x) + (a.y * b.y)) + (a.z * b.z)) + (a.w * b.w));
 
         /// <summary>
         /// <para>Creates a rotation with the specified forward and upwards directions.</para>
@@ -498,10 +465,8 @@
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static float Angle(Quaternion a, Quaternion b)
-        {
-            return ((Mathf.Acos(Mathf.Min(Mathf.Abs(Dot(a, b)), 1f)) * 2f) * 57.29578f);
-        }
+        public static float Angle(Quaternion a, Quaternion b) => 
+            ((Mathf.Acos(Mathf.Min(Mathf.Abs(Dot(a, b)), 1f)) * 2f) * 57.29578f);
 
         private static Vector3 Internal_MakePositive(Vector3 euler)
         {
@@ -535,10 +500,8 @@
             return euler;
         }
 
-        public override int GetHashCode()
-        {
-            return (((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2)) ^ (this.w.GetHashCode() >> 1));
-        }
+        public override int GetHashCode() => 
+            (((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2)) ^ (this.w.GetHashCode() >> 1));
 
         public override bool Equals(object other)
         {

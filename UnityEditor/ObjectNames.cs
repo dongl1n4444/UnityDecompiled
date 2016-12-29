@@ -29,10 +29,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetInspectorTitle(Object obj);
         [Obsolete("Please use GetInspectorTitle instead")]
-        public static string GetPropertyEditorTitle(Object obj)
-        {
-            return GetInspectorTitle(obj);
-        }
+        public static string GetPropertyEditorTitle(Object obj) => 
+            GetInspectorTitle(obj);
 
         internal static string GetTypeName(Object obj)
         {
@@ -73,10 +71,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetUniqueName(string[] existingNames, string name);
         [Obsolete("Please use NicifyVariableName instead")]
-        public static string MangleVariableName(string name)
-        {
-            return NicifyVariableName(name);
-        }
+        public static string MangleVariableName(string name) => 
+            NicifyVariableName(name);
 
         /// <summary>
         /// <para>Make a displayable name for a variable.</para>

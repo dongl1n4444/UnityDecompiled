@@ -25,13 +25,11 @@
             return GetString("Asset ID", str);
         }
 
-        private static NetworkIdentityInfo GetBoolean(string name, bool value)
-        {
-            return new NetworkIdentityInfo { 
+        private static NetworkIdentityInfo GetBoolean(string name, bool value) => 
+            new NetworkIdentityInfo { 
                 name = new GUIContent(name),
                 value = new GUIContent(!value ? "No" : "Yes")
             };
-        }
 
         private Vector2 GetMaxBehaviourLabelSize()
         {
@@ -111,18 +109,14 @@
             return this.m_Title;
         }
 
-        private static NetworkIdentityInfo GetString(string name, string value)
-        {
-            return new NetworkIdentityInfo { 
+        private static NetworkIdentityInfo GetString(string name, string value) => 
+            new NetworkIdentityInfo { 
                 name = new GUIContent(name),
                 value = new GUIContent(value)
             };
-        }
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_Info != null) && (this.m_Info.Count > 0));
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_Info != null) && (this.m_Info.Count > 0));
 
         public override void Initialize(UnityEngine.Object[] targets)
         {

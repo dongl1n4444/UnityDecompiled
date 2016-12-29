@@ -18,10 +18,8 @@
 
         public NDesk.Options.Option Option
         {
-            get
-            {
-                return this.option;
-            }
+            get => 
+                this.option;
             set
             {
                 this.option = value;
@@ -30,10 +28,8 @@
 
         public int OptionIndex
         {
-            get
-            {
-                return this.index;
-            }
+            get => 
+                this.index;
             set
             {
                 this.index = value;
@@ -42,31 +38,19 @@
 
         public string OptionName
         {
-            get
-            {
-                return this.name;
-            }
+            get => 
+                this.name;
             set
             {
                 this.name = value;
             }
         }
 
-        public NDesk.Options.OptionSet OptionSet
-        {
-            get
-            {
-                return this.set;
-            }
-        }
+        public NDesk.Options.OptionSet OptionSet =>
+            this.set;
 
-        public OptionValueCollection OptionValues
-        {
-            get
-            {
-                return this.c;
-            }
-        }
+        public OptionValueCollection OptionValues =>
+            this.c;
     }
 }
 

@@ -26,10 +26,10 @@
             objArray1[4] = " Process id: ";
             objArray1[5] = ScriptEditorSettings.ProcessId;
             Logger.Log(string.Concat(objArray1));
-            JSONValue value5 = new JSONValue();
-            value5["unityprocessid"] = Process.GetCurrentProcess().Id;
-            value5["unityproject"] = Application.dataPath;
-            return value5;
+            return new JSONValue { 
+                ["unityprocessid"] = Process.GetCurrentProcess().Id,
+                ["unityproject"] = Application.dataPath
+            };
         }
 
         private static bool IsScriptEditorRunning()

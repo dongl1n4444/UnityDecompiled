@@ -57,22 +57,16 @@
             }
         }
 
-        public virtual int CompareTo(TreeViewItem other)
-        {
-            return this.displayName.CompareTo(other.displayName);
-        }
+        public virtual int CompareTo(TreeViewItem other) => 
+            this.displayName.CompareTo(other.displayName);
 
-        public override string ToString()
-        {
-            return string.Format("Item: '{0}' ({1}), has {2} children, depth {3}, parent id {4}", new object[] { this.displayName, this.id, !this.hasChildren ? 0 : this.children.Count, this.depth, (this.parent == null) ? -1 : this.parent.id });
-        }
+        public override string ToString() => 
+            $"Item: '{this.displayName}' ({this.id}), has {(!this.hasChildren ? 0 : this.children.Count)} children, depth {this.depth}, parent id {((this.parent == null) ? -1 : this.parent.id)}";
 
         public virtual List<TreeViewItem> children
         {
-            get
-            {
-                return this.m_Children;
-            }
+            get => 
+                this.m_Children;
             set
             {
                 this.m_Children = value;
@@ -81,10 +75,8 @@
 
         public virtual int depth
         {
-            get
-            {
-                return this.m_Depth;
-            }
+            get => 
+                this.m_Depth;
             set
             {
                 this.m_Depth = value;
@@ -93,30 +85,21 @@
 
         public virtual string displayName
         {
-            get
-            {
-                return this.m_DisplayName;
-            }
+            get => 
+                this.m_DisplayName;
             set
             {
                 this.m_DisplayName = value;
             }
         }
 
-        public virtual bool hasChildren
-        {
-            get
-            {
-                return ((this.m_Children != null) && (this.m_Children.Count > 0));
-            }
-        }
+        public virtual bool hasChildren =>
+            ((this.m_Children != null) && (this.m_Children.Count > 0));
 
         public virtual Texture2D icon
         {
-            get
-            {
-                return this.m_Icon;
-            }
+            get => 
+                this.m_Icon;
             set
             {
                 this.m_Icon = value;
@@ -125,10 +108,8 @@
 
         public virtual int id
         {
-            get
-            {
-                return this.m_ID;
-            }
+            get => 
+                this.m_ID;
             set
             {
                 this.m_ID = value;
@@ -137,10 +118,8 @@
 
         public virtual TreeViewItem parent
         {
-            get
-            {
-                return this.m_Parent;
-            }
+            get => 
+                this.m_Parent;
             set
             {
                 this.m_Parent = value;
@@ -149,10 +128,8 @@
 
         internal virtual object userData
         {
-            get
-            {
-                return this.m_UserData;
-            }
+            get => 
+                this.m_UserData;
             set
             {
                 this.m_UserData = value;

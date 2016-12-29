@@ -151,21 +151,11 @@
             }
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
 
-        internal override bool shouldCompact
-        {
-            get
-            {
-                return true;
-            }
-        }
+        internal override bool shouldCompact =>
+            true;
     }
 }
 

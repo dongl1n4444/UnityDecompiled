@@ -27,10 +27,8 @@
         /// <param name="sprite">If Sprite is packed, it is possible to access data as if it was on the atlas texture.</param>
         /// <param name="getAtlasData"></param>
         [Obsolete("Use Sprite.triangles API instead. This data is the same for packed and unpacked sprites.")]
-        public static ushort[] GetSpriteIndices(Sprite sprite, bool getAtlasData)
-        {
-            return sprite.triangles;
-        }
+        public static ushort[] GetSpriteIndices(Sprite sprite, bool getAtlasData) => 
+            sprite.triangles;
 
         /// <summary>
         /// <para>Returns the generated Sprite mesh positions.</para>
@@ -38,10 +36,8 @@
         /// <param name="getAtlasData">If Sprite is packed, it is possible to access data as if it was on the atlas texture.</param>
         /// <param name="sprite"></param>
         [Obsolete("Use Sprite.vertices API instead. This data is the same for packed and unpacked sprites.")]
-        public static Vector2[] GetSpriteMesh(Sprite sprite, bool getAtlasData)
-        {
-            return sprite.vertices;
-        }
+        public static Vector2[] GetSpriteMesh(Sprite sprite, bool getAtlasData) => 
+            sprite.vertices;
 
         /// <summary>
         /// <para>Returns the generated Sprite texture. If Sprite is packed, it is possible to query for both source and atlas textures.</para>

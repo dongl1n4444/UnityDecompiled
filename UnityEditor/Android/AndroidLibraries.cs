@@ -24,13 +24,13 @@
         {
             if (!IsLibraryProject(projectPropertiesPath))
             {
-                Debug.LogWarning(string.Format("Project '{0}' is not an android library.", Directory.GetParent(projectPropertiesPath)));
+                Debug.LogWarning($"Project '{Directory.GetParent(projectPropertiesPath)}' is not an android library.");
                 return false;
             }
             DirectoryInfo parent = Directory.GetParent(projectPropertiesPath);
             if (!File.Exists(Path.Combine(parent.ToString(), "AndroidManifest.xml")))
             {
-                Debug.LogError(string.Format("Project '{0}' is missing {1} file.", parent, "AndroidManifest.xml"));
+                Debug.LogError($"Project '{parent}' is missing {"AndroidManifest.xml"} file.");
                 throw new UnityException("Adding Android library projects failed!");
             }
             base.Add(parent.FullName);
@@ -65,25 +65,17 @@
             return num;
         }
 
-        public string[] GetAssetsDirectories()
-        {
-            return this.Find("assets");
-        }
+        public string[] GetAssetsDirectories() => 
+            this.Find("assets");
 
-        public string[] GetCompiledJarFiles()
-        {
-            return this.Find("bin/*.jar");
-        }
+        public string[] GetCompiledJarFiles() => 
+            this.Find("bin/*.jar");
 
-        public string[] GetLibraryDirectories()
-        {
-            return this.Find("libs");
-        }
+        public string[] GetLibraryDirectories() => 
+            this.Find("libs");
 
-        public string[] GetManifestFiles()
-        {
-            return this.Find("AndroidManifest.xml");
-        }
+        public string[] GetManifestFiles() => 
+            this.Find("AndroidManifest.xml");
 
         public string[] GetPackageNames()
         {
@@ -95,15 +87,11 @@
             return list.ToArray();
         }
 
-        public string[] GetResourceDirectories()
-        {
-            return this.Find("res");
-        }
+        public string[] GetResourceDirectories() => 
+            this.Find("res");
 
-        public static bool IsAndroidLibraryProject(string libraryPath)
-        {
-            return (IsLibraryProject(Path.Combine(libraryPath, ProjectPropertiesFileName)) || IsLibraryProject(Path.Combine(libraryPath, "default.properties")));
-        }
+        public static bool IsAndroidLibraryProject(string libraryPath) => 
+            (IsLibraryProject(Path.Combine(libraryPath, ProjectPropertiesFileName)) || IsLibraryProject(Path.Combine(libraryPath, "default.properties")));
 
         private static bool IsLibraryProject(string projectPropertiesPath)
         {

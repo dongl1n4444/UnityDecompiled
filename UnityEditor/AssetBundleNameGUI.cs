@@ -37,13 +37,13 @@
                 num2 = list.Count;
                 list.Add("Remove Unused Names");
                 num3 = list.Count;
-                if (Enumerable.Count<string>(source) != 0)
+                if (source.Count<string>() != 0)
                 {
                     list.Add("Filter Selected Name" + (!flag ? "" : "s"));
                 }
             }
             int selected = 0;
-            string str = Enumerable.FirstOrDefault<string>(source);
+            string str = source.FirstOrDefault<string>();
             if (!string.IsNullOrEmpty(str))
             {
                 selected = list.IndexOf(str);
@@ -102,7 +102,7 @@
             {
                 <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <FilterSelected>m__0);
             }
-            searchFilter.assetBundleNames = Enumerable.ToArray<string>(Enumerable.Where<string>(assetBundleNames, <>f__am$cache0));
+            searchFilter.assetBundleNames = Enumerable.Where<string>(assetBundleNames, <>f__am$cache0).ToArray<string>();
             if (ProjectBrowser.s_LastInteractedProjectBrowser != null)
             {
                 ProjectBrowser.s_LastInteractedProjectBrowser.SetSearch(searchFilter);
@@ -218,10 +218,8 @@
             private static GUISkin s_DarkSkin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
             public static GUIStyle textField = GetStyle("textField");
 
-            private static GUIStyle GetStyle(string name)
-            {
-                return new GUIStyle(s_DarkSkin.GetStyle(name));
-            }
+            private static GUIStyle GetStyle(string name) => 
+                new GUIStyle(s_DarkSkin.GetStyle(name));
         }
     }
 }

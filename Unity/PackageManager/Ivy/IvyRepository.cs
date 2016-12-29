@@ -29,10 +29,8 @@
             return new Uri(this.Url, this.Pattern + file);
         }
 
-        public IvyRepository Clone()
-        {
-            return Cloner.CloneObject<IvyRepository>(this);
-        }
+        public IvyRepository Clone() => 
+            Cloner.CloneObject<IvyRepository>(this);
     }
 }
 

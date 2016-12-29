@@ -15,21 +15,11 @@
             this._interfaceOffsets = interfaceOffsets;
         }
 
-        public Dictionary<TypeReference, int> InterfaceOffsets
-        {
-            get
-            {
-                return this._interfaceOffsets;
-            }
-        }
+        public Dictionary<TypeReference, int> InterfaceOffsets =>
+            this._interfaceOffsets;
 
-        public ReadOnlyCollection<MethodReference> Slots
-        {
-            get
-            {
-                return this._slots;
-            }
-        }
+        public ReadOnlyCollection<MethodReference> Slots =>
+            this._slots;
     }
 }
 

@@ -16,20 +16,14 @@
             return result.ToArray();
         }
 
-        public static bool Find(string searchPattern, List<string> result)
-        {
-            return Find(searchPattern, result, false);
-        }
+        public static bool Find(string searchPattern, List<string> result) => 
+            Find(searchPattern, result, false);
 
-        public static bool Find(string searchPattern, List<string> result, bool findFirst)
-        {
-            return Find(searchPattern, result, findFirst, 0x100);
-        }
+        public static bool Find(string searchPattern, List<string> result, bool findFirst) => 
+            Find(searchPattern, result, findFirst, 0x100);
 
-        public static bool Find(string searchPattern, List<string> result, bool findFirst, int maxdepth)
-        {
-            return Find(searchPattern, DEFAULT_IGNORE_PATTERN, result, findFirst, maxdepth);
-        }
+        public static bool Find(string searchPattern, List<string> result, bool findFirst, int maxdepth) => 
+            Find(searchPattern, DEFAULT_IGNORE_PATTERN, result, findFirst, maxdepth);
 
         public static bool Find(string searchPattern, Regex ignorePattern, List<string> result, bool findFirst, int maxdepth)
         {

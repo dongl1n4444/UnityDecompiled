@@ -40,21 +40,21 @@
                     source[i] = SpeedTreeGeometryType.Branch;
                     for (int j = 0; j < this.speedTreeGeometryTypeString.Length; j++)
                     {
-                        if (Enumerable.Contains<string>(((Material) base.targets[i]).shaderKeywords, this.speedTreeGeometryTypeString[j]))
+                        if (((Material) base.targets[i]).shaderKeywords.Contains<string>(this.speedTreeGeometryTypeString[j]))
                         {
                             source[i] = (SpeedTreeGeometryType) j;
                             break;
                         }
                     }
                 }
-                EditorGUI.showMixedValue = Enumerable.Count<SpeedTreeGeometryType>(Enumerable.Distinct<SpeedTreeGeometryType>(source)) > 1;
+                EditorGUI.showMixedValue = source.Distinct<SpeedTreeGeometryType>().Count<SpeedTreeGeometryType>() > 1;
                 EditorGUI.BeginChangeCheck();
                 SpeedTreeGeometryType geomType = (SpeedTreeGeometryType) EditorGUILayout.EnumPopup("Geometry Type", source[0], new GUILayoutOption[0]);
                 if (EditorGUI.EndChangeCheck())
                 {
                     bool flag = this.ShouldEnableAlphaTest(geomType);
                     CullMode mode = !flag ? CullMode.Back : CullMode.Off;
-                    foreach (Material material in Enumerable.Cast<Material>(base.targets))
+                    foreach (Material material in base.targets.Cast<Material>())
                     {
                         if (flag)
                         {
@@ -93,10 +93,10 @@
                         <>f__am$cache2 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__2);
                     }
                     IEnumerable<bool> enumerable = Enumerable.Select<Object, bool>(base.targets, <>f__am$cache2);
-                    bool? nullable = this.ToggleShaderProperty(property3, Enumerable.First<bool>(enumerable), Enumerable.Count<bool>(Enumerable.Distinct<bool>(enumerable)) > 1);
+                    bool? nullable = this.ToggleShaderProperty(property3, enumerable.First<bool>(), enumerable.Distinct<bool>().Count<bool>() > 1);
                     if (nullable.HasValue)
                     {
-                        foreach (Material material2 in Enumerable.Cast<Material>(base.targets))
+                        foreach (Material material2 in base.targets.Cast<Material>())
                         {
                             if (nullable.Value)
                             {
@@ -117,7 +117,7 @@
                 if (property4 != null)
                 {
                     list.Remove(property4);
-                    if (Enumerable.Contains<SpeedTreeGeometryType>(source, SpeedTreeGeometryType.BranchDetail))
+                    if (source.Contains<SpeedTreeGeometryType>(SpeedTreeGeometryType.BranchDetail))
                     {
                         base.ShaderProperty(property4, property4.displayName);
                     }
@@ -135,10 +135,10 @@
                 if ((enumerable2 != null) && (property5 != null))
                 {
                     list.Remove(property5);
-                    bool? nullable2 = this.ToggleShaderProperty(property5, Enumerable.First<bool>(enumerable2), Enumerable.Count<bool>(Enumerable.Distinct<bool>(enumerable2)) > 1);
+                    bool? nullable2 = this.ToggleShaderProperty(property5, enumerable2.First<bool>(), enumerable2.Distinct<bool>().Count<bool>() > 1);
                     if (nullable2.HasValue)
                     {
-                        foreach (Material material3 in Enumerable.Cast<Material>(base.targets))
+                        foreach (Material material3 in base.targets.Cast<Material>())
                         {
                             if (nullable2.Value)
                             {
@@ -174,10 +174,8 @@
             }
         }
 
-        private bool ShouldEnableAlphaTest(SpeedTreeGeometryType geomType)
-        {
-            return ((geomType == SpeedTreeGeometryType.Frond) || (geomType == SpeedTreeGeometryType.Leaf));
-        }
+        private bool ShouldEnableAlphaTest(SpeedTreeGeometryType geomType) => 
+            ((geomType == SpeedTreeGeometryType.Frond) || (geomType == SpeedTreeGeometryType.Leaf));
 
         private bool? ToggleShaderProperty(MaterialProperty prop, bool enable, bool hasMixedEnable)
         {

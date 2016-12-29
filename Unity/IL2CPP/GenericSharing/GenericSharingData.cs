@@ -42,28 +42,19 @@
             this._rgctxs.Add(new RuntimeGenericMethodData(RuntimeGenericContextInfo.Method, data, genericMethod));
         }
 
-        public GenericSharingData Clone()
-        {
-            return new GenericSharingData(this._genericsSharings, this._rgctxs);
-        }
+        public GenericSharingData Clone() => 
+            new GenericSharingData(this._genericsSharings, this._rgctxs);
 
-        public ReadOnlyCollection<RuntimeGenericData> RuntimeGenericDatas
-        {
-            get
-            {
-                return this._rgctxs.AsReadOnly();
-            }
-        }
+        public ReadOnlyCollection<RuntimeGenericData> RuntimeGenericDatas =>
+            this._rgctxs.AsReadOnly();
 
         [CompilerGenerated]
         private sealed class <AddData>c__AnonStorey0
         {
             internal RuntimeGenericInflatedTypeData data;
 
-            internal bool <>m__0(RuntimeGenericData d)
-            {
-                return ((d.InfoType == this.data.InfoType) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(((RuntimeGenericTypeData) d).GenericType, this.data.GenericType, TypeComparisonMode.Exact));
-            }
+            internal bool <>m__0(RuntimeGenericData d) => 
+                ((d.InfoType == this.data.InfoType) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(((RuntimeGenericTypeData) d).GenericType, this.data.GenericType, TypeComparisonMode.Exact));
         }
     }
 }

@@ -129,13 +129,8 @@
         /// <summary>
         /// <para>Tells whether the phrase recognizer is listening for phrases.</para>
         /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return ((this.m_Recognizer != IntPtr.Zero) && IsRunning_Internal(this.m_Recognizer));
-            }
-        }
+        public bool IsRunning =>
+            ((this.m_Recognizer != IntPtr.Zero) && IsRunning_Internal(this.m_Recognizer));
 
         /// <summary>
         /// <para>Delegate for OnPhraseRecognized event.</para>

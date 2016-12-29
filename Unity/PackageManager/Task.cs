@@ -275,20 +275,13 @@
             this.InvokeOnProgress(this, progress);
         }
 
-        public bool Wait(int milliseconds)
-        {
-            return this.AsyncWaitHandle.WaitOne(milliseconds);
-        }
+        public bool Wait(int milliseconds) => 
+            this.AsyncWaitHandle.WaitOne(milliseconds);
 
         public WaitHandle AsyncWaitHandle { get; private set; }
 
-        public bool CancelRequested
-        {
-            get
-            {
-                return this.cancelRequested;
-            }
-        }
+        public bool CancelRequested =>
+            this.cancelRequested;
 
         public long EstimatedDuration { get; protected set; }
 
@@ -332,10 +325,8 @@
 
         public string Name
         {
-            get
-            {
-                return this.name;
-            }
+            get => 
+                this.name;
             set
             {
                 this.name = value;

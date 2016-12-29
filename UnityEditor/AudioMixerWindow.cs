@@ -250,10 +250,8 @@
             return list;
         }
 
-        private List<AudioMixerController> GetAllControllers()
-        {
-            return this.m_AllControllers;
-        }
+        private List<AudioMixerController> GetAllControllers() => 
+            this.m_AllControllers;
 
         private Dictionary<AudioMixerEffectController, AudioMixerGroupController> GetEffectMap(List<AudioMixerGroupController> allGroups)
         {
@@ -378,7 +376,7 @@
                 source[i].x += 4f;
                 source[i].width -= 8f;
             }
-            Rect viewRect = new Rect(0f, 0f, 1f, Enumerable.Last<Rect>(source).yMax);
+            Rect viewRect = new Rect(0f, 0f, 1f, source.Last<Rect>().yMax);
             if (viewRect.height > rect.height)
             {
                 for (int j = 0; j < source.Length; j++)
@@ -539,9 +537,8 @@
             base.Repaint();
         }
 
-        public MixerParameterDefinition ParamDef(string name, string desc, string units, float displayScale, float minRange, float maxRange, float defaultValue)
-        {
-            return new MixerParameterDefinition { 
+        public MixerParameterDefinition ParamDef(string name, string desc, string units, float displayScale, float minRange, float maxRange, float defaultValue) => 
+            new MixerParameterDefinition { 
                 name = name,
                 description = desc,
                 units = units,
@@ -550,7 +547,6 @@
                 maxRange = maxRange,
                 defaultValue = defaultValue
             };
-        }
 
         private void PlaymodeChanged()
         {
@@ -671,20 +667,13 @@
             }
         }
 
-        public AudioMixerController controller
-        {
-            get
-            {
-                return this.m_Controller;
-            }
-        }
+        public AudioMixerController controller =>
+            this.m_Controller;
 
         private LayoutMode layoutMode
         {
-            get
-            {
-                return this.m_LayoutMode;
-            }
+            get => 
+                this.m_LayoutMode;
             set
             {
                 this.m_LayoutMode = value;

@@ -12,13 +12,8 @@
     public struct GenericMixerPlayable
     {
         internal Playable handle;
-        internal Playable node
-        {
-            get
-            {
-                return this.handle;
-            }
-        }
+        internal Playable node =>
+            this.handle;
         /// <summary>
         /// <para>Creates an GenericMixerPlayable.</para>
         /// </summary>
@@ -39,18 +34,14 @@
             this.handle.Destroy();
         }
 
-        public T CastTo<T>() where T: struct
-        {
-            return this.handle.CastTo<T>();
-        }
+        public T CastTo<T>() where T: struct => 
+            this.handle.CastTo<T>();
 
-        public static implicit operator Playable(GenericMixerPlayable s)
-        {
-            return new Playable { 
+        public static implicit operator Playable(GenericMixerPlayable s) => 
+            new Playable { 
                 m_Handle = s.handle.m_Handle,
                 m_Version = s.handle.m_Version
             };
-        }
     }
 }
 

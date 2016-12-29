@@ -289,10 +289,8 @@
         public static string xboxOneAdditionalDebugPorts
         {
             [CompilerGenerated]
-            get
-            {
-                return <xboxOneAdditionalDebugPorts>k__BackingField;
-            }
+            get => 
+                <xboxOneAdditionalDebugPorts>k__BackingField;
             [CompilerGenerated]
             set
             {

@@ -18,14 +18,12 @@
         [SerializeField]
         private AnimFloat m_ViewSize = new AnimFloat(10f);
 
-        public CameraState Clone()
-        {
-            return new CameraState { 
+        public CameraState Clone() => 
+            new CameraState { 
                 pivot = { value = this.pivot.value },
                 rotation = { value = this.rotation.value },
                 viewSize = { value = this.viewSize.value }
             };
-        }
 
         public void Copy(CameraState cameraStateIn)
         {
@@ -64,10 +62,8 @@
 
         public AnimVector3 pivot
         {
-            get
-            {
-                return this.m_Pivot;
-            }
+            get => 
+                this.m_Pivot;
             set
             {
                 this.m_Pivot = value;
@@ -76,10 +72,8 @@
 
         public AnimQuaternion rotation
         {
-            get
-            {
-                return this.m_Rotation;
-            }
+            get => 
+                this.m_Rotation;
             set
             {
                 this.m_Rotation = value;
@@ -88,10 +82,8 @@
 
         public AnimFloat viewSize
         {
-            get
-            {
-                return this.m_ViewSize;
-            }
+            get => 
+                this.m_ViewSize;
             set
             {
                 this.m_ViewSize = value;

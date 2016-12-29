@@ -17,7 +17,7 @@ internal abstract class PostProcessUAP : PostProcessWSA
     [CompilerGenerated]
     private static Func<string, string> <>f__am$cache0;
 
-    public PostProcessUAP(BuildPostProcessArgs args, [Optional, DefaultParameterValue(null)] string stagingArea) : base(args, WSASDK.UWP, stagingArea)
+    public PostProcessUAP(BuildPostProcessArgs args, string stagingArea = null) : base(args, WSASDK.UWP, stagingArea)
     {
     }
 
@@ -98,10 +98,8 @@ internal abstract class PostProcessUAP : PostProcessWSA
         base._images.uwpWide310x150Logo = base.CheckImageConsistencyAndGetName(textArray7);
     }
 
-    protected override ManifestWSA CreateManifestBuilder()
-    {
-        return new ManifestUAP();
-    }
+    protected override ManifestWSA CreateManifestBuilder() => 
+        new ManifestUAP();
 
     protected override IEnumerable<string> GetAdditionalReferenceAssembliesDirectories()
     {
@@ -127,25 +125,17 @@ internal abstract class PostProcessUAP : PostProcessWSA
         return _defaultSplashScreens;
     }
 
-    protected override string GetPlayerFilesTargetDirectory()
-    {
-        return base.GetPlayerFilesTargetDirectory(!Utility.UseIl2CppScriptingBackend() ? @"UAP\dotnet" : @"UAP\il2cpp");
-    }
+    protected override string GetPlayerFilesTargetDirectory() => 
+        base.GetPlayerFilesTargetDirectory(!Utility.UseIl2CppScriptingBackend() ? @"UAP\dotnet" : @"UAP\il2cpp");
 
-    protected override string GetResourceCompilerPath()
-    {
-        return Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.UWP), @"bin\x86\rc.exe");
-    }
+    protected override string GetResourceCompilerPath() => 
+        Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.UWP), @"bin\x86\rc.exe");
 
-    protected override string GetSDKNotFoundErrorMessage()
-    {
-        return "Make sure Visual Studio 2015 is installed.";
-    }
+    protected override string GetSDKNotFoundErrorMessage() => 
+        "Make sure Visual Studio 2015 is installed.";
 
-    protected override Version GetToolsVersion()
-    {
-        return new Version(14, 0);
-    }
+    protected override Version GetToolsVersion() => 
+        new Version(14, 0);
 
     protected static string[] UWPReferences
     {

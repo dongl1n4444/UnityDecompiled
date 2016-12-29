@@ -7,19 +7,16 @@
     using UnityEngine.Events;
     using UnityEngine.PlaymodeTestsRunner;
 
-    [Extension]
     internal static class PlaymodeTestsControllerExtensions
     {
-        [Extension]
-        internal static T AddEventHandlerMonoBehaviour<T>(PlaymodeTestsController controller) where T: MonoBehaviour, TestRunnerListener
+        internal static T AddEventHandlerMonoBehaviour<T>(this PlaymodeTestsController controller) where T: MonoBehaviour, TestRunnerListener
         {
             T eventHandler = controller.gameObject.AddComponent<T>();
             SetListeners<T>(controller, eventHandler);
             return eventHandler;
         }
 
-        [Extension]
-        internal static T AddEventHandlerScriptableObject<T>(PlaymodeTestsController controller) where T: ScriptableObject, TestRunnerListener
+        internal static T AddEventHandlerScriptableObject<T>(this PlaymodeTestsController controller) where T: ScriptableObject, TestRunnerListener
         {
             T local = ScriptableObject.CreateInstance<T>();
             T local1 = local;

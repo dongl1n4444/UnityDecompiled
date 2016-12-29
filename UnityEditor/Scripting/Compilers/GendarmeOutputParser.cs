@@ -15,7 +15,7 @@
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(gendarmeRuleData.Problem);
             builder.AppendLine(gendarmeRuleData.Details);
-            builder.AppendLine(string.IsNullOrEmpty(gendarmeRuleData.Location) ? string.Format("{0} at line : {1}", gendarmeRuleData.Source, gendarmeRuleData.Line) : gendarmeRuleData.Location);
+            builder.AppendLine(string.IsNullOrEmpty(gendarmeRuleData.Location) ? $"{gendarmeRuleData.Source} at line : {gendarmeRuleData.Line}" : gendarmeRuleData.Location);
             string str = builder.ToString();
             return new CompilerMessage { 
                 type = CompilerMessageType.Error,
@@ -97,13 +97,11 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<CompilerMessage> Parse(string[] errorOutput, string[] standardOutput, bool compilationHadFailure)
-        {
-            return new <Parse>c__Iterator0 { 
+        public override IEnumerable<CompilerMessage> Parse(string[] errorOutput, string[] standardOutput, bool compilationHadFailure) => 
+            new <Parse>c__Iterator0 { 
                 standardOutput = standardOutput,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <Parse>c__Iterator0 : IEnumerable, IEnumerable<CompilerMessage>, IEnumerator, IDisposable, IEnumerator<CompilerMessage>
@@ -180,28 +178,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<UnityEditor.Scripting.Compilers.CompilerMessage>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<UnityEditor.Scripting.Compilers.CompilerMessage>.GetEnumerator();
 
-            CompilerMessage IEnumerator<CompilerMessage>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            CompilerMessage IEnumerator<CompilerMessage>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

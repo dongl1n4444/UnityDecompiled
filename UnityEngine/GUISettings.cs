@@ -28,10 +28,8 @@
         /// </summary>
         public Color cursorColor
         {
-            get
-            {
-                return this.m_CursorColor;
-            }
+            get => 
+                this.m_CursorColor;
             set
             {
                 this.m_CursorColor = value;
@@ -62,10 +60,8 @@
         /// </summary>
         public bool doubleClickSelectsWord
         {
-            get
-            {
-                return this.m_DoubleClickSelectsWord;
-            }
+            get => 
+                this.m_DoubleClickSelectsWord;
             set
             {
                 this.m_DoubleClickSelectsWord = value;
@@ -77,10 +73,8 @@
         /// </summary>
         public Color selectionColor
         {
-            get
-            {
-                return this.m_SelectionColor;
-            }
+            get => 
+                this.m_SelectionColor;
             set
             {
                 this.m_SelectionColor = value;
@@ -92,10 +86,8 @@
         /// </summary>
         public bool tripleClickSelectsLine
         {
-            get
-            {
-                return this.m_TripleClickSelectsLine;
-            }
+            get => 
+                this.m_TripleClickSelectsLine;
             set
             {
                 this.m_TripleClickSelectsLine = value;

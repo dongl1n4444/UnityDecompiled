@@ -11,10 +11,8 @@
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private NetworkID <networkId>k__BackingField;
 
-        public override bool IsValid()
-        {
-            return (base.IsValid() && (this.networkId != NetworkID.Invalid));
-        }
+        public override bool IsValid() => 
+            (base.IsValid() && (this.networkId != NetworkID.Invalid));
 
         public override string ToString()
         {

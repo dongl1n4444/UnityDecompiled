@@ -59,10 +59,8 @@
         public static extern bool IsBleedingEdgeBuild();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsDestroyScriptableObject(ScriptableObject target);
-        public static bool IsDeveloperBuild()
-        {
-            return (IsDeveloperBuildInternal() && !s_FakeNonDeveloperBuild);
-        }
+        public static bool IsDeveloperBuild() => 
+            (IsDeveloperBuildInternal() && !s_FakeNonDeveloperBuild);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool IsDeveloperBuildInternal();
@@ -117,10 +115,8 @@
 
         internal static bool fakeNonDeveloperBuild
         {
-            get
-            {
-                return s_FakeNonDeveloperBuild;
-            }
+            get => 
+                s_FakeNonDeveloperBuild;
             set
             {
                 s_FakeNonDeveloperBuild = value;

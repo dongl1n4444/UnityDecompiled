@@ -32,10 +32,8 @@
             return this.CalculatePathInternal(targetPosition, path);
         }
 
-        private bool CalculatePathInternal(Vector3 targetPosition, NavMeshPath path)
-        {
-            return INTERNAL_CALL_CalculatePathInternal(this, ref targetPosition, path);
-        }
+        private bool CalculatePathInternal(Vector3 targetPosition, NavMeshPath path) => 
+            INTERNAL_CALL_CalculatePathInternal(this, ref targetPosition, path);
 
         /// <summary>
         /// <para>Completes the movement on the current OffMeshLink.</para>
@@ -105,10 +103,8 @@
             INTERNAL_CALL_Move(this, ref offset);
         }
 
-        public bool Raycast(Vector3 targetPosition, out NavMeshHit hit)
-        {
-            return INTERNAL_CALL_Raycast(this, ref targetPosition, out hit);
-        }
+        public bool Raycast(Vector3 targetPosition, out NavMeshHit hit) => 
+            INTERNAL_CALL_Raycast(this, ref targetPosition, out hit);
 
         /// <summary>
         /// <para>Clears the current path.</para>
@@ -136,10 +132,8 @@
         /// <returns>
         /// <para>True if the destination was requested successfully, otherwise false.</para>
         /// </returns>
-        public bool SetDestination(Vector3 target)
-        {
-            return INTERNAL_CALL_SetDestination(this, ref target);
-        }
+        public bool SetDestination(Vector3 target) => 
+            INTERNAL_CALL_SetDestination(this, ref target);
 
         /// <summary>
         /// <para>Sets the cost for traversing over geometry of the layer type.</para>
@@ -180,10 +174,8 @@
         /// <returns>
         /// <para>True if agent is successfully warped, otherwise false.</para>
         /// </returns>
-        public bool Warp(Vector3 newPosition)
-        {
-            return INTERNAL_CALL_Warp(this, ref newPosition);
-        }
+        public bool Warp(Vector3 newPosition) => 
+            INTERNAL_CALL_Warp(this, ref newPosition);
 
         /// <summary>
         /// <para>The maximum acceleration of an agent as it follows a path, given in units / sec^2.</para>
@@ -228,13 +220,8 @@
         /// <summary>
         /// <para>The current OffMeshLinkData.</para>
         /// </summary>
-        public OffMeshLinkData currentOffMeshLinkData
-        {
-            get
-            {
-                return this.GetCurrentOffMeshLinkDataInternal();
-            }
-        }
+        public OffMeshLinkData currentOffMeshLinkData =>
+            this.GetCurrentOffMeshLinkDataInternal();
 
         /// <summary>
         /// <para>The desired velocity of the agent including any potential contribution from avoidance. (Read Only)</para>
@@ -294,13 +281,8 @@
         /// <summary>
         /// <para>The next OffMeshLinkData on the current path.</para>
         /// </summary>
-        public OffMeshLinkData nextOffMeshLinkData
-        {
-            get
-            {
-                return this.GetNextOffMeshLinkDataInternal();
-            }
-        }
+        public OffMeshLinkData nextOffMeshLinkData =>
+            this.GetNextOffMeshLinkDataInternal();
 
         /// <summary>
         /// <para>Gets or sets the simulation position of the navmesh agent.</para>

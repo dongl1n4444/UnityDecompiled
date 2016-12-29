@@ -10,13 +10,11 @@
     internal class AsyncUtil : MonoBehaviour, IAsyncUtil
     {
         [DebuggerHidden]
-        private IEnumerator DoInvoke(Action a, int delayInSeconds)
-        {
-            return new <DoInvoke>c__Iterator0 { 
+        private IEnumerator DoInvoke(Action a, int delayInSeconds) => 
+            new <DoInvoke>c__Iterator0 { 
                 delayInSeconds = delayInSeconds,
                 a = a
             };
-        }
 
         public void Get(string url, Action<string> responseHandler, Action<string> errorHandler)
         {
@@ -25,14 +23,12 @@
         }
 
         [DebuggerHidden]
-        private IEnumerator Process(WWW request, Action<string> responseHandler, Action<string> errorHandler)
-        {
-            return new <Process>c__Iterator1 { 
+        private IEnumerator Process(WWW request, Action<string> responseHandler, Action<string> errorHandler) => 
+            new <Process>c__Iterator1 { 
                 request = request,
                 errorHandler = errorHandler,
                 responseHandler = responseHandler
             };
-        }
 
         public void Schedule(Action a, int delayInSeconds)
         {
@@ -83,23 +79,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -156,23 +140,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

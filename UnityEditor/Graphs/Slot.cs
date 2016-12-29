@@ -122,10 +122,8 @@
             return ObjectNames.NicifyVariableName(name);
         }
 
-        public Property GetProperty()
-        {
-            return this.node.GetProperty(this.name);
-        }
+        public Property GetProperty() => 
+            this.node.GetProperty(this.name);
 
         internal bool HasConnectionTo(Slot toSlot)
         {
@@ -155,10 +153,8 @@
             this.m_DataTypeString = SerializedType.SetGenericArgumentType(this.m_DataTypeString, type);
         }
 
-        public override string ToString()
-        {
-            return this.name;
-        }
+        public override string ToString() => 
+            this.name;
 
         internal void WakeUp(Node owner)
         {
@@ -171,94 +167,45 @@
 
         public System.Type dataType
         {
-            get
-            {
-                return SerializedType.FromString(this.m_DataTypeString);
-            }
+            get => 
+                SerializedType.FromString(this.m_DataTypeString);
             set
             {
                 this.m_DataTypeString = SerializedType.ToString(value);
             }
         }
 
-        public string dataTypeString
-        {
-            get
-            {
-                return this.m_DataTypeString;
-            }
-        }
+        public string dataTypeString =>
+            this.m_DataTypeString;
 
-        public bool isDataSlot
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.m_DataTypeString);
-            }
-        }
+        public bool isDataSlot =>
+            !string.IsNullOrEmpty(this.m_DataTypeString);
 
-        public bool isFlowSlot
-        {
-            get
-            {
-                return (!this.isDataSlot && !this.isTarget);
-            }
-        }
+        public bool isFlowSlot =>
+            (!this.isDataSlot && !this.isTarget);
 
-        public bool isGeneric
-        {
-            get
-            {
-                return SerializedType.IsBaseTypeGeneric(this.m_DataTypeString);
-            }
-        }
+        public bool isGeneric =>
+            SerializedType.IsBaseTypeGeneric(this.m_DataTypeString);
 
-        public bool isInputDataSlot
-        {
-            get
-            {
-                return (this.isDataSlot && (this.type == SlotType.InputSlot));
-            }
-        }
+        public bool isInputDataSlot =>
+            (this.isDataSlot && (this.type == SlotType.InputSlot));
 
-        public bool isInputSlot
-        {
-            get
-            {
-                return (this.type == SlotType.InputSlot);
-            }
-        }
+        public bool isInputSlot =>
+            (this.type == SlotType.InputSlot);
 
-        public bool isOutputDataSlot
-        {
-            get
-            {
-                return (this.isDataSlot && (this.type == SlotType.OutputSlot));
-            }
-        }
+        public bool isOutputDataSlot =>
+            (this.isDataSlot && (this.type == SlotType.OutputSlot));
 
-        public bool isOutputSlot
-        {
-            get
-            {
-                return (this.type == SlotType.OutputSlot);
-            }
-        }
+        public bool isOutputSlot =>
+            (this.type == SlotType.OutputSlot);
 
-        public bool isTarget
-        {
-            get
-            {
-                return (this.name == "$Target");
-            }
-        }
+        public bool isTarget =>
+            (this.name == "$Target");
 
         public string name
         {
-            get
-            {
-                return this.m_Name;
-            }
+            get => 
+                this.m_Name;
             set
             {
                 this.m_Name = value;
@@ -268,10 +215,8 @@
 
         public Node node
         {
-            get
-            {
-                return this.m_Node;
-            }
+            get => 
+                this.m_Node;
             set
             {
                 this.m_Node = value;
@@ -280,10 +225,8 @@
 
         public string title
         {
-            get
-            {
-                return this.m_Title;
-            }
+            get => 
+                this.m_Title;
             set
             {
                 this.m_Title = value;
@@ -295,10 +238,8 @@
         {
             internal Slot toSlot;
 
-            internal bool <>m__0(UnityEditor.Graphs.Edge e)
-            {
-                return (e.toSlot == this.toSlot);
-            }
+            internal bool <>m__0(UnityEditor.Graphs.Edge e) => 
+                (e.toSlot == this.toSlot);
         }
     }
 }

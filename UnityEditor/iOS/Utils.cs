@@ -80,7 +80,7 @@
         public static void DeleteDirectoryIfEmpty(string path)
         {
             Regex regex = new Regex(@"\.DS_Store");
-            bool flag = !Enumerable.Any<string>(Directory.GetDirectories(path));
+            bool flag = !Directory.GetDirectories(path).Any<string>();
             foreach (string str in Directory.GetFiles(path))
             {
                 if (!regex.IsMatch(str))
@@ -201,7 +201,7 @@
                     {
                         return true;
                     }
-                    if (!Enumerable.SequenceEqual<byte>(Enumerable.Take<byte>(buffer, num), Enumerable.Take<byte>(buffer2, count)))
+                    if (!buffer.Take<byte>(num).SequenceEqual<byte>(buffer2.Take<byte>(count)))
                     {
                         flag = false;
                     }
@@ -387,7 +387,7 @@
         public static int InstallFileWithFallbacks(string[] srcFiles, string dest)
         {
             FileUtil.DeleteFileOrDirectory(dest);
-            for (int i = 0; i < Enumerable.Count<string>(srcFiles); i++)
+            for (int i = 0; i < srcFiles.Count<string>(); i++)
             {
                 if (File.Exists(srcFiles[i]))
                 {
@@ -644,20 +644,14 @@
             internal int revision;
             internal int vendorId;
 
-            internal bool <>m__0(iOSDeviceDescription d)
-            {
-                return (((d.vendorId == this.vendorId) && (d.productId == this.productId)) && (d.revision == this.revision));
-            }
+            internal bool <>m__0(iOSDeviceDescription d) => 
+                (((d.vendorId == this.vendorId) && (d.productId == this.productId)) && (d.revision == this.revision));
 
-            internal bool <>m__1(iOSDeviceDescription d)
-            {
-                return ((d.productId == this.productId) && (d.modelId == this.modelId));
-            }
+            internal bool <>m__1(iOSDeviceDescription d) => 
+                ((d.productId == this.productId) && (d.modelId == this.modelId));
 
-            internal bool <>m__2(iOSDeviceDescription d)
-            {
-                return (d.modelId == this.modelId);
-            }
+            internal bool <>m__2(iOSDeviceDescription d) => 
+                (d.modelId == this.modelId);
         }
 
         [CompilerGenerated]
@@ -665,10 +659,8 @@
         {
             internal string dst;
 
-            internal bool <>m__0(Regex val)
-            {
-                return val.IsMatch(this.dst);
-            }
+            internal bool <>m__0(Regex val) => 
+                val.IsMatch(this.dst);
         }
 
         [CompilerGenerated]

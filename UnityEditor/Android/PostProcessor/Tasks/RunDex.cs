@@ -62,13 +62,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Building DEX";
-            }
-        }
+        public string Name =>
+            "Building DEX";
     }
 }
 

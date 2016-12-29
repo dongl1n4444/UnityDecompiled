@@ -29,7 +29,7 @@
                     {
                         if (item.ConflictsWith(info2))
                         {
-                            Debug.LogError(string.Format("Found plugins with same names and architectures, {0} ({1}) and {2} ({3}). Assign different architectures or delete the duplicate.", new object[] { item.assetPath, item.cpuType, info2.assetPath, info2.cpuType }));
+                            Debug.LogError($"Found plugins with same names and architectures, {item.assetPath} ({item.cpuType}) and {info2.assetPath} ({info2.cpuType}). Assign different architectures or delete the duplicate.");
                             flag = true;
                         }
                     }
@@ -88,10 +88,8 @@
                 this.cpuType = plugin.GetPlatformData(buildTargetName, AndroidPluginImporterExtension.cpuTag);
             }
 
-            public bool ConflictsWith(AndroidPluginImporterExtension.PluginInfo other)
-            {
-                return ((this.assetName == other.assetName) && (((this.cpuType == "AnyCPU") || (other.cpuType == "AnyCPU")) || (other.cpuType == this.cpuType)));
-            }
+            public bool ConflictsWith(AndroidPluginImporterExtension.PluginInfo other) => 
+                ((this.assetName == other.assetName) && (((this.cpuType == "AnyCPU") || (other.cpuType == "AnyCPU")) || (other.cpuType == this.cpuType)));
         }
     }
 }

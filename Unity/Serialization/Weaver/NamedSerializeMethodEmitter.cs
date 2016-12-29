@@ -59,10 +59,8 @@
             base.Callvirt(this.SerializedStateWriterInterface, "EndMetaGroup");
         }
 
-        public static MethodDefinition SerializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider)
-        {
-            return new NamedSerializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
-        }
+        public static MethodDefinition SerializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider) => 
+            new NamedSerializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
 
         protected override void WriteSequenceLength(string fieldName, Action emitSequenceLength)
         {
@@ -72,21 +70,11 @@
             base.Callvirt(this.SerializedStateWriterInterface, "BeginSequenceGroup");
         }
 
-        protected override TypeDefinition SerializedStateWriterInterface
-        {
-            get
-            {
-                return base._serializationBridgeProvider.SerializedNamedStateWriterInterface;
-            }
-        }
+        protected override TypeDefinition SerializedStateWriterInterface =>
+            base._serializationBridgeProvider.SerializedNamedStateWriterInterface;
 
-        protected override string SerializeMethodName
-        {
-            get
-            {
-                return "Unity_NamedSerialize";
-            }
-        }
+        protected override string SerializeMethodName =>
+            "Unity_NamedSerialize";
     }
 }
 

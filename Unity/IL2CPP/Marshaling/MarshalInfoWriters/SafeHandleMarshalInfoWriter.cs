@@ -36,41 +36,35 @@
             {
                 <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <SafeHandleMarshalInfoWriter>m__0);
             }
-            this._addRefMethod = Enumerable.Single<MethodDefinition>(this._safeHandleTypeDefinition.Methods, <>f__am$cache0);
+            this._addRefMethod = this._safeHandleTypeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache0);
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <SafeHandleMarshalInfoWriter>m__1);
             }
-            this._releaseMethod = Enumerable.Single<MethodDefinition>(this._safeHandleTypeDefinition.Methods, <>f__am$cache1);
+            this._releaseMethod = this._safeHandleTypeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <SafeHandleMarshalInfoWriter>m__2);
             }
-            this._defaultConstructor = Enumerable.SingleOrDefault<MethodDefinition>(base._typeRef.Resolve().Methods, <>f__am$cache2);
+            this._defaultConstructor = base._typeRef.Resolve().Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache2);
             this._marshaledTypes = new MarshaledType[] { new MarshaledType("void*", "void*") };
         }
 
         [CompilerGenerated]
-        private static bool <SafeHandleMarshalInfoWriter>m__0(MethodDefinition method)
-        {
-            return (method.Name == "DangerousAddRef");
-        }
+        private static bool <SafeHandleMarshalInfoWriter>m__0(MethodDefinition method) => 
+            (method.Name == "DangerousAddRef");
 
         [CompilerGenerated]
-        private static bool <SafeHandleMarshalInfoWriter>m__1(MethodDefinition method)
-        {
-            return (method.Name == "DangerousRelease");
-        }
+        private static bool <SafeHandleMarshalInfoWriter>m__1(MethodDefinition method) => 
+            (method.Name == "DangerousRelease");
 
         [CompilerGenerated]
-        private static bool <SafeHandleMarshalInfoWriter>m__2(MethodDefinition ctor)
-        {
-            return ((ctor.Name == ".ctor") && (ctor.Parameters.Count == 0));
-        }
+        private static bool <SafeHandleMarshalInfoWriter>m__2(MethodDefinition ctor) => 
+            ((ctor.Name == ".ctor") && (ctor.Parameters.Count == 0));
 
         private void EmitCallToDangerousAddRef(CppCodeWriter writer, string variableName, bool generateBoolName, IRuntimeMetadataAccess metadataAccess)
         {
-            string str = !generateBoolName ? this.SafeHandleReferenceIncrementedLocalBoolName(variableName) : this.SafeHandleReferenceIncrementedLocalBoolName(string.Format("unused{0}", _unsusedBoolNameCounter++));
+            string str = !generateBoolName ? this.SafeHandleReferenceIncrementedLocalBoolName(variableName) : this.SafeHandleReferenceIncrementedLocalBoolName($"unused{_unsusedBoolNameCounter++}");
             object[] args = new object[] { str };
             writer.WriteLine("bool {0} = false;", args);
             object[] objArray2 = new object[1];
@@ -85,7 +79,7 @@
             {
                 <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetIntPtrValueField>m__3);
             }
-            return Enumerable.Single<FieldDefinition>(DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields, <>f__am$cache3);
+            return DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache3);
         }
 
         private FieldReference GetSafeHandleHandleField()
@@ -94,25 +88,21 @@
             {
                 <>f__am$cache4 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetSafeHandleHandleField>m__4);
             }
-            return Enumerable.Single<FieldDefinition>(this._safeHandleTypeDefinition.Fields, <>f__am$cache4);
+            return this._safeHandleTypeDefinition.Fields.Single<FieldDefinition>(<>f__am$cache4);
         }
 
-        private string LoadHandleFieldFor(string sourceVariable)
-        {
-            return string.Format("({0})->{1}().{2}()", sourceVariable, DefaultMarshalInfoWriter.Naming.ForFieldGetter(this.GetSafeHandleHandleField()), DefaultMarshalInfoWriter.Naming.ForFieldGetter(this.GetIntPtrValueField()));
-        }
+        private string LoadHandleFieldFor(string sourceVariable) => 
+            $"({sourceVariable})->{DefaultMarshalInfoWriter.Naming.ForFieldGetter(this.GetSafeHandleHandleField())}().{DefaultMarshalInfoWriter.Naming.ForFieldGetter(this.GetIntPtrValueField())}()";
 
-        private string SafeHandleReferenceIncrementedLocalBoolName(string variableName)
-        {
-            return string.Format("{0}_{1}", "___safeHandle_reference_incremented_for", DefaultMarshalInfoWriter.CleanVariableName(variableName));
-        }
+        private string SafeHandleReferenceIncrementedLocalBoolName(string variableName) => 
+            $"{"___safeHandle_reference_incremented_for"}_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}";
 
         public override void WriteDeclareAndAllocateObject(CppCodeWriter writer, string unmarshaledVariableName, string marshaledVariableName, IRuntimeMetadataAccess metadataAccess)
         {
             TypeDefinition definition = base._typeRef.Resolve();
             if (definition.IsAbstract)
             {
-                writer.WriteStatement(Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_marshal_directive_exception(\"A returned SafeHandle cannot be abstract, but this type is: '{0}'.\")", definition.FullName)));
+                writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_marshal_directive_exception("A returned SafeHandle cannot be abstract, but this type is: '{definition.FullName}'.")"));
             }
             CustomMarshalInfoWriter.EmitNewObject(writer, base._typeRef, unmarshaledVariableName, marshaledVariableName, false, metadataAccess);
         }
@@ -127,7 +117,7 @@
         {
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             if (!string.IsNullOrEmpty(managedVariableName))
             {
@@ -171,20 +161,15 @@
 
         public override void WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
         {
-            object[] args = new object[] { sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.Null, Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_argument_null_exception(\"{0}\")", !string.IsNullOrEmpty(managedVariableName) ? managedVariableName : sourceVariable.GetNiceName())) };
+            object[] args = new object[] { sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.Null, Emit.RaiseManagedException($"il2cpp_codegen_get_argument_null_exception("{!string.IsNullOrEmpty(managedVariableName) ? managedVariableName : sourceVariable.GetNiceName()}")") };
             writer.WriteLine("if ({0} == {1}) {2};", args);
             this.EmitCallToDangerousAddRef(writer, sourceVariable.Load(), false, metadataAccess);
             object[] objArray2 = new object[] { destinationVariable, this.LoadHandleFieldFor(sourceVariable.Load()) };
             writer.WriteLine("{0} = {1};", objArray2);
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
         [CompilerGenerated]
         private sealed class <WriteMarshalVariableFromNative>c__AnonStorey0

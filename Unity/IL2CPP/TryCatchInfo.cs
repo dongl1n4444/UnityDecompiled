@@ -13,10 +13,8 @@
         public int TryEnd;
         public int TryStart;
 
-        public override string ToString()
-        {
-            return string.Format("try {0}:{1}, catch {2}:{3}, finally {4}:{5}, fault {6}:{7}", new object[] { this.TryStart, this.TryEnd, this.CatchStart, this.CatchEnd, this.FinallyStart, this.FinallyEnd, this.FaultStart, this.FaultEnd });
-        }
+        public override string ToString() => 
+            $"try {this.TryStart}:{this.TryEnd}, catch {this.CatchStart}:{this.CatchEnd}, finally {this.FinallyStart}:{this.FinallyEnd}, fault {this.FaultStart}:{this.FaultEnd}";
     }
 }
 

@@ -23,7 +23,7 @@
             writer.WriteLine("try");
             using (new BlockWriter(writer, false))
             {
-                if (Extensions.IsValueType(base._managedMethod.DeclaringType))
+                if (base._managedMethod.DeclaringType.IsValueType())
                 {
                     object[] objArray2 = new object[] { InteropMethodBodyWriter.Naming.ForTypeNameOnly(base._managedMethod.DeclaringType), InteropMethodBodyWriter.Naming.ThisParameterName, metadataAccess.TypeInfoFor(base._managedMethod.DeclaringType) };
                     writer.WriteLine("{0}* {1} = ({0}*)UnBox(GetManagedObjectInline(), {2});", objArray2);

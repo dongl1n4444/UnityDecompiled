@@ -332,21 +332,11 @@
             }
         }
 
-        public UnityEditor.Graphs.AnimationBlendTree.Graph blendTreeGraph
-        {
-            get
-            {
-                return (base.graph as UnityEditor.Graphs.AnimationBlendTree.Graph);
-            }
-        }
+        public UnityEditor.Graphs.AnimationBlendTree.Graph blendTreeGraph =>
+            (base.graph as UnityEditor.Graphs.AnimationBlendTree.Graph);
 
-        private AnimatorControllerTool m_Tool
-        {
-            get
-            {
-                return (base.m_Host as AnimatorControllerTool);
-            }
-        }
+        private AnimatorControllerTool m_Tool =>
+            (base.m_Host as AnimatorControllerTool);
 
         [CompilerGenerated]
         private sealed class <OnGraphGUI>c__AnonStorey0

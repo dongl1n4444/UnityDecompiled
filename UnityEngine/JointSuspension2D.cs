@@ -17,10 +17,8 @@
         /// </summary>
         public float dampingRatio
         {
-            get
-            {
-                return this.m_DampingRatio;
-            }
+            get => 
+                this.m_DampingRatio;
             set
             {
                 this.m_DampingRatio = value;
@@ -31,10 +29,8 @@
         /// </summary>
         public float frequency
         {
-            get
-            {
-                return this.m_Frequency;
-            }
+            get => 
+                this.m_Frequency;
             set
             {
                 this.m_Frequency = value;
@@ -45,10 +41,8 @@
         /// </summary>
         public float angle
         {
-            get
-            {
-                return this.m_Angle;
-            }
+            get => 
+                this.m_Angle;
             set
             {
                 this.m_Angle = value;

@@ -28,10 +28,8 @@
             base.Callvirt(this.SerializedStateReaderInterface, methodName);
         }
 
-        public static MethodDefinition DeserializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider)
-        {
-            return new NamedDeserializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
-        }
+        public static MethodDefinition DeserializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider) => 
+            new NamedDeserializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
 
         private void EmitCString(string fieldName)
         {
@@ -71,21 +69,11 @@
             base.Callvirt(this.SerializedStateReaderInterface, "BeginSequenceGroup");
         }
 
-        protected override string DeserializeMethodName
-        {
-            get
-            {
-                return "Unity_NamedDeserialize";
-            }
-        }
+        protected override string DeserializeMethodName =>
+            "Unity_NamedDeserialize";
 
-        protected override TypeDefinition SerializedStateReaderInterface
-        {
-            get
-            {
-                return base._serializationBridgeProvider.SerializedNamedStateReaderInterface;
-            }
-        }
+        protected override TypeDefinition SerializedStateReaderInterface =>
+            base._serializationBridgeProvider.SerializedNamedStateReaderInterface;
     }
 }
 

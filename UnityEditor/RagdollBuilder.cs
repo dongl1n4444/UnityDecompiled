@@ -355,7 +355,7 @@
                         if (hashtable[current.anchor] != null)
                         {
                             BoneInfo info2 = (BoneInfo) hashtable[current.anchor];
-                            return string.Format("{0} and {1} may not be assigned to the same bone.", current.name, info2.name);
+                            return $"{current.name} and {info2.name} may not be assigned to the same bone.";
                         }
                         hashtable[current.anchor] = current;
                     }
@@ -377,7 +377,8 @@
                     BoneInfo info3 = (BoneInfo) enumerator2.Current;
                     if (info3.anchor == null)
                     {
-                        return string.Format("{0} has not been assigned yet.\n", info3.name);
+                        return $"{info3.name} has not been assigned yet.
+";
                     }
                 }
             }

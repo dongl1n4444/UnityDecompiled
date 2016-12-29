@@ -60,15 +60,11 @@
             InternalEditorUtility.RemoveCustomLighting();
         }
 
-        public override string GetInfoString()
-        {
-            return string.Format("{0} verts, {1} tris, {2} images", this.m_Vertices.arraySize, this.m_Indices.arraySize / 3, this.m_Images.arraySize);
-        }
+        public override string GetInfoString() => 
+            $"{this.m_Vertices.arraySize} verts, {(this.m_Indices.arraySize / 3)} tris, {this.m_Images.arraySize} images";
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.target != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.target != null);
 
         private void InitPreview()
         {
@@ -99,8 +95,8 @@
             {
                 <>f__am$cache1 = new Func<IEnumerable<Vector3>, IEnumerable<Vector3>>(null, (IntPtr) <MakePreviewMesh>m__3);
             }
-            mesh.SetVertices(Enumerable.ToList<Vector3>(Enumerable.SelectMany<IEnumerable<Vector3>, Vector3>(Enumerable.Repeat<IEnumerable<Vector3>>(Enumerable.Select<Vector2, Vector3>(billboard.GetVertices(), new Func<Vector2, Vector3>(storey, (IntPtr) this.<>m__0)), 2), <>f__am$cache1)));
-            mesh.SetNormals(Enumerable.ToList<Vector3>(Enumerable.Concat<Vector3>(Enumerable.Repeat<Vector3>(Vector3.forward, billboard.vertexCount), Enumerable.Repeat<Vector3>(-Vector3.forward, billboard.vertexCount))));
+            mesh.SetVertices(Enumerable.SelectMany<IEnumerable<Vector3>, Vector3>(Enumerable.Repeat<IEnumerable<Vector3>>(Enumerable.Select<Vector2, Vector3>(billboard.GetVertices(), new Func<Vector2, Vector3>(storey, (IntPtr) this.<>m__0)), 2), <>f__am$cache1).ToList<Vector3>());
+            mesh.SetNormals(Enumerable.Repeat<Vector3>(Vector3.forward, billboard.vertexCount).Concat<Vector3>(Enumerable.Repeat<Vector3>(-Vector3.forward, billboard.vertexCount)).ToList<Vector3>());
             int[] triangles = new int[billboard.indexCount * 2];
             ushort[] indices = billboard.GetIndices();
             for (int i = 0; i < (billboard.indexCount / 3); i++)
@@ -117,15 +113,15 @@
 
         private void MakeRenderMesh(Mesh mesh, BillboardAsset billboard)
         {
-            mesh.SetVertices(Enumerable.ToList<Vector3>(Enumerable.Repeat<Vector3>(Vector3.zero, billboard.vertexCount)));
-            mesh.SetColors(Enumerable.ToList<Color>(Enumerable.Repeat<Color>(Color.black, billboard.vertexCount)));
-            mesh.SetUVs(0, Enumerable.ToList<Vector2>(billboard.GetVertices()));
-            mesh.SetUVs(1, Enumerable.ToList<Vector4>(Enumerable.Repeat<Vector4>(new Vector4(1f, 1f, 0f, 0f), billboard.vertexCount)));
+            mesh.SetVertices(Enumerable.Repeat<Vector3>(Vector3.zero, billboard.vertexCount).ToList<Vector3>());
+            mesh.SetColors(Enumerable.Repeat<Color>(Color.black, billboard.vertexCount).ToList<Color>());
+            mesh.SetUVs(0, billboard.GetVertices().ToList<Vector2>());
+            mesh.SetUVs(1, Enumerable.Repeat<Vector4>(new Vector4(1f, 1f, 0f, 0f), billboard.vertexCount).ToList<Vector4>());
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<ushort, int>(null, (IntPtr) <MakeRenderMesh>m__2);
             }
-            mesh.SetTriangles(Enumerable.ToList<int>(Enumerable.Select<ushort, int>(billboard.GetIndices(), <>f__am$cache0)), 0);
+            mesh.SetTriangles(Enumerable.Select<ushort, int>(billboard.GetIndices(), <>f__am$cache0).ToList<int>(), 0);
         }
 
         private void OnDisable()
@@ -242,10 +238,8 @@
             internal float height;
             internal float width;
 
-            internal Vector3 <>m__0(Vector2 v)
-            {
-                return new Vector3((v.x - 0.5f) * this.width, (v.y * this.height) + this.bottom, 0f);
-            }
+            internal Vector3 <>m__0(Vector2 v) => 
+                new Vector3((v.x - 0.5f) * this.width, (v.y * this.height) + this.bottom, 0f);
         }
 
         private class GUIStyles

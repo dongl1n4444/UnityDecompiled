@@ -4,14 +4,10 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class FieldInfoExtensions
     {
-        [Extension]
-        public static RuntimeFieldHandle GetFieldHandlePortable(FieldInfo fieldInfo)
-        {
-            return fieldInfo.FieldHandle;
-        }
+        public static RuntimeFieldHandle GetFieldHandlePortable(this FieldInfo fieldInfo) => 
+            fieldInfo.FieldHandle;
     }
 }
 

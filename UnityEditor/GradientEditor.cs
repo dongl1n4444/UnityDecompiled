@@ -495,13 +495,8 @@
             return lhs.m_Time.CompareTo(rhs.m_Time);
         }
 
-        public Gradient target
-        {
-            get
-            {
-                return this.m_Gradient;
-            }
-        }
+        public Gradient target =>
+            this.m_Gradient;
 
         private class Styles
         {

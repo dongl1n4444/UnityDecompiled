@@ -304,13 +304,8 @@
             }
         }
 
-        public bool initialized
-        {
-            get
-            {
-                return (null != this.webView);
-            }
-        }
+        public bool initialized =>
+            (null != this.webView);
 
         [CompilerGenerated]
         private sealed class <ScheduleOpenURL>c__AnonStorey0

@@ -36,14 +36,14 @@
             bool flag = Unsupported.IsDeveloperBuild();
             string directory = Path.Combine(EmscriptenPaths.emscriptenCache, "asmjs");
             string str2 = Il2CppNativeCodeBuilderUtils.ObjectFilePathInCacheDirectoryFor(EmscriptenPaths.cacheDirForIl2CppIncrementalBuildArtifacts);
-            IEnumerable<string> first = Enumerable.Concat<string>(GetDirectorySymbolArtifactsFromGeneratedCode(str2), GetDirectorySymbolArtifacts(directory));
+            IEnumerable<string> first = GetDirectorySymbolArtifactsFromGeneratedCode(str2).Concat<string>(GetDirectorySymbolArtifacts(directory));
             if (flag)
             {
-                first = Enumerable.Concat<string>(first, GetSourceCodeSymbolArtifacts());
+                first = first.Concat<string>(GetSourceCodeSymbolArtifacts());
             }
             Dictionary<string, string> symbolArtifacts = GetSymbolArtifacts(first);
             string str3 = !this.developmentBuild ? "lib/modules" : "lib/modules_development";
-            Dictionary<string, string> dictionary2 = GetSymbolArtifacts(Enumerable.ToArray<string>(GetDirectorySymbolArtifacts(Path.Combine(EmscriptenPaths.buildToolsDir, str3))));
+            Dictionary<string, string> dictionary2 = GetSymbolArtifacts(GetDirectorySymbolArtifacts(Path.Combine(EmscriptenPaths.buildToolsDir, str3)).ToArray<string>());
             Dictionary<string, int> sizes = new Dictionary<string, int>();
             Dictionary<string, int> dictionary4 = new Dictionary<string, int>();
             Dictionary<string, int> dictionary5 = new Dictionary<string, int>();
@@ -58,7 +58,7 @@
                 storey.functionSizes = GetFunctionSizesFromWast("Temp/StagingArea/Data/Native/build.wast", out num2, storey.minificationMap);
                 base.totalSize = (int) new FileInfo(this.builtCodePath).Length;
                 float num3 = ((float) base.totalSize) / ((float) num2);
-                foreach (string str6 in Enumerable.ToList<string>(storey.functionSizes.Keys))
+                foreach (string str6 in storey.functionSizes.Keys.ToList<string>())
                 {
                     storey.functionSizes[str6] = (int) (((float) storey.functionSizes[str6]) * num3);
                 }
@@ -239,7 +239,7 @@
             foreach (string str4 in directories)
             {
                 string[] textArray2 = new string[] { path, str4 };
-                first = Enumerable.Concat<string>(first, GetDirectorySymbolArtifacts(Paths.Combine(textArray2)));
+                first = first.Concat<string>(GetDirectorySymbolArtifacts(Paths.Combine(textArray2)));
             }
             return first;
         }
@@ -279,7 +279,7 @@
 
         private static void OutputSizes(Dictionary<string, int> sizes, int totalLines)
         {
-            List<KeyValuePair<string, int>> list = Enumerable.ToList<KeyValuePair<string, int>>(sizes);
+            List<KeyValuePair<string, int>> list = sizes.ToList<KeyValuePair<string, int>>();
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = (firstPair, nextPair) => nextPair.Value.CompareTo(firstPair.Value);
@@ -318,7 +318,7 @@
 
         private static void PrintSizesDictionary(Dictionary<string, int> sizes, int maxSize)
         {
-            List<KeyValuePair<string, int>> list = Enumerable.ToList<KeyValuePair<string, int>>(sizes);
+            List<KeyValuePair<string, int>> list = sizes.ToList<KeyValuePair<string, int>>();
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = (pair1, pair2) => pair2.Value.CompareTo(pair1.Value);
@@ -375,10 +375,8 @@
         {
             internal string firstSubdirectory;
 
-            internal string <>m__0(string path)
-            {
-                return Path.Combine(this.firstSubdirectory, Path.GetFileName(path));
-            }
+            internal string <>m__0(string path) => 
+                Path.Combine(this.firstSubdirectory, Path.GetFileName(path));
         }
     }
 }

@@ -170,19 +170,15 @@
         private static string GetSaveControllerPath(Selectable target)
         {
             string name = target.gameObject.name;
-            string message = string.Format("Create a new animator for the game object '{0}':", name);
+            string message = $"Create a new animator for the game object '{name}':";
             return EditorUtility.SaveFilePanelInProject("New Animation Contoller", name, "controller", message);
         }
 
-        private static Selectable.Transition GetTransition(SerializedProperty transition)
-        {
-            return (Selectable.Transition) transition.enumValueIndex;
-        }
+        private static Selectable.Transition GetTransition(SerializedProperty transition) => 
+            ((Selectable.Transition) transition.enumValueIndex);
 
-        private bool IsDerivedSelectableEditor()
-        {
-            return (base.GetType() != typeof(SelectableEditor));
-        }
+        private bool IsDerivedSelectableEditor() => 
+            (base.GetType() != typeof(SelectableEditor));
 
         /// <summary>
         /// <para>See MonoBehaviour.OnDisable.</para>
@@ -352,10 +348,8 @@
         {
             internal Transform transform;
 
-            internal bool <>m__0(Transform e)
-            {
-                return (e == this.transform);
-            }
+            internal bool <>m__0(Transform e) => 
+                (e == this.transform);
         }
     }
 }

@@ -62,13 +62,8 @@
             return item;
         }
 
-        public int Count
-        {
-            get
-            {
-                return this._cache.Count;
-            }
-        }
+        public int Count =>
+            this._cache.Count;
     }
 }
 

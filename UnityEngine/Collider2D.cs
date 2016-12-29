@@ -35,10 +35,8 @@
             return INTERNAL_CALL_Cast(this, ref direction, results, distance, ignoreSiblingColliders);
         }
 
-        public int Cast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("true")] bool ignoreSiblingColliders)
-        {
-            return INTERNAL_CALL_Cast(this, ref direction, results, distance, ignoreSiblingColliders);
-        }
+        public int Cast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("true")] bool ignoreSiblingColliders) => 
+            INTERNAL_CALL_Cast(this, ref direction, results, distance, ignoreSiblingColliders);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int INTERNAL_CALL_Cast(Collider2D self, ref Vector2 direction, RaycastHit2D[] results, float distance, bool ignoreSiblingColliders);
@@ -84,10 +82,8 @@
         /// <returns>
         /// <para>Does point overlap the collider?</para>
         /// </returns>
-        public bool OverlapPoint(Vector2 point)
-        {
-            return INTERNAL_CALL_OverlapPoint(this, ref point);
-        }
+        public bool OverlapPoint(Vector2 point) => 
+            INTERNAL_CALL_OverlapPoint(this, ref point);
 
         [ExcludeFromDocs]
         public int Raycast(Vector2 direction, RaycastHit2D[] results)
@@ -135,10 +131,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public int Raycast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("Physics2D.AllLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
-        }
+        public int Raycast(Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("Physics2D.AllLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_Raycast(this, ref direction, results, distance, layerMask, minDepth, maxDepth);
 
         /// <summary>
         /// <para>The Rigidbody2D attached to the Collider2D's GameObject.</para>

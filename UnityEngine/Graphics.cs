@@ -697,7 +697,7 @@
             }
             if (matrices.Count > kMaxDrawMeshInstanceCount)
             {
-                throw new ArgumentOutOfRangeException("matrices", string.Format("Matrix list count must be in the range of 0 to {0}.", kMaxDrawMeshInstanceCount));
+                throw new ArgumentOutOfRangeException("matrices", $"Matrix list count must be in the range of 0 to {kMaxDrawMeshInstanceCount}.");
             }
             if (matrices.Count > 0)
             {
@@ -749,7 +749,7 @@
             }
             if ((count < 0) || (count > Mathf.Min(kMaxDrawMeshInstanceCount, matrices.Length)))
             {
-                throw new ArgumentOutOfRangeException("count", string.Format("Count must be in the range of 0 to {0}.", Mathf.Min(kMaxDrawMeshInstanceCount, matrices.Length)));
+                throw new ArgumentOutOfRangeException("count", $"Count must be in the range of 0 to {Mathf.Min(kMaxDrawMeshInstanceCount, matrices.Length)}.");
             }
             if (count > 0)
             {
@@ -1336,31 +1336,16 @@
         public static GraphicsTier activeTier { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         [Obsolete("Property deviceName has been deprecated. Use SystemInfo.graphicsDeviceName instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceName", true), EditorBrowsable(EditorBrowsableState.Never)]
-        public static string deviceName
-        {
-            get
-            {
-                return SystemInfo.graphicsDeviceName;
-            }
-        }
+        public static string deviceName =>
+            SystemInfo.graphicsDeviceName;
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property deviceVendor has been deprecated. Use SystemInfo.graphicsDeviceVendor instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceVendor", true)]
-        public static string deviceVendor
-        {
-            get
-            {
-                return SystemInfo.graphicsDeviceVendor;
-            }
-        }
+        public static string deviceVendor =>
+            SystemInfo.graphicsDeviceVendor;
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property deviceVersion has been deprecated. Use SystemInfo.graphicsDeviceVersion instead (UnityUpgradable) -> UnityEngine.SystemInfo.graphicsDeviceVersion", true)]
-        public static string deviceVersion
-        {
-            get
-            {
-                return SystemInfo.graphicsDeviceVersion;
-            }
-        }
+        public static string deviceVersion =>
+            SystemInfo.graphicsDeviceVersion;
     }
 }
 

@@ -4,13 +4,8 @@
 
     public class WebGLRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "WebGL";
-            }
-        }
+        public override string Name =>
+            "WebGL";
     }
 }
 

@@ -135,7 +135,7 @@
                 return "";
             }
             Sprite target = base.target as Sprite;
-            return string.Format("({0}x{1})", (int) target.rect.width, (int) target.rect.height);
+            return $"({((int) target.rect.width)}x{((int) target.rect.height)})";
         }
 
         private SpriteMetaData GetMetaData(string name)
@@ -179,10 +179,8 @@
             return data;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.target != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.target != null);
 
         public override void OnInspectorGUI()
         {
@@ -210,7 +208,7 @@
             if (flag3)
             {
                 Vector4 border = this.GetMetaData(this.sprite.name).border;
-                EditorGUILayout.LabelField("Border", string.Format("L:{0} B:{1} R:{2} T:{3}", new object[] { border.x, border.y, border.z, border.w }), new GUILayoutOption[0]);
+                EditorGUILayout.LabelField("Border", $"L:{border.x} B:{border.y} R:{border.z} T:{border.w}", new GUILayoutOption[0]);
             }
             else
             {
@@ -293,13 +291,8 @@
             }
         }
 
-        private Sprite sprite
-        {
-            get
-            {
-                return (base.target as Sprite);
-            }
-        }
+        private Sprite sprite =>
+            (base.target as Sprite);
 
         private static class Styles
         {

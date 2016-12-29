@@ -17,23 +17,13 @@
         /// <summary>
         /// <para>The actual bytes of the memory dump.</para>
         /// </summary>
-        public byte[] bytes
-        {
-            get
-            {
-                return this.m_Bytes;
-            }
-        }
+        public byte[] bytes =>
+            this.m_Bytes;
         /// <summary>
         /// <para>The start address of this piece of memory.</para>
         /// </summary>
-        public ulong startAddress
-        {
-            get
-            {
-                return this.m_StartAddress;
-            }
-        }
+        public ulong startAddress =>
+            this.m_StartAddress;
     }
 }
 

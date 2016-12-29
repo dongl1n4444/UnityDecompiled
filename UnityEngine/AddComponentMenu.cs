@@ -32,24 +32,14 @@
             this.m_Ordering = order;
         }
 
-        public string componentMenu
-        {
-            get
-            {
-                return this.m_AddComponentMenu;
-            }
-        }
+        public string componentMenu =>
+            this.m_AddComponentMenu;
 
         /// <summary>
         /// <para>The order of the component in the component menu (lower is higher to the top).</para>
         /// </summary>
-        public int componentOrder
-        {
-            get
-            {
-                return this.m_Ordering;
-            }
-        }
+        public int componentOrder =>
+            this.m_Ordering;
     }
 }
 

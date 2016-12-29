@@ -4,17 +4,15 @@
     using System.IO;
     using System.Runtime.CompilerServices;
 
-    [CompilerGlobalScope, Extension]
+    [CompilerGlobalScope]
     public sealed class CodeFactoryModule
     {
         private CodeFactoryModule()
         {
         }
 
-        public static string ModuleNameFromFileName(string fname)
-        {
-            return Path.GetFileNameWithoutExtension(fname);
-        }
+        public static string ModuleNameFromFileName(string fname) => 
+            Path.GetFileNameWithoutExtension(fname);
     }
 }
 

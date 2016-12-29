@@ -28,10 +28,8 @@
             }
         }
 
-        public override int Count()
-        {
-            return this.m_Presets.Count;
-        }
+        public override int Count() => 
+            this.m_Presets.Count;
 
         public void DebugCreateTonsOfPresets()
         {
@@ -77,15 +75,11 @@
             }
         }
 
-        public override string GetName(int index)
-        {
-            return this.m_Presets[index].name;
-        }
+        public override string GetName(int index) => 
+            this.m_Presets[index].name;
 
-        public override object GetPreset(int index)
-        {
-            return this.m_Presets[index].gradient;
-        }
+        public override object GetPreset(int index) => 
+            this.m_Presets[index].gradient;
 
         public override void Move(int index, int destIndex, bool insertAfterDestIndex)
         {
@@ -136,10 +130,8 @@
 
             public Gradient gradient
             {
-                get
-                {
-                    return this.m_Gradient;
-                }
+                get => 
+                    this.m_Gradient;
                 set
                 {
                     this.m_Gradient = value;
@@ -148,10 +140,8 @@
 
             public string name
             {
-                get
-                {
-                    return this.m_Name;
-                }
+                get => 
+                    this.m_Name;
                 set
                 {
                     this.m_Name = value;

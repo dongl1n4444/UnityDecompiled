@@ -15,23 +15,13 @@
         /// <summary>
         /// <para>The identifier for the hand, controller, or user's voice.</para>
         /// </summary>
-        public uint id
-        {
-            get
-            {
-                return this.m_id;
-            }
-        }
+        public uint id =>
+            this.m_id;
         /// <summary>
         /// <para>The kind of the interaction source.</para>
         /// </summary>
-        public InteractionSourceKind kind
-        {
-            get
-            {
-                return this.m_kind;
-            }
-        }
+        public InteractionSourceKind kind =>
+            this.m_kind;
     }
 }
 

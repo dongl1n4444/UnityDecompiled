@@ -43,10 +43,8 @@
         /// <returns>
         /// <para>The first string of the pair is the store-specific product ID. The second is one of the mapped store names.</para>
         /// </returns>
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return this.m_Dic.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => 
+            this.m_Dic.GetEnumerator();
 
         internal string SpecificIDForStore(string store, string defaultValue)
         {
@@ -57,10 +55,8 @@
             return defaultValue;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.m_Dic.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.m_Dic.GetEnumerator();
     }
 }
 

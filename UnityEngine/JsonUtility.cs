@@ -8,10 +8,8 @@
     /// </summary>
     public static class JsonUtility
     {
-        public static T FromJson<T>(string json)
-        {
-            return (T) FromJson(json, typeof(T));
-        }
+        public static T FromJson<T>(string json) => 
+            ((T) FromJson(json, typeof(T)));
 
         /// <summary>
         /// <para>Create an object from its JSON representation.</para>
@@ -38,10 +36,8 @@
         /// <returns>
         /// <para>The object's data in JSON format.</para>
         /// </returns>
-        public static string ToJson(object obj)
-        {
-            return ToJson(obj, false);
-        }
+        public static string ToJson(object obj) => 
+            ToJson(obj, false);
 
         /// <summary>
         /// <para>Generate a JSON representation of the public fields of an object.</para>

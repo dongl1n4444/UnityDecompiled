@@ -20,18 +20,11 @@
         public PackageVersion UnityVersion;
         public PackageVersion Version;
 
-        public IvyInfo Clone()
-        {
-            return Cloner.CloneObject<IvyInfo>(this);
-        }
+        public IvyInfo Clone() => 
+            Cloner.CloneObject<IvyInfo>(this);
 
-        public string FullName
-        {
-            get
-            {
-                return string.Format("{0}.{1}.{2}", this.Organisation, this.Module, this.Version);
-            }
-        }
+        public string FullName =>
+            $"{this.Organisation}.{this.Module}.{this.Version}";
 
         public List<IvyRepository> Repositories
         {

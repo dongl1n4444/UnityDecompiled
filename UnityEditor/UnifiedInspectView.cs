@@ -66,10 +66,8 @@
             throw new NotImplementedException("Unhandled InstructionType");
         }
 
-        protected override int GetInstructionCount()
-        {
-            return this.m_Instructions.Count;
-        }
+        protected override int GetInstructionCount() => 
+            this.m_Instructions.Count;
 
         internal override string GetInstructionListName(int index)
         {

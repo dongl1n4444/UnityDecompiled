@@ -13,23 +13,13 @@
         /// <summary>
         /// <para>Animation clip that is played.</para>
         /// </summary>
-        public AnimationClip clip
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public AnimationClip clip =>
+            null;
         /// <summary>
         /// <para>The weight of the animation clip.</para>
         /// </summary>
-        public float weight
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public float weight =>
+            0f;
     }
 }
 

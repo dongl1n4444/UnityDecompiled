@@ -16,10 +16,8 @@
             return ContainerWindow.FitRectToScreen(rect, true, true);
         }
 
-        public static Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize, ContainerWindow popupContainerWindow)
-        {
-            return GetDropDownRect(buttonRect, minSize, maxSize, popupContainerWindow, null);
-        }
+        public static Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize, ContainerWindow popupContainerWindow) => 
+            GetDropDownRect(buttonRect, minSize, maxSize, popupContainerWindow, null);
 
         public static Rect GetDropDownRect(Rect buttonRect, Vector2 minSize, Vector2 maxSize, ContainerWindow popupContainerWindow, PopupLocation[] locationPriorityOrder)
         {

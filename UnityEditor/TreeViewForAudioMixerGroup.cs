@@ -169,10 +169,8 @@
                 return new Vector2(1f, rect.yMax);
             }
 
-            private bool IsController(TreeViewItem item)
-            {
-                return ((item.parent == base.m_TreeView.data.root) && (item.id != TreeViewForAudioMixerGroup.kNoneItemID));
-            }
+            private bool IsController(TreeViewItem item) => 
+                ((item.parent == base.m_TreeView.data.root) && (item.id != TreeViewForAudioMixerGroup.kNoneItemID));
 
             public override void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused)
             {
@@ -236,10 +234,8 @@
                 return item;
             }
 
-            public override bool CanBeMultiSelected(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool CanBeMultiSelected(TreeViewItem item) => 
+                false;
 
             public override void FetchData()
             {
@@ -275,10 +271,8 @@
                 base.m_NeedRefreshRows = true;
             }
 
-            public override bool IsRenamingItemAllowed(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+                false;
 
             private bool ShouldShowController(AudioMixerController controller, List<int> allowedInstanceIDs)
             {

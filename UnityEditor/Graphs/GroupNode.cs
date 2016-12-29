@@ -224,29 +224,14 @@
             base.WakeUp(owner);
         }
 
-        internal ProxyNode ProxyInNode
-        {
-            get
-            {
-                return this.m_ProxyInNode;
-            }
-        }
+        internal ProxyNode ProxyInNode =>
+            this.m_ProxyInNode;
 
-        internal ProxyNode ProxyOutNode
-        {
-            get
-            {
-                return this.m_ProxyOutNode;
-            }
-        }
+        internal ProxyNode ProxyOutNode =>
+            this.m_ProxyOutNode;
 
-        public Graph subGraph
-        {
-            get
-            {
-                return this.m_SubGraph;
-            }
-        }
+        public Graph subGraph =>
+            this.m_SubGraph;
     }
 }
 

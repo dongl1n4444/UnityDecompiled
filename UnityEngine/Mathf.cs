@@ -87,92 +87,72 @@
         /// <returns>
         /// <para>The return value between -1 and +1.</para>
         /// </returns>
-        public static float Sin(float f)
-        {
-            return (float) Math.Sin((double) f);
-        }
+        public static float Sin(float f) => 
+            ((float) Math.Sin((double) f));
 
         /// <summary>
         /// <para>Returns the cosine of angle f in radians.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Cos(float f)
-        {
-            return (float) Math.Cos((double) f);
-        }
+        public static float Cos(float f) => 
+            ((float) Math.Cos((double) f));
 
         /// <summary>
         /// <para>Returns the tangent of angle f in radians.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Tan(float f)
-        {
-            return (float) Math.Tan((double) f);
-        }
+        public static float Tan(float f) => 
+            ((float) Math.Tan((double) f));
 
         /// <summary>
         /// <para>Returns the arc-sine of f - the angle in radians whose sine is f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Asin(float f)
-        {
-            return (float) Math.Asin((double) f);
-        }
+        public static float Asin(float f) => 
+            ((float) Math.Asin((double) f));
 
         /// <summary>
         /// <para>Returns the arc-cosine of f - the angle in radians whose cosine is f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Acos(float f)
-        {
-            return (float) Math.Acos((double) f);
-        }
+        public static float Acos(float f) => 
+            ((float) Math.Acos((double) f));
 
         /// <summary>
         /// <para>Returns the arc-tangent of f - the angle in radians whose tangent is f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Atan(float f)
-        {
-            return (float) Math.Atan((double) f);
-        }
+        public static float Atan(float f) => 
+            ((float) Math.Atan((double) f));
 
         /// <summary>
         /// <para>Returns the angle in radians whose Tan is y/x.</para>
         /// </summary>
         /// <param name="y"></param>
         /// <param name="x"></param>
-        public static float Atan2(float y, float x)
-        {
-            return (float) Math.Atan2((double) y, (double) x);
-        }
+        public static float Atan2(float y, float x) => 
+            ((float) Math.Atan2((double) y, (double) x));
 
         /// <summary>
         /// <para>Returns square root of f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Sqrt(float f)
-        {
-            return (float) Math.Sqrt((double) f);
-        }
+        public static float Sqrt(float f) => 
+            ((float) Math.Sqrt((double) f));
 
         /// <summary>
         /// <para>Returns the absolute value of f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Abs(float f)
-        {
-            return Math.Abs(f);
-        }
+        public static float Abs(float f) => 
+            Math.Abs(f);
 
         /// <summary>
         /// <para>Returns the absolute value of value.</para>
         /// </summary>
         /// <param name="value"></param>
-        public static int Abs(int value)
-        {
-            return Math.Abs(value);
-        }
+        public static int Abs(int value) => 
+            Math.Abs(value);
 
         /// <summary>
         /// <para>Returns the smallest of two or more values.</para>
@@ -180,10 +160,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="values"></param>
-        public static float Min(float a, float b)
-        {
-            return ((a >= b) ? b : a);
-        }
+        public static float Min(float a, float b) => 
+            ((a >= b) ? b : a);
 
         /// <summary>
         /// <para>Returns the smallest of two or more values.</para>
@@ -215,10 +193,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="values"></param>
-        public static int Min(int a, int b)
-        {
-            return ((a >= b) ? b : a);
-        }
+        public static int Min(int a, int b) => 
+            ((a >= b) ? b : a);
 
         /// <summary>
         /// <para>Returns the smallest of two or more values.</para>
@@ -250,10 +226,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="values"></param>
-        public static float Max(float a, float b)
-        {
-            return ((a <= b) ? b : a);
-        }
+        public static float Max(float a, float b) => 
+            ((a <= b) ? b : a);
 
         /// <summary>
         /// <para>Returns largest of two or more values.</para>
@@ -285,10 +259,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="values"></param>
-        public static int Max(int a, int b)
-        {
-            return ((a <= b) ? b : a);
-        }
+        public static int Max(int a, int b) => 
+            ((a <= b) ? b : a);
 
         /// <summary>
         /// <para>Returns the largest of two or more values.</para>
@@ -319,110 +291,86 @@
         /// </summary>
         /// <param name="f"></param>
         /// <param name="p"></param>
-        public static float Pow(float f, float p)
-        {
-            return (float) Math.Pow((double) f, (double) p);
-        }
+        public static float Pow(float f, float p) => 
+            ((float) Math.Pow((double) f, (double) p));
 
         /// <summary>
         /// <para>Returns e raised to the specified power.</para>
         /// </summary>
         /// <param name="power"></param>
-        public static float Exp(float power)
-        {
-            return (float) Math.Exp((double) power);
-        }
+        public static float Exp(float power) => 
+            ((float) Math.Exp((double) power));
 
         /// <summary>
         /// <para>Returns the logarithm of a specified number in a specified base.</para>
         /// </summary>
         /// <param name="f"></param>
         /// <param name="p"></param>
-        public static float Log(float f, float p)
-        {
-            return (float) Math.Log((double) f, (double) p);
-        }
+        public static float Log(float f, float p) => 
+            ((float) Math.Log((double) f, (double) p));
 
         /// <summary>
         /// <para>Returns the natural (base e) logarithm of a specified number.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Log(float f)
-        {
-            return (float) Math.Log((double) f);
-        }
+        public static float Log(float f) => 
+            ((float) Math.Log((double) f));
 
         /// <summary>
         /// <para>Returns the base 10 logarithm of a specified number.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Log10(float f)
-        {
-            return (float) Math.Log10((double) f);
-        }
+        public static float Log10(float f) => 
+            ((float) Math.Log10((double) f));
 
         /// <summary>
         /// <para>Returns the smallest integer greater to or equal to f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Ceil(float f)
-        {
-            return (float) Math.Ceiling((double) f);
-        }
+        public static float Ceil(float f) => 
+            ((float) Math.Ceiling((double) f));
 
         /// <summary>
         /// <para>Returns the largest integer smaller to or equal to f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Floor(float f)
-        {
-            return (float) Math.Floor((double) f);
-        }
+        public static float Floor(float f) => 
+            ((float) Math.Floor((double) f));
 
         /// <summary>
         /// <para>Returns f rounded to the nearest integer.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Round(float f)
-        {
-            return (float) Math.Round((double) f);
-        }
+        public static float Round(float f) => 
+            ((float) Math.Round((double) f));
 
         /// <summary>
         /// <para>Returns the smallest integer greater to or equal to f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static int CeilToInt(float f)
-        {
-            return (int) Math.Ceiling((double) f);
-        }
+        public static int CeilToInt(float f) => 
+            ((int) Math.Ceiling((double) f));
 
         /// <summary>
         /// <para>Returns the largest integer smaller to or equal to f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static int FloorToInt(float f)
-        {
-            return (int) Math.Floor((double) f);
-        }
+        public static int FloorToInt(float f) => 
+            ((int) Math.Floor((double) f));
 
         /// <summary>
         /// <para>Returns f rounded to the nearest integer.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static int RoundToInt(float f)
-        {
-            return (int) Math.Round((double) f);
-        }
+        public static int RoundToInt(float f) => 
+            ((int) Math.Round((double) f));
 
         /// <summary>
         /// <para>Returns the sign of f.</para>
         /// </summary>
         /// <param name="f"></param>
-        public static float Sign(float f)
-        {
-            return ((f < 0f) ? -1f : 1f);
-        }
+        public static float Sign(float f) => 
+            ((f < 0f) ? -1f : 1f);
 
         /// <summary>
         /// <para>Clamps a value between a minimum float and maximum float value.</para>
@@ -490,10 +438,8 @@
         /// <returns>
         /// <para>The interpolated float result between the two float values.</para>
         /// </returns>
-        public static float Lerp(float a, float b, float t)
-        {
-            return (a + ((b - a) * Clamp01(t)));
-        }
+        public static float Lerp(float a, float b, float t) => 
+            (a + ((b - a) * Clamp01(t)));
 
         /// <summary>
         /// <para>Linearly interpolates between a and b by t with no limit to t.</para>
@@ -504,10 +450,8 @@
         /// <returns>
         /// <para>The float value as a result from the linear interpolation.</para>
         /// </returns>
-        public static float LerpUnclamped(float a, float b, float t)
-        {
-            return (a + ((b - a) * t));
-        }
+        public static float LerpUnclamped(float a, float b, float t) => 
+            (a + ((b - a) * t));
 
         /// <summary>
         /// <para>Same as Lerp but makes sure the values interpolate correctly when they wrap around 360 degrees.</para>
@@ -591,10 +535,8 @@
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static bool Approximately(float a, float b)
-        {
-            return (Abs((float) (b - a)) < Max((float) (1E-06f * Max(Abs(a), Abs(b))), (float) (Epsilon * 8f)));
-        }
+        public static bool Approximately(float a, float b) => 
+            (Abs((float) (b - a)) < Max((float) (1E-06f * Max(Abs(a), Abs(b))), (float) (Epsilon * 8f)));
 
         [ExcludeFromDocs]
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
@@ -659,10 +601,8 @@
         /// </summary>
         /// <param name="t"></param>
         /// <param name="length"></param>
-        public static float Repeat(float t, float length)
-        {
-            return (t - (Floor(t / length) * length));
-        }
+        public static float Repeat(float t, float length) => 
+            (t - (Floor(t / length) * length));
 
         /// <summary>
         /// <para>PingPongs the value t, so that it is never larger than length and never smaller than 0.</para>

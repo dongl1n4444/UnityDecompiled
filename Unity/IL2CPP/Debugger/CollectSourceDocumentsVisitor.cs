@@ -29,13 +29,8 @@
             }
         }
 
-        public HashSet<string> Documents
-        {
-            get
-            {
-                return this._documents;
-            }
-        }
+        public HashSet<string> Documents =>
+            this._documents;
     }
 }
 

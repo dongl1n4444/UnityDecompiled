@@ -245,7 +245,7 @@
             {
                 s_PropertyFieldTempContent.tooltip = tooltip;
             }
-            s_PropertyFieldTempContent.image = (label != null) ? label.image : null;
+            s_PropertyFieldTempContent.image = label?.image;
             if (Event.current.alt && (property.serializedObject.inspectorMode != InspectorMode.Normal))
             {
                 string propertyPath = property.propertyPath;
@@ -278,15 +278,11 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Bounds BoundsField(Rect position, Bounds value)
-        {
-            return BoundsFieldNoIndent(IndentedRect(position), value, false);
-        }
+        public static Bounds BoundsField(Rect position, Bounds value) => 
+            BoundsFieldNoIndent(IndentedRect(position), value, false);
 
-        public static Bounds BoundsField(Rect position, string label, Bounds value)
-        {
-            return BoundsField(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static Bounds BoundsField(Rect position, string label, Bounds value) => 
+            BoundsField(position, EditorGUIUtility.TempContent(label), value);
 
         private static void BoundsField(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -345,10 +341,8 @@
             return value;
         }
 
-        internal static bool Button(Rect position, GUIContent content)
-        {
-            return Button(position, content, EditorStyles.miniButton);
-        }
+        internal static bool Button(Rect position, GUIContent content) => 
+            Button(position, content, EditorStyles.miniButton);
 
         internal static bool Button(Rect position, GUIContent content, GUIStyle style)
         {
@@ -398,15 +392,11 @@
             return false;
         }
 
-        internal static bool ButtonMouseDown(Rect position, GUIContent content, FocusType focusType, GUIStyle style)
-        {
-            return ButtonMouseDown(GUIUtility.GetControlID(s_ButtonMouseDownHash, focusType, position), position, content, style);
-        }
+        internal static bool ButtonMouseDown(Rect position, GUIContent content, FocusType focusType, GUIStyle style) => 
+            ButtonMouseDown(GUIUtility.GetControlID(s_ButtonMouseDownHash, focusType, position), position, content, style);
 
-        internal static bool ButtonWithDropdownList(string buttonName, string[] buttonNames, GenericMenu.MenuFunction2 callback, params GUILayoutOption[] options)
-        {
-            return ButtonWithDropdownList(EditorGUIUtility.TempContent(buttonName), buttonNames, callback, options);
-        }
+        internal static bool ButtonWithDropdownList(string buttonName, string[] buttonNames, GenericMenu.MenuFunction2 callback, params GUILayoutOption[] options) => 
+            ButtonWithDropdownList(EditorGUIUtility.TempContent(buttonName), buttonNames, callback, options);
 
         internal static bool ButtonWithDropdownList(GUIContent content, string[] buttonNames, GenericMenu.MenuFunction2 callback, params GUILayoutOption[] options)
         {
@@ -468,10 +458,8 @@
             return (Math.Max(1.0, Math.Pow(Math.Abs(value), 0.5)) * 0.029999999329447746);
         }
 
-        private static long CalculateIntDragSensitivity(long value)
-        {
-            return (long) Math.Max((double) 1.0, (double) (Math.Pow(Math.Abs((double) value), 0.5) * 0.029999999329447746));
-        }
+        private static long CalculateIntDragSensitivity(long value) => 
+            ((long) Math.Max((double) 1.0, (double) (Math.Pow(Math.Abs((double) value), 0.5) * 0.029999999329447746)));
 
         internal static bool CheckForCrossSceneReferencing(Object obj1, Object obj2)
         {
@@ -504,10 +492,8 @@
             ScriptAttributeUtility.s_DrawerStack.Clear();
         }
 
-        internal static Color ColorBrightnessField(Rect r, GUIContent label, Color value, float minBrightness, float maxBrightness)
-        {
-            return ColorBrightnessFieldInternal(r, label, value, minBrightness, maxBrightness, EditorStyles.numberField);
-        }
+        internal static Color ColorBrightnessField(Rect r, GUIContent label, Color value, float minBrightness, float maxBrightness) => 
+            ColorBrightnessFieldInternal(r, label, value, minBrightness, maxBrightness, EditorStyles.numberField);
 
         internal static Color ColorBrightnessFieldInternal(Rect position, GUIContent label, Color value, float minBrightness, float maxBrightness, GUIStyle style)
         {
@@ -549,10 +535,8 @@
         /// <returns>
         /// <para>The color selected by the user.</para>
         /// </returns>
-        public static Color ColorField(Rect position, string label, Color value)
-        {
-            return ColorField(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static Color ColorField(Rect position, string label, Color value) => 
+            ColorField(position, EditorGUIUtility.TempContent(label), value);
 
         /// <summary>
         /// <para>Make a field for selecting a Color.</para>
@@ -613,7 +597,7 @@
             switch (typeForControl)
             {
                 case EventType.KeyDown:
-                    if (EditorExtensionMethods.MainActionKeyForControl(current, id))
+                    if (current.MainActionKeyForControl(id))
                     {
                         current.Use();
                         showMixedValue = false;
@@ -692,10 +676,8 @@
         /// <returns>
         /// <para>The curve edited by the user.</para>
         /// </returns>
-        public static AnimationCurve CurveField(Rect position, string label, AnimationCurve value)
-        {
-            return CurveField(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static AnimationCurve CurveField(Rect position, string label, AnimationCurve value) => 
+            CurveField(position, EditorGUIUtility.TempContent(label), value);
 
         /// <summary>
         /// <para>Make a field for editing an AnimationCurve.</para>
@@ -755,10 +737,8 @@
         /// <returns>
         /// <para>The curve edited by the user.</para>
         /// </returns>
-        public static AnimationCurve CurveField(Rect position, string label, AnimationCurve value, Color color, Rect ranges)
-        {
-            return CurveField(position, EditorGUIUtility.TempContent(label), value, color, ranges);
-        }
+        public static AnimationCurve CurveField(Rect position, string label, AnimationCurve value, Color color, Rect ranges) => 
+            CurveField(position, EditorGUIUtility.TempContent(label), value, color, ranges);
 
         /// <summary>
         /// <para>Make a field for editing an AnimationCurve.</para>
@@ -1041,10 +1021,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the double field.</para>
         /// </returns>
-        public static double DelayedDoubleField(Rect position, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedDoubleFieldInternal(position, null, value, style);
-        }
+        public static double DelayedDoubleField(Rect position, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedDoubleFieldInternal(position, null, value, style);
 
         [ExcludeFromDocs]
         public static double DelayedDoubleField(Rect position, string label, double value)
@@ -1070,10 +1048,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the double field.</para>
         /// </returns>
-        public static double DelayedDoubleField(Rect position, string label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedDoubleField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static double DelayedDoubleField(Rect position, string label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedDoubleField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a delayed text field for entering doubles.</para>
@@ -1085,10 +1061,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the double field.</para>
         /// </returns>
-        public static double DelayedDoubleField(Rect position, GUIContent label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedDoubleFieldInternal(position, label, value, style);
-        }
+        public static double DelayedDoubleField(Rect position, GUIContent label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedDoubleFieldInternal(position, label, value, style);
 
         internal static double DelayedDoubleFieldInternal(Rect position, GUIContent label, double value, GUIStyle style)
         {
@@ -1132,10 +1106,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the float field.</para>
         /// </returns>
-        public static float DelayedFloatField(Rect position, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedFloatField(position, GUIContent.none, value, style);
-        }
+        public static float DelayedFloatField(Rect position, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedFloatField(position, GUIContent.none, value, style);
 
         [ExcludeFromDocs]
         public static float DelayedFloatField(Rect position, string label, float value)
@@ -1172,10 +1144,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the float field.</para>
         /// </returns>
-        public static float DelayedFloatField(Rect position, string label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedFloatField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static float DelayedFloatField(Rect position, string label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedFloatField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a delayed text field for entering floats.</para>
@@ -1187,10 +1157,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the float field.</para>
         /// </returns>
-        public static float DelayedFloatField(Rect position, GUIContent label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedFloatFieldInternal(position, label, value, style);
-        }
+        public static float DelayedFloatField(Rect position, GUIContent label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedFloatFieldInternal(position, label, value, style);
 
         internal static void DelayedFloatFieldInternal(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -1243,10 +1211,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the int field.</para>
         /// </returns>
-        public static int DelayedIntField(Rect position, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedIntField(position, GUIContent.none, value, style);
-        }
+        public static int DelayedIntField(Rect position, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedIntField(position, GUIContent.none, value, style);
 
         [ExcludeFromDocs]
         public static int DelayedIntField(Rect position, string label, int value)
@@ -1283,10 +1249,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the int field.</para>
         /// </returns>
-        public static int DelayedIntField(Rect position, string label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedIntField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static int DelayedIntField(Rect position, string label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedIntField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a delayed text field for entering integers.</para>
@@ -1298,10 +1262,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the int field.</para>
         /// </returns>
-        public static int DelayedIntField(Rect position, GUIContent label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DelayedIntFieldInternal(position, label, value, style);
-        }
+        public static int DelayedIntField(Rect position, GUIContent label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DelayedIntFieldInternal(position, label, value, style);
 
         internal static void DelayedIntFieldInternal(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -1361,10 +1323,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the text field.</para>
         /// </returns>
-        public static string DelayedTextField(Rect position, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return DelayedTextField(position, GUIContent.none, text, style);
-        }
+        public static string DelayedTextField(Rect position, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            DelayedTextField(position, GUIContent.none, text, style);
 
         /// <summary>
         /// <para>Make a delayed text field.</para>
@@ -1402,10 +1362,8 @@
         /// <returns>
         /// <para>The value entered by the user. Note that the return value will not change until the user has pressed enter or focus is moved away from the text field.</para>
         /// </returns>
-        public static string DelayedTextField(Rect position, string label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return DelayedTextField(position, EditorGUIUtility.TempContent(label), text, style);
-        }
+        public static string DelayedTextField(Rect position, string label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            DelayedTextField(position, EditorGUIUtility.TempContent(label), text, style);
 
         /// <summary>
         /// <para>Make a delayed text field.</para>
@@ -1423,15 +1381,11 @@
             return DelayedTextFieldInternal(position, id, label, text, null, style);
         }
 
-        public static string DelayedTextField(Rect position, int controlId, GUIContent label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return DelayedTextFieldInternal(position, controlId, label, text, null, style);
-        }
+        public static string DelayedTextField(Rect position, int controlId, GUIContent label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            DelayedTextFieldInternal(position, controlId, label, text, null, style);
 
-        internal static string DelayedTextFieldDropDown(Rect position, string text, string[] dropDownElement)
-        {
-            return DelayedTextFieldDropDown(position, GUIContent.none, text, dropDownElement);
-        }
+        internal static string DelayedTextFieldDropDown(Rect position, string text, string[] dropDownElement) => 
+            DelayedTextFieldDropDown(position, GUIContent.none, text, dropDownElement);
 
         internal static string DelayedTextFieldDropDown(Rect position, GUIContent label, string text, string[] dropDownElement)
         {
@@ -1590,7 +1544,7 @@
             switch (typeForControl)
             {
                 case EventType.KeyDown:
-                    if (EditorExtensionMethods.MainActionKeyForControl(current, id))
+                    if (current.MainActionKeyForControl(id))
                     {
                         Event.current.Use();
                         showMixedValue = false;
@@ -1801,7 +1755,7 @@
             switch (current.GetTypeForControl(id))
             {
                 case EventType.KeyDown:
-                    if (EditorExtensionMethods.MainActionKeyForControl(current, id))
+                    if (current.MainActionKeyForControl(id))
                     {
                         s_CurveID = id;
                         SetCurveEditorWindowCurve(value, property, color);
@@ -1867,10 +1821,8 @@
             return value;
         }
 
-        internal static double DoDoubleField(RecycledTextEditor editor, Rect position, Rect dragHotZone, int id, double value, string formatString, GUIStyle style, bool draggable)
-        {
-            return DoDoubleField(editor, position, dragHotZone, id, value, formatString, style, draggable, (Event.current.GetTypeForControl(id) != EventType.MouseDown) ? 0.0 : CalculateFloatDragSensitivity(s_DragStartValue));
-        }
+        internal static double DoDoubleField(RecycledTextEditor editor, Rect position, Rect dragHotZone, int id, double value, string formatString, GUIStyle style, bool draggable) => 
+            DoDoubleField(editor, position, dragHotZone, id, value, formatString, style, draggable, (Event.current.GetTypeForControl(id) != EventType.MouseDown) ? 0.0 : CalculateFloatDragSensitivity(s_DragStartValue));
 
         internal static double DoDoubleField(RecycledTextEditor editor, Rect position, Rect dragHotZone, int id, double value, string formatString, GUIStyle style, bool draggable, double dragSensitivity)
         {
@@ -1958,15 +1910,13 @@
             {
                 <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <DoEnumMaskField>m__4);
             }
-            string[] flagNames = Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache4));
+            string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache4).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(PrefixLabel(position, controlID, label), controlID, Convert.ToInt32(enumValue), flagNames, style, out changedFlags, out changedToValue);
             return EnumFlagsToInt(type, num2);
         }
 
-        internal static float DoFloatField(RecycledTextEditor editor, Rect position, Rect dragHotZone, int id, float value, string formatString, GUIStyle style, bool draggable)
-        {
-            return DoFloatField(editor, position, dragHotZone, id, value, formatString, style, draggable, (Event.current.GetTypeForControl(id) != EventType.MouseDown) ? 0f : ((float) CalculateFloatDragSensitivity(s_DragStartValue)));
-        }
+        internal static float DoFloatField(RecycledTextEditor editor, Rect position, Rect dragHotZone, int id, float value, string formatString, GUIStyle style, bool draggable) => 
+            DoFloatField(editor, position, dragHotZone, id, value, formatString, style, draggable, (Event.current.GetTypeForControl(id) != EventType.MouseDown) ? 0f : ((float) CalculateFloatDragSensitivity(s_DragStartValue)));
 
         internal static float DoFloatField(RecycledTextEditor editor, Rect position, Rect dragHotZone, int id, float value, string formatString, GUIStyle style, bool draggable, float dragSensitivity)
         {
@@ -2374,10 +2324,8 @@
             }
         }
 
-        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects)
-        {
-            return DoObjectField(position, dropRect, id, obj, objType, property, validator, allowSceneObjects, EditorStyles.objectField);
-        }
+        internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects) => 
+            DoObjectField(position, dropRect, id, obj, objType, property, validator, allowSceneObjects, EditorStyles.objectField);
 
         internal static Object DoObjectField(Rect position, Rect dropRect, int id, Object obj, Type objType, SerializedProperty property, ObjectFieldValidator validator, bool allowSceneObjects, GUIStyle style)
         {
@@ -2435,7 +2383,7 @@
                             GUI.changed = true;
                             current.Use();
                         }
-                        if (EditorExtensionMethods.MainActionKeyForControl(current, id))
+                        if (current.MainActionKeyForControl(id))
                         {
                             ObjectSelector.get.Show(obj, objType, property, allowSceneObjects);
                             ObjectSelector.get.objectSelectorID = id;
@@ -2464,7 +2412,7 @@
                                     }
                                     else
                                     {
-                                        content.text = content.text + string.Format(" ({0})", GetGameObjectFromObject(obj).scene.name);
+                                        content.text = content.text + $" ({GetGameObjectFromObject(obj).scene.name})";
                                     }
                                 }
                                 else if (validator(references, objType, property) == null)
@@ -2827,7 +2775,7 @@
             {
                 if (type != EventType.MouseDown)
                 {
-                    if ((type == EventType.KeyDown) && EditorExtensionMethods.MainActionKeyForControl(current, controlID))
+                    if ((type == EventType.KeyDown) && current.MainActionKeyForControl(controlID))
                     {
                         if (Application.platform == RuntimePlatform.OSXEditor)
                         {
@@ -2948,10 +2896,8 @@
             s_PendingPropertyKeyboardHandling = null;
         }
 
-        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString)
-        {
-            return DoSlider(position, dragZonePosition, id, value, left, right, formatString, 1f);
-        }
+        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString) => 
+            DoSlider(position, dragZonePosition, id, value, left, right, formatString, 1f);
 
         private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power)
         {
@@ -3468,10 +3414,8 @@
             return text;
         }
 
-        internal static bool DoToggle(Rect position, int id, bool value, GUIContent content, GUIStyle style)
-        {
-            return EditorGUIInternal.DoToggleForward(position, id, value, content, style);
-        }
+        internal static bool DoToggle(Rect position, int id, bool value, GUIContent content, GUIStyle style) => 
+            EditorGUIInternal.DoToggleForward(position, id, value, content, style);
 
         internal static void DoTwoLabels(Rect rect, GUIContent leftLabel, GUIContent rightLabel, GUIStyle labelStyle)
         {
@@ -3503,10 +3447,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static double DoubleField(Rect position, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DoubleFieldInternal(position, value, style);
-        }
+        public static double DoubleField(Rect position, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DoubleFieldInternal(position, value, style);
 
         [ExcludeFromDocs]
         public static double DoubleField(Rect position, string label, double value)
@@ -3532,10 +3474,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static double DoubleField(Rect position, string label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DoubleField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static double DoubleField(Rect position, string label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DoubleField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a text field for entering doubles.</para>
@@ -3547,10 +3487,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static double DoubleField(Rect position, GUIContent label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return DoubleFieldInternal(position, label, value, style);
-        }
+        public static double DoubleField(Rect position, GUIContent label, double value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            DoubleFieldInternal(position, label, value, style);
 
         internal static double DoubleFieldInternal(Rect position, double value, GUIStyle style)
         {
@@ -4142,10 +4080,8 @@
             }
         }
 
-        private static Enum EnumFlagsToInt(Type type, int value)
-        {
-            return (Enum.Parse(type, value.ToString()) as Enum);
-        }
+        private static Enum EnumFlagsToInt(Type type, int value) => 
+            (Enum.Parse(type, value.ToString()) as Enum);
 
         /// <summary>
         /// <para>Make a field for enum based masks.</para>
@@ -4174,10 +4110,8 @@
         /// <returns>
         /// <para>The value modified by the user.</para>
         /// </returns>
-        public static Enum EnumMaskField(Rect position, Enum enumValue, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumMaskFieldInternal(position, enumValue, style);
-        }
+        public static Enum EnumMaskField(Rect position, Enum enumValue, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumMaskFieldInternal(position, enumValue, style);
 
         /// <summary>
         /// <para>Make a field for enum based masks.</para>
@@ -4223,10 +4157,8 @@
         /// <returns>
         /// <para>The value modified by the user.</para>
         /// </returns>
-        public static Enum EnumMaskField(Rect position, string label, Enum enumValue, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumMaskFieldInternal(position, EditorGUIUtility.TempContent(label), enumValue, style);
-        }
+        public static Enum EnumMaskField(Rect position, string label, Enum enumValue, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumMaskFieldInternal(position, EditorGUIUtility.TempContent(label), enumValue, style);
 
         /// <summary>
         /// <para>Make a field for enum based masks.</para>
@@ -4238,20 +4170,14 @@
         /// <returns>
         /// <para>The value modified by the user.</para>
         /// </returns>
-        public static Enum EnumMaskField(Rect position, GUIContent label, Enum enumValue, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumMaskFieldInternal(position, label, enumValue, style);
-        }
+        public static Enum EnumMaskField(Rect position, GUIContent label, Enum enumValue, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumMaskFieldInternal(position, label, enumValue, style);
 
-        internal static Enum EnumMaskField(Rect position, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue)
-        {
-            return DoEnumMaskField(position, GUIContent.none, enumValue, style, out changedFlags, out changedToValue);
-        }
+        internal static Enum EnumMaskField(Rect position, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue) => 
+            DoEnumMaskField(position, GUIContent.none, enumValue, style, out changedFlags, out changedToValue);
 
-        internal static Enum EnumMaskField(Rect position, GUIContent label, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue)
-        {
-            return DoEnumMaskField(position, label, enumValue, style, out changedFlags, out changedToValue);
-        }
+        internal static Enum EnumMaskField(Rect position, GUIContent label, Enum enumValue, GUIStyle style, out int changedFlags, out bool changedToValue) => 
+            DoEnumMaskField(position, label, enumValue, style, out changedFlags, out changedToValue);
 
         internal static Enum EnumMaskFieldInternal(Rect position, Enum enumValue, GUIStyle style)
         {
@@ -4264,7 +4190,7 @@
             {
                 <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__3);
             }
-            string[] flagNames = Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache3));
+            string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache3).ToArray<string>();
             int num = MaskFieldGUI.DoMaskField(IndentedRect(position), GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position), Convert.ToInt32(enumValue), flagNames, style);
             return EnumFlagsToInt(type, num);
         }
@@ -4283,7 +4209,7 @@
             {
                 <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__2);
             }
-            string[] flagNames = Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache2));
+            string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache2).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(rect, id, Convert.ToInt32(enumValue), flagNames, style);
             return EnumFlagsToInt(type, num2);
         }
@@ -4350,20 +4276,14 @@
             return EnumMaskPopup(position, label, selected, out changedFlags, out changedToValue, popup);
         }
 
-        internal static Enum EnumMaskPopup(Rect position, string label, Enum selected, out int changedFlags, out bool changedToValue, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumMaskPopup(position, EditorGUIUtility.TempContent(label), selected, out changedFlags, out changedToValue, style);
-        }
+        internal static Enum EnumMaskPopup(Rect position, string label, Enum selected, out int changedFlags, out bool changedToValue, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumMaskPopup(position, EditorGUIUtility.TempContent(label), selected, out changedFlags, out changedToValue, style);
 
-        internal static Enum EnumMaskPopup(Rect position, GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumMaskPopupInternal(position, label, selected, out changedFlags, out changedToValue, style);
-        }
+        internal static Enum EnumMaskPopup(Rect position, GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumMaskPopupInternal(position, label, selected, out changedFlags, out changedToValue, style);
 
-        private static Enum EnumMaskPopupInternal(Rect position, GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, GUIStyle style)
-        {
-            return EnumMaskField(position, label, selected, style, out changedFlags, out changedToValue);
-        }
+        private static Enum EnumMaskPopupInternal(Rect position, GUIContent label, Enum selected, out int changedFlags, out bool changedToValue, GUIStyle style) => 
+            EnumMaskField(position, label, selected, style, out changedFlags, out changedToValue);
 
         /// <summary>
         /// <para>Make an enum popup selection field.</para>
@@ -4392,10 +4312,8 @@
         /// <returns>
         /// <para>The enum option that has been selected by the user.</para>
         /// </returns>
-        public static Enum EnumPopup(Rect position, Enum selected, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumPopup(position, GUIContent.none, selected, style);
-        }
+        public static Enum EnumPopup(Rect position, Enum selected, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumPopup(position, GUIContent.none, selected, style);
 
         /// <summary>
         /// <para>Make an enum popup selection field.</para>
@@ -4441,10 +4359,8 @@
         /// <returns>
         /// <para>The enum option that has been selected by the user.</para>
         /// </returns>
-        public static Enum EnumPopup(Rect position, string label, Enum selected, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumPopup(position, EditorGUIUtility.TempContent(label), selected, style);
-        }
+        public static Enum EnumPopup(Rect position, string label, Enum selected, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumPopup(position, EditorGUIUtility.TempContent(label), selected, style);
 
         /// <summary>
         /// <para>Make an enum popup selection field.</para>
@@ -4456,10 +4372,8 @@
         /// <returns>
         /// <para>The enum option that has been selected by the user.</para>
         /// </returns>
-        public static Enum EnumPopup(Rect position, GUIContent label, Enum selected, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return EnumPopupInternal(position, label, selected, style);
-        }
+        public static Enum EnumPopup(Rect position, GUIContent label, Enum selected, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            EnumPopupInternal(position, label, selected, style);
 
         private static Enum EnumPopupInternal(Rect position, GUIContent label, Enum selected, GUIStyle style)
         {
@@ -4468,14 +4382,14 @@
             {
                 throw new Exception("parameter _enum must be of type System.Enum");
             }
-            Enum[] array = Enumerable.ToArray<Enum>(Enumerable.Cast<Enum>(Enum.GetValues(enumType)));
+            Enum[] array = Enum.GetValues(enumType).Cast<Enum>().ToArray<Enum>();
             string[] names = Enum.GetNames(enumType);
             int index = Array.IndexOf<Enum>(array, selected);
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <EnumPopupInternal>m__1);
             }
-            index = Popup(position, label, index, EditorGUIUtility.TempContent(Enumerable.ToArray<string>(Enumerable.Select<string, string>(names, <>f__am$cache1))), style);
+            index = Popup(position, label, index, EditorGUIUtility.TempContent(Enumerable.Select<string, string>(names, <>f__am$cache1).ToArray<string>()), style);
             if ((index < 0) || (index >= names.Length))
             {
                 return selected;
@@ -4500,10 +4414,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static float FloatField(Rect position, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return FloatFieldInternal(position, value, style);
-        }
+        public static float FloatField(Rect position, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            FloatFieldInternal(position, value, style);
 
         [ExcludeFromDocs]
         public static float FloatField(Rect position, string label, float value)
@@ -4529,10 +4441,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static float FloatField(Rect position, string label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return FloatField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static float FloatField(Rect position, string label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            FloatField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a text field for entering floats.</para>
@@ -4544,10 +4454,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static float FloatField(Rect position, GUIContent label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return FloatFieldInternal(position, label, value, style);
-        }
+        public static float FloatField(Rect position, GUIContent label, float value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            FloatFieldInternal(position, label, value, style);
 
         internal static float FloatFieldInternal(Rect position, float value, GUIStyle style)
         {
@@ -4638,10 +4546,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(Rect position, bool foldout, string content, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return FoldoutInternal(position, foldout, EditorGUIUtility.TempContent(content), false, style);
-        }
+        public static bool Foldout(Rect position, bool foldout, string content, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            FoldoutInternal(position, foldout, EditorGUIUtility.TempContent(content), false, style);
 
         /// <summary>
         /// <para>Make a label with a foldout arrow to the left of it.</para>
@@ -4672,10 +4578,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(Rect position, bool foldout, GUIContent content, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return FoldoutInternal(position, foldout, content, false, style);
-        }
+        public static bool Foldout(Rect position, bool foldout, GUIContent content, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            FoldoutInternal(position, foldout, content, false, style);
 
         /// <summary>
         /// <para>Make a label with a foldout arrow to the left of it.</para>
@@ -4688,10 +4592,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(Rect position, bool foldout, string content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return FoldoutInternal(position, foldout, EditorGUIUtility.TempContent(content), toggleOnLabelClick, style);
-        }
+        public static bool Foldout(Rect position, bool foldout, string content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            FoldoutInternal(position, foldout, EditorGUIUtility.TempContent(content), toggleOnLabelClick, style);
 
         /// <summary>
         /// <para>Make a label with a foldout arrow to the left of it.</para>
@@ -4704,10 +4606,8 @@
         /// <returns>
         /// <para>The foldout state selected by the user. If true, you should render sub-objects.</para>
         /// </returns>
-        public static bool Foldout(Rect position, bool foldout, GUIContent content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style)
-        {
-            return FoldoutInternal(position, foldout, content, toggleOnLabelClick, style);
-        }
+        public static bool Foldout(Rect position, bool foldout, GUIContent content, bool toggleOnLabelClick, [DefaultValue("EditorStyles.foldout")] GUIStyle style) => 
+            FoldoutInternal(position, foldout, content, toggleOnLabelClick, style);
 
         internal static bool FoldoutInternal(Rect position, bool foldout, GUIContent content, bool toggleOnLabelClick, GUIStyle style)
         {
@@ -4869,10 +4769,8 @@
             return gameObject;
         }
 
-        internal static Rect GetInspectorTitleBarObjectFoldoutRenderRect(Rect rect)
-        {
-            return new Rect(rect.x + 3f, rect.y + 3f, 16f, 16f);
-        }
+        internal static Rect GetInspectorTitleBarObjectFoldoutRenderRect(Rect rect) => 
+            new Rect(rect.x + 3f, rect.y + 3f, 16f, 16f);
 
         internal static Material GetMaterialForSpecialTexture(Texture t)
         {
@@ -4949,15 +4847,11 @@
         /// <param name="property">Height of the property area.</param>
         /// <param name="label">Descriptive text or image.</param>
         /// <param name="includeChildren">Should the returned height include the height of child properties?</param>
-        public static float GetPropertyHeight(SerializedProperty property, [DefaultValue("null")] GUIContent label, [DefaultValue("true")] bool includeChildren)
-        {
-            return GetPropertyHeightInternal(property, label, includeChildren);
-        }
+        public static float GetPropertyHeight(SerializedProperty property, [DefaultValue("null")] GUIContent label, [DefaultValue("true")] bool includeChildren) => 
+            GetPropertyHeightInternal(property, label, includeChildren);
 
-        internal static float GetPropertyHeightInternal(SerializedProperty property, GUIContent label, bool includeChildren)
-        {
-            return ScriptAttributeUtility.GetHandler(property).GetHeight(property, label, includeChildren);
-        }
+        internal static float GetPropertyHeightInternal(SerializedProperty property, GUIContent label, bool includeChildren) => 
+            ScriptAttributeUtility.GetHandler(property).GetHeight(property, label, includeChildren);
 
         internal static void GetRectsForMiniThumbnailField(Rect position, out Rect thumbRect, out Rect labelRect)
         {
@@ -4990,15 +4884,11 @@
             return DoGradientField(position, id, gradient, null);
         }
 
-        internal static Gradient GradientField(string label, Rect position, SerializedProperty property)
-        {
-            return GradientField(EditorGUIUtility.TempContent(label), position, property);
-        }
+        internal static Gradient GradientField(string label, Rect position, SerializedProperty property) => 
+            GradientField(EditorGUIUtility.TempContent(label), position, property);
 
-        internal static Gradient GradientField(string label, Rect position, Gradient gradient)
-        {
-            return GradientField(EditorGUIUtility.TempContent(label), position, gradient);
-        }
+        internal static Gradient GradientField(string label, Rect position, Gradient gradient) => 
+            GradientField(EditorGUIUtility.TempContent(label), position, gradient);
 
         internal static Gradient GradientField(GUIContent label, Rect position, SerializedProperty property)
         {
@@ -5110,10 +5000,8 @@
             return tex;
         }
 
-        private static bool HasKeyboardFocus(int controlID)
-        {
-            return ((GUIUtility.keyboardControl == controlID) && GUIView.current.hasFocus);
-        }
+        private static bool HasKeyboardFocus(int controlID) => 
+            ((GUIUtility.keyboardControl == controlID) && GUIView.current.hasFocus);
 
         internal static bool HasVisibleChildFields(SerializedProperty property)
         {
@@ -5128,10 +5016,8 @@
             return property.hasVisibleChildren;
         }
 
-        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight)
-        {
-            return Resizer.Resize(position, height, minHeight, maxHeight, false);
-        }
+        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight) => 
+            Resizer.Resize(position, height, minHeight, maxHeight, false);
 
         /// <summary>
         /// <para>Make a help box with a message to the user.</para>
@@ -5158,11 +5044,13 @@
                 {
                     GUI.color = Color.yellow;
                     string str2 = (!(obj is MonoBehaviour) ? "sealed partial class-" : "script-") + niceHelpNameForObject;
-                    content.tooltip = string.Format("Could not find Reference page for {0} ({1}).\nDocs for this object is missing or all docs are missing.\nThis warning only shows up in development builds.", niceHelpNameForObject, str2);
+                    content.tooltip = $"Could not find Reference page for {niceHelpNameForObject} ({str2}).
+Docs for this object is missing or all docs are missing.
+This warning only shows up in development builds.";
                 }
                 else
                 {
-                    content.tooltip = string.Format("Open Reference for {0}.", niceHelpNameForObject);
+                    content.tooltip = $"Open Reference for {niceHelpNameForObject}.";
                 }
                 GUIStyle iconButton = EditorStyles.iconButton;
                 if (GUI.Button(position, content, iconButton))
@@ -5175,10 +5063,8 @@
             return false;
         }
 
-        internal static Color HexColorTextField(Rect rect, GUIContent label, Color color, bool showAlpha)
-        {
-            return HexColorTextField(rect, label, color, showAlpha, EditorStyles.textField);
-        }
+        internal static Color HexColorTextField(Rect rect, GUIContent label, Color color, bool showAlpha) => 
+            HexColorTextField(rect, label, color, showAlpha, EditorStyles.textField);
 
         internal static Color HexColorTextField(Rect rect, GUIContent label, Color color, bool showAlpha, GUIStyle style)
         {
@@ -5307,10 +5193,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static int IntField(Rect position, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return IntFieldInternal(position, value, style);
-        }
+        public static int IntField(Rect position, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            IntFieldInternal(position, value, style);
 
         /// <summary>
         /// <para>Make a text field for entering integers.</para>
@@ -5356,10 +5240,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static int IntField(Rect position, string label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return IntField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static int IntField(Rect position, string label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            IntField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a text field for entering integers.</para>
@@ -5371,10 +5253,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static int IntField(Rect position, GUIContent label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return IntFieldInternal(position, label, value, style);
-        }
+        public static int IntField(Rect position, GUIContent label, int value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            IntFieldInternal(position, label, value, style);
 
         internal static int IntFieldInternal(Rect position, int value, GUIStyle style)
         {
@@ -5455,10 +5335,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(Rect position, int selectedValue, string[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return IntPopup(position, GUIContent.none, selectedValue, EditorGUIUtility.TempContent(displayedOptions), optionValues, style);
-        }
+        public static int IntPopup(Rect position, int selectedValue, string[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            IntPopup(position, GUIContent.none, selectedValue, EditorGUIUtility.TempContent(displayedOptions), optionValues, style);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -5472,10 +5350,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(Rect position, int selectedValue, GUIContent[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return IntPopup(position, GUIContent.none, selectedValue, displayedOptions, optionValues, style);
-        }
+        public static int IntPopup(Rect position, int selectedValue, GUIContent[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            IntPopup(position, GUIContent.none, selectedValue, displayedOptions, optionValues, style);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -5540,10 +5416,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(Rect position, string label, int selectedValue, string[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return IntPopupInternal(position, EditorGUIUtility.TempContent(label), selectedValue, EditorGUIUtility.TempContent(displayedOptions), optionValues, style);
-        }
+        public static int IntPopup(Rect position, string label, int selectedValue, string[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            IntPopupInternal(position, EditorGUIUtility.TempContent(label), selectedValue, EditorGUIUtility.TempContent(displayedOptions), optionValues, style);
 
         /// <summary>
         /// <para>Make an integer popup selection field.</para>
@@ -5557,10 +5431,8 @@
         /// <returns>
         /// <para>The value of the option that has been selected by the user.</para>
         /// </returns>
-        public static int IntPopup(Rect position, GUIContent label, int selectedValue, GUIContent[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return IntPopupInternal(position, label, selectedValue, displayedOptions, optionValues, style);
-        }
+        public static int IntPopup(Rect position, GUIContent label, int selectedValue, GUIContent[] displayedOptions, int[] optionValues, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            IntPopupInternal(position, label, selectedValue, displayedOptions, optionValues, style);
 
         internal static void IntPopupInternal(Rect position, SerializedProperty property, GUIContent[] displayedOptions, int[] optionValues, GUIContent label)
         {
@@ -5640,10 +5512,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static int IntSlider(Rect position, string label, int value, int leftValue, int rightValue)
-        {
-            return IntSlider(position, EditorGUIUtility.TempContent(label), value, leftValue, rightValue);
-        }
+        public static int IntSlider(Rect position, string label, int value, int leftValue, int rightValue) => 
+            IntSlider(position, EditorGUIUtility.TempContent(label), value, leftValue, rightValue);
 
         /// <summary>
         /// <para>Make a slider the user can drag to change a value between a min and a max.</para>
@@ -5695,15 +5565,11 @@
             return Mathf.RoundToInt(DoSlider(PrefixLabel(position, id, label), EditorGUIUtility.DragZoneRect(position), id, (float) value, (float) leftValue, (float) rightValue, kIntFieldFormatString));
         }
 
-        internal static bool IsEditingTextField()
-        {
-            return RecycledTextEditor.s_ActuallyEditing;
-        }
+        internal static bool IsEditingTextField() => 
+            RecycledTextEditor.s_ActuallyEditing;
 
-        internal static Event KeyEventField(Rect position, Event evt)
-        {
-            return DoKeyEventField(position, evt, GUI.skin.textField);
-        }
+        internal static Event KeyEventField(Rect position, Event evt) => 
+            DoKeyEventField(position, evt, GUI.skin.textField);
 
         internal static float Knob(Rect position, Vector2 knobSize, float currentValue, float start, float end, string unit, Color backgroundColor, Color activeColor, bool showValue, int id)
         {
@@ -5825,10 +5691,8 @@
             }
         }
 
-        internal static bool LabelHasContent(GUIContent label)
-        {
-            return ((label == null) || ((label.text != string.Empty) || (label.image != null)));
-        }
+        internal static bool LabelHasContent(GUIContent label) => 
+            ((label == null) || ((label.text != string.Empty) || (label.image != null)));
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -5857,10 +5721,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(Rect position, int layer, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return LayerFieldInternal(position, GUIContent.none, layer, style);
-        }
+        public static int LayerField(Rect position, int layer, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            LayerFieldInternal(position, GUIContent.none, layer, style);
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -5906,10 +5768,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(Rect position, string label, int layer, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return LayerFieldInternal(position, EditorGUIUtility.TempContent(label), layer, style);
-        }
+        public static int LayerField(Rect position, string label, int layer, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            LayerFieldInternal(position, EditorGUIUtility.TempContent(label), layer, style);
 
         /// <summary>
         /// <para>Make a layer selection field.</para>
@@ -5921,10 +5781,8 @@
         /// <returns>
         /// <para>The layer selected by the user.</para>
         /// </returns>
-        public static int LayerField(Rect position, GUIContent label, int layer, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return LayerFieldInternal(position, label, layer, style);
-        }
+        public static int LayerField(Rect position, GUIContent label, int layer, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            LayerFieldInternal(position, label, layer, style);
 
         internal static int LayerFieldInternal(Rect position, GUIContent label, int layer, GUIStyle style)
         {
@@ -5957,7 +5815,7 @@
                     }
                 }
             }
-            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !EditorExtensionMethods.MainActionKeyForControl(current, id))
+            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !current.MainActionKeyForControl(id))
             {
                 if (current.type == EventType.Repaint)
                 {
@@ -6008,7 +5866,7 @@
                     style.Draw(position, EditorGUIUtility.TempContent(property.layerMaskStringValue), id, false);
                 }
             }
-            else if (((current.type == EventType.MouseDown) && position.Contains(current.mousePosition)) || EditorExtensionMethods.MainActionKeyForControl(current, id))
+            else if (((current.type == EventType.MouseDown) && position.Contains(current.mousePosition)) || current.MainActionKeyForControl(id))
             {
                 SerializedProperty userData = property.serializedObject.FindProperty(property.propertyPath);
                 if (<>f__mg$cache4 == null)
@@ -6038,10 +5896,8 @@
             return LongField(position, value, numberField);
         }
 
-        public static long LongField(Rect position, long value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return LongFieldInternal(position, value, style);
-        }
+        public static long LongField(Rect position, long value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            LongFieldInternal(position, value, style);
 
         /// <summary>
         /// <para>Make a text field for entering long integers.</para>
@@ -6087,10 +5943,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static long LongField(Rect position, string label, long value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return LongField(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static long LongField(Rect position, string label, long value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            LongField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a text field for entering long integers.</para>
@@ -6102,10 +5956,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static long LongField(Rect position, GUIContent label, long value, [DefaultValue("EditorStyles.numberField")] GUIStyle style)
-        {
-            return LongFieldInternal(position, label, value, style);
-        }
+        public static long LongField(Rect position, GUIContent label, long value, [DefaultValue("EditorStyles.numberField")] GUIStyle style) => 
+            LongFieldInternal(position, label, value, style);
 
         internal static long LongFieldInternal(Rect position, long value, GUIStyle style)
         {
@@ -6152,10 +6004,8 @@
         /// <returns>
         /// <para>The value modified by the user.</para>
         /// </returns>
-        public static int MaskField(Rect position, int mask, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return MaskFieldInternal(position, mask, displayedOptions, style);
-        }
+        public static int MaskField(Rect position, int mask, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            MaskFieldInternal(position, mask, displayedOptions, style);
 
         /// <summary>
         /// <para>Make a field for masks.</para>
@@ -6207,10 +6057,8 @@
         /// <returns>
         /// <para>The value modified by the user.</para>
         /// </returns>
-        public static int MaskField(Rect position, string label, int mask, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return MaskFieldInternal(position, GUIContent.Temp(label), mask, displayedOptions, style);
-        }
+        public static int MaskField(Rect position, string label, int mask, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            MaskFieldInternal(position, GUIContent.Temp(label), mask, displayedOptions, style);
 
         /// <summary>
         /// <para>Make a field for masks.</para>
@@ -6224,10 +6072,8 @@
         /// <returns>
         /// <para>The value modified by the user.</para>
         /// </returns>
-        public static int MaskField(Rect position, GUIContent label, int mask, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return MaskFieldInternal(position, label, mask, displayedOptions, style);
-        }
+        public static int MaskField(Rect position, GUIContent label, int mask, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            MaskFieldInternal(position, label, mask, displayedOptions, style);
 
         internal static int MaskFieldInternal(Rect position, int mask, string[] displayedOptions, GUIStyle style)
         {
@@ -6520,10 +6366,8 @@
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType)
-        {
-            return ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, true);
-        }
+        public static Object ObjectField(Rect position, string label, Object obj, Type objType) => 
+            ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, true);
 
         /// <summary>
         /// <para>Make an object field. You can assign objects either by drag and drop objects or by selecting an object using the Object Picker.</para>
@@ -6549,10 +6393,8 @@
         /// <para>The object that has been set by the user.</para>
         /// </returns>
         [Obsolete("Check the docs for the usage of the new parameter 'allowSceneObjects'.")]
-        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType)
-        {
-            return ObjectField(position, label, obj, objType, true);
-        }
+        public static Object ObjectField(Rect position, GUIContent label, Object obj, Type objType) => 
+            ObjectField(position, label, obj, objType, true);
 
         /// <summary>
         /// <para>Make an object field. You can assign objects either by drag and drop objects or by selecting an object using the Object Picker.</para>
@@ -6582,10 +6424,8 @@
         /// <returns>
         /// <para>The object that has been set by the user.</para>
         /// </returns>
-        public static Object ObjectField(Rect position, string label, Object obj, Type objType, bool allowSceneObjects)
-        {
-            return ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects);
-        }
+        public static Object ObjectField(Rect position, string label, Object obj, Type objType, bool allowSceneObjects) => 
+            ObjectField(position, EditorGUIUtility.TempContent(label), obj, objType, allowSceneObjects);
 
         internal static void ObjectField(Rect position, SerializedProperty property, Type objType, GUIContent label, GUIStyle style)
         {
@@ -6687,10 +6527,8 @@
             }
         }
 
-        internal static float OffsetKnob(Rect position, float currentValue, float start, float end, float median, string unit, Color backgroundColor, Color activeColor, GUIStyle knob, int id)
-        {
-            return 0f;
-        }
+        internal static float OffsetKnob(Rect position, float currentValue, float start, float end, float median, string unit, Color backgroundColor, Color activeColor, GUIStyle knob, int id) => 
+            0f;
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -6736,10 +6574,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(Rect position, string password, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return PasswordFieldInternal(position, password, style);
-        }
+        public static string PasswordField(Rect position, string password, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            PasswordFieldInternal(position, password, style);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -6768,10 +6604,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(Rect position, string label, string password, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return PasswordField(position, EditorGUIUtility.TempContent(label), password, style);
-        }
+        public static string PasswordField(Rect position, string label, string password, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            PasswordField(position, EditorGUIUtility.TempContent(label), password, style);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -6783,10 +6617,8 @@
         /// <returns>
         /// <para>The password entered by the user.</para>
         /// </returns>
-        public static string PasswordField(Rect position, GUIContent label, string password, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return PasswordFieldInternal(position, label, password, style);
-        }
+        public static string PasswordField(Rect position, GUIContent label, string password, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            PasswordFieldInternal(position, label, password, style);
 
         internal static string PasswordFieldInternal(Rect position, string password, GUIStyle style)
         {
@@ -6859,10 +6691,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(Rect position, int selectedIndex, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return DoPopup(IndentedRect(position), GUIUtility.GetControlID(s_PopupHash, FocusType.Keyboard, position), selectedIndex, EditorGUIUtility.TempContent(displayedOptions), style);
-        }
+        public static int Popup(Rect position, int selectedIndex, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            DoPopup(IndentedRect(position), GUIUtility.GetControlID(s_PopupHash, FocusType.Keyboard, position), selectedIndex, EditorGUIUtility.TempContent(displayedOptions), style);
 
         /// <summary>
         /// <para>Make a generic popup selection field.</para>
@@ -6875,10 +6705,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(Rect position, int selectedIndex, GUIContent[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return DoPopup(IndentedRect(position), GUIUtility.GetControlID(s_PopupHash, FocusType.Keyboard, position), selectedIndex, displayedOptions, style);
-        }
+        public static int Popup(Rect position, int selectedIndex, GUIContent[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            DoPopup(IndentedRect(position), GUIUtility.GetControlID(s_PopupHash, FocusType.Keyboard, position), selectedIndex, displayedOptions, style);
 
         /// <summary>
         /// <para>Make a generic popup selection field.</para>
@@ -6939,10 +6767,8 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(Rect position, string label, int selectedIndex, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return PopupInternal(position, EditorGUIUtility.TempContent(label), selectedIndex, EditorGUIUtility.TempContent(displayedOptions), style);
-        }
+        public static int Popup(Rect position, string label, int selectedIndex, string[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            PopupInternal(position, EditorGUIUtility.TempContent(label), selectedIndex, EditorGUIUtility.TempContent(displayedOptions), style);
 
         /// <summary>
         /// <para>Make a generic popup selection field.</para>
@@ -6955,15 +6781,11 @@
         /// <returns>
         /// <para>The index of the option that has been selected by the user.</para>
         /// </returns>
-        public static int Popup(Rect position, GUIContent label, int selectedIndex, GUIContent[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return PopupInternal(position, label, selectedIndex, displayedOptions, style);
-        }
+        public static int Popup(Rect position, GUIContent label, int selectedIndex, GUIContent[] displayedOptions, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            PopupInternal(position, label, selectedIndex, displayedOptions, style);
 
-        private static int PopupInternal(Rect position, string label, int selectedIndex, string[] displayedOptions, GUIStyle style)
-        {
-            return PopupInternal(position, EditorGUIUtility.TempContent(label), selectedIndex, EditorGUIUtility.TempContent(displayedOptions), style);
-        }
+        private static int PopupInternal(Rect position, string label, int selectedIndex, string[] displayedOptions, GUIStyle style) => 
+            PopupInternal(position, EditorGUIUtility.TempContent(label), selectedIndex, EditorGUIUtility.TempContent(displayedOptions), style);
 
         private static int PopupInternal(Rect position, GUIContent label, int selectedIndex, GUIContent[] displayedOptions, GUIStyle style)
         {
@@ -6971,10 +6793,8 @@
             return DoPopup(PrefixLabel(position, controlID, label), controlID, selectedIndex, displayedOptions, style);
         }
 
-        internal static float PowerSlider(Rect position, string label, float sliderValue, float leftValue, float rightValue, float power)
-        {
-            return PowerSlider(position, EditorGUIUtility.TempContent(label), sliderValue, leftValue, rightValue, power);
-        }
+        internal static float PowerSlider(Rect position, string label, float sliderValue, float leftValue, float rightValue, float power) => 
+            PowerSlider(position, EditorGUIUtility.TempContent(label), sliderValue, leftValue, rightValue, power);
 
         internal static float PowerSlider(Rect position, GUIContent label, float sliderValue, float leftValue, float rightValue, float power)
         {
@@ -7000,10 +6820,8 @@
         /// <returns>
         /// <para>Rectangle on the screen to use just for the control itself.</para>
         /// </returns>
-        public static Rect PrefixLabel(Rect totalPosition, GUIContent label)
-        {
-            return PrefixLabel(totalPosition, 0, label, EditorStyles.label);
-        }
+        public static Rect PrefixLabel(Rect totalPosition, GUIContent label) => 
+            PrefixLabel(totalPosition, 0, label, EditorStyles.label);
 
         /// <summary>
         /// <para>Make a label in front of some control.</para>
@@ -7015,10 +6833,8 @@
         /// <returns>
         /// <para>Rectangle on the screen to use just for the control itself.</para>
         /// </returns>
-        public static Rect PrefixLabel(Rect totalPosition, int id, GUIContent label)
-        {
-            return PrefixLabel(totalPosition, id, label, EditorStyles.label);
-        }
+        public static Rect PrefixLabel(Rect totalPosition, int id, GUIContent label) => 
+            PrefixLabel(totalPosition, id, label, EditorStyles.label);
 
         /// <summary>
         /// <para>Make a label in front of some control.</para>
@@ -7030,10 +6846,8 @@
         /// <returns>
         /// <para>Rectangle on the screen to use just for the control itself.</para>
         /// </returns>
-        public static Rect PrefixLabel(Rect totalPosition, GUIContent label, GUIStyle style)
-        {
-            return PrefixLabel(totalPosition, 0, label, style);
-        }
+        public static Rect PrefixLabel(Rect totalPosition, GUIContent label, GUIStyle style) => 
+            PrefixLabel(totalPosition, 0, label, style);
 
         /// <summary>
         /// <para>Make a label in front of some control.</para>
@@ -7128,10 +6942,8 @@
         /// <returns>
         /// <para>True if the property has children and is expanded and includeChildren was set to false; otherwise false.</para>
         /// </returns>
-        public static bool PropertyField(Rect position, SerializedProperty property, [DefaultValue("false")] bool includeChildren)
-        {
-            return PropertyFieldInternal(position, property, null, includeChildren);
-        }
+        public static bool PropertyField(Rect position, SerializedProperty property, [DefaultValue("false")] bool includeChildren) => 
+            PropertyFieldInternal(position, property, null, includeChildren);
 
         [ExcludeFromDocs]
         public static bool PropertyField(Rect position, SerializedProperty property, GUIContent label)
@@ -7150,15 +6962,11 @@
         /// <returns>
         /// <para>True if the property has children and is expanded and includeChildren was set to false; otherwise false.</para>
         /// </returns>
-        public static bool PropertyField(Rect position, SerializedProperty property, GUIContent label, [DefaultValue("false")] bool includeChildren)
-        {
-            return PropertyFieldInternal(position, property, label, includeChildren);
-        }
+        public static bool PropertyField(Rect position, SerializedProperty property, GUIContent label, [DefaultValue("false")] bool includeChildren) => 
+            PropertyFieldInternal(position, property, label, includeChildren);
 
-        internal static bool PropertyFieldInternal(Rect position, SerializedProperty property, GUIContent label, bool includeChildren)
-        {
-            return ScriptAttributeUtility.GetHandler(property).OnGUI(position, property, label, includeChildren);
-        }
+        internal static bool PropertyFieldInternal(Rect position, SerializedProperty property, GUIContent label, bool includeChildren) => 
+            ScriptAttributeUtility.GetHandler(property).OnGUI(position, property, label, includeChildren);
 
         /// <summary>
         /// <para>Make an X, Y, W &amp; H field for entering a Rect.</para>
@@ -7169,10 +6977,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Rect RectField(Rect position, Rect value)
-        {
-            return RectFieldNoIndent(IndentedRect(position), value);
-        }
+        public static Rect RectField(Rect position, Rect value) => 
+            RectFieldNoIndent(IndentedRect(position), value);
 
         /// <summary>
         /// <para>Make an X, Y, W &amp; H field for entering a Rect.</para>
@@ -7183,10 +6989,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Rect RectField(Rect position, string label, Rect value)
-        {
-            return RectField(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static Rect RectField(Rect position, string label, Rect value) => 
+            RectField(position, EditorGUIUtility.TempContent(label), value);
 
         private static void RectField(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -7501,10 +7305,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float Slider(Rect position, string label, float value, float leftValue, float rightValue)
-        {
-            return Slider(position, EditorGUIUtility.TempContent(label), value, leftValue, rightValue);
-        }
+        public static float Slider(Rect position, string label, float value, float leftValue, float rightValue) => 
+            Slider(position, EditorGUIUtility.TempContent(label), value, leftValue, rightValue);
 
         /// <summary>
         /// <para>Make a slider the user can drag to change a value between a min and a max.</para>
@@ -7550,10 +7352,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float Slider(Rect position, GUIContent label, float value, float leftValue, float rightValue)
-        {
-            return PowerSlider(position, label, value, leftValue, rightValue, 1f);
-        }
+        public static float Slider(Rect position, GUIContent label, float value, float leftValue, float rightValue) => 
+            PowerSlider(position, label, value, leftValue, rightValue, 1f);
 
         internal static void SortingLayerField(Rect position, GUIContent label, SerializedProperty layerID, GUIStyle style, GUIStyle labelStyle)
         {
@@ -7573,7 +7373,7 @@
                     layerID.intValue = sortingLayerUniqueIDs[selectedValueForControl];
                 }
             }
-            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !EditorExtensionMethods.MainActionKeyForControl(current, id))
+            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !current.MainActionKeyForControl(id))
             {
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -7657,10 +7457,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(Rect position, string tag, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return TagFieldInternal(position, EditorGUIUtility.TempContent(string.Empty), tag, style);
-        }
+        public static string TagField(Rect position, string tag, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            TagFieldInternal(position, EditorGUIUtility.TempContent(string.Empty), tag, style);
 
         /// <summary>
         /// <para>Make a tag selection field.</para>
@@ -7689,10 +7487,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(Rect position, string label, string tag, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return TagFieldInternal(position, EditorGUIUtility.TempContent(label), tag, style);
-        }
+        public static string TagField(Rect position, string label, string tag, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            TagFieldInternal(position, EditorGUIUtility.TempContent(label), tag, style);
 
         /// <summary>
         /// <para>Make a tag selection field.</para>
@@ -7704,10 +7500,8 @@
         /// <returns>
         /// <para>The tag selected by the user.</para>
         /// </returns>
-        public static string TagField(Rect position, GUIContent label, string tag, [DefaultValue("EditorStyles.popup")] GUIStyle style)
-        {
-            return TagFieldInternal(position, label, tag, style);
-        }
+        public static string TagField(Rect position, GUIContent label, string tag, [DefaultValue("EditorStyles.popup")] GUIStyle style) => 
+            TagFieldInternal(position, label, tag, style);
 
         internal static string TagFieldInternal(Rect position, string tag, GUIStyle style)
         {
@@ -7727,7 +7521,7 @@
                     tag = strArray[selectedValueForControl];
                 }
             }
-            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !EditorExtensionMethods.MainActionKeyForControl(current, controlID))
+            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !current.MainActionKeyForControl(controlID))
             {
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -7772,7 +7566,7 @@
                     tag = strArray[selectedValueForControl];
                 }
             }
-            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !EditorExtensionMethods.MainActionKeyForControl(current, id))
+            if (((current.type != EventType.MouseDown) || !position.Contains(current.mousePosition)) && !current.MainActionKeyForControl(id))
             {
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -7846,10 +7640,8 @@
         /// <returns>
         /// <para>The text entered by the user.</para>
         /// </returns>
-        public static string TextArea(Rect position, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return TextAreaInternal(position, text, style);
-        }
+        public static string TextArea(Rect position, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            TextAreaInternal(position, text, style);
 
         internal static string TextAreaInternal(Rect position, string text, GUIStyle style)
         {
@@ -7903,10 +7695,8 @@
         /// <returns>
         /// <para>The text entered by the user.</para>
         /// </returns>
-        public static string TextField(Rect position, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return TextFieldInternal(position, text, style);
-        }
+        public static string TextField(Rect position, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            TextFieldInternal(position, text, style);
 
         /// <summary>
         /// <para>Make a text field.</para>
@@ -7935,10 +7725,8 @@
         /// <returns>
         /// <para>The text entered by the user.</para>
         /// </returns>
-        public static string TextField(Rect position, string label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return TextField(position, EditorGUIUtility.TempContent(label), text, style);
-        }
+        public static string TextField(Rect position, string label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            TextField(position, EditorGUIUtility.TempContent(label), text, style);
 
         /// <summary>
         /// <para>Make a text field.</para>
@@ -7950,15 +7738,11 @@
         /// <returns>
         /// <para>The text entered by the user.</para>
         /// </returns>
-        public static string TextField(Rect position, GUIContent label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style)
-        {
-            return TextFieldInternal(position, label, text, style);
-        }
+        public static string TextField(Rect position, GUIContent label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+            TextFieldInternal(position, label, text, style);
 
-        internal static string TextFieldDropDown(Rect position, string text, string[] dropDownElement)
-        {
-            return TextFieldDropDown(position, GUIContent.none, text, dropDownElement);
-        }
+        internal static string TextFieldDropDown(Rect position, string text, string[] dropDownElement) => 
+            TextFieldDropDown(position, GUIContent.none, text, dropDownElement);
 
         internal static string TextFieldDropDown(Rect position, GUIContent label, string text, string[] dropDownElement)
         {
@@ -8024,10 +7808,8 @@
         /// <returns>
         /// <para>The selected state of the toggle.</para>
         /// </returns>
-        public static bool Toggle(Rect position, string label, bool value)
-        {
-            return Toggle(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static bool Toggle(Rect position, string label, bool value) => 
+            Toggle(position, EditorGUIUtility.TempContent(label), value);
 
         /// <summary>
         /// <para>Make a toggle.</para>
@@ -8055,10 +7837,8 @@
         /// <returns>
         /// <para>The selected state of the toggle.</para>
         /// </returns>
-        public static bool Toggle(Rect position, string label, bool value, GUIStyle style)
-        {
-            return Toggle(position, EditorGUIUtility.TempContent(label), value, style);
-        }
+        public static bool Toggle(Rect position, string label, bool value, GUIStyle style) => 
+            Toggle(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
         /// <para>Make a toggle.</para>
@@ -8120,10 +7900,8 @@
         /// <returns>
         /// <para>The value set by the user.</para>
         /// </returns>
-        public static bool ToggleLeft(Rect position, string label, bool value, [DefaultValue("EditorStyles.label")] GUIStyle labelStyle)
-        {
-            return ToggleLeft(position, EditorGUIUtility.TempContent(label), value, labelStyle);
-        }
+        public static bool ToggleLeft(Rect position, string label, bool value, [DefaultValue("EditorStyles.label")] GUIStyle labelStyle) => 
+            ToggleLeft(position, EditorGUIUtility.TempContent(label), value, labelStyle);
 
         /// <summary>
         /// <para>Make a toggle field where the toggle is to the left and the label immediately to the right of it.</para>
@@ -8135,10 +7913,8 @@
         /// <returns>
         /// <para>The value set by the user.</para>
         /// </returns>
-        public static bool ToggleLeft(Rect position, GUIContent label, bool value, [DefaultValue("EditorStyles.label")] GUIStyle labelStyle)
-        {
-            return ToggleLeftInternal(position, label, value, labelStyle);
-        }
+        public static bool ToggleLeft(Rect position, GUIContent label, bool value, [DefaultValue("EditorStyles.label")] GUIStyle labelStyle) => 
+            ToggleLeftInternal(position, label, value, labelStyle);
 
         internal static bool ToggleLeftInternal(Rect position, GUIContent label, bool value, GUIStyle labelStyle)
         {
@@ -8187,10 +7963,8 @@
             return text;
         }
 
-        internal static string ToolbarSearchField(Rect position, string[] searchModes, ref int searchMode, string text)
-        {
-            return ToolbarSearchField(GUIUtility.GetControlID(s_SearchFieldHash, FocusType.Keyboard, position), position, searchModes, ref searchMode, text);
-        }
+        internal static string ToolbarSearchField(Rect position, string[] searchModes, ref int searchMode, string text) => 
+            ToolbarSearchField(GUIUtility.GetControlID(s_SearchFieldHash, FocusType.Keyboard, position), position, searchModes, ref searchMode, text);
 
         internal static string ToolbarSearchField(int id, Rect position, string[] searchModes, ref int searchMode, string text)
         {
@@ -8265,10 +8039,8 @@
             return null;
         }
 
-        private static bool ValidTargetForIconSelection(Object[] targets)
-        {
-            return (((targets[0] is MonoScript) || (targets[0] is GameObject)) && (targets.Length == 1));
-        }
+        private static bool ValidTargetForIconSelection(Object[] targets) => 
+            (((targets[0] is MonoScript) || (targets[0] is GameObject)) && (targets.Length == 1));
 
         private static Vector2 Vector2Field(Rect position, Vector2 value)
         {
@@ -8294,10 +8066,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Vector2 Vector2Field(Rect position, string label, Vector2 value)
-        {
-            return Vector2Field(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static Vector2 Vector2Field(Rect position, string label, Vector2 value) => 
+            Vector2Field(position, EditorGUIUtility.TempContent(label), value);
 
         private static void Vector2Field(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -8352,10 +8122,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Vector3 Vector3Field(Rect position, string label, Vector3 value)
-        {
-            return Vector3Field(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static Vector3 Vector3Field(Rect position, string label, Vector3 value) => 
+            Vector3Field(position, EditorGUIUtility.TempContent(label), value);
 
         private static void Vector3Field(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -8393,10 +8161,8 @@
         /// <returns>
         /// <para>The value entered by the user.</para>
         /// </returns>
-        public static Vector4 Vector4Field(Rect position, string label, Vector4 value)
-        {
-            return Vector4Field(position, EditorGUIUtility.TempContent(label), value);
-        }
+        public static Vector4 Vector4Field(Rect position, string label, Vector4 value) => 
+            Vector4Field(position, EditorGUIUtility.TempContent(label), value);
 
         private static void Vector4Field(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -8435,10 +8201,8 @@
             return value;
         }
 
-        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth)
-        {
-            return Resizer.Resize(position, width, minWidth, maxWidth, true);
-        }
+        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth) => 
+            Resizer.Resize(position, width, minWidth, maxWidth, true);
 
         /// <summary>
         /// <para>Is the platform-dependent "action" modifier key held down? (Read Only)</para>
@@ -8459,31 +8223,19 @@
             }
         }
 
-        internal static Material alphaMaterial
-        {
-            get
-            {
-                return (EditorGUIUtility.LoadRequired("Previews/PreviewAlphaMaterial.mat") as Material);
-            }
-        }
+        internal static Material alphaMaterial =>
+            (EditorGUIUtility.LoadRequired("Previews/PreviewAlphaMaterial.mat") as Material);
 
-        internal static float indent
-        {
-            get
-            {
-                return (indentLevel * 15f);
-            }
-        }
+        internal static float indent =>
+            (indentLevel * 15f);
 
         /// <summary>
         /// <para>The indent level of the field labels.</para>
         /// </summary>
         public static int indentLevel
         {
-            get
-            {
-                return ms_IndentLevel;
-            }
+            get => 
+                ms_IndentLevel;
             set
             {
                 ms_IndentLevel = value;
@@ -8492,57 +8244,33 @@
 
         internal static bool isCollectingTooltips
         {
-            get
-            {
-                return s_CollectingToolTips;
-            }
+            get => 
+                s_CollectingToolTips;
             set
             {
                 s_CollectingToolTips = value;
             }
         }
 
-        internal static Material lightmapDoubleLDRMaterial
-        {
-            get
-            {
-                return (EditorGUIUtility.LoadRequired("Previews/PreviewEncodedLightmapDoubleLDRMaterial.mat") as Material);
-            }
-        }
+        internal static Material lightmapDoubleLDRMaterial =>
+            (EditorGUIUtility.LoadRequired("Previews/PreviewEncodedLightmapDoubleLDRMaterial.mat") as Material);
 
-        internal static Material lightmapRGBMMaterial
-        {
-            get
-            {
-                return (EditorGUIUtility.LoadRequired("Previews/PreviewEncodedLightmapRGBMMaterial.mat") as Material);
-            }
-        }
+        internal static Material lightmapRGBMMaterial =>
+            (EditorGUIUtility.LoadRequired("Previews/PreviewEncodedLightmapRGBMMaterial.mat") as Material);
 
-        internal static GUIContent mixedValueContent
-        {
-            get
-            {
-                return s_MixedValueContent;
-            }
-        }
+        internal static GUIContent mixedValueContent =>
+            s_MixedValueContent;
 
-        internal static Material normalmapMaterial
-        {
-            get
-            {
-                return (EditorGUIUtility.LoadRequired("Previews/PreviewEncodedNormalsMaterial.mat") as Material);
-            }
-        }
+        internal static Material normalmapMaterial =>
+            (EditorGUIUtility.LoadRequired("Previews/PreviewEncodedNormalsMaterial.mat") as Material);
 
         /// <summary>
         /// <para>Makes the following controls give the appearance of editing multiple different values.</para>
         /// </summary>
         public static bool showMixedValue
         {
-            get
-            {
-                return s_ShowMixedValue;
-            }
+            get => 
+                s_ShowMixedValue;
             set
             {
                 s_ShowMixedValue = value;
@@ -8561,13 +8289,8 @@
             }
         }
 
-        internal static Material transparentMaterial
-        {
-            get
-            {
-                return (EditorGUIUtility.LoadRequired("Previews/PreviewTransparentMaterial.mat") as Material);
-            }
-        }
+        internal static Material transparentMaterial =>
+            (EditorGUIUtility.LoadRequired("Previews/PreviewTransparentMaterial.mat") as Material);
 
         /// <summary>
         /// <para>Check if any control was changed inside a block of code.</para>
@@ -8765,10 +8488,8 @@
             internal static GUIContent helpIcon
             {
                 [CompilerGenerated]
-                get
-                {
-                    return <helpIcon>k__BackingField;
-                }
+                get => 
+                    <helpIcon>k__BackingField;
                 [CompilerGenerated]
                 private set
                 {
@@ -8780,10 +8501,8 @@
             internal static GUIContent titleSettingsIcon
             {
                 [CompilerGenerated]
-                get
-                {
-                    return <titleSettingsIcon>k__BackingField;
-                }
+                get => 
+                    <titleSettingsIcon>k__BackingField;
                 [CompilerGenerated]
                 private set
                 {
@@ -8800,13 +8519,8 @@
                     this.m_Name = name;
                 }
 
-                public virtual string name
-                {
-                    get
-                    {
-                        return this.m_Name;
-                    }
-                }
+                public virtual string name =>
+                    this.m_Name;
             }
         }
 
@@ -8862,65 +8576,41 @@
                 return this.currentValue;
             }
 
-            private EventType CurrentEventType()
-            {
-                return this.CurrentEvent().type;
-            }
+            private EventType CurrentEventType() => 
+                this.CurrentEvent().type;
 
-            private bool IsEmptyKnob()
-            {
-                return (this.start == this.end);
-            }
+            private bool IsEmptyKnob() => 
+                (this.start == this.end);
 
-            private Event CurrentEvent()
-            {
-                return Event.current;
-            }
+            private Event CurrentEvent() => 
+                Event.current;
 
-            private float Clamp(float value)
-            {
-                return Mathf.Clamp(value, this.MinValue(), this.MaxValue());
-            }
+            private float Clamp(float value) => 
+                Mathf.Clamp(value, this.MinValue(), this.MaxValue());
 
-            private float ClampedCurrentValue()
-            {
-                return this.Clamp(this.currentValue);
-            }
+            private float ClampedCurrentValue() => 
+                this.Clamp(this.currentValue);
 
-            private float MaxValue()
-            {
-                return Mathf.Max(this.start, this.end);
-            }
+            private float MaxValue() => 
+                Mathf.Max(this.start, this.end);
 
-            private float MinValue()
-            {
-                return Mathf.Min(this.start, this.end);
-            }
+            private float MinValue() => 
+                Mathf.Min(this.start, this.end);
 
-            private float GetCurrentValuePercent()
-            {
-                return ((this.ClampedCurrentValue() - this.MinValue()) / (this.MaxValue() - this.MinValue()));
-            }
+            private float GetCurrentValuePercent() => 
+                ((this.ClampedCurrentValue() - this.MinValue()) / (this.MaxValue() - this.MinValue()));
 
-            private float MousePosition()
-            {
-                return (this.CurrentEvent().mousePosition.y - this.position.y);
-            }
+            private float MousePosition() => 
+                (this.CurrentEvent().mousePosition.y - this.position.y);
 
-            private bool WasDoubleClick()
-            {
-                return ((this.CurrentEventType() == EventType.MouseDown) && (this.CurrentEvent().clickCount == 2));
-            }
+            private bool WasDoubleClick() => 
+                ((this.CurrentEventType() == EventType.MouseDown) && (this.CurrentEvent().clickCount == 2));
 
-            private float ValuesPerPixel()
-            {
-                return (250f / (this.MaxValue() - this.MinValue()));
-            }
+            private float ValuesPerPixel() => 
+                (250f / (this.MaxValue() - this.MinValue()));
 
-            private UnityEditor.KnobState KnobState()
-            {
-                return (UnityEditor.KnobState) GUIUtility.GetStateObject(typeof(UnityEditor.KnobState), this.id);
-            }
+            private UnityEditor.KnobState KnobState() => 
+                ((UnityEditor.KnobState) GUIUtility.GetStateObject(typeof(UnityEditor.KnobState), this.id));
 
             private void StartDraggingWithValue(float dragStartValue)
             {
@@ -9021,10 +8711,8 @@
                 }
             }
 
-            private Vector3 GetUVForPoint(Vector3 point)
-            {
-                return new Vector3((point.x - this.position.x) / this.knobSize.x, ((point.y - this.position.y) - this.knobSize.y) / -this.knobSize.y);
-            }
+            private Vector3 GetUVForPoint(Vector3 point) => 
+                new Vector3((point.x - this.position.x) / this.knobSize.x, ((point.y - this.position.y) - this.knobSize.y) / -this.knobSize.y);
 
             private void VertexPointWithUV(Vector3 point)
             {
@@ -9206,7 +8894,7 @@
         /// </summary>
         public class PropertyScope : GUI.Scope
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private GUIContent <content>k__BackingField;
 
             /// <summary>
@@ -9269,10 +8957,8 @@
                 Undo.IncrementCurrentGroup();
             }
 
-            internal bool IsEditingControl(int id)
-            {
-                return ((((GUIUtility.keyboardControl == id) && (base.controlID == id)) && s_ActuallyEditing) && GUIView.current.hasFocus);
-            }
+            internal bool IsEditingControl(int id) => 
+                ((((GUIUtility.keyboardControl == id) && (base.controlID == id)) && s_ActuallyEditing) && GUIView.current.hasFocus);
         }
 
         private static class Resizer

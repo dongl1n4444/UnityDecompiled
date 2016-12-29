@@ -611,13 +611,8 @@
             }
         }
 
-        private Object renderSettings
-        {
-            get
-            {
-                return RenderSettings.GetRenderSettings();
-            }
-        }
+        private Object renderSettings =>
+            RenderSettings.GetRenderSettings();
 
         private static Styles styles
         {

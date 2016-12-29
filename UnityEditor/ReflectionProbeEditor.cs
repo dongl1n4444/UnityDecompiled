@@ -13,7 +13,7 @@
     using UnityEngine.Rendering;
     using UnityEngine.SceneManagement;
 
-    [CustomEditor(typeof(ReflectionProbe)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(ReflectionProbe))]
     internal class ReflectionProbeEditor : Editor
     {
         internal static Color kGizmoHandleReflectionProbe = new Color(1f, 0.8980392f, 0.6666667f, 1f);
@@ -74,7 +74,7 @@
                 string fileNameWithoutExtension = probe.name + (!probe.hdr ? "-reflection" : "-reflectionHDR") + "." + extension;
                 fileNameWithoutExtension = Path.GetFileNameWithoutExtension(AssetDatabase.GenerateUniqueAssetPath(Path.Combine(pathWithoutExtension, fileNameWithoutExtension)));
                 assetPath = EditorUtility.SaveFilePanelInProject("Save reflection probe's cubemap.", fileNameWithoutExtension, extension, "", pathWithoutExtension);
-                if (string.IsNullOrEmpty(assetPath) || (this.IsCollidingWithOtherProbes(assetPath, probe, out probe2) && !EditorUtility.DisplayDialog("Cubemap is used by other reflection probe", string.Format("'{0}' path is used by the game object '{1}', do you really want to overwrite it?", assetPath, probe2.name), "Yes", "No")))
+                if (string.IsNullOrEmpty(assetPath) || (this.IsCollidingWithOtherProbes(assetPath, probe, out probe2) && !EditorUtility.DisplayDialog("Cubemap is used by other reflection probe", $"'{assetPath}' path is used by the game object '{probe2.name}', do you really want to overwrite it?", "Yes", "No")))
                 {
                     return;
                 }
@@ -260,7 +260,7 @@
 
         private bool IsCollidingWithOtherProbes(string targetPath, ReflectionProbe targetProbe, out ReflectionProbe collidingProbe)
         {
-            ReflectionProbe[] probeArray = Enumerable.ToArray<ReflectionProbe>(Object.FindObjectsOfType<ReflectionProbe>());
+            ReflectionProbe[] probeArray = Object.FindObjectsOfType<ReflectionProbe>().ToArray<ReflectionProbe>();
             collidingProbe = null;
             foreach (ReflectionProbe probe in probeArray)
             {
@@ -273,10 +273,8 @@
             return false;
         }
 
-        private bool IsReflectionProbeEditMode(EditMode.SceneViewEditMode editMode)
-        {
-            return ((editMode == EditMode.SceneViewEditMode.ReflectionProbeBox) || (editMode == EditMode.SceneViewEditMode.ReflectionProbeOrigin));
-        }
+        private bool IsReflectionProbeEditMode(EditMode.SceneViewEditMode editMode) => 
+            ((editMode == EditMode.SceneViewEditMode.ReflectionProbeBox) || (editMode == EditMode.SceneViewEditMode.ReflectionProbeOrigin));
 
         private void OnBakeButton(object data)
         {
@@ -603,21 +601,11 @@
             }
         }
 
-        private ReflectionProbeMode reflectionProbeMode
-        {
-            get
-            {
-                return this.reflectionProbeTarget.mode;
-            }
-        }
+        private ReflectionProbeMode reflectionProbeMode =>
+            this.reflectionProbeTarget.mode;
 
-        private ReflectionProbe reflectionProbeTarget
-        {
-            get
-            {
-                return (ReflectionProbe) base.target;
-            }
-        }
+        private ReflectionProbe reflectionProbeTarget =>
+            ((ReflectionProbe) base.target);
 
         private Material reflectiveMaterial
         {
@@ -632,13 +620,8 @@
             }
         }
 
-        private bool sceneViewEditing
-        {
-            get
-            {
-                return (this.IsReflectionProbeEditMode(EditMode.editMode) && EditMode.IsOwner(this));
-            }
-        }
+        private bool sceneViewEditing =>
+            (this.IsReflectionProbeEditMode(EditMode.editMode) && EditMode.IsOwner(this));
 
         private static Mesh sphereMesh
         {

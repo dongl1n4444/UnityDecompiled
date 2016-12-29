@@ -23,7 +23,7 @@
                 string attribute = iterator.Current.GetAttribute("name", "");
                 if ((attribute == null) || (attribute.Length < 1))
                 {
-                    throw new ApplicationException(string.Format("Failed to load {0}, <assembly> name attribute is empty", uri));
+                    throw new ApplicationException($"Failed to load {uri}, <assembly> name attribute is empty");
                 }
                 string key = iterator.Current.GetAttribute("platform", "");
                 if ((key == null) || (key.Length < 1))

@@ -55,7 +55,7 @@
             string str = string.Empty;
             if ((instruction != null) && (instruction.SequencePoint != null))
             {
-                str = string.Format("{0}:{1}", instruction.SequencePoint.Document.Url, instruction.SequencePoint.StartLine);
+                str = $"{instruction.SequencePoint.Document.Url}:{instruction.SequencePoint.StartLine}";
             }
             return str;
         }
@@ -87,7 +87,7 @@
             }
             if (!flag)
             {
-                additionalInformation = string.Format("Build a development build for more information.{0}{1}", !string.IsNullOrEmpty(additionalInformation) ? " " : "", additionalInformation);
+                additionalInformation = $"Build a development build for more information.{!string.IsNullOrEmpty(additionalInformation) ? " " : ""}{additionalInformation}";
             }
             if (!string.IsNullOrEmpty(additionalInformation))
             {

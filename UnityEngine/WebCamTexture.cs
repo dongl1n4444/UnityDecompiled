@@ -97,10 +97,8 @@
         /// <summary>
         /// <para>Get a block of pixel colors.</para>
         /// </summary>
-        public Color[] GetPixels()
-        {
-            return this.GetPixels(0, 0, this.width, this.height);
-        }
+        public Color[] GetPixels() => 
+            this.GetPixels(0, 0, this.width, this.height);
 
         /// <summary>
         /// <para>Get a block of pixel colors.</para>

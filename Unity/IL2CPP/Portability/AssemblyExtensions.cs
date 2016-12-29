@@ -4,50 +4,28 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class AssemblyExtensions
     {
-        [Extension]
-        public static string GetCodeBasePortable(Assembly assembly)
-        {
-            return assembly.CodeBase;
-        }
+        public static string GetCodeBasePortable(this Assembly assembly) => 
+            assembly.CodeBase;
 
-        [Extension]
-        public static object[] GetCustomAttributesPortable(Assembly assembly, Type attributeType, bool inherit)
-        {
-            return assembly.GetCustomAttributes(attributeType, inherit);
-        }
+        public static object[] GetCustomAttributesPortable(this Assembly assembly, Type attributeType, bool inherit) => 
+            assembly.GetCustomAttributes(attributeType, inherit);
 
-        [Extension]
-        public static Type[] GetExportedTypesPortable(Assembly assembly)
-        {
-            return assembly.GetExportedTypes();
-        }
+        public static Type[] GetExportedTypesPortable(this Assembly assembly) => 
+            assembly.GetExportedTypes();
 
-        [Extension]
-        public static Module[] GetModulesPortable(Assembly assembly)
-        {
-            return assembly.GetModules();
-        }
+        public static Module[] GetModulesPortable(this Assembly assembly) => 
+            assembly.GetModules();
 
-        [Extension]
-        public static AssemblyName[] GetReferencedAssembliesPortable(Assembly assembly)
-        {
-            return assembly.GetReferencedAssemblies();
-        }
+        public static AssemblyName[] GetReferencedAssembliesPortable(this Assembly assembly) => 
+            assembly.GetReferencedAssemblies();
 
-        [Extension]
-        public static Type[] GetTypesPortable(Assembly assembly)
-        {
-            return assembly.GetTypes();
-        }
+        public static Type[] GetTypesPortable(this Assembly assembly) => 
+            assembly.GetTypes();
 
-        [Extension]
-        public static bool InGlobalAssemblyCachePortable(Assembly assembly)
-        {
-            return assembly.GlobalAssemblyCache;
-        }
+        public static bool InGlobalAssemblyCachePortable(this Assembly assembly) => 
+            assembly.GlobalAssemblyCache;
     }
 }
 

@@ -24,7 +24,7 @@
         public override string GetInfoString()
         {
             RawImage target = base.target as RawImage;
-            return string.Format("RawImage Size: {0}x{1}", Mathf.RoundToInt(Mathf.Abs(target.rectTransform.rect.width)), Mathf.RoundToInt(Mathf.Abs(target.rectTransform.rect.height)));
+            return $"RawImage Size: {Mathf.RoundToInt(Mathf.Abs(target.rectTransform.rect.width))}x{Mathf.RoundToInt(Mathf.Abs(target.rectTransform.rect.height))}";
         }
 
         /// <summary>

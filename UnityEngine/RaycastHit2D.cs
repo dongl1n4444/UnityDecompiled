@@ -21,10 +21,8 @@
         /// </summary>
         public Vector2 centroid
         {
-            get
-            {
-                return this.m_Centroid;
-            }
+            get => 
+                this.m_Centroid;
             set
             {
                 this.m_Centroid = value;
@@ -35,10 +33,8 @@
         /// </summary>
         public Vector2 point
         {
-            get
-            {
-                return this.m_Point;
-            }
+            get => 
+                this.m_Point;
             set
             {
                 this.m_Point = value;
@@ -49,10 +45,8 @@
         /// </summary>
         public Vector2 normal
         {
-            get
-            {
-                return this.m_Normal;
-            }
+            get => 
+                this.m_Normal;
             set
             {
                 this.m_Normal = value;
@@ -63,10 +57,8 @@
         /// </summary>
         public float distance
         {
-            get
-            {
-                return this.m_Distance;
-            }
+            get => 
+                this.m_Distance;
             set
             {
                 this.m_Distance = value;
@@ -77,10 +69,8 @@
         /// </summary>
         public float fraction
         {
-            get
-            {
-                return this.m_Fraction;
-            }
+            get => 
+                this.m_Fraction;
             set
             {
                 this.m_Fraction = value;
@@ -89,23 +79,13 @@
         /// <summary>
         /// <para>The collider hit by the ray.</para>
         /// </summary>
-        public Collider2D collider
-        {
-            get
-            {
-                return this.m_Collider;
-            }
-        }
+        public Collider2D collider =>
+            this.m_Collider;
         /// <summary>
         /// <para>The Rigidbody2D attached to the object that was hit.</para>
         /// </summary>
-        public Rigidbody2D rigidbody
-        {
-            get
-            {
-                return ((this.collider == null) ? null : this.collider.attachedRigidbody);
-            }
-        }
+        public Rigidbody2D rigidbody =>
+            this.collider?.attachedRigidbody;
         /// <summary>
         /// <para>The Transform of the object that was hit.</para>
         /// </summary>
@@ -125,10 +105,8 @@
                 return null;
             }
         }
-        public static implicit operator bool(RaycastHit2D hit)
-        {
-            return (hit.collider != null);
-        }
+        public static implicit operator bool(RaycastHit2D hit) => 
+            (hit.collider != null);
 
         public int CompareTo(RaycastHit2D other)
         {

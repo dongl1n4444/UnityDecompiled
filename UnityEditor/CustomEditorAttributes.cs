@@ -13,10 +13,8 @@
         private static readonly List<MonoEditorType> kSCustomMultiEditors = new List<MonoEditorType>();
         private static bool s_Initialized;
 
-        internal static Type FindCustomEditorType(Object o, bool multiEdit)
-        {
-            return FindCustomEditorTypeByType(o.GetType(), multiEdit);
-        }
+        internal static Type FindCustomEditorType(Object o, bool multiEdit) => 
+            FindCustomEditorTypeByType(o.GetType(), multiEdit);
 
         internal static Type FindCustomEditorTypeByType(Type type, bool multiEdit)
         {

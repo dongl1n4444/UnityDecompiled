@@ -16,10 +16,8 @@
         {
         }
 
-        public override string ToString()
-        {
-            return this._rule;
-        }
+        public override string ToString() => 
+            this._rule;
     }
 }
 

@@ -34,10 +34,8 @@
         }
 
         protected abstract void CallWriterMethod(string methodName, string fieldName);
-        private static TypeReference ElementTypeFor(TypeReference typeRef)
-        {
-            return (!UnitySerializationLogic.IsSupportedCollection(typeRef) ? typeRef : CecilUtils.ElementTypeOfCollection(typeRef));
-        }
+        private static TypeReference ElementTypeFor(TypeReference typeRef) => 
+            (!UnitySerializationLogic.IsSupportedCollection(typeRef) ? typeRef : CecilUtils.ElementTypeOfCollection(typeRef));
 
         protected void EmitAlign()
         {
@@ -267,20 +265,14 @@
             return reference;
         }
 
-        protected override bool ShouldProcess(FieldDefinition fieldDefinition)
-        {
-            return base.WillUnitySerialize(fieldDefinition);
-        }
+        protected override bool ShouldProcess(FieldDefinition fieldDefinition) => 
+            base.WillUnitySerialize(fieldDefinition);
 
-        private string WriteMethodNameFor(FieldReference fieldDef)
-        {
-            return this.WriteMethodNameFor(base.TypeOf(fieldDef));
-        }
+        private string WriteMethodNameFor(FieldReference fieldDef) => 
+            this.WriteMethodNameFor(base.TypeOf(fieldDef));
 
-        protected string WriteMethodNameFor(TypeReference typeRef)
-        {
-            return ("Write" + base.MethodSuffixFor(typeRef));
-        }
+        protected string WriteMethodNameFor(TypeReference typeRef) => 
+            ("Write" + base.MethodSuffixFor(typeRef));
 
         protected abstract void WriteSequenceLength(string fieldName, Action emitSequenceLength);
 

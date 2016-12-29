@@ -23,7 +23,7 @@
                 {
                     return "0";
                 }
-                Match match = new Regex(string.Format(@"^{0}\s*=\s*([\d.]+).*$", "Pkg.Revision"), RegexOptions.Multiline).Match(input);
+                Match match = new Regex($"^{"Pkg.Revision"}\s*=\s*([\d.]+).*$", RegexOptions.Multiline).Match(input);
                 if (match.Success)
                 {
                     return match.Groups[1].Value;

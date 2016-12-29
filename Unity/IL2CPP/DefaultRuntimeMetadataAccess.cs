@@ -82,10 +82,8 @@
             return Naming.ForRuntimeMethodInfo(reference);
         }
 
-        public bool NeedsBoxingForValueTypeThis(MethodReference method)
-        {
-            return false;
-        }
+        public bool NeedsBoxingForValueTypeThis(MethodReference method) => 
+            false;
 
         public string Newobj(MethodReference ctor)
         {
@@ -97,7 +95,7 @@
         public string SizeOf(TypeReference type)
         {
             TypeReference variableType = this._typeResolver.Resolve(type);
-            return string.Format("sizeof({0})", Naming.ForVariable(variableType));
+            return $"sizeof({Naming.ForVariable(variableType)})";
         }
 
         public string StaticData(TypeReference type)

@@ -16,10 +16,8 @@
             base.k_BaseIndent = 20f;
         }
 
-        protected override Texture GetIconForItem(TreeViewItem item)
-        {
-            return (((item.children == null) || (item.children.Count <= 0)) ? this.k_Icon : this.k_Root);
-        }
+        protected override Texture GetIconForItem(TreeViewItem item) => 
+            (((item.children == null) || (item.children.Count <= 0)) ? this.k_Icon : this.k_Root);
 
         public override void OnRowGUI(Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
         {

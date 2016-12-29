@@ -28,10 +28,8 @@
         /// </summary>
         public int fingerId
         {
-            get
-            {
-                return this.m_FingerId;
-            }
+            get => 
+                this.m_FingerId;
             set
             {
                 this.m_FingerId = value;
@@ -42,10 +40,8 @@
         /// </summary>
         public Vector2 position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 this.m_Position = value;
@@ -56,10 +52,8 @@
         /// </summary>
         public Vector2 rawPosition
         {
-            get
-            {
-                return this.m_RawPosition;
-            }
+            get => 
+                this.m_RawPosition;
             set
             {
                 this.m_RawPosition = value;
@@ -70,10 +64,8 @@
         /// </summary>
         public Vector2 deltaPosition
         {
-            get
-            {
-                return this.m_PositionDelta;
-            }
+            get => 
+                this.m_PositionDelta;
             set
             {
                 this.m_PositionDelta = value;
@@ -84,10 +76,8 @@
         /// </summary>
         public float deltaTime
         {
-            get
-            {
-                return this.m_TimeDelta;
-            }
+            get => 
+                this.m_TimeDelta;
             set
             {
                 this.m_TimeDelta = value;
@@ -98,10 +88,8 @@
         /// </summary>
         public int tapCount
         {
-            get
-            {
-                return this.m_TapCount;
-            }
+            get => 
+                this.m_TapCount;
             set
             {
                 this.m_TapCount = value;
@@ -112,10 +100,8 @@
         /// </summary>
         public TouchPhase phase
         {
-            get
-            {
-                return this.m_Phase;
-            }
+            get => 
+                this.m_Phase;
             set
             {
                 this.m_Phase = value;
@@ -126,10 +112,8 @@
         /// </summary>
         public float pressure
         {
-            get
-            {
-                return this.m_Pressure;
-            }
+            get => 
+                this.m_Pressure;
             set
             {
                 this.m_Pressure = value;
@@ -140,10 +124,8 @@
         /// </summary>
         public float maximumPossiblePressure
         {
-            get
-            {
-                return this.m_maximumPossiblePressure;
-            }
+            get => 
+                this.m_maximumPossiblePressure;
             set
             {
                 this.m_maximumPossiblePressure = value;
@@ -154,10 +136,8 @@
         /// </summary>
         public TouchType type
         {
-            get
-            {
-                return this.m_Type;
-            }
+            get => 
+                this.m_Type;
             set
             {
                 this.m_Type = value;
@@ -168,10 +148,8 @@
         /// </summary>
         public float altitudeAngle
         {
-            get
-            {
-                return this.m_AltitudeAngle;
-            }
+            get => 
+                this.m_AltitudeAngle;
             set
             {
                 this.m_AltitudeAngle = value;
@@ -182,10 +160,8 @@
         /// </summary>
         public float azimuthAngle
         {
-            get
-            {
-                return this.m_AzimuthAngle;
-            }
+            get => 
+                this.m_AzimuthAngle;
             set
             {
                 this.m_AzimuthAngle = value;
@@ -196,10 +172,8 @@
         /// </summary>
         public float radius
         {
-            get
-            {
-                return this.m_Radius;
-            }
+            get => 
+                this.m_Radius;
             set
             {
                 this.m_Radius = value;
@@ -210,10 +184,8 @@
         /// </summary>
         public float radiusVariance
         {
-            get
-            {
-                return this.m_RadiusVariance;
-            }
+            get => 
+                this.m_RadiusVariance;
             set
             {
                 this.m_RadiusVariance = value;

@@ -19,10 +19,8 @@
             this.RefreshList();
         }
 
-        private static WindowResolve GetWindow()
-        {
-            return EditorWindow.GetWindow<WindowResolve>(true, "Version Control Resolve");
-        }
+        private static WindowResolve GetWindow() => 
+            EditorWindow.GetWindow<WindowResolve>(true, "Version Control Resolve");
 
         public void OnDisable()
         {

@@ -186,10 +186,8 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern int GetClipCount();
-        public IEnumerator GetEnumerator()
-        {
-            return new Enumerator(this);
-        }
+        public IEnumerator GetEnumerator() => 
+            new Enumerator(this);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern AnimationState GetState(string name);
@@ -239,26 +237,20 @@
         }
 
         [Obsolete("use PlayMode instead of AnimationPlayMode.")]
-        public bool Play(AnimationPlayMode mode)
-        {
-            return this.PlayDefaultAnimation((PlayMode) mode);
-        }
+        public bool Play(AnimationPlayMode mode) => 
+            this.PlayDefaultAnimation((PlayMode) mode);
 
         /// <summary>
         /// <para>Plays an animation without any blending.</para>
         /// </summary>
         /// <param name="mode"></param>
         /// <param name="animation"></param>
-        public bool Play([DefaultValue("PlayMode.StopSameLayer")] PlayMode mode)
-        {
-            return this.PlayDefaultAnimation(mode);
-        }
+        public bool Play([DefaultValue("PlayMode.StopSameLayer")] PlayMode mode) => 
+            this.PlayDefaultAnimation(mode);
 
         [Obsolete("use PlayMode instead of AnimationPlayMode.")]
-        public bool Play(string animation, AnimationPlayMode mode)
-        {
-            return this.Play(animation, (PlayMode) mode);
-        }
+        public bool Play(string animation, AnimationPlayMode mode) => 
+            this.Play(animation, (PlayMode) mode);
 
         /// <summary>
         /// <para>Plays an animation without any blending.</para>
@@ -394,13 +386,8 @@
         /// </summary>
         public bool isPlaying { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        public AnimationState this[string name]
-        {
-            get
-            {
-                return this.GetState(name);
-            }
-        }
+        public AnimationState this[string name] =>
+            this.GetState(name);
 
         /// <summary>
         /// <para>AABB of this Animation animation component in local space.</para>
@@ -451,13 +438,8 @@
                 this.m_CurrentIndex = -1;
             }
 
-            public object Current
-            {
-                get
-                {
-                    return this.m_Outer.GetStateAtIndex(this.m_CurrentIndex);
-                }
-            }
+            public object Current =>
+                this.m_Outer.GetStateAtIndex(this.m_CurrentIndex);
         }
     }
 }

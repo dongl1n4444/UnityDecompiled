@@ -23,7 +23,7 @@
             {
                 return "-∞ dB";
             }
-            return string.Format("{0:F1} dB", 20f * Mathf.Log10(vol));
+            return $"{(20f * Mathf.Log10(vol)):F1} dB";
         }
 
         private static string FormatNumber(int num)
@@ -58,13 +58,13 @@
             StringBuilder builder = new StringBuilder(400);
             float audioLevel = UnityStats.audioLevel;
             builder.Append("  Level: " + FormatDb(audioLevel) + (!EditorUtility.audioMasterMute ? "\n" : " (MUTED)\n"));
-            builder.Append(string.Format("  Clipping: {0:F1}%", 100f * UnityStats.audioClippingAmount));
+            builder.Append($"  Clipping: {100f * UnityStats.audioClippingAmount:F1}%");
             GUILayout.Label(builder.ToString(), new GUILayoutOption[0]);
-            GUI.Label(new Rect(170f, 40f, 120f, 20f), string.Format("DSP load: {0:F1}%", 100f * UnityStats.audioDSPLoad));
-            GUI.Label(new Rect(170f, 53f, 120f, 20f), string.Format("Stream load: {0:F1}%", 100f * UnityStats.audioStreamLoad));
+            GUI.Label(new Rect(170f, 40f, 120f, 20f), $"DSP load: {100f * UnityStats.audioDSPLoad:F1}%");
+            GUI.Label(new Rect(170f, 53f, 120f, 20f), $"Stream load: {100f * UnityStats.audioStreamLoad:F1}%");
             GUILayout.Label("Graphics:", sectionHeaderStyle, new GUILayoutOption[0]);
             UpdateFrameTime();
-            string text = string.Format("{0:F1} FPS ({1:F1}ms)", 1f / Mathf.Max(m_MaxFrameTime, 1E-05f), m_MaxFrameTime * 1000f);
+            string text = $"{1f / Mathf.Max(m_MaxFrameTime, 1E-05f):F1} FPS ({m_MaxFrameTime * 1000f:F1}ms)";
             GUI.Label(new Rect(170f, 75f, 120f, 20f), text);
             int screenBytes = UnityStats.screenBytes;
             int num6 = UnityStats.dynamicBatchedDrawCalls - UnityStats.dynamicBatches;
@@ -73,17 +73,23 @@
             StringBuilder builder2 = new StringBuilder(400);
             if (m_ClientFrameTime > m_RenderFrameTime)
             {
-                builder2.Append(string.Format("  CPU: main <b>{0:F1}</b>ms  render thread {1:F1}ms\n", m_ClientFrameTime * 1000f, m_RenderFrameTime * 1000f));
+                builder2.Append($"  CPU: main <b>{m_ClientFrameTime * 1000f:F1}</b>ms  render thread {m_RenderFrameTime * 1000f:F1}ms
+");
             }
             else
             {
-                builder2.Append(string.Format("  CPU: main {0:F1}ms  render thread <b>{1:F1}</b>ms\n", m_ClientFrameTime * 1000f, m_RenderFrameTime * 1000f));
+                builder2.Append($"  CPU: main {m_ClientFrameTime * 1000f:F1}ms  render thread <b>{m_RenderFrameTime * 1000f:F1}</b>ms
+");
             }
-            builder2.Append(string.Format("  Batches: <b>{0}</b> \tSaved by batching: {1}\n", UnityStats.batches, (num6 + num7) + num8));
-            builder2.Append(string.Format("  Tris: {0} \tVerts: {1} \n", FormatNumber(UnityStats.triangles), FormatNumber(UnityStats.vertices)));
-            builder2.Append(string.Format("  Screen: {0} - {1}\n", UnityStats.screenRes, EditorUtility.FormatBytes(screenBytes)));
-            builder2.Append(string.Format("  SetPass calls: {0} \tShadow casters: {1} \n", UnityStats.setPassCalls, UnityStats.shadowCasters));
-            builder2.Append(string.Format("  Visible skinned meshes: {0}  Animations: {1}", UnityStats.visibleSkinnedMeshes, UnityStats.visibleAnimations));
+            builder2.Append($"  Batches: <b>{UnityStats.batches}</b> 	Saved by batching: {(num6 + num7) + num8}
+");
+            builder2.Append($"  Tris: {FormatNumber(UnityStats.triangles)} 	Verts: {FormatNumber(UnityStats.vertices)} 
+");
+            builder2.Append($"  Screen: {UnityStats.screenRes} - {EditorUtility.FormatBytes(screenBytes)}
+");
+            builder2.Append($"  SetPass calls: {UnityStats.setPassCalls} 	Shadow casters: {UnityStats.shadowCasters} 
+");
+            builder2.Append($"  Visible skinned meshes: {UnityStats.visibleSkinnedMeshes}  Animations: {UnityStats.visibleAnimations}");
             GUILayout.Label(builder2.ToString(), labelStyle, new GUILayoutOption[0]);
             if (length != 0)
             {

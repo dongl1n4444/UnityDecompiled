@@ -13,21 +13,11 @@
             }
         }
 
-        public override string Architecture
-        {
-            get
-            {
-                return "FAT";
-            }
-        }
+        public override string Architecture =>
+            "FAT";
 
-        public override AndroidTargetDevice TargetDevice
-        {
-            get
-            {
-                return AndroidTargetDevice.FAT;
-            }
-        }
+        public override AndroidTargetDevice TargetDevice =>
+            AndroidTargetDevice.FAT;
     }
 }
 

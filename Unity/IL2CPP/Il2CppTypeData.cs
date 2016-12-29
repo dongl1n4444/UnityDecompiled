@@ -15,10 +15,8 @@
             this.Attrs = attrs;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0} [{1}]", this.Type.FullName, this.Attrs);
-        }
+        public override string ToString() => 
+            $"{this.Type.FullName} [{this.Attrs}]";
     }
 }
 

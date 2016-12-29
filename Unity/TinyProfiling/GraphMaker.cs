@@ -40,8 +40,8 @@
             int num = this.MaxParents(sections);
             int num2 = 20 + (15 * (num + 1));
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine(string.Format("<rect x=\"0.0\" y=\"{0}\" width=\"2000.0\" height=\"{1}\" fill=\"url(#background)\"  />", this.YTopOfCurrentThread, num2));
-            builder.AppendLine(string.Format("<text text-anchor=\"left\" x=\"0\" y=\"{0}\" font-size=\"12\" font-family=\"Verdana\" fill=\"rgb(0,0,0)\"  >ThreadID: {1} {2}</text>", this.YTopOfCurrentThread + 12, threadContext.ThreadID, threadContext.ThreadName));
+            builder.AppendLine($"<rect x="0.0" y="{this.YTopOfCurrentThread}" width="2000.0" height="{num2}" fill="url(#background)"  />");
+            builder.AppendLine($"<text text-anchor="left" x="0" y="{this.YTopOfCurrentThread + 12}" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >ThreadID: {threadContext.ThreadID} {threadContext.ThreadName}</text>");
             for (int i = 0; i != sections.Count; i++)
             {
                 builder.Append(this.SectionRect(sections, i));
@@ -65,10 +65,34 @@
             return (num3 + (num6 * (num5 - num3)));
         }
 
-        private string Header(string title)
-        {
-            return string.Format("<?xml version=\"1.0\" standalone=\"no\"?>\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n<svg version=\"1.1\" width=\"2000\" height=\"800\" onload=\"init(evt)\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n<defs >\n    <linearGradient id=\"background\" y1=\"0\" y2=\"1\" x1=\"0\" x2=\"0\" >\n        <stop stop-color=\"#eeeeee\" offset=\"5%\" />\n        <stop stop-color=\"#eeeeb0\" offset=\"95%\" />\n    </linearGradient>\n</defs>\n<style type=\"text/css\">\n    .func_g:hover {{ fill:rgb(220,80,80); }}\n    .func_text {{ pointer-events:none; }}\n</style>\n<script type=\"text/ecmascript\">\n<![CDATA[\n    var details;\n    function init(evt) {{ details = document.getElementById(\"details\").firstChild; }}\n    function s(info) {{ details.nodeValue = info; }}\n    function c() {{ details.nodeValue = ' '; }}\n]]>\n</script>\n<script xlink:href=\"SVGPan.js\"/>\n\n<g id=\"viewport\" class=\"chart\" width=\"2000\">\n\n<text text-anchor=\"middle\" x=\"1000\" y=\"30\" font-size=\"17\" font-family=\"Verdana\" fill=\"rgb(0,0,0)\"  >{0}</text>\n", title);
-        }
+        private string Header(string title) => 
+            $"<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="2000" height="800" onload="init(evt)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs >
+    <linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+        <stop stop-color="#eeeeee" offset="5%" />
+        <stop stop-color="#eeeeb0" offset="95%" />
+    </linearGradient>
+</defs>
+<style type="text/css">
+    .func_g:hover {{ fill:rgb(220,80,80); }}
+    .func_text {{ pointer-events:none; }}
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+    var details;
+    function init(evt) {{ details = document.getElementById("details").firstChild; }}
+    function s(info) {{ details.nodeValue = info; }}
+    function c() {{ details.nodeValue = ' '; }}
+]]>
+</script>
+<script xlink:href="SVGPan.js"/>
+
+<g id="viewport" class="chart" width="2000">
+
+<text text-anchor="middle" x="1000" y="30" font-size="17" font-family="Verdana" fill="rgb(0,0,0)"  >{title}</text>
+";
 
         public string MakeGraph(List<TinyProfiler.ThreadContext> threadContexts, string title)
         {
@@ -80,7 +104,7 @@
             {
                 <>f__am$cache1 = new Func<TinyProfiler.TimedSection, double>(null, (IntPtr) <MakeGraph>m__1);
             }
-            double num = Enumerable.Max<TinyProfiler.TimedSection>(Enumerable.SelectMany<TinyProfiler.ThreadContext, TinyProfiler.TimedSection>(threadContexts, <>f__am$cache0), <>f__am$cache1);
+            double num = threadContexts.SelectMany<TinyProfiler.ThreadContext, TinyProfiler.TimedSection>(<>f__am$cache0).Max<TinyProfiler.TimedSection>(<>f__am$cache1);
             this.millisecondsToPixels = 2000.0 / num;
             StringBuilder builder = new StringBuilder();
             object[] objArray1 = new object[] { title, " ", num, "ms" };
@@ -90,7 +114,7 @@
             {
                 <>f__am$cache2 = new Func<TinyProfiler.ThreadContext, bool>(null, (IntPtr) <MakeGraph>m__2);
             }
-            foreach (TinyProfiler.ThreadContext context in Enumerable.Where<TinyProfiler.ThreadContext>(threadContexts, <>f__am$cache2))
+            foreach (TinyProfiler.ThreadContext context in threadContexts.Where<TinyProfiler.ThreadContext>(<>f__am$cache2))
             {
                 builder.Append(this.EmitSingleThread(context));
             }
@@ -121,10 +145,8 @@
             return (this.NumberOfParents(sections, parent) + 1);
         }
 
-        private double Scale(double milliseconds)
-        {
-            return (milliseconds * this.millisecondsToPixels);
-        }
+        private double Scale(double milliseconds) => 
+            (milliseconds * this.millisecondsToPixels);
 
         private string SectionRect(List<TinyProfiler.TimedSection> sections, int index)
         {
@@ -136,7 +158,7 @@
             double num4 = this.FontSizeFor(section.Duration);
             if (num4 > 2.0)
             {
-                builder.AppendLine(string.Format("<text class=\"func_text\" text-anchor=\"top\" x=\"{0}\" y=\"{1}\" font-size=\"{2}\" font-family=\"Verdana\" fill=\"rgb(0,0,s0)\">{3}</text>", new object[] { this.Scale(section.Start).ToString(CultureInfo.InvariantCulture), num + 13, num4.ToString(CultureInfo.InvariantCulture), section.Label }));
+                builder.AppendLine($"<text class="func_text" text-anchor="top" x="{this.Scale(section.Start).ToString(CultureInfo.InvariantCulture)}" y="{num + 13}" font-size="{num4.ToString(CultureInfo.InvariantCulture)}" font-family="Verdana" fill="rgb(0,0,s0)">{section.Label}</text>");
             }
             return builder.ToString();
         }

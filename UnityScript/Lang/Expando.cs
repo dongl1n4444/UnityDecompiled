@@ -17,10 +17,8 @@
 
         public object this[string key]
         {
-            get
-            {
-                return this._attributes[key];
-            }
+            get => 
+                this._attributes[key];
             set
             {
                 if (value == null)
@@ -34,13 +32,8 @@
             }
         }
 
-        public object Target
-        {
-            get
-            {
-                return this._target.Target;
-            }
-        }
+        public object Target =>
+            this._target.Target;
     }
 }
 

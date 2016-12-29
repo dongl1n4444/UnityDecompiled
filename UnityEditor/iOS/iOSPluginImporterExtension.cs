@@ -108,10 +108,8 @@
         {
         }
 
-        private static DefaultPluginImporterExtension.Property[] GetProperties()
-        {
-            return new DefaultPluginImporterExtension.Property[] { m_frameworks, new DefaultPluginImporterExtension.Property(EditorGUIUtility.TextContent("Compile flags"), Plugin.compileFlagsKey, "", "iOS") };
-        }
+        private static DefaultPluginImporterExtension.Property[] GetProperties() => 
+            new DefaultPluginImporterExtension.Property[] { m_frameworks, new DefaultPluginImporterExtension.Property(EditorGUIUtility.TextContent("Compile flags"), Plugin.compileFlagsKey, "", "iOS") };
     }
 }
 

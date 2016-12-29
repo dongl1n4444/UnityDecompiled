@@ -14,21 +14,11 @@
             this._method = method;
         }
 
-        public GenericInstanceMethod Method
-        {
-            get
-            {
-                return this._method;
-            }
-        }
+        public GenericInstanceMethod Method =>
+            this._method;
 
-        public GenericInstanceType Type
-        {
-            get
-            {
-                return this._type;
-            }
-        }
+        public GenericInstanceType Type =>
+            this._type;
     }
 }
 

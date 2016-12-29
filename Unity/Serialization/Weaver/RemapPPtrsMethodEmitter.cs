@@ -208,10 +208,8 @@
             this.CallRemapPPtrsMethodFor(base.TypeOf(fieldDef));
         }
 
-        public static MethodDefinition RemapPPtrsMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider)
-        {
-            return new RemapPPtrsMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
-        }
+        public static MethodDefinition RemapPPtrsMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider) => 
+            new RemapPPtrsMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
 
         private MethodReference RemapPPtrsMethodRefFor(TypeReference typeReference)
         {
@@ -222,18 +220,11 @@
             return reference;
         }
 
-        protected override bool ShouldProcess(FieldDefinition fieldDefinition)
-        {
-            return UnitySerializationLogic.ShouldFieldBePPtrRemapped(fieldDefinition, base.TypeResolver);
-        }
+        protected override bool ShouldProcess(FieldDefinition fieldDefinition) => 
+            UnitySerializationLogic.ShouldFieldBePPtrRemapped(fieldDefinition, base.TypeResolver);
 
-        private TypeDefinition PPtrRemapperInterface
-        {
-            get
-            {
-                return base._serializationBridgeProvider.PPtrRemapperInterface;
-            }
-        }
+        private TypeDefinition PPtrRemapperInterface =>
+            base._serializationBridgeProvider.PPtrRemapperInterface;
 
         [CompilerGenerated]
         private sealed class <EmitRemappingForIDeserializable>c__AnonStorey0

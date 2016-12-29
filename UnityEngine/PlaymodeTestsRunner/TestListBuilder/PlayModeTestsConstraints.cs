@@ -7,15 +7,11 @@
 
     internal class PlayModeTestsConstraints : TestsConstraint
     {
-        public override bool IsClassATest(System.Type type)
-        {
-            return type.IsSubclassOf(typeof(MonoBehaviour));
-        }
+        public override bool IsClassATest(System.Type type) => 
+            type.IsSubclassOf(typeof(MonoBehaviour));
 
-        public override bool IsClassTestSupported()
-        {
-            return true;
-        }
+        public override bool IsClassTestSupported() => 
+            true;
 
         public override bool IsMethodATest(MethodInfo method)
         {
@@ -31,10 +27,8 @@
             return true;
         }
 
-        public override bool IsMethodTestSupported()
-        {
-            return true;
-        }
+        public override bool IsMethodTestSupported() => 
+            true;
     }
 }
 

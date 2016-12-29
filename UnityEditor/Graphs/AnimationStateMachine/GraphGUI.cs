@@ -99,7 +99,7 @@
         private List<AnimationClip> ComputeDraggedClipsFromModelImporter()
         {
             List<AnimationClip> list = new List<AnimationClip>();
-            List<GameObject> list2 = Enumerable.ToList<GameObject>(Enumerable.OfType<GameObject>(DragAndDrop.objectReferences));
+            List<GameObject> list2 = DragAndDrop.objectReferences.OfType<GameObject>().ToList<GameObject>();
             for (int i = 0; i < list2.Count; i++)
             {
                 ModelImporter atPath = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(list2[i])) as ModelImporter;
@@ -305,9 +305,9 @@
         private void HandleObjectDragging()
         {
             Event current = Event.current;
-            List<Motion> list = Enumerable.ToList<Motion>(Enumerable.OfType<Motion>(DragAndDrop.objectReferences));
-            List<AnimatorState> list2 = Enumerable.ToList<AnimatorState>(Enumerable.OfType<AnimatorState>(DragAndDrop.objectReferences));
-            List<AnimatorStateMachine> list3 = Enumerable.ToList<AnimatorStateMachine>(Enumerable.OfType<AnimatorStateMachine>(DragAndDrop.objectReferences));
+            List<Motion> list = DragAndDrop.objectReferences.OfType<Motion>().ToList<Motion>();
+            List<AnimatorState> list2 = DragAndDrop.objectReferences.OfType<AnimatorState>().ToList<AnimatorState>();
+            List<AnimatorStateMachine> list3 = DragAndDrop.objectReferences.OfType<AnimatorStateMachine>().ToList<AnimatorStateMachine>();
             List<AnimationClip> list4 = this.ComputeDraggedClipsFromModelImporter();
             switch (current.type)
             {
@@ -361,10 +361,8 @@
             }
         }
 
-        private static bool HasMotionSelected()
-        {
-            return (Selection.activeObject is Motion);
-        }
+        private static bool HasMotionSelected() => 
+            (Selection.activeObject is Motion);
 
         private bool IsCurrentStateMachineNodeLiveLinked(UnityEditor.Graphs.AnimationStateMachine.Node n)
         {
@@ -490,7 +488,7 @@
                 node.position = GUILayout.Window(node.GetInstanceID(), node.position, new GUI.WindowFunction(storey.<>m__0), node.title, UnityEditor.Graphs.Styles.GetNodeStyle(node.style, !this.IsCurrentStateMachineNodeLiveLinked(node) ? node.color : UnityEditor.Graphs.Styles.Color.Blue, on), options);
                 if ((Event.current.type == EventType.MouseMove) && node.position.Contains(Event.current.mousePosition))
                 {
-                    this.edgeGUI.SlotDragging(Enumerable.First<Slot>(node.inputSlots), true, true);
+                    this.edgeGUI.SlotDragging(node.inputSlots.First<Slot>(), true, true);
                 }
             }
             this.edgeGUI.DoEdges();
@@ -512,15 +510,11 @@
             AnimatorControllerTool.tool.RebuildGraph();
         }
 
-        internal string ResolveHash(Animator controller, int fullPathHash)
-        {
-            return controller.ResolveHash(fullPathHash);
-        }
+        internal string ResolveHash(Animator controller, int fullPathHash) => 
+            controller.ResolveHash(fullPathHash);
 
-        internal string ResolveHash(AnimatorControllerPlayable controller, int fullPathHash)
-        {
-            return controller.ResolveHash(fullPathHash);
-        }
+        internal string ResolveHash(AnimatorControllerPlayable controller, int fullPathHash) => 
+            controller.ResolveHash(fullPathHash);
 
         private bool SelectionOnlyUpNode()
         {
@@ -648,21 +642,11 @@
             }
         }
 
-        public AnimatorStateMachine activeStateMachine
-        {
-            get
-            {
-                return this.stateMachineGraph.activeStateMachine;
-            }
-        }
+        public AnimatorStateMachine activeStateMachine =>
+            this.stateMachineGraph.activeStateMachine;
 
-        public AnimatorDefaultTransition defaultTransition
-        {
-            get
-            {
-                return this.m_DefaultTransition;
-            }
-        }
+        public AnimatorDefaultTransition defaultTransition =>
+            this.m_DefaultTransition;
 
         public override IEdgeGUI edgeGUI
         {
@@ -679,61 +663,26 @@
             }
         }
 
-        public AnimatorStateMachine hoveredStateMachine
-        {
-            get
-            {
-                return ((this.m_HoveredStateMachineNode == null) ? null : this.m_HoveredStateMachineNode.stateMachine);
-            }
-        }
+        public AnimatorStateMachine hoveredStateMachine =>
+            ((this.m_HoveredStateMachineNode == null) ? null : this.m_HoveredStateMachineNode.stateMachine);
 
-        private bool isSelectionMoving
-        {
-            get
-            {
-                return ((base.selection.Count > 0) && base.selection[0].isDragging);
-            }
-        }
+        private bool isSelectionMoving =>
+            ((base.selection.Count > 0) && base.selection[0].isDragging);
 
-        public LiveLinkInfo liveLinkInfo
-        {
-            get
-            {
-                return this.m_LiveLinkInfo;
-            }
-        }
+        public LiveLinkInfo liveLinkInfo =>
+            this.m_LiveLinkInfo;
 
-        public AnimatorStateMachine parentStateMachine
-        {
-            get
-            {
-                return this.stateMachineGraph.parentStateMachine;
-            }
-        }
+        public AnimatorStateMachine parentStateMachine =>
+            this.stateMachineGraph.parentStateMachine;
 
-        public AnimatorStateMachine rootStateMachine
-        {
-            get
-            {
-                return this.stateMachineGraph.rootStateMachine;
-            }
-        }
+        public AnimatorStateMachine rootStateMachine =>
+            this.stateMachineGraph.rootStateMachine;
 
-        public UnityEditor.Graphs.AnimationStateMachine.Graph stateMachineGraph
-        {
-            get
-            {
-                return (base.graph as UnityEditor.Graphs.AnimationStateMachine.Graph);
-            }
-        }
+        public UnityEditor.Graphs.AnimationStateMachine.Graph stateMachineGraph =>
+            (base.graph as UnityEditor.Graphs.AnimationStateMachine.Graph);
 
-        public AnimatorControllerTool tool
-        {
-            get
-            {
-                return (base.m_Host as AnimatorControllerTool);
-            }
-        }
+        public AnimatorControllerTool tool =>
+            (base.m_Host as AnimatorControllerTool);
 
         [CompilerGenerated]
         private sealed class <OnGraphGUI>c__AnonStorey0
@@ -763,10 +712,8 @@
             public UnityEditor.Graphs.AnimationStateMachine.Node dstNode;
             public AnimatorState currentState
             {
-                get
-                {
-                    return this.m_CurrentState;
-                }
+                get => 
+                    this.m_CurrentState;
                 set
                 {
                     this.m_CurrentState = value;
@@ -774,10 +721,8 @@
             }
             public float currentStateNormalizedTime
             {
-                get
-                {
-                    return this.m_CurrentStateNormalizedTime;
-                }
+                get => 
+                    this.m_CurrentStateNormalizedTime;
                 set
                 {
                     this.m_CurrentStateNormalizedTime = value;
@@ -785,10 +730,8 @@
             }
             public bool currentStateLoopTime
             {
-                get
-                {
-                    return this.m_CurrentStateLoopTime;
-                }
+                get => 
+                    this.m_CurrentStateLoopTime;
                 set
                 {
                     this.m_CurrentStateLoopTime = value;
@@ -796,10 +739,8 @@
             }
             public AnimatorState nextState
             {
-                get
-                {
-                    return this.m_NextState;
-                }
+                get => 
+                    this.m_NextState;
                 set
                 {
                     this.m_NextState = value;
@@ -807,10 +748,8 @@
             }
             public float nextStateNormalizedTime
             {
-                get
-                {
-                    return this.m_NextStateNormalizedTime;
-                }
+                get => 
+                    this.m_NextStateNormalizedTime;
                 set
                 {
                     this.m_NextStateNormalizedTime = value;
@@ -818,10 +757,8 @@
             }
             public bool nextStateLoopTime
             {
-                get
-                {
-                    return this.m_NextStateLoopTime;
-                }
+                get => 
+                    this.m_NextStateLoopTime;
                 set
                 {
                     this.m_NextStateLoopTime = value;
@@ -829,10 +766,8 @@
             }
             public AnimatorStateMachine currentStateMachine
             {
-                get
-                {
-                    return this.m_CurrentStateMachine;
-                }
+                get => 
+                    this.m_CurrentStateMachine;
                 set
                 {
                     this.m_CurrentStateMachine = value;
@@ -840,10 +775,8 @@
             }
             public AnimatorStateMachine nextStateMachine
             {
-                get
-                {
-                    return this.m_NextStateMachine;
-                }
+                get => 
+                    this.m_NextStateMachine;
                 set
                 {
                     this.m_NextStateMachine = value;
@@ -851,10 +784,8 @@
             }
             public AnimatorTransitionInfo transitionInfo
             {
-                get
-                {
-                    return this.m_TransitionInfo;
-                }
+                get => 
+                    this.m_TransitionInfo;
                 set
                 {
                     this.m_TransitionInfo = value;

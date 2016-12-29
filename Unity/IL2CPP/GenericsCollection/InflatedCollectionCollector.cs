@@ -16,10 +16,8 @@
         public readonly InflatedCollection<GenericInstanceType> TypeMethodDeclarations = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
         public readonly InflatedCollection<GenericInstanceType> Types = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
 
-        public ReadOnlyInflatedCollectionCollector AsReadOnly()
-        {
-            return new ReadOnlyInflatedCollectionCollector(this);
-        }
+        public ReadOnlyInflatedCollectionCollector AsReadOnly() => 
+            new ReadOnlyInflatedCollectionCollector(this);
     }
 }
 

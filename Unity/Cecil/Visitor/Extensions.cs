@@ -4,65 +4,54 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class Extensions
     {
-        [Extension]
-        public static void Accept(ArrayType arrayType, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this ArrayType arrayType, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<ArrayType>(arrayType, visitor);
+            arrayType.DoAccept<ArrayType>(visitor);
         }
 
-        [Extension]
-        public static void Accept(AssemblyDefinition assemblyDefinition, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this AssemblyDefinition assemblyDefinition, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<AssemblyDefinition>(assemblyDefinition, visitor);
+            assemblyDefinition.DoAccept<AssemblyDefinition>(visitor);
         }
 
-        [Extension]
-        public static void Accept(FieldDefinition fieldDefinition, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this FieldDefinition fieldDefinition, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<FieldDefinition>(fieldDefinition, visitor);
+            fieldDefinition.DoAccept<FieldDefinition>(visitor);
         }
 
-        [Extension]
-        public static void Accept(GenericInstanceType genericInstanceType, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this GenericInstanceType genericInstanceType, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<GenericInstanceType>(genericInstanceType, visitor);
+            genericInstanceType.DoAccept<GenericInstanceType>(visitor);
         }
 
-        [Extension]
-        public static void Accept(MethodDefinition methodDefinition, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this MethodDefinition methodDefinition, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<MethodDefinition>(methodDefinition, visitor);
+            methodDefinition.DoAccept<MethodDefinition>(visitor);
         }
 
-        [Extension]
-        public static void Accept(ModuleDefinition moduleDefinition, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this ModuleDefinition moduleDefinition, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<ModuleDefinition>(moduleDefinition, visitor);
+            moduleDefinition.DoAccept<ModuleDefinition>(visitor);
         }
 
-        [Extension]
-        public static void Accept(PointerType pointerType, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this PointerType pointerType, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<PointerType>(pointerType, visitor);
+            pointerType.DoAccept<PointerType>(visitor);
         }
 
-        [Extension]
-        public static void Accept(PropertyDefinition propertyDefinition, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this PropertyDefinition propertyDefinition, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<PropertyDefinition>(propertyDefinition, visitor);
+            propertyDefinition.DoAccept<PropertyDefinition>(visitor);
         }
 
-        [Extension]
-        public static void Accept(TypeDefinition typeDefinition, Unity.Cecil.Visitor.Visitor visitor)
+        public static void Accept(this TypeDefinition typeDefinition, Unity.Cecil.Visitor.Visitor visitor)
         {
-            DoAccept<TypeDefinition>(typeDefinition, visitor);
+            typeDefinition.DoAccept<TypeDefinition>(visitor);
         }
 
-        [Extension]
-        private static void DoAccept<T>(T definition, Unity.Cecil.Visitor.Visitor visitor) where T: class
+        private static void DoAccept<T>(this T definition, Unity.Cecil.Visitor.Visitor visitor) where T: class
         {
             if ((visitor != null) && (definition != null))
             {

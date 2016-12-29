@@ -64,10 +64,8 @@
         /// <returns>
         /// <para>The frame rates at which the video can be recorded.</para>
         /// </returns>
-        public static IEnumerable<float> GetSupportedFrameRatesForResolution(Resolution resolution)
-        {
-            return GetSupportedFrameRatesForResolution_Internal(resolution.width, resolution.height);
-        }
+        public static IEnumerable<float> GetSupportedFrameRatesForResolution(Resolution resolution) => 
+            GetSupportedFrameRatesForResolution_Internal(resolution.width, resolution.height);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float[] GetSupportedFrameRatesForResolution_Internal(int resolutionWidth, int resolutionHeight);
@@ -79,10 +77,8 @@
         /// <returns>
         /// <para>A native COM pointer to the IVideoDeviceController.</para>
         /// </returns>
-        public IntPtr GetUnsafePointerToVideoDeviceController()
-        {
-            return GetUnsafePointerToVideoDeviceController_Internal(this.m_NativePtr);
-        }
+        public IntPtr GetUnsafePointerToVideoDeviceController() => 
+            GetUnsafePointerToVideoDeviceController_Internal(this.m_NativePtr);
 
         [ThreadAndSerializationSafe]
         private static IntPtr GetUnsafePointerToVideoDeviceController_Internal(IntPtr videoCaptureObj)
@@ -159,13 +155,11 @@
             return result;
         }
 
-        private static VideoCaptureResult MakeCaptureResult(CaptureResultType resultType, long hResult)
-        {
-            return new VideoCaptureResult { 
+        private static VideoCaptureResult MakeCaptureResult(CaptureResultType resultType, long hResult) => 
+            new VideoCaptureResult { 
                 resultType = resultType,
                 hResult = hResult
             };
-        }
 
         public void StartRecordingAsync(string filename, OnStartedRecordingVideoCallback onStartedRecordingVideoCallback)
         {
@@ -342,13 +336,8 @@
             /// <summary>
             /// <para>Indicates whether or not the operation was successful.</para>
             /// </summary>
-            public bool success
-            {
-                get
-                {
-                    return (this.resultType == VideoCapture.CaptureResultType.Success);
-                }
-            }
+            public bool success =>
+                (this.resultType == VideoCapture.CaptureResultType.Success);
         }
     }
 }

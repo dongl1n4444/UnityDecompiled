@@ -13,7 +13,7 @@
 
     internal class TasksCommon
     {
-        public static string Exec(string command, string args, string workingdir, string errorMsg, [Optional, DefaultParameterValue(0)] int retriesOnFailure)
+        public static string Exec(string command, string args, string workingdir, string errorMsg, int retriesOnFailure = 0)
         {
             ProcessStartInfo psi = new ProcessStartInfo {
                 FileName = command,
@@ -68,10 +68,8 @@
             return Paths.Combine(components);
         }
 
-        public static string SDKTool(PostProcessorContext context, string[] command, string workingdir, string errorMsg)
-        {
-            return context.Get<AndroidSDKTools>("SDKTools").RunCommand(command, workingdir, null, errorMsg);
-        }
+        public static string SDKTool(PostProcessorContext context, string[] command, string workingdir, string errorMsg) => 
+            context.Get<AndroidSDKTools>("SDKTools").RunCommand(command, workingdir, null, errorMsg);
     }
 }
 

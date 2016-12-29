@@ -48,7 +48,7 @@
             {
                 <>f__am$cache0 = new Func<ExceptionHandler, bool>(null, (IntPtr) <ExceptionSupport>m__0);
             }
-            if (Enumerable.Any<ExceptionHandler>(this._methodBody.ExceptionHandlers, <>f__am$cache0))
+            if (this._methodBody.ExceptionHandlers.Any<ExceptionHandler>(<>f__am$cache0))
             {
                 throw new NotSupportedException("Filter exception handlers types are not supported yet!");
             }
@@ -57,10 +57,8 @@
         }
 
         [CompilerGenerated]
-        private static bool <ExceptionSupport>m__0(ExceptionHandler h)
-        {
-            return (h.HandlerType == ExceptionHandlerType.Filter);
-        }
+        private static bool <ExceptionSupport>m__0(ExceptionHandler h) => 
+            (h.HandlerType == ExceptionHandlerType.Filter);
 
         internal void AddLeaveTarget(Node finallyNode, Instruction instruction)
         {
@@ -82,29 +80,29 @@
                 {
                     <>f__am$cache2 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__2);
                 }
-                storey.tryStart = Enumerable.Min<ExceptionHandler>(handlers, <>f__am$cache2);
+                storey.tryStart = handlers.Min<ExceptionHandler>(<>f__am$cache2);
                 if (<>f__am$cache3 == null)
                 {
                     <>f__am$cache3 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__3);
                 }
-                storey.tryEnd = Enumerable.Max<ExceptionHandler>(Enumerable.Where<ExceptionHandler>(handlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache3);
+                storey.tryEnd = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).Max<ExceptionHandler>(<>f__am$cache3);
                 if (<>f__am$cache4 == null)
                 {
                     <>f__am$cache4 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__4);
                 }
-                List<ExceptionHandler> second = Enumerable.ToList<ExceptionHandler>(Enumerable.OrderBy<ExceptionHandler, int>(Enumerable.Where<ExceptionHandler>(handlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1)), <>f__am$cache4));
-                HashSet<ExceptionHandler> source = new HashSet<ExceptionHandler>(Enumerable.Where<ExceptionHandler>(handlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2)));
+                List<ExceptionHandler> second = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1)).OrderBy<ExceptionHandler, int>(<>f__am$cache4).ToList<ExceptionHandler>();
+                HashSet<ExceptionHandler> source = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2)));
                 int num = 0;
                 while ((num < instructions.Count) && (instructions[num].Offset < storey.tryEnd))
                 {
                     num++;
                 }
-                TryCatchInfo local1 = this._infos[Enumerable.Single<Instruction>(instructions, new Func<Instruction, bool>(storey, (IntPtr) this.<>m__3))];
+                TryCatchInfo local1 = this._infos[instructions.Single<Instruction>(new Func<Instruction, bool>(storey, (IntPtr) this.<>m__3))];
                 local1.TryStart++;
                 TryCatchInfo local2 = this._infos[instructions[num]];
                 local2.TryEnd++;
-                this.BuildTryCatchScopeRecursive(instructions, Enumerable.ToList<ExceptionHandler>(source));
-                handlers = Enumerable.ToArray<ExceptionHandler>(Enumerable.Except<ExceptionHandler>(handlers, source));
+                this.BuildTryCatchScopeRecursive(instructions, source.ToList<ExceptionHandler>());
+                handlers = handlers.Except<ExceptionHandler>(source).ToArray<ExceptionHandler>();
                 using (List<ExceptionHandler>.Enumerator enumerator = second.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
@@ -126,7 +124,7 @@
                         {
                             num3++;
                         }
-                        HashSet<ExceptionHandler> set2 = new HashSet<ExceptionHandler>(Enumerable.Where<ExceptionHandler>(handlers, new Func<ExceptionHandler, bool>(storey3, (IntPtr) this.<>m__0)));
+                        HashSet<ExceptionHandler> set2 = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey3, (IntPtr) this.<>m__0)));
                         if (storey2.h.HandlerType == ExceptionHandlerType.Catch)
                         {
                             TryCatchInfo local3 = this._infos[instructions[num2]];
@@ -148,11 +146,11 @@
                             TryCatchInfo local8 = this._infos[instructions[num3]];
                             local8.FaultEnd++;
                         }
-                        this.BuildTryCatchScopeRecursive(instructions, Enumerable.ToList<ExceptionHandler>(set2));
-                        handlers = Enumerable.ToArray<ExceptionHandler>(Enumerable.Except<ExceptionHandler>(handlers, set2));
+                        this.BuildTryCatchScopeRecursive(instructions, set2.ToList<ExceptionHandler>());
+                        handlers = handlers.Except<ExceptionHandler>(set2).ToArray<ExceptionHandler>();
                     }
                 }
-                this.BuildTryCatchScopeRecursive(instructions, Enumerable.ToArray<ExceptionHandler>(Enumerable.Except<ExceptionHandler>(handlers, second)));
+                this.BuildTryCatchScopeRecursive(instructions, handlers.Except<ExceptionHandler>(second).ToArray<ExceptionHandler>());
             }
         }
 
@@ -162,7 +160,7 @@
                 start = start,
                 end = end
             };
-            return Enumerable.ToArray<ExceptionHandler>(Enumerable.Where<ExceptionHandler>(this._methodBody.ExceptionHandlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)));
+            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExceptionHandler>();
         }
 
         private void CollectTryCatchInfos(MethodBody body)
@@ -185,18 +183,16 @@
             {
                 <>f__am$cache1 = new Func<ExceptionHandler, int>(null, (IntPtr) <EnclosingFinallyHandlerForRange>m__1);
             }
-            return Enumerable.FirstOrDefault<ExceptionHandler>(Enumerable.OrderByDescending<ExceptionHandler, int>(Enumerable.Where<ExceptionHandler>(this._methodBody.ExceptionHandlers, new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache1));
+            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).OrderByDescending<ExceptionHandler, int>(<>f__am$cache1).FirstOrDefault<ExceptionHandler>();
         }
 
         [DebuggerHidden]
-        internal IEnumerable<Instruction> LeaveTargetsFor(Node finallyNode)
-        {
-            return new <LeaveTargetsFor>c__Iterator0 { 
+        internal IEnumerable<Instruction> LeaveTargetsFor(Node finallyNode) => 
+            new <LeaveTargetsFor>c__Iterator0 { 
                 finallyNode = finallyNode,
                 $this = this,
                 $PC = -2
             };
-        }
 
         public void Prepare()
         {
@@ -219,7 +215,7 @@
 
         private static void PushExceptionOnStack(Stack<StackInfo> valueStack, TypeReference catchType)
         {
-            valueStack.Push(new StackInfo(string.Format("(({0}){1})", Naming.ForVariable(catchType), "__exception_local"), catchType));
+            valueStack.Push(new StackInfo($"(({Naming.ForVariable(catchType)}){"__exception_local"})", catchType));
         }
 
         internal void PushExceptionOnStackIfNeeded(Node node, Stack<StackInfo> valueStack, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver)
@@ -234,13 +230,8 @@
             }
         }
 
-        public Node FlowTree
-        {
-            get
-            {
-                return this._flowTree;
-            }
-        }
+        public Node FlowTree =>
+            this._flowTree;
 
         [CompilerGenerated]
         private sealed class <BuildTryCatchScopeRecursive>c__AnonStorey3
@@ -248,25 +239,17 @@
             internal int tryEnd;
             internal int tryStart;
 
-            internal bool <>m__0(ExceptionHandler h)
-            {
-                return (h.TryStart.Offset == this.tryStart);
-            }
+            internal bool <>m__0(ExceptionHandler h) => 
+                (h.TryStart.Offset == this.tryStart);
 
-            internal bool <>m__1(ExceptionHandler h)
-            {
-                return ((h.TryStart.Offset == this.tryStart) && (h.TryEnd.Offset == this.tryEnd));
-            }
+            internal bool <>m__1(ExceptionHandler h) => 
+                ((h.TryStart.Offset == this.tryStart) && (h.TryEnd.Offset == this.tryEnd));
 
-            internal bool <>m__2(ExceptionHandler h)
-            {
-                return (((this.tryStart <= h.TryStart.Offset) && (h.TryEnd.Offset < this.tryEnd)) || ((this.tryStart < h.TryStart.Offset) && (h.TryEnd.Offset <= this.tryEnd)));
-            }
+            internal bool <>m__2(ExceptionHandler h) => 
+                (((this.tryStart <= h.TryStart.Offset) && (h.TryEnd.Offset < this.tryEnd)) || ((this.tryStart < h.TryStart.Offset) && (h.TryEnd.Offset <= this.tryEnd)));
 
-            internal bool <>m__3(Instruction i)
-            {
-                return (i.Offset == this.tryStart);
-            }
+            internal bool <>m__3(Instruction i) => 
+                (i.Offset == this.tryStart);
         }
 
         [CompilerGenerated]
@@ -281,10 +264,8 @@
             internal ExceptionSupport.<BuildTryCatchScopeRecursive>c__AnonStorey4 <>f__ref$4;
             internal int blockNesterHandlers;
 
-            internal bool <>m__0(ExceptionHandler e)
-            {
-                return (((this.<>f__ref$4.h.HandlerStart.Offset <= e.TryStart.Offset) && (e.TryEnd.Offset < this.blockNesterHandlers)) || ((this.<>f__ref$4.h.HandlerStart.Offset < e.TryStart.Offset) && (e.TryEnd.Offset <= this.blockNesterHandlers)));
-            }
+            internal bool <>m__0(ExceptionHandler e) => 
+                (((this.<>f__ref$4.h.HandlerStart.Offset <= e.TryStart.Offset) && (e.TryEnd.Offset < this.blockNesterHandlers)) || ((this.<>f__ref$4.h.HandlerStart.Offset < e.TryStart.Offset) && (e.TryEnd.Offset <= this.blockNesterHandlers)));
         }
 
         [CompilerGenerated]
@@ -293,10 +274,8 @@
             internal Instruction end;
             internal Instruction start;
 
-            internal bool <>m__0(ExceptionHandler h)
-            {
-                return (((h.HandlerType == ExceptionHandlerType.Catch) && (h.TryStart == this.start)) && (h.TryEnd == this.end));
-            }
+            internal bool <>m__0(ExceptionHandler h) => 
+                (((h.HandlerType == ExceptionHandlerType.Catch) && (h.TryStart == this.start)) && (h.TryEnd == this.end));
         }
 
         [CompilerGenerated]
@@ -305,10 +284,8 @@
             internal Instruction end;
             internal Instruction start;
 
-            internal bool <>m__0(ExceptionHandler h)
-            {
-                return (((h.HandlerType == ExceptionHandlerType.Finally) && (h.TryStart.Offset <= this.start.Offset)) && (h.TryEnd.Offset >= this.end.Offset));
-            }
+            internal bool <>m__0(ExceptionHandler h) => 
+                (((h.HandlerType == ExceptionHandlerType.Finally) && (h.TryStart.Offset <= this.start.Offset)) && (h.TryEnd.Offset >= this.end.Offset));
         }
 
         [CompilerGenerated]
@@ -411,28 +388,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.Cil.Instruction>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.Cil.Instruction>.GetEnumerator();
 
-            Instruction IEnumerator<Instruction>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            Instruction IEnumerator<Instruction>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         public class Node
@@ -499,7 +462,7 @@
                 {
                     <>f__am$cache1 = new Func<ExceptionSupport.Node, ExceptionSupport.Node>(null, (IntPtr) <GetTargetFinallyAndFaultNodesForJump>m__1);
                 }
-                return Enumerable.Select<ExceptionSupport.Node, ExceptionSupport.Node>(Enumerable.Reverse<ExceptionSupport.Node>(this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0))), <>f__am$cache1);
+                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache1);
             }
 
             internal IEnumerable<ExceptionSupport.Node> GetTargetFinallyNodesForJump(int from, int to)
@@ -512,7 +475,7 @@
                 {
                     <>f__am$cache0 = new Func<ExceptionSupport.Node, ExceptionSupport.Node>(null, (IntPtr) <GetTargetFinallyNodesForJump>m__0);
                 }
-                return Enumerable.Select<ExceptionSupport.Node, ExceptionSupport.Node>(Enumerable.Reverse<ExceptionSupport.Node>(this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0))), <>f__am$cache0);
+                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache0);
             }
 
             private static bool IsTargetFaultNodeForJump(ExceptionSupport.Node node, int from, int to)
@@ -565,28 +528,19 @@
                 return true;
             }
 
-            public override string ToString()
-            {
-                return string.Format("{0} children: {1}, depth: {2}", Enum.GetName(typeof(ExceptionSupport.NodeType), this._type), this._children.Length, this.Depth);
-            }
+            public override string ToString() => 
+                $"{Enum.GetName(typeof(ExceptionSupport.NodeType), this._type)} children: {this._children.Length}, depth: {this.Depth}";
 
             [DebuggerHidden]
-            private IEnumerable<ExceptionSupport.Node> Walk(Func<ExceptionSupport.Node, bool> filter)
-            {
-                return new <Walk>c__Iterator0 { 
+            private IEnumerable<ExceptionSupport.Node> Walk(Func<ExceptionSupport.Node, bool> filter) => 
+                new <Walk>c__Iterator0 { 
                     filter = filter,
                     $this = this,
                     $PC = -2
                 };
-            }
 
-            internal InstructionBlock Block
-            {
-                get
-                {
-                    return this._block;
-                }
-            }
+            internal InstructionBlock Block =>
+                this._block;
 
             internal ExceptionSupport.Node[] CatchNodes
             {
@@ -605,13 +559,8 @@
                 }
             }
 
-            internal ExceptionSupport.Node[] Children
-            {
-                get
-                {
-                    return this._children;
-                }
-            }
+            internal ExceptionSupport.Node[] Children =>
+                this._children;
 
             internal int Depth
             {
@@ -676,13 +625,8 @@
                 }
             }
 
-            internal ExceptionHandler Handler
-            {
-                get
-                {
-                    return this._handler;
-                }
-            }
+            internal ExceptionHandler Handler =>
+                this._handler;
 
             internal bool IsInCatchBlock
             {
@@ -817,13 +761,8 @@
                 }
             }
 
-            internal ExceptionSupport.Node Parent
-            {
-                get
-                {
-                    return this._parent;
-                }
-            }
+            internal ExceptionSupport.Node Parent =>
+                this._parent;
 
             private ExceptionSupport.Node PrevSibling
             {
@@ -891,13 +830,8 @@
                 }
             }
 
-            internal ExceptionSupport.NodeType Type
-            {
-                get
-                {
-                    return this._type;
-                }
-            }
+            internal ExceptionSupport.NodeType Type =>
+                this._type;
 
             [CompilerGenerated]
             private sealed class <GetTargetFinallyAndFaultNodesForJump>c__AnonStorey2
@@ -905,10 +839,8 @@
                 internal int from;
                 internal int to;
 
-                internal bool <>m__0(ExceptionSupport.Node node)
-                {
-                    return (ExceptionSupport.Node.IsTargetFinallyNodeForJump(node, this.from, this.to) || ExceptionSupport.Node.IsTargetFaultNodeForJump(node, this.from, this.to));
-                }
+                internal bool <>m__0(ExceptionSupport.Node node) => 
+                    (ExceptionSupport.Node.IsTargetFinallyNodeForJump(node, this.from, this.to) || ExceptionSupport.Node.IsTargetFaultNodeForJump(node, this.from, this.to));
             }
 
             [CompilerGenerated]
@@ -917,10 +849,8 @@
                 internal int from;
                 internal int to;
 
-                internal bool <>m__0(ExceptionSupport.Node node)
-                {
-                    return ExceptionSupport.Node.IsTargetFinallyNodeForJump(node, this.from, this.to);
-                }
+                internal bool <>m__0(ExceptionSupport.Node node) => 
+                    ExceptionSupport.Node.IsTargetFinallyNodeForJump(node, this.from, this.to);
             }
 
             [CompilerGenerated]
@@ -1009,28 +939,14 @@
                 }
 
                 [DebuggerHidden]
-                IEnumerator IEnumerable.GetEnumerator()
-                {
-                    return this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.ExceptionSupport.Node>.GetEnumerator();
-                }
+                IEnumerator IEnumerable.GetEnumerator() => 
+                    this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.ExceptionSupport.Node>.GetEnumerator();
 
-                ExceptionSupport.Node IEnumerator<ExceptionSupport.Node>.Current
-                {
-                    [DebuggerHidden]
-                    get
-                    {
-                        return this.$current;
-                    }
-                }
+                ExceptionSupport.Node IEnumerator<ExceptionSupport.Node>.Current =>
+                    this.$current;
 
-                object IEnumerator.Current
-                {
-                    [DebuggerHidden]
-                    get
-                    {
-                        return this.$current;
-                    }
-                }
+                object IEnumerator.Current =>
+                    this.$current;
             }
         }
 

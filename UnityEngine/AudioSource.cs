@@ -288,10 +288,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioSource.pan has been deprecated. Use AudioSource.panStereo instead (UnityUpgradable) -> panStereo", true)]
         public float pan
         {
-            get
-            {
-                return this.panStereo;
-            }
+            get => 
+                this.panStereo;
             set
             {
             }
@@ -303,10 +301,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioSource.panLevel has been deprecated. Use AudioSource.spatialBlend instead (UnityUpgradable) -> spatialBlend", true)]
         public float panLevel
         {
-            get
-            {
-                return this.spatialBlend;
-            }
+            get => 
+                this.spatialBlend;
             set
             {
             }

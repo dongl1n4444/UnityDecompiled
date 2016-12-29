@@ -63,10 +63,8 @@
             }
         }
 
-        public string GetExtension(BuildTarget target, BuildOptions options)
-        {
-            return "exe";
-        }
+        public string GetExtension(BuildTarget target, BuildOptions options) => 
+            "exe";
 
         protected override IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target)
         {
@@ -77,10 +75,8 @@
             return new WindowsStandaloneIl2CppPlatformProvider(target, base.DataFolder, base.Development);
         }
 
-        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName)
-        {
-            return string.Empty;
-        }
+        public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName) => 
+            string.Empty;
 
         protected override string GetVariationName()
         {
@@ -89,7 +85,7 @@
             {
                 str = "il2cpp";
             }
-            return string.Format("{0}_{1}", base.GetVariationName(), str);
+            return $"{base.GetVariationName()}_{str}";
         }
 
         public void LaunchPlayer(BuildLaunchPlayerArgs args)
@@ -123,10 +119,8 @@
             throw new NotImplementedException();
         }
 
-        public string PrepareForBuild(BuildOptions options, BuildTarget target)
-        {
-            return null;
-        }
+        public string PrepareForBuild(BuildOptions options, BuildTarget target) => 
+            null;
 
         protected override void RenameFilesInStagingArea()
         {
@@ -137,15 +131,11 @@
             this.m_PostProcessArgs.report.RelocateFiles(base.StagingArea + "/Data", base.StagingArea + "/" + Path.GetFileNameWithoutExtension(fileName) + "_Data");
         }
 
-        public bool SupportsInstallInBuildFolder()
-        {
-            return true;
-        }
+        public bool SupportsInstallInBuildFolder() => 
+            true;
 
-        public bool SupportsScriptsOnlyBuild()
-        {
-            return false;
-        }
+        public bool SupportsScriptsOnlyBuild() => 
+            false;
 
         private string ToWindowsPath(string path)
         {
@@ -156,53 +146,23 @@
             return path;
         }
 
-        private string DestinationFileWithoutExtension
-        {
-            get
-            {
-                return this.ToWindowsPath(FileUtil.UnityGetFileNameWithoutExtension(this.FullPathToExe));
-            }
-        }
+        private string DestinationFileWithoutExtension =>
+            this.ToWindowsPath(FileUtil.UnityGetFileNameWithoutExtension(this.FullPathToExe));
 
-        protected override string DestinationFolder
-        {
-            get
-            {
-                return this.ToWindowsPath(base.DestinationFolder);
-            }
-        }
+        protected override string DestinationFolder =>
+            this.ToWindowsPath(base.DestinationFolder);
 
-        protected override string DestinationFolderForInstallingIntoBuildsFolder
-        {
-            get
-            {
-                return ("build/WindowsStandaloneSupport/Variations/" + this.GetVariationName() + "/DataSource");
-            }
-        }
+        protected override string DestinationFolderForInstallingIntoBuildsFolder =>
+            ("build/WindowsStandaloneSupport/Variations/" + this.GetVariationName() + "/DataSource");
 
-        private string FullDataFolderPath
-        {
-            get
-            {
-                return Path.Combine(this.DestinationFolder, this.DestinationFileWithoutExtension + "_Data");
-            }
-        }
+        private string FullDataFolderPath =>
+            Path.Combine(this.DestinationFolder, this.DestinationFileWithoutExtension + "_Data");
 
-        private string FullPathToExe
-        {
-            get
-            {
-                return this.m_PostProcessArgs.installPath;
-            }
-        }
+        private string FullPathToExe =>
+            this.m_PostProcessArgs.installPath;
 
-        protected override string StagingAreaPluginsFolder
-        {
-            get
-            {
-                return (base.StagingArea + "/Data/Plugins");
-            }
-        }
+        protected override string StagingAreaPluginsFolder =>
+            (base.StagingArea + "/Data/Plugins");
     }
 }
 

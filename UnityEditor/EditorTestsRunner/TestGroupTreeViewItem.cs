@@ -42,10 +42,8 @@
 
         public override Texture2D icon
         {
-            get
-            {
-                return (GuiHelper.GetIconForResult(this.m_EditorTestGroupResult.resultState) as Texture2D);
-            }
+            get => 
+                (GuiHelper.GetIconForResult(this.m_EditorTestGroupResult.resultState) as Texture2D);
             set
             {
                 base.icon = value;

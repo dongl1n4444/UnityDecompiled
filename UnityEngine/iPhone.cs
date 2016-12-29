@@ -13,37 +13,17 @@
         {
         }
 
-        public static string advertisingIdentifier
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public static string advertisingIdentifier =>
+            null;
 
-        public static bool advertisingTrackingEnabled
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool advertisingTrackingEnabled =>
+            false;
 
-        public static iPhoneGeneration generation
-        {
-            get
-            {
-                return iPhoneGeneration.Unknown;
-            }
-        }
+        public static iPhoneGeneration generation =>
+            iPhoneGeneration.Unknown;
 
-        public static string vendorIdentifier
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public static string vendorIdentifier =>
+            null;
     }
 }
 

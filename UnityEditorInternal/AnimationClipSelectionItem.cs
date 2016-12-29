@@ -17,29 +17,14 @@
             return item;
         }
 
-        public override bool canChangeAnimationClip
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool canChangeAnimationClip =>
+            false;
 
-        public override bool canRecord
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool canRecord =>
+            false;
 
-        public override bool canSyncSceneSelection
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool canSyncSceneSelection =>
+            false;
     }
 }
 

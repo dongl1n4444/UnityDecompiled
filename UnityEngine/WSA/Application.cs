@@ -108,13 +108,8 @@
         /// <summary>
         /// <para>Arguments passed to application.</para>
         /// </summary>
-        public static string arguments
-        {
-            get
-            {
-                return GetAppArguments();
-            }
-        }
+        public static string arguments =>
+            GetAppArguments();
     }
 }
 

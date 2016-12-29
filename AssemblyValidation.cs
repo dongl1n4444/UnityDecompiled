@@ -37,7 +37,7 @@ internal class AssemblyValidation
         {
             <>f__am$cache1 = new Func<object, Type>(null, (IntPtr) <ConstructorFor>m__1);
         }
-        Type[] types = Enumerable.ToArray<Type>(Enumerable.Select<object, Type>(options, <>f__am$cache1));
+        Type[] types = Enumerable.Select<object, Type>(options, <>f__am$cache1).ToArray<Type>();
         return type.GetConstructor(types);
     }
 
@@ -60,10 +60,8 @@ internal class AssemblyValidation
         }
     }
 
-    private static bool IsValidationRule(Type type)
-    {
-        return Enumerable.Any<AssemblyValidationRule>(ValidationRuleAttributesFor(type));
-    }
+    private static bool IsValidationRule(Type type) => 
+        ValidationRuleAttributesFor(type).Any<AssemblyValidationRule>();
 
     private static int PriorityFor(Type type, RuntimePlatform platform)
     {
@@ -74,7 +72,7 @@ internal class AssemblyValidation
         {
             <>f__am$cache2 = new Func<AssemblyValidationRule, int>(null, (IntPtr) <PriorityFor>m__2);
         }
-        return Enumerable.FirstOrDefault<int>(Enumerable.Select<AssemblyValidationRule, int>(Enumerable.Where<AssemblyValidationRule>(ValidationRuleAttributesFor(type), new Func<AssemblyValidationRule, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2));
+        return Enumerable.Select<AssemblyValidationRule, int>(Enumerable.Where<AssemblyValidationRule>(ValidationRuleAttributesFor(type), new Func<AssemblyValidationRule, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2).FirstOrDefault<int>();
     }
 
     internal static void RegisterValidationRule(Type type)
@@ -112,7 +110,7 @@ internal class AssemblyValidation
         }
         else
         {
-            strArray = Enumerable.ToArray<string>(userAssemblies);
+            strArray = userAssemblies.ToArray<string>();
         }
         if (strArray.Length != 0)
         {
@@ -128,10 +126,8 @@ internal class AssemblyValidation
         return new ValidationResult { Success = true };
     }
 
-    private static IEnumerable<AssemblyValidationRule> ValidationRuleAttributesFor(Type type)
-    {
-        return Enumerable.OfType<AssemblyValidationRule>(type.GetCustomAttributes(true));
-    }
+    private static IEnumerable<AssemblyValidationRule> ValidationRuleAttributesFor(Type type) => 
+        type.GetCustomAttributes(true).OfType<AssemblyValidationRule>();
 
     private static IEnumerable<IValidationRule> ValidationRulesFor(RuntimePlatform platform, params object[] options)
     {
@@ -146,13 +142,11 @@ internal class AssemblyValidation
     }
 
     [DebuggerHidden]
-    private static IEnumerable<Type> ValidationRuleTypesFor(RuntimePlatform platform)
-    {
-        return new <ValidationRuleTypesFor>c__Iterator0 { 
+    private static IEnumerable<Type> ValidationRuleTypesFor(RuntimePlatform platform) => 
+        new <ValidationRuleTypesFor>c__Iterator0 { 
             platform = platform,
             $PC = -2
         };
-    }
 
     private static void WarmUpRulesCache()
     {
@@ -176,10 +170,8 @@ internal class AssemblyValidation
     {
         internal RuntimePlatform platform;
 
-        internal bool <>m__0(AssemblyValidationRule attr)
-        {
-            return (attr.Platform == this.platform);
-        }
+        internal bool <>m__0(AssemblyValidationRule attr) => 
+            (attr.Platform == this.platform);
     }
 
     [CompilerGenerated]
@@ -187,10 +179,8 @@ internal class AssemblyValidation
     {
         internal RuntimePlatform platform;
 
-        internal int <>m__0(Type a, Type b)
-        {
-            return AssemblyValidation.CompareValidationRulesByPriority(a, b, this.platform);
-        }
+        internal int <>m__0(Type a, Type b) => 
+            AssemblyValidation.CompareValidationRulesByPriority(a, b, this.platform);
     }
 
     [CompilerGenerated]
@@ -198,10 +188,8 @@ internal class AssemblyValidation
     {
         internal object[] options;
 
-        internal IValidationRule <>m__0(Type t)
-        {
-            return AssemblyValidation.CreateValidationRuleWithOptions(t, this.options);
-        }
+        internal IValidationRule <>m__0(Type t) => 
+            AssemblyValidation.CreateValidationRuleWithOptions(t, this.options);
     }
 
     [CompilerGenerated]
@@ -299,28 +287,14 @@ internal class AssemblyValidation
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<System.Type>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<System.Type>.GetEnumerator();
 
-        Type IEnumerator<Type>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        Type IEnumerator<Type>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 }
 

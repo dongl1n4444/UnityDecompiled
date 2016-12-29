@@ -115,15 +115,11 @@
             }
         }
 
-        public override int GetNetworkChannel()
-        {
-            return 1;
-        }
+        public override int GetNetworkChannel() => 
+            1;
 
-        public override float GetNetworkSendInterval()
-        {
-            return this.m_SendInterval;
-        }
+        public override float GetNetworkSendInterval() => 
+            this.m_SendInterval;
 
         public static void HandleTransform(NetworkMessage netMsg)
         {
@@ -1005,10 +1001,8 @@
             }
         }
 
-        public static float UnserializeRotation2D(NetworkReader reader, CompressionSyncMode compression)
-        {
-            return ReadAngle(reader, compression);
-        }
+        public static float UnserializeRotation2D(NetworkReader reader, CompressionSyncMode compression) => 
+            ReadAngle(reader, compression);
 
         public static Quaternion UnserializeRotation3D(NetworkReader reader, AxisSyncMode mode, CompressionSyncMode compression)
         {
@@ -1057,10 +1051,8 @@
             return identity;
         }
 
-        public static float UnserializeSpin2D(NetworkReader reader, CompressionSyncMode compression)
-        {
-            return ReadAngle(reader, compression);
-        }
+        public static float UnserializeSpin2D(NetworkReader reader, CompressionSyncMode compression) => 
+            ReadAngle(reader, compression);
 
         public static Vector3 UnserializeSpin3D(NetworkReader reader, AxisSyncMode mode, CompressionSyncMode compression)
         {
@@ -1101,15 +1093,11 @@
             return zero;
         }
 
-        public static Vector3 UnserializeVelocity2D(NetworkReader reader, CompressionSyncMode compression)
-        {
-            return (Vector3) reader.ReadVector2();
-        }
+        public static Vector3 UnserializeVelocity2D(NetworkReader reader, CompressionSyncMode compression) => 
+            ((Vector3) reader.ReadVector2());
 
-        public static Vector3 UnserializeVelocity3D(NetworkReader reader, CompressionSyncMode compression)
-        {
-            return reader.ReadVector3();
-        }
+        public static Vector3 UnserializeVelocity3D(NetworkReader reader, CompressionSyncMode compression) => 
+            reader.ReadVector3();
 
         private void Update()
         {
@@ -1142,23 +1130,16 @@
         /// <summary>
         /// <para>Cached CharacterController.</para>
         /// </summary>
-        public CharacterController characterContoller
-        {
-            get
-            {
-                return this.m_CharacterController;
-            }
-        }
+        public CharacterController characterContoller =>
+            this.m_CharacterController;
 
         /// <summary>
         /// <para>A callback that can be used to validate on the server, the movement of client authoritative objects.</para>
         /// </summary>
         public ClientMoveCallback2D clientMoveCallback2D
         {
-            get
-            {
-                return this.m_ClientMoveCallback2D;
-            }
+            get => 
+                this.m_ClientMoveCallback2D;
             set
             {
                 this.m_ClientMoveCallback2D = value;
@@ -1170,10 +1151,8 @@
         /// </summary>
         public ClientMoveCallback3D clientMoveCallback3D
         {
-            get
-            {
-                return this.m_ClientMoveCallback3D;
-            }
+            get => 
+                this.m_ClientMoveCallback3D;
             set
             {
                 this.m_ClientMoveCallback3D = value;
@@ -1185,10 +1164,8 @@
         /// </summary>
         public bool grounded
         {
-            get
-            {
-                return this.m_Grounded;
-            }
+            get => 
+                this.m_Grounded;
             set
             {
                 this.m_Grounded = value;
@@ -1200,10 +1177,8 @@
         /// </summary>
         public float interpolateMovement
         {
-            get
-            {
-                return this.m_InterpolateMovement;
-            }
+            get => 
+                this.m_InterpolateMovement;
             set
             {
                 this.m_InterpolateMovement = value;
@@ -1215,10 +1190,8 @@
         /// </summary>
         public float interpolateRotation
         {
-            get
-            {
-                return this.m_InterpolateRotation;
-            }
+            get => 
+                this.m_InterpolateRotation;
             set
             {
                 this.m_InterpolateRotation = value;
@@ -1228,23 +1201,16 @@
         /// <summary>
         /// <para>The most recent time when a movement synchronization packet arrived for this object.</para>
         /// </summary>
-        public float lastSyncTime
-        {
-            get
-            {
-                return this.m_LastClientSyncTime;
-            }
-        }
+        public float lastSyncTime =>
+            this.m_LastClientSyncTime;
 
         /// <summary>
         /// <para>The distance that an object can move without sending a movement synchronization update.</para>
         /// </summary>
         public float movementTheshold
         {
-            get
-            {
-                return this.m_MovementTheshold;
-            }
+            get => 
+                this.m_MovementTheshold;
             set
             {
                 this.m_MovementTheshold = value;
@@ -1254,34 +1220,22 @@
         /// <summary>
         /// <para>Cached Rigidbody2D.</para>
         /// </summary>
-        public Rigidbody2D rigidbody2D
-        {
-            get
-            {
-                return this.m_RigidBody2D;
-            }
-        }
+        public Rigidbody2D rigidbody2D =>
+            this.m_RigidBody2D;
 
         /// <summary>
         /// <para>Cached Rigidbody.</para>
         /// </summary>
-        public Rigidbody rigidbody3D
-        {
-            get
-            {
-                return this.m_RigidBody3D;
-            }
-        }
+        public Rigidbody rigidbody3D =>
+            this.m_RigidBody3D;
 
         /// <summary>
         /// <para>How much to compress rotation sync updates.</para>
         /// </summary>
         public CompressionSyncMode rotationSyncCompression
         {
-            get
-            {
-                return this.m_RotationSyncCompression;
-            }
+            get => 
+                this.m_RotationSyncCompression;
             set
             {
                 this.m_RotationSyncCompression = value;
@@ -1293,10 +1247,8 @@
         /// </summary>
         public float sendInterval
         {
-            get
-            {
-                return this.m_SendInterval;
-            }
+            get => 
+                this.m_SendInterval;
             set
             {
                 this.m_SendInterval = value;
@@ -1308,10 +1260,8 @@
         /// </summary>
         public float snapThreshold
         {
-            get
-            {
-                return this.m_SnapThreshold;
-            }
+            get => 
+                this.m_SnapThreshold;
             set
             {
                 this.m_SnapThreshold = value;
@@ -1323,10 +1273,8 @@
         /// </summary>
         public AxisSyncMode syncRotationAxis
         {
-            get
-            {
-                return this.m_SyncRotationAxis;
-            }
+            get => 
+                this.m_SyncRotationAxis;
             set
             {
                 this.m_SyncRotationAxis = value;
@@ -1335,10 +1283,8 @@
 
         public bool syncSpin
         {
-            get
-            {
-                return this.m_SyncSpin;
-            }
+            get => 
+                this.m_SyncSpin;
             set
             {
                 this.m_SyncSpin = value;
@@ -1348,56 +1294,34 @@
         /// <summary>
         /// <para>The target position interpolating towards.</para>
         /// </summary>
-        public Vector3 targetSyncPosition
-        {
-            get
-            {
-                return this.m_TargetSyncPosition;
-            }
-        }
+        public Vector3 targetSyncPosition =>
+            this.m_TargetSyncPosition;
 
         /// <summary>
         /// <para>The target rotation interpolating towards.</para>
         /// </summary>
-        public float targetSyncRotation2D
-        {
-            get
-            {
-                return this.m_TargetSyncRotation2D;
-            }
-        }
+        public float targetSyncRotation2D =>
+            this.m_TargetSyncRotation2D;
 
         /// <summary>
         /// <para>The target position interpolating towards.</para>
         /// </summary>
-        public Quaternion targetSyncRotation3D
-        {
-            get
-            {
-                return this.m_TargetSyncRotation3D;
-            }
-        }
+        public Quaternion targetSyncRotation3D =>
+            this.m_TargetSyncRotation3D;
 
         /// <summary>
         /// <para>The velocity send for synchronization.</para>
         /// </summary>
-        public Vector3 targetSyncVelocity
-        {
-            get
-            {
-                return this.m_TargetSyncVelocity;
-            }
-        }
+        public Vector3 targetSyncVelocity =>
+            this.m_TargetSyncVelocity;
 
         /// <summary>
         /// <para>What method to use to sync the object's position.</para>
         /// </summary>
         public TransformSyncMode transformSyncMode
         {
-            get
-            {
-                return this.m_TransformSyncMode;
-            }
+            get => 
+                this.m_TransformSyncMode;
             set
             {
                 this.m_TransformSyncMode = value;

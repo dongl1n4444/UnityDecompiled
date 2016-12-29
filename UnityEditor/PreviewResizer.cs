@@ -28,10 +28,8 @@
             return (this.m_CachedPref > 0f);
         }
 
-        public bool GetExpandedBeforeDragging()
-        {
-            return (this.m_CachedPref > 0f);
-        }
+        public bool GetExpandedBeforeDragging() => 
+            (this.m_CachedPref > 0f);
 
         public float GetPreviewSize()
         {
@@ -110,10 +108,8 @@
             return value;
         }
 
-        public float ResizeHandle(Rect windowPosition, float minSize, float minRemainingSize, float resizerHeight)
-        {
-            return this.ResizeHandle(windowPosition, minSize, minRemainingSize, resizerHeight, new Rect());
-        }
+        public float ResizeHandle(Rect windowPosition, float minSize, float minRemainingSize, float resizerHeight) => 
+            this.ResizeHandle(windowPosition, minSize, minRemainingSize, resizerHeight, new Rect());
 
         public float ResizeHandle(Rect windowPosition, float minSize, float minRemainingSize, float resizerHeight, Rect dragRect)
         {

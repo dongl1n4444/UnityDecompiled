@@ -68,15 +68,11 @@
         {
             internal TestListElement testElement;
 
-            internal bool <>m__0(TestResult a)
-            {
-                return (a.id == this.testElement.id);
-            }
+            internal bool <>m__0(TestResult a) => 
+                (a.id == this.testElement.id);
 
-            internal bool <>m__1(TestResult a)
-            {
-                return (a.id == this.testElement.id);
-            }
+            internal bool <>m__1(TestResult a) => 
+                (a.id == this.testElement.id);
         }
     }
 }

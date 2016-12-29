@@ -91,10 +91,8 @@
         /// <returns>
         /// <para>True if added.</para>
         /// </returns>
-        public static bool AddExternalConnection(NetworkConnection conn)
-        {
-            return instance.AddExternalConnectionInternal(conn);
-        }
+        public static bool AddExternalConnection(NetworkConnection conn) => 
+            instance.AddExternalConnectionInternal(conn);
 
         private bool AddExternalConnectionInternal(NetworkConnection conn)
         {
@@ -144,10 +142,8 @@
         /// <returns>
         /// <para>True if player was added.</para>
         /// </returns>
-        public static bool AddPlayerForConnection(NetworkConnection conn, GameObject player, short playerControllerId)
-        {
-            return instance.InternalAddPlayerForConnection(conn, player, playerControllerId);
-        }
+        public static bool AddPlayerForConnection(NetworkConnection conn, GameObject player, short playerControllerId) => 
+            instance.InternalAddPlayerForConnection(conn, player, playerControllerId);
 
         public static bool AddPlayerForConnection(NetworkConnection conn, GameObject player, short playerControllerId, NetworkHash128 assetId)
         {
@@ -159,10 +155,8 @@
             return instance.InternalAddPlayerForConnection(conn, player, playerControllerId);
         }
 
-        public static NetworkClient BecomeHost(NetworkClient oldClient, int port, MatchInfo matchInfo, int oldConnectionId, PeerInfoMessage[] peers)
-        {
-            return instance.BecomeHostInternal(oldClient, port, matchInfo, oldConnectionId, peers);
-        }
+        public static NetworkClient BecomeHost(NetworkClient oldClient, int port, MatchInfo matchInfo, int oldConnectionId, PeerInfoMessage[] peers) => 
+            instance.BecomeHostInternal(oldClient, port, matchInfo, oldConnectionId, peers);
 
         internal NetworkClient BecomeHostInternal(NetworkClient oldClient, int port, MatchInfo matchInfo, int oldConnectionId, PeerInfoMessage[] peers)
         {
@@ -313,10 +307,8 @@
         /// <returns>
         /// <para>True if successfully configured.</para>
         /// </returns>
-        public static bool Configure(HostTopology topology)
-        {
-            return instance.m_SimpleServerSimple.Configure(topology);
-        }
+        public static bool Configure(HostTopology topology) => 
+            instance.m_SimpleServerSimple.Configure(topology);
 
         /// <summary>
         /// <para>This configures the transport layer settings for the server.</para>
@@ -327,10 +319,8 @@
         /// <returns>
         /// <para>True if successfully configured.</para>
         /// </returns>
-        public static bool Configure(ConnectionConfig config, int maxConnections)
-        {
-            return instance.m_SimpleServerSimple.Configure(config, maxConnections);
-        }
+        public static bool Configure(ConnectionConfig config, int maxConnections) => 
+            instance.m_SimpleServerSimple.Configure(config, maxConnections);
 
         /// <summary>
         /// <para>Destroys this object and corresponding objects on all clients.</para>
@@ -450,10 +440,8 @@
         /// <returns>
         /// <para>The game object that matches the netId.</para>
         /// </returns>
-        public static GameObject FindLocalObject(NetworkInstanceId netId)
-        {
-            return instance.m_NetworkScene.FindLocalObject(netId);
-        }
+        public static GameObject FindLocalObject(NetworkInstanceId netId) => 
+            instance.m_NetworkScene.FindLocalObject(netId);
 
         private static void FinishPlayerForConnection(NetworkConnection conn, NetworkIdentity uv, GameObject playerGameObject)
         {
@@ -815,10 +803,8 @@
         /// <returns>
         /// <para>True if listen succeeded.</para>
         /// </returns>
-        public static bool Listen(int serverPort)
-        {
-            return instance.InternalListen(null, serverPort);
-        }
+        public static bool Listen(int serverPort) => 
+            instance.InternalListen(null, serverPort);
 
         /// <summary>
         /// <para>Start the server on the given port number. Note that if a match has been created, this will listen using the Relay server instead of a local socket.</para>
@@ -828,10 +814,8 @@
         /// <returns>
         /// <para>True if listen succeeded.</para>
         /// </returns>
-        public static bool Listen(string ipAddress, int serverPort)
-        {
-            return instance.InternalListen(ipAddress, serverPort);
-        }
+        public static bool Listen(string ipAddress, int serverPort) => 
+            instance.InternalListen(ipAddress, serverPort);
 
         public static bool Listen(MatchInfo matchInfo, int listenPort)
         {
@@ -1090,10 +1074,8 @@
         /// <returns>
         /// <para>True if player was replaced.</para>
         /// </returns>
-        public static bool ReplacePlayerForConnection(NetworkConnection conn, GameObject player, short playerControllerId)
-        {
-            return instance.InternalReplacePlayerForConnection(conn, player, playerControllerId);
-        }
+        public static bool ReplacePlayerForConnection(NetworkConnection conn, GameObject player, short playerControllerId) => 
+            instance.InternalReplacePlayerForConnection(conn, player, playerControllerId);
 
         public static bool ReplacePlayerForConnection(NetworkConnection conn, GameObject player, short playerControllerId, NetworkHash128 assetId)
         {
@@ -1942,34 +1924,22 @@
         /// <summary>
         /// <para>Checks if the server has been started.</para>
         /// </summary>
-        public static bool active
-        {
-            get
-            {
-                return s_Active;
-            }
-        }
+        public static bool active =>
+            s_Active;
 
         /// <summary>
         /// <para>A list of all the current connections from clients.</para>
         /// </summary>
-        public static ReadOnlyCollection<NetworkConnection> connections
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.connections;
-            }
-        }
+        public static ReadOnlyCollection<NetworkConnection> connections =>
+            instance.m_SimpleServerSimple.connections;
 
         /// <summary>
         /// <para>If you enable this, the server will not listen for incoming connections on the regular network port.</para>
         /// </summary>
         public static bool dontListen
         {
-            get
-            {
-                return m_DontListen;
-            }
+            get => 
+                m_DontListen;
             set
             {
                 m_DontListen = value;
@@ -1979,24 +1949,14 @@
         /// <summary>
         /// <para>Dictionary of the message handlers registered with the server.</para>
         /// </summary>
-        public static Dictionary<short, NetworkMessageDelegate> handlers
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.handlers;
-            }
-        }
+        public static Dictionary<short, NetworkMessageDelegate> handlers =>
+            instance.m_SimpleServerSimple.handlers;
 
         /// <summary>
         /// <para>The host topology that the server is using.</para>
         /// </summary>
-        public static HostTopology hostTopology
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.hostTopology;
-            }
-        }
+        public static HostTopology hostTopology =>
+            instance.m_SimpleServerSimple.hostTopology;
 
         internal static NetworkServer instance
         {
@@ -2020,45 +1980,28 @@
         /// <summary>
         /// <para>The port that the server is listening on.</para>
         /// </summary>
-        public static int listenPort
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.listenPort;
-            }
-        }
+        public static int listenPort =>
+            instance.m_SimpleServerSimple.listenPort;
 
         /// <summary>
         /// <para>True is a local client is currently active on the server.</para>
         /// </summary>
-        public static bool localClientActive
-        {
-            get
-            {
-                return instance.m_LocalClientActive;
-            }
-        }
+        public static bool localClientActive =>
+            instance.m_LocalClientActive;
 
         /// <summary>
         /// <para>A list of local connections on the server.</para>
         /// </summary>
-        public static List<NetworkConnection> localConnections
-        {
-            get
-            {
-                return instance.m_LocalConnectionsFakeList;
-            }
-        }
+        public static List<NetworkConnection> localConnections =>
+            instance.m_LocalConnectionsFakeList;
 
         /// <summary>
         /// <para>The maximum delay before sending packets on connections.</para>
         /// </summary>
         public static float maxDelay
         {
-            get
-            {
-                return instance.m_MaxDelay;
-            }
+            get => 
+                instance.m_MaxDelay;
             set
             {
                 instance.InternalSetMaxDelay(value);
@@ -2068,35 +2011,20 @@
         /// <summary>
         /// <para>The class to be used when creating new network connections.</para>
         /// </summary>
-        public static System.Type networkConnectionClass
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.networkConnectionClass;
-            }
-        }
+        public static System.Type networkConnectionClass =>
+            instance.m_SimpleServerSimple.networkConnectionClass;
 
         /// <summary>
         /// <para>The number of channels the network is configure with.</para>
         /// </summary>
-        public static int numChannels
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.hostTopology.DefaultConfig.ChannelCount;
-            }
-        }
+        public static int numChannels =>
+            instance.m_SimpleServerSimple.hostTopology.DefaultConfig.ChannelCount;
 
         /// <summary>
         /// <para>This is a dictionary of networked objects that have been spawned on the server.</para>
         /// </summary>
-        public static Dictionary<NetworkInstanceId, NetworkIdentity> objects
-        {
-            get
-            {
-                return instance.m_NetworkScene.localObjects;
-            }
-        }
+        public static Dictionary<NetworkInstanceId, NetworkIdentity> objects =>
+            instance.m_NetworkScene.localObjects;
 
         /// <summary>
         /// <para>Setting this true will make the server send peer info to all participants of the network.</para>
@@ -2104,10 +2032,8 @@
         [Obsolete("Moved to NetworkMigrationManager")]
         public static bool sendPeerInfo
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -2116,23 +2042,16 @@
         /// <summary>
         /// <para>The transport layer hostId used by this server.</para>
         /// </summary>
-        public static int serverHostId
-        {
-            get
-            {
-                return instance.m_SimpleServerSimple.serverHostId;
-            }
-        }
+        public static int serverHostId =>
+            instance.m_SimpleServerSimple.serverHostId;
 
         /// <summary>
         /// <para>This makes the server listen for WebSockets connections instead of normal transport layer connections.</para>
         /// </summary>
         public static bool useWebSockets
         {
-            get
-            {
-                return instance.m_SimpleServerSimple.useWebSockets;
-            }
+            get => 
+                instance.m_SimpleServerSimple.useWebSockets;
             set
             {
                 instance.m_SimpleServerSimple.useWebSockets = value;

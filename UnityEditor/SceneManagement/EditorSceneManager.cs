@@ -23,10 +23,8 @@
         /// <returns>
         /// <para>Returns true if the Scene is closed/removed.</para>
         /// </returns>
-        public static bool CloseScene(Scene scene, bool removeScene)
-        {
-            return INTERNAL_CALL_CloseScene(ref scene, removeScene);
-        }
+        public static bool CloseScene(Scene scene, bool removeScene) => 
+            INTERNAL_CALL_CloseScene(ref scene, removeScene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool CreateSceneAsset(string scenePath, bool createDefaultGameObjects);
@@ -37,10 +35,8 @@
         /// <returns>
         /// <para>Whether any cross-Scene references were found.</para>
         /// </returns>
-        public static bool DetectCrossSceneReferences(Scene scene)
-        {
-            return INTERNAL_CALL_DetectCrossSceneReferences(ref scene);
-        }
+        public static bool DetectCrossSceneReferences(Scene scene) => 
+            INTERNAL_CALL_DetectCrossSceneReferences(ref scene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool EnsureUntitledSceneHasBeenSaved(string operation);
@@ -118,10 +114,8 @@
         /// <returns>
         /// <para>Whether the Scene was successfully marked as dirty.</para>
         /// </returns>
-        public static bool MarkSceneDirty(Scene scene)
-        {
-            return INTERNAL_CALL_MarkSceneDirty(ref scene);
-        }
+        public static bool MarkSceneDirty(Scene scene) => 
+            INTERNAL_CALL_MarkSceneDirty(ref scene);
 
         /// <summary>
         /// <para>Allows you to reorder the Scenes currently open in the Hierarchy window. Moves the source Scene so it comes after the destination Scene.</para>
@@ -191,10 +185,8 @@
             return scene;
         }
 
-        internal static bool ReloadScene(Scene scene)
-        {
-            return INTERNAL_CALL_ReloadScene(ref scene);
-        }
+        internal static bool ReloadScene(Scene scene) => 
+            INTERNAL_CALL_ReloadScene(ref scene);
 
         /// <summary>
         /// <para>Restore the setup of the SceneManager.</para>
@@ -251,15 +243,11 @@
         /// <returns>
         /// <para>True if the save succeeded, otherwise false.</para>
         /// </returns>
-        public static bool SaveScene(Scene scene, [DefaultValue("\"\"")] string dstScenePath, [DefaultValue("false")] bool saveAsCopy)
-        {
-            return INTERNAL_CALL_SaveScene(ref scene, dstScenePath, saveAsCopy);
-        }
+        public static bool SaveScene(Scene scene, [DefaultValue("\"\"")] string dstScenePath, [DefaultValue("false")] bool saveAsCopy) => 
+            INTERNAL_CALL_SaveScene(ref scene, dstScenePath, saveAsCopy);
 
-        internal static bool SaveSceneAs(Scene scene)
-        {
-            return INTERNAL_CALL_SaveSceneAs(ref scene);
-        }
+        internal static bool SaveSceneAs(Scene scene) => 
+            INTERNAL_CALL_SaveSceneAs(ref scene);
 
         /// <summary>
         /// <para>Save a list of Scenes.</para>

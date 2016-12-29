@@ -28,13 +28,8 @@
             this.m_TypeSelections.Sort();
         }
 
-        public List<TypeSelection> typeSelections
-        {
-            get
-            {
-                return this.m_TypeSelections;
-            }
-        }
+        public List<TypeSelection> typeSelections =>
+            this.m_TypeSelections;
     }
 }
 

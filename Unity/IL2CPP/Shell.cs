@@ -15,7 +15,7 @@
         private static readonly object FileLocker = new object();
         private static readonly object PipeLocker = new object();
 
-        public static ExecuteResult Execute(ExecuteArgs executeArgs, [Optional, DefaultParameterValue(null)] IExecuteController controller)
+        public static ExecuteResult Execute(ExecuteArgs executeArgs, IExecuteController controller = null)
         {
             <Execute>c__AnonStorey1 storey = new <Execute>c__AnonStorey1 {
                 controller = controller
@@ -108,12 +108,10 @@
             return str;
         }
 
-        public static string ExecuteAndCaptureOutput(NPath filename, string arguments, [Optional, DefaultParameterValue(null)] Dictionary<string, string> envVars)
-        {
-            return ExecuteAndCaptureOutput(filename.ToString(), arguments, envVars);
-        }
+        public static string ExecuteAndCaptureOutput(NPath filename, string arguments, Dictionary<string, string> envVars = null) => 
+            ExecuteAndCaptureOutput(filename.ToString(), arguments, envVars);
 
-        public static string ExecuteAndCaptureOutput(string filename, string arguments, [Optional, DefaultParameterValue(null)] Dictionary<string, string> envVars)
+        public static string ExecuteAndCaptureOutput(string filename, string arguments, Dictionary<string, string> envVars = null)
         {
             ExecuteArgs executeArgs = new ExecuteArgs {
                 Executable = filename,
@@ -123,7 +121,7 @@
             return ExecuteAndCaptureOutput(executeArgs);
         }
 
-        public static string ExecuteAndCaptureOutput(string filename, string arguments, string workingDirectory, [Optional, DefaultParameterValue(null)] Dictionary<string, string> envVars)
+        public static string ExecuteAndCaptureOutput(string filename, string arguments, string workingDirectory, Dictionary<string, string> envVars = null)
         {
             ExecuteArgs executeArgs = new ExecuteArgs {
                 Executable = filename,
@@ -154,7 +152,7 @@
             {
                 foreach (KeyValuePair<string, string> pair in executeArgs.EnvVars)
                 {
-                    ProcessStartInfoExtensions.SetEnvironmentVariablePortable(process.StartInfo, pair);
+                    process.StartInfo.SetEnvironmentVariablePortable(pair);
                 }
             }
             return process;

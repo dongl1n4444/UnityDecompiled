@@ -6,69 +6,52 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-[Extension]
 public static class EnumerableExtensions
 {
-    [Extension]
-    public static string AggregateWith(IEnumerable<string> elements, string separator)
+    public static string AggregateWith(this IEnumerable<string> elements, string separator)
     {
         <AggregateWith>c__AnonStorey2 storey = new <AggregateWith>c__AnonStorey2 {
             separator = separator
         };
-        if (Enumerable.Any<string>(elements))
+        if (elements.Any<string>())
         {
-            return Enumerable.Aggregate<string>(elements, new Func<string, string, string>(storey, (IntPtr) this.<>m__0));
+            return elements.Aggregate<string>(new Func<string, string, string>(storey, (IntPtr) this.<>m__0));
         }
         return string.Empty;
     }
 
-    [Extension]
-    public static string AggregateWithComma(IEnumerable<string> elements)
-    {
-        return AggregateWith(elements, ", ");
-    }
+    public static string AggregateWithComma(this IEnumerable<string> elements) => 
+        elements.AggregateWith(", ");
 
-    [Extension]
-    public static string AggregateWithSpace(IEnumerable<string> elements)
-    {
-        return AggregateWith(elements, " ");
-    }
+    public static string AggregateWithSpace(this IEnumerable<string> elements) => 
+        elements.AggregateWith(" ");
 
-    [Extension]
-    public static string AggregateWithUnderscore(IEnumerable<string> elements)
-    {
-        return AggregateWith(elements, "_");
-    }
+    public static string AggregateWithUnderscore(this IEnumerable<string> elements) => 
+        elements.AggregateWith("_");
 
-    [Extension, DebuggerHidden]
-    public static IEnumerable<T> Append<T>(IEnumerable<T> inputs, T extra)
-    {
-        return new <Append>c__Iterator0<T> { 
+    [DebuggerHidden]
+    public static IEnumerable<T> Append<T>(this IEnumerable<T> inputs, T extra) => 
+        new <Append>c__Iterator0<T> { 
             inputs = inputs,
             extra = extra,
             $PC = -2
         };
-    }
 
-    [Extension, DebuggerHidden]
-    public static IEnumerable<T> Prepend<T>(IEnumerable<T> inputs, T extra)
-    {
-        return new <Prepend>c__Iterator1<T> { 
+    [DebuggerHidden]
+    public static IEnumerable<T> Prepend<T>(this IEnumerable<T> inputs, T extra) => 
+        new <Prepend>c__Iterator1<T> { 
             extra = extra,
             inputs = inputs,
             $PC = -2
         };
-    }
 
     [CompilerGenerated]
     private sealed class <AggregateWith>c__AnonStorey2
     {
         internal string separator;
 
-        internal string <>m__0(string buff, string s)
-        {
-            return (buff + this.separator + s);
-        }
+        internal string <>m__0(string buff, string s) => 
+            (buff + this.separator + s);
     }
 
     [CompilerGenerated]
@@ -183,28 +166,14 @@ public static class EnumerableExtensions
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
 
-        T IEnumerator<T>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        T IEnumerator<T>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 
     [CompilerGenerated]
@@ -318,28 +287,14 @@ public static class EnumerableExtensions
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
 
-        T IEnumerator<T>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        T IEnumerator<T>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 }
 

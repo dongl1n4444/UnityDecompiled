@@ -7,15 +7,11 @@
 
     internal class WindowsDesktopPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors)
-        {
-            return new MsvcDesktopToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
-        }
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+            new MsvcDesktopToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
 
-        public override bool Supports(RuntimePlatform platform)
-        {
-            return (platform is WindowsDesktopRuntimePlatform);
-        }
+        public override bool Supports(RuntimePlatform platform) => 
+            (platform is WindowsDesktopRuntimePlatform);
     }
 }
 

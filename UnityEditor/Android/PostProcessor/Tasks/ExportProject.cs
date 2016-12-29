@@ -52,13 +52,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Exporting project";
-            }
-        }
+        public string Name =>
+            "Exporting project";
     }
 }
 

@@ -39,13 +39,8 @@
             }
         }
 
-        public static bool Il2CppDependenciesAvailable
-        {
-            get
-            {
-                return (Il2CppRoot.ParentContaining("il2cpp-dependencies") != null);
-            }
-        }
+        public static bool Il2CppDependenciesAvailable =>
+            (Il2CppRoot.ParentContaining("il2cpp-dependencies") != null);
 
         public static NPath Il2CppRoot
         {
@@ -53,7 +48,7 @@
             {
                 if (_il2cppRoot == null)
                 {
-                    Uri uri = new Uri(AssemblyExtensions.GetCodeBasePortable(TypeExtensions.GetAssemblyPortable(typeof(CommonPaths))));
+                    Uri uri = new Uri(typeof(CommonPaths).GetAssemblyPortable().GetCodeBasePortable());
                     string localPath = uri.LocalPath;
                     if (!string.IsNullOrEmpty(uri.Fragment))
                     {

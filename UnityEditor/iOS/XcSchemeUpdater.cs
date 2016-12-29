@@ -23,7 +23,7 @@
             {
                 str = "Debug";
             }
-            XElement element = System.Xml.XPath.Extensions.XPathSelectElement(doc.Root, "./LaunchAction");
+            XElement element = doc.Root.XPathSelectElement("./LaunchAction");
             if (element == null)
             {
                 return contents;

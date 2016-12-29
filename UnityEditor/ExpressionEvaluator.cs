@@ -45,7 +45,7 @@
                     Operator @operator = CharToOperator(str[0]);
                     List<T> list = new List<T>();
                     bool flag = true;
-                    while (((Enumerable.LongCount<string>(source) > 0L) && !IsCommand(source.Peek())) && (list.Count < @operator.inputs))
+                    while (((source.LongCount<string>() > 0L) && !IsCommand(source.Peek())) && (list.Count < @operator.inputs))
                     {
                         T local;
                         flag &= TryParse<T>(source.Pop(), out local);
@@ -63,7 +63,7 @@
                     source.Push(str);
                 }
             }
-            if ((Enumerable.LongCount<string>(source) == 1L) && TryParse<T>(source.Pop(), out local5))
+            if ((source.LongCount<string>() == 1L) && TryParse<T>(source.Pop(), out local5))
             {
                 return local5;
             }
@@ -309,11 +309,11 @@
                         }
                         case ')':
                         {
-                            while ((Enumerable.LongCount<char>(source) > 0L) && (source.Peek() != '('))
+                            while ((source.LongCount<char>() > 0L) && (source.Peek() != '('))
                             {
                                 stack2.Push(source.Pop().ToString());
                             }
-                            if (Enumerable.LongCount<char>(source) > 0L)
+                            if (source.LongCount<char>() > 0L)
                             {
                                 source.Pop();
                             }
@@ -332,17 +332,15 @@
                     stack2.Push(str);
                 }
             }
-            while (Enumerable.LongCount<char>(source) > 0L)
+            while (source.LongCount<char>() > 0L)
             {
                 stack2.Push(source.Pop().ToString());
             }
-            return Enumerable.ToArray<string>(Enumerable.Reverse<string>(stack2));
+            return stack2.Reverse<string>().ToArray<string>();
         }
 
-        private static bool IsCommand(char character)
-        {
-            return (((character == '(') || (character == ')')) || IsOperator(character));
-        }
+        private static bool IsCommand(char character) => 
+            (((character == '(') || (character == ')')) || IsOperator(character));
 
         private static bool IsCommand(string token)
         {
@@ -376,7 +374,7 @@
 
         private static bool NeedToPop(Stack<char> operatorStack, Operator newOperator)
         {
-            if (Enumerable.LongCount<char>(operatorStack) > 0L)
+            if (operatorStack.LongCount<char>() > 0L)
             {
                 Operator @operator = CharToOperator(operatorStack.Peek());
                 if (IsOperator(@operator.character) && (((newOperator.associativity == Associativity.Left) && (newOperator.presedence <= @operator.presedence)) || ((newOperator.associativity == Associativity.Right) && (newOperator.presedence < @operator.presedence))))

@@ -103,10 +103,8 @@
         /// <returns>
         /// <para>A native COM pointer to the IMFMediaBuffer which contains the image data.</para>
         /// </returns>
-        public IntPtr GetUnsafePointerToBuffer()
-        {
-            return GetUnsafePointerToBuffer(this.m_NativePtr);
-        }
+        public IntPtr GetUnsafePointerToBuffer() => 
+            GetUnsafePointerToBuffer(this.m_NativePtr);
 
         [ThreadAndSerializationSafe]
         private static IntPtr GetUnsafePointerToBuffer(IntPtr photoCaptureFrame)

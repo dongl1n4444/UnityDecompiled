@@ -97,14 +97,8 @@
             return -1;
         }
 
-        public override int GetHashCode()
-        {
-            if (this.text == null)
-            {
-                return 0;
-            }
-            return this.text.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.text?.GetHashCode();
 
         public bool IsCompatibleWith(PackageVersion other)
         {
@@ -215,39 +209,23 @@
             return (a.special.Length < z.special.Length);
         }
 
-        public static bool operator >=(PackageVersion a, PackageVersion z)
-        {
-            return ((a == z) || (a > z));
-        }
+        public static bool operator >=(PackageVersion a, PackageVersion z) => 
+            ((a == z) || (a > z));
 
-        public static implicit operator string(PackageVersion version)
-        {
-            if (version == null)
-            {
-                return null;
-            }
-            return version.ToString();
-        }
+        public static implicit operator string(PackageVersion version) => 
+            version?.ToString();
 
-        public static bool operator !=(PackageVersion a, PackageVersion z)
-        {
-            return !(a == z);
-        }
+        public static bool operator !=(PackageVersion a, PackageVersion z) => 
+            !(a == z);
 
-        public static bool operator <(PackageVersion a, PackageVersion z)
-        {
-            return ((a != z) && (a <= z));
-        }
+        public static bool operator <(PackageVersion a, PackageVersion z) => 
+            ((a != z) && (a <= z));
 
-        public static bool operator <=(PackageVersion a, PackageVersion z)
-        {
-            return ((a == z) || (a < z));
-        }
+        public static bool operator <=(PackageVersion a, PackageVersion z) => 
+            ((a == z) || (a < z));
 
-        public override string ToString()
-        {
-            return this.text;
-        }
+        public override string ToString() => 
+            this.text;
 
         private bool ValidateSpecial()
         {

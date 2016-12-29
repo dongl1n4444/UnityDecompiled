@@ -4,21 +4,11 @@
 
     public class x86Architecture : Architecture
     {
-        public override int Bits
-        {
-            get
-            {
-                return 0x20;
-            }
-        }
+        public override int Bits =>
+            0x20;
 
-        public override string Name
-        {
-            get
-            {
-                return "x86";
-            }
-        }
+        public override string Name =>
+            "x86";
     }
 }
 

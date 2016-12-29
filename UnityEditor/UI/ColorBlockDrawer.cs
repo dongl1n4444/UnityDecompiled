@@ -11,10 +11,8 @@
     [CustomPropertyDrawer(typeof(ColorBlock), true)]
     public class ColorBlockDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
-        {
-            return ((6f * EditorGUIUtility.singleLineHeight) + (5f * EditorGUIUtility.standardVerticalSpacing));
-        }
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label) => 
+            ((6f * EditorGUIUtility.singleLineHeight) + (5f * EditorGUIUtility.standardVerticalSpacing));
 
         public override void OnGUI(Rect rect, SerializedProperty prop, GUIContent label)
         {

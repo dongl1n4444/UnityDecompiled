@@ -36,7 +36,7 @@
             {
                 <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <CStringStore>m__0);
             }
-            TypeReference baseType = module.ImportReference(Enumerable.First<TypeDefinition>(module.TypeSystem.Object.Resolve().Module.Types, <>f__am$cache0));
+            TypeReference baseType = module.ImportReference(module.TypeSystem.Object.Resolve().Module.Types.First<TypeDefinition>(<>f__am$cache0));
             this.fieldNamesStorageType = new TypeDefinition("UnityEngine.Internal", "$FieldNamesStorage", TypeAttributes.Abstract | TypeAttributes.Sealed, module.TypeSystem.Object);
             this.fieldNamesType = new TypeDefinition("UnityEngine.Internal", "$FieldNames", TypeAttributes.AnsiClass | TypeAttributes.ExplicitLayout | TypeAttributes.NestedAssembly | TypeAttributes.Sealed, baseType);
             this.fieldNamesType.ClassSize = 1;
@@ -48,10 +48,8 @@
         }
 
         [CompilerGenerated]
-        private static bool <CStringStore>m__0(TypeDefinition t)
-        {
-            return (t.FullName == "System.ValueType");
-        }
+        private static bool <CStringStore>m__0(TypeDefinition t) => 
+            (t.FullName == "System.ValueType");
 
         private int GetOffsetForString(string str)
         {
@@ -103,23 +101,23 @@
             {
                 <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__1);
             }
-            TypeDefinition definition2 = Enumerable.First<TypeDefinition>(this.module.TypeSystem.Object.Resolve().Module.Types, <>f__am$cache1);
+            TypeDefinition definition2 = this.module.TypeSystem.Object.Resolve().Module.Types.First<TypeDefinition>(<>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__2);
             }
-            MethodReference method = this.module.ImportReference(Enumerable.Single<MethodDefinition>(definition2.Methods, <>f__am$cache2));
+            MethodReference method = this.module.ImportReference(definition2.Methods.Single<MethodDefinition>(<>f__am$cache2));
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = new Func<TypeDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__3);
             }
-            TypeDefinition definition3 = Enumerable.First<TypeDefinition>(this.module.Types, <>f__am$cache3);
+            TypeDefinition definition3 = this.module.Types.First<TypeDefinition>(<>f__am$cache3);
             bool flag = true;
             if (<>f__am$cache4 == null)
             {
                 <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__4);
             }
-            MethodDefinition definition4 = Enumerable.FirstOrDefault<MethodDefinition>(definition3.Methods, <>f__am$cache4);
+            MethodDefinition definition4 = definition3.Methods.FirstOrDefault<MethodDefinition>(<>f__am$cache4);
             if (definition4 == null)
             {
                 flag = false;
@@ -142,7 +140,7 @@
             {
                 definition4.Body.Instructions.Insert(0, list[i]);
             }
-            MethodBodyRocks.OptimizeMacros(definition4.Body);
+            definition4.Body.OptimizeMacros();
         }
 
         public static void SaveCStringStore(ModuleDefinition module)

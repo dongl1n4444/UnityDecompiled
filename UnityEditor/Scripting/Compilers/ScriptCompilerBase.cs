@@ -40,15 +40,11 @@
             this.process = this.StartCompiler();
         }
 
-        protected bool CompilationHadFailure()
-        {
-            return (this.process.ExitCode != 0);
-        }
+        protected bool CompilationHadFailure() => 
+            (this.process.ExitCode != 0);
 
-        protected bool CompilingForWSA()
-        {
-            return (this._island._target == BuildTarget.WSAPlayer);
-        }
+        protected bool CompilingForWSA() => 
+            (this._island._target == BuildTarget.WSAPlayer);
 
         protected abstract CompilerOutputParserBase CreateOutputParser();
         public virtual void Dispose()
@@ -102,18 +98,14 @@
                 Debug.LogWarning("Compile process is not finished yet. This should not happen.");
             }
             this.DumpStreamOutputToLog();
-            return Enumerable.ToArray<CompilerMessage>(this.CreateOutputParser().Parse(this.GetStreamContainingCompilerMessages(), this.CompilationHadFailure()));
+            return this.CreateOutputParser().Parse(this.GetStreamContainingCompilerMessages(), this.CompilationHadFailure()).ToArray<CompilerMessage>();
         }
 
-        protected string[] GetErrorOutput()
-        {
-            return this.process.GetErrorOutput();
-        }
+        protected string[] GetErrorOutput() => 
+            this.process.GetErrorOutput();
 
-        protected string[] GetStandardOutput()
-        {
-            return this.process.GetStandardOutput();
-        }
+        protected string[] GetStandardOutput() => 
+            this.process.GetStandardOutput();
 
         protected virtual string[] GetStreamContainingCompilerMessages()
         {
@@ -124,15 +116,11 @@
             return list.ToArray();
         }
 
-        public virtual bool Poll()
-        {
-            return ((this.process == null) || this.process.HasExited);
-        }
+        public virtual bool Poll() => 
+            ((this.process == null) || this.process.HasExited);
 
-        protected static string PrepareFileName(string fileName)
-        {
-            return CommandLineFormatter.PrepareFileName(fileName);
-        }
+        protected static string PrepareFileName(string fileName) => 
+            CommandLineFormatter.PrepareFileName(fileName);
 
         protected abstract Program StartCompiler();
     }

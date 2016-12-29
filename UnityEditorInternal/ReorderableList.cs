@@ -94,10 +94,8 @@
             this.InitList(serializedObject, elements, null, draggable, displayHeader, displayAddButton, displayRemoveButton);
         }
 
-        private int CalculateRowIndex()
-        {
-            return this.GetRowIndex(this.m_DraggedY);
-        }
+        private int CalculateRowIndex() => 
+            this.GetRowIndex(this.m_DraggedY);
 
         private void DoDraggingAndSelection(Rect listRect)
         {
@@ -467,19 +465,11 @@
             return rect2;
         }
 
-        private float GetElementHeight(int index)
-        {
-            if (this.elementHeightCallback == null)
-            {
-                return this.elementHeight;
-            }
-            return this.elementHeightCallback(index);
-        }
+        private float GetElementHeight(int index) => 
+            this.elementHeightCallback?.Invoke(index);
 
-        private float GetElementYOffset(int index)
-        {
-            return this.GetElementYOffset(index, -1);
-        }
+        private float GetElementYOffset(int index) => 
+            this.GetElementYOffset(index, -1);
 
         private float GetElementYOffset(int index, int skipIndex)
         {
@@ -540,20 +530,16 @@
             return (this.count - 1);
         }
 
-        private Rect GetRowRect(int index, Rect listRect)
-        {
-            return new Rect(listRect.x, listRect.y + this.GetElementYOffset(index), listRect.width, this.GetElementHeight(index));
-        }
+        private Rect GetRowRect(int index, Rect listRect) => 
+            new Rect(listRect.x, listRect.y + this.GetElementYOffset(index), listRect.width, this.GetElementHeight(index));
 
         public void GrabKeyboardFocus()
         {
             GUIUtility.keyboardControl = this.id;
         }
 
-        public bool HasKeyboardControl()
-        {
-            return (GUIUtility.keyboardControl == this.id);
-        }
+        public bool HasKeyboardControl() => 
+            (GUIUtility.keyboardControl == this.id);
 
         private void InitList(SerializedObject serializedObject, SerializedProperty elements, IList elementList, bool draggable, bool displayHeader, bool displayAddButton, bool displayRemoveButton)
         {
@@ -577,10 +563,8 @@
             }
         }
 
-        private bool IsDragging()
-        {
-            return this.m_Dragging;
-        }
+        private bool IsDragging() => 
+            this.m_Dragging;
 
         private bool IsMouseInsideActiveElement(Rect listRect)
         {
@@ -623,20 +607,13 @@
             }
         }
 
-        public static Defaults defaultBehaviours
-        {
-            get
-            {
-                return s_Defaults;
-            }
-        }
+        public static Defaults defaultBehaviours =>
+            s_Defaults;
 
         public bool draggable
         {
-            get
-            {
-                return this.m_Draggable;
-            }
+            get => 
+                this.m_Draggable;
             set
             {
                 this.m_Draggable = value;
@@ -645,10 +622,8 @@
 
         public int index
         {
-            get
-            {
-                return this.m_ActiveElement;
-            }
+            get => 
+                this.m_ActiveElement;
             set
             {
                 this.m_ActiveElement = value;
@@ -657,10 +632,8 @@
 
         public IList list
         {
-            get
-            {
-                return this.m_ElementList;
-            }
+            get => 
+                this.m_ElementList;
             set
             {
                 this.m_ElementList = value;
@@ -669,10 +642,8 @@
 
         public SerializedProperty serializedProperty
         {
-            get
-            {
-                return this.m_Elements;
-            }
+            get => 
+                this.m_Elements;
             set
             {
                 this.m_Elements = value;

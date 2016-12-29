@@ -60,7 +60,7 @@
             {
                 <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <CustomAttributeConstructorFormattedArgumentsFor>m__3);
             }
-            return Enumerable.Aggregate<string, string>(Enumerable.Select<CustomAttributeArgument, string>(storey.attribute.ConstructorArguments, new Func<CustomAttributeArgument, string>(storey, (IntPtr) this.<>m__0)), "tmp", <>f__am$cache3);
+            return storey.attribute.ConstructorArguments.Select<CustomAttributeArgument, string>(new Func<CustomAttributeArgument, string>(storey, (IntPtr) this.<>m__0)).Aggregate<string, string>("tmp", <>f__am$cache3);
         }
 
         private static void DeclareTempLocals(CppCodeWriter writer, CustomAttribute attribute, IRuntimeMetadataAccess metadataAccess)
@@ -75,7 +75,7 @@
             {
                 <>f__mg$cache3 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) ValueIsArray);
             }
-            foreach (CustomAttributeArgument argument in Enumerable.Where<CustomAttributeArgument>(attribute.ConstructorArguments, <>f__mg$cache3))
+            foreach (CustomAttributeArgument argument in attribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__mg$cache3))
             {
                 WriteStoreArrayInTempLocal(writer, TempName(argument, attribute), argument, metadataAccess);
             }
@@ -83,7 +83,7 @@
             {
                 <>f__mg$cache4 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueIsArray);
             }
-            foreach (CustomAttributeNamedArgument argument2 in Enumerable.Where<CustomAttributeNamedArgument>(attribute.Fields, <>f__mg$cache4))
+            foreach (CustomAttributeNamedArgument argument2 in attribute.Fields.Where<CustomAttributeNamedArgument>(<>f__mg$cache4))
             {
                 string varName = TempName(argument2);
                 WriteStoreArrayInTempLocal(writer, varName, argument2.Argument, metadataAccess);
@@ -92,7 +92,7 @@
             {
                 <>f__mg$cache5 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueIsArray);
             }
-            foreach (CustomAttributeNamedArgument argument3 in Enumerable.Where<CustomAttributeNamedArgument>(attribute.Properties, <>f__mg$cache5))
+            foreach (CustomAttributeNamedArgument argument3 in attribute.Properties.Where<CustomAttributeNamedArgument>(<>f__mg$cache5))
             {
                 string introduced7 = TempName(argument3);
                 WriteStoreArrayInTempLocal(writer, introduced7, argument3.Argument, metadataAccess);
@@ -105,7 +105,7 @@
             {
                 <>f__mg$cache0 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
             }
-            foreach (CustomAttributeArgument argument in Enumerable.Where<CustomAttributeArgument>(attribute.ConstructorArguments, <>f__mg$cache0))
+            foreach (CustomAttributeArgument argument in attribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__mg$cache0))
             {
                 string variableName = TempName(argument, attribute);
                 WriteStoreValueInTempLocal(writer, variableName, (CustomAttributeArgument) argument.Value, metadataAccess);
@@ -114,7 +114,7 @@
             {
                 <>f__mg$cache1 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
             }
-            foreach (CustomAttributeNamedArgument argument2 in Enumerable.Where<CustomAttributeNamedArgument>(attribute.Fields, <>f__mg$cache1))
+            foreach (CustomAttributeNamedArgument argument2 in attribute.Fields.Where<CustomAttributeNamedArgument>(<>f__mg$cache1))
             {
                 string introduced9 = TempName(argument2);
                 WriteStoreValueInTempLocal(writer, introduced9, (CustomAttributeArgument) argument2.Argument.Value, metadataAccess);
@@ -123,7 +123,7 @@
             {
                 <>f__mg$cache2 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
             }
-            foreach (CustomAttributeNamedArgument argument4 in Enumerable.Where<CustomAttributeNamedArgument>(attribute.Properties, <>f__mg$cache2))
+            foreach (CustomAttributeNamedArgument argument4 in attribute.Properties.Where<CustomAttributeNamedArgument>(<>f__mg$cache2))
             {
                 string introduced10 = TempName(argument4);
                 WriteStoreValueInTempLocal(writer, introduced10, (CustomAttributeArgument) argument4.Argument.Value, metadataAccess);
@@ -131,24 +131,22 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<TypeReference> ExtractTypeReferencesFromCustomAttributeArguments(IEnumerable<CustomAttributeArgument> arguments)
-        {
-            return new <ExtractTypeReferencesFromCustomAttributeArguments>c__Iterator0 { 
+        private static IEnumerable<TypeReference> ExtractTypeReferencesFromCustomAttributeArguments(IEnumerable<CustomAttributeArgument> arguments) => 
+            new <ExtractTypeReferencesFromCustomAttributeArguments>c__Iterator0 { 
                 arguments = arguments,
                 $PC = -2
             };
-        }
 
         private static string FormatAttributeValue(CustomAttributeArgument argument, string tempLocalName, DefaultRuntimeMetadataAccess metadataAccess)
         {
             MetadataType metadataType = argument.Type.MetadataType;
-            if ((argument.Type.MetadataType == MetadataType.Class) && Extensions.IsEnum(argument.Type))
+            if ((argument.Type.MetadataType == MetadataType.Class) && argument.Type.IsEnum())
             {
                 metadataType = MetadataType.ValueType;
             }
-            if (Extensions.IsEnum(argument.Type))
+            if (argument.Type.IsEnum())
             {
-                TypeReference underlyingEnumType = Extensions.GetUnderlyingEnumType(argument.Type);
+                TypeReference underlyingEnumType = argument.Type.GetUnderlyingEnumType();
                 return FormatAttributeValue(underlyingEnumType.MetadataType, MetadataUtils.ChangePrimitiveType(argument.Value, underlyingEnumType), tempLocalName, metadataAccess);
             }
             return FormatAttributeValue(metadataType, argument.Value, tempLocalName, metadataAccess);
@@ -274,7 +272,7 @@
         private static List<FieldDefinition> GatherFieldsFromTypeAndBaseTypes(TypeDefinition attributeType)
         {
             List<FieldDefinition> list = new List<FieldDefinition>();
-            for (TypeDefinition definition = attributeType; definition != null; definition = (definition.BaseType == null) ? null : definition.BaseType.Resolve())
+            for (TypeDefinition definition = attributeType; definition != null; definition = definition.BaseType?.Resolve())
             {
                 list.AddRange(definition.Fields);
             }
@@ -284,7 +282,7 @@
         private static List<PropertyDefinition> GatherPropertiesFromTypeAndBaseTypes(TypeDefinition attributeType)
         {
             List<PropertyDefinition> list = new List<PropertyDefinition>();
-            for (TypeDefinition definition = attributeType; definition != null; definition = (definition.BaseType == null) ? null : definition.BaseType.Resolve())
+            for (TypeDefinition definition = attributeType; definition != null; definition = definition.BaseType?.Resolve())
             {
                 list.AddRange(definition.Properties);
             }
@@ -362,18 +360,14 @@
             {
                 value = value.Replace("\0ae", "\x00ae");
             }
-            return string.Format("il2cpp_codegen_string_new_wrapper(\"{0}\")", Formatter.EscapeString(value));
+            return $"il2cpp_codegen_string_new_wrapper("{Formatter.EscapeString(value)}")";
         }
 
-        private static string TempName(CustomAttributeNamedArgument argument)
-        {
-            return ("_tmp_" + argument.Name);
-        }
+        private static string TempName(CustomAttributeNamedArgument argument) => 
+            ("_tmp_" + argument.Name);
 
-        private static string TempName(CustomAttributeArgument argument, CustomAttribute attribute)
-        {
-            return ("_tmp_" + attribute.ConstructorArguments.IndexOf(argument));
-        }
+        private static string TempName(CustomAttributeArgument argument, CustomAttribute attribute) => 
+            ("_tmp_" + attribute.ConstructorArguments.IndexOf(argument));
 
         private static string TypeWrapperFor(TypeReference typeReference, IRuntimeMetadataAccess metadataAccess)
         {
@@ -381,18 +375,14 @@
             {
                 return Naming.Null;
             }
-            return string.Format("il2cpp_codegen_type_get_object({0})", metadataAccess.Il2CppTypeFor(typeReference));
+            return $"il2cpp_codegen_type_get_object({metadataAccess.Il2CppTypeFor(typeReference)})";
         }
 
-        private static bool ValueIsArray(CustomAttributeArgument argument)
-        {
-            return (argument.Type.MetadataType == MetadataType.Array);
-        }
+        private static bool ValueIsArray(CustomAttributeArgument argument) => 
+            (argument.Type.MetadataType == MetadataType.Array);
 
-        private static bool ValueIsArray(CustomAttributeNamedArgument namedArgument)
-        {
-            return ValueIsArray(namedArgument.Argument);
-        }
+        private static bool ValueIsArray(CustomAttributeNamedArgument namedArgument) => 
+            ValueIsArray(namedArgument.Argument);
 
         private static bool ValueNeedsBoxing(CustomAttributeArgument argument)
         {
@@ -412,17 +402,15 @@
             return true;
         }
 
-        private static bool ValueNeedsBoxing(CustomAttributeNamedArgument namedArgument)
-        {
-            return ValueNeedsBoxing(namedArgument.Argument);
-        }
+        private static bool ValueNeedsBoxing(CustomAttributeNamedArgument namedArgument) => 
+            ValueNeedsBoxing(namedArgument.Argument);
 
         public TableInfo WriteAttributes(IEnumerable<AssemblyDefinition> assemblyDefinitions)
         {
             foreach (AssemblyDefinition definition in assemblyDefinitions)
             {
                 this.WriteCustomAttributesCacheGeneratorFor(definition);
-                foreach (TypeDefinition definition2 in ModuleDefinitionRocks.GetAllTypes(definition.MainModule))
+                foreach (TypeDefinition definition2 in definition.MainModule.GetAllTypes())
                 {
                     this.WriteCustomAttributesCacheGenerators(definition2);
                 }
@@ -472,7 +460,7 @@
         private void WriteCustomAttributesCacheGeneratorFor(string name, ICustomAttributeProvider customAttributeProvider)
         {
             <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey2 storey = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey2 {
-                constructibleCustomAttributes = Enumerable.ToArray<CustomAttribute>(Extensions.GetConstructibleCustomAttributes(customAttributeProvider))
+                constructibleCustomAttributes = customAttributeProvider.GetConstructibleCustomAttributes().ToArray<CustomAttribute>()
             };
             if (storey.constructibleCustomAttributes.Length != 0)
             {
@@ -492,7 +480,7 @@
                     {
                         <>f__am$cache1 = new Func<CustomAttributeNamedArgument, CustomAttributeArgument>(null, (IntPtr) <WriteCustomAttributesCacheGeneratorFor>m__1);
                     }
-                    foreach (TypeReference reference2 in ExtractTypeReferencesFromCustomAttributeArguments(Enumerable.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(attribute.Fields, <>f__am$cache1)))
+                    foreach (TypeReference reference2 in ExtractTypeReferencesFromCustomAttributeArguments(attribute.Fields.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(<>f__am$cache1)))
                     {
                         if (reference2 != null)
                         {
@@ -503,7 +491,7 @@
                     {
                         <>f__am$cache2 = new Func<CustomAttributeNamedArgument, CustomAttributeArgument>(null, (IntPtr) <WriteCustomAttributesCacheGeneratorFor>m__2);
                     }
-                    foreach (TypeReference reference3 in ExtractTypeReferencesFromCustomAttributeArguments(Enumerable.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(attribute.Properties, <>f__am$cache2)))
+                    foreach (TypeReference reference3 in ExtractTypeReferencesFromCustomAttributeArguments(attribute.Properties.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(<>f__am$cache2)))
                     {
                         if (reference3 != null)
                         {
@@ -518,12 +506,12 @@
                             <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey2 = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
                                 property = enumerator4.Current
                             };
-                            MethodDefinition setMethod = Enumerable.First<PropertyDefinition>(source, new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
+                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
                             this._writer.AddIncludeForMethodDeclarations(setMethod.DeclaringType);
                         }
                     }
                 }
-                MethodWriter.WriteMethodWithMetadataInitialization(this._writer, string.Format("static void {0}(CustomAttributesCache* cache)", name), name, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), name);
+                MethodWriter.WriteMethodWithMetadataInitialization(this._writer, $"static void {name}(CustomAttributesCache* cache)", name, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), name);
             }
         }
 
@@ -605,7 +593,7 @@
                         <WriteMethodBody>c__AnonStorey3 storey = new <WriteMethodBody>c__AnonStorey3 {
                             fieldArgument = enumerator2.Current
                         };
-                        object[] objArray3 = new object[] { Naming.ForFieldSetter(Enumerable.First<FieldDefinition>(source, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
+                        object[] objArray3 = new object[] { Naming.ForFieldSetter(source.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
                         writer.WriteLine("tmp->{0}({1});", objArray3);
                     }
                 }
@@ -617,7 +605,7 @@
                         <WriteMethodBody>c__AnonStorey4 storey2 = new <WriteMethodBody>c__AnonStorey4 {
                             propertyArgument = enumerator3.Current
                         };
-                        MethodDefinition setMethod = Enumerable.First<PropertyDefinition>(list2, new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
+                        MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
                         object[] objArray4 = new object[] { Naming.ForMethodNameOnly(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
                         writer.WriteLine("{0}(tmp, {1}, {2});", objArray4);
                     }
@@ -639,11 +627,11 @@
             ArrayType variableType = (ArrayType) attributeValue.Type;
             if (arguments == null)
             {
-                writer.WriteLine(Statement.Expression(Emit.Assign(string.Format("{0} {1}", Naming.ForVariable(variableType), varName), "NULL")));
+                writer.WriteLine(Statement.Expression(Emit.Assign($"{Naming.ForVariable(variableType)} {varName}", "NULL")));
             }
             else
             {
-                writer.WriteLine(Statement.Expression(Emit.Assign(string.Format("{0} {1}", Naming.ForVariable(variableType), varName), Emit.NewSZArray(variableType, arguments.Length, metadataAccess))));
+                writer.WriteLine(Statement.Expression(Emit.Assign($"{Naming.ForVariable(variableType)} {varName}", Emit.NewSZArray(variableType, arguments.Length, metadataAccess))));
                 TypeReference elementType = variableType.ElementType;
                 if (elementType.MetadataType == MetadataType.Object)
                 {
@@ -668,10 +656,8 @@
             internal CustomAttribute attribute;
             internal DefaultRuntimeMetadataAccess metadataAccess;
 
-            internal string <>m__0(CustomAttributeArgument a)
-            {
-                return AttributesSupport.FormatAttributeValue(a, AttributesSupport.TempName(a, this.attribute), this.metadataAccess);
-            }
+            internal string <>m__0(CustomAttributeArgument a) => 
+                AttributesSupport.FormatAttributeValue(a, AttributesSupport.TempName(a, this.attribute), this.metadataAccess);
         }
 
         [CompilerGenerated]
@@ -781,7 +767,7 @@
                     {
                         this.<argument>__0 = this.$locvar0.Current;
                         this.<metadataType>__1 = this.<argument>__0.Type.MetadataType;
-                        if ((this.<argument>__0.Type.MetadataType == MetadataType.Class) && Extensions.IsEnum(this.<argument>__0.Type))
+                        if ((this.<argument>__0.Type.MetadataType == MetadataType.Class) && this.<argument>__0.Type.IsEnum())
                         {
                             this.<metadataType>__1 = MetadataType.ValueType;
                         }
@@ -891,28 +877,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeReference>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeReference>.GetEnumerator();
 
-            TypeReference IEnumerator<TypeReference>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeReference IEnumerator<TypeReference>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -920,10 +892,8 @@
         {
             internal CustomAttributeNamedArgument property;
 
-            internal bool <>m__0(PropertyDefinition p)
-            {
-                return (p.Name == this.property.Name);
-            }
+            internal bool <>m__0(PropertyDefinition p) => 
+                (p.Name == this.property.Name);
         }
 
         [CompilerGenerated]
@@ -942,10 +912,8 @@
         {
             internal CustomAttributeNamedArgument fieldArgument;
 
-            internal bool <>m__0(FieldDefinition p)
-            {
-                return (p.Name == this.fieldArgument.Name);
-            }
+            internal bool <>m__0(FieldDefinition p) => 
+                (p.Name == this.fieldArgument.Name);
         }
 
         [CompilerGenerated]
@@ -953,10 +921,8 @@
         {
             internal CustomAttributeNamedArgument propertyArgument;
 
-            internal bool <>m__0(PropertyDefinition p)
-            {
-                return (p.Name == this.propertyArgument.Name);
-            }
+            internal bool <>m__0(PropertyDefinition p) => 
+                (p.Name == this.propertyArgument.Name);
         }
     }
 }

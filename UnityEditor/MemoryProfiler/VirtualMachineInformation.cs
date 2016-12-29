@@ -25,73 +25,38 @@
         /// <summary>
         /// <para>Size in bytes of a pointer.</para>
         /// </summary>
-        public int pointerSize
-        {
-            get
-            {
-                return this.m_PointerSize;
-            }
-        }
+        public int pointerSize =>
+            this.m_PointerSize;
         /// <summary>
         /// <para>Size in bytes of the header of each managed object.</para>
         /// </summary>
-        public int objectHeaderSize
-        {
-            get
-            {
-                return this.m_ObjectHeaderSize;
-            }
-        }
+        public int objectHeaderSize =>
+            this.m_ObjectHeaderSize;
         /// <summary>
         /// <para>Size in bytes of the header of an array object.</para>
         /// </summary>
-        public int arrayHeaderSize
-        {
-            get
-            {
-                return this.m_ArrayHeaderSize;
-            }
-        }
+        public int arrayHeaderSize =>
+            this.m_ArrayHeaderSize;
         /// <summary>
         /// <para>Offset in bytes inside the object header of an array object where the bounds of the array is stored.</para>
         /// </summary>
-        public int arrayBoundsOffsetInHeader
-        {
-            get
-            {
-                return this.m_ArrayBoundsOffsetInHeader;
-            }
-        }
+        public int arrayBoundsOffsetInHeader =>
+            this.m_ArrayBoundsOffsetInHeader;
         /// <summary>
         /// <para>Offset in bytes inside the object header of an array object where the size of the array is stored.</para>
         /// </summary>
-        public int arraySizeOffsetInHeader
-        {
-            get
-            {
-                return this.m_ArraySizeOffsetInHeader;
-            }
-        }
+        public int arraySizeOffsetInHeader =>
+            this.m_ArraySizeOffsetInHeader;
         /// <summary>
         /// <para>Allocation granularity in bytes used by the virtual machine allocator.</para>
         /// </summary>
-        public int allocationGranularity
-        {
-            get
-            {
-                return this.m_AllocationGranularity;
-            }
-        }
+        public int allocationGranularity =>
+            this.m_AllocationGranularity;
         /// <summary>
         /// <para>A version number that will change when the object layout inside the managed heap will change.</para>
         /// </summary>
-        public int heapFormatVersion
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public int heapFormatVersion =>
+            0;
     }
 }
 

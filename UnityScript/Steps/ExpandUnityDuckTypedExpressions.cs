@@ -23,15 +23,11 @@
             node.get_Arguments().Add(this.get_CodeBuilder().CreateTypeofExpression(this.UnityScriptTypeSystem.ScriptBaseType));
         }
 
-        public override IMethod GetGetPropertyMethod()
-        {
-            return this.UnityRuntimeServices_GetProperty;
-        }
+        public override IMethod GetGetPropertyMethod() => 
+            this.UnityRuntimeServices_GetProperty;
 
-        public override IMethod GetSetPropertyMethod()
-        {
-            return (this._expando ? this.ResolveUnityRuntimeMethod("SetProperty") : base.GetSetPropertyMethod());
-        }
+        public override IMethod GetSetPropertyMethod() => 
+            (this._expando ? this.ResolveUnityRuntimeMethod("SetProperty") : base.GetSetPropertyMethod());
 
         public override void Initialize(CompilerContext context)
         {
@@ -58,34 +54,17 @@
             }
         }
 
-        public IMethod ResolveUnityRuntimeMethod(string methodName)
-        {
-            return this.get_NameResolutionService().ResolveMethod(this.UnityRuntimeServicesType, methodName);
-        }
+        public IMethod ResolveUnityRuntimeMethod(string methodName) => 
+            this.get_NameResolutionService().ResolveMethod(this.UnityRuntimeServicesType, methodName);
 
-        public IType UnityRuntimeServicesType
-        {
-            get
-            {
-                return this.get_TypeSystemServices().Map(typeof(UnityRuntimeServices));
-            }
-        }
+        public IType UnityRuntimeServicesType =>
+            this.get_TypeSystemServices().Map(typeof(UnityRuntimeServices));
 
-        public UnityScriptCompilerParameters UnityScriptParameters
-        {
-            get
-            {
-                return (UnityScriptCompilerParameters) this.get_Parameters();
-            }
-        }
+        public UnityScriptCompilerParameters UnityScriptParameters =>
+            ((UnityScriptCompilerParameters) this.get_Parameters());
 
-        public UnityScript.TypeSystem.UnityScriptTypeSystem UnityScriptTypeSystem
-        {
-            get
-            {
-                return (UnityScript.TypeSystem.UnityScriptTypeSystem) this.get_TypeSystemServices();
-            }
-        }
+        public UnityScript.TypeSystem.UnityScriptTypeSystem UnityScriptTypeSystem =>
+            ((UnityScript.TypeSystem.UnityScriptTypeSystem) this.get_TypeSystemServices());
     }
 }
 

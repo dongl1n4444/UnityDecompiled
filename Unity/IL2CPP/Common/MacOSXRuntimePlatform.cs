@@ -4,13 +4,8 @@
 
     public class MacOSXRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "MacOSX";
-            }
-        }
+        public override string Name =>
+            "MacOSX";
     }
 }
 

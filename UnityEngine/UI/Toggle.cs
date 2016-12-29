@@ -192,20 +192,16 @@
             this.PlayEffect(true);
         }
 
-        Transform ICanvasElement.get_transform()
-        {
-            return base.transform;
-        }
+        Transform ICanvasElement.get_transform() => 
+            base.transform;
 
         /// <summary>
         /// <para>Group the toggle belongs to.</para>
         /// </summary>
         public ToggleGroup group
         {
-            get
-            {
-                return this.m_Group;
-            }
+            get => 
+                this.m_Group;
             set
             {
                 this.m_Group = value;
@@ -222,10 +218,8 @@
         /// </summary>
         public bool isOn
         {
-            get
-            {
-                return this.m_IsOn;
-            }
+            get => 
+                this.m_IsOn;
             set
             {
                 this.Set(value);

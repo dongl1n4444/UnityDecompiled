@@ -23,20 +23,16 @@
             UnityConnectServiceCollection.instance.AddService(cloudService);
         }
 
-        public override string GetServiceName()
-        {
-            return "ErrorHub";
-        }
+        public override string GetServiceName() => 
+            "ErrorHub";
 
         public string errorMessage { get; set; }
 
         public static ErrorHubAccess instance
         {
             [CompilerGenerated]
-            get
-            {
-                return <instance>k__BackingField;
-            }
+            get => 
+                <instance>k__BackingField;
             [CompilerGenerated]
             private set
             {

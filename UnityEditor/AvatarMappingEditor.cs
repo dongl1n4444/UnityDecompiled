@@ -321,7 +321,7 @@
                     return BoneState.BoneLenghtIsZero;
                 }
             }
-            if (Enumerable.Count<AvatarSetupTool.BoneWrapper>(Enumerable.Where<AvatarSetupTool.BoneWrapper>(this.m_Bones, new Func<AvatarSetupTool.BoneWrapper, bool>(storey, (IntPtr) this.<>m__0))) > 1)
+            if (Enumerable.Where<AvatarSetupTool.BoneWrapper>(this.m_Bones, new Func<AvatarSetupTool.BoneWrapper, bool>(storey, (IntPtr) this.<>m__0)).Count<AvatarSetupTool.BoneWrapper>() > 1)
             {
                 error = storey.bone.messageName + " is also assigned to ";
                 bool flag = true;
@@ -627,10 +627,8 @@
             SceneView.RepaintAll();
         }
 
-        protected Vector4 QuaternionToVector4(Quaternion rot)
-        {
-            return new Vector4(rot.x, rot.y, rot.z, rot.w);
-        }
+        protected Vector4 QuaternionToVector4(Quaternion rot) => 
+            new Vector4(rot.x, rot.y, rot.z, rot.w);
 
         protected void ResetBones()
         {
@@ -748,10 +746,8 @@
             }
         }
 
-        protected Quaternion Vector4ToQuaternion(Vector4 rot)
-        {
-            return new Quaternion(rot.x, rot.y, rot.z, rot.w);
-        }
+        protected Quaternion Vector4ToQuaternion(Vector4 rot) => 
+            new Quaternion(rot.x, rot.y, rot.z, rot.w);
 
         internal static Styles styles
         {
@@ -770,10 +766,8 @@
         {
             internal string boneName;
 
-            internal bool <>m__0(Transform f)
-            {
-                return AvatarMappingEditor.MatchName(f.name, this.boneName);
-            }
+            internal bool <>m__0(Transform f) => 
+                AvatarMappingEditor.MatchName(f.name, this.boneName);
         }
 
         [CompilerGenerated]
@@ -781,10 +775,8 @@
         {
             internal AvatarSetupTool.BoneWrapper bone;
 
-            internal bool <>m__0(AvatarSetupTool.BoneWrapper f)
-            {
-                return (f.bone == this.bone.bone);
-            }
+            internal bool <>m__0(AvatarSetupTool.BoneWrapper f) => 
+                (f.bone == this.bone.bone);
         }
 
         internal class Styles

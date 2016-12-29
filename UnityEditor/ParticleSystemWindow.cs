@@ -120,10 +120,8 @@
             GUILayout.EndHorizontal();
         }
 
-        internal static ParticleSystemWindow GetInstance()
-        {
-            return s_Instance;
-        }
+        internal static ParticleSystemWindow GetInstance() => 
+            s_Instance;
 
         private void InitEffectUI()
         {
@@ -156,10 +154,8 @@
             }
         }
 
-        internal bool IsVisible()
-        {
-            return this.m_IsVisible;
-        }
+        internal bool IsVisible() => 
+            this.m_IsVisible;
 
         private void OnBecameInvisible()
         {

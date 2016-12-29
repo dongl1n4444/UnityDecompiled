@@ -17,15 +17,11 @@
             }
         }
 
-        public int GetTallInstancesCount()
-        {
-            return this.m_TallInstanceIDs.Count;
-        }
+        public int GetTallInstancesCount() => 
+            this.m_TallInstanceIDs.Count;
 
-        public bool GetTallMode(AnimationWindowHierarchyNode node)
-        {
-            return this.m_TallInstanceIDs.Contains(node.id);
-        }
+        public bool GetTallMode(AnimationWindowHierarchyNode node) => 
+            this.m_TallInstanceIDs.Contains(node.id);
 
         public void SetTallMode(AnimationWindowHierarchyNode node, bool tallMode)
         {

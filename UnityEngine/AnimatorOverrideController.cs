@@ -90,10 +90,8 @@
 
         public AnimationClip this[string name]
         {
-            get
-            {
-                return this.Internal_GetClipByName(name, true);
-            }
+            get => 
+                this.Internal_GetClipByName(name, true);
             set
             {
                 this.Internal_SetClipByName(name, value);
@@ -102,10 +100,8 @@
 
         public AnimationClip this[AnimationClip clip]
         {
-            get
-            {
-                return this.Internal_GetClip(clip, true);
-            }
+            get => 
+                this.Internal_GetClip(clip, true);
             set
             {
                 this.Internal_SetClip(clip, value);

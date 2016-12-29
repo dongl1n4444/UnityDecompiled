@@ -12,10 +12,8 @@
     public sealed class AssetBundle : UnityEngine.Object
     {
         [Obsolete("This method is deprecated. Use GetAllAssetNames() instead.")]
-        public string[] AllAssetNames()
-        {
-            return this.GetAllAssetNames();
-        }
+        public string[] AllAssetNames() => 
+            this.GetAllAssetNames();
 
         /// <summary>
         /// <para>Check if an AssetBundle contains a specific object.</para>
@@ -30,30 +28,24 @@
         /// 
         /// See Also: WWW.assetBundle, WWW.LoadFromCacheOrDownload.</param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method CreateFromFile has been renamed to LoadFromFile (UnityUpgradable) -> LoadFromFile(*)", true)]
-        public static AssetBundle CreateFromFile(string path)
-        {
-            return null;
-        }
+        public static AssetBundle CreateFromFile(string path) => 
+            null;
 
         /// <summary>
         /// <para>Asynchronously create an AssetBundle from a memory region.</para>
         /// </summary>
         /// <param name="binary"></param>
         [Obsolete("Method CreateFromMemory has been renamed to LoadFromMemoryAsync (UnityUpgradable) -> LoadFromMemoryAsync(*)", true), EditorBrowsable(EditorBrowsableState.Never)]
-        public static AssetBundleCreateRequest CreateFromMemory(byte[] binary)
-        {
-            return null;
-        }
+        public static AssetBundleCreateRequest CreateFromMemory(byte[] binary) => 
+            null;
 
         /// <summary>
         /// <para>Synchronously create an AssetBundle from a memory region.</para>
         /// </summary>
         /// <param name="binary">Array of bytes with the AssetBundle data.</param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Method CreateFromMemoryImmediate has been renamed to LoadFromMemory (UnityUpgradable) -> LoadFromMemory(*)", true)]
-        public static AssetBundle CreateFromMemoryImmediate(byte[] binary)
-        {
-            return null;
-        }
+        public static AssetBundle CreateFromMemoryImmediate(byte[] binary) => 
+            null;
 
         /// <summary>
         /// <para>Return all asset names in the AssetBundle.</para>
@@ -66,45 +58,33 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string[] GetAllScenePaths();
         [Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true)]
-        public UnityEngine.Object Load(string name)
-        {
-            return null;
-        }
+        public UnityEngine.Object Load(string name) => 
+            null;
 
         [Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true)]
-        public T Load<T>(string name) where T: UnityEngine.Object
-        {
-            return null;
-        }
+        public T Load<T>(string name) where T: UnityEngine.Object => 
+            null;
 
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument), Obsolete("Method Load has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAsset instead and check the documentation for details.", true)]
         public extern UnityEngine.Object Load(string name, System.Type type);
         [Obsolete("Method LoadAll has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAllAssets instead and check the documentation for details.", true)]
-        public UnityEngine.Object[] LoadAll()
-        {
-            return null;
-        }
+        public UnityEngine.Object[] LoadAll() => 
+            null;
 
         [Obsolete("Method LoadAll has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAllAssets instead and check the documentation for details.", true)]
-        public T[] LoadAll<T>() where T: UnityEngine.Object
-        {
-            return null;
-        }
+        public T[] LoadAll<T>() where T: UnityEngine.Object => 
+            null;
 
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Method LoadAll has been deprecated. Script updater cannot update it as the loading behaviour has changed. Please use LoadAllAssets instead and check the documentation for details.", true)]
         public extern UnityEngine.Object[] LoadAll(System.Type type);
         /// <summary>
         /// <para>Loads all assets contained in the asset bundle.</para>
         /// </summary>
-        public UnityEngine.Object[] LoadAllAssets()
-        {
-            return this.LoadAllAssets(typeof(UnityEngine.Object));
-        }
+        public UnityEngine.Object[] LoadAllAssets() => 
+            this.LoadAllAssets(typeof(UnityEngine.Object));
 
-        public T[] LoadAllAssets<T>() where T: UnityEngine.Object
-        {
-            return Resources.ConvertObjects<T>(this.LoadAllAssets(typeof(T)));
-        }
+        public T[] LoadAllAssets<T>() where T: UnityEngine.Object => 
+            Resources.ConvertObjects<T>(this.LoadAllAssets(typeof(T)));
 
         /// <summary>
         /// <para>Loads all assets contained in the asset bundle that inherit from type.</para>
@@ -122,15 +102,11 @@
         /// <summary>
         /// <para>Loads all assets contained in the asset bundle asynchronously.</para>
         /// </summary>
-        public AssetBundleRequest LoadAllAssetsAsync()
-        {
-            return this.LoadAllAssetsAsync(typeof(UnityEngine.Object));
-        }
+        public AssetBundleRequest LoadAllAssetsAsync() => 
+            this.LoadAllAssetsAsync(typeof(UnityEngine.Object));
 
-        public AssetBundleRequest LoadAllAssetsAsync<T>()
-        {
-            return this.LoadAllAssetsAsync(typeof(T));
-        }
+        public AssetBundleRequest LoadAllAssetsAsync<T>() => 
+            this.LoadAllAssetsAsync(typeof(T));
 
         /// <summary>
         /// <para>Loads all assets contained in the asset bundle that inherit from type asynchronously.</para>
@@ -149,15 +125,11 @@
         /// <para>Loads asset with name from the bundle.</para>
         /// </summary>
         /// <param name="name"></param>
-        public UnityEngine.Object LoadAsset(string name)
-        {
-            return this.LoadAsset(name, typeof(UnityEngine.Object));
-        }
+        public UnityEngine.Object LoadAsset(string name) => 
+            this.LoadAsset(name, typeof(UnityEngine.Object));
 
-        public T LoadAsset<T>(string name) where T: UnityEngine.Object
-        {
-            return (T) this.LoadAsset(name, typeof(T));
-        }
+        public T LoadAsset<T>(string name) where T: UnityEngine.Object => 
+            ((T) this.LoadAsset(name, typeof(T)));
 
         /// <summary>
         /// <para>Loads asset with name of a given type from the bundle.</para>
@@ -188,15 +160,11 @@
         /// <para>Asynchronously loads asset with name from the bundle.</para>
         /// </summary>
         /// <param name="name"></param>
-        public AssetBundleRequest LoadAssetAsync(string name)
-        {
-            return this.LoadAssetAsync(name, typeof(UnityEngine.Object));
-        }
+        public AssetBundleRequest LoadAssetAsync(string name) => 
+            this.LoadAssetAsync(name, typeof(UnityEngine.Object));
 
-        public AssetBundleRequest LoadAssetAsync<T>(string name)
-        {
-            return this.LoadAssetAsync(name, typeof(T));
-        }
+        public AssetBundleRequest LoadAssetAsync<T>(string name) => 
+            this.LoadAssetAsync(name, typeof(T));
 
         /// <summary>
         /// <para>Asynchronously loads asset with name of a given type from the bundle.</para>
@@ -226,15 +194,11 @@
         /// <para>Loads asset and sub assets with name from the bundle.</para>
         /// </summary>
         /// <param name="name"></param>
-        public UnityEngine.Object[] LoadAssetWithSubAssets(string name)
-        {
-            return this.LoadAssetWithSubAssets(name, typeof(UnityEngine.Object));
-        }
+        public UnityEngine.Object[] LoadAssetWithSubAssets(string name) => 
+            this.LoadAssetWithSubAssets(name, typeof(UnityEngine.Object));
 
-        public T[] LoadAssetWithSubAssets<T>(string name) where T: UnityEngine.Object
-        {
-            return Resources.ConvertObjects<T>(this.LoadAssetWithSubAssets(name, typeof(T)));
-        }
+        public T[] LoadAssetWithSubAssets<T>(string name) where T: UnityEngine.Object => 
+            Resources.ConvertObjects<T>(this.LoadAssetWithSubAssets(name, typeof(T)));
 
         /// <summary>
         /// <para>Loads asset and sub assets with name of a given type from the bundle.</para>
@@ -264,15 +228,11 @@
         /// <para>Loads asset with sub assets with name from the bundle asynchronously.</para>
         /// </summary>
         /// <param name="name"></param>
-        public AssetBundleRequest LoadAssetWithSubAssetsAsync(string name)
-        {
-            return this.LoadAssetWithSubAssetsAsync(name, typeof(UnityEngine.Object));
-        }
+        public AssetBundleRequest LoadAssetWithSubAssetsAsync(string name) => 
+            this.LoadAssetWithSubAssetsAsync(name, typeof(UnityEngine.Object));
 
-        public AssetBundleRequest LoadAssetWithSubAssetsAsync<T>(string name)
-        {
-            return this.LoadAssetWithSubAssetsAsync(name, typeof(T));
-        }
+        public AssetBundleRequest LoadAssetWithSubAssetsAsync<T>(string name) => 
+            this.LoadAssetWithSubAssetsAsync(name, typeof(T));
 
         /// <summary>
         /// <para>Loads asset with sub assets with name of a given type from the bundle asynchronously.</para>

@@ -26,101 +26,54 @@
         /// <summary>
         /// <para>Material objects being edited by this property (Read Only).</para>
         /// </summary>
-        public Object[] targets
-        {
-            get
-            {
-                return this.m_Targets;
-            }
-        }
+        public Object[] targets =>
+            this.m_Targets;
         /// <summary>
         /// <para>Type of the property (Read Only).</para>
         /// </summary>
-        public PropType type
-        {
-            get
-            {
-                return this.m_Type;
-            }
-        }
+        public PropType type =>
+            this.m_Type;
         /// <summary>
         /// <para>Name of the property (Read Only).</para>
         /// </summary>
-        public string name
-        {
-            get
-            {
-                return this.m_Name;
-            }
-        }
+        public string name =>
+            this.m_Name;
         /// <summary>
         /// <para>Display name of the property (Read Only).</para>
         /// </summary>
-        public string displayName
-        {
-            get
-            {
-                return this.m_DisplayName;
-            }
-        }
+        public string displayName =>
+            this.m_DisplayName;
         /// <summary>
         /// <para>Flags that control how property is displayed (Read Only).</para>
         /// </summary>
-        public PropFlags flags
-        {
-            get
-            {
-                return this.m_Flags;
-            }
-        }
+        public PropFlags flags =>
+            this.m_Flags;
         /// <summary>
         /// <para>Texture dimension (2D, Cubemap etc.) of the property (Read Only).</para>
         /// </summary>
-        public TextureDimension textureDimension
-        {
-            get
-            {
-                return this.m_TextureDimension;
-            }
-        }
+        public TextureDimension textureDimension =>
+            this.m_TextureDimension;
         /// <summary>
         /// <para>Min/max limits of a ranged float property (Read Only).</para>
         /// </summary>
-        public Vector2 rangeLimits
-        {
-            get
-            {
-                return this.m_RangeLimits;
-            }
-        }
+        public Vector2 rangeLimits =>
+            this.m_RangeLimits;
         /// <summary>
         /// <para>Does this property have multiple different values? (Read Only)</para>
         /// </summary>
-        public bool hasMixedValue
-        {
-            get
-            {
-                return ((this.m_MixedValueMask & 1) != 0);
-            }
-        }
+        public bool hasMixedValue =>
+            ((this.m_MixedValueMask & 1) != 0);
         public ApplyPropertyCallback applyPropertyCallback
         {
-            get
-            {
-                return this.m_ApplyPropertyCallback;
-            }
+            get => 
+                this.m_ApplyPropertyCallback;
             set
             {
                 this.m_ApplyPropertyCallback = value;
             }
         }
-        internal int mixedValueMask
-        {
-            get
-            {
-                return this.m_MixedValueMask;
-            }
-        }
+        internal int mixedValueMask =>
+            this.m_MixedValueMask;
         public void ReadFromMaterialPropertyBlock(MaterialPropertyBlock block)
         {
             ShaderUtil.ApplyMaterialPropertyBlockToMaterialProperty(block, this);

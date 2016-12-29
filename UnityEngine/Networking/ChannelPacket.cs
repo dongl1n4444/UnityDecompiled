@@ -23,10 +23,8 @@
             this.m_Position = 0;
         }
 
-        public bool IsEmpty()
-        {
-            return (this.m_Position == 0);
-        }
+        public bool IsEmpty() => 
+            (this.m_Position == 0);
 
         public void Write(byte[] bytes, int numBytes)
         {
@@ -34,10 +32,8 @@
             this.m_Position += numBytes;
         }
 
-        public bool HasSpace(int numBytes)
-        {
-            return ((this.m_Position + numBytes) <= this.m_Buffer.Length);
-        }
+        public bool HasSpace(int numBytes) => 
+            ((this.m_Position + numBytes) <= this.m_Buffer.Length);
 
         public bool SendToTransport(NetworkConnection conn, int channelId)
         {

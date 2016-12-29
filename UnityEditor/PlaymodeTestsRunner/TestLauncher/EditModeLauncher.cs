@@ -50,10 +50,10 @@
             {
                 <>f__am$cache0 = new Func<TestListElement, TestExecutorBase>(null, (IntPtr) <Run>m__0);
             }
-            this.m_TestsToRun = Enumerable.ToList<TestExecutorBase>(Enumerable.Select<TestListElement, TestExecutorBase>(util.GetEditmodeTests(this.m_Filter).GetFlattenedHierarchy(), <>f__am$cache0));
+            this.m_TestsToRun = Enumerable.Select<TestListElement, TestExecutorBase>(util.GetEditmodeTests(this.m_Filter).GetFlattenedHierarchy(), <>f__am$cache0).ToList<TestExecutorBase>();
             if (this.m_Filter != null)
             {
-                this.m_TestsToRun = Enumerable.ToList<TestExecutorBase>(Enumerable.Where<TestExecutorBase>(this.m_TestsToRun, new Func<TestExecutorBase, bool>(this, (IntPtr) this.<Run>m__1)));
+                this.m_TestsToRun = Enumerable.Where<TestExecutorBase>(this.m_TestsToRun, new Func<TestExecutorBase, bool>(this, (IntPtr) this.<Run>m__1)).ToList<TestExecutorBase>();
             }
             this.AddEventHandler<EditModeRunnerCallback>();
             EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.UpdateCallback));
@@ -66,7 +66,7 @@
                 this.started = !this.started;
                 this.m_RunStartedEvent.Invoke(null, null);
             }
-            else if ((this.m_CurrentTestEnumerator == null) && ((this.m_TestsToRun == null) || !Enumerable.Any<TestExecutorBase>(this.m_TestsToRun)))
+            else if ((this.m_CurrentTestEnumerator == null) && ((this.m_TestsToRun == null) || !this.m_TestsToRun.Any<TestExecutorBase>()))
             {
                 EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, new EditorApplication.CallbackFunction(this.UpdateCallback));
                 this.m_RunFinishedEvent.Invoke(null);
@@ -75,7 +75,7 @@
             {
                 if (this.m_CurrentTest == null)
                 {
-                    this.m_CurrentTest = Enumerable.First<TestExecutorBase>(this.m_TestsToRun);
+                    this.m_CurrentTest = this.m_TestsToRun.First<TestExecutorBase>();
                     Application.logMessageReceived += new Application.LogCallback(this.m_CurrentTest.OnLogCallback);
                     this.m_CurrentTestEnumerator = this.m_CurrentTest.Execute(null);
                     this.m_TestsToRun.Remove(this.m_CurrentTest);

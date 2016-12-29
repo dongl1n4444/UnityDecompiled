@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(SliderJoint2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SliderJoint2D))]
     internal class SliderJoint2DEditor : AnchoredJoint2DEditor
     {
         public void OnSceneGUI()

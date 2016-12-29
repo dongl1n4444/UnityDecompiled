@@ -54,10 +54,8 @@
             }
         }
 
-        private string GetDefaultFontNames()
-        {
-            return ((TrueTypeFontImporter) base.target).fontTTFName;
-        }
+        private string GetDefaultFontNames() => 
+            ((TrueTypeFontImporter) base.target).fontTTFName;
 
         private string GetFontNames()
         {
@@ -75,7 +73,7 @@
         {
             for (int i = 0; i < 0x2710; i++)
             {
-                string path = string.Format("{0}{1}.{2}", basePath, (i != 0) ? i.ToString() : string.Empty, extension);
+                string path = $"{basePath}{(i != 0) ? i.ToString() : string.Empty}.{extension}";
                 if (!File.Exists(path))
                 {
                     return path;
@@ -152,7 +150,7 @@
                                 {
                                     <>f__am$cache0 = new Func<char, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
                                 }
-                                this.m_CustomCharacters.stringValue = new string(Enumerable.ToArray<char>(Enumerable.Where<char>(Enumerable.Distinct<char>(source), <>f__am$cache0)));
+                                this.m_CustomCharacters.stringValue = new string(Enumerable.Where<char>(source.Distinct<char>(), <>f__am$cache0).ToArray<char>());
                             }
                         }
                     }

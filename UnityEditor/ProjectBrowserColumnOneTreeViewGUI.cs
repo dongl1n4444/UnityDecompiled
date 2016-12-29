@@ -76,10 +76,8 @@
             return listAreaGridSize;
         }
 
-        public override int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
-        {
-            return (((int) Mathf.Floor(heightOfTreeView / base.k_LineHeight)) - 1);
-        }
+        public override int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView) => 
+            (((int) Mathf.Floor(heightOfTreeView / base.k_LineHeight)) - 1);
 
         public override Rect GetRowRect(int row, float rowWidth)
         {
@@ -105,10 +103,8 @@
             return totalSize;
         }
 
-        private bool IsVisibleRootNode(TreeViewItem item)
-        {
-            return (base.m_TreeView.data as ProjectBrowserColumnOneTreeViewDataSource).IsVisibleRootNode(item);
-        }
+        private bool IsVisibleRootNode(TreeViewItem item) => 
+            (base.m_TreeView.data as ProjectBrowserColumnOneTreeViewDataSource).IsVisibleRootNode(item);
 
         public override void OnRowGUI(Rect rowRect, TreeViewItem item, int row, bool selected, bool focused)
         {

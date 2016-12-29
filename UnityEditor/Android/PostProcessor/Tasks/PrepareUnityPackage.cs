@@ -60,13 +60,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Preparing Unity libraries";
-            }
-        }
+        public string Name =>
+            "Preparing Unity libraries";
     }
 }
 

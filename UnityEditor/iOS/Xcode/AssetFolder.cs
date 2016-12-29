@@ -140,10 +140,8 @@
 
         public bool providesNamespace
         {
-            get
-            {
-                return this.m_ProvidesNamespace;
-            }
+            get => 
+                this.m_ProvidesNamespace;
             set
             {
                 if ((this.m_Items.Count > 0) && (value != this.m_ProvidesNamespace))

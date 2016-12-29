@@ -58,10 +58,8 @@
         public extern void ClearErrors();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void Disconnect();
-        public CollabStates GetAssetState(string guid)
-        {
-            return (CollabStates) this.GetAssetStateInternal(guid);
-        }
+        public CollabStates GetAssetState(string guid) => 
+            ((CollabStates) this.GetAssetStateInternal(guid));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern long GetAssetStateInternal(string guid);
@@ -69,10 +67,8 @@
         public extern Change[] GetChangesToPublish();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern Change[] GetCollabConflicts();
-        public CollabInfo GetCollabInfo()
-        {
-            return this.collabInfo;
-        }
+        public CollabInfo GetCollabInfo() => 
+            this.collabInfo;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern CollabStateID GetCollabState();
@@ -88,10 +84,8 @@
         public extern string GetProjectPath();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern Revision[] GetRevisions();
-        public CollabStates GetSelectedAssetState()
-        {
-            return (CollabStates) this.GetSelectedAssetStateInternal();
-        }
+        public CollabStates GetSelectedAssetState() => 
+            ((CollabStates) this.GetSelectedAssetStateInternal());
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern long GetSelectedAssetStateInternal();
@@ -101,10 +95,8 @@
         public extern void GoBackToRevision(string revisionID, bool updateToRevision);
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         public extern bool IsConnected();
-        public static bool IsDiffToolsAvailable()
-        {
-            return (InternalEditorUtility.GetAvailableDiffTools().Length > 0);
-        }
+        public static bool IsDiffToolsAvailable() => 
+            (InternalEditorUtility.GetAvailableDiffTools().Length > 0);
 
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         public extern bool JobRunning(int a_jobID);
@@ -216,13 +208,8 @@
 
         public CollabInfo collabInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
-        public static Collab instance
-        {
-            get
-            {
-                return s_Instance;
-            }
-        }
+        public static Collab instance =>
+            s_Instance;
 
         public string projectBrowserSingleMetaSelectionPath { get; set; }
 

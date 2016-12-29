@@ -122,10 +122,8 @@
             return -1f;
         }
 
-        public string GetName()
-        {
-            return this.m_ParticleSystem.gameObject.name;
-        }
+        public string GetName() => 
+            this.m_ParticleSystem.gameObject.name;
 
         internal ParticleSystemRenderer GetParticleSystemRenderer()
         {
@@ -136,23 +134,17 @@
             return null;
         }
 
-        internal ModuleUI GetParticleSystemRendererModuleUI()
-        {
-            return this.m_Modules[this.m_Modules.Length - 1];
-        }
+        internal ModuleUI GetParticleSystemRendererModuleUI() => 
+            this.m_Modules[this.m_Modules.Length - 1];
 
-        private ParticleSystem GetSelectedParticleSystem()
-        {
-            return Selection.activeGameObject.GetComponent<ParticleSystem>();
-        }
+        private ParticleSystem GetSelectedParticleSystem() => 
+            Selection.activeGameObject.GetComponent<ParticleSystem>();
 
-        public static string[] GetUIModuleNames()
-        {
-            return new string[] { 
+        public static string[] GetUIModuleNames() => 
+            new string[] { 
                 "", "Emission", "Shape", "Velocity over Lifetime", "Limit Velocity over Lifetime", "Inherit Velocity", "Force over Lifetime", "Color over Lifetime", "Color by Speed", "Size over Lifetime", "Size by Speed", "Rotation over Lifetime", "Rotation by Speed", "External Forces", "Noise", "Collision",
                 "Triggers", "Sub Emitters", "Texture Sheet Animation", "Lights", "Trails", "Renderer"
             };
-        }
 
         public void Init(ParticleEffectUI owner, ParticleSystem ps)
         {
@@ -212,7 +204,7 @@
                 s_Texts = new Texts();
             }
             bool flag = Event.current.type == EventType.Repaint;
-            string str = (this.m_ParticleSystem == null) ? null : this.m_ParticleSystem.gameObject.name;
+            string name = this.m_ParticleSystem?.gameObject.name;
             if (fixedWidth)
             {
                 EditorGUIUtility.labelWidth = width * 0.4f;
@@ -344,9 +336,9 @@
                 {
                     this.ShowAddModuleMenu();
                 }
-                if (!string.IsNullOrEmpty(str))
+                if (!string.IsNullOrEmpty(name))
                 {
-                    content.text = !flag2 ? eui.displayName : str;
+                    content.text = !flag2 ? eui.displayName : name;
                 }
                 else
                 {

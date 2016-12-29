@@ -165,10 +165,8 @@
 
         internal override WebView webView
         {
-            get
-            {
-                return this.m_WebView;
-            }
+            get => 
+                this.m_WebView;
             set
             {
                 this.m_WebView = value;

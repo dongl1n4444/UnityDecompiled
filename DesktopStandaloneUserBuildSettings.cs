@@ -2,12 +2,7 @@
 
 internal static class DesktopStandaloneUserBuildSettings
 {
-    internal static string PlatformName
-    {
-        get
-        {
-            return "Standalone";
-        }
-    }
+    internal static string PlatformName =>
+        "Standalone";
 }
 

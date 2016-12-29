@@ -27,10 +27,8 @@
         private GUIContent m_TeamIDGUIContent = EditorGUIUtility.TextContent("Automatic Signing Team ID|Developers can retrieve their Team ID by visiting the Apple Developer site under Account > Membership.");
         private SerializedProperty[] splashScreenProperties;
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
         public override void ConfigurationSectionGUI()
         {
@@ -53,7 +51,7 @@
             List<string> list2 = new List<string>();
             foreach (string str in allVariantNames)
             {
-                if (!Enumerable.Contains<string>(assetBundleVariantsWithDeviceRequirements, str))
+                if (!assetBundleVariantsWithDeviceRequirements.Contains<string>(str))
                 {
                     list2.Add(str);
                 }
@@ -172,7 +170,7 @@
                     }
                 }
             }
-            return Enumerable.ToList<string>(source);
+            return source.ToList<string>();
         }
 
         private static List<RequirementItem> GetRequirementItems()
@@ -194,15 +192,11 @@
             return list;
         }
 
-        public override bool HasIdentificationGUI()
-        {
-            return true;
-        }
+        public override bool HasIdentificationGUI() => 
+            true;
 
-        public override bool HasPublishSection()
-        {
-            return false;
-        }
+        public override bool HasPublishSection() => 
+            false;
 
         public override void IdentificationSectionGUI()
         {
@@ -242,10 +236,8 @@
             EditorGUI.indentLevel--;
         }
 
-        private static iOSBackgroundMode IOSBackgroundModeToggle(iOSBackgroundMode currentModes, iOSBackgroundMode toggleMode, string title)
-        {
-            return (!EditorGUILayout.Toggle(title, (currentModes & toggleMode) != iOSBackgroundMode.None, new GUILayoutOption[0]) ? iOSBackgroundMode.None : toggleMode);
-        }
+        private static iOSBackgroundMode IOSBackgroundModeToggle(iOSBackgroundMode currentModes, iOSBackgroundMode toggleMode, string title) => 
+            (!EditorGUILayout.Toggle(title, (currentModes & toggleMode) != iOSBackgroundMode.None, new GUILayoutOption[0]) ? iOSBackgroundMode.None : toggleMode);
 
         private void OnDeviceRequirementAdd(Rect buttonRect, ReorderableList list)
         {
@@ -471,20 +463,16 @@
             EditorGUI.indentLevel--;
         }
 
-        public override bool SupportsOrientation()
-        {
-            return true;
-        }
+        public override bool SupportsOrientation() => 
+            true;
 
         [CompilerGenerated]
         private sealed class <PopupWithOptionalStringEntry>c__AnonStorey1
         {
             internal string selected;
 
-            internal bool <>m__0(string v)
-            {
-                return (v == this.selected);
-            }
+            internal bool <>m__0(string v) => 
+                (v == this.selected);
         }
 
         [CompilerGenerated]
@@ -492,10 +480,8 @@
         {
             internal string key;
 
-            internal bool <>m__0(string s)
-            {
-                return (s == this.key);
-            }
+            internal bool <>m__0(string s) => 
+                (s == this.key);
         }
 
         [StructLayout(LayoutKind.Sequential)]

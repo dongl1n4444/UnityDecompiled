@@ -18,7 +18,7 @@
         private readonly NPath _cacheDirectory;
         private readonly NPath _sourceDirectory;
 
-        public SimpleDirectoryProgramBuildDescription(NPath sourceDir, NPath outputFile, string programName, [Optional, DefaultParameterValue(null)] IEnumerable<string> additionalCompilerFlags, [Optional, DefaultParameterValue(null)] IEnumerable<string> additionalLinkerFlags, [Optional, DefaultParameterValue(null)] NPath rootCacheDirectory)
+        public SimpleDirectoryProgramBuildDescription(NPath sourceDir, NPath outputFile, string programName, IEnumerable<string> additionalCompilerFlags = null, IEnumerable<string> additionalLinkerFlags = null, NPath rootCacheDirectory = null)
         {
             if (programName == null)
             {
@@ -37,48 +37,23 @@
             this._cacheDirectory = (rootCacheDirectory != null) ? rootCacheDirectory.Combine(new string[] { programName }) : TempDir.Il2CppTemporaryDirectoryRoot.Combine(new string[] { programName });
         }
 
-        public override IEnumerable<string> AdditionalCompilerFlags
-        {
-            get
-            {
-                return this._additionalCompilerFlags;
-            }
-        }
+        public override IEnumerable<string> AdditionalCompilerFlags =>
+            this._additionalCompilerFlags;
 
-        public override IEnumerable<string> AdditionalLinkerFlags
-        {
-            get
-            {
-                return this._additionalLinkerFlags;
-            }
-        }
+        public override IEnumerable<string> AdditionalLinkerFlags =>
+            this._additionalLinkerFlags;
 
-        public override IEnumerable<CppCompilationInstruction> CppCompileInstructions
-        {
-            get
-            {
-                return Enumerable.Select<NPath, CppCompilationInstruction>(this._sourceDirectory.Files("*.cpp", false), new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__0));
-            }
-        }
+        public override IEnumerable<CppCompilationInstruction> CppCompileInstructions =>
+            this._sourceDirectory.Files("*.cpp", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__0));
 
-        public override NPath GlobalCacheDirectory
-        {
-            get
-            {
-                return this._cacheDirectory;
-            }
-        }
+        public override NPath GlobalCacheDirectory =>
+            this._cacheDirectory;
 
-        public IEnumerable<NPath> SourceDirectories
-        {
-            get
-            {
-                return new <>c__Iterator0 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public IEnumerable<NPath> SourceDirectories =>
+            new <>c__Iterator0 { 
+                $this=this,
+                $PC=-2
+            };
 
         [CompilerGenerated]
         private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
@@ -133,28 +108,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

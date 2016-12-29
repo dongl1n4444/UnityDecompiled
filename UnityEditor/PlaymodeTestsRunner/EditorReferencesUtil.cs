@@ -35,14 +35,12 @@
             return false;
         }
 
-        private static string CleanPathSeparators(string s)
-        {
-            return s.Replace(@"\", "/");
-        }
+        private static string CleanPathSeparators(string s) => 
+            s.Replace(@"\", "/");
 
         private static List<FileInfo> DirSearch(DirectoryInfo d, string searchFor)
         {
-            List<FileInfo> list = Enumerable.ToList<FileInfo>(d.GetFiles(searchFor));
+            List<FileInfo> list = d.GetFiles(searchFor).ToList<FileInfo>();
             DirectoryInfo[] directories = d.GetDirectories();
             foreach (DirectoryInfo info in directories)
             {
@@ -56,7 +54,7 @@
             <FindScenesWhichContainAsset>c__AnonStorey0 storey = new <FindScenesWhichContainAsset>c__AnonStorey0();
             string assetPathFromFileNameAndExtension = GetAssetPathFromFileNameAndExtension(file);
             storey.cur = AssetDatabase.LoadAssetAtPath(assetPathFromFileNameAndExtension, typeof(UnityEngine.Object));
-            return Enumerable.ToList<UnityEngine.Object>(Enumerable.Where<UnityEngine.Object>(AllScenes, new Func<UnityEngine.Object, bool>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Where<UnityEngine.Object>(AllScenes, new Func<UnityEngine.Object, bool>(storey, (IntPtr) this.<>m__0)).ToList<UnityEngine.Object>();
         }
 
         private static string GetAssetPathFromFileNameAndExtension(string assetName)
@@ -107,10 +105,8 @@
         {
             internal UnityEngine.Object cur;
 
-            internal bool <>m__0(UnityEngine.Object a)
-            {
-                return EditorReferencesUtil.ADependsOnB(a, this.cur);
-            }
+            internal bool <>m__0(UnityEngine.Object a) => 
+                EditorReferencesUtil.ADependsOnB(a, this.cur);
         }
     }
 }

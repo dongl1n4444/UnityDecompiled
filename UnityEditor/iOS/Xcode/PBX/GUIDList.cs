@@ -30,20 +30,14 @@
             this.m_List.Clear();
         }
 
-        public bool Contains(string guid)
-        {
-            return this.m_List.Contains(guid);
-        }
+        public bool Contains(string guid) => 
+            this.m_List.Contains(guid);
 
-        public static implicit operator GUIDList(List<string> data)
-        {
-            return new GUIDList(data);
-        }
+        public static implicit operator GUIDList(List<string> data) => 
+            new GUIDList(data);
 
-        public static implicit operator List<string>(GUIDList list)
-        {
-            return list.m_List;
-        }
+        public static implicit operator List<string>(GUIDList list) => 
+            list.m_List;
 
         public void RemoveGUID(string guid)
         {
@@ -53,33 +47,22 @@
             this.m_List.RemoveAll(new Predicate<string>(storey.<>m__0));
         }
 
-        IEnumerator<string> IEnumerable<string>.GetEnumerator()
-        {
-            return this.m_List.GetEnumerator();
-        }
+        IEnumerator<string> IEnumerable<string>.GetEnumerator() => 
+            this.m_List.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.m_List.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.m_List.GetEnumerator();
 
-        public int Count
-        {
-            get
-            {
-                return this.m_List.Count;
-            }
-        }
+        public int Count =>
+            this.m_List.Count;
 
         [CompilerGenerated]
         private sealed class <RemoveGUID>c__AnonStorey0
         {
             internal string guid;
 
-            internal bool <>m__0(string x)
-            {
-                return (x == this.guid);
-            }
+            internal bool <>m__0(string x) => 
+                (x == this.guid);
         }
     }
 }

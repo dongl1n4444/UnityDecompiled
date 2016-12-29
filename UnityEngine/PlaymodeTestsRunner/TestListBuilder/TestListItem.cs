@@ -9,10 +9,8 @@
         {
         }
 
-        public override IEnumerable<TestListElement> GetFlattenedHierarchy()
-        {
-            return new TestListItem[] { this };
-        }
+        public override IEnumerable<TestListElement> GetFlattenedHierarchy() => 
+            new TestListItem[] { this };
     }
 }
 

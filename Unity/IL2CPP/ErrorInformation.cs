@@ -14,22 +14,15 @@
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Mono.Cecil.Cil.Instruction <Instruction>k__BackingField;
 
-        public static ErrorInformation CurrentlyProcessing
-        {
-            get
-            {
-                return _instance;
-            }
-        }
+        public static ErrorInformation CurrentlyProcessing =>
+            _instance;
 
         public Mono.Cecil.Cil.Instruction Instruction { get; set; }
 
         public MethodDefinition Method
         {
-            get
-            {
-                return this._method;
-            }
+            get => 
+                this._method;
             set
             {
                 this.Instruction = null;
@@ -39,10 +32,8 @@
 
         public TypeDefinition Type
         {
-            get
-            {
-                return this._type;
-            }
+            get => 
+                this._type;
             set
             {
                 this.Method = null;

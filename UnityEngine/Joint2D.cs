@@ -30,10 +30,8 @@
         /// <returns>
         /// <para>The reaction torque of the joint in the specified timeStep.</para>
         /// </returns>
-        public float GetReactionTorque(float timeStep)
-        {
-            return INTERNAL_CALL_GetReactionTorque(this, timeStep);
-        }
+        public float GetReactionTorque(float timeStep) => 
+            INTERNAL_CALL_GetReactionTorque(this, timeStep);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float INTERNAL_CALL_GetReactionTorque(Joint2D self, float timeStep);
@@ -56,10 +54,8 @@
         [Obsolete("Joint2D.collideConnected has been deprecated. Use Joint2D.enableCollision instead (UnityUpgradable) -> enableCollision", true)]
         public bool collideConnected
         {
-            get
-            {
-                return this.enableCollision;
-            }
+            get => 
+                this.enableCollision;
             set
             {
                 this.enableCollision = value;
@@ -79,24 +75,14 @@
         /// <summary>
         /// <para>Gets the reaction force of the joint.</para>
         /// </summary>
-        public Vector2 reactionForce
-        {
-            get
-            {
-                return this.GetReactionForce(Time.fixedDeltaTime);
-            }
-        }
+        public Vector2 reactionForce =>
+            this.GetReactionForce(Time.fixedDeltaTime);
 
         /// <summary>
         /// <para>Gets the reaction torque of the joint.</para>
         /// </summary>
-        public float reactionTorque
-        {
-            get
-            {
-                return this.GetReactionTorque(Time.fixedDeltaTime);
-            }
-        }
+        public float reactionTorque =>
+            this.GetReactionTorque(Time.fixedDeltaTime);
     }
 }
 

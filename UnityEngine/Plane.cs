@@ -50,10 +50,8 @@
         /// </summary>
         public Vector3 normal
         {
-            get
-            {
-                return this.m_Normal;
-            }
+            get => 
+                this.m_Normal;
             set
             {
                 this.m_Normal = value;
@@ -64,10 +62,8 @@
         /// </summary>
         public float distance
         {
-            get
-            {
-                return this.m_Distance;
-            }
+            get => 
+                this.m_Distance;
             set
             {
                 this.m_Distance = value;
@@ -100,19 +96,15 @@
         /// <para>Returns a signed distance from plane to point.</para>
         /// </summary>
         /// <param name="inPt"></param>
-        public float GetDistanceToPoint(Vector3 inPt)
-        {
-            return (Vector3.Dot(this.normal, inPt) + this.distance);
-        }
+        public float GetDistanceToPoint(Vector3 inPt) => 
+            (Vector3.Dot(this.normal, inPt) + this.distance);
 
         /// <summary>
         /// <para>Is a point on the positive side of the plane?</para>
         /// </summary>
         /// <param name="inPt"></param>
-        public bool GetSide(Vector3 inPt)
-        {
-            return ((Vector3.Dot(this.normal, inPt) + this.distance) > 0f);
-        }
+        public bool GetSide(Vector3 inPt) => 
+            ((Vector3.Dot(this.normal, inPt) + this.distance) > 0f);
 
         /// <summary>
         /// <para>Are two points on the same side of the plane?</para>

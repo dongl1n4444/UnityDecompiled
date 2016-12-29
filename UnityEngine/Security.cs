@@ -23,10 +23,8 @@
         /// <para>Loaded, verified, assembly, or null if the assembly cannot be verfied.</para>
         /// </returns>
         [Obsolete("This was an internal method which is no longer used", true)]
-        public static Assembly LoadAndVerifyAssembly(byte[] assemblyData)
-        {
-            return null;
-        }
+        public static Assembly LoadAndVerifyAssembly(byte[] assemblyData) => 
+            null;
 
         /// <summary>
         /// <para>Loads an assembly and checks that it is allowed to be used in the webplayer. (Web Player is no Longer Supported).</para>
@@ -37,10 +35,8 @@
         /// <para>Loaded, verified, assembly, or null if the assembly cannot be verfied.</para>
         /// </returns>
         [Obsolete("This was an internal method which is no longer used", true)]
-        public static Assembly LoadAndVerifyAssembly(byte[] assemblyData, string authorizationKey)
-        {
-            return null;
-        }
+        public static Assembly LoadAndVerifyAssembly(byte[] assemblyData, string authorizationKey) => 
+            null;
 
         /// <summary>
         /// <para>Prefetch the webplayer socket security policy from a non-default port number.</para>
@@ -62,10 +58,8 @@
         /// <param name="atPort">Port from where socket policy is read.</param>
         /// <param name="timeout">Time to wait for response.</param>
         [Obsolete("Security.PrefetchSocketPolicy is no longer supported, since the Unity Web Player is no longer supported by Unity.")]
-        public static bool PrefetchSocketPolicy(string ip, int atPort, [DefaultValue("3000")] int timeout)
-        {
-            return false;
-        }
+        public static bool PrefetchSocketPolicy(string ip, int atPort, [DefaultValue("3000")] int timeout) => 
+            false;
 
         [RequiredByNativeCode]
         internal static bool VerifySignature(string file, byte[] publicKey)

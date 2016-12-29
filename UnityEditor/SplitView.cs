@@ -727,10 +727,8 @@
             }
         }
 
-        public override string ToString()
-        {
-            return (!this.vertical ? "SplitView (horiz)" : "SplitView (vert)");
-        }
+        public override string ToString() => 
+            (!this.vertical ? "SplitView (horiz)" : "SplitView (vert)");
 
         internal class ExtraDropInfo
         {

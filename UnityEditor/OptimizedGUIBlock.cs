@@ -123,10 +123,8 @@
 
         public bool valid
         {
-            get
-            {
-                return this.m_Valid;
-            }
+            get => 
+                this.m_Valid;
             set
             {
                 this.m_Valid = value;

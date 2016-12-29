@@ -10,15 +10,11 @@
         private static List<MatEntry> m_List = new List<MatEntry>();
 
         [Obsolete("Use Material.Add instead.", true)]
-        public static Material Add(Material baseMat, int stencilID)
-        {
-            return null;
-        }
+        public static Material Add(Material baseMat, int stencilID) => 
+            null;
 
-        public static Material Add(Material baseMat, int stencilID, StencilOp operation, CompareFunction compareFunction, ColorWriteMask colorWriteMask)
-        {
-            return Add(baseMat, stencilID, operation, compareFunction, colorWriteMask, 0xff, 0xff);
-        }
+        public static Material Add(Material baseMat, int stencilID, StencilOp operation, CompareFunction compareFunction, ColorWriteMask colorWriteMask) => 
+            Add(baseMat, stencilID, operation, compareFunction, colorWriteMask, 0xff, 0xff);
 
         public static Material Add(Material baseMat, int stencilID, StencilOp operation, CompareFunction compareFunction, ColorWriteMask colorWriteMask, int readMask, int writeMask)
         {
@@ -78,7 +74,7 @@
             item.writeMask = writeMask;
             item.colorMask = colorWriteMask;
             item.useAlphaClip = (operation != StencilOp.Keep) && (writeMask > 0);
-            item.customMat.name = string.Format("Stencil Id:{0}, Op:{1}, Comp:{2}, WriteMask:{3}, ReadMask:{4}, ColorMask:{5} AlphaClip:{6} ({7})", new object[] { stencilID, operation, compareFunction, writeMask, readMask, colorWriteMask, item.useAlphaClip, baseMat.name });
+            item.customMat.name = $"Stencil Id:{stencilID}, Op:{operation}, Comp:{compareFunction}, WriteMask:{writeMask}, ReadMask:{readMask}, ColorMask:{colorWriteMask} AlphaClip:{item.useAlphaClip} ({baseMat.name})";
             item.customMat.SetInt("_Stencil", stencilID);
             item.customMat.SetInt("_StencilOp", (int) operation);
             item.customMat.SetInt("_StencilComp", (int) compareFunction);

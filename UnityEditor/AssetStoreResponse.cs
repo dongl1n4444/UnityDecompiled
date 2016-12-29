@@ -36,13 +36,8 @@
             return (str + "}");
         }
 
-        public bool failed
-        {
-            get
-            {
-                return !this.ok;
-            }
-        }
+        public bool failed =>
+            !this.ok;
 
         public string message
         {

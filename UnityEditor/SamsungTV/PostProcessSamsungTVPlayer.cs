@@ -70,7 +70,7 @@
             storey.http.Begin();
             do
             {
-                if (EditorUtility.DisplayCancelableProgressBar(progress_strings[0], progress_strings[1] + ((!flag || (storey.upload_done == 0)) ? "" : string.Format(" [{0:F1} MB / {1:F1} MB] {2:P0}", (((float) storey.upload_done) / 1024f) / 1024f, (((float) storey.upload_total) / 1024f) / 1024f, storey.upload_progress)), !flag ? progress_value : storey.upload_progress))
+                if (EditorUtility.DisplayCancelableProgressBar(progress_strings[0], progress_strings[1] + ((!flag || (storey.upload_done == 0)) ? "" : $" [{((((float) storey.upload_done) / 1024f) / 1024f):F1} MB / {((((float) storey.upload_total) / 1024f) / 1024f):F1} MB] {storey.upload_progress:P0}"), !flag ? progress_value : storey.upload_progress))
                 {
                     storey.http.Abort();
                     throw new Exception(progress_strings[0] + " aborted");

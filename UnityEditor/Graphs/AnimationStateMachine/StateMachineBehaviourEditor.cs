@@ -192,22 +192,16 @@
         }
 
         [UnityEditor.MenuItem("CONTEXT/StateMachineBehaviour/Move Down", true)]
-        internal static bool ValidateMoveDown(MenuCommand command)
-        {
-            return ValidateMenucommand(command);
-        }
+        internal static bool ValidateMoveDown(MenuCommand command) => 
+            ValidateMenucommand(command);
 
         [UnityEditor.MenuItem("CONTEXT/StateMachineBehaviour/Move Up", true)]
-        internal static bool ValidateMoveUp(MenuCommand command)
-        {
-            return ValidateMenucommand(command);
-        }
+        internal static bool ValidateMoveUp(MenuCommand command) => 
+            ValidateMenucommand(command);
 
         [UnityEditor.MenuItem("CONTEXT/StateMachineBehaviour/Remove", true)]
-        internal static bool ValidateRemove(MenuCommand command)
-        {
-            return ValidateMenucommand(command);
-        }
+        internal static bool ValidateRemove(MenuCommand command) => 
+            ValidateMenucommand(command);
     }
 }
 

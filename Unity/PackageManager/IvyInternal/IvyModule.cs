@@ -26,22 +26,12 @@
         private string Version = "2.0";
 
         [XmlIgnore]
-        public Unity.PackageManager.IvyInternal.IvyArtifacts Artifacts
-        {
-            get
-            {
-                return this.artifacts;
-            }
-        }
+        public Unity.PackageManager.IvyInternal.IvyArtifacts Artifacts =>
+            this.artifacts;
 
         [XmlIgnore]
-        public Unity.PackageManager.IvyInternal.IvyDependencies Dependencies
-        {
-            get
-            {
-                return this.dependencies;
-            }
-        }
+        public Unity.PackageManager.IvyInternal.IvyDependencies Dependencies =>
+            this.dependencies;
 
         [XmlElement("info", Order=1)]
         public Unity.PackageManager.IvyInternal.IvyInfo Info { get; set; }

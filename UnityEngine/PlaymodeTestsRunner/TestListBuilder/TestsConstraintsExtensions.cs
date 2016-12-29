@@ -4,11 +4,9 @@
     using System.Runtime.CompilerServices;
     using UnityEngine.PlaymodeTestsRunner;
 
-    [Extension]
     internal static class TestsConstraintsExtensions
     {
-        [Extension]
-        internal static TestsConstraint GetTestsConstraint(TestPlatform testPlatform)
+        internal static TestsConstraint GetTestsConstraint(this TestPlatform testPlatform)
         {
             if (testPlatform != TestPlatform.EditMode)
             {

@@ -85,13 +85,13 @@
         {
             Motion stateEffectiveMotion;
             this.blendTreeGraph.previewAvatar = this.m_PreviewAnimator;
-            if (Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target is AnimatorState)
+            if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorState)
             {
-                stateEffectiveMotion = tool.animatorController.GetStateEffectiveMotion(Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target as AnimatorState, tool.selectedLayerIndex);
+                stateEffectiveMotion = tool.animatorController.GetStateEffectiveMotion(this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorState, tool.selectedLayerIndex);
             }
             else
             {
-                stateEffectiveMotion = Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target as Motion;
+                stateEffectiveMotion = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as Motion;
             }
             this.blendTreeGraph.rootBlendTree = stateEffectiveMotion as BlendTree;
             this.blendTreeGraphGUI.BeginGraphGUI(this, position);
@@ -220,7 +220,7 @@
             {
                 if (Unsupported.IsDeveloperBuild() && GUILayout.Button("Select Graph", EditorStyles.toolbarButton, new GUILayoutOption[0]))
                 {
-                    if (Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target is AnimatorStateMachine)
+                    if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorStateMachine)
                     {
                         Selection.activeObject = this.stateMachineGraph;
                     }
@@ -230,7 +230,7 @@
                     }
                 }
             }
-            BreadCrumbElement element2 = Enumerable.LastOrDefault<BreadCrumbElement>(this.m_BreadCrumbs);
+            BreadCrumbElement element2 = this.m_BreadCrumbs.LastOrDefault<BreadCrumbElement>();
             if ((element2 != null) && (element2.target is AnimatorStateMachine))
             {
                 this.m_AutoLiveLink = GUILayout.Toggle(this.m_AutoLiveLink, "Auto Live Link", EditorStyles.toolbarButton, new GUILayoutOption[0]);
@@ -328,10 +328,8 @@
             tool = this;
         }
 
-        private bool IsPreviewController(AnimatorController controller)
-        {
-            return ((((controller != null) && (controller.name == "")) && ((controller.layers.Length > 0) && (controller.layers[0].name == "preview"))) && (controller.hideFlags == HideFlags.DontSave));
-        }
+        private bool IsPreviewController(AnimatorController controller) => 
+            ((((controller != null) && (controller.name == "")) && ((controller.layers.Length > 0) && (controller.layers[0].name == "preview"))) && (controller.hideFlags == HideFlags.DontSave));
 
         private void OnControllerChange()
         {
@@ -498,20 +496,20 @@
                 BlendTreeInspector.parentBlendTree = null;
                 if (this.m_BreadCrumbs.Count > 0)
                 {
-                    if (Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target is AnimatorStateMachine)
+                    if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorStateMachine)
                     {
                         this.StateMachineView(screenRect);
                     }
-                    if (Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target is AnimatorState)
+                    if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorState)
                     {
-                        AnimatorState target = Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target as AnimatorState;
+                        AnimatorState target = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorState;
                         this.BlendTreeView(screenRect);
                         BlendTreeInspector.parentBlendTree = tool.animatorController.GetStateEffectiveMotion(target, tool.selectedLayerIndex) as BlendTree;
                     }
-                    if (Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target is BlendTree)
+                    if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is BlendTree)
                     {
                         this.BlendTreeView(screenRect);
-                        BlendTreeInspector.parentBlendTree = Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target as BlendTree;
+                        BlendTreeInspector.parentBlendTree = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as BlendTree;
                     }
                 }
                 if (((this.activeGraphGUI != null) && (type == EventType.MouseDown)) && ((Event.current.type == type) && (Event.current.clickCount == 1)))
@@ -638,7 +636,7 @@
         {
             if (this.animatorController != null)
             {
-                this.stateMachineGraph.SetStateMachines(Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target as AnimatorStateMachine, this.GetParentStateMachine(), Enumerable.First<BreadCrumbElement>(this.m_BreadCrumbs).target as AnimatorStateMachine);
+                this.stateMachineGraph.SetStateMachines(this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorStateMachine, this.GetParentStateMachine(), this.m_BreadCrumbs.First<BreadCrumbElement>().target as AnimatorStateMachine);
             }
             this.stateMachineGraphGUI.BeginGraphGUI(this, position);
             if (this.animatorController != null)
@@ -663,10 +661,10 @@
         private void UpdateStateMachineSelection()
         {
             AnimatorStateMachine activeStateMachine = this.stateMachineGraph.activeStateMachine;
-            AnimatorStateMachine target = Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target as AnimatorStateMachine;
+            AnimatorStateMachine target = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorStateMachine;
             if ((target != activeStateMachine) && (target != null))
             {
-                this.stateMachineGraph.SetStateMachines(target, this.GetParentStateMachine(), Enumerable.First<BreadCrumbElement>(this.m_BreadCrumbs).target as AnimatorStateMachine);
+                this.stateMachineGraph.SetStateMachines(target, this.GetParentStateMachine(), this.m_BreadCrumbs.First<BreadCrumbElement>().target as AnimatorStateMachine);
                 this.stateMachineGraphGUI.ClearSelection();
                 this.blendTreeGraphGUI.ClearSelection();
                 InspectorWindow.RepaintAllInspectors();
@@ -678,7 +676,7 @@
             int count = this.m_BreadCrumbs.Count;
             if (count > 1)
             {
-                UnityEngine.Object target = Enumerable.First<BreadCrumbElement>(this.m_BreadCrumbs).target;
+                UnityEngine.Object target = this.m_BreadCrumbs.First<BreadCrumbElement>().target;
                 int index = 1;
                 while (index < count)
                 {
@@ -714,7 +712,7 @@
                 {
                     return null;
                 }
-                if (Enumerable.Last<BreadCrumbElement>(this.m_BreadCrumbs).target is AnimatorStateMachine)
+                if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorStateMachine)
                 {
                     return this.stateMachineGraphGUI;
                 }
@@ -724,10 +722,8 @@
 
         public AnimatorController animatorController
         {
-            get
-            {
-                return this.m_AnimatorController;
-            }
+            get => 
+                this.m_AnimatorController;
             set
             {
                 if (!this.IsPreviewController(value))
@@ -750,20 +746,13 @@
             }
         }
 
-        public bool autoLiveLink
-        {
-            get
-            {
-                return this.m_AutoLiveLink;
-            }
-        }
+        public bool autoLiveLink =>
+            this.m_AutoLiveLink;
 
         protected int currentEditor
         {
-            get
-            {
-                return this.m_CurrentEditor;
-            }
+            get => 
+                this.m_CurrentEditor;
             set
             {
                 this.editor.OnDisable();
@@ -801,40 +790,26 @@
             }
         }
 
-        public bool liveLink
-        {
-            get
-            {
-                return (((EditorApplication.isPlaying && (this.m_PreviewAnimator != null)) && this.m_PreviewAnimator.enabled) && this.m_PreviewAnimator.gameObject.activeInHierarchy);
-            }
-        }
+        public bool liveLink =>
+            (((EditorApplication.isPlaying && (this.m_PreviewAnimator != null)) && this.m_PreviewAnimator.enabled) && this.m_PreviewAnimator.gameObject.activeInHierarchy);
 
         public bool miniTool
         {
-            get
-            {
-                return this.m_MiniTool;
-            }
+            get => 
+                this.m_MiniTool;
             set
             {
                 this.m_MiniTool = value;
             }
         }
 
-        public Animator previewAnimator
-        {
-            get
-            {
-                return this.m_PreviewAnimator;
-            }
-        }
+        public Animator previewAnimator =>
+            this.m_PreviewAnimator;
 
         public int selectedLayerIndex
         {
-            get
-            {
-                return ((this.m_LayerEditor == null) ? 0 : this.m_LayerEditor.selectedLayerIndex);
-            }
+            get => 
+                ((this.m_LayerEditor == null) ? 0 : this.m_LayerEditor.selectedLayerIndex);
             set
             {
                 if (this.m_LayerEditor != null)
@@ -849,10 +824,8 @@
         {
             internal UnityEngine.Object target;
 
-            internal bool <>m__0(AnimatorControllerTool.BreadCrumbElement o)
-            {
-                return (o.target == this.target);
-            }
+            internal bool <>m__0(AnimatorControllerTool.BreadCrumbElement o) => 
+                (o.target == this.target);
         }
 
         [Serializable]
@@ -866,21 +839,11 @@
                 this.m_Target = target;
             }
 
-            public string name
-            {
-                get
-                {
-                    return ((this.m_Target == null) ? "" : this.m_Target.name);
-                }
-            }
+            public string name =>
+                ((this.m_Target == null) ? "" : this.m_Target.name);
 
-            public UnityEngine.Object target
-            {
-                get
-                {
-                    return this.m_Target;
-                }
-            }
+            public UnityEngine.Object target =>
+                this.m_Target;
         }
 
         private class ScopedPreventWarnings : IDisposable

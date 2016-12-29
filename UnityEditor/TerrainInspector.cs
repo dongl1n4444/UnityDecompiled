@@ -207,10 +207,8 @@
             return aspectRect;
         }
 
-        public bool HasFrameBounds()
-        {
-            return (this.m_Terrain != null);
-        }
+        public bool HasFrameBounds() => 
+            (this.m_Terrain != null);
 
         private void Initialize()
         {

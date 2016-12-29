@@ -30,10 +30,8 @@
         /// </summary>
         public float upperArmTwist
         {
-            get
-            {
-                return this.m_ArmTwist;
-            }
+            get => 
+                this.m_ArmTwist;
             set
             {
                 this.m_ArmTwist = value;
@@ -44,10 +42,8 @@
         /// </summary>
         public float lowerArmTwist
         {
-            get
-            {
-                return this.m_ForeArmTwist;
-            }
+            get => 
+                this.m_ForeArmTwist;
             set
             {
                 this.m_ForeArmTwist = value;
@@ -58,10 +54,8 @@
         /// </summary>
         public float upperLegTwist
         {
-            get
-            {
-                return this.m_UpperLegTwist;
-            }
+            get => 
+                this.m_UpperLegTwist;
             set
             {
                 this.m_UpperLegTwist = value;
@@ -72,10 +66,8 @@
         /// </summary>
         public float lowerLegTwist
         {
-            get
-            {
-                return this.m_LegTwist;
-            }
+            get => 
+                this.m_LegTwist;
             set
             {
                 this.m_LegTwist = value;
@@ -86,10 +78,8 @@
         /// </summary>
         public float armStretch
         {
-            get
-            {
-                return this.m_ArmStretch;
-            }
+            get => 
+                this.m_ArmStretch;
             set
             {
                 this.m_ArmStretch = value;
@@ -100,10 +90,8 @@
         /// </summary>
         public float legStretch
         {
-            get
-            {
-                return this.m_LegStretch;
-            }
+            get => 
+                this.m_LegStretch;
             set
             {
                 this.m_LegStretch = value;
@@ -114,10 +102,8 @@
         /// </summary>
         public float feetSpacing
         {
-            get
-            {
-                return this.m_FeetSpacing;
-            }
+            get => 
+                this.m_FeetSpacing;
             set
             {
                 this.m_FeetSpacing = value;
@@ -128,10 +114,8 @@
         /// </summary>
         public bool hasTranslationDoF
         {
-            get
-            {
-                return this.m_HasTranslationDoF;
-            }
+            get => 
+                this.m_HasTranslationDoF;
             set
             {
                 this.m_HasTranslationDoF = value;

@@ -41,13 +41,8 @@
             document.Save();
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Preparing APK resources";
-            }
-        }
+        public string Name =>
+            "Preparing APK resources";
     }
 }
 

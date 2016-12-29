@@ -187,10 +187,8 @@
         /// <summary>
         /// <para>Get the number of registered persistent listeners.</para>
         /// </summary>
-        public int GetPersistentEventCount()
-        {
-            return this.m_PersistentCalls.Count;
-        }
+        public int GetPersistentEventCount() => 
+            this.m_PersistentCalls.Count;
 
         /// <summary>
         /// <para>Get the target method name of the listener at index index.</para>
@@ -209,7 +207,7 @@
         public UnityEngine.Object GetPersistentTarget(int index)
         {
             PersistentCall listener = this.m_PersistentCalls.GetListener(index);
-            return ((listener == null) ? null : listener.target);
+            return listener?.target;
         }
 
         /// <summary>
@@ -393,10 +391,8 @@
             this.DirtyPersistentCalls();
         }
 
-        public override string ToString()
-        {
-            return (base.ToString() + " " + base.GetType().FullName);
-        }
+        public override string ToString() => 
+            (base.ToString() + " " + base.GetType().FullName);
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
@@ -414,10 +410,8 @@
             this.DirtyPersistentCalls();
         }
 
-        protected bool ValidateRegistration(MethodInfo method, object targetObj, PersistentListenerMode mode)
-        {
-            return this.ValidateRegistration(method, targetObj, mode, typeof(UnityEngine.Object));
-        }
+        protected bool ValidateRegistration(MethodInfo method, object targetObj, PersistentListenerMode mode) => 
+            this.ValidateRegistration(method, targetObj, mode, typeof(UnityEngine.Object));
 
         protected bool ValidateRegistration(MethodInfo method, object targetObj, PersistentListenerMode mode, System.Type argumentType)
         {

@@ -40,10 +40,8 @@
             }
         }
 
-        public override string CalculateFinalPluginPath(string platformName, PluginImporter imp)
-        {
-            return CalculateFinalPluginPath(platformName, imp, EditorUserBuildSettings.wsaSDK);
-        }
+        public override string CalculateFinalPluginPath(string platformName, PluginImporter imp) => 
+            CalculateFinalPluginPath(platformName, imp, EditorUserBuildSettings.wsaSDK);
 
         internal static string CalculateFinalPluginPath(string platformName, PluginImporter imp, WSASDK wsaSDK)
         {
@@ -113,7 +111,7 @@
                         return null;
 
                     default:
-                        throw new Exception(string.Format("Unknown WSASDK: {0}", wsaSDK));
+                        throw new Exception($"Unknown WSASDK: {wsaSDK}");
                 }
             }
             string str5 = (flag5 || !flag2) ? "Plugins" : string.Empty;
@@ -129,10 +127,8 @@
             return Path.Combine(str5, fileName);
         }
 
-        private static string GetOriginalPluginPath()
-        {
-            return _originalPluginPath;
-        }
+        private static string GetOriginalPluginPath() => 
+            _originalPluginPath;
 
         private static DefaultPluginImporterExtension.Property[] GetProperties()
         {

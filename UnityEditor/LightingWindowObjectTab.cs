@@ -132,7 +132,7 @@
                 {
                     this.ShowTerrainChunks(selectedObjectsOfType);
                 }
-                SerializedObject so = new SerializedObject(Enumerable.ToArray<Terrain>(selectedObjectsOfType));
+                SerializedObject so = new SerializedObject(selectedObjectsOfType.ToArray<Terrain>());
                 float lightmapScale = this.LightmapScaleGUI(so, 1f);
                 TerrainData terrainData = selectedObjectsOfType[0].terrainData;
                 float cachedSurfaceArea = (terrainData == null) ? 0f : (terrainData.size.x * terrainData.size.z);
@@ -523,7 +523,7 @@
                 string text = num.ToString() + "x" + num2.ToString();
                 if ((num3 > 1) || (num4 > 1))
                 {
-                    text = text + string.Format(" ({0}x{1} chunks)", num3, num4);
+                    text = text + $" ({num3}x{num4} chunks)";
                 }
                 EditorGUILayout.LabelField(s_Styles.RealtimeLMResolution, new GUIContent(text), new GUILayoutOption[0]);
             }
@@ -585,7 +585,7 @@
             }
             if ((num * num2) > 1)
             {
-                GUILayout.Label(string.Format("Terrain is chunked up into {0} instances for baking.", num * num2), EditorStyles.helpBox, new GUILayoutOption[0]);
+                GUILayout.Label($"Terrain is chunked up into {num * num2} instances for baking.", EditorStyles.helpBox, new GUILayoutOption[0]);
             }
         }
 

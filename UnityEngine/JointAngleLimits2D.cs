@@ -16,10 +16,8 @@
         /// </summary>
         public float min
         {
-            get
-            {
-                return this.m_LowerAngle;
-            }
+            get => 
+                this.m_LowerAngle;
             set
             {
                 this.m_LowerAngle = value;
@@ -30,10 +28,8 @@
         /// </summary>
         public float max
         {
-            get
-            {
-                return this.m_UpperAngle;
-            }
+            get => 
+                this.m_UpperAngle;
             set
             {
                 this.m_UpperAngle = value;

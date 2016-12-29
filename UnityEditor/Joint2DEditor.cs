@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Joint2D))]
+    [CustomEditor(typeof(Joint2D)), CanEditMultipleObjects]
     internal class Joint2DEditor : Editor
     {
         [CompilerGenerated]
@@ -57,10 +57,8 @@
             DrawAALine(end + vector4, end - vector4);
         }
 
-        private static Matrix4x4 GetAnchorSpaceMatrix(Transform transform)
-        {
-            return Matrix4x4.TRS(transform.position, Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z), transform.lossyScale);
-        }
+        private static Matrix4x4 GetAnchorSpaceMatrix(Transform transform) => 
+            Matrix4x4.TRS(transform.position, Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z), transform.lossyScale);
 
         protected bool HandleAnchor(ref Vector3 position, bool isConnectedAnchor)
         {
@@ -103,10 +101,8 @@
             }
         }
 
-        protected static Vector3 InverseTransformPoint(Transform transform, Vector3 position)
-        {
-            return GetAnchorSpaceMatrix(transform).inverse.MultiplyPoint(position);
-        }
+        protected static Vector3 InverseTransformPoint(Transform transform, Vector3 position) => 
+            GetAnchorSpaceMatrix(transform).inverse.MultiplyPoint(position);
 
         public void OnEnable()
         {
@@ -161,10 +157,8 @@
             return position;
         }
 
-        protected static Vector3 TransformPoint(Transform transform, Vector3 position)
-        {
-            return GetAnchorSpaceMatrix(transform).MultiplyPoint(position);
-        }
+        protected static Vector3 TransformPoint(Transform transform, Vector3 position) => 
+            GetAnchorSpaceMatrix(transform).MultiplyPoint(position);
 
         public class Styles
         {

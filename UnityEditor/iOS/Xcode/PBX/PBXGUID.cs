@@ -18,15 +18,11 @@
             guidGenerator = <>f__mg$cache0;
         }
 
-        internal static string DefaultGuidGenerator()
-        {
-            return Guid.NewGuid().ToString("N").Substring(8).ToUpper();
-        }
+        internal static string DefaultGuidGenerator() => 
+            Guid.NewGuid().ToString("N").Substring(8).ToUpper();
 
-        public static string Generate()
-        {
-            return guidGenerator();
-        }
+        public static string Generate() => 
+            guidGenerator();
 
         internal static void SetGuidGenerator(GuidGenerator generator)
         {

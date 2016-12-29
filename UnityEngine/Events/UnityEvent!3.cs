@@ -44,15 +44,11 @@
             return UnityEventBase.GetValidMethodInfo(targetObj, name, argumentTypes);
         }
 
-        private static BaseInvokableCall GetDelegate(UnityAction<T0, T1, T2> action)
-        {
-            return new InvokableCall<T0, T1, T2>(action);
-        }
+        private static BaseInvokableCall GetDelegate(UnityAction<T0, T1, T2> action) => 
+            new InvokableCall<T0, T1, T2>(action);
 
-        internal override BaseInvokableCall GetDelegate(object target, MethodInfo theFunction)
-        {
-            return new InvokableCall<T0, T1, T2>(target, theFunction);
-        }
+        internal override BaseInvokableCall GetDelegate(object target, MethodInfo theFunction) => 
+            new InvokableCall<T0, T1, T2>(target, theFunction);
 
         public void Invoke(T0 arg0, T1 arg1, T2 arg2)
         {
@@ -76,7 +72,7 @@
 
         public void RemoveListener(UnityAction<T0, T1, T2> call)
         {
-            base.RemoveListener(call.Target, NetFxCoreExtensions.GetMethodInfo(call));
+            base.RemoveListener(call.Target, call.GetMethodInfo());
         }
     }
 }

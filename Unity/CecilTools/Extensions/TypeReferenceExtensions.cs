@@ -5,19 +5,17 @@
     using System.Runtime.CompilerServices;
     using Unity.CecilTools;
 
-    [Extension]
     public static class TypeReferenceExtensions
     {
-        [Extension]
-        public static bool IsAssignableTo(TypeReference typeRef, string typeName)
+        public static bool IsAssignableTo(this TypeReference typeRef, string typeName)
         {
             try
             {
                 if (typeRef.IsGenericInstance)
                 {
-                    return IsAssignableTo(ElementType.For(typeRef), typeName);
+                    return ElementType.For(typeRef).IsAssignableTo(typeName);
                 }
-                return ((typeRef.FullName == typeName) || TypeDefinitionExtensions.IsSubclassOf(ResolutionExtensions.CheckedResolve(typeRef), typeName));
+                return ((typeRef.FullName == typeName) || typeRef.CheckedResolve().IsSubclassOf(typeName));
             }
             catch (AssemblyResolutionException)
             {
@@ -25,33 +23,24 @@
             }
         }
 
-        [Extension]
-        public static bool IsEnum(TypeReference type)
-        {
-            return ((type.IsValueType && !type.IsPrimitive) && ResolutionExtensions.CheckedResolve(type).IsEnum);
-        }
+        public static bool IsEnum(this TypeReference type) => 
+            ((type.IsValueType && !type.IsPrimitive) && type.CheckedResolve().IsEnum);
 
-        [Extension]
-        public static bool IsStruct(TypeReference type)
-        {
-            return (((type.IsValueType && !type.IsPrimitive) && !IsEnum(type)) && !IsSystemDecimal(type));
-        }
+        public static bool IsStruct(this TypeReference type) => 
+            (((type.IsValueType && !type.IsPrimitive) && !type.IsEnum()) && !IsSystemDecimal(type));
 
-        private static bool IsSystemDecimal(TypeReference type)
-        {
-            return (type.FullName == "System.Decimal");
-        }
+        private static bool IsSystemDecimal(TypeReference type) => 
+            (type.FullName == "System.Decimal");
 
-        [Extension]
-        public static string SafeNamespace(TypeReference type)
+        public static string SafeNamespace(this TypeReference type)
         {
             if (type.IsGenericInstance)
             {
-                return SafeNamespace(((GenericInstanceType) type).ElementType);
+                return ((GenericInstanceType) type).ElementType.SafeNamespace();
             }
             if (type.IsNested)
             {
-                return SafeNamespace(type.DeclaringType);
+                return type.DeclaringType.SafeNamespace();
             }
             return type.Namespace;
         }

@@ -23,10 +23,8 @@
         /// <param name="targetPlatform">The platform to build the bundle for.</param>
         /// <param name="crc">The optional crc output parameter can be used to get a CRC checksum for the generated AssetBundle, which can be used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.</param>
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName)
-        {
-            return WebPlayerAssetBundlesAreNoLongerSupported();
-        }
+        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName) => 
+            WebPlayerAssetBundlesAreNoLongerSupported();
 
         /// <summary>
         /// <para>Builds an asset bundle.</para>
@@ -38,10 +36,8 @@
         /// <param name="targetPlatform">The platform to build the bundle for.</param>
         /// <param name="crc">The optional crc output parameter can be used to get a CRC checksum for the generated AssetBundle, which can be used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.</param>
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, BuildAssetBundleOptions assetBundleOptions)
-        {
-            return WebPlayerAssetBundlesAreNoLongerSupported();
-        }
+        public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, BuildAssetBundleOptions assetBundleOptions) => 
+            WebPlayerAssetBundlesAreNoLongerSupported();
 
         [Obsolete("BuildAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
         public static bool BuildAssetBundle(Object mainAsset, Object[] assets, string pathName, out uint crc)
@@ -99,10 +95,8 @@
         /// <param name="targetPlatform">The platform where the asset bundle will be used.</param>
         /// <param name="crc">An optional output parameter used to get a CRC checksum for the generated AssetBundle. (Used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.)</param>
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName)
-        {
-            return WebPlayerAssetBundlesAreNoLongerSupported();
-        }
+        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName) => 
+            WebPlayerAssetBundlesAreNoLongerSupported();
 
         /// <summary>
         /// <para>Builds an asset bundle, with custom names for the assets.</para>
@@ -115,10 +109,8 @@
         /// <param name="targetPlatform">The platform where the asset bundle will be used.</param>
         /// <param name="crc">An optional output parameter used to get a CRC checksum for the generated AssetBundle. (Used to verify content when downloading AssetBundles using WWW.LoadFromCacheOrDownload.)</param>
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
-        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions)
-        {
-            return WebPlayerAssetBundlesAreNoLongerSupported();
-        }
+        public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions) => 
+            WebPlayerAssetBundlesAreNoLongerSupported();
 
         [Obsolete("BuildAssetBundleExplicitAssetNames has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.", true)]
         public static bool BuildAssetBundleExplicitAssetNames(Object[] assets, string[] assetNames, string pathName, out uint crc)
@@ -168,7 +160,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool BuildAssetBundleInternal(Object mainAsset, Object[] assets, string[] assetNames, string pathName, BuildAssetBundleOptions assetBundleOptions, BuildTarget targetPlatform, out uint crc);
-        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
         public static AssetBundleManifest BuildAssetBundles(string outputPath)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;
@@ -248,10 +240,8 @@
         /// <returns>
         /// <para>An error message if an error occurred.</para>
         /// </returns>
-        public static string BuildPlayer(BuildPlayerOptions buildPlayerOptions)
-        {
-            return BuildPlayer(buildPlayerOptions.scenes, buildPlayerOptions.locationPathName, buildPlayerOptions.assetBundleManifestPath, buildPlayerOptions.target, buildPlayerOptions.options);
-        }
+        public static string BuildPlayer(BuildPlayerOptions buildPlayerOptions) => 
+            BuildPlayer(buildPlayerOptions.scenes, buildPlayerOptions.locationPathName, buildPlayerOptions.assetBundleManifestPath, buildPlayerOptions.target, buildPlayerOptions.options);
 
         /// <summary>
         /// <para>Builds a player. These overloads are still supported, but will be replaces by BuildPlayer (BuildPlayerOptions). Please use it instead.</para>
@@ -309,7 +299,8 @@
                 string extensionForBuildTarget = PostprocessBuildPlayer.GetExtensionForBuildTarget(target, options);
                 if (!string.IsNullOrEmpty(extensionForBuildTarget))
                 {
-                    return string.Format("For the '{0}' target the 'locationPathName' parameter for BuildPipeline.BuildPlayer should not end with a directory separator.\nProvided path: '{1}', expected a path with the extension '.{2}'.", target, locationPathName, extensionForBuildTarget);
+                    return $"For the '{target}' target the 'locationPathName' parameter for BuildPipeline.BuildPlayer should not end with a directory separator.
+Provided path: '{locationPathName}', expected a path with the extension '.{extensionForBuildTarget}'.";
                 }
             }
             try
@@ -346,10 +337,8 @@
         /// <para>String with an error message, empty on success.</para>
         /// </returns>
         [Obsolete("BuildStreamedSceneAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target)
-        {
-            return BuildPlayer(levels, locationPath, target, BuildOptions.BuildAdditionalStreamedScenes);
-        }
+        public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target) => 
+            BuildPlayer(levels, locationPath, target, BuildOptions.BuildAdditionalStreamedScenes);
 
         /// <summary>
         /// <para>Builds one or more scenes and all their dependencies into a compressed asset bundle.</para>
@@ -363,16 +352,12 @@
         /// <para>String with an error message, empty on success.</para>
         /// </returns>
         [Obsolete("BuildStreamedSceneAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target, BuildOptions options)
-        {
-            return BuildPlayer(levels, locationPath, target, options | BuildOptions.BuildAdditionalStreamedScenes);
-        }
+        public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target, BuildOptions options) => 
+            BuildPlayer(levels, locationPath, target, options | BuildOptions.BuildAdditionalStreamedScenes);
 
         [Obsolete("BuildStreamedSceneAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
-        public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target, out uint crc)
-        {
-            return BuildStreamedSceneAssetBundle(levels, locationPath, target, out crc, BuildOptions.CompressTextures);
-        }
+        public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target, out uint crc) => 
+            BuildStreamedSceneAssetBundle(levels, locationPath, target, out crc, BuildOptions.CompressTextures);
 
         [Obsolete("BuildStreamedSceneAssetBundle has been made obsolete. Please use the new AssetBundle build system introduced in 5.0 and check BuildAssetBundles documentation for details.")]
         public static string BuildStreamedSceneAssetBundle(string[] levels, string locationPath, BuildTarget target, out uint crc, BuildOptions options)

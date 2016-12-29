@@ -39,16 +39,14 @@
                 EdgeCollider2D colliderd2 = collider as EdgeCollider2D;
                 if (colliderd2 == null)
                 {
-                    throw new NotImplementedException(string.Format("PolygonEditorUtility does not support {0}", collider));
+                    throw new NotImplementedException($"PolygonEditorUtility does not support {collider}");
                 }
                 PolygonEditor.ApplyEditing(colliderd2);
             }
         }
 
-        private bool DeleteCommandEvent(Event evt)
-        {
-            return (((evt.type == EventType.ExecuteCommand) || (evt.type == EventType.ValidateCommand)) && ((evt.commandName == "Delete") || (evt.commandName == "SoftDelete")));
-        }
+        private bool DeleteCommandEvent(Event evt) => 
+            (((evt.type == EventType.ExecuteCommand) || (evt.type == EventType.ValidateCommand)) && ((evt.commandName == "Delete") || (evt.commandName == "SoftDelete")));
 
         private void DrawEdgesForSelectedPoint(Vector3 worldPos, Transform transform, bool leftIntersect, bool rightIntersect, bool loop)
         {
@@ -305,7 +303,7 @@
                 EdgeCollider2D colliderd2 = collider as EdgeCollider2D;
                 if (colliderd2 == null)
                 {
-                    throw new NotImplementedException(string.Format("PolygonEditorUtility does not support {0}", collider));
+                    throw new NotImplementedException($"PolygonEditorUtility does not support {collider}");
                 }
                 this.m_ActiveCollider = collider;
                 this.m_LoopingCollider = false;

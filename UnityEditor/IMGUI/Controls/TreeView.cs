@@ -33,25 +33,19 @@
             this.Init(state);
         }
 
-        public bool BeginRename(TreeViewItem item)
-        {
-            return this.BeginRename(item, 0f);
-        }
+        public bool BeginRename(TreeViewItem item) => 
+            this.BeginRename(item, 0f);
 
-        public bool BeginRename(TreeViewItem item, float delay)
-        {
-            return this.m_GUI.BeginRename(item, delay);
-        }
+        public bool BeginRename(TreeViewItem item, float delay) => 
+            this.m_GUI.BeginRename(item, delay);
 
         protected virtual void BeginRowGUI()
         {
         }
 
         protected abstract void BuildRootAndRows(out TreeViewItem hiddenRoot, out IList<TreeViewItem> rows);
-        protected virtual bool CanBeParent(TreeViewItem item)
-        {
-            return true;
-        }
+        protected virtual bool CanBeParent(TreeViewItem item) => 
+            true;
 
         protected virtual bool CanChangeExpandedState(TreeViewItem item)
         {
@@ -62,20 +56,14 @@
             return item.hasChildren;
         }
 
-        protected virtual bool CanMultiSelect(TreeViewItem item)
-        {
-            return true;
-        }
+        protected virtual bool CanMultiSelect(TreeViewItem item) => 
+            true;
 
-        protected virtual bool CanRename(TreeViewItem item)
-        {
-            return false;
-        }
+        protected virtual bool CanRename(TreeViewItem item) => 
+            false;
 
-        protected virtual bool CanStartDrag(CanStartDragArgs args)
-        {
-            return false;
-        }
+        protected virtual bool CanStartDrag(CanStartDragArgs args) => 
+            false;
 
         public void CollapseAll()
         {
@@ -90,10 +78,8 @@
         {
         }
 
-        public static List<TreeViewItem> CreateChildListForCollapsedParent()
-        {
-            return LazyTreeViewDataSource.CreateChildListForCollapsedParent();
-        }
+        public static List<TreeViewItem> CreateChildListForCollapsedParent() => 
+            LazyTreeViewDataSource.CreateChildListForCollapsedParent();
 
         protected virtual void DoubleClickedItem(int id)
         {
@@ -126,7 +112,7 @@
             TreeViewItem item = TreeViewUtility.FindItem(id, this.rootItem);
             if (item == null)
             {
-                throw new ArgumentException(string.Format("Could not find item with id: {0}. FindItem assumes complete tree is built.", id));
+                throw new ArgumentException($"Could not find item with id: {id}. FindItem assumes complete tree is built.");
             }
             return item;
         }
@@ -137,10 +123,8 @@
             this.m_TreeView.Frame(id, true, false, animated);
         }
 
-        protected virtual IList<int> GetAncestors(int id)
-        {
-            return Enumerable.ToList<int>(TreeViewUtility.GetParentsAboveItem(this.FindItem(id)));
-        }
+        protected virtual IList<int> GetAncestors(int id) => 
+            TreeViewUtility.GetParentsAboveItem(this.FindItem(id)).ToList<int>();
 
         public Rect GetCellRectForTreeFoldouts(Rect rowRect)
         {
@@ -153,58 +137,40 @@
             return this.multiColumnHeader.GetCellRect(visibleColumnIndex, rowRect);
         }
 
-        public float GetContentIndent(TreeViewItem item)
-        {
-            return this.m_GUI.GetContentIndent(item);
-        }
+        public float GetContentIndent(TreeViewItem item) => 
+            this.m_GUI.GetContentIndent(item);
 
-        protected virtual IList<int> GetDescendantsThatHaveChildren(int id)
-        {
-            return Enumerable.ToList<int>(TreeViewUtility.GetParentsBelowItem(this.FindItem(id)));
-        }
+        protected virtual IList<int> GetDescendantsThatHaveChildren(int id) => 
+            TreeViewUtility.GetParentsBelowItem(this.FindItem(id)).ToList<int>();
 
-        public IList<int> GetExpanded()
-        {
-            return this.m_DataSource.GetExpandedIDs();
-        }
+        public IList<int> GetExpanded() => 
+            this.m_DataSource.GetExpandedIDs();
 
-        public float GetFoldoutIndent(TreeViewItem item)
-        {
-            return this.m_GUI.GetFoldoutIndent(item);
-        }
+        public float GetFoldoutIndent(TreeViewItem item) => 
+            this.m_GUI.GetFoldoutIndent(item);
 
-        protected virtual Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
-        {
-            return this.m_GUI.DefaultRenameRect(rowRect, row, item);
-        }
+        protected virtual Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item) => 
+            this.m_GUI.DefaultRenameRect(rowRect, row, item);
 
-        public IList<TreeViewItem> GetRows()
-        {
-            return this.m_TreeView.data.GetRows();
-        }
+        public IList<TreeViewItem> GetRows() => 
+            this.m_TreeView.data.GetRows();
 
         public IList<TreeViewItem> GetRowsFromIDs(IList<int> ids)
         {
             <GetRowsFromIDs>c__AnonStorey0 storey = new <GetRowsFromIDs>c__AnonStorey0 {
                 ids = ids
             };
-            return Enumerable.ToList<TreeViewItem>(Enumerable.Where<TreeViewItem>(this.GetRows(), new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Where<TreeViewItem>(this.GetRows(), new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)).ToList<TreeViewItem>();
         }
 
-        public IList<int> GetSelection()
-        {
-            return this.m_TreeView.GetSelection();
-        }
+        public IList<int> GetSelection() => 
+            this.m_TreeView.GetSelection();
 
-        protected virtual DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
-        {
-            return DragAndDropVisualMode.None;
-        }
+        protected virtual DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args) => 
+            DragAndDropVisualMode.None;
 
-        public bool HasSelection()
-        {
-            return this.m_TreeView.HasSelection();
-        }
+        public bool HasSelection() => 
+            this.m_TreeView.HasSelection();
 
         private void Init(TreeViewState state)
         {
@@ -226,15 +192,11 @@
             this.m_TreeViewKeyControlID = GUIUtility.GetPermanentControlID();
         }
 
-        public bool IsExpanded(int id)
-        {
-            return this.m_DataSource.IsExpanded(id);
-        }
+        public bool IsExpanded(int id) => 
+            this.m_DataSource.IsExpanded(id);
 
-        public bool IsSelected(int id)
-        {
-            return this.m_TreeView.IsSelected(id);
-        }
+        public bool IsSelected(int id) => 
+            this.m_TreeView.IsSelected(id);
 
         protected virtual void OnDrawItemBackground(ItemGUIEventArgs args)
         {
@@ -289,13 +251,11 @@
 
         public void SetExpanded(IList<int> ids)
         {
-            this.m_DataSource.SetExpandedIDs(Enumerable.ToArray<int>(ids));
+            this.m_DataSource.SetExpandedIDs(ids.ToArray<int>());
         }
 
-        public bool SetExpanded(int id, bool expanded)
-        {
-            return this.m_DataSource.SetExpanded(id, expanded);
-        }
+        public bool SetExpanded(int id, bool expanded) => 
+            this.m_DataSource.SetExpanded(id, expanded);
 
         public void SetExpandedRecursive(int id, bool expanded)
         {
@@ -312,7 +272,7 @@
             bool flag = (options & TreeViewSelectionOptions.FireSelectionChanged) != TreeViewSelectionOptions.None;
             bool revealSelectionAndFrameLastSelected = (options & TreeViewSelectionOptions.RevealAndFrame) != TreeViewSelectionOptions.None;
             bool animatedFraming = false;
-            this.m_TreeView.SetSelection(Enumerable.ToArray<int>(selectedIDs), revealSelectionAndFrameLastSelected, animatedFraming);
+            this.m_TreeView.SetSelection(selectedIDs.ToArray<int>(), revealSelectionAndFrameLastSelected, animatedFraming);
             if (flag)
             {
                 this.m_TreeView.NotifyListenersThatSelectionChanged();
@@ -348,10 +308,8 @@
 
         public float baseIndent
         {
-            get
-            {
-                return this.m_GUI.k_BaseIndent;
-            }
+            get => 
+                this.m_GUI.k_BaseIndent;
             set
             {
                 this.m_GUI.k_BaseIndent = value;
@@ -360,82 +318,46 @@
 
         public int columnIndexForTreeFoldouts
         {
-            get
-            {
-                return this.m_GUI.columnIndexForTreeFoldouts;
-            }
+            get => 
+                this.m_GUI.columnIndexForTreeFoldouts;
             set
             {
                 this.m_GUI.columnIndexForTreeFoldouts = value;
             }
         }
 
-        public float depthIndentWidth
-        {
-            get
-            {
-                return this.m_GUI.k_IndentWidth;
-            }
-        }
+        public float depthIndentWidth =>
+            this.m_GUI.k_IndentWidth;
 
-        public float foldoutWidth
-        {
-            get
-            {
-                return this.m_GUI.foldoutWidth;
-            }
-        }
+        public float foldoutWidth =>
+            this.m_GUI.foldoutWidth;
 
         public float foldoutYOffset
         {
-            get
-            {
-                return this.m_GUI.foldoutYOffset;
-            }
+            get => 
+                this.m_GUI.foldoutYOffset;
             set
             {
                 this.m_GUI.foldoutYOffset = value;
             }
         }
 
-        public bool hasSearch
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.searchString);
-            }
-        }
+        public bool hasSearch =>
+            !string.IsNullOrEmpty(this.searchString);
 
-        public bool isDragging
-        {
-            get
-            {
-                return this.m_TreeView.isDragging;
-            }
-        }
+        public bool isDragging =>
+            this.m_TreeView.isDragging;
 
-        public MultiColumnHeader multiColumnHeader
-        {
-            get
-            {
-                return this.m_MultiColumnHeader;
-            }
-        }
+        public MultiColumnHeader multiColumnHeader =>
+            this.m_MultiColumnHeader;
 
-        public TreeViewItem rootItem
-        {
-            get
-            {
-                return this.m_TreeView.data.root;
-            }
-        }
+        public TreeViewItem rootItem =>
+            this.m_TreeView.data.root;
 
         public float rowHeight
         {
-            get
-            {
-                return this.m_GUI.k_LineHeight;
-            }
+            get => 
+                this.m_GUI.k_LineHeight;
             set
             {
                 this.m_GUI.k_LineHeight = Mathf.Max(value, 16f);
@@ -444,38 +366,24 @@
 
         public string searchString
         {
-            get
-            {
-                return this.m_TreeView.searchString;
-            }
+            get => 
+                this.m_TreeView.searchString;
             set
             {
                 this.m_TreeView.searchString = value;
             }
         }
 
-        public TreeViewState state
-        {
-            get
-            {
-                return this.m_TreeView.state;
-            }
-        }
+        public TreeViewState state =>
+            this.m_TreeView.state;
 
-        public int treeViewControlID
-        {
-            get
-            {
-                return this.m_TreeViewKeyControlID;
-            }
-        }
+        public int treeViewControlID =>
+            this.m_TreeViewKeyControlID;
 
         public Rect treeViewRect
         {
-            get
-            {
-                return this.m_TreeView.GetTotalRect();
-            }
+            get => 
+                this.m_TreeView.GetTotalRect();
             set
             {
                 this.m_TreeView.SetTotalRect(value);
@@ -487,10 +395,8 @@
         {
             internal IList<int> ids;
 
-            internal bool <>m__0(TreeViewItem item)
-            {
-                return this.ids.Contains(item.id);
-            }
+            internal bool <>m__0(TreeViewItem item) => 
+                this.ids.Contains(item.id);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -534,21 +440,11 @@
                 }
             }
 
-            public static float columnMargin
-            {
-                get
-                {
-                    return 5f;
-                }
-            }
+            public static float columnMargin =>
+                5f;
 
-            public static float contentLeftMargin
-            {
-                get
-                {
-                    return (float) TreeView.DefaultStyles.label.margin.left;
-                }
-            }
+            public static float contentLeftMargin =>
+                ((float) TreeView.DefaultStyles.label.margin.left);
         }
 
         public static class DefaultStyles
@@ -684,15 +580,11 @@
                 base.showRootItem = false;
             }
 
-            public override bool CanBeMultiSelected(TreeViewItem item)
-            {
-                return this.m_Owner.CanMultiSelect(item);
-            }
+            public override bool CanBeMultiSelected(TreeViewItem item) => 
+                this.m_Owner.CanMultiSelect(item);
 
-            public override bool CanBeParent(TreeViewItem item)
-            {
-                return this.m_Owner.CanBeParent(item);
-            }
+            public override bool CanBeParent(TreeViewItem item) => 
+                this.m_Owner.CanBeParent(item);
 
             public override void FetchData()
             {
@@ -716,25 +608,17 @@
                 base.m_NeedRefreshRows = false;
             }
 
-            protected override HashSet<int> GetParentsAbove(int id)
-            {
-                return new HashSet<int>(this.m_Owner.GetAncestors(id));
-            }
+            protected override HashSet<int> GetParentsAbove(int id) => 
+                new HashSet<int>(this.m_Owner.GetAncestors(id));
 
-            protected override HashSet<int> GetParentsBelow(int id)
-            {
-                return new HashSet<int>(this.m_Owner.GetDescendantsThatHaveChildren(id));
-            }
+            protected override HashSet<int> GetParentsBelow(int id) => 
+                new HashSet<int>(this.m_Owner.GetDescendantsThatHaveChildren(id));
 
-            public override bool IsExpandable(TreeViewItem item)
-            {
-                return this.m_Owner.CanChangeExpandedState(item);
-            }
+            public override bool IsExpandable(TreeViewItem item) => 
+                this.m_Owner.CanChangeExpandedState(item);
 
-            public override bool IsRenamingItemAllowed(TreeViewItem item)
-            {
-                return this.m_Owner.CanRename(item);
-            }
+            public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+                this.m_Owner.CanRename(item);
         }
 
         private class TreeViewControlDragging : TreeViewDragging
@@ -834,10 +718,8 @@
                 base.OnContentGUI(args.rowRect, args.row, args.item, displayName, args.selected, args.focused, false, false);
             }
 
-            public Rect DefaultRenameRect(Rect rowRect, int row, TreeViewItem item)
-            {
-                return base.GetRenameRect(rowRect, row, item);
-            }
+            public Rect DefaultRenameRect(Rect rowRect, int row, TreeViewItem item) => 
+                base.GetRenameRect(rowRect, row, item);
 
             protected override Rect DoFoldout(Rect rowRect, TreeViewItem item, int row)
             {
@@ -898,7 +780,7 @@
                     int rowCount = base.m_TreeView.data.rowCount;
                     if (rowCount != this.m_RowRects.Count)
                     {
-                        Debug.LogError(string.Format("Mismatch in state: rows vs cached rects. Did you remember to update row heigths when BuildRootAndRows was called. Number of rows: {0}, number of custom row heights: {1}", rowCount, this.m_RowRects.Count));
+                        Debug.LogError($"Mismatch in state: rows vs cached rects. Did you remember to update row heigths when BuildRootAndRows was called. Number of rows: {rowCount}, number of custom row heights: {this.m_RowRects.Count}");
                     }
                     float y = base.m_TreeView.state.scrollPos.y;
                     float height = base.m_TreeView.GetTotalRect().height;
@@ -943,10 +825,8 @@
                 }
             }
 
-            public override Rect GetRectForFraming(int row)
-            {
-                return this.GetRowRect(row, 1f);
-            }
+            public override Rect GetRectForFraming(int row) => 
+                this.GetRowRect(row, 1f);
 
             public override Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
             {
@@ -983,10 +863,8 @@
                 return vector;
             }
 
-            private bool IsDropTarget(TreeViewItem item)
-            {
-                return ((base.m_TreeView.dragging.GetDropTargetControlID() == item.id) && base.m_TreeView.data.CanBeParent(item));
-            }
+            private bool IsDropTarget(TreeViewItem item) => 
+                ((base.m_TreeView.dragging.GetDropTargetControlID() == item.id) && base.m_TreeView.data.CanBeParent(item));
 
             protected override void OnContentGUI(Rect rect, int row, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
             {
@@ -1066,21 +944,11 @@
                 }
             }
 
-            public float foldoutWidth
-            {
-                get
-                {
-                    return TreeViewGUI.s_Styles.foldoutWidth;
-                }
-            }
+            public float foldoutWidth =>
+                TreeViewGUI.s_Styles.foldoutWidth;
 
-            private bool hasCustomRowRects
-            {
-                get
-                {
-                    return ((this.m_RowRects != null) && (this.m_RowRects.Count > 0));
-                }
-            }
+            private bool hasCustomRowRects =>
+                ((this.m_RowRects != null) && (this.m_RowRects.Count > 0));
         }
     }
 }

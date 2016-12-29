@@ -17,10 +17,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioHighPassFilter.highpassResonaceQ is obsolete. Use highpassResonanceQ instead (UnityUpgradable) -> highpassResonanceQ", true)]
         public float highpassResonaceQ
         {
-            get
-            {
-                return this.highpassResonanceQ;
-            }
+            get => 
+                this.highpassResonanceQ;
             set
             {
             }

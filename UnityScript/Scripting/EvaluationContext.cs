@@ -69,21 +69,11 @@
             }
         }
 
-        public bool IsStaticContext
-        {
-            get
-            {
-                return (this._container is SimpleEvaluationDomainProvider);
-            }
-        }
+        public bool IsStaticContext =>
+            (this._container is SimpleEvaluationDomainProvider);
 
-        public IEvaluationDomainProvider ScriptContainer
-        {
-            get
-            {
-                return this._container;
-            }
-        }
+        public IEvaluationDomainProvider ScriptContainer =>
+            this._container;
     }
 }
 

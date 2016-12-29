@@ -9,10 +9,8 @@
     {
         private string m_TizenSdkPath = string.Empty;
 
-        public bool HasExternalApplications()
-        {
-            return true;
-        }
+        public bool HasExternalApplications() => 
+            true;
 
         public void ReadPreferences()
         {

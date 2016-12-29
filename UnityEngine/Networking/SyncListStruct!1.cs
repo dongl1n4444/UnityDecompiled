@@ -12,27 +12,18 @@
             base.AddInternal(item);
         }
 
-        protected override T DeserializeItem(NetworkReader reader)
-        {
-            return Activator.CreateInstance<T>();
-        }
+        protected override T DeserializeItem(NetworkReader reader) => 
+            Activator.CreateInstance<T>();
 
-        public T GetItem(int i)
-        {
-            return base[i];
-        }
+        public T GetItem(int i) => 
+            base[i];
 
         protected override void SerializeItem(NetworkWriter writer, T item)
         {
         }
 
-        public ushort Count
-        {
-            get
-            {
-                return (ushort) base.Count;
-            }
-        }
+        public ushort Count =>
+            ((ushort) base.Count);
     }
 }
 

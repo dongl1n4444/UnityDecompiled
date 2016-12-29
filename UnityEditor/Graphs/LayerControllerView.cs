@@ -35,10 +35,8 @@
             this.m_LayerList.GrabKeyboardFocus();
         }
 
-        public bool HasKeyboardControl()
-        {
-            return this.m_LayerList.HasKeyboardControl();
-        }
+        public bool HasKeyboardControl() => 
+            this.m_LayerList.HasKeyboardControl();
 
         public void Init(IAnimatorControllerEditor host)
         {
@@ -517,10 +515,8 @@
         {
             internal string layerName;
 
-            internal bool <>m__0(UnityEditor.Animations.AnimatorControllerLayer layer)
-            {
-                return (layer.name == this.layerName);
-            }
+            internal bool <>m__0(UnityEditor.Animations.AnimatorControllerLayer layer) => 
+                (layer.name == this.layerName);
         }
 
         private class Styles

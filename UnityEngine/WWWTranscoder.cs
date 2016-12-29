@@ -16,10 +16,8 @@
         private static byte[] urlForbidden = WWW.DefaultEncoding.GetBytes("@&;:<>=?\"'/\\!#%+$,{}|^[]`");
         private static byte urlSpace = 0x2b;
 
-        private static byte[] Byte2Hex(byte b, byte[] hexChars)
-        {
-            return new byte[] { hexChars[b >> 4], hexChars[b & 15] };
-        }
+        private static byte[] Byte2Hex(byte b, byte[] hexChars) => 
+            new byte[] { hexChars[b >> 4], hexChars[b & 15] };
 
         private static bool ByteArrayContains(byte[] array, byte b)
         {
@@ -117,10 +115,8 @@
             return QPDecode(toEncode, e);
         }
 
-        public static byte[] QPDecode(byte[] toEncode)
-        {
-            return Decode(toEncode, qpEscapeChar, qpSpace);
-        }
+        public static byte[] QPDecode(byte[] toEncode) => 
+            Decode(toEncode, qpEscapeChar, qpSpace);
 
         public static string QPDecode(string toEncode, [DefaultValue("Encoding.UTF8")] Encoding e)
         {
@@ -135,10 +131,8 @@
             return QPEncode(toEncode, e);
         }
 
-        public static byte[] QPEncode(byte[] toEncode)
-        {
-            return Encode(toEncode, qpEscapeChar, qpSpace, qpForbidden, true);
-        }
+        public static byte[] QPEncode(byte[] toEncode) => 
+            Encode(toEncode, qpEscapeChar, qpSpace, qpForbidden, true);
 
         public static string QPEncode(string toEncode, [DefaultValue("Encoding.UTF8")] Encoding e)
         {
@@ -165,10 +159,8 @@
             return true;
         }
 
-        public static bool SevenBitClean(string s, [DefaultValue("Encoding.UTF8")] Encoding e)
-        {
-            return SevenBitClean(e.GetBytes(s));
-        }
+        public static bool SevenBitClean(string s, [DefaultValue("Encoding.UTF8")] Encoding e) => 
+            SevenBitClean(e.GetBytes(s));
 
         [ExcludeFromDocs]
         public static string URLDecode(string toEncode)
@@ -177,10 +169,8 @@
             return URLDecode(toEncode, e);
         }
 
-        public static byte[] URLDecode(byte[] toEncode)
-        {
-            return Decode(toEncode, urlEscapeChar, urlSpace);
-        }
+        public static byte[] URLDecode(byte[] toEncode) => 
+            Decode(toEncode, urlEscapeChar, urlSpace);
 
         public static string URLDecode(string toEncode, [DefaultValue("Encoding.UTF8")] Encoding e)
         {
@@ -195,10 +185,8 @@
             return URLEncode(toEncode, e);
         }
 
-        public static byte[] URLEncode(byte[] toEncode)
-        {
-            return Encode(toEncode, urlEscapeChar, urlSpace, urlForbidden, false);
-        }
+        public static byte[] URLEncode(byte[] toEncode) => 
+            Encode(toEncode, urlEscapeChar, urlSpace, urlForbidden, false);
 
         public static string URLEncode(string toEncode, [DefaultValue("Encoding.UTF8")] Encoding e)
         {

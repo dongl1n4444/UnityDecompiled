@@ -69,25 +69,17 @@
             this.m_InstanceID = (tex == null) ? 0 : tex.GetInstanceID();
         }
 
-        public static implicit operator RenderTargetIdentifier(BuiltinRenderTextureType type)
-        {
-            return new RenderTargetIdentifier(type);
-        }
+        public static implicit operator RenderTargetIdentifier(BuiltinRenderTextureType type) => 
+            new RenderTargetIdentifier(type);
 
-        public static implicit operator RenderTargetIdentifier(string name)
-        {
-            return new RenderTargetIdentifier(name);
-        }
+        public static implicit operator RenderTargetIdentifier(string name) => 
+            new RenderTargetIdentifier(name);
 
-        public static implicit operator RenderTargetIdentifier(int nameID)
-        {
-            return new RenderTargetIdentifier(nameID);
-        }
+        public static implicit operator RenderTargetIdentifier(int nameID) => 
+            new RenderTargetIdentifier(nameID);
 
-        public static implicit operator RenderTargetIdentifier(Texture tex)
-        {
-            return new RenderTargetIdentifier(tex);
-        }
+        public static implicit operator RenderTargetIdentifier(Texture tex) => 
+            new RenderTargetIdentifier(tex);
     }
 }
 

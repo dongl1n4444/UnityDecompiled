@@ -21,10 +21,8 @@
             return Enumerable.Select<string, string>(relativeIncludePaths, new Func<string, string>(storey, (IntPtr) this.<>m__0));
         }
 
-        public virtual string ConvertOutputFileToFullPath(string outputFileRelativePath)
-        {
-            return Path.Combine(Directory.GetCurrentDirectory(), outputFileRelativePath);
-        }
+        public virtual string ConvertOutputFileToFullPath(string outputFileRelativePath) => 
+            Path.Combine(Directory.GetCurrentDirectory(), outputFileRelativePath);
 
         protected virtual void SetupEnvironment(ProcessStartInfo startInfo)
         {
@@ -38,67 +36,35 @@
             }
         }
 
-        public virtual IEnumerable<string> AdditionalIl2CPPArguments
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public virtual IEnumerable<string> AdditionalIl2CPPArguments =>
+            new string[0];
 
-        public virtual string CacheDirectory
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        public virtual string CacheDirectory =>
+            string.Empty;
 
         public abstract string CompilerArchitecture { get; }
 
-        public virtual string CompilerFlags
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        public virtual string CompilerFlags =>
+            string.Empty;
 
         public abstract string CompilerPlatform { get; }
 
-        public virtual string LinkerFlags
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        public virtual string LinkerFlags =>
+            string.Empty;
 
-        public virtual string PluginPath
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        public virtual string PluginPath =>
+            string.Empty;
 
-        public virtual bool SetsUpEnvironment
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool SetsUpEnvironment =>
+            false;
 
         [CompilerGenerated]
         private sealed class <ConvertIncludesToFullPaths>c__AnonStorey0
         {
             internal string workingDirectory;
 
-            internal string <>m__0(string path)
-            {
-                return Path.Combine(this.workingDirectory, path);
-            }
+            internal string <>m__0(string path) => 
+                Path.Combine(this.workingDirectory, path);
         }
     }
 }

@@ -8,10 +8,8 @@
         public const string NameOfErrorMethod = "_ErrorMethodForTestingOnly_";
         public const string NameOfErrorType = "_ErrorTypeForTestingOnly_";
 
-        private static string FormatExceptionMessage(string typeOrMethod, string name)
-        {
-            return string.Format("The managed {0} {1} always causes this exception when (--enable-error-message-test) is passed to il2cpp.exe. This exception is used only to test the il2cpp error reporting code.", typeOrMethod, name);
-        }
+        private static string FormatExceptionMessage(string typeOrMethod, string name) => 
+            $"The managed {typeOrMethod} {name} always causes this exception when (--enable-error-message-test) is passed to il2cpp.exe. This exception is used only to test the il2cpp error reporting code.";
 
         public static void ThrowIfIsErrorMethod(MethodReference method)
         {

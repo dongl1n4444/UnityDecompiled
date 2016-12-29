@@ -29,15 +29,11 @@
         public abstract bool CanMarshalAsOutputParameter(MethodReturnType methodReturnType);
         public abstract bool CanMarshalAsOutputParameter(MarshaledParameter parameter);
         public abstract string GetPrettyCalleeName();
-        public DefaultMarshalInfoWriter MarshalInfoWriterFor(MethodReturnType methodReturnType)
-        {
-            return MarshalDataCollector.MarshalInfoWriterFor(this._typeResolver.Resolve(methodReturnType.ReturnType), this._marshalType, methodReturnType.MarshalInfo, this._useUnicodeCharset, false, false, null);
-        }
+        public DefaultMarshalInfoWriter MarshalInfoWriterFor(MethodReturnType methodReturnType) => 
+            MarshalDataCollector.MarshalInfoWriterFor(this._typeResolver.Resolve(methodReturnType.ReturnType), this._marshalType, methodReturnType.MarshalInfo, this._useUnicodeCharset, false, false, null);
 
-        public DefaultMarshalInfoWriter MarshalInfoWriterFor(MarshaledParameter parameter)
-        {
-            return MarshalDataCollector.MarshalInfoWriterFor(parameter.ParameterType, this._marshalType, parameter.MarshalInfo, this._useUnicodeCharset, false, false, null);
-        }
+        public DefaultMarshalInfoWriter MarshalInfoWriterFor(MarshaledParameter parameter) => 
+            MarshalDataCollector.MarshalInfoWriterFor(parameter.ParameterType, this._marshalType, parameter.MarshalInfo, this._useUnicodeCharset, false, false, null);
 
         public abstract void WriteMarshalCleanupEmptyParameter(CppCodeWriter writer, string valueName, MarshaledParameter parameter, IRuntimeMetadataAccess metadataAccess);
         public abstract void WriteMarshalCleanupParameter(CppCodeWriter writer, string valueName, MarshaledParameter parameter, IRuntimeMetadataAccess metadataAccess);

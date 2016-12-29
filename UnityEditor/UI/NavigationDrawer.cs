@@ -13,10 +13,8 @@
     {
         private static Styles s_Styles = null;
 
-        private static Navigation.Mode GetNavigationMode(SerializedProperty navigation)
-        {
-            return (Navigation.Mode) navigation.enumValueIndex;
-        }
+        private static Navigation.Mode GetNavigationMode(SerializedProperty navigation) => 
+            ((Navigation.Mode) navigation.enumValueIndex);
 
         public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
         {

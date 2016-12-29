@@ -14,10 +14,8 @@
         private GUIContent[] mobileTextureSubtargetStrings = new GUIContent[] { EditorGUIUtility.TextContent("Don't override"), EditorGUIUtility.TextContent("DXT (Tegra)"), EditorGUIUtility.TextContent("PVRTC (PowerVR)"), EditorGUIUtility.TextContent("ATC (Adreno)"), EditorGUIUtility.TextContent("ETC (default)"), EditorGUIUtility.TextContent("ETC2 (GLES 3.0)"), EditorGUIUtility.TextContent("ASTC") };
         private GUIContent targetTypeString = EditorGUIUtility.TextContent("Build System");
 
-        public override bool EnabledBuildAndRunButton()
-        {
-            return !EditorUserBuildSettings.exportAsGoogleAndroidProject;
-        }
+        public override bool EnabledBuildAndRunButton() => 
+            !EditorUserBuildSettings.exportAsGoogleAndroidProject;
 
         public override void ShowPlatformBuildOptions()
         {

@@ -50,10 +50,8 @@
             this.m_TreeView.EndNameEditing(true);
         }
 
-        public float GetTotalHeight()
-        {
-            return (22f + Mathf.Max(20f, this.m_TreeView.gui.GetTotalSize().y));
-        }
+        public float GetTotalHeight() => 
+            (22f + Mathf.Max(20f, this.m_TreeView.gui.GetTotalSize().y));
 
         private void HandleCommandEvents(int treeViewKeyboardControlID)
         {
@@ -121,7 +119,7 @@
                     {
                         <>f__am$cache1 = new Func<AudioMixerController, int>(null, (IntPtr) <HandleObjectSelectorResult>m__1);
                     }
-                    int[] selectedIDs = Enumerable.ToArray<int>(Enumerable.Select<AudioMixerController, int>(this.m_DraggedMixers, <>f__am$cache1));
+                    int[] selectedIDs = Enumerable.Select<AudioMixerController, int>(this.m_DraggedMixers, <>f__am$cache1).ToArray<int>();
                     this.m_TreeView.SetSelection(selectedIDs, true);
                 }
                 if (commandName == "ObjectSelectorClosed")
@@ -175,7 +173,7 @@
             {
                 <>f__am$cache0 = new Func<AudioMixerController, int>(null, (IntPtr) <OnMixersDroppedOnMixerCallback>m__0);
             }
-            int[] selectedIDs = Enumerable.ToArray<int>(Enumerable.Select<AudioMixerController, int>(draggedMixers, <>f__am$cache0));
+            int[] selectedIDs = Enumerable.Select<AudioMixerController, int>(draggedMixers, <>f__am$cache0).ToArray<int>();
             this.m_TreeView.SetSelection(selectedIDs, true);
             Selection.instanceIDs = selectedIDs;
             if (droppedUponMixer == null)

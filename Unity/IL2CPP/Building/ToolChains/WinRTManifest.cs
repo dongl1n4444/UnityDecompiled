@@ -23,14 +23,14 @@
             {
                 <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <AddActivatableClasses>m__0);
             }
-            string[] source = Enumerable.ToArray<string>(Enumerable.Select<NPath, string>(manifestPath.Parent.Files("*.winmd", false), <>f__am$cache0));
-            if (Enumerable.Any<string>(source))
+            string[] source = manifestPath.Parent.Files("*.winmd", false).Select<NPath, string>(<>f__am$cache0).ToArray<string>();
+            if (source.Any<string>())
             {
                 if (<>f__am$cache1 == null)
                 {
                     <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <AddActivatableClasses>m__1);
                 }
-                string str = Enumerable.Aggregate<string>(source, <>f__am$cache1);
+                string str = source.Aggregate<string>(<>f__am$cache1);
                 string contents = File.ReadAllText(manifestPath.ToString());
                 int index = contents.IndexOf("<Extensions>");
                 if (index != -1)
@@ -69,7 +69,7 @@
             }
             if (!(architecture is ARMv7Architecture))
             {
-                throw new NotSupportedException(string.Format("Architecture {0} is not supported by WinRTManifest!", architecture));
+                throw new NotSupportedException($"Architecture {architecture} is not supported by WinRTManifest!");
             }
             return "arm";
         }
@@ -83,12 +83,12 @@
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("    <Extension Category=\"windows.activatableClass.inProcessServer\">");
             builder.AppendLine("      <InProcessServer>");
-            builder.AppendLine(string.Format("        <Path>{0}</Path>", winmd.ChangeExtension(".dll").FileName));
+            builder.AppendLine($"        <Path>{winmd.ChangeExtension(".dll").FileName}</Path>");
             foreach (TypeDefinition definition2 in definition.Types)
             {
                 if (definition2.IsPublic && !definition2.IsValueType)
                 {
-                    builder.AppendLine(string.Format("        <ActivatableClass ActivatableClassId=\"{0}\" ThreadingModel=\"both\" />", definition2.FullName));
+                    builder.AppendLine($"        <ActivatableClass ActivatableClassId="{definition2.FullName}" ThreadingModel="both" />");
                 }
             }
             builder.AppendLine("      </InProcessServer>");

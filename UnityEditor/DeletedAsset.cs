@@ -13,10 +13,8 @@
         public string fullPath;
         public string date;
         public int assetIsDir;
-        internal static int Compare(DeletedAsset p1, DeletedAsset p2)
-        {
-            return ((p1.changeset <= p2.changeset) ? ((p1.changeset >= p2.changeset) ? string.Compare(p1.fullPath, p2.fullPath, true) : 1) : -1);
-        }
+        internal static int Compare(DeletedAsset p1, DeletedAsset p2) => 
+            ((p1.changeset <= p2.changeset) ? ((p1.changeset >= p2.changeset) ? string.Compare(p1.fullPath, p2.fullPath, true) : 1) : -1);
     }
 }
 

@@ -50,7 +50,7 @@
                 string str;
                 if (this._field != null)
                 {
-                    str = string.Format("{0}.{1}()", this._objectVariableName, Naming.ForFieldGetter(this._field));
+                    str = $"{this._objectVariableName}.{Naming.ForFieldGetter(this._field)}()";
                 }
                 else
                 {
@@ -60,7 +60,7 @@
             }
             if (this._field != null)
             {
-                return string.Format("{0}.{1}()", this._objectVariableName, Naming.ForFieldGetter(this._field));
+                return $"{this._objectVariableName}.{Naming.ForFieldGetter(this._field)}()";
             }
             return this._objectVariableName;
         }
@@ -73,7 +73,7 @@
             }
             if (this._field != null)
             {
-                return string.Format("{0}.{1}()", this._objectVariableName, Naming.ForFieldAddressGetter(this._field));
+                return $"{this._objectVariableName}.{Naming.ForFieldAddressGetter(this._field)}()";
             }
             return Naming.AddressOf(this._objectVariableName);
         }
@@ -85,25 +85,23 @@
                 string str;
                 if (this._field != null)
                 {
-                    str = string.Format("{0}.{1}()", this._objectVariableName, Naming.ForFieldGetter(this._field));
+                    str = $"{this._objectVariableName}.{Naming.ForFieldGetter(this._field)}()";
                 }
                 else
                 {
                     str = this._objectVariableName;
                 }
-                return string.Format("{0};", Emit.StoreArrayElement(str, this._indexVariableName, value, false));
+                return $"{Emit.StoreArrayElement(str, this._indexVariableName, value, false)};";
             }
             if (this._field != null)
             {
-                return string.Format("{0}.{1}({2});", this._objectVariableName, Naming.ForFieldSetter(this._field), value);
+                return $"{this._objectVariableName}.{Naming.ForFieldSetter(this._field)}({value});";
             }
-            return string.Format("{0} = {1};", this._objectVariableName, value);
+            return $"{this._objectVariableName} = {value};";
         }
 
-        public string Store(string format, params object[] args)
-        {
-            return this.Store(string.Format(format, args));
-        }
+        public string Store(string format, params object[] args) => 
+            this.Store(string.Format(format, args));
 
         public string GetNiceName()
         {

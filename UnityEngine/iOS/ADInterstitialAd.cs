@@ -62,24 +62,14 @@
         /// <summary>
         /// <para>Checks if InterstitialAd is available (it is available on iPad since iOS 4.3, and on iPhone since iOS 7.0).</para>
         /// </summary>
-        public static bool isAvailable
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool isAvailable =>
+            false;
 
         /// <summary>
         /// <para>Has the interstitial ad object downloaded an advertisement? (Read Only)</para>
         /// </summary>
-        public bool loaded
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool loaded =>
+            false;
 
         /// <summary>
         /// <para>Will be called when ad is ready to be shown.</para>

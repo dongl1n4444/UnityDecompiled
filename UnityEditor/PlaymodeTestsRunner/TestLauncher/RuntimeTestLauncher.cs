@@ -25,10 +25,8 @@
             return scene;
         }
 
-        public string CreateSceneName()
-        {
-            return ("Assets/InitTestScene" + DateTime.Now.Ticks + ".unity");
-        }
+        public string CreateSceneName() => 
+            ("Assets/InitTestScene" + DateTime.Now.Ticks + ".unity");
     }
 }
 

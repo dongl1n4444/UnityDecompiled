@@ -9,37 +9,25 @@
         {
         }
 
-        public JsonElementArray AsArray()
-        {
-            return (JsonElementArray) this;
-        }
+        public JsonElementArray AsArray() => 
+            ((JsonElementArray) this);
 
-        public bool AsBoolean()
-        {
-            return ((JsonElementBoolean) this).value;
-        }
+        public bool AsBoolean() => 
+            ((JsonElementBoolean) this).value;
 
-        public JsonElementDict AsDict()
-        {
-            return (JsonElementDict) this;
-        }
+        public JsonElementDict AsDict() => 
+            ((JsonElementDict) this);
 
-        public int AsInteger()
-        {
-            return ((JsonElementInteger) this).value;
-        }
+        public int AsInteger() => 
+            ((JsonElementInteger) this).value;
 
-        public string AsString()
-        {
-            return ((JsonElementString) this).value;
-        }
+        public string AsString() => 
+            ((JsonElementString) this).value;
 
         public JsonElement this[string key]
         {
-            get
-            {
-                return this.AsDict()[key];
-            }
+            get => 
+                this.AsDict()[key];
             set
             {
                 this.AsDict()[key] = value;

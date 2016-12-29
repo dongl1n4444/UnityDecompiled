@@ -17,20 +17,14 @@
         private SerializedProperty m_SamsungTVProductLink;
         private PlayerSettingsEditor m_SettingsEditor;
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
-        public override bool HasBundleIdentifier()
-        {
-            return false;
-        }
+        public override bool HasBundleIdentifier() => 
+            false;
 
-        public override bool HasIdentificationGUI()
-        {
-            return true;
-        }
+        public override bool HasIdentificationGUI() => 
+            true;
 
         public override void OnEnable(PlayerSettingsEditor settingsEditor)
         {

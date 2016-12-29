@@ -108,10 +108,8 @@
         /// </summary>
         public AvatarMask avatarMask
         {
-            get
-            {
-                return this.m_AvatarMask;
-            }
+            get => 
+                this.m_AvatarMask;
             set
             {
                 this.m_AvatarMask = value;
@@ -123,10 +121,8 @@
         /// </summary>
         public AnimatorLayerBlendingMode blendingMode
         {
-            get
-            {
-                return this.m_BlendingMode;
-            }
+            get => 
+                this.m_BlendingMode;
             set
             {
                 this.m_BlendingMode = value;
@@ -138,10 +134,8 @@
         /// </summary>
         public float defaultWeight
         {
-            get
-            {
-                return this.m_DefaultWeight;
-            }
+            get => 
+                this.m_DefaultWeight;
             set
             {
                 this.m_DefaultWeight = value;
@@ -153,10 +147,8 @@
         /// </summary>
         public bool iKPass
         {
-            get
-            {
-                return this.m_IKPass;
-            }
+            get => 
+                this.m_IKPass;
             set
             {
                 this.m_IKPass = value;
@@ -168,10 +160,8 @@
         /// </summary>
         public string name
         {
-            get
-            {
-                return this.m_Name;
-            }
+            get => 
+                this.m_Name;
             set
             {
                 this.m_Name = value;
@@ -183,10 +173,8 @@
         /// </summary>
         public AnimatorStateMachine stateMachine
         {
-            get
-            {
-                return this.m_StateMachine;
-            }
+            get => 
+                this.m_StateMachine;
             set
             {
                 this.m_StateMachine = value;
@@ -198,10 +186,8 @@
         /// </summary>
         public bool syncedLayerAffectsTiming
         {
-            get
-            {
-                return this.m_SyncedLayerAffectsTiming;
-            }
+            get => 
+                this.m_SyncedLayerAffectsTiming;
             set
             {
                 this.m_SyncedLayerAffectsTiming = value;
@@ -213,10 +199,8 @@
         /// </summary>
         public int syncedLayerIndex
         {
-            get
-            {
-                return this.m_SyncedLayerIndex;
-            }
+            get => 
+                this.m_SyncedLayerIndex;
             set
             {
                 this.m_SyncedLayerIndex = value;

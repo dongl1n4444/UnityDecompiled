@@ -20,7 +20,7 @@
                 string displayStringOfInvalidCharsOfFileName = InternalEditorUtility.GetDisplayStringOfInvalidCharsOfFileName(libaryNameFromPath);
                 if (displayStringOfInvalidCharsOfFileName.Length > 0)
                 {
-                    s_LastError = string.Format("A library filename cannot contain the following character{0}:  {1}", (displayStringOfInvalidCharsOfFileName.Length <= 1) ? "" : "s", displayStringOfInvalidCharsOfFileName);
+                    s_LastError = $"A library filename cannot contain the following character{(displayStringOfInvalidCharsOfFileName.Length <= 1) ? "" : "s"}:  {displayStringOfInvalidCharsOfFileName}";
                 }
                 else
                 {
@@ -55,10 +55,8 @@
             return str;
         }
 
-        private string GetLibaryNameFromPath(string filePath)
-        {
-            return Path.GetFileNameWithoutExtension(filePath);
-        }
+        private string GetLibaryNameFromPath(string filePath) => 
+            Path.GetFileNameWithoutExtension(filePath);
 
         public T GetLibrary<T>(ScriptableObjectSaveLoadHelper<T> helper, string presetLibraryPathWithoutExtension) where T: ScriptableObject
         {
@@ -125,13 +123,8 @@
             }
         }
 
-        private HideFlags libraryHideFlag
-        {
-            get
-            {
-                return HideFlags.DontSave;
-            }
-        }
+        private HideFlags libraryHideFlag =>
+            HideFlags.DontSave;
 
         private class LibraryCache
         {
@@ -154,29 +147,14 @@
                 this.m_LoadedLibraryIDs.Clear();
             }
 
-            public string identifier
-            {
-                get
-                {
-                    return this.m_Identifier;
-                }
-            }
+            public string identifier =>
+                this.m_Identifier;
 
-            public List<ScriptableObject> loadedLibraries
-            {
-                get
-                {
-                    return this.m_LoadedLibraries;
-                }
-            }
+            public List<ScriptableObject> loadedLibraries =>
+                this.m_LoadedLibraries;
 
-            public List<string> loadedLibraryIDs
-            {
-                get
-                {
-                    return this.m_LoadedLibraryIDs;
-                }
-            }
+            public List<string> loadedLibraryIDs =>
+                this.m_LoadedLibraryIDs;
         }
     }
 }

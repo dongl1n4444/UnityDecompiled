@@ -50,13 +50,8 @@
             this.dependencies = base.GetPropertyList("dependencies");
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
     }
 }
 

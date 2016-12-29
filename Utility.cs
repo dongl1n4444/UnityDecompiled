@@ -13,7 +13,6 @@ using UnityEditor;
 using UnityEditor.Utils;
 using UnityEditorInternal;
 
-[Extension]
 internal static class Utility
 {
     [CompilerGenerated]
@@ -26,23 +25,16 @@ internal static class Utility
     [return: MarshalAs(UnmanagedType.Bool)]
     [DllImport("kernel32.dll")]
     private static extern bool CloseHandle(IntPtr objectHandle);
-    public static string CombinePath(params string[] paths)
-    {
-        return ConvertToWindowsPath(Paths.Combine(paths));
-    }
+    public static string CombinePath(params string[] paths) => 
+        Paths.Combine(paths).ConvertToWindowsPath();
 
-    public static string CombinePath(string path1, string path2)
-    {
-        return ConvertToWindowsPath(Path.Combine(path1, path2));
-    }
+    public static string CombinePath(string path1, string path2) => 
+        Path.Combine(path1, path2).ConvertToWindowsPath();
 
-    [Extension]
-    public static string ConvertToWindowsPath(string path)
-    {
-        return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-    }
+    public static string ConvertToWindowsPath(this string path) => 
+        path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
-    public static void CopyDirectoryContents(string sourceDirectory, string destinationDirectory, [Optional, DefaultParameterValue(false)] bool recursive)
+    public static void CopyDirectoryContents(string sourceDirectory, string destinationDirectory, bool recursive = false)
     {
         if (!Directory.Exists(destinationDirectory))
         {
@@ -131,7 +123,7 @@ internal static class Utility
         }
         if (string.IsNullOrEmpty(str) || !File.Exists(str))
         {
-            throw new Exception(string.Format("Failed to locate suitable MSBuild '{0}'", str));
+            throw new Exception($"Failed to locate suitable MSBuild '{str}'");
         }
         return str;
     }
@@ -147,7 +139,7 @@ internal static class Utility
                 environmentVariable = @"C:\Program Files (x86)";
             }
         }
-        return Path.Combine(environmentVariable, string.Format(@"MSBuild\{0}", version));
+        return Path.Combine(environmentVariable, $"MSBuild\{version}");
     }
 
     public static string GetMSBuildPath(WSASDK wsaSDK)
@@ -192,7 +184,7 @@ internal static class Utility
         StringBuilder builder = new StringBuilder();
         foreach (char ch in str)
         {
-            if (!Enumerable.Contains<char>(invalidFileNameChars, ch) && (CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark))
+            if (!invalidFileNameChars.Contains<char>(ch) && (CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark))
             {
                 builder.Append(ch);
             }
@@ -209,7 +201,7 @@ internal static class Utility
         for (int i = 0; i < vsName.Length; i++)
         {
             char ch = vsName[i];
-            if (Enumerable.Contains<char>(invalidFileNameChars, ch))
+            if (invalidFileNameChars.Contains<char>(ch))
             {
                 continue;
             }
@@ -281,10 +273,8 @@ internal static class Utility
         return "11.0";
     }
 
-    public static bool HasExtension(string path, string extension)
-    {
-        return string.Equals(Path.GetExtension(path), extension, StringComparison.InvariantCultureIgnoreCase);
-    }
+    public static bool HasExtension(string path, string extension) => 
+        string.Equals(Path.GetExtension(path), extension, StringComparison.InvariantCultureIgnoreCase);
 
     private static bool IsValidPackageName(string value)
     {
@@ -422,7 +412,7 @@ internal static class Utility
         }
     }
 
-    public static void MoveDirectory(string source, string destination, [Optional, DefaultParameterValue(null)] Func<string, bool> shouldOverwriteFile)
+    public static void MoveDirectory(string source, string destination, Func<string, bool> shouldOverwriteFile = null)
     {
         if (!Directory.Exists(destination))
         {
@@ -452,7 +442,7 @@ internal static class Utility
     private static extern IntPtr OpenProcess(int dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, int dwProcessId);
     [DllImport("kernel32.dll", SetLastError=true)]
     private static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] int dwFlags, [Out] StringBuilder lpExeName, ref int lpdwSize);
-    public static int RunAndWait(string fileName, string arguments, out string result, [Optional, DefaultParameterValue(null)] IDictionary<string, string> environmentVariables)
+    public static int RunAndWait(string fileName, string arguments, out string result, IDictionary<string, string> environmentVariables = null)
     {
         ProcessStartInfo si = new ProcessStartInfo(fileName, arguments) {
             CreateNoWindow = true,
@@ -505,41 +495,19 @@ internal static class Utility
         return value;
     }
 
-    public static bool UseIl2CppScriptingBackend()
-    {
-        return (PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) == ScriptingImplementation.IL2CPP);
-    }
+    public static bool UseIl2CppScriptingBackend() => 
+        (PlayerSettings.GetScriptingBackend(BuildTargetGroup.WSA) == ScriptingImplementation.IL2CPP);
 
-    public static string AssemblyCSharpFirstPassName
-    {
-        get
-        {
-            return ("Assembly-CSharp-firstpass" + EditorSettings.Internal_UserGeneratedProjectSuffix);
-        }
-    }
+    public static string AssemblyCSharpFirstPassName =>
+        ("Assembly-CSharp-firstpass" + EditorSettings.Internal_UserGeneratedProjectSuffix);
 
-    public static string AssemblyCSharpName
-    {
-        get
-        {
-            return ("Assembly-CSharp" + EditorSettings.Internal_UserGeneratedProjectSuffix);
-        }
-    }
+    public static string AssemblyCSharpName =>
+        ("Assembly-CSharp" + EditorSettings.Internal_UserGeneratedProjectSuffix);
 
-    public static string AssemblyUnityScriptFirstPassName
-    {
-        get
-        {
-            return ("Assembly-UnityScript-firstpass" + EditorSettings.Internal_UserGeneratedProjectSuffix);
-        }
-    }
+    public static string AssemblyUnityScriptFirstPassName =>
+        ("Assembly-UnityScript-firstpass" + EditorSettings.Internal_UserGeneratedProjectSuffix);
 
-    public static string AssemblyUnityScriptName
-    {
-        get
-        {
-            return ("Assembly-UnityScript" + EditorSettings.Internal_UserGeneratedProjectSuffix);
-        }
-    }
+    public static string AssemblyUnityScriptName =>
+        ("Assembly-UnityScript" + EditorSettings.Internal_UserGeneratedProjectSuffix);
 }
 

@@ -23,10 +23,8 @@
         /// <returns>
         /// <para>The size of the Popup window.</para>
         /// </returns>
-        public virtual Vector2 GetWindowSize()
-        {
-            return new Vector2(200f, 200f);
-        }
+        public virtual Vector2 GetWindowSize() => 
+            new Vector2(200f, 200f);
 
         /// <summary>
         /// <para>Callback when the popup window is closed.</para>

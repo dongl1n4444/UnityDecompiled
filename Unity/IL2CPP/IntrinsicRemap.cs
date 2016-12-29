@@ -344,40 +344,30 @@
             MethodNameMappingCustomArguments = dictionary2;
         }
 
-        private static IEnumerable<string> GetCurrentMethodRemappingCustomArguments(MethodReference callingMethod, MethodReference methodToCall, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments)
-        {
-            return new string[] { runtimeMetadata.MethodInfo(callingMethod) };
-        }
+        private static IEnumerable<string> GetCurrentMethodRemappingCustomArguments(MethodReference callingMethod, MethodReference methodToCall, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments) => 
+            new string[] { runtimeMetadata.MethodInfo(callingMethod) };
 
-        public static IEnumerable<string> GetCustomArguments(MethodReference methodToCall, MethodReference callingMethod, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments)
-        {
-            return MethodNameMappingCustomArguments[methodToCall.FullName].Invoke(callingMethod, methodToCall, runtimeMetadata, arguments);
-        }
+        public static IEnumerable<string> GetCustomArguments(MethodReference methodToCall, MethodReference callingMethod, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments) => 
+            MethodNameMappingCustomArguments[methodToCall.FullName].Invoke(callingMethod, methodToCall, runtimeMetadata, arguments);
 
         private static IEnumerable<string> GetTypeRemappingCustomArguments(MethodReference callingMethod, MethodReference methodToCall, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments)
         {
             List<string> list = new List<string> {
-                string.Format("(Il2CppMethodPointer)&{0}", Naming.ForMethod(methodToCall))
+                $"(Il2CppMethodPointer)&{Naming.ForMethod(methodToCall)}"
             };
             list.AddRange(arguments);
             list.Add("\"" + callingMethod.DeclaringType.Module.Assembly.Name + "\"");
             return list;
         }
 
-        public static bool HasCustomArguments(MethodReference methodToCall)
-        {
-            return MethodNameMappingCustomArguments.ContainsKey(methodToCall.FullName);
-        }
+        public static bool HasCustomArguments(MethodReference methodToCall) => 
+            MethodNameMappingCustomArguments.ContainsKey(methodToCall.FullName);
 
-        public static string MappedNameFor(MethodReference methodToCall)
-        {
-            return MethodNameMapping[methodToCall.FullName];
-        }
+        public static string MappedNameFor(MethodReference methodToCall) => 
+            MethodNameMapping[methodToCall.FullName];
 
-        public static bool ShouldRemap(MethodReference methodToCall)
-        {
-            return MethodNameMapping.ContainsKey(methodToCall.FullName);
-        }
+        public static bool ShouldRemap(MethodReference methodToCall) => 
+            MethodNameMapping.ContainsKey(methodToCall.FullName);
     }
 }
 

@@ -57,13 +57,8 @@
             return true;
         }
 
-        public LocalClient localClient
-        {
-            get
-            {
-                return this.m_LocalClient;
-            }
-        }
+        public LocalClient localClient =>
+            this.m_LocalClient;
     }
 }
 

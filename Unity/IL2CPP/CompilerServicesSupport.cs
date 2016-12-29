@@ -11,20 +11,14 @@
     internal struct CompilerServicesSupport
     {
         private const string SetOptionsAttributeFullName = "Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute";
-        public static bool HasNullChecksSupportEnabled(MethodDefinition methodDefinition, bool globalValue)
-        {
-            return HasOptionEnabled(methodDefinition, Option.NullChecks, globalValue);
-        }
+        public static bool HasNullChecksSupportEnabled(MethodDefinition methodDefinition, bool globalValue) => 
+            HasOptionEnabled(methodDefinition, Option.NullChecks, globalValue);
 
-        public static bool HasArrayBoundsChecksSupportEnabled(MethodDefinition methodDefinition, bool globalValue)
-        {
-            return HasOptionEnabled(methodDefinition, Option.ArrayBoundsChecks, globalValue);
-        }
+        public static bool HasArrayBoundsChecksSupportEnabled(MethodDefinition methodDefinition, bool globalValue) => 
+            HasOptionEnabled(methodDefinition, Option.ArrayBoundsChecks, globalValue);
 
-        public static bool HasDivideByZeroChecksSupportEnabled(MethodDefinition methodDefinition, bool globalValue)
-        {
-            return HasOptionEnabled(methodDefinition, Option.DivideByZeroChecks, globalValue);
-        }
+        public static bool HasDivideByZeroChecksSupportEnabled(MethodDefinition methodDefinition, bool globalValue) => 
+            HasOptionEnabled(methodDefinition, Option.DivideByZeroChecks, globalValue);
 
         private static bool HasOptionEnabled(IMemberDefinition methodDefinition, Option option, bool globalValue)
         {
@@ -48,10 +42,8 @@
             return globalValue;
         }
 
-        private static bool GetBooleanOptionValue(IEnumerable<CustomAttribute> attributes, Option option, ref bool result)
-        {
-            return GetOptionValue<bool>(attributes, option, ref result);
-        }
+        private static bool GetBooleanOptionValue(IEnumerable<CustomAttribute> attributes, Option option, ref bool result) => 
+            GetOptionValue<bool>(attributes, option, ref result);
 
         private static bool GetOptionValue<T>(IEnumerable<CustomAttribute> attributes, Option option, ref T result)
         {

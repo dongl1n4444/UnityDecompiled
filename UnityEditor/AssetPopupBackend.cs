@@ -91,7 +91,7 @@
                         }
                         object[] userData = new object[] { storey2.resource.m_InstanceID, storey.serializedProperty };
                         menu.AddItem(new GUIContent(storey2.resource.m_Name), storey2.resource.m_InstanceID == num, <>f__mg$cache0, userData);
-                        builtinResourceList = Enumerable.ToArray<BuiltinResource>(Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2, (IntPtr) this.<>m__0)));
+                        builtinResourceList = Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2, (IntPtr) this.<>m__0)).ToArray<BuiltinResource>();
                         flag = true;
                         break;
                     }
@@ -143,10 +143,8 @@
         {
             internal BuiltinResource resource;
 
-            internal bool <>m__0(BuiltinResource x)
-            {
-                return (x != this.resource);
-            }
+            internal bool <>m__0(BuiltinResource x) => 
+                (x != this.resource);
         }
 
         [CompilerGenerated]

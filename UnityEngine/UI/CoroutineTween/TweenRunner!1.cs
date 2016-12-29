@@ -18,10 +18,8 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerator Start(T tweenInfo)
-        {
-            return new <Start>c__Iterator0<T> { tweenInfo = tweenInfo };
-        }
+        private static IEnumerator Start(T tweenInfo) => 
+            new <Start>c__Iterator0<T> { tweenInfo = tweenInfo };
 
         public void StartTween(T info)
         {
@@ -111,23 +109,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

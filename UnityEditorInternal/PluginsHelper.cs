@@ -13,18 +13,7 @@
             {
                 pluginImporterExtension = ModuleManager.GetPluginImporterExtension(buildTarget);
             }
-            if (pluginImporterExtension == null)
-            {
-                if (BuildPipeline.GetBuildTargetGroup(buildTarget) == BuildTargetGroup.Standalone)
-                {
-                    pluginImporterExtension = new DesktopPluginImporterExtension();
-                }
-                else
-                {
-                    pluginImporterExtension = new DefaultPluginImporterExtension(null);
-                }
-            }
-            return pluginImporterExtension.CheckFileCollisions(BuildPipeline.GetBuildTargetName(buildTarget));
+            return pluginImporterExtension?.CheckFileCollisions(BuildPipeline.GetBuildTargetName(buildTarget));
         }
     }
 }

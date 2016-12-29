@@ -28,15 +28,11 @@
             this.m_dictionary = dictionary;
         }
 
-        public bool ContainsKey(TKey key)
-        {
-            return this.m_dictionary.ContainsKey(key);
-        }
+        public bool ContainsKey(TKey key) => 
+            this.m_dictionary.ContainsKey(key);
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return this.m_dictionary.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => 
+            this.m_dictionary.GetEnumerator();
 
         private static bool IsCompatibleKey(object key)
         {
@@ -57,10 +53,8 @@
             throw new NotSupportedException();
         }
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
-        {
-            return this.m_dictionary.Contains(item);
-        }
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => 
+            this.m_dictionary.Contains(item);
 
         void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
@@ -151,10 +145,8 @@
             throw new NotSupportedException();
         }
 
-        bool IDictionary.Contains(object key)
-        {
-            return (ReadOnlyDictionary<TKey, TValue>.IsCompatibleKey(key) && this.ContainsKey((TKey) key));
-        }
+        bool IDictionary.Contains(object key) => 
+            (ReadOnlyDictionary<TKey, TValue>.IsCompatibleKey(key) && this.ContainsKey((TKey) key));
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
         {
@@ -171,39 +163,20 @@
             throw new NotSupportedException();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.m_dictionary.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.m_dictionary.GetEnumerator();
 
-        public bool TryGetValue(TKey key, out TValue value)
-        {
-            return this.m_dictionary.TryGetValue(key, out value);
-        }
+        public bool TryGetValue(TKey key, out TValue value) => 
+            this.m_dictionary.TryGetValue(key, out value);
 
-        public int Count
-        {
-            get
-            {
-                return this.m_dictionary.Count;
-            }
-        }
+        public int Count =>
+            this.m_dictionary.Count;
 
-        protected IDictionary<TKey, TValue> Dictionary
-        {
-            get
-            {
-                return this.m_dictionary;
-            }
-        }
+        protected IDictionary<TKey, TValue> Dictionary =>
+            this.m_dictionary;
 
-        public TValue this[TKey key]
-        {
-            get
-            {
-                return this.m_dictionary[key];
-            }
-        }
+        public TValue this[TKey key] =>
+            this.m_dictionary[key];
 
         public KeyCollection<TKey, TValue> Keys
         {
@@ -217,49 +190,27 @@
             }
         }
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return true;
-            }
-        }
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly =>
+            true;
 
         TValue IDictionary<TKey, TValue>.this[TKey key]
         {
-            get
-            {
-                return this.m_dictionary[key];
-            }
+            get => 
+                this.m_dictionary[key];
             set
             {
                 throw new NotSupportedException();
             }
         }
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys
-        {
-            get
-            {
-                return this.Keys;
-            }
-        }
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys =>
+            this.Keys;
 
-        ICollection<TValue> IDictionary<TKey, TValue>.Values
-        {
-            get
-            {
-                return this.Values;
-            }
-        }
+        ICollection<TValue> IDictionary<TKey, TValue>.Values =>
+            this.Values;
 
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool ICollection.IsSynchronized =>
+            false;
 
         object ICollection.SyncRoot
         {
@@ -281,21 +232,11 @@
             }
         }
 
-        bool IDictionary.IsFixedSize
-        {
-            get
-            {
-                return true;
-            }
-        }
+        bool IDictionary.IsFixedSize =>
+            true;
 
-        bool IDictionary.IsReadOnly
-        {
-            get
-            {
-                return true;
-            }
-        }
+        bool IDictionary.IsReadOnly =>
+            true;
 
         object IDictionary.this[object key]
         {
@@ -313,21 +254,11 @@
             }
         }
 
-        ICollection IDictionary.Keys
-        {
-            get
-            {
-                return this.Keys;
-            }
-        }
+        ICollection IDictionary.Keys =>
+            this.Keys;
 
-        ICollection IDictionary.Values
-        {
-            get
-            {
-                return this.Values;
-            }
-        }
+        ICollection IDictionary.Values =>
+            this.Values;
 
         public ValueCollection<TKey, TValue> Values
         {
@@ -352,38 +283,16 @@
                 this.m_enumerator = this.m_dictionary.GetEnumerator();
             }
 
-            public DictionaryEntry Entry
-            {
-                get
-                {
-                    return new DictionaryEntry(this.m_enumerator.Current.Key, this.m_enumerator.Current.Value);
-                }
-            }
-            public object Key
-            {
-                get
-                {
-                    return this.m_enumerator.Current.Key;
-                }
-            }
-            public object Value
-            {
-                get
-                {
-                    return this.m_enumerator.Current.Value;
-                }
-            }
-            public object Current
-            {
-                get
-                {
-                    return this.Entry;
-                }
-            }
-            public bool MoveNext()
-            {
-                return this.m_enumerator.MoveNext();
-            }
+            public DictionaryEntry Entry =>
+                new DictionaryEntry(this.m_enumerator.Current.Key, this.m_enumerator.Current.Value);
+            public object Key =>
+                this.m_enumerator.Current.Key;
+            public object Value =>
+                this.m_enumerator.Current.Value;
+            public object Current =>
+                this.Entry;
+            public bool MoveNext() => 
+                this.m_enumerator.MoveNext();
 
             public void Reset()
             {
@@ -412,10 +321,8 @@
                 this.m_collection.CopyTo(array, arrayIndex);
             }
 
-            public IEnumerator<TKey> GetEnumerator()
-            {
-                return this.m_collection.GetEnumerator();
-            }
+            public IEnumerator<TKey> GetEnumerator() => 
+                this.m_collection.GetEnumerator();
 
             void ICollection<TKey>.Add(TKey item)
             {
@@ -427,10 +334,8 @@
                 throw new NotSupportedException();
             }
 
-            bool ICollection<TKey>.Contains(TKey item)
-            {
-                return this.m_collection.Contains(item);
-            }
+            bool ICollection<TKey>.Contains(TKey item) => 
+                this.m_collection.Contains(item);
 
             bool ICollection<TKey>.Remove(TKey item)
             {
@@ -442,34 +347,17 @@
                 ReadOnlyDictionaryHelpers.CopyToNonGenericICollectionHelper<TKey>(this.m_collection, array, index);
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.m_collection.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.m_collection.GetEnumerator();
 
-            public int Count
-            {
-                get
-                {
-                    return this.m_collection.Count;
-                }
-            }
+            public int Count =>
+                this.m_collection.Count;
 
-            bool ICollection<TKey>.IsReadOnly
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            bool ICollection<TKey>.IsReadOnly =>
+                true;
 
-            bool ICollection.IsSynchronized
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            bool ICollection.IsSynchronized =>
+                false;
 
             object ICollection.SyncRoot
             {
@@ -513,10 +401,8 @@
                 this.m_collection.CopyTo(array, arrayIndex);
             }
 
-            public IEnumerator<TValue> GetEnumerator()
-            {
-                return this.m_collection.GetEnumerator();
-            }
+            public IEnumerator<TValue> GetEnumerator() => 
+                this.m_collection.GetEnumerator();
 
             void ICollection<TValue>.Add(TValue item)
             {
@@ -528,10 +414,8 @@
                 throw new NotSupportedException();
             }
 
-            bool ICollection<TValue>.Contains(TValue item)
-            {
-                return this.m_collection.Contains(item);
-            }
+            bool ICollection<TValue>.Contains(TValue item) => 
+                this.m_collection.Contains(item);
 
             bool ICollection<TValue>.Remove(TValue item)
             {
@@ -543,34 +427,17 @@
                 ReadOnlyDictionaryHelpers.CopyToNonGenericICollectionHelper<TValue>(this.m_collection, array, index);
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.m_collection.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.m_collection.GetEnumerator();
 
-            public int Count
-            {
-                get
-                {
-                    return this.m_collection.Count;
-                }
-            }
+            public int Count =>
+                this.m_collection.Count;
 
-            bool ICollection<TValue>.IsReadOnly
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            bool ICollection<TValue>.IsReadOnly =>
+                true;
 
-            bool ICollection.IsSynchronized
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            bool ICollection.IsSynchronized =>
+                false;
 
             object ICollection.SyncRoot
             {

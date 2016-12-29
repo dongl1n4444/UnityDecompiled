@@ -196,10 +196,8 @@
         /// </summary>
         public Vector2 cellSize
         {
-            get
-            {
-                return this.m_CellSize;
-            }
+            get => 
+                this.m_CellSize;
             set
             {
                 base.SetProperty<Vector2>(ref this.m_CellSize, value);
@@ -211,10 +209,8 @@
         /// </summary>
         public Constraint constraint
         {
-            get
-            {
-                return this.m_Constraint;
-            }
+            get => 
+                this.m_Constraint;
             set
             {
                 base.SetProperty<Constraint>(ref this.m_Constraint, value);
@@ -226,10 +222,8 @@
         /// </summary>
         public int constraintCount
         {
-            get
-            {
-                return this.m_ConstraintCount;
-            }
+            get => 
+                this.m_ConstraintCount;
             set
             {
                 base.SetProperty<int>(ref this.m_ConstraintCount, Mathf.Max(1, value));
@@ -241,10 +235,8 @@
         /// </summary>
         public Vector2 spacing
         {
-            get
-            {
-                return this.m_Spacing;
-            }
+            get => 
+                this.m_Spacing;
             set
             {
                 base.SetProperty<Vector2>(ref this.m_Spacing, value);
@@ -256,10 +248,8 @@
         /// </summary>
         public Axis startAxis
         {
-            get
-            {
-                return this.m_StartAxis;
-            }
+            get => 
+                this.m_StartAxis;
             set
             {
                 base.SetProperty<Axis>(ref this.m_StartAxis, value);
@@ -271,10 +261,8 @@
         /// </summary>
         public Corner startCorner
         {
-            get
-            {
-                return this.m_StartCorner;
-            }
+            get => 
+                this.m_StartCorner;
             set
             {
                 base.SetProperty<Corner>(ref this.m_StartCorner, value);

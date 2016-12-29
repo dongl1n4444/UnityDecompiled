@@ -8,10 +8,8 @@
     {
         public string alertAction
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -19,10 +17,8 @@
 
         public string alertBody
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -30,10 +26,8 @@
 
         public string alertLaunchImage
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -41,29 +35,20 @@
 
         public int applicationIconBadgeNumber
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }
         }
 
-        public static string defaultSoundName
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public static string defaultSoundName =>
+            null;
 
         public DateTime fireDate
         {
-            get
-            {
-                return new DateTime();
-            }
+            get => 
+                new DateTime();
             set
             {
             }
@@ -71,10 +56,8 @@
 
         public bool hasAction
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -82,10 +65,8 @@
 
         public CalendarIdentifier repeatCalendar
         {
-            get
-            {
-                return CalendarIdentifier.GregorianCalendar;
-            }
+            get => 
+                CalendarIdentifier.GregorianCalendar;
             set
             {
             }
@@ -93,10 +74,8 @@
 
         public CalendarUnit repeatInterval
         {
-            get
-            {
-                return CalendarUnit.Era;
-            }
+            get => 
+                CalendarUnit.Era;
             set
             {
             }
@@ -104,10 +83,8 @@
 
         public string soundName
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -115,10 +92,8 @@
 
         public string timeZone
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }
@@ -126,10 +101,8 @@
 
         public IDictionary userInfo
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }

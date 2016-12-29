@@ -12,7 +12,6 @@ using UnityEditor.WSA;
 using UnityEditorInternal;
 using UnityEngine;
 
-[Extension]
 internal static class MetroVisualStudioSolutionHelper
 {
     private static Dictionary<WSASDK, string> _assemblyConverterPlatform;
@@ -55,7 +54,7 @@ internal static class MetroVisualStudioSolutionHelper
         DontOverwriteFilesCpp = new string[] { "App.h", "App.cpp", "Main.cpp", "App.xaml.h", "App.xaml.cpp", "MainPage.xaml.h", "MainPage.xaml.cpp", "pch.h", "pch.cpp" };
     }
 
-    internal static void AddAssemblyConverterCommands(string playerPackage, bool sourceBuild, Dictionary<WSASDK, TemplateBuilder> templateBuilders, Dictionary<WSASDK, LibraryCollection> libraryCollections, [Optional, DefaultParameterValue(false)] bool useCSharpProjects, [Optional, DefaultParameterValue(null)] Dictionary<WSASDK, string> assemblyCSharpDllPaths, [Optional, DefaultParameterValue(null)] Dictionary<WSASDK, string> assemblyCSharpFirstpassDllPaths)
+    internal static void AddAssemblyConverterCommands(string playerPackage, bool sourceBuild, Dictionary<WSASDK, TemplateBuilder> templateBuilders, Dictionary<WSASDK, LibraryCollection> libraryCollections, bool useCSharpProjects = false, Dictionary<WSASDK, string> assemblyCSharpDllPaths = null, Dictionary<WSASDK, string> assemblyCSharpFirstpassDllPaths = null)
     {
         foreach (KeyValuePair<WSASDK, TemplateBuilder> pair in templateBuilders)
         {
@@ -110,7 +109,7 @@ internal static class MetroVisualStudioSolutionHelper
             if (referencePath.StartsWith(@"Plugins\", StringComparison.InvariantCultureIgnoreCase))
             {
                 referencePath = "$(ProjectDir)" + referencePath;
-                string destinationFile = string.Format("$(ProjectDir){0}", library.Reference);
+                string destinationFile = $"$(ProjectDir){library.Reference}";
                 AddPrebuildCopyEvent(templateBuilder, referencePath, destinationFile, library.WinMd && library.Native);
             }
         }
@@ -124,19 +123,19 @@ internal static class MetroVisualStudioSolutionHelper
             sourceFile = Path.ChangeExtension(sourceFile, ".dll");
             destinationFile = Path.ChangeExtension(destinationFile, ".dll");
         }
-        string str = string.Format("<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" />", sourceFile, destinationFile);
+        string str = $"<Copy SourceFiles="{sourceFile}" DestinationFiles="{destinationFile}" />";
         if (!beforeResolveReferences.ToString().Contains(str))
         {
-            TemplateBuilderExtensions.AppendLineWithPrefix(beforeResolveReferences, str, new object[0]);
+            beforeResolveReferences.AppendLineWithPrefix(str, new object[0]);
             string str2 = Path.ChangeExtension(sourceFile, ".pdb");
             string str3 = Path.ChangeExtension(destinationFile, ".pdb");
             string str4 = Path.ChangeExtension(destinationFile, ".dll.mdb");
             object[] args = new object[] { str3 };
-            TemplateBuilderExtensions.AppendLineWithPrefix(beforeResolveReferences, "    <Delete Files=\"{0}\" Condition=\"Exists('{0}')\" />", args);
+            beforeResolveReferences.AppendLineWithPrefix("    <Delete Files=\"{0}\" Condition=\"Exists('{0}')\" />", args);
             object[] objArray2 = new object[] { str4 };
-            TemplateBuilderExtensions.AppendLineWithPrefix(beforeResolveReferences, "    <Delete Files=\"{0}\" Condition=\"Exists('{0}')\" />", objArray2);
+            beforeResolveReferences.AppendLineWithPrefix("    <Delete Files=\"{0}\" Condition=\"Exists('{0}')\" />", objArray2);
             object[] objArray3 = new object[] { str2, str3 };
-            TemplateBuilderExtensions.AppendLineWithPrefix(beforeResolveReferences, "    <Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" Condition=\"Exists('{0}')\" />", objArray3);
+            beforeResolveReferences.AppendLineWithPrefix("    <Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" Condition=\"Exists('{0}')\" />", objArray3);
         }
     }
 
@@ -282,11 +281,8 @@ internal static class MetroVisualStudioSolutionHelper
         }
     }
 
-    [Extension]
-    internal static string FixLineEndings(string str)
-    {
-        return str.Replace("\n", "\r\n").Replace("\r\r", "\r");
-    }
+    internal static string FixLineEndings(this string str) => 
+        str.Replace("\n", "\r\n").Replace("\r\r", "\r");
 
     internal static string FixPropsPath(string path)
     {
@@ -324,15 +320,11 @@ internal static class MetroVisualStudioSolutionHelper
         return (!splashScreenBackgroundColor.HasValue ? "" : string.Format(CultureInfo.InvariantCulture, "Background=\"{0}\"", new object[] { ColorToXAMLAttribute(splashScreenBackgroundColor.Value) }));
     }
 
-    public static string[] GetDontOverwriteFilesCpp()
-    {
-        return ConcatStringArrays(DontOverwriteFilesCommon, DontOverwriteFilesCpp);
-    }
+    public static string[] GetDontOverwriteFilesCpp() => 
+        ConcatStringArrays(DontOverwriteFilesCommon, DontOverwriteFilesCpp);
 
-    public static string[] GetDontOverwriteFilesCSharp()
-    {
-        return ConcatStringArrays(DontOverwriteFilesCommon, DontOverwriteFilesCSharp);
-    }
+    public static string[] GetDontOverwriteFilesCSharp() => 
+        ConcatStringArrays(DontOverwriteFilesCommon, DontOverwriteFilesCSharp);
 
     public static string GetPlayersDirectoryTag(WSASDK sdk)
     {
@@ -350,13 +342,11 @@ internal static class MetroVisualStudioSolutionHelper
             case WSASDK.UWP:
                 return (@"UAP\" + (!Utility.UseIl2CppScriptingBackend() ? "dotnet" : "il2cpp"));
         }
-        throw new Exception(string.Format("Unknown WSASDK value {0}.", sdk));
+        throw new Exception($"Unknown WSASDK value {sdk}.");
     }
 
-    public static string GetPlayersRootPath(WSASDK sdk, bool sourceBuild)
-    {
-        return (@"$(UnityWSAPlayerDir)Players\" + GetPlayersDirectoryTag(sdk) + @"\$(PlatformTarget)\$(Configuration)");
-    }
+    public static string GetPlayersRootPath(WSASDK sdk, bool sourceBuild) => 
+        (@"$(UnityWSAPlayerDir)Players\" + GetPlayersDirectoryTag(sdk) + @"\$(PlatformTarget)\$(Configuration)");
 
     internal static string GetSDKPluginTag(WSASDK sdk)
     {
@@ -391,7 +381,7 @@ internal static class MetroVisualStudioSolutionHelper
                 case PlayerSettings.SplashScreen.UnityLogoStyle.LightOnDark:
                     return new Color32(0xff, 0xff, 0xff, 0xff);
             }
-            Debug.LogWarning(string.Format("Splash screen style {0} not fully supported, please report a bug", PlayerSettings.SplashScreen.unityLogoStyle));
+            Debug.LogWarning($"Splash screen style {PlayerSettings.SplashScreen.unityLogoStyle} not fully supported, please report a bug");
         }
         return nullable;
     }
@@ -412,11 +402,8 @@ internal static class MetroVisualStudioSolutionHelper
         return str;
     }
 
-    [Extension]
-    internal static bool IsManifestFileName(string file)
-    {
-        return ((file.IndexOf(".appxmanifest") != -1) || (file.IndexOf("AppxManifest.xml") != -1));
-    }
+    internal static bool IsManifestFileName(this string file) => 
+        ((file.IndexOf(".appxmanifest") != -1) || (file.IndexOf("AppxManifest.xml") != -1));
 
     public static bool OverwriteFile(string installPath, string relFileName, string src, IEnumerable<string> dontOverwriteFiles, OverwriteFilesInfo overwriteControl)
     {
@@ -554,7 +541,7 @@ internal static class MetroVisualStudioSolutionHelper
         }
         catch (Exception exception)
         {
-            Debug.LogWarning(string.Format("Failed to remove readonly attribute from {0}: {1}.", directoryInfo.FullName, exception.Message));
+            Debug.LogWarning($"Failed to remove readonly attribute from {directoryInfo.FullName}: {exception.Message}.");
         }
     }
 
@@ -566,7 +553,7 @@ internal static class MetroVisualStudioSolutionHelper
         }
         catch (Exception exception)
         {
-            Debug.LogWarning(string.Format("Failed to remove readonly attribute from {0}: {1}.", fileInfo.FullName, exception.Message));
+            Debug.LogWarning($"Failed to remove readonly attribute from {fileInfo.FullName}: {exception.Message}.");
         }
     }
 
@@ -662,7 +649,7 @@ internal static class MetroVisualStudioSolutionHelper
             {
                 foreach (KeyValuePair<string, string> pair in dictionary)
                 {
-                    writer.WriteLine(string.Format("{0}: {1}", pair.Key, pair.Value));
+                    writer.WriteLine($"{pair.Key}: {pair.Value}");
                 }
             }
         }
@@ -717,10 +704,8 @@ internal static class MetroVisualStudioSolutionHelper
     {
         internal string relFileName;
 
-        internal bool <>m__0(string f)
-        {
-            return this.relFileName.EndsWith(f);
-        }
+        internal bool <>m__0(string f) => 
+            this.relFileName.EndsWith(f);
     }
 
     [CompilerGenerated]
@@ -728,15 +713,11 @@ internal static class MetroVisualStudioSolutionHelper
     {
         internal string fileName;
 
-        internal bool <>m__0(string f)
-        {
-            return this.fileName.EndsWith(f);
-        }
+        internal bool <>m__0(string f) => 
+            this.fileName.EndsWith(f);
 
-        internal bool <>m__1(string f)
-        {
-            return this.fileName.EndsWith(f);
-        }
+        internal bool <>m__1(string f) => 
+            this.fileName.EndsWith(f);
     }
 
     private class AssemblyConverterCommandAdder
@@ -769,21 +750,21 @@ internal static class MetroVisualStudioSolutionHelper
         private void CopyAssemblies()
         {
             StringBuilder modifyAppXPackage = this.templateBuilder.ModifyAppXPackage;
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"Copying unprocessed assemblies...\" />", new object[0]);
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Copy SourceFiles=\"@(UnprocessedFile)\" DestinationFolder=\"$(ProjectDir)\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"Copying unprocessed assemblies...\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Copy SourceFiles=\"@(UnprocessedFile)\" DestinationFolder=\"$(ProjectDir)\" />", new object[0]);
         }
 
         private void CopyAssemblyCSharpAssembliesToTempFolder()
         {
             StringBuilder modifyAppXPackage = this.templateBuilder.ModifyAppXPackage;
             object[] args = new object[] { this.assemblyCSharpDllSourcePath, this.assemblyCSharpDllDestPath };
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" />", args);
+            modifyAppXPackage.AppendLineWithPrefix("<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" />", args);
             object[] objArray2 = new object[] { Path.ChangeExtension(this.assemblyCSharpDllSourcePath, ".pdb"), Path.ChangeExtension(this.assemblyCSharpDllDestPath, ".pdb") };
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" Condition=\"Exists('{0}')\" />", objArray2);
+            modifyAppXPackage.AppendLineWithPrefix("<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" Condition=\"Exists('{0}')\" />", objArray2);
             object[] objArray3 = new object[] { this.assemblyCSharpFirstpassDllSourcePath, this.assemblyCSharpFirstpassDllDestPath };
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" />", objArray3);
+            modifyAppXPackage.AppendLineWithPrefix("<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" />", objArray3);
             object[] objArray4 = new object[] { Path.ChangeExtension(this.assemblyCSharpFirstpassDllSourcePath, ".pdb"), Path.ChangeExtension(this.assemblyCSharpFirstpassDllDestPath, ".pdb") };
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" Condition=\"Exists('{0}')\" />", objArray4);
+            modifyAppXPackage.AppendLineWithPrefix("<Copy SourceFiles=\"{0}\" DestinationFiles=\"{1}\" Condition=\"Exists('{0}')\" />", objArray4);
         }
 
         private void Execute()
@@ -793,9 +774,9 @@ internal static class MetroVisualStudioSolutionHelper
             this.assemblyCSharpDllDestPath = "$(ProjectDir)" + Path.GetFileName(this.assemblyCSharpDllPath);
             this.assemblyCSharpFirstpassDllSourcePath = this.assemblyCSharpFirstpassDllPath;
             this.assemblyCSharpFirstpassDllDestPath = "$(ProjectDir)" + Path.GetFileName(this.assemblyCSharpFirstpassDllPath);
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"UnityInstallationDir &quot;$(UnityInstallationDir)&quot;.\" />", new object[0]);
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"UnityWSAPlayerDir &quot;$(UnityWSAPlayerDir)&quot;.\" />", new object[0]);
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"UnityProjectDir &quot;$(UnityProjectDir)&quot;.\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"UnityInstallationDir &quot;$(UnityInstallationDir)&quot;.\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"UnityWSAPlayerDir &quot;$(UnityWSAPlayerDir)&quot;.\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"UnityProjectDir &quot;$(UnityProjectDir)&quot;.\" />", new object[0]);
             this.CopyAssemblies();
             if (this.useAssemblyCSharpProjects)
             {
@@ -808,29 +789,29 @@ internal static class MetroVisualStudioSolutionHelper
         private void ModifyAppxPackagePayload()
         {
             StringBuilder modifyAppXPackage = this.templateBuilder.ModifyAppXPackage;
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"Modifying AppxPackagePayload\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"Modifying AppxPackagePayload\" />", new object[0]);
             List<string> list = new List<string>(this.assemblies);
             if (this.useAssemblyCSharpProjects)
             {
                 list.Add(Utility.AssemblyCSharpName + ".dll");
                 list.Add(Utility.AssemblyCSharpFirstPassName + ".dll");
             }
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<ItemGroup>", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<ItemGroup>", new object[0]);
             foreach (string str in list)
             {
                 string[] strArray = new string[] { str, Path.GetFileNameWithoutExtension(str) + ".pdb" };
                 foreach (string str2 in strArray)
                 {
                     object[] args = new object[] { str2 };
-                    TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "    <AppxPackagePayload Remove=\"@(AppxPackagePayload)\" Condition=\"'%(TargetPath)' == '{0}'\" />", args);
+                    modifyAppXPackage.AppendLineWithPrefix("    <AppxPackagePayload Remove=\"@(AppxPackagePayload)\" Condition=\"'%(TargetPath)' == '{0}'\" />", args);
                     object[] objArray2 = new object[] { str2 };
-                    TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "    <AppxPackagePayload Include=\"$(ProjectDir){0}\">", objArray2);
+                    modifyAppXPackage.AppendLineWithPrefix("    <AppxPackagePayload Include=\"$(ProjectDir){0}\">", objArray2);
                     object[] objArray3 = new object[] { str2 };
-                    TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "        <TargetPath>{0}</TargetPath>", objArray3);
-                    TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "    </AppxPackagePayload>", new object[0]);
+                    modifyAppXPackage.AppendLineWithPrefix("        <TargetPath>{0}</TargetPath>", objArray3);
+                    modifyAppXPackage.AppendLineWithPrefix("    </AppxPackagePayload>", new object[0]);
                 }
             }
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "</ItemGroup>", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("</ItemGroup>", new object[0]);
         }
 
         private void RunAssemblyConverter()
@@ -838,7 +819,7 @@ internal static class MetroVisualStudioSolutionHelper
             StringBuilder modifyAppXPackage = this.templateBuilder.ModifyAppXPackage;
             string[] textArray1 = new string[] { "        <PropertyGroup Condition=\" '$(Configuration)' == 'Master' \">", "           <RemoveDebuggableAttribute>True</RemoveDebuggableAttribute>", "        </PropertyGroup>", "        <PropertyGroup Condition=\" '$(Configuration)' != 'Master' \">", "           <RemoveDebuggableAttribute>False</RemoveDebuggableAttribute>", "        </PropertyGroup>" };
             modifyAppXPackage.AppendLine(string.Join("\r\n", textArray1));
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"Running AssemblyConverter...\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"Running AssemblyConverter...\" />", new object[0]);
             modifyAppXPackage.Append("        <Exec Command=\"&quot;$(UnityWSAToolsDir)AssemblyConverter.exe&quot; -platform=");
             modifyAppXPackage.Append(MetroVisualStudioSolutionHelper._assemblyConverterPlatform[this.wsaSDK]);
             if (this.wsaSDK == WSASDK.UWP)
@@ -864,7 +845,7 @@ internal static class MetroVisualStudioSolutionHelper
                 modifyAppXPackage.Append("&quot;");
             }
             modifyAppXPackage.AppendLine("\" />");
-            TemplateBuilderExtensions.AppendLineWithPrefix(modifyAppXPackage, "<Message Importance=\"high\" Text=\"AssemblyConverter done.\" />", new object[0]);
+            modifyAppXPackage.AppendLineWithPrefix("<Message Importance=\"high\" Text=\"AssemblyConverter done.\" />", new object[0]);
         }
     }
 }

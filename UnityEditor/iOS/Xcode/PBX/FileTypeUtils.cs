@@ -199,16 +199,14 @@
             stringToSourceTreeMap = dictionary3;
         }
 
-        internal static List<PBXSourceTree> AllAbsoluteSourceTrees()
-        {
-            return new List<PBXSourceTree> { 
+        internal static List<PBXSourceTree> AllAbsoluteSourceTrees() => 
+            new List<PBXSourceTree> { 
                 PBXSourceTree.Absolute,
                 PBXSourceTree.Build,
                 PBXSourceTree.Developer,
                 PBXSourceTree.Sdk,
                 PBXSourceTree.Source
             };
-        }
 
         public static PBXFileType GetFileType(string ext, bool isFolderRef)
         {
@@ -232,25 +230,17 @@
             return "file";
         }
 
-        public static bool IsBuildable(string ext, bool isFolderReference)
-        {
-            return (isFolderReference || IsBuildableFile(ext));
-        }
+        public static bool IsBuildable(string ext, bool isFolderReference) => 
+            (isFolderReference || IsBuildableFile(ext));
 
-        public static bool IsBuildableFile(string ext)
-        {
-            return (!types.ContainsKey(ext) || (types[ext].type != PBXFileType.NotBuildable));
-        }
+        public static bool IsBuildableFile(string ext) => 
+            (!types.ContainsKey(ext) || (types[ext].type != PBXFileType.NotBuildable));
 
-        internal static bool IsFileTypeExplicit(string ext)
-        {
-            return (types.ContainsKey(ext) && types[ext].isExplicit);
-        }
+        internal static bool IsFileTypeExplicit(string ext) => 
+            (types.ContainsKey(ext) && types[ext].isExplicit);
 
-        public static bool IsKnownExtension(string ext)
-        {
-            return types.ContainsKey(ext);
-        }
+        public static bool IsKnownExtension(string ext) => 
+            types.ContainsKey(ext);
 
         internal static PBXSourceTree ParseSourceTree(string tree)
         {
@@ -261,10 +251,8 @@
             return PBXSourceTree.Source;
         }
 
-        internal static string SourceTreeDesc(PBXSourceTree tree)
-        {
-            return sourceTree[tree];
-        }
+        internal static string SourceTreeDesc(PBXSourceTree tree) => 
+            sourceTree[tree];
 
         internal class FileTypeDesc
         {

@@ -37,21 +37,11 @@
             }
         }
 
-        public override string CompilerArchitecture
-        {
-            get
-            {
-                return this._architecture;
-            }
-        }
+        public override string CompilerArchitecture =>
+            this._architecture;
 
-        public override string CompilerPlatform
-        {
-            get
-            {
-                return "Linux";
-            }
-        }
+        public override string CompilerPlatform =>
+            "Linux";
     }
 }
 

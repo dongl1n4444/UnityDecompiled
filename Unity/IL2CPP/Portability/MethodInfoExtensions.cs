@@ -4,20 +4,13 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class MethodInfoExtensions
     {
-        [Extension]
-        public static RuntimeMethodHandle GetMethodHandlePortable(MethodBase methodInfo)
-        {
-            return methodInfo.MethodHandle;
-        }
+        public static RuntimeMethodHandle GetMethodHandlePortable(this MethodBase methodInfo) => 
+            methodInfo.MethodHandle;
 
-        [Extension]
-        public static MethodImplAttributes GetMethodImplementationFlagsPortable(MethodBase methodInfo)
-        {
-            return methodInfo.GetMethodImplementationFlags();
-        }
+        public static MethodImplAttributes GetMethodImplementationFlagsPortable(this MethodBase methodInfo) => 
+            methodInfo.GetMethodImplementationFlags();
     }
 }
 

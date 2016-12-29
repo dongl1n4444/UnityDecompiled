@@ -13,26 +13,14 @@
             this._items = new HashSet<T>(comparer);
         }
 
-        public virtual bool Add(T item)
-        {
-            return this._items.Add(item);
-        }
+        public virtual bool Add(T item) => 
+            this._items.Add(item);
 
-        public int Count
-        {
-            get
-            {
-                return this._items.Count;
-            }
-        }
+        public int Count =>
+            this._items.Count;
 
-        public ReadOnlyHashSet<T> Items
-        {
-            get
-            {
-                return ExtensionMethods.AsReadOnly<T>(this._items);
-            }
-        }
+        public ReadOnlyHashSet<T> Items =>
+            this._items.AsReadOnly<T>();
     }
 }
 

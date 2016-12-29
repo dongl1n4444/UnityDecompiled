@@ -41,35 +41,27 @@
             this.values.Clear();
         }
 
-        public bool Contains(string item)
-        {
-            return this.values.Contains(item);
-        }
+        public bool Contains(string item) => 
+            this.values.Contains(item);
 
         public void CopyTo(string[] array, int arrayIndex)
         {
             this.values.CopyTo(array, arrayIndex);
         }
 
-        public IEnumerator<string> GetEnumerator()
-        {
-            return this.values.GetEnumerator();
-        }
+        public IEnumerator<string> GetEnumerator() => 
+            this.values.GetEnumerator();
 
-        public int IndexOf(string item)
-        {
-            return this.values.IndexOf(item);
-        }
+        public int IndexOf(string item) => 
+            this.values.IndexOf(item);
 
         public void Insert(int index, string item)
         {
             this.values.Insert(index, item);
         }
 
-        public bool Remove(string item)
-        {
-            return this.values.Remove(item);
-        }
+        public bool Remove(string item) => 
+            this.values.Remove(item);
 
         public void RemoveAt(int index)
         {
@@ -81,25 +73,17 @@
             this.values.CopyTo(array, index);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.values.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.values.GetEnumerator();
 
-        int IList.Add(object value)
-        {
-            return this.values.Add(value);
-        }
+        int IList.Add(object value) => 
+            this.values.Add(value);
 
-        bool IList.Contains(object value)
-        {
-            return this.values.Contains(value);
-        }
+        bool IList.Contains(object value) => 
+            this.values.Contains(value);
 
-        int IList.IndexOf(object value)
-        {
-            return this.values.IndexOf(value);
-        }
+        int IList.IndexOf(object value) => 
+            this.values.IndexOf(value);
 
         void IList.Insert(int index, object value)
         {
@@ -116,36 +100,20 @@
             this.values.RemoveAt(index);
         }
 
-        public string[] ToArray()
-        {
-            return this.values.ToArray();
-        }
+        public string[] ToArray() => 
+            this.values.ToArray();
 
-        public List<string> ToList()
-        {
-            return new List<string>(this.values);
-        }
+        public List<string> ToList() => 
+            new List<string>(this.values);
 
-        public override string ToString()
-        {
-            return string.Join(", ", this.values.ToArray());
-        }
+        public override string ToString() => 
+            string.Join(", ", this.values.ToArray());
 
-        public int Count
-        {
-            get
-            {
-                return this.values.Count;
-            }
-        }
+        public int Count =>
+            this.values.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly =>
+            false;
 
         public string this[int index]
         {
@@ -160,36 +128,19 @@
             }
         }
 
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
-                return ((ICollection) this.values).IsSynchronized;
-            }
-        }
+        bool ICollection.IsSynchronized =>
+            ((ICollection) this.values).IsSynchronized;
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                return ((ICollection) this.values).SyncRoot;
-            }
-        }
+        object ICollection.SyncRoot =>
+            ((ICollection) this.values).SyncRoot;
 
-        bool IList.IsFixedSize
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool IList.IsFixedSize =>
+            false;
 
         object IList.this[int index]
         {
-            get
-            {
-                return this[index];
-            }
+            get => 
+                this[index];
             set
             {
                 ((IList) this.values)[index] = value;

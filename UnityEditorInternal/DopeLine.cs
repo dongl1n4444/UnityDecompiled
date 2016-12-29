@@ -32,21 +32,11 @@
             this.m_Keys = null;
         }
 
-        public AnimationWindowCurve[] curves
-        {
-            get
-            {
-                return this.m_Curves;
-            }
-        }
+        public AnimationWindowCurve[] curves =>
+            this.m_Curves;
 
-        public int hierarchyNodeID
-        {
-            get
-            {
-                return this.m_HierarchyNodeID;
-            }
-        }
+        public int hierarchyNodeID =>
+            this.m_HierarchyNodeID;
 
         public bool isEditable
         {

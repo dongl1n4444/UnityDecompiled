@@ -134,7 +134,7 @@
                     this.m_TestListTree.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_TestListTree.itemDoubleClickedCallback, new Action<int>(this.TestDoubleClickCallback));
                     this.m_TestListTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TestListTree.contextClickItemCallback, new Action<int>(this.TestContextClick));
                     this.m_TestListTreeViewDataSource = new TestListTreeViewDataSource(this.m_TestListTree, this);
-                    if ((this.m_ResultList == null) || (Enumerable.Count<EditorTestResult>(this.m_ResultList) == 0))
+                    if ((this.m_ResultList == null) || (this.m_ResultList.Count<EditorTestResult>() == 0))
                     {
                         this.m_TestListTreeViewDataSource.ExpandTreeOnCreation();
                     }
@@ -191,13 +191,13 @@
                         <>f__am$cache0 = new Func<EditorTestResult, bool>(null, (IntPtr) <OnGUI>m__0);
                     }
                     IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_ResultList, <>f__am$cache0);
-                    if (Enumerable.Any<EditorTestResult>(source))
+                    if (source.Any<EditorTestResult>())
                     {
                         if (<>f__am$cache1 == null)
                         {
                             <>f__am$cache1 = new Func<EditorTestResult, TestName>(null, <OnGUI>m__1);
                         }
-                        this.RunTests(Enumerable.ToArray<TestName>(Enumerable.Select<EditorTestResult, TestName>(source, <>f__am$cache1)));
+                        this.RunTests(Enumerable.Select<EditorTestResult, TestName>(source, <>f__am$cache1).ToArray<TestName>());
                         GUIUtility.ExitGUI();
                     }
                     else
@@ -263,10 +263,8 @@
             EditorUtility.ClearProgressBar();
         }
 
-        private static int RegisterUndo()
-        {
-            return Undo.GetCurrentGroup();
-        }
+        private static int RegisterUndo() => 
+            Undo.GetCurrentGroup();
 
         private void RenderTestInfo()
         {
@@ -432,7 +430,8 @@
                 else if (item is TestGroupTreeViewItem)
                 {
                     TestGroupTreeViewItem item3 = item as TestGroupTreeViewItem;
-                    this.m_ResultText = string.Format("{0} ({1})\n{2}", item3.GroupName, item3.GroupFullName, item3.GroupDescription);
+                    this.m_ResultText = $"{item3.GroupName} ({item3.GroupFullName})
+{item3.GroupDescription}";
                 }
             }
             else if (selected.Length == 0)
@@ -453,7 +452,7 @@
             }
             result.Update(storey.newResult, false);
             this.m_TestListTree.selectionChangedCallback(this.m_TestListTree.GetSelection());
-            this.m_FilterSettings.UpdateCounters(Enumerable.Cast<ITestResult>(this.m_ResultList));
+            this.m_FilterSettings.UpdateCounters(this.m_ResultList.Cast<ITestResult>());
         }
 
         [CompilerGenerated]
@@ -484,15 +483,11 @@
         {
             internal ITestResult newResult;
 
-            internal bool <>m__0(EditorTestResult r)
-            {
-                return ((r.id == this.newResult.id) && (r.fullName == this.newResult.fullName));
-            }
+            internal bool <>m__0(EditorTestResult r) => 
+                ((r.id == this.newResult.id) && (r.fullName == this.newResult.fullName));
 
-            internal bool <>m__1(EditorTestResult r)
-            {
-                return (r.fullName == this.newResult.fullName);
-            }
+            internal bool <>m__1(EditorTestResult r) => 
+                (r.fullName == this.newResult.fullName);
         }
 
         private static class Styles

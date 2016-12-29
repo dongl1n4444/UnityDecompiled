@@ -71,13 +71,8 @@
         internal bool hasFeetIK { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("AvatarMask.humanoidBodyPartCount is deprecated. Use AvatarMaskBodyPart.LastBodyPart instead.")]
-        private int humanoidBodyPartCount
-        {
-            get
-            {
-                return 13;
-            }
-        }
+        private int humanoidBodyPartCount =>
+            13;
 
         /// <summary>
         /// <para>Number of transforms.</para>

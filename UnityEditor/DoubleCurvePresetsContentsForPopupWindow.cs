@@ -48,29 +48,20 @@
             }
         }
 
-        private string GetEditorPrefBaseName()
-        {
-            return PresetLibraryLocations.GetParticleCurveLibraryExtension(this.m_DoubleCurve.IsSingleCurve(), this.m_DoubleCurve.signedRange);
-        }
+        private string GetEditorPrefBaseName() => 
+            PresetLibraryLocations.GetParticleCurveLibraryExtension(this.m_DoubleCurve.IsSingleCurve(), this.m_DoubleCurve.signedRange);
 
-        public PresetLibraryEditor<DoubleCurvePresetLibrary> GetPresetLibraryEditor()
-        {
-            return this.m_CurveLibraryEditor;
-        }
+        public PresetLibraryEditor<DoubleCurvePresetLibrary> GetPresetLibraryEditor() => 
+            this.m_CurveLibraryEditor;
 
-        private static List<DoubleCurve> GetSignedDoubleCurveDefaults()
-        {
-            return new List<DoubleCurve> { new DoubleCurve(new AnimationCurve(CurveEditorWindow.GetConstantKeys(-1f)), new AnimationCurve(CurveEditorWindow.GetConstantKeys(1f)), true) };
-        }
+        private static List<DoubleCurve> GetSignedDoubleCurveDefaults() => 
+            new List<DoubleCurve> { new DoubleCurve(new AnimationCurve(CurveEditorWindow.GetConstantKeys(-1f)), new AnimationCurve(CurveEditorWindow.GetConstantKeys(1f)), true) };
 
-        private static List<DoubleCurve> GetUnsignedDoubleCurveDefaults()
-        {
-            return new List<DoubleCurve> { new DoubleCurve(new AnimationCurve(CurveEditorWindow.GetConstantKeys(0f)), new AnimationCurve(CurveEditorWindow.GetConstantKeys(1f)), false) };
-        }
+        private static List<DoubleCurve> GetUnsignedDoubleCurveDefaults() => 
+            new List<DoubleCurve> { new DoubleCurve(new AnimationCurve(CurveEditorWindow.GetConstantKeys(0f)), new AnimationCurve(CurveEditorWindow.GetConstantKeys(1f)), false) };
 
-        private static List<DoubleCurve> GetUnsignedSingleCurveDefaults(bool signedRange)
-        {
-            return new List<DoubleCurve> { 
+        private static List<DoubleCurve> GetUnsignedSingleCurveDefaults(bool signedRange) => 
+            new List<DoubleCurve> { 
                 new DoubleCurve(null, new AnimationCurve(CurveEditorWindow.GetConstantKeys(1f)), signedRange),
                 new DoubleCurve(null, new AnimationCurve(CurveEditorWindow.GetLinearKeys()), signedRange),
                 new DoubleCurve(null, new AnimationCurve(CurveEditorWindow.GetLinearMirrorKeys()), signedRange),
@@ -81,12 +72,9 @@
                 new DoubleCurve(null, new AnimationCurve(CurveEditorWindow.GetEaseInOutKeys()), signedRange),
                 new DoubleCurve(null, new AnimationCurve(CurveEditorWindow.GetEaseInOutMirrorKeys()), signedRange)
             };
-        }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(240f, 330f);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(240f, 330f);
 
         public void InitIfNeeded()
         {
@@ -107,10 +95,8 @@
             }
         }
 
-        private bool IsSingleCurve(DoubleCurve doubleCurve)
-        {
-            return ((doubleCurve.minCurve == null) || (doubleCurve.minCurve.length == 0));
-        }
+        private bool IsSingleCurve(DoubleCurve doubleCurve) => 
+            ((doubleCurve.minCurve == null) || (doubleCurve.minCurve.length == 0));
 
         private void ItemClickedCallback(int clickCount, object presetObject)
         {
@@ -144,10 +130,8 @@
 
         public DoubleCurve doubleCurveToSave
         {
-            get
-            {
-                return this.m_DoubleCurve;
-            }
+            get => 
+                this.m_DoubleCurve;
             set
             {
                 this.m_DoubleCurve = value;

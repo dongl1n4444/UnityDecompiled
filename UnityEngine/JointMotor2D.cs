@@ -16,10 +16,8 @@
         /// </summary>
         public float motorSpeed
         {
-            get
-            {
-                return this.m_MotorSpeed;
-            }
+            get => 
+                this.m_MotorSpeed;
             set
             {
                 this.m_MotorSpeed = value;
@@ -30,10 +28,8 @@
         /// </summary>
         public float maxMotorTorque
         {
-            get
-            {
-                return this.m_MaximumMotorTorque;
-            }
+            get => 
+                this.m_MaximumMotorTorque;
             set
             {
                 this.m_MaximumMotorTorque = value;

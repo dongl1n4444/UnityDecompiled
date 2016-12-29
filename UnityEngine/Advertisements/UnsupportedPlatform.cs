@@ -37,19 +37,15 @@
             }
         }
 
-        public PlacementState GetPlacementState(string placementId)
-        {
-            return PlacementState.NotAvailable;
-        }
+        public PlacementState GetPlacementState(string placementId) => 
+            PlacementState.NotAvailable;
 
         public void Initialize(string gameId, bool testMode)
         {
         }
 
-        public bool IsReady(string placementId)
-        {
-            return false;
-        }
+        public bool IsReady(string placementId) => 
+            false;
 
         public void SetMetaData(MetaData metaData)
         {
@@ -66,38 +62,21 @@
 
         public bool debugMode
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
         }
 
-        public bool isInitialized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool isInitialized =>
+            false;
 
-        public bool isSupported
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool isSupported =>
+            false;
 
-        public string version
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public string version =>
+            null;
     }
 }
 

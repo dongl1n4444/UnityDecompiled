@@ -30,23 +30,17 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void ForceRebuild();
-        public override int GetHashCode()
-        {
-            return this.m_Property.m_IntPtr.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.m_Property.m_IntPtr.GetHashCode();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern int GetVisible(int index);
-        public static bool HasCustomEditor(Object obj)
-        {
-            return (CustomEditorAttributes.FindCustomEditorType(obj, false) != null);
-        }
+        public static bool HasCustomEditor(Object obj) => 
+            (CustomEditorAttributes.FindCustomEditorType(obj, false) != null);
 
         [Obsolete("Use Editor.CreateEditor instead")]
-        public static Editor MakeCustomEditor(Object obj)
-        {
-            return Editor.CreateEditor(obj);
-        }
+        public static Editor MakeCustomEditor(Object obj) => 
+            Editor.CreateEditor(obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void RebuildIfNecessary();

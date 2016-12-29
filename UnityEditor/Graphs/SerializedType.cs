@@ -43,10 +43,8 @@
             return Type.GetType(SplitTypeString(serializedTypeString).typeName, true);
         }
 
-        private static Type FromString(SerializedTypeData data)
-        {
-            return Type.GetType(data.typeName, true);
-        }
+        private static Type FromString(SerializedTypeData data) => 
+            Type.GetType(data.typeName, true);
 
         public static Type GenericType(Type t)
         {
@@ -76,7 +74,7 @@
             {
                 throw new ArgumentException("Internal error: got unsupported generic type");
             }
-            return string.Format("System.Collections.Generic.List<{0}>", SafeTypeName(t.GetGenericArguments()[0]));
+            return $"System.Collections.Generic.List<{SafeTypeName(t.GetGenericArguments()[0])}>";
         }
 
         public static bool IsBaseTypeGeneric(string serializedTypeString)
@@ -98,10 +96,8 @@
             return (serializedTypeString[serializedTypeString.Length - 1] == '1');
         }
 
-        public static bool IsListType(Type t)
-        {
-            return typeof(IList).IsAssignableFrom(t);
-        }
+        public static bool IsListType(Type t) => 
+            typeof(IList).IsAssignableFrom(t);
 
         public static string ResetGenericArgumentType(string serializedTypeString)
         {
@@ -120,10 +116,8 @@
             return ToString(data);
         }
 
-        private static string SafeTypeName(Type type)
-        {
-            return ((type.FullName == null) ? null : type.FullName.Replace('+', '.'));
-        }
+        private static string SafeTypeName(Type type) => 
+            type.FullName?.Replace('+', '.');
 
         public static string SetGenericArgumentType(string serializedTypeString, Type type)
         {

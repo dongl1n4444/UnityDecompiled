@@ -37,28 +37,19 @@
             Array.Sort<string>(this.m_EditorTestsRunnerWindow.m_FilterSettings.availableCategories);
             this.m_NewResults = builder.newResultList;
             this.m_EditorTestsRunnerWindow.m_ResultList = new List<EditorTestResult>(this.m_NewResults);
-            this.m_EditorTestsRunnerWindow.m_FilterSettings.UpdateCounters(Enumerable.Cast<ITestResult>(this.m_EditorTestsRunnerWindow.m_ResultList));
+            this.m_EditorTestsRunnerWindow.m_FilterSettings.UpdateCounters(this.m_EditorTestsRunnerWindow.m_ResultList.Cast<ITestResult>());
             this.m_EditorTestsRunnerWindow.Repaint();
             base.m_NeedRefreshRows = true;
         }
 
-        public override bool IsExpandable(TreeViewItem item)
-        {
-            return ((item is TestGroupTreeViewItem) || base.IsExpandable(item));
-        }
+        public override bool IsExpandable(TreeViewItem item) => 
+            ((item is TestGroupTreeViewItem) || base.IsExpandable(item));
 
-        public override bool IsRenamingItemAllowed(TreeViewItem item)
-        {
-            return false;
-        }
+        public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+            false;
 
-        public List<EditorTestResult> resultState
-        {
-            get
-            {
-                return this.m_NewResults;
-            }
-        }
+        public List<EditorTestResult> resultState =>
+            this.m_NewResults;
     }
 }
 

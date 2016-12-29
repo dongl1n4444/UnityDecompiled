@@ -40,10 +40,8 @@
             }
         }
 
-        public override bool CanBeParent(TreeViewItem item)
-        {
-            return item.hasChildren;
-        }
+        public override bool CanBeParent(TreeViewItem item) => 
+            item.hasChildren;
 
         public override void FetchData()
         {
@@ -68,10 +66,8 @@
             return set;
         }
 
-        protected override HashSet<int> GetParentsBelow(int id)
-        {
-            return this.m_Backend.GetParentsBelow(id);
-        }
+        protected override HashSet<int> GetParentsBelow(int id) => 
+            this.m_Backend.GetParentsBelow(id);
 
         public int itemCounter { get; private set; }
     }

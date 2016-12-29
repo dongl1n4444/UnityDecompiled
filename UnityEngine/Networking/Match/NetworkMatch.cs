@@ -251,14 +251,12 @@
         }
 
         [DebuggerHidden]
-        private IEnumerator ProcessMatchResponse<JSONRESPONSE, USERRESPONSEDELEGATETYPE>(WWW client, InternalResponseDelegate<JSONRESPONSE, USERRESPONSEDELEGATETYPE> internalCallback, USERRESPONSEDELEGATETYPE userCallback) where JSONRESPONSE: Response, new()
-        {
-            return new <ProcessMatchResponse>c__Iterator0<JSONRESPONSE, USERRESPONSEDELEGATETYPE> { 
+        private IEnumerator ProcessMatchResponse<JSONRESPONSE, USERRESPONSEDELEGATETYPE>(WWW client, InternalResponseDelegate<JSONRESPONSE, USERRESPONSEDELEGATETYPE> internalCallback, USERRESPONSEDELEGATETYPE userCallback) where JSONRESPONSE: Response, new() => 
+            new <ProcessMatchResponse>c__Iterator0<JSONRESPONSE, USERRESPONSEDELEGATETYPE> { 
                 client = client,
                 internalCallback = internalCallback,
                 userCallback = userCallback
             };
-        }
 
         internal Coroutine SetMatchAttributes(SetMatchAttributesRequest req, BasicResponseDelegate callback)
         {
@@ -306,10 +304,8 @@
         /// </summary>
         public Uri baseUri
         {
-            get
-            {
-                return this.m_BaseUri;
-            }
+            get => 
+                this.m_BaseUri;
             set
             {
                 this.m_BaseUri = value;
@@ -387,23 +383,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         /// <summary>

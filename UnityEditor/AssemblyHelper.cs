@@ -45,7 +45,7 @@
                     {
                         <>f__am$cache0 = new Func<PluginImporter, string>(null, (IntPtr) <AddReferencedAssembliesRecurse>m__0);
                     }
-                    IEnumerable<string> enumerable = Enumerable.Distinct<string>(Enumerable.Select<PluginImporter, string>(Enumerable.Where<PluginImporter>(PluginImporter.GetImporters(storey.target), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0));
+                    IEnumerable<string> enumerable = Enumerable.Select<PluginImporter, string>(Enumerable.Where<PluginImporter>(PluginImporter.GetImporters(storey.target), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0).Distinct<string>();
                     using (Collection<AssemblyNameReference>.Enumerator enumerator = assemblyDefinitionCached.MainModule.AssemblyReferences.GetEnumerator())
                     {
                         while (enumerator.MoveNext())
@@ -76,7 +76,7 @@
                                     {
                                         continue;
                                     }
-                                    throw new ArgumentException(string.Format("The Assembly {0} is referenced by {1} ('{2}'). But the dll is not allowed to be included or could not be found.", storey2.referencedAssembly.Name, assemblyDefinitionCached.MainModule.Assembly.Name.Name, assemblyPath));
+                                    throw new ArgumentException($"The Assembly {storey2.referencedAssembly.Name} is referenced by {assemblyDefinitionCached.MainModule.Assembly.Name.Name} ('{assemblyPath}'). But the dll is not allowed to be included or could not be found.");
                                 }
                                 AddReferencedAssembliesRecurse(str, alreadyFoundAssemblies, allAssemblyPaths, foldersToSearch, cache, storey.target);
                             }
@@ -161,15 +161,11 @@
             return infoArray;
         }
 
-        public static string ExtractInternalAssemblyName(string path)
-        {
-            return AssemblyDefinition.ReadAssembly(path).Name.Name;
-        }
+        public static string ExtractInternalAssemblyName(string path) => 
+            AssemblyDefinition.ReadAssembly(path).Name.Name;
 
-        internal static ICollection<string> FindAssemblies(string basePath)
-        {
-            return FindAssemblies(basePath, 10);
-        }
+        internal static ICollection<string> FindAssemblies(string basePath) => 
+            FindAssemblies(basePath, 10);
 
         internal static ICollection<string> FindAssemblies(string basePath, int maxDepth)
         {
@@ -216,10 +212,8 @@
             return alreadyFoundAssemblies.ToArray();
         }
 
-        public static string[] FindAssembliesReferencedBy(string path, string[] foldersToSearch, BuildTarget target)
-        {
-            return FindAssembliesReferencedBy(new string[] { path }, foldersToSearch, target);
-        }
+        public static string[] FindAssembliesReferencedBy(string path, string[] foldersToSearch, BuildTarget target) => 
+            FindAssembliesReferencedBy(new string[] { path }, foldersToSearch, target);
 
         private static string FindAssemblyName(string fullName, string name, string[] allAssemblyPaths, string[] foldersToSearch, Dictionary<string, AssemblyDefinition> cache)
         {
@@ -242,13 +236,11 @@
         }
 
         [DebuggerHidden]
-        internal static IEnumerable<T> FindImplementors<T>(Assembly assembly) where T: class
-        {
-            return new <FindImplementors>c__Iterator0<T> { 
+        internal static IEnumerable<T> FindImplementors<T>(Assembly assembly) where T: class => 
+            new <FindImplementors>c__Iterator0<T> { 
                 assembly = assembly,
                 $PC = -2
             };
-        }
 
         public static Assembly FindLoadedAssemblyWithName(string s)
         {
@@ -313,10 +305,8 @@
             }
         }
 
-        private static bool IgnoreAssembly(string assemblyPath, BuildTarget target)
-        {
-            return (((target == BuildTarget.WSAPlayer) && ((((assemblyPath.IndexOf("mscorlib.dll") != -1) || (assemblyPath.IndexOf("System.") != -1)) || ((assemblyPath.IndexOf("Windows.dll") != -1) || (assemblyPath.IndexOf("Microsoft.") != -1))) || (((assemblyPath.IndexOf("Windows.") != -1) || (assemblyPath.IndexOf("WinRTLegacy.dll") != -1)) || (assemblyPath.IndexOf("platform.dll") != -1)))) || IsInternalAssembly(assemblyPath));
-        }
+        private static bool IgnoreAssembly(string assemblyPath, BuildTarget target) => 
+            (((target == BuildTarget.WSAPlayer) && ((((assemblyPath.IndexOf("mscorlib.dll") != -1) || (assemblyPath.IndexOf("System.") != -1)) || ((assemblyPath.IndexOf("Windows.dll") != -1) || (assemblyPath.IndexOf("Microsoft.") != -1))) || (((assemblyPath.IndexOf("Windows.") != -1) || (assemblyPath.IndexOf("WinRTLegacy.dll") != -1)) || (assemblyPath.IndexOf("platform.dll") != -1)))) || IsInternalAssembly(assemblyPath));
 
         public static bool IsInternalAssembly(string file)
         {
@@ -403,10 +393,8 @@
             internal AssemblyHelper.<AddReferencedAssembliesRecurse>c__AnonStorey2 <>f__ref$2;
             internal string extension;
 
-            internal bool <>m__0(string p)
-            {
-                return string.Equals(p, this.<>f__ref$2.referencedAssembly.Name + this.extension, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string p) => 
+                string.Equals(p, this.<>f__ref$2.referencedAssembly.Name + this.extension, StringComparison.InvariantCultureIgnoreCase);
         }
 
         [CompilerGenerated]
@@ -498,28 +486,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
 
-            T IEnumerator<T>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            T IEnumerator<T>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -527,10 +501,8 @@
         {
             internal string file;
 
-            internal bool <>m__0(string p)
-            {
-                return p.Equals(this.file);
-            }
+            internal bool <>m__0(string p) => 
+                p.Equals(this.file);
         }
     }
 }

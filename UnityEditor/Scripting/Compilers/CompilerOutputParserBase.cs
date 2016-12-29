@@ -35,16 +35,12 @@
         }
 
         protected abstract string GetErrorIdentifier();
-        protected virtual Regex GetInternalErrorOutputRegex()
-        {
-            return null;
-        }
+        protected virtual Regex GetInternalErrorOutputRegex() => 
+            null;
 
         protected abstract Regex GetOutputRegex();
-        protected virtual NormalizedCompilerStatus NormalizedStatusFor(Match match)
-        {
-            return new NormalizedCompilerStatus();
-        }
+        protected virtual NormalizedCompilerStatus NormalizedStatusFor(Match match) => 
+            new NormalizedCompilerStatus();
 
         protected static NormalizedCompilerStatus NormalizeMemberNotFoundError(string errorMsg, Regex messageParser)
         {
@@ -73,10 +69,8 @@
             return status;
         }
 
-        public virtual IEnumerable<CompilerMessage> Parse(string[] errorOutput, bool compilationHadFailure)
-        {
-            return this.Parse(errorOutput, new string[0], compilationHadFailure);
-        }
+        public virtual IEnumerable<CompilerMessage> Parse(string[] errorOutput, bool compilationHadFailure) => 
+            this.Parse(errorOutput, new string[0], compilationHadFailure);
 
         public virtual IEnumerable<CompilerMessage> Parse(string[] errorOutput, string[] standardOutput, bool compilationHadFailure)
         {

@@ -23,10 +23,8 @@
         /// <returns>
         /// <para>A random color with HSV and alpha values in the input ranges.</para>
         /// </returns>
-        public static Color ColorHSV()
-        {
-            return ColorHSV(0f, 1f, 0f, 1f, 0f, 1f, 1f, 1f);
-        }
+        public static Color ColorHSV() => 
+            ColorHSV(0f, 1f, 0f, 1f, 0f, 1f, 1f, 1f);
 
         /// <summary>
         /// <para>Generates a random color from HSV and alpha ranges.</para>
@@ -42,10 +40,8 @@
         /// <returns>
         /// <para>A random color with HSV and alpha values in the input ranges.</para>
         /// </returns>
-        public static Color ColorHSV(float hueMin, float hueMax)
-        {
-            return ColorHSV(hueMin, hueMax, 0f, 1f, 0f, 1f, 1f, 1f);
-        }
+        public static Color ColorHSV(float hueMin, float hueMax) => 
+            ColorHSV(hueMin, hueMax, 0f, 1f, 0f, 1f, 1f, 1f);
 
         /// <summary>
         /// <para>Generates a random color from HSV and alpha ranges.</para>
@@ -61,10 +57,8 @@
         /// <returns>
         /// <para>A random color with HSV and alpha values in the input ranges.</para>
         /// </returns>
-        public static Color ColorHSV(float hueMin, float hueMax, float saturationMin, float saturationMax)
-        {
-            return ColorHSV(hueMin, hueMax, saturationMin, saturationMax, 0f, 1f, 1f, 1f);
-        }
+        public static Color ColorHSV(float hueMin, float hueMax, float saturationMin, float saturationMax) => 
+            ColorHSV(hueMin, hueMax, saturationMin, saturationMax, 0f, 1f, 1f, 1f);
 
         /// <summary>
         /// <para>Generates a random color from HSV and alpha ranges.</para>
@@ -80,10 +74,8 @@
         /// <returns>
         /// <para>A random color with HSV and alpha values in the input ranges.</para>
         /// </returns>
-        public static Color ColorHSV(float hueMin, float hueMax, float saturationMin, float saturationMax, float valueMin, float valueMax)
-        {
-            return ColorHSV(hueMin, hueMax, saturationMin, saturationMax, valueMin, valueMax, 1f, 1f);
-        }
+        public static Color ColorHSV(float hueMin, float hueMax, float saturationMin, float saturationMax, float valueMin, float valueMax) => 
+            ColorHSV(hueMin, hueMax, saturationMin, saturationMax, valueMin, valueMax, 1f, 1f);
 
         /// <summary>
         /// <para>Generates a random color from HSV and alpha ranges.</para>
@@ -130,16 +122,12 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_set_state(ref State value);
         [Obsolete("Use Random.Range instead")]
-        public static int RandomRange(int min, int max)
-        {
-            return Range(min, max);
-        }
+        public static int RandomRange(int min, int max) => 
+            Range(min, max);
 
         [Obsolete("Use Random.Range instead")]
-        public static float RandomRange(float min, float max)
-        {
-            return Range(min, max);
-        }
+        public static float RandomRange(float min, float max) => 
+            Range(min, max);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int RandomRangeInt(int min, int max);
@@ -148,10 +136,8 @@
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public static int Range(int min, int max)
-        {
-            return RandomRangeInt(min, max);
-        }
+        public static int Range(int min, int max) => 
+            RandomRangeInt(min, max);
 
         /// <summary>
         /// <para>Returns a random float number between and min [inclusive] and max [inclusive] (Read Only).</para>

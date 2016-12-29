@@ -22,10 +22,8 @@
         /// </summary>
         public Sprite highlightedSprite
         {
-            get
-            {
-                return this.m_HighlightedSprite;
-            }
+            get => 
+                this.m_HighlightedSprite;
             set
             {
                 this.m_HighlightedSprite = value;
@@ -36,10 +34,8 @@
         /// </summary>
         public Sprite pressedSprite
         {
-            get
-            {
-                return this.m_PressedSprite;
-            }
+            get => 
+                this.m_PressedSprite;
             set
             {
                 this.m_PressedSprite = value;
@@ -50,19 +46,15 @@
         /// </summary>
         public Sprite disabledSprite
         {
-            get
-            {
-                return this.m_DisabledSprite;
-            }
+            get => 
+                this.m_DisabledSprite;
             set
             {
                 this.m_DisabledSprite = value;
             }
         }
-        public bool Equals(SpriteState other)
-        {
-            return (((this.highlightedSprite == other.highlightedSprite) && (this.pressedSprite == other.pressedSprite)) && (this.disabledSprite == other.disabledSprite));
-        }
+        public bool Equals(SpriteState other) => 
+            (((this.highlightedSprite == other.highlightedSprite) && (this.pressedSprite == other.pressedSprite)) && (this.disabledSprite == other.disabledSprite));
     }
 }
 

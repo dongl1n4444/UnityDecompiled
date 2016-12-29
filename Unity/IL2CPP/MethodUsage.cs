@@ -13,10 +13,8 @@
             this._methods.Add(method);
         }
 
-        public IEnumerable<MethodReference> GetMethods()
-        {
-            return this._methods;
-        }
+        public IEnumerable<MethodReference> GetMethods() => 
+            this._methods;
     }
 }
 

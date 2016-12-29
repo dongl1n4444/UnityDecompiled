@@ -21,69 +21,24 @@
         {
         }
 
-        public string title
-        {
-            get
-            {
-                return this.m_Title;
-            }
-        }
-        public string extraInfo
-        {
-            get
-            {
-                return this.m_ExtraInfo;
-            }
-        }
-        public int currentCount
-        {
-            get
-            {
-                return this.m_CurrentCount;
-            }
-        }
-        public int totalCount
-        {
-            get
-            {
-                return this.m_TotalCount;
-            }
-        }
-        public bool completed
-        {
-            get
-            {
-                return (this.m_Completed != 0);
-            }
-        }
-        public bool cancelled
-        {
-            get
-            {
-                return (this.m_Cancelled != 0);
-            }
-        }
-        public bool canCancel
-        {
-            get
-            {
-                return (this.m_CanCancel != 0);
-            }
-        }
-        public string lastErrorString
-        {
-            get
-            {
-                return this.m_LastErrorString;
-            }
-        }
-        public ulong lastError
-        {
-            get
-            {
-                return this.m_LastError;
-            }
-        }
+        public string title =>
+            this.m_Title;
+        public string extraInfo =>
+            this.m_ExtraInfo;
+        public int currentCount =>
+            this.m_CurrentCount;
+        public int totalCount =>
+            this.m_TotalCount;
+        public bool completed =>
+            (this.m_Completed != 0);
+        public bool cancelled =>
+            (this.m_Cancelled != 0);
+        public bool canCancel =>
+            (this.m_CanCancel != 0);
+        public string lastErrorString =>
+            this.m_LastErrorString;
+        public ulong lastError =>
+            this.m_LastError;
         public int percentComplete
         {
             get
@@ -103,27 +58,12 @@
                 return 0;
             }
         }
-        public bool isProgressTypeCount
-        {
-            get
-            {
-                return ((this.m_ProgressType == ProgressType.Count) || (this.m_ProgressType == ProgressType.Both));
-            }
-        }
-        public bool isProgressTypePercent
-        {
-            get
-            {
-                return ((this.m_ProgressType == ProgressType.Percent) || (this.m_ProgressType == ProgressType.Both));
-            }
-        }
-        public bool errorOccured
-        {
-            get
-            {
-                return (this.m_LastError != 0L);
-            }
-        }
+        public bool isProgressTypeCount =>
+            ((this.m_ProgressType == ProgressType.Count) || (this.m_ProgressType == ProgressType.Both));
+        public bool isProgressTypePercent =>
+            ((this.m_ProgressType == ProgressType.Percent) || (this.m_ProgressType == ProgressType.Both));
+        public bool errorOccured =>
+            (this.m_LastError != 0L);
         public enum ProgressType : uint
         {
             Both = 3,

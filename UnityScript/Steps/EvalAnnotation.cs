@@ -16,10 +16,8 @@
             }
         }
 
-        public static bool IsMarked(Node node)
-        {
-            return node.ContainsAnnotation(Annotation);
-        }
+        public static bool IsMarked(Node node) => 
+            node.ContainsAnnotation(Annotation);
 
         public static void Mark(Method node)
         {

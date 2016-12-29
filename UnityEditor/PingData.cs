@@ -58,13 +58,8 @@
             }
         }
 
-        public bool isPinging
-        {
-            get
-            {
-                return (this.m_TimeStart > -1f);
-            }
-        }
+        public bool isPinging =>
+            (this.m_TimeStart > -1f);
     }
 }
 

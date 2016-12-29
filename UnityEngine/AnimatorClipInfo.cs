@@ -16,23 +16,13 @@
         /// <summary>
         /// <para>Returns the animation clip played by the Animator.</para>
         /// </summary>
-        public AnimationClip clip
-        {
-            get
-            {
-                return ((this.m_ClipInstanceID == 0) ? null : ClipInstanceToScriptingObject(this.m_ClipInstanceID));
-            }
-        }
+        public AnimationClip clip =>
+            ((this.m_ClipInstanceID == 0) ? null : ClipInstanceToScriptingObject(this.m_ClipInstanceID));
         /// <summary>
         /// <para>Returns the blending weight used by the Animator to blend this clip.</para>
         /// </summary>
-        public float weight
-        {
-            get
-            {
-                return this.m_Weight;
-            }
-        }
+        public float weight =>
+            this.m_Weight;
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimationClip ClipInstanceToScriptingObject(int instanceID);
     }

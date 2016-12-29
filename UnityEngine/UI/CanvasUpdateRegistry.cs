@@ -67,7 +67,7 @@
         {
             if (this.m_PerformingGraphicUpdate)
             {
-                Debug.LogError(string.Format("Trying to add {0} for graphic rebuild while we are already inside a graphic rebuild loop. This is not supported.", element));
+                Debug.LogError($"Trying to add {element} for graphic rebuild while we are already inside a graphic rebuild loop. This is not supported.");
                 return false;
             }
             return this.m_GraphicRebuildQueue.AddUnique(element);
@@ -86,7 +86,7 @@
         {
             if (this.m_PerformingGraphicUpdate)
             {
-                Debug.LogError(string.Format("Trying to remove {0} from rebuild list while we are already inside a rebuild loop. This is not supported.", element));
+                Debug.LogError($"Trying to remove {element} from rebuild list while we are already inside a rebuild loop. This is not supported.");
             }
             else
             {
@@ -99,7 +99,7 @@
         {
             if (this.m_PerformingLayoutUpdate)
             {
-                Debug.LogError(string.Format("Trying to remove {0} from rebuild list while we are already inside a rebuild loop. This is not supported.", element));
+                Debug.LogError($"Trying to remove {element} from rebuild list while we are already inside a rebuild loop. This is not supported.");
             }
             else
             {
@@ -114,10 +114,8 @@
         /// <returns>
         /// <para>Rebuilding graphics.</para>
         /// </returns>
-        public static bool IsRebuildingGraphics()
-        {
-            return instance.m_PerformingGraphicUpdate;
-        }
+        public static bool IsRebuildingGraphics() => 
+            instance.m_PerformingGraphicUpdate;
 
         /// <summary>
         /// <para>Is layout being rebuilt?</para>
@@ -125,10 +123,8 @@
         /// <returns>
         /// <para>Rebuilding layout.</para>
         /// </returns>
-        public static bool IsRebuildingLayout()
-        {
-            return instance.m_PerformingLayoutUpdate;
-        }
+        public static bool IsRebuildingLayout() => 
+            instance.m_PerformingLayoutUpdate;
 
         private bool ObjectValidForUpdate(ICanvasElement element)
         {
@@ -245,10 +241,8 @@
         /// <returns>
         /// <para>Was the element scheduled.</para>
         /// </returns>
-        public static bool TryRegisterCanvasElementForGraphicRebuild(ICanvasElement element)
-        {
-            return instance.InternalRegisterCanvasElementForGraphicRebuild(element);
-        }
+        public static bool TryRegisterCanvasElementForGraphicRebuild(ICanvasElement element) => 
+            instance.InternalRegisterCanvasElementForGraphicRebuild(element);
 
         /// <summary>
         /// <para>Was the element scheduled.</para>
@@ -257,10 +251,8 @@
         /// <returns>
         /// <para>Was the element scheduled.</para>
         /// </returns>
-        public static bool TryRegisterCanvasElementForLayoutRebuild(ICanvasElement element)
-        {
-            return instance.InternalRegisterCanvasElementForLayoutRebuild(element);
-        }
+        public static bool TryRegisterCanvasElementForLayoutRebuild(ICanvasElement element) => 
+            instance.InternalRegisterCanvasElementForLayoutRebuild(element);
 
         /// <summary>
         /// <para>Remove the given element from rebuild.</para>

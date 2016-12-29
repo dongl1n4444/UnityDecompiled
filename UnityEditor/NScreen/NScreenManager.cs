@@ -74,10 +74,8 @@
             }
         }
 
-        internal int GetNewId()
-        {
-            return ++this.m_LatestId;
-        }
+        internal int GetNewId() => 
+            ++this.m_LatestId;
 
         internal static void Init()
         {
@@ -176,30 +174,21 @@
 
         internal bool BuildOnPlay
         {
-            get
-            {
-                return (this.m_BuildOnPlay || !this.HasBuild);
-            }
+            get => 
+                (this.m_BuildOnPlay || !this.HasBuild);
             set
             {
                 this.m_BuildOnPlay = value;
             }
         }
 
-        internal bool HasBuild
-        {
-            get
-            {
-                return Directory.Exists("Temp/NScreen/NScreen.app");
-            }
-        }
+        internal bool HasBuild =>
+            Directory.Exists("Temp/NScreen/NScreen.app");
 
         internal int SelectedSizeIndex
         {
-            get
-            {
-                return this.m_SelectedSizeIndex;
-            }
+            get => 
+                this.m_SelectedSizeIndex;
             set
             {
                 this.m_SelectedSizeIndex = value;

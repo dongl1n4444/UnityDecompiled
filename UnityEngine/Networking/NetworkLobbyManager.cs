@@ -143,7 +143,7 @@
         private void OnClientReadyToBegin(NetworkMessage netMsg)
         {
             netMsg.ReadMessage<LobbyReadyToBeginMessage>(s_LobbyReadyToBeginMessage);
-            if (s_LobbyReadyToBeginMessage.slotId >= Enumerable.Count<NetworkLobbyPlayer>(this.lobbySlots))
+            if (s_LobbyReadyToBeginMessage.slotId >= this.lobbySlots.Count<NetworkLobbyPlayer>())
             {
                 if (LogFilter.logError)
                 {
@@ -263,10 +263,8 @@
         /// <returns>
         /// <para>A new GamePlayer object.</para>
         /// </returns>
-        public virtual GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
-        {
-            return null;
-        }
+        public virtual GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId) => 
+            null;
 
         /// <summary>
         /// <para>This allows customization of the creation of the lobby-player object on the server.</para>
@@ -276,10 +274,8 @@
         /// <returns>
         /// <para>The new lobby-player object.</para>
         /// </returns>
-        public virtual GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControllerId)
-        {
-            return null;
-        }
+        public virtual GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControllerId) => 
+            null;
 
         /// <summary>
         /// <para>This is called on the server when a client disconnects.</para>
@@ -322,10 +318,8 @@
         /// <returns>
         /// <para>False to not allow this player to replace the lobby player.</para>
         /// </returns>
-        public virtual bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
-        {
-            return true;
-        }
+        public virtual bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer) => 
+            true;
 
         /// <summary>
         /// <para>This is called on the client when a client is started.</para>
@@ -812,10 +806,8 @@
         /// </summary>
         public GameObject gamePlayerPrefab
         {
-            get
-            {
-                return this.m_GamePlayerPrefab;
-            }
+            get => 
+                this.m_GamePlayerPrefab;
             set
             {
                 this.m_GamePlayerPrefab = value;
@@ -827,10 +819,8 @@
         /// </summary>
         public NetworkLobbyPlayer lobbyPlayerPrefab
         {
-            get
-            {
-                return this.m_LobbyPlayerPrefab;
-            }
+            get => 
+                this.m_LobbyPlayerPrefab;
             set
             {
                 this.m_LobbyPlayerPrefab = value;
@@ -842,10 +832,8 @@
         /// </summary>
         public string lobbyScene
         {
-            get
-            {
-                return this.m_LobbyScene;
-            }
+            get => 
+                this.m_LobbyScene;
             set
             {
                 this.m_LobbyScene = value;
@@ -858,10 +846,8 @@
         /// </summary>
         public int maxPlayers
         {
-            get
-            {
-                return this.m_MaxPlayers;
-            }
+            get => 
+                this.m_MaxPlayers;
             set
             {
                 this.m_MaxPlayers = value;
@@ -873,10 +859,8 @@
         /// </summary>
         public int maxPlayersPerConnection
         {
-            get
-            {
-                return this.m_MaxPlayersPerConnection;
-            }
+            get => 
+                this.m_MaxPlayersPerConnection;
             set
             {
                 this.m_MaxPlayersPerConnection = value;
@@ -888,10 +872,8 @@
         /// </summary>
         public int minPlayers
         {
-            get
-            {
-                return this.m_MinPlayers;
-            }
+            get => 
+                this.m_MinPlayers;
             set
             {
                 this.m_MinPlayers = value;
@@ -903,10 +885,8 @@
         /// </summary>
         public string playScene
         {
-            get
-            {
-                return this.m_PlayScene;
-            }
+            get => 
+                this.m_PlayScene;
             set
             {
                 this.m_PlayScene = value;
@@ -918,10 +898,8 @@
         /// </summary>
         public bool showLobbyGUI
         {
-            get
-            {
-                return this.m_ShowLobbyGUI;
-            }
+            get => 
+                this.m_ShowLobbyGUI;
             set
             {
                 this.m_ShowLobbyGUI = value;

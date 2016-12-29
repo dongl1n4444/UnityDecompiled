@@ -17,15 +17,11 @@
             this.m_Imageset = new AssetImageSet(base.m_Path, "Content", authorId);
         }
 
-        public AssetImageSet GetImageSet()
-        {
-            return this.m_Imageset;
-        }
+        public AssetImageSet GetImageSet() => 
+            this.m_Imageset;
 
-        public string ReferencedName()
-        {
-            return this.m_ReferencedName;
-        }
+        public string ReferencedName() => 
+            this.m_ReferencedName;
 
         public void SetReference(string name)
         {

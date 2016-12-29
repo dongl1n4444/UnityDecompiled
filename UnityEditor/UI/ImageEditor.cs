@@ -48,7 +48,7 @@
             Sprite sprite = target.sprite;
             int num = (sprite == null) ? 0 : Mathf.RoundToInt(sprite.rect.width);
             int num2 = (sprite == null) ? 0 : Mathf.RoundToInt(sprite.rect.height);
-            return string.Format("Image Size: {0}x{1}", num, num2);
+            return $"Image Size: {num}x{num2}";
         }
 
         /// <summary>
@@ -57,10 +57,8 @@
         /// <returns>
         /// <para>True if this component can be Previewed in its current state.</para>
         /// </returns>
-        public override bool HasPreviewGUI()
-        {
-            return true;
-        }
+        public override bool HasPreviewGUI() => 
+            true;
 
         /// <summary>
         /// <para>See MonoBehaviour.OnDisable.</para>

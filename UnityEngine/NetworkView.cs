@@ -13,10 +13,8 @@
         /// <para>Find a network view based on a NetworkViewID.</para>
         /// </summary>
         /// <param name="viewID"></param>
-        public static NetworkView Find(NetworkViewID viewID)
-        {
-            return INTERNAL_CALL_Find(ref viewID);
-        }
+        public static NetworkView Find(NetworkViewID viewID) => 
+            INTERNAL_CALL_Find(ref viewID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern NetworkView INTERNAL_CALL_Find(ref NetworkViewID viewID);
@@ -69,10 +67,8 @@
         /// </summary>
         /// <param name="player"></param>
         /// <param name="relevancy"></param>
-        public bool SetScope(NetworkPlayer player, bool relevancy)
-        {
-            return INTERNAL_CALL_SetScope(this, ref player, relevancy);
-        }
+        public bool SetScope(NetworkPlayer player, bool relevancy) => 
+            INTERNAL_CALL_SetScope(this, ref player, relevancy);
 
         /// <summary>
         /// <para>The network group number of this network view.</para>
@@ -82,13 +78,8 @@
         /// <summary>
         /// <para>Is the network view controlled by this object?</para>
         /// </summary>
-        public bool isMine
-        {
-            get
-            {
-                return this.viewID.isMine;
-            }
-        }
+        public bool isMine =>
+            this.viewID.isMine;
 
         /// <summary>
         /// <para>The component the network view is observing.</para>
@@ -98,13 +89,8 @@
         /// <summary>
         /// <para>The NetworkPlayer who owns this network view.</para>
         /// </summary>
-        public NetworkPlayer owner
-        {
-            get
-            {
-                return this.viewID.owner;
-            }
-        }
+        public NetworkPlayer owner =>
+            this.viewID.owner;
 
         /// <summary>
         /// <para>The type of NetworkStateSynchronization set for this network view.</para>

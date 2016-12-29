@@ -49,15 +49,11 @@
             return null;
         }
 
-        public override string GetServiceDisplayName()
-        {
-            return "In App Purchasing";
-        }
+        public override string GetServiceDisplayName() => 
+            "In App Purchasing";
 
-        public override string GetServiceName()
-        {
-            return "Purchasing";
-        }
+        public override string GetServiceName() => 
+            "Purchasing";
 
         public void InstallUnityPackage()
         {
@@ -84,10 +80,8 @@
             }
         }
 
-        public override bool IsServiceEnabled()
-        {
-            return PurchasingSettings.enabled;
-        }
+        public override bool IsServiceEnabled() => 
+            PurchasingSettings.enabled;
 
         private void SaveETag(WebClient client)
         {

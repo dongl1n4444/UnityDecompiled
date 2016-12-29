@@ -47,10 +47,8 @@
         /// </summary>
         /// <param name="screenPosition"></param>
         /// <param name="camera"></param>
-        public bool HitTest(Vector3 screenPosition, [DefaultValue("null")] Camera camera)
-        {
-            return INTERNAL_CALL_HitTest(this, ref screenPosition, camera);
-        }
+        public bool HitTest(Vector3 screenPosition, [DefaultValue("null")] Camera camera) => 
+            INTERNAL_CALL_HitTest(this, ref screenPosition, camera);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_GetScreenRect(GUIElement self, Camera camera, out Rect value);

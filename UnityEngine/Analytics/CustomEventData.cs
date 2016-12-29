@@ -31,75 +31,47 @@
             GC.SuppressFinalize(this);
         }
 
-        public bool Add(string key, string value)
-        {
-            return this.AddString(key, value);
-        }
+        public bool Add(string key, string value) => 
+            this.AddString(key, value);
 
-        public bool Add(string key, bool value)
-        {
-            return this.AddBool(key, value);
-        }
+        public bool Add(string key, bool value) => 
+            this.AddBool(key, value);
 
-        public bool Add(string key, char value)
-        {
-            return this.AddChar(key, value);
-        }
+        public bool Add(string key, char value) => 
+            this.AddChar(key, value);
 
-        public bool Add(string key, byte value)
-        {
-            return this.AddByte(key, value);
-        }
+        public bool Add(string key, byte value) => 
+            this.AddByte(key, value);
 
-        public bool Add(string key, sbyte value)
-        {
-            return this.AddSByte(key, value);
-        }
+        public bool Add(string key, sbyte value) => 
+            this.AddSByte(key, value);
 
-        public bool Add(string key, short value)
-        {
-            return this.AddInt16(key, value);
-        }
+        public bool Add(string key, short value) => 
+            this.AddInt16(key, value);
 
-        public bool Add(string key, ushort value)
-        {
-            return this.AddUInt16(key, value);
-        }
+        public bool Add(string key, ushort value) => 
+            this.AddUInt16(key, value);
 
-        public bool Add(string key, int value)
-        {
-            return this.AddInt32(key, value);
-        }
+        public bool Add(string key, int value) => 
+            this.AddInt32(key, value);
 
-        public bool Add(string key, uint value)
-        {
-            return this.AddUInt32(key, value);
-        }
+        public bool Add(string key, uint value) => 
+            this.AddUInt32(key, value);
 
-        public bool Add(string key, long value)
-        {
-            return this.AddInt64(key, value);
-        }
+        public bool Add(string key, long value) => 
+            this.AddInt64(key, value);
 
-        public bool Add(string key, ulong value)
-        {
-            return this.AddUInt64(key, value);
-        }
+        public bool Add(string key, ulong value) => 
+            this.AddUInt64(key, value);
 
-        public bool Add(string key, float value)
-        {
-            return this.AddDouble(key, (double) Convert.ToDecimal(value));
-        }
+        public bool Add(string key, float value) => 
+            this.AddDouble(key, (double) Convert.ToDecimal(value));
 
-        public bool Add(string key, double value)
-        {
-            return this.AddDouble(key, value);
-        }
+        public bool Add(string key, double value) => 
+            this.AddDouble(key, value);
 
-        public bool Add(string key, decimal value)
-        {
-            return this.AddDouble(key, (double) Convert.ToDecimal(value));
-        }
+        public bool Add(string key, decimal value) => 
+            this.AddDouble(key, (double) Convert.ToDecimal(value));
 
         public bool Add(IDictionary<string, object> eventData)
         {
@@ -174,7 +146,7 @@
                     {
                         if (!type.IsValueType)
                         {
-                            throw new ArgumentException(string.Format("Invalid type: {0} passed", type));
+                            throw new ArgumentException($"Invalid type: {type} passed");
                         }
                         this.Add(key, obj2.ToString());
                     }

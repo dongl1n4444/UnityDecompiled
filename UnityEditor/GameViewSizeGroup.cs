@@ -40,15 +40,11 @@
             }
         }
 
-        public int GetBuiltinCount()
-        {
-            return this.m_Builtin.Count;
-        }
+        public int GetBuiltinCount() => 
+            this.m_Builtin.Count;
 
-        public int GetCustomCount()
-        {
-            return this.m_Custom.Count;
-        }
+        public int GetCustomCount() => 
+            this.m_Custom.Count;
 
         public string[] GetDisplayTexts()
         {
@@ -79,10 +75,8 @@
             return new GameViewSize(GameViewSizeType.AspectRatio, 0, 0, "");
         }
 
-        public int GetTotalCount()
-        {
-            return (this.m_Builtin.Count + this.m_Custom.Count);
-        }
+        public int GetTotalCount() => 
+            (this.m_Builtin.Count + this.m_Custom.Count);
 
         public int IndexOf(GameViewSize view)
         {
@@ -117,10 +111,8 @@
             }
         }
 
-        public int TotalIndexToCustomIndex(int index)
-        {
-            return (index - this.m_Builtin.Count);
-        }
+        public int TotalIndexToCustomIndex(int index) => 
+            (index - this.m_Builtin.Count);
     }
 }
 

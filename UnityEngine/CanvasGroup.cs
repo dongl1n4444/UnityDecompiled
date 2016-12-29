@@ -13,10 +13,8 @@
         /// </summary>
         /// <param name="sp"></param>
         /// <param name="eventCamera"></param>
-        public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
-        {
-            return this.blocksRaycasts;
-        }
+        public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera) => 
+            this.blocksRaycasts;
 
         /// <summary>
         /// <para>Set the alpha of the group.</para>

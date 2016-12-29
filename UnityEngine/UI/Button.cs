@@ -24,10 +24,8 @@
         }
 
         [DebuggerHidden]
-        private IEnumerator OnFinishSubmit()
-        {
-            return new <OnFinishSubmit>c__Iterator0 { $this = this };
-        }
+        private IEnumerator OnFinishSubmit() => 
+            new <OnFinishSubmit>c__Iterator0 { $this = this };
 
         /// <summary>
         /// <para>Registered IPointerClickHandler callback.</para>
@@ -68,10 +66,8 @@
         /// </summary>
         public ButtonClickedEvent onClick
         {
-            get
-            {
-                return this.m_OnClick;
-            }
+            get => 
+                this.m_OnClick;
             set
             {
                 this.m_OnClick = value;
@@ -134,23 +130,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         /// <summary>

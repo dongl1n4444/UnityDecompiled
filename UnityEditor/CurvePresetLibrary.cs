@@ -26,10 +26,8 @@
             }
         }
 
-        public override int Count()
-        {
-            return this.m_Presets.Count;
-        }
+        public override int Count() => 
+            this.m_Presets.Count;
 
         public override void Draw(Rect rect, int index)
         {
@@ -49,15 +47,11 @@
             }
         }
 
-        public override string GetName(int index)
-        {
-            return this.m_Presets[index].name;
-        }
+        public override string GetName(int index) => 
+            this.m_Presets[index].name;
 
-        public override object GetPreset(int index)
-        {
-            return this.m_Presets[index].curve;
-        }
+        public override object GetPreset(int index) => 
+            this.m_Presets[index].curve;
 
         public override void Move(int index, int destIndex, bool insertAfterDestIndex)
         {
@@ -113,10 +107,8 @@
 
             public AnimationCurve curve
             {
-                get
-                {
-                    return this.m_Curve;
-                }
+                get => 
+                    this.m_Curve;
                 set
                 {
                     this.m_Curve = value;
@@ -125,10 +117,8 @@
 
             public string name
             {
-                get
-                {
-                    return this.m_Name;
-                }
+                get => 
+                    this.m_Name;
                 set
                 {
                     this.m_Name = value;

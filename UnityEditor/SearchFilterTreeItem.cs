@@ -12,13 +12,8 @@
             this.m_IsFolder = isFolder;
         }
 
-        public bool isFolder
-        {
-            get
-            {
-                return this.m_IsFolder;
-            }
-        }
+        public bool isFolder =>
+            this.m_IsFolder;
     }
 }
 

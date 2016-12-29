@@ -69,17 +69,15 @@
             {
                 <>f__am$cache0 = new Func<string, GUIContent>(null, (IntPtr) <m_AdditionalInfoGuiContents>m__0);
             }
-            this.m_AdditionalInfoGuiContents = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enum.GetNames(typeof(ShowAdditionalInfo)), <>f__am$cache0));
+            this.m_AdditionalInfoGuiContents = Enumerable.Select<string, GUIContent>(Enum.GetNames(typeof(ShowAdditionalInfo)), <>f__am$cache0).ToArray<GUIContent>();
             this.m_AttachProfilerUI = new AttachProfilerUI();
             base.position = new Rect(50f, 50f, 600f, 350f);
             base.minSize = new Vector2(400f, 200f);
         }
 
         [CompilerGenerated]
-        private static GUIContent <m_AdditionalInfoGuiContents>m__0(string m)
-        {
-            return new GUIContent(m);
-        }
+        private static GUIContent <m_AdditionalInfoGuiContents>m__0(string m) => 
+            new GUIContent(m);
 
         internal void ChangeFrameEventLimit(int newLimit)
         {
@@ -154,7 +152,7 @@
                 {
                     this.DrawRenderTargetControls(data);
                 }
-                GUILayout.Label(string.Format("Event #{0}: {1}", index + 1, s_FrameEventTypeNames[(int) event2.type]), EditorStyles.boldLabel, new GUILayoutOption[0]);
+                GUILayout.Label($"Event #{index + 1}: {s_FrameEventTypeNames[(int) event2.type]}", EditorStyles.boldLabel, new GUILayoutOption[0]);
                 if (FrameDebuggerUtility.IsRemoteEnabled() && FrameDebuggerUtility.receivingRemoteFrameEventData)
                 {
                     GUILayout.Label("Receiving frame event data...", new GUILayoutOption[0]);
@@ -356,7 +354,7 @@
                 }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
-                GUILayout.Label(string.Format("{0}x{1} {2}", cur.rtWidth, cur.rtHeight, (RenderTextureFormat) cur.rtFormat), new GUILayoutOption[0]);
+                GUILayout.Label($"{cur.rtWidth}x{cur.rtHeight} {(RenderTextureFormat) cur.rtFormat}", new GUILayoutOption[0]);
                 if (cur.rtDim == 4)
                 {
                     GUILayout.Label("Rendering into cubemap", new GUILayoutOption[0]);
@@ -374,10 +372,10 @@
             Rect rect2;
             Rect rect3;
             this.m_ScrollViewShaderProps = GUILayout.BeginScrollView(this.m_ScrollViewShaderProps, new GUILayoutOption[0]);
-            if (Enumerable.Count<ShaderTextureInfo>(props.textures) > 0)
+            if (props.textures.Count<ShaderTextureInfo>() > 0)
             {
                 GUILayout.Label("Textures", EditorStyles.boldLabel, new GUILayoutOption[0]);
-                this.GetPropertyFieldRects(Enumerable.Count<ShaderTextureInfo>(props.textures), 16f, out rect, out rect2, out rect3);
+                this.GetPropertyFieldRects(props.textures.Count<ShaderTextureInfo>(), 16f, out rect, out rect2, out rect3);
                 foreach (ShaderTextureInfo info in props.textures)
                 {
                     this.OnGUIShaderPropTexture(rect, rect2, rect3, info);
@@ -386,10 +384,10 @@
                     rect3.y += rect3.height;
                 }
             }
-            if (Enumerable.Count<ShaderFloatInfo>(props.floats) > 0)
+            if (props.floats.Count<ShaderFloatInfo>() > 0)
             {
                 GUILayout.Label("Floats", EditorStyles.boldLabel, new GUILayoutOption[0]);
-                this.GetPropertyFieldRects(Enumerable.Count<ShaderFloatInfo>(props.floats), 16f, out rect, out rect2, out rect3);
+                this.GetPropertyFieldRects(props.floats.Count<ShaderFloatInfo>(), 16f, out rect, out rect2, out rect3);
                 foreach (ShaderFloatInfo info2 in props.floats)
                 {
                     this.OnGUIShaderPropFloat(rect, rect2, rect3, info2);
@@ -398,10 +396,10 @@
                     rect3.y += rect3.height;
                 }
             }
-            if (Enumerable.Count<ShaderVectorInfo>(props.vectors) > 0)
+            if (props.vectors.Count<ShaderVectorInfo>() > 0)
             {
                 GUILayout.Label("Vectors", EditorStyles.boldLabel, new GUILayoutOption[0]);
-                this.GetPropertyFieldRects(Enumerable.Count<ShaderVectorInfo>(props.vectors), 16f, out rect, out rect2, out rect3);
+                this.GetPropertyFieldRects(props.vectors.Count<ShaderVectorInfo>(), 16f, out rect, out rect2, out rect3);
                 foreach (ShaderVectorInfo info3 in props.vectors)
                 {
                     this.OnGUIShaderPropVector4(rect, rect2, rect3, info3);
@@ -410,10 +408,10 @@
                     rect3.y += rect3.height;
                 }
             }
-            if (Enumerable.Count<ShaderMatrixInfo>(props.matrices) > 0)
+            if (props.matrices.Count<ShaderMatrixInfo>() > 0)
             {
                 GUILayout.Label("Matrices", EditorStyles.boldLabel, new GUILayoutOption[0]);
-                this.GetPropertyFieldRects(Enumerable.Count<ShaderMatrixInfo>(props.matrices), 48f, out rect, out rect2, out rect3);
+                this.GetPropertyFieldRects(props.matrices.Count<ShaderMatrixInfo>(), 48f, out rect, out rect2, out rect3);
                 foreach (ShaderMatrixInfo info4 in props.matrices)
                 {
                     this.OnGUIShaderPropMatrix(rect, rect2, rect3, info4);
@@ -456,20 +454,20 @@
             FrameDebuggerBlendState blendState = curEventData.blendState;
             FrameDebuggerRasterState rasterState = curEventData.rasterState;
             FrameDebuggerDepthState depthState = curEventData.depthState;
-            string text = string.Format("Blend {0} {1}", blendState.srcBlend, blendState.dstBlend);
+            string text = $"Blend {blendState.srcBlend} {blendState.dstBlend}";
             if ((blendState.srcBlendAlpha != blendState.srcBlend) || (blendState.dstBlendAlpha != blendState.dstBlend))
             {
-                text = text + string.Format(", {0} {1}", blendState.srcBlendAlpha, blendState.dstBlendAlpha);
+                text = text + $", {blendState.srcBlendAlpha} {blendState.dstBlendAlpha}";
             }
             if ((blendState.blendOp != BlendOp.Add) || (blendState.blendOpAlpha != BlendOp.Add))
             {
                 if (blendState.blendOp == blendState.blendOpAlpha)
                 {
-                    text = text + string.Format(" BlendOp {0}", blendState.blendOp);
+                    text = text + $" BlendOp {blendState.blendOp}";
                 }
                 else
                 {
-                    text = text + string.Format(" BlendOp {0}, {1}", blendState.blendOp, blendState.blendOpAlpha);
+                    text = text + $" BlendOp {blendState.blendOp}, {blendState.blendOpAlpha}";
                 }
             }
             if (blendState.writeMask != 15)
@@ -500,10 +498,10 @@
                 }
             }
             GUILayout.Label(text, EditorStyles.miniLabel, new GUILayoutOption[0]);
-            string str2 = string.Format("ZTest {0} ZWrite {1} Cull {2}", depthState.depthFunc, (depthState.depthWrite != 0) ? "On" : "Off", rasterState.cullMode);
+            string str2 = $"ZTest {depthState.depthFunc} ZWrite {(depthState.depthWrite != 0) ? "On" : "Off"} Cull {rasterState.cullMode}";
             if ((rasterState.slopeScaledDepthBias != 0f) || (rasterState.depthBias != 0))
             {
-                str2 = str2 + string.Format(" Offset {0}, {1}", rasterState.slopeScaledDepthBias, rasterState.depthBias);
+                str2 = str2 + $" Offset {rasterState.slopeScaledDepthBias}, {rasterState.depthBias}";
             }
             GUILayout.Label(str2, EditorStyles.miniLabel, new GUILayoutOption[0]);
         }

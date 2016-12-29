@@ -59,10 +59,8 @@
             this._types.Add(type);
         }
 
-        private static string DescriptionFor(FieldInfo field)
-        {
-            return "";
-        }
+        private static string DescriptionFor(FieldInfo field) => 
+            "";
 
         public static void DisplayHelp(TextWriter writer, Type type)
         {
@@ -82,7 +80,7 @@
                     string str;
                     if (pair.Value.FieldInfo.FieldType == typeof(bool))
                     {
-                        str = string.Format("  {0}", pair.Key);
+                        str = $"  {pair.Key}";
                     }
                     else if (pair.Value.FieldInfo.FieldType.IsArray || IsListField(pair.Value.FieldInfo))
                     {
@@ -90,11 +88,11 @@
                     }
                     else
                     {
-                        str = string.Format("  {0}=<{1}>", pair.Key, !pair.Value.HasCustomValueDescription ? "value" : pair.Value.CustomValueDescription);
+                        str = $"  {pair.Key}=<{!pair.Value.HasCustomValueDescription ? "value" : pair.Value.CustomValueDescription}>";
                     }
                     if (str.Length > 50)
                     {
-                        throw new InvalidOperationException(string.Format("Option to long for current padding : {0}, shorten name/value or increase padding if necessary. Over by {1}", pair.Key, str.Length - 50));
+                        throw new InvalidOperationException($"Option to long for current padding : {pair.Key}, shorten name/value or increase padding if necessary. Over by {str.Length - 50}");
                     }
                     str = str.PadRight(50);
                     writer.WriteLine("{0}{1}", str, pair.Value.Summary);
@@ -102,12 +100,12 @@
             }
         }
 
-        public static void DisplayHelp(Assembly assembly, [Optional, DefaultParameterValue(true)] bool includeReferencedAssemblies)
+        public static void DisplayHelp(Assembly assembly, bool includeReferencedAssemblies = true)
         {
             DisplayHelp(Console.Out, LoadOptionTypesFromAssembly(assembly, includeReferencedAssemblies));
         }
 
-        public static void DisplayHelp(TextWriter writer, Assembly assembly, [Optional, DefaultParameterValue(true)] bool includeReferencedAssemblies)
+        public static void DisplayHelp(TextWriter writer, Assembly assembly, bool includeReferencedAssemblies = true)
         {
             DisplayHelp(writer, LoadOptionTypesFromAssembly(assembly, includeReferencedAssemblies));
         }
@@ -117,7 +115,7 @@
             FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (FieldInfo info in fields)
             {
-                ProgramOptionsAttribute options = (ProgramOptionsAttribute) Enumerable.First<object>(TypeExtensions.GetCustomAttributesPortable(type, typeof(ProgramOptionsAttribute), false));
+                ProgramOptionsAttribute options = (ProgramOptionsAttribute) type.GetCustomAttributesPortable(typeof(ProgramOptionsAttribute), false).First<object>();
                 foreach (string str in this.OptionNamesFor(options, info))
                 {
                     optionSet.Add(str, DescriptionFor(info), ActionFor(options, info));
@@ -125,10 +123,8 @@
             }
         }
 
-        internal static bool HasProgramOptionsAttribute(Type type)
-        {
-            return Enumerable.Any<object>(TypeExtensions.GetCustomAttributesPortable(type, typeof(ProgramOptionsAttribute), false));
-        }
+        internal static bool HasProgramOptionsAttribute(Type type) => 
+            type.GetCustomAttributesPortable(typeof(ProgramOptionsAttribute), false).Any<object>();
 
         public static bool HelpRequested(string[] commandLine)
         {
@@ -136,13 +132,11 @@
             {
                 <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <HelpRequested>m__0);
             }
-            return (Enumerable.Count<string>(commandLine, <>f__am$cache0) > 0);
+            return (commandLine.Count<string>(<>f__am$cache0) > 0);
         }
 
-        private static bool IsListField(FieldInfo field)
-        {
-            return (TypeExtensions.IsGenericTypePortable(field.FieldType) && field.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>)));
-        }
+        private static bool IsListField(FieldInfo field) => 
+            (field.FieldType.IsGenericTypePortable() && field.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>)));
 
         private static Type[] LoadOptionTypesFromAssembly(Assembly assembly, bool includeReferencedAssemblies)
         {
@@ -159,10 +153,10 @@
                     {
                         <>f__mg$cache0 = new Func<Type, bool>(null, (IntPtr) HasProgramOptionsAttribute);
                     }
-                    list.AddRange(Enumerable.Where<Type>(AssemblyExtensions.GetTypesPortable(assembly2), <>f__mg$cache0));
+                    list.AddRange(assembly2.GetTypesPortable().Where<Type>(<>f__mg$cache0));
                     if (includeReferencedAssemblies)
                     {
-                        foreach (AssemblyName name in AssemblyExtensions.GetReferencedAssembliesPortable(assembly2))
+                        foreach (AssemblyName name in assembly2.GetReferencedAssembliesPortable())
                         {
                             if (((((name.Name != "mscorlib") && !name.Name.StartsWith("System")) && !name.Name.StartsWith("Mono.Cecil")) && (name.Name != "Unity.IL2CPP.RuntimeServices")) && !set.Contains(name))
                             {
@@ -195,23 +189,19 @@
             {
                 <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <NormalizeName>m__2);
             }
-            return Enumerable.Aggregate<string>(Enumerable.Select<Match, string>(Enumerable.Cast<Match>(NameBuilder.Matches(name)), <>f__am$cache1), <>f__am$cache2);
+            return NameBuilder.Matches(name).Cast<Match>().Select<Match, string>(<>f__am$cache1).Aggregate<string>(<>f__am$cache2);
         }
 
         [DebuggerHidden]
-        private IEnumerable<string> OptionNamesFor(ProgramOptionsAttribute options, FieldInfo field)
-        {
-            return new <OptionNamesFor>c__Iterator0 { 
+        private IEnumerable<string> OptionNamesFor(ProgramOptionsAttribute options, FieldInfo field) => 
+            new <OptionNamesFor>c__Iterator0 { 
                 field = field,
                 options = options,
                 $PC = -2
             };
-        }
 
-        internal string[] Parse(IEnumerable<string> commandLine)
-        {
-            return this.PrepareOptionSet().Parse(commandLine).ToArray();
-        }
+        internal string[] Parse(IEnumerable<string> commandLine) => 
+            this.PrepareOptionSet().Parse(commandLine).ToArray();
 
         public static Dictionary<string, HelpInformation> ParseHelpTable(Type[] types)
         {
@@ -223,14 +213,14 @@
                     object[] customAttributes = info.GetCustomAttributes(typeof(HelpDetailsAttribute), false);
                     if (customAttributes.Length > 1)
                     {
-                        throw new InvalidOperationException(string.Format("Field, {0}, has more than one help attribute", info.Name));
+                        throw new InvalidOperationException($"Field, {info.Name}, has more than one help attribute");
                     }
-                    string key = string.Format("--{0}", NormalizeName(info.Name));
+                    string key = $"--{NormalizeName(info.Name)}";
                     if (dictionary.ContainsKey(key))
                     {
-                        throw new InvalidOperationException(string.Format("There are multiple options defined with the name : {0}", key));
+                        throw new InvalidOperationException($"There are multiple options defined with the name : {key}");
                     }
-                    if (!Enumerable.Any<object>(info.GetCustomAttributes(typeof(HideFromHelpAttribute), false)))
+                    if (!info.GetCustomAttributes(typeof(HideFromHelpAttribute), false).Any<object>())
                     {
                         HelpInformation information;
                         if (customAttributes.Length == 0)
@@ -257,12 +247,10 @@
             return dictionary;
         }
 
-        public static Dictionary<string, HelpInformation> ParseHelpTable(Assembly assembly, [Optional, DefaultParameterValue(true)] bool includeReferencedAssemblies)
-        {
-            return ParseHelpTable(LoadOptionTypesFromAssembly(assembly, includeReferencedAssemblies));
-        }
+        public static Dictionary<string, HelpInformation> ParseHelpTable(Assembly assembly, bool includeReferencedAssemblies = true) => 
+            ParseHelpTable(LoadOptionTypesFromAssembly(assembly, includeReferencedAssemblies));
 
-        public static Dictionary<string, HelpInformation> ParseHelpTable(Type type, [Optional, DefaultParameterValue(true)] bool includeReferencedAssemblies)
+        public static Dictionary<string, HelpInformation> ParseHelpTable(Type type, bool includeReferencedAssemblies = true)
         {
             Type[] types = new Type[] { type };
             return ParseHelpTable(types);
@@ -274,9 +262,9 @@
                 type = type,
                 value = value
             };
-            if (TypeExtensions.IsEnumPortable(storey.type))
+            if (storey.type.IsEnumPortable())
             {
-                return Enumerable.First<object>(Enumerable.Cast<object>(Enum.GetValues(storey.type)), new Func<object, bool>(storey, (IntPtr) this.<>m__0));
+                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey, (IntPtr) this.<>m__0));
             }
             object obj3 = Convert.ChangeType(storey.value, storey.type, CultureInfo.InvariantCulture);
             if (obj3 == null)
@@ -296,10 +284,8 @@
             return parser.Parse(commandLine);
         }
 
-        public static string[] Prepare(string[] commandLine, Assembly assembly, [Optional, DefaultParameterValue(true)] bool includeReferencedAssemblies)
-        {
-            return Prepare(commandLine, LoadOptionTypesFromAssembly(assembly, includeReferencedAssemblies));
-        }
+        public static string[] Prepare(string[] commandLine, Assembly assembly, bool includeReferencedAssemblies = true) => 
+            Prepare(commandLine, LoadOptionTypesFromAssembly(assembly, includeReferencedAssemblies));
 
         public static string[] PrepareFromFile(string argFile, Type[] types)
         {
@@ -310,10 +296,8 @@
             return Prepare(File.ReadAllLines(argFile), types);
         }
 
-        public static string[] PrepareFromFile(string argFile, Assembly assembly, [Optional, DefaultParameterValue(true)] bool includeReferencedAssemblies)
-        {
-            return Prepare(Enumerable.ToArray<string>(OptionsHelper.LoadArgumentsFromFile(argFile)), assembly, includeReferencedAssemblies);
-        }
+        public static string[] PrepareFromFile(string argFile, Assembly assembly, bool includeReferencedAssemblies = true) => 
+            Prepare(OptionsHelper.LoadArgumentsFromFile(argFile).ToArray<string>(), assembly, includeReferencedAssemblies);
 
         private OptionSet PrepareOptionSet()
         {
@@ -503,28 +487,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -533,10 +503,8 @@
             internal Type type;
             internal string value;
 
-            internal bool <>m__0(object v)
-            {
-                return string.Equals(Enum.GetName(this.type, v), this.value, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(object v) => 
+                string.Equals(Enum.GetName(this.type, v), this.value, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

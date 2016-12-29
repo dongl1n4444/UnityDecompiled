@@ -22,10 +22,8 @@
         /// </summary>
         public Motion motion
         {
-            get
-            {
-                return this.m_Motion;
-            }
+            get => 
+                this.m_Motion;
             set
             {
                 this.m_Motion = value;
@@ -36,10 +34,8 @@
         /// </summary>
         public float threshold
         {
-            get
-            {
-                return this.m_Threshold;
-            }
+            get => 
+                this.m_Threshold;
             set
             {
                 this.m_Threshold = value;
@@ -50,10 +46,8 @@
         /// </summary>
         public Vector2 position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 this.m_Position = value;
@@ -64,10 +58,8 @@
         /// </summary>
         public float timeScale
         {
-            get
-            {
-                return this.m_TimeScale;
-            }
+            get => 
+                this.m_TimeScale;
             set
             {
                 this.m_TimeScale = value;
@@ -78,10 +70,8 @@
         /// </summary>
         public float cycleOffset
         {
-            get
-            {
-                return this.m_CycleOffset;
-            }
+            get => 
+                this.m_CycleOffset;
             set
             {
                 this.m_CycleOffset = value;
@@ -92,10 +82,8 @@
         /// </summary>
         public string directBlendParameter
         {
-            get
-            {
-                return this.m_DirectBlendParameter;
-            }
+            get => 
+                this.m_DirectBlendParameter;
             set
             {
                 this.m_DirectBlendParameter = value;
@@ -106,10 +94,8 @@
         /// </summary>
         public bool mirror
         {
-            get
-            {
-                return this.m_Mirror;
-            }
+            get => 
+                this.m_Mirror;
             set
             {
                 this.m_Mirror = value;

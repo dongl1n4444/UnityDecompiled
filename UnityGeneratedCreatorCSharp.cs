@@ -16,9 +16,7 @@ internal class UnityGeneratedCreatorCSharp : UnityGeneratedCreator
         return strArray;
     }
 
-    protected override string IndentCodeLine()
-    {
-        return "\t\t\t";
-    }
+    protected override string IndentCodeLine() => 
+        "\t\t\t";
 }
 

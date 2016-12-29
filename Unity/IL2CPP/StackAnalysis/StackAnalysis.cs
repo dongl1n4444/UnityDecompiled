@@ -100,7 +100,7 @@
             {
                 <>f__am$cache10 = new Func<KeyValuePair<InstructionBlock, StackState>, InstructionBlock>(null, (IntPtr) <BlockFor>m__10);
             }
-            InstructionBlock block = Enumerable.FirstOrDefault<InstructionBlock>(Enumerable.Select<KeyValuePair<InstructionBlock, StackState>, InstructionBlock>(Enumerable.Where<KeyValuePair<InstructionBlock, StackState>>(stackStates, new Func<KeyValuePair<InstructionBlock, StackState>, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache10));
+            InstructionBlock block = stackStates.Where<KeyValuePair<InstructionBlock, StackState>>(new Func<KeyValuePair<InstructionBlock, StackState>, bool>(storey, (IntPtr) this.<>m__0)).Select<KeyValuePair<InstructionBlock, StackState>, InstructionBlock>(<>f__am$cache10).FirstOrDefault<InstructionBlock>();
             if (block == null)
             {
                 throw new ArgumentException("invalid Entry", "entry");
@@ -115,7 +115,7 @@
             {
                 <>f__am$cache0 = new Func<KeyValuePair<InstructionBlock, StackState>, bool>(null, (IntPtr) <ComputeGlobalVariables>m__0);
             }
-            using (IEnumerator<KeyValuePair<InstructionBlock, StackState>> enumerator = Enumerable.Where<KeyValuePair<InstructionBlock, StackState>>(this._ins, <>f__am$cache0).GetEnumerator())
+            using (IEnumerator<KeyValuePair<InstructionBlock, StackState>> enumerator = this._ins.Where<KeyValuePair<InstructionBlock, StackState>>(<>f__am$cache0).GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -127,7 +127,7 @@
                         <>f__ref$1 = storey,
                         index = 0
                     };
-                    list.AddRange(Enumerable.Select<Entry, GlobalVariable>(storey.entry.Value.Entries, new Func<Entry, GlobalVariable>(storey2, (IntPtr) this.<>m__0)));
+                    list.AddRange(storey.entry.Value.Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(storey2, (IntPtr) this.<>m__0)));
                 }
             }
             return list.ToArray();
@@ -139,19 +139,19 @@
             {
                 <>f__am$cache1 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__1);
             }
-            if (Enumerable.Any<TypeReference>(entry.Types, <>f__am$cache1))
+            if (entry.Types.Any<TypeReference>(<>f__am$cache1))
             {
                 throw new NotImplementedException();
             }
             if (entry.Types.Count == 1)
             {
-                return Enumerable.Single<TypeReference>(entry.Types);
+                return entry.Types.Single<TypeReference>();
             }
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__2);
             }
-            if (Enumerable.Any<TypeReference>(entry.Types, <>f__am$cache2))
+            if (entry.Types.Any<TypeReference>(<>f__am$cache2))
             {
                 TypeReference widestValueType = StackAnalysisUtils.GetWidestValueType(entry.Types);
                 if (widestValueType != null)
@@ -162,13 +162,13 @@
                 {
                     <>f__am$cache3 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__3);
                 }
-                if (Enumerable.All<TypeReference>(entry.Types, <>f__am$cache3))
+                if (entry.Types.All<TypeReference>(<>f__am$cache3))
                 {
                     if (<>f__am$cache4 == null)
                     {
                         <>f__am$cache4 = new Func<TypeReference, TypeReference>(null, (IntPtr) <ComputeType>m__4);
                     }
-                    widestValueType = StackAnalysisUtils.GetWidestValueType(Enumerable.Select<TypeReference, TypeReference>(entry.Types, <>f__am$cache4));
+                    widestValueType = StackAnalysisUtils.GetWidestValueType(entry.Types.Select<TypeReference, TypeReference>(<>f__am$cache4));
                     if (widestValueType != null)
                     {
                         return widestValueType;
@@ -178,19 +178,19 @@
                 {
                     <>f__am$cache5 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__5);
                 }
-                if (Enumerable.All<TypeReference>(entry.Types, <>f__am$cache5))
+                if (entry.Types.All<TypeReference>(<>f__am$cache5))
                 {
                     if (<>f__am$cache6 == null)
                     {
                         <>f__am$cache6 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__6);
                     }
-                    return Enumerable.Single<TypeReference>(entry.Types, <>f__am$cache6);
+                    return entry.Types.Single<TypeReference>(<>f__am$cache6);
                 }
                 if (<>f__am$cache7 == null)
                 {
                     <>f__am$cache7 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__7);
                 }
-                if (Enumerable.Any<TypeReference>(entry.Types, <>f__am$cache7))
+                if (entry.Types.Any<TypeReference>(<>f__am$cache7))
                 {
                     return TypeProvider.NativeUIntTypeReference;
                 }
@@ -198,7 +198,7 @@
                 {
                     <>f__am$cache8 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__8);
                 }
-                if (!Enumerable.Any<TypeReference>(entry.Types, <>f__am$cache8))
+                if (!entry.Types.Any<TypeReference>(<>f__am$cache8))
                 {
                     throw new NotImplementedException();
                 }
@@ -208,7 +208,7 @@
             {
                 <>f__am$cache9 = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__9);
             }
-            if (Enumerable.All<TypeReference>(entry.Types, <>f__am$cache9))
+            if (entry.Types.All<TypeReference>(<>f__am$cache9))
             {
                 return TypeProvider.NativeIntTypeReference;
             }
@@ -216,7 +216,7 @@
             {
                 <>f__am$cacheA = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__A);
             }
-            if (Enumerable.All<TypeReference>(entry.Types, <>f__am$cacheA))
+            if (entry.Types.All<TypeReference>(<>f__am$cacheA))
             {
                 return TypeProvider.NativeUIntTypeReference;
             }
@@ -228,13 +228,13 @@
             {
                 <>f__am$cacheC = new Func<TypeDefinition, bool>(null, (IntPtr) <ComputeType>m__C);
             }
-            if (Enumerable.Any<TypeDefinition>(Enumerable.Select<TypeReference, TypeDefinition>(entry.Types, <>f__am$cacheB), <>f__am$cacheC))
+            if (entry.Types.Select<TypeReference, TypeDefinition>(<>f__am$cacheB).Any<TypeDefinition>(<>f__am$cacheC))
             {
                 if (<>f__am$cacheD == null)
                 {
                     <>f__am$cacheD = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__D);
                 }
-                return Enumerable.First<TypeReference>(entry.Types, <>f__am$cacheD);
+                return entry.Types.First<TypeReference>(<>f__am$cacheD);
             }
             if (entry.NullValue)
             {
@@ -242,41 +242,37 @@
                 {
                     <>f__am$cacheE = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__E);
                 }
-                TypeReference reference3 = Enumerable.FirstOrDefault<TypeReference>(entry.Types, <>f__am$cacheE);
+                TypeReference reference3 = entry.Types.FirstOrDefault<TypeReference>(<>f__am$cacheE);
                 if (reference3 != null)
                 {
                     return reference3;
                 }
-                return Enumerable.First<TypeReference>(entry.Types);
+                return entry.Types.First<TypeReference>();
             }
             if (<>f__am$cacheF == null)
             {
                 <>f__am$cacheF = new Func<TypeReference, bool>(null, (IntPtr) <ComputeType>m__F);
             }
-            TypeReference reference4 = Enumerable.FirstOrDefault<TypeReference>(entry.Types, <>f__am$cacheF);
+            TypeReference reference4 = entry.Types.FirstOrDefault<TypeReference>(<>f__am$cacheF);
             if (reference4 != null)
             {
                 return reference4;
             }
-            return Enumerable.First<TypeReference>(entry.Types);
+            return entry.Types.First<TypeReference>();
         }
 
-        public GlobalVariable GlobalInputVariableFor(Entry entry)
-        {
-            return this.GlobaVariableFor(this._ins, entry);
-        }
+        public GlobalVariable GlobalInputVariableFor(Entry entry) => 
+            this.GlobaVariableFor(this._ins, entry);
 
-        public GlobalVariable GlobalOutputVariableFor(Entry entry)
-        {
-            return this.GlobaVariableFor(this._outs, entry);
-        }
+        public GlobalVariable GlobalOutputVariableFor(Entry entry) => 
+            this.GlobaVariableFor(this._outs, entry);
 
         public GlobalVariable[] GlobalsForBlock(int blockIndex)
         {
             <GlobalsForBlock>c__AnonStorey0 storey = new <GlobalsForBlock>c__AnonStorey0 {
                 blockIndex = blockIndex
             };
-            return Enumerable.ToArray<GlobalVariable>(Enumerable.Where<GlobalVariable>(this.Globals, new Func<GlobalVariable, bool>(storey, (IntPtr) this.<>m__0)));
+            return this.Globals.Where<GlobalVariable>(new Func<GlobalVariable, bool>(storey, (IntPtr) this.<>m__0)).ToArray<GlobalVariable>();
         }
 
         private GlobalVariable GlobaVariableFor(Dictionary<InstructionBlock, StackState> stackStates, Entry entry)
@@ -299,10 +295,8 @@
             return state;
         }
 
-        public GlobalVariable[] InputVariablesFor(InstructionBlock block)
-        {
-            return Enumerable.ToArray<GlobalVariable>(Enumerable.Select<Entry, GlobalVariable>(this.InputStackStateFor(block).Entries, new Func<Entry, GlobalVariable>(this, (IntPtr) this.GlobalInputVariableFor)));
-        }
+        public GlobalVariable[] InputVariablesFor(InstructionBlock block) => 
+            this.InputStackStateFor(block).Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(this, (IntPtr) this.GlobalInputVariableFor)).ToArray<GlobalVariable>();
 
         public StackState OutputStackStateFor(InstructionBlock block)
         {
@@ -314,10 +308,8 @@
             return state;
         }
 
-        public GlobalVariable[] OutputVariablesFor(InstructionBlock block)
-        {
-            return Enumerable.ToArray<GlobalVariable>(Enumerable.Select<Entry, GlobalVariable>(this.OutputStackStateFor(block).Entries, new Func<Entry, GlobalVariable>(this, (IntPtr) this.GlobalOutputVariableFor)));
-        }
+        public GlobalVariable[] OutputVariablesFor(InstructionBlock block) => 
+            this.OutputStackStateFor(block).Entries.Select<Entry, GlobalVariable>(new Func<Entry, GlobalVariable>(this, (IntPtr) this.GlobalOutputVariableFor)).ToArray<GlobalVariable>();
 
         private static int StackIndexFor(IDictionary<InstructionBlock, StackState> stackStates, Entry entry, InstructionBlock block)
         {
@@ -356,10 +348,8 @@
         {
             internal Entry entry;
 
-            internal bool <>m__0(KeyValuePair<InstructionBlock, StackState> s)
-            {
-                return s.Value.Entries.Contains(this.entry);
-            }
+            internal bool <>m__0(KeyValuePair<InstructionBlock, StackState> s) => 
+                s.Value.Entries.Contains(this.entry);
         }
 
         [CompilerGenerated]
@@ -375,14 +365,12 @@
             internal Unity.IL2CPP.StackAnalysis.StackAnalysis.<ComputeGlobalVariables>c__AnonStorey1 <>f__ref$1;
             internal int index;
 
-            internal GlobalVariable <>m__0(Entry item)
-            {
-                return new GlobalVariable { 
+            internal GlobalVariable <>m__0(Entry item) => 
+                new GlobalVariable { 
                     BlockIndex = this.<>f__ref$1.entry.Key.Index,
                     Index = this.index++,
                     Type = this.<>f__ref$1.$this.ComputeType(item)
                 };
-            }
         }
 
         [CompilerGenerated]
@@ -390,10 +378,8 @@
         {
             internal int blockIndex;
 
-            internal bool <>m__0(GlobalVariable v)
-            {
-                return (v.BlockIndex == this.blockIndex);
-            }
+            internal bool <>m__0(GlobalVariable v) => 
+                (v.BlockIndex == this.blockIndex);
         }
     }
 }

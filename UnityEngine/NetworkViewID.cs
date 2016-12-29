@@ -28,10 +28,8 @@
         }
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_get_unassigned(out NetworkViewID value);
-        internal static bool Internal_IsMine(NetworkViewID value)
-        {
-            return INTERNAL_CALL_Internal_IsMine(ref value);
-        }
+        internal static bool Internal_IsMine(NetworkViewID value) => 
+            INTERNAL_CALL_Internal_IsMine(ref value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_Internal_IsMine(ref NetworkViewID value);
@@ -42,34 +40,24 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_Internal_GetOwner(ref NetworkViewID value, out NetworkPlayer player);
-        internal static string Internal_GetString(NetworkViewID value)
-        {
-            return INTERNAL_CALL_Internal_GetString(ref value);
-        }
+        internal static string Internal_GetString(NetworkViewID value) => 
+            INTERNAL_CALL_Internal_GetString(ref value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string INTERNAL_CALL_Internal_GetString(ref NetworkViewID value);
-        internal static bool Internal_Compare(NetworkViewID lhs, NetworkViewID rhs)
-        {
-            return INTERNAL_CALL_Internal_Compare(ref lhs, ref rhs);
-        }
+        internal static bool Internal_Compare(NetworkViewID lhs, NetworkViewID rhs) => 
+            INTERNAL_CALL_Internal_Compare(ref lhs, ref rhs);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_Internal_Compare(ref NetworkViewID lhs, ref NetworkViewID rhs);
-        public static bool operator ==(NetworkViewID lhs, NetworkViewID rhs)
-        {
-            return Internal_Compare(lhs, rhs);
-        }
+        public static bool operator ==(NetworkViewID lhs, NetworkViewID rhs) => 
+            Internal_Compare(lhs, rhs);
 
-        public static bool operator !=(NetworkViewID lhs, NetworkViewID rhs)
-        {
-            return !Internal_Compare(lhs, rhs);
-        }
+        public static bool operator !=(NetworkViewID lhs, NetworkViewID rhs) => 
+            !Internal_Compare(lhs, rhs);
 
-        public override int GetHashCode()
-        {
-            return ((this.a ^ this.b) ^ this.c);
-        }
+        public override int GetHashCode() => 
+            ((this.a ^ this.b) ^ this.c);
 
         public override bool Equals(object other)
         {
@@ -84,13 +72,8 @@
         /// <summary>
         /// <para>True if instantiated by me.</para>
         /// </summary>
-        public bool isMine
-        {
-            get
-            {
-                return Internal_IsMine(this);
-            }
-        }
+        public bool isMine =>
+            Internal_IsMine(this);
         /// <summary>
         /// <para>The NetworkPlayer who owns the NetworkView. Could be the server.</para>
         /// </summary>
@@ -106,10 +89,8 @@
         /// <summary>
         /// <para>Returns a formatted string with details on this NetworkViewID.</para>
         /// </summary>
-        public override string ToString()
-        {
-            return Internal_GetString(this);
-        }
+        public override string ToString() => 
+            Internal_GetString(this);
     }
 }
 

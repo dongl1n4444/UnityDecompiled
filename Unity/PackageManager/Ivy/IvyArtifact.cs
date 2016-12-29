@@ -29,10 +29,8 @@
             this.Type = type;
         }
 
-        public IvyArtifact Clone()
-        {
-            return Cloner.CloneObject<IvyArtifact>(this);
-        }
+        public IvyArtifact Clone() => 
+            Cloner.CloneObject<IvyArtifact>(this);
 
         public string WriteToDisk(System.Guid jobId, string basePath, byte[] bytes)
         {
@@ -54,21 +52,11 @@
             }
         }
 
-        public string Filename
-        {
-            get
-            {
-                return (!string.IsNullOrEmpty(this.Extension) ? string.Format("{0}.{1}", this.Name, this.Extension) : this.Name);
-            }
-        }
+        public string Filename =>
+            (!string.IsNullOrEmpty(this.Extension) ? $"{this.Name}.{this.Extension}" : this.Name);
 
-        public string MD5Filename
-        {
-            get
-            {
-                return string.Format("{0}.md5", this.Name);
-            }
-        }
+        public string MD5Filename =>
+            $"{this.Name}.md5";
 
         public Uri MD5Uri
         {

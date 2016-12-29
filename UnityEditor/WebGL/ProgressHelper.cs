@@ -8,20 +8,14 @@
         internal float m_CurrentBuildStep = 0f;
         internal float m_NumBuildSteps = 0f;
 
-        public float Advance()
-        {
-            return (++this.m_CurrentBuildStep / this.m_NumBuildSteps);
-        }
+        public float Advance() => 
+            (++this.m_CurrentBuildStep / this.m_NumBuildSteps);
 
-        public float Get()
-        {
-            return (this.m_CurrentBuildStep / this.m_NumBuildSteps);
-        }
+        public float Get() => 
+            (this.m_CurrentBuildStep / this.m_NumBuildSteps);
 
-        public float LastValue()
-        {
-            return ((this.m_CurrentBuildStep - 1f) / this.m_NumBuildSteps);
-        }
+        public float LastValue() => 
+            ((this.m_CurrentBuildStep - 1f) / this.m_NumBuildSteps);
 
         public void Reset(float numSteps)
         {

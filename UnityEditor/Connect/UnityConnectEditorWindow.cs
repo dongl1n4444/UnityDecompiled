@@ -93,15 +93,13 @@
             {
                 return false;
             }
-            return !Enumerable.Any<string>(Enumerable.Where<string>(this.m_ServiceUrls, new Func<string, int, bool>(storey, (IntPtr) this.<>m__0)));
+            return !Enumerable.Where<string>(this.m_ServiceUrls, new Func<string, int, bool>(storey, (IntPtr) this.<>m__0)).Any<string>();
         }
 
         public string currentUrl
         {
-            get
-            {
-                return base.m_InitialOpenURL;
-            }
+            get => 
+                base.m_InitialOpenURL;
             set
             {
                 base.m_InitialOpenURL = value;
@@ -116,10 +114,8 @@
         {
             internal List<string> referenceUrls;
 
-            internal bool <>m__0(string t, int idx)
-            {
-                return (t != this.referenceUrls[idx]);
-            }
+            internal bool <>m__0(string t, int idx) => 
+                (t != this.referenceUrls[idx]);
         }
     }
 }

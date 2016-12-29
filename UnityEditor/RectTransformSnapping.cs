@@ -248,10 +248,8 @@
             s_SnapGuides[1].OnGUI();
         }
 
-        internal static Vector2 SnapToGuides(Vector2 value, Vector2 snapDistance)
-        {
-            return new Vector2(SnapToGuides(value.x, snapDistance.x, 0), SnapToGuides(value.y, snapDistance.y, 1));
-        }
+        internal static Vector2 SnapToGuides(Vector2 value, Vector2 snapDistance) => 
+            new Vector2(SnapToGuides(value.x, snapDistance.x, 0), SnapToGuides(value.y, snapDistance.y, 1));
 
         internal static float SnapToGuides(float value, float snapDistance, int axis)
         {

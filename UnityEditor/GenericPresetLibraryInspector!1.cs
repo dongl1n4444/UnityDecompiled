@@ -94,7 +94,7 @@
                     if (num2 > 0)
                     {
                         Rect rect8 = new Rect(this.m_Grid.CalcRect(0, 0f).x, (rect.y + height) - 20f, rect.width, 20f);
-                        GUI.Label(rect8, string.Format("+ {0} more...", num2));
+                        GUI.Label(rect8, $"+ {num2} more...");
                     }
                 }
             }
@@ -164,13 +164,8 @@
             }
         }
 
-        public string extension
-        {
-            get
-            {
-                return this.m_SaveLoadHelper.fileExtensionWithoutDot;
-            }
-        }
+        public string extension =>
+            this.m_SaveLoadHelper.fileExtensionWithoutDot;
 
         public PresetLibraryEditorState.ItemViewMode itemViewMode { get; set; }
 

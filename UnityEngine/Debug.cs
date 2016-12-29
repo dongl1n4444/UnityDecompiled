@@ -482,13 +482,8 @@
         /// <summary>
         /// <para>Get default debug logger.</para>
         /// </summary>
-        public static ILogger logger
-        {
-            get
-            {
-                return s_Logger;
-            }
-        }
+        public static ILogger logger =>
+            s_Logger;
     }
 }
 

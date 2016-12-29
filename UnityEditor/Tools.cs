@@ -163,10 +163,8 @@
             return (activeTransform.position + vector2);
         }
 
-        internal static int GetPivotMode()
-        {
-            return (int) pivotMode;
-        }
+        internal static int GetPivotMode() => 
+            ((int) pivotMode);
 
         private static int GetRectAxisForViewDir(Bounds bounds, Quaternion rotation, Vector3 viewDir)
         {
@@ -313,10 +311,8 @@
         /// </summary>
         public static Tool current
         {
-            get
-            {
-                return get.currentTool;
-            }
+            get => 
+                get.currentTool;
             set
             {
                 if (get.currentTool != value)
@@ -437,10 +433,8 @@
         /// </summary>
         public static bool hidden
         {
-            get
-            {
-                return s_Hidden;
-            }
+            get => 
+                s_Hidden;
             set
             {
                 s_Hidden = value;
@@ -449,10 +443,8 @@
 
         public static int lockedLayers
         {
-            get
-            {
-                return get.m_LockedLayers;
-            }
+            get => 
+                get.m_LockedLayers;
             set
             {
                 if (get.m_LockedLayers != value)
@@ -469,10 +461,8 @@
         /// </summary>
         public static PivotMode pivotMode
         {
-            get
-            {
-                return get.m_PivotMode;
-            }
+            get => 
+                get.m_PivotMode;
             set
             {
                 if (get.m_PivotMode != value)
@@ -488,10 +478,8 @@
         /// </summary>
         public static PivotRotation pivotRotation
         {
-            get
-            {
-                return get.m_PivotRotation;
-            }
+            get => 
+                get.m_PivotRotation;
             set
             {
                 if (get.m_PivotRotation != value)
@@ -507,10 +495,8 @@
         /// </summary>
         public static bool rectBlueprintMode
         {
-            get
-            {
-                return get.m_RectBlueprintMode;
-            }
+            get => 
+                get.m_RectBlueprintMode;
             set
             {
                 if (get.m_RectBlueprintMode != value)
@@ -583,10 +569,8 @@
         /// </summary>
         public static int visibleLayers
         {
-            get
-            {
-                return get.m_VisibleLayers;
-            }
+            get => 
+                get.m_VisibleLayers;
             set
             {
                 if (get.m_VisibleLayers != value)

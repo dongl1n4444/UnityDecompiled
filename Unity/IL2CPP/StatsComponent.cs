@@ -166,23 +166,13 @@
             writer.WriteLine();
         }
 
-        public HashSet<string> ArrayBoundsChecksMethods
-        {
-            get
-            {
-                return this._arrayBoundsChecksMethods;
-            }
-        }
+        public HashSet<string> ArrayBoundsChecksMethods =>
+            this._arrayBoundsChecksMethods;
 
         public long ConversionMilliseconds { get; set; }
 
-        public HashSet<string> DivideByZeroChecksMethods
-        {
-            get
-            {
-                return this._divideByZeroChecksMethods;
-            }
-        }
+        public HashSet<string> DivideByZeroChecksMethods =>
+            this._divideByZeroChecksMethods;
 
         public bool EnableArrayBoundsCheckRecording { get; set; }
 
@@ -196,33 +186,18 @@
 
         public int GenericTypeMethods { get; set; }
 
-        public HashSet<string> MemoryBarrierMethods
-        {
-            get
-            {
-                return this._memoryBarrierMethods;
-            }
-        }
+        public HashSet<string> MemoryBarrierMethods =>
+            this._memoryBarrierMethods;
 
         public int MethodHashCollisions { get; set; }
 
         public int Methods { get; set; }
 
-        public Dictionary<string, int> NullCheckMethodsCount
-        {
-            get
-            {
-                return this._nullCheckMethodsCount;
-            }
-        }
+        public Dictionary<string, int> NullCheckMethodsCount =>
+            this._nullCheckMethodsCount;
 
-        public HashSet<string> NullChecksMethods
-        {
-            get
-            {
-                return this._nullChecksMethods;
-            }
-        }
+        public HashSet<string> NullChecksMethods =>
+            this._nullChecksMethods;
 
         public int ShareableMethods { get; set; }
 
@@ -230,13 +205,8 @@
 
         public int StringLiterals { get; set; }
 
-        public int TailCallsEncountered
-        {
-            get
-            {
-                return this._methodsWithTailCalls.Count;
-            }
-        }
+        public int TailCallsEncountered =>
+            this._methodsWithTailCalls.Count;
 
         public int TypeHashCollisions { get; set; }
 

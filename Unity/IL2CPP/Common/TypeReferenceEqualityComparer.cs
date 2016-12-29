@@ -7,7 +7,7 @@
 
     public class TypeReferenceEqualityComparer : EqualityComparer<TypeReference>
     {
-        private static bool AreEqual(GenericInstanceType a, GenericInstanceType b, [Optional, DefaultParameterValue(0)] TypeComparisonMode comparisonMode)
+        private static bool AreEqual(GenericInstanceType a, GenericInstanceType b, TypeComparisonMode comparisonMode = 0)
         {
             if (!object.ReferenceEquals(a, b))
             {
@@ -31,7 +31,7 @@
             return true;
         }
 
-        private static bool AreEqual(GenericParameter a, GenericParameter b, [Optional, DefaultParameterValue(0)] TypeComparisonMode comparisonMode)
+        private static bool AreEqual(GenericParameter a, GenericParameter b, TypeComparisonMode comparisonMode = 0)
         {
             if (object.ReferenceEquals(a, b))
             {
@@ -54,7 +54,7 @@
             return (((x != null) && Unity.IL2CPP.Common.MethodReferenceComparer.AreEqual(x, b.Owner as MethodReference)) || (comparisonMode == TypeComparisonMode.SignatureOnly));
         }
 
-        public static bool AreEqual(TypeReference a, TypeReference b, [Optional, DefaultParameterValue(0)] TypeComparisonMode comparisonMode)
+        public static bool AreEqual(TypeReference a, TypeReference b, TypeComparisonMode comparisonMode = 0)
         {
             if (object.ReferenceEquals(a, b))
             {
@@ -165,15 +165,11 @@
             return (definition == definition2);
         }
 
-        public override bool Equals(TypeReference x, TypeReference y)
-        {
-            return AreEqual(x, y, TypeComparisonMode.Exact);
-        }
+        public override bool Equals(TypeReference x, TypeReference y) => 
+            AreEqual(x, y, TypeComparisonMode.Exact);
 
-        public override int GetHashCode(TypeReference obj)
-        {
-            return GetHashCodeFor(obj);
-        }
+        public override int GetHashCode(TypeReference obj) => 
+            GetHashCodeFor(obj);
 
         public static int GetHashCodeFor(TypeReference obj)
         {

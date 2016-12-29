@@ -38,7 +38,7 @@
                 if ((num5 - x) > num2)
                 {
                     EditorGUI.DrawRect(new Rect(num5, r.yMax - 5f, 1f, 5f), col);
-                    GUI.Label(new Rect(num5, r.yMax - 22f, 1f, 15f), (num4 >= 1000f) ? string.Format("{0:F0} kHz", num4 * 0.001f) : string.Format("{0:F0} Hz", num4), textStyle10);
+                    GUI.Label(new Rect(num5, r.yMax - 22f, 1f, 15f), (num4 >= 1000f) ? $"{(num4 * 0.001f):F0} kHz" : $"{num4:F0} Hz", textStyle10);
                     x = num5;
                 }
             }
@@ -165,34 +165,17 @@
             return flag;
         }
 
-        protected static Color ScaleAlpha(Color col, float blend)
-        {
-            return new Color(col.r, col.g, col.b, col.a * blend);
-        }
+        protected static Color ScaleAlpha(Color col, float blend) => 
+            new Color(col.r, col.g, col.b, col.a * blend);
 
-        public override string Description
-        {
-            get
-            {
-                return "Parametric equalizer";
-            }
-        }
+        public override string Description =>
+            "Parametric equalizer";
 
-        public override string Name
-        {
-            get
-            {
-                return "ParamEQ";
-            }
-        }
+        public override string Name =>
+            "ParamEQ";
 
-        public override string Vendor
-        {
-            get
-            {
-                return "Firelight Technologies";
-            }
-        }
+        public override string Vendor =>
+            "Firelight Technologies";
 
         [CompilerGenerated]
         private sealed class <ParamEqualizerCurveEditor>c__AnonStorey0

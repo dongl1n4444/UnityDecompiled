@@ -20,7 +20,7 @@
 
         public void OnBeforeSerialize()
         {
-            this.m_SelectedKeyHashesSerialized = Enumerable.ToList<int>(this.m_SelectedKeyHashes);
+            this.m_SelectedKeyHashesSerialized = this.m_SelectedKeyHashes.ToList<int>();
         }
 
         public void SaveSelection(string undoLabel)

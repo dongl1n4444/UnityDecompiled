@@ -4,45 +4,29 @@
 
     internal class DefaultBuildWindowExtension : IBuildWindowExtension
     {
-        public virtual bool EnabledBuildAndRunButton()
-        {
-            return true;
-        }
+        public virtual bool EnabledBuildAndRunButton() => 
+            true;
 
-        public virtual bool EnabledBuildButton()
-        {
-            return true;
-        }
+        public virtual bool EnabledBuildButton() => 
+            true;
 
-        public virtual bool ShouldDrawDevelopmentPlayerCheckbox()
-        {
-            return true;
-        }
+        public virtual bool ShouldDrawDevelopmentPlayerCheckbox() => 
+            true;
 
-        public virtual bool ShouldDrawExplicitDivideByZeroCheckbox()
-        {
-            return false;
-        }
+        public virtual bool ShouldDrawExplicitDivideByZeroCheckbox() => 
+            false;
 
-        public virtual bool ShouldDrawExplicitNullCheckbox()
-        {
-            return false;
-        }
+        public virtual bool ShouldDrawExplicitNullCheckbox() => 
+            false;
 
-        public virtual bool ShouldDrawForceOptimizeScriptsCheckbox()
-        {
-            return false;
-        }
+        public virtual bool ShouldDrawForceOptimizeScriptsCheckbox() => 
+            false;
 
-        public virtual bool ShouldDrawProfilerCheckbox()
-        {
-            return true;
-        }
+        public virtual bool ShouldDrawProfilerCheckbox() => 
+            true;
 
-        public virtual bool ShouldDrawScriptDebuggingCheckbox()
-        {
-            return true;
-        }
+        public virtual bool ShouldDrawScriptDebuggingCheckbox() => 
+            true;
 
         public virtual void ShowInternalPlatformBuildOptions()
         {

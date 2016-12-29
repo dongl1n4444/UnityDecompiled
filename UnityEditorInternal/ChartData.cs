@@ -41,13 +41,8 @@
             this.gridLabels = labels;
         }
 
-        public int NumberOfFrames
-        {
-            get
-            {
-                return this.charts[0].data.Length;
-            }
-        }
+        public int NumberOfFrames =>
+            this.charts[0].data.Length;
     }
 }
 

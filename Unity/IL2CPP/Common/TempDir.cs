@@ -9,10 +9,8 @@
     {
         public const string CppRunnerCachePostFix = "_cpprunner_cache";
 
-        public static TempDirContext Begin([Optional, DefaultParameterValue("")] string nameSuggestion, [Optional, DefaultParameterValue(false)] bool noClean)
-        {
-            return new TempDirContext(Empty(nameSuggestion), noClean);
-        }
+        public static TempDirContext Begin(string nameSuggestion = "", bool noClean = false) => 
+            new TempDirContext(Empty(nameSuggestion), noClean);
 
         public static NPath Empty(string nameSuggestion)
         {
@@ -49,7 +47,7 @@
             }
             catch (Exception)
             {
-                if (!Enumerable.Any<NPath>(directory.Files(true)))
+                if (!directory.Files(true).Any<NPath>())
                 {
                     return true;
                 }
@@ -73,7 +71,7 @@
                 string environmentVariable = Environment.GetEnvironmentVariable("IL2CPP_CUSTOM_TEMP_DIR");
                 if (!string.IsNullOrEmpty(environmentVariable))
                 {
-                    return Extensions.ToNPath(environmentVariable).EnsureDirectoryExists("");
+                    return environmentVariable.ToNPath().EnsureDirectoryExists("");
                 }
                 return NPath.SystemTemp;
             }

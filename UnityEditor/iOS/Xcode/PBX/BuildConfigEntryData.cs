@@ -70,10 +70,8 @@
         {
             internal string value;
 
-            internal bool <>m__0(string v)
-            {
-                return (v == this.value);
-            }
+            internal bool <>m__0(string v) => 
+                (v == this.value);
         }
     }
 }

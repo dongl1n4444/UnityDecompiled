@@ -141,15 +141,11 @@
             return -num;
         }
 
-        private Rect GetButtonLabelRect(Rect r)
-        {
-            return new Rect(r.x + 20f, r.y + 1f, (((r.width - this.GetMinusButtonSize().x) - 10f) - 20f) - 55f, r.height);
-        }
+        private Rect GetButtonLabelRect(Rect r) => 
+            new Rect(r.x + 20f, r.y + 1f, (((r.width - this.GetMinusButtonSize().x) - 10f) - 20f) - 55f, r.height);
 
-        private Rect GetDraggingHandleRect(Rect r)
-        {
-            return new Rect(r.x + 5f, r.y + 7f, 10f, r.height - 14f);
-        }
+        private Rect GetDraggingHandleRect(Rect r) => 
+            new Rect(r.x + 5f, r.y + 7f, 10f, r.height - 14f);
 
         private int GetExecutionOrder(MonoScript script)
         {
@@ -161,20 +157,14 @@
             return 0;
         }
 
-        private int GetExecutionOrderAtIndex(int idx)
-        {
-            return this.GetExecutionOrder(this.m_CustomTimeScripts[idx]);
-        }
+        private int GetExecutionOrderAtIndex(int idx) => 
+            this.GetExecutionOrder(this.m_CustomTimeScripts[idx]);
 
-        private Rect GetFieldRect(Rect r)
-        {
-            return new Rect(((r.xMax - 50f) - this.GetMinusButtonSize().x) - 10f, r.y + 2f, 50f, r.height - 5f);
-        }
+        private Rect GetFieldRect(Rect r) => 
+            new Rect(((r.xMax - 50f) - this.GetMinusButtonSize().x) - 10f, r.y + 2f, 50f, r.height - 5f);
 
-        private Vector2 GetMinusButtonSize()
-        {
-            return m_Styles.removeButton.CalcSize(m_Styles.iconToolbarMinus);
-        }
+        private Vector2 GetMinusButtonSize() => 
+            m_Styles.removeButton.CalcSize(m_Styles.iconToolbarMinus);
 
         private static bool IsValidScript(MonoScript script)
         {
@@ -352,10 +342,8 @@
             return val;
         }
 
-        private int RoundByAmount(int val, int rounding)
-        {
-            return (Mathf.RoundToInt(((float) val) / ((float) rounding)) * rounding);
-        }
+        private int RoundByAmount(int val, int rounding) => 
+            (Mathf.RoundToInt(((float) val) / ((float) rounding)) * rounding);
 
         private void SetExecutionOrder(MonoScript script, int order)
         {
@@ -464,18 +452,11 @@
             }
         }
 
-        public override bool UseDefaultMargins()
-        {
-            return false;
-        }
+        public override bool UseDefaultMargins() => 
+            false;
 
-        internal override string targetTitle
-        {
-            get
-            {
-                return "Script Execution Order";
-            }
-        }
+        internal override string targetTitle =>
+            "Script Execution Order";
 
         private class DragReorderGUI
         {
@@ -633,10 +614,8 @@
                 return num5;
             }
 
-            private static bool IsDefaultTimeElement(MonoScript element)
-            {
-                return (element.name == string.Empty);
-            }
+            private static bool IsDefaultTimeElement(MonoScript element) => 
+                (element.name == string.Empty);
 
             public delegate void DrawElementDelegate(Rect r, object obj, bool dragging);
         }

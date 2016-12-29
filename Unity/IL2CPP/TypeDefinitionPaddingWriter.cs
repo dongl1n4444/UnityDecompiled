@@ -24,10 +24,8 @@
             this.WritePaddingEnd();
         }
 
-        private bool NeedsPadding()
-        {
-            return (this._type.ClassSize > 0);
-        }
+        private bool NeedsPadding() => 
+            (this._type.ClassSize > 0);
 
         private void WritePaddingEnd()
         {

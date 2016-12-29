@@ -15,10 +15,8 @@
             base.Callvirt(this.SerializedStateReaderInterface, methodName);
         }
 
-        public static MethodDefinition DeserializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider)
-        {
-            return new DeserializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
-        }
+        public static MethodDefinition DeserializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider) => 
+            new DeserializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
 
         protected override void FinishReadingSequence()
         {
@@ -30,21 +28,11 @@
             base.Callvirt(this.SerializedStateReaderInterface, base.ReadMethodNameFor(base.Import(typeof(int))));
         }
 
-        protected override string DeserializeMethodName
-        {
-            get
-            {
-                return "Unity_Deserialize";
-            }
-        }
+        protected override string DeserializeMethodName =>
+            "Unity_Deserialize";
 
-        protected override TypeDefinition SerializedStateReaderInterface
-        {
-            get
-            {
-                return base._serializationBridgeProvider.SerializedStateReaderInterface;
-            }
-        }
+        protected override TypeDefinition SerializedStateReaderInterface =>
+            base._serializationBridgeProvider.SerializedStateReaderInterface;
     }
 }
 

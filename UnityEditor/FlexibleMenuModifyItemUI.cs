@@ -34,10 +34,8 @@
             this.m_IsInitialized = true;
         }
 
-        public bool IsShowing()
-        {
-            return this.m_IsInitialized;
-        }
+        public bool IsShowing() => 
+            this.m_IsInitialized;
 
         public override void OnClose()
         {

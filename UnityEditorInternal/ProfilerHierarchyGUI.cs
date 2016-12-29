@@ -104,10 +104,8 @@
             return DetailViewSelectedPropertyPath(property, property.instanceIDs[0]);
         }
 
-        private static string DetailViewSelectedPropertyPath(ProfilerProperty property, int instanceId)
-        {
-            return (property.propertyPath + "/" + instanceId);
-        }
+        private static string DetailViewSelectedPropertyPath(ProfilerProperty property, int instanceId) => 
+            (property.propertyPath + "/" + instanceId);
 
         public void DoGUI(ProfilerProperty property, string searchString, bool expandAll)
         {
@@ -430,15 +428,11 @@
             return null;
         }
 
-        private GUIStyle GetRowBackgroundStyle(int rowIndex)
-        {
-            return (((rowIndex % 2) != 0) ? styles.entryOdd : styles.entryEven);
-        }
+        private GUIStyle GetRowBackgroundStyle(int rowIndex) => 
+            (((rowIndex % 2) != 0) ? styles.entryOdd : styles.entryEven);
 
-        private Rect GetRowRect(int rowIndex)
-        {
-            return new Rect(1f, 16f * rowIndex, GUIClip.visibleRect.width, 16f);
-        }
+        private Rect GetRowRect(int rowIndex) => 
+            new Rect(1f, 16f * rowIndex, GUIClip.visibleRect.width, 16f);
 
         private int[] GetVisibleDropDownIndexList()
         {
@@ -540,15 +534,11 @@
             current.Use();
         }
 
-        private bool IsExpanded(string expanded)
-        {
-            return (this.m_ExpandAll || this.m_ExpandedHash.Contains(expanded));
-        }
+        private bool IsExpanded(string expanded) => 
+            (this.m_ExpandAll || this.m_ExpandedHash.Contains(expanded));
 
-        private bool IsSearchActive()
-        {
-            return this.m_Window.IsSearching();
-        }
+        private bool IsSearchActive() => 
+            this.m_Window.IsSearching();
 
         private void MoveSelection(int steps)
         {
@@ -785,10 +775,8 @@
 
         public ProfilerColumn sortType
         {
-            get
-            {
-                return this.m_SortType;
-            }
+            get => 
+                this.m_SortType;
             private set
             {
                 this.m_SortType = value;
@@ -981,20 +969,13 @@
                 }
             }
 
-            public int numRows
-            {
-                get
-                {
-                    return (this.m_NumResultsUsed + (!this.m_FoundAllResults ? 1 : 0));
-                }
-            }
+            public int numRows =>
+                (this.m_NumResultsUsed + (!this.m_FoundAllResults ? 1 : 0));
 
             public int selectedSearchIndex
             {
-                get
-                {
-                    return this.m_SelectedSearchIndex;
-                }
+                get => 
+                    this.m_SelectedSearchIndex;
                 set
                 {
                     if (value < this.m_NumResultsUsed)

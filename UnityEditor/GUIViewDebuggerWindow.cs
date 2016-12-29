@@ -310,20 +310,13 @@
             }
         }
 
-        public IBaseInspectView instructionModeView
-        {
-            get
-            {
-                return this.m_InstructionModeView;
-            }
-        }
+        public IBaseInspectView instructionModeView =>
+            this.m_InstructionModeView;
 
         public UnityEditor.InstructionOverlayWindow InstructionOverlayWindow
         {
-            get
-            {
-                return this.m_InstructionOverlayWindow;
-            }
+            get => 
+                this.m_InstructionOverlayWindow;
             set
             {
                 this.m_InstructionOverlayWindow = value;

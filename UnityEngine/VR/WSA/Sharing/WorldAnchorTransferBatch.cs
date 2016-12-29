@@ -219,13 +219,8 @@
         /// <summary>
         /// <para>(Read Only) Gets the number of world anchors in this WorldAnchorTransferBatch.</para>
         /// </summary>
-        public int anchorCount
-        {
-            get
-            {
-                return GetAnchorCount_Internal(this.m_NativePtr);
-            }
-        }
+        public int anchorCount =>
+            GetAnchorCount_Internal(this.m_NativePtr);
 
         /// <summary>
         /// <para>The handler for when deserialization has completed.</para>

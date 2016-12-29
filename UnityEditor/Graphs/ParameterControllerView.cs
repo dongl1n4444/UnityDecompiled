@@ -168,10 +168,8 @@
             this.m_Host.Repaint();
         }
 
-        public bool HasKeyboardControl()
-        {
-            return this.m_ParameterList.HasKeyboardControl();
-        }
+        public bool HasKeyboardControl() => 
+            this.m_ParameterList.HasKeyboardControl();
 
         public void Init(IAnimatorControllerEditor host)
         {
@@ -363,7 +361,7 @@
             if (!this.m_Host.liveLink && (this.m_ParameterList.list.Count > 0))
             {
                 Element element = this.m_ParameterList.list[index] as Element;
-                List<UnityEngine.Object> list = Enumerable.ToList<UnityEngine.Object>(this.m_Host.animatorController.CollectObjectsUsingParameter(element.name));
+                List<UnityEngine.Object> list = this.m_Host.animatorController.CollectObjectsUsingParameter(element.name).ToList<UnityEngine.Object>();
                 bool flag = false;
                 if (list.Count > 0)
                 {
@@ -526,13 +524,8 @@
             }
         }
 
-        public RenameOverlay renameOverlay
-        {
-            get
-            {
-                return this.m_RenameOverlay;
-            }
-        }
+        public RenameOverlay renameOverlay =>
+            this.m_RenameOverlay;
 
         private class BoolElement : ParameterControllerView.Element
         {
@@ -588,10 +581,8 @@
                 this.m_Parameter = parameter;
             }
 
-            public int CompareTo(object o)
-            {
-                return this.name.CompareTo((o as ParameterControllerView.Element).name);
-            }
+            public int CompareTo(object o) => 
+                this.name.CompareTo((o as ParameterControllerView.Element).name);
 
             public virtual void OnGUI(Rect rect, int index)
             {
@@ -626,10 +617,8 @@
 
             public string name
             {
-                get
-                {
-                    return this.m_Parameter.name;
-                }
+                get => 
+                    this.m_Parameter.name;
                 set
                 {
                     this.m_Parameter.name = value;

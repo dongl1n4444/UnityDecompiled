@@ -58,15 +58,11 @@
             return ConstructGenericMethod(context, declaringType, methodDefinition, (IEnumerable<TypeReference>) methodDefinition.GenericParameters);
         }
 
-        public static GenericInstanceType InflateType(GenericContext context, GenericInstanceType genericInstanceType)
-        {
-            return ConstructGenericType(context, genericInstanceType.Resolve(), genericInstanceType.GenericArguments);
-        }
+        public static GenericInstanceType InflateType(GenericContext context, GenericInstanceType genericInstanceType) => 
+            ConstructGenericType(context, genericInstanceType.Resolve(), genericInstanceType.GenericArguments);
 
-        public static GenericInstanceType InflateType(GenericContext context, TypeDefinition typeDefinition)
-        {
-            return ConstructGenericType(context, typeDefinition, (IEnumerable<TypeReference>) typeDefinition.GenericParameters);
-        }
+        public static GenericInstanceType InflateType(GenericContext context, TypeDefinition typeDefinition) => 
+            ConstructGenericType(context, typeDefinition, (IEnumerable<TypeReference>) typeDefinition.GenericParameters);
 
         public static TypeReference InflateType(GenericContext context, TypeReference typeReference)
         {

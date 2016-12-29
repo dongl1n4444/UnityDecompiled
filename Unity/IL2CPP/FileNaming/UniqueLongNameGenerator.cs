@@ -12,10 +12,8 @@
         [CompilerGenerated]
         private static Func<TypeReference, string> <>f__mg$cache1;
 
-        private static string NameFor(ArrayType type)
-        {
-            return string.Format("{0} {1}", type.Resolve().Module.Assembly.Name.Name, type.FullName);
-        }
+        private static string NameFor(ArrayType type) => 
+            $"{type.Resolve().Module.Assembly.Name.Name} {type.FullName}";
 
         private static string NameFor(GenericInstanceType type)
         {
@@ -23,12 +21,12 @@
             {
                 <>f__mg$cache1 = new Func<TypeReference, string>(null, (IntPtr) NameFor);
             }
-            return string.Format("{0} {1}", NameFor(type.ElementType), "[" + EnumerableExtensions.AggregateWithComma(Enumerable.Select<TypeReference, string>(type.GenericArguments, <>f__mg$cache1)) + "]");
+            return $"{NameFor(type.ElementType)} {("[" + type.GenericArguments.Select<TypeReference, string>(<>f__mg$cache1).AggregateWithComma() + "]")}";
         }
 
         internal static string NameFor(MethodReference method)
         {
-            string str = string.Format("{0} - {1}", NameFor(method.DeclaringType), method.Resolve().FullName);
+            string str = $"{NameFor(method.DeclaringType)} - {method.Resolve().FullName}";
             GenericInstanceMethod method2 = method as GenericInstanceMethod;
             if (method2 == null)
             {
@@ -38,18 +36,14 @@
             {
                 <>f__mg$cache0 = new Func<TypeReference, string>(null, (IntPtr) NameFor);
             }
-            return (str + "[" + EnumerableExtensions.AggregateWithComma(Enumerable.Select<TypeReference, string>(method2.GenericArguments, <>f__mg$cache0)) + "]");
+            return (str + "[" + method2.GenericArguments.Select<TypeReference, string>(<>f__mg$cache0).AggregateWithComma() + "]");
         }
 
-        private static string NameFor(PointerType type)
-        {
-            return string.Format("{0} {1}", type.Resolve().Module.Assembly.Name.Name, type.FullName);
-        }
+        private static string NameFor(PointerType type) => 
+            $"{type.Resolve().Module.Assembly.Name.Name} {type.FullName}";
 
-        private static string NameFor(TypeDefinition type)
-        {
-            return string.Format("{0} {1}", type.Resolve().Module.Assembly.Name.Name, type.FullName);
-        }
+        private static string NameFor(TypeDefinition type) => 
+            $"{type.Resolve().Module.Assembly.Name.Name} {type.FullName}";
 
         internal static string NameFor(TypeReference type)
         {

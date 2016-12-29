@@ -22,13 +22,8 @@
         /// <summary>
         /// <para>Version of Unity API.</para>
         /// </summary>
-        public string version
-        {
-            get
-            {
-                return this._version;
-            }
-        }
+        public string version =>
+            this._version;
     }
 }
 

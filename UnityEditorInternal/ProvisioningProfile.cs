@@ -53,10 +53,8 @@
 
         public string UUID
         {
-            get
-            {
-                return this.m_UUID;
-            }
+            get => 
+                this.m_UUID;
             set
             {
                 this.m_UUID = value;

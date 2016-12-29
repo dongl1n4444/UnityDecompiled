@@ -25,10 +25,8 @@
         /// <para>Calculates frustum planes.</para>
         /// </summary>
         /// <param name="camera"></param>
-        public static Plane[] CalculateFrustumPlanes(Camera camera)
-        {
-            return CalculateFrustumPlanes(camera.projectionMatrix * camera.worldToCameraMatrix);
-        }
+        public static Plane[] CalculateFrustumPlanes(Camera camera) => 
+            CalculateFrustumPlanes(camera.projectionMatrix * camera.worldToCameraMatrix);
 
         /// <summary>
         /// <para>Calculates frustum planes.</para>
@@ -57,10 +55,8 @@
         /// </summary>
         /// <param name="planes"></param>
         /// <param name="bounds"></param>
-        public static bool TestPlanesAABB(Plane[] planes, Bounds bounds)
-        {
-            return INTERNAL_CALL_TestPlanesAABB(planes, ref bounds);
-        }
+        public static bool TestPlanesAABB(Plane[] planes, Bounds bounds) => 
+            INTERNAL_CALL_TestPlanesAABB(planes, ref bounds);
     }
 }
 

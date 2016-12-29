@@ -129,7 +129,7 @@
                     {
                         <>f__am$cache0 = new Func<Assembly, string>(null, (IntPtr) <get_testSuite>m__0);
                     }
-                    List<string> assemblyList = Enumerable.ToList<string>(Enumerable.Select<Assembly, string>(GetAssembliesWithTests(), <>f__am$cache0));
+                    List<string> assemblyList = Enumerable.Select<Assembly, string>(GetAssembliesWithTests(), <>f__am$cache0).ToList<string>();
                     TestSuite suite = this.PrepareTestSuite(assemblyList);
                     this.m_TestSuite = suite;
                 }
@@ -142,10 +142,8 @@
         {
             internal Assembly assembly;
 
-            internal bool <>m__0(string a)
-            {
-                return this.assembly.GetName().Name.StartsWith(a);
-            }
+            internal bool <>m__0(string a) => 
+                this.assembly.GetName().Name.StartsWith(a);
         }
 
         public class TestRunnerEventListener : EventListener

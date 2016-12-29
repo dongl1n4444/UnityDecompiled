@@ -310,10 +310,8 @@
             s_uniqueIDList.Remove(this.uniqueID);
         }
 
-        public ListItem FindItemWithIdentifier(int identifier)
-        {
-            return this.root.FindWithIdentifierRecurse(identifier);
-        }
+        public ListItem FindItemWithIdentifier(int identifier) => 
+            this.root.FindWithIdentifierRecurse(identifier);
 
         public static ListControl FromID(int id)
         {
@@ -1050,10 +1048,8 @@
 
         public ActionDelegate ActionEvent
         {
-            get
-            {
-                return this.actionDelegate;
-            }
+            get => 
+                this.actionDelegate;
             set
             {
                 this.actionDelegate = value;
@@ -1062,10 +1058,8 @@
 
         public bool DragAcceptOnly
         {
-            get
-            {
-                return this.dragAcceptOnly;
-            }
+            get => 
+                this.dragAcceptOnly;
             set
             {
                 this.dragAcceptOnly = value;
@@ -1074,10 +1068,8 @@
 
         public DragDelegate DragEvent
         {
-            get
-            {
-                return this.dragDelegate;
-            }
+            get => 
+                this.dragDelegate;
             set
             {
                 this.dragDelegate = value;
@@ -1105,10 +1097,8 @@
 
         public ExpandDelegate ExpandEvent
         {
-            get
-            {
-                return this.expandDelegate;
-            }
+            get => 
+                this.expandDelegate;
             set
             {
                 this.expandDelegate = value;
@@ -1129,10 +1119,8 @@
 
         public string MenuDefault
         {
-            get
-            {
-                return this.menuDefault;
-            }
+            get => 
+                this.menuDefault;
             set
             {
                 this.menuDefault = value;
@@ -1141,10 +1129,8 @@
 
         public string MenuFolder
         {
-            get
-            {
-                return this.menuFolder;
-            }
+            get => 
+                this.menuFolder;
             set
             {
                 this.menuFolder = value;
@@ -1153,23 +1139,16 @@
 
         public bool ReadOnly
         {
-            get
-            {
-                return this.readOnly;
-            }
+            get => 
+                this.readOnly;
             set
             {
                 this.readOnly = value;
             }
         }
 
-        public ListItem Root
-        {
-            get
-            {
-                return this.root;
-            }
-        }
+        public ListItem Root =>
+            this.root;
 
         public AssetList SelectedAssets
         {
@@ -1203,13 +1182,8 @@
             }
         }
 
-        public int Size
-        {
-            get
-            {
-                return this.visibleList.Count;
-            }
-        }
+        public int Size =>
+            this.visibleList.Count;
 
         public delegate void ActionDelegate(ListItem item, int actionIdx);
 

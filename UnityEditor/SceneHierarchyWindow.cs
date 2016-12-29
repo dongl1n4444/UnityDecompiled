@@ -211,7 +211,7 @@
             {
                 <>f__am$cache0 = new Func<Transform, GameObject>(null, (IntPtr) <CreateGameObjectContextClick>m__0);
             }
-            this.AddCreateGameObjectItemsToMenu(menu, Enumerable.ToArray<GameObject>(Enumerable.Select<Transform, GameObject>(Selection.transforms, <>f__am$cache0)), false, false, 0);
+            this.AddCreateGameObjectItemsToMenu(menu, Enumerable.Select<Transform, GameObject>(Selection.transforms, <>f__am$cache0).ToArray<GameObject>(), false, false, 0);
             menu.ShowAsContext();
         }
 
@@ -353,7 +353,7 @@
                     {
                         <>f__am$cache1 = new Func<Transform, GameObject>(null, (IntPtr) <CreateMultiSceneHeaderContextClick>m__1);
                     }
-                    this.AddCreateGameObjectItemsToMenu(menu, Enumerable.ToArray<GameObject>(Enumerable.Select<Transform, GameObject>(Selection.transforms, <>f__am$cache1)), false, true, sceneByHandle.handle);
+                    this.AddCreateGameObjectItemsToMenu(menu, Enumerable.Select<Transform, GameObject>(Selection.transforms, <>f__am$cache1).ToArray<GameObject>(), false, true, sceneByHandle.handle);
                 }
             }
         }
@@ -389,7 +389,7 @@
             {
                 <>f__am$cache3 = new Func<Scene, bool>(null, (IntPtr) <DiscardChangesInSelectedScenes>m__3);
             }
-            Scene[] sceneArray2 = Enumerable.ToArray<Scene>(Enumerable.Where<Scene>(modifiedScenes, <>f__am$cache3));
+            Scene[] sceneArray2 = Enumerable.Where<Scene>(modifiedScenes, <>f__am$cache3).ToArray<Scene>();
             if (this.UserAllowedDiscardingChanges(sceneArray2))
             {
                 if (sceneArray2.Length != modifiedScenes.Length)
@@ -402,7 +402,7 @@
                 }
                 if (SceneManager.sceneCount == 1)
                 {
-                    this.SetScenesExpanded(Enumerable.ToList<string>(expandedSceneNames));
+                    this.SetScenesExpanded(expandedSceneNames.ToList<string>());
                 }
                 EditorApplication.RequestRepaintAllViews();
             }
@@ -450,7 +450,7 @@
                 int num;
                 int num2;
                 this.m_TreeView.gui.GetFirstAndLastRowVisible(out num, out num2);
-                GUILayout.Label(string.Format("{0} ({1}, {2})", this.m_TreeView.data.rowCount, num, num2), EditorStyles.miniLabel, new GUILayoutOption[0]);
+                GUILayout.Label($"{this.m_TreeView.data.rowCount} ({num}, {num2})", EditorStyles.miniLabel, new GUILayoutOption[0]);
                 GUILayout.Space(6f);
             }
             GUILayout.FlexibleSpace();
@@ -594,10 +594,8 @@
             }
         }
 
-        public static List<SceneHierarchyWindow> GetAllSceneHierarchyWindows()
-        {
-            return s_SceneHierarchyWindow;
-        }
+        public static List<SceneHierarchyWindow> GetAllSceneHierarchyWindows() => 
+            s_SceneHierarchyWindow;
 
         public string[] GetCurrentVisibleObjects()
         {
@@ -634,13 +632,11 @@
             {
                 <>f__am$cache5 = new Func<Scene, bool>(null, (IntPtr) <GetModifiedScenes>m__5);
             }
-            return Enumerable.ToArray<Scene>(Enumerable.Where<Scene>(Enumerable.Select<int, Scene>(handles, <>f__am$cache4), <>f__am$cache5));
+            return Enumerable.Where<Scene>(Enumerable.Select<int, Scene>(handles, <>f__am$cache4), <>f__am$cache5).ToArray<Scene>();
         }
 
-        private string GetNameForType(Type type)
-        {
-            return type.Name;
-        }
+        private string GetNameForType(Type type) => 
+            type.Name;
 
         private int GetNumLoadedScenesInSelection()
         {
@@ -710,15 +706,11 @@
             this.m_TreeView.ReloadData();
         }
 
-        public static bool IsSceneHeaderInHierarchyWindow(Scene scene)
-        {
-            return scene.IsValid();
-        }
+        public static bool IsSceneHeaderInHierarchyWindow(Scene scene) => 
+            scene.IsValid();
 
-        private bool IsTreeViewSelectionInSyncWithBackend()
-        {
-            return ((this.m_TreeView != null) && Enumerable.SequenceEqual<int>(this.m_TreeView.state.selectedIDs, Selection.instanceIDs));
-        }
+        private bool IsTreeViewSelectionInSyncWithBackend() => 
+            ((this.m_TreeView != null) && this.m_TreeView.state.selectedIDs.SequenceEqual<int>(Selection.instanceIDs));
 
         private void ItemContextClick(int contextClickedItemID)
         {
@@ -872,7 +864,7 @@
 
         private void OnQuit()
         {
-            this.m_ExpandedScenes = Enumerable.ToList<string>(this.GetExpandedSceneNames());
+            this.m_ExpandedScenes = this.GetExpandedSceneNames().ToList<string>();
         }
 
         private void OnSceneWasCreated(Scene scene, NewSceneMode mode)
@@ -1064,9 +1056,9 @@
             else
             {
                 this.currentSortingName = sortTypeName;
-                if (Enumerable.Any<int>(this.treeView.GetSelection()))
+                if (this.treeView.GetSelection().Any<int>())
                 {
-                    this.treeView.Frame(Enumerable.First<int>(this.treeView.GetSelection()), true, false);
+                    this.treeView.Frame(this.treeView.GetSelection().First<int>(), true, false);
                 }
                 this.treeView.ReloadData();
             }
@@ -1193,17 +1185,15 @@
             {
                 <>f__am$cache2 = new Func<Scene, string>(null, (IntPtr) <UserAllowedDiscardingChanges>m__2);
             }
-            string str3 = string.Join("\n   ", Enumerable.ToArray<string>(Enumerable.Select<Scene, string>(modifiedScenes, <>f__am$cache2)));
+            string str3 = string.Join("\n   ", Enumerable.Select<Scene, string>(modifiedScenes, <>f__am$cache2).ToArray<string>());
             format = string.Format(format, str3);
             return EditorUtility.DisplayDialog(localizedString, format, LocalizationDatabase.GetLocalizedString("OK"), LocalizationDatabase.GetLocalizedString("Cancel"));
         }
 
         private string currentSortingName
         {
-            get
-            {
-                return this.m_CurrentSortingName;
-            }
+            get => 
+                this.m_CurrentSortingName;
             set
             {
                 this.m_CurrentSortingName = value;
@@ -1218,38 +1208,24 @@
 
         internal static bool debug
         {
-            get
-            {
-                return lastInteractedHierarchyWindow.m_Debug;
-            }
+            get => 
+                lastInteractedHierarchyWindow.m_Debug;
             set
             {
                 lastInteractedHierarchyWindow.m_Debug = value;
             }
         }
 
-        private bool hasSortMethods
-        {
-            get
-            {
-                return (this.m_SortingObjects.Count > 1);
-            }
-        }
+        private bool hasSortMethods =>
+            (this.m_SortingObjects.Count > 1);
 
-        public static SceneHierarchyWindow lastInteractedHierarchyWindow
-        {
-            get
-            {
-                return s_LastInteractedHierarchy;
-            }
-        }
+        public static SceneHierarchyWindow lastInteractedHierarchyWindow =>
+            s_LastInteractedHierarchy;
 
         public static bool s_Debug
         {
-            get
-            {
-                return SessionState.GetBool("HierarchyWindowDebug", false);
-            }
+            get => 
+                SessionState.GetBool("HierarchyWindowDebug", false);
             set
             {
                 SessionState.SetBool("HierarchyWindowDebug", value);
@@ -1258,10 +1234,8 @@
 
         private bool selectionSyncNeeded
         {
-            get
-            {
-                return this.m_SelectionSyncNeeded;
-            }
+            get => 
+                this.m_SelectionSyncNeeded;
             set
             {
                 this.m_SelectionSyncNeeded = value;
@@ -1288,20 +1262,13 @@
             }
         }
 
-        private Rect treeViewRect
-        {
-            get
-            {
-                return new Rect(0f, 17f, base.position.width, base.position.height - 17f);
-            }
-        }
+        private Rect treeViewRect =>
+            new Rect(0f, 17f, base.position.width, base.position.height - 17f);
 
         private bool treeViewReloadNeeded
         {
-            get
-            {
-                return this.m_TreeViewReloadNeeded;
-            }
+            get => 
+                this.m_TreeViewReloadNeeded;
             set
             {
                 this.m_TreeViewReloadNeeded = value;

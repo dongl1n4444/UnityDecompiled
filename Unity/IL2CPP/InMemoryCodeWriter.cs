@@ -18,10 +18,8 @@
             this._memoryStream = stream;
         }
 
-        public string GetSourceCodeString()
-        {
-            return Encoding.UTF8.GetString(this._memoryStream.ToArray());
-        }
+        public string GetSourceCodeString() => 
+            Encoding.UTF8.GetString(this._memoryStream.ToArray());
     }
 }
 

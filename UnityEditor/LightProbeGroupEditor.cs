@@ -14,7 +14,7 @@
     {
         [CompilerGenerated]
         private static Func<int, int> <>f__am$cache0;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <drawTetrahedra>k__BackingField;
         private static readonly Color kCloudColor = new Color(0.7843137f, 0.7843137f, 0.07843138f, 0.85f);
         private static readonly Color kSelectedCloudColor = new Color(0.3f, 0.6f, 1f, 1f);
@@ -69,7 +69,7 @@
             IEnumerable<Vector3> enumerable = this.SelectedProbePositions();
             XmlSerializer serializer = new XmlSerializer(typeof(Vector3[]));
             StringWriter writer = new StringWriter();
-            serializer.Serialize((TextWriter) writer, Enumerable.ToArray<Vector3>(Enumerable.Select<Vector3, Vector3>(enumerable, new Func<Vector3, Vector3>(this, (IntPtr) this.<CopySelectedProbes>m__1))));
+            serializer.Serialize((TextWriter) writer, Enumerable.Select<Vector3, Vector3>(enumerable, new Func<Vector3, Vector3>(this, (IntPtr) this.<CopySelectedProbes>m__1)).ToArray<Vector3>());
             writer.Close();
             GUIUtility.systemCopyBuffer = writer.ToString();
         }
@@ -116,30 +116,20 @@
             return GeometryUtility.CalculateBounds(positions.ToArray(), this.m_Group.transform.localToWorldMatrix);
         }
 
-        public Color GetDefaultColor()
-        {
-            return kCloudColor;
-        }
+        public Color GetDefaultColor() => 
+            kCloudColor;
 
-        public float GetPointScale()
-        {
-            return (10f * AnnotationUtility.iconSize);
-        }
+        public float GetPointScale() => 
+            (10f * AnnotationUtility.iconSize);
 
-        public Vector3 GetPosition(int idx)
-        {
-            return this.m_SourcePositions[idx];
-        }
+        public Vector3 GetPosition(int idx) => 
+            this.m_SourcePositions[idx];
 
-        public IEnumerable<Vector3> GetPositions()
-        {
-            return this.m_SourcePositions;
-        }
+        public IEnumerable<Vector3> GetPositions() => 
+            this.m_SourcePositions;
 
-        public Color GetSelectedColor()
-        {
-            return kSelectedCloudColor;
-        }
+        public Color GetSelectedColor() => 
+            kSelectedCloudColor;
 
         public Vector3[] GetSelectedPositions()
         {
@@ -185,10 +175,8 @@
             return vectorArray2;
         }
 
-        public Vector3 GetWorldPosition(int idx)
-        {
-            return this.m_Group.transform.TransformPoint(this.m_SourcePositions[idx]);
-        }
+        public Vector3 GetWorldPosition(int idx) => 
+            this.m_Group.transform.TransformPoint(this.m_SourcePositions[idx]);
 
         public void HandleEditMenuHotKeyCommands()
         {
@@ -387,10 +375,8 @@
             }
         }
 
-        private IEnumerable<Vector3> SelectedProbePositions()
-        {
-            return Enumerable.ToList<Vector3>(Enumerable.Select<int, Vector3>(this.m_Selection, new Func<int, Vector3>(this, (IntPtr) this.<SelectedProbePositions>m__0)));
-        }
+        private IEnumerable<Vector3> SelectedProbePositions() => 
+            Enumerable.Select<int, Vector3>(this.m_Selection, new Func<int, Vector3>(this, (IntPtr) this.<SelectedProbePositions>m__0)).ToList<Vector3>();
 
         private void SelectProbe(int i)
         {
@@ -453,31 +439,16 @@
             }
         }
 
-        public Bounds bounds
-        {
-            get
-            {
-                return this.GetBounds(this.m_SourcePositions);
-            }
-        }
+        public Bounds bounds =>
+            this.GetBounds(this.m_SourcePositions);
 
-        public int Count
-        {
-            get
-            {
-                return this.m_SourcePositions.Count;
-            }
-        }
+        public int Count =>
+            this.m_SourcePositions.Count;
 
         public bool drawTetrahedra { get; set; }
 
-        public int SelectedCount
-        {
-            get
-            {
-                return this.m_Selection.Count;
-            }
-        }
+        public int SelectedCount =>
+            this.m_Selection.Count;
 
         public Bounds selectedProbeBounds
         {

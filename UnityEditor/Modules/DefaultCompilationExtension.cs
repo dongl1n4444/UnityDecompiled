@@ -5,20 +5,14 @@
 
     internal class DefaultCompilationExtension : ICompilationExtension
     {
-        public virtual IAssemblyResolver GetAssemblyResolver(bool buildingForEditor, string assemblyPath, string[] searchDirectories)
-        {
-            return null;
-        }
+        public virtual IAssemblyResolver GetAssemblyResolver(bool buildingForEditor, string assemblyPath, string[] searchDirectories) => 
+            null;
 
-        public virtual string[] GetCompilerExtraAssemblyPaths(bool isEditor, string assemblyPathName)
-        {
-            return new string[0];
-        }
+        public virtual string[] GetCompilerExtraAssemblyPaths(bool isEditor, string assemblyPathName) => 
+            new string[0];
 
-        public virtual CSharpCompiler GetCsCompiler(bool buildingForEditor, string assemblyName)
-        {
-            return CSharpCompiler.Mono;
-        }
+        public virtual CSharpCompiler GetCsCompiler(bool buildingForEditor, string assemblyName) => 
+            CSharpCompiler.Mono;
     }
 }
 

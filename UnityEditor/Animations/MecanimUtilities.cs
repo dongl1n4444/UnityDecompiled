@@ -7,10 +7,8 @@
 
     internal class MecanimUtilities
     {
-        internal static bool AreSameAsset(Object obj1, Object obj2)
-        {
-            return (AssetDatabase.GetAssetPath(obj1) == AssetDatabase.GetAssetPath(obj2));
-        }
+        internal static bool AreSameAsset(Object obj1, Object obj2) => 
+            (AssetDatabase.GetAssetPath(obj1) == AssetDatabase.GetAssetPath(obj2));
 
         internal static void DestroyBlendTreeRecursive(BlendTree blendTree)
         {

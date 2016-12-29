@@ -323,15 +323,11 @@
             EditorGUILayout.IntPopup(property, EditorGUIUtility.TempContent(Enum.GetNames(type)), Enum.GetValues(type) as int[], label, new GUILayoutOption[0]);
         }
 
-        public static BuildPlayerWindow.BuildPlatform[] GetBuildPlayerValidPlatforms()
-        {
-            return BuildPlayerWindow.GetValidPlatforms().ToArray();
-        }
+        public static BuildPlayerWindow.BuildPlatform[] GetBuildPlayerValidPlatforms() => 
+            BuildPlayerWindow.GetValidPlatforms().ToArray();
 
-        internal TextureImporterSettings GetSerializedPropertySettings()
-        {
-            return this.GetSerializedPropertySettings(new TextureImporterSettings());
-        }
+        internal TextureImporterSettings GetSerializedPropertySettings() => 
+            this.GetSerializedPropertySettings(new TextureImporterSettings());
 
         internal TextureImporterSettings GetSerializedPropertySettings(TextureImporterSettings settings)
         {
@@ -500,20 +496,14 @@
             this.m_GUIElementsDisplayOrder.Add(TextureInspectorGUIElement.MipMaps);
         }
 
-        public static bool IsCompressedDXTTextureFormat(TextureImporterFormat format)
-        {
-            return ((format == TextureImporterFormat.DXT1) || (format == TextureImporterFormat.DXT5));
-        }
+        public static bool IsCompressedDXTTextureFormat(TextureImporterFormat format) => 
+            ((format == TextureImporterFormat.DXT1) || (format == TextureImporterFormat.DXT5));
 
-        internal static bool IsGLESMobileTargetPlatform(BuildTarget target)
-        {
-            return ((((target == BuildTarget.iOS) || (target == BuildTarget.tvOS)) || ((target == BuildTarget.Android) || (target == BuildTarget.Tizen))) || (target == BuildTarget.SamsungTV));
-        }
+        internal static bool IsGLESMobileTargetPlatform(BuildTarget target) => 
+            ((((target == BuildTarget.iOS) || (target == BuildTarget.tvOS)) || ((target == BuildTarget.Android) || (target == BuildTarget.Tizen))) || (target == BuildTarget.SamsungTV));
 
-        private static bool IsPowerOfTwo(int f)
-        {
-            return ((f & (f - 1)) == 0);
-        }
+        private static bool IsPowerOfTwo(int f) => 
+            ((f & (f - 1)) == 0);
 
         private void MipMapGUI(TextureInspectorGUIElement guiElements)
         {
@@ -770,14 +760,12 @@
             this.m_TextureShape.intValue = (int) settings.textureShape;
         }
 
-        private bool ShouldDisplayGUIElement(TextureInspectorGUIElement guiElements, TextureInspectorGUIElement guiElement)
-        {
-            return ((guiElements & guiElement) == guiElement);
-        }
+        private bool ShouldDisplayGUIElement(TextureInspectorGUIElement guiElements, TextureInspectorGUIElement guiElement) => 
+            ((guiElements & guiElement) == guiElement);
 
         protected void ShowPlatformSpecificSettings()
         {
-            BuildPlayerWindow.BuildPlatform[] platforms = Enumerable.ToArray<BuildPlayerWindow.BuildPlatform>(GetBuildPlayerValidPlatforms());
+            BuildPlayerWindow.BuildPlatform[] platforms = GetBuildPlayerValidPlatforms().ToArray<BuildPlayerWindow.BuildPlatform>();
             GUILayout.Space(10f);
             int index = EditorGUILayout.BeginPlatformGrouping(platforms, s_Styles.defaultPlatform);
             TextureImportPlatformSettings platformSettings = this.m_PlatformSettings[index + 1];
@@ -959,8 +947,7 @@
 
         private void UpdateImportWarning()
         {
-            TextureImporter target = base.target as TextureImporter;
-            this.m_ImportWarning = (target == null) ? null : target.GetImportWarnings();
+            this.m_ImportWarning = (base.target as TextureImporter)?.GetImportWarnings();
         }
 
         internal static int[] NormalFormatsValueAll
@@ -1042,21 +1029,11 @@
             }
         }
 
-        internal override bool showImportedObject
-        {
-            get
-            {
-                return false;
-            }
-        }
+        internal override bool showImportedObject =>
+            false;
 
-        internal SpriteImportMode spriteImportMode
-        {
-            get
-            {
-                return (SpriteImportMode) this.m_SpriteMode.intValue;
-            }
-        }
+        internal SpriteImportMode spriteImportMode =>
+            ((SpriteImportMode) this.m_SpriteMode.intValue);
 
         internal static int[] TextureFormatsValueAll
         {
@@ -1147,13 +1124,8 @@
             }
         }
 
-        internal bool textureTypeHasMultipleDifferentValues
-        {
-            get
-            {
-                return this.m_TextureType.hasMultipleDifferentValues;
-            }
-        }
+        internal bool textureTypeHasMultipleDifferentValues =>
+            this.m_TextureType.hasMultipleDifferentValues;
 
         private enum CookieMode
         {

@@ -18,54 +18,29 @@
         /// <summary>
         /// <para>Intersection point of the collision in world coordinates.</para>
         /// </summary>
-        public Vector3 intersection
-        {
-            get
-            {
-                return this.m_Intersection;
-            }
-        }
+        public Vector3 intersection =>
+            this.m_Intersection;
         /// <summary>
         /// <para>Geometry normal at the intersection point of the collision.</para>
         /// </summary>
-        public Vector3 normal
-        {
-            get
-            {
-                return this.m_Normal;
-            }
-        }
+        public Vector3 normal =>
+            this.m_Normal;
         /// <summary>
         /// <para>Incident velocity at the intersection point of the collision.</para>
         /// </summary>
-        public Vector3 velocity
-        {
-            get
-            {
-                return this.m_Velocity;
-            }
-        }
+        public Vector3 velocity =>
+            this.m_Velocity;
         /// <summary>
         /// <para>The Collider for the GameObject struck by the particles.</para>
         /// </summary>
         [Obsolete("collider property is deprecated. Use colliderComponent instead, which supports Collider and Collider2D components.")]
-        public Collider collider
-        {
-            get
-            {
-                return InstanceIDToCollider(this.m_ColliderInstanceID);
-            }
-        }
+        public Collider collider =>
+            InstanceIDToCollider(this.m_ColliderInstanceID);
         /// <summary>
         /// <para>The Collider or Collider2D for the GameObject struck by the particles.</para>
         /// </summary>
-        public Component colliderComponent
-        {
-            get
-            {
-                return InstanceIDToColliderComponent(this.m_ColliderInstanceID);
-            }
-        }
+        public Component colliderComponent =>
+            InstanceIDToColliderComponent(this.m_ColliderInstanceID);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Collider InstanceIDToCollider(int instanceID);
         [MethodImpl(MethodImplOptions.InternalCall)]

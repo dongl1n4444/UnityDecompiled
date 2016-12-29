@@ -50,7 +50,7 @@
             {
                 <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <NPath>m__0);
             }
-            this._elements = this.ParseSplitStringIntoElements(Enumerable.ToArray<string>(Enumerable.Where<string>(split, <>f__am$cache0)));
+            this._elements = this.ParseSplitStringIntoElements(split.Where<string>(<>f__am$cache0).ToArray<string>());
         }
 
         private NPath(string[] elements, bool isRelative, string driveLetter)
@@ -61,15 +61,11 @@
         }
 
         [CompilerGenerated]
-        private static bool <NPath>m__0(string s)
-        {
-            return (s.Length > 0);
-        }
+        private static bool <NPath>m__0(string s) => 
+            (s.Length > 0);
 
-        private static bool AlwaysTrue(NPath p)
-        {
-            return true;
-        }
+        private static bool AlwaysTrue(NPath p) => 
+            true;
 
         public NPath ChangeExtension(string extension)
         {
@@ -89,7 +85,7 @@
             {
                 <>f__am$cache4 = new Func<NPath, bool>(null, (IntPtr) <Combine>m__4);
             }
-            if (!Enumerable.All<NPath>(append, <>f__am$cache4))
+            if (!append.All<NPath>(<>f__am$cache4))
             {
                 throw new ArgumentException("You cannot .Combine a non-relative path");
             }
@@ -97,7 +93,7 @@
             {
                 <>f__am$cache5 = new Func<NPath, IEnumerable<string>>(null, (IntPtr) <Combine>m__5);
             }
-            return new NPath(this.ParseSplitStringIntoElements(Enumerable.Concat<string>(this._elements, Enumerable.SelectMany<NPath, string>(append, <>f__am$cache5))), this._isRelative, this._driveLetter);
+            return new NPath(this.ParseSplitStringIntoElements(this._elements.Concat<string>(append.SelectMany<NPath, string>(<>f__am$cache5))), this._isRelative, this._driveLetter);
         }
 
         public NPath Combine(params string[] append)
@@ -106,18 +102,14 @@
             {
                 <>f__am$cache3 = new Func<string, NPath>(null, (IntPtr) <Combine>m__3);
             }
-            return this.Combine(Enumerable.ToArray<NPath>(Enumerable.Select<string, NPath>(append, <>f__am$cache3)));
+            return this.Combine(append.Select<string, NPath>(<>f__am$cache3).ToArray<NPath>());
         }
 
-        public IEnumerable<NPath> Contents([Optional, DefaultParameterValue(false)] bool recurse)
-        {
-            return this.Contents("*", recurse);
-        }
+        public IEnumerable<NPath> Contents(bool recurse = false) => 
+            this.Contents("*", recurse);
 
-        public IEnumerable<NPath> Contents(string filter, [Optional, DefaultParameterValue(false)] bool recurse)
-        {
-            return Enumerable.Concat<NPath>(this.Files(filter, recurse), this.Directories(filter, recurse));
-        }
+        public IEnumerable<NPath> Contents(string filter, bool recurse = false) => 
+            this.Files(filter, recurse).Concat<NPath>(this.Directories(filter, recurse));
 
         public NPath Copy(NPath dest)
         {
@@ -128,10 +120,8 @@
             return this.Copy(dest, <>f__am$cache8);
         }
 
-        public NPath Copy(string dest)
-        {
-            return this.Copy(new NPath(dest));
-        }
+        public NPath Copy(string dest) => 
+            this.Copy(new NPath(dest));
 
         public NPath Copy(NPath dest, Func<NPath, bool> fileFilter)
         {
@@ -149,12 +139,10 @@
             return this.CopyWithDeterminedDestination(dest, fileFilter);
         }
 
-        public NPath Copy(string dest, Func<NPath, bool> fileFilter)
-        {
-            return this.Copy(new NPath(dest), fileFilter);
-        }
+        public NPath Copy(string dest, Func<NPath, bool> fileFilter) => 
+            this.Copy(new NPath(dest), fileFilter);
 
-        public IEnumerable<NPath> CopyFiles(NPath destination, bool recurse, [Optional, DefaultParameterValue(null)] Func<NPath, bool> fileFilter)
+        public IEnumerable<NPath> CopyFiles(NPath destination, bool recurse, Func<NPath, bool> fileFilter = null)
         {
             <CopyFiles>c__AnonStorey1 storey = new <CopyFiles>c__AnonStorey1 {
                 destination = destination,
@@ -165,7 +153,7 @@
             {
                 <>f__mg$cache0 = new Func<NPath, bool>(null, (IntPtr) AlwaysTrue);
             }
-            return Enumerable.ToArray<NPath>(Enumerable.Select<NPath, NPath>(Enumerable.Where<NPath>(this.Files(recurse), <>f__mg$cache0), new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)));
+            return this.Files(recurse).Where<NPath>(<>f__mg$cache0).Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
         }
 
         private NPath CopyWithDeterminedDestination(NPath absoluteDestination, Func<NPath, bool> fileFilter)
@@ -214,10 +202,8 @@
             return this.Combine(append).CreateDirectory();
         }
 
-        public NPath CreateDirectory(string directory)
-        {
-            return this.CreateDirectory(new NPath(directory));
-        }
+        public NPath CreateDirectory(string directory) => 
+            this.CreateDirectory(new NPath(directory));
 
         public NPath CreateFile()
         {
@@ -237,10 +223,8 @@
             return this.Combine(append).CreateFile();
         }
 
-        public NPath CreateFile(string file)
-        {
-            return this.CreateFile(new NPath(file));
-        }
+        public NPath CreateFile(string file) => 
+            this.CreateFile(new NPath(file));
 
         public static NPath CreateTempDirectory(string myprefix)
         {
@@ -256,7 +240,7 @@
             }
         }
 
-        public void Delete([Optional, DefaultParameterValue(0)] DeleteMode deleteMode)
+        public void Delete(DeleteMode deleteMode = 0)
         {
             this.ThrowIfRelative();
             if (this.FileExists(""))
@@ -283,18 +267,16 @@
             }
         }
 
-        public IEnumerable<NPath> Directories([Optional, DefaultParameterValue(false)] bool recurse)
-        {
-            return this.Directories("*", recurse);
-        }
+        public IEnumerable<NPath> Directories(bool recurse = false) => 
+            this.Directories("*", recurse);
 
-        public IEnumerable<NPath> Directories(string filter, [Optional, DefaultParameterValue(false)] bool recurse)
+        public IEnumerable<NPath> Directories(string filter, bool recurse = false)
         {
             if (<>f__am$cache7 == null)
             {
                 <>f__am$cache7 = new Func<string, NPath>(null, (IntPtr) <Directories>m__7);
             }
-            return Enumerable.Select<string, NPath>(Directory.GetDirectories(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories), <>f__am$cache7);
+            return Directory.GetDirectories(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories).Select<string, NPath>(<>f__am$cache7);
         }
 
         public bool DirectoryExists(NPath append)
@@ -303,10 +285,8 @@
             return Directory.Exists(this.Combine(pathArray1).ToString());
         }
 
-        public bool DirectoryExists([Optional, DefaultParameterValue("")] string append)
-        {
-            return this.DirectoryExists(new NPath(append));
-        }
+        public bool DirectoryExists(string append = "") => 
+            this.DirectoryExists(new NPath(append));
 
         public NPath EnsureDirectoryExists(NPath append)
         {
@@ -320,10 +300,8 @@
             return path;
         }
 
-        public NPath EnsureDirectoryExists([Optional, DefaultParameterValue("")] string append)
-        {
-            return this.EnsureDirectoryExists(new NPath(append));
-        }
+        public NPath EnsureDirectoryExists(string append = "") => 
+            this.EnsureDirectoryExists(new NPath(append));
 
         public NPath EnsureParentDirectoryExists()
         {
@@ -370,15 +348,11 @@
             return this.Equals(p);
         }
 
-        public bool Exists(NPath append)
-        {
-            return (this.FileExists(append) || this.DirectoryExists(append));
-        }
+        public bool Exists(NPath append) => 
+            (this.FileExists(append) || this.DirectoryExists(append));
 
-        public bool Exists([Optional, DefaultParameterValue("")] string append)
-        {
-            return this.Exists(new NPath(append));
-        }
+        public bool Exists(string append = "") => 
+            this.Exists(new NPath(append));
 
         public bool FileExists(NPath append)
         {
@@ -386,23 +360,19 @@
             return File.Exists(this.Combine(pathArray1).ToString());
         }
 
-        public bool FileExists([Optional, DefaultParameterValue("")] string append)
-        {
-            return this.FileExists(new NPath(append));
-        }
+        public bool FileExists(string append = "") => 
+            this.FileExists(new NPath(append));
 
-        public IEnumerable<NPath> Files([Optional, DefaultParameterValue(false)] bool recurse)
-        {
-            return this.Files("*", recurse);
-        }
+        public IEnumerable<NPath> Files(bool recurse = false) => 
+            this.Files("*", recurse);
 
-        public IEnumerable<NPath> Files(string filter, [Optional, DefaultParameterValue(false)] bool recurse)
+        public IEnumerable<NPath> Files(string filter, bool recurse = false)
         {
             if (<>f__am$cache6 == null)
             {
                 <>f__am$cache6 = new Func<string, NPath>(null, (IntPtr) <Files>m__6);
             }
-            return Enumerable.Select<string, NPath>(Directory.GetFiles(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories), <>f__am$cache6);
+            return Directory.GetFiles(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories).Select<string, NPath>(<>f__am$cache6);
         }
 
         public NPath FirstParentMatching(Func<NPath, bool> predicate)
@@ -440,23 +410,17 @@
             <HasExtension>c__AnonStorey0 storey = new <HasExtension>c__AnonStorey0 {
                 extensionWithDotLower = this.ExtensionWithDot.ToLower()
             };
-            return Enumerable.Any<string>(extensions, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return extensions.Any<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__0));
         }
 
-        private static bool HasNonDotDotLastElement(List<string> stack)
-        {
-            return ((stack.Count > 0) && (stack[stack.Count - 1] != ".."));
-        }
+        private static bool HasNonDotDotLastElement(List<string> stack) => 
+            ((stack.Count > 0) && (stack[stack.Count - 1] != ".."));
 
-        public string InQuotes()
-        {
-            return ("\"" + this.ToString() + "\"");
-        }
+        public string InQuotes() => 
+            ("\"" + this.ToString() + "\"");
 
-        public string InQuotes(SlashMode slashMode)
-        {
-            return ("\"" + this.ToString(slashMode) + "\"");
-        }
+        public string InQuotes(SlashMode slashMode) => 
+            ("\"" + this.ToString(slashMode) + "\"");
 
         public bool IsChildOf(NPath potentialBasePath)
         {
@@ -471,20 +435,14 @@
             return (this.Equals(potentialBasePath) || this.Parent.IsChildOf(potentialBasePath));
         }
 
-        public bool IsChildOf(string potentialBasePath)
-        {
-            return this.IsChildOf(new NPath(potentialBasePath));
-        }
+        public bool IsChildOf(string potentialBasePath) => 
+            this.IsChildOf(new NPath(potentialBasePath));
 
-        private bool IsEmpty()
-        {
-            return (this._elements.Length == 0);
-        }
+        private bool IsEmpty() => 
+            (this._elements.Length == 0);
 
-        private static bool IsLinux()
-        {
-            return Directory.Exists("/proc");
-        }
+        private static bool IsLinux() => 
+            Directory.Exists("/proc");
 
         private static bool IsRelativeFromSplitString(string[] split)
         {
@@ -495,7 +453,7 @@
             if (split[0].Length == 0)
             {
             }
-            return ((<>f__am$cache2 != null) || !Enumerable.Any<string>(split, <>f__am$cache2));
+            return ((<>f__am$cache2 != null) || !split.Any<string>(<>f__am$cache2));
         }
 
         public NPath MakeAbsolute()
@@ -523,7 +481,7 @@
                 }
                 catch (IOException)
                 {
-                    if (Enumerable.Any<NPath>(this.Files(true)))
+                    if (this.Files(true).Any<NPath>())
                     {
                         throw;
                     }
@@ -559,10 +517,8 @@
             return dest;
         }
 
-        public NPath Move(string dest)
-        {
-            return this.Move(new NPath(dest));
-        }
+        public NPath Move(string dest) => 
+            this.Move(new NPath(dest));
 
         public static bool operator ==(NPath a, NPath b)
         {
@@ -577,10 +533,8 @@
             return a.Equals(b);
         }
 
-        public static bool operator !=(NPath a, NPath b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(NPath a, NPath b) => 
+            !(a == b);
 
         public NPath ParentContaining(NPath needle)
         {
@@ -597,10 +551,8 @@
             return parent;
         }
 
-        public NPath ParentContaining(string needle)
-        {
-            return this.ParentContaining(new NPath(needle));
-        }
+        public NPath ParentContaining(string needle) => 
+            this.ParentContaining(new NPath(needle));
 
         private string ParseDriveLetter(string path, out string driveLetter)
         {
@@ -620,7 +572,7 @@
             {
                 <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <ParseSplitStringIntoElements>m__1);
             }
-            foreach (string str in Enumerable.Where<string>(inputs, <>f__am$cache1))
+            foreach (string str in inputs.Where<string>(<>f__am$cache1))
             {
                 if (str == "..")
                 {
@@ -658,7 +610,7 @@
                 object[] objArray1 = new object[] { "Path.RelativeTo() was invoked with two paths that are unrelated. invoked on: ", this.ToString(), " asked to be made relative to: ", path };
                 throw new ArgumentException(string.Concat(objArray1));
             }
-            return new NPath(Enumerable.ToArray<string>(Enumerable.Skip<string>(this._elements, path._elements.Length)), true, null);
+            return new NPath(this._elements.Skip<string>(path._elements.Length).ToArray<string>(), true, null);
         }
 
         private static char Slash(SlashMode slashMode)
@@ -685,10 +637,8 @@
             }
         }
 
-        public override string ToString()
-        {
-            return this.ToString(SlashMode.Native);
-        }
+        public override string ToString() => 
+            this.ToString(SlashMode.Native);
 
         public string ToString(SlashMode slashMode)
         {
@@ -719,10 +669,8 @@
             return builder.ToString();
         }
 
-        private static string WithDot(string extension)
-        {
-            return (!extension.StartsWith(".") ? ("." + extension) : extension);
-        }
+        private static string WithDot(string extension) => 
+            (!extension.StartsWith(".") ? ("." + extension) : extension);
 
         public NPath WriteAllLines(string[] contents)
         {
@@ -740,27 +688,17 @@
             return this;
         }
 
-        public static NPath CurrentDirectory
-        {
-            get
-            {
-                return new NPath(Directory.GetCurrentDirectory());
-            }
-        }
+        public static NPath CurrentDirectory =>
+            new NPath(Directory.GetCurrentDirectory());
 
-        public IEnumerable<string> Elements
-        {
-            get
-            {
-                return this._elements;
-            }
-        }
+        public IEnumerable<string> Elements =>
+            this._elements;
 
         public string ExtensionWithDot
         {
             get
             {
-                string str = Enumerable.Last<string>(this._elements);
+                string str = this._elements.Last<string>();
                 int startIndex = str.LastIndexOf(".");
                 if (startIndex < 0)
                 {
@@ -770,21 +708,11 @@
             }
         }
 
-        public string FileName
-        {
-            get
-            {
-                return Enumerable.Last<string>(this._elements);
-            }
-        }
+        public string FileName =>
+            this._elements.Last<string>();
 
-        public string FileNameWithoutExtension
-        {
-            get
-            {
-                return Path.GetFileNameWithoutExtension(this.FileName);
-            }
-        }
+        public string FileNameWithoutExtension =>
+            Path.GetFileNameWithoutExtension(this.FileName);
 
         public static NPath HomeDirectory
         {
@@ -798,13 +726,8 @@
             }
         }
 
-        public bool IsRelative
-        {
-            get
-            {
-                return this._isRelative;
-            }
-        }
+        public bool IsRelative =>
+            this._isRelative;
 
         public NPath Parent
         {
@@ -814,17 +737,12 @@
                 {
                     throw new InvalidOperationException("Parent is called on an empty path");
                 }
-                return new NPath(Enumerable.ToArray<string>(Enumerable.Take<string>(this._elements, this._elements.Length - 1)), this._isRelative, this._driveLetter);
+                return new NPath(this._elements.Take<string>((this._elements.Length - 1)).ToArray<string>(), this._isRelative, this._driveLetter);
             }
         }
 
-        public static NPath SystemTemp
-        {
-            get
-            {
-                return new NPath(Path.GetTempPath());
-            }
-        }
+        public static NPath SystemTemp =>
+            new NPath(Path.GetTempPath());
 
         [CompilerGenerated]
         private sealed class <CopyFiles>c__AnonStorey1
@@ -844,10 +762,8 @@
         {
             internal string extensionWithDotLower;
 
-            internal bool <>m__0(string e)
-            {
-                return (NPath.WithDot(e).ToLower() == this.extensionWithDotLower);
-            }
+            internal bool <>m__0(string e) => 
+                (NPath.WithDot(e).ToLower() == this.extensionWithDotLower);
         }
     }
 }

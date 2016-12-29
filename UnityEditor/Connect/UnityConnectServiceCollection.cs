@@ -119,13 +119,11 @@
             {
                 <>f__am$cache2 = new Func<KeyValuePair<string, UnityConnectServiceData>, ServiceInfo>(null, (IntPtr) <GetAllServiceInfos>m__2);
             }
-            return Enumerable.ToArray<ServiceInfo>(Enumerable.Select<KeyValuePair<string, UnityConnectServiceData>, ServiceInfo>(this.m_Services, <>f__am$cache2));
+            return Enumerable.Select<KeyValuePair<string, UnityConnectServiceData>, ServiceInfo>(this.m_Services, <>f__am$cache2).ToArray<ServiceInfo>();
         }
 
-        public List<string> GetAllServiceNames()
-        {
-            return Enumerable.ToList<string>(this.m_Services.Keys);
-        }
+        public List<string> GetAllServiceNames() => 
+            this.m_Services.Keys.ToList<string>();
 
         public List<string> GetAllServiceUrls()
         {
@@ -133,7 +131,7 @@
             {
                 <>f__am$cache1 = new Func<UnityConnectServiceData, string>(null, (IntPtr) <GetAllServiceUrls>m__1);
             }
-            return Enumerable.ToList<string>(Enumerable.Select<UnityConnectServiceData, string>(this.m_Services.Values, <>f__am$cache1));
+            return Enumerable.Select<UnityConnectServiceData, string>(this.m_Services.Values, <>f__am$cache1).ToList<string>();
         }
 
         public UnityConnectServiceData GetServiceFromUrl(string searchUrl)
@@ -144,10 +142,8 @@
             return Enumerable.FirstOrDefault<KeyValuePair<string, UnityConnectServiceData>>(this.m_Services, new Func<KeyValuePair<string, UnityConnectServiceData>, bool>(storey, (IntPtr) this.<>m__0)).Value;
         }
 
-        public string GetUrlForService(string serviceName)
-        {
-            return (!this.m_Services.ContainsKey(serviceName) ? string.Empty : this.m_Services[serviceName].serviceUrl);
-        }
+        public string GetUrlForService(string serviceName) => 
+            (!this.m_Services.ContainsKey(serviceName) ? string.Empty : this.m_Services[serviceName].serviceUrl);
 
         public WebView GetWebViewFromServiceName(string serviceName)
         {
@@ -200,15 +196,11 @@
             return this.m_Services.Remove(serviceName);
         }
 
-        public bool ServiceExist(string serviceName)
-        {
-            return this.m_Services.ContainsKey(serviceName);
-        }
+        public bool ServiceExist(string serviceName) => 
+            this.m_Services.ContainsKey(serviceName);
 
-        public bool ShowService(string serviceName, bool forceFocus)
-        {
-            return this.ShowService(serviceName, "", forceFocus);
-        }
+        public bool ShowService(string serviceName, bool forceFocus) => 
+            this.ShowService(serviceName, "", forceFocus);
 
         public bool ShowService(string serviceName, string atPage, bool forceFocus)
         {
@@ -266,10 +258,8 @@
         {
             internal string searchUrl;
 
-            internal bool <>m__0(KeyValuePair<string, UnityConnectServiceData> kvp)
-            {
-                return (kvp.Value.serviceUrl == this.searchUrl);
-            }
+            internal bool <>m__0(KeyValuePair<string, UnityConnectServiceData> kvp) => 
+                (kvp.Value.serviceUrl == this.searchUrl);
         }
 
         public class ServiceInfo

@@ -104,7 +104,7 @@
             {
                 this.AddData(new RuntimeGenericTypeData(RuntimeGenericContextInfo.Static, genericType));
             }
-            TypeReference baseType = Unity.IL2CPP.Extensions.GetBaseType(genericType);
+            TypeReference baseType = genericType.GetBaseType();
             if (baseType != null)
             {
                 this.AddStaticUsageRecursiveIfNeeded(baseType);
@@ -264,7 +264,7 @@
                         case Code.Ldvirtftn:
                         {
                             MethodReference reference11 = (MethodReference) instruction.Operand;
-                            if (Unity.IL2CPP.Extensions.IsInterface(reference11.DeclaringType))
+                            if (reference11.DeclaringType.IsInterface())
                             {
                                 this.AddClassUsage(reference11.DeclaringType);
                             }
@@ -293,9 +293,9 @@
             goto Label_03CA;
         Label_028A:
             reference12 = (MethodReference) instruction.Operand;
-            if (!Naming.IsSpecialArrayMethod(reference12) && (!Unity.IL2CPP.Extensions.IsSystemArray(reference12.DeclaringType) || ((reference12.Name != "GetGenericValueImpl") && (reference12.Name != "SetGenericValueImpl"))))
+            if (!Naming.IsSpecialArrayMethod(reference12) && (!reference12.DeclaringType.IsSystemArray() || ((reference12.Name != "GetGenericValueImpl") && (reference12.Name != "SetGenericValueImpl"))))
             {
-                if (((instruction.OpCode.Code == Code.Callvirt) && Unity.IL2CPP.Extensions.IsInterface(reference12.DeclaringType)) && !reference12.IsGenericInstance)
+                if (((instruction.OpCode.Code == Code.Callvirt) && reference12.DeclaringType.IsInterface()) && !reference12.IsGenericInstance)
                 {
                     this.AddClassUsage(reference12.DeclaringType);
                     if ((instruction.Previous != null) && (instruction.Previous.OpCode.Code == Code.Constrained))
@@ -350,10 +350,8 @@
         {
             internal RuntimeGenericTypeData data;
 
-            internal bool <>m__0(RuntimeGenericData d)
-            {
-                return ((d.InfoType == this.data.InfoType) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(((RuntimeGenericTypeData) d).GenericType, this.data.GenericType, TypeComparisonMode.Exact));
-            }
+            internal bool <>m__0(RuntimeGenericData d) => 
+                ((d.InfoType == this.data.InfoType) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(((RuntimeGenericTypeData) d).GenericType, this.data.GenericType, TypeComparisonMode.Exact));
         }
 
         [CompilerGenerated]
@@ -361,10 +359,8 @@
         {
             internal RuntimeGenericMethodData data;
 
-            internal bool <>m__0(RuntimeGenericData d)
-            {
-                return ((d.InfoType == this.data.InfoType) && new Unity.IL2CPP.Common.MethodReferenceComparer().Equals(((RuntimeGenericMethodData) d).GenericMethod, this.data.GenericMethod));
-            }
+            internal bool <>m__0(RuntimeGenericData d) => 
+                ((d.InfoType == this.data.InfoType) && new Unity.IL2CPP.Common.MethodReferenceComparer().Equals(((RuntimeGenericMethodData) d).GenericMethod, this.data.GenericMethod));
         }
     }
 }

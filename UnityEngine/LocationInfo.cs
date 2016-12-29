@@ -18,63 +18,33 @@
         /// <summary>
         /// <para>Geographical device location latitude.</para>
         /// </summary>
-        public float latitude
-        {
-            get
-            {
-                return this.m_Latitude;
-            }
-        }
+        public float latitude =>
+            this.m_Latitude;
         /// <summary>
         /// <para>Geographical device location latitude.</para>
         /// </summary>
-        public float longitude
-        {
-            get
-            {
-                return this.m_Longitude;
-            }
-        }
+        public float longitude =>
+            this.m_Longitude;
         /// <summary>
         /// <para>Geographical device location altitude.</para>
         /// </summary>
-        public float altitude
-        {
-            get
-            {
-                return this.m_Altitude;
-            }
-        }
+        public float altitude =>
+            this.m_Altitude;
         /// <summary>
         /// <para>Horizontal accuracy of the location.</para>
         /// </summary>
-        public float horizontalAccuracy
-        {
-            get
-            {
-                return this.m_HorizontalAccuracy;
-            }
-        }
+        public float horizontalAccuracy =>
+            this.m_HorizontalAccuracy;
         /// <summary>
         /// <para>Vertical accuracy of the location.</para>
         /// </summary>
-        public float verticalAccuracy
-        {
-            get
-            {
-                return this.m_VerticalAccuracy;
-            }
-        }
+        public float verticalAccuracy =>
+            this.m_VerticalAccuracy;
         /// <summary>
         /// <para>Timestamp (in seconds since 1970) when location was last time updated.</para>
         /// </summary>
-        public double timestamp
-        {
-            get
-            {
-                return this.m_Timestamp;
-            }
-        }
+        public double timestamp =>
+            this.m_Timestamp;
     }
 }
 

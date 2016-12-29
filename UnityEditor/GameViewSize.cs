@@ -102,10 +102,8 @@
 
         public string baseText
         {
-            get
-            {
-                return this.m_BaseText;
-            }
+            get => 
+                this.m_BaseText;
             set
             {
                 this.m_BaseText = value;
@@ -136,10 +134,8 @@
 
         public int height
         {
-            get
-            {
-                return this.m_Height;
-            }
+            get => 
+                this.m_Height;
             set
             {
                 this.m_Height = value;
@@ -148,13 +144,8 @@
             }
         }
 
-        public bool isFreeAspectRatio
-        {
-            get
-            {
-                return (this.width == 0);
-            }
-        }
+        public bool isFreeAspectRatio =>
+            (this.width == 0);
 
         private string sizeText
         {
@@ -162,11 +153,11 @@
             {
                 if (this.sizeType == GameViewSizeType.AspectRatio)
                 {
-                    return string.Format("{0}:{1}", this.width, this.height);
+                    return $"{this.width}:{this.height}";
                 }
                 if (this.sizeType == GameViewSizeType.FixedResolution)
                 {
-                    return string.Format("{0}x{1}", this.width, this.height);
+                    return $"{this.width}x{this.height}";
                 }
                 Debug.LogError("Unhandled game view size type");
                 return "";
@@ -175,10 +166,8 @@
 
         public GameViewSizeType sizeType
         {
-            get
-            {
-                return this.m_SizeType;
-            }
+            get => 
+                this.m_SizeType;
             set
             {
                 this.m_SizeType = value;
@@ -189,10 +178,8 @@
 
         public int width
         {
-            get
-            {
-                return this.m_Width;
-            }
+            get => 
+                this.m_Width;
             set
             {
                 this.m_Width = value;

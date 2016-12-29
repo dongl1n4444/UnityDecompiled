@@ -13,15 +13,11 @@
             this.$from = from;
         }
 
-        public static ObjectFactory Adapt(__UnityScriptCompilerParameters$callable6$43_34__ from)
-        {
-            return new ObjectFactory(new $adaptor$__UnityScriptCompilerParameters$callable6$43_34__$ObjectFactory$3(from).Invoke);
-        }
+        public static ObjectFactory Adapt(__UnityScriptCompilerParameters$callable6$43_34__ from) => 
+            new ObjectFactory(new $adaptor$__UnityScriptCompilerParameters$callable6$43_34__$ObjectFactory$3(from).Invoke);
 
-        public object Invoke()
-        {
-            return this.$from();
-        }
+        public object Invoke() => 
+            this.$from();
     }
 }
 

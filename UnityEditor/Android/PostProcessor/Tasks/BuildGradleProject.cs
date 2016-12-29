@@ -69,13 +69,8 @@
             File.Move(sourceFileName, Paths.Combine(textArray6));
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Building Gradle project";
-            }
-        }
+        public string Name =>
+            "Building Gradle project";
     }
 }
 

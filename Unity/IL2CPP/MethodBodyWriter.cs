@@ -123,10 +123,8 @@
             this._thisInstructionIsVolatile = true;
         }
 
-        private string ArrayIndexerForIntPtr(string indexExpression, TypeReference indexType)
-        {
-            return string.Format("({0})({1}){2}", Naming.ForArrayIndexType(), !Extensions.IsSameType(indexType, this.IntPtrTypeReference) ? Naming.ForUIntPtrT : Naming.ForIntPtrT, this.FormatNativeIntGetterName(indexExpression, indexType));
-        }
+        private string ArrayIndexerForIntPtr(string indexExpression, TypeReference indexType) => 
+            $"({Naming.ForArrayIndexType()})({(!indexType.IsSameType(this.IntPtrTypeReference) ? Naming.ForUIntPtrT : Naming.ForIntPtrT)}){this.FormatNativeIntGetterName(indexExpression, indexType)}";
 
         private StackInfo BoxThisForContraintedCallIntoNewTemp(StackInfo thisValue)
         {
@@ -138,7 +136,7 @@
 
         private TypeReference CalculateResultTypeForNegate(TypeReference type)
         {
-            if (!Extensions.IsUnsignedIntegralType(type))
+            if (!type.IsUnsignedIntegralType())
             {
                 return type;
             }
@@ -149,7 +147,7 @@
             return TypeProvider.Int64TypeReference;
         }
 
-        private string CallExpressionFor(MethodReference callingMethod, MethodReference unresolvedMethodToCall, MethodCallType callType, List<StackInfo> poppedValues, Func<string, string> addUniqueSuffix, [Optional, DefaultParameterValue(true)] bool emitNullCheckForInvocation)
+        private string CallExpressionFor(MethodReference callingMethod, MethodReference unresolvedMethodToCall, MethodCallType callType, List<StackInfo> poppedValues, Func<string, string> addUniqueSuffix, bool emitNullCheckForInvocation = true)
         {
             MethodReference reference = this._typeResolver.Resolve(unresolvedMethodToCall);
             Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall = this._typeResolver;
@@ -161,7 +159,7 @@
             List<TypeReference> parameterTypes = GetParameterTypes(reference, typeResolverForMethodToCall);
             if (reference.HasThis)
             {
-                parameterTypes.Insert(0, !Extensions.IsValueType(reference.DeclaringType) ? reference.DeclaringType : new ByReferenceType(reference.DeclaringType));
+                parameterTypes.Insert(0, !reference.DeclaringType.IsValueType() ? reference.DeclaringType : new ByReferenceType(reference.DeclaringType));
             }
             List<string> args = FormatArgumentsForMethodCall(parameterTypes, poppedValues, this._sharingType);
             if (NeedsNullArgForStaticMethod(reference, false))
@@ -170,7 +168,7 @@
             }
             if (MethodSignatureWriter.NeedsHiddenMethodInfo(reference, callType, false))
             {
-                args.Add((!CodeGenOptions.EmitComments ? "" : "/*hidden argument*/") + ((callType != MethodCallType.DirectVirtual) ? this._runtimeMetadataAccess.HiddenMethodInfo(unresolvedMethodToCall) : string.Format("{0}->vtable[{1}].method", addUniqueSuffix.Invoke("il2cpp_this_typeinfo"), this._vTableBuilder.IndexFor(unresolvedMethodToCall.Resolve()) + InterfaceOffsetExpressionForDirectVirtualCall(unresolvedMethodToCall, addUniqueSuffix))));
+                args.Add((!CodeGenOptions.EmitComments ? "" : "/*hidden argument*/") + ((callType != MethodCallType.DirectVirtual) ? this._runtimeMetadataAccess.HiddenMethodInfo(unresolvedMethodToCall) : $"{addUniqueSuffix.Invoke("il2cpp_this_typeinfo")}->vtable[{(this._vTableBuilder.IndexFor(unresolvedMethodToCall.Resolve()) + InterfaceOffsetExpressionForDirectVirtualCall(unresolvedMethodToCall, addUniqueSuffix))}].method"));
             }
             if (emitNullCheckForInvocation)
             {
@@ -181,7 +179,7 @@
                 this.WriteCallToClassAndInitializerAndStaticConstructorIfNeeded(unresolvedMethodToCall.DeclaringType, this._methodDefinition, this._runtimeMetadataAccess);
             }
             string str2 = GetMethodCallExpression(callingMethod, reference, unresolvedMethodToCall, typeResolverForMethodToCall, callType, this._runtimeMetadataAccess, this._vTableBuilder, args, this._arrayBoundsCheckSupport.ShouldEmitBoundsChecksForMethod(), addUniqueSuffix);
-            if ((callType != MethodCallType.Virtual) || (MethodSignatureWriter.CanDevirtualizeMethodCall(reference.Resolve()) && Extensions.IsValueType(unresolvedMethodToCall.DeclaringType)))
+            if ((callType != MethodCallType.Virtual) || (MethodSignatureWriter.CanDevirtualizeMethodCall(reference.Resolve()) && unresolvedMethodToCall.DeclaringType.IsValueType()))
             {
                 this._writer.AddIncludeForMethodDeclarations(reference.DeclaringType);
             }
@@ -193,7 +191,7 @@
             if ((ins != null) && (ins.OpCode.Code == Code.Box))
             {
                 TypeReference typeReference = this._typeResolver.Resolve((TypeReference) ins.Operand);
-                return (((Extensions.IsValueType(typeReference) && !Extensions.IsNullable(typeReference)) && ((ins != block.Last) && (ins.Next != null))) && ((((ins.Next.OpCode.Code == Code.Brtrue) || (ins.Next.OpCode.Code == Code.Brtrue_S)) || (ins.Next.OpCode.Code == Code.Brfalse)) || (ins.Next.OpCode.Code == Code.Brfalse_S)));
+                return (((typeReference.IsValueType() && !typeReference.IsNullable()) && ((ins != block.Last) && (ins.Next != null))) && ((((ins.Next.OpCode.Code == Code.Brtrue) || (ins.Next.OpCode.Code == Code.Brtrue_S)) || (ins.Next.OpCode.Code == Code.Brfalse)) || (ins.Next.OpCode.Code == Code.Brfalse_S)));
             }
             return false;
         }
@@ -214,10 +212,8 @@
             }
         }
 
-        private string CastExpressionForOperandOfComparision(Signedness signedness, StackInfo left)
-        {
-            return ("(" + Naming.ForVariable(this.TypeForComparison(signedness, left.Type)) + ")");
-        }
+        private string CastExpressionForOperandOfComparision(Signedness signedness, StackInfo left) => 
+            ("(" + Naming.ForVariable(this.TypeForComparison(signedness, left.Type)) + ")");
 
         private static string CastIfPointerType(TypeReference type)
         {
@@ -231,11 +227,11 @@
 
         private static string CastReferenceTypeOrNativeIntIfNeeded(StackInfo originalValue, TypeReference toType)
         {
-            if (!Extensions.IsValueType(toType))
+            if (!toType.IsValueType())
             {
                 return CastTypeIfNeeded(originalValue, toType);
             }
-            if (Extensions.IsNativeIntegralType(originalValue.Type))
+            if (originalValue.Type.IsNativeIntegralType())
             {
                 return CastTypeIfNeeded(originalValue, new ByReferenceType(toType));
             }
@@ -250,7 +246,7 @@
         {
             if (!Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(originalValue.Type, toType, TypeComparisonMode.Exact))
             {
-                return string.Format("({0})", Emit.Cast(toType, originalValue.Expression));
+                return $"({Emit.Cast(toType, originalValue.Expression)})";
             }
             return originalValue.Expression;
         }
@@ -261,7 +257,7 @@
             {
                 <>f__am$cache0 = new Func<InstructionBlock, bool>(null, (IntPtr) <CollectUsedLabels>m__1);
             }
-            foreach (InstructionBlock block in Enumerable.Where<InstructionBlock>(this._cfg.Blocks, <>f__am$cache0))
+            foreach (InstructionBlock block in this._cfg.Blocks.Where<InstructionBlock>(<>f__am$cache0))
             {
                 this._referencedLabels.Add(block.First);
             }
@@ -295,8 +291,8 @@
             }
             string expressionFor = this.GetExpressionFor(info2);
             string str5 = this.GetExpressionFor(left);
-            string str6 = string.Format("(({0}{1}) {2} ({3}{4}))", new object[] { expression, expressionFor, cppOperator, str3, str5 });
-            return (!negate ? str6 : string.Format("(!{0})", str6));
+            string str6 = $"(({expression}{expressionFor}) {cppOperator} ({str3}{str5}))";
+            return (!negate ? str6 : $"(!{str6})");
         }
 
         private string ConstrainedCallExpressionFor(MethodReference resolvedMethodToCall, ref MethodReference methodToCall, MethodCallType callType, List<StackInfo> poppedValues, Func<string, string> addUniqueSuffix)
@@ -311,9 +307,9 @@
             TypeReference b = this._typeResolver.Resolve(this._constrainedCallThisType);
             if (!Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(elementType, b, TypeComparisonMode.Exact))
             {
-                throw new InvalidOperationException(string.Format("Attempting to constrain a value of type '{0}' to type '{1}'.", elementType, b));
+                throw new InvalidOperationException($"Attempting to constrain a value of type '{elementType}' to type '{b}'.");
             }
-            if (!Extensions.IsValueType(elementType))
+            if (!elementType.IsValueType())
             {
                 poppedValues[0] = new StackInfo(Emit.Dereference(thisValue.Expression), elementType);
                 this._writer.AddIncludeForTypeDefinition(resolvedMethodToCall.DeclaringType);
@@ -329,38 +325,39 @@
                 string str2 = addUniqueSuffix.Invoke("il2cpp_this_typeinfo");
                 object[] args = new object[] { str2, this._runtimeMetadataAccess.TypeInfoFor(this._constrainedCallThisType) };
                 this._writer.WriteLine("Il2CppClass* {0} = {1};", args);
-                if (Extensions.IsInterface(resolvedMethodToCall.DeclaringType))
+                if (resolvedMethodToCall.DeclaringType.IsInterface())
                 {
                     object[] objArray2 = new object[] { addUniqueSuffix.Invoke("il2cpp_interface_offset_"), str2, this._runtimeMetadataAccess.TypeInfoFor(methodToCall.DeclaringType) };
                     this._writer.WriteLine("int32_t {0} = il2cpp_codegen_class_interface_offset({1}, {2});", objArray2);
                 }
                 string str3 = InterfaceOffsetExpressionForDirectVirtualCall(resolvedMethodToCall, addUniqueSuffix);
-                List<StackInfo> list = new List<StackInfo>(poppedValues);
-                list[0] = new StackInfo(Emit.Call("Box", str2, thisValue.Expression), TypeProvider.ObjectTypeReference);
+                List<StackInfo> list = new List<StackInfo>(poppedValues) {
+                    [0] = new StackInfo(Emit.Call("Box", str2, thisValue.Expression), TypeProvider.ObjectTypeReference)
+                };
                 string str4 = this.CallExpressionFor(this._methodReference, methodToCall, callType, list, addUniqueSuffix, false);
                 List<StackInfo> list2 = new List<StackInfo>(poppedValues);
                 StackInfo info2 = list2[0];
-                list2[0] = new StackInfo(string.Format("il2cpp_codegen_fake_box({0})", info2.Expression), TypeProvider.ObjectTypeReference);
+                list2[0] = new StackInfo($"il2cpp_codegen_fake_box({info2.Expression})", TypeProvider.ObjectTypeReference);
                 string str5 = this.CallExpressionFor(this._methodReference, methodToCall, MethodCallType.DirectVirtual, list2, addUniqueSuffix, false);
                 string str6 = Emit.Call("il2cpp_codegen_type_implements_virtual_method", str2, this._vTableBuilder.IndexFor(methodToCall.Resolve()) + str3);
-                return string.Format("{0} ? {1} : {2}", str6, str5, str4);
+                return $"{str6} ? {str5} : {str4}";
             }
             MethodReference virtualMethodTargetMethodForConstrainedCallOnValueType = this._vTableBuilder.GetVirtualMethodTargetMethodForConstrainedCallOnValueType(b, resolvedMethodToCall);
             if ((virtualMethodTargetMethodForConstrainedCallOnValueType != null) && Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(virtualMethodTargetMethodForConstrainedCallOnValueType.DeclaringType, b, TypeComparisonMode.Exact))
             {
-                if ((elementType.IsGenericInstance && Extensions.IsValueType(elementType)) && (this._sharingType == SharingType.Shared))
+                if ((elementType.IsGenericInstance && elementType.IsValueType()) && (this._sharingType == SharingType.Shared))
                 {
                     string str7 = addUniqueSuffix.Invoke("il2cpp_this_typeinfo");
                     object[] objArray3 = new object[] { str7, this._runtimeMetadataAccess.TypeInfoFor(this._constrainedCallThisType) };
                     this._writer.WriteLine("Il2CppClass* {0} = {1};", objArray3);
-                    if (Extensions.IsInterface(resolvedMethodToCall.DeclaringType))
+                    if (resolvedMethodToCall.DeclaringType.IsInterface())
                     {
                         object[] objArray4 = new object[] { addUniqueSuffix.Invoke("il2cpp_interface_offset_"), str7, this._runtimeMetadataAccess.TypeInfoFor(methodToCall.DeclaringType) };
                         this._writer.WriteLine("int32_t {0} = il2cpp_codegen_class_interface_offset({1}, {2});", objArray4);
                     }
                     List<StackInfo> list3 = new List<StackInfo>(poppedValues);
                     StackInfo info3 = list3[0];
-                    list3[0] = new StackInfo(string.Format("il2cpp_codegen_fake_box({0})", info3.Expression), TypeProvider.ObjectTypeReference);
+                    list3[0] = new StackInfo($"il2cpp_codegen_fake_box({info3.Expression})", TypeProvider.ObjectTypeReference);
                     return this.CallExpressionFor(this._methodReference, methodToCall, MethodCallType.DirectVirtual, list3, addUniqueSuffix, false);
                 }
                 methodToCall = virtualMethodTargetMethodForConstrainedCallOnValueType;
@@ -376,7 +373,7 @@
         private void ConvertToNaturalInt(TypeReference pointerType)
         {
             StackInfo info = this._valueStack.Pop();
-            this.PushExpression(pointerType, string.Format("(({0}){1})", Naming.ForVariable(pointerType), info.Expression));
+            this.PushExpression(pointerType, $"(({Naming.ForVariable(pointerType)}){info.Expression})");
         }
 
         private void ConvertToNaturalIntWithOverflow<TMaxValueType>(TypeReference pointerType, bool treatInputAsUnsigned, TMaxValueType maxValue)
@@ -385,10 +382,8 @@
             this.ConvertToNaturalInt(pointerType);
         }
 
-        private bool DidAlreadyEmitLabelFor(Instruction ins)
-        {
-            return this._emittedLabels.Contains(ins);
-        }
+        private bool DidAlreadyEmitLabelFor(Instruction ins) => 
+            this._emittedLabels.Contains(ins);
 
         private void DumpInsFor(InstructionBlock block)
         {
@@ -409,7 +404,7 @@
                     {
                         <>f__am$cache5 = new Func<TypeReference, string>(null, (IntPtr) <DumpInsFor>m__6);
                     }
-                    args[1] = EnumerableExtensions.AggregateWithComma(Enumerable.Select<TypeReference, string>(entry.Types, <>f__am$cache5));
+                    args[1] = entry.Types.Select<TypeReference, string>(<>f__am$cache5).AggregateWithComma();
                     args[2] = entry.NullValue;
                     this.WriteComment("[in: {0}] {1} (null: {2})", args);
                 }
@@ -435,7 +430,7 @@
                     {
                         <>f__am$cache6 = new Func<TypeReference, string>(null, (IntPtr) <DumpOutsFor>m__7);
                     }
-                    args[1] = EnumerableExtensions.AggregateWithComma(Enumerable.Select<TypeReference, string>(entry.Types, <>f__am$cache6));
+                    args[1] = entry.Types.Select<TypeReference, string>(<>f__am$cache6).AggregateWithComma();
                     args[2] = entry.NullValue;
                     this.WriteComment("[out: {0}] {1} (null: {2})", args);
                 }
@@ -445,7 +440,7 @@
         private string EmitArrayLoadElementAddress(StackInfo array, string indexExpression, TypeReference indexType)
         {
             this._arrayBoundsCheckSupport.RecordArrayBoundsCheckEmitted();
-            if (Extensions.IsIntegralPointerType(indexType) || Extensions.IsNativeIntegralType(indexType))
+            if (indexType.IsIntegralPointerType() || indexType.IsNativeIntegralType())
             {
                 return Emit.LoadArrayElementAddress(array.Expression, this.ArrayIndexerForIntPtr(indexExpression, indexType), this._arrayBoundsCheckSupport.ShouldEmitBoundsChecksForMethod());
             }
@@ -454,7 +449,7 @@
 
         private void EmitCallExpressionAndStoreResult(Instruction instruction, TypeReference returnType, string callExpression)
         {
-            if (Extensions.IsVoid(returnType))
+            if (returnType.IsVoid())
             {
                 this._writer.WriteStatement(callExpression);
             }
@@ -480,10 +475,8 @@
             }
         }
 
-        private static string EmitCastRightCastToLeftType(TypeReference leftType, StackInfo right)
-        {
-            return string.Format("({0}){1}", Naming.ForVariable(leftType), right.Expression);
-        }
+        private static string EmitCastRightCastToLeftType(TypeReference leftType, StackInfo right) => 
+            $"({Naming.ForVariable(leftType)}){right.Expression}";
 
         private void EmitCodeForLeaveFromBlock(ExceptionSupport.Node node, Instruction ins)
         {
@@ -494,10 +487,10 @@
             }
             else
             {
-                ExceptionSupport.Node[] source = Enumerable.ToArray<ExceptionSupport.Node>(node.GetTargetFinallyNodesForJump(ins.Offset, offset));
+                ExceptionSupport.Node[] source = node.GetTargetFinallyNodesForJump(ins.Offset, offset).ToArray<ExceptionSupport.Node>();
                 if (source.Length != 0)
                 {
-                    ExceptionSupport.Node node2 = Enumerable.First<ExceptionSupport.Node>(source);
+                    ExceptionSupport.Node node2 = source.First<ExceptionSupport.Node>();
                     foreach (ExceptionSupport.Node node3 in source)
                     {
                         this._exceptionSupport.AddLeaveTarget(node3, ins);
@@ -515,10 +508,10 @@
         private void EmitCodeForLeaveFromCatch(ExceptionSupport.Node node, Instruction ins)
         {
             int offset = ((Instruction) ins.Operand).Offset;
-            ExceptionSupport.Node[] source = Enumerable.ToArray<ExceptionSupport.Node>(node.GetTargetFinallyNodesForJump(ins.Offset, offset));
+            ExceptionSupport.Node[] source = node.GetTargetFinallyNodesForJump(ins.Offset, offset).ToArray<ExceptionSupport.Node>();
             if (source.Length != 0)
             {
-                ExceptionSupport.Node node2 = Enumerable.First<ExceptionSupport.Node>(source);
+                ExceptionSupport.Node node2 = source.First<ExceptionSupport.Node>();
                 foreach (ExceptionSupport.Node node3 in source)
                 {
                     this._exceptionSupport.AddLeaveTarget(node3, ins);
@@ -540,10 +533,10 @@
         private void EmitCodeForLeaveFromTry(ExceptionSupport.Node node, Instruction ins)
         {
             int offset = ((Instruction) ins.Operand).Offset;
-            ExceptionSupport.Node[] source = Enumerable.ToArray<ExceptionSupport.Node>(node.GetTargetFinallyNodesForJump(ins.Offset, offset));
+            ExceptionSupport.Node[] source = node.GetTargetFinallyNodesForJump(ins.Offset, offset).ToArray<ExceptionSupport.Node>();
             if (source.Length != 0)
             {
-                ExceptionSupport.Node node2 = Enumerable.First<ExceptionSupport.Node>(source);
+                ExceptionSupport.Node node2 = source.First<ExceptionSupport.Node>();
                 foreach (ExceptionSupport.Node node3 in source)
                 {
                     this._exceptionSupport.AddLeaveTarget(node3, ins);
@@ -566,7 +559,7 @@
             {
                 <>f__am$cacheD = new Func<FieldDefinition, bool>(null, (IntPtr) <EmitLocalIntPtrWithValue>m__F);
             }
-            string str = Naming.ForFieldSetter(Enumerable.First<FieldDefinition>(this.IntPtrTypeReference.Resolve().Fields, <>f__am$cacheD));
+            string str = Naming.ForFieldSetter(this.IntPtrTypeReference.Resolve().Fields.First<FieldDefinition>(<>f__am$cacheD));
             object[] objArray2 = new object[] { local.Expression, str, stringValue };
             this._writer.WriteLine("{0}.{1}((void*){2});", objArray2);
             return local;
@@ -581,15 +574,15 @@
             {
                 <>f__am$cacheE = new Func<FieldDefinition, bool>(null, (IntPtr) <EmitLocalUIntPtrWithValue>m__10);
             }
-            string str = Naming.ForFieldSetter(Enumerable.First<FieldDefinition>(this.UIntPtrTypeReference.Resolve().Fields, <>f__am$cacheE));
+            string str = Naming.ForFieldSetter(this.UIntPtrTypeReference.Resolve().Fields.First<FieldDefinition>(<>f__am$cacheE));
             object[] objArray2 = new object[] { local.Expression, str, stringValue };
             this._writer.WriteLine("{0}.{1}((void*){2});", objArray2);
             return local;
         }
 
-        private void EmitMemoryBarrierIfNecessary([Optional, DefaultParameterValue(null)] FieldReference fieldReference)
+        private void EmitMemoryBarrierIfNecessary(FieldReference fieldReference = null)
         {
-            if (this._thisInstructionIsVolatile || Extensions.IsVolatile(fieldReference))
+            if (this._thisInstructionIsVolatile || fieldReference.IsVolatile())
             {
                 StatsService.RecordMemoryBarrierEmitted(this._methodDefinition);
                 this._writer.WriteStatement(Emit.MemoryBarrier());
@@ -599,17 +592,17 @@
 
         private void EnterCatch(ExceptionSupport.Node node)
         {
-            this._writer.BeginBlock(string.Format("begin catch({0})", node.Handler.CatchType.FullName));
+            this._writer.BeginBlock($"begin catch({node.Handler.CatchType.FullName})");
         }
 
         private void EnterFault(ExceptionSupport.Node node)
         {
-            this._writer.BeginBlock(string.Format("begin fault (depth: {0})", node.Depth));
+            this._writer.BeginBlock($"begin fault (depth: {node.Depth})");
         }
 
         private void EnterFinally(ExceptionSupport.Node node)
         {
-            this._writer.BeginBlock(string.Format("begin finally (depth: {0})", node.Depth));
+            this._writer.BeginBlock($"begin finally (depth: {node.Depth})");
         }
 
         private void EnterNode(ExceptionSupport.Node node)
@@ -642,12 +635,12 @@
         private void EnterTry(ExceptionSupport.Node node)
         {
             this._writer.WriteLine("try");
-            this._writer.BeginBlock(string.Format("begin try (depth: {0})", node.Depth));
+            this._writer.BeginBlock($"begin try (depth: {node.Depth})");
         }
 
         private void ExitCatch(ExceptionSupport.Node node)
         {
-            this._writer.EndBlock(string.Format("end catch (depth: {0})", node.Depth), false);
+            this._writer.EndBlock($"end catch (depth: {node.Depth})", false);
         }
 
         private void ExitFault(ExceptionSupport.Node node)
@@ -658,10 +651,10 @@
             this._writer.BeginBlock();
             foreach (Instruction instruction in this._exceptionSupport.LeaveTargetsFor(node))
             {
-                ExceptionSupport.Node[] source = Enumerable.ToArray<ExceptionSupport.Node>(node.GetTargetFinallyAndFaultNodesForJump(node.End.Offset, instruction.Offset));
+                ExceptionSupport.Node[] source = node.GetTargetFinallyAndFaultNodesForJump(node.End.Offset, instruction.Offset).ToArray<ExceptionSupport.Node>();
                 if (source.Length > 0)
                 {
-                    object[] objArray2 = new object[] { instruction.Offset, this._labeler.FormatOffset(Enumerable.First<ExceptionSupport.Node>(source).Start) };
+                    object[] objArray2 = new object[] { instruction.Offset, this._labeler.FormatOffset(source.First<ExceptionSupport.Node>().Start) };
                     this._writer.WriteLine("IL2CPP_END_CLEANUP(0x{0:X}, {1});", objArray2);
                 }
             }
@@ -672,16 +665,16 @@
 
         private void ExitFinally(ExceptionSupport.Node node)
         {
-            this._writer.EndBlock(string.Format("end finally (depth: {0})", node.Depth), false);
+            this._writer.EndBlock($"end finally (depth: {node.Depth})", false);
             object[] args = new object[] { node.Start.Offset };
             this._writer.WriteLine("IL2CPP_CLEANUP({0})", args);
             this._writer.BeginBlock();
             foreach (Instruction instruction in this._exceptionSupport.LeaveTargetsFor(node))
             {
-                ExceptionSupport.Node[] source = Enumerable.ToArray<ExceptionSupport.Node>(node.GetTargetFinallyAndFaultNodesForJump(node.End.Offset, instruction.Offset));
+                ExceptionSupport.Node[] source = node.GetTargetFinallyAndFaultNodesForJump(node.End.Offset, instruction.Offset).ToArray<ExceptionSupport.Node>();
                 if (source.Length > 0)
                 {
-                    object[] objArray2 = new object[] { instruction.Offset, this._labeler.FormatOffset(Enumerable.First<ExceptionSupport.Node>(source).Start) };
+                    object[] objArray2 = new object[] { instruction.Offset, this._labeler.FormatOffset(source.First<ExceptionSupport.Node>().Start) };
                     this._writer.WriteLine("IL2CPP_END_CLEANUP(0x{0:X}, {1});", objArray2);
                 }
                 else
@@ -724,7 +717,7 @@
 
         private void ExitTry(ExceptionSupport.Node node)
         {
-            this._writer.EndBlock(string.Format("end try (depth: {0})", node.Depth), false);
+            this._writer.EndBlock($"end try (depth: {node.Depth})", false);
             ExceptionSupport.Node[] catchNodes = node.CatchNodes;
             ExceptionSupport.Node finallyNode = node.FinallyNode;
             ExceptionSupport.Node faultNode = node.FaultNode;
@@ -755,7 +748,7 @@
                 {
                     <>f__am$cache4 = new Func<ExceptionSupport.Node, ExceptionHandler>(null, (IntPtr) <ExitTry>m__5);
                 }
-                foreach (ExceptionHandler handler in Enumerable.Select<ExceptionSupport.Node, ExceptionHandler>(catchNodes, <>f__am$cache4))
+                foreach (ExceptionHandler handler in catchNodes.Select<ExceptionSupport.Node, ExceptionHandler>(<>f__am$cache4))
                 {
                     object[] objArray3 = new object[] { this._runtimeMetadataAccess.TypeInfoFor(handler.CatchType) };
                     this._writer.WriteLine("if(il2cpp_codegen_class_is_assignable_from ({0}, e.ex->object.klass))", objArray3);
@@ -821,13 +814,13 @@
             TypeReference type = operand as TypeReference;
             if (type != null)
             {
-                return new StackInfo(string.Format("LoadTypeToken({0})", this._runtimeMetadataAccess.Il2CppTypeFor(type)), this.RuntimeTypeHandleTypeReference);
+                return new StackInfo($"LoadTypeToken({this._runtimeMetadataAccess.Il2CppTypeFor(type)})", this.RuntimeTypeHandleTypeReference);
             }
             FieldReference field = operand as FieldReference;
             if (field != null)
             {
                 this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(field.DeclaringType));
-                return new StackInfo(string.Format("LoadFieldToken({0})", this._runtimeMetadataAccess.FieldInfo(field)), this.RuntimeFieldHandleTypeReference);
+                return new StackInfo($"LoadFieldToken({this._runtimeMetadataAccess.FieldInfo(field)})", this.RuntimeFieldHandleTypeReference);
             }
             MethodReference method = operand as MethodReference;
             if (method == null)
@@ -835,28 +828,28 @@
                 throw new ArgumentException();
             }
             this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(method.DeclaringType));
-            return new StackInfo(string.Format("LoadMethodToken({0})", this._runtimeMetadataAccess.MethodInfo(method)), this.RuntimeMethodHandleTypeReference);
+            return new StackInfo($"LoadMethodToken({this._runtimeMetadataAccess.MethodInfo(method)})", this.RuntimeMethodHandleTypeReference);
         }
 
         private string FormatNativeIntGetterName(string variableName, TypeReference variableType)
         {
-            if (Extensions.IsSameType(variableType, this.IntPtrTypeReference))
+            if (variableType.IsSameType(this.IntPtrTypeReference))
             {
                 if (<>f__am$cache8 == null)
                 {
                     <>f__am$cache8 = new Func<FieldDefinition, bool>(null, (IntPtr) <FormatNativeIntGetterName>m__A);
                 }
-                return string.Format("{0}.{1}()", variableName, Naming.ForFieldGetter(Enumerable.Single<FieldDefinition>(TypeProvider.SystemIntPtr.Fields, <>f__am$cache8)));
+                return $"{variableName}.{Naming.ForFieldGetter(TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache8))}()";
             }
-            if (Extensions.IsSameType(variableType, this.UIntPtrTypeReference))
+            if (variableType.IsSameType(this.UIntPtrTypeReference))
             {
                 if (<>f__am$cache9 == null)
                 {
                     <>f__am$cache9 = new Func<FieldDefinition, bool>(null, (IntPtr) <FormatNativeIntGetterName>m__B);
                 }
-                return string.Format("{0}.{1}()", variableName, Naming.ForFieldGetter(Enumerable.Single<FieldDefinition>(TypeProvider.SystemUIntPtr.Fields, <>f__am$cache9)));
+                return $"{variableName}.{Naming.ForFieldGetter(TypeProvider.SystemUIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache9))}()";
             }
-            if (!Extensions.IsNativeIntegralType(variableType))
+            if (!variableType.IsNativeIntegralType())
             {
                 throw new ArgumentException("The variableType argument must be a TypeReference to an IntPtr or a an UIntPtr.", "variableType");
             }
@@ -865,27 +858,27 @@
 
         private string FormatNativeIntSetterInvocation(string variableName, TypeReference variableType, string value)
         {
-            if (Extensions.IsSameType(variableType, this.IntPtrTypeReference))
+            if (variableType.IsSameType(this.IntPtrTypeReference))
             {
                 if (<>f__am$cacheA == null)
                 {
                     <>f__am$cacheA = new Func<FieldDefinition, bool>(null, (IntPtr) <FormatNativeIntSetterInvocation>m__C);
                 }
-                return string.Format("{0}.{1}({2});", variableName, Naming.ForFieldSetter(Enumerable.Single<FieldDefinition>(TypeProvider.SystemIntPtr.Fields, <>f__am$cacheA)), value);
+                return $"{variableName}.{Naming.ForFieldSetter(TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cacheA))}({value});";
             }
-            if (Extensions.IsSameType(variableType, this.UIntPtrTypeReference))
+            if (variableType.IsSameType(this.UIntPtrTypeReference))
             {
                 if (<>f__am$cacheB == null)
                 {
                     <>f__am$cacheB = new Func<FieldDefinition, bool>(null, (IntPtr) <FormatNativeIntSetterInvocation>m__D);
                 }
-                return string.Format("{0}.{1}({2});", variableName, Naming.ForFieldSetter(Enumerable.Single<FieldDefinition>(TypeProvider.SystemUIntPtr.Fields, <>f__am$cacheB)), value);
+                return $"{variableName}.{Naming.ForFieldSetter(TypeProvider.SystemUIntPtr.Fields.Single<FieldDefinition>(<>f__am$cacheB))}({value});";
             }
-            if (!Extensions.IsNativeIntegralType(variableType))
+            if (!variableType.IsNativeIntegralType())
             {
                 throw new ArgumentException("The variableType argument must be a TypeReference to an IntPtr or a an UIntPtr.", "variableType");
             }
-            return string.Format("{0} = {1};", variableName, value);
+            return $"{variableName} = {value};";
         }
 
         public void Generate()
@@ -955,7 +948,7 @@
             {
                 <>f__am$cache1 = new Func<GlobalVariable, int>(null, (IntPtr) <GenerateCodeRecursive>m__2);
             }
-            foreach (GlobalVariable variable in Enumerable.Reverse<GlobalVariable>(Enumerable.OrderBy<GlobalVariable, int>(this._stackAnalysis.InputVariablesFor(block), <>f__am$cache1)))
+            foreach (GlobalVariable variable in this._stackAnalysis.InputVariablesFor(block).OrderBy<GlobalVariable, int>(<>f__am$cache1).Reverse<GlobalVariable>())
             {
                 this._valueStack.Push(new StackInfo(variable.VariableName, this._typeResolver.Resolve(variable.Type, true)));
             }
@@ -991,7 +984,7 @@
                 first = first.Next;
                 goto Label_016C;
             }
-            if (((first.OpCode.Code < Code.Br_S) || (first.OpCode.Code > Code.Blt_Un)) && (Enumerable.Any<InstructionBlock>(block.Successors) && (first.OpCode.Code != Code.Switch)))
+            if (((first.OpCode.Code < Code.Br_S) || (first.OpCode.Code > Code.Blt_Un)) && (block.Successors.Any<InstructionBlock>() && (first.OpCode.Code != Code.Switch)))
             {
                 this.SetupFallthroughVariables(block);
             }
@@ -1001,7 +994,7 @@
             }
             if (this._options.EmitBlockInfo)
             {
-                if (Enumerable.Any<InstructionBlock>(block.Successors))
+                if (block.Successors.Any<InstructionBlock>())
                 {
                     object[] objArray5 = new object[2];
                     objArray5[0] = block.Index;
@@ -1009,7 +1002,7 @@
                     {
                         <>f__am$cache2 = new Func<InstructionBlock, string>(null, (IntPtr) <GenerateCodeRecursive>m__3);
                     }
-                    objArray5[1] = EnumerableExtensions.AggregateWithComma(Enumerable.Select<InstructionBlock, string>(block.Successors, <>f__am$cache2));
+                    objArray5[1] = block.Successors.Select<InstructionBlock, string>(<>f__am$cache2).AggregateWithComma();
                     this.WriteComment("END BLOCK {0} (succ: {1})", objArray5);
                 }
                 else
@@ -1023,7 +1016,7 @@
             this.ExitNode(node);
         }
 
-        private void GenerateConditional(string op, Signedness signedness, [Optional, DefaultParameterValue(false)] bool negate)
+        private void GenerateConditional(string op, Signedness signedness, bool negate = false)
         {
             this.PushExpression(this.Int32TypeReference, this.ConditionalExpressionFor(op, signedness, negate) + "? 1 : 0");
         }
@@ -1041,7 +1034,7 @@
             {
                 expression = info.Expression;
             }
-            string conditional = string.Format("{0}{1}", !isTrue ? "!" : "", expression);
+            string conditional = $"{!isTrue ? "!" : ""}{expression}";
             if (this._valueStack.Count == 0)
             {
                 using (this.NewIfBlock(conditional))
@@ -1060,7 +1053,7 @@
             }
         }
 
-        private void GenerateConditionalJump(InstructionBlock block, Instruction ins, string cppOperator, Signedness signedness, [Optional, DefaultParameterValue(false)] bool negate)
+        private void GenerateConditionalJump(InstructionBlock block, Instruction ins, string cppOperator, Signedness signedness, bool negate = false)
         {
             <GenerateConditionalJump>c__AnonStorey7 storey = new <GenerateConditionalJump>c__AnonStorey7();
             string conditional = this.ConditionalExpressionFor(cppOperator, signedness, negate);
@@ -1074,8 +1067,8 @@
             }
             else
             {
-                GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(Enumerable.Single<InstructionBlock>(block.Successors, new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__0)));
-                GlobalVariable[] variableArray2 = this._stackAnalysis.InputVariablesFor(Enumerable.Single<InstructionBlock>(block.Successors, new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__1)));
+                GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>(new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__0)));
+                GlobalVariable[] variableArray2 = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>(new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__1)));
                 this.WriteAssignGlobalVariables(globalVariables);
                 using (this.NewIfBlock(conditional))
                 {
@@ -1085,62 +1078,50 @@
             }
         }
 
-        private static string GetArrayAddressCall(MethodReference methodReference, string array, string arguments, bool useArrayBoundsCheck)
-        {
-            return Emit.Call(string.Format("({0})->{1}", array, Naming.ForArrayItemAddressGetter(useArrayBoundsCheck)), arguments);
-        }
+        private static string GetArrayAddressCall(MethodReference methodReference, string array, string arguments, bool useArrayBoundsCheck) => 
+            Emit.Call($"({array})->{Naming.ForArrayItemAddressGetter(useArrayBoundsCheck)}", arguments);
 
-        private static string GetArrayGetCall(MethodReference methodReference, string array, string arguments, bool useArrayBoundsCheck)
-        {
-            return Emit.Call(string.Format("({0})->{1}", array, Naming.ForArrayItemGetter(useArrayBoundsCheck)), arguments);
-        }
+        private static string GetArrayGetCall(MethodReference methodReference, string array, string arguments, bool useArrayBoundsCheck) => 
+            Emit.Call($"({array})->{Naming.ForArrayItemGetter(useArrayBoundsCheck)}", arguments);
 
-        private static string GetArraySetCall(MethodReference methodReference, string array, string arguments, bool useArrayBoundsCheck)
-        {
-            return Emit.Call(string.Format("({0})->{1}", array, Naming.ForArrayItemSetter(useArrayBoundsCheck)), arguments);
-        }
+        private static string GetArraySetCall(MethodReference methodReference, string array, string arguments, bool useArrayBoundsCheck) => 
+            Emit.Call($"({array})->{Naming.ForArrayItemSetter(useArrayBoundsCheck)}", arguments);
 
-        public static string GetAssignment(string leftName, TypeReference leftType, StackInfo right, [Optional, DefaultParameterValue(0)] SharingType sharingType)
-        {
-            return Emit.Assign(leftName, WriteExpressionAndCastIfNeeded(leftType, right, sharingType));
-        }
+        public static string GetAssignment(string leftName, TypeReference leftType, StackInfo right, SharingType sharingType = 0) => 
+            Emit.Assign(leftName, WriteExpressionAndCastIfNeeded(leftType, right, sharingType));
 
-        private string GetCastclassOrIsInstCall(TypeReference targetType, StackInfo value, string operation, TypeReference resolvedTypeReference)
-        {
-            return Emit.Call(operation + GetOptimizedCastclassOrIsInstMethodSuffix(resolvedTypeReference, this._sharingType), value.Expression, this._runtimeMetadataAccess.TypeInfoFor(targetType));
-        }
+        private string GetCastclassOrIsInstCall(TypeReference targetType, StackInfo value, string operation, TypeReference resolvedTypeReference) => 
+            Emit.Call(operation + GetOptimizedCastclassOrIsInstMethodSuffix(resolvedTypeReference, this._sharingType), value.Expression, this._runtimeMetadataAccess.TypeInfoFor(targetType));
 
         private string GetExpressionFor(StackInfo stackInfo)
         {
-            if (Extensions.IsSameType(stackInfo.Type, TypeProvider.SystemIntPtr))
+            if (stackInfo.Type.IsSameType(TypeProvider.SystemIntPtr))
             {
                 if (<>f__am$cacheF == null)
                 {
                     <>f__am$cacheF = new Func<FieldDefinition, bool>(null, (IntPtr) <GetExpressionFor>m__11);
                 }
-                FieldDefinition field = Enumerable.Single<FieldDefinition>(TypeProvider.SystemIntPtr.Fields, <>f__am$cacheF);
-                return string.Format("{0}.{1}()", stackInfo.Expression, Naming.ForFieldGetter(field));
+                FieldDefinition field = TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cacheF);
+                return $"{stackInfo.Expression}.{Naming.ForFieldGetter(field)}()";
             }
-            if (Extensions.IsSameType(stackInfo.Type, TypeProvider.SystemUIntPtr))
+            if (stackInfo.Type.IsSameType(TypeProvider.SystemUIntPtr))
             {
                 if (<>f__am$cache10 == null)
                 {
                     <>f__am$cache10 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetExpressionFor>m__12);
                 }
-                FieldDefinition definition2 = Enumerable.Single<FieldDefinition>(TypeProvider.SystemUIntPtr.Fields, <>f__am$cache10);
-                return string.Format("{0}.{1}()", stackInfo.Expression, Naming.ForFieldGetter(definition2));
+                FieldDefinition definition2 = TypeProvider.SystemUIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache10);
+                return $"{stackInfo.Expression}.{Naming.ForFieldGetter(definition2)}()";
             }
             return stackInfo.Expression;
         }
 
-        private static string GetLoadIndirectExpression(TypeReference castType, string expression)
-        {
-            return string.Format("*(({0}){1})", Naming.ForVariable(castType), expression);
-        }
+        private static string GetLoadIndirectExpression(TypeReference castType, string expression) => 
+            $"*(({Naming.ForVariable(castType)}){expression})";
 
         private int GetMetadataTypeOrderFor(TypeReference type)
         {
-            if (!Extensions.IsSameType(type, this.NativeIntTypeReference) && !Extensions.IsSameType(type, this.NativeUIntTypeReference))
+            if (!type.IsSameType(this.NativeIntTypeReference) && !type.IsSameType(this.NativeUIntTypeReference))
             {
                 MetadataType metadataType = type.MetadataType;
                 switch (metadataType)
@@ -1167,7 +1148,7 @@
                     default:
                         if ((metadataType != MetadataType.IntPtr) && (metadataType != MetadataType.UIntPtr))
                         {
-                            throw new Exception(string.Format("Invalid metadata type for typereference {0}", type));
+                            throw new Exception($"Invalid metadata type for typereference {type}");
                         }
                         break;
                 }
@@ -1175,25 +1156,25 @@
             return 3;
         }
 
-        internal static string GetMethodCallExpression(MethodReference callingMethod, MethodReference methodToCall, MethodReference unresolvedMethodtoCall, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall, MethodCallType callType, IRuntimeMetadataAccess runtimeMetadataAccess, VTableBuilder vTableBuilder, IEnumerable<string> argumentArray, bool useArrayBoundsCheck, [Optional, DefaultParameterValue(null)] Func<string, string> addUniqueSuffix)
+        internal static string GetMethodCallExpression(MethodReference callingMethod, MethodReference methodToCall, MethodReference unresolvedMethodtoCall, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall, MethodCallType callType, IRuntimeMetadataAccess runtimeMetadataAccess, VTableBuilder vTableBuilder, IEnumerable<string> argumentArray, bool useArrayBoundsCheck, Func<string, string> addUniqueSuffix = null)
         {
             if (methodToCall.DeclaringType.IsArray && (methodToCall.Name == "Set"))
             {
-                return GetArraySetCall(methodToCall, Enumerable.First<string>(argumentArray), EnumerableExtensions.AggregateWithComma(Enumerable.Skip<string>(argumentArray, 1)), useArrayBoundsCheck);
+                return GetArraySetCall(methodToCall, argumentArray.First<string>(), argumentArray.Skip<string>(1).AggregateWithComma(), useArrayBoundsCheck);
             }
             if (methodToCall.DeclaringType.IsArray && (methodToCall.Name == "Get"))
             {
-                return GetArrayGetCall(methodToCall, Enumerable.First<string>(argumentArray), EnumerableExtensions.AggregateWithComma(Enumerable.Skip<string>(argumentArray, 1)), useArrayBoundsCheck);
+                return GetArrayGetCall(methodToCall, argumentArray.First<string>(), argumentArray.Skip<string>(1).AggregateWithComma(), useArrayBoundsCheck);
             }
             if (methodToCall.DeclaringType.IsArray && (methodToCall.Name == "Address"))
             {
-                return GetArrayAddressCall(methodToCall, Enumerable.First<string>(argumentArray), EnumerableExtensions.AggregateWithComma(Enumerable.Skip<string>(argumentArray, 1)), useArrayBoundsCheck);
+                return GetArrayAddressCall(methodToCall, argumentArray.First<string>(), argumentArray.Skip<string>(1).AggregateWithComma(), useArrayBoundsCheck);
             }
-            if (Extensions.IsSystemArray(methodToCall.DeclaringType) && (methodToCall.Name == "GetGenericValueImpl"))
+            if (methodToCall.DeclaringType.IsSystemArray() && (methodToCall.Name == "GetGenericValueImpl"))
             {
                 return Emit.Call("ArrayGetGenericValueImpl", argumentArray);
             }
-            if (Extensions.IsSystemArray(methodToCall.DeclaringType) && (methodToCall.Name == "SetGenericValueImpl"))
+            if (methodToCall.DeclaringType.IsSystemArray() && (methodToCall.Name == "SetGenericValueImpl"))
             {
                 return Emit.Call("ArraySetGenericValueImpl", argumentArray);
             }
@@ -1201,13 +1182,13 @@
             {
                 GenericInstanceMethod method = (GenericInstanceMethod) methodToCall;
                 string str2 = Naming.ForVariable(method.GenericArguments[0]);
-                return Emit.Call(string.Format("InterlockedCompareExchangeImpl<{0}>", str2), argumentArray);
+                return Emit.Call($"InterlockedCompareExchangeImpl<{str2}>", argumentArray);
             }
             if (GenericsUtilities.IsGenericInstanceOfExchange(methodToCall))
             {
                 GenericInstanceMethod method2 = (GenericInstanceMethod) methodToCall;
                 string str3 = Naming.ForVariable(method2.GenericArguments[0]);
-                return Emit.Call(string.Format("InterlockedExchangeImpl<{0}>", str3), argumentArray);
+                return Emit.Call($"InterlockedExchangeImpl<{str3}>", argumentArray);
             }
             if (IntrinsicRemap.ShouldRemap(methodToCall))
             {
@@ -1219,11 +1200,11 @@
             }
             if (callType == MethodCallType.DirectVirtual)
             {
-                return Emit.Call("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(methodToCall), string.Format("{0}->vtable[{1}].methodPtr", addUniqueSuffix.Invoke("il2cpp_this_typeinfo"), vTableBuilder.IndexFor(unresolvedMethodtoCall.Resolve()) + InterfaceOffsetExpressionForDirectVirtualCall(unresolvedMethodtoCall, addUniqueSuffix))) + ")", argumentArray);
+                return Emit.Call("(" + Emit.Cast(MethodSignatureWriter.GetMethodPointerForVTable(methodToCall), $"{addUniqueSuffix.Invoke("il2cpp_this_typeinfo")}->vtable[{vTableBuilder.IndexFor(unresolvedMethodtoCall.Resolve()) + InterfaceOffsetExpressionForDirectVirtualCall(unresolvedMethodtoCall, addUniqueSuffix)}].methodPtr") + ")", argumentArray);
             }
             if ((callType != MethodCallType.Virtual) || MethodSignatureWriter.CanDevirtualizeMethodCall(methodToCall.Resolve()))
             {
-                if (Extensions.IsValueType(unresolvedMethodtoCall.DeclaringType))
+                if (unresolvedMethodtoCall.DeclaringType.IsValueType())
                 {
                     return Emit.Call(Naming.ForMethod(methodToCall), argumentArray);
                 }
@@ -1234,7 +1215,7 @@
 
         private static string GetOptimizedCastclassOrIsInstMethodSuffix(TypeReference resolvedTypeReference, SharingType sharingType)
         {
-            if (((sharingType == SharingType.NonShared) && !Extensions.IsInterface(resolvedTypeReference)) && (!resolvedTypeReference.IsArray && !Extensions.IsNullable(resolvedTypeReference)))
+            if (((sharingType == SharingType.NonShared) && !resolvedTypeReference.IsInterface()) && (!resolvedTypeReference.IsArray && !resolvedTypeReference.IsNullable()))
             {
                 return (!resolvedTypeReference.Resolve().IsSealed ? "Class" : "Sealed");
             }
@@ -1247,7 +1228,7 @@
                 typeResolverForMethodToCall = typeResolverForMethodToCall,
                 method = method
             };
-            return new List<TypeReference>(Enumerable.Select<ParameterDefinition, TypeReference>(storey.method.Parameters, new Func<ParameterDefinition, TypeReference>(storey, (IntPtr) this.<>m__0)));
+            return new List<TypeReference>(storey.method.Parameters.Select<ParameterDefinition, TypeReference>(new Func<ParameterDefinition, TypeReference>(storey, (IntPtr) this.<>m__0)));
         }
 
         private static TypeReference GetPointerOrByRefType(StackInfo address)
@@ -1260,16 +1241,12 @@
                 return type.ElementType;
             }
             ByReferenceType type2 = typeReference as ByReferenceType;
-            if (type2 == null)
-            {
-                throw new Exception();
-            }
-            return type2.ElementType;
+            return type2?.ElementType;
         }
 
         private TypeReference GetSignedType(TypeReference type)
         {
-            if (Extensions.IsSameType(type, this.NativeIntTypeReference) || Extensions.IsSameType(type, this.NativeUIntTypeReference))
+            if (type.IsSameType(this.NativeIntTypeReference) || type.IsSameType(this.NativeUIntTypeReference))
             {
                 return this.NativeIntTypeReference;
             }
@@ -1300,7 +1277,7 @@
 
         private TypeReference GetUnsignedType(TypeReference type)
         {
-            if (Extensions.IsSameType(type, this.NativeIntTypeReference) || Extensions.IsSameType(type, this.NativeUIntTypeReference))
+            if (type.IsSameType(this.NativeIntTypeReference) || type.IsSameType(this.NativeUIntTypeReference))
             {
                 return this.NativeUIntTypeReference;
             }
@@ -1331,17 +1308,15 @@
 
         private static string InterfaceOffsetExpressionForDirectVirtualCall(MethodReference unresolvedMethodtoCall, Func<string, string> addUniqueSuffix)
         {
-            if (Extensions.IsInterface(unresolvedMethodtoCall.DeclaringType))
+            if (unresolvedMethodtoCall.DeclaringType.IsInterface())
             {
-                return string.Format(" + {0}", addUniqueSuffix.Invoke("il2cpp_interface_offset_"));
+                return $" + {addUniqueSuffix.Invoke("il2cpp_interface_offset_")}";
             }
             return string.Empty;
         }
 
-        private static bool IsNonPointerReferenceType(StackInfo stackEntry)
-        {
-            return (!Extensions.IsValueType(stackEntry.Type) && !stackEntry.Type.IsPointer);
-        }
+        private static bool IsNonPointerReferenceType(StackInfo stackEntry) => 
+            (!stackEntry.Type.IsValueType() && !stackEntry.Type.IsPointer);
 
         private void LoadArgumentAddress(ParameterReference parameter)
         {
@@ -1362,7 +1337,7 @@
             object[] args = new object[] { local.IdentifierExpression, index.Expression };
             this._writer.WriteLine("{0} = {1};", args);
             string expression = local.Expression;
-            if (Extensions.IsIntegralPointerType(local.Type))
+            if (local.Type.IsIntegralPointerType())
             {
                 expression = this.ArrayIndexerForIntPtr(local.Expression, local.Type);
             }
@@ -1377,7 +1352,7 @@
             this.LoadElem(array, typeReference, index);
         }
 
-        private void LoadField(Instruction ins, [Optional, DefaultParameterValue(false)] bool loadAddress)
+        private void LoadField(Instruction ins, bool loadAddress = false)
         {
             string str;
             StackInfo stackInfo = this._valueStack.Pop();
@@ -1398,7 +1373,7 @@
             }
             Local local = this.NewTemp(type);
             this._valueStack.Push(new StackInfo(local));
-            string str2 = Emit.Call((!Extensions.IsValueType(stackInfo.Type) || Extensions.IsNativeIntegralType(stackInfo.Type)) ? Emit.Arrow(CastReferenceTypeOrNativeIntIfNeeded(stackInfo, this._typeResolver.Resolve(operand.DeclaringType)), str) : Emit.Dot(stackInfo.Expression, str));
+            string str2 = Emit.Call((!stackInfo.Type.IsValueType() || stackInfo.Type.IsNativeIntegralType()) ? Emit.Arrow(CastReferenceTypeOrNativeIntIfNeeded(stackInfo, this._typeResolver.Resolve(operand.DeclaringType)), str) : Emit.Dot(stackInfo.Expression, str));
             if (this._sharingType == SharingType.Shared)
             {
                 str2 = Emit.Cast(type, str2);
@@ -1428,11 +1403,11 @@
         {
             StackInfo address = this._valueStack.Pop();
             TypeReference pointerOrByRefType = GetPointerOrByRefType(address);
-            if (Extensions.IsIntegralPointerType(pointerOrByRefType))
+            if (pointerOrByRefType.IsIntegralPointerType())
             {
-                this.PushExpression(pointerOrByRefType, string.Format("(*({0}))", address.Expression));
+                this.PushExpression(pointerOrByRefType, $"(*({address.Expression}))");
             }
-            else if (Extensions.IsVoid(pointerOrByRefType) || address.Type.IsByReference)
+            else if (pointerOrByRefType.IsVoid() || address.Type.IsByReference)
             {
                 this.PushLoadIndirectExpression(this.NativeIntTypeReference, new PointerType(this.NativeIntTypeReference), address.Expression);
             }
@@ -1451,7 +1426,7 @@
 
         private void LoadInt32Constant(int value)
         {
-            this._valueStack.Push((value >= 0) ? new StackInfo(value.ToString(), this.Int32TypeReference) : new StackInfo(string.Format("({0})", value), this.Int32TypeReference));
+            this._valueStack.Push((value >= 0) ? new StackInfo(value.ToString(), this.Int32TypeReference) : new StackInfo($"({value})", this.Int32TypeReference));
         }
 
         private void LoadLocalAddress(VariableReference variableReference)
@@ -1524,10 +1499,8 @@
             return true;
         }
 
-        private IDisposable NewBlock()
-        {
-            return new BlockWriter(this._writer, false);
-        }
+        private IDisposable NewBlock() => 
+            new BlockWriter(this._writer, false);
 
         private IDisposable NewIfBlock(string conditional)
         {
@@ -1538,17 +1511,15 @@
 
         private Local NewTemp(TypeReference type)
         {
-            if (Extensions.ContainsGenericParameters(type))
+            if (type.ContainsGenericParameters())
             {
                 throw new InvalidOperationException("Callers should resolve the type prior to calling this method.");
             }
             return new Local(type, this.NewTempName());
         }
 
-        private string NewTempName()
-        {
-            return ("L_" + this._tempIndex++);
-        }
+        private string NewTempName() => 
+            ("L_" + this._tempIndex++);
 
         private static string ParameterNameFor(MethodDefinition method, int i)
         {
@@ -1563,7 +1534,7 @@
         {
             if (amount > valueStack.Count)
             {
-                throw new Exception(string.Format("Attempting to pop '{0}' values from a stack of depth '{1}'.", amount, valueStack.Count));
+                throw new Exception($"Attempting to pop '{amount}' values from a stack of depth '{valueStack.Count}'.");
             }
             List<StackInfo> list = new List<StackInfo>();
             for (int i = 0; i != amount; i++)
@@ -1574,10 +1545,8 @@
             return list;
         }
 
-        private static string PrependCastToObject(string expression)
-        {
-            return string.Format("({0}*){1}", Naming.ForType(TypeProvider.SystemObject), expression);
-        }
+        private static string PrependCastToObject(string expression) => 
+            $"({Naming.ForType(TypeProvider.SystemObject)}*){expression}";
 
         private void ProcessFieldReferenceOperand(FieldReference fieldReference)
         {
@@ -1774,7 +1743,7 @@
                     <ProcessInstruction>c__AnonStorey1 storey2 = new <ProcessInstruction>c__AnonStorey1();
                     if (this._constrainedCallThisType != null)
                     {
-                        throw new InvalidOperationException(string.Format("Constrained opcode was followed a Call rather than a Callvirt in method '{0}' at instruction '{1}'", this._methodReference.FullName, ins));
+                        throw new InvalidOperationException($"Constrained opcode was followed a Call rather than a Callvirt in method '{this._methodReference.FullName}' at instruction '{ins}'");
                     }
                     storey2.suffix = "_" + ins.Offset;
                     MethodReference unresolvedMethodToCall = (MethodReference) ins.Operand;
@@ -1861,7 +1830,7 @@
                     storey3.targetInstructions = (Instruction[]) ins.Operand;
                     int num2 = 0;
                     List<InstructionBlock> source = new List<InstructionBlock>(block.Successors);
-                    InstructionBlock item = Enumerable.SingleOrDefault<InstructionBlock>(source, new Func<InstructionBlock, bool>(storey3, (IntPtr) this.<>m__0));
+                    InstructionBlock item = source.SingleOrDefault<InstructionBlock>(new Func<InstructionBlock, bool>(storey3, (IntPtr) this.<>m__0));
                     if (item != null)
                     {
                         source.Remove(item);
@@ -1873,9 +1842,9 @@
                         <ProcessInstruction>c__AnonStorey3 storey4 = new <ProcessInstruction>c__AnonStorey3 {
                             targetInstruction = targetInstructions[i]
                         };
-                        using (this.NewIfBlock(string.Format("{0} == {1}", info, num2++)))
+                        using (this.NewIfBlock($"{info} == {num2++}"))
                         {
-                            InstructionBlock block3 = Enumerable.First<InstructionBlock>(source, new Func<InstructionBlock, bool>(storey4, (IntPtr) this.<>m__0));
+                            InstructionBlock block3 = source.First<InstructionBlock>(new Func<InstructionBlock, bool>(storey4, (IntPtr) this.<>m__0));
                             this.WriteAssignGlobalVariables(this._stackAnalysis.InputVariablesFor(block3));
                             this.WriteJump(storey4.targetInstruction);
                         }
@@ -2102,7 +2071,7 @@
                     }
                     if (!reference8.IsArray)
                     {
-                        if (Extensions.IsValueType(reference8))
+                        if (reference8.IsValueType())
                         {
                             string str5 = Naming.AddressOf(local.Expression);
                             arguments.Insert(0, str5);
@@ -2128,7 +2097,7 @@
                         throw new NotImplementedException("Attempting to create a multidimensional array of rank lesser than 2");
                     }
                     string str4 = this.NewTempName();
-                    object[] args = new object[] { Naming.ForArrayIndexType(), str4, EnumerableExtensions.AggregateWithComma(Emit.CastEach(Naming.ForArrayIndexType(), arguments)) };
+                    object[] args = new object[] { Naming.ForArrayIndexType(), str4, Emit.CastEach(Naming.ForArrayIndexType(), arguments).AggregateWithComma() };
                     this._writer.WriteLine("{0} {1}[] = {{ {2} }};", args);
                     object[] objArray2 = new object[] { Emit.Assign(local.IdentifierExpression, Emit.Cast(type, Emit.Call("GenArrayNew", this._runtimeMetadataAccess.TypeInfoFor(reference6.DeclaringType), str4))) };
                     this._writer.WriteLine("{0};", objArray2);
@@ -2222,27 +2191,27 @@
                 {
                     TypeReference typeReference = this._typeResolver.Resolve((TypeReference) ins.Operand);
                     this._writer.AddIncludeForTypeDefinition(typeReference);
-                    if (Extensions.IsValueType(typeReference))
+                    if (typeReference.IsValueType())
                     {
                         StackInfo originalValue = this._valueStack.Pop();
                         if (!this.CanApplyValueTypeBoxBranchOptimizationToInstruction(ins, block))
                         {
                             bool flag = (typeReference.MetadataType == MetadataType.IntPtr) || (typeReference.MetadataType == MetadataType.UIntPtr);
-                            bool flag2 = Extensions.IsSameType(originalValue.Type, this.NativeIntTypeReference) || Extensions.IsSameType(originalValue.Type, this.NativeUIntTypeReference);
+                            bool flag2 = originalValue.Type.IsSameType(this.NativeIntTypeReference) || originalValue.Type.IsSameType(this.NativeUIntTypeReference);
                             if (flag && flag2)
                             {
                                 typeReference = originalValue.Type;
                             }
                             if (((originalValue.Type.MetadataType == MetadataType.IntPtr) && (typeReference.MetadataType == MetadataType.UIntPtr)) || ((originalValue.Type.MetadataType == MetadataType.UIntPtr) && (typeReference.MetadataType == MetadataType.IntPtr)))
                             {
-                                this.StoreLocalAndPush(this.ObjectTypeReference, string.Format("Box({0}, &{1})", this._runtimeMetadataAccess.TypeInfoFor((TypeReference) ins.Operand), originalValue.Expression));
+                                this.StoreLocalAndPush(this.ObjectTypeReference, $"Box({this._runtimeMetadataAccess.TypeInfoFor((TypeReference) ins.Operand)}, &{originalValue.Expression})");
                             }
                             else
                             {
                                 Local local2 = this.NewTemp(typeReference);
                                 object[] objArray3 = new object[] { local2.IdentifierExpression, CastTypeIfNeeded(originalValue, typeReference) };
                                 this._writer.WriteLine("{0} = {1};", objArray3);
-                                this.StoreLocalAndPush(this.ObjectTypeReference, string.Format("Box({0}, &{1})", this._runtimeMetadataAccess.TypeInfoFor((TypeReference) ins.Operand), local2.Expression));
+                                this.StoreLocalAndPush(this.ObjectTypeReference, $"Box({this._runtimeMetadataAccess.TypeInfoFor((TypeReference) ins.Operand)}, &{local2.Expression})");
                             }
                             return;
                         }
@@ -2262,7 +2231,7 @@
                     StackInfo info4 = this._valueStack.Pop();
                     ArrayType type3 = new ArrayType(this._typeResolver.Resolve((TypeReference) ins.Operand));
                     this._writer.AddIncludeForTypeDefinition(type3);
-                    string str6 = string.Format("(uint32_t){0}", info4.Expression);
+                    string str6 = $"(uint32_t){info4.Expression}";
                     this.PushExpression(type3, Emit.Cast(type3, Emit.Call("SZArrayNew", this._runtimeMetadataAccess.ArrayInfo((TypeReference) ins.Operand), str6)));
                     return;
                 }
@@ -2270,7 +2239,7 @@
                 {
                     StackInfo stackInfo = this._valueStack.Pop();
                     this._nullCheckSupport.WriteNullCheckIfNeeded(stackInfo);
-                    this.PushExpression(this.UInt32TypeReference, string.Format("(({0}){1})->max_length", Naming.ForVariable(TypeProvider.SystemArray), stackInfo));
+                    this.PushExpression(this.UInt32TypeReference, $"(({Naming.ForVariable(TypeProvider.SystemArray)}){stackInfo})->max_length");
                     return;
                 }
                 case Code.Ldelema:
@@ -2361,7 +2330,7 @@
                     StackInfo info16 = this._valueStack.Pop();
                     TypeReference reference12 = this._typeResolver.Resolve((TypeReference) ins.Operand);
                     this._writer.AddIncludeForTypeDefinition(reference12);
-                    if (!Extensions.IsValueType(reference12))
+                    if (!reference12.IsValueType())
                     {
                         this.WriteCastclass((TypeReference) ins.Operand, info16, ins);
                         return;
@@ -2537,7 +2506,7 @@
                 {
                     MethodReference reference13 = (MethodReference) ins.Operand;
                     this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(reference13.DeclaringType));
-                    this.StoreLocalIntPtrAndPush(string.Format("(void*){0}", this._runtimeMetadataAccess.MethodInfo(reference13)));
+                    this.StoreLocalIntPtrAndPush($"(void*){this._runtimeMetadataAccess.MethodInfo(reference13)}");
                     return;
                 }
                 case Code.Ldvirtftn:
@@ -2643,8 +2612,8 @@
                     {
                         throw new InvalidOperationException();
                     }
-                    FieldDefinition field = Enumerable.Single<FieldDefinition>(info20.Type.Resolve().Fields, new Func<FieldDefinition, bool>(this, (IntPtr) this.<ProcessInstruction>m__9));
-                    string expression = string.Format("{0}.{1}()", info20.Expression, Naming.ForFieldGetter(field));
+                    FieldDefinition field = info20.Type.Resolve().Fields.Single<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.<ProcessInstruction>m__9));
+                    string expression = $"{info20.Expression}.{Naming.ForFieldGetter(field)}()";
                     this._valueStack.Push(new StackInfo(expression, this.RuntimeTypeHandleTypeReference));
                     return;
                 }
@@ -2710,7 +2679,7 @@
             string str;
             StackInfo info = this._valueStack.Pop();
             MethodReference operand = (MethodReference) ins.Operand;
-            bool flag = Extensions.IsInterface(operand.DeclaringType);
+            bool flag = operand.DeclaringType.IsInterface();
             MethodDefinition method = operand.Resolve();
             if (flag)
             {
@@ -2725,12 +2694,12 @@
                 str = this._runtimeMetadataAccess.MethodInfo(operand);
             }
             this._writer.AddIncludeForTypeDefinition(this._typeResolver.Resolve(operand.DeclaringType));
-            this.StoreLocalIntPtrAndPush(string.Format("(void*){0}", str));
+            this.StoreLocalIntPtrAndPush($"(void*){str}");
         }
 
         private void PushExpression(TypeReference typeReference, string expression)
         {
-            this._valueStack.Push(new StackInfo(string.Format("({0})", expression), typeReference));
+            this._valueStack.Push(new StackInfo($"({expression})", typeReference));
         }
 
         private void PushLoadIndirectExpression(TypeReference expressionType, TypeReference castType, string expression)
@@ -2757,15 +2726,11 @@
             }
         }
 
-        private static bool Requires64BitOverflowCheck(MetadataType metadataType)
-        {
-            return ((metadataType == MetadataType.UInt64) || (metadataType == MetadataType.Int64));
-        }
+        private static bool Requires64BitOverflowCheck(MetadataType metadataType) => 
+            ((metadataType == MetadataType.UInt64) || (metadataType == MetadataType.Int64));
 
-        private static bool Requires64BitOverflowCheck(MetadataType leftStackType, MetadataType rightStackType)
-        {
-            return (Requires64BitOverflowCheck(leftStackType) || Requires64BitOverflowCheck(rightStackType));
-        }
+        private static bool Requires64BitOverflowCheck(MetadataType leftStackType, MetadataType rightStackType) => 
+            (Requires64BitOverflowCheck(leftStackType) || Requires64BitOverflowCheck(rightStackType));
 
         private bool RequiresContravariantCastToStore(TypeReference destinationVariable, TypeReference sourceVariableType)
         {
@@ -2780,40 +2745,32 @@
             return true;
         }
 
-        private bool RequiresPointerOverflowCheck(TypeReference type)
-        {
-            return (Extensions.IsSameType(type, TypeProvider.NativeIntTypeReference) || Extensions.IsSameType(type, TypeProvider.NativeUIntTypeReference));
-        }
+        private bool RequiresPointerOverflowCheck(TypeReference type) => 
+            (type.IsSameType(TypeProvider.NativeIntTypeReference) || type.IsSameType(TypeProvider.NativeUIntTypeReference));
 
-        private bool RequiresPointerOverflowCheck(TypeReference leftStackType, TypeReference rightStackType)
-        {
-            return (this.RequiresPointerOverflowCheck(leftStackType) || this.RequiresPointerOverflowCheck(rightStackType));
-        }
+        private bool RequiresPointerOverflowCheck(TypeReference leftStackType, TypeReference rightStackType) => 
+            (this.RequiresPointerOverflowCheck(leftStackType) || this.RequiresPointerOverflowCheck(rightStackType));
 
-        private IEnumerable<KeyValuePair<string, TypeReference>> ResolveLocalVariableTypes()
-        {
-            return Enumerable.Select<VariableDefinition, KeyValuePair<string, TypeReference>>(this._methodDefinition.Body.Variables, new Func<VariableDefinition, KeyValuePair<string, TypeReference>>(this, (IntPtr) this.<ResolveLocalVariableTypes>m__0));
-        }
+        private IEnumerable<KeyValuePair<string, TypeReference>> ResolveLocalVariableTypes() => 
+            this._methodDefinition.Body.Variables.Select<VariableDefinition, KeyValuePair<string, TypeReference>>(new Func<VariableDefinition, KeyValuePair<string, TypeReference>>(this, (IntPtr) this.<ResolveLocalVariableTypes>m__0));
 
         private void SetupFallthroughVariables(InstructionBlock block)
         {
-            GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(Enumerable.Single<InstructionBlock>(block.Successors));
+            GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>());
             this.WriteAssignGlobalVariables(globalVariables);
             this._valueStack.Clear();
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = new Func<GlobalVariable, int>(null, (IntPtr) <SetupFallthroughVariables>m__4);
             }
-            foreach (GlobalVariable variable in Enumerable.Reverse<GlobalVariable>(Enumerable.OrderBy<GlobalVariable, int>(globalVariables, <>f__am$cache3)))
+            foreach (GlobalVariable variable in globalVariables.OrderBy<GlobalVariable, int>(<>f__am$cache3).Reverse<GlobalVariable>())
             {
                 this._valueStack.Push(new StackInfo(variable.VariableName, this._typeResolver.Resolve(variable.Type)));
             }
         }
 
-        private bool ShouldStripLeaveInstruction(InstructionBlock block, Instruction ins)
-        {
-            return (!this._labeler.NeedsLabel(ins) && (((block.First == block.Last) && (block.First.Previous != null)) && (block.First.Previous.OpCode.Code == Code.Leave)));
-        }
+        private bool ShouldStripLeaveInstruction(InstructionBlock block, Instruction ins) => 
+            (!this._labeler.NeedsLabel(ins) && (((block.First == block.Last) && (block.First.Previous != null)) && (block.First.Previous.OpCode.Code == Code.Leave)));
 
         private void StaticFieldAccess(Instruction ins)
         {
@@ -2829,20 +2786,20 @@
             {
                 StackInfo right = this._valueStack.Pop();
                 this.EmitMemoryBarrierIfNecessary(null);
-                this._writer.WriteLine(Statement.Expression(Emit.Call(string.Format("{0}{1}", str, Naming.ForFieldSetter(operand)), WriteExpressionAndCastIfNeeded(leftType, right, SharingType.NonShared))));
+                this._writer.WriteLine(Statement.Expression(Emit.Call($"{str}{Naming.ForFieldSetter(operand)}", WriteExpressionAndCastIfNeeded(leftType, right, SharingType.NonShared))));
             }
             else
             {
                 if (ins.OpCode.Code == Code.Ldsflda)
                 {
                     ByReferenceType typeReference = new ByReferenceType(leftType);
-                    string expression = Emit.Call(string.Format("{0}{1}", str, Naming.ForFieldAddressGetter(operand)));
+                    string expression = Emit.Call($"{str}{Naming.ForFieldAddressGetter(operand)}");
                     this.PushExpression(typeReference, expression);
                 }
                 else
                 {
                     Local local = this.NewTemp(leftType);
-                    object[] args = new object[] { Emit.Assign(local.IdentifierExpression, Emit.Call(string.Format("{0}{1}", str, Naming.ForFieldGetter(operand)))) };
+                    object[] args = new object[] { Emit.Assign(local.IdentifierExpression, Emit.Call($"{str}{Naming.ForFieldGetter(operand)}")) };
                     this._writer.WriteLine("{0};", args);
                     this._valueStack.Push(new StackInfo(local));
                 }
@@ -2873,7 +2830,7 @@
                 this._writer.WriteLine(Emit.ArrayElementTypeCheck(array.Expression, value.Expression));
             }
             string expression = index.Expression;
-            if (Extensions.IsIntegralPointerType(index.Type))
+            if (index.Type.IsIntegralPointerType())
             {
                 expression = this.ArrayIndexerForIntPtr(index.Expression, index.Type);
             }
@@ -2906,8 +2863,8 @@
             if (!Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(info.Type, this.IntPtrTypeReference, TypeComparisonMode.Exact) && !Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(info.Type, this.UIntPtrTypeReference, TypeComparisonMode.Exact))
             {
                 PointerType variableType = new PointerType(type);
-                expression = string.Format("({0})({1})", Naming.ForVariable(variableType), info2.Expression);
-                str2 = string.Format("({0}){1}", Naming.ForVariable(type), info.Expression);
+                expression = $"({Naming.ForVariable(variableType)})({info2.Expression})";
+                str2 = $"({Naming.ForVariable(type)}){info.Expression}";
             }
             else
             {
@@ -2935,7 +2892,7 @@
         private TypeReference TypeForComparison(Signedness signedness, TypeReference type)
         {
             TypeReference a = StackTypeConverter.StackTypeFor(type);
-            if (Extensions.IsSameType(a, TypeProvider.NativeIntTypeReference))
+            if (a.IsSameType(TypeProvider.NativeIntTypeReference))
             {
                 return ((signedness != Signedness.Signed) ? this.NativeUIntTypeReference : this.NativeIntTypeReference);
             }
@@ -2963,11 +2920,11 @@
         {
             TypeReference type = typeResolver.Resolve(fieldReference.DeclaringType);
             string str = runtimeMetadataAccess.StaticData(fieldReference.DeclaringType);
-            if (Extensions.IsThreadStatic(fieldReference))
+            if (fieldReference.IsThreadStatic())
             {
-                return string.Format("(({0}*)il2cpp_codegen_get_thread_static_data({1}))->", Naming.ForThreadFieldsStruct(type), str);
+                return $"(({Naming.ForThreadFieldsStruct(type)}*)il2cpp_codegen_get_thread_static_data({str}))->";
             }
-            return string.Format("(({0}*){1}->static_fields)->", Naming.ForStaticFieldsStruct(type), str);
+            return $"(({Naming.ForStaticFieldsStruct(type)}*){str}->static_fields)->";
         }
 
         private void Unbox(Instruction ins)
@@ -2982,14 +2939,14 @@
         {
             string str = this._runtimeMetadataAccess.TypeInfoFor(type);
             TypeReference reference = this._typeResolver.Resolve(type);
-            if (Extensions.IsNullable(reference))
+            if (reference.IsNullable())
             {
                 string str2 = this.NewTempName();
-                this._writer.WriteLine(string.Format("void* {0} = alloca(sizeof({1}));", str2, Naming.ForVariable(reference)));
-                this._writer.WriteLine(string.Format("UnBoxNullable({0}, {1}, {2});", boxedExpression, str, str2));
+                this._writer.WriteLine($"void* {str2} = alloca(sizeof({Naming.ForVariable(reference)}));");
+                this._writer.WriteLine($"UnBoxNullable({boxedExpression}, {str}, {str2});");
                 return str2;
             }
-            return string.Format("UnBox ({0}, {1})", boxedExpression, str);
+            return $"UnBox ({boxedExpression}, {str})";
         }
 
         private static string VirtualCallFor(MethodReference method, MethodReference unresolvedMethod, IEnumerable<string> args, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, IRuntimeMetadataAccess runtimeMetadataAccess, VTableBuilder vTableBuilder)
@@ -3005,15 +2962,15 @@
             {
                 source.Add(storey.typeResolver.ResolveReturnType(storey.method));
             }
-            source.AddRange(Enumerable.Select<ParameterDefinition, TypeReference>(storey.method.Parameters, new Func<ParameterDefinition, TypeReference>(storey, (IntPtr) this.<>m__0)));
+            source.AddRange(storey.method.Parameters.Select<ParameterDefinition, TypeReference>(new Func<ParameterDefinition, TypeReference>(storey, (IntPtr) this.<>m__0)));
             string str2 = "";
             if (source.Count > 0)
             {
-                str2 = "< " + EnumerableExtensions.AggregateWithComma(Enumerable.Select<TypeReference, string>(source, new Func<TypeReference, string>(Naming, (IntPtr) Naming.ForVariable))) + " >";
+                str2 = "< " + source.Select<TypeReference, string>(new Func<TypeReference, string>(Naming, (IntPtr) Naming.ForVariable)).AggregateWithComma() + " >";
             }
             bool isInterface = storey.method.DeclaringType.Resolve().IsInterface;
             string str3 = !isInterface ? "Virt" : "Interface";
-            string str4 = string.Format("{0}{1}{2}{3}Invoker{4}{5}::Invoke", new object[] { str, !storey.method.IsGenericInstance ? (!Extensions.IsComOrWindowsRuntimeInterface(storey.method) ? string.Empty : "Com") : "Generic", str3, !flag ? "Action" : "Func", storey.method.Parameters.Count, str2 });
+            string str4 = $"{str}{!storey.method.IsGenericInstance ? (!storey.method.IsComOrWindowsRuntimeInterface() ? string.Empty : "Com") : "Generic"}{str3}{!flag ? "Action" : "Func"}Invoker{storey.method.Parameters.Count}{str2}::Invoke";
             List<string> arguments = new List<string> {
                 !storey.method.IsGenericInstance ? string.Concat(new object[] { 
                     vTableBuilder.IndexFor(storey.method.Resolve()),
@@ -3084,7 +3041,7 @@
             storey.stackIndex = 0;
             foreach (StackInfo info in this._valueStack)
             {
-                GlobalVariable variable = Enumerable.Single<GlobalVariable>(globalVariables, new Func<GlobalVariable, bool>(storey, (IntPtr) this.<>m__0));
+                GlobalVariable variable = globalVariables.Single<GlobalVariable>(new Func<GlobalVariable, bool>(storey, (IntPtr) this.<>m__0));
                 if (info.Type.FullName != variable.Type.FullName)
                 {
                     object[] args = new object[] { variable.VariableName, Naming.ForVariable(this._typeResolver.Resolve(variable.Type)), (info.Type.MetadataType != MetadataType.Pointer) ? "" : "(intptr_t)", info.Expression };
@@ -3127,7 +3084,7 @@
 
         private void WriteBinaryOperation(TypeReference destType, string lcast, string left, string op, string rcast, string right)
         {
-            this.PushExpression(destType, string.Format("({0})({1}{2}{3}{4}{5})", new object[] { Naming.ForVariable(destType), lcast, left, op, rcast, right }));
+            this.PushExpression(destType, $"({Naming.ForVariable(destType)})({lcast}{left}{op}{rcast}{right})");
         }
 
         private void WriteBinaryOperationUsingLargestOperandTypeAsResultType(string op)
@@ -3146,7 +3103,7 @@
 
         private void WriteCallToClassAndInitializerAndStaticConstructorIfNeeded(TypeReference type, MethodDefinition invokingMethod, IRuntimeMetadataAccess runtimeMetadataAccess)
         {
-            if (Extensions.HasStaticConstructor(type) && !this._classesAlreadyInitializedInBlock.Contains(type))
+            if (type.HasStaticConstructor() && !this._classesAlreadyInitializedInBlock.Contains(type))
             {
                 this._classesAlreadyInitializedInBlock.Add(type);
                 string argument = runtimeMetadataAccess.StaticData(type);
@@ -3154,7 +3111,7 @@
                 {
                     <>f__mg$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) Extensions.IsStaticConstructor);
                 }
-                MethodDefinition definition = Enumerable.Single<MethodDefinition>(type.Resolve().Methods, <>f__mg$cache0);
+                MethodDefinition definition = type.Resolve().Methods.Single<MethodDefinition>(<>f__mg$cache0);
                 if ((invokingMethod == null) || (definition != invokingMethod))
                 {
                     this._writer.WriteLine(Statement.Expression(Emit.Call("IL2CPP_RUNTIME_CLASS_INIT", argument)));
@@ -3165,7 +3122,7 @@
         private void WriteCastclass(TypeReference typeReference1, StackInfo value, Instruction ins)
         {
             TypeReference typeReference = this._typeResolver.Resolve(typeReference1);
-            TypeReference type = !Extensions.IsValueType(typeReference) ? typeReference : TypeProvider.ObjectTypeReference;
+            TypeReference type = !typeReference.IsValueType() ? typeReference : TypeProvider.ObjectTypeReference;
             string expression = Emit.Cast(type, Emit.Call("Castclass", value.Expression, this._runtimeMetadataAccess.TypeInfoFor(typeReference1)));
             this.PushExpression(type, expression);
         }
@@ -3173,7 +3130,7 @@
         private void WriteCastclassOrIsInst(TypeReference targetType, StackInfo value, string operation)
         {
             TypeReference typeReference = this._typeResolver.Resolve(targetType);
-            TypeReference reference2 = !Extensions.IsValueType(typeReference) ? typeReference : TypeProvider.ObjectTypeReference;
+            TypeReference reference2 = !typeReference.IsValueType() ? typeReference : TypeProvider.ObjectTypeReference;
             this._writer.AddIncludeForTypeDefinition(typeReference);
             this.PushExpression(reference2, Emit.Cast(reference2, this.GetCastclassOrIsInstCall(targetType, value, operation, typeReference)));
         }
@@ -3181,7 +3138,7 @@
         private void WriteCheckForOverflow<TMaxValue>(bool treatInputAsUnsigned, TMaxValue maxValue, bool inputIsNumber)
         {
             StackInfo info = this._valueStack.Peek();
-            if (Extensions.IsSameType(info.Type, this.DoubleTypeReference) || Extensions.IsSameType(info.Type, this.SingleTypeReference))
+            if (info.Type.IsSameType(this.DoubleTypeReference) || info.Type.IsSameType(this.SingleTypeReference))
             {
                 object[] args = new object[] { info.Expression, maxValue, Emit.RaiseManagedException("il2cpp_codegen_get_overflow_exception()") };
                 this._writer.WriteLine("if ({0} > (double)({1})) {2};", args);
@@ -3212,7 +3169,7 @@
                 this._valueStack.Push(new StackInfo(Naming.ThisParameterName, right.Type));
                 this._valueStack.Push(new StackInfo(Naming.ThisParameterName, right.Type));
             }
-            else if ((right.Expression == "NULL") && Extensions.IsSystemObject(right.Type))
+            else if ((right.Expression == "NULL") && right.Type.IsSystemObject())
             {
                 this._valueStack.Push(new StackInfo("NULL", this.ObjectTypeReference));
                 this._valueStack.Push(new StackInfo("NULL", this.ObjectTypeReference));
@@ -3226,9 +3183,9 @@
             }
         }
 
-        private static string WriteExpressionAndCastIfNeeded(TypeReference leftType, StackInfo right, [Optional, DefaultParameterValue(0)] SharingType sharingType)
+        private static string WriteExpressionAndCastIfNeeded(TypeReference leftType, StackInfo right, SharingType sharingType = 0)
         {
-            if ((leftType.MetadataType == MetadataType.Boolean) && Extensions.IsIntegralType(right.Type))
+            if ((leftType.MetadataType == MetadataType.Boolean) && right.Type.IsIntegralType())
             {
                 return EmitCastRightCastToLeftType(leftType, right);
             }
@@ -3236,7 +3193,7 @@
             {
                 return EmitCastRightCastToLeftType(leftType, right);
             }
-            if (Extensions.IsGenericParameter(leftType))
+            if (leftType.IsGenericParameter())
             {
                 return right.Expression;
             }
@@ -3254,11 +3211,11 @@
                 {
                     <>f__am$cache7 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteExpressionAndCastIfNeeded>m__8);
                 }
-                FieldDefinition field = Enumerable.Single<FieldDefinition>(TypeProvider.SystemIntPtr.Fields, <>f__am$cache7);
-                return string.Format("({0})({1}){2}.{3}()", new object[] { Naming.ForVariable(leftType), Naming.ForIntPtrT, right.Expression, Naming.ForFieldGetter(field) });
+                FieldDefinition field = TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache7);
+                return $"({Naming.ForVariable(leftType)})({Naming.ForIntPtrT}){right.Expression}.{Naming.ForFieldGetter(field)}()";
             }
             ByReferenceType type = leftType as ByReferenceType;
-            if (((type != null) && (Extensions.IsIntegralPointerType(type.ElementType) || Extensions.IsPrimitiveType(type.ElementType.MetadataType))) && (right.Type == TypeProvider.NativeIntTypeReference))
+            if (((type != null) && (type.ElementType.IsIntegralPointerType() || type.ElementType.MetadataType.IsPrimitiveType())) && (right.Type == TypeProvider.NativeIntTypeReference))
             {
                 return EmitCastRightCastToLeftType(leftType, right);
             }
@@ -3270,7 +3227,7 @@
             {
                 return right.Expression;
             }
-            return string.Format("{0}{1}", VarianceSupport.Apply(leftType, right.Type), right.Expression);
+            return $"{VarianceSupport.Apply(leftType, right.Type)}{right.Expression}";
         }
 
         private void WriteGlobalVariableAssignmentForLeftBranch(InstructionBlock block, Instruction targetInstruction)
@@ -3278,7 +3235,7 @@
             <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey6 storey = new <WriteGlobalVariableAssignmentForLeftBranch>c__AnonStorey6 {
                 targetInstruction = targetInstruction
             };
-            GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(Enumerable.Single<InstructionBlock>(block.Successors, new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__0)));
+            GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>(new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__0)));
             this.WriteAssignGlobalVariables(globalVariables);
         }
 
@@ -3287,7 +3244,7 @@
             <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey5 storey = new <WriteGlobalVariableAssignmentForRightBranch>c__AnonStorey5 {
                 targetInstruction = targetInstruction
             };
-            GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(Enumerable.Single<InstructionBlock>(block.Successors, new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__0)));
+            GlobalVariable[] globalVariables = this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>(new Func<InstructionBlock, bool>(storey, (IntPtr) this.<>m__0)));
             this.WriteAssignGlobalVariables(globalVariables);
         }
 
@@ -3305,7 +3262,7 @@
                 if (this._referencedLabels.Contains(ins))
                 {
                     this._writer.WriteLine();
-                    this._writer.WriteUnindented(string.Format("{0}{1}", str, this._labeler.ForLabel(ins)), new object[0]);
+                    this._writer.WriteUnindented($"{str}{this._labeler.ForLabel(ins)}", new object[0]);
                 }
             }
         }
@@ -3319,7 +3276,7 @@
             if (index < 0)
             {
                 TypeReference typeReference = this._typeResolver.Resolve(this._methodReference.DeclaringType);
-                if (Extensions.IsValueType(typeReference))
+                if (typeReference.IsValueType())
                 {
                     typeReference = new ByReferenceType(typeReference);
                 }
@@ -3357,7 +3314,7 @@
             StackInfo info = this._valueStack.Pop();
             TypeReference reference = this._typeResolver.Resolve((TypeReference) ins.Operand);
             PointerType variableType = new PointerType(reference);
-            this._valueStack.Push(new StackInfo(string.Format("(*({0}){1})", Naming.ForVariable(variableType), info.Expression), reference));
+            this._valueStack.Push(new StackInfo($"(*({Naming.ForVariable(variableType)}){info.Expression})", reference));
             this.EmitMemoryBarrierIfNecessary(null);
         }
 
@@ -3432,29 +3389,29 @@
         {
             StackInfo originalValue = this._valueStack.Pop();
             TypeReference a = this.CalculateResultTypeForNegate(originalValue.Type);
-            if (Extensions.IsSameType(a, TypeProvider.SystemIntPtr))
+            if (a.IsSameType(TypeProvider.SystemIntPtr))
             {
                 if (<>f__am$cacheC == null)
                 {
                     <>f__am$cacheC = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteNegateOperation>m__E);
                 }
-                FieldDefinition field = Enumerable.Single<FieldDefinition>(TypeProvider.SystemIntPtr.Fields, <>f__am$cacheC);
+                FieldDefinition field = TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cacheC);
                 string str = Naming.ForFieldGetter(field);
-                string str2 = string.Format("{0}.{1}()", originalValue.Expression, str);
-                string stringValue = string.Format("(-(intptr_t){0})", str2);
+                string str2 = $"{originalValue.Expression}.{str}()";
+                string stringValue = $"(-(intptr_t){str2})";
                 Local local = this.EmitLocalIntPtrWithValue(stringValue);
                 this.PushExpression(local.Type, local.Expression);
             }
             else
             {
-                this.PushExpression(originalValue.Type, string.Format("(-{0})", CastTypeIfNeeded(originalValue, a)));
+                this.PushExpression(originalValue.Type, $"(-{CastTypeIfNeeded(originalValue, a)})");
             }
         }
 
         private void WriteNotOperation()
         {
             StackInfo info = this._valueStack.Pop();
-            this.PushExpression(info.Type, string.Format("(~{0})", info.Expression));
+            this.PushExpression(info.Type, $"(~{info.Expression})");
         }
 
         private void WriteNumericConversion(TypeReference typeReference)
@@ -3470,16 +3427,16 @@
             {
                 str = this.FormatNativeIntGetterName(info.Expression, info.Type);
             }
-            this.PushExpression(outputType, string.Format("(({0})(({1}){2}{3}))", new object[] { Naming.ForVariable(outputType), Naming.ForVariable(inputType), (info.Type.MetadataType != MetadataType.Pointer) ? "" : "(intptr_t)", str }));
+            this.PushExpression(outputType, $"(({Naming.ForVariable(outputType)})(({Naming.ForVariable(inputType)}){(info.Type.MetadataType != MetadataType.Pointer) ? "" : "(intptr_t)"}{str}))");
         }
 
         private void WriteNumericConversionFloat(TypeReference outputType)
         {
-            if (Extensions.IsSameType(this._valueStack.Peek().Type, this.UInt32TypeReference))
+            if (this._valueStack.Peek().Type.IsSameType(this.UInt32TypeReference))
             {
                 this.WriteNumericConversion(this.Int32TypeReference, outputType);
             }
-            else if (Extensions.IsSameType(this._valueStack.Peek().Type, this.UInt64TypeReference))
+            else if (this._valueStack.Peek().Type.IsSameType(this.UInt64TypeReference))
             {
                 this.WriteNumericConversion(this.Int64TypeReference, outputType);
             }
@@ -3488,7 +3445,7 @@
 
         private void WriteNumericConversionI8()
         {
-            if (Extensions.IsSameType(this._valueStack.Peek().Type, this.UInt32TypeReference))
+            if (this._valueStack.Peek().Type.IsSameType(this.UInt32TypeReference))
             {
                 this.WriteNumericConversion(this.Int32TypeReference);
             }
@@ -3514,14 +3471,14 @@
 
         private void WriteNumericConversionU8()
         {
-            if (Extensions.IsSameType(this._valueStack.Peek().Type, this.Int32TypeReference))
+            if (this._valueStack.Peek().Type.IsSameType(this.Int32TypeReference))
             {
                 this.WriteNumericConversion(this.UInt32TypeReference);
             }
             this.WriteNumericConversion(this.UInt64TypeReference, this.Int64TypeReference);
         }
 
-        private void WriteNumericConversionWithOverflow<TMaxValue>(TypeReference typeReference, bool treatInputAsUnsigned, TMaxValue maxValue, [Optional, DefaultParameterValue(true)] bool inputIsValue)
+        private void WriteNumericConversionWithOverflow<TMaxValue>(TypeReference typeReference, bool treatInputAsUnsigned, TMaxValue maxValue, bool inputIsValue = true)
         {
             this.WriteCheckForOverflow<TMaxValue>(treatInputAsUnsigned, maxValue, inputIsValue);
             this.WriteNumericConversion(typeReference);
@@ -3558,11 +3515,11 @@
             StackInfo left = this._valueStack.Pop();
             if ((right.Type.MetadataType == MetadataType.Single) || (left.Type.MetadataType == MetadataType.Single))
             {
-                this.PushExpression(this.SingleTypeReference, string.Format("fmodf({0}, {1})", left.Expression, right.Expression));
+                this.PushExpression(this.SingleTypeReference, $"fmodf({left.Expression}, {right.Expression})");
             }
             else if ((right.Type.MetadataType == MetadataType.Double) || (left.Type.MetadataType == MetadataType.Double))
             {
-                this.PushExpression(this.DoubleTypeReference, string.Format("fmod({0}, {1})", left.Expression, right.Expression));
+                this.PushExpression(this.DoubleTypeReference, $"fmod({left.Expression}, {right.Expression})");
             }
             else
             {
@@ -3575,7 +3532,7 @@
             TypeReference type = this._typeResolver.ResolveReturnType(this._methodDefinition);
             if (((type.MetadataType == MetadataType.Void) && (this._valueStack.Count > 0)) || ((type.MetadataType != MetadataType.Void) && (this._valueStack.Count > 1)))
             {
-                throw new InvalidOperationException(string.Format("Attempting to return a value from method '{0}' when there is no value on the stack. Is this invalid IL code?", this._methodDefinition.FullName));
+                throw new InvalidOperationException($"Attempting to return a value from method '{this._methodDefinition.FullName}' when there is no value on the stack. Is this invalid IL code?");
             }
             if (type.MetadataType != MetadataType.Void)
             {
@@ -3591,13 +3548,13 @@
                     object[] objArray2 = new object[] { str, right.Expression };
                     this._writer.WriteLine("return {0}({1});", objArray2);
                 }
-                else if ((type.MetadataType == MetadataType.IntPtr) && (Extensions.IsSameType(right.Type, this.NativeIntTypeReference) || Extensions.IsSameType(right.Type, this.NativeUIntTypeReference)))
+                else if ((type.MetadataType == MetadataType.IntPtr) && (right.Type.IsSameType(this.NativeIntTypeReference) || right.Type.IsSameType(this.NativeUIntTypeReference)))
                 {
                     Local local = this.EmitLocalIntPtrWithValue(right.Expression);
                     object[] objArray3 = new object[] { local.Expression };
                     this._writer.WriteLine("return {0};", objArray3);
                 }
-                else if ((type.MetadataType == MetadataType.UIntPtr) && (Extensions.IsSameType(right.Type, this.NativeIntTypeReference) || Extensions.IsSameType(right.Type, this.NativeUIntTypeReference)))
+                else if ((type.MetadataType == MetadataType.UIntPtr) && (right.Type.IsSameType(this.NativeIntTypeReference) || right.Type.IsSameType(this.NativeUIntTypeReference)))
                 {
                     Local local2 = this.EmitLocalUIntPtrWithValue(right.Expression);
                     object[] objArray4 = new object[] { local2.Expression };
@@ -3642,9 +3599,9 @@
                 object[] args = new object[] { Naming.ForVariableName(variable), Naming.ForVariable(this._typeResolver.Resolve(destinationVariable)), info };
                 this._writer.WriteLine("{0} = ({1}){2};", args);
             }
-            else if ((Extensions.IsSameType(variable.VariableType, this.IntPtrTypeReference) && !Extensions.IsSameType(info.Type, this.IntPtrTypeReference)) || (Extensions.IsSameType(variable.VariableType, this.UIntPtrTypeReference) && !Extensions.IsSameType(info.Type, this.UIntPtrTypeReference)))
+            else if ((variable.VariableType.IsSameType(this.IntPtrTypeReference) && !info.Type.IsSameType(this.IntPtrTypeReference)) || (variable.VariableType.IsSameType(this.UIntPtrTypeReference) && !info.Type.IsSameType(this.UIntPtrTypeReference)))
             {
-                this._writer.WriteLine(this.FormatNativeIntSetterInvocation(Naming.ForVariableName(variable), variable.VariableType, string.Format("(void*){0}", info)));
+                this._writer.WriteLine(this.FormatNativeIntSetterInvocation(Naming.ForVariableName(variable), variable.VariableType, $"(void*){info}"));
             }
             else
             {
@@ -3705,11 +3662,11 @@
 
         private void WriteUnconditionalJumpTo(InstructionBlock block, Instruction target)
         {
-            if (Enumerable.Count<InstructionBlock>(block.Successors) != 1)
+            if (block.Successors.Count<InstructionBlock>() != 1)
             {
                 throw new ArgumentException("Expected only one successor for the current block", "target");
             }
-            this.WriteAssignGlobalVariables(this._stackAnalysis.InputVariablesFor(Enumerable.Single<InstructionBlock>(block.Successors)));
+            this.WriteAssignGlobalVariables(this._stackAnalysis.InputVariablesFor(block.Successors.Single<InstructionBlock>()));
             this.WriteJump(target);
         }
 
@@ -3720,175 +3677,76 @@
             TypeReference type = StackTypeConverter.StackTypeForBinaryOperation(info2.Type);
             TypeReference reference2 = StackTypeConverter.StackTypeForBinaryOperation(info.Type);
             TypeReference reference3 = (this.GetMetadataTypeOrderFor(type) >= this.GetMetadataTypeOrderFor(reference2)) ? this.GetUnsignedType(type) : this.GetUnsignedType(reference2);
-            this.WriteBinaryOperation(this.GetSignedType(reference3), string.Format("({0})({1})", Naming.ForVariable(reference3), Naming.ForVariable(type)), this.ExpressionForBinaryOperation(info2.Type, info2.Expression), op, string.Format("({0})({1})", Naming.ForVariable(reference3), Naming.ForVariable(reference2)), this.ExpressionForBinaryOperation(info.Type, info.Expression));
+            this.WriteBinaryOperation(this.GetSignedType(reference3), $"({Naming.ForVariable(reference3)})({Naming.ForVariable(type)})", this.ExpressionForBinaryOperation(info2.Type, info2.Expression), op, $"({Naming.ForVariable(reference3)})({Naming.ForVariable(reference2)})", this.ExpressionForBinaryOperation(info.Type, info.Expression));
         }
 
-        private TypeReference ByteTypeReference
-        {
-            get
-            {
-                return TypeProvider.ByteTypeReference;
-            }
-        }
+        private TypeReference ByteTypeReference =>
+            TypeProvider.ByteTypeReference;
 
-        private TypeReference DoubleTypeReference
-        {
-            get
-            {
-                return TypeProvider.DoubleTypeReference;
-            }
-        }
+        private TypeReference DoubleTypeReference =>
+            TypeProvider.DoubleTypeReference;
 
-        private TypeReference Int16TypeReference
-        {
-            get
-            {
-                return TypeProvider.Int16TypeReference;
-            }
-        }
+        private TypeReference Int16TypeReference =>
+            TypeProvider.Int16TypeReference;
 
-        private TypeReference Int32TypeReference
-        {
-            get
-            {
-                return TypeProvider.Int32TypeReference;
-            }
-        }
+        private TypeReference Int32TypeReference =>
+            TypeProvider.Int32TypeReference;
 
-        private TypeReference Int64TypeReference
-        {
-            get
-            {
-                return TypeProvider.Int64TypeReference;
-            }
-        }
+        private TypeReference Int64TypeReference =>
+            TypeProvider.Int64TypeReference;
 
-        private TypeReference IntPtrTypeReference
-        {
-            get
-            {
-                return TypeProvider.IntPtrTypeReference;
-            }
-        }
+        private TypeReference IntPtrTypeReference =>
+            TypeProvider.IntPtrTypeReference;
 
-        private TypeReference NativeIntTypeReference
-        {
-            get
-            {
-                return TypeProvider.NativeIntTypeReference;
-            }
-        }
+        private TypeReference NativeIntTypeReference =>
+            TypeProvider.NativeIntTypeReference;
 
-        private TypeReference NativeUIntTypeReference
-        {
-            get
-            {
-                return TypeProvider.NativeUIntTypeReference;
-            }
-        }
+        private TypeReference NativeUIntTypeReference =>
+            TypeProvider.NativeUIntTypeReference;
 
-        private TypeReference ObjectTypeReference
-        {
-            get
-            {
-                return TypeProvider.ObjectTypeReference;
-            }
-        }
+        private TypeReference ObjectTypeReference =>
+            TypeProvider.ObjectTypeReference;
 
-        private TypeReference RuntimeFieldHandleTypeReference
-        {
-            get
-            {
-                return TypeProvider.RuntimeFieldHandleTypeReference;
-            }
-        }
+        private TypeReference RuntimeFieldHandleTypeReference =>
+            TypeProvider.RuntimeFieldHandleTypeReference;
 
-        private TypeReference RuntimeMethodHandleTypeReference
-        {
-            get
-            {
-                return TypeProvider.RuntimeMethodHandleTypeReference;
-            }
-        }
+        private TypeReference RuntimeMethodHandleTypeReference =>
+            TypeProvider.RuntimeMethodHandleTypeReference;
 
-        private TypeReference RuntimeTypeHandleTypeReference
-        {
-            get
-            {
-                return TypeProvider.RuntimeTypeHandleTypeReference;
-            }
-        }
+        private TypeReference RuntimeTypeHandleTypeReference =>
+            TypeProvider.RuntimeTypeHandleTypeReference;
 
-        private TypeReference SByteTypeReference
-        {
-            get
-            {
-                return TypeProvider.SByteTypeReference;
-            }
-        }
+        private TypeReference SByteTypeReference =>
+            TypeProvider.SByteTypeReference;
 
-        private TypeReference SingleTypeReference
-        {
-            get
-            {
-                return TypeProvider.SingleTypeReference;
-            }
-        }
+        private TypeReference SingleTypeReference =>
+            TypeProvider.SingleTypeReference;
 
-        private TypeReference StringTypeReference
-        {
-            get
-            {
-                return TypeProvider.StringTypeReference;
-            }
-        }
+        private TypeReference StringTypeReference =>
+            TypeProvider.StringTypeReference;
 
-        private TypeReference UInt16TypeReference
-        {
-            get
-            {
-                return TypeProvider.UInt16TypeReference;
-            }
-        }
+        private TypeReference UInt16TypeReference =>
+            TypeProvider.UInt16TypeReference;
 
-        private TypeReference UInt32TypeReference
-        {
-            get
-            {
-                return TypeProvider.UInt32TypeReference;
-            }
-        }
+        private TypeReference UInt32TypeReference =>
+            TypeProvider.UInt32TypeReference;
 
-        private TypeReference UInt64TypeReference
-        {
-            get
-            {
-                return TypeProvider.UInt64TypeReference;
-            }
-        }
+        private TypeReference UInt64TypeReference =>
+            TypeProvider.UInt64TypeReference;
 
-        private TypeReference UIntPtrTypeReference
-        {
-            get
-            {
-                return TypeProvider.UIntPtrTypeReference;
-            }
-        }
+        private TypeReference UIntPtrTypeReference =>
+            TypeProvider.UIntPtrTypeReference;
 
         [CompilerGenerated]
         private sealed class <GenerateConditionalJump>c__AnonStorey7
         {
             internal Instruction targetInstruction;
 
-            internal bool <>m__0(InstructionBlock b)
-            {
-                return (b.First.Offset != this.targetInstruction.Offset);
-            }
+            internal bool <>m__0(InstructionBlock b) => 
+                (b.First.Offset != this.targetInstruction.Offset);
 
-            internal bool <>m__1(InstructionBlock b)
-            {
-                return (b.First.Offset == this.targetInstruction.Offset);
-            }
+            internal bool <>m__1(InstructionBlock b) => 
+                (b.First.Offset == this.targetInstruction.Offset);
         }
 
         [CompilerGenerated]
@@ -3897,10 +3755,8 @@
             internal MethodReference method;
             internal Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolverForMethodToCall;
 
-            internal TypeReference <>m__0(ParameterDefinition parameter)
-            {
-                return this.typeResolverForMethodToCall.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(this.method, parameter));
-            }
+            internal TypeReference <>m__0(ParameterDefinition parameter) => 
+                this.typeResolverForMethodToCall.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(this.method, parameter));
         }
 
         [CompilerGenerated]
@@ -3908,15 +3764,11 @@
         {
             internal string suffix;
 
-            internal string <>m__0(string s)
-            {
-                return (s + this.suffix);
-            }
+            internal string <>m__0(string s) => 
+                (s + this.suffix);
 
-            internal string <>m__1(string s)
-            {
-                return (s + this.suffix);
-            }
+            internal string <>m__1(string s) => 
+                (s + this.suffix);
         }
 
         [CompilerGenerated]
@@ -3924,10 +3776,8 @@
         {
             internal string suffix;
 
-            internal string <>m__0(string s)
-            {
-                return (s + this.suffix);
-            }
+            internal string <>m__0(string s) => 
+                (s + this.suffix);
         }
 
         [CompilerGenerated]
@@ -3942,13 +3792,11 @@
                 {
                     <>f__am$cache0 = new Func<Instruction, int>(null, (IntPtr) <>m__1);
                 }
-                return !Enumerable.Contains<int>(Enumerable.Select<Instruction, int>(this.targetInstructions, <>f__am$cache0), b.First.Offset);
+                return !this.targetInstructions.Select<Instruction, int>(<>f__am$cache0).Contains<int>(b.First.Offset);
             }
 
-            private static int <>m__1(Instruction t)
-            {
-                return t.Offset;
-            }
+            private static int <>m__1(Instruction t) => 
+                t.Offset;
         }
 
         [CompilerGenerated]
@@ -3956,10 +3804,8 @@
         {
             internal Instruction targetInstruction;
 
-            internal bool <>m__0(InstructionBlock b)
-            {
-                return (b.First.Offset == this.targetInstruction.Offset);
-            }
+            internal bool <>m__0(InstructionBlock b) => 
+                (b.First.Offset == this.targetInstruction.Offset);
         }
 
         [CompilerGenerated]
@@ -3968,10 +3814,8 @@
             internal MethodReference method;
             internal Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver;
 
-            internal TypeReference <>m__0(ParameterDefinition p)
-            {
-                return this.typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(this.method, p));
-            }
+            internal TypeReference <>m__0(ParameterDefinition p) => 
+                this.typeResolver.Resolve(Unity.IL2CPP.GenericParameterResolver.ResolveParameterTypeIfNeeded(this.method, p));
         }
 
         [CompilerGenerated]
@@ -3979,10 +3823,8 @@
         {
             internal int stackIndex;
 
-            internal bool <>m__0(GlobalVariable v)
-            {
-                return (v.Index == this.stackIndex);
-            }
+            internal bool <>m__0(GlobalVariable v) => 
+                (v.Index == this.stackIndex);
         }
 
         [CompilerGenerated]
@@ -3990,10 +3832,8 @@
         {
             internal Instruction targetInstruction;
 
-            internal bool <>m__0(InstructionBlock b)
-            {
-                return (b.First.Offset != this.targetInstruction.Offset);
-            }
+            internal bool <>m__0(InstructionBlock b) => 
+                (b.First.Offset != this.targetInstruction.Offset);
         }
 
         [CompilerGenerated]
@@ -4001,10 +3841,8 @@
         {
             internal Instruction targetInstruction;
 
-            internal bool <>m__0(InstructionBlock b)
-            {
-                return (b.First.Offset == this.targetInstruction.Offset);
-            }
+            internal bool <>m__0(InstructionBlock b) => 
+                (b.First.Offset == this.targetInstruction.Offset);
         }
 
         private enum OverflowCheck

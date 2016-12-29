@@ -239,15 +239,11 @@
             return IntPtr.Zero;
         }
 
-        public static IntPtr CreateJavaProxy(int delegateHandle, AndroidJavaProxy proxy)
-        {
-            return AndroidReflection.NewProxyInstance(delegateHandle, proxy.javaInterface.GetRawClass());
-        }
+        public static IntPtr CreateJavaProxy(int delegateHandle, AndroidJavaProxy proxy) => 
+            AndroidReflection.NewProxyInstance(delegateHandle, proxy.javaInterface.GetRawClass());
 
-        public static IntPtr CreateJavaRunnable(AndroidJavaRunnable jrunnable)
-        {
-            return AndroidJNIHelper.CreateJavaProxy(new AndroidJavaRunnableProxy(jrunnable));
-        }
+        public static IntPtr CreateJavaRunnable(AndroidJavaRunnable jrunnable) => 
+            AndroidJNIHelper.CreateJavaProxy(new AndroidJavaRunnableProxy(jrunnable));
 
         public static jvalue[] CreateJNIArgArray(object[] args)
         {
@@ -340,10 +336,8 @@
             }
         }
 
-        public static IntPtr GetConstructorID(IntPtr jclass, object[] args)
-        {
-            return AndroidJNIHelper.GetConstructorID(jclass, GetSignature(args));
-        }
+        public static IntPtr GetConstructorID(IntPtr jclass, object[] args) => 
+            AndroidJNIHelper.GetConstructorID(jclass, GetSignature(args));
 
         public static IntPtr GetConstructorID(IntPtr jclass, string signature)
         {
@@ -370,10 +364,8 @@
             return ptr2;
         }
 
-        public static IntPtr GetFieldID<ReturnType>(IntPtr jclass, string fieldName, bool isStatic)
-        {
-            return AndroidJNIHelper.GetFieldID(jclass, fieldName, GetSignature(typeof(ReturnType)), isStatic);
-        }
+        public static IntPtr GetFieldID<ReturnType>(IntPtr jclass, string fieldName, bool isStatic) => 
+            AndroidJNIHelper.GetFieldID(jclass, fieldName, GetSignature(typeof(ReturnType)), isStatic);
 
         public static IntPtr GetFieldID(IntPtr jclass, string fieldName, string signature, bool isStatic)
         {
@@ -400,10 +392,8 @@
             return ptr2;
         }
 
-        public static IntPtr GetMethodID(IntPtr jclass, string methodName, object[] args, bool isStatic)
-        {
-            return AndroidJNIHelper.GetMethodID(jclass, methodName, GetSignature(args), isStatic);
-        }
+        public static IntPtr GetMethodID(IntPtr jclass, string methodName, object[] args, bool isStatic) => 
+            AndroidJNIHelper.GetMethodID(jclass, methodName, GetSignature(args), isStatic);
 
         public static IntPtr GetMethodID(IntPtr jclass, string methodName, string signature, bool isStatic)
         {
@@ -430,10 +420,8 @@
             return ptr2;
         }
 
-        public static IntPtr GetMethodID<ReturnType>(IntPtr jclass, string methodName, object[] args, bool isStatic)
-        {
-            return AndroidJNIHelper.GetMethodID(jclass, methodName, GetSignature<ReturnType>(args), isStatic);
-        }
+        public static IntPtr GetMethodID<ReturnType>(IntPtr jclass, string methodName, object[] args, bool isStatic) => 
+            AndroidJNIHelper.GetMethodID(jclass, methodName, GetSignature<ReturnType>(args), isStatic);
 
         private static IntPtr GetMethodIDFallback(IntPtr jclass, string methodName, string signature, bool isStatic)
         {

@@ -39,55 +39,25 @@
             return string.Concat(objArray1);
         }
 
-        public string achievedDescription
-        {
-            get
-            {
-                return this.m_AchievedDescription;
-            }
-        }
+        public string achievedDescription =>
+            this.m_AchievedDescription;
 
-        public bool hidden
-        {
-            get
-            {
-                return this.m_Hidden;
-            }
-        }
+        public bool hidden =>
+            this.m_Hidden;
 
         public string id { get; set; }
 
-        public Texture2D image
-        {
-            get
-            {
-                return this.m_Image;
-            }
-        }
+        public Texture2D image =>
+            this.m_Image;
 
-        public int points
-        {
-            get
-            {
-                return this.m_Points;
-            }
-        }
+        public int points =>
+            this.m_Points;
 
-        public string title
-        {
-            get
-            {
-                return this.m_Title;
-            }
-        }
+        public string title =>
+            this.m_Title;
 
-        public string unachievedDescription
-        {
-            get
-            {
-                return this.m_UnachievedDescription;
-            }
-        }
+        public string unachievedDescription =>
+            this.m_UnachievedDescription;
     }
 }
 

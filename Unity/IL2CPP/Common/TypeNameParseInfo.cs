@@ -53,7 +53,7 @@
                 {
                     <>f__am$cache2 = new Func<int, bool>(null, (IntPtr) <get_ArrayDimension>m__2);
                 }
-                return Enumerable.Count<int>(this.Modifiers, <>f__am$cache2);
+                return this.Modifiers.Count<int>(<>f__am$cache2);
             }
         }
 
@@ -72,17 +72,12 @@
                 {
                     <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <get_ElementTypeName>m__0);
                 }
-                return Enumerable.Aggregate<string, string>(this.Nested, name, <>f__am$cache0);
+                return this.Nested.Aggregate<string, string>(name, <>f__am$cache0);
             }
         }
 
-        public bool HasGenericArguments
-        {
-            get
-            {
-                return (this.TypeArguments.Count > 0);
-            }
-        }
+        public bool HasGenericArguments =>
+            (this.TypeArguments.Count > 0);
 
         public bool IsArray
         {
@@ -92,41 +87,21 @@
                 {
                     <>f__am$cache3 = new Func<int, bool>(null, (IntPtr) <get_IsArray>m__3);
                 }
-                return Enumerable.Any<int>(this.Modifiers, <>f__am$cache3);
+                return this.Modifiers.Any<int>(<>f__am$cache3);
             }
         }
 
-        public bool IsBounded
-        {
-            get
-            {
-                return (this.Modifiers.IndexOf(-2) >= 0);
-            }
-        }
+        public bool IsBounded =>
+            (this.Modifiers.IndexOf(-2) >= 0);
 
-        public bool IsByRef
-        {
-            get
-            {
-                return (this.Modifiers.IndexOf(0) >= 0);
-            }
-        }
+        public bool IsByRef =>
+            (this.Modifiers.IndexOf(0) >= 0);
 
-        public bool IsNested
-        {
-            get
-            {
-                return (this.Nested.Count > 0);
-            }
-        }
+        public bool IsNested =>
+            (this.Nested.Count > 0);
 
-        public bool IsPointer
-        {
-            get
-            {
-                return (this.Modifiers.IndexOf(-1) >= 0);
-            }
-        }
+        public bool IsPointer =>
+            (this.Modifiers.IndexOf(-1) >= 0);
 
         public List<int> Modifiers { get; internal set; }
 
@@ -144,7 +119,7 @@
                 {
                     <>f__am$cache1 = new Func<int, bool>(null, (IntPtr) <get_Ranks>m__1);
                 }
-                return Enumerable.ToArray<int>(Enumerable.Where<int>(this.Modifiers, <>f__am$cache1));
+                return this.Modifiers.Where<int>(<>f__am$cache1).ToArray<int>();
             }
         }
 

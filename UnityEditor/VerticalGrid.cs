@@ -113,40 +113,23 @@
             return true;
         }
 
-        public override string ToString()
-        {
-            return string.Format("VerticalGrid: rows {0}, columns {1}, fixedWidth {2}, itemSize {3}", new object[] { this.rows, this.columns, this.fixedWidth, this.itemSize });
-        }
+        public override string ToString() => 
+            $"VerticalGrid: rows {this.rows}, columns {this.columns}, fixedWidth {this.fixedWidth}, itemSize {this.itemSize}";
 
         public float bottomMargin { get; set; }
 
-        public int columns
-        {
-            get
-            {
-                return this.m_Columns;
-            }
-        }
+        public int columns =>
+            this.m_Columns;
 
         public float fixedHorizontalSpacing { get; set; }
 
         public float fixedWidth { get; set; }
 
-        public float height
-        {
-            get
-            {
-                return this.m_Height;
-            }
-        }
+        public float height =>
+            this.m_Height;
 
-        public float horizontalSpacing
-        {
-            get
-            {
-                return this.m_HorizontalSpacing;
-            }
-        }
+        public float horizontalSpacing =>
+            this.m_HorizontalSpacing;
 
         public Vector2 itemSize { get; set; }
 
@@ -156,13 +139,8 @@
 
         public float rightMargin { get; set; }
 
-        public int rows
-        {
-            get
-            {
-                return this.m_Rows;
-            }
-        }
+        public int rows =>
+            this.m_Rows;
 
         public float topMargin { get; set; }
 

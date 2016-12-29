@@ -92,25 +92,17 @@
             }
         }
 
-        public bool Exists(Predicate<AnimationWindowSelectionItem> predicate)
-        {
-            return this.m_Selection.Exists(predicate);
-        }
+        public bool Exists(Predicate<AnimationWindowSelectionItem> predicate) => 
+            this.m_Selection.Exists(predicate);
 
-        public bool Exists(AnimationWindowSelectionItem itemToFind)
-        {
-            return this.m_Selection.Contains(itemToFind);
-        }
+        public bool Exists(AnimationWindowSelectionItem itemToFind) => 
+            this.m_Selection.Contains(itemToFind);
 
-        public AnimationWindowSelectionItem Find(Predicate<AnimationWindowSelectionItem> predicate)
-        {
-            return this.m_Selection.Find(predicate);
-        }
+        public AnimationWindowSelectionItem Find(Predicate<AnimationWindowSelectionItem> predicate) => 
+            this.m_Selection.Find(predicate);
 
-        public AnimationWindowSelectionItem First()
-        {
-            return Enumerable.First<AnimationWindowSelectionItem>(this.m_Selection);
-        }
+        public AnimationWindowSelectionItem First() => 
+            this.m_Selection.First<AnimationWindowSelectionItem>();
 
         public int GetRefreshHash()
         {
@@ -189,10 +181,8 @@
             }
         }
 
-        public AnimationWindowSelectionItem[] ToArray()
-        {
-            return this.m_Selection.ToArray();
-        }
+        public AnimationWindowSelectionItem[] ToArray() => 
+            this.m_Selection.ToArray();
 
         public void UpdateClip(AnimationWindowSelectionItem itemToUpdate, AnimationClip newClip)
         {
@@ -243,13 +233,8 @@
             }
         }
 
-        public int count
-        {
-            get
-            {
-                return this.m_Selection.Count;
-            }
-        }
+        public int count =>
+            this.m_Selection.Count;
 
         public List<AnimationWindowCurve> curves
         {
@@ -287,10 +272,8 @@
 
         public bool locked
         {
-            get
-            {
-                return this.m_Locked;
-            }
+            get => 
+                this.m_Locked;
             set
             {
                 this.m_Locked = value;

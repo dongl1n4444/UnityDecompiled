@@ -20,10 +20,8 @@
             this.InitOtherParameters(topology);
         }
 
-        private int AddSpecialConnectionConfig(ConnectionConfigInternal config)
-        {
-            return this.AddSpecialConnectionConfigWrapper(config);
-        }
+        private int AddSpecialConnectionConfig(ConnectionConfigInternal config) => 
+            this.AddSpecialConnectionConfigWrapper(config);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern int AddSpecialConnectionConfigWrapper(ConnectionConfigInternal config);

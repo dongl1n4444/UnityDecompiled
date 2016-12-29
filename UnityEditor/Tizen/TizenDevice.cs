@@ -15,13 +15,8 @@
         {
         }
 
-        public string Id
-        {
-            get
-            {
-                return this._deviceId;
-            }
-        }
+        public string Id =>
+            this._deviceId;
     }
 }
 

@@ -111,10 +111,8 @@
             internal GenericFloatVarsTypeConverter $this;
             internal object target;
 
-            internal float <>m__0(string varName)
-            {
-                return this.$this.GetVariableValue(varName, this.target);
-            }
+            internal float <>m__0(string varName) => 
+                this.$this.GetVariableValue(varName, this.target);
         }
 
         [CompilerGenerated]
@@ -122,10 +120,8 @@
         {
             internal float dummy;
 
-            internal bool <>m__0(string t)
-            {
-                return float.TryParse(t, NumberStyles.Float, CultureInfo.InvariantCulture, out this.dummy);
-            }
+            internal bool <>m__0(string t) => 
+                float.TryParse(t, NumberStyles.Float, CultureInfo.InvariantCulture, out this.dummy);
         }
     }
 }

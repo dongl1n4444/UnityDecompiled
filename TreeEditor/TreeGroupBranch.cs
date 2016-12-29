@@ -718,85 +718,35 @@
             }
         }
 
-        internal override string DistributionModeString
-        {
-            get
-            {
-                return Styles.distributionModeString;
-            }
-        }
+        internal override string DistributionModeString =>
+            Styles.distributionModeString;
 
-        internal override string EdgeTurbulenceString
-        {
-            get
-            {
-                return Styles.edgeTurbulenceString;
-            }
-        }
+        internal override string EdgeTurbulenceString =>
+            Styles.edgeTurbulenceString;
 
-        internal override string FrequencyString
-        {
-            get
-            {
-                return Styles.frequencyString;
-            }
-        }
+        internal override string FrequencyString =>
+            Styles.frequencyString;
 
-        internal override string GroupSeedString
-        {
-            get
-            {
-                return Styles.groupSeedString;
-            }
-        }
+        internal override string GroupSeedString =>
+            Styles.groupSeedString;
 
-        internal override string GrowthAngleString
-        {
-            get
-            {
-                return Styles.growthAngleString;
-            }
-        }
+        internal override string GrowthAngleString =>
+            Styles.growthAngleString;
 
-        internal override string GrowthScaleString
-        {
-            get
-            {
-                return Styles.growthScaleString;
-            }
-        }
+        internal override string GrowthScaleString =>
+            Styles.growthScaleString;
 
-        internal override string MainTurbulenceString
-        {
-            get
-            {
-                return Styles.mainTurbulenceString;
-            }
-        }
+        internal override string MainTurbulenceString =>
+            Styles.mainTurbulenceString;
 
-        internal override string MainWindString
-        {
-            get
-            {
-                return Styles.mainWindString;
-            }
-        }
+        internal override string MainWindString =>
+            Styles.mainWindString;
 
-        internal override string TwirlString
-        {
-            get
-            {
-                return Styles.twirlString;
-            }
-        }
+        internal override string TwirlString =>
+            Styles.twirlString;
 
-        internal override string WhorledStepString
-        {
-            get
-            {
-                return Styles.whorledStepString;
-            }
-        }
+        internal override string WhorledStepString =>
+            Styles.whorledStepString;
 
         public enum GeometryMode
         {

@@ -40,14 +40,14 @@
             this.fullName = testMethod.get_TestName().get_FullName();
             this.paramName = ExtractMethodCallParametersString(this.fullName);
             this.id = testMethod.get_TestName().get_TestID().GetHashCode().ToString();
-            List<string> list = Enumerable.ToList<string>(Enumerable.Cast<string>(testMethod.get_Categories()));
+            List<string> list = testMethod.get_Categories().Cast<string>().ToList<string>();
             if (testMethod.get_Parent().get_Categories().Count > 0)
             {
-                list.AddRange(Enumerable.Cast<string>(testMethod.get_Parent().get_Categories()));
+                list.AddRange(testMethod.get_Parent().get_Categories().Cast<string>());
             }
             if (testMethod.get_Parent() is ParameterizedMethodSuite)
             {
-                list.AddRange(Enumerable.Cast<string>(testMethod.get_Parent().get_Parent().get_Categories()));
+                list.AddRange(testMethod.get_Parent().get_Parent().get_Categories().Cast<string>());
             }
             this.categories = list.ToArray();
             this.assemblyPath = this.GetAssemblyPath(testMethod);

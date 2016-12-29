@@ -94,10 +94,8 @@
             GUILayout.BeginHorizontal(GUIContent.none, EditorStyles.toolbar, new GUILayoutOption[0]);
         }
 
-        protected static float CeilValueToGrid(float value)
-        {
-            return (Mathf.Ceil(value / 12f) * 12f);
-        }
+        protected static float CeilValueToGrid(float value) => 
+            (Mathf.Ceil(value / 12f) * 12f);
 
         public void CenterGraph()
         {
@@ -515,7 +513,7 @@
         {
             string[] source = new string[] { "SoftDelete", "Delete", "Cut", "Copy", "Paste", "Duplicate", "SelectAll" };
             Event current = Event.current;
-            if (((current.type == EventType.ValidateCommand) || (current.type == EventType.ExecuteCommand)) && Enumerable.Contains<string>(source, current.commandName))
+            if (((current.type == EventType.ValidateCommand) || (current.type == EventType.ExecuteCommand)) && source.Contains<string>(current.commandName))
             {
                 if (current.type == EventType.ValidateCommand)
                 {
@@ -570,7 +568,7 @@
                                     {
                                         if (current.type == EventType.ExecuteCommand)
                                         {
-                                            this.DeleteNodesAndEdges(this.selection, Enumerable.ToList<UnityEditor.Graphs.Edge>(Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__0))));
+                                            this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__0)).ToList<UnityEditor.Graphs.Edge>());
                                         }
                                         current.Use();
                                         break;
@@ -579,7 +577,7 @@
 
                                 case 1:
                                     this.CopyNodesToPasteboard();
-                                    this.DeleteNodesAndEdges(this.selection, Enumerable.ToList<UnityEditor.Graphs.Edge>(Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__1))));
+                                    this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__1)).ToList<UnityEditor.Graphs.Edge>());
                                     current.Use();
                                     break;
 
@@ -899,10 +897,8 @@
 
         public Graph graph
         {
-            get
-            {
-                return this.m_Graph;
-            }
+            get => 
+                this.m_Graph;
             set
             {
                 this.m_Graph = value;

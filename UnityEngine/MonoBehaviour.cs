@@ -50,10 +50,8 @@
         /// <summary>
         /// <para>Is any invoke pending on this MonoBehaviour?</para>
         /// </summary>
-        public bool IsInvoking()
-        {
-            return this.Internal_IsInvokingAll();
-        }
+        public bool IsInvoking() => 
+            this.Internal_IsInvokingAll();
 
         /// <summary>
         /// <para>Is any invoke on methodName pending?</para>
@@ -74,10 +72,8 @@
         /// <para>Starts a coroutine.</para>
         /// </summary>
         /// <param name="routine"></param>
-        public Coroutine StartCoroutine(IEnumerator routine)
-        {
-            return this.StartCoroutine_Auto_Internal(routine);
-        }
+        public Coroutine StartCoroutine(IEnumerator routine) => 
+            this.StartCoroutine_Auto_Internal(routine);
 
         /// <summary>
         /// <para>Starts a coroutine named methodName.</para>
@@ -99,10 +95,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern Coroutine StartCoroutine(string methodName, [DefaultValue("null")] object value);
         [Obsolete("StartCoroutine_Auto has been deprecated. Use StartCoroutine instead (UnityUpgradable) -> StartCoroutine([mscorlib] System.Collections.IEnumerator)", false)]
-        public Coroutine StartCoroutine_Auto(IEnumerator routine)
-        {
-            return this.StartCoroutine(routine);
-        }
+        public Coroutine StartCoroutine_Auto(IEnumerator routine) => 
+            this.StartCoroutine(routine);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern Coroutine StartCoroutine_Auto_Internal(IEnumerator routine);

@@ -36,40 +36,20 @@
             return builder.CreateGraph();
         }
 
-        public InstructionData GetData(Instruction instruction)
-        {
-            return this.data[instruction.Offset];
-        }
+        public InstructionData GetData(Instruction instruction) => 
+            this.data[instruction.Offset];
 
-        public ExceptionHandlerData[] GetExceptionData()
-        {
-            return this.exception_data.ToArray();
-        }
+        public ExceptionHandlerData[] GetExceptionData() => 
+            this.exception_data.ToArray();
 
-        public bool HasExceptionObject(int offset)
-        {
-            if (this.exception_objects_offsets == null)
-            {
-                return false;
-            }
-            return this.exception_objects_offsets.Contains(offset);
-        }
+        public bool HasExceptionObject(int offset) => 
+            this.exception_objects_offsets?.Contains(offset);
 
-        public InstructionBlock[] Blocks
-        {
-            get
-            {
-                return this.blocks;
-            }
-        }
+        public InstructionBlock[] Blocks =>
+            this.blocks;
 
-        public Mono.Cecil.Cil.MethodBody MethodBody
-        {
-            get
-            {
-                return this.body;
-            }
-        }
+        public Mono.Cecil.Cil.MethodBody MethodBody =>
+            this.body;
     }
 }
 

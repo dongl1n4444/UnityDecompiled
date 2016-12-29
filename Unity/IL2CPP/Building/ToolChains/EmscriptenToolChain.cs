@@ -26,49 +26,39 @@
         private static Func<string, NPath> <>f__am$cache1;
         public static bool DeepDebugging = false;
 
-        public EmscriptenToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, [Optional, DefaultParameterValue(false)] bool setEnvironmentVariables) : base(architecture, buildConfiguration)
+        public EmscriptenToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool setEnvironmentVariables = false) : base(architecture, buildConfiguration)
         {
             this._setEnvironmentVariables = setEnvironmentVariables;
         }
 
-        public override bool CanBuildInCurrentEnvironment()
-        {
-            return true;
-        }
+        public override bool CanBuildInCurrentEnvironment() => 
+            true;
 
-        public override NPath CompilerExecutableFor(NPath sourceFile)
-        {
-            return EmscriptenPaths.Python;
-        }
+        public override NPath CompilerExecutableFor(NPath sourceFile) => 
+            EmscriptenPaths.Python;
 
         [DebuggerHidden]
-        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction)
-        {
-            return new <CompilerFlagsFor>c__Iterator2 { 
+        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction) => 
+            new <CompilerFlagsFor>c__Iterator2 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        private IEnumerable<string> DefaultCompilerFlags(CppCompilationInstruction cppCompilationInstruction)
-        {
-            return new <DefaultCompilerFlags>c__Iterator4 { 
+        private IEnumerable<string> DefaultCompilerFlags(CppCompilationInstruction cppCompilationInstruction) => 
+            new <DefaultCompilerFlags>c__Iterator4 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        private IEnumerable<string> DefaultLinkerFlags(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile)
-        {
-            return new <DefaultLinkerFlags>c__Iterator3 { 
+        private IEnumerable<string> DefaultLinkerFlags(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile) => 
+            new <DefaultLinkerFlags>c__Iterator3 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         public override Dictionary<string, string> EnvVars()
         {
@@ -79,20 +69,14 @@
             return null;
         }
 
-        public override string ExecutableExtension()
-        {
-            return ".html";
-        }
+        public override string ExecutableExtension() => 
+            ".html";
 
-        protected override string GetInterestingOutputFromCompilationShellResult(Shell.ExecuteResult shellResult)
-        {
-            return shellResult.StdErr;
-        }
+        protected override string GetInterestingOutputFromCompilationShellResult(Shell.ExecuteResult shellResult) => 
+            shellResult.StdErr;
 
-        protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult)
-        {
-            return shellResult.StdErr;
-        }
+        protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult) => 
+            shellResult.StdErr;
 
         private static string GetShortPathName(string path)
         {
@@ -134,7 +118,7 @@
                 path2.InQuotes()
             };
             inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
-            string path = !Enumerable.Any<NPath>(objectFiles) ? null : Enumerable.First<NPath>(objectFiles).Parent.ToString();
+            string path = !objectFiles.Any<NPath>() ? null : objectFiles.First<NPath>().Parent.ToString();
             using (TextWriter writer = new Unity.IL2CPP.Portability.StreamWriter(shortPathName))
             {
                 foreach (NPath path3 in objectFiles)
@@ -161,7 +145,7 @@
                 {
                     <>f__am$cache0 = new Func<string, NPath>(null, (IntPtr) <MakeLinkerInvocation>m__0);
                 }
-                list.AddRange(Enumerable.Select<string, NPath>(EmscriptenBuildingOptions.JsPre, <>f__am$cache0));
+                list.AddRange(EmscriptenBuildingOptions.JsPre.Select<string, NPath>(<>f__am$cache0));
             }
             if (EmscriptenBuildingOptions.JsLibraries != null)
             {
@@ -173,10 +157,10 @@
                 {
                     <>f__am$cache1 = new Func<string, NPath>(null, (IntPtr) <MakeLinkerInvocation>m__1);
                 }
-                list.AddRange(Enumerable.Select<string, NPath>(EmscriptenBuildingOptions.JsLibraries, <>f__am$cache1));
+                list.AddRange(EmscriptenBuildingOptions.JsLibraries.Select<string, NPath>(<>f__am$cache1));
             }
-            inputs.AddRange(Extensions.InQuotes(staticLibraries, SlashMode.Native));
-            inputs.AddRange(ExtensionMethods.InQuotes(this.ToolChainStaticLibraries()));
+            inputs.AddRange(staticLibraries.InQuotes(SlashMode.Native));
+            inputs.AddRange(this.ToolChainStaticLibraries().InQuotes());
             string str5 = EmscriptenPaths.Python.ToString();
             if (PlatformUtils.IsWindows())
             {
@@ -185,7 +169,7 @@
             CppProgramBuilder.LinkerInvocation invocation = new CppProgramBuilder.LinkerInvocation();
             Shell.ExecuteArgs args = new Shell.ExecuteArgs {
                 Executable = str5,
-                Arguments = ExtensionMethods.SeparateWithSpaces(EnumerableExtensions.Append<string>(inputs, "@" + ExtensionMethods.InQuotes(shortPathName))),
+                Arguments = inputs.Append<string>(("@" + shortPathName.InQuotes())).SeparateWithSpaces(),
                 EnvVars = this.EnvVars(),
                 WorkingDirectory = path
             };
@@ -195,32 +179,22 @@
             return invocation;
         }
 
-        public override string ObjectExtension()
-        {
-            return ".o";
-        }
+        public override string ObjectExtension() => 
+            ".o";
 
-        public override IEnumerable<string> OutputArgumentFor(NPath objectFile)
-        {
-            return new string[] { "-o", objectFile.InQuotes() };
-        }
+        public override IEnumerable<string> OutputArgumentFor(NPath objectFile) => 
+            new string[] { "-o", objectFile.InQuotes() };
 
-        public override IEnumerable<Type> SupportedArchitectures()
-        {
-            return new Type[] { typeof(EmscriptenJavaScriptArchitecture) };
-        }
+        public override IEnumerable<Type> SupportedArchitectures() => 
+            new Type[] { typeof(EmscriptenJavaScriptArchitecture) };
 
         [DebuggerHidden]
-        public override IEnumerable<string> ToolChainDefines()
-        {
-            return new <ToolChainDefines>c__Iterator1 { $PC = -2 };
-        }
+        public override IEnumerable<string> ToolChainDefines() => 
+            new <ToolChainDefines>c__Iterator1 { $PC = -2 };
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> ToolChainIncludePaths()
-        {
-            return new <ToolChainIncludePaths>c__Iterator0 { $PC = -2 };
-        }
+        public override IEnumerable<NPath> ToolChainIncludePaths() => 
+            new <ToolChainIncludePaths>c__Iterator0 { $PC = -2 };
 
         [DllImport("kernel32.dll", EntryPoint="GetShortPathName", CharSet=CharSet.Unicode, SetLastError=true)]
         private static extern int WindowsGetShortPathName([MarshalAs(UnmanagedType.LPWStr)] string lpszLongPath, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszShortPath, int cchBuffer);
@@ -425,7 +399,7 @@
                         this.$locvar2.Dispose();
                     }
                 }
-                this.$current = ExtensionMethods.InQuotes(EmscriptenToolChain.GetShortPathName(Path.GetFullPath(this.cppCompilationInstruction.SourceFile.ToString())));
+                this.$current = EmscriptenToolChain.GetShortPathName(Path.GetFullPath(this.cppCompilationInstruction.SourceFile.ToString())).InQuotes();
                 if (!this.$disposing)
                 {
                     this.$PC = 6;
@@ -457,28 +431,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -639,28 +599,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -770,28 +716,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -832,28 +764,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -894,28 +812,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [ProgramOptions]

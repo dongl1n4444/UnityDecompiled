@@ -4,21 +4,11 @@
 
     public class PSP2RuntimePlatform : RuntimePlatform
     {
-        public override bool ExecutesOnHostMachine
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool ExecutesOnHostMachine =>
+            false;
 
-        public override string Name
-        {
-            get
-            {
-                return "PSP2";
-            }
-        }
+        public override string Name =>
+            "PSP2";
     }
 }
 

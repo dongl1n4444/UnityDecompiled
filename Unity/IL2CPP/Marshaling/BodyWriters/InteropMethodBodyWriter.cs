@@ -75,36 +75,28 @@
             return null;
         }
 
-        protected IList<CustomAttribute> GetCustomMethodAttributes()
-        {
-            return this._interopMethod.Resolve().CustomAttributes;
-        }
+        protected IList<CustomAttribute> GetCustomMethodAttributes() => 
+            this._interopMethod.Resolve().CustomAttributes;
 
-        protected string GetMethodName()
-        {
-            return this._interopMethod.Name;
-        }
+        protected string GetMethodName() => 
+            this._interopMethod.Name;
 
-        protected virtual string GetMethodNameInGeneratedCode()
-        {
-            return Naming.ForMethodNameOnly(this._interopMethod);
-        }
+        protected virtual string GetMethodNameInGeneratedCode() => 
+            Naming.ForMethodNameOnly(this._interopMethod);
 
-        protected virtual MethodReturnType GetMethodReturnType()
-        {
-            return this._interopMethod.MethodReturnType;
-        }
+        protected virtual MethodReturnType GetMethodReturnType() => 
+            this._interopMethod.MethodReturnType;
 
         protected bool IsInParameter(MarshaledParameter parameter)
         {
             TypeReference parameterType = parameter.ParameterType;
-            return ((!parameter.IsOut || parameter.IsIn) || (Extensions.IsValueType(parameterType) && !parameterType.IsByReference));
+            return ((!parameter.IsOut || parameter.IsIn) || (parameterType.IsValueType() && !parameterType.IsByReference));
         }
 
         protected bool IsOutParameter(MarshaledParameter parameter)
         {
             TypeReference parameterType = parameter.ParameterType;
-            if (parameter.IsOut && !Extensions.IsValueType(parameterType))
+            if (parameter.IsOut && !parameterType.IsValueType())
             {
                 return true;
             }
@@ -115,20 +107,14 @@
             return (parameter.ParameterType.IsByReference || MarshalingUtils.IsStringBuilder(parameterType));
         }
 
-        protected DefaultMarshalInfoWriter MarshalInfoWriterFor(MethodReturnType methodReturnType)
-        {
-            return this._marshaler.MarshalInfoWriterFor(methodReturnType);
-        }
+        protected DefaultMarshalInfoWriter MarshalInfoWriterFor(MethodReturnType methodReturnType) => 
+            this._marshaler.MarshalInfoWriterFor(methodReturnType);
 
-        protected DefaultMarshalInfoWriter MarshalInfoWriterFor(MarshaledParameter parameter)
-        {
-            return this._marshaler.MarshalInfoWriterFor(parameter);
-        }
+        protected DefaultMarshalInfoWriter MarshalInfoWriterFor(MarshaledParameter parameter) => 
+            this._marshaler.MarshalInfoWriterFor(parameter);
 
-        private bool ParameterRequiresCleanup(MarshaledParameter parameter)
-        {
-            return (this.IsInParameter(parameter) || parameter.IsOut);
-        }
+        private bool ParameterRequiresCleanup(MarshaledParameter parameter) => 
+            (this.IsInParameter(parameter) || parameter.IsOut);
 
         private void WriteCleanupParameter(CppCodeWriter writer, string valueName, MarshaledParameter parameter, IRuntimeMetadataAccess metadataAccess)
         {

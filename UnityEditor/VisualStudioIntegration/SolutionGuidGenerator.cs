@@ -6,20 +6,14 @@
 
     public static class SolutionGuidGenerator
     {
-        private static string ComputeGuidHashFor(string input)
-        {
-            return HashAsGuid(HashToString(MD5.Create().ComputeHash(Encoding.Default.GetBytes(input))));
-        }
+        private static string ComputeGuidHashFor(string input) => 
+            HashAsGuid(HashToString(MD5.Create().ComputeHash(Encoding.Default.GetBytes(input))));
 
-        public static string GuidForProject(string projectName)
-        {
-            return ComputeGuidHashFor(projectName + "salt");
-        }
+        public static string GuidForProject(string projectName) => 
+            ComputeGuidHashFor(projectName + "salt");
 
-        public static string GuidForSolution(string projectName)
-        {
-            return "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC";
-        }
+        public static string GuidForSolution(string projectName) => 
+            "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC";
 
         private static string HashAsGuid(string hash)
         {

@@ -68,10 +68,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void GetSystemExtImpl(IntPtr nativeDisplay, out int w, out int h);
         [Obsolete("MultiDisplayLicense has been deprecated.", false)]
-        public static bool MultiDisplayLicense()
-        {
-            return true;
-        }
+        public static bool MultiDisplayLicense() => 
+            true;
 
         [RequiredByNativeCode]
         private static void RecreateDisplayList(IntPtr[] nativeDisplay)
@@ -161,13 +159,8 @@
         /// <summary>
         /// <para>Main Display.</para>
         /// </summary>
-        public static Display main
-        {
-            get
-            {
-                return _mainDisplay;
-            }
-        }
+        public static Display main =>
+            _mainDisplay;
 
         /// <summary>
         /// <para>Vertical resolution that the display is rendering at.</para>

@@ -9,15 +9,11 @@
     {
         private List<IvyModule> modules;
 
-        public ModuleRepository Clone()
-        {
-            return Cloner.CloneObject<ModuleRepository>(this);
-        }
+        public ModuleRepository Clone() => 
+            Cloner.CloneObject<ModuleRepository>(this);
 
-        public static ModuleRepository FromIvyFile(string fullpath)
-        {
-            return IvyParser.ParseFile<ModuleRepository>(fullpath);
-        }
+        public static ModuleRepository FromIvyFile(string fullpath) => 
+            IvyParser.ParseFile<ModuleRepository>(fullpath);
 
         public IvyModule GetPackage(PackageType type)
         {
@@ -35,7 +31,7 @@
         {
             foreach (IvyModule module in this.modules)
             {
-                if (module.Info.FullName == string.Format("{0}.{1}.{2}", org, name, version))
+                if (module.Info.FullName == $"{org}.{name}.{version}")
                 {
                     return module;
                 }
@@ -43,15 +39,11 @@
             return null;
         }
 
-        public override string ToString()
-        {
-            return IvyParser.Serialize(this);
-        }
+        public override string ToString() => 
+            IvyParser.Serialize(this);
 
-        public string WriteIvyFile(string outputPath)
-        {
-            return this.WriteIvyFile(outputPath, null);
-        }
+        public string WriteIvyFile(string outputPath) => 
+            this.WriteIvyFile(outputPath, null);
 
         public string WriteIvyFile(string outputPath, string filename)
         {

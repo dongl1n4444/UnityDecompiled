@@ -211,7 +211,7 @@
             HashSet<string> set2;
             string str = Path.Combine(stagingAreaDataManaged, "ICallSummary.txt");
             string exe = Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/InternalCallRegistrationWriter/InternalCallRegistrationWriter.exe");
-            string args = string.Format("-assembly=\"{0}\" -summary=\"{1}\"", Path.Combine(stagingAreaDataManaged, "UnityEngine.dll"), str);
+            string args = $"-assembly="{Path.Combine(stagingAreaDataManaged, "UnityEngine.dll")}" -summary="{str}"";
             Runner.RunManagedProgram(exe, args);
             CodeStrippingUtils.GenerateDependencies(Path.GetDirectoryName(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, null);
             using (TextWriter writer = new StreamWriter(file))

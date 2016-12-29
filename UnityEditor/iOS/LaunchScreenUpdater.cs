@@ -22,7 +22,7 @@
         {
             bool flag = true;
             XDocument doc = PlistDocument.ParseXmlNoDtd(contents);
-            XElement node = System.Xml.XPath.Extensions.XPathSelectElement(doc.Root, "./objects/view[@id='iN0-l3-epB']");
+            XElement node = doc.Root.XPathSelectElement("./objects/view[@id='iN0-l3-epB']");
             if (node == null)
             {
                 flag = false;
@@ -31,7 +31,7 @@
             {
                 foreach (string str in mainViewXpaths)
                 {
-                    flag &= RemoveElement(System.Xml.XPath.Extensions.XPathSelectElement(node, str));
+                    flag &= RemoveElement(node.XPathSelectElement(str));
                 }
             }
             if (!flag)
@@ -65,7 +65,7 @@
 
         private static bool SetBackgroundColorElement(XElement parentEl, Color color)
         {
-            XElement element = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./color[@key='backgroundColor']");
+            XElement element = parentEl.XPathSelectElement("./color[@key='backgroundColor']");
             if (element == null)
             {
                 return false;
@@ -123,14 +123,14 @@
             bool flag = true;
             if (device == UnityEditor.iOS.DeviceType.iPhone)
             {
-                XElement el = System.Xml.XPath.Extensions.XPathSelectElement(rootEl, "./resources/image[@name='LaunchScreen-iPhonePortrait.png']");
+                XElement el = rootEl.XPathSelectElement("./resources/image[@name='LaunchScreen-iPhonePortrait.png']");
                 flag &= SetImageSize(el, data.iPhonePortraitWidth, data.iPhonePortraitHeight);
-                el = System.Xml.XPath.Extensions.XPathSelectElement(rootEl, "./resources/image[@name='LaunchScreen-iPhoneLandscape.png']");
+                el = rootEl.XPathSelectElement("./resources/image[@name='LaunchScreen-iPhoneLandscape.png']");
                 flag &= SetImageSize(el, data.iPhoneLandscapeWidth, data.iPhoneLandscapeHeight);
             }
             if (device == UnityEditor.iOS.DeviceType.iPad)
             {
-                XElement element2 = System.Xml.XPath.Extensions.XPathSelectElement(rootEl, "./resources/image[@name='LaunchScreen-iPad.png']");
+                XElement element2 = rootEl.XPathSelectElement("./resources/image[@name='LaunchScreen-iPad.png']");
                 flag &= SetImageSize(element2, data.iPadWidth, data.iPadHeight);
             }
             return flag;
@@ -141,7 +141,7 @@
             bool flag = true;
             XDocument doc = PlistDocument.ParseXmlNoDtd(contents);
             flag &= UpdateLaunchScreenAllImageSizes(doc.Root, data, device);
-            XElement parentEl = System.Xml.XPath.Extensions.XPathSelectElement(doc.Root, "./objects/view[@id='iN0-l3-epB']");
+            XElement parentEl = doc.Root.XPathSelectElement("./objects/view[@id='iN0-l3-epB']");
             if (parentEl == null)
             {
                 flag = false;
@@ -151,14 +151,14 @@
                 flag &= SetBackgroundColorElement(parentEl, data.background);
                 if (device == UnityEditor.iOS.DeviceType.iPhone)
                 {
-                    XElement el = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./subviews/view[@id='eQG-9T-8bq']/constraints/constraint[@id='rU5-7V-ukh']");
+                    XElement el = parentEl.XPathSelectElement("./subviews/view[@id='eQG-9T-8bq']/constraints/constraint[@id='rU5-7V-ukh']");
                     flag &= SetConstantForConstraint(el, data.iPhonePortraitHorizontalSize);
-                    el = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./subviews/view[@id='gVh-4A-1je']/constraints/constraint[@id='NjH-A4-Wg3']");
+                    el = parentEl.XPathSelectElement("./subviews/view[@id='gVh-4A-1je']/constraints/constraint[@id='NjH-A4-Wg3']");
                     flag &= SetConstantForConstraint(el, data.iPhoneLandscapeVerticalSize);
                 }
                 if (device == UnityEditor.iOS.DeviceType.iPad)
                 {
-                    XElement element3 = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./subviews/view[@id='7bp-Iv-3mp']/constraints/constraint[@id='0Cy-oZ-PWZ']");
+                    XElement element3 = parentEl.XPathSelectElement("./subviews/view[@id='7bp-Iv-3mp']/constraints/constraint[@id='0Cy-oZ-PWZ']");
                     flag &= SetConstantForConstraint(element3, data.iPadVerticalSize);
                 }
             }
@@ -174,7 +174,7 @@
             bool flag = true;
             XDocument doc = PlistDocument.ParseXmlNoDtd(contents);
             flag &= UpdateLaunchScreenAllImageSizes(doc.Root, data, device);
-            XElement parentEl = System.Xml.XPath.Extensions.XPathSelectElement(doc.Root, "./objects/view[@id='iN0-l3-epB']");
+            XElement parentEl = doc.Root.XPathSelectElement("./objects/view[@id='iN0-l3-epB']");
             if (parentEl == null)
             {
                 flag = false;
@@ -184,17 +184,17 @@
                 flag &= SetBackgroundColorElement(parentEl, data.background);
                 if (device == UnityEditor.iOS.DeviceType.iPhone)
                 {
-                    XElement first = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./constraints/constraint[@id='VWh-bq-Pfv']");
-                    XElement second = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./constraints/constraint[@id='S6m-R2-QBg']");
-                    XElement element4 = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./constraints/constraint[@id='e2k-A9-5oM']");
-                    XElement element5 = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./constraints/constraint[@id='omh-z1-Che']");
+                    XElement first = parentEl.XPathSelectElement("./constraints/constraint[@id='VWh-bq-Pfv']");
+                    XElement second = parentEl.XPathSelectElement("./constraints/constraint[@id='S6m-R2-QBg']");
+                    XElement element4 = parentEl.XPathSelectElement("./constraints/constraint[@id='e2k-A9-5oM']");
+                    XElement element5 = parentEl.XPathSelectElement("./constraints/constraint[@id='omh-z1-Che']");
                     flag &= SetRelativeSizeConstraints(data.iPhoneLandscapeRelativeVerticalSize, first, second, true);
                     flag &= SetRelativeSizeConstraints(data.iPhonePortraitRelativeHorizontalSize, element4, element5, false);
                 }
                 if (device == UnityEditor.iOS.DeviceType.iPad)
                 {
-                    XElement element6 = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./constraints/constraint[@id='wWy-Vq-I9X']");
-                    XElement element7 = System.Xml.XPath.Extensions.XPathSelectElement(parentEl, "./constraints/constraint[@id='FGm-8j-iPJ']");
+                    XElement element6 = parentEl.XPathSelectElement("./constraints/constraint[@id='wWy-Vq-I9X']");
+                    XElement element7 = parentEl.XPathSelectElement("./constraints/constraint[@id='FGm-8j-iPJ']");
                     flag &= SetRelativeSizeConstraints(data.iPadRelativeVerticalSize, element6, element7, true);
                 }
             }

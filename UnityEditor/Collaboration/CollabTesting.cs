@@ -30,13 +30,8 @@
             Execute();
         }
 
-        public static int ActionsCount
-        {
-            get
-            {
-                return m_Actions.Count;
-            }
-        }
+        public static int ActionsCount =>
+            m_Actions.Count;
     }
 }
 

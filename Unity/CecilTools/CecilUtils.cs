@@ -27,13 +27,11 @@
             {
                 <>f__am$cache1 = new Func<InterfaceImplementation, TypeDefinition>(null, (IntPtr) <AllInterfacesImplementedBy>m__1);
             }
-            return Enumerable.Distinct<TypeDefinition>(Enumerable.Select<InterfaceImplementation, TypeDefinition>(Enumerable.SelectMany<TypeDefinition, InterfaceImplementation>(TypeAndBaseTypesOf(typeDefinition), <>f__am$cache0), <>f__am$cache1));
+            return Enumerable.Select<InterfaceImplementation, TypeDefinition>(Enumerable.SelectMany<TypeDefinition, InterfaceImplementation>(TypeAndBaseTypesOf(typeDefinition), <>f__am$cache0), <>f__am$cache1).Distinct<TypeDefinition>();
         }
 
-        public static IEnumerable<TypeDefinition> BaseTypesOf(TypeReference typeReference)
-        {
-            return Enumerable.Skip<TypeDefinition>(TypeAndBaseTypesOf(typeReference), 1);
-        }
+        public static IEnumerable<TypeDefinition> BaseTypesOf(TypeReference typeReference) => 
+            TypeAndBaseTypesOf(typeReference).Skip<TypeDefinition>(1);
 
         public static TypeReference ElementTypeOfCollection(TypeReference type)
         {
@@ -46,7 +44,7 @@
             {
                 throw new ArgumentException();
             }
-            return Enumerable.Single<TypeReference>(((GenericInstanceType) type).GenericArguments);
+            return ((GenericInstanceType) type).GenericArguments.Single<TypeReference>();
         }
 
         public static MethodDefinition FindInTypeExplicitImplementationFor(MethodDefinition interfaceMethod, TypeDefinition typeDefinition)
@@ -63,38 +61,30 @@
             {
                 type = ((GenericInstanceType) type).ElementType;
             }
-            return ((type.Name == "Dictionary`2") && (TypeReferenceExtensions.SafeNamespace(type) == "System.Collections.Generic"));
+            return ((type.Name == "Dictionary`2") && (type.SafeNamespace() == "System.Collections.Generic"));
         }
 
-        public static bool IsGenericList(TypeReference type)
-        {
-            return ((type.Name == "List`1") && (TypeReferenceExtensions.SafeNamespace(type) == "System.Collections.Generic"));
-        }
+        public static bool IsGenericList(TypeReference type) => 
+            ((type.Name == "List`1") && (type.SafeNamespace() == "System.Collections.Generic"));
 
         [DebuggerHidden]
-        public static IEnumerable<TypeDefinition> TypeAndBaseTypesOf(TypeReference typeReference)
-        {
-            return new <TypeAndBaseTypesOf>c__Iterator0 { 
+        public static IEnumerable<TypeDefinition> TypeAndBaseTypesOf(TypeReference typeReference) => 
+            new <TypeAndBaseTypesOf>c__Iterator0 { 
                 typeReference = typeReference,
                 <$>typeReference = typeReference,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <FindInTypeExplicitImplementationFor>c__AnonStorey1
         {
             internal MethodDefinition interfaceMethod;
 
-            internal bool <>m__0(MethodDefinition m)
-            {
-                return Enumerable.Any<MethodReference>(m.Overrides, new Func<MethodReference, bool>(this, (IntPtr) this.<>m__1));
-            }
+            internal bool <>m__0(MethodDefinition m) => 
+                Enumerable.Any<MethodReference>(m.Overrides, new Func<MethodReference, bool>(this, (IntPtr) this.<>m__1));
 
-            internal bool <>m__1(MethodReference o)
-            {
-                return MethodDefinitionExtensions.SameAs(ResolutionExtensions.CheckedResolve(o), this.interfaceMethod);
-            }
+            internal bool <>m__1(MethodReference o) => 
+                o.CheckedResolve().SameAs(this.interfaceMethod);
         }
 
         [CompilerGenerated]
@@ -132,7 +122,7 @@
                 }
                 if (this.typeReference != null)
                 {
-                    this.<typeDefinition>__0 = ResolutionExtensions.CheckedResolve(this.typeReference);
+                    this.<typeDefinition>__0 = this.typeReference.CheckedResolve();
                     this.$current = this.<typeDefinition>__0;
                     if (!this.$disposing)
                     {
@@ -162,28 +152,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
 
-            TypeDefinition IEnumerator<TypeDefinition>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeDefinition IEnumerator<TypeDefinition>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

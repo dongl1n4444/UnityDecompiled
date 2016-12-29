@@ -4,11 +4,9 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     internal static class TypeExtensions
     {
-        [Extension]
-        public static bool CanWrite(MemberInfo member)
+        public static bool CanWrite(this MemberInfo member)
         {
             if (member is PropertyInfo)
             {
@@ -17,8 +15,7 @@
             return true;
         }
 
-        [Extension]
-        public static object GetValue(MemberInfo member, object target)
+        public static object GetValue(this MemberInfo member, object target)
         {
             if (member is PropertyInfo)
             {
@@ -27,8 +24,7 @@
             return ((FieldInfo) member).GetValue(target);
         }
 
-        [Extension]
-        public static void SetValue(MemberInfo member, object target, object value)
+        public static void SetValue(this MemberInfo member, object target, object value)
         {
             if (member is PropertyInfo)
             {

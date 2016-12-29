@@ -12,10 +12,8 @@
             this.m_Selected = null;
         }
 
-        public bool isSelected(MemoryElement node)
-        {
-            return (this.m_Selected == node);
-        }
+        public bool isSelected(MemoryElement node) => 
+            (this.m_Selected == node);
 
         public void MoveDown()
         {
@@ -78,13 +76,8 @@
             }
         }
 
-        public MemoryElement Selected
-        {
-            get
-            {
-                return this.m_Selected;
-            }
-        }
+        public MemoryElement Selected =>
+            this.m_Selected;
     }
 }
 

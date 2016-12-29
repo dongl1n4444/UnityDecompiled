@@ -45,21 +45,14 @@
         /// <returns>
         /// <para>String with the object state.</para>
         /// </returns>
-        public override string ToString()
-        {
-            return string.Format("ID={0} NetworkIdentity NetID={1} Player={2}", new object[] { this.playerControllerId, (this.unetView == null) ? "null" : this.unetView.netId.ToString(), (this.gameObject == null) ? "null" : this.gameObject.name });
-        }
+        public override string ToString() => 
+            $"ID={this.playerControllerId} NetworkIdentity NetID={((this.unetView == null) ? "null" : this.unetView.netId.ToString())} Player={((this.gameObject == null) ? "null" : this.gameObject.name)}";
 
         /// <summary>
         /// <para>Checks if this PlayerController has an actual player attached to it.</para>
         /// </summary>
-        public bool IsValid
-        {
-            get
-            {
-                return (this.playerControllerId != -1);
-            }
-        }
+        public bool IsValid =>
+            (this.playerControllerId != -1);
     }
 }
 

@@ -44,10 +44,8 @@
         /// </summary>
         public string takeName
         {
-            get
-            {
-                return this.m_TakeName;
-            }
+            get => 
+                this.m_TakeName;
             set
             {
                 this.m_TakeName = value;
@@ -58,10 +56,8 @@
         /// </summary>
         public string name
         {
-            get
-            {
-                return this.m_Name;
-            }
+            get => 
+                this.m_Name;
             set
             {
                 this.m_Name = value;
@@ -72,10 +68,8 @@
         /// </summary>
         public float firstFrame
         {
-            get
-            {
-                return this.m_FirstFrame;
-            }
+            get => 
+                this.m_FirstFrame;
             set
             {
                 this.m_FirstFrame = value;
@@ -86,10 +80,8 @@
         /// </summary>
         public float lastFrame
         {
-            get
-            {
-                return this.m_LastFrame;
-            }
+            get => 
+                this.m_LastFrame;
             set
             {
                 this.m_LastFrame = value;
@@ -100,10 +92,8 @@
         /// </summary>
         public WrapMode wrapMode
         {
-            get
-            {
-                return (WrapMode) this.m_WrapMode;
-            }
+            get => 
+                ((WrapMode) this.m_WrapMode);
             set
             {
                 this.m_WrapMode = (int) value;
@@ -114,10 +104,8 @@
         /// </summary>
         public bool loop
         {
-            get
-            {
-                return (this.m_Loop != 0);
-            }
+            get => 
+                (this.m_Loop != 0);
             set
             {
                 this.m_Loop = !value ? 0 : 1;
@@ -128,10 +116,8 @@
         /// </summary>
         public float rotationOffset
         {
-            get
-            {
-                return this.m_OrientationOffsetY;
-            }
+            get => 
+                this.m_OrientationOffsetY;
             set
             {
                 this.m_OrientationOffsetY = value;
@@ -142,10 +128,8 @@
         /// </summary>
         public float heightOffset
         {
-            get
-            {
-                return this.m_Level;
-            }
+            get => 
+                this.m_Level;
             set
             {
                 this.m_Level = value;
@@ -156,10 +140,8 @@
         /// </summary>
         public float cycleOffset
         {
-            get
-            {
-                return this.m_CycleOffset;
-            }
+            get => 
+                this.m_CycleOffset;
             set
             {
                 this.m_CycleOffset = value;
@@ -170,10 +152,8 @@
         /// </summary>
         public bool loopTime
         {
-            get
-            {
-                return (this.m_LoopTime != 0);
-            }
+            get => 
+                (this.m_LoopTime != 0);
             set
             {
                 this.m_LoopTime = !value ? 0 : 1;
@@ -184,10 +164,8 @@
         /// </summary>
         public bool loopPose
         {
-            get
-            {
-                return (this.m_LoopBlend != 0);
-            }
+            get => 
+                (this.m_LoopBlend != 0);
             set
             {
                 this.m_LoopBlend = !value ? 0 : 1;
@@ -198,10 +176,8 @@
         /// </summary>
         public bool lockRootRotation
         {
-            get
-            {
-                return (this.m_LoopBlendOrientation != 0);
-            }
+            get => 
+                (this.m_LoopBlendOrientation != 0);
             set
             {
                 this.m_LoopBlendOrientation = !value ? 0 : 1;
@@ -212,10 +188,8 @@
         /// </summary>
         public bool lockRootHeightY
         {
-            get
-            {
-                return (this.m_LoopBlendPositionY != 0);
-            }
+            get => 
+                (this.m_LoopBlendPositionY != 0);
             set
             {
                 this.m_LoopBlendPositionY = !value ? 0 : 1;
@@ -226,10 +200,8 @@
         /// </summary>
         public bool lockRootPositionXZ
         {
-            get
-            {
-                return (this.m_LoopBlendPositionXZ != 0);
-            }
+            get => 
+                (this.m_LoopBlendPositionXZ != 0);
             set
             {
                 this.m_LoopBlendPositionXZ = !value ? 0 : 1;
@@ -240,10 +212,8 @@
         /// </summary>
         public bool keepOriginalOrientation
         {
-            get
-            {
-                return (this.m_KeepOriginalOrientation != 0);
-            }
+            get => 
+                (this.m_KeepOriginalOrientation != 0);
             set
             {
                 this.m_KeepOriginalOrientation = !value ? 0 : 1;
@@ -254,10 +224,8 @@
         /// </summary>
         public bool keepOriginalPositionY
         {
-            get
-            {
-                return (this.m_KeepOriginalPositionY != 0);
-            }
+            get => 
+                (this.m_KeepOriginalPositionY != 0);
             set
             {
                 this.m_KeepOriginalPositionY = !value ? 0 : 1;
@@ -268,10 +236,8 @@
         /// </summary>
         public bool keepOriginalPositionXZ
         {
-            get
-            {
-                return (this.m_KeepOriginalPositionXZ != 0);
-            }
+            get => 
+                (this.m_KeepOriginalPositionXZ != 0);
             set
             {
                 this.m_KeepOriginalPositionXZ = !value ? 0 : 1;
@@ -282,10 +248,8 @@
         /// </summary>
         public bool heightFromFeet
         {
-            get
-            {
-                return (this.m_HeightFromFeet != 0);
-            }
+            get => 
+                (this.m_HeightFromFeet != 0);
             set
             {
                 this.m_HeightFromFeet = !value ? 0 : 1;
@@ -296,10 +260,8 @@
         /// </summary>
         public bool mirror
         {
-            get
-            {
-                return (this.m_Mirror != 0);
-            }
+            get => 
+                (this.m_Mirror != 0);
             set
             {
                 this.m_Mirror = !value ? 0 : 1;
@@ -310,10 +272,8 @@
         /// </summary>
         public ClipAnimationMaskType maskType
         {
-            get
-            {
-                return (ClipAnimationMaskType) this.m_MaskType;
-            }
+            get => 
+                ((ClipAnimationMaskType) this.m_MaskType);
             set
             {
                 this.m_MaskType = (int) value;
@@ -324,10 +284,8 @@
         /// </summary>
         public AvatarMask maskSource
         {
-            get
-            {
-                return this.m_MaskSource;
-            }
+            get => 
+                this.m_MaskSource;
             set
             {
                 this.m_MaskSource = value;
@@ -338,10 +296,8 @@
         /// </summary>
         public AnimationEvent[] events
         {
-            get
-            {
-                return this.m_AnimationEvents;
-            }
+            get => 
+                this.m_AnimationEvents;
             set
             {
                 this.m_AnimationEvents = value;
@@ -352,10 +308,8 @@
         /// </summary>
         public ClipAnimationInfoCurve[] curves
         {
-            get
-            {
-                return this.m_AdditionnalCurves;
-            }
+            get => 
+                this.m_AdditionnalCurves;
             set
             {
                 this.m_AdditionnalCurves = value;
@@ -365,22 +319,15 @@
         /// <para>Returns true when the source AvatarMask has changed. This only happens when  ModelImporterClipAnimation.maskType is set to ClipAnimationMaskType.CopyFromOther
         /// To force a reload of the mask, simply set  ModelImporterClipAnimation.maskSource to the desired AvatarMask.</para>
         /// </summary>
-        public bool maskNeedsUpdating
-        {
-            get
-            {
-                return this.m_MaskNeedsUpdating;
-            }
-        }
+        public bool maskNeedsUpdating =>
+            this.m_MaskNeedsUpdating;
         /// <summary>
         /// <para>The additive reference pose frame.</para>
         /// </summary>
         public float additiveReferencePoseFrame
         {
-            get
-            {
-                return this.m_AdditiveReferencePoseFrame;
-            }
+            get => 
+                this.m_AdditiveReferencePoseFrame;
             set
             {
                 this.m_AdditiveReferencePoseFrame = value;
@@ -391,10 +338,8 @@
         /// </summary>
         public bool hasAdditiveReferencePose
         {
-            get
-            {
-                return (this.m_HasAdditiveReferencePose != 0);
-            }
+            get => 
+                (this.m_HasAdditiveReferencePose != 0);
             set
             {
                 this.m_HasAdditiveReferencePose = !value ? 0 : 1;
@@ -439,10 +384,8 @@
             return ((((((animation != null) && (this.takeName == animation.takeName)) && ((this.name == animation.name) && (this.firstFrame == animation.firstFrame))) && (((this.lastFrame == animation.lastFrame) && (this.m_WrapMode == animation.m_WrapMode)) && ((this.m_Loop == animation.m_Loop) && (this.loopPose == animation.loopPose)))) && ((((this.lockRootRotation == animation.lockRootRotation) && (this.lockRootHeightY == animation.lockRootHeightY)) && ((this.lockRootPositionXZ == animation.lockRootPositionXZ) && (this.mirror == animation.mirror))) && (((this.maskType == animation.maskType) && (this.maskSource == animation.maskSource)) && (this.additiveReferencePoseFrame == animation.additiveReferencePoseFrame)))) && (this.hasAdditiveReferencePose == animation.hasAdditiveReferencePose));
         }
 
-        public override int GetHashCode()
-        {
-            return this.name.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.name.GetHashCode();
     }
 }
 

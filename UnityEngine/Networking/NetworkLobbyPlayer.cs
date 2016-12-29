@@ -227,10 +227,8 @@
         /// </summary>
         public bool readyToBegin
         {
-            get
-            {
-                return this.m_ReadyToBegin;
-            }
+            get => 
+                this.m_ReadyToBegin;
             set
             {
                 this.m_ReadyToBegin = value;
@@ -242,10 +240,8 @@
         /// </summary>
         public byte slot
         {
-            get
-            {
-                return this.m_Slot;
-            }
+            get => 
+                this.m_Slot;
             set
             {
                 this.m_Slot = value;

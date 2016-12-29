@@ -157,7 +157,7 @@
                 {
                     source.ExceptWith(other);
                 }
-                this.data.SetExpandedIDs(Enumerable.ToArray<int>(source));
+                this.data.SetExpandedIDs(source.ToArray<int>());
             }
         }
 
@@ -275,10 +275,8 @@
             }
         }
 
-        public TreeViewItem FindItem(int id)
-        {
-            return this.data.FindItem(id);
-        }
+        public TreeViewItem FindItem(int id) => 
+            this.data.FindItem(id);
 
         public void Frame(int id, bool frame, bool ping)
         {
@@ -314,15 +312,11 @@
             }
         }
 
-        private float GetAnimationDuration(float height)
-        {
-            return ((height <= 60f) ? ((height * 0.1f) / 60f) : 0.1f);
-        }
+        private float GetAnimationDuration(float height) => 
+            ((height <= 60f) ? ((height * 0.1f) / 60f) : 0.1f);
 
-        public Vector2 GetContentSize()
-        {
-            return this.gui.GetTotalSize();
-        }
+        public Vector2 GetContentSize() => 
+            this.gui.GetTotalSize();
 
         private bool GetFirstAndLastSelected(List<TreeViewItem> items, out int firstIndex, out int lastIndex)
         {
@@ -364,10 +358,8 @@
             return this.data.GetItem(row);
         }
 
-        internal static int GetItemControlID(TreeViewItem item)
-        {
-            return (((item == null) ? 0 : item.id) + 0x989680);
-        }
+        internal static int GetItemControlID(TreeViewItem item) => 
+            (((item == null) ? 0 : item.id) + 0x989680);
 
         private int GetLastChildRowUnder(int row)
         {
@@ -410,23 +402,17 @@
             {
                 <>f__am$cache0 = new Func<TreeViewItem, int>(null, (IntPtr) <GetRowIDs>m__0);
             }
-            return Enumerable.ToArray<int>(Enumerable.Select<TreeViewItem, int>(this.data.GetRows(), <>f__am$cache0));
+            return Enumerable.Select<TreeViewItem, int>(this.data.GetRows(), <>f__am$cache0).ToArray<int>();
         }
 
-        public int[] GetSelection()
-        {
-            return this.state.selectedIDs.ToArray();
-        }
+        public int[] GetSelection() => 
+            this.state.selectedIDs.ToArray();
 
-        private float GetTopPixelOfRow(int row)
-        {
-            return this.gui.GetRowRect(row, 1f).y;
-        }
+        private float GetTopPixelOfRow(int row) => 
+            this.gui.GetRowRect(row, 1f).y;
 
-        public Rect GetTotalRect()
-        {
-            return this.m_TotalRect;
-        }
+        public Rect GetTotalRect() => 
+            this.m_TotalRect;
 
         private List<int> GetVisibleSelectedIds()
         {
@@ -443,7 +429,7 @@
                 TreeViewItem item = this.data.GetItem(i);
                 list2.Add(item.id);
             }
-            return Enumerable.ToList<int>(Enumerable.Where<int>(list2, new Func<int, bool>(this, (IntPtr) this.<GetVisibleSelectedIds>m__1)));
+            return Enumerable.Where<int>(list2, new Func<int, bool>(this, (IntPtr) this.<GetVisibleSelectedIds>m__1)).ToList<int>();
         }
 
         public void GrabKeyboardFocus()
@@ -649,15 +635,11 @@
             current.Use();
         }
 
-        public bool HasFocus()
-        {
-            return (((this.m_GUIView == null) ? EditorGUIUtility.HasCurrentWindowKeyFocus() : this.m_GUIView.hasFocus) && (GUIUtility.keyboardControl == this.m_KeyboardControlID));
-        }
+        public bool HasFocus() => 
+            (((this.m_GUIView == null) ? EditorGUIUtility.HasCurrentWindowKeyFocus() : this.m_GUIView.hasFocus) && (GUIUtility.keyboardControl == this.m_KeyboardControlID));
 
-        public bool HasSelection()
-        {
-            return (Enumerable.Count<int>(this.state.selectedIDs) > 0);
-        }
+        public bool HasSelection() => 
+            (this.state.selectedIDs.Count<int>() > 0);
 
         public void Init(Rect rect, ITreeViewDataSource data, ITreeViewGUI gui, ITreeViewDragging dragging)
         {
@@ -675,10 +657,8 @@
             this.m_FramingAnimFloat = new AnimFloat(this.state.scrollPos.y, new UnityAction(this.AnimatedScrollChanged));
         }
 
-        public bool IsItemDragSelectedOrSelected(TreeViewItem item)
-        {
-            return ((this.m_DragSelection.Count <= 0) ? this.state.selectedIDs.Contains(item.id) : this.m_DragSelection.Contains(item.id));
-        }
+        public bool IsItemDragSelectedOrSelected(TreeViewItem item) => 
+            ((this.m_DragSelection.Count <= 0) ? this.state.selectedIDs.Contains(item.id) : this.m_DragSelection.Contains(item.id));
 
         public bool IsLastClickedPartOfRows()
         {
@@ -690,10 +670,8 @@
             return (GetIndexOfID(rows, this.state.lastClickedID) >= 0);
         }
 
-        public bool IsSelected(int id)
-        {
-            return this.state.selectedIDs.Contains(id);
-        }
+        public bool IsSelected(int id) => 
+            this.state.selectedIDs.Contains(id);
 
         private void IterateVisibleItems(int firstRow, int numVisibleRows, float rowWidth, bool hasFocus)
         {
@@ -824,7 +802,7 @@
         private void NewSelectionFromUserInteraction(List<int> newSelection, int itemID)
         {
             this.state.lastClickedID = itemID;
-            if (!Enumerable.SequenceEqual<int>(this.state.selectedIDs, newSelection))
+            if (!this.state.selectedIDs.SequenceEqual<int>(newSelection))
             {
                 this.state.selectedIDs = newSelection;
                 this.NotifyListenersThatSelectionChanged();
@@ -996,7 +974,7 @@
                 bool flag = this.state.selectedIDs.IndexOf(this.state.lastClickedID) >= 0;
                 if (!flag)
                 {
-                    int id = Enumerable.Last<int>(selectedIDs);
+                    int id = selectedIDs.Last<int>();
                     if (this.data.GetRow(id) != -1)
                     {
                         this.state.lastClickedID = id;
@@ -1051,7 +1029,7 @@
             }
             if (ids.Count != second.Count)
             {
-                second.AddRange(Enumerable.Except<int>(ids, second));
+                second.AddRange(ids.Except<int>(second));
                 if (ids.Count != second.Count)
                 {
                     Debug.LogError(string.Concat(new object[] { "SortIDsInVisiblityOrder failed: ", ids.Count, " != ", second.Count }));
@@ -1093,13 +1071,8 @@
             }
         }
 
-        private bool animatingExpansion
-        {
-            get
-            {
-                return (this.m_UseExpansionAnimation && this.m_ExpansionAnimator.isAnimating);
-            }
-        }
+        private bool animatingExpansion =>
+            (this.m_UseExpansionAnimation && this.m_ExpansionAnimator.isAnimating);
 
         public Action<int> contextClickItemCallback { get; set; }
 
@@ -1115,31 +1088,16 @@
 
         public Action expandedStateChanged { get; set; }
 
-        public TreeViewItemExpansionAnimator expansionAnimator
-        {
-            get
-            {
-                return this.m_ExpansionAnimator;
-            }
-        }
+        public TreeViewItemExpansionAnimator expansionAnimator =>
+            this.m_ExpansionAnimator;
 
         public ITreeViewGUI gui { get; set; }
 
-        public bool isDragging
-        {
-            get
-            {
-                return ((this.m_DragSelection != null) && (this.m_DragSelection.Count > 0));
-            }
-        }
+        public bool isDragging =>
+            ((this.m_DragSelection != null) && (this.m_DragSelection.Count > 0));
 
-        public bool isSearching
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.state.searchString);
-            }
-        }
+        public bool isSearching =>
+            !string.IsNullOrEmpty(this.state.searchString);
 
         public Action<int> itemDoubleClickedCallback { get; set; }
 
@@ -1153,10 +1111,8 @@
 
         public string searchString
         {
-            get
-            {
-                return this.state.searchString;
-            }
+            get => 
+                this.state.searchString;
             set
             {
                 if (this.state.searchString != value)
@@ -1177,10 +1133,8 @@
 
         public bool useExpansionAnimation
         {
-            get
-            {
-                return this.m_UseExpansionAnimation;
-            }
+            get => 
+                this.m_UseExpansionAnimation;
             set
             {
                 this.m_UseExpansionAnimation = value;
@@ -1192,10 +1146,8 @@
         {
             internal int id;
 
-            internal bool <>m__0(TreeViewItem i)
-            {
-                return (i.id == this.id);
-            }
+            internal bool <>m__0(TreeViewItem i) => 
+                (i.id == this.id);
         }
     }
 }

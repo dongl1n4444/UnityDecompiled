@@ -4,7 +4,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(ProceduralTexture)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(ProceduralTexture))]
     internal class ProceduralTextureInspector : TextureInspector
     {
         private bool m_MightHaveModified = false;

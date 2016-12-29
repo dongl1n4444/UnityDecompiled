@@ -30,10 +30,8 @@
             return standardOutputAsString;
         }
 
-        internal static string GenerateBundleIdentifier(string companyName, string productName)
-        {
-            return ("unity." + companyName + "." + productName);
-        }
+        internal static string GenerateBundleIdentifier(string companyName, string productName) => 
+            ("unity." + companyName + "." + productName);
 
         internal static string GetArchitectureForTarget(BuildTarget target)
         {
@@ -63,15 +61,8 @@
             return "x86";
         }
 
-        public static string GetExtensionForBuildTarget(BuildTarget target, BuildOptions options)
-        {
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
-            if (buildPostProcessor == null)
-            {
-                return string.Empty;
-            }
-            return buildPostProcessor.GetExtension(target, options);
-        }
+        public static string GetExtensionForBuildTarget(BuildTarget target, BuildOptions options) => 
+            ModuleManager.GetBuildPostProcessor(target)?.GetExtension(target, options);
 
         public static string GetScriptLayoutFileFromBuild(BuildOptions options, BuildTarget target, string installPath, string fileName)
         {
@@ -141,7 +132,7 @@
             IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
             if (buildPostProcessor == null)
             {
-                throw new UnityException(string.Format("Launching {0} build target via mono is not supported", target));
+                throw new UnityException($"Launching {target} build target via mono is not supported");
             }
             args.target = target;
             args.playerPackage = BuildPipeline.GetPlaybackEngineDirectory(target, options);
@@ -166,7 +157,7 @@
             IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
             if (buildPostProcessor == null)
             {
-                throw new UnityException(string.Format("Build target '{0}' not supported", target));
+                throw new UnityException($"Build target '{target}' not supported");
             }
             args.target = target;
             args.stagingAreaData = str2;
@@ -183,15 +174,8 @@
             buildPostProcessor.PostProcess(args);
         }
 
-        public static string PrepareForBuild(BuildOptions options, BuildTarget target)
-        {
-            IBuildPostprocessor buildPostProcessor = ModuleManager.GetBuildPostProcessor(target);
-            if (buildPostProcessor == null)
-            {
-                return null;
-            }
-            return buildPostProcessor.PrepareForBuild(options, target);
-        }
+        public static string PrepareForBuild(BuildOptions options, BuildTarget target) => 
+            ModuleManager.GetBuildPostProcessor(target)?.PrepareForBuild(options, target);
 
         public static bool SupportsInstallInBuildFolder(BuildTarget target)
         {
@@ -222,21 +206,11 @@
             return ((buildPostProcessor != null) && buildPostProcessor.SupportsScriptsOnlyBuild());
         }
 
-        public static string subDir32Bit
-        {
-            get
-            {
-                return "x86";
-            }
-        }
+        public static string subDir32Bit =>
+            "x86";
 
-        public static string subDir64Bit
-        {
-            get
-            {
-                return "x86_64";
-            }
-        }
+        public static string subDir64Bit =>
+            "x86_64";
     }
 }
 

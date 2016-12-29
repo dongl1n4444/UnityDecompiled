@@ -20,13 +20,8 @@
             this.Name = name;
         }
 
-        public static TableInfo Empty
-        {
-            get
-            {
-                return new TableInfo(0, Naming.Null, Naming.Null);
-            }
-        }
+        public static TableInfo Empty =>
+            new TableInfo(0, Naming.Null, Naming.Null);
     }
 }
 

@@ -63,10 +63,8 @@
             return val;
         }
 
-        public ParticleSystemCurveEditor.CurveData CreateCurveData(Color color)
-        {
-            return new ParticleSystemCurveEditor.CurveData(this.GetUniqueCurveName(), this.m_DisplayName, this.GetMinCurve(), this.maxCurve, color, this.m_SignedRange, new CurveWrapper.GetAxisScalarsCallback(this.GetAxisScalars), new CurveWrapper.SetAxisScalarsCallback(this.SetAxisScalars), this.m_Module.foldout);
-        }
+        public ParticleSystemCurveEditor.CurveData CreateCurveData(Color color) => 
+            new ParticleSystemCurveEditor.CurveData(this.GetUniqueCurveName(), this.m_DisplayName, this.GetMinCurve(), this.maxCurve, color, this.m_SignedRange, new CurveWrapper.GetAxisScalarsCallback(this.GetAxisScalars), new CurveWrapper.SetAxisScalarsCallback(this.SetAxisScalars), this.m_Module.foldout);
 
         private float GetAverageKeyValue(Keyframe[] keyFrames)
         {
@@ -78,10 +76,8 @@
             return (num / ((float) keyFrames.Length));
         }
 
-        public Vector2 GetAxisScalars()
-        {
-            return new Vector2(this.m_Module.GetXAxisScalar(), this.scalar.floatValue * this.m_RemapValue);
-        }
+        public Vector2 GetAxisScalars() => 
+            new Vector2(this.m_Module.GetXAxisScalar(), this.scalar.floatValue * this.m_RemapValue);
 
         private float GetMaxKeyValue(Keyframe[] keyFrames)
         {
@@ -105,10 +101,8 @@
             return negativeInfinity;
         }
 
-        private SerializedProperty GetMinCurve()
-        {
-            return ((this.state != MinMaxCurveState.k_TwoCurves) ? null : this.minCurve);
-        }
+        private SerializedProperty GetMinCurve() => 
+            ((this.state != MinMaxCurveState.k_TwoCurves) ? null : this.minCurve);
 
         private float GetNormalizedValueFromScalar()
         {
@@ -123,10 +117,8 @@
             return 0f;
         }
 
-        public string GetUniqueCurveName()
-        {
-            return SerializedModule.Concat(this.m_Module.GetUniqueModuleName(), this.m_Name);
-        }
+        public string GetUniqueCurveName() => 
+            SerializedModule.Concat(this.m_Module.GetUniqueModuleName(), this.m_Name);
 
         private void Init(ModuleUI m, GUIContent displayName, string uniqueName, bool signedRange, bool useProp0)
         {
@@ -240,8 +232,7 @@
             }
             if (button == 1)
             {
-                SerializedProperty minCurve = this.GetMinCurve();
-                AnimationCurveContextMenu.Show(drawRect, (this.maxCurve == null) ? null : this.maxCurve.Copy(), (minCurve == null) ? null : minCurve.Copy(), (this.scalar == null) ? null : this.scalar.Copy(), curveRanges, this.m_Module.GetParticleSystemCurveEditor());
+                AnimationCurveContextMenu.Show(drawRect, this.maxCurve?.Copy(), this.GetMinCurve()?.Copy(), this.scalar?.Copy(), curveRanges, this.m_Module.GetParticleSystemCurveEditor());
                 return true;
             }
             return false;
@@ -364,10 +355,8 @@
 
         public float maxConstant
         {
-            get
-            {
-                return (this.maxCurveFirstKeyValue.floatValue * this.scalar.floatValue);
-            }
+            get => 
+                (this.maxCurveFirstKeyValue.floatValue * this.scalar.floatValue);
             set
             {
                 value = this.ClampValueToMaxAllowed(value);
@@ -392,10 +381,8 @@
 
         public float minConstant
         {
-            get
-            {
-                return (this.minCurveFirstKeyValue.floatValue * this.scalar.floatValue);
-            }
+            get => 
+                (this.minCurveFirstKeyValue.floatValue * this.scalar.floatValue);
             set
             {
                 value = this.ClampValueToMaxAllowed(value);
@@ -418,20 +405,13 @@
             }
         }
 
-        public bool signedRange
-        {
-            get
-            {
-                return this.m_SignedRange;
-            }
-        }
+        public bool signedRange =>
+            this.m_SignedRange;
 
         public MinMaxCurveState state
         {
-            get
-            {
-                return (MinMaxCurveState) this.minMaxState.intValue;
-            }
+            get => 
+                ((MinMaxCurveState) this.minMaxState.intValue);
             set
             {
                 this.SetMinMaxState(value);

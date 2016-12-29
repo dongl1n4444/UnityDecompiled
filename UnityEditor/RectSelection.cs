@@ -49,7 +49,7 @@
                             if (current.shift || EditorGUI.actionKey)
                             {
                                 GameObject obj5 = HandleUtility.PickGameObject(current.mousePosition, false);
-                                if (!EditorGUI.actionKey ? (Selection.activeGameObject == obj5) : Enumerable.Contains<GameObject>(Selection.gameObjects, obj5))
+                                if (!EditorGUI.actionKey ? (Selection.activeGameObject == obj5) : Selection.gameObjects.Contains<GameObject>(obj5))
                                 {
                                     UpdateSelection(this.m_SelectionStart, obj5, SelectionType.Subtractive, this.m_RectSelecting);
                                 }

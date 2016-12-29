@@ -58,20 +58,14 @@
             return obj2;
         }
 
-        public static T DeserializeObject<T>(string json)
-        {
-            return (T) DeserializeObject(json, typeof(T), null);
-        }
+        public static T DeserializeObject<T>(string json) => 
+            ((T) DeserializeObject(json, typeof(T), null));
 
-        public static T DeserializeObject<T>(string json, IJsonSerializerStrategy jsonSerializerStrategy)
-        {
-            return (T) DeserializeObject(json, typeof(T), jsonSerializerStrategy);
-        }
+        public static T DeserializeObject<T>(string json, IJsonSerializerStrategy jsonSerializerStrategy) => 
+            ((T) DeserializeObject(json, typeof(T), jsonSerializerStrategy));
 
-        public static object DeserializeObject(string json, Type type)
-        {
-            return DeserializeObject(json, type, null);
-        }
+        public static object DeserializeObject(string json, Type type) => 
+            DeserializeObject(json, type, null);
 
         public static object DeserializeObject(string json, Type type, IJsonSerializerStrategy jsonSerializerStrategy)
         {
@@ -166,10 +160,8 @@
             return (num - 1);
         }
 
-        private static bool IsNumeric(object value)
-        {
-            return ((value is sbyte) || ((value is byte) || ((value is short) || ((value is ushort) || ((value is int) || ((value is uint) || ((value is long) || ((value is ulong) || ((value is float) || ((value is double) || (value is decimal)))))))))));
-        }
+        private static bool IsNumeric(object value) => 
+            ((value is sbyte) || ((value is byte) || ((value is short) || ((value is ushort) || ((value is int) || ((value is uint) || ((value is long) || ((value is ulong) || ((value is float) || ((value is double) || (value is decimal)))))))))));
 
         private static int LookAhead(char[] json, int index)
         {
@@ -546,10 +538,8 @@
             return true;
         }
 
-        public static string SerializeObject(object json)
-        {
-            return SerializeObject(json, CurrentJsonSerializerStrategy);
-        }
+        public static string SerializeObject(object json) => 
+            SerializeObject(json, CurrentJsonSerializerStrategy);
 
         public static string SerializeObject(object json, IJsonSerializerStrategy jsonSerializerStrategy)
         {

@@ -37,10 +37,8 @@
             }
         }
 
-        public string GetDisplayString()
-        {
-            return base.name;
-        }
+        public string GetDisplayString() => 
+            base.name;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern GUID GetGUIDForPitch();
@@ -83,10 +81,8 @@
         public extern void SetValueForPitch(AudioMixerController controller, AudioMixerSnapshotController snapshot, float value);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetValueForVolume(AudioMixerController controller, AudioMixerSnapshotController snapshot, float value);
-        public override string ToString()
-        {
-            return base.name;
-        }
+        public override string ToString() => 
+            base.name;
 
         public bool bypassEffects { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 

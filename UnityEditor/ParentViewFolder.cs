@@ -29,10 +29,8 @@
             this.files = new ParentViewFile[0];
         }
 
-        public ParentViewFolder CloneWithoutFiles()
-        {
-            return new ParentViewFolder(this.name, this.guid, this.changeFlags);
-        }
+        public ParentViewFolder CloneWithoutFiles() => 
+            new ParentViewFolder(this.name, this.guid, this.changeFlags);
 
         public static string MakeNiceName(string name)
         {

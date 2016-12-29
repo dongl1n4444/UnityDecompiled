@@ -26,13 +26,13 @@
             Application.runInBackground = true;
             string sceneName = base.CreateSceneName();
             this.m_Scene = base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
-                PlaymodeTestsControllerExtensions.AddEventHandlerMonoBehaviour<ResultsRenderer>(runner);
-                PlaymodeTestsControllerExtensions.AddEventHandlerScriptableObject<WindowResultUpdater>(runner);
-                PlaymodeTestsControllerExtensions.AddEventHandlerScriptableObject<TestRunnerCallback>(runner);
+                runner.AddEventHandlerMonoBehaviour<ResultsRenderer>();
+                runner.AddEventHandlerScriptableObject<WindowResultUpdater>();
+                runner.AddEventHandlerScriptableObject<TestRunnerCallback>();
                 if (this.m_Settings.isBatchModeRun)
                 {
-                    PlaymodeTestsControllerExtensions.AddEventHandlerScriptableObject<PlaymodeResultSaverCallback>(runner);
-                    PlaymodeTestsControllerExtensions.AddEventHandlerScriptableObject<BatchRunCallback>(runner);
+                    runner.AddEventHandlerScriptableObject<PlaymodeResultSaverCallback>();
+                    runner.AddEventHandlerScriptableObject<BatchRunCallback>();
                 }
                 runner.settings = this.m_Settings;
             });

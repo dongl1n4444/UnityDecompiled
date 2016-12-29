@@ -9,21 +9,11 @@
         public System.Reflection.FieldInfo FieldInfo;
         public string Summary;
 
-        public bool HasCustomValueDescription
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.CustomValueDescription);
-            }
-        }
+        public bool HasCustomValueDescription =>
+            !string.IsNullOrEmpty(this.CustomValueDescription);
 
-        public bool HasSummary
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.Summary);
-            }
-        }
+        public bool HasSummary =>
+            !string.IsNullOrEmpty(this.Summary);
     }
 }
 

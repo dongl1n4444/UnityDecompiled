@@ -255,13 +255,8 @@
 
         public bool foldersFirst { get; set; }
 
-        public HierarchyType hierarchyType
-        {
-            get
-            {
-                return this.m_HierarchyType;
-            }
-        }
+        public HierarchyType hierarchyType =>
+            this.m_HierarchyType;
 
         public FilterResult[] results
         {
@@ -277,10 +272,8 @@
 
         public SearchFilter searchFilter
         {
-            get
-            {
-                return this.m_SearchFilter;
-            }
+            get => 
+                this.m_SearchFilter;
             set
             {
                 if (this.m_SearchFilter.SetNewFilter(value))

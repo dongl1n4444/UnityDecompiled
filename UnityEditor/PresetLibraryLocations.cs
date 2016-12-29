@@ -8,10 +8,8 @@
 
     internal static class PresetLibraryLocations
     {
-        private static string ConvertToUnitySeperators(string path)
-        {
-            return path.Replace('\\', '/');
-        }
+        private static string ConvertToUnitySeperators(string path) => 
+            path.Replace('\\', '/');
 
         public static List<string> GetAvailableFilesWithExtensionOnTheHDD(PresetFileLocation fileLocation, string fileExtensionWithoutDot)
         {
@@ -109,29 +107,14 @@
             return (str + "");
         }
 
-        public static string defaultLibraryLocation
-        {
-            get
-            {
-                return GetDefaultFilePathForFileLocation(PresetFileLocation.PreferencesFolder);
-            }
-        }
+        public static string defaultLibraryLocation =>
+            GetDefaultFilePathForFileLocation(PresetFileLocation.PreferencesFolder);
 
-        public static string defaultLibraryName
-        {
-            get
-            {
-                return "Default";
-            }
-        }
+        public static string defaultLibraryName =>
+            "Default";
 
-        public static string defaultPresetLibraryPath
-        {
-            get
-            {
-                return Path.Combine(defaultLibraryLocation, defaultLibraryName);
-            }
-        }
+        public static string defaultPresetLibraryPath =>
+            Path.Combine(defaultLibraryLocation, defaultLibraryName);
     }
 }
 

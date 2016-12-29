@@ -56,10 +56,8 @@
             this.Visit(this.get_CompileUnit());
         }
 
-        public IType TypeEntityFor(TypeReference baseType)
-        {
-            return this.GetEntity(baseType);
-        }
+        public IType TypeEntityFor(TypeReference baseType) => 
+            this.GetEntity(baseType);
     }
 }
 

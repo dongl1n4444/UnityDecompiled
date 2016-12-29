@@ -159,7 +159,7 @@
             if (msg == null)
             {
             }
-            throw new ArgumentException(string.Format("Could not map typename '{0}' to type info ({1})", name, "no context"));
+            throw new ArgumentException($"Could not map typename '{name}' to type info ({"no context"})");
         }
 
         public static void GenerateDependencies(string strippedAssemblyDir, string icallsListFile, RuntimeClassRegistry rcr, bool doStripping, out HashSet<UnityType> nativeClasses, out HashSet<string> nativeModules, IIl2CppPlatformProvider platformProvider)
@@ -198,7 +198,7 @@
                 while (flag)
                 {
                     flag = false;
-                    foreach (string str2 in Enumerable.ToList<string>(nativeModules))
+                    foreach (string str2 in nativeModules.ToList<string>())
                     {
                         string moduleWhitelist = GetModuleWhitelist(str2, platformProvider.moduleStrippingInformationFolder);
                         if (File.Exists(moduleWhitelist))
@@ -305,17 +305,15 @@
             return set;
         }
 
-        private static IEnumerable<string> GetAssembliesInDirectory(string strippedAssemblyDir, string assemblyName)
-        {
-            return Directory.GetFiles(strippedAssemblyDir, assemblyName, SearchOption.TopDirectoryOnly);
-        }
+        private static IEnumerable<string> GetAssembliesInDirectory(string strippedAssemblyDir, string assemblyName) => 
+            Directory.GetFiles(strippedAssemblyDir, assemblyName, SearchOption.TopDirectoryOnly);
 
         private static string[] GetAssembliesWithSuffix()
         {
             <GetAssembliesWithSuffix>c__AnonStorey0 storey = new <GetAssembliesWithSuffix>c__AnonStorey0 {
                 suffix = EditorSettings.Internal_UserGeneratedProjectSuffix
             };
-            return Enumerable.ToArray<string>(Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
         }
 
         public static List<string> GetDependentModules(string moduleXml)
@@ -364,10 +362,8 @@
             return Paths.Combine(components);
         }
 
-        public static HashSet<string> GetNativeModulesToRegister(HashSet<UnityType> nativeClasses, StrippingInfo strippingInfo)
-        {
-            return ((nativeClasses != null) ? GetRequiredStrippableModules(nativeClasses, strippingInfo) : GetAllStrippableModules());
-        }
+        public static HashSet<string> GetNativeModulesToRegister(HashSet<UnityType> nativeClasses, StrippingInfo strippingInfo) => 
+            ((nativeClasses != null) ? GetRequiredStrippableModules(nativeClasses, strippingInfo) : GetAllStrippableModules());
 
         private static HashSet<string> GetRequiredStrippableModules(HashSet<UnityType> nativeClasses, StrippingInfo strippingInfo)
         {
@@ -549,7 +545,7 @@
                     {
                         <>f__am$cache0 = new Func<string, UnityType>(null, (IntPtr) <get_BlackListNativeClasses>m__0);
                     }
-                    s_blackListNativeClasses = Enumerable.ToArray<UnityType>(Enumerable.Select<string, UnityType>(s_blackListNativeClassNames, <>f__am$cache0));
+                    s_blackListNativeClasses = Enumerable.Select<string, UnityType>(s_blackListNativeClassNames, <>f__am$cache0).ToArray<UnityType>();
                 }
                 return s_blackListNativeClasses;
             }

@@ -26,10 +26,8 @@
             }
         }
 
-        public bool ShouldEmitBoundsChecksForMethod()
-        {
-            return CompilerServicesSupport.HasArrayBoundsChecksSupportEnabled(this._methodDefinition, this._arrayBoundsChecksGloballyEnabled);
-        }
+        public bool ShouldEmitBoundsChecksForMethod() => 
+            CompilerServicesSupport.HasArrayBoundsChecksSupportEnabled(this._methodDefinition, this._arrayBoundsChecksGloballyEnabled);
     }
 }
 

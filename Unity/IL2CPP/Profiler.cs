@@ -32,10 +32,8 @@
             _stopwatch.Start();
         }
 
-        public static IDisposable Sample(string name)
-        {
-            return new Sampler(name);
-        }
+        public static IDisposable Sample(string name) => 
+            new Sampler(name);
 
         private class ProfilerSample
         {

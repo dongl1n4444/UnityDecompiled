@@ -12,10 +12,8 @@
     [Serializable]
     public class ApplySemantics : AbstractVisitorCompilerStep
     {
-        internal bool $ModuleContainsOnlyTypeDefinitions$closure$129(TypeMember m)
-        {
-            return (m is TypeDefinition);
-        }
+        internal bool $ModuleContainsOnlyTypeDefinitions$closure$129(TypeMember m) => 
+            (m is TypeDefinition);
 
         public void AddScriptBaseType(ClassDefinition klass)
         {
@@ -35,15 +33,13 @@
             return constructor;
         }
 
-        public Method ExistingMainMethodOn(TypeDefinition typeDef)
-        {
-            return Enumerable.FirstOrDefault<Method>(Enumerable.OfType<Method>(typeDef.get_Members()), new Func<Method, bool>(this, (IntPtr) this.IsMainMethod));
-        }
+        public Method ExistingMainMethodOn(TypeDefinition typeDef) => 
+            typeDef.get_Members().OfType<Method>().FirstOrDefault<Method>(new Func<Method, bool>(this, (IntPtr) this.IsMainMethod));
 
         public ClassDefinition FindOrCreateScriptClass(Module module)
         {
             ClassDefinition definition2;
-            foreach (ClassDefinition definition in Enumerable.OfType<ClassDefinition>(module.get_Members()))
+            foreach (ClassDefinition definition in module.get_Members().OfType<ClassDefinition>())
             {
                 if (definition.get_Name() == module.get_Name())
                 {
@@ -65,10 +61,8 @@
             return klass;
         }
 
-        public bool IsConstructorMethod(TypeDefinition toType, TypeMember member)
-        {
-            return ((member.get_NodeType() == 0x16) ? (toType.get_Name() == member.get_Name()) : false);
-        }
+        public bool IsConstructorMethod(TypeDefinition toType, TypeMember member) => 
+            ((member.get_NodeType() == 0x16) ? (toType.get_Name() == member.get_Name()) : false);
 
         public bool IsMainMethod(Method m)
         {
@@ -93,7 +87,7 @@
             if (module.get_Members().get_IsEmpty())
             {
             }
-            if (!Enumerable.All<TypeMember>(module.get_Members(), new Func<TypeMember, bool>(this, (IntPtr) this.$ModuleContainsOnlyTypeDefinitions$closure$129)))
+            if (!module.get_Members().All<TypeMember>(new Func<TypeMember, bool>(this, (IntPtr) this.$ModuleContainsOnlyTypeDefinitions$closure$129)))
             {
             }
             bool flag3 = module.get_Globals().get_IsEmpty();
@@ -110,10 +104,8 @@
             fromType.get_Attributes().Clear();
         }
 
-        public TypeMember MovedMember(TypeDefinition toType, TypeMember member)
-        {
-            return (toType.ContainsAnnotation("UserDefined") ? (this.IsConstructorMethod(toType, member) ? this.ConstructorFromMethod((Method) member) : member) : member);
-        }
+        public TypeMember MovedMember(TypeDefinition toType, TypeMember member) => 
+            (toType.ContainsAnnotation("UserDefined") ? (this.IsConstructorMethod(toType, member) ? this.ConstructorFromMethod((Method) member) : member) : member);
 
         public void MoveGlobalStatementsToMainMethodOf(TypeDefinition script, Module module)
         {
@@ -210,21 +202,11 @@
             }
         }
 
-        public string ScriptMainMethod
-        {
-            get
-            {
-                return this.UnityScriptParameters.ScriptMainMethod;
-            }
-        }
+        public string ScriptMainMethod =>
+            this.UnityScriptParameters.ScriptMainMethod;
 
-        public UnityScriptCompilerParameters UnityScriptParameters
-        {
-            get
-            {
-                return (UnityScriptCompilerParameters) base._context.get_Parameters();
-            }
-        }
+        public UnityScriptCompilerParameters UnityScriptParameters =>
+            ((UnityScriptCompilerParameters) base._context.get_Parameters());
 
         [Serializable]
         public class DeclareGlobalVariables : DepthFirstTransformer
@@ -236,10 +218,8 @@
                 this._class = cd;
             }
 
-            public override bool EnterBlock(Block node)
-            {
-                return (node.get_ParentNode() is Method);
-            }
+            public override bool EnterBlock(Block node) => 
+                (node.get_ParentNode() is Method);
 
             public override void OnDeclarationStatement(DeclarationStatement node)
             {

@@ -20,10 +20,8 @@
             this.m_Prefix = prefix;
         }
 
-        public static ItemViewMode GetItemViewMode(string prefix)
-        {
-            return (ItemViewMode) EditorPrefs.GetInt(prefix + "ViewMode", 0);
-        }
+        public static ItemViewMode GetItemViewMode(string prefix) => 
+            ((ItemViewMode) EditorPrefs.GetInt(prefix + "ViewMode", 0));
 
         public void TransferEditorPrefsState(bool load)
         {
@@ -45,10 +43,8 @@
 
         public ItemViewMode itemViewMode
         {
-            get
-            {
-                return this.m_ItemViewMode;
-            }
+            get => 
+                this.m_ItemViewMode;
             set
             {
                 if (this.m_ItemViewMode != value)

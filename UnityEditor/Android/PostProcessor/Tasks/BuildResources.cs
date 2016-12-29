@@ -22,13 +22,13 @@
             AndroidSDKTools tools = context.Get<AndroidSDKTools>("SDKTools");
             string str2 = "gen";
             string fullName = Directory.CreateDirectory(Path.Combine(this._stagingArea, str2)).FullName;
-            string args = string.Format("package --auto-add-overlay -v -f -m -J \"{0}\" -M \"{1}\" -S \"{2}\" -I \"{3}\" -F {4}", new object[] { str2, "AndroidManifest.xml", "res", str, "bin/resources.ap_" });
+            string args = $"package --auto-add-overlay -v -f -m -J "{str2}" -M "{"AndroidManifest.xml"}" -S "{"res"}" -I "{str}" -F {"bin/resources.ap_"}";
             if (libraries.Count > 0)
             {
-                args = args + string.Format(" --extra-packages {0}", string.Join(":", libraries.GetPackageNames()));
+                args = args + $" --extra-packages {string.Join(":", libraries.GetPackageNames())}";
                 foreach (string str5 in libraries.GetResourceDirectories())
                 {
-                    args = args + string.Format(" -S \"{0}\"", str5);
+                    args = args + $" -S "{str5}"";
                 }
             }
             string errorMsg = "Failed to re-package resources.";
@@ -46,7 +46,7 @@
                     list.Add(str8.Substring(fullName.Length + 1));
                 }
                 string str9 = Directory.CreateDirectory(Path.Combine(this._stagingArea, "bin/classes")).FullName;
-                string str10 = string.Format("-bootclasspath \"{0}\" -d \"{1}\" -source 1.6 -target 1.6 -encoding UTF-8 \"{2}\"", str, str9, string.Join("\" \"", list.ToArray()));
+                string str10 = $"-bootclasspath "{str}" -d "{str9}" -source 1.6 -target 1.6 -encoding UTF-8 "{string.Join("\" \"", list.ToArray())}"";
                 string str11 = "Failed to recompile android resource files.";
                 string str12 = TasksCommon.Exec(AndroidJavaTools.javacPath, str10, fullName, str11, 0);
                 if (str12.Trim().Length > 0)
@@ -99,13 +99,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Compiling resources";
-            }
-        }
+        public string Name =>
+            "Compiling resources";
     }
 }
 

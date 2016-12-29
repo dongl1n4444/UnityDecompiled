@@ -73,10 +73,8 @@
         /// </summary>
         public DateTime fireDate
         {
-            get
-            {
-                return new DateTime(((long) (this.GetFireDate() * 10000000.0)) + m_NSReferenceDateTicks);
-            }
+            get => 
+                new DateTime(((long) (this.GetFireDate() * 10000000.0)) + m_NSReferenceDateTicks);
             set
             {
                 this.SetFireDate(((double) (value.ToUniversalTime().Ticks - m_NSReferenceDateTicks)) / 10000000.0);

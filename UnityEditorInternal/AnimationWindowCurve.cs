@@ -179,10 +179,8 @@
             return -1;
         }
 
-        public bool HasKeyframe(AnimationKeyTime time)
-        {
-            return (this.GetKeyframeIndex(time) != -1);
-        }
+        public bool HasKeyframe(AnimationKeyTime time) => 
+            (this.GetKeyframeIndex(time) != -1);
 
         public void LoadKeyframes(AnimationClip clip)
         {
@@ -268,145 +266,63 @@
             return list.ToArray();
         }
 
-        public bool animationIsEditable
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) || this.m_SelectionBinding.animationIsEditable);
-            }
-        }
+        public bool animationIsEditable =>
+            ((this.m_SelectionBinding == null) || this.m_SelectionBinding.animationIsEditable);
 
-        public EditorCurveBinding binding
-        {
-            get
-            {
-                return this.m_Binding;
-            }
-        }
+        public EditorCurveBinding binding =>
+            this.m_Binding;
 
-        public AnimationClip clip
-        {
-            get
-            {
-                return this.m_Clip;
-            }
-        }
+        public AnimationClip clip =>
+            this.m_Clip;
 
-        public bool clipIsEditable
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) || this.m_SelectionBinding.clipIsEditable);
-            }
-        }
+        public bool clipIsEditable =>
+            ((this.m_SelectionBinding == null) || this.m_SelectionBinding.clipIsEditable);
 
-        public int depth
-        {
-            get
-            {
-                return ((this.path.Length <= 0) ? 0 : this.path.Split(new char[] { '/' }).Length);
-            }
-        }
+        public int depth =>
+            ((this.path.Length <= 0) ? 0 : this.path.Split(new char[] { '/' }).Length);
 
-        public bool isPhantom
-        {
-            get
-            {
-                return this.m_Binding.isPhantom;
-            }
-        }
+        public bool isPhantom =>
+            this.m_Binding.isPhantom;
 
-        public bool isPPtrCurve
-        {
-            get
-            {
-                return this.m_Binding.isPPtrCurve;
-            }
-        }
+        public bool isPPtrCurve =>
+            this.m_Binding.isPPtrCurve;
 
-        public int length
-        {
-            get
-            {
-                return this.m_Keyframes.Count;
-            }
-        }
+        public int length =>
+            this.m_Keyframes.Count;
 
-        public string path
-        {
-            get
-            {
-                return this.m_Binding.path;
-            }
-        }
+        public string path =>
+            this.m_Binding.path;
 
-        public string propertyName
-        {
-            get
-            {
-                return this.m_Binding.propertyName;
-            }
-        }
+        public string propertyName =>
+            this.m_Binding.propertyName;
 
-        public GameObject rootGameObject
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? null : this.m_SelectionBinding.rootGameObject);
-            }
-        }
+        public GameObject rootGameObject =>
+            this.m_SelectionBinding?.rootGameObject;
 
-        public ScriptableObject scriptableObject
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? null : this.m_SelectionBinding.scriptableObject);
-            }
-        }
+        public ScriptableObject scriptableObject =>
+            this.m_SelectionBinding?.scriptableObject;
 
         public AnimationWindowSelectionItem selectionBinding
         {
-            get
-            {
-                return this.m_SelectionBinding;
-            }
+            get => 
+                this.m_SelectionBinding;
             set
             {
                 this.m_SelectionBinding = value;
             }
         }
 
-        public int selectionID
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? 0 : this.m_SelectionBinding.id);
-            }
-        }
+        public int selectionID =>
+            ((this.m_SelectionBinding == null) ? 0 : this.m_SelectionBinding.id);
 
-        public float timeOffset
-        {
-            get
-            {
-                return ((this.m_SelectionBinding == null) ? 0f : this.m_SelectionBinding.timeOffset);
-            }
-        }
+        public float timeOffset =>
+            ((this.m_SelectionBinding == null) ? 0f : this.m_SelectionBinding.timeOffset);
 
-        public Type type
-        {
-            get
-            {
-                return this.m_Binding.type;
-            }
-        }
+        public Type type =>
+            this.m_Binding.type;
 
-        public Type valueType
-        {
-            get
-            {
-                return this.m_ValueType;
-            }
-        }
+        public Type valueType =>
+            this.m_ValueType;
     }
 }
 

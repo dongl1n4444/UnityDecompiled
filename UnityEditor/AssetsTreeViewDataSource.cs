@@ -12,7 +12,7 @@
 
     internal class AssetsTreeViewDataSource : LazyTreeViewDataSource
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersFirst>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <foldersOnly>k__BackingField;
@@ -26,10 +26,8 @@
             base.rootIsCollapsable = rootItemIsCollapsable;
         }
 
-        private static string CreateDisplayName(int instanceID)
-        {
-            return Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(instanceID));
-        }
+        private static string CreateDisplayName(int instanceID) => 
+            Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(instanceID));
 
         public override void FetchData()
         {
@@ -121,10 +119,8 @@
             }
         }
 
-        protected CreateAssetUtility GetCreateAssetUtility()
-        {
-            return base.m_TreeView.state.createAssetUtility;
-        }
+        protected CreateAssetUtility GetCreateAssetUtility() => 
+            base.m_TreeView.state.createAssetUtility;
 
         public int GetInsertAfterItemIDForNewItem(string newName, TreeViewItem parentItem, bool isCreatingNewFolder, bool foldersFirst)
         {
@@ -153,10 +149,8 @@
             return id;
         }
 
-        protected override HashSet<int> GetParentsAbove(int id)
-        {
-            return new HashSet<int>(ProjectWindowUtil.GetAncestors(id));
-        }
+        protected override HashSet<int> GetParentsAbove(int id) => 
+            new HashSet<int>(ProjectWindowUtil.GetAncestors(id));
 
         protected override HashSet<int> GetParentsBelow(int id)
         {

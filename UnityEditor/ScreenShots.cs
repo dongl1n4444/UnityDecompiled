@@ -34,10 +34,10 @@
 
         private static string GetUniquePathForName(string name)
         {
-            string path = string.Format("{0}/../../{1}.png", Application.dataPath, name);
+            string path = $"{Application.dataPath}/../../{name}.png";
             for (int i = 0; File.Exists(path); i++)
             {
-                path = string.Format("{0}/../../{1}{2:000}.png", Application.dataPath, name, i);
+                path = $"{Application.dataPath}/../../{name}{i:000}.png";
             }
             return path;
         }
@@ -56,7 +56,7 @@
             Object.DestroyImmediate(textured, true);
             string uniquePathForName = GetUniquePathForName(name);
             File.WriteAllBytes(uniquePathForName, bytes);
-            Debug.Log(string.Format("Saved screenshot at {0}", uniquePathForName));
+            Debug.Log($"Saved screenshot at {uniquePathForName}");
             return uniquePathForName;
         }
 
@@ -91,7 +91,7 @@
         {
             string uniquePathForName = GetUniquePathForName("ContentExample");
             Application.CaptureScreenshot(uniquePathForName);
-            Debug.Log(string.Format("Saved screenshot at {0}", uniquePathForName));
+            Debug.Log($"Saved screenshot at {uniquePathForName}");
         }
 
         [MenuItem("Window/Screenshot/Snap View %&j", false, 0x3e8, true)]

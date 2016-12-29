@@ -25,10 +25,8 @@
             this.fullName = fullName;
         }
 
-        private static int CreateId(string fullName)
-        {
-            return fullName.GetHashCode();
-        }
+        private static int CreateId(string fullName) => 
+            fullName.GetHashCode();
 
         public string GetResultText()
         {
@@ -51,10 +49,8 @@
             return builder.ToString().Trim();
         }
 
-        public virtual bool IsVisible(FilteringOptions options)
-        {
-            return true;
-        }
+        public virtual bool IsVisible(FilteringOptions options) => 
+            true;
 
         protected virtual void ResultUpdated(TestResult result)
         {

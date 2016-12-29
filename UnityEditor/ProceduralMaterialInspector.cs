@@ -565,10 +565,8 @@
             }
         }
 
-        internal override bool IsEnabled()
-        {
-            return base.IsOpenForEdit();
-        }
+        internal override bool IsEnabled() => 
+            base.IsOpenForEdit();
 
         protected void OffsetScaleGUI(ProceduralMaterial material)
         {
@@ -1186,28 +1184,16 @@
                 this.m_Overridden = true;
             }
 
-            public bool isDefault
-            {
-                get
-                {
-                    return (this.name == "");
-                }
-            }
+            public bool isDefault =>
+                (this.name == "");
 
-            public bool overridden
-            {
-                get
-                {
-                    return this.m_Overridden;
-                }
-            }
+            public bool overridden =>
+                this.m_Overridden;
 
             public int textureFormat
             {
-                get
-                {
-                    return this.m_TextureFormat;
-                }
+                get => 
+                    this.m_TextureFormat;
                 set
                 {
                     this.m_TextureFormat = value;

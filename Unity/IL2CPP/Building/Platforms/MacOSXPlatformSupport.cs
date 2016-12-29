@@ -7,15 +7,11 @@
 
     internal class MacOSXPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors)
-        {
-            return new ClangToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
-        }
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+            new ClangToolChain(architecture, buildConfiguration, treatWarningsAsErrors);
 
-        public override bool Supports(RuntimePlatform platform)
-        {
-            return (platform is MacOSXRuntimePlatform);
-        }
+        public override bool Supports(RuntimePlatform platform) => 
+            (platform is MacOSXRuntimePlatform);
     }
 }
 

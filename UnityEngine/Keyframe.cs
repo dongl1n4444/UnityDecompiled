@@ -50,10 +50,8 @@
         /// </summary>
         public float time
         {
-            get
-            {
-                return this.m_Time;
-            }
+            get => 
+                this.m_Time;
             set
             {
                 this.m_Time = value;
@@ -64,10 +62,8 @@
         /// </summary>
         public float value
         {
-            get
-            {
-                return this.m_Value;
-            }
+            get => 
+                this.m_Value;
             set
             {
                 this.m_Value = value;
@@ -78,10 +74,8 @@
         /// </summary>
         public float inTangent
         {
-            get
-            {
-                return this.m_InTangent;
-            }
+            get => 
+                this.m_InTangent;
             set
             {
                 this.m_InTangent = value;
@@ -92,10 +86,8 @@
         /// </summary>
         public float outTangent
         {
-            get
-            {
-                return this.m_OutTangent;
-            }
+            get => 
+                this.m_OutTangent;
             set
             {
                 this.m_OutTangent = value;
@@ -106,10 +98,8 @@
         /// </summary>
         public int tangentMode
         {
-            get
-            {
-                return this.m_TangentMode;
-            }
+            get => 
+                this.m_TangentMode;
             set
             {
                 this.m_TangentMode = value;

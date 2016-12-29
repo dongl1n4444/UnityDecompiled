@@ -127,10 +127,8 @@
         /// </summary>
         public Color32 backgroundColor
         {
-            get
-            {
-                return this.background;
-            }
+            get => 
+                this.background;
             set
             {
                 this.background = value;

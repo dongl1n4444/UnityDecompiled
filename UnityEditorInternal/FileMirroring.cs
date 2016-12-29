@@ -137,7 +137,7 @@
                 }
                 IEnumerable<string> first = Enumerable.Select<string, string>(Directory.GetFileSystemEntries(storey.to), new Func<string, string>(storey, (IntPtr) this.<>m__0));
                 IEnumerable<string> second = Enumerable.Select<string, string>(Directory.GetFileSystemEntries(storey.from), new Func<string, string>(storey, (IntPtr) this.<>m__1));
-                IEnumerable<string> enumerable3 = Enumerable.Except<string>(first, second);
+                IEnumerable<string> enumerable3 = first.Except<string>(second);
                 foreach (string str in enumerable3)
                 {
                     DeleteFileOrDirectory(Path.Combine(storey.to, str));
@@ -172,10 +172,8 @@
             }
         }
 
-        private static string StripPrefix(string s, string prefix)
-        {
-            return s.Substring(prefix.Length + 1);
-        }
+        private static string StripPrefix(string s, string prefix) => 
+            s.Substring(prefix.Length + 1);
 
         [CompilerGenerated]
         private sealed class <MirrorFolder>c__AnonStorey0
@@ -183,15 +181,11 @@
             internal string from;
             internal string to;
 
-            internal string <>m__0(string s)
-            {
-                return FileMirroring.StripPrefix(s, this.to);
-            }
+            internal string <>m__0(string s) => 
+                FileMirroring.StripPrefix(s, this.to);
 
-            internal string <>m__1(string s)
-            {
-                return FileMirroring.StripPrefix(s, this.from);
-            }
+            internal string <>m__1(string s) => 
+                FileMirroring.StripPrefix(s, this.from);
         }
 
         private enum FileEntryType

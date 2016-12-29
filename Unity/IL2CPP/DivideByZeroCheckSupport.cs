@@ -40,10 +40,8 @@
             StatsService.RecordDivideByZeroCheckEmitted(this._methodDefinition);
         }
 
-        private bool ShouldEmitDivideByZeroChecksForMethod()
-        {
-            return CompilerServicesSupport.HasDivideByZeroChecksSupportEnabled(this._methodDefinition, this._divideByZeroChecksGloballyEnabled);
-        }
+        private bool ShouldEmitDivideByZeroChecksForMethod() => 
+            CompilerServicesSupport.HasDivideByZeroChecksSupportEnabled(this._methodDefinition, this._divideByZeroChecksGloballyEnabled);
     }
 }
 

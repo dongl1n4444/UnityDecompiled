@@ -120,35 +120,23 @@
             }
         }
 
-        public static RuntimeClassRegistry Create()
-        {
-            return new RuntimeClassRegistry();
-        }
+        public static RuntimeClassRegistry Create() => 
+            new RuntimeClassRegistry();
 
-        public List<string> GetAllManagedBaseClassesAsString()
-        {
-            return new List<string>(this.monoBaseClasses);
-        }
+        public List<string> GetAllManagedBaseClassesAsString() => 
+            new List<string>(this.monoBaseClasses);
 
-        public List<string> GetAllManagedClassesAsString()
-        {
-            return new List<string>(this.monoClasses);
-        }
+        public List<string> GetAllManagedClassesAsString() => 
+            new List<string>(this.monoClasses);
 
-        public List<string> GetAllNativeClassesAsString()
-        {
-            return new List<string>(this.nativeClasses.Values);
-        }
+        public List<string> GetAllNativeClassesAsString() => 
+            new List<string>(this.nativeClasses.Values);
 
-        public List<string> GetAllNativeClassesIncludingManagersAsString()
-        {
-            return new List<string>(this.allNativeClasses.Values);
-        }
+        public List<string> GetAllNativeClassesIncludingManagersAsString() => 
+            new List<string>(this.allNativeClasses.Values);
 
-        internal List<MethodDescription> GetMethodsToPreserve()
-        {
-            return this.m_MethodsToPreserve;
-        }
+        internal List<MethodDescription> GetMethodsToPreserve() => 
+            this.m_MethodsToPreserve;
 
         public string GetRetentionLevel(string className)
         {
@@ -168,10 +156,8 @@
             return this.classScenes[ID];
         }
 
-        internal string[] GetUserAssemblies()
-        {
-            return this.m_UserAssemblies.ToArray();
-        }
+        internal string[] GetUserAssemblies() => 
+            this.m_UserAssemblies.ToArray();
 
         public void Initialize(int[] nativeClassIDs, BuildTarget buildTarget)
         {
@@ -400,10 +386,8 @@
             }
         }
 
-        public bool IsDLLUsed(string dll)
-        {
-            return ((this.m_UsedTypesPerUserAssembly == null) || ((Array.IndexOf<string>(CodeStrippingUtils.UserAssemblies, dll) != -1) || this.m_UsedTypesPerUserAssembly.ContainsKey(dll)));
-        }
+        public bool IsDLLUsed(string dll) => 
+            ((this.m_UsedTypesPerUserAssembly == null) || ((Array.IndexOf<string>(CodeStrippingUtils.UserAssemblies, dll) != -1) || this.m_UsedTypesPerUserAssembly.ContainsKey(dll)));
 
         protected string ResolveTypeName(Type type)
         {
@@ -458,13 +442,8 @@
             }
         }
 
-        public Dictionary<string, string[]> UsedTypePerUserAssembly
-        {
-            get
-            {
-                return this.m_UsedTypesPerUserAssembly;
-            }
-        }
+        public Dictionary<string, string[]> UsedTypePerUserAssembly =>
+            this.m_UsedTypesPerUserAssembly;
 
         internal class MethodDescription
         {

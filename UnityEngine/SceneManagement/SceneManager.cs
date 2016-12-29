@@ -227,10 +227,8 @@
         /// <returns>
         /// <para>Use the AsyncOperation to determine if the operation has completed.</para>
         /// </returns>
-        public static AsyncOperation LoadSceneAsync(int sceneBuildIndex, [DefaultValue("LoadSceneMode.Single")] LoadSceneMode mode)
-        {
-            return LoadSceneAsyncNameIndexInternal(null, sceneBuildIndex, mode == LoadSceneMode.Additive, false);
-        }
+        public static AsyncOperation LoadSceneAsync(int sceneBuildIndex, [DefaultValue("LoadSceneMode.Single")] LoadSceneMode mode) => 
+            LoadSceneAsyncNameIndexInternal(null, sceneBuildIndex, mode == LoadSceneMode.Additive, false);
 
         /// <summary>
         /// <para>Loads the scene asynchronously in the background.</para>
@@ -241,10 +239,8 @@
         /// <returns>
         /// <para>Use the AsyncOperation to determine if the operation has completed.</para>
         /// </returns>
-        public static AsyncOperation LoadSceneAsync(string sceneName, [DefaultValue("LoadSceneMode.Single")] LoadSceneMode mode)
-        {
-            return LoadSceneAsyncNameIndexInternal(sceneName, -1, mode == LoadSceneMode.Additive, false);
-        }
+        public static AsyncOperation LoadSceneAsync(string sceneName, [DefaultValue("LoadSceneMode.Single")] LoadSceneMode mode) => 
+            LoadSceneAsyncNameIndexInternal(sceneName, -1, mode == LoadSceneMode.Additive, false);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AsyncOperation LoadSceneAsyncNameIndexInternal(string sceneName, int sceneBuildIndex, bool isAdditive, bool mustCompleteNextFrame);
@@ -278,10 +274,8 @@
         /// <returns>
         /// <para>Returns false if the scene is not loaded yet.</para>
         /// </returns>
-        public static bool SetActiveScene(Scene scene)
-        {
-            return INTERNAL_CALL_SetActiveScene(ref scene);
-        }
+        public static bool SetActiveScene(Scene scene) => 
+            INTERNAL_CALL_SetActiveScene(ref scene);
 
         /// <summary>
         /// <para>Destroyes all GameObjects associated with the given scene and removes the scene from the SceneManager.</para>

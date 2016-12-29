@@ -11,7 +11,7 @@
 
     internal class GradleWrapper
     {
-        public static string Run(string workingdir, string task, [Optional, DefaultParameterValue(null)] Progress progress)
+        public static string Run(string workingdir, string task, Progress progress = null)
         {
             string[] strArray = AndroidFileLocator.Find(Path.Combine(Path.Combine(Path.Combine(BuildPipeline.GetBuildToolsDirectory(BuildTarget.Android), "gradle"), "lib"), "gradle-launcher-*.jar"));
             if (strArray.Length != 1)
@@ -19,10 +19,10 @@
                 throw new Exception("Gradle install not valid");
             }
             string str3 = strArray[0];
-            return RunJava(string.Format("-classpath \"{0}\" org.gradle.launcher.GradleMain \"{1}\"", str3, task), workingdir, progress);
+            return RunJava($"-classpath "{str3}" org.gradle.launcher.GradleMain "{task}"", workingdir, progress);
         }
 
-        private static string RunJava(string args, string workingdir, [Optional, DefaultParameterValue(null)] Progress progress)
+        private static string RunJava(string args, string workingdir, Progress progress = null)
         {
             <RunJava>c__AnonStorey0 storey = new <RunJava>c__AnonStorey0 {
                 progress = progress

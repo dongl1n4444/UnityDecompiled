@@ -64,10 +64,8 @@
         /// <returns>
         /// <para>A TextureImporterPlatformSettings structure containing the default platform parameters.</para>
         /// </returns>
-        public TextureImporterPlatformSettings GetDefaultPlatformTextureSettings()
-        {
-            return this.GetPlatformTextureSettings(TextureImporterInspector.s_DefaultPlatformName);
-        }
+        public TextureImporterPlatformSettings GetDefaultPlatformTextureSettings() => 
+            this.GetPlatformTextureSettings(TextureImporterInspector.s_DefaultPlatformName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern string GetImportWarnings();
@@ -138,7 +136,7 @@
         /// <param name="platformSettings">Structure containing the platform settings.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void SetPlatformTextureSettings(TextureImporterPlatformSettings platformSettings);
-        [ExcludeFromDocs, Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings(TextureImporterPlatformSettings) instead.")]
+        [Obsolete("Use UnityEditor.TextureImporter.SetPlatformTextureSettings(TextureImporterPlatformSettings) instead."), ExcludeFromDocs]
         public void SetPlatformTextureSettings(string platform, int maxTextureSize, TextureImporterFormat textureFormat)
         {
             bool allowsAlphaSplit = false;
@@ -265,10 +263,8 @@
         [Obsolete("Use UnityEditor.TextureImporter.alphaSource instead.")]
         public bool grayscaleToAlpha
         {
-            get
-            {
-                return (this.alphaSource == TextureImporterAlphaSource.FromGrayScale);
-            }
+            get => 
+                (this.alphaSource == TextureImporterAlphaSource.FromGrayScale);
             set
             {
                 if (value)
@@ -298,10 +294,8 @@
         [Obsolete("lightmap Property deprecated. Check [[TextureImporterSettings.textureType]] instead. Getter will work as expected. Setter will set textureType to Lightmap if true, nothing otherwise.")]
         public bool lightmap
         {
-            get
-            {
-                return (this.textureType == TextureImporterType.Lightmap);
-            }
+            get => 
+                (this.textureType == TextureImporterType.Lightmap);
             set
             {
                 if (value)
@@ -321,10 +315,8 @@
         [Obsolete("linearTexture Property deprecated. Use sRGBTexture instead.")]
         public bool linearTexture
         {
-            get
-            {
-                return !this.sRGBTexture;
-            }
+            get => 
+                !this.sRGBTexture;
             set
             {
                 this.sRGBTexture = !value;
@@ -367,10 +359,8 @@
         [Obsolete("normalmap Property deprecated. Check [[TextureImporterSettings.textureType]] instead. Getter will work as expected. Setter will set textureType to NormalMap if true, nothing otherwise.")]
         public bool normalmap
         {
-            get
-            {
-                return (this.textureType == TextureImporterType.NormalMap);
-            }
+            get => 
+                (this.textureType == TextureImporterType.NormalMap);
             set
             {
                 if (value)

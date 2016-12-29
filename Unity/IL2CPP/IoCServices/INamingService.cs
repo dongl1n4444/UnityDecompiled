@@ -48,7 +48,7 @@
         string ForGenericClass(TypeReference type);
         string ForGenericInst(IList<TypeReference> types);
         string ForIl2CppComObjectIdentityField();
-        string ForIl2CppType(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs);
+        string ForIl2CppType(TypeReference type, int attrs = 0);
         string ForImage(ModuleDefinition module);
         string ForImage(TypeDefinition type);
         string ForInitializedTypeInfo(string argument);
@@ -78,7 +78,7 @@
         string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType);
         string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType);
         string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod);
-        int GetFieldIndex(FieldReference field, [Optional, DefaultParameterValue(false)] bool includeBase);
+        int GetFieldIndex(FieldReference field, bool includeBase = false);
         bool IsSpecialArrayMethod(MethodReference methodReference);
         string ModuleNameToPrependString(string name);
         TypeReference RemoveModifiers(TypeReference typeReference);

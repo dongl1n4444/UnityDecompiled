@@ -9,10 +9,8 @@
         {
         }
 
-        protected override string ReplacementMethodCallFor(string type)
-        {
-            return ("GetComponent.<" + type + ">()");
-        }
+        protected override string ReplacementMethodCallFor(string type) => 
+            ("GetComponent.<" + type + ">()");
     }
 }
 

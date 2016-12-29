@@ -16,23 +16,14 @@
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(name, name + "*") };
         }
 
-        public override string WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
-        {
-            return DefaultMarshalInfoWriter.Naming.Dereference(variableName);
-        }
+        public override string WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess) => 
+            DefaultMarshalInfoWriter.Naming.Dereference(variableName);
 
-        public override string WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
-        {
-            return sourceVariable.LoadAddress();
-        }
+        public override string WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess) => 
+            sourceVariable.LoadAddress();
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
     }
 }
 

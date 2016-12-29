@@ -6,24 +6,18 @@
 
     internal class GenericParameterResolver
     {
-        internal static TypeReference ResolveFieldTypeIfNeeded(FieldReference fieldReference)
-        {
-            return ResolveIfNeeded(null, fieldReference.DeclaringType as GenericInstanceType, fieldReference.FieldType);
-        }
+        internal static TypeReference ResolveFieldTypeIfNeeded(FieldReference fieldReference) => 
+            ResolveIfNeeded(null, fieldReference.DeclaringType as GenericInstanceType, fieldReference.FieldType);
 
-        private static ArrayType ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, ArrayType arrayType)
-        {
-            return new ArrayType(ResolveIfNeeded(genericInstanceMethod, genericInstanceType, arrayType.ElementType), arrayType.Rank);
-        }
+        private static ArrayType ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, ArrayType arrayType) => 
+            new ArrayType(ResolveIfNeeded(genericInstanceMethod, genericInstanceType, arrayType.ElementType), arrayType.Rank);
 
-        private static ByReferenceType ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, ByReferenceType byReferenceType)
-        {
-            return new ByReferenceType(ResolveIfNeeded(genericInstanceMethod, genericInstanceType, byReferenceType.ElementType));
-        }
+        private static ByReferenceType ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, ByReferenceType byReferenceType) => 
+            new ByReferenceType(ResolveIfNeeded(genericInstanceMethod, genericInstanceType, byReferenceType.ElementType));
 
         private static GenericInstanceType ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, GenericInstanceType genericInstanceType1)
         {
-            if (!Extensions.ContainsGenericParameters(genericInstanceType1))
+            if (!genericInstanceType1.ContainsGenericParameters())
             {
                 return genericInstanceType1;
             }
@@ -63,10 +57,8 @@
             return type2;
         }
 
-        private static TypeReference ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, GenericParameter genericParameterElement)
-        {
-            return ((genericParameterElement.MetadataType != MetadataType.MVar) ? genericInstanceType.GenericArguments[genericParameterElement.Position] : ((genericInstanceMethod == null) ? genericParameterElement : genericInstanceMethod.GenericArguments[genericParameterElement.Position]));
-        }
+        private static TypeReference ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance genericInstanceType, GenericParameter genericParameterElement) => 
+            ((genericParameterElement.MetadataType != MetadataType.MVar) ? genericInstanceType.GenericArguments[genericParameterElement.Position] : ((genericInstanceMethod == null) ? genericParameterElement : genericInstanceMethod.GenericArguments[genericParameterElement.Position]));
 
         private static TypeReference ResolveIfNeeded(IGenericInstance genericInstanceMethod, IGenericInstance declaringGenericInstanceType, TypeReference parameterType)
         {
@@ -91,11 +83,11 @@
                 return ResolveIfNeeded(genericInstanceMethod, declaringGenericInstanceType, genericParameterElement);
             }
             RequiredModifierType typeReference = parameterType as RequiredModifierType;
-            if ((typeReference != null) && Extensions.ContainsGenericParameters(typeReference))
+            if ((typeReference != null) && typeReference.ContainsGenericParameters())
             {
                 return ResolveIfNeeded(genericInstanceMethod, declaringGenericInstanceType, typeReference.ElementType);
             }
-            if (Extensions.ContainsGenericParameters(parameterType))
+            if (parameterType.ContainsGenericParameters())
             {
                 throw new Exception("Unexpected generic parameter.");
             }

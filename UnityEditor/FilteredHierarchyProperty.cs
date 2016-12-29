@@ -13,10 +13,8 @@
             this.m_Hierarchy = filter;
         }
 
-        public int CountRemaining(int[] expanded)
-        {
-            return ((this.m_Hierarchy.results.Length - this.m_Position) - 1);
-        }
+        public int CountRemaining(int[] expanded) => 
+            ((this.m_Hierarchy.results.Length - this.m_Position) - 1);
 
         public static IHierarchyProperty CreateHierarchyPropertyForFilter(FilteredHierarchy filteredHierarchy)
         {
@@ -40,15 +38,11 @@
             return false;
         }
 
-        public int[] FindAllAncestors(int[] instanceIDs)
-        {
-            return new int[0];
-        }
+        public int[] FindAllAncestors(int[] instanceIDs) => 
+            new int[0];
 
-        public bool IsExpanded(int[] expanded)
-        {
-            return false;
-        }
+        public bool IsExpanded(int[] expanded) => 
+            false;
 
         public bool Next(int[] expanded)
         {
@@ -56,15 +50,11 @@
             return (this.m_Position < this.m_Hierarchy.results.Length);
         }
 
-        public bool NextWithDepthCheck(int[] expanded, int minDepth)
-        {
-            return this.Next(expanded);
-        }
+        public bool NextWithDepthCheck(int[] expanded, int minDepth) => 
+            this.Next(expanded);
 
-        public bool Parent()
-        {
-            return false;
-        }
+        public bool Parent() => 
+            false;
 
         public bool Previous(int[] expanded)
         {
@@ -83,125 +73,50 @@
             return (this.m_Position < this.m_Hierarchy.results.Length);
         }
 
-        public int[] ancestors
-        {
-            get
-            {
-                return new int[0];
-            }
-        }
+        public int[] ancestors =>
+            new int[0];
 
-        public int colorCode
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].colorCode;
-            }
-        }
+        public int colorCode =>
+            this.m_Hierarchy.results[this.m_Position].colorCode;
 
-        public int depth
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public int depth =>
+            0;
 
-        public string guid
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].guid;
-            }
-        }
+        public string guid =>
+            this.m_Hierarchy.results[this.m_Position].guid;
 
-        public bool hasChildren
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].hasChildren;
-            }
-        }
+        public bool hasChildren =>
+            this.m_Hierarchy.results[this.m_Position].hasChildren;
 
-        public bool hasFullPreviewImage
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].hasFullPreviewImage;
-            }
-        }
+        public bool hasFullPreviewImage =>
+            this.m_Hierarchy.results[this.m_Position].hasFullPreviewImage;
 
-        public Texture2D icon
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].icon;
-            }
-        }
+        public Texture2D icon =>
+            this.m_Hierarchy.results[this.m_Position].icon;
 
-        public IconDrawStyle iconDrawStyle
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].iconDrawStyle;
-            }
-        }
+        public IconDrawStyle iconDrawStyle =>
+            this.m_Hierarchy.results[this.m_Position].iconDrawStyle;
 
-        public int instanceID
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].instanceID;
-            }
-        }
+        public int instanceID =>
+            this.m_Hierarchy.results[this.m_Position].instanceID;
 
-        public bool isFolder
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].isFolder;
-            }
-        }
+        public bool isFolder =>
+            this.m_Hierarchy.results[this.m_Position].isFolder;
 
-        public bool isMainRepresentation
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].isMainRepresentation;
-            }
-        }
+        public bool isMainRepresentation =>
+            this.m_Hierarchy.results[this.m_Position].isMainRepresentation;
 
-        public bool isValid
-        {
-            get
-            {
-                return (((this.m_Hierarchy.results != null) && (this.m_Position < this.m_Hierarchy.results.Length)) && (this.m_Position >= 0));
-            }
-        }
+        public bool isValid =>
+            (((this.m_Hierarchy.results != null) && (this.m_Position < this.m_Hierarchy.results.Length)) && (this.m_Position >= 0));
 
-        public string name
-        {
-            get
-            {
-                return this.m_Hierarchy.results[this.m_Position].name;
-            }
-        }
+        public string name =>
+            this.m_Hierarchy.results[this.m_Position].name;
 
-        public Object pptrValue
-        {
-            get
-            {
-                return EditorUtility.InstanceIDToObject(this.instanceID);
-            }
-        }
+        public Object pptrValue =>
+            EditorUtility.InstanceIDToObject(this.instanceID);
 
-        public int row
-        {
-            get
-            {
-                return this.m_Position;
-            }
-        }
+        public int row =>
+            this.m_Position;
     }
 }
 

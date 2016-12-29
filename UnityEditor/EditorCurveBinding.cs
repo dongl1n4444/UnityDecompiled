@@ -22,19 +22,12 @@
         private int m_isPhantom;
         internal int m_ClassID;
         internal int m_ScriptInstanceID;
-        public bool isPPtrCurve
-        {
-            get
-            {
-                return (this.m_isPPtrCurve != 0);
-            }
-        }
+        public bool isPPtrCurve =>
+            (this.m_isPPtrCurve != 0);
         internal bool isPhantom
         {
-            get
-            {
-                return (this.m_isPhantom != 0);
-            }
+            get => 
+                (this.m_isPhantom != 0);
             set
             {
                 this.m_isPhantom = !value ? 0 : 1;
@@ -49,10 +42,8 @@
             return ((((lhs.path == rhs.path) && (lhs.type == rhs.type)) && (lhs.propertyName == rhs.propertyName)) && (lhs.m_isPPtrCurve == rhs.m_isPPtrCurve));
         }
 
-        public static bool operator !=(EditorCurveBinding lhs, EditorCurveBinding rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static bool operator !=(EditorCurveBinding lhs, EditorCurveBinding rhs) => 
+            !(lhs == rhs);
 
         public override int GetHashCode()
         {
@@ -72,10 +63,8 @@
 
         public Type type
         {
-            get
-            {
-                return this.m_type;
-            }
+            get => 
+                this.m_type;
             set
             {
                 this.m_type = value;
@@ -83,27 +72,23 @@
                 this.m_ScriptInstanceID = 0;
             }
         }
-        public static EditorCurveBinding FloatCurve(string inPath, Type inType, string inPropertyName)
-        {
-            return new EditorCurveBinding { 
+        public static EditorCurveBinding FloatCurve(string inPath, Type inType, string inPropertyName) => 
+            new EditorCurveBinding { 
                 path = inPath,
                 type = inType,
                 propertyName = inPropertyName,
                 m_isPPtrCurve = 0,
                 m_isPhantom = 0
             };
-        }
 
-        public static EditorCurveBinding PPtrCurve(string inPath, Type inType, string inPropertyName)
-        {
-            return new EditorCurveBinding { 
+        public static EditorCurveBinding PPtrCurve(string inPath, Type inType, string inPropertyName) => 
+            new EditorCurveBinding { 
                 path = inPath,
                 type = inType,
                 propertyName = inPropertyName,
                 m_isPPtrCurve = 1,
                 m_isPhantom = 0
             };
-        }
     }
 }
 

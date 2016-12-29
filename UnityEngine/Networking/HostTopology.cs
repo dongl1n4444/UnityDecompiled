@@ -95,34 +95,22 @@
         /// <summary>
         /// <para>Defines config for default connections in the topology.</para>
         /// </summary>
-        public ConnectionConfig DefaultConfig
-        {
-            get
-            {
-                return this.m_DefConfig;
-            }
-        }
+        public ConnectionConfig DefaultConfig =>
+            this.m_DefConfig;
 
         /// <summary>
         /// <para>Defines how many connection with default config be permitted.</para>
         /// </summary>
-        public int MaxDefaultConnections
-        {
-            get
-            {
-                return this.m_MaxDefConnections;
-            }
-        }
+        public int MaxDefaultConnections =>
+            this.m_MaxDefConnections;
 
         /// <summary>
         /// <para>Library keep and reuse internal pools of messages. By default they have size 128. If this value is not enough pools will be automatically increased. This value defines how they will increase. Default value is 0.75, so if original pool size was 128, the new pool size will be 128 * 1.75 = 224.</para>
         /// </summary>
         public float MessagePoolSizeGrowthFactor
         {
-            get
-            {
-                return this.m_MessagePoolSizeGrowthFactor;
-            }
+            get => 
+                this.m_MessagePoolSizeGrowthFactor;
             set
             {
                 if ((value <= 0.5) || (value > 1.0))
@@ -138,10 +126,8 @@
         /// </summary>
         public ushort ReceivedMessagePoolSize
         {
-            get
-            {
-                return this.m_ReceivedMessagePoolSize;
-            }
+            get => 
+                this.m_ReceivedMessagePoolSize;
             set
             {
                 this.m_ReceivedMessagePoolSize = value;
@@ -153,10 +139,8 @@
         /// </summary>
         public ushort SentMessagePoolSize
         {
-            get
-            {
-                return this.m_SentMessagePoolSize;
-            }
+            get => 
+                this.m_SentMessagePoolSize;
             set
             {
                 this.m_SentMessagePoolSize = value;
@@ -166,24 +150,14 @@
         /// <summary>
         /// <para>List of special connection configs.</para>
         /// </summary>
-        public List<ConnectionConfig> SpecialConnectionConfigs
-        {
-            get
-            {
-                return this.m_SpecialConnections;
-            }
-        }
+        public List<ConnectionConfig> SpecialConnectionConfigs =>
+            this.m_SpecialConnections;
 
         /// <summary>
         /// <para>Returns count of special connection added to topology.</para>
         /// </summary>
-        public int SpecialConnectionConfigsCount
-        {
-            get
-            {
-                return this.m_SpecialConnections.Count;
-            }
-        }
+        public int SpecialConnectionConfigsCount =>
+            this.m_SpecialConnections.Count;
     }
 }
 

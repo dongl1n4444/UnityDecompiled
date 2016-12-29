@@ -361,7 +361,7 @@
             if ((this.m_DragState == DragStates.Destination) && !flag3)
             {
                 Rect rect12 = new Rect(num7 - 50f, rect5.y, 45f, rect5.height);
-                string t = string.Format("{0:0%}", (num7 - num5) / (num6 - num5));
+                string t = $"{(num7 - num5) / (num6 - num5):0%}";
                 GUI.Box(rect12, EditorGUIUtility.TempContent(t), this.styles.timeBlockRight);
             }
             if (this.m_DragState == DragStates.LeftSelection)
@@ -369,13 +369,13 @@
                 if (!flag2)
                 {
                     Rect rect13 = new Rect(num7 - 50f, rect4.y, 45f, rect4.height);
-                    string str2 = string.Format("{0:0%}", (num7 - x) / (pixelX - x));
+                    string str2 = $"{(num7 - x) / (pixelX - x):0%}";
                     GUI.Box(rect13, EditorGUIUtility.TempContent(str2), this.styles.timeBlockRight);
                 }
                 if (!flag3)
                 {
                     Rect rect14 = new Rect(num7 - 50f, rect5.y, 45f, rect5.height);
-                    string str3 = string.Format("{0:0%}", (num7 - num5) / (num6 - num5));
+                    string str3 = $"{(num7 - num5) / (num6 - num5):0%}";
                     GUI.Box(rect14, EditorGUIUtility.TempContent(str3), this.styles.timeBlockRight);
                 }
             }
@@ -384,13 +384,13 @@
                 if (!flag2)
                 {
                     Rect rect15 = new Rect(num8 + 5f, rect4.y, 45f, rect4.height);
-                    string str4 = string.Format("{0:0%}", (num8 - x) / (pixelX - x));
+                    string str4 = $"{(num8 - x) / (pixelX - x):0%}";
                     GUI.Box(rect15, EditorGUIUtility.TempContent(str4), this.styles.timeBlockLeft);
                 }
                 if (!flag3)
                 {
                     Rect rect16 = new Rect(num8 + 5f, rect5.y, 45f, rect5.height);
-                    string str5 = string.Format("{0:0%}", (num8 - num5) / (num6 - num5));
+                    string str5 = $"{(num8 - num5) / (num6 - num5):0%}";
                     GUI.Box(rect16, EditorGUIUtility.TempContent(str5), this.styles.timeBlockLeft);
                 }
             }
@@ -589,25 +589,16 @@
             this.m_TimeArea.SetShownHRangeInsideMargins(0f, this.StopTime);
         }
 
-        private bool WasDraggingData()
-        {
-            return (((this.m_DstDragOffset != 0f) || (this.m_LeftThumbOffset != 0f)) || (this.m_RightThumbOffset != 0f));
-        }
+        private bool WasDraggingData() => 
+            (((this.m_DstDragOffset != 0f) || (this.m_LeftThumbOffset != 0f)) || (this.m_RightThumbOffset != 0f));
 
-        public float DstDuration
-        {
-            get
-            {
-                return (this.DstStopTime - this.DstStartTime);
-            }
-        }
+        public float DstDuration =>
+            (this.DstStopTime - this.DstStartTime);
 
         public bool dstLoop
         {
-            get
-            {
-                return this.m_DstLoop;
-            }
+            get => 
+                this.m_DstLoop;
             set
             {
                 this.m_DstLoop = value;
@@ -616,10 +607,8 @@
 
         public string DstName
         {
-            get
-            {
-                return this.m_DstName;
-            }
+            get => 
+                this.m_DstName;
             set
             {
                 this.m_DstName = value;
@@ -628,10 +617,8 @@
 
         public List<PivotSample> DstPivotList
         {
-            get
-            {
-                return this.m_DstPivotList;
-            }
+            get => 
+                this.m_DstPivotList;
             set
             {
                 this.m_DstPivotList = value;
@@ -641,10 +628,8 @@
 
         public float DstStartTime
         {
-            get
-            {
-                return this.m_DstStartTime;
-            }
+            get => 
+                this.m_DstStartTime;
             set
             {
                 this.m_DstStartTime = value;
@@ -653,10 +638,8 @@
 
         public float DstStopTime
         {
-            get
-            {
-                return this.m_DstStopTime;
-            }
+            get => 
+                this.m_DstStopTime;
             set
             {
                 this.m_DstStopTime = value;
@@ -665,10 +648,8 @@
 
         public bool HasExitTime
         {
-            get
-            {
-                return this.m_HasExitTime;
-            }
+            get => 
+                this.m_HasExitTime;
             set
             {
                 this.m_HasExitTime = value;
@@ -677,30 +658,21 @@
 
         public float SampleStopTime
         {
-            get
-            {
-                return this.m_SampleStopTime;
-            }
+            get => 
+                this.m_SampleStopTime;
             set
             {
                 this.m_SampleStopTime = value;
             }
         }
 
-        public float SrcDuration
-        {
-            get
-            {
-                return (this.SrcStopTime - this.SrcStartTime);
-            }
-        }
+        public float SrcDuration =>
+            (this.SrcStopTime - this.SrcStartTime);
 
         public bool srcLoop
         {
-            get
-            {
-                return this.m_SrcLoop;
-            }
+            get => 
+                this.m_SrcLoop;
             set
             {
                 this.m_SrcLoop = value;
@@ -709,10 +681,8 @@
 
         public string SrcName
         {
-            get
-            {
-                return this.m_SrcName;
-            }
+            get => 
+                this.m_SrcName;
             set
             {
                 this.m_SrcName = value;
@@ -721,10 +691,8 @@
 
         public List<PivotSample> SrcPivotList
         {
-            get
-            {
-                return this.m_SrcPivotList;
-            }
+            get => 
+                this.m_SrcPivotList;
             set
             {
                 this.m_SrcPivotList = value;
@@ -734,10 +702,8 @@
 
         public float SrcStartTime
         {
-            get
-            {
-                return this.m_SrcStartTime;
-            }
+            get => 
+                this.m_SrcStartTime;
             set
             {
                 this.m_SrcStartTime = value;
@@ -746,10 +712,8 @@
 
         public float SrcStopTime
         {
-            get
-            {
-                return this.m_SrcStopTime;
-            }
+            get => 
+                this.m_SrcStopTime;
             set
             {
                 this.m_SrcStopTime = value;
@@ -758,10 +722,8 @@
 
         public float StartTime
         {
-            get
-            {
-                return this.m_StartTime;
-            }
+            get => 
+                this.m_StartTime;
             set
             {
                 this.m_StartTime = value;
@@ -770,10 +732,8 @@
 
         public float StopTime
         {
-            get
-            {
-                return this.m_StopTime;
-            }
+            get => 
+                this.m_StopTime;
             set
             {
                 this.m_StopTime = value;
@@ -782,30 +742,21 @@
 
         public float Time
         {
-            get
-            {
-                return this.m_Time;
-            }
+            get => 
+                this.m_Time;
             set
             {
                 this.m_Time = value;
             }
         }
 
-        public float TransitionDuration
-        {
-            get
-            {
-                return (this.TransitionStopTime - this.TransitionStartTime);
-            }
-        }
+        public float TransitionDuration =>
+            (this.TransitionStopTime - this.TransitionStartTime);
 
         public float TransitionStartTime
         {
-            get
-            {
-                return this.m_TransitionStartTime;
-            }
+            get => 
+                this.m_TransitionStartTime;
             set
             {
                 this.m_TransitionStartTime = value;
@@ -814,10 +765,8 @@
 
         public float TransitionStopTime
         {
-            get
-            {
-                return this.m_TransitionStopTime;
-            }
+            get => 
+                this.m_TransitionStopTime;
             set
             {
                 this.m_TransitionStopTime = value;

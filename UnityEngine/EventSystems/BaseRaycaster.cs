@@ -44,35 +44,20 @@
         /// <para>Priority of the caster relative to other casters.</para>
         /// </summary>
         [Obsolete("Please use sortOrderPriority and renderOrderPriority", false)]
-        public virtual int priority
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public virtual int priority =>
+            0;
 
         /// <summary>
         /// <para>Priority of the raycaster based upon render order.</para>
         /// </summary>
-        public virtual int renderOrderPriority
-        {
-            get
-            {
-                return -2147483648;
-            }
-        }
+        public virtual int renderOrderPriority =>
+            -2147483648;
 
         /// <summary>
         /// <para>Priority of the raycaster based upon sort order.</para>
         /// </summary>
-        public virtual int sortOrderPriority
-        {
-            get
-            {
-                return -2147483648;
-            }
-        }
+        public virtual int sortOrderPriority =>
+            -2147483648;
     }
 }
 

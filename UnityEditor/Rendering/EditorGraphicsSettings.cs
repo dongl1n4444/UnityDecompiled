@@ -14,10 +14,8 @@
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool AreTierSettingsAutomatic(BuildTargetGroup target, GraphicsTier tier);
-        internal static TierSettings GetCurrentTierSettings()
-        {
-            return GetCurrentTierSettingsImpl();
-        }
+        internal static TierSettings GetCurrentTierSettings() => 
+            GetCurrentTierSettingsImpl();
 
         internal static TierSettings GetCurrentTierSettingsImpl()
         {
@@ -43,10 +41,8 @@
             };
         }
 
-        public static TierSettings GetTierSettings(BuildTargetGroup target, GraphicsTier tier)
-        {
-            return GetTierSettingsImpl(target, tier);
-        }
+        public static TierSettings GetTierSettings(BuildTargetGroup target, GraphicsTier tier) => 
+            GetTierSettingsImpl(target, tier);
 
         /// <summary>
         /// <para>Will return TierSettings for given platform and shader hardware tier.</para>
@@ -54,10 +50,8 @@
         /// <param name="target"></param>
         /// <param name="tier"></param>
         [Obsolete("Use GraphicsTier instead of ShaderHardwareTier enum", false)]
-        public static TierSettings GetTierSettings(BuildTargetGroup target, ShaderHardwareTier tier)
-        {
-            return GetTierSettings(target, (GraphicsTier) tier);
-        }
+        public static TierSettings GetTierSettings(BuildTargetGroup target, ShaderHardwareTier tier) => 
+            GetTierSettings(target, (GraphicsTier) tier);
 
         internal static TierSettings GetTierSettingsImpl(BuildTargetGroup target, GraphicsTier tier)
         {

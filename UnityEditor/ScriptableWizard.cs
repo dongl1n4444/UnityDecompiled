@@ -18,15 +18,11 @@
         private string m_OtherButton = "";
         private Vector2 m_ScrollPosition;
 
-        public static T DisplayWizard<T>(string title) where T: ScriptableWizard
-        {
-            return DisplayWizard<T>(title, "Create", "");
-        }
+        public static T DisplayWizard<T>(string title) where T: ScriptableWizard => 
+            DisplayWizard<T>(title, "Create", "");
 
-        public static T DisplayWizard<T>(string title, string createButtonName) where T: ScriptableWizard
-        {
-            return DisplayWizard<T>(title, createButtonName, "");
-        }
+        public static T DisplayWizard<T>(string title, string createButtonName) where T: ScriptableWizard => 
+            DisplayWizard<T>(title, createButtonName, "");
 
         [ExcludeFromDocs]
         public static ScriptableWizard DisplayWizard(string title, Type klass)
@@ -36,10 +32,8 @@
             return DisplayWizard(title, klass, createButtonName, otherButtonName);
         }
 
-        public static T DisplayWizard<T>(string title, string createButtonName, string otherButtonName) where T: ScriptableWizard
-        {
-            return (T) DisplayWizard(title, typeof(T), createButtonName, otherButtonName);
-        }
+        public static T DisplayWizard<T>(string title, string createButtonName, string otherButtonName) where T: ScriptableWizard => 
+            ((T) DisplayWizard(title, typeof(T), createButtonName, otherButtonName));
 
         [ExcludeFromDocs]
         public static ScriptableWizard DisplayWizard(string title, Type klass, string createButtonName)
@@ -78,17 +72,8 @@
         /// <returns>
         /// <para>Returns true if any property has been modified.</para>
         /// </returns>
-        protected virtual bool DrawWizardGUI()
-        {
-            if (this.m_Inspector == null)
-            {
-                this.m_Inspector = ScriptableObject.CreateInstance<GenericInspector>();
-                this.m_Inspector.hideFlags = HideFlags.HideAndDontSave;
-                Object[] t = new Object[] { this };
-                this.m_Inspector.InternalSetTargets(t);
-            }
-            return this.m_Inspector.DrawDefaultInspector();
-        }
+        protected virtual bool DrawWizardGUI() => 
+            this.m_Inspector?.DrawDefaultInspector();
 
         private void InvokeWizardUpdate()
         {
@@ -177,10 +162,8 @@
         /// </summary>
         public string createButtonName
         {
-            get
-            {
-                return this.m_CreateButton;
-            }
+            get => 
+                this.m_CreateButton;
             set
             {
                 string str;
@@ -205,10 +188,8 @@
         /// </summary>
         public string errorString
         {
-            get
-            {
-                return this.m_ErrorString;
-            }
+            get => 
+                this.m_ErrorString;
             set
             {
                 string str;
@@ -233,10 +214,8 @@
         /// </summary>
         public string helpString
         {
-            get
-            {
-                return this.m_HelpString;
-            }
+            get => 
+                this.m_HelpString;
             set
             {
                 string str;
@@ -261,10 +240,8 @@
         /// </summary>
         public bool isValid
         {
-            get
-            {
-                return this.m_IsValid;
-            }
+            get => 
+                this.m_IsValid;
             set
             {
                 this.m_IsValid = value;
@@ -276,10 +253,8 @@
         /// </summary>
         public string otherButtonName
         {
-            get
-            {
-                return this.m_OtherButton;
-            }
+            get => 
+                this.m_OtherButton;
             set
             {
                 string str;

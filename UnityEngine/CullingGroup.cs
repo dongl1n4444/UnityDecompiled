@@ -40,10 +40,8 @@
         /// </summary>
         public StateChanged onStateChanged
         {
-            get
-            {
-                return this.m_OnStateChanged;
-            }
+            get => 
+                this.m_OnStateChanged;
             set
             {
                 this.m_OnStateChanged = value;
@@ -91,10 +89,8 @@
         /// <returns>
         /// <para>The number of sphere indices found and written into the result array.</para>
         /// </returns>
-        public int QueryIndices(bool visible, int[] result, int firstIndex)
-        {
-            return this.QueryIndices(visible, -1, CullingQueryOptions.IgnoreDistance, result, firstIndex);
-        }
+        public int QueryIndices(bool visible, int[] result, int firstIndex) => 
+            this.QueryIndices(visible, -1, CullingQueryOptions.IgnoreDistance, result, firstIndex);
 
         /// <summary>
         /// <para>Retrieve the indices of spheres that have particular visibility and/or distance states.</para>
@@ -106,10 +102,8 @@
         /// <returns>
         /// <para>The number of sphere indices found and written into the result array.</para>
         /// </returns>
-        public int QueryIndices(int distanceIndex, int[] result, int firstIndex)
-        {
-            return this.QueryIndices(false, distanceIndex, CullingQueryOptions.IgnoreVisibility, result, firstIndex);
-        }
+        public int QueryIndices(int distanceIndex, int[] result, int firstIndex) => 
+            this.QueryIndices(false, distanceIndex, CullingQueryOptions.IgnoreVisibility, result, firstIndex);
 
         /// <summary>
         /// <para>Retrieve the indices of spheres that have particular visibility and/or distance states.</para>
@@ -121,10 +115,8 @@
         /// <returns>
         /// <para>The number of sphere indices found and written into the result array.</para>
         /// </returns>
-        public int QueryIndices(bool visible, int distanceIndex, int[] result, int firstIndex)
-        {
-            return this.QueryIndices(visible, distanceIndex, CullingQueryOptions.Normal, result, firstIndex);
-        }
+        public int QueryIndices(bool visible, int distanceIndex, int[] result, int firstIndex) => 
+            this.QueryIndices(visible, distanceIndex, CullingQueryOptions.Normal, result, firstIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int QueryIndices(bool visible, int distanceIndex, CullingQueryOptions options, int[] result, int firstIndex);

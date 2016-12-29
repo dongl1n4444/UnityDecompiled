@@ -4,10 +4,8 @@
 
     public class IvyArtifacts : List<IvyArtifact>
     {
-        public IvyArtifacts Clone()
-        {
-            return Cloner.CloneObject<IvyArtifacts>(this);
-        }
+        public IvyArtifacts Clone() => 
+            Cloner.CloneObject<IvyArtifacts>(this);
     }
 }
 

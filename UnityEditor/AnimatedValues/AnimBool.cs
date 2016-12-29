@@ -54,10 +54,8 @@
         /// </summary>
         /// <param name="from">Value to lerp from.</param>
         /// <param name="to">Value to lerp to.</param>
-        public float Fade(float from, float to)
-        {
-            return Mathf.Lerp(from, to, this.faded);
-        }
+        public float Fade(float from, float to) => 
+            Mathf.Lerp(from, to, this.faded);
 
         /// <summary>
         /// <para>Type specific implementation of BaseAnimValue_1.GetValue.</para>

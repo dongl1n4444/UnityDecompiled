@@ -45,62 +45,52 @@
             {
                 <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__0);
             }
-            FieldDefinition field = Enumerable.Single<FieldDefinition>(TypeProvider.SystemDelegate.Fields, <>f__am$cache0);
+            FieldDefinition field = TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache0);
             this._methodPtrGetterName = Naming.ForFieldGetter(field);
             this._methodPtrSetterName = Naming.ForFieldSetter(field);
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__1);
             }
-            FieldDefinition definition2 = Enumerable.Single<FieldDefinition>(TypeProvider.SystemDelegate.Fields, <>f__am$cache1);
+            FieldDefinition definition2 = TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache1);
             this._methodGetterName = Naming.ForFieldGetter(definition2);
             this._methodSetterName = Naming.ForFieldSetter(definition2);
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__2);
             }
-            FieldDefinition definition3 = Enumerable.Single<FieldDefinition>(TypeProvider.SystemDelegate.Fields, <>f__am$cache2);
+            FieldDefinition definition3 = TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache2);
             this._targetGetterName = Naming.ForFieldGetter(definition3);
             this._targetSetterName = Naming.ForFieldSetter(definition3);
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <DelegateMethodsWriter>m__3);
             }
-            FieldDefinition definition4 = Enumerable.Single<FieldDefinition>(TypeProvider.SystemIntPtr.Fields, <>f__am$cache3);
+            FieldDefinition definition4 = TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache3);
             this._valueGetterName = Naming.ForFieldGetter(definition4);
             storey.expectedName = (CodeGenOptions.Dotnetprofile != DotNetProfile.Net45) ? "prev" : "delegates";
-            FieldDefinition definition5 = Enumerable.Single<FieldDefinition>(TypeProvider.SystemMulticastDelegate.Fields, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            FieldDefinition definition5 = TypeProvider.SystemMulticastDelegate.Fields.Single<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
             this._prevGetterName = Naming.ForFieldGetter(definition5);
         }
 
         [CompilerGenerated]
-        private static bool <DelegateMethodsWriter>m__0(FieldDefinition f)
-        {
-            return (f.Name == "method_ptr");
-        }
+        private static bool <DelegateMethodsWriter>m__0(FieldDefinition f) => 
+            (f.Name == "method_ptr");
 
         [CompilerGenerated]
-        private static bool <DelegateMethodsWriter>m__1(FieldDefinition f)
-        {
-            return (f.Name == "method");
-        }
+        private static bool <DelegateMethodsWriter>m__1(FieldDefinition f) => 
+            (f.Name == "method");
 
         [CompilerGenerated]
-        private static bool <DelegateMethodsWriter>m__2(FieldDefinition f)
-        {
-            return (f.Name == "m_target");
-        }
+        private static bool <DelegateMethodsWriter>m__2(FieldDefinition f) => 
+            (f.Name == "m_target");
 
         [CompilerGenerated]
-        private static bool <DelegateMethodsWriter>m__3(FieldDefinition f)
-        {
-            return (f.Name == "m_value");
-        }
+        private static bool <DelegateMethodsWriter>m__3(FieldDefinition f) => 
+            (f.Name == "m_value");
 
-        private static bool BeginInvokeHasAdditionalParameters(MethodReference method)
-        {
-            return (method.Parameters.Count > 2);
-        }
+        private static bool BeginInvokeHasAdditionalParameters(MethodReference method) => 
+            (method.Parameters.Count > 2);
 
         private static List<string> CollectOutArgsIfAny(MethodReference method)
         {
@@ -115,19 +105,19 @@
             return list;
         }
 
-        private static string CommaSeperate(IEnumerable<string> strings, [Optional, DefaultParameterValue(false)] bool alsoStartWithComma)
+        private static string CommaSeperate(IEnumerable<string> strings, bool alsoStartWithComma = false)
         {
-            if (!Enumerable.Any<string>(strings))
+            if (!strings.Any<string>())
             {
                 return string.Empty;
             }
-            string str2 = EnumerableExtensions.AggregateWithComma(strings);
+            string str2 = strings.AggregateWithComma();
             return (!alsoStartWithComma ? str2 : ("," + str2));
         }
 
-        private void EmitInvocation(string delegateVariableName, MethodReference method, string methodPtrFieldName, string targetFieldName, List<string> parametersOnlyName, string methodInfoExpression, [Optional, DefaultParameterValue(false)] bool useFirstArgumentAsThis, [Optional, DefaultParameterValue(false)] bool forStatic, [Optional, DefaultParameterValue(null)] string resultVariableName)
+        private void EmitInvocation(string delegateVariableName, MethodReference method, string methodPtrFieldName, string targetFieldName, List<string> parametersOnlyName, string methodInfoExpression, bool useFirstArgumentAsThis = false, bool forStatic = false, string resultVariableName = null)
         {
-            List<string> strings = Enumerable.ToList<string>(MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithTypeAndNameThisObject, false, true, true));
+            List<string> strings = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithTypeAndNameThisObject, false, true, true).ToList<string>();
             if (useFirstArgumentAsThis)
             {
                 strings.RemoveAt(1);
@@ -136,33 +126,29 @@
             {
                 strings.Insert(0, Naming.ForVariable(TypeProvider.SystemObject));
             }
-            object[] args = new object[] { Naming.ForVariable(TypeResolverFor(method).ResolveReturnType(method)), string.Format("(*{0})", "FunctionPointerType"), CommaSeperate(strings, false) };
+            object[] args = new object[] { Naming.ForVariable(TypeResolverFor(method).ResolveReturnType(method)), $"(*{"FunctionPointerType"})", CommaSeperate(strings, false) };
             this.WriteLine("typedef {0} {1} ({2});", args);
-            string str = (resultVariableName != null) ? ((method.ReturnType.MetadataType == MetadataType.Void) ? string.Empty : string.Format("{0} = ", resultVariableName)) : ((method.ReturnType.MetadataType == MetadataType.Void) ? string.Empty : "return ");
-            string str2 = string.Format("(({0}){1})", "FunctionPointerType", ExpressionForFieldOf(delegateVariableName, methodPtrFieldName));
-            string str3 = string.Format("{0}->{1}()", delegateVariableName, this._targetGetterName);
-            object[] objArray2 = new object[] { str, str2, !forStatic ? string.Empty : string.Format("{0},", Naming.Null), !useFirstArgumentAsThis ? str3 : string.Empty, CommaSeperate(parametersOnlyName, !useFirstArgumentAsThis), methodInfoExpression };
+            string str = (resultVariableName != null) ? ((method.ReturnType.MetadataType == MetadataType.Void) ? string.Empty : $"{resultVariableName} = ") : ((method.ReturnType.MetadataType == MetadataType.Void) ? string.Empty : "return ");
+            string str2 = $"(({"FunctionPointerType"}){ExpressionForFieldOf(delegateVariableName, methodPtrFieldName)})";
+            string str3 = $"{delegateVariableName}->{this._targetGetterName}()";
+            object[] objArray2 = new object[] { str, str2, !forStatic ? string.Empty : $"{Naming.Null},", !useFirstArgumentAsThis ? str3 : string.Empty, CommaSeperate(parametersOnlyName, !useFirstArgumentAsThis), methodInfoExpression };
             this.WriteLine("{0}{1}({2}{3}{4},{5});", objArray2);
         }
 
-        private static string ExpressionForFieldOf(string variableName, string targetFieldName)
-        {
-            return string.Format("{0}->{1}", variableName, targetFieldName);
-        }
+        private static string ExpressionForFieldOf(string variableName, string targetFieldName) => 
+            $"{variableName}->{targetFieldName}";
 
-        private static string ExpressionForFieldOfThis(string targetFieldName)
-        {
-            return ExpressionForFieldOf(Naming.ThisParameterName, targetFieldName);
-        }
+        private static string ExpressionForFieldOfThis(string targetFieldName) => 
+            ExpressionForFieldOf(Naming.ThisParameterName, targetFieldName);
 
         private static bool ShouldEmitNotBoundInstanceInvocation(MethodReference method)
         {
-            if (!Enumerable.Any<ParameterDefinition>(method.Parameters))
+            if (!method.Parameters.Any<ParameterDefinition>())
             {
                 return false;
             }
             TypeReference typeReference = TypeResolverFor(method).ResolveParameterType(method, method.Parameters[0]);
-            if (Extensions.IsValueType(typeReference))
+            if (typeReference.IsValueType())
             {
                 return false;
             }
@@ -177,14 +163,12 @@
             return true;
         }
 
-        private static Unity.IL2CPP.ILPreProcessor.TypeResolver TypeResolverFor(MethodReference method)
-        {
-            return new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
-        }
+        private static Unity.IL2CPP.ILPreProcessor.TypeResolver TypeResolverFor(MethodReference method) => 
+            new Unity.IL2CPP.ILPreProcessor.TypeResolver(method.DeclaringType as GenericInstanceType, method as GenericInstanceMethod);
 
-        private void WriteInvocationsForDelegate(string delegateVariableName, MethodReference method, List<string> parametersOnlyName, [Optional, DefaultParameterValue(null)] string resultVariableName)
+        private void WriteInvocationsForDelegate(string delegateVariableName, MethodReference method, List<string> parametersOnlyName, string resultVariableName = null)
         {
-            string methodInfoExpression = string.Format("(MethodInfo*)({0}().{1}())", ExpressionForFieldOf(delegateVariableName, this._methodGetterName), this._valueGetterName);
+            string methodInfoExpression = $"(MethodInfo*)({ExpressionForFieldOf(delegateVariableName, this._methodGetterName)}().{this._valueGetterName}())";
             bool flag = ShouldEmitNotBoundInstanceInvocation(method);
             object[] args = new object[] { methodInfoExpression };
             this.WriteLine("il2cpp_codegen_raise_execution_engine_exception_if_method_is_not_found({0});", args);
@@ -241,7 +225,7 @@
 
         private void WriteInvocationsForDelegate45(MethodReference method, List<string> parametersOnlyName)
         {
-            string str = string.Format("(MethodInfo*)({0}().{1}())", ExpressionForFieldOfThis(this._methodGetterName), this._valueGetterName);
+            string str = $"(MethodInfo*)({ExpressionForFieldOfThis(this._methodGetterName)}().{this._valueGetterName}())";
             object[] args = new object[] { str };
             this.WriteLine("il2cpp_codegen_raise_execution_engine_exception_if_method_is_not_found({0});", args);
             string str2 = "length";
@@ -258,7 +242,7 @@
             {
                 <>f__am$cache4 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteInvocationsForDelegate45>m__4);
             }
-            FieldDefinition definition = Enumerable.Single<FieldDefinition>(TypeProvider.SystemMulticastDelegate.Fields, <>f__am$cache4);
+            FieldDefinition definition = TypeProvider.SystemMulticastDelegate.Fields.Single<FieldDefinition>(<>f__am$cache4);
             string str7 = Naming.ForVariable(definition.FieldType);
             this._writer.AddIncludeForTypeDefinition(definition.FieldType);
             object[] objArray2 = new object[] { str7, array, str6 };
@@ -319,9 +303,9 @@
                     if (typeReference.IsByReference)
                     {
                         TypeReference elementType = ((ByReferenceType) typeReference).ElementType;
-                        str = !Extensions.IsValueType(elementType) ? Emit.Dereference(str) : Emit.Box(elementType, Emit.Dereference(str), metadataAccess);
+                        str = !elementType.IsValueType() ? Emit.Dereference(str) : Emit.Box(elementType, Emit.Dereference(str), metadataAccess);
                     }
-                    else if (Extensions.IsValueType(typeReference))
+                    else if (typeReference.IsValueType())
                     {
                         str = Emit.Box(typeReference, str, metadataAccess);
                     }
@@ -371,7 +355,7 @@
                 object[] objArray3 = new object[] { Naming.ForParameterName(parameterReference), str };
                 this.WriteLine("Il2CppObject *__result = il2cpp_codegen_delegate_end_invoke((Il2CppAsyncResult*) {0}, {1});", objArray3);
                 TypeReference typeReference = TypeResolverFor(method).ResolveReturnType(method);
-                if (!Extensions.IsValueType(typeReference))
+                if (!typeReference.IsValueType())
                 {
                     object[] objArray4 = new object[] { Naming.ForVariable(typeReference) };
                     this.WriteLine("return ({0})__result;", objArray4);
@@ -386,7 +370,7 @@
 
         private void WriteMethodBodyForInvoke(MethodReference method)
         {
-            List<string> parametersOnlyName = Enumerable.ToList<string>(MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithNameNoThis, false, false, false));
+            List<string> parametersOnlyName = MethodSignatureWriter.ParametersFor(method, ParameterFormat.WithNameNoThis, false, false, false).ToList<string>();
             if (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45)
             {
                 this.WriteInvocationsForDelegate45(method, parametersOnlyName);
@@ -431,10 +415,8 @@
         {
             internal string expectedName;
 
-            internal bool <>m__0(FieldDefinition f)
-            {
-                return (f.Name == this.expectedName);
-            }
+            internal bool <>m__0(FieldDefinition f) => 
+                (f.Name == this.expectedName);
         }
     }
 }

@@ -62,20 +62,14 @@
             }
         }
 
-        public MemberReferenceExpression CreateEvaluationContextFieldReference(InternalField field)
-        {
-            return this.get_CodeBuilder().CreateMemberReference(this.CreateEvaluationContextReference(), field);
-        }
+        public MemberReferenceExpression CreateEvaluationContextFieldReference(InternalField field) => 
+            this.get_CodeBuilder().CreateMemberReference(this.CreateEvaluationContextReference(), field);
 
-        public ReferenceExpression CreateEvaluationContextReference()
-        {
-            return this.get_CodeBuilder().CreateReference(this._evaluationContextLocal);
-        }
+        public ReferenceExpression CreateEvaluationContextReference() => 
+            this.get_CodeBuilder().CreateReference(this._evaluationContextLocal);
 
-        public MethodInvocationExpression CreateEvaluatorInvocation(MethodInvocationExpression node)
-        {
-            return this.get_CodeBuilder().CreateMethodInvocation(Evaluator_Eval, this.CreateEvaluationContextReference(), node.get_Arguments().get_Item(0));
-        }
+        public MethodInvocationExpression CreateEvaluatorInvocation(MethodInvocationExpression node) => 
+            this.get_CodeBuilder().CreateMethodInvocation(Evaluator_Eval, this.CreateEvaluationContextReference(), node.get_Arguments().get_Item(0));
 
         public IType DefineEvaluationContext()
         {
@@ -88,10 +82,8 @@
             return builder.get_Entity();
         }
 
-        public Expression EvaluationDomainProviderReference()
-        {
-            return (!this._currentMethod.get_IsStatic() ? this.get_CodeBuilder().CreateSelfReference(this.CurrentType) : this.get_CodeBuilder().CreateReference(My<EvaluationDomainProviderImplementor>.Instance.StaticEvaluationDomainProviderFor((ClassDefinition) this.CurrentTypeNode)));
-        }
+        public Expression EvaluationDomainProviderReference() => 
+            (!this._currentMethod.get_IsStatic() ? this.get_CodeBuilder().CreateSelfReference(this.CurrentType) : this.get_CodeBuilder().CreateReference(My<EvaluationDomainProviderImplementor>.Instance.StaticEvaluationDomainProviderFor((ClassDefinition) this.CurrentTypeNode)));
 
         public InternalField GetEvaluationContextField(Node node)
         {
@@ -102,10 +94,8 @@
             return (InternalField) RuntimeServices.Coerce(obj1, typeof(InternalField));
         }
 
-        public bool IsEvalInvocation(MethodInvocationExpression node)
-        {
-            return (node.get_Target().get_Entity() == UnityScriptTypeSystem.UnityScriptEval);
-        }
+        public bool IsEvalInvocation(MethodInvocationExpression node) => 
+            (node.get_Target().get_Entity() == UnityScriptTypeSystem.UnityScriptEval);
 
         public override void LeaveClassDefinition(ClassDefinition node)
         {
@@ -130,10 +120,8 @@
             }
         }
 
-        public IType Map(Type type)
-        {
-            return this.get_TypeSystemServices().Map(type);
-        }
+        public IType Map(Type type) => 
+            this.get_TypeSystemServices().Map(type);
 
         public override void OnConstructor(Constructor node)
         {
@@ -195,45 +183,20 @@
             node.set_Item("EvaluationContextField", field);
         }
 
-        public Block CurrentMethodBody
-        {
-            get
-            {
-                return this.CurrentMethodNode.get_Body();
-            }
-        }
+        public Block CurrentMethodBody =>
+            this.CurrentMethodNode.get_Body();
 
-        public Method CurrentMethodNode
-        {
-            get
-            {
-                return this._currentMethod.get_Method();
-            }
-        }
+        public Method CurrentMethodNode =>
+            this._currentMethod.get_Method();
 
-        public IType CurrentType
-        {
-            get
-            {
-                return this._currentMethod.get_DeclaringType();
-            }
-        }
+        public IType CurrentType =>
+            this._currentMethod.get_DeclaringType();
 
-        public TypeDefinition CurrentTypeNode
-        {
-            get
-            {
-                return this.CurrentMethodNode.get_DeclaringType();
-            }
-        }
+        public TypeDefinition CurrentTypeNode =>
+            this.CurrentMethodNode.get_DeclaringType();
 
-        public UnityScriptCompilerParameters UnityScriptParameters
-        {
-            get
-            {
-                return (UnityScriptCompilerParameters) base._context.get_Parameters();
-            }
-        }
+        public UnityScriptCompilerParameters UnityScriptParameters =>
+            ((UnityScriptCompilerParameters) base._context.get_Parameters());
     }
 }
 

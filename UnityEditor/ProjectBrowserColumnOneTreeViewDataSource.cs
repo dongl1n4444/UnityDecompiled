@@ -17,15 +17,11 @@
             SavedSearchFilters.AddChangeListener(new Action(this, (IntPtr) this.ReloadData));
         }
 
-        public override bool CanBeMultiSelected(TreeViewItem item)
-        {
-            return (ProjectBrowser.GetItemType(item.id) != ProjectBrowser.ItemType.SavedFilter);
-        }
+        public override bool CanBeMultiSelected(TreeViewItem item) => 
+            (ProjectBrowser.GetItemType(item.id) != ProjectBrowser.ItemType.SavedFilter);
 
-        public override bool CanBeParent(TreeViewItem item)
-        {
-            return (!(item is SearchFilterTreeItem) || SavedSearchFilters.AllowsHierarchy());
-        }
+        public override bool CanBeParent(TreeViewItem item) => 
+            (!(item is SearchFilterTreeItem) || SavedSearchFilters.AllowsHierarchy());
 
         public override void FetchData()
         {
@@ -56,10 +52,8 @@
             return AssetDatabase.GetInstanceIDFromGUID(AssetDatabase.AssetPathToGUID(path));
         }
 
-        public override bool IsExpandable(TreeViewItem item)
-        {
-            return (item.hasChildren && ((item != base.m_RootItem) || base.rootIsCollapsable));
-        }
+        public override bool IsExpandable(TreeViewItem item) => 
+            (item.hasChildren && ((item != base.m_RootItem) || base.rootIsCollapsable));
 
         public override bool IsRenamingItemAllowed(TreeViewItem item)
         {
@@ -70,10 +64,8 @@
             return base.IsRenamingItemAllowed(item);
         }
 
-        public bool IsVisibleRootNode(TreeViewItem item)
-        {
-            return ((item.parent != null) && (item.parent.parent == null));
-        }
+        public bool IsVisibleRootNode(TreeViewItem item) => 
+            ((item.parent != null) && (item.parent.parent == null));
 
         private void ReadAssetDatabase(TreeViewItem parent, int baseDepth)
         {

@@ -1,6 +1,5 @@
 ﻿namespace Unity.IL2CPP.Building.ToolChains.MsvcVersions
 {
-    using Microsoft.Win32;
     using NiceIO;
     using System;
     using System.Collections;
@@ -18,69 +17,32 @@
 
         public Msvc14Installation(NPath visualStudioDir) : base(new Version(14, 0), visualStudioDir)
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0");
-            if (key != null)
-            {
-                string str = (string) key.GetValue("InstallationFolder");
-                if (!string.IsNullOrEmpty(str))
-                {
-                    base.SDKDirectory = new NPath(str);
-                    string str2 = (string) key.GetValue("ProductVersion");
-                    Version version = string.IsNullOrEmpty(str2) ? new Version(10, 0, 0x2800) : Version.Parse(str2);
-                    if (version.Build == -1)
-                    {
-                        version = new Version(version.Major, version.Minor, 0, 0);
-                    }
-                    else if (version.Revision == -1)
-                    {
-                        version = new Version(version.Major, version.Minor, version.Build, 0);
-                    }
-                    this._sdkVersion = version.ToString();
-                }
-            }
-            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\NETFXSDK\4.6.1");
-            if (key == null)
-            {
-                key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\NETFXSDK\4.6");
-            }
-            if (key != null)
-            {
-                string str3 = (string) key.GetValue("KitsInstallationFolder");
-                if (!string.IsNullOrEmpty(str3))
-                {
-                    this._netfxsdkDir = new NPath(str3);
-                }
-            }
+            base.SDKDirectory = WindowsSDKs.GetWindows10SDKDirectory(out this._sdkVersion);
+            this._netfxsdkDir = WindowsSDKs.GetDotNetFrameworkSDKDirectory();
         }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetIncludeDirectories()
-        {
-            return new <GetIncludeDirectories>c__Iterator0 { 
+        public override IEnumerable<NPath> GetIncludeDirectories(Architecture architecture) => 
+            new <GetIncludeDirectories>c__Iterator0 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetLibDirectories(Architecture architecture, [Optional, DefaultParameterValue(null)] string sdkSubset)
-        {
-            return new <GetLibDirectories>c__Iterator1 { 
+        public override IEnumerable<NPath> GetLibDirectories(Architecture architecture, string sdkSubset = null) => 
+            new <GetLibDirectories>c__Iterator1 { 
                 sdkSubset = sdkSubset,
                 architecture = architecture,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetPlatformMetadataReferences()
-        {
-            return new <GetPlatformMetadataReferences>c__Iterator2 { 
+        public override IEnumerable<NPath> GetPlatformMetadataReferences() => 
+            new <GetPlatformMetadataReferences>c__Iterator2 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         public override NPath GetUnionMetadataDirectory()
         {
@@ -89,26 +51,17 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetWindowsMetadataReferences()
-        {
-            return new <GetWindowsMetadataReferences>c__Iterator3 { 
+        public override IEnumerable<NPath> GetWindowsMetadataReferences() => 
+            new <GetWindowsMetadataReferences>c__Iterator3 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override bool HasMetadataDirectories()
-        {
-            return true;
-        }
+        public override bool HasMetadataDirectories() => 
+            true;
 
-        public override IEnumerable<Type> SupportedArchitectures
-        {
-            get
-            {
-                return new Type[] { typeof(x86Architecture), typeof(ARMv7Architecture), typeof(x64Architecture) };
-            }
-        }
+        public override IEnumerable<Type> SupportedArchitectures =>
+            new Type[] { typeof(x86Architecture), typeof(ARMv7Architecture), typeof(x64Architecture) };
 
         [CompilerGenerated]
         private sealed class <GetIncludeDirectories>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
@@ -211,28 +164,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -293,7 +232,7 @@
                         {
                             if (!(this.architecture is ARMv7Architecture))
                             {
-                                throw new NotSupportedException(string.Format("Architecture {0} is not supported by MsvcToolChain!", this.architecture));
+                                throw new NotSupportedException($"Architecture {this.architecture} is not supported by MsvcToolChain!");
                             }
                             string[] textArray12 = new string[] { "arm" };
                             this.$current = this.<vcLibPath>__1.Combine(textArray12);
@@ -442,28 +381,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -521,28 +446,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -600,28 +511,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

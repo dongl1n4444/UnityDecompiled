@@ -5,10 +5,8 @@
 
     internal sealed class PerceptionRemotingPlugin
     {
-        internal static HolographicStreamerConnectionFailureReason CheckForDisconnect()
-        {
-            return CheckForDisconnect_Internal();
-        }
+        internal static HolographicStreamerConnectionFailureReason CheckForDisconnect() => 
+            CheckForDisconnect_Internal();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern HolographicStreamerConnectionFailureReason CheckForDisconnect_Internal();
@@ -16,10 +14,8 @@
         internal static extern void Connect(string clientName);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Disconnect();
-        internal static HolographicStreamerConnectionState GetConnectionState()
-        {
-            return GetConnectionState_Internal();
-        }
+        internal static HolographicStreamerConnectionState GetConnectionState() => 
+            GetConnectionState_Internal();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern HolographicStreamerConnectionState GetConnectionState_Internal();

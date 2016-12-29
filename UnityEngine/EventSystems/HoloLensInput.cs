@@ -31,10 +31,8 @@
             this.m_GestureRecognizer.StartCapturingGestures();
         }
 
-        private Vector2 EmulateMousePosition(Vector3 anchorWorldspace, Vector2 finalOffset)
-        {
-            return (Camera.main.WorldToScreenPoint(anchorWorldspace) + finalOffset);
-        }
+        private Vector2 EmulateMousePosition(Vector3 anchorWorldspace, Vector2 finalOffset) => 
+            (Camera.main.WorldToScreenPoint(anchorWorldspace) + finalOffset);
 
         private void GestureHandler_NavigationCompletedOrCanceled(InteractionSourceKind source, Vector3 normalizedOffset, Ray headRay)
         {
@@ -82,30 +80,20 @@
             return GetGazeScreenPosition();
         }
 
-        private static Vector2 GetGazeScreenPosition()
-        {
-            return new Vector2(0.5f * Screen.width, 0.5f * Screen.height);
-        }
+        private static Vector2 GetGazeScreenPosition() => 
+            new Vector2(0.5f * Screen.width, 0.5f * Screen.height);
 
-        private Vector2 GetGestureScrollDelta()
-        {
-            return ((this.m_MouseEmulationMode != MouseEmulationMode.Navigation) ? Vector2.zero : new Vector2(0f, this.m_NavigationNormalizedOffset.z));
-        }
+        private Vector2 GetGestureScrollDelta() => 
+            ((this.m_MouseEmulationMode != MouseEmulationMode.Navigation) ? Vector2.zero : new Vector2(0f, this.m_NavigationNormalizedOffset.z));
 
-        public override bool GetMouseButton(int button)
-        {
-            return ((button == 0) && this.m_IsEmulatedMouseDownCurr);
-        }
+        public override bool GetMouseButton(int button) => 
+            ((button == 0) && this.m_IsEmulatedMouseDownCurr);
 
-        public override bool GetMouseButtonDown(int button)
-        {
-            return (((button == 0) && !this.m_IsEmulatedMouseDownPrev) && this.m_IsEmulatedMouseDownCurr);
-        }
+        public override bool GetMouseButtonDown(int button) => 
+            (((button == 0) && !this.m_IsEmulatedMouseDownPrev) && this.m_IsEmulatedMouseDownCurr);
 
-        public override bool GetMouseButtonUp(int button)
-        {
-            return (((button == 0) && this.m_IsEmulatedMouseDownPrev) && !this.m_IsEmulatedMouseDownCurr);
-        }
+        public override bool GetMouseButtonUp(int button) => 
+            (((button == 0) && this.m_IsEmulatedMouseDownPrev) && !this.m_IsEmulatedMouseDownCurr);
 
         protected override void OnDestroy()
         {
@@ -145,45 +133,20 @@
             this.m_IsEmulatedMouseDownCurr = this.m_MouseEmulationMode != MouseEmulationMode.Inactive;
         }
 
-        public override Vector2 mousePosition
-        {
-            get
-            {
-                return this.GetGazeAndGestureScreenPosition();
-            }
-        }
+        public override Vector2 mousePosition =>
+            this.GetGazeAndGestureScreenPosition();
 
-        public override bool mousePresent
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool mousePresent =>
+            true;
 
-        public override Vector2 mouseScrollDelta
-        {
-            get
-            {
-                return this.GetGestureScrollDelta();
-            }
-        }
+        public override Vector2 mouseScrollDelta =>
+            this.GetGestureScrollDelta();
 
-        public override int touchCount
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public override int touchCount =>
+            0;
 
-        public override bool touchSupported
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool touchSupported =>
+            false;
 
         private enum MouseEmulationMode
         {

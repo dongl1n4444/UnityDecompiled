@@ -34,18 +34,14 @@
         /// <para>Utility function to fetch the program's ID for UNET Cloud interfacing.</para>
         /// </summary>
         [Obsolete("This function is unused and should not be referenced in code. Please sign in and setup your project in the editor instead.", true)]
-        public static AppID GetAppID()
-        {
-            return AppID.Invalid;
-        }
+        public static AppID GetAppID() => 
+            AppID.Invalid;
 
         /// <summary>
         /// <para>Utility function to get the client's SourceID for unique identification.</para>
         /// </summary>
-        public static SourceID GetSourceID()
-        {
-            return (SourceID) SystemInfo.deviceUniqueIdentifier.GetHashCode();
-        }
+        public static SourceID GetSourceID() => 
+            ((SourceID) SystemInfo.deviceUniqueIdentifier.GetHashCode());
 
         /// <summary>
         /// <para>Utility function that accepts the access token for a network after it's received from the server.</para>
@@ -76,10 +72,8 @@
         [Obsolete("This property is unused and should not be referenced in code.", true)]
         public static bool useRandomSourceID
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }

@@ -177,10 +177,8 @@
             return wholeWidthRect;
         }
 
-        private static Rect GetSettingsRect()
-        {
-            return GetSettingsRect(GUILayoutUtility.GetRect((float) 10f, (float) 16f));
-        }
+        private static Rect GetSettingsRect() => 
+            GetSettingsRect(GUILayoutUtility.GetRect((float) 10f, (float) 16f));
 
         private static Rect GetSettingsRect(Rect wholeWidthRect)
         {

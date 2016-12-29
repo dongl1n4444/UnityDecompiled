@@ -166,7 +166,7 @@
             EnsureFolderIsCreated(inputData.targetFolder);
             float realtimeSinceStartup = Time.realtimeSinceStartup;
             GenerateIconsWithMips(inputData);
-            Debug.Log(string.Format("Generated {0} icons with mip levels in {1} seconds", inputData.generatedFileNames.Count, Time.realtimeSinceStartup - realtimeSinceStartup));
+            Debug.Log($"Generated {inputData.generatedFileNames.Count} icons with mip levels in {Time.realtimeSinceStartup - realtimeSinceStartup} seconds");
             RemoveUnusedFiles(inputData.generatedFileNames);
             AssetDatabase.Refresh();
             InternalEditorUtility.RepaintAllViews();
@@ -223,7 +223,7 @@
                 EnsureFolderIsCreated(inputData.targetFolder);
                 if (GenerateIcon(inputData, baseName, assetPathsOfAllIcons, mipTextures, fileInfo))
                 {
-                    Debug.Log(string.Format("Generated {0} icon with mip levels in {1} seconds", baseName, Time.realtimeSinceStartup - realtimeSinceStartup));
+                    Debug.Log($"Generated {baseName} icon with mip levels in {Time.realtimeSinceStartup - realtimeSinceStartup} seconds");
                 }
                 InternalEditorUtility.RepaintAllViews();
             }
@@ -247,7 +247,7 @@
                     List<string> assetPathsOfAllIcons = GetIconAssetPaths(inputData.sourceFolder, inputData.mipIdentifier, inputData.mipFileExtension);
                     EnsureFolderIsCreated(inputData.targetFolder);
                     GenerateIcon(inputData, baseName, assetPathsOfAllIcons, null, null);
-                    Debug.Log(string.Format("Generated {0} icon with mip levels in {1} seconds", baseName, Time.realtimeSinceStartup - realtimeSinceStartup));
+                    Debug.Log($"Generated {baseName} icon with mip levels in {Time.realtimeSinceStartup - realtimeSinceStartup} seconds");
                     InternalEditorUtility.RepaintAllViews();
                 }
             }
@@ -284,20 +284,16 @@
             return list;
         }
 
-        private static InputData GetInputData()
-        {
-            return new InputData { 
+        private static InputData GetInputData() => 
+            new InputData { 
                 sourceFolder = k_IconSourceFolder,
                 targetFolder = k_IconTargetFolder,
                 mipIdentifier = k_IconMipIdentifier,
                 mipFileExtension = "png"
             };
-        }
 
-        private static Texture2D GetTexture2D(string path)
-        {
-            return (AssetDatabase.LoadAssetAtPath(path, typeof(Texture2D)) as Texture2D);
-        }
+        private static Texture2D GetTexture2D(string path) => 
+            (AssetDatabase.LoadAssetAtPath(path, typeof(Texture2D)) as Texture2D);
 
         public static int MipLevelForAssetPath(string assetPath, string separator)
         {
@@ -367,10 +363,8 @@
             internal string baseName;
             internal GenerateIconsWithMipLevels.InputData inputData;
 
-            internal bool <>m__0(string o)
-            {
-                return (o.IndexOf('/' + this.baseName + this.inputData.mipIdentifier) >= 0);
-            }
+            internal bool <>m__0(string o) => 
+                (o.IndexOf('/' + this.baseName + this.inputData.mipIdentifier) >= 0);
         }
 
         [CompilerGenerated]
@@ -378,10 +372,8 @@
         {
             internal string mustHaveIdentifier;
 
-            internal bool <>m__0(string o)
-            {
-                return (o.IndexOf(this.mustHaveIdentifier) < 0);
-            }
+            internal bool <>m__0(string o) => 
+                (o.IndexOf(this.mustHaveIdentifier) < 0);
         }
 
         private class InputData

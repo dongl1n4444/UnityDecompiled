@@ -32,10 +32,8 @@
         [Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic instead (UnityUpgradable) -> orthographic", true), EditorBrowsable(EditorBrowsableState.Never)]
         public bool isOrthoGraphic
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -64,10 +62,8 @@
         [Obsolete("Property orthoGraphicSize has been deprecated. Use orthographicSize instead (UnityUpgradable) -> orthographicSize", true), EditorBrowsable(EditorBrowsableState.Never)]
         public float orthoGraphicSize
         {
-            get
-            {
-                return -1f;
-            }
+            get => 
+                -1f;
             set
             {
             }

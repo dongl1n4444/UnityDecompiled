@@ -47,15 +47,11 @@
         private MetroScaledImage[] m_WindowsSplashScreens;
         private Vector2 metroFTAFileTypesScrollViewPosition = Vector2.zero;
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
-        private static MetroScaledImageGroup CreateScaledImageGroup(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] widths, int[] heights)
-        {
-            return new MetroScaledImageGroup(CreateScaledImages(type, scales, labelFormat, widths, heights));
-        }
+        private static MetroScaledImageGroup CreateScaledImageGroup(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] widths, int[] heights) => 
+            new MetroScaledImageGroup(CreateScaledImages(type, scales, labelFormat, widths, heights));
 
         private static MetroScaledImage[] CreateScaledImages(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] widths, int[] heights)
         {
@@ -71,20 +67,14 @@
             return imageArray;
         }
 
-        private static MetroScaledImageGroup CreateScaledSquareImageGroup(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] sizes)
-        {
-            return CreateScaledImageGroup(type, scales, labelFormat, sizes, sizes);
-        }
+        private static MetroScaledImageGroup CreateScaledSquareImageGroup(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] sizes) => 
+            CreateScaledImageGroup(type, scales, labelFormat, sizes, sizes);
 
-        private static MetroScaledImage[] CreateScaledSquareImages(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] sizes)
-        {
-            return CreateScaledImages(type, scales, labelFormat, sizes, sizes);
-        }
+        private static MetroScaledImage[] CreateScaledSquareImages(PlayerSettings.WSAImageType type, PlayerSettings.WSAImageScale[] scales, string labelFormat, int[] sizes) => 
+            CreateScaledImages(type, scales, labelFormat, sizes, sizes);
 
-        public override bool HasResolutionSection()
-        {
-            return true;
-        }
+        public override bool HasResolutionSection() => 
+            true;
 
         public override void IconSectionGUI()
         {
@@ -513,10 +503,8 @@
             this.MetroSplashScreenSection(kLabelMinWidth, kLabelMinWidth, kLabelMinHeight, kLabelMinHeight);
         }
 
-        public override bool SupportsOrientation()
-        {
-            return true;
-        }
+        public override bool SupportsOrientation() => 
+            true;
 
         private static bool ValidateImage(string imageFile, int width, int height)
         {
@@ -533,7 +521,7 @@
             UnityEngine.Object.DestroyImmediate(textured);
             if ((num != width) || (num2 != height))
             {
-                Debug.LogError(string.Format("Invalid image size ({0}x{1}), should be {2}x{3}", new object[] { num, num2, width, height }));
+                Debug.LogError($"Invalid image size ({num}x{num2}), should be {width}x{height}");
                 return false;
             }
             return true;

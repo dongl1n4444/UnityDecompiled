@@ -38,15 +38,11 @@
             this._members.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, object> item)
-        {
-            return (this._members.ContainsKey(item.Key) && (this._members[item.Key] == item.Value));
-        }
+        public bool Contains(KeyValuePair<string, object> item) => 
+            (this._members.ContainsKey(item.Key) && (this._members[item.Key] == item.Value));
 
-        public bool ContainsKey(string key)
-        {
-            return this._members.ContainsKey(key);
-        }
+        public bool ContainsKey(string key) => 
+            this._members.ContainsKey(key);
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
@@ -86,87 +82,48 @@
             return null;
         }
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-        {
-            return this._members.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => 
+            this._members.GetEnumerator();
 
-        public bool Remove(KeyValuePair<string, object> item)
-        {
-            return this._members.Remove(item.Key);
-        }
+        public bool Remove(KeyValuePair<string, object> item) => 
+            this._members.Remove(item.Key);
 
-        public bool Remove(string key)
-        {
-            return this._members.Remove(key);
-        }
+        public bool Remove(string key) => 
+            this._members.Remove(key);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this._members.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this._members.GetEnumerator();
 
-        public override string ToString()
-        {
-            return SimpleJson.SimpleJson.SerializeObject(this);
-        }
+        public override string ToString() => 
+            SimpleJson.SimpleJson.SerializeObject(this);
 
-        public bool TryGetValue(string key, out object value)
-        {
-            return this._members.TryGetValue(key, out value);
-        }
+        public bool TryGetValue(string key, out object value) => 
+            this._members.TryGetValue(key, out value);
 
-        public int Count
-        {
-            get
-            {
-                return this._members.Count;
-            }
-        }
+        public int Count =>
+            this._members.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly =>
+            false;
 
-        public object this[int index]
-        {
-            get
-            {
-                return GetAtIndex(this._members, index);
-            }
-        }
+        public object this[int index] =>
+            GetAtIndex(this._members, index);
 
         public object this[string key]
         {
-            get
-            {
-                return this._members[key];
-            }
+            get => 
+                this._members[key];
             set
             {
                 this._members[key] = value;
             }
         }
 
-        public ICollection<string> Keys
-        {
-            get
-            {
-                return this._members.Keys;
-            }
-        }
+        public ICollection<string> Keys =>
+            this._members.Keys;
 
-        public ICollection<object> Values
-        {
-            get
-            {
-                return this._members.Values;
-            }
-        }
+        public ICollection<object> Values =>
+            this._members.Values;
     }
 }
 

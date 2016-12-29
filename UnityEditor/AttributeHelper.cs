@@ -16,14 +16,12 @@
     internal class AttributeHelper
     {
         [DebuggerHidden]
-        internal static IEnumerable<T> CallMethodsWithAttribute<T>(Type attributeType, params object[] arguments)
-        {
-            return new <CallMethodsWithAttribute>c__Iterator0<T> { 
+        internal static IEnumerable<T> CallMethodsWithAttribute<T>(Type attributeType, params object[] arguments) => 
+            new <CallMethodsWithAttribute>c__Iterator0<T> { 
                 attributeType = attributeType,
                 arguments = arguments,
                 $PC = -2
             };
-        }
 
         [RequiredByNativeCode]
         private static MonoMenuItem[] ExtractContextMenu(Type type)
@@ -59,7 +57,7 @@
                     dictionary[menu.menuItem] = item;
                 }
             }
-            MonoMenuItem[] array = Enumerable.ToArray<MonoMenuItem>(dictionary.Values);
+            MonoMenuItem[] array = dictionary.Values.ToArray<MonoMenuItem>();
             Array.Sort(array, new CompareMenuIndex());
             return array;
         }
@@ -117,7 +115,7 @@
                         ParameterInfo[] parameters = info.GetParameters();
                         if (parameters.Length != 2)
                         {
-                            Debug.LogWarning(string.Format("Method {0}.{1} is marked with the DrawGizmo attribute but does not take parameters (ComponentType, GizmoType) so will be ignored.", info.DeclaringType.FullName, info.Name));
+                            Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take parameters (ComponentType, GizmoType) so will be ignored.");
                         }
                         else
                         {
@@ -132,12 +130,12 @@
                             }
                             else
                             {
-                                Debug.LogWarning(string.Format("Method {0}.{1} is marked with the DrawGizmo attribute but the component type it applies to could not be determined.", info.DeclaringType.FullName, info.Name));
+                                Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but the component type it applies to could not be determined.");
                                 goto Label_0198;
                             }
                             if ((parameters[1].ParameterType != typeof(GizmoType)) && (parameters[1].ParameterType != typeof(int)))
                             {
-                                Debug.LogWarning(string.Format("Method {0}.{1} is marked with the DrawGizmo attribute but does not take a second parameter of type GizmoType so will be ignored.", info.DeclaringType.FullName, info.Name));
+                                Debug.LogWarning($"Method {info.DeclaringType.FullName}.{info.Name} is marked with the DrawGizmo attribute but does not take a second parameter of type GizmoType so will be ignored.");
                             }
                             else
                             {
@@ -216,7 +214,7 @@
                     }
                 }
             }
-            MonoMenuItem[] array = Enumerable.ToArray<MonoMenuItem>(dictionary.Values);
+            MonoMenuItem[] array = dictionary.Values.ToArray<MonoMenuItem>();
             Array.Sort(array, new CompareMenuIndex());
             return array;
         }
@@ -261,7 +259,7 @@
         internal static string GetHelpURLFromAttribute(Type objectType)
         {
             HelpURLAttribute customAttribute = (HelpURLAttribute) Attribute.GetCustomAttribute(objectType, typeof(HelpURLAttribute));
-            return ((customAttribute == null) ? null : customAttribute.URL);
+            return customAttribute?.URL;
         }
 
         internal static object InvokeMemberIfAvailable(object target, string methodName, object[] args)
@@ -398,28 +396,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
 
-            T IEnumerator<T>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            T IEnumerator<T>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         internal class CompareMenuIndex : IComparer

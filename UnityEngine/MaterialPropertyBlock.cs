@@ -101,10 +101,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public float GetFloat(string name)
-        {
-            return this.GetFloat(Shader.PropertyToID(name));
-        }
+        public float GetFloat(string name) => 
+            this.GetFloat(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a float array from the property block.</para>
@@ -118,10 +116,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public float[] GetFloatArray(string name)
-        {
-            return this.GetFloatArray(Shader.PropertyToID(name));
-        }
+        public float[] GetFloatArray(string name) => 
+            this.GetFloatArray(Shader.PropertyToID(name));
 
         public void GetFloatArray(int nameID, List<float> values)
         {
@@ -156,10 +152,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Matrix4x4 GetMatrix(string name)
-        {
-            return this.GetMatrix(Shader.PropertyToID(name));
-        }
+        public Matrix4x4 GetMatrix(string name) => 
+            this.GetMatrix(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a matrix array from the property block.</para>
@@ -173,10 +167,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Matrix4x4[] GetMatrixArray(string name)
-        {
-            return this.GetMatrixArray(Shader.PropertyToID(name));
-        }
+        public Matrix4x4[] GetMatrixArray(string name) => 
+            this.GetMatrixArray(Shader.PropertyToID(name));
 
         public void GetMatrixArray(int nameID, List<Matrix4x4> values)
         {
@@ -206,10 +198,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Texture GetTexture(string name)
-        {
-            return this.GetTexture(Shader.PropertyToID(name));
-        }
+        public Texture GetTexture(string name) => 
+            this.GetTexture(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a vector from the property block.</para>
@@ -228,10 +218,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Vector4 GetVector(string name)
-        {
-            return this.GetVector(Shader.PropertyToID(name));
-        }
+        public Vector4 GetVector(string name) => 
+            this.GetVector(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a vector array from the property block.</para>
@@ -245,10 +233,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Vector4[] GetVectorArray(string name)
-        {
-            return this.GetVectorArray(Shader.PropertyToID(name));
-        }
+        public Vector4[] GetVectorArray(string name) => 
+            this.GetVectorArray(Shader.PropertyToID(name));
 
         public void GetVectorArray(int nameID, List<Vector4> values)
         {

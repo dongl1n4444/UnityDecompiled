@@ -37,7 +37,7 @@
             {
                 <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <Initialize>m__0);
             }
-            TypeDefinition baseType = Enumerable.Single<TypeDefinition>(mscorlib.MainModule.Types, <>f__am$cache0);
+            TypeDefinition baseType = mscorlib.MainModule.Types.Single<TypeDefinition>(<>f__am$cache0);
             this._nativeIntType = new TypeDefinition(string.Empty, "intptr_t", TypeAttributes.AnsiClass, baseType);
             this._nativeUIntType = new TypeDefinition(string.Empty, "uintptr_t", TypeAttributes.AnsiClass, baseType);
             this._iActivationFactoryType = new TypeDefinition(string.Empty, "IActivationFactory", TypeAttributes.AnsiClass, this.SystemObject);
@@ -65,293 +65,113 @@
             }
         }
 
-        public TypeReference BoolTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Boolean;
-            }
-        }
+        public TypeReference BoolTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Boolean;
 
-        public TypeReference ByteTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Byte;
-            }
-        }
+        public TypeReference ByteTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Byte;
 
-        public TypeReference CharTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Char;
-            }
-        }
+        public TypeReference CharTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Char;
 
-        public AssemblyDefinition Corlib
-        {
-            get
-            {
-                return this._mscorlib;
-            }
-        }
+        public AssemblyDefinition Corlib =>
+            this._mscorlib;
 
-        public TypeReference DoubleTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Double;
-            }
-        }
+        public TypeReference DoubleTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Double;
 
-        public TypeReference IActivationFactoryTypeReference
-        {
-            get
-            {
-                return this._iActivationFactoryType;
-            }
-        }
+        public TypeReference IActivationFactoryTypeReference =>
+            this._iActivationFactoryType;
 
-        public TypeReference Il2CppComDelegateTypeReference
-        {
-            get
-            {
-                return this._il2cppComDelegateType;
-            }
-        }
+        public TypeReference Il2CppComDelegateTypeReference =>
+            this._il2cppComDelegateType;
 
-        public TypeReference Il2CppComObjectTypeReference
-        {
-            get
-            {
-                return this._il2cppComObjectType;
-            }
-        }
+        public TypeReference Il2CppComObjectTypeReference =>
+            this._il2cppComObjectType;
 
-        public TypeReference Int16TypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Int16;
-            }
-        }
+        public TypeReference Int16TypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Int16;
 
-        public TypeReference Int32TypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Int32;
-            }
-        }
+        public TypeReference Int32TypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Int32;
 
-        public TypeReference Int64TypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Int64;
-            }
-        }
+        public TypeReference Int64TypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Int64;
 
-        public TypeReference IntPtrTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.IntPtr;
-            }
-        }
+        public TypeReference IntPtrTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.IntPtr;
 
-        public TypeReference NativeIntTypeReference
-        {
-            get
-            {
-                return this._nativeIntType;
-            }
-        }
+        public TypeReference NativeIntTypeReference =>
+            this._nativeIntType;
 
-        public TypeReference NativeUIntTypeReference
-        {
-            get
-            {
-                return this._nativeUIntType;
-            }
-        }
+        public TypeReference NativeUIntTypeReference =>
+            this._nativeUIntType;
 
-        public TypeReference ObjectTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Object;
-            }
-        }
+        public TypeReference ObjectTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Object;
 
-        public TypeReference RuntimeFieldHandleTypeReference
-        {
-            get
-            {
-                return this._runtimeFieldHandleType;
-            }
-        }
+        public TypeReference RuntimeFieldHandleTypeReference =>
+            this._runtimeFieldHandleType;
 
-        public TypeReference RuntimeMethodHandleTypeReference
-        {
-            get
-            {
-                return this._runtimeMethodHandleType;
-            }
-        }
+        public TypeReference RuntimeMethodHandleTypeReference =>
+            this._runtimeMethodHandleType;
 
-        public TypeReference RuntimeTypeHandleTypeReference
-        {
-            get
-            {
-                return this._runtimeTypeHandleType;
-            }
-        }
+        public TypeReference RuntimeTypeHandleTypeReference =>
+            this._runtimeTypeHandleType;
 
-        public TypeReference SByteTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.SByte;
-            }
-        }
+        public TypeReference SByteTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.SByte;
 
-        public TypeReference SingleTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.Single;
-            }
-        }
+        public TypeReference SingleTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.Single;
 
-        public TypeReference StringTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.String;
-            }
-        }
+        public TypeReference StringTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.String;
 
-        public TypeDefinition SystemArray
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.Array");
-            }
-        }
+        public TypeDefinition SystemArray =>
+            this._mscorlib.MainModule.GetType("System.Array");
 
-        public TypeDefinition SystemByte
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.Byte");
-            }
-        }
+        public TypeDefinition SystemByte =>
+            this._mscorlib.MainModule.GetType("System.Byte");
 
-        public TypeDefinition SystemDelegate
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.Delegate");
-            }
-        }
+        public TypeDefinition SystemDelegate =>
+            this._mscorlib.MainModule.GetType("System.Delegate");
 
-        public TypeDefinition SystemException
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.Exception");
-            }
-        }
+        public TypeDefinition SystemException =>
+            this._mscorlib.MainModule.GetType("System.Exception");
 
-        public TypeDefinition SystemIntPtr
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.IntPtr");
-            }
-        }
+        public TypeDefinition SystemIntPtr =>
+            this._mscorlib.MainModule.GetType("System.IntPtr");
 
-        public TypeDefinition SystemMulticastDelegate
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.MulticastDelegate");
-            }
-        }
+        public TypeDefinition SystemMulticastDelegate =>
+            this._mscorlib.MainModule.GetType("System.MulticastDelegate");
 
-        public TypeDefinition SystemNullable
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.Nullable`1");
-            }
-        }
+        public TypeDefinition SystemNullable =>
+            this._mscorlib.MainModule.GetType("System.Nullable`1");
 
-        public TypeDefinition SystemObject
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.Object");
-            }
-        }
+        public TypeDefinition SystemObject =>
+            this._mscorlib.MainModule.GetType("System.Object");
 
-        public TypeDefinition SystemString
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.String");
-            }
-        }
+        public TypeDefinition SystemString =>
+            this._mscorlib.MainModule.GetType("System.String");
 
-        public TypeDefinition SystemUInt16
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.UInt16");
-            }
-        }
+        public TypeDefinition SystemUInt16 =>
+            this._mscorlib.MainModule.GetType("System.UInt16");
 
-        public TypeDefinition SystemUIntPtr
-        {
-            get
-            {
-                return this._mscorlib.MainModule.GetType("System.UIntPtr");
-            }
-        }
+        public TypeDefinition SystemUIntPtr =>
+            this._mscorlib.MainModule.GetType("System.UIntPtr");
 
-        public TypeReference UInt16TypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.UInt16;
-            }
-        }
+        public TypeReference UInt16TypeReference =>
+            this._mscorlib.MainModule.TypeSystem.UInt16;
 
-        public TypeReference UInt32TypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.UInt32;
-            }
-        }
+        public TypeReference UInt32TypeReference =>
+            this._mscorlib.MainModule.TypeSystem.UInt32;
 
-        public TypeReference UInt64TypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.UInt64;
-            }
-        }
+        public TypeReference UInt64TypeReference =>
+            this._mscorlib.MainModule.TypeSystem.UInt64;
 
-        public TypeReference UIntPtrTypeReference
-        {
-            get
-            {
-                return this._mscorlib.MainModule.TypeSystem.UIntPtr;
-            }
-        }
+        public TypeReference UIntPtrTypeReference =>
+            this._mscorlib.MainModule.TypeSystem.UIntPtr;
     }
 }
 

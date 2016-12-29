@@ -27,23 +27,14 @@
             this._compiler = new BooCompiler(this._parameters);
         }
 
-        public CompilerContext Run()
-        {
-            return this._compiler.Run();
-        }
+        public CompilerContext Run() => 
+            this._compiler.Run();
 
-        public CompilerContext Run(CompileUnit compileUnit)
-        {
-            return this._compiler.Run(compileUnit);
-        }
+        public CompilerContext Run(CompileUnit compileUnit) => 
+            this._compiler.Run(compileUnit);
 
-        public UnityScriptCompilerParameters Parameters
-        {
-            get
-            {
-                return this._parameters;
-            }
-        }
+        public UnityScriptCompilerParameters Parameters =>
+            this._parameters;
 
         public static class Pipelines
         {
@@ -58,32 +49,24 @@
                 pipeline.Replace(typeof(ProcessMethodBodiesWithDuckTyping), new ProcessUnityScriptMethods());
                 pipeline.InsertAfter(typeof(ProcessUnityScriptMethods), new AutoExplodeVarArgsInvocations());
                 pipeline.InsertAfter(typeof(ProcessUnityScriptMethods), new ProcessEvalInvocations());
-                UnityScriptCompilerModule.ReplaceOptional(pipeline, typeof(ExpandDuckTypedExpressions), new ExpandUnityDuckTypedExpressions());
+                pipeline.ReplaceOptional(typeof(ExpandDuckTypedExpressions), new ExpandUnityDuckTypedExpressions());
                 pipeline.InsertBefore(typeof(EmitAssembly), new Lint());
                 pipeline.InsertBefore(typeof(EmitAssembly), new EnableRawArrayIndexing());
                 pipeline.InsertAfter(typeof(BindBaseTypes), new CheckBaseTypes());
                 return pipeline;
             }
 
-            public static CompilerPipeline Compile()
-            {
-                return AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.Compile());
-            }
+            public static CompilerPipeline Compile() => 
+                AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.Compile());
 
-            public static CompilerPipeline CompileToBoo()
-            {
-                return AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.CompileToBoo());
-            }
+            public static CompilerPipeline CompileToBoo() => 
+                AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.CompileToBoo());
 
-            public static CompilerPipeline CompileToFile()
-            {
-                return AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.CompileToFile());
-            }
+            public static CompilerPipeline CompileToFile() => 
+                AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.CompileToFile());
 
-            public static CompilerPipeline CompileToMemory()
-            {
-                return AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.CompileToMemory());
-            }
+            public static CompilerPipeline CompileToMemory() => 
+                AdjustBooPipeline(new Boo.Lang.Compiler.Pipelines.CompileToMemory());
 
             public static CompilerPipeline Parse()
             {

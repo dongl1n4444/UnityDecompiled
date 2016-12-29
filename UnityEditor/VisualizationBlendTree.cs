@@ -107,21 +107,11 @@
             }
         }
 
-        public Animator animator
-        {
-            get
-            {
-                return this.m_Animator;
-            }
-        }
+        public Animator animator =>
+            this.m_Animator;
 
-        public bool controllerDirty
-        {
-            get
-            {
-                return this.m_ControllerIsDirty;
-            }
-        }
+        public bool controllerDirty =>
+            this.m_ControllerIsDirty;
     }
 }
 

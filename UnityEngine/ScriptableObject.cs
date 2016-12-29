@@ -44,17 +44,13 @@
         /// <returns>
         /// <para>The created ScriptableObject.</para>
         /// </returns>
-        public static ScriptableObject CreateInstance(System.Type type)
-        {
-            return CreateInstanceFromType(type);
-        }
+        public static ScriptableObject CreateInstance(System.Type type) => 
+            CreateInstanceFromType(type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern ScriptableObject CreateInstanceFromType(System.Type type);
-        public static T CreateInstance<T>() where T: ScriptableObject
-        {
-            return (T) CreateInstance(typeof(T));
-        }
+        public static T CreateInstance<T>() where T: ScriptableObject => 
+            ((T) CreateInstance(typeof(T)));
     }
 }
 

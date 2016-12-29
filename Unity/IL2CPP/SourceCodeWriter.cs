@@ -57,7 +57,7 @@
             writer.WriteLine("# include <malloc.h>");
             writer.WriteLine("#endif");
             writer.WriteLine();
-            foreach (string str in Enumerable.Where<string>(base.Includes, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (string str in base.Includes.Where<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
             {
                 writer.WriteLine("#include {0}", str);
             }
@@ -75,7 +75,7 @@
                 writer.WriteLine(str2 + ';');
             }
             writer.WriteLine();
-            foreach (string str3 in Enumerable.Where<string>(base.Includes, new Func<string, bool>(storey, (IntPtr) this.<>m__1)))
+            foreach (string str3 in base.Includes.Where<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__1)))
             {
                 writer.WriteLine("#include {0}", str3);
             }
@@ -117,15 +117,11 @@
         {
             internal string[] includesToSkip;
 
-            internal bool <>m__0(string i)
-            {
-                return (!Enumerable.Contains<string>(this.includesToSkip, i) && i.StartsWith("<"));
-            }
+            internal bool <>m__0(string i) => 
+                (!this.includesToSkip.Contains<string>(i) && i.StartsWith("<"));
 
-            internal bool <>m__1(string i)
-            {
-                return (!Enumerable.Contains<string>(this.includesToSkip, i) && !i.StartsWith("<"));
-            }
+            internal bool <>m__1(string i) => 
+                (!this.includesToSkip.Contains<string>(i) && !i.StartsWith("<"));
         }
     }
 }

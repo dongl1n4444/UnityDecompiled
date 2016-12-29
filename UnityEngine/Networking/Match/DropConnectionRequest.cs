@@ -13,10 +13,8 @@
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NodeID <nodeId>k__BackingField;
 
-        public override bool IsValid()
-        {
-            return ((base.IsValid() && (this.networkId != NetworkID.Invalid)) && (this.nodeId != NodeID.Invalid));
-        }
+        public override bool IsValid() => 
+            ((base.IsValid() && (this.networkId != NetworkID.Invalid)) && (this.nodeId != NodeID.Invalid));
 
         public override string ToString()
         {

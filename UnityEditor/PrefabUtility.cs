@@ -126,10 +126,8 @@
         /// <returns>
         /// <para>The GameObject at the root of the prefab.</para>
         /// </returns>
-        public static Object InstantiatePrefab(Object target)
-        {
-            return InternalInstantiatePrefab(target, EditorSceneManager.GetTargetSceneForNewGameObjects());
-        }
+        public static Object InstantiatePrefab(Object target) => 
+            InternalInstantiatePrefab(target, EditorSceneManager.GetTargetSceneForNewGameObjects());
 
         /// <summary>
         /// <para>Instantiates the given prefab in a given scene.</para>
@@ -139,10 +137,8 @@
         /// <returns>
         /// <para>The GameObject at the root of the prefab.</para>
         /// </returns>
-        public static Object InstantiatePrefab(Object target, Scene destinationScene)
-        {
-            return InternalInstantiatePrefab(target, destinationScene);
-        }
+        public static Object InstantiatePrefab(Object target, Scene destinationScene) => 
+            InternalInstantiatePrefab(target, destinationScene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Object INTERNAL_CALL_InternalInstantiatePrefab(Object target, ref Scene destinationScene);
@@ -154,10 +150,8 @@
             }
         }
 
-        private static Object InternalInstantiatePrefab(Object target, Scene destinationScene)
-        {
-            return INTERNAL_CALL_InternalInstantiatePrefab(target, ref destinationScene);
-        }
+        private static Object InternalInstantiatePrefab(Object target, Scene destinationScene) => 
+            INTERNAL_CALL_InternalInstantiatePrefab(target, ref destinationScene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsComponentAddedToPrefabInstance(Object source);

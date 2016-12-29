@@ -39,10 +39,8 @@
             this.m_ProductModel = this.Properties["ro.product.model"];
         }
 
-        public string Describe()
-        {
-            return string.Format("{0} [{1}]", this.Id, this.ProductModel);
-        }
+        public string Describe() => 
+            $"{this.Id} [{this.ProductModel}]";
 
         private string Exec(string[] command, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg)
         {
@@ -53,7 +51,7 @@
             try
             {
                 string[] array = new string[2 + command.Length];
-                string str = string.Format("\"{0}\"", this.m_DeviceId);
+                string str = $""{this.m_DeviceId}"";
                 new string[] { "-s", str }.CopyTo(array, 0);
                 command.CopyTo(array, 2);
                 return ADB.Run(array, new Command.WaitingForProcessToExit(storey.<>m__0), errorMsg);
@@ -84,7 +82,7 @@
 
         public string Launch(string package, string activity, Command.WaitingForProcessToExit waitingForProcessToExit)
         {
-            string[] command = new string[] { "shell", "am", "start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.LAUNCHER", "-f", "0x10200000", "-n", Quote(string.Format("{0}/{1}", package, activity)) };
+            string[] command = new string[] { "shell", "am", "start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.LAUNCHER", "-f", "0x10200000", "-n", Quote($"{package}/{activity}") };
             return this.Exec(command, waitingForProcessToExit, "Unable to launch application. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ");
         }
 
@@ -106,10 +104,8 @@
             return this.Exec(command, waitingForProcessToExit, "Unable to push local file to device. Please make sure the Android SDK is installed and is properly configured in the Editor. See the Console for more details. ");
         }
 
-        private static string Quote(string val)
-        {
-            return string.Format("\"{0}\"", val);
-        }
+        private static string Quote(string val) => 
+            $""{val}"";
 
         public string SetProperty(string key, string val, Command.WaitingForProcessToExit waitingForProcessToExit)
         {
@@ -171,13 +167,8 @@
             }
         }
 
-        public string Id
-        {
-            get
-            {
-                return this.m_DeviceId;
-            }
-        }
+        public string Id =>
+            this.m_DeviceId;
 
         public PropertiesTable<ulong> MemInfo
         {
@@ -207,13 +198,8 @@
             }
         }
 
-        public string ProductModel
-        {
-            get
-            {
-                return this.m_ProductModel;
-            }
-        }
+        public string ProductModel =>
+            this.m_ProductModel;
 
         public PropertiesTable<string> Properties
         {
@@ -287,13 +273,8 @@
                 this.m_DefaultValue = defaultValue;
             }
 
-            public Dictionary<string, TValue> Dictionary
-            {
-                get
-                {
-                    return this.m_Dictionary;
-                }
-            }
+            public Dictionary<string, TValue> Dictionary =>
+                this.m_Dictionary;
 
             public TValue this[string key]
             {

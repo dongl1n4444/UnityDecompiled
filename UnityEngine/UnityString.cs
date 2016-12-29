@@ -4,10 +4,8 @@
 
     internal sealed class UnityString
     {
-        public static string Format(string fmt, params object[] args)
-        {
-            return string.Format(fmt, args);
-        }
+        public static string Format(string fmt, params object[] args) => 
+            string.Format(fmt, args);
     }
 }
 

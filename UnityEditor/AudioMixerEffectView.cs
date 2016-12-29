@@ -369,10 +369,8 @@
         {
             internal Type pluginType;
 
-            internal bool <>m__0(Type t)
-            {
-                return (!t.IsAbstract && this.pluginType.IsAssignableFrom(t));
-            }
+            internal bool <>m__0(Type t) => 
+                (!t.IsAbstract && this.pluginType.IsAssignableFrom(t));
         }
 
         [CompilerGenerated]
@@ -512,7 +510,7 @@
                         {
                             if ((this.m_MovingDstIndex != -1) && this.m_MovingEffectAllowed)
                             {
-                                List<AudioMixerEffectController> sourceEffects = Enumerable.ToList<AudioMixerEffectController>(group.effects);
+                                List<AudioMixerEffectController> sourceEffects = group.effects.ToList<AudioMixerEffectController>();
                                 if (AudioMixerController.MoveEffect(ref sourceEffects, this.m_MovingSrcIndex, ref sourceEffects, this.m_MovingDstIndex))
                                 {
                                     group.effects = sourceEffects.ToArray();
@@ -543,26 +541,14 @@
                 }
             }
 
-            public bool IsDraggingIndex(int effectIndex)
-            {
-                return ((this.m_MovingSrcIndex == effectIndex) && (GUIUtility.hotControl == this.m_DragControlID));
-            }
+            public bool IsDraggingIndex(int effectIndex) => 
+                ((this.m_MovingSrcIndex == effectIndex) && (GUIUtility.hotControl == this.m_DragControlID));
 
-            public int dragControlID
-            {
-                get
-                {
-                    return this.m_DragControlID;
-                }
-            }
+            public int dragControlID =>
+                this.m_DragControlID;
 
-            private bool isDragging
-            {
-                get
-                {
-                    return ((this.m_MovingSrcIndex != -1) && (GUIUtility.hotControl == this.m_DragControlID));
-                }
-            }
+            private bool isDragging =>
+                ((this.m_MovingSrcIndex != -1) && (GUIUtility.hotControl == this.m_DragControlID));
         }
 
         private static class Texts

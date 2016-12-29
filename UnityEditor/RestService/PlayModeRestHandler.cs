@@ -15,12 +15,8 @@
             return (!EditorApplication.isPaused ? "playing" : "paused");
         }
 
-        protected override JSONValue HandleGet(Request request, JSONValue payload)
-        {
-            JSONValue value2 = new JSONValue();
-            value2["state"] = this.CurrentState();
-            return value2;
-        }
+        protected override JSONValue HandleGet(Request request, JSONValue payload) => 
+            new JSONValue { ["state"] = this.CurrentState() };
 
         protected override JSONValue HandlePost(Request request, JSONValue payload)
         {
@@ -50,10 +46,10 @@
                     throw exception;
                 }
             }
-            JSONValue value3 = new JSONValue();
-            value3["oldstate"] = str2;
-            value3["newstate"] = this.CurrentState();
-            return value3;
+            return new JSONValue { 
+                ["oldstate"] = str2,
+                ["newstate"] = this.CurrentState()
+            };
         }
 
         internal static void Register()

@@ -19,10 +19,8 @@
             this.m_Icon = EditorGUIUtility.FindTexture("boo Script Icon");
         }
 
-        protected override Texture GetIconForItem(TreeViewItem item)
-        {
-            return (!item.hasChildren ? this.m_Icon : this.m_FolderIcon);
-        }
+        protected override Texture GetIconForItem(TreeViewItem item) => 
+            (!item.hasChildren ? this.m_Icon : this.m_FolderIcon);
 
         protected override void OnContentGUI(Rect rect, int row, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
         {
@@ -76,13 +74,8 @@
         {
         }
 
-        private float[] columnWidths
-        {
-            get
-            {
-                return base.m_TreeView.state.columnWidths;
-            }
-        }
+        private float[] columnWidths =>
+            base.m_TreeView.state.columnWidths;
     }
 }
 

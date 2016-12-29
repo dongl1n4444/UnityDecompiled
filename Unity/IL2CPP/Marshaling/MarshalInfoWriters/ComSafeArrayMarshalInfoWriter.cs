@@ -20,15 +20,15 @@
             this._marshalInfo = marshalInfo as SafeArrayMarshalInfo;
             if (this._marshalInfo == null)
             {
-                throw new InvalidOperationException(string.Format("SafeArray type '{0}' has invalid MarshalAsAttribute.", type.FullName));
+                throw new InvalidOperationException($"SafeArray type '{type.FullName}' has invalid MarshalAsAttribute.");
             }
             if ((this._marshalInfo.ElementType == VariantType.BStr) && (this._elementType.MetadataType != MetadataType.String))
             {
-                throw new InvalidOperationException(string.Format("SafeArray(BSTR) type '{0}' has invalid MarshalAsAttribute.", type.FullName));
+                throw new InvalidOperationException($"SafeArray(BSTR) type '{type.FullName}' has invalid MarshalAsAttribute.");
             }
             NativeType nativeElementType = this.GetNativeElementType();
             this._elementTypeMarshalInfoWriter = MarshalDataCollector.MarshalInfoWriterFor(this._elementType, MarshalType.COM, new MarshalInfo(nativeElementType), false, false, false, null);
-            string name = string.Format("Il2CppSafeArray/*{0}*/*", this._marshalInfo.ElementType.ToString().ToUpper());
+            string name = $"Il2CppSafeArray/*{this._marshalInfo.ElementType.ToString().ToUpper()}*/*";
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(name, name) };
         }
 
@@ -78,7 +78,7 @@
                 case VariantType.UInt:
                     return NativeType.UInt;
             }
-            throw new NotSupportedException(string.Format("SafeArray element type {0} is not supported.", this._marshalInfo.ElementType));
+            throw new NotSupportedException($"SafeArray element type {this._marshalInfo.ElementType} is not supported.");
         }
 
         public override void WriteIncludesForFieldDeclaration(CppCodeWriter writer)
@@ -92,7 +92,7 @@
             base.WriteIncludesForMarshaling(writer);
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             object[] args = new object[] { variableName };
             writer.WriteLine("il2cpp_codegen_com_destroy_safe_array({0});", args);
@@ -133,21 +133,11 @@
             }
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
-        public override string NativeSize
-        {
-            get
-            {
-                return "-1";
-            }
-        }
+        public override string NativeSize =>
+            "-1";
     }
 }
 

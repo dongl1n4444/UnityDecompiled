@@ -7,15 +7,11 @@
     {
         private static Dictionary<string, object> store = new Dictionary<string, object>();
 
-        public static int GetInt(string key)
-        {
-            return GetValue<int>(key);
-        }
+        public static int GetInt(string key) => 
+            GetValue<int>(key);
 
-        public static string GetString(string key)
-        {
-            return GetValue<string>(key);
-        }
+        public static string GetString(string key) => 
+            GetValue<string>(key);
 
         private static T GetValue<T>(string key)
         {

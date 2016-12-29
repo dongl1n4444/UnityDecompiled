@@ -84,10 +84,8 @@
             return true;
         }
 
-        public bool CanUnifyLODConfig()
-        {
-            return (!base.serializedObject.FindProperty("m_HasBillboard").hasMultipleDifferentValues && !this.m_LODSettings.FindPropertyRelative("Array.size").hasMultipleDifferentValues);
-        }
+        public bool CanUnifyLODConfig() => 
+            (!base.serializedObject.FindProperty("m_HasBillboard").hasMultipleDifferentValues && !this.m_LODSettings.FindPropertyRelative("Array.size").hasMultipleDifferentValues);
 
         private void DrawLODLevelSlider(Rect sliderPosition, List<LODGroupGUI.LODInfo> lods)
         {
@@ -172,16 +170,17 @@
             {
                 <>f__am$cache1 = new Func<SpeedTreeImporter, string>(null, (IntPtr) <GenerateMaterials>m__1);
             }
-            string[] searchInFolders = Enumerable.ToArray<string>(Enumerable.Select<SpeedTreeImporter, string>(this.importers, <>f__am$cache1));
+            string[] searchInFolders = Enumerable.Select<SpeedTreeImporter, string>(this.importers, <>f__am$cache1).ToArray<string>();
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <GenerateMaterials>m__2);
             }
-            string[] assets = Enumerable.ToArray<string>(Enumerable.Select<string, string>(AssetDatabase.FindAssets("t:Material", searchInFolders), <>f__am$cache2));
+            string[] assets = Enumerable.Select<string, string>(AssetDatabase.FindAssets("t:Material", searchInFolders), <>f__am$cache2).ToArray<string>();
             bool flag = true;
             if (assets.Length > 0)
             {
-                flag = Provider.PromptAndCheckoutIfNeeded(assets, string.Format("Materials will be checked out in:\n{0}", string.Join("\n", searchInFolders)));
+                flag = Provider.PromptAndCheckoutIfNeeded(assets, $"Materials will be checked out in:
+{string.Join("\n", searchInFolders)}");
             }
             if (flag)
             {
@@ -253,7 +252,7 @@
             EditorGUILayout.Space();
             if (this.upgradeMaterials)
             {
-                EditorGUILayout.HelpBox(string.Format("SpeedTree materials need to be upgraded. Please back them up (if modified manually) then hit the \"{0}\" button below.", Styles.ApplyAndGenerate.text), MessageType.Warning);
+                EditorGUILayout.HelpBox($"SpeedTree materials need to be upgraded. Please back them up (if modified manually) then hit the "{Styles.ApplyAndGenerate.text}" button below.", MessageType.Warning);
             }
             base.ApplyRevertGUI();
         }
@@ -325,7 +324,7 @@
                         {
                             <>f__am$cache4 = new Func<string, GUIContent>(null, (IntPtr) <ShowLODGUI>m__4);
                         }
-                        EditorGUILayout.Popup(this.m_LODSettings.GetArrayElementAtIndex(this.m_SelectedLODRange).FindPropertyRelative("windQuality"), Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.Take<string>(SpeedTreeImporter.windQualityNames, num + 1), <>f__am$cache4)), Styles.WindQuality, new GUILayoutOption[0]);
+                        EditorGUILayout.Popup(this.m_LODSettings.GetArrayElementAtIndex(this.m_SelectedLODRange).FindPropertyRelative("windQuality"), Enumerable.Select<string, GUIContent>(SpeedTreeImporter.windQualityNames.Take<string>(num + 1), <>f__am$cache4).ToArray<GUIContent>(), Styles.WindQuality, new GUILayoutOption[0]);
                     }
                 }
             }
@@ -339,13 +338,13 @@
                     if (GUI.Button(rect, Styles.ResetLOD, EditorStyles.miniButton))
                     {
                         GenericMenu menu = new GenericMenu();
-                        foreach (SpeedTreeImporter importer in Enumerable.Cast<SpeedTreeImporter>(base.targets))
+                        foreach (SpeedTreeImporter importer in base.targets.Cast<SpeedTreeImporter>())
                         {
                             if (<>f__am$cache5 == null)
                             {
                                 <>f__am$cache5 = new Func<float, string>(null, (IntPtr) <ShowLODGUI>m__5);
                             }
-                            string text = string.Format("{0}: {1}", Path.GetFileNameWithoutExtension(importer.assetPath), string.Join(" | ", Enumerable.ToArray<string>(Enumerable.Select<float, string>(importer.LODHeights, <>f__am$cache5))));
+                            string text = $"{Path.GetFileNameWithoutExtension(importer.assetPath)}: {string.Join(" | ", Enumerable.Select<float, string>(importer.LODHeights, <>f__am$cache5).ToArray<string>())}";
                             menu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(this.OnResetLODMenuClick), importer);
                         }
                         menu.DropDown(rect);
@@ -380,13 +379,8 @@
             }
         }
 
-        private SpeedTreeImporter[] importers
-        {
-            get
-            {
-                return Enumerable.ToArray<SpeedTreeImporter>(Enumerable.Cast<SpeedTreeImporter>(base.targets));
-            }
-        }
+        private SpeedTreeImporter[] importers =>
+            base.targets.Cast<SpeedTreeImporter>().ToArray<SpeedTreeImporter>();
 
         private bool upgradeMaterials
         {
@@ -406,15 +400,11 @@
             internal SpeedTreeImporterInspector $this;
             internal int lodCount;
 
-            internal string <>m__0(int i)
-            {
-                return (((i != (this.lodCount - 1)) || !(this.$this.target as SpeedTreeImporter).hasBillboard) ? string.Format("LOD {0}", i) : "Billboard");
-            }
+            internal string <>m__0(int i) => 
+                (((i != (this.lodCount - 1)) || !(this.$this.target as SpeedTreeImporter).hasBillboard) ? $"LOD {i}" : "Billboard");
 
-            internal float <>m__1(int i)
-            {
-                return this.$this.m_LODSettings.GetArrayElementAtIndex(i).FindPropertyRelative("height").floatValue;
-            }
+            internal float <>m__1(int i) => 
+                this.$this.m_LODSettings.GetArrayElementAtIndex(i).FindPropertyRelative("height").floatValue;
         }
 
         private class Styles

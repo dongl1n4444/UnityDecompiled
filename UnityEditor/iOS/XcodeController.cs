@@ -49,10 +49,8 @@
             }
         }
 
-        private string CommandAsString(Command cmd)
-        {
-            return Convert.ToString((int) cmd);
-        }
+        private string CommandAsString(Command cmd) => 
+            Convert.ToString((int) cmd);
 
         public void Connect()
         {
@@ -78,15 +76,11 @@
             this.Disconnect();
         }
 
-        private string[] EncodeCommand(Command cmd)
-        {
-            return new string[] { this.CommandAsString(cmd) };
-        }
+        private string[] EncodeCommand(Command cmd) => 
+            new string[] { this.CommandAsString(cmd) };
 
-        private string[] EncodeCommand(Command cmd, string arg)
-        {
-            return new string[] { this.CommandAsString(cmd), arg };
-        }
+        private string[] EncodeCommand(Command cmd, string arg) => 
+            new string[] { this.CommandAsString(cmd), arg };
 
         public string GetMobileDeviceList(string projectPath)
         {
@@ -97,10 +91,8 @@
             return str;
         }
 
-        public bool InitializeXcodeApplication(string buildToolsDirs)
-        {
-            return this.LaunchAndWaitForXcode(buildToolsDirs);
-        }
+        public bool InitializeXcodeApplication(string buildToolsDirs) => 
+            this.LaunchAndWaitForXcode(buildToolsDirs);
 
         private void InstallXcodePlugin(string buildToolsDir)
         {
@@ -167,10 +159,8 @@
             this.Disconnect();
         }
 
-        private string PluginSourcePath(string buildToolsDir)
-        {
-            return Path.Combine(Path.Combine(UnityEditor.BuildPipeline.GetBuildToolsDirectory(EditorUserBuildSettings.activeBuildTarget), Utils.GetOSPathPart()), "Unity4XC.xcplugin");
-        }
+        private string PluginSourcePath(string buildToolsDir) => 
+            Path.Combine(Path.Combine(UnityEditor.BuildPipeline.GetBuildToolsDirectory(EditorUserBuildSettings.activeBuildTarget), Utils.GetOSPathPart()), "Unity4XC.xcplugin");
 
         private string ReceiveResult()
         {
@@ -184,7 +174,7 @@
             }
             while ((buffer[0] != 10) && (num > 0));
             string str = Encoding.UTF8.GetString(list.ToArray());
-            this.Log(string.Format("Received results: {0}", str), new object[0]);
+            this.Log($"Received results: {str}", new object[0]);
             return str;
         }
 
@@ -218,7 +208,7 @@
         private void SendCommand(string[] cmd)
         {
             string str = string.Join("\t", cmd) + "\n";
-            this.Log(string.Format("Sending command {0}", str), new object[0]);
+            this.Log($"Sending command {str}", new object[0]);
             byte[] bytes = Encoding.UTF8.GetBytes(str);
             this._socket.Send(bytes);
         }

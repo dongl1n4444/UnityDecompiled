@@ -10,13 +10,8 @@
         {
         }
 
-        public override System.Text.Encoding Encoding
-        {
-            get
-            {
-                return System.Text.Encoding.UTF8;
-            }
-        }
+        public override System.Text.Encoding Encoding =>
+            System.Text.Encoding.UTF8;
     }
 }
 

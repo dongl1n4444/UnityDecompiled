@@ -6,41 +6,23 @@
 
     internal class TargetExtension : DefaultPlatformSupportModule
     {
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new OSXDesktopStandalonePostProcessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new OSXDesktopStandalonePostProcessor();
 
-        public override IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return new DesktopStandaloneBuildWindowExtension();
-        }
+        public override IBuildWindowExtension CreateBuildWindowExtension() => 
+            new DesktopStandaloneBuildWindowExtension();
 
-        public override IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return new DesktopPluginImporterExtension();
-        }
+        public override IPluginImporterExtension CreatePluginImporterExtension() => 
+            new DesktopPluginImporterExtension();
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return new DesktopStandalonePostProcessor.ScriptingImplementations();
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            new DesktopStandalonePostProcessor.ScriptingImplementations();
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "OSXStandaloneEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "OSXStandaloneEditorExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "OSXStandalone";
-            }
-        }
+        public override string TargetName =>
+            "OSXStandalone";
     }
 }
 

@@ -26,7 +26,7 @@
             {
                 <>f__am$cache0 = new Func<GenericInstanceMethod, bool>(null, (IntPtr) <Collect>m__0);
             }
-            GenericInstanceMethod[] methodArray = Enumerable.ToArray<GenericInstanceMethod>(Enumerable.Where<GenericInstanceMethod>(generics.Methods.Items, <>f__am$cache0));
+            GenericInstanceMethod[] methodArray = generics.Methods.Items.Where<GenericInstanceMethod>(<>f__am$cache0).ToArray<GenericInstanceMethod>();
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <Collect>m__1);
@@ -35,7 +35,7 @@
             {
                 <>f__am$cache2 = new Func<TypeReference, bool>(null, (IntPtr) <Collect>m__2);
             }
-            TypeReference[] referenceArray = Enumerable.ToArray<TypeReference>(Enumerable.Where<TypeReference>(Enumerable.Concat<TypeReference>(Enumerable.Where<TypeDefinition>(types, <>f__am$cache1), generics.Types.Items), <>f__am$cache2));
+            TypeReference[] referenceArray = types.Where<TypeDefinition>(<>f__am$cache1).Concat<TypeReference>(generics.Types.Items).Where<TypeReference>(<>f__am$cache2).ToArray<TypeReference>();
             foreach (TypeReference reference in referenceArray)
             {
                 foreach (GenericInstanceMethod method in methodArray)
@@ -52,7 +52,7 @@
         private static GenericInstanceMethod FindMethodInTypeThatOverrides(GenericInstanceMethod potentiallyOverridenGenericInstanceMethod, TypeReference typeThatMightHaveAnOverrideingMethod, VTableBuilder vTableBuilder)
         {
             MethodDefinition method = potentiallyOverridenGenericInstanceMethod.Resolve();
-            if (!Extensions.DerivesFrom(typeThatMightHaveAnOverrideingMethod, potentiallyOverridenGenericInstanceMethod.DeclaringType, true))
+            if (!typeThatMightHaveAnOverrideingMethod.DerivesFrom(potentiallyOverridenGenericInstanceMethod.DeclaringType, true))
             {
                 return null;
             }
@@ -79,7 +79,7 @@
             if (!typeDefinition.IsInterface)
             {
             }
-            return ((<>f__am$cache3 == null) && Enumerable.Any<MethodDefinition>(typeDefinition.Methods, <>f__am$cache3));
+            return ((<>f__am$cache3 == null) && typeDefinition.Methods.Any<MethodDefinition>(<>f__am$cache3));
         }
     }
 }

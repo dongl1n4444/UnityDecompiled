@@ -238,14 +238,8 @@
             return null;
         }
 
-        public IEnumerator GetEnumerator()
-        {
-            if (this.m_Styles == null)
-            {
-                this.BuildStyleCache();
-            }
-            return this.m_Styles.Values.GetEnumerator();
-        }
+        public IEnumerator GetEnumerator() => 
+            this.m_Styles?.Values.GetEnumerator();
 
         /// <summary>
         /// <para>Get a named GUIStyle.</para>
@@ -282,10 +276,8 @@
         /// </summary>
         public GUIStyle box
         {
-            get
-            {
-                return this.m_box;
-            }
+            get => 
+                this.m_box;
             set
             {
                 this.m_box = value;
@@ -298,10 +290,8 @@
         /// </summary>
         public GUIStyle button
         {
-            get
-            {
-                return this.m_button;
-            }
+            get => 
+                this.m_button;
             set
             {
                 this.m_button = value;
@@ -314,10 +304,8 @@
         /// </summary>
         public GUIStyle[] customStyles
         {
-            get
-            {
-                return this.m_CustomStyles;
-            }
+            get => 
+                this.m_CustomStyles;
             set
             {
                 this.m_CustomStyles = value;
@@ -342,10 +330,8 @@
         /// </summary>
         public Font font
         {
-            get
-            {
-                return this.m_Font;
-            }
+            get => 
+                this.m_Font;
             set
             {
                 this.m_Font = value;
@@ -362,10 +348,8 @@
         /// </summary>
         public GUIStyle horizontalScrollbar
         {
-            get
-            {
-                return this.m_horizontalScrollbar;
-            }
+            get => 
+                this.m_horizontalScrollbar;
             set
             {
                 this.m_horizontalScrollbar = value;
@@ -378,10 +362,8 @@
         /// </summary>
         public GUIStyle horizontalScrollbarLeftButton
         {
-            get
-            {
-                return this.m_horizontalScrollbarLeftButton;
-            }
+            get => 
+                this.m_horizontalScrollbarLeftButton;
             set
             {
                 this.m_horizontalScrollbarLeftButton = value;
@@ -394,10 +376,8 @@
         /// </summary>
         public GUIStyle horizontalScrollbarRightButton
         {
-            get
-            {
-                return this.m_horizontalScrollbarRightButton;
-            }
+            get => 
+                this.m_horizontalScrollbarRightButton;
             set
             {
                 this.m_horizontalScrollbarRightButton = value;
@@ -410,10 +390,8 @@
         /// </summary>
         public GUIStyle horizontalScrollbarThumb
         {
-            get
-            {
-                return this.m_horizontalScrollbarThumb;
-            }
+            get => 
+                this.m_horizontalScrollbarThumb;
             set
             {
                 this.m_horizontalScrollbarThumb = value;
@@ -426,10 +404,8 @@
         /// </summary>
         public GUIStyle horizontalSlider
         {
-            get
-            {
-                return this.m_horizontalSlider;
-            }
+            get => 
+                this.m_horizontalSlider;
             set
             {
                 this.m_horizontalSlider = value;
@@ -442,10 +418,8 @@
         /// </summary>
         public GUIStyle horizontalSliderThumb
         {
-            get
-            {
-                return this.m_horizontalSliderThumb;
-            }
+            get => 
+                this.m_horizontalSliderThumb;
             set
             {
                 this.m_horizontalSliderThumb = value;
@@ -458,10 +432,8 @@
         /// </summary>
         public GUIStyle label
         {
-            get
-            {
-                return this.m_label;
-            }
+            get => 
+                this.m_label;
             set
             {
                 this.m_label = value;
@@ -474,10 +446,8 @@
         /// </summary>
         public GUIStyle scrollView
         {
-            get
-            {
-                return this.m_ScrollView;
-            }
+            get => 
+                this.m_ScrollView;
             set
             {
                 this.m_ScrollView = value;
@@ -488,23 +458,16 @@
         /// <summary>
         /// <para>Generic settings for how controls should behave with this skin.</para>
         /// </summary>
-        public GUISettings settings
-        {
-            get
-            {
-                return this.m_Settings;
-            }
-        }
+        public GUISettings settings =>
+            this.m_Settings;
 
         /// <summary>
         /// <para>Style used by default for GUI.TextArea controls.</para>
         /// </summary>
         public GUIStyle textArea
         {
-            get
-            {
-                return this.m_textArea;
-            }
+            get => 
+                this.m_textArea;
             set
             {
                 this.m_textArea = value;
@@ -517,10 +480,8 @@
         /// </summary>
         public GUIStyle textField
         {
-            get
-            {
-                return this.m_textField;
-            }
+            get => 
+                this.m_textField;
             set
             {
                 this.m_textField = value;
@@ -533,10 +494,8 @@
         /// </summary>
         public GUIStyle toggle
         {
-            get
-            {
-                return this.m_toggle;
-            }
+            get => 
+                this.m_toggle;
             set
             {
                 this.m_toggle = value;
@@ -549,10 +508,8 @@
         /// </summary>
         public GUIStyle verticalScrollbar
         {
-            get
-            {
-                return this.m_verticalScrollbar;
-            }
+            get => 
+                this.m_verticalScrollbar;
             set
             {
                 this.m_verticalScrollbar = value;
@@ -565,10 +522,8 @@
         /// </summary>
         public GUIStyle verticalScrollbarDownButton
         {
-            get
-            {
-                return this.m_verticalScrollbarDownButton;
-            }
+            get => 
+                this.m_verticalScrollbarDownButton;
             set
             {
                 this.m_verticalScrollbarDownButton = value;
@@ -581,10 +536,8 @@
         /// </summary>
         public GUIStyle verticalScrollbarThumb
         {
-            get
-            {
-                return this.m_verticalScrollbarThumb;
-            }
+            get => 
+                this.m_verticalScrollbarThumb;
             set
             {
                 this.m_verticalScrollbarThumb = value;
@@ -597,10 +550,8 @@
         /// </summary>
         public GUIStyle verticalScrollbarUpButton
         {
-            get
-            {
-                return this.m_verticalScrollbarUpButton;
-            }
+            get => 
+                this.m_verticalScrollbarUpButton;
             set
             {
                 this.m_verticalScrollbarUpButton = value;
@@ -613,10 +564,8 @@
         /// </summary>
         public GUIStyle verticalSlider
         {
-            get
-            {
-                return this.m_verticalSlider;
-            }
+            get => 
+                this.m_verticalSlider;
             set
             {
                 this.m_verticalSlider = value;
@@ -629,10 +578,8 @@
         /// </summary>
         public GUIStyle verticalSliderThumb
         {
-            get
-            {
-                return this.m_verticalSliderThumb;
-            }
+            get => 
+                this.m_verticalSliderThumb;
             set
             {
                 this.m_verticalSliderThumb = value;
@@ -645,10 +592,8 @@
         /// </summary>
         public GUIStyle window
         {
-            get
-            {
-                return this.m_window;
-            }
+            get => 
+                this.m_window;
             set
             {
                 this.m_window = value;

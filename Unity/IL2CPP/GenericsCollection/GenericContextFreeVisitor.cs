@@ -34,18 +34,14 @@
             {
                 <>f__am$cache0 = new Func<TypeReference, bool>(null, (IntPtr) <IsFullyInflated>m__0);
             }
-            return (!Enumerable.Any<TypeReference>(genericInstanceMethod.GenericArguments, <>f__am$cache0) && !Unity.IL2CPP.Extensions.ContainsGenericParameters(genericInstanceMethod.DeclaringType));
+            return (!genericInstanceMethod.GenericArguments.Any<TypeReference>(<>f__am$cache0) && !genericInstanceMethod.DeclaringType.ContainsGenericParameters());
         }
 
-        private static bool IsFullyInflated(GenericInstanceType genericInstanceType)
-        {
-            return ((genericInstanceType != null) && !Unity.IL2CPP.Extensions.ContainsGenericParameters(genericInstanceType));
-        }
+        private static bool IsFullyInflated(GenericInstanceType genericInstanceType) => 
+            ((genericInstanceType != null) && !genericInstanceType.ContainsGenericParameters());
 
-        private static bool MethodHasFullySharableGenericParameters(MethodDefinition methodDefinition)
-        {
-            return (methodDefinition.HasGenericParameters && GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.GenericParameters));
-        }
+        private static bool MethodHasFullySharableGenericParameters(MethodDefinition methodDefinition) => 
+            (methodDefinition.HasGenericParameters && GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.GenericParameters));
 
         private void ProcessArray(TypeReference elementType, int rank)
         {
@@ -98,14 +94,12 @@
             GenericContextAwareVisitor.ProcessGenericType(inflatedType, this._generics, null);
         }
 
-        private static bool TypeHasFullySharableGenericParameters(TypeDefinition typeDefinition)
-        {
-            return (typeDefinition.HasGenericParameters && GenericSharingAnalysis.AreFullySharableGenericParameters(typeDefinition.GenericParameters));
-        }
+        private static bool TypeHasFullySharableGenericParameters(TypeDefinition typeDefinition) => 
+            (typeDefinition.HasGenericParameters && GenericSharingAnalysis.AreFullySharableGenericParameters(typeDefinition.GenericParameters));
 
         protected override void Visit(ArrayType arrayType, Unity.Cecil.Visitor.Context context)
         {
-            if (!Unity.IL2CPP.Extensions.ContainsGenericParameters(arrayType))
+            if (!arrayType.ContainsGenericParameters())
             {
                 this.ProcessArray(arrayType.ElementType, arrayType.Rank);
             }
@@ -117,7 +111,7 @@
             if (instruction.OpCode.Code == Code.Newarr)
             {
                 TypeReference operand = (TypeReference) instruction.Operand;
-                if (!Unity.IL2CPP.Extensions.ContainsGenericParameters(operand))
+                if (!operand.ContainsGenericParameters())
                 {
                     this.ProcessArray(operand, 1);
                 }
@@ -141,7 +135,7 @@
 
         protected override void Visit(GenericInstanceType genericInstanceType, Unity.Cecil.Visitor.Context context)
         {
-            if (!Unity.IL2CPP.Extensions.ContainsGenericParameters(genericInstanceType))
+            if (!genericInstanceType.ContainsGenericParameters())
             {
                 GenericInstanceType inflatedType = Inflater.InflateType(null, genericInstanceType);
                 this.ProcessGenericType(inflatedType);
@@ -163,7 +157,7 @@
             {
                 foreach (TypeReference reference in parameter.Constraints)
                 {
-                    if ((reference is GenericInstanceType) && !Unity.IL2CPP.Extensions.ContainsGenericParameters(reference))
+                    if ((reference is GenericInstanceType) && !reference.ContainsGenericParameters())
                     {
                         this.ProcessGenericType((GenericInstanceType) reference);
                     }

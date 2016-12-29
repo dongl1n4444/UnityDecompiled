@@ -99,13 +99,8 @@
         public static bool graphicsMultiThreaded { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("graphicsPixelFillrate is no longer supported in Unity 5.0+.")]
-        public static int graphicsPixelFillrate
-        {
-            get
-            {
-                return -1;
-            }
-        }
+        public static int graphicsPixelFillrate =>
+            -1;
 
         /// <summary>
         /// <para>Graphics device shader capability level (Read Only).</para>
@@ -242,13 +237,8 @@
         public static int supportsStencil { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("Vertex program support is required in Unity 5.0+")]
-        public static bool supportsVertexPrograms
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public static bool supportsVertexPrograms =>
+            true;
 
         /// <summary>
         /// <para>Is the device capable of providing the user haptic feedback by vibration?</para>

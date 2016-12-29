@@ -59,33 +59,21 @@
         /// <summary>
         /// <para>Returns the raw bytes downloaded from the remote server, or null. (Read Only)</para>
         /// </summary>
-        public byte[] data
-        {
-            get
-            {
-                return this.GetData();
-            }
-        }
+        public byte[] data =>
+            this.GetData();
         /// <summary>
         /// <para>Convenience property. Returns the bytes from data interpreted as a UTF8 string. (Read Only)</para>
         /// </summary>
-        public string text
-        {
-            get
-            {
-                return this.GetText();
-            }
-        }
+        public string text =>
+            this.GetText();
         /// <summary>
         /// <para>Callback, invoked when the data property is accessed.</para>
         /// </summary>
         /// <returns>
         /// <para>Byte array to return as the value of the data property.</para>
         /// </returns>
-        protected virtual byte[] GetData()
-        {
-            return null;
-        }
+        protected virtual byte[] GetData() => 
+            null;
 
         /// <summary>
         /// <para>Callback, invoked when the text property is accessed.</para>
@@ -112,10 +100,8 @@
         /// <para>True if the download should continue, false to abort.</para>
         /// </returns>
         [UsedByNativeCode]
-        protected virtual bool ReceiveData(byte[] data, int dataLength)
-        {
-            return true;
-        }
+        protected virtual bool ReceiveData(byte[] data, int dataLength) => 
+            true;
 
         /// <summary>
         /// <para>Callback, invoked with a Content-Length header is received.</para>
@@ -141,10 +127,8 @@
         /// <para>The return value for UnityWebRequest.downloadProgress.</para>
         /// </returns>
         [UsedByNativeCode]
-        protected virtual float GetProgress()
-        {
-            return 0f;
-        }
+        protected virtual float GetProgress() => 
+            0f;
 
         protected static T GetCheckedDownloader<T>(UnityWebRequest www) where T: DownloadHandler
         {

@@ -59,10 +59,8 @@
 
         public bool boolArgument
         {
-            get
-            {
-                return this.m_BoolArgument;
-            }
+            get => 
+                this.m_BoolArgument;
             set
             {
                 this.m_BoolArgument = value;
@@ -71,10 +69,8 @@
 
         public float floatArgument
         {
-            get
-            {
-                return this.m_FloatArgument;
-            }
+            get => 
+                this.m_FloatArgument;
             set
             {
                 this.m_FloatArgument = value;
@@ -83,10 +79,8 @@
 
         public int intArgument
         {
-            get
-            {
-                return this.m_IntArgument;
-            }
+            get => 
+                this.m_IntArgument;
             set
             {
                 this.m_IntArgument = value;
@@ -95,10 +89,8 @@
 
         public string stringArgument
         {
-            get
-            {
-                return this.m_StringArgument;
-            }
+            get => 
+                this.m_StringArgument;
             set
             {
                 this.m_StringArgument = value;
@@ -107,10 +99,8 @@
 
         public UnityEngine.Object unityObjectArgument
         {
-            get
-            {
-                return this.m_ObjectArgument;
-            }
+            get => 
+                this.m_ObjectArgument;
             set
             {
                 this.m_ObjectArgument = value;
@@ -118,13 +108,8 @@
             }
         }
 
-        public string unityObjectArgumentAssemblyTypeName
-        {
-            get
-            {
-                return this.m_ObjectArgumentAssemblyTypeName;
-            }
-        }
+        public string unityObjectArgumentAssemblyTypeName =>
+            this.m_ObjectArgumentAssemblyTypeName;
     }
 }
 

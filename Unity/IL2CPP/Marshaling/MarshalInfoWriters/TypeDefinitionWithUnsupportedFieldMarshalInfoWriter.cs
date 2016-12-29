@@ -14,18 +14,16 @@
             this._faultyField = faultyField;
         }
 
-        public override bool CanMarshalTypeToNative()
-        {
-            return false;
-        }
+        public override bool CanMarshalTypeToNative() => 
+            false;
 
         public override string GetMarshalingException()
         {
             if ((this._faultyField.FieldType.MetadataType == MetadataType.Class) || (this._faultyField.FieldType.IsArray && (((ArrayType) this._faultyField.FieldType).ElementType.MetadataType == MetadataType.Class)))
             {
-                return string.Format("il2cpp_codegen_get_marshal_directive_exception(\"Cannot marshal field '{0}' of type '{1}': Reference type field marshaling is not supported.\")", this._faultyField.Name, base._type.Name);
+                return $"il2cpp_codegen_get_marshal_directive_exception("Cannot marshal field '{this._faultyField.Name}' of type '{base._type.Name}': Reference type field marshaling is not supported.")";
             }
-            return string.Format("il2cpp_codegen_get_marshal_directive_exception(\"Cannot marshal field '{0}' of type '{1}'.\")", this._faultyField.Name, base._type.Name);
+            return $"il2cpp_codegen_get_marshal_directive_exception("Cannot marshal field '{this._faultyField.Name}' of type '{base._type.Name}'.")";
         }
 
         protected override void WriteMarshalCleanupFunction(CppCodeWriter writer)
@@ -59,13 +57,8 @@
             writer.WriteStatement(Emit.RaiseManagedException(exception));
         }
 
-        public override string NativeSize
-        {
-            get
-            {
-                return "-1";
-            }
-        }
+        public override string NativeSize =>
+            "-1";
     }
 }
 

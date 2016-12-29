@@ -104,15 +104,11 @@
             }
         }
 
-        internal static string GetPassword(string server, string user)
-        {
-            return EditorPrefs.GetString("ASPassword::" + server + "::" + user, string.Empty);
-        }
+        internal static string GetPassword(string server, string user) => 
+            EditorPrefs.GetString("ASPassword::" + server + "::" + user, string.Empty);
 
-        internal static string GetUser(string server)
-        {
-            return EditorPrefs.GetString("ASUser::" + server, string.Empty);
-        }
+        internal static string GetUser(string server) => 
+            EditorPrefs.GetString("ASUser::" + server, string.Empty);
 
         public static bool InitializeMaintBinding()
         {
@@ -132,7 +128,7 @@
                 AssetServer.SetProjectName("");
                 return false;
             }
-            AssetServer.SetProjectName(string.Format("{0} @ {1}", str3, str2));
+            AssetServer.SetProjectName($"{str3} @ {str2}");
             string[] textArray1 = new string[] { "host='", str2, "' user='", user, "' password='", GetPassword(str2, user), "' dbname='", str4, "' port='", str5, "' sslmode=disable ", config["Maint Connection Settings"] };
             string connectionString = string.Concat(textArray1);
             AssetServer.Initialize(user, connectionString, num);
@@ -155,10 +151,8 @@
             return ((((str.Length != 0) && (str2.Length != 0)) && ((str3.Length != 0) && (str4.Length != 0))) && (str5.Length != 0));
         }
 
-        public static bool SettingsIfNeeded()
-        {
-            return InitializeMaintBinding();
-        }
+        public static bool SettingsIfNeeded() => 
+            InitializeMaintBinding();
 
         public static void ShowASConflictResolutionsWindow(string[] conflicting)
         {
@@ -227,17 +221,17 @@
 
         public static void Testing_SetActiveDatabase(string host, int port, string projectName, string dbName, string user, string pwd)
         {
-            PListConfig config = new PListConfig("Library/ServerPreferences.plist");
-            config["Maint Server"] = host;
-            config["Maint UserName"] = user;
-            config["Maint database name"] = dbName;
-            config["Maint port number"] = port.ToString();
-            config["Maint project name"] = projectName;
-            config["Maint Password"] = "";
-            config["Maint settings type"] = "manual";
-            config["Maint Timeout"] = "5";
-            config["Maint Connection Settings"] = "";
-            config.Save();
+            new PListConfig("Library/ServerPreferences.plist") { 
+                ["Maint Server"] = host,
+                ["Maint UserName"] = user,
+                ["Maint database name"] = dbName,
+                ["Maint port number"] = port.ToString(),
+                ["Maint project name"] = projectName,
+                ["Maint Password"] = "",
+                ["Maint settings type"] = "manual",
+                ["Maint Timeout"] = "5",
+                ["Maint Connection Settings"] = ""
+            }.Save();
         }
 
         public static void Testing_SetConflictResolutionFunction(string klass, string fn)
@@ -280,13 +274,8 @@
             return true;
         }
 
-        public static ASMainWindow ASWin
-        {
-            get
-            {
-                return ((asMainWin == null) ? EditorWindow.GetWindowDontShow<ASMainWindow>() : asMainWin);
-            }
-        }
+        public static ASMainWindow ASWin =>
+            ((asMainWin == null) ? EditorWindow.GetWindowDontShow<ASMainWindow>() : asMainWin);
     }
 }
 

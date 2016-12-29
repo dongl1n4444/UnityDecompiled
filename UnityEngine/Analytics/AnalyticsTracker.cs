@@ -105,10 +105,8 @@
         /// </summary>
         public string eventName
         {
-            get
-            {
-                return this.m_EventName;
-            }
+            get => 
+                this.m_EventName;
             set
             {
                 this.m_EventName = value;
@@ -117,10 +115,8 @@
 
         internal TrackableProperty TP
         {
-            get
-            {
-                return this.m_TrackableProperty;
-            }
+            get => 
+                this.m_TrackableProperty;
             set
             {
                 this.m_TrackableProperty = value;

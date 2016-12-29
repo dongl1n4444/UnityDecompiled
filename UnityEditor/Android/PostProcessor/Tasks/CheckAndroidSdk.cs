@@ -16,10 +16,8 @@
 
         public event ProgressHandler OnProgress;
 
-        private static int AskUpdateSdk(string title, string message)
-        {
-            return EditorUtility.DisplayDialogComplex(title, message, "Update Android SDK", "Cancel", "Continue");
-        }
+        private static int AskUpdateSdk(string title, string message) => 
+            EditorUtility.DisplayDialogComplex(title, message, "Update Android SDK", "Cancel", "Continue");
 
         private int EnsureSDKComponentVersion(int minVersion, SDKComponentDetector detector)
         {
@@ -63,7 +61,7 @@
             while (topAndroidPlatformAvailable < minPlatformApiLevel)
             {
                 string title = "Android SDK is missing required platform api";
-                string message = string.Format("Minimum platform required is {0} (API level {1})", minPlatformName, minPlatformApiLevel);
+                string message = $"Minimum platform required is {minPlatformName} (API level {minPlatformApiLevel})";
                 if (!InternalEditorUtility.inBatchMode)
                 {
                     switch (AskUpdateSdk(title, message))
@@ -80,7 +78,7 @@
                 {
                     if (this.OnProgress != null)
                     {
-                        this.OnProgress(this, string.Format("Updating Android SDK - {0} (API level {1})...", minPlatformName, minPlatformApiLevel));
+                        this.OnProgress(this, $"Updating Android SDK - {minPlatformName} (API level {minPlatformApiLevel})...");
                     }
                     this._sdkTools.InstallPlatform(minPlatformApiLevel, null);
                     topAndroidPlatformAvailable = this._sdkTools.GetTopAndroidPlatformAvailable(null);
@@ -123,13 +121,8 @@
             context.Set<string>("AndroidJarPath", str);
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Android SDK Detection";
-            }
-        }
+        public string Name =>
+            "Android SDK Detection";
 
         private class SDKBuildToolsDetector : CheckAndroidSdk.SDKComponentDetector
         {
@@ -149,10 +142,8 @@
                 return int.Parse(Regex.Match(sdkTools.BuildToolsVersion(null), @"\d+").Value);
             }
 
-            public override string GetUpgradeMsg(int currentVerion, int minVersion)
-            {
-                return string.Format("SDK Build Tools version {0} < {1}", currentVerion, minVersion);
-            }
+            public override string GetUpgradeMsg(int currentVerion, int minVersion) => 
+                $"SDK Build Tools version {currentVerion} < {minVersion}";
         }
 
         private abstract class SDKComponentDetector
@@ -183,10 +174,8 @@
                 return int.Parse(Regex.Match(sdkTools.PlatformToolsVersion(null), @"\d+").Value);
             }
 
-            public override string GetUpgradeMsg(int currentVerion, int minVersion)
-            {
-                return string.Format("SDK Platform Tools version {0} < {1}", currentVerion, minVersion);
-            }
+            public override string GetUpgradeMsg(int currentVerion, int minVersion) => 
+                $"SDK Platform Tools version {currentVerion} < {minVersion}";
         }
 
         private class SDKToolsDetector : CheckAndroidSdk.SDKComponentDetector
@@ -207,10 +196,8 @@
                 return int.Parse(Regex.Match(sdkTools.ToolsVersion(null), @"\d+").Value);
             }
 
-            public override string GetUpgradeMsg(int currentVerion, int minVersion)
-            {
-                return string.Format("SDK Tools version {0} < {1}", currentVerion, minVersion);
-            }
+            public override string GetUpgradeMsg(int currentVerion, int minVersion) => 
+                $"SDK Tools version {currentVerion} < {minVersion}";
         }
     }
 }

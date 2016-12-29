@@ -15,10 +15,8 @@
         /// <returns>
         /// <para>Object representing ODR request.</para>
         /// </returns>
-        public static OnDemandResourcesRequest PreloadAsync(string[] tags)
-        {
-            return PreloadAsyncInternal(tags);
-        }
+        public static OnDemandResourcesRequest PreloadAsync(string[] tags) => 
+            PreloadAsyncInternal(tags);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern OnDemandResourcesRequest PreloadAsyncInternal(string[] tags);

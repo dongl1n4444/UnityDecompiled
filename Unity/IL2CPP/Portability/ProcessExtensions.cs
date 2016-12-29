@@ -4,14 +4,10 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class ProcessExtensions
     {
-        [Extension]
-        public static IntPtr GetHandlePortable(Process process)
-        {
-            return process.Handle;
-        }
+        public static IntPtr GetHandlePortable(this Process process) => 
+            process.Handle;
     }
 }
 

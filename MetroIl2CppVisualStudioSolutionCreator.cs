@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEditorInternal.VR;
 
 internal class MetroIl2CppVisualStudioSolutionCreator
@@ -69,7 +70,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
         List<string> list2 = new List<string>();
         foreach (string str in enumerable)
         {
-            if (!this.ShouldOverwriteFile(str) || Enumerable.Contains<string>(source, Path.GetFileName(str)))
+            if (!this.ShouldOverwriteFile(str) || source.Contains<string>(Path.GetFileName(str)))
             {
                 projectFiles.Add(str);
             }
@@ -136,7 +137,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
         return Enumerable.Select<string, string>(Enumerable.Where<string>(list, new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1));
     }
 
-    private static string MakeFilterItems(IEnumerable<string> files, string UserProjectDirectory, [Optional, DefaultParameterValue("")] string pathPrefix)
+    private static string MakeFilterItems(IEnumerable<string> files, string UserProjectDirectory, string pathPrefix = "")
     {
         StringBuilder builder = new StringBuilder();
         Dictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
@@ -186,7 +187,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
         return (builder2.ToString() + builder.ToString());
     }
 
-    private static string MakeProjectItems(IEnumerable<string> files, string UserProjectDirectory, [Optional, DefaultParameterValue("")] string pathPrefix)
+    private static string MakeProjectItems(IEnumerable<string> files, string UserProjectDirectory, string pathPrefix = "")
     {
         StringBuilder builder = new StringBuilder();
         foreach (string str in files)
@@ -249,10 +250,8 @@ internal class MetroIl2CppVisualStudioSolutionCreator
         return builder.ToString();
     }
 
-    private static string MakeRelativePath(string basePath, string filePath)
-    {
-        return Uri.UnescapeDataString(new Uri(basePath.Replace('\\', '/') + "/").MakeRelativeUri(new Uri(filePath)).ToString()).Replace('/', '\\');
-    }
+    private static string MakeRelativePath(string basePath, string filePath) => 
+        Uri.UnescapeDataString(new Uri(basePath.Replace('\\', '/') + "/").MakeRelativeUri(new Uri(filePath)).ToString()).Replace('/', '\\');
 
     private TemplateBuilder MakeTemplateBuilder()
     {
@@ -376,19 +375,20 @@ internal class MetroIl2CppVisualStudioSolutionCreator
             }
             string str5 = MakeRelativePath(this.UserProjectDirectory, filePath);
             string uWPSDKVersion = MetroVisualStudioSolutionHelper.GetUWPSDKVersion();
-            string str7 = "";
+            string str7 = "_UNICODE;UNICODE;%(PreprocessorDefinitions)";
             if (VREditor.GetVREnabledOnTargetGroup(BuildTargetGroup.WSA) && (Array.IndexOf<string>(VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.WSA), "HoloLens") > -1))
             {
-                str7 = str7 + "UNITY_HOLOGRAPHIC";
+                str7 = str7 + ";UNITY_HOLOGRAPHIC=1";
             }
-            string contents = string.Format(MetroIl2CppTemplates.GetUserProjectTemplate(uWPSDKVersion), new object[] { Utility.GetVsNamespace(), str3, str5, str7 });
+            string str8 = !VisualStudioUtil.CanVS2017BuildCppCode() ? "v140" : "v141";
+            string contents = string.Format(MetroIl2CppTemplates.GetUserProjectTemplate(uWPSDKVersion), new object[] { Utility.GetVsNamespace(), str3, str5, str7, str8 });
             File.WriteAllText(path, contents, Encoding.UTF8);
         }
         if (!File.Exists(str2))
         {
-            string str9 = MakeFilterItems(projectFiles, this.UserProjectDirectory, "");
-            string str10 = string.Format(MetroIl2CppTemplates.GetFiltersTemplate(), str9);
-            File.WriteAllText(str2, str10, Encoding.UTF8);
+            string str10 = MakeFilterItems(projectFiles, this.UserProjectDirectory, "");
+            string str11 = string.Format(MetroIl2CppTemplates.GetFiltersTemplate(), str10);
+            File.WriteAllText(str2, str11, Encoding.UTF8);
         }
     }
 
@@ -407,20 +407,16 @@ internal class MetroIl2CppVisualStudioSolutionCreator
             return !Enumerable.Any<string>(this.ignoredExtensions, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
         }
 
-        internal string <>m__1(string path)
-        {
-            return Path.Combine(this.$this.UserProjectDirectory, MetroIl2CppVisualStudioSolutionCreator.MakeRelativePath(this.$this.StagingArea, path));
-        }
+        internal string <>m__1(string path) => 
+            Path.Combine(this.$this.UserProjectDirectory, MetroIl2CppVisualStudioSolutionCreator.MakeRelativePath(this.$this.StagingArea, path));
 
         private sealed class <GatherUserProjectFiles>c__AnonStorey1
         {
             internal MetroIl2CppVisualStudioSolutionCreator.<GatherUserProjectFiles>c__AnonStorey0 <>f__ref$0;
             internal string path;
 
-            internal bool <>m__0(string ext)
-            {
-                return string.Equals(Path.GetExtension(this.path), ext, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string ext) => 
+                string.Equals(Path.GetExtension(this.path), ext, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

@@ -5,10 +5,8 @@
 
     internal class RenderThumbnailUtility
     {
-        public static Bounds CalculateVisibleBounds(GameObject prefab)
-        {
-            return prefab.GetComponent<Renderer>().bounds;
-        }
+        public static Bounds CalculateVisibleBounds(GameObject prefab) => 
+            prefab.GetComponent<Renderer>().bounds;
 
         public static Texture2D Render(GameObject prefab)
         {

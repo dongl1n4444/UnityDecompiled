@@ -319,15 +319,11 @@
             return default(FieldType);
         }
 
-        protected IntPtr _GetRawClass()
-        {
-            return this.m_jclass;
-        }
+        protected IntPtr _GetRawClass() => 
+            this.m_jclass;
 
-        protected IntPtr _GetRawObject()
-        {
-            return this.m_jobject;
-        }
+        protected IntPtr _GetRawObject() => 
+            this.m_jobject;
 
         protected FieldType _GetStatic<FieldType>(string fieldName)
         {
@@ -550,10 +546,8 @@
             this._Call(methodName, args);
         }
 
-        public ReturnType Call<ReturnType>(string methodName, params object[] args)
-        {
-            return this._Call<ReturnType>(methodName, args);
-        }
+        public ReturnType Call<ReturnType>(string methodName, params object[] args) => 
+            this._Call<ReturnType>(methodName, args);
 
         /// <summary>
         /// <para>Call a static Java method on a class.</para>
@@ -565,10 +559,8 @@
             this._CallStatic(methodName, args);
         }
 
-        public ReturnType CallStatic<ReturnType>(string methodName, params object[] args)
-        {
-            return this._CallStatic<ReturnType>(methodName, args);
-        }
+        public ReturnType CallStatic<ReturnType>(string methodName, params object[] args) => 
+            this._CallStatic<ReturnType>(methodName, args);
 
         protected void DebugPrint(string msg)
         {
@@ -621,35 +613,27 @@
             return JavaLangClass.CallStatic<AndroidJavaObject>("forName", args);
         }
 
-        public FieldType Get<FieldType>(string fieldName)
-        {
-            return this._Get<FieldType>(fieldName);
-        }
+        public FieldType Get<FieldType>(string fieldName) => 
+            this._Get<FieldType>(fieldName);
 
         /// <summary>
         /// <para>Retrieves the raw &lt;tt&gt;jclass&lt;/tt&gt; pointer to the Java class.
         /// 
         /// Note: Using raw JNI functions requires advanced knowledge of the Android Java Native Interface (JNI). Please take note.</para>
         /// </summary>
-        public IntPtr GetRawClass()
-        {
-            return this._GetRawClass();
-        }
+        public IntPtr GetRawClass() => 
+            this._GetRawClass();
 
         /// <summary>
         /// <para>Retrieves the raw &lt;tt&gt;jobject&lt;/tt&gt; pointer to the Java object.
         /// 
         /// Note: Using raw JNI functions requires advanced knowledge of the Android Java Native Interface (JNI). Please take note.</para>
         /// </summary>
-        public IntPtr GetRawObject()
-        {
-            return this._GetRawObject();
-        }
+        public IntPtr GetRawObject() => 
+            this._GetRawObject();
 
-        public FieldType GetStatic<FieldType>(string fieldName)
-        {
-            return this._GetStatic<FieldType>(fieldName);
-        }
+        public FieldType GetStatic<FieldType>(string fieldName) => 
+            this._GetStatic<FieldType>(fieldName);
 
         public void Set<FieldType>(string fieldName, FieldType val)
         {

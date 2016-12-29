@@ -30,10 +30,8 @@
         [Obsolete("transformModified is no longer used and has been deprecated.", true)]
         public int transformModified
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }

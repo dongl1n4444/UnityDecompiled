@@ -29,10 +29,8 @@
             return str;
         }
 
-        private static string HashToString(byte[] computeHash)
-        {
-            return BitConverter.ToString(computeHash).Replace("-", "");
-        }
+        private static string HashToString(byte[] computeHash) => 
+            BitConverter.ToString(computeHash).Replace("-", "");
     }
 }
 

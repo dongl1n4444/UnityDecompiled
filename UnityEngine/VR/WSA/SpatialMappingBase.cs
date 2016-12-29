@@ -60,12 +60,12 @@
         {
             if (this.surfaceParent == null)
             {
-                this.surfaceParent = new GameObject(string.Format("Surface Parent{0}", this.observerId));
+                this.surfaceParent = new GameObject($"Surface Parent{this.observerId}");
                 this.surfaceParentWasDynamicallyCreated = true;
             }
             if (surface.gameObject == null)
             {
-                surface.gameObject = new GameObject(string.Format("spatial-mapping-surface{0}_{1}", this.observerId, surface.surfaceId.handle));
+                surface.gameObject = new GameObject($"spatial-mapping-surface{this.observerId}_{surface.surfaceId.handle}");
                 surface.gameObject.transform.parent = this.surfaceParent.transform;
             }
             if (surface.meshFilter == null)
@@ -119,13 +119,11 @@
             }
         }
 
-        private Surface CreateSurface(SurfaceId surfaceId)
-        {
-            return new Surface { 
+        private Surface CreateSurface(SurfaceId surfaceId) => 
+            new Surface { 
                 surfaceId = surfaceId,
                 awaitingBake = false
             };
-        }
 
         protected virtual void DestroySurface(Surface surface)
         {
@@ -276,7 +274,7 @@
                 {
                     if (pair2.Value.gameObject == null)
                     {
-                        Debug.LogWarning(string.Format("Can not activate the surface id \"{0}\" because its GameObject is null.", pair2.Key));
+                        Debug.LogWarning($"Can not activate the surface id "{pair2.Key}" because its GameObject is null.");
                     }
                     else
                     {
@@ -293,7 +291,7 @@
                 Surface surface;
                 if (!this.surfaceObjects.TryGetValue(surfaceId.handle, out surface))
                 {
-                    Debug.LogWarning(string.Format("Can not remove the surface id \"{0}\" because it is not an active surface.", surfaceId.handle));
+                    Debug.LogWarning($"Can not remove the surface id "{surfaceId.handle}" because it is not an active surface.");
                 }
                 else
                 {
@@ -496,10 +494,8 @@
         /// </summary>
         public bool bakePhysics
         {
-            get
-            {
-                return this.m_BakePhysics;
-            }
+            get => 
+                this.m_BakePhysics;
             protected set
             {
                 this.m_BakePhysics = value;
@@ -513,10 +509,8 @@
         /// </summary>
         public bool freezeUpdates
         {
-            get
-            {
-                return this.m_FreezeUpdates;
-            }
+            get => 
+                this.m_FreezeUpdates;
             set
             {
                 this.m_FreezeUpdates = value;
@@ -528,10 +522,8 @@
         /// </summary>
         public Vector3 halfBoxExtents
         {
-            get
-            {
-                return this.m_HalfBoxExtents;
-            }
+            get => 
+                this.m_HalfBoxExtents;
             set
             {
                 this.m_HalfBoxExtents = value;
@@ -540,23 +532,16 @@
 
         protected Vector3 lastUpdatedObserverPosition { get; set; }
 
-        protected static int[] lodToPcm
-        {
-            get
-            {
-                return s_LodToPcm;
-            }
-        }
+        protected static int[] lodToPcm =>
+            s_LodToPcm;
 
         /// <summary>
         /// <para>The level of detail that should be used when generating surface meshes.</para>
         /// </summary>
         public LODType lodType
         {
-            get
-            {
-                return this.m_LodType;
-            }
+            get => 
+                this.m_LodType;
             set
             {
                 this.m_LodType = value;
@@ -570,10 +555,8 @@
         /// </summary>
         public int numUpdatesBeforeRemoval
         {
-            get
-            {
-                return this.m_NumUpdatesBeforeRemoval;
-            }
+            get => 
+                this.m_NumUpdatesBeforeRemoval;
             set
             {
                 this.m_NumUpdatesBeforeRemoval = value;
@@ -584,10 +567,8 @@
 
         protected Dictionary<int, Surface> pendingSurfacesForEviction
         {
-            get
-            {
-                return this.m_PendingSurfacesForEviction;
-            }
+            get => 
+                this.m_PendingSurfacesForEviction;
             set
             {
                 this.m_PendingSurfacesForEviction = value;
@@ -599,10 +580,8 @@
         /// </summary>
         public float secondsBetweenUpdates
         {
-            get
-            {
-                return this.m_SecondsBetweenUpdates;
-            }
+            get => 
+                this.m_SecondsBetweenUpdates;
             set
             {
                 this.m_SecondsBetweenUpdates = value;
@@ -616,10 +595,8 @@
         /// </summary>
         public float sphereRadius
         {
-            get
-            {
-                return this.m_SphereRadius;
-            }
+            get => 
+                this.m_SphereRadius;
             set
             {
                 this.m_SphereRadius = value;
@@ -635,10 +612,8 @@
         /// </summary>
         public GameObject surfaceParent
         {
-            get
-            {
-                return this.m_SurfaceParent;
-            }
+            get => 
+                this.m_SurfaceParent;
             set
             {
                 this.m_SurfaceParent = value;
@@ -647,10 +622,8 @@
 
         protected bool surfaceParentWasDynamicallyCreated
         {
-            get
-            {
-                return this.m_SurfaceParentWasDynamicallyCreated;
-            }
+            get => 
+                this.m_SurfaceParentWasDynamicallyCreated;
             set
             {
                 this.m_SurfaceParentWasDynamicallyCreated = value;
@@ -659,10 +632,8 @@
 
         protected List<int> surfacesToRemoveFromDict
         {
-            get
-            {
-                return this.m_SurfacesToRemoveFromDict;
-            }
+            get => 
+                this.m_SurfacesToRemoveFromDict;
             set
             {
                 this.m_SurfacesToRemoveFromDict = value;
@@ -674,10 +645,8 @@
         /// </summary>
         public VolumeType volumeType
         {
-            get
-            {
-                return this.m_VolumeType;
-            }
+            get => 
+                this.m_VolumeType;
             set
             {
                 this.m_VolumeType = value;

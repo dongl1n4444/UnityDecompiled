@@ -290,10 +290,8 @@
                 this.$$locals$334 = $$locals$334;
             }
 
-            public override IEnumerator<Expression> GetEnumerator()
-            {
-                return new Enumerator(this.$$locals$334);
-            }
+            public override IEnumerator<Expression> GetEnumerator() => 
+                new Enumerator(this.$$locals$334);
 
             [Serializable]
             internal class Enumerator : IEnumerator<Expression>, IDisposable, ICloneable
@@ -308,41 +306,27 @@
                     this.Reset();
                 }
 
-                public override object Clone()
-                {
-                    return this.MemberwiseClone();
-                }
+                public override object Clone() => 
+                    this.MemberwiseClone();
 
                 public override void Dispose()
                 {
                     this.$$enumerator.Dispose();
                 }
 
-                public override bool MoveNext()
-                {
-                    return this.$$enumerator.MoveNext();
-                }
+                public override bool MoveNext() => 
+                    this.$$enumerator.MoveNext();
 
                 public override void Reset()
                 {
                     this.$$enumerator = this.$$locals$333.$node.get_EnclosingModule().get_Imports().GetEnumerator();
                 }
 
-                public override Expression Current
-                {
-                    get
-                    {
-                        return this.$$current;
-                    }
-                }
+                public override Expression Current =>
+                    this.$$current;
 
-                public override object System.Collections.IEnumerator.Current
-                {
-                    get
-                    {
-                        return this.$$current;
-                    }
-                }
+                public override object System.Collections.IEnumerator.Current =>
+                    this.$$current;
             }
         }
 

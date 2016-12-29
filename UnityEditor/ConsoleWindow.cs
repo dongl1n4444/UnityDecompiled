@@ -179,10 +179,8 @@
             ms_ConsoleWindow.Repaint();
         }
 
-        public static bool GetConsoleErrorPause()
-        {
-            return HasFlag(ConsoleFlags.ErrorPause);
-        }
+        public static bool GetConsoleErrorPause() => 
+            HasFlag(ConsoleFlags.ErrorPause);
 
         private static string GetFirstLine(string s)
         {
@@ -247,15 +245,11 @@
             return Constants.LogStyle;
         }
 
-        private static bool HasFlag(ConsoleFlags flags)
-        {
-            return ((LogEntries.consoleFlags & flags) != 0);
-        }
+        private static bool HasFlag(ConsoleFlags flags) => 
+            ((LogEntries.consoleFlags & flags) != 0);
 
-        private static bool HasMode(int mode, Mode modeToCheck)
-        {
-            return ((mode & modeToCheck) != 0);
-        }
+        private static bool HasMode(int mode, Mode modeToCheck) => 
+            ((mode & modeToCheck) != 0);
 
         internal static void LoadIcons()
         {

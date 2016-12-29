@@ -78,15 +78,11 @@
             return count;
         }
 
-        public int CountItemsIncludingChildren()
-        {
-            return this.Count(true);
-        }
+        public int CountItemsIncludingChildren() => 
+            this.Count(true);
 
-        public int CountLocalItems()
-        {
-            return this.Count(false);
-        }
+        public int CountLocalItems() => 
+            this.Count(false);
 
         public void DebugDraw(Vector2 offset)
         {
@@ -122,15 +118,11 @@
             return list;
         }
 
-        public List<T> GetElements()
-        {
-            return this.Elements(false);
-        }
+        public List<T> GetElements() => 
+            this.Elements(false);
 
-        public List<T> GetElementsIncludingChildren()
-        {
-            return this.Elements(true);
-        }
+        public List<T> GetElementsIncludingChildren() => 
+            this.Elements(true);
 
         public void Insert(T item)
         {
@@ -200,21 +192,11 @@
             }
         }
 
-        public Rect BoundingRect
-        {
-            get
-            {
-                return this.m_BoundingRect;
-            }
-        }
+        public Rect BoundingRect =>
+            this.m_BoundingRect;
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return (((this.m_BoundingRect.width == 0f) && (this.m_BoundingRect.height == 0f)) || (this.m_ChildrenNodes.Count == 0));
-            }
-        }
+        public bool IsEmpty =>
+            (((this.m_BoundingRect.width == 0f) && (this.m_BoundingRect.height == 0f)) || (this.m_ChildrenNodes.Count == 0));
     }
 }
 

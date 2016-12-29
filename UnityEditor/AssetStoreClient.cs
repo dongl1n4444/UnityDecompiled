@@ -26,20 +26,14 @@
         }
 
         [CompilerGenerated]
-        private static bool <AssetStoreClient>m__0(object, X509Certificate, X509Chain, SslPolicyErrors)
-        {
-            return true;
-        }
+        private static bool <AssetStoreClient>m__0(object, X509Certificate, X509Chain, SslPolicyErrors) => 
+            true;
 
-        private static string APISearchUrl(string path)
-        {
-            return string.Format("{0}/public-api{2}.json?{1}", AssetStoreSearchUrl, VersionParams, path);
-        }
+        private static string APISearchUrl(string path) => 
+            string.Format("{0}/public-api{2}.json?{1}", AssetStoreSearchUrl, VersionParams, path);
 
-        private static string APIUrl(string path)
-        {
-            return string.Format("{0}/api{2}.json?{1}", AssetStoreUrl, VersionParams, path);
-        }
+        private static string APIUrl(string path) => 
+            string.Format("{0}/api{2}.json?{1}", AssetStoreUrl, VersionParams, path);
 
         internal static AsyncHTTPClient AssetsInfo(List<AssetStoreAsset> assets, AssetStoreResultBase<AssetStoreAssetsInfo>.Callback callback)
         {
@@ -63,38 +57,42 @@
 
         private static AsyncHTTPClient CreateJSONRequest(string url, DoneCallback callback)
         {
-            AsyncHTTPClient client = new AsyncHTTPClient(url);
-            client.header["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken();
-            client.doneCallback = WrapJsonCallback(callback);
+            AsyncHTTPClient client = new AsyncHTTPClient(url) {
+                header = { ["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken() },
+                doneCallback = WrapJsonCallback(callback)
+            };
             client.Begin();
             return client;
         }
 
         private static AsyncHTTPClient CreateJSONRequestDelete(string url, DoneCallback callback)
         {
-            AsyncHTTPClient client = new AsyncHTTPClient(url, "DELETE");
-            client.header["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken();
-            client.doneCallback = WrapJsonCallback(callback);
+            AsyncHTTPClient client = new AsyncHTTPClient(url, "DELETE") {
+                header = { ["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken() },
+                doneCallback = WrapJsonCallback(callback)
+            };
             client.Begin();
             return client;
         }
 
         private static AsyncHTTPClient CreateJSONRequestPost(string url, Dictionary<string, string> param, DoneCallback callback)
         {
-            AsyncHTTPClient client = new AsyncHTTPClient(url);
-            client.header["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken();
-            client.postDictionary = param;
-            client.doneCallback = WrapJsonCallback(callback);
+            AsyncHTTPClient client = new AsyncHTTPClient(url) {
+                header = { ["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken() },
+                postDictionary = param,
+                doneCallback = WrapJsonCallback(callback)
+            };
             client.Begin();
             return client;
         }
 
         private static AsyncHTTPClient CreateJSONRequestPost(string url, string postData, DoneCallback callback)
         {
-            AsyncHTTPClient client = new AsyncHTTPClient(url);
-            client.header["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken();
-            client.postData = postData;
-            client.doneCallback = WrapJsonCallback(callback);
+            AsyncHTTPClient client = new AsyncHTTPClient(url) {
+                header = { ["X-Unity-Session"] = ActiveOrUnauthSessionID + GetToken() },
+                postData = postData,
+                doneCallback = WrapJsonCallback(callback)
+            };
             client.Begin();
             return client;
         }
@@ -102,37 +100,28 @@
         internal static AsyncHTTPClient DirectPurchase(int packageID, string password, AssetStoreResultBase<PurchaseResult>.Callback callback)
         {
             <DirectPurchase>c__AnonStorey4 storey = new <DirectPurchase>c__AnonStorey4();
-            string url = APIUrl(string.Format("/purchase/direct/{0}", packageID.ToString()));
+            string url = APIUrl($"/purchase/direct/{packageID.ToString()}");
             storey.r = new PurchaseResult(callback);
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param["password"] = password;
+            Dictionary<string, string> param = new Dictionary<string, string> {
+                ["password"] = password
+            };
             return CreateJSONRequestPost(url, param, new DoneCallback(storey.<>m__0));
         }
 
-        private static string GetToken()
-        {
-            return InternalEditorUtility.GetAuthToken();
-        }
+        private static string GetToken() => 
+            InternalEditorUtility.GetAuthToken();
 
-        public static bool LoggedIn()
-        {
-            return !string.IsNullOrEmpty(ActiveSessionID);
-        }
+        public static bool LoggedIn() => 
+            !string.IsNullOrEmpty(ActiveSessionID);
 
-        public static bool LoggedOut()
-        {
-            return string.IsNullOrEmpty(ActiveSessionID);
-        }
+        public static bool LoggedOut() => 
+            string.IsNullOrEmpty(ActiveSessionID);
 
-        public static bool LoginError()
-        {
-            return (sLoginState == LoginState.LOGIN_ERROR);
-        }
+        public static bool LoginError() => 
+            (sLoginState == LoginState.LOGIN_ERROR);
 
-        public static bool LoginInProgress()
-        {
-            return (sLoginState == LoginState.IN_PROGRESS);
-        }
+        public static bool LoginInProgress() => 
+            (sLoginState == LoginState.IN_PROGRESS);
 
         internal static void LoginWithCredentials(string username, string password, bool rememberMe, DoneLoginCallback callback)
         {
@@ -146,12 +135,11 @@
                 RememberSession = rememberMe;
                 string str = AssetStoreUrl + "/login?skip_terms=1";
                 sLoginErrorMessage = null;
-                AsyncHTTPClient client = new AsyncHTTPClient(str.Replace("http://", "https://")) {
-                    postData = "user=" + username + "&pass=" + password
-                };
-                client.header["X-Unity-Session"] = "26c4202eb475d02864b40827dfff11a14657aa41" + GetToken();
-                client.doneCallback = WrapLoginCallback(callback);
-                client.Begin();
+                new AsyncHTTPClient(str.Replace("http://", "https://")) { 
+                    postData = "user=" + username + "&pass=" + password,
+                    header = { ["X-Unity-Session"] = "26c4202eb475d02864b40827dfff11a14657aa41" + GetToken() },
+                    doneCallback = WrapLoginCallback(callback)
+                }.Begin();
             }
         }
 
@@ -170,10 +158,10 @@
                 }
                 string str = AssetStoreUrl + "/login?skip_terms=1&reuse_session=" + SavedSessionID;
                 sLoginErrorMessage = null;
-                AsyncHTTPClient client = new AsyncHTTPClient(str);
-                client.header["X-Unity-Session"] = "26c4202eb475d02864b40827dfff11a14657aa41" + GetToken();
-                client.doneCallback = WrapLoginCallback(callback);
-                client.Begin();
+                new AsyncHTTPClient(str) { 
+                    header = { ["X-Unity-Session"] = "26c4202eb475d02864b40827dfff11a14657aa41" + GetToken() },
+                    doneCallback = WrapLoginCallback(callback)
+                }.Begin();
             }
         }
 
@@ -294,7 +282,7 @@
                 Array.Resize<string>(ref requiredClassNames, requiredClassNames.Length + 1);
                 requiredClassNames[requiredClassNames.Length - 1] = "Script";
             }
-            string url = string.Format("{0}&q={1}&c={2}&l={3}&O={4}&N={5}&G={6}", new object[] { APISearchUrl("/search/assets"), Uri.EscapeDataString(searchString), Uri.EscapeDataString(string.Join(",", requiredClassNames)), Uri.EscapeDataString(string.Join(",", assetLabels)), str, str2, str3 });
+            string url = $"{APISearchUrl("/search/assets")}&q={Uri.EscapeDataString(searchString)}&c={Uri.EscapeDataString(string.Join(",", requiredClassNames))}&l={Uri.EscapeDataString(string.Join(",", assetLabels))}&O={str}&N={str2}&G={str3}";
             storey.r = new AssetStoreSearchResults(callback);
             return CreateJSONRequest(url, new DoneCallback(storey.<>m__0));
         }
@@ -368,36 +356,19 @@
             }
         }
 
-        public static bool HasActiveSessionID
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(ActiveSessionID);
-            }
-        }
+        public static bool HasActiveSessionID =>
+            !string.IsNullOrEmpty(ActiveSessionID);
 
-        public static bool HasSavedSessionID
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(SavedSessionID);
-            }
-        }
+        public static bool HasSavedSessionID =>
+            !string.IsNullOrEmpty(SavedSessionID);
 
-        public static string LoginErrorMessage
-        {
-            get
-            {
-                return sLoginErrorMessage;
-            }
-        }
+        public static string LoginErrorMessage =>
+            sLoginErrorMessage;
 
         public static bool RememberSession
         {
-            get
-            {
-                return (EditorPrefs.GetString("kharma.remember_session") == "1");
-            }
+            get => 
+                (EditorPrefs.GetString("kharma.remember_session") == "1");
             set
             {
                 EditorPrefs.SetString("kharma.remember_session", !value ? "0" : "1");
@@ -420,13 +391,8 @@
             }
         }
 
-        private static string VersionParams
-        {
-            get
-            {
-                return ("unityversion=" + Uri.EscapeDataString(Application.unityVersion) + "&skip_terms=1");
-            }
-        }
+        private static string VersionParams =>
+            ("unityversion=" + Uri.EscapeDataString(Application.unityVersion) + "&skip_terms=1");
 
         [CompilerGenerated]
         private sealed class <AssetsInfo>c__AnonStorey3

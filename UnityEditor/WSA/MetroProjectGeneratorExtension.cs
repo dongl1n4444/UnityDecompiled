@@ -33,7 +33,7 @@
                     string strB = Path.GetDirectoryName(project2.Path);
                     if (string.Compare(directoryName, strB, true) == 0)
                     {
-                        throw new Exception(string.Format("Projects {0} and {1} should be in different folders.", directoryName, strB));
+                        throw new Exception($"Projects {directoryName} and {strB} should be in different folders.");
                     }
                 }
             }
@@ -86,7 +86,7 @@
                         strArray2 = new string[] { @"UAP\UnityEngine.dll", @"UAP\WinRTLegacy.dll" };
                         goto Label_0324;
                 }
-                throw new Exception(string.Format("Unknown Windows Store Apps SDK: {0}", wsaSDK));
+                throw new Exception($"Unknown Windows Store Apps SDK: {wsaSDK}");
             }
         Label_0324:
             strArray3 = strArray2;
@@ -117,10 +117,8 @@
         {
             internal string extension;
 
-            internal bool <>m__0(string e)
-            {
-                return string.Equals(this.extension, e, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string e) => 
+                string.Equals(this.extension, e, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

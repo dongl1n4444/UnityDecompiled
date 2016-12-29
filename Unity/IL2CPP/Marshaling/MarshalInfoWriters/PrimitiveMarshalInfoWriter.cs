@@ -178,28 +178,22 @@
             }
         }
 
-        private string GetIntPtrTypeName()
-        {
-            return ((base._typeRef.MetadataType != MetadataType.IntPtr) ? DefaultMarshalInfoWriter.Naming.ForUIntPtrT : DefaultMarshalInfoWriter.Naming.ForIntPtrT);
-        }
+        private string GetIntPtrTypeName() => 
+            ((base._typeRef.MetadataType != MetadataType.IntPtr) ? DefaultMarshalInfoWriter.Naming.ForUIntPtrT : DefaultMarshalInfoWriter.Naming.ForIntPtrT);
 
         private string GetIntPtrValueSetterName()
         {
             <GetIntPtrValueSetterName>c__AnonStorey1 storey = new <GetIntPtrValueSetterName>c__AnonStorey1 {
                 fieldManagedName = (base._typeRef.MetadataType != MetadataType.IntPtr) ? DefaultMarshalInfoWriter.Naming.UIntPtrPointerField : DefaultMarshalInfoWriter.Naming.IntPtrValueField
             };
-            return DefaultMarshalInfoWriter.Naming.ForFieldSetter(Enumerable.First<FieldDefinition>(base._typeRef.Resolve().Fields, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)));
+            return DefaultMarshalInfoWriter.Naming.ForFieldSetter(base._typeRef.Resolve().Fields.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)));
         }
 
-        private static string MarshalVariantBoolFromNative(string variableName)
-        {
-            return string.Format("(({0}) != IL2CPP_VARIANT_FALSE)", variableName);
-        }
+        private static string MarshalVariantBoolFromNative(string variableName) => 
+            $"(({variableName}) != IL2CPP_VARIANT_FALSE)";
 
-        private static string MarshalVariantBoolToNative(string variableName)
-        {
-            return string.Format("(({0}) ? IL2CPP_VARIANT_TRUE : IL2CPP_VARIANT_FALSE)", variableName);
-        }
+        private static string MarshalVariantBoolToNative(string variableName) => 
+            $"(({variableName}) ? IL2CPP_VARIANT_TRUE : IL2CPP_VARIANT_FALSE)";
 
         public override void WriteIncludesForFieldDeclaration(CppCodeWriter writer)
         {
@@ -236,7 +230,7 @@
             }
             if ((base._typeRef.MetadataType == MetadataType.IntPtr) || (base._typeRef.MetadataType == MetadataType.UIntPtr))
             {
-                string destinationVariable = string.Format("_{0}_unmarshaled", DefaultMarshalInfoWriter.CleanVariableName(variableName));
+                string destinationVariable = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_unmarshaled";
                 object[] args = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(base._typeRef), destinationVariable };
                 writer.WriteLine("{0} {1};", args);
                 this.WriteIntPtrFieldAssignmentToLocalVariable(writer, variableName, destinationVariable);
@@ -245,7 +239,7 @@
             string str3 = DefaultMarshalInfoWriter.Naming.ForVariable(base._typeRef);
             if (str3 != this._marshaledTypeName)
             {
-                return string.Format("static_cast<{0}>({1})", str3, variableName);
+                return $"static_cast<{str3}>({variableName})";
             }
             return variableName;
         }
@@ -269,10 +263,10 @@
                 <WriteMarshalVariableToNative>c__AnonStorey0 storey = new <WriteMarshalVariableToNative>c__AnonStorey0 {
                     fieldManagedName = (base._typeRef.MetadataType != MetadataType.IntPtr) ? DefaultMarshalInfoWriter.Naming.UIntPtrPointerField : DefaultMarshalInfoWriter.Naming.IntPtrValueField
                 };
-                string str = DefaultMarshalInfoWriter.Naming.ForFieldGetter(Enumerable.First<FieldDefinition>(base._typeRef.Resolve().Fields, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)));
+                string str = DefaultMarshalInfoWriter.Naming.ForFieldGetter(base._typeRef.Resolve().Fields.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)));
                 if (this._marshaledTypeName == "intptr_t")
                 {
-                    return string.Format("reinterpret_cast<intptr_t>(({0}).{1}())", sourceVariable.Load(), str);
+                    return $"reinterpret_cast<intptr_t>(({sourceVariable.Load()}).{str}())";
                 }
                 return string.Format("static_cast<{2}>(reinterpret_cast<intptr_t>(({0}).{1}()))", sourceVariable.Load(), str, this._marshaledTypeName);
             }
@@ -282,7 +276,7 @@
             }
             if (DefaultMarshalInfoWriter.Naming.ForVariable(base._typeRef) != this._marshaledTypeName)
             {
-                return string.Format("static_cast<{0}>({1})", this._marshaledTypeName, sourceVariable.Load());
+                return $"static_cast<{this._marshaledTypeName}>({sourceVariable.Load()})";
             }
             return sourceVariable.Load();
         }
@@ -321,39 +315,22 @@
             }
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
-        public override string NativeSize
-        {
-            get
-            {
-                return this._nativeSize;
-            }
-        }
+        public override string NativeSize =>
+            this._nativeSize;
 
-        public override int NativeSizeWithoutPointers
-        {
-            get
-            {
-                return this._nativeSizeWithoutPointers;
-            }
-        }
+        public override int NativeSizeWithoutPointers =>
+            this._nativeSizeWithoutPointers;
 
         [CompilerGenerated]
         private sealed class <GetIntPtrValueSetterName>c__AnonStorey1
         {
             internal string fieldManagedName;
 
-            internal bool <>m__0(FieldDefinition f)
-            {
-                return (f.Name == this.fieldManagedName);
-            }
+            internal bool <>m__0(FieldDefinition f) => 
+                (f.Name == this.fieldManagedName);
         }
 
         [CompilerGenerated]
@@ -361,10 +338,8 @@
         {
             internal string fieldManagedName;
 
-            internal bool <>m__0(FieldDefinition f)
-            {
-                return (f.Name == this.fieldManagedName);
-            }
+            internal bool <>m__0(FieldDefinition f) => 
+                (f.Name == this.fieldManagedName);
         }
     }
 }

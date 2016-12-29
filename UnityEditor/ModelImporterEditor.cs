@@ -5,10 +5,8 @@
     [CustomEditor(typeof(ModelImporter)), CanEditMultipleObjects]
     internal class ModelImporterEditor : AssetImporterTabbedEditor
     {
-        public override bool HasPreviewGUI()
-        {
-            return (base.HasPreviewGUI() && (base.targets.Length < 2));
-        }
+        public override bool HasPreviewGUI() => 
+            (base.HasPreviewGUI() && (base.targets.Length < 2));
 
         internal override void OnEnable()
         {
@@ -20,21 +18,11 @@
             base.OnEnable();
         }
 
-        internal override bool showImportedObject
-        {
-            get
-            {
-                return (base.activeEditor is ModelImporterModelEditor);
-            }
-        }
+        internal override bool showImportedObject =>
+            (base.activeEditor is ModelImporterModelEditor);
 
-        protected override bool useAssetDrawPreview
-        {
-            get
-            {
-                return false;
-            }
-        }
+        protected override bool useAssetDrawPreview =>
+            false;
     }
 }
 

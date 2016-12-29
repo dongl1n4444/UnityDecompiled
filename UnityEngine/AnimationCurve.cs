@@ -52,10 +52,8 @@
         /// </summary>
         public Keyframe[] keys
         {
-            get
-            {
-                return this.GetKeys();
-            }
+            get => 
+                this.GetKeys();
             set
             {
                 this.SetKeys(value);
@@ -78,15 +76,11 @@
         /// <returns>
         /// <para>The index of the added key, or -1 if the key could not be added.</para>
         /// </returns>
-        public int AddKey(Keyframe key)
-        {
-            return this.AddKey_Internal(key);
-        }
+        public int AddKey(Keyframe key) => 
+            this.AddKey_Internal(key);
 
-        private int AddKey_Internal(Keyframe key)
-        {
-            return INTERNAL_CALL_AddKey_Internal(this, ref key);
-        }
+        private int AddKey_Internal(Keyframe key) => 
+            INTERNAL_CALL_AddKey_Internal(this, ref key);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int INTERNAL_CALL_AddKey_Internal(AnimationCurve self, ref Keyframe key);
@@ -98,10 +92,8 @@
         /// <returns>
         /// <para>The index of the keyframe after moving it.</para>
         /// </returns>
-        public int MoveKey(int index, Keyframe key)
-        {
-            return INTERNAL_CALL_MoveKey(this, index, ref key);
-        }
+        public int MoveKey(int index, Keyframe key) => 
+            INTERNAL_CALL_MoveKey(this, index, ref key);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int INTERNAL_CALL_MoveKey(AnimationCurve self, int index, ref Keyframe key);
@@ -111,13 +103,8 @@
         /// <param name="index">The index of the key to remove.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void RemoveKey(int index);
-        public Keyframe this[int index]
-        {
-            get
-            {
-                return this.GetKey_Internal(index);
-            }
-        }
+        public Keyframe this[int index] =>
+            this.GetKey_Internal(index);
         /// <summary>
         /// <para>The number of keys in the curve. (Read Only)</para>
         /// </summary>

@@ -35,7 +35,7 @@
             {
                 <>f__am$cache0 = new Func<KeyValuePair<TypeReference[], uint>, TypeReference[]>(null, <WriteIl2CppGenericInstDefinitions>m__0);
             }
-            foreach (TypeReference[] referenceArray in Enumerable.Select<KeyValuePair<TypeReference[], uint>, TypeReference[]>(Il2CppGenericInstCollector.Items, <>f__am$cache0))
+            foreach (TypeReference[] referenceArray in Il2CppGenericInstCollector.Items.Select<KeyValuePair<TypeReference[], uint>, TypeReference[]>(<>f__am$cache0))
             {
                 for (int i = 0; i < referenceArray.Length; i++)
                 {
@@ -47,7 +47,7 @@
                 {
                     <>f__am$cache1 = new Func<TypeReference, string>(null, (IntPtr) <WriteIl2CppGenericInstDefinitions>m__1);
                 }
-                args[1] = EnumerableExtensions.AggregateWithComma(Enumerable.Select<TypeReference, string>(referenceArray, <>f__am$cache1));
+                args[1] = referenceArray.Select<TypeReference, string>(<>f__am$cache1).AggregateWithComma();
                 base.WriteLine("static const Il2CppType* {0}[] = {{ {1} }};", args);
                 object[] objArray2 = new object[] { MetadataWriter.Naming.ForGenericInst(referenceArray), referenceArray.Length, MetadataWriter.Naming.ForGenericInst(referenceArray) + "_Types" };
                 base.WriteLine("extern const Il2CppGenericInst {0} = {{ {1}, {2} }};", objArray2);
@@ -60,7 +60,7 @@
             {
                 <>f__am$cache3 = new Func<KeyValuePair<TypeReference[], uint>, string>(null, (IntPtr) <WriteIl2CppGenericInstDefinitions>m__3);
             }
-            return MetadataWriter.WriteTable<KeyValuePair<TypeReference[], uint>>(base.Writer, "extern const Il2CppGenericInst* const", "g_Il2CppGenericInstTable", Enumerable.ToArray<KeyValuePair<TypeReference[], uint>>(Enumerable.OrderBy<KeyValuePair<TypeReference[], uint>, uint>(Il2CppGenericInstCollector.Items, <>f__am$cache2)), <>f__am$cache3);
+            return MetadataWriter.WriteTable<KeyValuePair<TypeReference[], uint>>(base.Writer, "extern const Il2CppGenericInst* const", "g_Il2CppGenericInstTable", Il2CppGenericInstCollector.Items.OrderBy<KeyValuePair<TypeReference[], uint>, uint>(<>f__am$cache2).ToArray<KeyValuePair<TypeReference[], uint>>(), <>f__am$cache3);
         }
     }
 }

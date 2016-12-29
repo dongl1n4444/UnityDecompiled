@@ -172,10 +172,8 @@
         /// </summary>
         public bool childControlHeight
         {
-            get
-            {
-                return this.m_ChildControlHeight;
-            }
+            get => 
+                this.m_ChildControlHeight;
             set
             {
                 base.SetProperty<bool>(ref this.m_ChildControlHeight, value);
@@ -187,10 +185,8 @@
         /// </summary>
         public bool childControlWidth
         {
-            get
-            {
-                return this.m_ChildControlWidth;
-            }
+            get => 
+                this.m_ChildControlWidth;
             set
             {
                 base.SetProperty<bool>(ref this.m_ChildControlWidth, value);
@@ -202,10 +198,8 @@
         /// </summary>
         public bool childForceExpandHeight
         {
-            get
-            {
-                return this.m_ChildForceExpandHeight;
-            }
+            get => 
+                this.m_ChildForceExpandHeight;
             set
             {
                 base.SetProperty<bool>(ref this.m_ChildForceExpandHeight, value);
@@ -217,10 +211,8 @@
         /// </summary>
         public bool childForceExpandWidth
         {
-            get
-            {
-                return this.m_ChildForceExpandWidth;
-            }
+            get => 
+                this.m_ChildForceExpandWidth;
             set
             {
                 base.SetProperty<bool>(ref this.m_ChildForceExpandWidth, value);
@@ -232,10 +224,8 @@
         /// </summary>
         public float spacing
         {
-            get
-            {
-                return this.m_Spacing;
-            }
+            get => 
+                this.m_Spacing;
             set
             {
                 base.SetProperty<float>(ref this.m_Spacing, value);

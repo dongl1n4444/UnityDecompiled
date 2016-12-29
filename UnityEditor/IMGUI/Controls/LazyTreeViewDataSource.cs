@@ -10,10 +10,8 @@
         {
         }
 
-        public static List<TreeViewItem> CreateChildListForCollapsedParent()
-        {
-            return new List<TreeViewItem> { null };
-        }
+        public static List<TreeViewItem> CreateChildListForCollapsedParent() => 
+            new List<TreeViewItem> { null };
 
         public override TreeViewItem FindItem(int itemID)
         {
@@ -43,10 +41,8 @@
             }
         }
 
-        public static bool IsChildListForACollapsedParent(IList<TreeViewItem> childList)
-        {
-            return (((childList != null) && (childList.Count == 1)) && (childList[0] == null));
-        }
+        public static bool IsChildListForACollapsedParent(IList<TreeViewItem> childList) => 
+            (((childList != null) && (childList.Count == 1)) && (childList[0] == null));
 
         public override void RevealItem(int itemID)
         {
@@ -56,7 +52,7 @@
             source.UnionWith(parentsAbove);
             if (count != source.Count)
             {
-                this.SetExpandedIDs(Enumerable.ToArray<int>(source));
+                this.SetExpandedIDs(source.ToArray<int>());
                 if (base.m_NeedRefreshRows)
                 {
                     this.FetchData();
@@ -76,7 +72,7 @@
             {
                 source.ExceptWith(parentsBelow);
             }
-            this.SetExpandedIDs(Enumerable.ToArray<int>(source));
+            this.SetExpandedIDs(source.ToArray<int>());
         }
 
         public override void SetExpandedWithChildren(TreeViewItem item, bool expand)

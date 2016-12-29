@@ -23,10 +23,8 @@
 
         public List<FieldWithTarget> fields
         {
-            get
-            {
-                return this.m_Fields;
-            }
+            get => 
+                this.m_Fields;
             set
             {
                 this.m_Fields = value;
@@ -73,10 +71,8 @@
 
             public bool doStatic
             {
-                get
-                {
-                    return this.m_DoStatic;
-                }
+                get => 
+                    this.m_DoStatic;
                 set
                 {
                     this.m_DoStatic = value;
@@ -85,10 +81,8 @@
 
             public string fieldPath
             {
-                get
-                {
-                    return this.m_FieldPath;
-                }
+                get => 
+                    this.m_FieldPath;
                 set
                 {
                     this.m_FieldPath = value;
@@ -97,10 +91,8 @@
 
             public string paramName
             {
-                get
-                {
-                    return this.m_ParamName;
-                }
+                get => 
+                    this.m_ParamName;
                 set
                 {
                     this.m_ParamName = value;
@@ -109,10 +101,8 @@
 
             public string staticString
             {
-                get
-                {
-                    return this.m_StaticString;
-                }
+                get => 
+                    this.m_StaticString;
                 set
                 {
                     this.m_StaticString = value;
@@ -121,10 +111,8 @@
 
             public UnityEngine.Object target
             {
-                get
-                {
-                    return this.m_Target;
-                }
+                get => 
+                    this.m_Target;
                 set
                 {
                     this.m_Target = value;
@@ -133,10 +121,8 @@
 
             public string typeString
             {
-                get
-                {
-                    return this.m_TypeString;
-                }
+                get => 
+                    this.m_TypeString;
                 set
                 {
                     this.m_TypeString = value;

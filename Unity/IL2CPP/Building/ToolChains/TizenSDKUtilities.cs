@@ -52,10 +52,8 @@
         protected static NPath SDKDirectory
         {
             [CompilerGenerated]
-            get
-            {
-                return <SDKDirectory>k__BackingField;
-            }
+            get => 
+                <SDKDirectory>k__BackingField;
             [CompilerGenerated]
             set
             {

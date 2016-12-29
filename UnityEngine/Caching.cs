@@ -17,10 +17,8 @@
         /// <param name="signature"></param>
         /// <param name="expiration"></param>
         [Obsolete("Size is now specified as a long")]
-        public static bool Authorize(string name, string domain, int size, string signature)
-        {
-            return Authorize(name, domain, (long) size, signature);
-        }
+        public static bool Authorize(string name, string domain, int size, string signature) => 
+            Authorize(name, domain, (long) size, signature);
 
         /// <summary>
         /// <para>This is a WebPlayer-only function.</para>
@@ -32,10 +30,8 @@
         /// <param name="size"></param>
         /// <param name="signature"></param>
         /// <param name="expiration"></param>
-        public static bool Authorize(string name, string domain, long size, string signature)
-        {
-            return Authorize(name, domain, size, -1, signature);
-        }
+        public static bool Authorize(string name, string domain, long size, string signature) => 
+            Authorize(name, domain, size, -1, signature);
 
         /// <summary>
         /// <para>TODO.</para>
@@ -46,10 +42,8 @@
         /// <param name="signature"></param>
         /// <param name="expiration"></param>
         [Obsolete("Size is now specified as a long")]
-        public static bool Authorize(string name, string domain, int size, int expiration, string signature)
-        {
-            return Authorize(name, domain, (long) size, expiration, signature);
-        }
+        public static bool Authorize(string name, string domain, int size, int expiration, string signature) => 
+            Authorize(name, domain, (long) size, expiration, signature);
 
         /// <summary>
         /// <para>This is a WebPlayer-only function.</para>
@@ -101,10 +95,8 @@
             return IsVersionCached(url, hash);
         }
 
-        public static bool IsVersionCached(string url, Hash128 hash)
-        {
-            return INTERNAL_CALL_IsVersionCached(url, ref hash);
-        }
+        public static bool IsVersionCached(string url, Hash128 hash) => 
+            INTERNAL_CALL_IsVersionCached(url, ref hash);
 
         /// <summary>
         /// <para>Bumps the timestamp of a cached file to be the current time.</para>
@@ -117,10 +109,8 @@
             return MarkAsUsed(url, hash);
         }
 
-        public static bool MarkAsUsed(string url, Hash128 hash)
-        {
-            return INTERNAL_CALL_MarkAsUsed(url, ref hash);
-        }
+        public static bool MarkAsUsed(string url, Hash128 hash) => 
+            INTERNAL_CALL_MarkAsUsed(url, ref hash);
 
         public static void ResetNoBackupFlag(string url, int version)
         {

@@ -53,25 +53,17 @@
             }
         }
 
-        public string ForJump(Instruction targetInstruction)
-        {
-            return string.Format("goto {0};", this.FormatOffset(targetInstruction));
-        }
+        public string ForJump(Instruction targetInstruction) => 
+            $"goto {this.FormatOffset(targetInstruction)};";
 
-        public string ForJump(int offset)
-        {
-            return string.Format("goto {0};", this.FormatOffset(offset));
-        }
+        public string ForJump(int offset) => 
+            $"goto {this.FormatOffset(offset)};";
 
-        public string ForLabel(Instruction ins)
-        {
-            return (this.FormatOffset(ins) + ":");
-        }
+        public string ForLabel(Instruction ins) => 
+            (this.FormatOffset(ins) + ":");
 
-        public string FormatOffset(Instruction ins)
-        {
-            return this.FormatOffset(ins.Offset);
-        }
+        public string FormatOffset(Instruction ins) => 
+            this.FormatOffset(ins.Offset);
 
         private string FormatOffset(int offset)
         {
@@ -100,13 +92,11 @@
                     }
                 }
             }
-            return string.Format("{0}_{1:x4}", str, offset);
+            return $"{str}_{offset:x4}";
         }
 
-        public bool NeedsLabel(Instruction ins)
-        {
-            return this._jumpMap.ContainsKey(ins);
-        }
+        public bool NeedsLabel(Instruction ins) => 
+            this._jumpMap.ContainsKey(ins);
     }
 }
 

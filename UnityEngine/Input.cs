@@ -63,37 +63,29 @@
         /// <para>Returns true while the user holds down the key identified by name. Think auto fire.</para>
         /// </summary>
         /// <param name="name"></param>
-        public static bool GetKey(string name)
-        {
-            return GetKeyString(name);
-        }
+        public static bool GetKey(string name) => 
+            GetKeyString(name);
 
         /// <summary>
         /// <para>Returns true while the user holds down the key identified by the key KeyCode enum parameter.</para>
         /// </summary>
         /// <param name="key"></param>
-        public static bool GetKey(KeyCode key)
-        {
-            return GetKeyInt((int) key);
-        }
+        public static bool GetKey(KeyCode key) => 
+            GetKeyInt((int) key);
 
         /// <summary>
         /// <para>Returns true during the frame the user starts pressing down the key identified by name.</para>
         /// </summary>
         /// <param name="name"></param>
-        public static bool GetKeyDown(string name)
-        {
-            return GetKeyDownString(name);
-        }
+        public static bool GetKeyDown(string name) => 
+            GetKeyDownString(name);
 
         /// <summary>
         /// <para>Returns true during the frame the user starts pressing down the key identified by the key KeyCode enum parameter.</para>
         /// </summary>
         /// <param name="key"></param>
-        public static bool GetKeyDown(KeyCode key)
-        {
-            return GetKeyDownInt((int) key);
-        }
+        public static bool GetKeyDown(KeyCode key) => 
+            GetKeyDownInt((int) key);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool GetKeyDownInt(int key);
@@ -107,19 +99,15 @@
         /// <para>Returns true during the frame the user releases the key identified by name.</para>
         /// </summary>
         /// <param name="name"></param>
-        public static bool GetKeyUp(string name)
-        {
-            return GetKeyUpString(name);
-        }
+        public static bool GetKeyUp(string name) => 
+            GetKeyUpString(name);
 
         /// <summary>
         /// <para>Returns true during the frame the user releases the key identified by the key KeyCode enum parameter.</para>
         /// </summary>
         /// <param name="key"></param>
-        public static bool GetKeyUp(KeyCode key)
-        {
-            return GetKeyUpInt((int) key);
-        }
+        public static bool GetKeyUp(KeyCode key) => 
+            GetKeyUpInt((int) key);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool GetKeyUpInt(int key);

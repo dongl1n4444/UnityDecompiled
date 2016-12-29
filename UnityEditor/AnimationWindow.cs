@@ -55,10 +55,8 @@
             }
         }
 
-        public static List<AnimationWindow> GetAllAnimationWindows()
-        {
-            return s_AnimationWindows;
-        }
+        public static List<AnimationWindow> GetAllAnimationWindows() => 
+            s_AnimationWindows;
 
         public void OnControllerChange()
         {
@@ -226,10 +224,8 @@
         {
             internal AnimationWindowSelectionItem currentlySelectedItem;
 
-            internal bool <>m__0(AnimationClip x)
-            {
-                return (x == this.currentlySelectedItem.animationClip);
-            }
+            internal bool <>m__0(AnimationClip x) => 
+                (x == this.currentlySelectedItem.animationClip);
         }
     }
 }

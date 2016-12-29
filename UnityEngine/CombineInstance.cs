@@ -18,10 +18,8 @@
         /// </summary>
         public Mesh mesh
         {
-            get
-            {
-                return this.InternalGetMesh(this.m_MeshInstanceID);
-            }
+            get => 
+                this.InternalGetMesh(this.m_MeshInstanceID);
             set
             {
                 this.m_MeshInstanceID = (value == null) ? 0 : value.GetInstanceID();
@@ -32,10 +30,8 @@
         /// </summary>
         public int subMeshIndex
         {
-            get
-            {
-                return this.m_SubMeshIndex;
-            }
+            get => 
+                this.m_SubMeshIndex;
             set
             {
                 this.m_SubMeshIndex = value;
@@ -46,10 +42,8 @@
         /// </summary>
         public Matrix4x4 transform
         {
-            get
-            {
-                return this.m_Transform;
-            }
+            get => 
+                this.m_Transform;
             set
             {
                 this.m_Transform = value;

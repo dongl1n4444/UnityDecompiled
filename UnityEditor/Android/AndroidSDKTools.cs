@@ -50,10 +50,8 @@
             return this.PlatformToolsExe(command);
         }
 
-        public string BuildToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit)
-        {
-            return AndroidComponentVersion.GetComponentVersion(this.SDKBuildToolsDir);
-        }
+        public string BuildToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
+            AndroidComponentVersion.GetComponentVersion(this.SDKBuildToolsDir);
 
         public void CreateKey(string keystore, string storepass, string alias, string password, string dname, int validityInDays)
         {
@@ -100,7 +98,7 @@
 
         public string GetAndroidPlatformPath(int apiLevel)
         {
-            string[] components = new string[] { this.SDKRootDir, "platforms", string.Format("android-{0}", apiLevel) };
+            string[] components = new string[] { this.SDKRootDir, "platforms", $"android-{apiLevel}" };
             string str = Paths.Combine(components);
             if (File.Exists(Path.Combine(str, "android.jar")))
             {
@@ -155,7 +153,7 @@
 
         public string InstallPlatform(int apiLevel, Command.WaitingForProcessToExit waitingForProcessToExit)
         {
-            string[] sdkToolCommand = new string[] { "android", "update", "sdk", "-u", "-t", string.Format("android-{0}", apiLevel) };
+            string[] sdkToolCommand = new string[] { "android", "update", "sdk", "-u", "-t", $"android-{apiLevel}" };
             return this.RunCommand(sdkToolCommand, waitingForProcessToExit, "Unable to install additional SDK platform. Please run the SDK Manager manually to make sure you have the latest set of tools and the required platforms installed. See the Console for more details. ");
         }
 
@@ -200,10 +198,8 @@
             return this.ToolsExe(command);
         }
 
-        public string PlatformToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit)
-        {
-            return AndroidComponentVersion.GetComponentVersion(this.SDKPlatformToolsDir);
-        }
+        public string PlatformToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
+            AndroidComponentVersion.GetComponentVersion(this.SDKPlatformToolsDir);
 
         public string[] ReadAvailableKeys(string keystore, string storepass)
         {
@@ -225,20 +221,14 @@
             return list.ToArray();
         }
 
-        public string RunCommand(string[] sdkToolCommand, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg)
-        {
-            return this.RunCommand(sdkToolCommand, null, waitingForProcessToExit, errorMsg);
-        }
+        public string RunCommand(string[] sdkToolCommand, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg) => 
+            this.RunCommand(sdkToolCommand, null, waitingForProcessToExit, errorMsg);
 
-        public string RunCommand(string[] sdkToolCommand, string workingdir, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg)
-        {
-            return this.RunCommand(sdkToolCommand, 0x800, workingdir, waitingForProcessToExit, errorMsg);
-        }
+        public string RunCommand(string[] sdkToolCommand, string workingdir, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg) => 
+            this.RunCommand(sdkToolCommand, 0x800, workingdir, waitingForProcessToExit, errorMsg);
 
-        public string RunCommand(string[] sdkToolCommand, int memoryMB, string workingdir, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg)
-        {
-            return RunCommandSafe(AndroidJavaTools.javaPath, this.SDKToolsDir, sdkToolCommand, memoryMB, workingdir, waitingForProcessToExit, errorMsg);
-        }
+        public string RunCommand(string[] sdkToolCommand, int memoryMB, string workingdir, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg) => 
+            RunCommandSafe(AndroidJavaTools.javaPath, this.SDKToolsDir, sdkToolCommand, memoryMB, workingdir, waitingForProcessToExit, errorMsg);
 
         private static string RunCommandInternal(string javaExe, string sdkToolsDir, string[] sdkToolCommand, int memoryMB, string workingdir, Command.WaitingForProcessToExit waitingForProcessToExit, string errorMsg)
         {
@@ -334,15 +324,11 @@
             return str;
         }
 
-        private string ToolsExe(string command)
-        {
-            return Path.Combine(this.SDKToolsDir, AndroidJavaTools.Exe(command));
-        }
+        private string ToolsExe(string command) => 
+            Path.Combine(this.SDKToolsDir, AndroidJavaTools.Exe(command));
 
-        public string ToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit)
-        {
-            return AndroidComponentVersion.GetComponentVersion(this.SDKToolsDir);
-        }
+        public string ToolsVersion(Command.WaitingForProcessToExit waitingForProcessToExit) => 
+            AndroidComponentVersion.GetComponentVersion(this.SDKToolsDir);
 
         public string UpdateSDK(Command.WaitingForProcessToExit waitingForProcessToExit)
         {
@@ -371,29 +357,14 @@
             }
         }
 
-        public string AAPT
-        {
-            get
-            {
-                return this.BuildToolsExe("aapt");
-            }
-        }
+        public string AAPT =>
+            this.BuildToolsExe("aapt");
 
-        public string ADB
-        {
-            get
-            {
-                return this.PlatformToolsExe("adb");
-            }
-        }
+        public string ADB =>
+            this.PlatformToolsExe("adb");
 
-        public string ZIPALIGN
-        {
-            get
-            {
-                return this.BuildToolsExe("zipalign");
-            }
-        }
+        public string ZIPALIGN =>
+            this.BuildToolsExe("zipalign");
 
         [CompilerGenerated]
         private sealed class <RunCommandInternal>c__AnonStorey0

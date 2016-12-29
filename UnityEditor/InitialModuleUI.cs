@@ -37,10 +37,8 @@
             this.Init();
         }
 
-        public override float GetXAxisScalar()
-        {
-            return base.m_ParticleSystemUI.GetEmitterDuration();
-        }
+        public override float GetXAxisScalar() => 
+            base.m_ParticleSystemUI.GetEmitterDuration();
 
         protected override void Init()
         {

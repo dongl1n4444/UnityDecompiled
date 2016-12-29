@@ -131,13 +131,8 @@
             }
         }
 
-        public bool hasMultipleTransitions
-        {
-            get
-            {
-                return (this.transitions.Count > 1);
-            }
-        }
+        public bool hasMultipleTransitions =>
+            (this.transitions.Count > 1);
     }
 }
 

@@ -9,10 +9,8 @@
         {
         }
 
-        public override float GetHeight()
-        {
-            return 0f;
-        }
+        public override float GetHeight() => 
+            0f;
     }
 }
 

@@ -4,17 +4,14 @@
     using System.IO;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class FileStreamExtensions
     {
-        [Extension]
-        public static void LockPortable(FileStream stream, long position, long length)
+        public static void LockPortable(this FileStream stream, long position, long length)
         {
             stream.Lock(position, length);
         }
 
-        [Extension]
-        public static void UnlockPortable(FileStream stream, long position, long length)
+        public static void UnlockPortable(this FileStream stream, long position, long length)
         {
             stream.Unlock(position, length);
         }

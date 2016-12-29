@@ -61,10 +61,8 @@
             this.shouldExit = true;
         }
 
-        internal bool IsRunning()
-        {
-            return !this.shouldExit;
-        }
+        internal bool IsRunning() => 
+            !this.shouldExit;
 
         private void OnDestroy()
         {
@@ -188,40 +186,23 @@
             }
         }
 
-        public bool forceLowResolutionAspectRatios
-        {
-            get
-            {
-                return (EditorGUIUtility.pixelsPerPoint == 1f);
-            }
-        }
+        public bool forceLowResolutionAspectRatios =>
+            (EditorGUIUtility.pixelsPerPoint == 1f);
 
         public bool lowResolutionForAspectRatios
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
         }
 
-        public bool showLowResolutionToggle
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool showLowResolutionToggle =>
+            false;
 
-        private int ToolBarHeight
-        {
-            get
-            {
-                return 0x11;
-            }
-        }
+        private int ToolBarHeight =>
+            0x11;
     }
 }
 

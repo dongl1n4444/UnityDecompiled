@@ -20,13 +20,8 @@
             this.option = optionName;
         }
 
-        public string OptionName
-        {
-            get
-            {
-                return this.option;
-            }
-        }
+        public string OptionName =>
+            this.option;
     }
 }
 

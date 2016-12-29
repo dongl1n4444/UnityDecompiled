@@ -14,10 +14,8 @@
         [Obsolete("CircleCollider2D.center has been deprecated. Use CircleCollider2D.offset instead (UnityUpgradable) -> offset", true)]
         public Vector2 center
         {
-            get
-            {
-                return Vector2.zero;
-            }
+            get => 
+                Vector2.zero;
             set
             {
             }

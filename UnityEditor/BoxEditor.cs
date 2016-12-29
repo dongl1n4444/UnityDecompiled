@@ -111,10 +111,8 @@
             Handles.DotCap(controlID, position, rotation, size);
         }
 
-        private static float DefaultMidpointGetSizeFunc(Vector3 localPos)
-        {
-            return (HandleUtility.GetHandleSize(localPos) * 0.03f);
-        }
+        private static float DefaultMidpointGetSizeFunc(Vector3 localPos) => 
+            (HandleUtility.GetHandleSize(localPos) * 0.03f);
 
         private Vector3 EdgeHandle(Vector3 handlePos, Vector3 handleDir, Vector3 slideDir1, Vector3 slideDir2, Matrix4x4 transform)
         {
@@ -282,15 +280,11 @@
             this.m_HandleControlID = -1;
         }
 
-        public bool OnSceneGUI(Transform transform, Color color, ref Vector3 center, ref Vector3 size)
-        {
-            return this.OnSceneGUI(transform, color, true, ref center, ref size);
-        }
+        public bool OnSceneGUI(Transform transform, Color color, ref Vector3 center, ref Vector3 size) => 
+            this.OnSceneGUI(transform, color, true, ref center, ref size);
 
-        public bool OnSceneGUI(Matrix4x4 transform, Color color, bool handlesOnly, ref Vector3 center, ref Vector3 size)
-        {
-            return this.OnSceneGUI(transform, color, color, handlesOnly, ref center, ref size);
-        }
+        public bool OnSceneGUI(Matrix4x4 transform, Color color, bool handlesOnly, ref Vector3 center, ref Vector3 size) => 
+            this.OnSceneGUI(transform, color, color, handlesOnly, ref center, ref size);
 
         public bool OnSceneGUI(Transform transform, Color color, bool handlesOnly, ref Vector3 center, ref Vector3 size)
         {
@@ -361,10 +355,8 @@
 
         public bool allowNegativeSize
         {
-            get
-            {
-                return this.m_AllowNegativeSize;
-            }
+            get => 
+                this.m_AllowNegativeSize;
             set
             {
                 this.m_AllowNegativeSize = value;

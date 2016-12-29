@@ -14,7 +14,7 @@
         {
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             <WriteMarshalCleanupVariable>c__AnonStorey3 storey = new <WriteMarshalCleanupVariable>c__AnonStorey3 {
                 variableName = variableName,
@@ -97,8 +97,8 @@
             internal string <>m__0(CppCodeWriter bodyWriter)
             {
                 string str = DefaultMarshalInfoWriter.CleanVariableName(this.variableName);
-                string str2 = string.Format("{0}_CleanupLoopCount", str);
-                string str3 = (this.managedVariableName != null) ? string.Format("({0} != {1}) ? ({0})->max_length : 0", this.managedVariableName, DefaultMarshalInfoWriter.Naming.Null) : string.Format("{0}", this.$this._arraySize);
+                string str2 = $"{str}_CleanupLoopCount";
+                string str3 = (this.managedVariableName != null) ? string.Format("({0} != {1}) ? ({0})->max_length : 0", this.managedVariableName, DefaultMarshalInfoWriter.Naming.Null) : $"{this.$this._arraySize}";
                 object[] args = new object[] { str2, str3 };
                 bodyWriter.WriteLine("const int32_t {0} = {1};", args);
                 return str2;
@@ -112,10 +112,8 @@
             internal ManagedMarshalValue destinationVariable;
             internal string variableName;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.$this.WriteArraySizeFromManagedArray(bodyWriter, this.destinationVariable, this.variableName);
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.$this.WriteArraySizeFromManagedArray(bodyWriter, this.destinationVariable, this.variableName);
         }
 
         [CompilerGenerated]
@@ -137,10 +135,8 @@
         {
             internal string arraySizeVariable;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.arraySizeVariable;
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.arraySizeVariable;
         }
     }
 }

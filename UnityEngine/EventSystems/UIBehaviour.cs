@@ -25,10 +25,8 @@
         /// <returns>
         /// <para>Active.</para>
         /// </returns>
-        public virtual bool IsActive()
-        {
-            return base.isActiveAndEnabled;
-        }
+        public virtual bool IsActive() => 
+            base.isActiveAndEnabled;
 
         /// <summary>
         /// <para>Returns true if the native representation of the behaviour has been destroyed.</para>
@@ -36,10 +34,8 @@
         /// <returns>
         /// <para>True if Destroyed.</para>
         /// </returns>
-        public bool IsDestroyed()
-        {
-            return (this == null);
-        }
+        public bool IsDestroyed() => 
+            (this == null);
 
         /// <summary>
         /// <para>See MonoBehaviour.OnBeforeTransformParentChanged.</para>

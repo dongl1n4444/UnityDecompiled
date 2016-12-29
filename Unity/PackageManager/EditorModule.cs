@@ -61,10 +61,8 @@
 
         public string editorInstallPath
         {
-            get
-            {
-                return Settings.editorInstallPath;
-            }
+            get => 
+                Settings.editorInstallPath;
             set
             {
                 Settings.editorInstallPath = value;
@@ -73,28 +71,16 @@
 
         public PackageInfo moduleInfo { get; set; }
 
-        public IEnumerable<PackageInfo> playbackEngines
-        {
-            get
-            {
-                return GetNewestLocalPackagesOfType(PackageType.PlaybackEngine);
-            }
-        }
+        public IEnumerable<PackageInfo> playbackEngines =>
+            GetNewestLocalPackagesOfType(PackageType.PlaybackEngine);
 
-        public IEnumerable<PackageInfo> unityExtensions
-        {
-            get
-            {
-                return GetNewestLocalPackagesOfType(PackageType.UnityExtension);
-            }
-        }
+        public IEnumerable<PackageInfo> unityExtensions =>
+            GetNewestLocalPackagesOfType(PackageType.UnityExtension);
 
         public string unityVersion
         {
-            get
-            {
-                return Settings.unityVersion.ToString();
-            }
+            get => 
+                Settings.unityVersion.ToString();
             set
             {
                 Settings.unityVersion = new PackageVersion(value);
@@ -103,10 +89,8 @@
 
         public UpdateMode updateMode
         {
-            get
-            {
-                return Settings.updateMode;
-            }
+            get => 
+                Settings.updateMode;
             set
             {
                 Settings.updateMode = value;
@@ -118,10 +102,8 @@
         {
             internal PackageType type;
 
-            internal bool <>m__0(IvyModule m)
-            {
-                return (m.Info.Type == this.type);
-            }
+            internal bool <>m__0(IvyModule m) => 
+                (m.Info.Type == this.type);
         }
     }
 }

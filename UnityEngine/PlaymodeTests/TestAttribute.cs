@@ -65,15 +65,11 @@
             return (Attribute.GetCustomAttribute(type, typeof(PlayModeTestAttribute)) as PlayModeTestAttribute);
         }
 
-        internal float GetTimeout()
-        {
-            return this.m_Timeout;
-        }
+        internal float GetTimeout() => 
+            this.m_Timeout;
 
-        internal bool IncludeOnPlatform(TestPlatform testPlatform)
-        {
-            return ((this.m_TestPlatform & testPlatform) == testPlatform);
-        }
+        internal bool IncludeOnPlatform(TestPlatform testPlatform) => 
+            ((this.m_TestPlatform & testPlatform) == testPlatform);
 
         internal bool IncludeOnScene(string sceneName)
         {
@@ -85,10 +81,8 @@
             return (this.m_SceneName == fileNameWithoutExtension);
         }
 
-        internal bool IsSceneBased()
-        {
-            return !string.IsNullOrEmpty(this.m_SceneName);
-        }
+        internal bool IsSceneBased() => 
+            !string.IsNullOrEmpty(this.m_SceneName);
     }
 }
 

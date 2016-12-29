@@ -83,15 +83,11 @@
             }
         }
 
-        protected virtual RectOffset GetBorderSize()
-        {
-            return this.m_BorderSize;
-        }
+        protected virtual RectOffset GetBorderSize() => 
+            this.m_BorderSize;
 
-        private MethodInfo GetPaneMethod(string methodName)
-        {
-            return this.GetPaneMethod(methodName, this.m_ActualView);
-        }
+        private MethodInfo GetPaneMethod(string methodName) => 
+            this.GetPaneMethod(methodName, this.m_ActualView);
 
         private MethodInfo GetPaneMethod(string methodName, object obj)
         {
@@ -112,10 +108,8 @@
             return null;
         }
 
-        protected Type[] GetPaneTypes()
-        {
-            return new Type[] { typeof(SceneView), typeof(GameView), typeof(InspectorWindow), typeof(SceneHierarchyWindow), typeof(ProjectBrowser), typeof(ProfilerWindow), typeof(AnimationWindow) };
-        }
+        protected Type[] GetPaneTypes() => 
+            new Type[] { typeof(SceneView), typeof(GameView), typeof(InspectorWindow), typeof(SceneHierarchyWindow), typeof(ProjectBrowser), typeof(ProfilerWindow), typeof(AnimationWindow) };
 
         protected void Invoke(string methodName)
         {
@@ -338,10 +332,8 @@
 
         internal EditorWindow actualView
         {
-            get
-            {
-                return this.m_ActualView;
-            }
+            get => 
+                this.m_ActualView;
             set
             {
                 if (this.m_ActualView != value)
@@ -353,13 +345,8 @@
             }
         }
 
-        internal RectOffset borderSize
-        {
-            get
-            {
-                return this.GetBorderSize();
-            }
-        }
+        internal RectOffset borderSize =>
+            this.GetBorderSize();
     }
 }
 

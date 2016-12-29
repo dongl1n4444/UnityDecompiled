@@ -50,10 +50,8 @@
             base.Repaint();
         }
 
-        public static bool IsVisible()
-        {
-            return (s_PopupWindowWithoutFocus != null);
-        }
+        public static bool IsVisible() => 
+            (s_PopupWindowWithoutFocus != null);
 
         private void OnDisable()
         {

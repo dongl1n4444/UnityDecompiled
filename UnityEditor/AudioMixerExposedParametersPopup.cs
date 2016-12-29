@@ -19,7 +19,7 @@
         {
             if (controller.numExposedParameters != m_LastNumExposedParams)
             {
-                m_ButtonContent.text = string.Format("Exposed Parameters ({0})", controller.numExposedParameters);
+                m_ButtonContent.text = $"Exposed Parameters ({controller.numExposedParameters})";
                 m_LastNumExposedParams = controller.numExposedParameters;
             }
             return m_ButtonContent;

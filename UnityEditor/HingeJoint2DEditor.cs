@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(HingeJoint2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(HingeJoint2D))]
     internal class HingeJoint2DEditor : AnchoredJoint2DEditor
     {
         private void DrawTick(Vector3 center, float radius, float angle, Vector3 up, float length)

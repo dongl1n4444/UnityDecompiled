@@ -67,7 +67,7 @@
             Console.Write(text);
             string[] errorOutput = text.Split(kNewlineChars, StringSplitOptions.RemoveEmptyEntries);
             string baseUnityDeveloperFolder = Unsupported.GetBaseUnityDeveloperFolder();
-            List<CompilerMessage> list = Enumerable.ToList<CompilerMessage>(new MonoCSharpCompilerOutputParser().Parse(errorOutput, false));
+            List<CompilerMessage> list = new MonoCSharpCompilerOutputParser().Parse(errorOutput, false).ToList<CompilerMessage>();
             for (int i = 0; i < list.Count; i++)
             {
                 CompilerMessage message = list[i];

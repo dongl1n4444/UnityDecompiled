@@ -34,15 +34,11 @@
             Debug.LogError("Failed to dispose EditorWrapper.");
         }
 
-        public string GetInfoString()
-        {
-            return this.editor.GetInfoString();
-        }
+        public string GetInfoString() => 
+            this.editor.GetInfoString();
 
-        public bool HasPreviewGUI()
-        {
-            return this.editor.HasPreviewGUI();
-        }
+        public bool HasPreviewGUI() => 
+            this.editor.HasPreviewGUI();
 
         private bool Init(Object obj, EditorFeatures requirements)
         {
@@ -108,13 +104,8 @@
             this.editor.OnPreviewSettings();
         }
 
-        public string name
-        {
-            get
-            {
-                return this.editor.target.name;
-            }
-        }
+        public string name =>
+            this.editor.target.name;
 
         public delegate void VoidDelegate(SceneView sceneView);
     }

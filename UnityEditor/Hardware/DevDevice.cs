@@ -23,20 +23,10 @@
             this.features = features;
         }
 
-        public bool isConnected
-        {
-            get
-            {
-                return (this.state == DevDeviceState.Connected);
-            }
-        }
-        public static DevDevice none
-        {
-            get
-            {
-                return new DevDevice("None", "None", "none", "internal", DevDeviceState.Disconnected, DevDeviceFeatures.None);
-            }
-        }
+        public bool isConnected =>
+            (this.state == DevDeviceState.Connected);
+        public static DevDevice none =>
+            new DevDevice("None", "None", "none", "internal", DevDeviceState.Disconnected, DevDeviceFeatures.None);
         public override string ToString()
         {
             object[] objArray1 = new object[] { this.name, " (id:", this.id, ", type: ", this.type, ", module: ", this.module, ", state: ", this.state, ", features: ", this.features, ")" };

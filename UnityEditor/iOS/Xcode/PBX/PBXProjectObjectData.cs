@@ -90,21 +90,11 @@
             }
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
 
-        public string mainGroup
-        {
-            get
-            {
-                return base.GetPropertyString("mainGroup");
-            }
-        }
+        public string mainGroup =>
+            base.GetPropertyString("mainGroup");
     }
 }
 

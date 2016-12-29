@@ -72,10 +72,8 @@
         {
             internal GameObjectSelectionItem selectionItem;
 
-            internal bool <>m__0(AnimationClip x)
-            {
-                return (x == this.selectionItem.animationClip);
-            }
+            internal bool <>m__0(AnimationClip x) => 
+                (x == this.selectionItem.animationClip);
         }
     }
 }

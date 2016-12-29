@@ -111,7 +111,7 @@
             {
                 return value.Substring(1);
             }
-            return string.Format("&{0}", value);
+            return $"&{value}";
         }
 
         public string Clean(string name)
@@ -164,7 +164,7 @@
             {
                 return value.Substring(1);
             }
-            return string.Format("*{0}", value);
+            return $"*{value}";
         }
 
         public void Dispose()
@@ -178,75 +178,47 @@
             this._stringLiteralHashCache.Clear();
         }
 
-        private string EscapeKeywords(string fieldName)
-        {
-            return ("___" + fieldName);
-        }
+        private string EscapeKeywords(string fieldName) => 
+            ("___" + fieldName);
 
-        public string ForArrayIndexName()
-        {
-            return "index";
-        }
+        public string ForArrayIndexName() => 
+            "index";
 
-        public string ForArrayIndexType()
-        {
-            return "il2cpp_array_size_t";
-        }
+        public string ForArrayIndexType() => 
+            "il2cpp_array_size_t";
 
-        public string ForArrayItemAddressGetter(bool useArrayBoundsCheck)
-        {
-            return (!useArrayBoundsCheck ? "GetAddressAtUnchecked" : "GetAddressAt");
-        }
+        public string ForArrayItemAddressGetter(bool useArrayBoundsCheck) => 
+            (!useArrayBoundsCheck ? "GetAddressAtUnchecked" : "GetAddressAt");
 
-        public string ForArrayItemGetter(bool useArrayBoundsCheck)
-        {
-            return (!useArrayBoundsCheck ? "GetAtUnchecked" : "GetAt");
-        }
+        public string ForArrayItemGetter(bool useArrayBoundsCheck) => 
+            (!useArrayBoundsCheck ? "GetAtUnchecked" : "GetAt");
 
-        public string ForArrayItems()
-        {
-            return "m_Items";
-        }
+        public string ForArrayItems() => 
+            "m_Items";
 
-        public string ForArrayItemSetter(bool useArrayBoundsCheck)
-        {
-            return (!useArrayBoundsCheck ? "SetAtUnchecked" : "SetAt");
-        }
+        public string ForArrayItemSetter(bool useArrayBoundsCheck) => 
+            (!useArrayBoundsCheck ? "SetAtUnchecked" : "SetAt");
 
-        public string ForArrayType(ArrayType type)
-        {
-            return (this.ForTypeNameOnly(type) + "_ArrayType");
-        }
+        public string ForArrayType(ArrayType type) => 
+            (this.ForTypeNameOnly(type) + "_ArrayType");
 
-        public string ForAssembly(AssemblyDefinition assembly)
-        {
-            return string.Format("g_{0}_Assembly", this.Clean(assembly.Name.Name));
-        }
+        public string ForAssembly(AssemblyDefinition assembly) => 
+            $"g_{this.Clean(assembly.Name.Name)}_Assembly";
 
-        public string ForAssemblyScope(AssemblyDefinition assembly, string symbol)
-        {
-            return string.Format("{0}_{1}", this.ForAssembly(assembly), symbol);
-        }
+        public string ForAssemblyScope(AssemblyDefinition assembly, string symbol) => 
+            $"{this.ForAssembly(assembly)}_{symbol}";
 
-        public string ForComInterfaceReturnParameterName()
-        {
-            return "comReturnValue";
-        }
+        public string ForComInterfaceReturnParameterName() => 
+            "comReturnValue";
 
-        public string ForComTypeInterfaceFieldGetter(TypeReference interfaceType)
-        {
-            return ("get_" + this.ForInteropInterfaceVariable(interfaceType));
-        }
+        public string ForComTypeInterfaceFieldGetter(TypeReference interfaceType) => 
+            ("get_" + this.ForInteropInterfaceVariable(interfaceType));
 
-        public string ForComTypeInterfaceFieldName(TypeReference interfaceType)
-        {
-            return this.ForInteropInterfaceVariable(interfaceType);
-        }
+        public string ForComTypeInterfaceFieldName(TypeReference interfaceType) => 
+            this.ForInteropInterfaceVariable(interfaceType);
 
-        public string ForCreateComCallableWrapperFunction(TypeReference type)
-        {
-            return (this.ForTypeNameOnly(type) + "_create_ccw");
-        }
+        public string ForCreateComCallableWrapperFunction(TypeReference type) => 
+            (this.ForTypeNameOnly(type) + "_create_ccw");
 
         public string ForCreateStringMethod(MethodReference method)
         {
@@ -258,7 +230,7 @@
             {
                 <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <ForCreateStringMethod>m__2);
             }
-            foreach (MethodDefinition definition in Enumerable.Where<MethodDefinition>(method.DeclaringType.Resolve().Methods, <>f__am$cache2))
+            foreach (MethodDefinition definition in method.DeclaringType.Resolve().Methods.Where<MethodDefinition>(<>f__am$cache2))
             {
                 if (definition.Parameters.Count == method.Parameters.Count)
                 {
@@ -276,58 +248,38 @@
                     }
                 }
             }
-            throw new Exception(string.Format("Can't find proper CreateString : {0}", method.FullName));
+            throw new Exception($"Can't find proper CreateString : {method.FullName}");
         }
 
-        public string ForCustomAttributesCacheGenerator(AssemblyDefinition assemblyDefinition)
-        {
-            return string.Format("{0}_CustomAttributesCacheGenerator", this.ForAssembly(assemblyDefinition));
-        }
+        public string ForCustomAttributesCacheGenerator(AssemblyDefinition assemblyDefinition) => 
+            $"{this.ForAssembly(assemblyDefinition)}_CustomAttributesCacheGenerator";
 
-        public string ForCustomAttributesCacheGenerator(EventDefinition eventDefinition)
-        {
-            return string.Format("{0}_{1}", this.ForCustomAttributesCacheGenerator(eventDefinition.DeclaringType), this.ForEventInfo(eventDefinition));
-        }
+        public string ForCustomAttributesCacheGenerator(EventDefinition eventDefinition) => 
+            $"{this.ForCustomAttributesCacheGenerator(eventDefinition.DeclaringType)}_{this.ForEventInfo(eventDefinition)}";
 
-        public string ForCustomAttributesCacheGenerator(FieldDefinition fieldDefinition)
-        {
-            return string.Format("{0}_{1}", this.ForCustomAttributesCacheGenerator(fieldDefinition.DeclaringType), this.Clean(fieldDefinition.Name));
-        }
+        public string ForCustomAttributesCacheGenerator(FieldDefinition fieldDefinition) => 
+            $"{this.ForCustomAttributesCacheGenerator(fieldDefinition.DeclaringType)}_{this.Clean(fieldDefinition.Name)}";
 
-        public string ForCustomAttributesCacheGenerator(MethodDefinition methodDefinition)
-        {
-            return string.Format("{0}_{1}", this.ForCustomAttributesCacheGenerator(methodDefinition.DeclaringType), this.ForMethodNameOnly(methodDefinition));
-        }
+        public string ForCustomAttributesCacheGenerator(MethodDefinition methodDefinition) => 
+            $"{this.ForCustomAttributesCacheGenerator(methodDefinition.DeclaringType)}_{this.ForMethodNameOnly(methodDefinition)}";
 
-        public string ForCustomAttributesCacheGenerator(PropertyDefinition propertyDefinition)
-        {
-            return string.Format("{0}_{1}", this.ForCustomAttributesCacheGenerator(propertyDefinition.DeclaringType), this.ForPropertyInfo(propertyDefinition));
-        }
+        public string ForCustomAttributesCacheGenerator(PropertyDefinition propertyDefinition) => 
+            $"{this.ForCustomAttributesCacheGenerator(propertyDefinition.DeclaringType)}_{this.ForPropertyInfo(propertyDefinition)}";
 
-        public string ForCustomAttributesCacheGenerator(TypeDefinition typeDefinition)
-        {
-            return string.Format("{0}_CustomAttributesCacheGenerator", this.ForTypeNameOnly(typeDefinition));
-        }
+        public string ForCustomAttributesCacheGenerator(TypeDefinition typeDefinition) => 
+            $"{this.ForTypeNameOnly(typeDefinition)}_CustomAttributesCacheGenerator";
 
-        public string ForCustomAttributesCacheGenerator(ParameterDefinition parameterDefinition, MethodDefinition method)
-        {
-            return string.Format("{0}_{1}", this.ForCustomAttributesCacheGenerator(method), this.ForParameterName(parameterDefinition));
-        }
+        public string ForCustomAttributesCacheGenerator(ParameterDefinition parameterDefinition, MethodDefinition method) => 
+            $"{this.ForCustomAttributesCacheGenerator(method)}_{this.ForParameterName(parameterDefinition)}";
 
-        public string ForDebugLocalInfo(MethodReference method)
-        {
-            return this.ForMethodInfoInternal(method, "DebugLocalInfos");
-        }
+        public string ForDebugLocalInfo(MethodReference method) => 
+            this.ForMethodInfoInternal(method, "DebugLocalInfos");
 
-        public string ForDebugMethodInfo(MethodReference method)
-        {
-            return this.ForMethodInfoInternal(method, this.MemberNames.DebugMethodInfo);
-        }
+        public string ForDebugMethodInfo(MethodReference method) => 
+            this.ForMethodInfoInternal(method, this.MemberNames.DebugMethodInfo);
 
-        public string ForDebugMethodInfoOffsetTable(MethodReference method)
-        {
-            return this.ForMethodInfoInternal(method, this.MemberNames.DebugMethodInfoOffsetTable);
-        }
+        public string ForDebugMethodInfoOffsetTable(MethodReference method) => 
+            this.ForMethodInfoInternal(method, this.MemberNames.DebugMethodInfoOffsetTable);
 
         public string ForDebugMethodLocalInfo(VariableDefinition variable, MethodReference method)
         {
@@ -335,65 +287,41 @@
             return this.ForMethodInfoInternal(method, string.Concat(objArray1));
         }
 
-        public string ForDebugTypeInfos(TypeReference type)
-        {
-            return this.TypeMember(type, this.MemberNames.DebugTypeInfo);
-        }
+        public string ForDebugTypeInfos(TypeReference type) => 
+            this.TypeMember(type, this.MemberNames.DebugTypeInfo);
 
-        public string ForDelegatePInvokeWrapper(TypeReference type)
-        {
-            return ("DelegatePInvokeWrapper_" + this.ForType(type));
-        }
+        public string ForDelegatePInvokeWrapper(TypeReference type) => 
+            ("DelegatePInvokeWrapper_" + this.ForType(type));
 
-        private string ForEventInfo(EventDefinition ev)
-        {
-            return this.TypeMember(ev.DeclaringType, this.Clean(this.EscapeKeywords(ev.Name)) + "_EventInfo");
-        }
+        private string ForEventInfo(EventDefinition ev) => 
+            this.TypeMember(ev.DeclaringType, this.Clean(this.EscapeKeywords(ev.Name)) + "_EventInfo");
 
-        public string ForField(FieldReference field)
-        {
-            return (this.Clean(this.EscapeKeywords(field.Name)) + "_" + this.GetFieldIndex(field, true));
-        }
+        public string ForField(FieldReference field) => 
+            (this.Clean(this.EscapeKeywords(field.Name)) + "_" + this.GetFieldIndex(field, true));
 
-        public string ForFieldAddressGetter(FieldReference field)
-        {
-            return (string.Format("get_address_of_{0}_", this.Clean(field.Name)) + this.GetFieldIndex(field, true));
-        }
+        public string ForFieldAddressGetter(FieldReference field) => 
+            ($"get_address_of_{this.Clean(field.Name)}_" + this.GetFieldIndex(field, true));
 
-        public string ForFieldGetter(FieldReference field)
-        {
-            return (string.Format("get_{0}_", this.Clean(field.Name)) + this.GetFieldIndex(field, true));
-        }
+        public string ForFieldGetter(FieldReference field) => 
+            ($"get_{this.Clean(field.Name)}_" + this.GetFieldIndex(field, true));
 
-        private string ForFieldInfo(FieldReference field)
-        {
-            return this.TypeMember(field.DeclaringType, this.ForField(field) + "_FieldInfo");
-        }
+        private string ForFieldInfo(FieldReference field) => 
+            this.TypeMember(field.DeclaringType, this.ForField(field) + "_FieldInfo");
 
-        public string ForFieldOffsetGetter(FieldReference field)
-        {
-            return (string.Format("get_offset_of_{0}_", this.Clean(field.Name)) + this.GetFieldIndex(field, true));
-        }
+        public string ForFieldOffsetGetter(FieldReference field) => 
+            ($"get_offset_of_{this.Clean(field.Name)}_" + this.GetFieldIndex(field, true));
 
-        public string ForFieldPadding(FieldReference field)
-        {
-            return (this.ForField(field) + "_OffsetPadding");
-        }
+        public string ForFieldPadding(FieldReference field) => 
+            (this.ForField(field) + "_OffsetPadding");
 
-        public string ForFieldSetter(FieldReference field)
-        {
-            return (string.Format("set_{0}_", this.Clean(field.Name)) + this.GetFieldIndex(field, true));
-        }
+        public string ForFieldSetter(FieldReference field) => 
+            ($"set_{this.Clean(field.Name)}_" + this.GetFieldIndex(field, true));
 
-        public string ForFile(TypeDefinition type)
-        {
-            return (this.ModuleNameToPrependString(type.Module.Name) + "_" + this.Clean(type.FullName));
-        }
+        public string ForFile(TypeDefinition type) => 
+            (this.ModuleNameToPrependString(type.Module.Name) + "_" + this.Clean(type.FullName));
 
-        public string ForGenericClass(TypeReference type)
-        {
-            return this.TypeMember(type, this.MemberNames.GenericClass);
-        }
+        public string ForGenericClass(TypeReference type) => 
+            this.TypeMember(type, this.MemberNames.GenericClass);
 
         public string ForGenericInst(IList<TypeReference> types)
         {
@@ -405,14 +333,12 @@
             return str;
         }
 
-        public string ForIl2CppComObjectIdentityField()
-        {
-            return "identity";
-        }
+        public string ForIl2CppComObjectIdentityField() => 
+            "identity";
 
-        public string ForIl2CppType(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs)
+        public string ForIl2CppType(TypeReference type, int attrs = 0)
         {
-            TypeReference nonPinnedAndNonByReferenceType = Extensions.GetNonPinnedAndNonByReferenceType(type);
+            TypeReference nonPinnedAndNonByReferenceType = type.GetNonPinnedAndNonByReferenceType();
             string str = this.ForType(nonPinnedAndNonByReferenceType);
             GenericParameter parameter = nonPinnedAndNonByReferenceType as GenericParameter;
             if (parameter != null)
@@ -430,29 +356,21 @@
             return string.Concat(objArray1);
         }
 
-        public string ForImage(ModuleDefinition module)
-        {
-            return string.Format("g_{0}_Image", this.Clean(module.Name));
-        }
+        public string ForImage(ModuleDefinition module) => 
+            $"g_{this.Clean(module.Name)}_Image";
 
-        public string ForImage(TypeDefinition type)
-        {
-            return string.Format("g_{0}_Image", this.Clean(type.Module.Name));
-        }
+        public string ForImage(TypeDefinition type) => 
+            $"g_{this.Clean(type.Module.Name)}_Image";
 
-        public string ForInitializedTypeInfo(string argument)
-        {
-            return string.Format("InitializedTypeInfo({0})", argument);
-        }
+        public string ForInitializedTypeInfo(string argument) => 
+            $"InitializedTypeInfo({argument})";
 
-        public string ForInteropHResultVariable()
-        {
-            return "hr";
-        }
+        public string ForInteropHResultVariable() => 
+            "hr";
 
         public string ForInteropInterfaceVariable(TypeReference interfaceType)
         {
-            if (Extensions.IsIActivationFactory(interfaceType))
+            if (interfaceType.IsIActivationFactory())
             {
                 return "activationFactory";
             }
@@ -461,25 +379,17 @@
             return ("____" + str2.Substring(0, 2).ToLower() + str2.Substring(2));
         }
 
-        public string ForInteropReturnValue()
-        {
-            return "returnValue";
-        }
+        public string ForInteropReturnValue() => 
+            "returnValue";
 
-        public string ForMethod(MethodReference method)
-        {
-            return this.ForMethodNameOnly(method);
-        }
+        public string ForMethod(MethodReference method) => 
+            this.ForMethodNameOnly(method);
 
-        public string ForMethodAdjustorThunk(MethodReference method)
-        {
-            return (this.ForMethod(method) + "_AdjustorThunk");
-        }
+        public string ForMethodAdjustorThunk(MethodReference method) => 
+            (this.ForMethod(method) + "_AdjustorThunk");
 
-        private string ForMethodInfoInternal(MethodReference method, string suffix)
-        {
-            return (this.ForMethodNameOnly(method) + "_" + suffix);
-        }
+        private string ForMethodInfoInternal(MethodReference method, string suffix) => 
+            (this.ForMethodNameOnly(method) + "_" + suffix);
 
         private string ForMethodInternal(MethodReference method)
         {
@@ -521,10 +431,8 @@
             return str3;
         }
 
-        public string ForPadding(TypeDefinition typeDefinition)
-        {
-            return (this.ForType(typeDefinition) + "__padding");
-        }
+        public string ForPadding(TypeDefinition typeDefinition) => 
+            (this.ForType(typeDefinition) + "__padding");
 
         public string ForParameterName(ParameterReference parameterReference)
         {
@@ -538,20 +446,14 @@
             return (this.Clean(name) + index.ToString(CultureInfo.InvariantCulture));
         }
 
-        public string ForPInvokeFunctionPointerTypedef()
-        {
-            return "PInvokeFunc";
-        }
+        public string ForPInvokeFunctionPointerTypedef() => 
+            "PInvokeFunc";
 
-        public string ForPInvokeFunctionPointerVariable()
-        {
-            return "il2cppPInvokeFunc";
-        }
+        public string ForPInvokeFunctionPointerVariable() => 
+            "il2cppPInvokeFunc";
 
-        private string ForPropertyInfo(PropertyDefinition property)
-        {
-            return this.ForPropertyInfo(property, property.DeclaringType);
-        }
+        private string ForPropertyInfo(PropertyDefinition property) => 
+            this.ForPropertyInfo(property, property.DeclaringType);
 
         private string ForPropertyInfo(PropertyDefinition property, TypeReference declaringType)
         {
@@ -560,46 +462,34 @@
                 $this = this
             };
             string str = this.Clean(this.EscapeKeywords(storey.property.Name));
-            if (Enumerable.Count<PropertyDefinition>(declaringType.Resolve().Properties, new Func<PropertyDefinition, bool>(storey, (IntPtr) this.<>m__0)) > 1)
+            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey, (IntPtr) this.<>m__0)) > 1)
             {
                 if (<>f__am$cache1 == null)
                 {
                     <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <ForPropertyInfo>m__1);
                 }
-                str = str + "_" + Enumerable.Aggregate<string>(Enumerable.Select<ParameterDefinition, string>(storey.property.Parameters, new Func<ParameterDefinition, string>(storey, (IntPtr) this.<>m__1)), <>f__am$cache1);
+                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey, (IntPtr) this.<>m__1)).Aggregate<string>(<>f__am$cache1);
             }
             return this.TypeMember(declaringType, str + "_PropertyInfo");
         }
 
-        public string ForReversePInvokeWrapperMethod(MethodReference method)
-        {
-            return ("ReversePInvokeWrapper_" + this.ForMethod(method));
-        }
+        public string ForReversePInvokeWrapperMethod(MethodReference method) => 
+            ("ReversePInvokeWrapper_" + this.ForMethod(method));
 
-        public string ForRuntimeFieldInfo(FieldReference field)
-        {
-            return (this.ForFieldInfo(field) + "_var");
-        }
+        public string ForRuntimeFieldInfo(FieldReference field) => 
+            (this.ForFieldInfo(field) + "_var");
 
-        public string ForRuntimeIl2CppType(TypeReference type)
-        {
-            return (this.ForIl2CppType(type, 0) + "_var");
-        }
+        public string ForRuntimeIl2CppType(TypeReference type) => 
+            (this.ForIl2CppType(type, 0) + "_var");
 
-        public string ForRuntimeMethodInfo(MethodReference method)
-        {
-            return (this.ForMethodInfoInternal(method, this.MemberNames.MethodInfo) + "_var");
-        }
+        public string ForRuntimeMethodInfo(MethodReference method) => 
+            (this.ForMethodInfoInternal(method, this.MemberNames.MethodInfo) + "_var");
 
-        public string ForRuntimeTypeInfo(TypeReference type)
-        {
-            return (this.ForTypeInfo(type) + "_var");
-        }
+        public string ForRuntimeTypeInfo(TypeReference type) => 
+            (this.ForTypeInfo(type) + "_var");
 
-        public string ForStaticFieldsStruct(TypeReference type)
-        {
-            return this.TypeMember(type, this.MemberNames.StaticFields);
-        }
+        public string ForStaticFieldsStruct(TypeReference type) => 
+            this.TypeMember(type, this.MemberNames.StaticFields);
 
         public string ForStringLiteralIdentifier(string literal)
         {
@@ -613,10 +503,8 @@
             return str3;
         }
 
-        public string ForThreadFieldsStruct(TypeReference type)
-        {
-            return this.TypeMember(type, this.MemberNames.ThreadStaticFields);
-        }
+        public string ForThreadFieldsStruct(TypeReference type) => 
+            this.TypeMember(type, this.MemberNames.ThreadStaticFields);
 
         public string ForType(TypeReference typeReference)
         {
@@ -624,10 +512,8 @@
             return this.ForTypeNameOnly(typeReference);
         }
 
-        private string ForTypeInfo(TypeReference typeReference)
-        {
-            return this.TypeMember(typeReference, this.MemberNames.Il2CppClass);
-        }
+        private string ForTypeInfo(TypeReference typeReference) => 
+            this.TypeMember(typeReference, this.MemberNames.Il2CppClass);
 
         private string ForTypeMangling(TypeReference typeReference)
         {
@@ -700,7 +586,7 @@
                 {
                     throw new NotImplementedException("Invalid array rank");
                 }
-                return string.Format("{0}*", this.ForType(typeReference));
+                return $"{this.ForType(typeReference)}*";
             }
             if (type2 != null)
             {
@@ -776,7 +662,7 @@
                 {
                     <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <ForVariable>m__0);
                 }
-                FieldDefinition definition2 = Enumerable.Single<FieldDefinition>(definition.Fields, <>f__am$cache0);
+                FieldDefinition definition2 = definition.Fields.Single<FieldDefinition>(<>f__am$cache0);
                 return this.ForVariable(definition2.FieldType);
             }
             if (variableType is GenericInstanceType)
@@ -785,7 +671,7 @@
                 {
                     return (this.ForType(variableType.Module.TypeSystem.Object) + "*");
                 }
-                return string.Format("{0} {1}", this.ForTypeNameOnly(variableType), !NeedsAsterisk(variableType) ? string.Empty : "*");
+                return $"{this.ForTypeNameOnly(variableType)} {(!NeedsAsterisk(variableType) ? string.Empty : "*")}";
             }
             return this.ForVariableInternal(variableType);
         }
@@ -801,45 +687,31 @@
             {
                 return this.ForVariable(TypeProvider.SystemObject);
             }
-            return string.Format("{0} {1}", this.ForType(variableType), !NeedsAsterisk(variableType) ? string.Empty : "*");
+            return $"{this.ForType(variableType)} {(!NeedsAsterisk(variableType) ? string.Empty : "*")}";
         }
 
-        public string ForVariableName(VariableReference variable)
-        {
-            return ("V_" + variable.Index);
-        }
+        public string ForVariableName(VariableReference variable) => 
+            ("V_" + variable.Index);
 
-        public string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType)
-        {
-            return (this.ForTypeNameOnly(delegateType) + "_ComCallableWrapper");
-        }
+        public string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType) => 
+            (this.ForTypeNameOnly(delegateType) + "_ComCallableWrapper");
 
-        public string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType)
-        {
-            return ("I" + this.ForWindowsRuntimeDelegateComCallableWrapperClass(delegateType));
-        }
+        public string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType) => 
+            ("I" + this.ForWindowsRuntimeDelegateComCallableWrapperClass(delegateType));
 
-        public string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod)
-        {
-            return (this.ForMethod(invokeMethod) + "_NativeInvoker");
-        }
+        public string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod) => 
+            (this.ForMethod(invokeMethod) + "_NativeInvoker");
 
-        private string GenerateUniqueMethodPostFix(MethodReference methodReference)
-        {
-            return this._methodHashCache.GetUniqueHash(methodReference).ToString();
-        }
+        private string GenerateUniqueMethodPostFix(MethodReference methodReference) => 
+            this._methodHashCache.GetUniqueHash(methodReference).ToString();
 
-        private string GenerateUniqueStringLiteralPostFix(string literal)
-        {
-            return this._stringLiteralHashCache.GetUniqueHash(literal).ToString();
-        }
+        private string GenerateUniqueStringLiteralPostFix(string literal) => 
+            this._stringLiteralHashCache.GetUniqueHash(literal).ToString();
 
-        private string GenerateUniqueTypePostFix(TypeReference typeReference)
-        {
-            return this._typeHashCache.GetUniqueHash(typeReference).ToString();
-        }
+        private string GenerateUniqueTypePostFix(TypeReference typeReference) => 
+            this._typeHashCache.GetUniqueHash(typeReference).ToString();
 
-        public int GetFieldIndex(FieldReference field, [Optional, DefaultParameterValue(false)] bool includeBase)
+        public int GetFieldIndex(FieldReference field, bool includeBase = false)
         {
             FieldDefinition definition = field.Resolve();
             TypeDefinition definition2 = (definition.DeclaringType.BaseType == null) ? definition.DeclaringType : definition.DeclaringType.BaseType.Resolve();
@@ -847,7 +719,7 @@
             while (includeBase && (definition2 != null))
             {
                 num += definition2.Fields.Count;
-                definition2 = (definition2.BaseType == null) ? null : definition2.BaseType.Resolve();
+                definition2 = definition2.BaseType?.Resolve();
             }
             Collection<FieldDefinition> fields = definition.DeclaringType.Fields;
             for (int i = 0; i < fields.Count; i++)
@@ -857,7 +729,7 @@
                     return (num + i);
                 }
             }
-            throw new InvalidOperationException(string.Format("Field {0} was not found on its definition {1}!", field.Name, definition.DeclaringType.FullName));
+            throw new InvalidOperationException($"Field {field.Name} was not found on its definition {definition.DeclaringType.FullName}!");
         }
 
         private string GetWellKnownNameFor(TypeReference typeReference)
@@ -987,41 +859,31 @@
                     }
                 }
             }
-            if (Extensions.IsIActivationFactory(typeReference))
+            if (typeReference.IsIActivationFactory())
             {
                 return "Il2CppIActivationFactory";
             }
-            if (Extensions.IsIl2CppComObject(typeReference))
+            if (typeReference.IsIl2CppComObject())
             {
                 return "Il2CppComObject";
             }
             return null;
         }
 
-        private bool IsAsciiDigit(char c)
-        {
-            return ((c >= '0') && (c <= '9'));
-        }
+        private bool IsAsciiDigit(char c) => 
+            ((c >= '0') && (c <= '9'));
 
-        private bool IsSafeCharacter(char c)
-        {
-            return ((((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'))) || (c == '_'));
-        }
+        private bool IsSafeCharacter(char c) => 
+            ((((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'))) || (c == '_'));
 
-        public bool IsSpecialArrayMethod(MethodReference methodReference)
-        {
-            return ((((methodReference.Name == "Set") || (methodReference.Name == "Get")) || ((methodReference.Name == "Address") || (methodReference.Name == ".ctor"))) && methodReference.DeclaringType.IsArray);
-        }
+        public bool IsSpecialArrayMethod(MethodReference methodReference) => 
+            ((((methodReference.Name == "Set") || (methodReference.Name == "Get")) || ((methodReference.Name == "Address") || (methodReference.Name == ".ctor"))) && methodReference.DeclaringType.IsArray);
 
-        public string ModuleNameToPrependString(string name)
-        {
-            return this.Clean(name.Replace(".dll", "").Replace(".DLL", ""));
-        }
+        public string ModuleNameToPrependString(string name) => 
+            this.Clean(name.Replace(".dll", "").Replace(".DLL", ""));
 
-        private static bool NeedsAsterisk(TypeReference type)
-        {
-            return (!Extensions.IsValueType(UnderlyingType(type)) || type.IsByReference);
-        }
+        private static bool NeedsAsterisk(TypeReference type) => 
+            (!UnderlyingType(type).IsValueType() || type.IsByReference);
 
         public TypeReference RemoveModifiers(TypeReference typeReference)
         {
@@ -1053,9 +915,9 @@
             {
                 GenericParameter parameter = (GenericParameter) type;
                 object[] objArray1 = new object[] { (parameter.Owner.GenericParameterType != GenericParameterType.Type) ? this.ForMethodNameOnly((MethodReference) parameter.Owner) : this.ForTypeNameOnly((TypeReference) parameter.Owner), "_gp_", this.Clean(parameter.Name), "_", parameter.Position };
-                return string.Format("{0}_{1}", string.Concat(objArray1), memberName);
+                return $"{string.Concat(objArray1)}_{memberName}";
             }
-            return string.Format("{0}_{1}", this.ForType(type), memberName);
+            return $"{this.ForType(type)}_{memberName}";
         }
 
         private static TypeReference UnderlyingType(TypeReference type)
@@ -1068,53 +930,23 @@
             return type;
         }
 
-        public string ForIntPtrT
-        {
-            get
-            {
-                return "intptr_t";
-            }
-        }
+        public string ForIntPtrT =>
+            "intptr_t";
 
-        public string ForUIntPtrT
-        {
-            get
-            {
-                return "uintptr_t";
-            }
-        }
+        public string ForUIntPtrT =>
+            "uintptr_t";
 
-        public string IntPtrValueField
-        {
-            get
-            {
-                return "m_value";
-            }
-        }
+        public string IntPtrValueField =>
+            "m_value";
 
-        public string Null
-        {
-            get
-            {
-                return "NULL";
-            }
-        }
+        public string Null =>
+            "NULL";
 
-        public string ThisParameterName
-        {
-            get
-            {
-                return "__this";
-            }
-        }
+        public string ThisParameterName =>
+            "__this";
 
-        public string UIntPtrPointerField
-        {
-            get
-            {
-                return "_pointer";
-            }
-        }
+        public string UIntPtrPointerField =>
+            "_pointer";
 
         [CompilerGenerated]
         private sealed class <ForPropertyInfo>c__AnonStorey0
@@ -1122,15 +954,11 @@
             internal NamingComponent $this;
             internal PropertyDefinition property;
 
-            internal bool <>m__0(PropertyDefinition p)
-            {
-                return (p.Name == this.property.Name);
-            }
+            internal bool <>m__0(PropertyDefinition p) => 
+                (p.Name == this.property.Name);
 
-            internal string <>m__1(ParameterDefinition param)
-            {
-                return this.$this.ForTypeMangling(param.ParameterType);
-            }
+            internal string <>m__1(ParameterDefinition param) => 
+                this.$this.ForTypeMangling(param.ParameterType);
         }
     }
 }

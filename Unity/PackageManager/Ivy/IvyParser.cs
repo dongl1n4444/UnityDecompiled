@@ -103,7 +103,7 @@
             if (!File.Exists(path))
             {
                 HasErrors = true;
-                ErrorMessage = string.Format("File does not exist: {0}", path);
+                ErrorMessage = $"File does not exist: {path}";
                 return null;
             }
             object obj2 = Parse<T>(File.ReadAllText(path, Encoding.UTF8));

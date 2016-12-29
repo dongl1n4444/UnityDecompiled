@@ -172,10 +172,8 @@
             return SpriteEditorUtility.RoundedRect(rect2);
         }
 
-        private Vector2 ConvertFromTextureToNormalizedSpace(Vector2 texturePos, Rect rect)
-        {
-            return new Vector2((texturePos.x - rect.xMin) / rect.width, (texturePos.y - rect.yMin) / rect.height);
-        }
+        private Vector2 ConvertFromTextureToNormalizedSpace(Vector2 texturePos, Rect rect) => 
+            new Vector2((texturePos.x - rect.xMin) / rect.width, (texturePos.y - rect.yMin) / rect.height);
 
         private Texture2D CreateTemporaryDuplicate(Texture2D original, int width, int height)
         {
@@ -683,15 +681,13 @@
             }
         }
 
-        private Rect FlipNegativeRect(Rect rect)
-        {
-            return new Rect { 
+        private Rect FlipNegativeRect(Rect rect) => 
+            new Rect { 
                 xMin = Mathf.Min(rect.xMin, rect.xMax),
                 yMin = Mathf.Min(rect.yMin, rect.yMax),
                 xMax = Mathf.Max(rect.xMin, rect.xMax),
                 yMax = Mathf.Max(rect.yMin, rect.yMax)
             };
-        }
 
         private void FourIntFields(GUIContent label, GUIContent labelX, GUIContent labelY, GUIContent labelZ, GUIContent labelW, ref int x, ref int y, ref int z, ref int w)
         {
@@ -1209,10 +1205,8 @@
             s_AlphaPixelCache = null;
         }
 
-        public bool IsEditingDisabled()
-        {
-            return EditorApplication.isPlayingOrWillChangePlaymode;
-        }
+        public bool IsEditingDisabled() => 
+            EditorApplication.isPlayingOrWillChangePlaymode;
 
         private void ModifierKeysChanged()
         {
@@ -1310,10 +1304,8 @@
             base.Repaint();
         }
 
-        private bool Overlap(Rect a, Rect b)
-        {
-            return ((((a.xMin < b.xMax) && (a.xMax > b.xMin)) && (a.yMin < b.yMax)) && (a.yMax > b.yMin));
-        }
+        private bool Overlap(Rect a, Rect b) => 
+            ((((a.xMin < b.xMax) && (a.xMax > b.xMin)) && (a.yMin < b.yMax)) && (a.yMax > b.yMin));
 
         private bool PixelHasAlpha(int x, int y)
         {
@@ -1466,15 +1458,11 @@
             }
         }
 
-        private bool ShouldDrawBorders(SpriteRect currentRect)
-        {
-            return (!Mathf.Approximately(currentRect.m_Border.sqrMagnitude, 0f) || ((currentRect == this.selected) && (this.m_GizmoMode == GizmoMode.BorderEditing)));
-        }
+        private bool ShouldDrawBorders(SpriteRect currentRect) => 
+            (!Mathf.Approximately(currentRect.m_Border.sqrMagnitude, 0f) || ((currentRect == this.selected) && (this.m_GizmoMode == GizmoMode.BorderEditing)));
 
-        private bool ShouldShowRectScaling()
-        {
-            return ((this.selected != null) && (this.m_GizmoMode == GizmoMode.RectEditing));
-        }
+        private bool ShouldShowRectScaling() => 
+            ((this.selected != null) && (this.m_GizmoMode == GizmoMode.RectEditing));
 
         private Vector2 SnapPivot(Vector2 pivot)
         {
@@ -1604,77 +1592,32 @@
             }
         }
 
-        private bool activeTextureSelected
-        {
-            get
-            {
-                return (((this.m_TextureImporter != null) && (base.m_Texture != null)) && (this.m_OriginalTexture != null));
-            }
-        }
+        private bool activeTextureSelected =>
+            (((this.m_TextureImporter != null) && (base.m_Texture != null)) && (this.m_OriginalTexture != null));
 
-        private int defaultColliderAlphaCutoff
-        {
-            get
-            {
-                return 0xfe;
-            }
-        }
+        private int defaultColliderAlphaCutoff =>
+            0xfe;
 
-        private float defaultColliderDetail
-        {
-            get
-            {
-                return 0.25f;
-            }
-        }
+        private float defaultColliderDetail =>
+            0.25f;
 
-        private Rect inspectorRect
-        {
-            get
-            {
-                return new Rect(((base.position.width - 330f) - 8f) - 16f, ((base.position.height - 160f) - 8f) - 16f, 330f, 160f);
-            }
-        }
+        private Rect inspectorRect =>
+            new Rect(((base.position.width - 330f) - 8f) - 16f, ((base.position.height - 160f) - 8f) - 16f, 330f, 160f);
 
-        private bool isSidesValid
-        {
-            get
-            {
-                return ((this.m_PolygonSides == 0) || ((this.m_PolygonSides >= 3) && (this.m_PolygonSides <= 0x80)));
-            }
-        }
+        private bool isSidesValid =>
+            ((this.m_PolygonSides == 0) || ((this.m_PolygonSides >= 3) && (this.m_PolygonSides <= 0x80)));
 
-        private bool multipleSprites
-        {
-            get
-            {
-                return ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode == SpriteImportMode.Multiple));
-            }
-        }
+        private bool multipleSprites =>
+            ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode == SpriteImportMode.Multiple));
 
-        public Texture2D originalTexture
-        {
-            get
-            {
-                return this.m_OriginalTexture;
-            }
-        }
+        public Texture2D originalTexture =>
+            this.m_OriginalTexture;
 
-        private bool polygonSprite
-        {
-            get
-            {
-                return ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode == SpriteImportMode.Polygon));
-            }
-        }
+        private bool polygonSprite =>
+            ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode == SpriteImportMode.Polygon));
 
-        internal Texture2D previewTexture
-        {
-            get
-            {
-                return base.m_Texture;
-            }
-        }
+        internal Texture2D previewTexture =>
+            base.m_Texture;
 
         internal SpriteRect selected
         {
@@ -1706,31 +1649,19 @@
 
         public bool textureIsDirty
         {
-            get
-            {
-                return this.m_TextureIsDirty;
-            }
+            get => 
+                this.m_TextureIsDirty;
             set
             {
                 this.m_TextureIsDirty = value;
             }
         }
 
-        private bool validSprite
-        {
-            get
-            {
-                return ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode != SpriteImportMode.None));
-            }
-        }
+        private bool validSprite =>
+            ((this.m_TextureImporter != null) && (this.m_TextureImporter.spriteImportMode != SpriteImportMode.None));
 
-        private Rect warningMessageRect
-        {
-            get
-            {
-                return new Rect(((base.position.width - 250f) - 8f) - 16f, 24f, 250f, 40f);
-            }
-        }
+        private Rect warningMessageRect =>
+            new Rect(((base.position.width - 250f) - 8f) - 16f, 24f, 250f, 40f);
 
         public enum AutoSlicingMethod
         {

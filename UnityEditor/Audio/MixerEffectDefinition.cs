@@ -14,21 +14,11 @@
             Array.Copy(parameters, this.m_Parameters, parameters.Length);
         }
 
-        public string name
-        {
-            get
-            {
-                return this.m_EffectName;
-            }
-        }
+        public string name =>
+            this.m_EffectName;
 
-        public MixerParameterDefinition[] parameters
-        {
-            get
-            {
-                return this.m_Parameters;
-            }
-        }
+        public MixerParameterDefinition[] parameters =>
+            this.m_Parameters;
     }
 }
 

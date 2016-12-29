@@ -9,15 +9,11 @@
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ApplyEditing(Collider2D collider);
-        public static bool GetNearestEdge(Vector2 point, out int pathIndex, out int pointIndex0, out int pointIndex1, out float distance, bool loop)
-        {
-            return INTERNAL_CALL_GetNearestEdge(ref point, out pathIndex, out pointIndex0, out pointIndex1, out distance, loop);
-        }
+        public static bool GetNearestEdge(Vector2 point, out int pathIndex, out int pointIndex0, out int pointIndex1, out float distance, bool loop) => 
+            INTERNAL_CALL_GetNearestEdge(ref point, out pathIndex, out pointIndex0, out pointIndex1, out distance, loop);
 
-        public static bool GetNearestPoint(Vector2 point, out int pathIndex, out int pointIndex, out float distance)
-        {
-            return INTERNAL_CALL_GetNearestPoint(ref point, out pathIndex, out pointIndex, out distance);
-        }
+        public static bool GetNearestPoint(Vector2 point, out int pathIndex, out int pointIndex, out float distance) => 
+            INTERNAL_CALL_GetNearestPoint(ref point, out pathIndex, out pointIndex, out distance);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetPathCount();

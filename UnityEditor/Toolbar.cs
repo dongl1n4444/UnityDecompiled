@@ -38,10 +38,8 @@
         private static GUIContent[] s_ToolIcons;
         private static GUIContent[] s_ViewToolIcons;
 
-        public float CalcHeight()
-        {
-            return 30f;
-        }
+        public float CalcHeight() => 
+            30f;
 
         private void DoCollabDropDown(Rect rect)
         {
@@ -160,15 +158,11 @@
             }
         }
 
-        private Rect GetThickArea(Rect pos)
-        {
-            return new Rect(pos.x, 5f, pos.width, 24f);
-        }
+        private Rect GetThickArea(Rect pos) => 
+            new Rect(pos.x, 5f, pos.width, 24f);
 
-        private Rect GetThinArea(Rect pos)
-        {
-            return new Rect(pos.x, 7f, pos.width, 18f);
-        }
+        private Rect GetThinArea(Rect pos) => 
+            new Rect(pos.x, 7f, pos.width, 18f);
 
         private void InitializeToolIcons()
         {
@@ -227,10 +221,8 @@
             }
         }
 
-        protected override bool OnFocus()
-        {
-            return false;
-        }
+        protected override bool OnFocus() => 
+            false;
 
         private void OnGUI()
         {
@@ -492,10 +484,8 @@
 
         internal static string lastLoadedLayoutName
         {
-            get
-            {
-                return (!string.IsNullOrEmpty(get.m_LastLoadedLayoutName) ? get.m_LastLoadedLayoutName : "Layout");
-            }
+            get => 
+                (!string.IsNullOrEmpty(get.m_LastLoadedLayoutName) ? get.m_LastLoadedLayoutName : "Layout");
             set
             {
                 get.m_LastLoadedLayoutName = value;

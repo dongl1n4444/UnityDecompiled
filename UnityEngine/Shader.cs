@@ -48,10 +48,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Color GetGlobalColor(string name)
-        {
-            return GetGlobalColor(PropertyToID(name));
-        }
+        public static Color GetGlobalColor(string name) => 
+            GetGlobalColor(PropertyToID(name));
 
         /// <summary>
         /// <para>Gets a global float property for all shaders previously set using SetGlobalFloat.</para>
@@ -65,30 +63,24 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static float GetGlobalFloat(string name)
-        {
-            return GetGlobalFloat(PropertyToID(name));
-        }
+        public static float GetGlobalFloat(string name) => 
+            GetGlobalFloat(PropertyToID(name));
 
         /// <summary>
         /// <para>Gets a global float array for all shaders previously set using SetGlobalFloatArray.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static float[] GetGlobalFloatArray(int nameID)
-        {
-            return GetGlobalFloatArrayImpl(nameID);
-        }
+        public static float[] GetGlobalFloatArray(int nameID) => 
+            GetGlobalFloatArrayImpl(nameID);
 
         /// <summary>
         /// <para>Gets a global float array for all shaders previously set using SetGlobalFloatArray.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static float[] GetGlobalFloatArray(string name)
-        {
-            return GetGlobalFloatArray(PropertyToID(name));
-        }
+        public static float[] GetGlobalFloatArray(string name) => 
+            GetGlobalFloatArray(PropertyToID(name));
 
         public static void GetGlobalFloatArray(int nameID, List<float> values)
         {
@@ -120,10 +112,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static int GetGlobalInt(string name)
-        {
-            return GetGlobalInt(PropertyToID(name));
-        }
+        public static int GetGlobalInt(string name) => 
+            GetGlobalInt(PropertyToID(name));
 
         /// <summary>
         /// <para>Gets a global matrix property for all shaders previously set using SetGlobalMatrix.</para>
@@ -142,30 +132,24 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Matrix4x4 GetGlobalMatrix(string name)
-        {
-            return GetGlobalMatrix(PropertyToID(name));
-        }
+        public static Matrix4x4 GetGlobalMatrix(string name) => 
+            GetGlobalMatrix(PropertyToID(name));
 
         /// <summary>
         /// <para>Gets a global matrix array for all shaders previously set using SetGlobalMatrixArray.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Matrix4x4[] GetGlobalMatrixArray(int nameID)
-        {
-            return GetGlobalMatrixArrayImpl(nameID);
-        }
+        public static Matrix4x4[] GetGlobalMatrixArray(int nameID) => 
+            GetGlobalMatrixArrayImpl(nameID);
 
         /// <summary>
         /// <para>Gets a global matrix array for all shaders previously set using SetGlobalMatrixArray.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Matrix4x4[] GetGlobalMatrixArray(string name)
-        {
-            return GetGlobalMatrixArray(PropertyToID(name));
-        }
+        public static Matrix4x4[] GetGlobalMatrixArray(string name) => 
+            GetGlobalMatrixArray(PropertyToID(name));
 
         public static void GetGlobalMatrixArray(int nameID, List<Matrix4x4> values)
         {
@@ -197,10 +181,8 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Texture GetGlobalTexture(string name)
-        {
-            return GetGlobalTexture(PropertyToID(name));
-        }
+        public static Texture GetGlobalTexture(string name) => 
+            GetGlobalTexture(PropertyToID(name));
 
         /// <summary>
         /// <para>Gets a global vector property for all shaders previously set using SetGlobalVector.</para>
@@ -219,30 +201,24 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Vector4 GetGlobalVector(string name)
-        {
-            return GetGlobalVector(PropertyToID(name));
-        }
+        public static Vector4 GetGlobalVector(string name) => 
+            GetGlobalVector(PropertyToID(name));
 
         /// <summary>
         /// <para>Gets a global vector array for all shaders previously set using SetGlobalVectorArray.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Vector4[] GetGlobalVectorArray(int nameID)
-        {
-            return GetGlobalVectorArrayImpl(nameID);
-        }
+        public static Vector4[] GetGlobalVectorArray(int nameID) => 
+            GetGlobalVectorArrayImpl(nameID);
 
         /// <summary>
         /// <para>Gets a global vector array for all shaders previously set using SetGlobalVectorArray.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public static Vector4[] GetGlobalVectorArray(string name)
-        {
-            return GetGlobalVectorArray(PropertyToID(name));
-        }
+        public static Vector4[] GetGlobalVectorArray(string name) => 
+            GetGlobalVectorArray(PropertyToID(name));
 
         public static void GetGlobalVectorArray(int nameID, List<Vector4> values)
         {
@@ -625,10 +601,8 @@
         [Obsolete("Use Graphics.activeTier instead (UnityUpgradable) -> UnityEngine.Graphics.activeTier", false)]
         public static ShaderHardwareTier globalShaderHardwareTier
         {
-            get
-            {
-                return (ShaderHardwareTier) Graphics.activeTier;
-            }
+            get => 
+                ((ShaderHardwareTier) Graphics.activeTier);
             set
             {
                 Graphics.activeTier = (GraphicsTier) value;

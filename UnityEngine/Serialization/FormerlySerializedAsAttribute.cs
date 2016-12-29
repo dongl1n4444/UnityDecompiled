@@ -23,13 +23,8 @@
         /// <summary>
         /// <para>The name of the field before the rename.</para>
         /// </summary>
-        public string oldName
-        {
-            get
-            {
-                return this.m_oldName;
-            }
-        }
+        public string oldName =>
+            this.m_oldName;
     }
 }
 

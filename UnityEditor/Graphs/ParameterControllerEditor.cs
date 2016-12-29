@@ -169,10 +169,8 @@
 
         public AnimatorController animatorController
         {
-            get
-            {
-                return this.m_AnimatorController;
-            }
+            get => 
+                this.m_AnimatorController;
             set
             {
                 this.m_AnimatorController = value;
@@ -195,21 +193,11 @@
             }
         }
 
-        public bool liveLink
-        {
-            get
-            {
-                return (((EditorApplication.isPlaying && (this.previewAnimator != null)) && this.previewAnimator.enabled) && this.previewAnimator.gameObject.activeInHierarchy);
-            }
-        }
+        public bool liveLink =>
+            (((EditorApplication.isPlaying && (this.previewAnimator != null)) && this.previewAnimator.enabled) && this.previewAnimator.gameObject.activeInHierarchy);
 
-        public Animator previewAnimator
-        {
-            get
-            {
-                return this.m_PreviewAnimator;
-            }
-        }
+        public Animator previewAnimator =>
+            this.m_PreviewAnimator;
     }
 }
 

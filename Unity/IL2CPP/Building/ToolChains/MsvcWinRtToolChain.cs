@@ -30,16 +30,14 @@
         }
 
         [DebuggerHidden]
-        protected override IEnumerable<string> GetDefaultLinkerArgs(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile)
-        {
-            return new <GetDefaultLinkerArgs>c__Iterator2 { 
+        protected override IEnumerable<string> GetDefaultLinkerArgs(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile) => 
+            new <GetDefaultLinkerArgs>c__Iterator2 { 
                 staticLibraries = staticLibraries,
                 dynamicLibraries = dynamicLibraries,
                 outputFile = outputFile,
                 $this = this,
                 $PC = -2
             };
-        }
 
         public override void OnAfterLink(NPath outputFile, CppToolChainContext toolChainContext, bool forceRebuild, bool verbose)
         {
@@ -51,36 +49,28 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<string> ToolChainDefines()
-        {
-            return new <ToolChainDefines>c__Iterator0 { 
+        public override IEnumerable<string> ToolChainDefines() => 
+            new <ToolChainDefines>c__Iterator0 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> ToolChainIncludePaths()
-        {
-            return new <ToolChainIncludePaths>c__Iterator3 { 
+        public override IEnumerable<NPath> ToolChainIncludePaths() => 
+            new <ToolChainIncludePaths>c__Iterator3 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override IEnumerable<NPath> ToolChainLibraryPaths()
-        {
-            return this.MsvcInstallation.GetLibDirectories(base.Architecture, "store");
-        }
+        public override IEnumerable<NPath> ToolChainLibraryPaths() => 
+            this.MsvcInstallation.GetLibDirectories(base.Architecture, "store");
 
         [DebuggerHidden]
-        public override IEnumerable<string> ToolChainStaticLibraries()
-        {
-            return new <ToolChainStaticLibraries>c__Iterator1 { 
+        public override IEnumerable<string> ToolChainStaticLibraries() => 
+            new <ToolChainStaticLibraries>c__Iterator1 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         public override Unity.IL2CPP.Building.ToolChains.MsvcVersions.MsvcInstallation MsvcInstallation
         {
@@ -88,7 +78,7 @@
             {
                 if (this._msvcInstallation == null)
                 {
-                    this._msvcInstallation = Unity.IL2CPP.Building.ToolChains.MsvcVersions.MsvcInstallation.GetInstallation(new Version(14, 0));
+                    this._msvcInstallation = Unity.IL2CPP.Building.ToolChains.MsvcVersions.MsvcInstallation.GetLatestInstallationAtLeast(new Version(14, 0));
                 }
                 return this._msvcInstallation;
             }
@@ -247,28 +237,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -387,28 +363,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -526,28 +488,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -666,28 +614,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

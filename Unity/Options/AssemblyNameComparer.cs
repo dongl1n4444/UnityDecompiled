@@ -6,15 +6,11 @@
 
     internal class AssemblyNameComparer : IEqualityComparer<AssemblyName>
     {
-        public bool Equals(AssemblyName x, AssemblyName y)
-        {
-            return (x.FullName == y.FullName);
-        }
+        public bool Equals(AssemblyName x, AssemblyName y) => 
+            (x.FullName == y.FullName);
 
-        public int GetHashCode(AssemblyName obj)
-        {
-            return obj.FullName.GetHashCode();
-        }
+        public int GetHashCode(AssemblyName obj) => 
+            obj.FullName.GetHashCode();
     }
 }
 

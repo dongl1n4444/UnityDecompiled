@@ -48,10 +48,8 @@
             this.m_DragBeingPerformed = false;
         }
 
-        private float ComputeAngleOffsetFromMouseCoord(Vector2 mousePosition)
-        {
-            return ((mousePosition.x / 250f) * 360f);
-        }
+        private float ComputeAngleOffsetFromMouseCoord(Vector2 mousePosition) => 
+            ((mousePosition.x / 250f) * 360f);
 
         private void DrawLatLongThumbnail(CubemapInfo infos, float angleOffset, float intensity, float alpha, Rect textureRect)
         {
@@ -78,10 +76,8 @@
             Handles.DrawLines(vectorArray2);
         }
 
-        public Cubemap GetCurrentSelection()
-        {
-            return this.m_SelectedCubemap;
-        }
+        public Cubemap GetCurrentSelection() => 
+            this.m_SelectedCubemap;
 
         private void GetFrameAndShadowTextureRect(Rect textureRect, out Rect frameTextureRect, out Rect shadowTextureRect)
         {
@@ -105,10 +101,8 @@
             return gUIRect;
         }
 
-        public Vector2 GetSelectedPositionOffset()
-        {
-            return this.m_SelectedPositionOffset;
-        }
+        public Vector2 GetSelectedPositionOffset() => 
+            this.m_SelectedPositionOffset;
 
         private Rect GetThumbnailRect(int envIndex)
         {
@@ -617,10 +611,8 @@
                 GUILayout.Label(GUIContent.none, styles.sSeparator, new GUILayoutOption[0]);
             }
 
-            public override Vector2 GetWindowSize()
-            {
-                return new Vector2(this.kShadowSettingWidth, this.kShadowSettingHeight);
-            }
+            public override Vector2 GetWindowSize() => 
+                new Vector2(this.kShadowSettingWidth, this.kShadowSettingHeight);
 
             public override void OnGUI(Rect rect)
             {

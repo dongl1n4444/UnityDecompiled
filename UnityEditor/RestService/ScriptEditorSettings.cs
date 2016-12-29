@@ -51,7 +51,7 @@
                 {
                     value6 = value2["opendocuments"];
                 }
-                OpenDocuments = (<>f__am$cache1 != null) ? new List<string>() : Enumerable.ToList<string>(Enumerable.Select<JSONValue, string>(value6.AsList(), <>f__am$cache1));
+                OpenDocuments = (<>f__am$cache1 != null) ? new List<string>() : Enumerable.Select<JSONValue, string>(value6.AsList(), <>f__am$cache1).ToList<string>();
                 if (ProcessId >= 0)
                 {
                     Process.GetProcessById(ProcessId);
@@ -78,25 +78,18 @@
             {
                 <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <Save>m__0);
             }
-            builder.AppendFormat("\"opendocuments\" : [{0}]\n}}", string.Join(",", Enumerable.ToArray<string>(Enumerable.Select<string, string>(OpenDocuments, <>f__am$cache0))));
+            builder.AppendFormat("\"opendocuments\" : [{0}]\n}}", string.Join(",", Enumerable.Select<string, string>(OpenDocuments, <>f__am$cache0).ToArray<string>()));
             File.WriteAllText(FilePath, builder.ToString());
         }
 
-        private static string FilePath
-        {
-            get
-            {
-                return (Application.dataPath + "/../Library/UnityScriptEditorSettings.json");
-            }
-        }
+        private static string FilePath =>
+            (Application.dataPath + "/../Library/UnityScriptEditorSettings.json");
 
         public static string Name
         {
             [CompilerGenerated]
-            get
-            {
-                return <Name>k__BackingField;
-            }
+            get => 
+                <Name>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -107,10 +100,8 @@
         public static List<string> OpenDocuments
         {
             [CompilerGenerated]
-            get
-            {
-                return <OpenDocuments>k__BackingField;
-            }
+            get => 
+                <OpenDocuments>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -121,10 +112,8 @@
         public static int ProcessId
         {
             [CompilerGenerated]
-            get
-            {
-                return <ProcessId>k__BackingField;
-            }
+            get => 
+                <ProcessId>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -135,10 +124,8 @@
         public static string ServerURL
         {
             [CompilerGenerated]
-            get
-            {
-                return <ServerURL>k__BackingField;
-            }
+            get => 
+                <ServerURL>k__BackingField;
             [CompilerGenerated]
             set
             {

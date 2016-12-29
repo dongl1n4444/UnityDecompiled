@@ -12,10 +12,8 @@
         {
         }
 
-        private static DefaultPluginImporterExtension.Property[] GetProperties()
-        {
-            return new DefaultPluginImporterExtension.Property[] { new DefaultPluginImporterExtension.Property(EditorGUIUtility.TextContent("CPU|Is plugin compatible with 32bit or 64bit Editor?"), "CPU", EditorPluginCPUArchitecture.AnyCPU, BuildPipeline.GetEditorTargetName()), new DefaultPluginImporterExtension.Property(EditorGUIUtility.TextContent("OS|Is plugin compatible with Windows, OS X or Linux Editor?"), "OS", EditorPluginOSArchitecture.AnyOS, BuildPipeline.GetEditorTargetName()) };
-        }
+        private static DefaultPluginImporterExtension.Property[] GetProperties() => 
+            new DefaultPluginImporterExtension.Property[] { new DefaultPluginImporterExtension.Property(EditorGUIUtility.TextContent("CPU|Is plugin compatible with 32bit or 64bit Editor?"), "CPU", EditorPluginCPUArchitecture.AnyCPU, BuildPipeline.GetEditorTargetName()), new DefaultPluginImporterExtension.Property(EditorGUIUtility.TextContent("OS|Is plugin compatible with Windows, OS X or Linux Editor?"), "OS", EditorPluginOSArchitecture.AnyOS, BuildPipeline.GetEditorTargetName()) };
 
         internal enum EditorPluginCPUArchitecture
         {

@@ -15,10 +15,8 @@
             this._dataIndex = dataIndex;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{{ {0}, {1}, {2} }}", this._parameterIndex, this._typeIndex, this._dataIndex);
-        }
+        public override string ToString() => 
+            $"{{ {this._parameterIndex}, {this._typeIndex}, {this._dataIndex} }}";
     }
 }
 

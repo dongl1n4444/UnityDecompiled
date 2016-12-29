@@ -66,10 +66,8 @@
         /// <returns>
         /// <para>Result of the comparison.</para>
         /// </returns>
-        public static bool AreEqual(float expected, float actual, float error)
-        {
-            return (Math.Abs((float) (actual - expected)) <= error);
-        }
+        public static bool AreEqual(float expected, float actual, float error) => 
+            (Math.Abs((float) (actual - expected)) <= error);
 
         /// <summary>
         /// <para>Performs equality check with relative error check.</para>
@@ -91,15 +89,11 @@
             return (Math.Abs((float) ((actual - expected) / ((num <= num2) ? num2 : num))) <= error);
         }
 
-        public bool Equals(float a, float b)
-        {
-            return (!this.m_Relative ? AreEqual(a, b, this.m_Error) : AreEqualRelative(a, b, this.m_Error));
-        }
+        public bool Equals(float a, float b) => 
+            (!this.m_Relative ? AreEqual(a, b, this.m_Error) : AreEqualRelative(a, b, this.m_Error));
 
-        public int GetHashCode(float obj)
-        {
-            return base.GetHashCode();
-        }
+        public int GetHashCode(float obj) => 
+            base.GetHashCode();
     }
 }
 

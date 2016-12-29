@@ -24,50 +24,32 @@
             AdvertisementSettings.enabled = enabled;
         }
 
-        public string GetAndroidGameId()
-        {
-            return AdvertisementSettings.GetGameId(RuntimePlatform.Android);
-        }
+        public string GetAndroidGameId() => 
+            AdvertisementSettings.GetGameId(RuntimePlatform.Android);
 
-        public string GetIOSGameId()
-        {
-            return AdvertisementSettings.GetGameId(RuntimePlatform.IPhonePlayer);
-        }
+        public string GetIOSGameId() => 
+            AdvertisementSettings.GetGameId(RuntimePlatform.IPhonePlayer);
 
-        public override string GetServiceDisplayName()
-        {
-            return "Ads";
-        }
+        public override string GetServiceDisplayName() => 
+            "Ads";
 
-        public override string GetServiceName()
-        {
-            return "Unity Ads";
-        }
+        public override string GetServiceName() => 
+            "Unity Ads";
 
-        public bool IsAndroidEnabled()
-        {
-            return AdvertisementSettings.IsPlatformEnabled(RuntimePlatform.Android);
-        }
+        public bool IsAndroidEnabled() => 
+            AdvertisementSettings.IsPlatformEnabled(RuntimePlatform.Android);
 
-        public bool IsInitializedOnStartup()
-        {
-            return AdvertisementSettings.initializeOnStartup;
-        }
+        public bool IsInitializedOnStartup() => 
+            AdvertisementSettings.initializeOnStartup;
 
-        public bool IsIOSEnabled()
-        {
-            return AdvertisementSettings.IsPlatformEnabled(RuntimePlatform.IPhonePlayer);
-        }
+        public bool IsIOSEnabled() => 
+            AdvertisementSettings.IsPlatformEnabled(RuntimePlatform.IPhonePlayer);
 
-        public override bool IsServiceEnabled()
-        {
-            return AdvertisementSettings.enabled;
-        }
+        public override bool IsServiceEnabled() => 
+            AdvertisementSettings.enabled;
 
-        public bool IsTestModeEnabled()
-        {
-            return AdvertisementSettings.testMode;
-        }
+        public bool IsTestModeEnabled() => 
+            AdvertisementSettings.testMode;
 
         public override void OnProjectUnbound()
         {

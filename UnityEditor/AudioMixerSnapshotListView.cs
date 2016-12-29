@@ -85,10 +85,8 @@
             this.SaveToBackend();
         }
 
-        private string GetNameOfElement(int index)
-        {
-            return this.m_Snapshots[index].name;
-        }
+        private string GetNameOfElement(int index) => 
+            this.m_Snapshots[index].name;
 
         private int GetSnapshotIndex(AudioMixerSnapshotController snapshot)
         {

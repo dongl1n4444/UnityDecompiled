@@ -17,7 +17,7 @@
         [Inject]
         public static ITypeProviderService TypeProvider;
 
-        public GenericContextAwareDeclarationOnlyVisitor(InflatedCollectionCollector generics, GenericContext genericContext, [Optional, DefaultParameterValue(0)] CollectionMode mode)
+        public GenericContextAwareDeclarationOnlyVisitor(InflatedCollectionCollector generics, GenericContext genericContext, CollectionMode mode = 0)
         {
             this._generics = generics;
             this._genericContext = genericContext;
@@ -46,8 +46,8 @@
             if (((mode != CollectionMode.Types) || flag) && ((mode != CollectionMode.MethodsAndTypes) || generics.TypeMethodDeclarations.Add(type)))
             {
                 GenericContext genericContext = new GenericContext(type, contextMethod);
-                Unity.Cecil.Visitor.Extensions.Accept(type.ElementType.Resolve(), new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.Types));
-                foreach (GenericInstanceType type2 in Enumerable.OfType<GenericInstanceType>(type.GenericArguments))
+                type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.Types));
+                foreach (GenericInstanceType type2 in type.GenericArguments.OfType<GenericInstanceType>())
                 {
                     ProcessGenericType(Inflater.InflateType(genericContext, type2), generics, null, mode);
                 }

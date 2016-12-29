@@ -25,13 +25,8 @@
             return data;
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
     }
 }
 

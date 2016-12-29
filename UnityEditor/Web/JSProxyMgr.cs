@@ -75,8 +75,8 @@
                 callback(FormatError(messageID, -1001, "errUnknownObject", "cannot find object with reference <" + reference + ">"));
                 return false;
             }
-            List<MethodInfo> list = Enumerable.ToList<MethodInfo>(destinationObject.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance));
-            list.AddRange(Enumerable.ToList<MethodInfo>(destinationObject.GetType().GetMethods(BindingFlags.Public | BindingFlags.Static)));
+            List<MethodInfo> list = destinationObject.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance).ToList<MethodInfo>();
+            list.AddRange(destinationObject.GetType().GetMethods(BindingFlags.Public | BindingFlags.Static).ToList<MethodInfo>());
             ArrayList list2 = new ArrayList();
             foreach (MethodInfo info in list)
             {
@@ -92,18 +92,18 @@
                     list2.Add(info3);
                 }
             }
-            List<PropertyInfo> list4 = Enumerable.ToList<PropertyInfo>(destinationObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            List<PropertyInfo> list4 = destinationObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).ToList<PropertyInfo>();
             ArrayList list5 = new ArrayList();
             foreach (PropertyInfo info4 in list4)
             {
                 list5.Add(new JspmPropertyInfo(info4.Name, info4.GetValue(destinationObject, null)));
             }
-            List<FieldInfo> list6 = Enumerable.ToList<FieldInfo>(destinationObject.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance));
+            List<FieldInfo> list6 = destinationObject.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<FieldInfo>();
             foreach (FieldInfo info5 in list6)
             {
                 list5.Add(new JspmPropertyInfo(info5.Name, info5.GetValue(destinationObject)));
             }
-            List<EventInfo> list7 = Enumerable.ToList<EventInfo>(destinationObject.GetType().GetEvents(BindingFlags.Public | BindingFlags.Instance));
+            List<EventInfo> list7 = destinationObject.GetType().GetEvents(BindingFlags.Public | BindingFlags.Instance).ToList<EventInfo>();
             ArrayList list8 = new ArrayList();
             foreach (EventInfo info6 in list7)
             {
@@ -218,15 +218,11 @@
             this.m_GlobalObjects = null;
         }
 
-        public static JspmError FormatError(long messageID, int status, string errorClass, string message)
-        {
-            return new JspmError(messageID, status, errorClass, message);
-        }
+        public static JspmError FormatError(long messageID, int status, string errorClass, string message) => 
+            new JspmError(messageID, status, errorClass, message);
 
-        public static JspmSuccess FormatSuccess(long messageID, object result)
-        {
-            return new JspmSuccess(messageID, result, "INVOKE");
-        }
+        public static JspmSuccess FormatSuccess(long messageID, object result) => 
+            new JspmSuccess(messageID, result, "INVOKE");
 
         public object GetDestinationObject(string reference)
         {
@@ -300,7 +296,7 @@
                     throw new InvalidOperationException("Cannot find a default constructor for " + type.FullName);
                 }
                 object obj4 = info.Invoke(new object[0]);
-                List<FieldInfo> list3 = Enumerable.ToList<FieldInfo>(type.GetFields(BindingFlags.Public | BindingFlags.Instance));
+                List<FieldInfo> list3 = type.GetFields(BindingFlags.Public | BindingFlags.Instance).ToList<FieldInfo>();
                 foreach (FieldInfo info2 in list3)
                 {
                     try
@@ -312,7 +308,7 @@
                     {
                     }
                 }
-                List<PropertyInfo> list4 = Enumerable.ToList<PropertyInfo>(type.GetProperties(BindingFlags.Public | BindingFlags.Instance));
+                List<PropertyInfo> list4 = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList<PropertyInfo>();
                 foreach (PropertyInfo info3 in list4)
                 {
                     try
@@ -389,10 +385,8 @@
             }
         }
 
-        public string Stringify(object target)
-        {
-            return Json.Serialize(target);
-        }
+        public string Stringify(object target) => 
+            Json.Serialize(target);
 
         [CompilerGenerated]
         private sealed class <DoInvokeMessage>c__AnonStorey0

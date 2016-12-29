@@ -14,13 +14,8 @@
             this.m_Predicate = predicate;
         }
 
-        public override bool keepWaiting
-        {
-            get
-            {
-                return this.m_Predicate.Invoke();
-            }
-        }
+        public override bool keepWaiting =>
+            this.m_Predicate.Invoke();
     }
 }
 

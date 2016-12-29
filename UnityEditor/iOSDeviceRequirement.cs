@@ -13,13 +13,8 @@
         /// <summary>
         /// <para>The values of the device requirement description.</para>
         /// </summary>
-        public IDictionary<string, string> values
-        {
-            get
-            {
-                return this.m_Values;
-            }
-        }
+        public IDictionary<string, string> values =>
+            this.m_Values;
     }
 }
 

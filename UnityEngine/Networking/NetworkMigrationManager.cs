@@ -905,34 +905,22 @@
         /// <summary>
         /// <para>The client instance that is being used to connect to the host.</para>
         /// </summary>
-        public NetworkClient client
-        {
-            get
-            {
-                return this.m_Client;
-            }
-        }
+        public NetworkClient client =>
+            this.m_Client;
 
         /// <summary>
         /// <para>True is this is a client that has been disconnected from a host.</para>
         /// </summary>
-        public bool disconnectedFromHost
-        {
-            get
-            {
-                return this.m_DisconnectedFromHost;
-            }
-        }
+        public bool disconnectedFromHost =>
+            this.m_DisconnectedFromHost;
 
         /// <summary>
         /// <para>Controls whether host migration is active.</para>
         /// </summary>
         public bool hostMigration
         {
-            get
-            {
-                return this.m_HostMigration;
-            }
+            get => 
+                this.m_HostMigration;
             set
             {
                 this.m_HostMigration = value;
@@ -942,34 +930,22 @@
         /// <summary>
         /// <para>True if this was the host and the host has been shut down.</para>
         /// </summary>
-        public bool hostWasShutdown
-        {
-            get
-            {
-                return this.m_HostWasShutdown;
-            }
-        }
+        public bool hostWasShutdown =>
+            this.m_HostWasShutdown;
 
         /// <summary>
         /// <para>Information about the match. This may be null if there is no match.</para>
         /// </summary>
-        public MatchInfo matchInfo
-        {
-            get
-            {
-                return this.m_MatchInfo;
-            }
-        }
+        public MatchInfo matchInfo =>
+            this.m_MatchInfo;
 
         /// <summary>
         /// <para>The IP address of the new host to connect to.</para>
         /// </summary>
         public string newHostAddress
         {
-            get
-            {
-                return this.m_NewHostAddress;
-            }
+            get => 
+                this.m_NewHostAddress;
             set
             {
                 this.m_NewHostAddress = value;
@@ -981,10 +957,8 @@
         /// </summary>
         public int offsetX
         {
-            get
-            {
-                return this.m_OffsetX;
-            }
+            get => 
+                this.m_OffsetX;
             set
             {
                 this.m_OffsetX = value;
@@ -996,10 +970,8 @@
         /// </summary>
         public int offsetY
         {
-            get
-            {
-                return this.m_OffsetY;
-            }
+            get => 
+                this.m_OffsetY;
             set
             {
                 this.m_OffsetY = value;
@@ -1009,45 +981,28 @@
         /// <summary>
         /// <para>The connectionId that this client was assign on the old host.</para>
         /// </summary>
-        public int oldServerConnectionId
-        {
-            get
-            {
-                return this.m_OldServerConnectionId;
-            }
-        }
+        public int oldServerConnectionId =>
+            this.m_OldServerConnectionId;
 
         /// <summary>
         /// <para>The set of peers involved in the game. This includes the host and this client.</para>
         /// </summary>
-        public PeerInfoMessage[] peers
-        {
-            get
-            {
-                return this.m_Peers;
-            }
-        }
+        public PeerInfoMessage[] peers =>
+            this.m_Peers;
 
         /// <summary>
         /// <para>The player objects that have been disabled, and are waiting for their corresponding clients to reconnect.</para>
         /// </summary>
-        public Dictionary<int, ConnectionPendingPlayers> pendingPlayers
-        {
-            get
-            {
-                return this.m_PendingPlayers;
-            }
-        }
+        public Dictionary<int, ConnectionPendingPlayers> pendingPlayers =>
+            this.m_PendingPlayers;
 
         /// <summary>
         /// <para>Flag to toggle display of the default UI.</para>
         /// </summary>
         public bool showGUI
         {
-            get
-            {
-                return this.m_ShowGUI;
-            }
+            get => 
+                this.m_ShowGUI;
             set
             {
                 this.m_ShowGUI = value;
@@ -1059,10 +1014,8 @@
         /// </summary>
         public bool waitingReconnectToNewHost
         {
-            get
-            {
-                return this.m_WaitingReconnectToNewHost;
-            }
+            get => 
+                this.m_WaitingReconnectToNewHost;
             set
             {
                 this.m_WaitingReconnectToNewHost = value;
@@ -1074,10 +1027,8 @@
         /// </summary>
         public bool waitingToBecomeNewHost
         {
-            get
-            {
-                return this.m_WaitingToBecomeNewHost;
-            }
+            get => 
+                this.m_WaitingToBecomeNewHost;
             set
             {
                 this.m_WaitingToBecomeNewHost = value;

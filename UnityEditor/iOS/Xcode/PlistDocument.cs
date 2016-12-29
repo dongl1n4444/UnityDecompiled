@@ -37,7 +37,7 @@
             {
                 <>f__am$cache0 = new Func<XText, string>(null, (IntPtr) <GetText>m__0);
             }
-            return string.Join("", Enumerable.ToArray<string>(Enumerable.Select<XText, string>(Enumerable.OfType<XText>(xml.Nodes()), <>f__am$cache0)));
+            return string.Join("", Enumerable.Select<XText, string>(xml.Nodes().OfType<XText>(), <>f__am$cache0).ToArray<string>());
         }
 
         internal static XDocument ParseXmlNoDtd(string text)
@@ -55,7 +55,7 @@
             {
                 case "dict":
                 {
-                    List<XElement> list = Enumerable.ToList<XElement>(xml.Elements());
+                    List<XElement> list = xml.Elements().ToList<XElement>();
                     PlistElementDict dict = new PlistElementDict();
                     if ((list.Count % 2) == 1)
                     {
@@ -79,7 +79,7 @@
                 }
                 case "array":
                 {
-                    List<XElement> list2 = Enumerable.ToList<XElement>(xml.Elements());
+                    List<XElement> list2 = xml.Elements().ToList<XElement>();
                     PlistElementArray array = new PlistElementArray();
                     foreach (XElement element3 in list2)
                     {
@@ -125,7 +125,7 @@
         {
             XDocument node = ParseXmlNoDtd(text);
             this.version = (string) node.Root.Attribute("version");
-            PlistElement element2 = ReadElement(System.Xml.XPath.Extensions.XPathSelectElement(node, "plist/dict"));
+            PlistElement element2 = ReadElement(node.XPathSelectElement("plist/dict"));
             if (element2 == null)
             {
                 throw new Exception("Error parsing plist file");

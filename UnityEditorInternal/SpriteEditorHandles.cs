@@ -198,10 +198,8 @@
             return rect;
         }
 
-        internal static Vector2 ScaleSlider(Vector2 pos, MouseCursor cursor, Rect cursorRect)
-        {
-            return ScaleSlider(GUIUtility.GetControlID("Slider1D".GetHashCode(), FocusType.Keyboard), pos, cursor, cursorRect);
-        }
+        internal static Vector2 ScaleSlider(Vector2 pos, MouseCursor cursor, Rect cursorRect) => 
+            ScaleSlider(GUIUtility.GetControlID("Slider1D".GetHashCode(), FocusType.Keyboard), pos, cursor, cursorRect);
 
         private static Vector2 ScaleSlider(int id, Vector2 pos, MouseCursor cursor, Rect cursorRect)
         {

@@ -49,10 +49,8 @@
             this.Init(!onlyComponents ? GenericTypeSelectorCommonTypes() : s_ComponentTypeNames, onlyComponents);
         }
 
-        public bool DoGUI()
-        {
-            return (((this.selectedType != typeof(DummyNullType)) && (this.selectedType != null)) ? this.DoTypeClear() : this.DoTypeSelector());
-        }
+        public bool DoGUI() => 
+            (((this.selectedType != typeof(DummyNullType)) && (this.selectedType != null)) ? this.DoTypeClear() : this.DoTypeSelector());
 
         private bool DoOtherEditing()
         {
@@ -174,10 +172,8 @@
             throw new ArgumentException("Type '" + typeName + "' was not found.");
         }
 
-        private static string[] GenericTypeSelectorCommonTypes()
-        {
-            return s_TypeNames;
-        }
+        private static string[] GenericTypeSelectorCommonTypes() => 
+            s_TypeNames;
 
         public static System.Type GetBaseType(TypeKind typeKind, System.Type finalType)
         {

@@ -1298,10 +1298,8 @@
         /// <para>Convert a managed array of System.IntPtr, representing Java objects, to a Java array of &lt;tt&gt;java.lang.Object&lt;/tt&gt;.</para>
         /// </summary>
         /// <param name="array"></param>
-        public static IntPtr ToObjectArray(IntPtr[] array)
-        {
-            return ToObjectArray(array, IntPtr.Zero);
-        }
+        public static IntPtr ToObjectArray(IntPtr[] array) => 
+            ToObjectArray(array, IntPtr.Zero);
 
         [ThreadAndSerializationSafe]
         public static IntPtr ToObjectArray(IntPtr[] array, IntPtr arrayClass)

@@ -87,10 +87,8 @@
             return false;
         }
 
-        public int GetChangeID()
-        {
-            return this.m_ChangeID;
-        }
+        public int GetChangeID() => 
+            this.m_ChangeID;
 
         public static Rect GetConstrainedRect(Rect startRect, GameViewSizeGroupType groupType, int gameViewSizeIndex, out bool fitsInsideRect)
         {
@@ -147,10 +145,8 @@
             return rect;
         }
 
-        public int GetDefaultStandaloneIndex()
-        {
-            return (this.m_Standalone.GetBuiltinCount() - 1);
-        }
+        public int GetDefaultStandaloneIndex() => 
+            (this.m_Standalone.GetBuiltinCount() - 1);
 
         public GameViewSizeGroup GetGroup(GameViewSizeGroupType gameViewSizeGroupType)
         {
@@ -310,15 +306,11 @@
             }
         }
 
-        public bool IsDefaultStandaloneScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index)
-        {
-            return ((gameViewSizeGroupType == GameViewSizeGroupType.Standalone) && (this.GetDefaultStandaloneIndex() == index));
-        }
+        public bool IsDefaultStandaloneScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index) => 
+            ((gameViewSizeGroupType == GameViewSizeGroupType.Standalone) && (this.GetDefaultStandaloneIndex() == index));
 
-        public bool IsRemoteScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index)
-        {
-            return (this.GetGroup(gameViewSizeGroupType).IndexOf(this.m_Remote) == index);
-        }
+        public bool IsRemoteScreenSize(GameViewSizeGroupType gameViewSizeGroupType, int index) => 
+            (this.GetGroup(gameViewSizeGroupType).IndexOf(this.m_Remote) == index);
 
         private void OnEnable()
         {
@@ -403,21 +395,11 @@
             this.Save(saveAsText);
         }
 
-        public GameViewSizeGroup currentGroup
-        {
-            get
-            {
-                return this.GetGroup(s_GameViewSizeGroupType);
-            }
-        }
+        public GameViewSizeGroup currentGroup =>
+            this.GetGroup(s_GameViewSizeGroupType);
 
-        public GameViewSizeGroupType currentGroupType
-        {
-            get
-            {
-                return s_GameViewSizeGroupType;
-            }
-        }
+        public GameViewSizeGroupType currentGroupType =>
+            s_GameViewSizeGroupType;
     }
 }
 

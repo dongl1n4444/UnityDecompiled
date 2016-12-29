@@ -27,10 +27,8 @@
             this.ResetValues();
         }
 
-        protected bool ApplyButton()
-        {
-            return this.ApplyButton("Apply");
-        }
+        protected bool ApplyButton() => 
+            this.ApplyButton("Apply");
 
         protected bool ApplyButton(string buttonText)
         {
@@ -118,10 +116,8 @@
             return base.m_SerializedObject;
         }
 
-        internal virtual bool HasModified()
-        {
-            return base.serializedObject.hasModifiedProperties;
-        }
+        internal virtual bool HasModified() => 
+            base.serializedObject.hasModifiedProperties;
 
         private static void ImportAssets(string[] paths)
         {
@@ -211,10 +207,8 @@
 
         internal virtual Editor assetEditor
         {
-            get
-            {
-                return this.m_AssetEditor;
-            }
+            get => 
+                this.m_AssetEditor;
             set
             {
                 this.m_AssetEditor = value;
@@ -235,10 +229,8 @@
 
         internal override int referenceTargetIndex
         {
-            get
-            {
-                return base.referenceTargetIndex;
-            }
+            get => 
+                base.referenceTargetIndex;
             set
             {
                 base.referenceTargetIndex = value;
@@ -249,29 +241,14 @@
             }
         }
 
-        internal virtual bool showImportedObject
-        {
-            get
-            {
-                return true;
-            }
-        }
+        internal virtual bool showImportedObject =>
+            true;
 
-        internal override string targetTitle
-        {
-            get
-            {
-                return string.Format("{0} Import Settings", (this.assetEditor != null) ? this.assetEditor.targetTitle : string.Empty);
-            }
-        }
+        internal override string targetTitle =>
+            $"{((this.assetEditor != null) ? this.assetEditor.targetTitle : string.Empty)} Import Settings";
 
-        protected virtual bool useAssetDrawPreview
-        {
-            get
-            {
-                return true;
-            }
-        }
+        protected virtual bool useAssetDrawPreview =>
+            true;
     }
 }
 

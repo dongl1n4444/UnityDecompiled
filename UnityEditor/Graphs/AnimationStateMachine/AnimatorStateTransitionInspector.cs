@@ -161,15 +161,11 @@
             }
         }
 
-        protected AnimatorState GetSourceState(int index)
-        {
-            return ((base.m_TransitionContexts[index] == null) ? null : base.m_TransitionContexts[index].sourceState);
-        }
+        protected AnimatorState GetSourceState(int index) => 
+            ((base.m_TransitionContexts[index] == null) ? null : base.m_TransitionContexts[index].sourceState);
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_TransitionPreview != null) && this.m_TransitionPreview.HasPreviewGUI());
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_TransitionPreview != null) && this.m_TransitionPreview.HasPreviewGUI());
 
         private void Init()
         {

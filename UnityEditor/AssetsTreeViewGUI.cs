@@ -49,10 +49,8 @@
             base.ClearRenameAndNewItemState();
         }
 
-        protected CreateAssetUtility GetCreateAssetUtility()
-        {
-            return base.m_TreeView.state.createAssetUtility;
-        }
+        protected CreateAssetUtility GetCreateAssetUtility() => 
+            base.m_TreeView.state.createAssetUtility;
 
         protected override Texture GetIconForItem(TreeViewItem item)
         {
@@ -76,10 +74,8 @@
             return icon;
         }
 
-        protected virtual bool IsCreatingNewAsset(int instanceID)
-        {
-            return (this.GetCreateAssetUtility().IsCreatingNewAsset() && this.IsRenaming(instanceID));
-        }
+        protected virtual bool IsCreatingNewAsset(int instanceID) => 
+            (this.GetCreateAssetUtility().IsCreatingNewAsset() && this.IsRenaming(instanceID));
 
         private void OnIconOverlayGUI(TreeViewItem item, Rect overlayRect)
         {

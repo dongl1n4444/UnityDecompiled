@@ -68,13 +68,11 @@
             {
                 return (str2 + "Unlimited");
             }
-            return (str2 + string.Format("{0:00}:{1:00}.{2:000}", span.Minutes, span.Seconds, span.Milliseconds));
+            return (str2 + $"{span.Minutes:00}:{span.Seconds:00}.{span.Milliseconds:000}");
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.targets != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.targets != null);
 
         private static void Init()
         {
@@ -184,7 +182,7 @@
                     {
                         float clipPosition = AudioUtil.GetClipPosition(target);
                         TimeSpan span = new TimeSpan(0, 0, 0, 0, (int) (clipPosition * 1000f));
-                        EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), string.Format("Playing - {0:00}:{1:00}.{2:000}", span.Minutes, span.Seconds, span.Milliseconds));
+                        EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), $"Playing - {span.Minutes:00}:{span.Seconds:00}.{span.Milliseconds:000}");
                     }
                 }
                 else
@@ -209,11 +207,11 @@
                         GUI.DrawTexture(new Rect(m_wantedRect.x + ((int) (num3 * num8)), m_wantedRect.y, 2f, m_wantedRect.height), EditorGUIUtility.whiteTexture);
                         if (r.width > 64f)
                         {
-                            EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), string.Format("{0:00}:{1:00}.{2:000}", span2.Minutes, span2.Seconds, span2.Milliseconds));
+                            EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), $"{span2.Minutes:00}:{span2.Seconds:00}.{span2.Milliseconds:000}");
                         }
                         else
                         {
-                            EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), string.Format("{0:00}:{1:00}", span2.Minutes, span2.Seconds));
+                            EditorGUI.DropShadowLabel(new Rect(m_wantedRect.x, m_wantedRect.y, m_wantedRect.width, 20f), $"{span2.Minutes:00}:{span2.Seconds:00}");
                         }
                         if (!AudioUtil.IsClipPlaying(target))
                         {
@@ -293,13 +291,8 @@
             return this.m_PreviewUtility.EndStaticPreview();
         }
 
-        private bool playing
-        {
-            get
-            {
-                return (this.m_PlayingClip != null);
-            }
-        }
+        private bool playing =>
+            (this.m_PlayingClip != null);
 
         [CompilerGenerated]
         private sealed class <DoRenderPreview>c__AnonStorey0

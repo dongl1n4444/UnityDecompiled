@@ -26,10 +26,8 @@
             Selection.objects = new Object[0];
         }
 
-        public bool HasSingleChannelStripSelection()
-        {
-            return (this.ChannelStripSelection.Count == 1);
-        }
+        public bool HasSingleChannelStripSelection() => 
+            (this.ChannelStripSelection.Count == 1);
 
         private void RefreshCachedChannelStripSelection()
         {
@@ -38,7 +36,7 @@
             List<AudioMixerGroupController> allAudioGroupsSlow = this.m_Controller.GetAllAudioGroupsSlow();
             foreach (AudioMixerGroupController controller in allAudioGroupsSlow)
             {
-                if (Enumerable.Contains<Object>(filtered, controller))
+                if (filtered.Contains<Object>(controller))
                 {
                     this.ChannelStripSelection.Add(controller);
                 }

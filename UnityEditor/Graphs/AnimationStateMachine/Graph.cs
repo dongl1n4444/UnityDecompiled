@@ -150,8 +150,8 @@
                 }
                 else if ((srcNode != dstNode) || (((context.sourceState == null) || this.HasState(this.activeStateMachine, context.sourceState, false)) && ((context.sourceStateMachine == null) || this.HasStateMachine(this.activeStateMachine, context.sourceStateMachine, false))))
                 {
-                    Slot fromSlot = Enumerable.First<Slot>(srcNode.outputSlots);
-                    Slot toSlot = Enumerable.First<Slot>(dstNode.inputSlots);
+                    Slot fromSlot = srcNode.outputSlots.First<Slot>();
+                    Slot toSlot = dstNode.inputSlots.First<Slot>();
                     this.Connect(fromSlot, toSlot);
                     this.m_ConnectedSlotsCache.Add(key, new EdgeInfo(context));
                 }
@@ -287,10 +287,8 @@
             this.FillStateMachineLookupFromStateMachine(this.rootStateMachine);
         }
 
-        public bool DisplayDirty()
-        {
-            return ((this.activeStateMachine.states.Length != this.m_StateCount) || ((this.activeStateMachine.stateMachines.Length != this.m_StateMachineCount) || ((this.rootStateMachine.transitionCount != this.m_TransitionCount) || (this.rootStateMachine.defaultState != this.m_DefaultState))));
-        }
+        public bool DisplayDirty() => 
+            ((this.activeStateMachine.states.Length != this.m_StateCount) || ((this.activeStateMachine.stateMachines.Length != this.m_StateMachineCount) || ((this.rootStateMachine.transitionCount != this.m_TransitionCount) || (this.rootStateMachine.defaultState != this.m_DefaultState))));
 
         private void FillStateMachineLookupFromStateMachine(AnimatorStateMachine stateMachine)
         {
@@ -350,10 +348,8 @@
             return null;
         }
 
-        public UnityEditor.Graphs.AnimationStateMachine.Node FindNodeForEdges(AnimatorState state)
-        {
-            return this.FindNode(state);
-        }
+        public UnityEditor.Graphs.AnimationStateMachine.Node FindNodeForEdges(AnimatorState state) => 
+            this.FindNode(state);
 
         public UnityEditor.Graphs.AnimationStateMachine.Node FindNodeForEdges(AnimatorStateMachine stateMachine)
         {
@@ -386,10 +382,8 @@
             return null;
         }
 
-        private static string GenerateConnectionKey(UnityEditor.Graphs.Node srcNode, UnityEditor.Graphs.Node dstNode)
-        {
-            return (srcNode.GetInstanceID() + "->" + dstNode.GetInstanceID());
-        }
+        private static string GenerateConnectionKey(UnityEditor.Graphs.Node srcNode, UnityEditor.Graphs.Node dstNode) => 
+            (srcNode.GetInstanceID() + "->" + dstNode.GetInstanceID());
 
         public EdgeInfo GetEdgeInfo(UnityEditor.Graphs.Edge edge)
         {
@@ -540,13 +534,8 @@
             }
         }
 
-        public AnimatorStateMachine activeStateMachine
-        {
-            get
-            {
-                return this.m_ActiveStateMachine;
-            }
-        }
+        public AnimatorStateMachine activeStateMachine =>
+            this.m_ActiveStateMachine;
     }
 }
 

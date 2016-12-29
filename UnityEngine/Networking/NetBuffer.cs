@@ -21,10 +21,8 @@
             this.m_Buffer = buffer;
         }
 
-        internal ArraySegment<byte> AsArraySegment()
-        {
-            return new ArraySegment<byte>(this.m_Buffer, 0, (int) this.m_Pos);
-        }
+        internal ArraySegment<byte> AsArraySegment() => 
+            new ArraySegment<byte>(this.m_Buffer, 0, (int) this.m_Pos);
 
         public void FinishMessage()
         {
@@ -81,10 +79,8 @@
             this.m_Pos = 0;
         }
 
-        public override string ToString()
-        {
-            return string.Format("NetBuf sz:{0} pos:{1}", this.m_Buffer.Length, this.m_Pos);
-        }
+        public override string ToString() => 
+            $"NetBuf sz:{this.m_Buffer.Length} pos:{this.m_Pos}";
 
         public void WriteByte(byte value)
         {
@@ -182,21 +178,11 @@
             }
         }
 
-        public int Length
-        {
-            get
-            {
-                return this.m_Buffer.Length;
-            }
-        }
+        public int Length =>
+            this.m_Buffer.Length;
 
-        public uint Position
-        {
-            get
-            {
-                return this.m_Pos;
-            }
-        }
+        public uint Position =>
+            this.m_Pos;
     }
 }
 

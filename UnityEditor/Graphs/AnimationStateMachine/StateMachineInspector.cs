@@ -15,10 +15,8 @@
         private AnimatorStateMachine m_RootStateMachine;
         private SourceNodeTransitionEditor m_TransitionEditor = null;
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_TransitionEditor != null) && this.m_TransitionEditor.HasPreviewGUI());
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_TransitionEditor != null) && this.m_TransitionEditor.HasPreviewGUI());
 
         private void Init()
         {
@@ -107,10 +105,8 @@
             }
         }
 
-        private bool ShouldShowTransitionEditor()
-        {
-            return (((this.m_TransitionEditor != null) && !base.serializedObject.isEditingMultipleObjects) && (((AnimatorControllerTool.tool != null) && (AnimatorControllerTool.tool.stateMachineGraph != null)) && (AnimatorControllerTool.tool.stateMachineGraph.activeStateMachine != (base.target as AnimatorStateMachine))));
-        }
+        private bool ShouldShowTransitionEditor() => 
+            (((this.m_TransitionEditor != null) && !base.serializedObject.isEditingMultipleObjects) && (((AnimatorControllerTool.tool != null) && (AnimatorControllerTool.tool.stateMachineGraph != null)) && (AnimatorControllerTool.tool.stateMachineGraph.activeStateMachine != (base.target as AnimatorStateMachine))));
     }
 }
 

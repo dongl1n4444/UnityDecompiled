@@ -4,26 +4,16 @@
     using System.Net.Sockets;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     internal static class DotNetCompatibility
     {
-        [Extension]
-        internal static Type GetBaseType(Type type)
-        {
-            return type.BaseType;
-        }
+        internal static Type GetBaseType(this Type type) => 
+            type.BaseType;
 
-        [Extension]
-        internal static string GetErrorCode(SocketException e)
-        {
-            return e.ErrorCode.ToString();
-        }
+        internal static string GetErrorCode(this SocketException e) => 
+            e.ErrorCode.ToString();
 
-        [Extension]
-        internal static string GetMethodName(Delegate func)
-        {
-            return func.Method.Name;
-        }
+        internal static string GetMethodName(this Delegate func) => 
+            func.Method.Name;
     }
 }
 

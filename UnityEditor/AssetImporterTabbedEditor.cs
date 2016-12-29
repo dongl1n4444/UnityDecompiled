@@ -14,14 +14,8 @@
         {
         }
 
-        public override bool HasPreviewGUI()
-        {
-            if (this.activeEditor == null)
-            {
-                return false;
-            }
-            return this.activeEditor.HasPreviewGUI();
-        }
+        public override bool HasPreviewGUI() => 
+            this.activeEditor?.HasPreviewGUI();
 
         private void OnDestroy()
         {
@@ -76,20 +70,13 @@
             this.activeEditor.OnPreviewSettings();
         }
 
-        public AssetImporterInspector activeEditor
-        {
-            get
-            {
-                return this.m_ActiveEditor;
-            }
-        }
+        public AssetImporterInspector activeEditor =>
+            this.m_ActiveEditor;
 
         internal override Editor assetEditor
         {
-            get
-            {
-                return base.assetEditor;
-            }
+            get => 
+                base.assetEditor;
             set
             {
                 base.assetEditor = value;

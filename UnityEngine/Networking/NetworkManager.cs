@@ -304,10 +304,8 @@
         /// <returns>
         /// <para>True if the NetworkManagers client is connected to a server.</para>
         /// </returns>
-        public bool IsClientConnected()
-        {
-            return ((this.client != null) && this.client.isConnected);
-        }
+        public bool IsClientConnected() => 
+            ((this.client != null) && this.client.isConnected);
 
         /// <summary>
         /// <para>Called on the client when connected to a server.</para>
@@ -1033,15 +1031,11 @@
         /// <returns>
         /// <para>The client object created.</para>
         /// </returns>
-        public NetworkClient StartClient()
-        {
-            return this.StartClient(null, null);
-        }
+        public NetworkClient StartClient() => 
+            this.StartClient(null, null);
 
-        public NetworkClient StartClient(MatchInfo matchInfo)
-        {
-            return this.StartClient(matchInfo, null);
-        }
+        public NetworkClient StartClient(MatchInfo matchInfo) => 
+            this.StartClient(matchInfo, null);
 
         public NetworkClient StartClient(MatchInfo info, ConnectionConfig config)
         {
@@ -1189,20 +1183,14 @@
         /// <returns>
         /// <para>True is the server was started.</para>
         /// </returns>
-        public bool StartServer()
-        {
-            return this.StartServer(null);
-        }
+        public bool StartServer() => 
+            this.StartServer(null);
 
-        public bool StartServer(MatchInfo info)
-        {
-            return this.StartServer(info, null, -1);
-        }
+        public bool StartServer(MatchInfo info) => 
+            this.StartServer(info, null, -1);
 
-        public bool StartServer(ConnectionConfig config, int maxConnections)
-        {
-            return this.StartServer(null, config, maxConnections);
-        }
+        public bool StartServer(ConnectionConfig config, int maxConnections) => 
+            this.StartServer(null, config, maxConnections);
 
         private bool StartServer(MatchInfo info, ConnectionConfig config, int maxConnections)
         {
@@ -1440,10 +1428,8 @@
         /// </summary>
         public bool autoCreatePlayer
         {
-            get
-            {
-                return this.m_AutoCreatePlayer;
-            }
+            get => 
+                this.m_AutoCreatePlayer;
             set
             {
                 this.m_AutoCreatePlayer = value;
@@ -1453,23 +1439,16 @@
         /// <summary>
         /// <para>The Quality-of-Service channels to use for the network transport layer.</para>
         /// </summary>
-        public List<QosType> channels
-        {
-            get
-            {
-                return this.m_Channels;
-            }
-        }
+        public List<QosType> channels =>
+            this.m_Channels;
 
         /// <summary>
         /// <para>This is true if the client loaded a new scene when connecting to the server.</para>
         /// </summary>
         public bool clientLoadedScene
         {
-            get
-            {
-                return this.m_ClientLoadedScene;
-            }
+            get => 
+                this.m_ClientLoadedScene;
             set
             {
                 this.m_ClientLoadedScene = value;
@@ -1496,10 +1475,8 @@
         /// </summary>
         public bool customConfig
         {
-            get
-            {
-                return this.m_CustomConfig;
-            }
+            get => 
+                this.m_CustomConfig;
             set
             {
                 this.m_CustomConfig = value;
@@ -1511,10 +1488,8 @@
         /// </summary>
         public bool dontDestroyOnLoad
         {
-            get
-            {
-                return this.m_DontDestroyOnLoad;
-            }
+            get => 
+                this.m_DontDestroyOnLoad;
             set
             {
                 this.m_DontDestroyOnLoad = value;
@@ -1541,10 +1516,8 @@
         /// </summary>
         public LogFilter.FilterLevel logLevel
         {
-            get
-            {
-                return this.m_LogLevel;
-            }
+            get => 
+                this.m_LogLevel;
             set
             {
                 this.m_LogLevel = value;
@@ -1557,10 +1530,8 @@
         /// </summary>
         public string matchHost
         {
-            get
-            {
-                return this.m_MatchHost;
-            }
+            get => 
+                this.m_MatchHost;
             set
             {
                 this.m_MatchHost = value;
@@ -1572,10 +1543,8 @@
         /// </summary>
         public int matchPort
         {
-            get
-            {
-                return this.m_MatchPort;
-            }
+            get => 
+                this.m_MatchPort;
             set
             {
                 this.m_MatchPort = value;
@@ -1587,10 +1556,8 @@
         /// </summary>
         public int maxConnections
         {
-            get
-            {
-                return this.m_MaxConnections;
-            }
+            get => 
+                this.m_MaxConnections;
             set
             {
                 this.m_MaxConnections = value;
@@ -1602,10 +1569,8 @@
         /// </summary>
         public float maxDelay
         {
-            get
-            {
-                return this.m_MaxDelay;
-            }
+            get => 
+                this.m_MaxDelay;
             set
             {
                 this.m_MaxDelay = value;
@@ -1615,23 +1580,16 @@
         /// <summary>
         /// <para>The migration manager being used with the NetworkManager.</para>
         /// </summary>
-        public NetworkMigrationManager migrationManager
-        {
-            get
-            {
-                return this.m_MigrationManager;
-            }
-        }
+        public NetworkMigrationManager migrationManager =>
+            this.m_MigrationManager;
 
         /// <summary>
         /// <para>The network address currently in use.</para>
         /// </summary>
         public string networkAddress
         {
-            get
-            {
-                return this.m_NetworkAddress;
-            }
+            get => 
+                this.m_NetworkAddress;
             set
             {
                 this.m_NetworkAddress = value;
@@ -1643,10 +1601,8 @@
         /// </summary>
         public int networkPort
         {
-            get
-            {
-                return this.m_NetworkPort;
-            }
+            get => 
+                this.m_NetworkPort;
             set
             {
                 this.m_NetworkPort = value;
@@ -1684,10 +1640,8 @@
         /// </summary>
         public string offlineScene
         {
-            get
-            {
-                return this.m_OfflineScene;
-            }
+            get => 
+                this.m_OfflineScene;
             set
             {
                 this.m_OfflineScene = value;
@@ -1699,10 +1653,8 @@
         /// </summary>
         public string onlineScene
         {
-            get
-            {
-                return this.m_OnlineScene;
-            }
+            get => 
+                this.m_OnlineScene;
             set
             {
                 this.m_OnlineScene = value;
@@ -1714,10 +1666,8 @@
         /// </summary>
         public float packetLossPercentage
         {
-            get
-            {
-                return this.m_PacketLossPercentage;
-            }
+            get => 
+                this.m_PacketLossPercentage;
             set
             {
                 this.m_PacketLossPercentage = value;
@@ -1729,10 +1679,8 @@
         /// </summary>
         public GameObject playerPrefab
         {
-            get
-            {
-                return this.m_PlayerPrefab;
-            }
+            get => 
+                this.m_PlayerPrefab;
             set
             {
                 this.m_PlayerPrefab = value;
@@ -1744,10 +1692,8 @@
         /// </summary>
         public PlayerSpawnMethod playerSpawnMethod
         {
-            get
-            {
-                return this.m_PlayerSpawnMethod;
-            }
+            get => 
+                this.m_PlayerSpawnMethod;
             set
             {
                 this.m_PlayerSpawnMethod = value;
@@ -1759,10 +1705,8 @@
         /// </summary>
         public bool runInBackground
         {
-            get
-            {
-                return this.m_RunInBackground;
-            }
+            get => 
+                this.m_RunInBackground;
             set
             {
                 this.m_RunInBackground = value;
@@ -1774,10 +1718,8 @@
         /// </summary>
         public bool scriptCRCCheck
         {
-            get
-            {
-                return this.m_ScriptCRCCheck;
-            }
+            get => 
+                this.m_ScriptCRCCheck;
             set
             {
                 this.m_ScriptCRCCheck = value;
@@ -1789,10 +1731,8 @@
         /// </summary>
         public EndPoint secureTunnelEndpoint
         {
-            get
-            {
-                return this.m_EndPoint;
-            }
+            get => 
+                this.m_EndPoint;
             set
             {
                 this.m_EndPoint = value;
@@ -1805,10 +1745,8 @@
         [Obsolete("moved to NetworkMigrationManager")]
         public bool sendPeerInfo
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -1819,10 +1757,8 @@
         /// </summary>
         public string serverBindAddress
         {
-            get
-            {
-                return this.m_ServerBindAddress;
-            }
+            get => 
+                this.m_ServerBindAddress;
             set
             {
                 this.m_ServerBindAddress = value;
@@ -1834,10 +1770,8 @@
         /// </summary>
         public bool serverBindToIP
         {
-            get
-            {
-                return this.m_ServerBindToIP;
-            }
+            get => 
+                this.m_ServerBindToIP;
             set
             {
                 this.m_ServerBindToIP = value;
@@ -1849,10 +1783,8 @@
         /// </summary>
         public int simulatedLatency
         {
-            get
-            {
-                return this.m_SimulatedLatency;
-            }
+            get => 
+                this.m_SimulatedLatency;
             set
             {
                 this.m_SimulatedLatency = value;
@@ -1862,34 +1794,22 @@
         /// <summary>
         /// <para>List of prefabs that will be registered with the spawning system.</para>
         /// </summary>
-        public List<GameObject> spawnPrefabs
-        {
-            get
-            {
-                return this.m_SpawnPrefabs;
-            }
-        }
+        public List<GameObject> spawnPrefabs =>
+            this.m_SpawnPrefabs;
 
         /// <summary>
         /// <para>The list of currently registered player start positions for the current scene.</para>
         /// </summary>
-        public List<Transform> startPositions
-        {
-            get
-            {
-                return s_StartPositions;
-            }
-        }
+        public List<Transform> startPositions =>
+            s_StartPositions;
 
         /// <summary>
         /// <para>Flag that control whether clients started by this NetworkManager will use simulated latency and packet loss.</para>
         /// </summary>
         public bool useSimulator
         {
-            get
-            {
-                return this.m_UseSimulator;
-            }
+            get => 
+                this.m_UseSimulator;
             set
             {
                 this.m_UseSimulator = value;
@@ -1901,10 +1821,8 @@
         /// </summary>
         public bool useWebSockets
         {
-            get
-            {
-                return this.m_UseWebSockets;
-            }
+            get => 
+                this.m_UseWebSockets;
             set
             {
                 this.m_UseWebSockets = value;

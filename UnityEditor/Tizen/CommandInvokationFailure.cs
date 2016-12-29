@@ -27,20 +27,14 @@
             this.Errors = new string[0];
         }
 
-        public string CommandString()
-        {
-            return (this.Command + " " + this.Args);
-        }
+        public string CommandString() => 
+            (this.Command + " " + this.Args);
 
-        public string StdErrString()
-        {
-            return string.Join("\n", this.StdErr);
-        }
+        public string StdErrString() => 
+            string.Join("\n", this.StdErr);
 
-        public string StdOutString()
-        {
-            return string.Join("\n", this.StdOut);
-        }
+        public string StdOutString() => 
+            string.Join("\n", this.StdOut);
 
         public override string ToString()
         {
@@ -57,13 +51,16 @@
 
         public string[] Errors { get; set; }
 
-        public override string Message
-        {
-            get
-            {
-                return string.Format("{0}\n{1}\n\nstderr[\n{2}\n]\nstdout[\n{3}\n]", new object[] { this.HighLevelMessage, this.CommandString(), this.StdErrString(), this.StdOutString() });
-            }
-        }
+        public override string Message =>
+            $"{this.HighLevelMessage}
+{this.CommandString()}
+
+stderr[
+{this.StdErrString()}
+]
+stdout[
+{this.StdOutString()}
+]";
     }
 }
 

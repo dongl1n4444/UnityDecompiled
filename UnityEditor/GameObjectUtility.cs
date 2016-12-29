@@ -105,10 +105,8 @@
         /// <para>An array of the names of all navmesh layers.</para>
         /// </returns>
         [Obsolete("GetNavMeshAreaNames instead.")]
-        public static string[] GetNavMeshLayerNames()
-        {
-            return GetNavMeshAreaNames();
-        }
+        public static string[] GetNavMeshLayerNames() => 
+            GetNavMeshAreaNames();
 
         /// <summary>
         /// <para>Gets the StaticEditorFlags of the GameObject specified.</para>

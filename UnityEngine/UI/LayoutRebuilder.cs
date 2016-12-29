@@ -48,10 +48,8 @@
             this.m_CachedHashFromTransform = 0;
         }
 
-        public override bool Equals(object obj)
-        {
-            return (obj.GetHashCode() == this.GetHashCode());
-        }
+        public override bool Equals(object obj) => 
+            (obj.GetHashCode() == this.GetHashCode());
 
         /// <summary>
         /// <para>Forces an immediate rebuild of the layout element and child layout elements affected by the calculations.</para>
@@ -65,10 +63,8 @@
             s_Rebuilders.Release(element);
         }
 
-        public override int GetHashCode()
-        {
-            return this.m_CachedHashFromTransform;
-        }
+        public override int GetHashCode() => 
+            this.m_CachedHashFromTransform;
 
         /// <summary>
         /// <para>See ICanvasElement.GraphicUpdateComplete.</para>
@@ -86,10 +82,8 @@
         /// <summary>
         /// <para>Has the native representation of this LayoutRebuilder been destroyed?</para>
         /// </summary>
-        public bool IsDestroyed()
-        {
-            return (this.m_ToRebuild == null);
-        }
+        public bool IsDestroyed() => 
+            (this.m_ToRebuild == null);
 
         /// <summary>
         /// <para>See ICanvasElement.LayoutComplete.</para>
@@ -242,10 +236,8 @@
             components.RemoveAll(<>f__am$cache0);
         }
 
-        public override string ToString()
-        {
-            return ("(Layout Rebuilder for) " + this.m_ToRebuild);
-        }
+        public override string ToString() => 
+            ("(Layout Rebuilder for) " + this.m_ToRebuild);
 
         private static bool ValidController(RectTransform layoutRoot, List<Component> comps)
         {
@@ -272,13 +264,8 @@
         /// <summary>
         /// <para>See ICanvasElement.</para>
         /// </summary>
-        public Transform transform
-        {
-            get
-            {
-                return this.m_ToRebuild;
-            }
-        }
+        public Transform transform =>
+            this.m_ToRebuild;
     }
 }
 

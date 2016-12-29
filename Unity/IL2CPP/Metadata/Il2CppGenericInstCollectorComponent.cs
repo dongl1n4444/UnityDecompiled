@@ -17,7 +17,7 @@
 
         public void Add(IList<TypeReference> types)
         {
-            TypeReference[] key = Enumerable.ToArray<TypeReference>(types);
+            TypeReference[] key = types.ToArray<TypeReference>();
             object obj2 = this._data;
             lock (obj2)
             {
@@ -38,13 +38,8 @@
             this._data.Clear();
         }
 
-        public IDictionary<TypeReference[], uint> Items
-        {
-            get
-            {
-                return this._data;
-            }
-        }
+        public IDictionary<TypeReference[], uint> Items =>
+            this._data;
 
         internal class Il2CppGenericInstComparer : EqualityComparer<TypeReference[]>
         {

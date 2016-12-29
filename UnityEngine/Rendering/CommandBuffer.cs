@@ -192,7 +192,7 @@
             if ((submeshIndex < 0) || (submeshIndex >= mesh.subMeshCount))
             {
                 submeshIndex = Mathf.Clamp(submeshIndex, 0, mesh.subMeshCount - 1);
-                Debug.LogWarning(string.Format("submeshIndex out of range. Clampped to {0}.", submeshIndex));
+                Debug.LogWarning($"submeshIndex out of range. Clampped to {submeshIndex}.");
             }
             if (material == null)
             {
@@ -250,7 +250,7 @@
             }
             if ((count < 0) || (count > Mathf.Min(Graphics.kMaxDrawMeshInstanceCount, matrices.Length)))
             {
-                throw new ArgumentOutOfRangeException("count", string.Format("Count must be in the range of 0 to {0}.", Mathf.Min(Graphics.kMaxDrawMeshInstanceCount, matrices.Length)));
+                throw new ArgumentOutOfRangeException("count", $"Count must be in the range of 0 to {Mathf.Min(Graphics.kMaxDrawMeshInstanceCount, matrices.Length)}.");
             }
             if (count > 0)
             {
@@ -361,7 +361,7 @@
             if (submeshIndex < 0)
             {
                 submeshIndex = Mathf.Max(submeshIndex, 0);
-                Debug.LogWarning(string.Format("submeshIndex out of range. Clampped to {0}.", submeshIndex));
+                Debug.LogWarning($"submeshIndex out of range. Clampped to {submeshIndex}.");
             }
             if (material == null)
             {

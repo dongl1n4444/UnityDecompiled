@@ -14,10 +14,8 @@
         [Obsolete("bakedColorSpace is no longer valid. Use QualitySettings.desiredColorSpace.", false)]
         public static ColorSpace bakedColorSpace
         {
-            get
-            {
-                return QualitySettings.desiredColorSpace;
-            }
+            get => 
+                QualitySettings.desiredColorSpace;
             set
             {
             }

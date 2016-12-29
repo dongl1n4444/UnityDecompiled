@@ -35,20 +35,10 @@
             this.xcodeFile = xcodeFile;
         }
 
-        public string defaultSource
-        {
-            get
-            {
-                return string.Format("SplashScreen-{0}x{1}.png", this.width, this.height);
-            }
-        }
-        public string localizedName
-        {
-            get
-            {
-                return LocalizationDatabase.GetLocalizedString(this.nonLocalizedName);
-            }
-        }
+        public string defaultSource =>
+            $"SplashScreen-{this.width}x{this.height}.png";
+        public string localizedName =>
+            LocalizationDatabase.GetLocalizedString(this.nonLocalizedName);
         public string localizedNameAndTooltip
         {
             get

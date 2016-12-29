@@ -221,10 +221,8 @@
         /// </summary>
         public float defaultSpriteDPI
         {
-            get
-            {
-                return this.m_DefaultSpriteDPI;
-            }
+            get => 
+                this.m_DefaultSpriteDPI;
             set
             {
                 this.m_DefaultSpriteDPI = Mathf.Max(1f, value);
@@ -236,10 +234,8 @@
         /// </summary>
         public float dynamicPixelsPerUnit
         {
-            get
-            {
-                return this.m_DynamicPixelsPerUnit;
-            }
+            get => 
+                this.m_DynamicPixelsPerUnit;
             set
             {
                 this.m_DynamicPixelsPerUnit = value;
@@ -251,10 +247,8 @@
         /// </summary>
         public float fallbackScreenDPI
         {
-            get
-            {
-                return this.m_FallbackScreenDPI;
-            }
+            get => 
+                this.m_FallbackScreenDPI;
             set
             {
                 this.m_FallbackScreenDPI = value;
@@ -266,10 +260,8 @@
         /// </summary>
         public float matchWidthOrHeight
         {
-            get
-            {
-                return this.m_MatchWidthOrHeight;
-            }
+            get => 
+                this.m_MatchWidthOrHeight;
             set
             {
                 this.m_MatchWidthOrHeight = value;
@@ -281,10 +273,8 @@
         /// </summary>
         public Unit physicalUnit
         {
-            get
-            {
-                return this.m_PhysicalUnit;
-            }
+            get => 
+                this.m_PhysicalUnit;
             set
             {
                 this.m_PhysicalUnit = value;
@@ -296,10 +286,8 @@
         /// </summary>
         public float referencePixelsPerUnit
         {
-            get
-            {
-                return this.m_ReferencePixelsPerUnit;
-            }
+            get => 
+                this.m_ReferencePixelsPerUnit;
             set
             {
                 this.m_ReferencePixelsPerUnit = value;
@@ -311,10 +299,8 @@
         /// </summary>
         public Vector2 referenceResolution
         {
-            get
-            {
-                return this.m_ReferenceResolution;
-            }
+            get => 
+                this.m_ReferenceResolution;
             set
             {
                 this.m_ReferenceResolution = value;
@@ -334,10 +320,8 @@
         /// </summary>
         public float scaleFactor
         {
-            get
-            {
-                return this.m_ScaleFactor;
-            }
+            get => 
+                this.m_ScaleFactor;
             set
             {
                 this.m_ScaleFactor = Mathf.Max(0.01f, value);
@@ -349,10 +333,8 @@
         /// </summary>
         public ScreenMatchMode screenMatchMode
         {
-            get
-            {
-                return this.m_ScreenMatchMode;
-            }
+            get => 
+                this.m_ScreenMatchMode;
             set
             {
                 this.m_ScreenMatchMode = value;
@@ -364,10 +346,8 @@
         /// </summary>
         public ScaleMode uiScaleMode
         {
-            get
-            {
-                return this.m_UiScaleMode;
-            }
+            get => 
+                this.m_UiScaleMode;
             set
             {
                 this.m_UiScaleMode = value;

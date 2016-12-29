@@ -33,25 +33,17 @@
             this.isEditModeRunner = isEditModeRunner;
         }
 
-        public TestListElement GetEditmodeTests()
-        {
-            return this.GetEditmodeTests(null);
-        }
+        public TestListElement GetEditmodeTests() => 
+            this.GetEditmodeTests(null);
 
-        public TestListElement GetEditmodeTests(TestRunnerFilter filter)
-        {
-            return this.GetTests(TestPlatform.EditMode);
-        }
+        public TestListElement GetEditmodeTests(TestRunnerFilter filter) => 
+            this.GetTests(TestPlatform.EditMode);
 
-        public TestListElement GetPlaymodeTests()
-        {
-            return this.GetPlaymodeTests(null);
-        }
+        public TestListElement GetPlaymodeTests() => 
+            this.GetPlaymodeTests(null);
 
-        public TestListElement GetPlaymodeTests(TestRunnerFilter filter)
-        {
-            return this.GetTests(TestPlatform.PlayMode);
-        }
+        public TestListElement GetPlaymodeTests(TestRunnerFilter filter) => 
+            this.GetTests(TestPlatform.PlayMode);
 
         private IEnumerable<MethodInfo> GetTestMethodList(TestPlatform testPlatform, Type type)
         {
@@ -63,7 +55,7 @@
 
         private TestListElement GetTests(TestPlatform testPlatform)
         {
-            IEnumerable<Assembly> userAssemblies = this.GetUserAssemblies(TestPlatformEnumExtensions.IsFlagIncluded(testPlatform, TestPlatform.EditMode));
+            IEnumerable<Assembly> userAssemblies = this.GetUserAssemblies(testPlatform.IsFlagIncluded(TestPlatform.EditMode));
             IEnumerable<Type> typesFromAsseblies = this.GetTypesFromAsseblies(testPlatform, userAssemblies);
             return this.ParseTypesForTests(testPlatform, typesFromAsseblies);
         }
@@ -78,18 +70,16 @@
         }
 
         [DebuggerHidden]
-        internal virtual IEnumerable<Assembly> GetUserAssemblies(bool includeEditorAssemblies)
-        {
-            return new <GetUserAssemblies>c__Iterator0 { 
+        internal virtual IEnumerable<Assembly> GetUserAssemblies(bool includeEditorAssemblies) => 
+            new <GetUserAssemblies>c__Iterator0 { 
                 includeEditorAssemblies = includeEditorAssemblies,
                 $this = this,
                 $PC = -2
             };
-        }
 
         private bool IsTypeATestForPlatform(Type type)
         {
-            if (Enumerable.Any<object>(type.GetCustomAttributes(typeof(TestAttribute), true)))
+            if (type.GetCustomAttributes(typeof(TestAttribute), true).Any<object>())
             {
                 return true;
             }
@@ -103,7 +93,7 @@
         private TestListElement ParseTypesForTests(TestPlatform testPlatform, IEnumerable<Type> types)
         {
             TestListGroup group = new TestListGroup("Root", "Root", "Root");
-            TestsConstraint testsConstraint = TestsConstraintsExtensions.GetTestsConstraint(testPlatform);
+            TestsConstraint testsConstraint = testPlatform.GetTestsConstraint();
             foreach (Type type in types)
             {
                 if (testsConstraint.IsClassTestSupported() && testsConstraint.IsClassATest(type))
@@ -133,7 +123,7 @@
                         }
                         group2.AddChildren(item2);
                     }
-                    if (Enumerable.Any<MethodInfo>(testMethodList))
+                    if (testMethodList.Any<MethodInfo>())
                     {
                         group.AddChildren(group2);
                     }
@@ -158,7 +148,7 @@
                 {
                     return false;
                 }
-                if (!TestsConstraintsExtensions.GetTestsConstraint(this.testPlatform).IsMethodATest(m))
+                if (!this.testPlatform.GetTestsConstraint().IsMethodATest(m))
                 {
                     return false;
                 }
@@ -207,7 +197,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.<assemblyList>__0 = Enumerable.ToList<string>(this.$this.DefaultUserAssemblies);
+                        this.<assemblyList>__0 = this.$this.DefaultUserAssemblies.ToList<string>();
                         if (this.includeEditorAssemblies)
                         {
                             this.<assemblyList>__0.AddRange(this.$this.DefaultUserEditorAssemblies);
@@ -285,28 +275,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<System.Reflection.Assembly>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<System.Reflection.Assembly>.GetEnumerator();
 
-            Assembly IEnumerator<Assembly>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            Assembly IEnumerator<Assembly>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

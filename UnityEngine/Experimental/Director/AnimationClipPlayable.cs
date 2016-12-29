@@ -13,13 +13,8 @@
     public struct AnimationClipPlayable
     {
         internal AnimationPlayable handle;
-        internal Playable node
-        {
-            get
-            {
-                return this.handle.node;
-            }
-        }
+        internal Playable node =>
+            this.handle.node;
         /// <summary>
         /// <para>Creates an AnimationClipPlayable.</para>
         /// </summary>
@@ -41,53 +36,37 @@
             this.node.Destroy();
         }
 
-        public static bool operator ==(AnimationClipPlayable x, Playable y)
-        {
-            return Playables.Equals((Playable) x, y);
-        }
+        public static bool operator ==(AnimationClipPlayable x, Playable y) => 
+            Playables.Equals((Playable) x, y);
 
-        public static bool operator !=(AnimationClipPlayable x, Playable y)
-        {
-            return !Playables.Equals((Playable) x, y);
-        }
+        public static bool operator !=(AnimationClipPlayable x, Playable y) => 
+            !Playables.Equals((Playable) x, y);
 
-        public override unsafe bool Equals(object p)
-        {
-            return Playables.Equals(*((Playable*) this), p);
-        }
+        public override unsafe bool Equals(object p) => 
+            Playables.Equals(*((Playable*) this), p);
 
-        public override int GetHashCode()
-        {
-            return this.node.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.node.GetHashCode();
 
-        public static implicit operator Playable(AnimationClipPlayable b)
-        {
-            return b.node;
-        }
+        public static implicit operator Playable(AnimationClipPlayable b) => 
+            b.node;
 
-        public static implicit operator AnimationPlayable(AnimationClipPlayable b)
-        {
-            return b.handle;
-        }
+        public static implicit operator AnimationPlayable(AnimationClipPlayable b) => 
+            b.handle;
 
         /// <summary>
         /// <para>Returns true if the Playable is valid. A playable can be invalid if it was disposed. This is different from a Null playable.</para>
         /// </summary>
-        public unsafe bool IsValid()
-        {
-            return Playables.IsValid(*((Playable*) this));
-        }
+        public unsafe bool IsValid() => 
+            Playables.IsValid(*((Playable*) this));
 
         /// <summary>
         /// <para>Current Experimental.Director.PlayState of this playable. This indicates whether the Playable is currently playing or paused.</para>
         /// </summary>
         public PlayState state
         {
-            get
-            {
-                return Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetPlayStateValidated(*((Playable*) this), value, base.GetType());
@@ -98,10 +77,8 @@
         /// </summary>
         public double time
         {
-            get
-            {
-                return Playables.GetTimeValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetTimeValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetTimeValidated(*((Playable*) this), value, base.GetType());
@@ -112,10 +89,8 @@
         /// </summary>
         public double duration
         {
-            get
-            {
-                return Playables.GetDurationValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetDurationValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetDurationValidated(*((Playable*) this), value, base.GetType());
@@ -124,13 +99,8 @@
         /// <summary>
         /// <para>The count of ouputs on the Playable.  Currently only 1 output is supported.</para>
         /// </summary>
-        public int outputCount
-        {
-            get
-            {
-                return Playables.GetOutputCountValidated(*((Playable*) this), base.GetType());
-            }
-        }
+        public int outputCount =>
+            Playables.GetOutputCountValidated(*((Playable*) this), base.GetType());
         /// <summary>
         /// <para>Returns the Playable connected at the specified output index.</para>
         /// </summary>
@@ -138,28 +108,19 @@
         /// <returns>
         /// <para>Playable connected at the output index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected.</para>
         /// </returns>
-        public unsafe Playable GetOutput(int outputPort)
-        {
-            return Playables.GetOutputValidated(*((Playable*) this), outputPort, base.GetType());
-        }
+        public unsafe Playable GetOutput(int outputPort) => 
+            Playables.GetOutputValidated(*((Playable*) this), outputPort, base.GetType());
 
-        public T CastTo<T>() where T: struct
-        {
-            return this.handle.CastTo<T>();
-        }
+        public T CastTo<T>() where T: struct => 
+            this.handle.CastTo<T>();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimationClip GetAnimationClip(ref AnimationClipPlayable that);
         /// <summary>
         /// <para>AnimationClip played by this playable.</para>
         /// </summary>
-        public AnimationClip clip
-        {
-            get
-            {
-                return GetAnimationClip(ref this);
-            }
-        }
+        public AnimationClip clip =>
+            GetAnimationClip(ref this);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetSpeed(ref AnimationClipPlayable that);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -169,10 +130,8 @@
         /// </summary>
         public float speed
         {
-            get
-            {
-                return GetSpeed(ref this);
-            }
+            get => 
+                GetSpeed(ref this);
             set
             {
                 SetSpeed(ref this, value);
@@ -187,10 +146,8 @@
         /// </summary>
         public bool applyFootIK
         {
-            get
-            {
-                return GetApplyFootIK(ref this);
-            }
+            get => 
+                GetApplyFootIK(ref this);
             set
             {
                 SetApplyFootIK(ref this, value);
@@ -202,10 +159,8 @@
         private static extern void SetRemoveStartOffset(ref AnimationClipPlayable that, bool value);
         internal bool removeStartOffset
         {
-            get
-            {
-                return GetRemoveStartOffset(ref this);
-            }
+            get => 
+                GetRemoveStartOffset(ref this);
             set
             {
                 SetRemoveStartOffset(ref this, value);

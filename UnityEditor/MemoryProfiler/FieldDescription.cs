@@ -21,43 +21,23 @@
         /// <summary>
         /// <para>Name of this field.</para>
         /// </summary>
-        public string name
-        {
-            get
-            {
-                return this.m_Name;
-            }
-        }
+        public string name =>
+            this.m_Name;
         /// <summary>
         /// <para>Offset of this field.</para>
         /// </summary>
-        public int offset
-        {
-            get
-            {
-                return this.m_Offset;
-            }
-        }
+        public int offset =>
+            this.m_Offset;
         /// <summary>
         /// <para>The typeindex into PackedMemorySnapshot.typeDescriptions of the type this field belongs to.</para>
         /// </summary>
-        public int typeIndex
-        {
-            get
-            {
-                return this.m_TypeIndex;
-            }
-        }
+        public int typeIndex =>
+            this.m_TypeIndex;
         /// <summary>
         /// <para>Is this field static?</para>
         /// </summary>
-        public bool isStatic
-        {
-            get
-            {
-                return this.m_IsStatic;
-            }
-        }
+        public bool isStatic =>
+            this.m_IsStatic;
     }
 }
 

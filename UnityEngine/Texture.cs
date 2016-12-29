@@ -55,10 +55,8 @@
         /// </summary>
         public virtual TextureDimension dimension
         {
-            get
-            {
-                return Internal_GetDimension(this);
-            }
+            get => 
+                Internal_GetDimension(this);
             set
             {
                 throw new Exception("not implemented");
@@ -75,10 +73,8 @@
         /// </summary>
         public virtual int height
         {
-            get
-            {
-                return Internal_GetHeight(this);
-            }
+            get => 
+                Internal_GetHeight(this);
             set
             {
                 throw new Exception("not implemented");
@@ -107,10 +103,8 @@
         /// </summary>
         public virtual int width
         {
-            get
-            {
-                return Internal_GetWidth(this);
-            }
+            get => 
+                Internal_GetWidth(this);
             set
             {
                 throw new Exception("not implemented");

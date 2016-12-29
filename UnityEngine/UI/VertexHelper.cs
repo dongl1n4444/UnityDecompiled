@@ -238,24 +238,14 @@
         /// <summary>
         /// <para>Get the number of indices set on the VertexHelper.</para>
         /// </summary>
-        public int currentIndexCount
-        {
-            get
-            {
-                return this.m_Indices.Count;
-            }
-        }
+        public int currentIndexCount =>
+            this.m_Indices.Count;
 
         /// <summary>
         /// <para>Current number of vertices in the buffer.</para>
         /// </summary>
-        public int currentVertCount
-        {
-            get
-            {
-                return this.m_Positions.Count;
-            }
-        }
+        public int currentVertCount =>
+            this.m_Positions.Count;
     }
 }
 

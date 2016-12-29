@@ -88,12 +88,12 @@
 
         public void AddInclude(string path)
         {
-            this._includes.Add(string.Format("\"{0}\"", path));
+            this._includes.Add($""{path}"");
         }
 
         public void AddIncludeForMethodDeclarations(TypeReference type)
         {
-            if (((!Extensions.IsInterface(type) || Extensions.IsComOrWindowsRuntimeInterface(type)) && !type.IsArray) && !type.HasGenericParameters)
+            if (((!type.IsInterface() || type.IsComOrWindowsRuntimeInterface()) && !type.IsArray) && !type.HasGenericParameters)
             {
                 this.AddInclude(FileNameProvider.Instance.ForMethodDeclarations(type));
             }
@@ -102,7 +102,7 @@
         private void AddIncludeForType(TypeReference type)
         {
             type = Naming.RemoveModifiers(type);
-            if (!type.HasGenericParameters && (!Extensions.IsInterface(type) || Extensions.IsComOrWindowsRuntimeInterface(type)))
+            if (!type.HasGenericParameters && (!type.IsInterface() || type.IsComOrWindowsRuntimeInterface()))
             {
                 if (type.IsArray)
                 {
@@ -118,14 +118,14 @@
         public void AddIncludeForTypeDefinition(TypeReference typeReference)
         {
             TypeReference reference = typeReference;
-            if (Extensions.ContainsGenericParameters(reference))
+            if (reference.ContainsGenericParameters())
             {
                 if (reference.IsGenericParameter)
                 {
                     return;
                 }
                 TypeDefinition definition = reference.Resolve();
-                if ((definition == null) || Extensions.IsEnum(definition))
+                if ((definition == null) || definition.IsEnum())
                 {
                     return;
                 }
@@ -180,7 +180,7 @@
             {
                 type = type3.ElementType;
             }
-            if (!Extensions.IsValueType(type))
+            if (!type.IsValueType())
             {
                 this.AddForwardDeclaration(type);
             }
@@ -206,10 +206,10 @@
             this.AddGenericInstanceMethod(method);
         }
 
-        public void AddIncludesForTypeReference(TypeReference typeReference, [Optional, DefaultParameterValue(false)] bool requiresCompleteType)
+        public void AddIncludesForTypeReference(TypeReference typeReference, bool requiresCompleteType = false)
         {
             TypeReference elementType = typeReference;
-            if (!Extensions.ContainsGenericParameters(elementType))
+            if (!elementType.ContainsGenericParameters())
             {
                 ArrayType type = elementType as ArrayType;
                 if (type != null)
@@ -219,7 +219,7 @@
                 GenericInstanceType type2 = elementType as GenericInstanceType;
                 if (type2 != null)
                 {
-                    if (Extensions.IsValueType(type2.ElementType))
+                    if (type2.ElementType.IsValueType())
                     {
                         this.AddIncludeForType(type2);
                     }
@@ -247,7 +247,7 @@
                 }
                 else
                 {
-                    bool flag = Extensions.IsValueType(elementType);
+                    bool flag = elementType.IsValueType();
                     if (flag || (requiresCompleteType && !(elementType is TypeSpecification)))
                     {
                         this.AddIncludeForType(elementType);
@@ -267,7 +267,7 @@
 
         public void AddStdInclude(string path)
         {
-            this._includes.Add(string.Format("<{0}>", path));
+            this._includes.Add($"<{path}>");
         }
 
         private static TypeReference GetForwardDeclarationType(TypeReference typeReference)
@@ -288,7 +288,7 @@
 
         public static string InitializerStringFor(TypeReference type)
         {
-            if (((type.FullName == "intptr_t") || (type.FullName == "uintptr_t")) || Extensions.IsEnum(type))
+            if (((type.FullName == "intptr_t") || (type.FullName == "uintptr_t")) || type.IsEnum())
             {
                 return " = 0";
             }
@@ -297,13 +297,13 @@
                 string str2 = InitializerStringForPrimitiveType(type);
                 if (str2 != null)
                 {
-                    return string.Format(" = {0}", str2);
+                    return $" = {str2}";
                 }
                 return string.Empty;
             }
-            if (!Extensions.IsValueType(type))
+            if (!type.IsValueType())
             {
-                return string.Format(" = {0}", Naming.Null);
+                return $" = {Naming.Null}";
             }
             return string.Empty;
         }
@@ -428,14 +428,12 @@
             return null;
         }
 
-        public static string InitializerStringForPrimitiveType(TypeReference type)
-        {
-            return InitializerStringForPrimitiveType(type.MetadataType);
-        }
+        public static string InitializerStringForPrimitiveType(TypeReference type) => 
+            InitializerStringForPrimitiveType(type.MetadataType);
 
         private static bool IsZeroSizeValueType(TypeReference type)
         {
-            if (!Extensions.IsValueType(type))
+            if (!type.IsValueType())
             {
                 return false;
             }
@@ -443,7 +441,7 @@
             {
                 return false;
             }
-            if (Extensions.IsEnum(type))
+            if (type.IsEnum())
             {
                 return false;
             }
@@ -456,7 +454,7 @@
             {
                 <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <IsZeroSizeValueType>m__0);
             }
-            if (Enumerable.All<FieldDefinition>(definition.Fields, <>f__am$cache0))
+            if (definition.Fields.All<FieldDefinition>(<>f__am$cache0))
             {
                 return true;
             }
@@ -472,7 +470,7 @@
             {
                 <>f__mg$cache0 = new Func<TypeReference, bool>(null, (IntPtr) IsZeroSizeValueType);
             }
-            return Enumerable.All<TypeReference>(Enumerable.Select<FieldDefinition, TypeReference>(Enumerable.Where<FieldDefinition>(definition.Fields, <>f__am$cache1), <>f__am$cache2), <>f__mg$cache0);
+            return definition.Fields.Where<FieldDefinition>(<>f__am$cache1).Select<FieldDefinition, TypeReference>(<>f__am$cache2).All<TypeReference>(<>f__mg$cache0);
         }
 
         public void Write(CppCodeWriter other)
@@ -509,13 +507,13 @@
             {
                 <>f__am$cache3 = new Func<object, string>(null, (IntPtr) <WriteArrayInitializer>m__3);
             }
-            this.WriteFieldInitializer(Enumerable.Select<object, string>(values, <>f__am$cache3));
+            this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache3));
         }
 
-        public TableInfo WriteArrayInitializer(string type, string variableName, IEnumerable<string> values, [Optional, DefaultParameterValue(true)] bool nullTerminate)
+        public TableInfo WriteArrayInitializer(string type, string variableName, IEnumerable<string> values, bool nullTerminate = true)
         {
-            values = !nullTerminate ? values : Enumerable.Concat<string>(values, new string[] { "NULL" });
-            string[] initializers = Enumerable.ToArray<string>(values);
+            values = !nullTerminate ? values : values.Concat<string>(new string[] { "NULL" });
+            string[] initializers = values.ToArray<string>();
             object[] args = new object[] { type, variableName, initializers.Length };
             base.WriteLine("{0} {1}[{2}] = ", args);
             this.WriteFieldInitializer(initializers);
@@ -556,7 +554,7 @@
             string item = Naming.ForGenericClass(type);
             if (this._writtenExterns.Add(item))
             {
-                base.WriteLine(string.Format("extern Il2CppGenericClass {0};", item));
+                base.WriteLine($"extern Il2CppGenericClass {item};");
             }
         }
 
@@ -565,7 +563,7 @@
             string item = Naming.ForGenericInst(types);
             if (this._writtenExterns.Add(item))
             {
-                base.WriteLine(string.Format("extern const Il2CppGenericInst {0};", item));
+                base.WriteLine($"extern const Il2CppGenericInst {item};");
             }
         }
 
@@ -574,7 +572,7 @@
             string item = Naming.ForIl2CppType(type, 0);
             if (this._writtenExterns.Add(item))
             {
-                base.WriteLine(string.Format("extern const Il2CppType {0};", item));
+                base.WriteLine($"extern const Il2CppType {item};");
             }
         }
 
@@ -665,7 +663,7 @@
                 <>f__am$cache4 = new Func<object, string>(null, (IntPtr) <WriteNullTerminatedArrayInitializer>m__4);
             }
             string[] second = new string[] { "NULL" };
-            this.WriteFieldInitializer(Enumerable.Concat<string>(Enumerable.Select<object, string>(values, <>f__am$cache4), second));
+            this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache4).Concat<string>(second));
         }
 
         public void WriteStructInitializer(string type, string variableName, IEnumerable<string> values)
@@ -677,7 +675,7 @@
 
         public void WriteVariable(TypeReference type, string name)
         {
-            if (Extensions.IsGenericParameter(type))
+            if (type.IsGenericParameter())
             {
                 throw new ArgumentException("Generic parameter encountered as variable type", "type");
             }
@@ -699,52 +697,27 @@
 
         public void WriteWriteBarrierIfNeeded(TypeReference valueType, string addressExpression, string valueExpression)
         {
-            if (!Extensions.IsValueType(valueType) && !valueType.IsPointer)
+            if (!valueType.IsValueType() && !valueType.IsPointer)
             {
                 object[] args = new object[] { addressExpression, valueExpression };
                 base.WriteLine("Il2CppCodeGenWriteBarrier({0}, {1});", args);
             }
         }
 
-        public IEnumerable<TypeReference> ForwardDeclarations
-        {
-            get
-            {
-                return this._forwardDeclarations;
-            }
-        }
+        public IEnumerable<TypeReference> ForwardDeclarations =>
+            this._forwardDeclarations;
 
-        public IEnumerable<GenericInstanceMethod> GenericInstanceMethods
-        {
-            get
-            {
-                return this._genericInstanceMethods;
-            }
-        }
+        public IEnumerable<GenericInstanceMethod> GenericInstanceMethods =>
+            this._genericInstanceMethods;
 
-        public IEnumerable<string> Includes
-        {
-            get
-            {
-                return this._includes;
-            }
-        }
+        public IEnumerable<string> Includes =>
+            this._includes;
 
-        public IEnumerable<string> RawForwardDeclarations
-        {
-            get
-            {
-                return this._rawForwardDeclarations;
-            }
-        }
+        public IEnumerable<string> RawForwardDeclarations =>
+            this._rawForwardDeclarations;
 
-        public IEnumerable<string> WrittenExterns
-        {
-            get
-            {
-                return this._writtenExterns;
-            }
-        }
+        public IEnumerable<string> WrittenExterns =>
+            this._writtenExterns;
 
         [CompilerGenerated]
         private sealed class <WriteIfNotEmpty>c__AnonStorey0

@@ -15,7 +15,7 @@
         private bool <alwaysShowScrollAreaHorizontalLines>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <contentHeight>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <gridWidth>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private RectOffset <marginsForGrid>k__BackingField;
@@ -23,7 +23,7 @@
         private RectOffset <marginsForList>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <settingsMenuRightMargin>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <showHeader>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <useOnePixelOverlappedGrid>k__BackingField;
@@ -262,10 +262,8 @@
             return new RectOffset(left, left, top, top).Add(itemRect);
         }
 
-        private RenameOverlay GetRenameOverlay()
-        {
-            return this.m_State.m_RenameOverlay;
-        }
+        private RenameOverlay GetRenameOverlay() => 
+            this.m_State.m_RenameOverlay;
 
         public void InitializeGrid(float availableWidth)
         {
@@ -298,10 +296,8 @@
             return true;
         }
 
-        private bool IsRenaming(int itemID)
-        {
-            return ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == itemID)) && !this.GetRenameOverlay().isWaitingForDelay);
-        }
+        private bool IsRenaming(int itemID) => 
+            ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == itemID)) && !this.GetRenameOverlay().isWaitingForDelay);
 
         private static void LabelWithOutline(Rect rect, GUIContent content, Color outlineColor, GUIStyle style)
         {
@@ -766,10 +762,8 @@
 
         public string currentLibraryWithoutExtension
         {
-            get
-            {
-                return this.m_State.m_CurrrentLibrary;
-            }
+            get => 
+                this.m_State.m_CurrrentLibrary;
             set
             {
                 this.m_State.m_CurrrentLibrary = Path.ChangeExtension(value, null);
@@ -779,22 +773,15 @@
             }
         }
 
-        private bool drawLabels
-        {
-            get
-            {
-                return (this.m_State.itemViewMode == PresetLibraryEditorState.ItemViewMode.List);
-            }
-        }
+        private bool drawLabels =>
+            (this.m_State.itemViewMode == PresetLibraryEditorState.ItemViewMode.List);
 
         private float gridWidth { get; set; }
 
         public PresetLibraryEditorState.ItemViewMode itemViewMode
         {
-            get
-            {
-                return this.m_State.itemViewMode;
-            }
+            get => 
+                this.m_State.itemViewMode;
             set
             {
                 this.m_State.itemViewMode = value;
@@ -809,10 +796,8 @@
 
         public Vector2 minMaxPreviewHeight
         {
-            get
-            {
-                return this.m_MinMaxPreviewHeight;
-            }
+            get => 
+                this.m_MinMaxPreviewHeight;
             set
             {
                 this.m_MinMaxPreviewHeight = value;
@@ -820,20 +805,13 @@
             }
         }
 
-        private string pathWithExtension
-        {
-            get
-            {
-                return (this.currentLibraryWithoutExtension + "." + this.m_SaveLoadHelper.fileExtensionWithoutDot);
-            }
-        }
+        private string pathWithExtension =>
+            (this.currentLibraryWithoutExtension + "." + this.m_SaveLoadHelper.fileExtensionWithoutDot);
 
         public float previewAspect
         {
-            get
-            {
-                return this.m_PreviewAspect;
-            }
+            get => 
+                this.m_PreviewAspect;
             set
             {
                 this.m_PreviewAspect = value;
@@ -842,10 +820,8 @@
 
         public float previewHeight
         {
-            get
-            {
-                return this.m_State.m_PreviewHeight;
-            }
+            get => 
+                this.m_State.m_PreviewHeight;
             set
             {
                 this.m_State.m_PreviewHeight = Mathf.Clamp(value, this.minMaxPreviewHeight.x, this.minMaxPreviewHeight.y);
@@ -857,23 +833,13 @@
 
         public bool showHeader { get; set; }
 
-        private float topAreaHeight
-        {
-            get
-            {
-                return 20f;
-            }
-        }
+        private float topAreaHeight =>
+            20f;
 
         public bool useOnePixelOverlappedGrid { get; set; }
 
-        private float versionControlAreaHeight
-        {
-            get
-            {
-                return 20f;
-            }
-        }
+        private float versionControlAreaHeight =>
+            20f;
 
         public bool wantsToCreateLibrary { get; set; }
 
@@ -883,7 +849,7 @@
             private int <draggingIndex>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <dragUponIndex>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Rect <dragUponRect>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <insertAfterIndex>k__BackingField;
@@ -894,10 +860,8 @@
                 this.draggingIndex = -1;
             }
 
-            public bool IsDragging()
-            {
-                return (this.draggingIndex != -1);
-            }
+            public bool IsDragging() => 
+                (this.draggingIndex != -1);
 
             public int draggingIndex { get; set; }
 
@@ -998,10 +962,8 @@
                 PresetLibraryEditor<T>.SettingsMenu.s_Owner.wantsToCreateLibrary = true;
             }
 
-            private static bool HasDefaultPresets()
-            {
-                return (PresetLibraryEditor<T>.SettingsMenu.s_Owner.addDefaultPresets != null);
-            }
+            private static bool HasDefaultPresets() => 
+                (PresetLibraryEditor<T>.SettingsMenu.s_Owner.addDefaultPresets != null);
 
             private static void LibraryModeChange(object userData)
             {
@@ -1166,10 +1128,8 @@
                 this.newPresetStyle.normal.textColor = Color.white;
             }
 
-            private static GUIStyle GetStyle(string styleName)
-            {
-                return styleName;
-            }
+            private static GUIStyle GetStyle(string styleName) => 
+                styleName;
         }
     }
 }

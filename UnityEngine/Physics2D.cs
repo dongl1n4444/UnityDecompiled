@@ -129,10 +129,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static RaycastHit2D[] BoxCastAll(Vector2 origin, Vector2 size, float angle, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_BoxCastAll(ref origin, ref size, angle, ref direction, distance, layerMask, minDepth, maxDepth);
-        }
+        public static RaycastHit2D[] BoxCastAll(Vector2 origin, Vector2 size, float angle, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_BoxCastAll(ref origin, ref size, angle, ref direction, distance, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int BoxCastNonAlloc(Vector2 origin, Vector2 size, float angle, Vector2 direction, RaycastHit2D[] results)
@@ -183,10 +181,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int BoxCastNonAlloc(Vector2 origin, Vector2 size, float angle, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_BoxCastNonAlloc(ref origin, ref size, angle, ref direction, results, distance, layerMask, minDepth, maxDepth);
-        }
+        public static int BoxCastNonAlloc(Vector2 origin, Vector2 size, float angle, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_BoxCastNonAlloc(ref origin, ref size, angle, ref direction, results, distance, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static RaycastHit2D CapsuleCast(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction)
@@ -293,10 +289,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static RaycastHit2D[] CapsuleCastAll(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_CapsuleCastAll(ref origin, ref size, capsuleDirection, angle, ref direction, distance, layerMask, minDepth, maxDepth);
-        }
+        public static RaycastHit2D[] CapsuleCastAll(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_CapsuleCastAll(ref origin, ref size, capsuleDirection, angle, ref direction, distance, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int CapsuleCastNonAlloc(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction, RaycastHit2D[] results)
@@ -348,10 +342,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int CapsuleCastNonAlloc(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_CapsuleCastNonAlloc(ref origin, ref size, capsuleDirection, angle, ref direction, results, distance, layerMask, minDepth, maxDepth);
-        }
+        public static int CapsuleCastNonAlloc(Vector2 origin, Vector2 size, CapsuleDirection2D capsuleDirection, float angle, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_CapsuleCastNonAlloc(ref origin, ref size, capsuleDirection, angle, ref direction, results, distance, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static RaycastHit2D CircleCast(Vector2 origin, float radius, Vector2 direction)
@@ -454,10 +446,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static RaycastHit2D[] CircleCastAll(Vector2 origin, float radius, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_CircleCastAll(ref origin, radius, ref direction, distance, layerMask, minDepth, maxDepth);
-        }
+        public static RaycastHit2D[] CircleCastAll(Vector2 origin, float radius, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_CircleCastAll(ref origin, radius, ref direction, distance, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int CircleCastNonAlloc(Vector2 origin, float radius, Vector2 direction, RaycastHit2D[] results)
@@ -507,10 +497,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int CircleCastNonAlloc(Vector2 origin, float radius, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_CircleCastNonAlloc(ref origin, radius, ref direction, results, distance, layerMask, minDepth, maxDepth);
-        }
+        public static int CircleCastNonAlloc(Vector2 origin, float radius, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_CircleCastNonAlloc(ref origin, radius, ref direction, results, distance, layerMask, minDepth, maxDepth);
 
         /// <summary>
         /// <para>Checks whether the collision detection system will ignore all collisionstriggers between collider1 and collider2/ or not.</para>
@@ -591,10 +579,8 @@
         /// <para>The cast results returned.</para>
         /// </returns>
         [RequiredByNativeCode]
-        public static RaycastHit2D[] GetRayIntersectionAll(Ray ray, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask)
-        {
-            return INTERNAL_CALL_GetRayIntersectionAll(ref ray, distance, layerMask);
-        }
+        public static RaycastHit2D[] GetRayIntersectionAll(Ray ray, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask) => 
+            INTERNAL_CALL_GetRayIntersectionAll(ref ray, distance, layerMask);
 
         [ExcludeFromDocs]
         public static int GetRayIntersectionNonAlloc(Ray ray, RaycastHit2D[] results)
@@ -621,10 +607,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int GetRayIntersectionNonAlloc(Ray ray, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask)
-        {
-            return INTERNAL_CALL_GetRayIntersectionNonAlloc(ref ray, results, distance, layerMask);
-        }
+        public static int GetRayIntersectionNonAlloc(Ray ray, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask) => 
+            INTERNAL_CALL_GetRayIntersectionNonAlloc(ref ray, results, distance, layerMask);
 
         [ExcludeFromDocs]
         public static void IgnoreCollision(Collider2D collider1, Collider2D collider2)
@@ -876,10 +860,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static RaycastHit2D[] LinecastAll(Vector2 start, Vector2 end, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_LinecastAll(ref start, ref end, layerMask, minDepth, maxDepth);
-        }
+        public static RaycastHit2D[] LinecastAll(Vector2 start, Vector2 end, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_LinecastAll(ref start, ref end, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int LinecastNonAlloc(Vector2 start, Vector2 end, RaycastHit2D[] results)
@@ -917,10 +899,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int LinecastNonAlloc(Vector2 start, Vector2 end, RaycastHit2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_LinecastNonAlloc(ref start, ref end, results, layerMask, minDepth, maxDepth);
-        }
+        public static int LinecastNonAlloc(Vector2 start, Vector2 end, RaycastHit2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_LinecastNonAlloc(ref start, ref end, results, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D OverlapArea(Vector2 pointA, Vector2 pointB)
@@ -957,10 +937,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D OverlapArea(Vector2 pointA, Vector2 pointB, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapArea(ref pointA, ref pointB, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D OverlapArea(Vector2 pointA, Vector2 pointB, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapArea(ref pointA, ref pointB, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D[] OverlapAreaAll(Vector2 pointA, Vector2 pointB)
@@ -997,10 +975,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D[] OverlapAreaAll(Vector2 pointA, Vector2 pointB, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapAreaAll(ref pointA, ref pointB, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D[] OverlapAreaAll(Vector2 pointA, Vector2 pointB, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapAreaAll(ref pointA, ref pointB, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int OverlapAreaNonAlloc(Vector2 pointA, Vector2 pointB, Collider2D[] results)
@@ -1038,10 +1014,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int OverlapAreaNonAlloc(Vector2 pointA, Vector2 pointB, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapAreaNonAlloc(ref pointA, ref pointB, results, layerMask, minDepth, maxDepth);
-        }
+        public static int OverlapAreaNonAlloc(Vector2 pointA, Vector2 pointB, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapAreaNonAlloc(ref pointA, ref pointB, results, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D OverlapBox(Vector2 point, Vector2 size, float angle)
@@ -1079,10 +1053,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D OverlapBox(Vector2 point, Vector2 size, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapBox(ref point, ref size, angle, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D OverlapBox(Vector2 point, Vector2 size, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapBox(ref point, ref size, angle, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D[] OverlapBoxAll(Vector2 point, Vector2 size, float angle)
@@ -1120,10 +1092,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D[] OverlapBoxAll(Vector2 point, Vector2 size, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapBoxAll(ref point, ref size, angle, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D[] OverlapBoxAll(Vector2 point, Vector2 size, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapBoxAll(ref point, ref size, angle, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int OverlapBoxNonAlloc(Vector2 point, Vector2 size, float angle, Collider2D[] results)
@@ -1162,10 +1132,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int OverlapBoxNonAlloc(Vector2 point, Vector2 size, float angle, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapBoxNonAlloc(ref point, ref size, angle, results, layerMask, minDepth, maxDepth);
-        }
+        public static int OverlapBoxNonAlloc(Vector2 point, Vector2 size, float angle, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapBoxNonAlloc(ref point, ref size, angle, results, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D OverlapCapsule(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle)
@@ -1204,10 +1172,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D OverlapCapsule(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapCapsule(ref point, ref size, direction, angle, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D OverlapCapsule(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapCapsule(ref point, ref size, direction, angle, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D[] OverlapCapsuleAll(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle)
@@ -1246,10 +1212,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D[] OverlapCapsuleAll(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapCapsuleAll(ref point, ref size, direction, angle, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D[] OverlapCapsuleAll(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapCapsuleAll(ref point, ref size, direction, angle, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int OverlapCapsuleNonAlloc(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, Collider2D[] results)
@@ -1289,10 +1253,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int OverlapCapsuleNonAlloc(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapCapsuleNonAlloc(ref point, ref size, direction, angle, results, layerMask, minDepth, maxDepth);
-        }
+        public static int OverlapCapsuleNonAlloc(Vector2 point, Vector2 size, CapsuleDirection2D direction, float angle, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapCapsuleNonAlloc(ref point, ref size, direction, angle, results, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D OverlapCircle(Vector2 point, float radius)
@@ -1326,10 +1288,8 @@
         /// <param name="layerMask">Filter to check objects only on specific layers.</param>
         /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
         /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
-        public static Collider2D OverlapCircle(Vector2 point, float radius, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapCircle(ref point, radius, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D OverlapCircle(Vector2 point, float radius, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapCircle(ref point, radius, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D[] OverlapCircleAll(Vector2 point, float radius)
@@ -1363,10 +1323,8 @@
         /// <param name="layerMask">Filter to check objects only on specified layers.</param>
         /// <param name="minDepth">Only include objects with a Z coordinate (depth) greater than or equal to this value.</param>
         /// <param name="maxDepth">Only include objects with a Z coordinate (depth) less than or equal to this value.</param>
-        public static Collider2D[] OverlapCircleAll(Vector2 point, float radius, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapCircleAll(ref point, radius, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D[] OverlapCircleAll(Vector2 point, float radius, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapCircleAll(ref point, radius, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int OverlapCircleNonAlloc(Vector2 point, float radius, Collider2D[] results)
@@ -1404,10 +1362,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int OverlapCircleNonAlloc(Vector2 point, float radius, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapCircleNonAlloc(ref point, radius, results, layerMask, minDepth, maxDepth);
-        }
+        public static int OverlapCircleNonAlloc(Vector2 point, float radius, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapCircleNonAlloc(ref point, radius, results, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D OverlapPoint(Vector2 point)
@@ -1443,10 +1399,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D OverlapPoint(Vector2 point, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapPoint(ref point, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D OverlapPoint(Vector2 point, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapPoint(ref point, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static Collider2D[] OverlapPointAll(Vector2 point)
@@ -1482,10 +1436,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static Collider2D[] OverlapPointAll(Vector2 point, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapPointAll(ref point, layerMask, minDepth, maxDepth);
-        }
+        public static Collider2D[] OverlapPointAll(Vector2 point, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapPointAll(ref point, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int OverlapPointNonAlloc(Vector2 point, Collider2D[] results)
@@ -1522,10 +1474,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int OverlapPointNonAlloc(Vector2 point, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_OverlapPointNonAlloc(ref point, results, layerMask, minDepth, maxDepth);
-        }
+        public static int OverlapPointNonAlloc(Vector2 point, Collider2D[] results, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_OverlapPointNonAlloc(ref point, results, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static RaycastHit2D Raycast(Vector2 origin, Vector2 direction)
@@ -1626,10 +1576,8 @@
         /// <returns>
         /// <para>The cast results returned.</para>
         /// </returns>
-        public static RaycastHit2D[] RaycastAll(Vector2 origin, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_RaycastAll(ref origin, ref direction, distance, layerMask, minDepth, maxDepth);
-        }
+        public static RaycastHit2D[] RaycastAll(Vector2 origin, Vector2 direction, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_RaycastAll(ref origin, ref direction, distance, layerMask, minDepth, maxDepth);
 
         [ExcludeFromDocs]
         public static int RaycastNonAlloc(Vector2 origin, Vector2 direction, RaycastHit2D[] results)
@@ -1678,10 +1626,8 @@
         /// <returns>
         /// <para>The number of results returned.</para>
         /// </returns>
-        public static int RaycastNonAlloc(Vector2 origin, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth)
-        {
-            return INTERNAL_CALL_RaycastNonAlloc(ref origin, ref direction, results, distance, layerMask, minDepth, maxDepth);
-        }
+        public static int RaycastNonAlloc(Vector2 origin, Vector2 direction, RaycastHit2D[] results, [DefaultValue("Mathf.Infinity")] float distance, [DefaultValue("DefaultRaycastLayers")] int layerMask, [DefaultValue("-Mathf.Infinity")] float minDepth, [DefaultValue("Mathf.Infinity")] float maxDepth) => 
+            INTERNAL_CALL_RaycastNonAlloc(ref origin, ref direction, results, distance, layerMask, minDepth, maxDepth);
 
         internal static void SetEditorDragMovement(bool dragging, GameObject[] objs)
         {
@@ -1819,10 +1765,8 @@
         [Obsolete("Physics2D.deleteStopsCallbacks is deprecated. Use Physics2D.changeStopsCallbacks instead. (UnityUpgradable) -> changeStopsCallbacks", true)]
         public static bool deleteStopsCallbacks
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -1896,10 +1840,8 @@
         [Obsolete("Physics2D.raycastsHitTriggers is deprecated. Use Physics2D.queriesHitTriggers instead. (UnityUpgradable) -> queriesHitTriggers", true)]
         public static bool raycastsHitTriggers
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -1911,10 +1853,8 @@
         [Obsolete("Physics2D.raycastsStartInColliders is deprecated. Use Physics2D.queriesStartInColliders instead. (UnityUpgradable) -> queriesStartInColliders", true)]
         public static bool raycastsStartInColliders
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }

@@ -101,10 +101,8 @@
             this.m_LookDevEnvLibrary.CleanupDeletedHDRI();
         }
 
-        private float ComputeLookDevEnvWindowHeight()
-        {
-            return this.m_DisplayRect.height;
-        }
+        private float ComputeLookDevEnvWindowHeight() => 
+            this.m_DisplayRect.height;
 
         private float ComputeLookDevEnvWindowWidth()
         {
@@ -468,10 +466,8 @@
             this.m_CurrentObjRotationOffset = 0f;
         }
 
-        private float GetBlendFactorMaxGizmoDistance()
-        {
-            return ((this.m_LookDevConfig.gizmo.length - this.m_GizmoCircleRadius) - this.m_BlendFactorCircleRadius);
-        }
+        private float GetBlendFactorMaxGizmoDistance() => 
+            ((this.m_LookDevConfig.gizmo.length - this.m_GizmoCircleRadius) - this.m_BlendFactorCircleRadius);
 
         private LookDevEditionContext GetEditionContext(Vector2 position)
         {
@@ -547,10 +543,8 @@
             return none;
         }
 
-        private GUIContent GetGUIContentLink(bool active)
-        {
-            return (!active ? styles.sLinkInactive : styles.sLinkActive);
-        }
+        private GUIContent GetGUIContentLink(bool active) => 
+            (!active ? styles.sLinkInactive : styles.sLinkActive);
 
         private Vector2 GetNormalizedCoordinates(Vector2 mousePosition, Rect previewRect)
         {
@@ -972,10 +966,8 @@
             }
         }
 
-        private bool IsOperatingGizmo()
-        {
-            return ((((this.m_LookDevOperationType == LookDevOperationType.BlendFactor) || (this.m_LookDevOperationType == LookDevOperationType.GizmoRotationZone1)) || (this.m_LookDevOperationType == LookDevOperationType.GizmoRotationZone2)) || (this.m_LookDevOperationType == LookDevOperationType.GizmoTranslation));
-        }
+        private bool IsOperatingGizmo() => 
+            ((((this.m_LookDevOperationType == LookDevOperationType.BlendFactor) || (this.m_LookDevOperationType == LookDevOperationType.GizmoRotationZone1)) || (this.m_LookDevOperationType == LookDevOperationType.GizmoRotationZone2)) || (this.m_LookDevOperationType == LookDevOperationType.GizmoTranslation));
 
         private void LoadLookDevConfig()
         {
@@ -1557,20 +1549,13 @@
             this.m_ControlWindowRect = new Rect((this.m_PreviewRects[2].width / 2f) - (width / 2f), (this.m_PreviewRects[2].height - height) - 10f, width, height);
         }
 
-        public LookDevConfig config
-        {
-            get
-            {
-                return this.m_LookDevConfig;
-            }
-        }
+        public LookDevConfig config =>
+            this.m_LookDevConfig;
 
         public LookDevEnvironmentLibrary envLibrary
         {
-            get
-            {
-                return this.m_LookDevEnvLibrary;
-            }
+            get => 
+                this.m_LookDevEnvLibrary;
             set
             {
                 if (value == null)
@@ -1593,13 +1578,8 @@
             }
         }
 
-        public int hotControl
-        {
-            get
-            {
-                return this.m_hotControlID;
-            }
-        }
+        public int hotControl =>
+            this.m_hotControlID;
 
         public static Styles styles
         {
@@ -1613,23 +1593,16 @@
             }
         }
 
-        public LookDevEnvironmentLibrary userEnvLibrary
-        {
-            get
-            {
-                return this.m_LookDevUserEnvLibrary;
-            }
-        }
+        public LookDevEnvironmentLibrary userEnvLibrary =>
+            this.m_LookDevUserEnvLibrary;
 
         [CompilerGenerated]
         private sealed class <UpdateContextWithCurrentHDRI>c__AnonStorey0
         {
             internal Cubemap cubemap;
 
-            internal bool <>m__0(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap);
-            }
+            internal bool <>m__0(CubemapInfo x) => 
+                (x.cubemap == this.cubemap);
         }
 
         private class PreviewContext

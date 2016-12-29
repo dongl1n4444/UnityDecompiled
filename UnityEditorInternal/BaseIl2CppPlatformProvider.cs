@@ -25,15 +25,11 @@
             this.libraryFolder = libraryFolder;
         }
 
-        public virtual Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder()
-        {
-            return null;
-        }
+        public virtual Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder() => 
+            null;
 
-        public virtual INativeCompiler CreateNativeCompiler()
-        {
-            return null;
-        }
+        public virtual INativeCompiler CreateNativeCompiler() => 
+            null;
 
         private static PackageInfo FindIl2CppPackage()
         {
@@ -66,53 +62,23 @@
             return (Directory.Exists(str2) ? str2 : Path.Combine(this.libraryFolder, path));
         }
 
-        public virtual BuildReport buildReport
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual BuildReport buildReport =>
+            null;
 
-        public virtual bool developmentMode
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool developmentMode =>
+            false;
 
-        public virtual bool emitNullChecks
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool emitNullChecks =>
+            true;
 
-        public virtual bool enableArrayBoundsCheck
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool enableArrayBoundsCheck =>
+            true;
 
-        public virtual bool enableDivideByZeroCheck
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool enableDivideByZeroCheck =>
+            false;
 
-        public virtual bool enableStackTraces
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool enableStackTraces =>
+            true;
 
         public virtual string il2CppFolder
         {
@@ -127,63 +93,28 @@
             }
         }
 
-        public virtual string[] includePaths
-        {
-            get
-            {
-                return new string[] { this.GetFolderInPackageOrDefault("bdwgc/include"), this.GetFolderInPackageOrDefault("libil2cpp/include") };
-            }
-        }
+        public virtual string[] includePaths =>
+            new string[] { this.GetFolderInPackageOrDefault("bdwgc/include"), this.GetFolderInPackageOrDefault("libil2cpp/include") };
 
         public string libraryFolder { virtual get; private set; }
 
-        public virtual string[] libraryPaths
-        {
-            get
-            {
-                return new string[] { this.GetFileInPackageOrDefault("bdwgc/lib/bdwgc." + this.staticLibraryExtension), this.GetFileInPackageOrDefault("libil2cpp/lib/libil2cpp." + this.staticLibraryExtension) };
-            }
-        }
+        public virtual string[] libraryPaths =>
+            new string[] { this.GetFileInPackageOrDefault("bdwgc/lib/bdwgc." + this.staticLibraryExtension), this.GetFileInPackageOrDefault("libil2cpp/lib/libil2cpp." + this.staticLibraryExtension) };
 
-        public virtual bool loadSymbols
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool loadSymbols =>
+            false;
 
-        public virtual string moduleStrippingInformationFolder
-        {
-            get
-            {
-                return Path.Combine(BuildPipeline.GetPlaybackEngineDirectory(EditorUserBuildSettings.activeBuildTarget, BuildOptions.CompressTextures), "Whitelists");
-            }
-        }
+        public virtual string moduleStrippingInformationFolder =>
+            Path.Combine(BuildPipeline.GetPlaybackEngineDirectory(EditorUserBuildSettings.activeBuildTarget, BuildOptions.CompressTextures), "Whitelists");
 
-        public virtual string nativeLibraryFileName
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual string nativeLibraryFileName =>
+            null;
 
-        public virtual string staticLibraryExtension
-        {
-            get
-            {
-                return "a";
-            }
-        }
+        public virtual string staticLibraryExtension =>
+            "a";
 
-        public virtual bool supportsEngineStripping
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool supportsEngineStripping =>
+            false;
 
         public BuildTarget target { virtual get; private set; }
     }

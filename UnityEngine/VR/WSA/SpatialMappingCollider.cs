@@ -81,7 +81,7 @@
                 {
                     if (surface.gameObject == null)
                     {
-                        Debug.LogError(string.Format("A SpatialMappingCollider component can not apply baked data to the surface with id \"{0}\" because its GameObject is null.", bakedData.id.handle));
+                        Debug.LogError($"A SpatialMappingCollider component can not apply baked data to the surface with id "{bakedData.id.handle}" because its GameObject is null.");
                     }
                     else if (bakedData.outputCollider != null)
                     {
@@ -113,10 +113,8 @@
         /// </summary>
         public bool enableCollisions
         {
-            get
-            {
-                return this.m_EnableCollisions;
-            }
+            get => 
+                this.m_EnableCollisions;
             set
             {
                 this.m_EnableCollisions = value;
@@ -129,10 +127,8 @@
         /// </summary>
         public int layer
         {
-            get
-            {
-                return this.m_Layer;
-            }
+            get => 
+                this.m_Layer;
             set
             {
                 this.m_Layer = value;
@@ -145,10 +141,8 @@
         /// </summary>
         public PhysicMaterial material
         {
-            get
-            {
-                return this.m_Material;
-            }
+            get => 
+                this.m_Material;
             set
             {
                 this.m_Material = value;

@@ -717,10 +717,8 @@
             return (identity * avatarOrientation);
         }
 
-        public static bool IsPoseValid(BoneWrapper[] bones)
-        {
-            return (GetPoseError(bones) == 0f);
-        }
+        public static bool IsPoseValid(BoneWrapper[] bones) => 
+            (GetPoseError(bones) == 0f);
 
         public static bool IsPoseValidOnInstance(GameObject modelPrefab, SerializedObject modelImporterSerializedObject)
         {
@@ -1293,31 +1291,19 @@
                 }
             }
 
-            public string humanBoneName
-            {
-                get
-                {
-                    return this.m_HumanBoneName;
-                }
-            }
+            public string humanBoneName =>
+                this.m_HumanBoneName;
 
-            public string messageName
-            {
-                get
-                {
-                    return (ObjectNames.NicifyVariableName(this.m_HumanBoneName) + " Transform '" + ((this.bone == null) ? "None" : this.bone.name) + "'");
-                }
-            }
+            public string messageName =>
+                (ObjectNames.NicifyVariableName(this.m_HumanBoneName) + " Transform '" + ((this.bone == null) ? "None" : this.bone.name) + "'");
 
             [CompilerGenerated]
             private sealed class <Reset>c__AnonStorey0
             {
                 internal string boneName;
 
-                internal bool <>m__0(Transform b)
-                {
-                    return ((b != null) && (b.name == this.boneName));
-                }
+                internal bool <>m__0(Transform b) => 
+                    ((b != null) && (b.name == this.boneName));
             }
         }
 

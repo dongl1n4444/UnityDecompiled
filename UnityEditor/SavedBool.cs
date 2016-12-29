@@ -23,10 +23,8 @@
             }
         }
 
-        public static implicit operator bool(SavedBool s)
-        {
-            return s.value;
-        }
+        public static implicit operator bool(SavedBool s) => 
+            s.value;
 
         public bool value
         {

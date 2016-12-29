@@ -84,10 +84,8 @@
         {
         }
 
-        private Vector2 CalculateOffset(Vector2 delta)
-        {
-            return InternalCalculateOffset(ref this.m_ViewBounds, ref this.m_ContentBounds, this.m_Horizontal, this.m_Vertical, this.m_MovementType, ref delta);
-        }
+        private Vector2 CalculateOffset(Vector2 delta) => 
+            InternalCalculateOffset(ref this.m_ViewBounds, ref this.m_ContentBounds, this.m_Horizontal, this.m_Vertical, this.m_MovementType, ref delta);
 
         private void EnsureLayoutHasRebuilt()
         {
@@ -185,10 +183,8 @@
         /// <summary>
         /// <para>See member in base class.</para>
         /// </summary>
-        public override bool IsActive()
-        {
-            return (base.IsActive() && (this.m_Content != null));
-        }
+        public override bool IsActive() => 
+            (base.IsActive() && (this.m_Content != null));
 
         protected virtual unsafe void LateUpdate()
         {
@@ -435,10 +431,8 @@
             }
         }
 
-        private static float RubberDelta(float overStretching, float viewSize)
-        {
-            return (((1f - (1f / (((Mathf.Abs(overStretching) * 0.55f) / viewSize) + 1f))) * viewSize) * Mathf.Sign(overStretching));
-        }
+        private static float RubberDelta(float overStretching, float viewSize) => 
+            (((1f - (1f / (((Mathf.Abs(overStretching) * 0.55f) / viewSize) + 1f))) * viewSize) * Mathf.Sign(overStretching));
 
         /// <summary>
         /// <para>Sets the anchored position of the content.</para>
@@ -565,10 +559,8 @@
             this.m_Velocity = Vector2.zero;
         }
 
-        Transform ICanvasElement.get_transform()
-        {
-            return base.transform;
-        }
+        Transform ICanvasElement.get_transform() => 
+            base.transform;
 
         /// <summary>
         /// <para>Calculate the bounds the ScrollRect should be using.</para>
@@ -711,10 +703,8 @@
         /// </summary>
         public RectTransform content
         {
-            get
-            {
-                return this.m_Content;
-            }
+            get => 
+                this.m_Content;
             set
             {
                 this.m_Content = value;
@@ -726,10 +716,8 @@
         /// </summary>
         public float decelerationRate
         {
-            get
-            {
-                return this.m_DecelerationRate;
-            }
+            get => 
+                this.m_DecelerationRate;
             set
             {
                 this.m_DecelerationRate = value;
@@ -741,10 +729,8 @@
         /// </summary>
         public float elasticity
         {
-            get
-            {
-                return this.m_Elasticity;
-            }
+            get => 
+                this.m_Elasticity;
             set
             {
                 this.m_Elasticity = value;
@@ -754,34 +740,22 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float flexibleHeight
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleHeight =>
+            -1f;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float flexibleWidth
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleWidth =>
+            -1f;
 
         /// <summary>
         /// <para>Should horizontal scrolling be enabled?</para>
         /// </summary>
         public bool horizontal
         {
-            get
-            {
-                return this.m_Horizontal;
-            }
+            get => 
+                this.m_Horizontal;
             set
             {
                 this.m_Horizontal = value;
@@ -813,10 +787,8 @@
         /// </summary>
         public Scrollbar horizontalScrollbar
         {
-            get
-            {
-                return this.m_HorizontalScrollbar;
-            }
+            get => 
+                this.m_HorizontalScrollbar;
             set
             {
                 if (this.m_HorizontalScrollbar != null)
@@ -837,10 +809,8 @@
         /// </summary>
         public float horizontalScrollbarSpacing
         {
-            get
-            {
-                return this.m_HorizontalScrollbarSpacing;
-            }
+            get => 
+                this.m_HorizontalScrollbarSpacing;
             set
             {
                 this.m_HorizontalScrollbarSpacing = value;
@@ -853,10 +823,8 @@
         /// </summary>
         public ScrollbarVisibility horizontalScrollbarVisibility
         {
-            get
-            {
-                return this.m_HorizontalScrollbarVisibility;
-            }
+            get => 
+                this.m_HorizontalScrollbarVisibility;
             set
             {
                 this.m_HorizontalScrollbarVisibility = value;
@@ -881,10 +849,8 @@
         /// </summary>
         public bool inertia
         {
-            get
-            {
-                return this.m_Inertia;
-            }
+            get => 
+                this.m_Inertia;
             set
             {
                 this.m_Inertia = value;
@@ -894,45 +860,28 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual int layoutPriority
-        {
-            get
-            {
-                return -1;
-            }
-        }
+        public virtual int layoutPriority =>
+            -1;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float minHeight
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float minHeight =>
+            -1f;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float minWidth
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float minWidth =>
+            -1f;
 
         /// <summary>
         /// <para>The behavior to use when the content moves beyond the scroll rect.</para>
         /// </summary>
         public MovementType movementType
         {
-            get
-            {
-                return this.m_MovementType;
-            }
+            get => 
+                this.m_MovementType;
             set
             {
                 this.m_MovementType = value;
@@ -944,10 +893,8 @@
         /// </summary>
         public Vector2 normalizedPosition
         {
-            get
-            {
-                return new Vector2(this.horizontalNormalizedPosition, this.verticalNormalizedPosition);
-            }
+            get => 
+                new Vector2(this.horizontalNormalizedPosition, this.verticalNormalizedPosition);
             set
             {
                 this.SetNormalizedPosition(value.x, 0);
@@ -960,10 +907,8 @@
         /// </summary>
         public ScrollRectEvent onValueChanged
         {
-            get
-            {
-                return this.m_OnValueChanged;
-            }
+            get => 
+                this.m_OnValueChanged;
             set
             {
                 this.m_OnValueChanged = value;
@@ -973,24 +918,14 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float preferredHeight
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float preferredHeight =>
+            -1f;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float preferredWidth
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float preferredWidth =>
+            -1f;
 
         private RectTransform rectTransform
         {
@@ -1009,10 +944,8 @@
         /// </summary>
         public float scrollSensitivity
         {
-            get
-            {
-                return this.m_ScrollSensitivity;
-            }
+            get => 
+                this.m_ScrollSensitivity;
             set
             {
                 this.m_ScrollSensitivity = value;
@@ -1024,10 +957,8 @@
         /// </summary>
         public Vector2 velocity
         {
-            get
-            {
-                return this.m_Velocity;
-            }
+            get => 
+                this.m_Velocity;
             set
             {
                 this.m_Velocity = value;
@@ -1039,10 +970,8 @@
         /// </summary>
         public bool vertical
         {
-            get
-            {
-                return this.m_Vertical;
-            }
+            get => 
+                this.m_Vertical;
             set
             {
                 this.m_Vertical = value;
@@ -1074,10 +1003,8 @@
         /// </summary>
         public Scrollbar verticalScrollbar
         {
-            get
-            {
-                return this.m_VerticalScrollbar;
-            }
+            get => 
+                this.m_VerticalScrollbar;
             set
             {
                 if (this.m_VerticalScrollbar != null)
@@ -1098,10 +1025,8 @@
         /// </summary>
         public float verticalScrollbarSpacing
         {
-            get
-            {
-                return this.m_VerticalScrollbarSpacing;
-            }
+            get => 
+                this.m_VerticalScrollbarSpacing;
             set
             {
                 this.m_VerticalScrollbarSpacing = value;
@@ -1114,10 +1039,8 @@
         /// </summary>
         public ScrollbarVisibility verticalScrollbarVisibility
         {
-            get
-            {
-                return this.m_VerticalScrollbarVisibility;
-            }
+            get => 
+                this.m_VerticalScrollbarVisibility;
             set
             {
                 this.m_VerticalScrollbarVisibility = value;
@@ -1130,10 +1053,8 @@
         /// </summary>
         public RectTransform viewport
         {
-            get
-            {
-                return this.m_Viewport;
-            }
+            get => 
+                this.m_Viewport;
             set
             {
                 this.m_Viewport = value;

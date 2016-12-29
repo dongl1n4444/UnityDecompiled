@@ -18,7 +18,7 @@ internal class Library
     public readonly bool Process;
     public bool WinMd;
 
-    public Library(string name, bool native, bool winmd, bool process, [Optional, DefaultParameterValue(null)] string directory)
+    public Library(string name, bool native, bool winmd, bool process, string directory = null)
     {
         this.Name = name;
         this.Native = native;
@@ -41,20 +41,14 @@ internal class Library
         return reference;
     }
 
-    public static bool IsAnyCpuTag(string arch)
-    {
-        return IsTag(arch, "AnyCPU");
-    }
+    public static bool IsAnyCpuTag(string arch) => 
+        IsTag(arch, "AnyCPU");
 
-    public static bool IsPlayerTag(string arch)
-    {
-        return IsTag(arch, "Player");
-    }
+    public static bool IsPlayerTag(string arch) => 
+        IsTag(arch, "Player");
 
-    private static bool IsTag(string arch, string tag)
-    {
-        return (string.IsNullOrEmpty(arch) || string.Equals(arch, tag, StringComparison.InvariantCultureIgnoreCase));
-    }
+    private static bool IsTag(string arch, string tag) => 
+        (string.IsNullOrEmpty(arch) || string.Equals(arch, tag, StringComparison.InvariantCultureIgnoreCase));
 
     public void RegisterArch(string arch)
     {
@@ -64,7 +58,7 @@ internal class Library
         }
         if (this._archs.Contains(arch))
         {
-            throw new Exception(string.Format("{0} already contains {1} architecture.", this.Name, arch));
+            throw new Exception($"{this.Name} already contains {arch} architecture.");
         }
         this._archs.Add(arch);
     }
@@ -81,24 +75,14 @@ internal class Library
         }
     }
 
-    public IEnumerable<string> Archs
-    {
-        get
-        {
-            return this._archs;
-        }
-    }
+    public IEnumerable<string> Archs =>
+        this._archs;
 
-    public IEnumerable<string> Files
-    {
-        get
-        {
-            return new <>c__Iterator0 { 
-                $this = this,
-                $PC = -2
-            };
-        }
-    }
+    public IEnumerable<string> Files =>
+        new <>c__Iterator0 { 
+            $this=this,
+            $PC=-2
+        };
 
     public bool Player
     {
@@ -112,13 +96,8 @@ internal class Library
         }
     }
 
-    public string Reference
-    {
-        get
-        {
-            return (this.Name + (!this.WinMd ? ".dll" : ".winmd"));
-        }
-    }
+    public string Reference =>
+        (this.Name + (!this.WinMd ? ".dll" : ".winmd"));
 
     public string ReferencePath
     {
@@ -204,28 +183,14 @@ internal class Library
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-        string IEnumerator<string>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        string IEnumerator<string>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 }
 

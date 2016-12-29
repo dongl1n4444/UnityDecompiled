@@ -19,10 +19,8 @@
         {
         }
 
-        public static MethodDefinition SerializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider)
-        {
-            return new SerializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
-        }
+        public static MethodDefinition SerializeMethodDefinitionFor(TypeDefinition typeDef, SerializationBridgeProvider serializationBridgeProvider) => 
+            new SerializeMethodEmitter(typeDef, serializationBridgeProvider).MethodDefinition;
 
         protected override void WriteSequenceLength(string fieldName, Action emitSequenceLength)
         {
@@ -31,21 +29,11 @@
             base.Callvirt(this.SerializedStateWriterInterface, base.WriteMethodNameFor(base.Import(typeof(int))));
         }
 
-        protected override TypeDefinition SerializedStateWriterInterface
-        {
-            get
-            {
-                return base._serializationBridgeProvider.SerializedStateWriterInterface;
-            }
-        }
+        protected override TypeDefinition SerializedStateWriterInterface =>
+            base._serializationBridgeProvider.SerializedStateWriterInterface;
 
-        protected override string SerializeMethodName
-        {
-            get
-            {
-                return "Unity_Serialize";
-            }
-        }
+        protected override string SerializeMethodName =>
+            "Unity_Serialize";
     }
 }
 

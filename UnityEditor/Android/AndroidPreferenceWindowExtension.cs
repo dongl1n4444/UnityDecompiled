@@ -18,10 +18,8 @@
         private string m_AndroidSdkPath = string.Empty;
         private string m_JdkPath = string.Empty;
 
-        public bool HasExternalApplications()
-        {
-            return true;
-        }
+        public bool HasExternalApplications() => 
+            true;
 
         public void ReadPreferences()
         {
@@ -48,7 +46,8 @@
                 <>f__am$cache2 = path => AndroidNdkRoot.Browse(path);
             }
             this.ToolLocation("NDK", ref this.m_AndroidNdkPath, AndroidNdkRoot.DownloadUrl, <>f__am$cache2);
-            EditorGUILayout.HelpBox(string.Format("IL2CPP requires that you have Android NDK {0} installed.\nIf you are not targeting IL2CPP you can leave this field empty.", "r10e"), MessageType.Info);
+            EditorGUILayout.HelpBox($"IL2CPP requires that you have Android NDK {"r10e"} installed.
+If you are not targeting IL2CPP you can leave this field empty.", MessageType.Info);
         }
 
         private void ToolLocation(string title, ref string pathRef, string downloadURL, BrowseFunc Browse)

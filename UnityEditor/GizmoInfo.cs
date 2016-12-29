@@ -82,61 +82,26 @@
             this.m_Point2 = this.m_Center - ((Vector2) (vector * this.m_Length));
         }
 
-        public float angle
-        {
-            get
-            {
-                return this.m_Angle;
-            }
-        }
+        public float angle =>
+            this.m_Angle;
 
-        public Vector2 center
-        {
-            get
-            {
-                return this.m_Center;
-            }
-        }
+        public Vector2 center =>
+            this.m_Center;
 
-        public float length
-        {
-            get
-            {
-                return this.m_Length;
-            }
-        }
+        public float length =>
+            this.m_Length;
 
-        public Vector4 plane
-        {
-            get
-            {
-                return this.m_Plane;
-            }
-        }
+        public Vector4 plane =>
+            this.m_Plane;
 
-        public Vector4 planeOrtho
-        {
-            get
-            {
-                return this.m_PlaneOrtho;
-            }
-        }
+        public Vector4 planeOrtho =>
+            this.m_PlaneOrtho;
 
-        public Vector2 point1
-        {
-            get
-            {
-                return this.m_Point1;
-            }
-        }
+        public Vector2 point1 =>
+            this.m_Point1;
 
-        public Vector2 point2
-        {
-            get
-            {
-                return this.m_Point2;
-            }
-        }
+        public Vector2 point2 =>
+            this.m_Point2;
     }
 }
 

@@ -201,10 +201,8 @@
         /// </summary>
         /// <param name="str">String to generate.</param>
         /// <param name="settings">Settings.</param>
-        public bool Populate(string str, TextGenerationSettings settings)
-        {
-            return (this.PopulateWithError(str, settings) == TextGenerationError.None);
-        }
+        public bool Populate(string str, TextGenerationSettings settings) => 
+            (this.PopulateWithError(str, settings) == TextGenerationError.None);
 
         private TextGenerationError PopulateWithError(string str, TextGenerationSettings settings)
         {
@@ -287,10 +285,8 @@
             return flag;
         }
 
-        internal bool Populate_Internal_cpp(string str, Font font, Color color, int fontSize, float scaleFactor, float lineSpacing, FontStyle style, bool richText, bool resizeTextForBestFit, int resizeTextMinSize, int resizeTextMaxSize, int verticalOverFlow, int horizontalOverflow, bool updateBounds, TextAnchor anchor, float extentsX, float extentsY, float pivotX, float pivotY, bool generateOutOfBounds, bool alignByGeometry, out uint error)
-        {
-            return INTERNAL_CALL_Populate_Internal_cpp(this, str, font, ref color, fontSize, scaleFactor, lineSpacing, style, richText, resizeTextForBestFit, resizeTextMinSize, resizeTextMaxSize, verticalOverFlow, horizontalOverflow, updateBounds, anchor, extentsX, extentsY, pivotX, pivotY, generateOutOfBounds, alignByGeometry, out error);
-        }
+        internal bool Populate_Internal_cpp(string str, Font font, Color color, int fontSize, float scaleFactor, float lineSpacing, FontStyle style, bool richText, bool resizeTextForBestFit, int resizeTextMinSize, int resizeTextMaxSize, int verticalOverFlow, int horizontalOverflow, bool updateBounds, TextAnchor anchor, float extentsX, float extentsY, float pivotX, float pivotY, bool generateOutOfBounds, bool alignByGeometry, out uint error) => 
+            INTERNAL_CALL_Populate_Internal_cpp(this, str, font, ref color, fontSize, scaleFactor, lineSpacing, style, richText, resizeTextForBestFit, resizeTextMinSize, resizeTextMaxSize, verticalOverFlow, horizontalOverflow, updateBounds, anchor, extentsX, extentsY, pivotX, pivotY, generateOutOfBounds, alignByGeometry, out error);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_Populate_Internal_cpp(TextGenerator self, string str, Font font, ref Color color, int fontSize, float scaleFactor, float lineSpacing, FontStyle style, bool richText, bool resizeTextForBestFit, int resizeTextMinSize, int resizeTextMaxSize, int verticalOverFlow, int horizontalOverflow, bool updateBounds, TextAnchor anchor, float extentsX, float extentsY, float pivotX, float pivotY, bool generateOutOfBounds, bool alignByGeometry, out uint error);
@@ -329,13 +325,8 @@
         /// <summary>
         /// <para>The number of characters that have been generated and are included in the visible lines.</para>
         /// </summary>
-        public int characterCountVisible
-        {
-            get
-            {
-                return (this.characterCount - 1);
-            }
-        }
+        public int characterCountVisible =>
+            (this.characterCount - 1);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void GetCharactersInternal(object characters);
         /// <summary>

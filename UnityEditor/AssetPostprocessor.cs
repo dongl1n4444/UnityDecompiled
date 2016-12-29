@@ -14,18 +14,14 @@
         /// <summary>
         /// <para>Override the order in which importers are processed.</para>
         /// </summary>
-        public virtual int GetPostprocessOrder()
-        {
-            return 0;
-        }
+        public virtual int GetPostprocessOrder() => 
+            0;
 
         /// <summary>
         /// <para>Returns the version of the asset postprocessor.</para>
         /// </summary>
-        public virtual uint GetVersion()
-        {
-            return 0;
-        }
+        public virtual uint GetVersion() => 
+            0;
 
         /// <summary>
         /// <para>Logs an import error message to the console.</para>
@@ -74,23 +70,16 @@
         /// <summary>
         /// <para>Reference to the asset importer.</para>
         /// </summary>
-        public AssetImporter assetImporter
-        {
-            get
-            {
-                return AssetImporter.GetAtPath(this.assetPath);
-            }
-        }
+        public AssetImporter assetImporter =>
+            AssetImporter.GetAtPath(this.assetPath);
 
         /// <summary>
         /// <para>The path name of the asset being imported.</para>
         /// </summary>
         public string assetPath
         {
-            get
-            {
-                return this.m_PathName;
-            }
+            get => 
+                this.m_PathName;
             set
             {
                 this.m_PathName = value;
@@ -100,10 +89,8 @@
         [Obsolete("To set or get the preview, call EditorUtility.SetAssetPreview or AssetPreview.GetAssetPreview instead", true)]
         public Texture2D preview
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }

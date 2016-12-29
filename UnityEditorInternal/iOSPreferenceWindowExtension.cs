@@ -12,10 +12,8 @@
         private ProvisioningProfile m_DefaultiOSProvisioningProfile = null;
         private ProvisioningProfile m_DefaulttvOSProvisioningProfile = null;
 
-        public bool HasExternalApplications()
-        {
-            return true;
-        }
+        public bool HasExternalApplications() => 
+            true;
 
         public void ReadPreferences()
         {

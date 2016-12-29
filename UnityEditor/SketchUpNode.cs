@@ -36,10 +36,8 @@
 
         public bool Enabled
         {
-            get
-            {
-                return this.Info.enabled;
-            }
+            get => 
+                this.Info.enabled;
             set
             {
                 if (this.Info.enabled != value)

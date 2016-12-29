@@ -13,10 +13,8 @@
 
     internal static class UWPReferences
     {
-        private static string CombinePaths(params string[] paths)
-        {
-            return FileUtil.CombinePaths(paths);
-        }
+        private static string CombinePaths(params string[] paths) => 
+            FileUtil.CombinePaths(paths);
 
         private static UWPExtension[] GetExtensions(string folder, string version)
         {
@@ -78,7 +76,7 @@
             XElement element = XDocument.Load(uri).Element("ApplicationPlatform");
             if (element.Attribute("name").Value != "UAP")
             {
-                throw new Exception(string.Format("Invalid platform manifest at \"{0}\".", uri));
+                throw new Exception($"Invalid platform manifest at "{uri}".");
             }
             XElement containedApiContractsElement = element.Element("ContainedApiContracts");
             return GetReferences(referencesFolder, containedApiContractsElement);
@@ -103,7 +101,7 @@
                     source.Add(str5);
                 }
             }
-            return Enumerable.ToArray<string>(source);
+            return source.ToArray<string>();
         }
 
         private static string[] GetReferences(string referencesFolder, XElement containedApiContractsElement)
@@ -162,7 +160,7 @@
         {
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <Name>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string[] <References>k__BackingField;
 
             public UWPExtension(string manifest, string referencesFolder)
@@ -170,7 +168,7 @@
                 XElement element = XDocument.Load(manifest).Element("FileList");
                 if (element.Attribute("TargetPlatform").Value != "UAP")
                 {
-                    throw new Exception(string.Format("Invalid extension manifest at \"{0}\".", manifest));
+                    throw new Exception($"Invalid extension manifest at "{manifest}".");
                 }
                 this.Name = element.Attribute("DisplayName").Value;
                 XElement containedApiContractsElement = element.Element("ContainedApiContracts");

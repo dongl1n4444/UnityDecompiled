@@ -38,10 +38,8 @@
             this.FrameItem(index);
         }
 
-        private bool CanBeginRename()
-        {
-            return (!this.GetRenameOverlay().IsRenaming() && (this.m_ReorderableList.index >= 0));
-        }
+        private bool CanBeginRename() => 
+            (!this.GetRenameOverlay().IsRenaming() && (this.m_ReorderableList.index >= 0));
 
         private void CommandHandling()
         {
@@ -118,15 +116,11 @@
             this.m_FrameIndex = index;
         }
 
-        private RenameOverlay GetRenameOverlay()
-        {
-            return this.m_State.m_RenameOverlay;
-        }
+        private RenameOverlay GetRenameOverlay() => 
+            this.m_State.m_RenameOverlay;
 
-        public bool IsRenamingIndex(int index)
-        {
-            return ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == index)) && !this.GetRenameOverlay().isWaitingForDelay);
-        }
+        public bool IsRenamingIndex(int index) => 
+            ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == index)) && !this.GetRenameOverlay().isWaitingForDelay);
 
         private void KeyboardHandling()
         {
@@ -279,21 +273,11 @@
             }
         }
 
-        public GUIStyle elementStyleRightAligned
-        {
-            get
-            {
-                return s_Styles.reorderableListLabelRightAligned;
-            }
-        }
+        public GUIStyle elementStyleRightAligned =>
+            s_Styles.reorderableListLabelRightAligned;
 
-        public ReorderableList list
-        {
-            get
-            {
-                return this.m_ReorderableList;
-            }
-        }
+        public ReorderableList list =>
+            this.m_ReorderableList;
 
         [Serializable]
         public class State

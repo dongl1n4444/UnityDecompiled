@@ -24,10 +24,8 @@
 
         internal RenderBufferLoadAction loadAction
         {
-            get
-            {
-                return (RenderBufferLoadAction) RenderBufferHelper.GetLoadAction(out this);
-            }
+            get => 
+                ((RenderBufferLoadAction) RenderBufferHelper.GetLoadAction(out this));
             set
             {
                 this.SetLoadAction(value);
@@ -35,10 +33,8 @@
         }
         internal RenderBufferStoreAction storeAction
         {
-            get
-            {
-                return (RenderBufferStoreAction) RenderBufferHelper.GetStoreAction(out this);
-            }
+            get => 
+                ((RenderBufferStoreAction) RenderBufferHelper.GetStoreAction(out this));
             set
             {
                 this.SetStoreAction(value);
@@ -47,10 +43,8 @@
         /// <summary>
         /// <para>Returns native RenderBuffer. Be warned this is not native Texture, but rather pointer to unity struct that can be used with native unity API. Currently such API exists only on iOS.</para>
         /// </summary>
-        public IntPtr GetNativeRenderBufferPtr()
-        {
-            return RenderBufferHelper.GetNativeRenderBufferPtr(this.m_BufferPtr);
-        }
+        public IntPtr GetNativeRenderBufferPtr() => 
+            RenderBufferHelper.GetNativeRenderBufferPtr(this.m_BufferPtr);
     }
 }
 

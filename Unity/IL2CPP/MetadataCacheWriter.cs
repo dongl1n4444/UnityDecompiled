@@ -78,23 +78,21 @@
         {
             if ((dataStream.Position % 4L) != 0L)
             {
-                throw new ArgumentException(string.Format("Data stream is not aligned to minimum alignment of {0}", 4), "dataStream");
+                throw new ArgumentException($"Data stream is not aligned to minimum alignment of {4}", "dataStream");
             }
             if ((stream.Position % 4L) != 0L)
             {
-                throw new ArgumentException(string.Format("Stream is not aligned to minimum alignment of {0}", 4), "stream");
+                throw new ArgumentException($"Stream is not aligned to minimum alignment of {4}", "stream");
             }
             StatsService.RecordMetadataStream(name, stream.Position);
-            StreamExtensions.WriteLongAsInt(headerStream, 0x100L + dataStream.Position);
-            StreamExtensions.WriteLongAsInt(headerStream, stream.Position);
+            headerStream.WriteLongAsInt(0x100L + dataStream.Position);
+            headerStream.WriteLongAsInt(stream.Position);
             stream.Seek(0L, SeekOrigin.Begin);
             stream.CopyTo(dataStream);
         }
 
-        private static TypeReference BaseTypeFor(TypeDefinition type)
-        {
-            return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type).Resolve(type.Resolve().BaseType);
-        }
+        private static TypeReference BaseTypeFor(TypeDefinition type) => 
+            Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type).Resolve(type.Resolve().BaseType);
 
         private static PackingSize ConvertPackingSizeToCompressedEnum(int packingSize)
         {
@@ -123,7 +121,7 @@
                     {
                         if (packingSize != 0x80)
                         {
-                            throw new InvalidOperationException(string.Format("The packing size of {0} is not valid. Valid values are 0, 1, 2, 4, 8, 16, 32, 64, or 128.", packingSize));
+                            throw new InvalidOperationException($"The packing size of {packingSize} is not valid. Valid values are 0, 1, 2, 4, 8, 16, 32, 64, or 128.");
                         }
                         return PackingSize.OneHundredTwentyEight;
                     }
@@ -148,9 +146,9 @@
 
         private static TypeReference ElementTypeFor(TypeDefinition type)
         {
-            if (Unity.IL2CPP.Extensions.IsEnum(type))
+            if (type.IsEnum())
             {
-                return Unity.IL2CPP.Extensions.GetUnderlyingEnumType(type);
+                return type.GetUnderlyingEnumType();
             }
             return type;
         }
@@ -165,7 +163,7 @@
 
         private static CppCodeWriter GetMetadataCodeWriter(NPath outputDir, string tableName)
         {
-            string[] append = new string[] { string.Format("Il2Cpp{0}Table.cpp", tableName) };
+            string[] append = new string[] { $"Il2Cpp{tableName}Table.cpp" };
             SourceCodeWriter writer = new SourceCodeWriter(outputDir.Combine(append));
             IncludeWriter.WriteRegistrationIncludes(writer);
             return writer;
@@ -173,11 +171,11 @@
 
         private static string InstanceSizeFor(TypeDefinition type)
         {
-            if (Unity.IL2CPP.Extensions.IsInterface(type))
+            if (type.IsInterface())
             {
                 return "0";
             }
-            return string.Format("sizeof ({0}){1}", Naming.ForType(type), !Unity.IL2CPP.Extensions.IsValueType(type) ? string.Empty : "+ sizeof (Il2CppObject)");
+            return $"sizeof ({Naming.ForType(type)}){(!type.IsValueType() ? string.Empty : "+ sizeof (Il2CppObject)")}";
         }
 
         private static string OffsetOf(FieldDefinition field)
@@ -186,7 +184,7 @@
             {
                 return "0";
             }
-            if (Unity.IL2CPP.Extensions.IsThreadStatic(field))
+            if (field.IsThreadStatic())
             {
                 return "THREAD_STATIC_FIELD_OFFSET";
             }
@@ -194,11 +192,11 @@
             {
                 return "0";
             }
-            if (Unity.IL2CPP.Extensions.IsNormalStatic(field))
+            if (field.IsNormalStatic())
             {
-                return string.Format("{0}::{1}()", Naming.ForStaticFieldsStruct(field.DeclaringType), Naming.ForFieldOffsetGetter(field));
+                return $"{Naming.ForStaticFieldsStruct(field.DeclaringType)}::{Naming.ForFieldOffsetGetter(field)}()";
             }
-            return string.Format("{0}::{1}(){2}", Naming.ForTypeNameOnly(field.DeclaringType), Naming.ForFieldOffsetGetter(field), !Unity.IL2CPP.Extensions.IsValueType(field.DeclaringType) ? "" : (" + static_cast<int32_t>(sizeof(" + Naming.ForType(TypeProvider.SystemObject) + "))"));
+            return $"{Naming.ForTypeNameOnly(field.DeclaringType)}::{Naming.ForFieldOffsetGetter(field)}(){(!field.DeclaringType.IsValueType() ? "" : (" + static_cast<int32_t>(sizeof(" + Naming.ForType(TypeProvider.SystemObject) + "))"))}";
         }
 
         private static string Sizes(TypeDefinition type)
@@ -211,19 +209,17 @@
             {
                 <>f__am$cacheB = new Func<FieldDefinition, bool>(null, (IntPtr) <Sizes>m__B);
             }
-            args[2] = (!Enumerable.Any<FieldDefinition>(type.Fields, <>f__am$cacheB) && !Unity.IL2CPP.Extensions.StoresNonFieldsInStaticFields(type)) ? "0" : string.Format("sizeof({0})", Naming.ForStaticFieldsStruct(type));
+            args[2] = (!type.Fields.Any<FieldDefinition>(<>f__am$cacheB) && !type.StoresNonFieldsInStaticFields()) ? "0" : $"sizeof({Naming.ForStaticFieldsStruct(type)})";
             if (!type.HasGenericParameters && (<>f__am$cacheC == null))
             {
                 <>f__am$cacheC = new Func<FieldDefinition, bool>(null, (IntPtr) <Sizes>m__C);
             }
-            args[3] = !Enumerable.Any<FieldDefinition>(type.Fields, <>f__am$cacheC) ? "0" : string.Format("sizeof({0})", Naming.ForThreadFieldsStruct(type));
+            args[3] = !type.Fields.Any<FieldDefinition>(<>f__am$cacheC) ? "0" : $"sizeof({Naming.ForThreadFieldsStruct(type)})";
             return string.Format("{0}, {1}, {2}, {3}", args);
         }
 
-        internal static bool TypeDoesNotExceedMaximumRecursion(TypeReference type)
-        {
-            return (!type.IsGenericInstance || !GenericsUtilities.CheckForMaximumRecursion((GenericInstanceType) type));
-        }
+        internal static bool TypeDoesNotExceedMaximumRecursion(TypeReference type) => 
+            (!type.IsGenericInstance || !GenericsUtilities.CheckForMaximumRecursion((GenericInstanceType) type));
 
         internal static bool TypesDoNotExceedMaximumRecursion(IEnumerable<TypeReference> types)
         {
@@ -231,7 +227,7 @@
             {
                 <>f__mg$cache1 = new Func<TypeReference, bool>(null, (IntPtr) TypeDoesNotExceedMaximumRecursion);
             }
-            return Enumerable.All<TypeReference>(types, <>f__mg$cache1);
+            return types.All<TypeReference>(<>f__mg$cache1);
         }
 
         public static TableInfo WriteFieldTable(CppCodeWriter writer, List<TableInfo> fieldTableInfos)
@@ -240,7 +236,7 @@
             {
                 <>f__am$cache7 = new Func<TableInfo, bool>(null, (IntPtr) <WriteFieldTable>m__7);
             }
-            foreach (TableInfo info in Enumerable.ToArray<TableInfo>(Enumerable.Where<TableInfo>(fieldTableInfos, <>f__am$cache7)))
+            foreach (TableInfo info in fieldTableInfos.Where<TableInfo>(<>f__am$cache7).ToArray<TableInfo>())
             {
                 object[] args = new object[] { info.Name, info.Count };
                 writer.WriteLine("extern const int32_t {0}[{1}];", args);
@@ -280,7 +276,7 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(null, (IntPtr) <WriteMetadata>m__1);
             }
-            storey.fieldRefs = Enumerable.ToArray<KeyValuePair<int, int>>(Enumerable.Select<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(Enumerable.OrderBy<KeyValuePair<FieldReference, uint>, uint>(FieldReferenceCollector.Fields, <>f__am$cache0), <>f__am$cache1));
+            storey.fieldRefs = FieldReferenceCollector.Fields.OrderBy<KeyValuePair<FieldReference, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(<>f__am$cache1).ToArray<KeyValuePair<int, int>>();
             using (TinyProfiler.Section("GenericClasses", ""))
             {
                 using (CppCodeWriter writer3 = GetMetadataCodeWriter(outputDir, "GenericClass"))
@@ -293,7 +289,7 @@
                     {
                         <>f__am$cache3 = new Func<KeyValuePair<Il2CppTypeData, int>, TypeReference>(null, (IntPtr) <WriteMetadata>m__3);
                     }
-                    TypeReference[] items = Enumerable.ToArray<TypeReference>(Enumerable.Distinct<TypeReference>(Enumerable.Select<KeyValuePair<Il2CppTypeData, int>, TypeReference>(Enumerable.Where<KeyValuePair<Il2CppTypeData, int>>(Il2CppTypeCollectorReader.Items, <>f__am$cache2), <>f__am$cache3), new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()));
+                    TypeReference[] items = Il2CppTypeCollectorReader.Items.Where<KeyValuePair<Il2CppTypeData, int>>(<>f__am$cache2).Select<KeyValuePair<Il2CppTypeData, int>, TypeReference>(<>f__am$cache3).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()).ToArray<TypeReference>();
                     foreach (TypeReference reference in items)
                     {
                         writer3.WriteExternForGenericClass(reference);
@@ -321,7 +317,7 @@
                     {
                         <>f__am$cache5 = new Func<MethodReference, bool>(null, (IntPtr) <WriteMetadata>m__5);
                     }
-                    MethodReference[] referenceArray3 = Enumerable.ToArray<MethodReference>(Enumerable.Where<MethodReference>(Il2CppGenericMethodCollector.Items.Keys, <>f__am$cache5));
+                    MethodReference[] referenceArray3 = Il2CppGenericMethodCollector.Items.Keys.Where<MethodReference>(<>f__am$cache5).ToArray<MethodReference>();
                     source.Add(MetadataWriter.WriteTable<MethodReference>(writer5, "extern const Il2CppGenericMethodFunctionsDefinitions", "s_Il2CppGenericMethodFunctions", referenceArray3, new Func<MethodReference, string>(storey, (IntPtr) this.<>m__0)));
                 }
             }
@@ -348,7 +344,7 @@
                     int num2 = 0;
                     List<TableInfo> fieldTableInfos = new List<TableInfo>();
                     int num3 = 0;
-                    foreach (List<TypeDefinition> list3 in Unity.IL2CPP.Extensions.Chunk<TypeDefinition>(storey.metadataCollector.GetTypeInfos(), 100))
+                    foreach (List<TypeDefinition> list3 in storey.metadataCollector.GetTypeInfos().Chunk<TypeDefinition>(100))
                     {
                         using (CppCodeWriter writer9 = GetMetadataCodeWriter(outputDir, "CompilerCalculateTypeValues_" + num2))
                         {
@@ -390,7 +386,7 @@
                     {
                         <>f__am$cache6 = new Func<TableInfo, IEnumerable<string>>(null, (IntPtr) <WriteMetadata>m__6);
                     }
-                    writer10.WriteStructInitializer("extern const Il2CppMetadataRegistration", "g_MetadataRegistration", Enumerable.SelectMany<TableInfo, string>(source, <>f__am$cache6));
+                    writer10.WriteStructInitializer("extern const Il2CppMetadataRegistration", "g_MetadataRegistration", source.SelectMany<TableInfo, string>(<>f__am$cache6));
                 }
             }
             string[] textArray6 = new string[] { "Metadata" };
@@ -410,7 +406,7 @@
                                 using (MemoryStream stream5 = new MemoryStream())
                                 {
                                     new StringLiteralWriter().Write(stream4, stream5);
-                                    StreamExtensions.AlignTo(stream5, 4);
+                                    stream5.AlignTo(4);
                                     AddStreamAndRecordHeader("String Literals", stream2, stream3, stream4);
                                     AddStreamAndRecordHeader("String Literal Data", stream2, stream3, stream5);
                                 }
@@ -445,8 +441,8 @@
                         WriteMetadataToStream("Attribute Types", stream2, stream3, new Action<MemoryStream>(storey.<>m__1B));
                         WriteMetadataToStream("Unresolved Virtual Call Parameter Types", stream2, stream3, new Action<MemoryStream>(storey.<>m__1C));
                         WriteMetadataToStream("Unresolved Virtual Call Parameter Ranges", stream2, stream3, new Action<MemoryStream>(storey.<>m__1D));
-                        StreamExtensions.WriteUInt(stream, 0xfab11baf);
-                        StreamExtensions.WriteInt(stream, 0x16);
+                        stream.WriteUInt(0xfab11baf);
+                        stream.WriteInt(0x16);
                         stream2.Seek(0L, SeekOrigin.Begin);
                         stream2.CopyTo(stream);
                         stream3.Seek(0L, SeekOrigin.Begin);
@@ -474,7 +470,7 @@
             {
                 <>f__am$cache9 = new Func<TypeDefinition, int, string>(null, (IntPtr) <WriteTypeDefinitionSizesTable>m__9);
             }
-            string[] items = Enumerable.ToArray<string>(Enumerable.Select<TypeDefinition, string>(metadataCollector.GetTypeInfos(), <>f__am$cache9));
+            string[] items = metadataCollector.GetTypeInfos().Select<TypeDefinition, string>(<>f__am$cache9).ToArray<string>();
             foreach (string str in items)
             {
                 object[] args = new object[] { str };
@@ -502,23 +498,21 @@
             internal UnresolvedVirtualsTablesInfo virtualCallTables;
             internal VTableBuilder vTableBuilder;
 
-            internal string <>m__0(MethodReference m)
-            {
-                return MetadataCacheWriter.FormatMethodTableEntry(m, this.methodTables.MethodPointers);
-            }
+            internal string <>m__0(MethodReference m) => 
+                MetadataCacheWriter.FormatMethodTableEntry(m, this.methodTables.MethodPointers);
 
             internal void <>m__1(MemoryStream stream)
             {
-                byte[] buffer = Enumerable.ToArray<byte>(this.metadataCollector.GetStringData());
+                byte[] buffer = this.metadataCollector.GetStringData().ToArray<byte>();
                 stream.Write(buffer, 0, buffer.Length);
-                StreamExtensions.AlignTo(stream, 4);
+                stream.AlignTo(4);
             }
 
             internal void <>m__10(MemoryStream stream)
             {
                 foreach (uint num in this.metadataCollector.GetVTableMethods())
                 {
-                    StreamExtensions.WriteUInt(stream, num);
+                    stream.WriteUInt(num);
                 }
             }
 
@@ -526,8 +520,8 @@
             {
                 foreach (KeyValuePair<int, int> pair in this.metadataCollector.GetInterfaceOffsets())
                 {
-                    StreamExtensions.WriteInt(stream, pair.Key);
-                    StreamExtensions.WriteInt(stream, pair.Value);
+                    stream.WriteInt(pair.Key);
+                    stream.WriteInt(pair.Value);
                 }
             }
 
@@ -537,7 +531,7 @@
                 {
                     int count = 0;
                     int num2 = 0;
-                    if (!definition.IsInterface || Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeType(definition))
+                    if (!definition.IsInterface || definition.IsComOrWindowsRuntimeType())
                     {
                         VTable table = this.vTableBuilder.VTableFor(definition, null);
                         count = table.Slots.Count;
@@ -554,63 +548,63 @@
                         {
                             <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <>m__1E);
                         }
-                        MethodDefinition[] definitionArray = Enumerable.ToArray<MethodDefinition>(Enumerable.Where<MethodDefinition>(definition.Methods, <>f__am$cache0));
+                        MethodDefinition[] definitionArray = definition.Methods.Where<MethodDefinition>(<>f__am$cache0).ToArray<MethodDefinition>();
                         length = definitionArray.Length;
                         if (length != 0)
                         {
                             methodIndex = this.metadataCollector.GetMethodIndex(definitionArray[0]);
                         }
                     }
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Namespace));
-                    StreamExtensions.WriteUInt(stream, this.attributeCollection.GetIndex(definition));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition, 0));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.Il2CppTypeCollector.GetIndex(new ByReferenceType(definition), 0));
-                    StreamExtensions.WriteInt(stream, (reference2 == null) ? -1 : MetadataCacheWriter.Il2CppTypeCollector.GetIndex(reference2, 0));
-                    StreamExtensions.WriteInt(stream, (type == null) ? -1 : MetadataCacheWriter.Il2CppTypeCollector.GetIndex(type, 0));
-                    StreamExtensions.WriteInt(stream, (reference3 == null) ? -1 : MetadataCacheWriter.Il2CppTypeCollector.GetIndex(reference3, 0));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetRGCTXEntriesStartIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetRGCTXEntriesCount(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetGenericContainerIndex(definition));
-                    if (Unity.IL2CPP.Extensions.IsDelegate(definition))
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Namespace));
+                    stream.WriteUInt(this.attributeCollection.GetIndex(definition));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition, 0));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(new ByReferenceType(definition), 0));
+                    stream.WriteInt((reference2 == null) ? -1 : MetadataCacheWriter.Il2CppTypeCollector.GetIndex(reference2, 0));
+                    stream.WriteInt((type == null) ? -1 : MetadataCacheWriter.Il2CppTypeCollector.GetIndex(type, 0));
+                    stream.WriteInt((reference3 == null) ? -1 : MetadataCacheWriter.Il2CppTypeCollector.GetIndex(reference3, 0));
+                    stream.WriteInt(this.metadataCollector.GetRGCTXEntriesStartIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetRGCTXEntriesCount(definition));
+                    stream.WriteInt(this.metadataCollector.GetGenericContainerIndex(definition));
+                    if (definition.IsDelegate())
                     {
                     }
-                    StreamExtensions.WriteInt(stream, (<>f__am$cache1 != null) ? -1 : this.methodCollector.GetWrapperForDelegateFromManagedToNativedIndex(Enumerable.Single<MethodDefinition>(definition.Methods, <>f__am$cache1)));
-                    StreamExtensions.WriteInt(stream, this.methodCollector.GetTypeMarshalingFunctionsIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.methodCollector.GetCCWMarshalingFunctionIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetGuidIndex(definition));
-                    StreamExtensions.WriteUInt(stream, (uint) definition.Attributes);
-                    StreamExtensions.WriteInt(stream, !definition.HasFields ? -1 : this.metadataCollector.GetFieldIndex(definition.Fields[0]));
-                    StreamExtensions.WriteInt(stream, methodIndex);
-                    StreamExtensions.WriteInt(stream, !definition.HasEvents ? -1 : this.metadataCollector.GetEventIndex(definition.Events[0]));
-                    StreamExtensions.WriteInt(stream, !definition.HasProperties ? -1 : this.metadataCollector.GetPropertyIndex(definition.Properties[0]));
-                    StreamExtensions.WriteInt(stream, !definition.HasNestedTypes ? -1 : this.metadataCollector.GetNestedTypesStartIndex(definition));
-                    StreamExtensions.WriteInt(stream, !definition.HasInterfaces ? -1 : this.metadataCollector.GetInterfacesStartIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetVTableMethodsStartIndex(definition));
-                    StreamExtensions.WriteInt(stream, (definition.IsInterface && !Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeType(definition)) ? -1 : this.metadataCollector.GetInterfaceOffsetsStartIndex(definition));
-                    StreamExtensions.WriteIntAsUShort(stream, length);
-                    StreamExtensions.WriteIntAsUShort(stream, definition.Properties.Count);
-                    StreamExtensions.WriteIntAsUShort(stream, definition.Fields.Count);
-                    StreamExtensions.WriteIntAsUShort(stream, definition.Events.Count);
-                    StreamExtensions.WriteIntAsUShort(stream, definition.NestedTypes.Count);
-                    StreamExtensions.WriteIntAsUShort(stream, count);
-                    StreamExtensions.WriteIntAsUShort(stream, definition.Interfaces.Count);
-                    StreamExtensions.WriteIntAsUShort(stream, num2);
+                    stream.WriteInt((<>f__am$cache1 != null) ? -1 : this.methodCollector.GetWrapperForDelegateFromManagedToNativedIndex(definition.Methods.Single<MethodDefinition>(<>f__am$cache1)));
+                    stream.WriteInt(this.methodCollector.GetTypeMarshalingFunctionsIndex(definition));
+                    stream.WriteInt(this.methodCollector.GetCCWMarshalingFunctionIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetGuidIndex(definition));
+                    stream.WriteUInt((uint) definition.Attributes);
+                    stream.WriteInt(!definition.HasFields ? -1 : this.metadataCollector.GetFieldIndex(definition.Fields[0]));
+                    stream.WriteInt(methodIndex);
+                    stream.WriteInt(!definition.HasEvents ? -1 : this.metadataCollector.GetEventIndex(definition.Events[0]));
+                    stream.WriteInt(!definition.HasProperties ? -1 : this.metadataCollector.GetPropertyIndex(definition.Properties[0]));
+                    stream.WriteInt(!definition.HasNestedTypes ? -1 : this.metadataCollector.GetNestedTypesStartIndex(definition));
+                    stream.WriteInt(!definition.HasInterfaces ? -1 : this.metadataCollector.GetInterfacesStartIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetVTableMethodsStartIndex(definition));
+                    stream.WriteInt((definition.IsInterface && !definition.IsComOrWindowsRuntimeType()) ? -1 : this.metadataCollector.GetInterfaceOffsetsStartIndex(definition));
+                    stream.WriteIntAsUShort(length);
+                    stream.WriteIntAsUShort(definition.Properties.Count);
+                    stream.WriteIntAsUShort(definition.Fields.Count);
+                    stream.WriteIntAsUShort(definition.Events.Count);
+                    stream.WriteIntAsUShort(definition.NestedTypes.Count);
+                    stream.WriteIntAsUShort(count);
+                    stream.WriteIntAsUShort(definition.Interfaces.Count);
+                    stream.WriteIntAsUShort(num2);
                     int num5 = 0;
                     num5 |= ((definition.IsValueType == null) ? 0 : 1) << 0;
                     num5 |= ((definition.IsEnum == null) ? 0 : 1) << 1;
-                    num5 |= ((Unity.IL2CPP.Extensions.HasFinalizer(definition) == null) ? 0 : 1) << 2;
-                    num5 |= ((Unity.IL2CPP.Extensions.HasStaticConstructor(definition) == null) ? 0 : 1) << 3;
+                    num5 |= ((definition.HasFinalizer() == null) ? 0 : 1) << 2;
+                    num5 |= ((definition.HasStaticConstructor() == null) ? 0 : 1) << 3;
                     NativeType? nativeType = null;
                     num5 |= ((MarshalingUtils.IsBlittable(definition, nativeType, 0) == null) ? 0 : 1) << 4;
-                    num5 |= ((Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeType(definition) == null) ? 0 : 1) << 5;
+                    num5 |= ((definition.IsComOrWindowsRuntimeType() == null) ? 0 : 1) << 5;
                     int packingSize = TypeDefinitionWriter.FieldLayoutPackingSizeFor(definition);
                     if (packingSize != -1)
                     {
                         num5 |= ((int) MetadataCacheWriter.ConvertPackingSizeToCompressedEnum(packingSize)) << 6;
                     }
-                    StreamExtensions.WriteInt(stream, num5);
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
+                    stream.WriteInt(num5);
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
                 }
             }
 
@@ -618,8 +612,8 @@
             {
                 foreach (KeyValuePair<int, uint> pair in this.metadataCollector.GetRGCTXEntries())
                 {
-                    StreamExtensions.WriteInt(stream, pair.Key);
-                    StreamExtensions.WriteUInt(stream, pair.Value);
+                    stream.WriteInt(pair.Key);
+                    stream.WriteUInt(pair.Value);
                 }
             }
 
@@ -627,12 +621,12 @@
             {
                 foreach (ModuleDefinition definition in this.metadataCollector.GetModules())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(Path.GetFileName(definition.FullyQualifiedName)));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetAssemblyIndex(definition.Assembly));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetTypeInfoIndex(definition.Types[0]));
-                    StreamExtensions.WriteInt(stream, Enumerable.Count<TypeDefinition>(ModuleDefinitionRocks.GetAllTypes(definition)));
-                    StreamExtensions.WriteInt(stream, (definition.Assembly.EntryPoint != null) ? this.metadataCollector.GetMethodIndex(definition.Assembly.EntryPoint) : -1);
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(Path.GetFileName(definition.FullyQualifiedName)));
+                    stream.WriteInt(this.metadataCollector.GetAssemblyIndex(definition.Assembly));
+                    stream.WriteInt(this.metadataCollector.GetTypeInfoIndex(definition.Types[0]));
+                    stream.WriteInt(definition.GetAllTypes().Count<TypeDefinition>());
+                    stream.WriteInt((definition.Assembly.EntryPoint != null) ? this.metadataCollector.GetMethodIndex(definition.Assembly.EntryPoint) : -1);
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
                 }
             }
 
@@ -641,22 +635,22 @@
                 foreach (AssemblyDefinition definition in this.metadataCollector.GetAssemblies())
                 {
                     int num;
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetModuleIndex(definition.MainModule));
-                    StreamExtensions.WriteInt(stream, (int) this.attributeCollection.GetIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetModuleIndex(definition.MainModule));
+                    stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
                     int firstIndexInReferencedAssemblyTableForAssembly = this.metadataCollector.GetFirstIndexInReferencedAssemblyTableForAssembly(definition, out num);
-                    StreamExtensions.WriteInt(stream, firstIndexInReferencedAssemblyTableForAssembly);
-                    StreamExtensions.WriteInt(stream, num);
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name.Name));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name.Culture));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(Formatter.Stringify(definition.Name.Hash)));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(Formatter.Stringify(definition.Name.PublicKey)));
-                    StreamExtensions.WriteUInt(stream, (uint) definition.Name.HashAlgorithm);
-                    StreamExtensions.WriteInt(stream, definition.Name.Hash.Length);
-                    StreamExtensions.WriteUInt(stream, (uint) definition.Name.Attributes);
-                    StreamExtensions.WriteInt(stream, definition.Name.Version.Major);
-                    StreamExtensions.WriteInt(stream, definition.Name.Version.Minor);
-                    StreamExtensions.WriteInt(stream, definition.Name.Version.Build);
-                    StreamExtensions.WriteInt(stream, definition.Name.Version.Revision);
+                    stream.WriteInt(firstIndexInReferencedAssemblyTableForAssembly);
+                    stream.WriteInt(num);
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name.Name));
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name.Culture));
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(Formatter.Stringify(definition.Name.Hash)));
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(Formatter.Stringify(definition.Name.PublicKey)));
+                    stream.WriteUInt((uint) definition.Name.HashAlgorithm);
+                    stream.WriteInt(definition.Name.Hash.Length);
+                    stream.WriteUInt((uint) definition.Name.Attributes);
+                    stream.WriteInt(definition.Name.Version.Major);
+                    stream.WriteInt(definition.Name.Version.Minor);
+                    stream.WriteInt(definition.Name.Version.Build);
+                    stream.WriteInt(definition.Name.Version.Revision);
                     byte[] buffer = (definition.Name.PublicKeyToken.Length <= 0) ? new byte[8] : definition.Name.PublicKeyToken;
                     foreach (byte num3 in buffer)
                     {
@@ -669,8 +663,8 @@
             {
                 foreach (KeyValuePair<uint, uint> pair in this.usageLists)
                 {
-                    StreamExtensions.WriteUInt(stream, pair.Key);
-                    StreamExtensions.WriteUInt(stream, pair.Value);
+                    stream.WriteUInt(pair.Key);
+                    stream.WriteUInt(pair.Value);
                 }
             }
 
@@ -678,8 +672,8 @@
             {
                 foreach (KeyValuePair<uint, uint> pair in this.usagePairs)
                 {
-                    StreamExtensions.WriteUInt(stream, pair.Key);
-                    StreamExtensions.WriteUInt(stream, pair.Value);
+                    stream.WriteUInt(pair.Key);
+                    stream.WriteUInt(pair.Value);
                 }
             }
 
@@ -687,8 +681,8 @@
             {
                 foreach (KeyValuePair<int, int> pair in this.fieldRefs)
                 {
-                    StreamExtensions.WriteInt(stream, pair.Key);
-                    StreamExtensions.WriteInt(stream, pair.Value);
+                    stream.WriteInt(pair.Key);
+                    stream.WriteInt(pair.Value);
                 }
             }
 
@@ -696,7 +690,7 @@
             {
                 foreach (int num in this.metadataCollector.GetReferencedAssemblyIndiciesIntoAssemblyTable())
                 {
-                    StreamExtensions.WriteInt(stream, num);
+                    stream.WriteInt(num);
                 }
             }
 
@@ -704,8 +698,8 @@
             {
                 foreach (AttributeCollection.AttributeTypeRange range in this.attributeCollection.GetAttributeTypeRanges())
                 {
-                    StreamExtensions.WriteInt(stream, range.Start);
-                    StreamExtensions.WriteInt(stream, range.Count);
+                    stream.WriteInt(range.Start);
+                    stream.WriteInt(range.Count);
                 }
             }
 
@@ -713,7 +707,7 @@
             {
                 foreach (int num in this.attributeCollection.GetAttributeTypeIndices())
                 {
-                    StreamExtensions.WriteInt(stream, num);
+                    stream.WriteInt(num);
                 }
             }
 
@@ -721,7 +715,7 @@
             {
                 foreach (int num in this.virtualCallTables.SignatureTypesInfo)
                 {
-                    StreamExtensions.WriteInt(stream, num);
+                    stream.WriteInt(num);
                 }
             }
 
@@ -729,32 +723,28 @@
             {
                 foreach (Unity.IL2CPP.IoCServices.Range range in this.virtualCallTables.SignatureRangesInfo)
                 {
-                    StreamExtensions.WriteInt(stream, range.start);
-                    StreamExtensions.WriteInt(stream, range.length);
+                    stream.WriteInt(range.start);
+                    stream.WriteInt(range.length);
                 }
             }
 
-            private static bool <>m__1E(MethodDefinition m)
-            {
-                return !Unity.IL2CPP.Extensions.IsStripped(m);
-            }
+            private static bool <>m__1E(MethodDefinition m) => 
+                !m.IsStripped();
 
-            private static bool <>m__1F(MethodDefinition m)
-            {
-                return (m.Name == "Invoke");
-            }
+            private static bool <>m__1F(MethodDefinition m) => 
+                (m.Name == "Invoke");
 
             internal void <>m__2(MemoryStream stream)
             {
                 foreach (EventDefinition definition in this.metadataCollector.GetEvents())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.EventType, 0));
-                    StreamExtensions.WriteInt(stream, (definition.AddMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.AddMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    StreamExtensions.WriteInt(stream, (definition.RemoveMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.RemoveMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    StreamExtensions.WriteInt(stream, (definition.InvokeMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.InvokeMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    StreamExtensions.WriteInt(stream, (int) this.attributeCollection.GetIndex(definition));
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.EventType, 0));
+                    stream.WriteInt((definition.AddMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.AddMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt((definition.RemoveMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.RemoveMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt((definition.InvokeMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.InvokeMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
                 }
             }
 
@@ -762,12 +752,12 @@
             {
                 foreach (PropertyDefinition definition in this.metadataCollector.GetProperties())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name));
-                    StreamExtensions.WriteInt(stream, (definition.GetMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.GetMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    StreamExtensions.WriteInt(stream, (definition.SetMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.SetMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
-                    StreamExtensions.WriteInt(stream, (int) definition.Attributes);
-                    StreamExtensions.WriteInt(stream, (int) this.attributeCollection.GetIndex(definition));
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
+                    stream.WriteInt((definition.GetMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.GetMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt((definition.SetMethod == null) ? -1 : (this.metadataCollector.GetMethodIndex(definition.SetMethod) - this.metadataCollector.GetMethodIndex(definition.DeclaringType.Methods[0])));
+                    stream.WriteInt((int) definition.Attributes);
+                    stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
                 }
             }
 
@@ -775,22 +765,22 @@
             {
                 foreach (MethodDefinition definition in this.metadataCollector.GetMethods())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetTypeInfoIndex(definition.DeclaringType));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.ReturnType, 0));
-                    StreamExtensions.WriteInt(stream, !definition.HasParameters ? -1 : this.metadataCollector.GetParameterIndex(definition.Parameters[0]));
-                    StreamExtensions.WriteInt(stream, (int) this.attributeCollection.GetIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetGenericContainerIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.methodCollector.GetMethodIndex(definition));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.RuntimeInvokerCollectorReader.GetIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.methodCollector.GetReversePInvokeWrapperIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetRGCTXEntriesStartIndex(definition));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetRGCTXEntriesCount(definition));
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
-                    StreamExtensions.WriteUShort(stream, (ushort) definition.Attributes);
-                    StreamExtensions.WriteUShort(stream, (ushort) definition.ImplAttributes);
-                    StreamExtensions.WriteUShort(stream, (ushort) this.vTableBuilder.IndexFor(definition));
-                    StreamExtensions.WriteUShort(stream, (ushort) definition.Parameters.Count);
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
+                    stream.WriteInt(this.metadataCollector.GetTypeInfoIndex(definition.DeclaringType));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.ReturnType, 0));
+                    stream.WriteInt(!definition.HasParameters ? -1 : this.metadataCollector.GetParameterIndex(definition.Parameters[0]));
+                    stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetGenericContainerIndex(definition));
+                    stream.WriteInt(this.methodCollector.GetMethodIndex(definition));
+                    stream.WriteInt(MetadataCacheWriter.RuntimeInvokerCollectorReader.GetIndex(definition));
+                    stream.WriteInt(this.methodCollector.GetReversePInvokeWrapperIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetRGCTXEntriesStartIndex(definition));
+                    stream.WriteInt(this.metadataCollector.GetRGCTXEntriesCount(definition));
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
+                    stream.WriteUShort((ushort) definition.Attributes);
+                    stream.WriteUShort((ushort) definition.ImplAttributes);
+                    stream.WriteUShort((ushort) this.vTableBuilder.IndexFor(definition));
+                    stream.WriteUShort((ushort) definition.Parameters.Count);
                 }
             }
 
@@ -798,9 +788,9 @@
             {
                 foreach (ParameterDefaultValue value2 in this.metadataCollector.GetParameterDefaultValues())
                 {
-                    StreamExtensions.WriteInt(stream, value2._parameterIndex);
-                    StreamExtensions.WriteInt(stream, value2._typeIndex);
-                    StreamExtensions.WriteInt(stream, value2._dataIndex);
+                    stream.WriteInt(value2._parameterIndex);
+                    stream.WriteInt(value2._typeIndex);
+                    stream.WriteInt(value2._dataIndex);
                 }
             }
 
@@ -808,26 +798,26 @@
             {
                 foreach (FieldDefaultValue value2 in this.metadataCollector.GetFieldDefaultValues())
                 {
-                    StreamExtensions.WriteInt(stream, value2._fieldIndex);
-                    StreamExtensions.WriteInt(stream, value2._typeIndex);
-                    StreamExtensions.WriteInt(stream, value2._dataIndex);
+                    stream.WriteInt(value2._fieldIndex);
+                    stream.WriteInt(value2._typeIndex);
+                    stream.WriteInt(value2._dataIndex);
                 }
             }
 
             internal void <>m__7(MemoryStream stream)
             {
-                byte[] buffer = Enumerable.ToArray<byte>(this.metadataCollector.GetDefaultValueData());
+                byte[] buffer = this.metadataCollector.GetDefaultValueData().ToArray<byte>();
                 stream.Write(buffer, 0, buffer.Length);
-                StreamExtensions.AlignTo(stream, 4);
+                stream.AlignTo(4);
             }
 
             internal void <>m__8(MemoryStream stream)
             {
                 foreach (FieldMarshaledSize size in this.metadataCollector.GetFieldMarshaledSizes())
                 {
-                    StreamExtensions.WriteInt(stream, size._fieldIndex);
-                    StreamExtensions.WriteInt(stream, size._typeIndex);
-                    StreamExtensions.WriteInt(stream, size._size);
+                    stream.WriteInt(size._fieldIndex);
+                    stream.WriteInt(size._typeIndex);
+                    stream.WriteInt(size._size);
                 }
             }
 
@@ -835,10 +825,10 @@
             {
                 foreach (ParameterDefinition definition in this.metadataCollector.GetParameters())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name));
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
-                    StreamExtensions.WriteInt(stream, (int) this.attributeCollection.GetIndex(definition, (MethodDefinition) definition.Method));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.ParameterType, (int) definition.Attributes));
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
+                    stream.WriteInt((int) this.attributeCollection.GetIndex(definition, (MethodDefinition) definition.Method));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.ParameterType, (int) definition.Attributes));
                 }
             }
 
@@ -846,10 +836,10 @@
             {
                 foreach (FieldDefinition definition in this.metadataCollector.GetFields())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(definition.Name));
-                    StreamExtensions.WriteInt(stream, MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.FieldType, (int) definition.Attributes));
-                    StreamExtensions.WriteInt(stream, (int) this.attributeCollection.GetIndex(definition));
-                    StreamExtensions.WriteUInt(stream, definition.MetadataToken.ToUInt32());
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(definition.Name));
+                    stream.WriteInt(MetadataCacheWriter.Il2CppTypeCollector.GetIndex(definition.FieldType, (int) definition.Attributes));
+                    stream.WriteInt((int) this.attributeCollection.GetIndex(definition));
+                    stream.WriteUInt(definition.MetadataToken.ToUInt32());
                 }
             }
 
@@ -857,12 +847,12 @@
             {
                 foreach (GenericParameter parameter in this.metadataCollector.GetGenericParameters())
                 {
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetGenericContainerIndex(parameter.Owner));
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetStringIndex(parameter.Name));
-                    StreamExtensions.WriteShort(stream, (parameter.Constraints.Count <= 0) ? ((short) 0) : ((short) this.metadataCollector.GetGenericParameterConstraintsStartIndex(parameter)));
-                    StreamExtensions.WriteShort(stream, (short) parameter.Constraints.Count);
-                    StreamExtensions.WriteUShort(stream, (ushort) parameter.Position);
-                    StreamExtensions.WriteUShort(stream, (ushort) parameter.Attributes);
+                    stream.WriteInt(this.metadataCollector.GetGenericContainerIndex(parameter.Owner));
+                    stream.WriteInt(this.metadataCollector.GetStringIndex(parameter.Name));
+                    stream.WriteShort((parameter.Constraints.Count <= 0) ? ((short) 0) : ((short) this.metadataCollector.GetGenericParameterConstraintsStartIndex(parameter)));
+                    stream.WriteShort((short) parameter.Constraints.Count);
+                    stream.WriteUShort((ushort) parameter.Position);
+                    stream.WriteUShort((ushort) parameter.Attributes);
                 }
             }
 
@@ -870,7 +860,7 @@
             {
                 foreach (int num in this.metadataCollector.GetGenericParameterConstraints())
                 {
-                    StreamExtensions.WriteInt(stream, num);
+                    stream.WriteInt(num);
                 }
             }
 
@@ -878,10 +868,10 @@
             {
                 foreach (IGenericParameterProvider provider in this.metadataCollector.GetGenericContainers())
                 {
-                    StreamExtensions.WriteInt(stream, (provider.GenericParameterType != GenericParameterType.Method) ? this.metadataCollector.GetTypeInfoIndex((TypeDefinition) provider) : this.metadataCollector.GetMethodIndex((MethodDefinition) provider));
-                    StreamExtensions.WriteInt(stream, provider.GenericParameters.Count);
-                    StreamExtensions.WriteInt(stream, (provider.GenericParameterType != GenericParameterType.Method) ? 0 : 1);
-                    StreamExtensions.WriteInt(stream, this.metadataCollector.GetGenericParameterIndex(provider.GenericParameters[0]));
+                    stream.WriteInt((provider.GenericParameterType != GenericParameterType.Method) ? this.metadataCollector.GetTypeInfoIndex((TypeDefinition) provider) : this.metadataCollector.GetMethodIndex((MethodDefinition) provider));
+                    stream.WriteInt(provider.GenericParameters.Count);
+                    stream.WriteInt((provider.GenericParameterType != GenericParameterType.Method) ? 0 : 1);
+                    stream.WriteInt(this.metadataCollector.GetGenericParameterIndex(provider.GenericParameters[0]));
                 }
             }
 
@@ -889,7 +879,7 @@
             {
                 foreach (int num in this.metadataCollector.GetNestedTypes())
                 {
-                    StreamExtensions.WriteInt(stream, num);
+                    stream.WriteInt(num);
                 }
             }
 
@@ -897,7 +887,7 @@
             {
                 foreach (int num in this.metadataCollector.GetInterfaces())
                 {
-                    StreamExtensions.WriteInt(stream, num);
+                    stream.WriteInt(num);
                 }
             }
         }

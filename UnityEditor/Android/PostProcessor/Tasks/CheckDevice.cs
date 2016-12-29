@@ -40,7 +40,8 @@
             while ((list.Count == 0) && EditorUtility.DisplayDialog("No Android device found!", " * Make sure USB debugging has been enabled\n * Check your device, in most cases there should be a small icon in the status bar telling you if the USB connection is up.\n * If you are sure that device is attached then it might be USB driver problem, for details please check Android SDK Setup section in Unity manual.", "Retry", "Cancel"));
             if (list.Count < 1)
             {
-                string message = string.Format("No Android devices found.{0}\n", (Application.platform != RuntimePlatform.WindowsEditor) ? "" : " If you are sure that device is attached then it might be USB driver problem, for details please check Android SDK Setup section in Unity manual.");
+                string message = $"No Android devices found.{(Application.platform != RuntimePlatform.WindowsEditor) ? "" : " If you are sure that device is attached then it might be USB driver problem, for details please check Android SDK Setup section in Unity manual."}
+";
                 CancelPostProcess.AbortBuild("Couldn't find Android device", message);
             }
             AndroidDevice device2 = new AndroidDevice(list[0]);
@@ -62,11 +63,11 @@
             }
             int num3 = 0xf0000;
             GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(platform);
-            if (Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES3))
+            if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3))
             {
                 num3 = 0x30000;
             }
-            if (Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES2))
+            if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2))
             {
                 num3 = 0x20000;
             }
@@ -107,10 +108,10 @@
             string str6 = device2.Properties["ro.product.model"];
             string action = device2.Properties["ro.product.cpu.abi"];
             bool flag4 = device2.Properties["ro.secure"].Equals("1");
-            string str8 = string.Format("{0}{1} {2}", char.ToUpper(str5[0]), str5.Substring(1), str6);
-            string label = string.Format("Android API-{0}", num);
+            string str8 = $"{char.ToUpper(str5[0])}{str5.Substring(1)} {str6}";
+            string label = $"Android API-{num}";
             UsabilityAnalytics.Event("Android Device", str8, label, !flag4 ? 0 : 1);
-            string str10 = string.Format("gles {0}.{1}{2}", num2 >> 0x10, num2 & 0xffff, !flag ? "" : " AEP");
+            string str10 = $"gles {num2 >> 0x10}.{num2 & 0xffff}{!flag ? "" : " AEP"}";
             if (num2 < 0)
             {
                 str10 = "gles 2.0";
@@ -119,7 +120,7 @@
             string str11 = device2.Properties["ro.board.platform"];
             ulong i = device2.MemInfo["MemTotal"];
             i = UpperboundPowerOf2(i) / ((ulong) 0x100000L);
-            UsabilityAnalytics.Event("Android Chipset", str11, string.Format("{0}MB", i), 1);
+            UsabilityAnalytics.Event("Android Chipset", str11, $"{i}MB", 1);
             return device2;
         }
 
@@ -135,13 +136,8 @@
             return (i + ((ulong) 1L));
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Trying to find a suitable Android device";
-            }
-        }
+        public string Name =>
+            "Trying to find a suitable Android device";
     }
 }
 

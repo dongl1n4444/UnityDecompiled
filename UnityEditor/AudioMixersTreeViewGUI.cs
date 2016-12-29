@@ -39,20 +39,14 @@
             base.ClearRenameAndNewItemState();
         }
 
-        protected CreateAssetUtility GetCreateAssetUtility()
-        {
-            return base.m_TreeView.state.createAssetUtility;
-        }
+        protected CreateAssetUtility GetCreateAssetUtility() => 
+            base.m_TreeView.state.createAssetUtility;
 
-        protected override Texture GetIconForItem(TreeViewItem node)
-        {
-            return null;
-        }
+        protected override Texture GetIconForItem(TreeViewItem node) => 
+            null;
 
-        private AudioMixerItem GetSelectedItem()
-        {
-            return (base.m_TreeView.FindItem(Enumerable.FirstOrDefault<int>(base.m_TreeView.GetSelection())) as AudioMixerItem);
-        }
+        private AudioMixerItem GetSelectedItem() => 
+            (base.m_TreeView.FindItem(base.m_TreeView.GetSelection().FirstOrDefault<int>()) as AudioMixerItem);
 
         protected override void OnContentGUI(Rect rect, int row, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
         {

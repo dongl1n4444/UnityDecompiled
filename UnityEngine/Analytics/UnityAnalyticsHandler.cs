@@ -40,10 +40,8 @@
         public extern AnalyticsResult SetUserBirthYear(int birthYear);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern AnalyticsResult Transaction(string productId, double amount, string currency);
-        public AnalyticsResult Transaction(string productId, double amount, string currency, string receiptPurchaseData, string signature)
-        {
-            return this.Transaction(productId, amount, currency, receiptPurchaseData, signature, false);
-        }
+        public AnalyticsResult Transaction(string productId, double amount, string currency, string receiptPurchaseData, string signature) => 
+            this.Transaction(productId, amount, currency, receiptPurchaseData, signature, false);
 
         internal AnalyticsResult Transaction(string productId, double amount, string currency, string receiptPurchaseData, string signature, bool usingIAPService)
         {
@@ -60,15 +58,11 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern AnalyticsResult InternalTransaction(string productId, double amount, string currency, string receiptPurchaseData, string signature, bool usingIAPService);
-        public AnalyticsResult CustomEvent(string customEventName)
-        {
-            return this.SendCustomEventName(customEventName);
-        }
+        public AnalyticsResult CustomEvent(string customEventName) => 
+            this.SendCustomEventName(customEventName);
 
-        public AnalyticsResult CustomEvent(CustomEventData eventData)
-        {
-            return this.SendCustomEvent(eventData);
-        }
+        public AnalyticsResult CustomEvent(CustomEventData eventData) => 
+            this.SendCustomEvent(eventData);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern AnalyticsResult SendCustomEventName(string customEventName);

@@ -582,10 +582,8 @@
             return false;
         }
 
-        internal static bool ValidateAddComponentMenuItem()
-        {
-            return (FirstInspectorWithGameObject() != null);
-        }
+        internal static bool ValidateAddComponentMenuItem() => 
+            (FirstInspectorWithGameObject() != null);
 
         private Element activeElement
         {
@@ -604,57 +602,30 @@
             }
         }
 
-        private GroupElement activeParent
-        {
-            get
-            {
-                return this.m_Stack[(this.m_Stack.Count - 2) + this.m_AnimTarget];
-            }
-        }
+        private GroupElement activeParent =>
+            this.m_Stack[(this.m_Stack.Count - 2) + this.m_AnimTarget];
 
-        private Element[] activeTree
-        {
-            get
-            {
-                return (!this.hasSearch ? this.m_Tree : this.m_SearchResultTree);
-            }
-        }
+        private Element[] activeTree =>
+            (!this.hasSearch ? this.m_Tree : this.m_SearchResultTree);
 
         internal static string className
         {
-            get
-            {
-                return s_AddComponentWindow.m_ClassName;
-            }
+            get => 
+                s_AddComponentWindow.m_ClassName;
             set
             {
                 s_AddComponentWindow.m_ClassName = value;
             }
         }
 
-        internal static GameObject[] gameObjects
-        {
-            get
-            {
-                return s_AddComponentWindow.m_GameObjects;
-            }
-        }
+        internal static GameObject[] gameObjects =>
+            s_AddComponentWindow.m_GameObjects;
 
-        private bool hasSearch
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.m_Search);
-            }
-        }
+        private bool hasSearch =>
+            !string.IsNullOrEmpty(this.m_Search);
 
-        private bool isAnimating
-        {
-            get
-            {
-                return (this.m_Anim != this.m_AnimTarget);
-            }
-        }
+        private bool isAnimating =>
+            (this.m_Anim != this.m_AnimTarget);
 
         [CompilerGenerated]
         private sealed class <CreateComponentTree>c__AnonStorey0
@@ -662,10 +633,8 @@
             internal AddComponentWindow $this;
             internal int level;
 
-            internal bool <>m__0(AddComponentWindow.Element c)
-            {
-                return (c.name == this.$this.m_Stack[this.level].name);
-            }
+            internal bool <>m__0(AddComponentWindow.Element c) => 
+                (c.name == this.$this.m_Stack[this.level].name);
         }
 
         private class ComponentElement : AddComponentWindow.Element
@@ -729,18 +698,11 @@
             public GUIContent content;
             public int level;
 
-            public virtual int CompareTo(object o)
-            {
-                return this.name.CompareTo((o as AddComponentWindow.Element).name);
-            }
+            public virtual int CompareTo(object o) => 
+                this.name.CompareTo((o as AddComponentWindow.Element).name);
 
-            public string name
-            {
-                get
-                {
-                    return this.content.text;
-                }
-            }
+            public string name =>
+                this.content.text;
         }
 
         [Serializable]
@@ -776,10 +738,8 @@
                 this.m_Directory = string.Empty;
             }
 
-            public bool CanCreate()
-            {
-                return ((((AddComponentWindow.className.Length > 0) && !File.Exists(this.TargetPath())) && (!this.ClassAlreadyExists() && !this.ClassNameIsInvalid())) && !this.InvalidTargetPath());
-            }
+            public bool CanCreate() => 
+                ((((AddComponentWindow.className.Length > 0) && !File.Exists(this.TargetPath())) && (!this.ClassAlreadyExists() && !this.ClassNameIsInvalid())) && !this.InvalidTargetPath());
 
             private bool ClassAlreadyExists()
             {
@@ -798,10 +758,8 @@
                 return Enumerable.Any<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), new Func<Assembly, bool>(storey, (IntPtr) this.<>m__0));
             }
 
-            private bool ClassNameIsInvalid()
-            {
-                return !CodeGenerator.IsValidLanguageIndependentIdentifier(AddComponentWindow.className);
-            }
+            private bool ClassNameIsInvalid() => 
+                !CodeGenerator.IsValidLanguageIndependentIdentifier(AddComponentWindow.className);
 
             public void Create()
             {
@@ -849,10 +807,8 @@
                 return str;
             }
 
-            private bool InvalidTargetPath()
-            {
-                return ((this.m_Directory.IndexOfAny(this.kInvalidPathChars) >= 0) || Enumerable.Contains<string>(this.TargetDir().Split(this.kPathSepChars, StringSplitOptions.None), string.Empty));
-            }
+            private bool InvalidTargetPath() => 
+                ((this.m_Directory.IndexOfAny(this.kInvalidPathChars) >= 0) || this.TargetDir().Split(this.kPathSepChars, StringSplitOptions.None).Contains<string>(string.Empty));
 
             public void OnGUI()
             {
@@ -884,15 +840,11 @@
                 EditorGUILayout.Space();
             }
 
-            private string TargetDir()
-            {
-                return Path.Combine("Assets", this.m_Directory.Trim(this.kPathSepChars));
-            }
+            private string TargetDir() => 
+                Path.Combine("Assets", this.m_Directory.Trim(this.kPathSepChars));
 
-            public string TargetPath()
-            {
-                return Path.Combine(this.TargetDir(), AddComponentWindow.className + "." + this.extension);
-            }
+            public string TargetPath() => 
+                Path.Combine(this.TargetDir(), AddComponentWindow.className + "." + this.extension);
 
             private string extension
             {
@@ -940,10 +892,8 @@
             {
                 internal string className;
 
-                internal bool <>m__0(Assembly a)
-                {
-                    return (a.GetType(this.className, false) != null);
-                }
+                internal bool <>m__0(Assembly a) => 
+                    (a.GetType(this.className, false) != null);
             }
         }
 

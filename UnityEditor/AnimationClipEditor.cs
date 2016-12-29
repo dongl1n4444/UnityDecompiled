@@ -494,14 +494,8 @@
             }
         }
 
-        private float GetClipLength()
-        {
-            if (this.m_ClipInfo == null)
-            {
-                return this.m_Clip.length;
-            }
-            return ((this.m_ClipInfo.lastFrame - this.m_ClipInfo.firstFrame) / this.m_Clip.frameRate);
-        }
+        private float GetClipLength() => 
+            ((this.m_ClipInfo?.lastFrame - this.m_ClipInfo.firstFrame) / this.m_Clip.frameRate);
 
         private string GetStatsText()
         {
@@ -532,7 +526,9 @@
             float num3 = (((float) stats.constantCurves) / ((float) stats.totalCurves)) * 100f;
             float num4 = (((float) stats.denseCurves) / ((float) stats.totalCurves)) * 100f;
             float num5 = (((float) stats.streamCurves) / ((float) stats.totalCurves)) * 100f;
-            return ((str + string.Format("Curves Pos: {0} Quaternion: {1} Euler: {2} Scale: {3} Muscles: {4} Generic: {5} PPtr: {6}\n", new object[] { stats.positionCurves, stats.quaternionCurves, stats.eulerCurves, stats.scaleCurves, stats.muscleCurves, stats.genericCurves, stats.pptrCurves })) + string.Format("Curves Total: {0}, Constant: {1} ({2}%) Dense: {3} ({4}%) Stream: {5} ({6}%)\n", new object[] { stats.totalCurves, stats.constantCurves, num3.ToString("0.0"), stats.denseCurves, num4.ToString("0.0"), stats.streamCurves, num5.ToString("0.0") }) + EditorUtility.FormatBytes(stats.size));
+            return ((str + $"Curves Pos: {stats.positionCurves} Quaternion: {stats.quaternionCurves} Euler: {stats.eulerCurves} Scale: {stats.scaleCurves} Muscles: {stats.muscleCurves} Generic: {stats.genericCurves} PPtr: {stats.pptrCurves}
+") + $"Curves Total: {stats.totalCurves}, Constant: {stats.constantCurves} ({num3.ToString("0.0")}%) Dense: {stats.denseCurves} ({num4.ToString("0.0")}%) Stream: {stats.streamCurves} ({num5.ToString("0.0")}%)
+" + EditorUtility.FormatBytes(stats.size));
         }
 
         public override bool HasPreviewGUI()
@@ -1157,10 +1153,8 @@
 
         public AvatarMask mask
         {
-            get
-            {
-                return this.m_Mask;
-            }
+            get => 
+                this.m_Mask;
             set
             {
                 this.m_Mask = value;
@@ -1169,10 +1163,8 @@
 
         public bool needsToGenerateClipInfo
         {
-            get
-            {
-                return this.m_NeedsToGenerateClipInfo;
-            }
+            get => 
+                this.m_NeedsToGenerateClipInfo;
             set
             {
                 this.m_NeedsToGenerateClipInfo = value;

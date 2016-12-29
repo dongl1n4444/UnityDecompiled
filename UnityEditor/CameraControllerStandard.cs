@@ -283,13 +283,8 @@
             }
         }
 
-        public ViewTool currentViewTool
-        {
-            get
-            {
-                return this.m_CurrentViewTool;
-            }
-        }
+        public ViewTool currentViewTool =>
+            this.m_CurrentViewTool;
     }
 }
 

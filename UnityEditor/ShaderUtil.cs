@@ -49,10 +49,8 @@
         internal static extern int GetLOD(Shader s);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern MaterialProperty[] GetMaterialProperties(Object[] mats);
-        internal static MaterialProperty GetMaterialProperty(Object[] mats, int propertyIndex)
-        {
-            return GetMaterialProperty_Index(mats, propertyIndex);
-        }
+        internal static MaterialProperty GetMaterialProperty(Object[] mats, int propertyIndex) => 
+            GetMaterialProperty_Index(mats, propertyIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern MaterialProperty GetMaterialProperty(Object[] mats, string name);

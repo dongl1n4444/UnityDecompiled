@@ -46,23 +46,16 @@
 
         public double elapsedTime
         {
-            get
-            {
-                return (EditorApplication.timeSinceStartup - this.startTime);
-            }
+            get => 
+                (EditorApplication.timeSinceStartup - this.startTime);
             set
             {
                 this.startTime = EditorApplication.timeSinceStartup - value;
             }
         }
 
-        public float elapsedTimeNormalized
-        {
-            get
-            {
-                return Mathf.Clamp01(((float) this.elapsedTime) / ((float) this.animationDuration));
-            }
-        }
+        public float elapsedTimeNormalized =>
+            Mathf.Clamp01(((float) this.elapsedTime) / ((float) this.animationDuration));
 
         public int endRow { get; set; }
 

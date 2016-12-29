@@ -21,10 +21,8 @@
         public bool Selected;
         public string Timestamp;
 
-        public IvyModule Clone()
-        {
-            return Cloner.CloneObject<IvyModule>(this);
-        }
+        public IvyModule Clone() => 
+            Cloner.CloneObject<IvyModule>(this);
 
         public override bool Equals(object other)
         {
@@ -35,10 +33,8 @@
             return (this == (other as IvyModule));
         }
 
-        public static IvyModule FromIvyFile(string fullpath)
-        {
-            return IvyParser.ParseFile<IvyModule>(fullpath);
-        }
+        public static IvyModule FromIvyFile(string fullpath) => 
+            IvyParser.ParseFile<IvyModule>(fullpath);
 
         public static IvyModule FromPackageInfo(PackageInfo package)
         {
@@ -116,10 +112,8 @@
             return (a.GetHashCode() == z.GetHashCode());
         }
 
-        public static bool operator !=(IvyModule a, object z)
-        {
-            return (a != z);
-        }
+        public static bool operator !=(IvyModule a, object z) => 
+            (a != z);
 
         public PackageInfo ToPackageInfo()
         {
@@ -155,10 +149,8 @@
             return info;
         }
 
-        public override string ToString()
-        {
-            return IvyParser.Serialize(this);
-        }
+        public override string ToString() => 
+            IvyParser.Serialize(this);
 
         public string WriteIvyFile()
         {
@@ -169,10 +161,8 @@
             return this.WriteIvyFile(this.BasePath, this.IvyFile, true);
         }
 
-        public string WriteIvyFile(string outputPath)
-        {
-            return this.WriteIvyFile(outputPath, this.IvyFile, false);
-        }
+        public string WriteIvyFile(string outputPath) => 
+            this.WriteIvyFile(outputPath, this.IvyFile, false);
 
         public string WriteIvyFile(string outputPath, string filename)
         {
@@ -247,54 +237,35 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return string.Format("{0}.{1}", this.Info.Organisation, this.Info.Module);
-            }
-        }
+        public string Name =>
+            $"{this.Info.Organisation}.{this.Info.Module}";
 
         public bool Public
         {
-            get
-            {
-                return this.Info.Published;
-            }
+            get => 
+                this.Info.Published;
             set
             {
                 this.Info.Published = value;
             }
         }
 
-        public PackageVersion UnityVersion
-        {
-            get
-            {
-                return this.Info.UnityVersion;
-            }
-        }
+        public PackageVersion UnityVersion =>
+            this.Info.UnityVersion;
 
-        public PackageVersion Version
-        {
-            get
-            {
-                return this.Info.Version;
-            }
-        }
+        public PackageVersion Version =>
+            this.Info.Version;
 
         [CompilerGenerated]
         private sealed class <FromPackageInfo>c__AnonStorey0
         {
             internal PackageInfo package;
 
-            internal IvyArtifact <>m__0(string f)
-            {
-                return new IvyArtifact(f) { 
+            internal IvyArtifact <>m__0(string f) => 
+                new IvyArtifact(f) { 
                     Type = (ArtifactType) this.package.files[f].type,
                     Url = new Uri(this.package.files[f].url)
                 };
-            }
         }
 
         [CompilerGenerated]
@@ -302,10 +273,8 @@
         {
             internal ArtifactType type;
 
-            internal bool <>m__0(IvyArtifact x)
-            {
-                return (x.Type == this.type);
-            }
+            internal bool <>m__0(IvyArtifact x) => 
+                (x.Type == this.type);
         }
 
         [CompilerGenerated]
@@ -313,10 +282,8 @@
         {
             internal string filename;
 
-            internal bool <>m__0(IvyArtifact x)
-            {
-                return (x.Filename == this.filename);
-            }
+            internal bool <>m__0(IvyArtifact x) => 
+                (x.Filename == this.filename);
         }
 
         [CompilerGenerated]
@@ -324,10 +291,8 @@
         {
             internal string name;
 
-            internal bool <>m__0(IvyRepository x)
-            {
-                return (x.Name == this.name);
-            }
+            internal bool <>m__0(IvyRepository x) => 
+                (x.Name == this.name);
         }
     }
 }

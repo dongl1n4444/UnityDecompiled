@@ -41,13 +41,8 @@
             this.name = base.GetPropertyString("name");
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
     }
 }
 

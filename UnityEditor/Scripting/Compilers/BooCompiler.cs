@@ -14,10 +14,8 @@
         {
         }
 
-        protected override CompilerOutputParserBase CreateOutputParser()
-        {
-            return new BooCompilerOutputParser();
-        }
+        protected override CompilerOutputParserBase CreateOutputParser() => 
+            new BooCompilerOutputParser();
 
         protected override Program StartCompiler()
         {
@@ -31,7 +29,7 @@
             {
                 arguments.Add("-r:" + ScriptCompilerBase.PrepareFileName(str));
             }
-            foreach (string str2 in Enumerable.Distinct<string>(this._island._defines))
+            foreach (string str2 in this._island._defines.Distinct<string>())
             {
                 arguments.Add("-define:" + str2);
             }

@@ -63,10 +63,10 @@
                 Vector3[] vectorArray6 = new Vector3[] { new Vector3(x, y - b, 0f), new Vector3(x + num, y - b, 0f) };
                 Handles.color = new Color(0f, 0f, 0f, 0.5f);
                 Handles.DrawAAPolyLine((float) 2f, vectorArray6);
-                GUI.Label(new Rect((x + num) + 5f, (y - (b * 0.5f)) - 10f, 150f, 20f), string.Format("H = {0}", agentHeight));
-                GUI.Label(new Rect(x, ((y - b) - (num * num5)) - 15f, 150f, 20f), string.Format("R = {0}", agentRadius));
-                GUI.Label(new Rect(((xMin + num17) * 0.5f) - 20f, num16 - 15f, 150f, 20f), string.Format("{0}", agentClimb));
-                GUI.Label(new Rect(num19 + 20f, num20 - 15f, 150f, 20f), string.Format("{0}\x00b0", agentSlope));
+                GUI.Label(new Rect((x + num) + 5f, (y - (b * 0.5f)) - 10f, 150f, 20f), $"H = {agentHeight}");
+                GUI.Label(new Rect(x, ((y - b) - (num * num5)) - 15f, 150f, 20f), $"R = {agentRadius}");
+                GUI.Label(new Rect(((xMin + num17) * 0.5f) - 20f, num16 - 15f, 150f, 20f), $"{agentClimb}");
+                GUI.Label(new Rect(num19 + 20f, num20 - 15f, 150f, 20f), $"{agentSlope}°");
                 Handles.color = color;
             }
         }

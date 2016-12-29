@@ -56,11 +56,11 @@
             {
                 TypeReference reference = type.GenericArguments[0];
                 TypeReference[] arguments = new TypeReference[] { reference };
-                storey.genericElementComparisonInterface = TypeReferenceRocks.MakeGenericInstanceType(genericElementComparisonInterfaceDefinition, arguments);
-                if (Enumerable.Any<TypeReference>(Unity.IL2CPP.Extensions.GetInterfaces(reference), new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)))
+                storey.genericElementComparisonInterface = genericElementComparisonInterfaceDefinition.MakeGenericInstanceType(arguments);
+                if (reference.GetInterfaces().Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)))
                 {
                     TypeReference[] referenceArray2 = new TypeReference[] { reference };
-                    ProcessGenericType(TypeReferenceRocks.MakeGenericInstanceType(genericComparerDefinition, referenceArray2), generics, contextMethod);
+                    ProcessGenericType(genericComparerDefinition.MakeGenericInstanceType(referenceArray2), generics, contextMethod);
                 }
             }
         }
@@ -77,11 +77,11 @@
                 GenericInstanceType type2 = (GenericInstanceType) type.GenericArguments[0];
                 TypeReference reference = type2.GenericArguments[0];
                 TypeReference[] arguments = new TypeReference[] { reference };
-                storey.genericElementComparisonInterface = TypeReferenceRocks.MakeGenericInstanceType(self, arguments);
-                if (Enumerable.Any<TypeReference>(Unity.IL2CPP.Extensions.GetInterfaces(reference), new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)))
+                storey.genericElementComparisonInterface = self.MakeGenericInstanceType(arguments);
+                if (reference.GetInterfaces().Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)))
                 {
                     TypeReference[] referenceArray2 = new TypeReference[] { reference };
-                    ProcessGenericType(TypeReferenceRocks.MakeGenericInstanceType(definition4, referenceArray2), generics, contextMethod);
+                    ProcessGenericType(definition4.MakeGenericInstanceType(referenceArray2), generics, contextMethod);
                 }
             }
         }
@@ -100,7 +100,7 @@
                 {
                     <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <ProcessArray>m__0);
                 }
-                MethodDefinition definition2 = Enumerable.Single<MethodDefinition>(TypeProvider.Corlib.MainModule.GetType("System", "Array").Methods, <>f__am$cache0);
+                MethodDefinition definition2 = TypeProvider.Corlib.MainModule.GetType("System", "Array").Methods.Single<MethodDefinition>(<>f__am$cache0);
                 if (definition2 != null)
                 {
                     GenericInstanceMethod genericInstanceMethod = new GenericInstanceMethod(definition2) {
@@ -108,9 +108,9 @@
                     };
                     GenericInstanceMethod method = Inflater.InflateMethod(currentContext, genericInstanceMethod);
                     GenericContextAwareVisitor visitor = new GenericContextAwareVisitor(generics, new GenericContext(currentContext.Type, method));
-                    Unity.Cecil.Visitor.Extensions.Accept(definition2, visitor);
+                    definition2.Accept(visitor);
                 }
-                foreach (GenericInstanceMethod method3 in Enumerable.OfType<GenericInstanceMethod>(ArrayTypeInfoWriter.InflateArrayMethods(inflatedType)))
+                foreach (GenericInstanceMethod method3 in ArrayTypeInfoWriter.InflateArrayMethods(inflatedType).OfType<GenericInstanceMethod>())
                 {
                     ProcessGenericMethod(method3, generics);
                 }
@@ -138,11 +138,11 @@
 
         private static void ProcessGenericArguments(IEnumerable<TypeReference> genericArguments, InflatedCollectionCollector generics)
         {
-            foreach (GenericInstanceType type in Enumerable.OfType<GenericInstanceType>(genericArguments))
+            foreach (GenericInstanceType type in genericArguments.OfType<GenericInstanceType>())
             {
                 if (generics.TypeDeclarations.Add(type))
                 {
-                    Unity.Cecil.Visitor.Extensions.Accept(type.Resolve(), new GenericContextAwareDeclarationOnlyVisitor(generics, new GenericContext(type, null), CollectionMode.MethodsAndTypes));
+                    type.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, new GenericContext(type, null), CollectionMode.MethodsAndTypes));
                 }
             }
         }
@@ -159,12 +159,12 @@
             {
                 ProcessGenericMethod((GenericInstanceMethod) sharedMethod, generics);
                 GenericContext genericContext = new GenericContext(method.DeclaringType as GenericInstanceType, method);
-                Unity.Cecil.Visitor.Extensions.Accept(method.Resolve(), new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.MethodsAndTypes));
+                method.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.MethodsAndTypes));
             }
             else if (generics.Methods.Add(method))
             {
                 GenericContext context2 = new GenericContext(method.DeclaringType as GenericInstanceType, method);
-                Unity.Cecil.Visitor.Extensions.Accept(method.Resolve(), new GenericContextAwareVisitor(generics, context2));
+                method.Resolve().Accept(new GenericContextAwareVisitor(generics, context2));
             }
         }
 
@@ -183,13 +183,13 @@
             {
                 ProcessGenericType(sharedType, generics, contextMethod);
                 GenericContext genericContext = new GenericContext(type, contextMethod);
-                Unity.Cecil.Visitor.Extensions.Accept(type.ElementType.Resolve(), new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.MethodsAndTypes));
+                type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.MethodsAndTypes));
             }
             else if (generics.Types.Add(type))
             {
                 ProcessHardcodedDependencies(type, generics, contextMethod);
                 GenericContext context2 = new GenericContext(type, contextMethod);
-                Unity.Cecil.Visitor.Extensions.Accept(type.ElementType.Resolve(), new GenericContextAwareVisitor(generics, context2));
+                type.ElementType.Resolve().Accept(new GenericContextAwareVisitor(generics, context2));
             }
         }
 
@@ -237,7 +237,7 @@
                 GenericInstanceType inflatedType = Inflater.InflateType(this._genericContext, declaringType);
                 this.ProcessGenericType(inflatedType);
                 GenericContextAwareVisitor visitor = new GenericContextAwareVisitor(this._generics, new GenericContext(inflatedType, this._genericContext.Method));
-                Unity.Cecil.Visitor.Extensions.Accept(fieldReference.Resolve(), visitor);
+                fieldReference.Resolve().Accept(visitor);
             }
             else
             {
@@ -335,10 +335,8 @@
         {
             internal GenericInstanceType genericElementComparisonInterface;
 
-            internal bool <>m__0(TypeReference i)
-            {
-                return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(i, this.genericElementComparisonInterface, TypeComparisonMode.Exact);
-            }
+            internal bool <>m__0(TypeReference i) => 
+                Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(i, this.genericElementComparisonInterface, TypeComparisonMode.Exact);
         }
 
         [CompilerGenerated]
@@ -346,10 +344,8 @@
         {
             internal GenericInstanceType genericElementComparisonInterface;
 
-            internal bool <>m__0(TypeReference i)
-            {
-                return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(i, this.genericElementComparisonInterface, TypeComparisonMode.Exact);
-            }
+            internal bool <>m__0(TypeReference i) => 
+                Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(i, this.genericElementComparisonInterface, TypeComparisonMode.Exact);
         }
     }
 }

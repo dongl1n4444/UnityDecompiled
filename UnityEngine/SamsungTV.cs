@@ -44,10 +44,8 @@
         /// </summary>
         public static TouchPadMode touchPadMode
         {
-            get
-            {
-                return GetTouchPadMode();
-            }
+            get => 
+                GetTouchPadMode();
             set
             {
                 if (!SetTouchPadMode(value))

@@ -336,10 +336,8 @@
             return this.m_BuiltinAnnotations.Find(new Predicate<AInfo>(storey.<>m__1));
         }
 
-        private float GetTopSectionHeight()
-        {
-            return 90f;
-        }
+        private float GetTopSectionHeight() => 
+            90f;
 
         public static void IconChanged()
         {
@@ -532,15 +530,11 @@
             internal int classID;
             internal string scriptClass;
 
-            internal bool <>m__0(AInfo o)
-            {
-                return (o.m_ScriptClass == this.scriptClass);
-            }
+            internal bool <>m__0(AInfo o) => 
+                (o.m_ScriptClass == this.scriptClass);
 
-            internal bool <>m__1(AInfo o)
-            {
-                return (o.m_ClassID == this.classID);
-            }
+            internal bool <>m__1(AInfo o) => 
+                (o.m_ClassID == this.classID);
         }
 
         private class Styles

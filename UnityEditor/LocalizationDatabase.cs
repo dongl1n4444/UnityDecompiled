@@ -14,10 +14,8 @@
         internal static extern SystemLanguage GetDefaultEditorLanguage();
         [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
         public static extern string GetLocalizedString(string original);
-        public static string MarkForTranslation(string value)
-        {
-            return value;
-        }
+        public static string MarkForTranslation(string value) => 
+            value;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void ReadEditorLocalizationResources();

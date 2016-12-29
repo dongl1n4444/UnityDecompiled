@@ -356,10 +356,8 @@
         /// </summary>
         public string broadcastData
         {
-            get
-            {
-                return this.m_BroadcastData;
-            }
+            get => 
+                this.m_BroadcastData;
             set
             {
                 this.m_BroadcastData = value;
@@ -376,10 +374,8 @@
         /// </summary>
         public int broadcastInterval
         {
-            get
-            {
-                return this.m_BroadcastInterval;
-            }
+            get => 
+                this.m_BroadcastInterval;
             set
             {
                 this.m_BroadcastInterval = value;
@@ -391,10 +387,8 @@
         /// </summary>
         public int broadcastKey
         {
-            get
-            {
-                return this.m_BroadcastKey;
-            }
+            get => 
+                this.m_BroadcastKey;
             set
             {
                 this.m_BroadcastKey = value;
@@ -406,10 +400,8 @@
         /// </summary>
         public int broadcastPort
         {
-            get
-            {
-                return this.m_BroadcastPort;
-            }
+            get => 
+                this.m_BroadcastPort;
             set
             {
                 this.m_BroadcastPort = value;
@@ -419,23 +411,16 @@
         /// <summary>
         /// <para>A dictionary of broadcasts received from servers.</para>
         /// </summary>
-        public Dictionary<string, NetworkBroadcastResult> broadcastsReceived
-        {
-            get
-            {
-                return this.m_BroadcastsReceived;
-            }
-        }
+        public Dictionary<string, NetworkBroadcastResult> broadcastsReceived =>
+            this.m_BroadcastsReceived;
 
         /// <summary>
         /// <para>The sub-version of the application to broadcast. This is used to match versions of the same application.</para>
         /// </summary>
         public int broadcastSubVersion
         {
-            get
-            {
-                return this.m_BroadcastSubVersion;
-            }
+            get => 
+                this.m_BroadcastSubVersion;
             set
             {
                 this.m_BroadcastSubVersion = value;
@@ -447,10 +432,8 @@
         /// </summary>
         public int broadcastVersion
         {
-            get
-            {
-                return this.m_BroadcastVersion;
-            }
+            get => 
+                this.m_BroadcastVersion;
             set
             {
                 this.m_BroadcastVersion = value;
@@ -462,10 +445,8 @@
         /// </summary>
         public int hostId
         {
-            get
-            {
-                return this.m_HostId;
-            }
+            get => 
+                this.m_HostId;
             set
             {
                 this.m_HostId = value;
@@ -477,10 +458,8 @@
         /// </summary>
         public bool isClient
         {
-            get
-            {
-                return this.m_IsClient;
-            }
+            get => 
+                this.m_IsClient;
             set
             {
                 this.m_IsClient = value;
@@ -492,10 +471,8 @@
         /// </summary>
         public bool isServer
         {
-            get
-            {
-                return this.m_IsServer;
-            }
+            get => 
+                this.m_IsServer;
             set
             {
                 this.m_IsServer = value;
@@ -507,10 +484,8 @@
         /// </summary>
         public int offsetX
         {
-            get
-            {
-                return this.m_OffsetX;
-            }
+            get => 
+                this.m_OffsetX;
             set
             {
                 this.m_OffsetX = value;
@@ -522,10 +497,8 @@
         /// </summary>
         public int offsetY
         {
-            get
-            {
-                return this.m_OffsetY;
-            }
+            get => 
+                this.m_OffsetY;
             set
             {
                 this.m_OffsetY = value;
@@ -537,10 +510,8 @@
         /// </summary>
         public bool running
         {
-            get
-            {
-                return this.m_Running;
-            }
+            get => 
+                this.m_Running;
             set
             {
                 this.m_Running = value;
@@ -552,10 +523,8 @@
         /// </summary>
         public bool showGUI
         {
-            get
-            {
-                return this.m_ShowGUI;
-            }
+            get => 
+                this.m_ShowGUI;
             set
             {
                 this.m_ShowGUI = value;
@@ -567,10 +536,8 @@
         /// </summary>
         public bool useNetworkManager
         {
-            get
-            {
-                return this.m_UseNetworkManager;
-            }
+            get => 
+                this.m_UseNetworkManager;
             set
             {
                 this.m_UseNetworkManager = value;

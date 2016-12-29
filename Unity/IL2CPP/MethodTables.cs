@@ -32,7 +32,7 @@
             {
                 <>f__am$cache0 = new Func<MethodReference, bool>(null, (IntPtr) <CollectMethodTables>m__0);
             }
-            foreach (MethodReference reference in Enumerable.Where<MethodReference>(genericMethods, <>f__am$cache0))
+            foreach (MethodReference reference in genericMethods.Where<MethodReference>(<>f__am$cache0))
             {
                 string key = MethodPointerFor(reference);
                 if (!dictionary.ContainsKey(key))
@@ -75,13 +75,13 @@
             if (GenericSharingAnalysis.CanShareMethod(method))
             {
                 method = GenericSharingAnalysis.GetSharedMethod(method);
-                if (method.HasThis && Extensions.IsValueType(method.DeclaringType))
+                if (method.HasThis && method.DeclaringType.IsValueType())
                 {
                     return Naming.ForMethodAdjustorThunk(method);
                 }
                 return (Naming.ForMethod(method) + "_gshared");
             }
-            if (method.HasThis && Extensions.IsValueType(method.DeclaringType))
+            if (method.HasThis && method.DeclaringType.IsValueType())
             {
                 return Naming.ForMethodAdjustorThunk(method);
             }

@@ -180,10 +180,8 @@
         internal extern void RemoveDetailPrototype(int index);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void RemoveTreePrototype(int index);
-        internal int RemoveTrees(Vector2 position, float radius, int prototypeIndex)
-        {
-            return INTERNAL_CALL_RemoveTrees(this, ref position, radius, prototypeIndex);
-        }
+        internal int RemoveTrees(Vector2 position, float radius, int prototypeIndex) => 
+            INTERNAL_CALL_RemoveTrees(this, ref position, radius, prototypeIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void RemoveUser(GameObject user);
@@ -283,13 +281,8 @@
         /// <summary>
         /// <para>Height of the alpha map.</para>
         /// </summary>
-        public int alphamapHeight
-        {
-            get
-            {
-                return this.alphamapResolution;
-            }
-        }
+        public int alphamapHeight =>
+            this.alphamapResolution;
 
         /// <summary>
         /// <para>Number of alpha map layers.</para>
@@ -301,10 +294,8 @@
         /// </summary>
         public int alphamapResolution
         {
-            get
-            {
-                return this.Internal_alphamapResolution;
-            }
+            get => 
+                this.Internal_alphamapResolution;
             set
             {
                 int num = value;
@@ -338,23 +329,16 @@
         /// <summary>
         /// <para>Width of the alpha map.</para>
         /// </summary>
-        public int alphamapWidth
-        {
-            get
-            {
-                return this.alphamapResolution;
-            }
-        }
+        public int alphamapWidth =>
+            this.alphamapResolution;
 
         /// <summary>
         /// <para>Resolution of the base map used for rendering far patches on the terrain.</para>
         /// </summary>
         public int baseMapResolution
         {
-            get
-            {
-                return this.Internal_baseMapResolution;
-            }
+            get => 
+                this.Internal_baseMapResolution;
             set
             {
                 int num = value;
@@ -412,10 +396,8 @@
         /// </summary>
         public int heightmapResolution
         {
-            get
-            {
-                return this.Internal_heightmapResolution;
-            }
+            get => 
+                this.Internal_heightmapResolution;
             set
             {
                 int num = value;

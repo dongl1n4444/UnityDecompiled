@@ -17,10 +17,8 @@
         {
         }
 
-        public override bool CanBuildInCurrentEnvironment()
-        {
-            return (PlatformUtils.IsLinux() || PlatformUtils.IsOSX());
-        }
+        public override bool CanBuildInCurrentEnvironment() => 
+            (PlatformUtils.IsLinux() || PlatformUtils.IsOSX());
 
         public override NPath CompilerExecutableFor(NPath sourceFile)
         {
@@ -33,24 +31,18 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction)
-        {
-            return new <CompilerFlagsFor>c__Iterator0 { 
+        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction) => 
+            new <CompilerFlagsFor>c__Iterator0 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
             };
-        }
 
-        protected override string GetInterestingOutputFromCompilationShellResult(Shell.ExecuteResult shellResult)
-        {
-            return shellResult.StdErr;
-        }
+        protected override string GetInterestingOutputFromCompilationShellResult(Shell.ExecuteResult shellResult) => 
+            shellResult.StdErr;
 
-        protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult)
-        {
-            return shellResult.StdErr;
-        }
+        protected override string GetInterestingOutputFromLinkerShellResult(Shell.ExecuteResult shellResult) => 
+            shellResult.StdErr;
 
         protected override List<string> GetLinkerArgs(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags)
         {
@@ -60,10 +52,8 @@
             return list;
         }
 
-        public override NPath LinkerExecutableFor()
-        {
-            return TizenSDKUtilities.GetLinkerPath();
-        }
+        public override NPath LinkerExecutableFor() => 
+            TizenSDKUtilities.GetLinkerPath();
 
         [CompilerGenerated]
         private sealed class <CompilerFlagsFor>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -201,28 +191,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

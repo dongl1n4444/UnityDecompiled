@@ -32,7 +32,7 @@
         {
             if (debugEnvironmentAndInvocations)
             {
-                UnityEngine.Debug.Log(string.Format("SET {0}={1}", environmentVariable, value));
+                UnityEngine.Debug.Log($"SET {environmentVariable}={value}");
             }
             string str = value;
             startInfo.EnvironmentVariables[environmentVariable] = str;
@@ -54,13 +54,8 @@
             SetEnvironmentVariable(startInfo, "EM_EXCLUSIVE_CACHE_ACCESS", "1");
         }
 
-        public static bool debugEnvironmentAndInvocations
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool debugEnvironmentAndInvocations =>
+            false;
     }
 }
 

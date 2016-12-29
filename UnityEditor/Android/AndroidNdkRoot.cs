@@ -13,7 +13,7 @@
     {
         public static string Browse(string ndkPath)
         {
-            string title = string.Format("Select Android NDK {0} root folder", "r10e");
+            string title = $"Select Android NDK {"r10e"} root folder";
             string str2 = ndkPath;
             if (string.IsNullOrEmpty(str2))
             {
@@ -82,10 +82,8 @@
             return flag;
         }
 
-        public static bool Is64BitWindows()
-        {
-            return ((Application.platform == RuntimePlatform.WindowsEditor) && ((IntPtr.Size == 8) || ((IntPtr.Size == 4) && Is32BitProcessOn64BitOS())));
-        }
+        public static bool Is64BitWindows() => 
+            ((Application.platform == RuntimePlatform.WindowsEditor) && ((IntPtr.Size == 8) || ((IntPtr.Size == 4) && Is32BitProcessOn64BitOS())));
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", SetLastError=true)]
@@ -104,7 +102,7 @@
                     {
                         return true;
                     }
-                    message = string.Format("NDK {0} is incompatible with IL2CPP. IL2CPP requires {1}.", str3, AndroidIl2CppNativeCodeBuilder.AndroidNdkVersionString);
+                    message = $"NDK {str3} is incompatible with IL2CPP. IL2CPP requires {AndroidIl2CppNativeCodeBuilder.AndroidNdkVersionString}.";
                 }
             }
             catch (Exception)
@@ -114,7 +112,7 @@
             string componentVersion = AndroidComponentVersion.GetComponentVersion(ndkPath);
             if (!componentVersion.Equals("0"))
             {
-                message = string.Format("NDK {0} is incompatible with IL2CPP. IL2CPP requires {1}.", componentVersion, AndroidIl2CppNativeCodeBuilder.AndroidNdkVersionString);
+                message = $"NDK {componentVersion} is incompatible with IL2CPP. IL2CPP requires {AndroidIl2CppNativeCodeBuilder.AndroidNdkVersionString}.";
             }
             switch (EditorUtility.DisplayDialogComplex("Invalid NDK version", message, "Ok", "Cancel", "Download"))
             {
@@ -133,7 +131,7 @@
             get
             {
                 string str = "http://dl.google.com/android/ndk/";
-                string str2 = string.Format("android-ndk-{0}", "r10e");
+                string str2 = $"android-ndk-{"r10e"}";
                 switch (Application.platform)
                 {
                     case RuntimePlatform.WindowsEditor:

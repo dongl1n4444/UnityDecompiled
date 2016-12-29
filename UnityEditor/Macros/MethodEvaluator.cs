@@ -22,10 +22,8 @@
         }
 
         [CompilerGenerated]
-        private static string <ToCommaSeparatedString`1>m__0<T>(T o)
-        {
-            return o.ToString();
-        }
+        private static string <ToCommaSeparatedString`1>m__0<T>(T o) => 
+            o.ToString();
 
         public static object Eval(string assemblyFile, string typeName, string methodName, Type[] paramTypes, object[] args)
         {
@@ -38,7 +36,7 @@
                 MethodInfo info = assembly.GetType(typeName, true).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static, null, paramTypes, null);
                 if (info == null)
                 {
-                    throw new ArgumentException(string.Format("Method {0}.{1}({2}) not found in assembly {3}!", new object[] { typeName, methodName, ToCommaSeparatedString<Type>(paramTypes), assembly.FullName }));
+                    throw new ArgumentException($"Method {typeName}.{methodName}({ToCommaSeparatedString<Type>(paramTypes)}) not found in assembly {assembly.FullName}!");
                 }
                 obj2 = info.Invoke(null, args);
             }
@@ -49,10 +47,8 @@
             return obj2;
         }
 
-        private static object ExecuteCode(Type target, MethodInfo method, object[] args)
-        {
-            return method.Invoke(!method.IsStatic ? GetActor(target) : null, args);
-        }
+        private static object ExecuteCode(Type target, MethodInfo method, object[] args) => 
+            method.Invoke(!method.IsStatic ? GetActor(target) : null, args);
 
         public static object ExecuteExternalCode(string parcel)
         {
@@ -76,7 +72,7 @@
                     MethodInfo method = target.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, null, types, null);
                     if (method == null)
                     {
-                        throw new Exception(string.Format("Could not find method {0}.{1} in assembly {2} located in {3}.", new object[] { target.FullName, name, assembly.GetName().Name, path }));
+                        throw new Exception($"Could not find method {target.FullName}.{name} in assembly {assembly.GetName().Name} located in {path}.");
                     }
                     object[] args = (object[]) s_Formatter.Deserialize(stream);
                     obj2 = ExecuteCode(target, method, args);
@@ -89,16 +85,11 @@
             return obj2;
         }
 
-        private static object GetActor(Type type)
-        {
-            ConstructorInfo constructor = type.GetConstructor(new Type[0]);
-            return ((constructor == null) ? null : constructor.Invoke(new object[0]));
-        }
+        private static object GetActor(Type type) => 
+            type.GetConstructor(new Type[0])?.Invoke(new object[0]);
 
-        private static string ToCommaSeparatedString<T>(IEnumerable<T> items)
-        {
-            return string.Join(", ", Enumerable.ToArray<string>(Enumerable.Select<T, string>(items, new Func<T, string>(null, (IntPtr) <ToCommaSeparatedString`1>m__0<T>))));
-        }
+        private static string ToCommaSeparatedString<T>(IEnumerable<T> items) => 
+            string.Join(", ", Enumerable.Select<T, string>(items, new Func<T, string>(null, (IntPtr) <ToCommaSeparatedString`1>m__0<T>)).ToArray<string>());
 
         private class AssemblyResolver
         {

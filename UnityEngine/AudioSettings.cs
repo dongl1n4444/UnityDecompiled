@@ -49,10 +49,8 @@
         /// <returns>
         /// <para>True if all settings could be successfully applied.</para>
         /// </returns>
-        public static bool Reset(AudioConfiguration config)
-        {
-            return INTERNAL_CALL_Reset(ref config);
-        }
+        public static bool Reset(AudioConfiguration config) => 
+            INTERNAL_CALL_Reset(ref config);
 
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("AudioSettings.SetDSPBufferSize is deprecated and has been replaced by audio project settings and the AudioSettings.GetConfiguration/AudioSettings.Reset API.")]
         public static extern void SetDSPBufferSize(int bufferLength, int numBuffers);
@@ -63,13 +61,8 @@
         public static AudioSpeakerMode driverCapabilities { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("AudioSettings.driverCaps is obsolete. Use driverCapabilities instead (UnityUpgradable) -> driverCapabilities", true)]
-        public static AudioSpeakerMode driverCaps
-        {
-            get
-            {
-                return driverCapabilities;
-            }
-        }
+        public static AudioSpeakerMode driverCaps =>
+            driverCapabilities;
 
         /// <summary>
         /// <para>Returns the current time of the audio system.</para>

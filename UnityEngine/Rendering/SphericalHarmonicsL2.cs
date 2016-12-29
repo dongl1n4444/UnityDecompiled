@@ -338,9 +338,8 @@
             return (this == sl);
         }
 
-        public static SphericalHarmonicsL2 operator *(SphericalHarmonicsL2 lhs, float rhs)
-        {
-            return new SphericalHarmonicsL2 { 
+        public static SphericalHarmonicsL2 operator *(SphericalHarmonicsL2 lhs, float rhs) => 
+            new SphericalHarmonicsL2 { 
                 shr0 = lhs.shr0 * rhs,
                 shr1 = lhs.shr1 * rhs,
                 shr2 = lhs.shr2 * rhs,
@@ -369,11 +368,9 @@
                 shb7 = lhs.shb7 * rhs,
                 shb8 = lhs.shb8 * rhs
             };
-        }
 
-        public static SphericalHarmonicsL2 operator *(float lhs, SphericalHarmonicsL2 rhs)
-        {
-            return new SphericalHarmonicsL2 { 
+        public static SphericalHarmonicsL2 operator *(float lhs, SphericalHarmonicsL2 rhs) => 
+            new SphericalHarmonicsL2 { 
                 shr0 = rhs.shr0 * lhs,
                 shr1 = rhs.shr1 * lhs,
                 shr2 = rhs.shr2 * lhs,
@@ -402,11 +399,9 @@
                 shb7 = rhs.shb7 * lhs,
                 shb8 = rhs.shb8 * lhs
             };
-        }
 
-        public static SphericalHarmonicsL2 operator +(SphericalHarmonicsL2 lhs, SphericalHarmonicsL2 rhs)
-        {
-            return new SphericalHarmonicsL2 { 
+        public static SphericalHarmonicsL2 operator +(SphericalHarmonicsL2 lhs, SphericalHarmonicsL2 rhs) => 
+            new SphericalHarmonicsL2 { 
                 shr0 = lhs.shr0 + rhs.shr0,
                 shr1 = lhs.shr1 + rhs.shr1,
                 shr2 = lhs.shr2 + rhs.shr2,
@@ -435,17 +430,12 @@
                 shb7 = lhs.shb7 + rhs.shb7,
                 shb8 = lhs.shb8 + rhs.shb8
             };
-        }
 
-        public static bool operator ==(SphericalHarmonicsL2 lhs, SphericalHarmonicsL2 rhs)
-        {
-            return (((((((lhs.shr0 == rhs.shr0) && (lhs.shr1 == rhs.shr1)) && ((lhs.shr2 == rhs.shr2) && (lhs.shr3 == rhs.shr3))) && (((lhs.shr4 == rhs.shr4) && (lhs.shr5 == rhs.shr5)) && ((lhs.shr6 == rhs.shr6) && (lhs.shr7 == rhs.shr7)))) && ((((lhs.shr8 == rhs.shr8) && (lhs.shg0 == rhs.shg0)) && ((lhs.shg1 == rhs.shg1) && (lhs.shg2 == rhs.shg2))) && (((lhs.shg3 == rhs.shg3) && (lhs.shg4 == rhs.shg4)) && ((lhs.shg5 == rhs.shg5) && (lhs.shg6 == rhs.shg6))))) && (((((lhs.shg7 == rhs.shg7) && (lhs.shg8 == rhs.shg8)) && ((lhs.shb0 == rhs.shb0) && (lhs.shb1 == rhs.shb1))) && (((lhs.shb2 == rhs.shb2) && (lhs.shb3 == rhs.shb3)) && ((lhs.shb4 == rhs.shb4) && (lhs.shb5 == rhs.shb5)))) && ((lhs.shb6 == rhs.shb6) && (lhs.shb7 == rhs.shb7)))) && (lhs.shb8 == rhs.shb8));
-        }
+        public static bool operator ==(SphericalHarmonicsL2 lhs, SphericalHarmonicsL2 rhs) => 
+            (((((((lhs.shr0 == rhs.shr0) && (lhs.shr1 == rhs.shr1)) && ((lhs.shr2 == rhs.shr2) && (lhs.shr3 == rhs.shr3))) && (((lhs.shr4 == rhs.shr4) && (lhs.shr5 == rhs.shr5)) && ((lhs.shr6 == rhs.shr6) && (lhs.shr7 == rhs.shr7)))) && ((((lhs.shr8 == rhs.shr8) && (lhs.shg0 == rhs.shg0)) && ((lhs.shg1 == rhs.shg1) && (lhs.shg2 == rhs.shg2))) && (((lhs.shg3 == rhs.shg3) && (lhs.shg4 == rhs.shg4)) && ((lhs.shg5 == rhs.shg5) && (lhs.shg6 == rhs.shg6))))) && (((((lhs.shg7 == rhs.shg7) && (lhs.shg8 == rhs.shg8)) && ((lhs.shb0 == rhs.shb0) && (lhs.shb1 == rhs.shb1))) && (((lhs.shb2 == rhs.shb2) && (lhs.shb3 == rhs.shb3)) && ((lhs.shb4 == rhs.shb4) && (lhs.shb5 == rhs.shb5)))) && ((lhs.shb6 == rhs.shb6) && (lhs.shb7 == rhs.shb7)))) && (lhs.shb8 == rhs.shb8));
 
-        public static bool operator !=(SphericalHarmonicsL2 lhs, SphericalHarmonicsL2 rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static bool operator !=(SphericalHarmonicsL2 lhs, SphericalHarmonicsL2 rhs) => 
+            !(lhs == rhs);
     }
 }
 

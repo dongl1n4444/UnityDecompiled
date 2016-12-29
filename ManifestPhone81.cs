@@ -22,10 +22,8 @@ internal class ManifestPhone81 : ManifestWSA
         this.supportedOrientations = list;
     }
 
-    protected override XElement CreateInitialRotationPreferenceElement()
-    {
-        return base.CreateInitialRotationPreferenceElement(this._m3Namespace, this.supportedOrientations);
-    }
+    protected override XElement CreateInitialRotationPreferenceElement() => 
+        base.CreateInitialRotationPreferenceElement(this._m3Namespace, this.supportedOrientations);
 
     protected override XElement CreatePackageElement()
     {
@@ -36,10 +34,8 @@ internal class ManifestPhone81 : ManifestWSA
         return element;
     }
 
-    protected override XElement CreatePhoneIdentityElement()
-    {
-        return new XElement((XName) (this._mpNamespace + "PhoneIdentity"), new object[] { new XAttribute("PhoneProductId", base.ProductId), new XAttribute("PhonePublisherId", Guid.Empty.ToString("D", CultureInfo.InvariantCulture)) });
-    }
+    protected override XElement CreatePhoneIdentityElement() => 
+        new XElement((XName) (this._mpNamespace + "PhoneIdentity"), new object[] { new XAttribute("PhoneProductId", base.ProductId), new XAttribute("PhonePublisherId", Guid.Empty.ToString("D", CultureInfo.InvariantCulture)) });
 
     protected override XElement CreatePrerequisitesElement()
     {
@@ -79,7 +75,7 @@ internal class ManifestPhone81 : ManifestWSA
                 break;
 
             default:
-                throw new Exception(string.Format("Invalid WSADefaultTileSize value ({0}).", PlayerSettings.WSA.defaultTileSize));
+                throw new Exception($"Invalid WSADefaultTileSize value ({PlayerSettings.WSA.defaultTileSize}).");
         }
         if (!string.IsNullOrEmpty(str))
         {
@@ -120,28 +116,13 @@ internal class ManifestPhone81 : ManifestWSA
         return (!element.HasElements ? null : element);
     }
 
-    protected override XNamespace DefaultNamespace
-    {
-        get
-        {
-            return this._defaultNamespace;
-        }
-    }
+    protected override XNamespace DefaultNamespace =>
+        this._defaultNamespace;
 
-    protected override string PackageName
-    {
-        get
-        {
-            return PlayerSettings.productGUID.ToString("D", CultureInfo.InvariantCulture);
-        }
-    }
+    protected override string PackageName =>
+        PlayerSettings.productGUID.ToString("D", CultureInfo.InvariantCulture);
 
-    protected override string StoreLogo
-    {
-        get
-        {
-            return base.Images.phoneStoreLogo;
-        }
-    }
+    protected override string StoreLogo =>
+        base.Images.phoneStoreLogo;
 }
 

@@ -25,40 +25,26 @@
             this.m_Platform = platform;
         }
 
-        private static string EnvironmentGetCurrentDirectory()
-        {
-            return Environment.CurrentDirectory;
-        }
+        private static string EnvironmentGetCurrentDirectory() => 
+            Environment.CurrentDirectory;
 
-        private static string GetEnvironmentMachineName()
-        {
-            return Environment.MachineName;
-        }
+        private static string GetEnvironmentMachineName() => 
+            Environment.MachineName;
 
-        private static string GetEnvironmentOSVersion()
-        {
-            return Environment.OSVersion.ToString();
-        }
+        private static string GetEnvironmentOSVersion() => 
+            Environment.OSVersion.ToString();
 
-        private static string GetEnvironmentOSVersionPlatform()
-        {
-            return Environment.OSVersion.Platform.ToString();
-        }
+        private static string GetEnvironmentOSVersionPlatform() => 
+            Environment.OSVersion.Platform.ToString();
 
-        private static string GetEnvironmentUserDomainName()
-        {
-            return Environment.UserDomainName;
-        }
+        private static string GetEnvironmentUserDomainName() => 
+            Environment.UserDomainName;
 
-        private static string GetEnvironmentUserName()
-        {
-            return Environment.UserName;
-        }
+        private static string GetEnvironmentUserName() => 
+            Environment.UserName;
 
-        private static string GetEnvironmentVersion()
-        {
-            return Environment.Version.ToString();
-        }
+        private static string GetEnvironmentVersion() => 
+            Environment.Version.ToString();
 
         public string GetTestResult()
         {

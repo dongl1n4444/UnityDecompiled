@@ -5,10 +5,8 @@
 
     internal class TerrainEditorUtility
     {
-        internal static bool IsLODTreePrototype(GameObject prefab)
-        {
-            return ((prefab != null) && (prefab.GetComponent<LODGroup>() != null));
-        }
+        internal static bool IsLODTreePrototype(GameObject prefab) => 
+            ((prefab != null) && (prefab.GetComponent<LODGroup>() != null));
 
         internal static void RemoveDetail(Terrain terrain, int index)
         {

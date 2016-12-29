@@ -78,10 +78,8 @@
         [Obsolete("light.attenuate was removed; all lights always attenuate now", true)]
         public bool attenuate
         {
-            get
-            {
-                return true;
-            }
+            get => 
+                true;
             set
             {
             }
@@ -175,10 +173,8 @@
         [Obsolete("light.shadowConstantBias was removed, use light.shadowBias", true)]
         public float shadowConstantBias
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }
@@ -202,10 +198,8 @@
         [Obsolete("light.shadowObjectSizeBias was removed, use light.shadowBias", true)]
         public float shadowObjectSizeBias
         {
-            get
-            {
-                return 0f;
-            }
+            get => 
+                0f;
             set
             {
             }

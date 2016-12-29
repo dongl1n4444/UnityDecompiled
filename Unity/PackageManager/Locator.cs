@@ -54,7 +54,7 @@
             {
                 <>f__am$cache2 = new Func<InternalPackageInfo, PackageVersion>(null, (IntPtr) <GetPackageManager>m__2);
             }
-            InternalPackageInfo info = Enumerable.FirstOrDefault<InternalPackageInfo>(Enumerable.OrderByDescending<InternalPackageInfo, PackageVersion>(Enumerable.Where<InternalPackageInfo>(s_Tree, new Func<InternalPackageInfo, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2));
+            InternalPackageInfo info = Enumerable.OrderByDescending<InternalPackageInfo, PackageVersion>(Enumerable.Where<InternalPackageInfo>(s_Tree, new Func<InternalPackageInfo, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2).FirstOrDefault<InternalPackageInfo>();
             if (info != null)
             {
                 return info.package;
@@ -108,7 +108,7 @@
             {
                 ScanDirectory(editorInstallPath, editorInstallPath, 0);
             }
-            string[] paths = new string[] { installLocation, string.Format("{0}.{1}", version.major, version.minor) };
+            string[] paths = new string[] { installLocation, $"{version.major}.{version.minor}" };
             string path = CombinePaths(paths);
             if (Directory.Exists(path))
             {
@@ -130,7 +130,7 @@
                     ScanDirectory(str, str, 0);
                 }
             }
-            string[] paths = new string[] { installLocation, string.Format("{0}.{1}", version.major, version.minor) };
+            string[] paths = new string[] { installLocation, $"{version.major}.{version.minor}" };
             string path = CombinePaths(paths);
             if (Directory.Exists(path))
             {
@@ -199,10 +199,8 @@
         public static bool Completed
         {
             [CompilerGenerated]
-            get
-            {
-                return <Completed>k__BackingField;
-            }
+            get => 
+                <Completed>k__BackingField;
             [CompilerGenerated]
             private set
             {
@@ -233,21 +231,11 @@
             }
         }
 
-        private static bool isLinux
-        {
-            get
-            {
-                return ((Environment.OSVersion.Platform == PlatformID.Unix) && Directory.Exists("/proc"));
-            }
-        }
+        private static bool isLinux =>
+            ((Environment.OSVersion.Platform == PlatformID.Unix) && Directory.Exists("/proc"));
 
-        private static string moduleFile
-        {
-            get
-            {
-                return "ivy.xml";
-            }
-        }
+        private static string moduleFile =>
+            "ivy.xml";
 
         public static string moduleLocation
         {
@@ -273,23 +261,16 @@
             }
         }
 
-        private static bool teamcity
-        {
-            get
-            {
-                return (Environment.GetEnvironmentVariable("UNITY_THISISABUILDMACHINE") == "1");
-            }
-        }
+        private static bool teamcity =>
+            (Environment.GetEnvironmentVariable("UNITY_THISISABUILDMACHINE") == "1");
 
         [CompilerGenerated]
         private sealed class <GetPackageManager>c__AnonStorey0
         {
             internal PackageVersion version;
 
-            internal bool <>m__0(InternalPackageInfo p)
-            {
-                return ((p.package.type == PackageType.PackageManager) && p.module.UnityVersion.IsCompatibleWith(this.version));
-            }
+            internal bool <>m__0(InternalPackageInfo p) => 
+                ((p.package.type == PackageType.PackageManager) && p.module.UnityVersion.IsCompatibleWith(this.version));
         }
     }
 }

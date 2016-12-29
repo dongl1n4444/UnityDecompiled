@@ -37,10 +37,8 @@ internal abstract class GendarmeValidationRule : IValidationRule
     }
 
     protected abstract GendarmeOptions ConfigureGendarme(IEnumerable<string> userAssemblies);
-    private static ManagedProgram ManagedProgramFor(string exe, string arguments)
-    {
-        return new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), null, exe, arguments, false, null);
-    }
+    private static ManagedProgram ManagedProgramFor(string exe, string arguments) => 
+        new ManagedProgram(MonoInstallationFinder.GetMonoInstallation("MonoBleedingEdge"), null, exe, arguments, false, null);
 
     private static bool StartManagedProgram(string exe, string arguments, CompilerOutputParserBase parser, ref IEnumerable<CompilerMessage> compilerMessages)
     {

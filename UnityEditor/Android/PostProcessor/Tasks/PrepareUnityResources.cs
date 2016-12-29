@@ -44,13 +44,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Preparing Unity resources";
-            }
-        }
+        public string Name =>
+            "Preparing Unity resources";
     }
 }
 

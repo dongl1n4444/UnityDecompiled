@@ -166,17 +166,13 @@
             }
         }
 
-        private static bool ShowAmbientField()
-        {
-            return (Lightmapping.realtimeGI || Lightmapping.bakedGI);
-        }
+        private static bool ShowAmbientField() => 
+            (Lightmapping.realtimeGI || Lightmapping.bakedGI);
 
         public EditorWindow parentWindow
         {
-            get
-            {
-                return this.m_ParentWindow;
-            }
+            get => 
+                this.m_ParentWindow;
             set
             {
                 if (this.m_ParentWindow != null)
@@ -199,7 +195,7 @@
             public static readonly GUIContent createLight = EditorGUIUtility.TextContent("Create Light");
             public static readonly GUIContent customReflection = EditorGUIUtility.TextContent("Cubemap|Custom reflection cubemap.");
             public static readonly GUIContent defaultReflectionResolution = EditorGUIUtility.TextContent("Resolution|Cubemap resolution for default reflection.");
-            public static GUIContent[] defaultReflectionSizes = Enumerable.ToArray<GUIContent>(Enumerable.Select<int, GUIContent>(defaultReflectionSizesValues, new Func<int, GUIContent>(null, (IntPtr) <defaultReflectionSizes>m__0)));
+            public static GUIContent[] defaultReflectionSizes = Enumerable.Select<int, GUIContent>(defaultReflectionSizesValues, new Func<int, GUIContent>(null, (IntPtr) <defaultReflectionSizes>m__0)).ToArray<GUIContent>();
             public static int[] defaultReflectionSizesValues = new int[] { 0x80, 0x100, 0x200, 0x400 };
             public static readonly GUIContent defReflectionWarning = EditorGUIUtility.TextContent("Reflection Source material is not set. The default material will be black.");
             public static readonly GUIContent environmentHeader = EditorGUIUtility.TextContent("Environment Lighting|Settings for the scene's surroundings, that can cast light into the scene.");
@@ -225,10 +221,8 @@
             }
 
             [CompilerGenerated]
-            private static GUIContent <defaultReflectionSizes>m__0(int n)
-            {
-                return new GUIContent(n.ToString());
-            }
+            private static GUIContent <defaultReflectionSizes>m__0(int n) => 
+                new GUIContent(n.ToString());
         }
     }
 }

@@ -13,10 +13,8 @@
         {
         }
 
-        public bool processMessage(string jsonRequest, WebViewV8CallbackCSharp callback)
-        {
-            return this.ProcessMessage(jsonRequest, callback);
-        }
+        public bool processMessage(string jsonRequest, WebViewV8CallbackCSharp callback) => 
+            this.ProcessMessage(jsonRequest, callback);
 
         public bool ProcessMessage(string jsonRequest, WebViewV8CallbackCSharp callback)
         {
@@ -28,10 +26,8 @@
 
         public WebView webView
         {
-            get
-            {
-                return this.m_WebView;
-            }
+            get => 
+                this.m_WebView;
             set
             {
                 this.m_WebView = value;

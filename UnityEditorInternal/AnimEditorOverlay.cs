@@ -64,10 +64,8 @@
             }
         }
 
-        public float TimeToPixel(float time)
-        {
-            return this.state.TimeToPixel(time);
-        }
+        public float TimeToPixel(float time) => 
+            this.state.TimeToPixel(time);
 
         public float ValueToPixel(float value)
         {
@@ -77,21 +75,11 @@
             return ((value * num) + num2);
         }
 
-        public Rect contentRect
-        {
-            get
-            {
-                return this.m_ContentRect;
-            }
-        }
+        public Rect contentRect =>
+            this.m_ContentRect;
 
-        public Rect rect
-        {
-            get
-            {
-                return this.m_Rect;
-            }
-        }
+        public Rect rect =>
+            this.m_Rect;
     }
 }
 

@@ -312,40 +312,28 @@
         }
 
         [CompilerGenerated]
-        private static float <GetHandleSize>m__17()
-        {
-            return 5f;
-        }
+        private static float <GetHandleSize>m__17() => 
+            5f;
 
         [CompilerGenerated]
-        private static Vector3 <GetPointLTangent>m__2(int i)
-        {
-            return Vector3.zero;
-        }
+        private static Vector3 <GetPointLTangent>m__2(int i) => 
+            Vector3.zero;
 
         [CompilerGenerated]
-        private static Vector3 <GetPointPosition>m__0(int i)
-        {
-            return Vector3.zero;
-        }
+        private static Vector3 <GetPointPosition>m__0(int i) => 
+            Vector3.zero;
 
         [CompilerGenerated]
-        private static Vector3 <GetPointRTangent>m__4(int i)
-        {
-            return Vector3.zero;
-        }
+        private static Vector3 <GetPointRTangent>m__4(int i) => 
+            Vector3.zero;
 
         [CompilerGenerated]
-        private static int <GetPointsCount>m__A()
-        {
-            return 0;
-        }
+        private static int <GetPointsCount>m__A() => 
+            0;
 
         [CompilerGenerated]
-        private static TangentMode <GetTangentMode>m__6(int i)
-        {
-            return TangentMode.Linear;
-        }
+        private static TangentMode <GetTangentMode>m__6(int i) => 
+            TangentMode.Linear;
 
         [CompilerGenerated]
         private static void <InsertPointAt>m__8(int i, Vector3 p)
@@ -353,16 +341,12 @@
         }
 
         [CompilerGenerated]
-        private static Vector2 <LocalToScreen>m__C(Vector3 i)
-        {
-            return i;
-        }
+        private static Vector2 <LocalToScreen>m__C(Vector3 i) => 
+            i;
 
         [CompilerGenerated]
-        private static Matrix4x4 <LocalToWorldMatrix>m__D()
-        {
-            return Matrix4x4.identity;
-        }
+        private static Matrix4x4 <LocalToWorldMatrix>m__D() => 
+            Matrix4x4.identity;
 
         [CompilerGenerated]
         private static void <OnPointClick>m__15(int i)
@@ -370,10 +354,8 @@
         }
 
         [CompilerGenerated]
-        private static bool <OpenEnded>m__16()
-        {
-            return false;
-        }
+        private static bool <OpenEnded>m__16() => 
+            false;
 
         [CompilerGenerated]
         private static void <RecordUndo>m__12()
@@ -391,10 +373,8 @@
         }
 
         [CompilerGenerated]
-        private static Vector3 <ScreenToLocal>m__B(Vector2 i)
-        {
-            return (Vector3) i;
-        }
+        private static Vector3 <ScreenToLocal>m__B(Vector2 i) => 
+            ((Vector3) i);
 
         [CompilerGenerated]
         private static void <SetPointLTangent>m__3(int i, Vector3 p)
@@ -417,10 +397,8 @@
         }
 
         [CompilerGenerated]
-        private static Vector3 <Snap>m__13(Vector3 i)
-        {
-            return i;
-        }
+        private static Vector3 <Snap>m__13(Vector3 i) => 
+            i;
 
         public static void CircleCap(int controlID, Vector3 position, Quaternion rotation, float size, EventType eventType)
         {
@@ -521,15 +499,11 @@
             }
         }
 
-        private static float DistanceToCircleInternal(Vector3 position, Quaternion rotation, float size)
-        {
-            return HandleUtility.DistanceToCircle(position, size);
-        }
+        private static float DistanceToCircleInternal(Vector3 position, Quaternion rotation, float size) => 
+            HandleUtility.DistanceToCircle(position, size);
 
-        private static Vector3 DoSlider(int id, Vector3 position, Vector3 slide1, Vector3 slide2, float s, Handles.CapFunction cap)
-        {
-            return Slider2D.Do(id, position, Vector3.zero, Vector3.Cross(slide1, slide2), slide1, slide2, s, cap, Vector2.zero, false);
-        }
+        private static Vector3 DoSlider(int id, Vector3 position, Vector3 slide1, Vector3 slide2, float s, Handles.CapFunction cap) => 
+            Slider2D.Do(id, position, Vector3.zero, Vector3.Cross(slide1, slide2), slide1, slide2, s, cap, Vector2.zero, false);
 
         private Vector3 DoTangent(Vector3 p0, Vector3 t0, int cid, int pointIndex, Color color)
         {
@@ -552,10 +526,8 @@
             return ((vector.magnitude >= handleSizeForPoint) ? vector : Vector3.zero);
         }
 
-        private static bool EdgeDragModifiersActive()
-        {
-            return ((Event.current.modifiers == EventModifiers.Control) || (Event.current.modifiers == EventModifiers.Command));
-        }
+        private static bool EdgeDragModifiersActive() => 
+            ((Event.current.modifiers == EventModifiers.Control) || (Event.current.modifiers == EventModifiers.Command));
 
         public void Edges()
         {
@@ -660,7 +632,7 @@
                 }
                 else
                 {
-                    Bounds bounds = new Bounds(this.GetPointPosition.Invoke(Enumerable.First<int>(this.selectedPoints)), Vector3.zero);
+                    Bounds bounds = new Bounds(this.GetPointPosition.Invoke(this.selectedPoints.First<int>()), Vector3.zero);
                     foreach (int num in this.selectedPoints)
                     {
                         bounds.Encapsulate(this.GetPointPosition.Invoke(num));
@@ -791,15 +763,11 @@
             return k_UnSelectedFill;
         }
 
-        private float GetHandleSizeForPoint(int index)
-        {
-            return ((Camera.current == null) ? (this.GetHandleSize.Invoke() / Handles.matrix.m00) : (HandleUtility.GetHandleSize(this.GetPointPosition.Invoke(index)) * 0.075f));
-        }
+        private float GetHandleSizeForPoint(int index) => 
+            ((Camera.current == null) ? (this.GetHandleSize.Invoke() / Handles.matrix.m00) : (HandleUtility.GetHandleSize(this.GetPointPosition.Invoke(index)) * 0.075f));
 
-        public static TangentMode GetNextTangentMode(TangentMode current)
-        {
-            return ((current + 1) % Enum.GetValues(typeof(TangentMode)).Length);
-        }
+        public static TangentMode GetNextTangentMode(TangentMode current) => 
+            ((current + 1) % Enum.GetValues(typeof(TangentMode)).Length);
 
         private Color GetOutlineColorForPoint(int pointIndex, int handleID)
         {
@@ -835,10 +803,8 @@
             return GetPoint(this.GetPointPosition.Invoke(num), this.GetPointPosition.Invoke(num2), this.GetPointRTangent.Invoke(num), this.GetPointLTangent.Invoke(num2), t);
         }
 
-        private float GetTangentSizeForPoint(int index)
-        {
-            return (this.GetHandleSizeForPoint(index) * 0.8f);
-        }
+        private float GetTangentSizeForPoint(int index) => 
+            (this.GetHandleSizeForPoint(index) * 0.8f);
 
         private void HandleEdgeDragging(int closestEdge, float closestEdgeDist)
         {
@@ -984,10 +950,8 @@
             return float.MaxValue;
         }
 
-        private static int NextIndex(int index, int total)
-        {
-            return mod(index + 1, total);
-        }
+        private static int NextIndex(int index, int total) => 
+            mod(index + 1, total);
 
         public void OnGUI()
         {
@@ -1074,10 +1038,8 @@
             }
         }
 
-        private static int PreviousIndex(int index, int total)
-        {
-            return mod(index - 1, total);
-        }
+        private static int PreviousIndex(int index, int total) => 
+            mod(index - 1, total);
 
         private static Vector3 ProjectPointOnPlane(Vector3 planeNormal, Vector3 planePoint, Vector3 point)
         {
@@ -1223,10 +1185,8 @@
 
         public int activeEdge
         {
-            get
-            {
-                return this.m_ActiveEdge;
-            }
+            get => 
+                this.m_ActiveEdge;
             set
             {
                 this.m_ActiveEdge = value;
@@ -1246,10 +1206,8 @@
         private static Color handleFillColor
         {
             [CompilerGenerated]
-            get
-            {
-                return <handleFillColor>k__BackingField;
-            }
+            get => 
+                <handleFillColor>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -1257,21 +1215,14 @@
             }
         }
 
-        private static Quaternion handleMatrixrotation
-        {
-            get
-            {
-                return Quaternion.LookRotation((Vector3) Handles.matrix.GetColumn(2), (Vector3) Handles.matrix.GetColumn(1));
-            }
-        }
+        private static Quaternion handleMatrixrotation =>
+            Quaternion.LookRotation((Vector3) Handles.matrix.GetColumn(2), (Vector3) Handles.matrix.GetColumn(1));
 
         private static Color handleOutlineColor
         {
             [CompilerGenerated]
-            get
-            {
-                return <handleOutlineColor>k__BackingField;
-            }
+            get => 
+                <handleOutlineColor>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -1283,13 +1234,8 @@
 
         public Texture2D lineTexture { get; set; }
 
-        public HashSet<int> selectedPoints
-        {
-            get
-            {
-                return this.m_Selection.indices;
-            }
-        }
+        public HashSet<int> selectedPoints =>
+            this.m_Selection.indices;
 
         public delegate float DistanceToControl(Vector3 pos, Quaternion rotation, float handleSize);
 

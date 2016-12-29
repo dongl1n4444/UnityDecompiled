@@ -6,15 +6,11 @@ internal class ManifestStore81 : ManifestStore
 {
     private readonly XNamespace _m2Namespace = "http://schemas.microsoft.com/appx/2013/manifest";
 
-    protected override XElement CreateHumanInterfaceDeviceCapabilityElement()
-    {
-        return this.CreateHumanInterfaceDeviceCapabilityElement(this._m2Namespace);
-    }
+    protected override XElement CreateHumanInterfaceDeviceCapabilityElement() => 
+        this.CreateHumanInterfaceDeviceCapabilityElement(this._m2Namespace);
 
-    protected override XElement CreateInitialRotationPreferenceElement()
-    {
-        return base.CreateInitialRotationPreferenceElement(this._m2Namespace, base.supportedOrientations);
-    }
+    protected override XElement CreateInitialRotationPreferenceElement() => 
+        base.CreateInitialRotationPreferenceElement(this._m2Namespace, base.supportedOrientations);
 
     protected override XElement CreatePackageElement()
     {
@@ -55,7 +51,7 @@ internal class ManifestStore81 : ManifestStore
                 break;
 
             default:
-                throw new Exception(string.Format("Invalid WSADefaultTileSize value ({0}).", PlayerSettings.WSA.defaultTileSize));
+                throw new Exception($"Invalid WSADefaultTileSize value ({PlayerSettings.WSA.defaultTileSize}).");
         }
         if (!string.IsNullOrEmpty(str))
         {

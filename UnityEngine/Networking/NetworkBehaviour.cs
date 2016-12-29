@@ -30,29 +30,23 @@
             this.m_SyncVarDirtyBits = 0;
         }
 
-        internal bool ContainsCommandDelegate(int cmdHash)
-        {
-            return s_CmdHandlerDelegates.ContainsKey(cmdHash);
-        }
+        internal bool ContainsCommandDelegate(int cmdHash) => 
+            s_CmdHandlerDelegates.ContainsKey(cmdHash);
 
         internal static void DumpInvokers()
         {
             Debug.Log("DumpInvokers size:" + s_CmdHandlerDelegates.Count);
             foreach (KeyValuePair<int, Invoker> pair in s_CmdHandlerDelegates)
             {
-                Debug.Log(string.Concat(new object[] { "  Invoker:", pair.Value.invokeClass, ":", DotNetCompatibility.GetMethodName(pair.Value.invokeFunction), " ", pair.Value.invokeType, " ", pair.Key }));
+                Debug.Log(string.Concat(new object[] { "  Invoker:", pair.Value.invokeClass, ":", pair.Value.invokeFunction.GetMethodName(), " ", pair.Value.invokeType, " ", pair.Key }));
             }
         }
 
-        internal static string GetCmdHashCmdName(int cmdHash)
-        {
-            return GetCmdHashPrefixName(cmdHash, "InvokeCmd");
-        }
+        internal static string GetCmdHashCmdName(int cmdHash) => 
+            GetCmdHashPrefixName(cmdHash, "InvokeCmd");
 
-        internal static string GetCmdHashEventName(int cmdHash)
-        {
-            return GetCmdHashPrefixName(cmdHash, "InvokeSyncEvent");
-        }
+        internal static string GetCmdHashEventName(int cmdHash) => 
+            GetCmdHashPrefixName(cmdHash, "InvokeSyncEvent");
 
         internal static string GetCmdHashHandlerName(int cmdHash)
         {
@@ -61,13 +55,11 @@
                 return cmdHash.ToString();
             }
             Invoker invoker = s_CmdHandlerDelegates[cmdHash];
-            return (invoker.invokeType + ":" + DotNetCompatibility.GetMethodName(invoker.invokeFunction));
+            return (invoker.invokeType + ":" + invoker.invokeFunction.GetMethodName());
         }
 
-        internal static string GetCmdHashListName(int cmdHash)
-        {
-            return GetCmdHashPrefixName(cmdHash, "InvokeSyncList");
-        }
+        internal static string GetCmdHashListName(int cmdHash) => 
+            GetCmdHashPrefixName(cmdHash, "InvokeSyncList");
 
         private static string GetCmdHashPrefixName(int cmdHash, string prefix)
         {
@@ -76,7 +68,7 @@
                 return cmdHash.ToString();
             }
             Invoker invoker = s_CmdHandlerDelegates[cmdHash];
-            string methodName = DotNetCompatibility.GetMethodName(invoker.invokeFunction);
+            string methodName = invoker.invokeFunction.GetMethodName();
             if (methodName.IndexOf(prefix) > -1)
             {
                 methodName = methodName.Substring(prefix.Length);
@@ -84,10 +76,8 @@
             return methodName;
         }
 
-        internal static string GetCmdHashRpcName(int cmdHash)
-        {
-            return GetCmdHashPrefixName(cmdHash, "InvokeRpc");
-        }
+        internal static string GetCmdHashRpcName(int cmdHash) => 
+            GetCmdHashPrefixName(cmdHash, "InvokeRpc");
 
         internal int GetDirtyChannel()
         {
@@ -146,25 +136,17 @@
             return true;
         }
 
-        internal static bool GetInvokerForHashClientRpc(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction)
-        {
-            return GetInvokerForHash(cmdHash, UNetInvokeType.ClientRpc, out invokeClass, out invokeFunction);
-        }
+        internal static bool GetInvokerForHashClientRpc(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction) => 
+            GetInvokerForHash(cmdHash, UNetInvokeType.ClientRpc, out invokeClass, out invokeFunction);
 
-        internal static bool GetInvokerForHashCommand(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction)
-        {
-            return GetInvokerForHash(cmdHash, UNetInvokeType.Command, out invokeClass, out invokeFunction);
-        }
+        internal static bool GetInvokerForHashCommand(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction) => 
+            GetInvokerForHash(cmdHash, UNetInvokeType.Command, out invokeClass, out invokeFunction);
 
-        internal static bool GetInvokerForHashSyncEvent(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction)
-        {
-            return GetInvokerForHash(cmdHash, UNetInvokeType.SyncEvent, out invokeClass, out invokeFunction);
-        }
+        internal static bool GetInvokerForHashSyncEvent(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction) => 
+            GetInvokerForHash(cmdHash, UNetInvokeType.SyncEvent, out invokeClass, out invokeFunction);
 
-        internal static bool GetInvokerForHashSyncList(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction)
-        {
-            return GetInvokerForHash(cmdHash, UNetInvokeType.SyncList, out invokeClass, out invokeFunction);
-        }
+        internal static bool GetInvokerForHashSyncList(int cmdHash, out System.Type invokeClass, out CmdDelegate invokeFunction) => 
+            GetInvokerForHash(cmdHash, UNetInvokeType.SyncList, out invokeClass, out invokeFunction);
 
         /// <summary>
         /// <para>This virtual function is used to specify the QoS channel to use for SyncVar updates for this script.</para>
@@ -172,10 +154,8 @@
         /// <returns>
         /// <para>The QoS channel for this script.</para>
         /// </returns>
-        public virtual int GetNetworkChannel()
-        {
-            return 0;
-        }
+        public virtual int GetNetworkChannel() => 
+            0;
 
         /// <summary>
         /// <para>This virtual function is used to specify the send interval to use for SyncVar updates for this script.</para>
@@ -183,10 +163,8 @@
         /// <returns>
         /// <para>The time in seconds between updates.</para>
         /// </returns>
-        public virtual float GetNetworkSendInterval()
-        {
-            return 0.1f;
-        }
+        public virtual float GetNetworkSendInterval() => 
+            0.1f;
 
         /// <summary>
         /// <para>Manually invoke a Command.</para>
@@ -197,10 +175,8 @@
         /// <para>Returns true if successful.</para>
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual bool InvokeCommand(int cmdHash, NetworkReader reader)
-        {
-            return this.InvokeCommandDelegate(cmdHash, reader);
-        }
+        public virtual bool InvokeCommand(int cmdHash, NetworkReader reader) => 
+            this.InvokeCommandDelegate(cmdHash, reader);
 
         internal bool InvokeCommandDelegate(int cmdHash, NetworkReader reader)
         {
@@ -230,10 +206,8 @@
         /// <para>Returns true if successful.</para>
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual bool InvokeRPC(int cmdHash, NetworkReader reader)
-        {
-            return this.InvokeRpcDelegate(cmdHash, reader);
-        }
+        public virtual bool InvokeRPC(int cmdHash, NetworkReader reader) => 
+            this.InvokeRpcDelegate(cmdHash, reader);
 
         internal bool InvokeRpcDelegate(int cmdHash, NetworkReader reader)
         {
@@ -263,10 +237,8 @@
         /// <para>Returns true if successful.</para>
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual bool InvokeSyncEvent(int cmdHash, NetworkReader reader)
-        {
-            return this.InvokeSyncEventDelegate(cmdHash, reader);
-        }
+        public virtual bool InvokeSyncEvent(int cmdHash, NetworkReader reader) => 
+            this.InvokeSyncEventDelegate(cmdHash, reader);
 
         internal bool InvokeSyncEventDelegate(int cmdHash, NetworkReader reader)
         {
@@ -284,10 +256,8 @@
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual bool InvokeSyncList(int cmdHash, NetworkReader reader)
-        {
-            return this.InvokeSyncListDelegate(cmdHash, reader);
-        }
+        public virtual bool InvokeSyncList(int cmdHash, NetworkReader reader) => 
+            this.InvokeSyncListDelegate(cmdHash, reader);
 
         internal bool InvokeSyncListDelegate(int cmdHash, NetworkReader reader)
         {
@@ -315,10 +285,8 @@
         /// <returns>
         /// <para>True if the player can see this object.</para>
         /// </returns>
-        public virtual bool OnCheckObserver(NetworkConnection conn)
-        {
-            return true;
-        }
+        public virtual bool OnCheckObserver(NetworkConnection conn) => 
+            true;
 
         /// <summary>
         /// <para>Virtual function to override to receive custom serialization data. The corresponding function to send serialization data is OnSerialize().</para>
@@ -340,10 +308,8 @@
         {
         }
 
-        public virtual bool OnRebuildObservers(HashSet<NetworkConnection> observers, bool initialize)
-        {
-            return false;
-        }
+        public virtual bool OnRebuildObservers(HashSet<NetworkConnection> observers, bool initialize) => 
+            false;
 
         /// <summary>
         /// <para>Virtual function to override to send custom serialization data. The corresponding function to send serialization data is OnDeserialize().</para>
@@ -426,7 +392,7 @@
                 s_CmdHandlerDelegates[cmdHash] = invoker;
                 if (LogFilter.logDev)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterCommandDelegate hash:", cmdHash, " ", DotNetCompatibility.GetMethodName(func) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterCommandDelegate hash:", cmdHash, " ", func.GetMethodName() }));
                 }
             }
         }
@@ -444,7 +410,7 @@
                 s_CmdHandlerDelegates[cmdHash] = invoker;
                 if (LogFilter.logDev)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterEventDelegate hash:", cmdHash, " ", DotNetCompatibility.GetMethodName(func) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterEventDelegate hash:", cmdHash, " ", func.GetMethodName() }));
                 }
             }
         }
@@ -462,7 +428,7 @@
                 s_CmdHandlerDelegates[cmdHash] = invoker;
                 if (LogFilter.logDev)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterRpcDelegate hash:", cmdHash, " ", DotNetCompatibility.GetMethodName(func) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterRpcDelegate hash:", cmdHash, " ", func.GetMethodName() }));
                 }
             }
         }
@@ -480,7 +446,7 @@
                 s_CmdHandlerDelegates[cmdHash] = invoker;
                 if (LogFilter.logDev)
                 {
-                    Debug.Log(string.Concat(new object[] { "RegisterSyncListDelegate hash:", cmdHash, " ", DotNetCompatibility.GetMethodName(func) }));
+                    Debug.Log(string.Concat(new object[] { "RegisterSyncListDelegate hash:", cmdHash, " ", func.GetMethodName() }));
                 }
             }
         }
@@ -626,79 +592,44 @@
         /// <summary>
         /// <para>The NetworkConnection associated with this NetworkIdentity. This is only valid for player objects on the server.</para>
         /// </summary>
-        public NetworkConnection connectionToClient
-        {
-            get
-            {
-                return this.myView.connectionToClient;
-            }
-        }
+        public NetworkConnection connectionToClient =>
+            this.myView.connectionToClient;
 
         /// <summary>
         /// <para>The NetworkConnection associated with this NetworkIdentity. This is only valid for player objects on the server.</para>
         /// </summary>
-        public NetworkConnection connectionToServer
-        {
-            get
-            {
-                return this.myView.connectionToServer;
-            }
-        }
+        public NetworkConnection connectionToServer =>
+            this.myView.connectionToServer;
 
         /// <summary>
         /// <para>This returns true if this object is the authoritative version of the object in the distributed network application.</para>
         /// </summary>
-        public bool hasAuthority
-        {
-            get
-            {
-                return this.myView.hasAuthority;
-            }
-        }
+        public bool hasAuthority =>
+            this.myView.hasAuthority;
 
         /// <summary>
         /// <para>Returns true if running as a client and this object was spawned by a server.</para>
         /// </summary>
-        public bool isClient
-        {
-            get
-            {
-                return this.myView.isClient;
-            }
-        }
+        public bool isClient =>
+            this.myView.isClient;
 
         /// <summary>
         /// <para>This returns true if this object is the one that represents the player on the local machine.</para>
         /// </summary>
-        public bool isLocalPlayer
-        {
-            get
-            {
-                return this.myView.isLocalPlayer;
-            }
-        }
+        public bool isLocalPlayer =>
+            this.myView.isLocalPlayer;
 
         /// <summary>
         /// <para>Returns true if this object is active on an active server.</para>
         /// </summary>
-        public bool isServer
-        {
-            get
-            {
-                return this.myView.isServer;
-            }
-        }
+        public bool isServer =>
+            this.myView.isServer;
 
         /// <summary>
         /// <para>This value is set on the NetworkIdentity and is accessible here for convenient access for scripts.</para>
         /// </summary>
-        public bool localPlayerAuthority
-        {
-            get
-            {
-                return this.myView.localPlayerAuthority;
-            }
-        }
+        public bool localPlayerAuthority =>
+            this.myView.localPlayerAuthority;
 
         private NetworkIdentity myView
         {
@@ -720,39 +651,22 @@
         /// <summary>
         /// <para>The unique network Id of this object.</para>
         /// </summary>
-        public NetworkInstanceId netId
-        {
-            get
-            {
-                return this.myView.netId;
-            }
-        }
+        public NetworkInstanceId netId =>
+            this.myView.netId;
 
         /// <summary>
         /// <para>The id of the player associated with the behaviour.</para>
         /// </summary>
-        public short playerControllerId
-        {
-            get
-            {
-                return this.myView.playerControllerId;
-            }
-        }
+        public short playerControllerId =>
+            this.myView.playerControllerId;
 
-        protected uint syncVarDirtyBits
-        {
-            get
-            {
-                return this.m_SyncVarDirtyBits;
-            }
-        }
+        protected uint syncVarDirtyBits =>
+            this.m_SyncVarDirtyBits;
 
         protected bool syncVarHookGuard
         {
-            get
-            {
-                return this.m_SyncVarGuard;
-            }
+            get => 
+                this.m_SyncVarGuard;
             set
             {
                 this.m_SyncVarGuard = value;
@@ -781,7 +695,7 @@
 
             public string DebugString()
             {
-                object[] objArray1 = new object[] { this.invokeType, ":", this.invokeClass, ":", DotNetCompatibility.GetMethodName(this.invokeFunction) };
+                object[] objArray1 = new object[] { this.invokeType, ":", this.invokeClass, ":", this.invokeFunction.GetMethodName() };
                 return string.Concat(objArray1);
             }
         }

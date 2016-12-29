@@ -10,7 +10,7 @@
 
     public static class ParallelHelper
     {
-        public static void ForEach<TSource>(IEnumerable<TSource> source, Action<TSource> action, [Optional, DefaultParameterValue(null)] Func<bool, bool> shouldForceSerialCallback, [Optional, DefaultParameterValue(true)] bool loadBalance, [Optional, DefaultParameterValue(false)] bool betaTag)
+        public static void ForEach<TSource>(IEnumerable<TSource> source, Action<TSource> action, Func<bool, bool> shouldForceSerialCallback = null, bool loadBalance = true, bool betaTag = false)
         {
             if ((shouldForceSerialCallback != null) && shouldForceSerialCallback.Invoke(betaTag))
             {
@@ -25,11 +25,11 @@
             }
         }
 
-        private static void ForEachParallel<TSource>(IEnumerable<TSource> source, Action<TSource> action, [Optional, DefaultParameterValue(true)] bool loadBalance)
+        private static void ForEachParallel<TSource>(IEnumerable<TSource> source, Action<TSource> action, bool loadBalance = true)
         {
             if (loadBalance)
             {
-                Parallel.ForEach<TSource>(Partitioner.Create<TSource>(Enumerable.ToList<TSource>(source), true), action);
+                Parallel.ForEach<TSource>(Partitioner.Create<TSource>(source.ToList<TSource>(), true), action);
             }
             else
             {
@@ -37,11 +37,11 @@
             }
         }
 
-        public static IEnumerable<TResult> Select<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> func, [Optional, DefaultParameterValue(null)] Func<bool, bool> shouldForceSerialCallback, [Optional, DefaultParameterValue(true)] bool loadBalance, [Optional, DefaultParameterValue(false)] bool betaTag)
+        public static IEnumerable<TResult> Select<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> func, Func<bool, bool> shouldForceSerialCallback = null, bool loadBalance = true, bool betaTag = false)
         {
             if ((shouldForceSerialCallback != null) && shouldForceSerialCallback.Invoke(betaTag))
             {
-                return Enumerable.Select<TSource, TResult>(source, func);
+                return source.Select<TSource, TResult>(func);
             }
             return SelectParallel<TSource, TResult>(source, func, loadBalance);
         }
@@ -54,7 +54,7 @@
             };
             if (loadBalance)
             {
-                Parallel.ForEach<TSource>(Partitioner.Create<TSource>(Enumerable.ToList<TSource>(source), true), new Action<TSource>(storey.<>m__0));
+                Parallel.ForEach<TSource>(Partitioner.Create<TSource>(source.ToList<TSource>(), true), new Action<TSource>(storey.<>m__0));
             }
             else
             {

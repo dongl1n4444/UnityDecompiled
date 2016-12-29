@@ -39,25 +39,17 @@
             return this.m_DisplayText.CompareTo(info.m_DisplayText);
         }
 
-        public bool Equals(AInfo other)
-        {
-            return ((this.m_ClassID == other.m_ClassID) && (this.m_ScriptClass == other.m_ScriptClass));
-        }
+        public bool Equals(AInfo other) => 
+            ((this.m_ClassID == other.m_ClassID) && (this.m_ScriptClass == other.m_ScriptClass));
 
-        public bool HasGizmo()
-        {
-            return ((this.m_Flags & 2) > 0);
-        }
+        public bool HasGizmo() => 
+            ((this.m_Flags & 2) > 0);
 
-        public bool HasIcon()
-        {
-            return ((this.m_Flags & 1) > 0);
-        }
+        public bool HasIcon() => 
+            ((this.m_Flags & 1) > 0);
 
-        private bool IsBitSet(byte b, int pos)
-        {
-            return ((b & (((int) 1) << pos)) != 0);
-        }
+        private bool IsBitSet(byte b, int pos) => 
+            ((b & (((int) 1) << pos)) != 0);
 
         public enum Flags
         {

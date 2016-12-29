@@ -7,14 +7,12 @@
     using System.Runtime.CompilerServices;
     using Unity.DataContract;
 
-    [Extension]
     public static class PackageInfoExtensions
     {
         [CompilerGenerated]
         private static Func<KeyValuePair<string, PackageFileData>, bool> <>f__am$cache0;
 
-        [Extension]
-        public static PackageInfo Refresh(PackageInfo info)
+        public static PackageInfo Refresh(this PackageInfo info)
         {
             if (info != null)
             {

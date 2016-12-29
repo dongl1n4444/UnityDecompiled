@@ -31,10 +31,8 @@
             this.m_TestExecutor.OnPlaymodeFailCall();
         }
 
-        internal static PlaymodeTestsController GetController()
-        {
-            return GameObject.Find("Code-based tests runner").GetComponent<PlaymodeTestsController>();
-        }
+        internal static PlaymodeTestsController GetController() => 
+            GameObject.Find("Code-based tests runner").GetComponent<PlaymodeTestsController>();
 
         private void HandleLogCallback(string logString, string stackTrace, LogType type)
         {
@@ -44,10 +42,8 @@
             }
         }
 
-        internal static bool IsControllerOnScene()
-        {
-            return (GameObject.Find("Code-based tests runner") != null);
-        }
+        internal static bool IsControllerOnScene() => 
+            (GameObject.Find("Code-based tests runner") != null);
 
         internal void PassPlaymodeTest()
         {
@@ -55,16 +51,12 @@
         }
 
         [DebuggerHidden]
-        public IEnumerator Run()
-        {
-            return new <Run>c__Iterator1 { $this = this };
-        }
+        public IEnumerator Run() => 
+            new <Run>c__Iterator1 { $this = this };
 
         [DebuggerHidden]
-        public IEnumerator Start()
-        {
-            return new <Start>c__Iterator0 { $this = this };
-        }
+        public IEnumerator Start() => 
+            new <Start>c__Iterator0 { $this = this };
 
         [CompilerGenerated]
         private sealed class <Run>c__Iterator1 : IEnumerator, IDisposable, IEnumerator<object>
@@ -80,15 +72,11 @@
             internal TestListUtil <testListUtil>__0;
             internal IEnumerable<TestExecutorBase> <tests>__1;
 
-            private static TestExecutorBase <>m__0(TestListElement t)
-            {
-                return t.testExecutor;
-            }
+            private static TestExecutorBase <>m__0(TestListElement t) => 
+                t.testExecutor;
 
-            internal bool <>m__1(TestExecutorBase e)
-            {
-                return this.$this.settings.filter.Matches(e.name);
-            }
+            internal bool <>m__1(TestExecutorBase e) => 
+                this.$this.settings.filter.Matches(e.name);
 
             [DebuggerHidden]
             public void Dispose()
@@ -152,7 +140,7 @@
                 this.<tests>__1 = Enumerable.Select<TestListElement, TestExecutorBase>(this.<testListUtil>__0.GetPlaymodeTests(this.$this.settings.filter).GetFlattenedHierarchy(), <>f__am$cache0);
                 if (this.$this.settings.filter != null)
                 {
-                    this.<tests>__1 = Enumerable.ToList<TestExecutorBase>(Enumerable.Where<TestExecutorBase>(this.<tests>__1, new Func<TestExecutorBase, bool>(this, (IntPtr) this.<>m__1)));
+                    this.<tests>__1 = Enumerable.Where<TestExecutorBase>(this.<tests>__1, new Func<TestExecutorBase, bool>(this, (IntPtr) this.<>m__1)).ToList<TestExecutorBase>();
                 }
                 this.$locvar0 = this.<tests>__1.GetEnumerator();
                 num = 0xfffffffd;
@@ -204,23 +192,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -276,23 +252,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

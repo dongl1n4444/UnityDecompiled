@@ -39,7 +39,7 @@
         {
             if (DebuggerOptions.Enabled)
             {
-                Unity.Cecil.Visitor.Extensions.Accept(assembly, this._documentsCollector);
+                assembly.Accept(this._documentsCollector);
             }
         }
 
@@ -64,14 +64,14 @@
         private IEnumerable<string> DocumentsFor(MethodDefinition methodDefinition)
         {
             CollectSourceDocumentsVisitor visitor = new CollectSourceDocumentsVisitor();
-            Unity.Cecil.Visitor.Extensions.Accept(methodDefinition, visitor);
+            methodDefinition.Accept(visitor);
             return visitor.Documents;
         }
 
         private static IEnumerable<string> DocumentsFor(TypeDefinition typeDefinition)
         {
             CollectSourceDocumentsVisitor visitor = new CollectSourceDocumentsVisitor();
-            Unity.Cecil.Visitor.Extensions.Accept(typeDefinition, visitor);
+            typeDefinition.Accept(visitor);
             return visitor.Documents;
         }
 
@@ -108,15 +108,11 @@
             return "__dbg_locals";
         }
 
-        private static string ParamsAddressArrayFor(MethodDefinition methodDefinition)
-        {
-            return (methodDefinition.HasParameters ? "__dbg_params" : "0");
-        }
+        private static string ParamsAddressArrayFor(MethodDefinition methodDefinition) => 
+            (methodDefinition.HasParameters ? "__dbg_params" : "0");
 
-        private static string Quote(object val)
-        {
-            return string.Format("\"{0}\"", val);
-        }
+        private static string Quote(object val) => 
+            $""{val}"";
 
         private static string StringifyPath(string path)
         {
@@ -128,10 +124,8 @@
             return str;
         }
 
-        private static string ThisAddressFor(MethodDefinition methodDefinition)
-        {
-            return (!Unity.IL2CPP.Extensions.IsStaticConstructor(methodDefinition) ? "&__this" : "&__dummy_this");
-        }
+        private static string ThisAddressFor(MethodDefinition methodDefinition) => 
+            (!methodDefinition.IsStaticConstructor() ? "&__this" : "&__dummy_this");
 
         private string UniqueDocumentVarNameFor(string document)
         {
@@ -142,7 +136,7 @@
                 string str2 = Path.GetFileNameWithoutExtension(document).ToLower();
                 do
                 {
-                    str = string.Format("{0}_{1}_dbgdoc", str2, num++);
+                    str = $"{str2}_{num++}_dbgdoc";
                 }
                 while (this._varNameToDocument.ContainsKey(str));
                 this._documentToVarName[document] = str;
@@ -154,7 +148,7 @@
         public void WriteCallStackInformation(CppCodeWriter writer, MethodReference methodReference, IEnumerable<KeyValuePair<string, TypeReference>> locals, IRuntimeMetadataAccess metadataAccess)
         {
             this._sequencePointUid = 0;
-            KeyValuePair<string, TypeReference>[] localvars = Enumerable.ToArray<KeyValuePair<string, TypeReference>>(locals);
+            KeyValuePair<string, TypeReference>[] localvars = locals.ToArray<KeyValuePair<string, TypeReference>>();
             MethodDefinition methodDefinition = methodReference.Resolve();
             WriteDummyNullThisIfNeeded(writer, methodDefinition);
             WriteParamsAddressArray(writer, methodDefinition);
@@ -192,7 +186,7 @@
             WriteOffsetTable(writer, methodReference, methodDefinition);
             WriteDebugLocalInfos(writer, methodReference, methodDefinition);
             List<SequencePointInfo> sequencePoints = new List<SequencePointInfo>();
-            string variableName = string.Format("{0}_sp", Naming.ForDebugMethodInfo(methodReference));
+            string variableName = $"{Naming.ForDebugMethodInfo(methodReference)}_sp";
             WriteSequencePointsTableIfNeeded(writer, variableName, methodDefinition, sequencePoints);
             this.WriteDebugMethodInfos(writer, variableName, sequencePoints, methodReference, methodDefinition);
         }
@@ -219,7 +213,7 @@
                 values[3] = 0;
                 writer.WriteArrayInitializer(values);
             }
-            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(storey.methodReference), Enumerable.Select<VariableDefinition, string>(methodDefinition.Body.Variables, new Func<VariableDefinition, string>(storey, (IntPtr) this.<>m__0)), true);
+            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(storey.methodReference), methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey, (IntPtr) this.<>m__0)), true);
         }
 
         public void WriteDebugMetadataIncludes(CppCodeWriter writer)
@@ -286,7 +280,7 @@
 
         private static void WriteDummyNullThisIfNeeded(CppCodeWriter writer, MethodDefinition methodDefinition)
         {
-            if (Unity.IL2CPP.Extensions.IsStaticConstructor(methodDefinition))
+            if (methodDefinition.IsStaticConstructor())
             {
                 writer.WriteLine("void *__dummy_this = 0;");
             }
@@ -308,7 +302,7 @@
                 {
                     <>f__am$cache1 = new Func<KeyValuePair<string, TypeReference>, string>(null, (IntPtr) <WriteLocalsAddressArray>m__1);
                 }
-                writer.WriteArrayInitializer("void*", "__dbg_locals", Enumerable.Select<KeyValuePair<string, TypeReference>, string>(localvars, <>f__am$cache1), true);
+                writer.WriteArrayInitializer("void*", "__dbg_locals", localvars.Select<KeyValuePair<string, TypeReference>, string>(<>f__am$cache1), true);
             }
         }
 
@@ -320,7 +314,7 @@
             object[] args = new object[] { Naming.ForDebugMethodInfoOffsetTable(methodReference) };
             storey.writer.WriteLine("const int32_t {0}[] = ", args);
             storey.writer.BeginBlock();
-            Unity.Cecil.Visitor.Extensions.Accept(methodDefinition, new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
+            methodDefinition.Accept(new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
             storey.writer.WriteLine("-1, -1");
             storey.writer.EndBlock(true);
         }
@@ -333,7 +327,7 @@
                 {
                     <>f__am$cache0 = new Func<ParameterDefinition, string>(null, (IntPtr) <WriteParamsAddressArray>m__0);
                 }
-                writer.WriteArrayInitializer("void*", "__dbg_params", Enumerable.Select<ParameterDefinition, string>(methodDefinition.Parameters, <>f__am$cache0), true);
+                writer.WriteArrayInitializer("void*", "__dbg_params", methodDefinition.Parameters.Select<ParameterDefinition, string>(<>f__am$cache0), true);
             }
         }
 
@@ -349,12 +343,12 @@
                 sequencePoints = sequencePoints,
                 methodDefinition = methodDefinition
             };
-            Unity.Cecil.Visitor.Extensions.Accept(storey.methodDefinition, new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
+            storey.methodDefinition.Accept(new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
             if (storey.sequencePoints.Count != 0)
             {
                 object[] args = new object[] { variableName };
                 writer.WriteLine("static SequencePointRecord {0}[] = ", args);
-                writer.WriteArrayInitializer(Enumerable.ToArray<string>(Enumerable.Select<SequencePointInfo, string>(storey.sequencePoints, new Func<SequencePointInfo, string>(storey, (IntPtr) this.<>m__1))));
+                writer.WriteArrayInitializer(storey.sequencePoints.Select<SequencePointInfo, string>(new Func<SequencePointInfo, string>(storey, (IntPtr) this.<>m__1)).ToArray<string>());
             }
         }
 
@@ -363,10 +357,8 @@
         {
             internal MethodReference methodReference;
 
-            internal string <>m__0(VariableDefinition v)
-            {
-                return DebuggerSupport.Naming.AddressOf(DebuggerSupport.Naming.ForDebugMethodLocalInfo(v, this.methodReference));
-            }
+            internal string <>m__0(VariableDefinition v) => 
+                DebuggerSupport.Naming.AddressOf(DebuggerSupport.Naming.ForDebugMethodLocalInfo(v, this.methodReference));
         }
 
         [CompilerGenerated]
@@ -393,7 +385,7 @@
                     Instruction = i,
                     SequencePoint = s
                 };
-                SequencePointInfo info3 = Enumerable.LastOrDefault<SequencePointInfo>(this.sequencePoints);
+                SequencePointInfo info3 = this.sequencePoints.LastOrDefault<SequencePointInfo>();
                 if (info3 != null)
                 {
                     info3.NextSequencePoint = item;
@@ -401,10 +393,8 @@
                 this.sequencePoints.Add(item);
             }
 
-            internal string <>m__1(SequencePointInfo info)
-            {
-                return string.Format("{{ {0}, {1}, NULL }}", info.Instruction.Offset, (info.NextSequencePoint != null) ? (info.NextSequencePoint.Instruction.Offset - 1) : this.methodDefinition.Body.CodeSize);
-            }
+            internal string <>m__1(SequencePointInfo info) => 
+                $"{{ {info.Instruction.Offset}, {((info.NextSequencePoint != null) ? (info.NextSequencePoint.Instruction.Offset - 1) : this.methodDefinition.Body.CodeSize)}, NULL }}";
         }
     }
 }

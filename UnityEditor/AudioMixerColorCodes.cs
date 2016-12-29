@@ -44,10 +44,8 @@
             return Color.white;
         }
 
-        private static string[] GetColorNames()
-        {
-            return colorNames;
-        }
+        private static string[] GetColorNames() => 
+            colorNames;
 
         private static Color[] GetColors()
         {

@@ -20,10 +20,8 @@
             }
         }
 
-        public override Editor GetLastInteractedEditor()
-        {
-            return this.m_ParentInspectorWindow.GetLastInteractedEditor();
-        }
+        public override Editor GetLastInteractedEditor() => 
+            this.m_ParentInspectorWindow.GetLastInteractedEditor();
 
         protected override void OnDisable()
         {

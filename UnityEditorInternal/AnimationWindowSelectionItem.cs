@@ -47,10 +47,8 @@
             return item;
         }
 
-        public bool Equals(AnimationWindowSelectionItem other)
-        {
-            return ((((this.id == other.id) && (this.animationClip == other.animationClip)) && (this.gameObject == other.gameObject)) && (this.scriptableObject == other.scriptableObject));
-        }
+        public bool Equals(AnimationWindowSelectionItem other) => 
+            ((((this.id == other.id) && (this.animationClip == other.animationClip)) && (this.gameObject == other.gameObject)) && (this.scriptableObject == other.scriptableObject));
 
         private void FillInMissingTransformCurves(List<AnimationWindowCurve> transformCurves, ref List<AnimationWindowCurve> curvesCache)
         {
@@ -118,10 +116,8 @@
             return typeof(float);
         }
 
-        public int GetRefreshHash()
-        {
-            return ((((this.id * 0x4c93) ^ ((this.animationClip == null) ? 0 : (0x2d9 * this.animationClip.GetHashCode()))) ^ ((this.rootGameObject == null) ? 0 : (0x1b * this.rootGameObject.GetHashCode()))) ^ ((this.scriptableObject == null) ? 0 : this.scriptableObject.GetHashCode()));
-        }
+        public int GetRefreshHash() => 
+            ((((this.id * 0x4c93) ^ ((this.animationClip == null) ? 0 : (0x2d9 * this.animationClip.GetHashCode()))) ^ ((this.rootGameObject == null) ? 0 : (0x1b * this.rootGameObject.GetHashCode()))) ^ ((this.scriptableObject == null) ? 0 : this.scriptableObject.GetHashCode()));
 
         public virtual void Synchronize()
         {
@@ -129,10 +125,8 @@
 
         public virtual AnimationClip animationClip
         {
-            get
-            {
-                return this.m_AnimationClip;
-            }
+            get => 
+                this.m_AnimationClip;
             set
             {
                 this.m_AnimationClip = value;
@@ -179,29 +173,14 @@
             }
         }
 
-        public virtual bool canChangeAnimationClip
-        {
-            get
-            {
-                return (this.rootGameObject != null);
-            }
-        }
+        public virtual bool canChangeAnimationClip =>
+            (this.rootGameObject != null);
 
-        public virtual bool canRecord
-        {
-            get
-            {
-                return (this.rootGameObject != null);
-            }
-        }
+        public virtual bool canRecord =>
+            (this.rootGameObject != null);
 
-        public virtual bool canSyncSceneSelection
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool canSyncSceneSelection =>
+            true;
 
         public virtual bool clipIsEditable
         {
@@ -270,10 +249,8 @@
 
         public virtual GameObject gameObject
         {
-            get
-            {
-                return this.m_GameObject;
-            }
+            get => 
+                this.m_GameObject;
             set
             {
                 this.m_GameObject = value;
@@ -282,10 +259,8 @@
 
         public virtual int id
         {
-            get
-            {
-                return this.m_Id;
-            }
+            get => 
+                this.m_Id;
             set
             {
                 this.m_Id = value;
@@ -319,10 +294,8 @@
 
         public virtual ScriptableObject scriptableObject
         {
-            get
-            {
-                return this.m_ScriptableObject;
-            }
+            get => 
+                this.m_ScriptableObject;
             set
             {
                 this.m_ScriptableObject = value;
@@ -331,10 +304,8 @@
 
         public virtual float timeOffset
         {
-            get
-            {
-                return this.m_TimeOffset;
-            }
+            get => 
+                this.m_TimeOffset;
             set
             {
                 this.m_TimeOffset = value;

@@ -63,10 +63,8 @@
             }
         }
 
-        public int AccumulatedChildCount()
-        {
-            return this.totalChildCount;
-        }
+        public int AccumulatedChildCount() => 
+            this.totalChildCount;
 
         public void AddChild(MemoryElement node)
         {
@@ -101,10 +99,8 @@
             }
         }
 
-        public MemoryElement FirstChild()
-        {
-            return this.children[0];
-        }
+        public MemoryElement FirstChild() => 
+            this.children[0];
 
         public int GetChildIndexInList()
         {
@@ -173,10 +169,8 @@
             return this.children[this.children.Count - 1].LastChild();
         }
 
-        public int ReferenceCount()
-        {
-            return (((this.memoryInfo == null) || (this.memoryInfo.referencedBy == null)) ? 0 : this.memoryInfo.referencedBy.Count);
-        }
+        public int ReferenceCount() => 
+            (((this.memoryInfo == null) || (this.memoryInfo.referencedBy == null)) ? 0 : this.memoryInfo.referencedBy.Count);
     }
 }
 

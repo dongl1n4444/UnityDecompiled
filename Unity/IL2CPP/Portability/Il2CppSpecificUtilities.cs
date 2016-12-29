@@ -5,14 +5,12 @@
 
     public static class Il2CppSpecificUtilities
     {
-        public static string GetIl2CppBuildDirectory()
-        {
-            return Path.Combine(GetIl2CppSolutionDirectory(), "build");
-        }
+        public static string GetIl2CppBuildDirectory() => 
+            Path.Combine(GetIl2CppSolutionDirectory(), "build");
 
         public static string GetIl2CppSolutionDirectory()
         {
-            Uri uri = new Uri(AssemblyExtensions.GetCodeBasePortable(typeof(PortabilityUtilities).Assembly));
+            Uri uri = new Uri(typeof(PortabilityUtilities).Assembly.GetCodeBasePortable());
             string localPath = uri.LocalPath;
             if (!string.IsNullOrEmpty(uri.Fragment))
             {

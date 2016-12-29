@@ -92,13 +92,8 @@
             IL2CPPUtils.CopyConfigFiles(il2cppDir, str4);
         }
 
-        public string Name
-        {
-            get
-            {
-                return "IL2CPP";
-            }
-        }
+        public string Name =>
+            "IL2CPP";
     }
 }
 

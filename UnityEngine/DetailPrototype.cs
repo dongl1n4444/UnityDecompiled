@@ -27,10 +27,8 @@
         /// </summary>
         public GameObject prototype
         {
-            get
-            {
-                return this.m_Prototype;
-            }
+            get => 
+                this.m_Prototype;
             set
             {
                 this.m_Prototype = value;
@@ -41,10 +39,8 @@
         /// </summary>
         public Texture2D prototypeTexture
         {
-            get
-            {
-                return this.m_PrototypeTexture;
-            }
+            get => 
+                this.m_PrototypeTexture;
             set
             {
                 this.m_PrototypeTexture = value;
@@ -55,10 +51,8 @@
         /// </summary>
         public float minWidth
         {
-            get
-            {
-                return this.m_MinWidth;
-            }
+            get => 
+                this.m_MinWidth;
             set
             {
                 this.m_MinWidth = value;
@@ -69,10 +63,8 @@
         /// </summary>
         public float maxWidth
         {
-            get
-            {
-                return this.m_MaxWidth;
-            }
+            get => 
+                this.m_MaxWidth;
             set
             {
                 this.m_MaxWidth = value;
@@ -83,10 +75,8 @@
         /// </summary>
         public float minHeight
         {
-            get
-            {
-                return this.m_MinHeight;
-            }
+            get => 
+                this.m_MinHeight;
             set
             {
                 this.m_MinHeight = value;
@@ -97,10 +87,8 @@
         /// </summary>
         public float maxHeight
         {
-            get
-            {
-                return this.m_MaxHeight;
-            }
+            get => 
+                this.m_MaxHeight;
             set
             {
                 this.m_MaxHeight = value;
@@ -111,10 +99,8 @@
         /// </summary>
         public float noiseSpread
         {
-            get
-            {
-                return this.m_NoiseSpread;
-            }
+            get => 
+                this.m_NoiseSpread;
             set
             {
                 this.m_NoiseSpread = value;
@@ -125,10 +111,8 @@
         /// </summary>
         public float bendFactor
         {
-            get
-            {
-                return this.m_BendFactor;
-            }
+            get => 
+                this.m_BendFactor;
             set
             {
                 this.m_BendFactor = value;
@@ -139,10 +123,8 @@
         /// </summary>
         public Color healthyColor
         {
-            get
-            {
-                return this.m_HealthyColor;
-            }
+            get => 
+                this.m_HealthyColor;
             set
             {
                 this.m_HealthyColor = value;
@@ -153,10 +135,8 @@
         /// </summary>
         public Color dryColor
         {
-            get
-            {
-                return this.m_DryColor;
-            }
+            get => 
+                this.m_DryColor;
             set
             {
                 this.m_DryColor = value;
@@ -167,10 +147,8 @@
         /// </summary>
         public DetailRenderMode renderMode
         {
-            get
-            {
-                return (DetailRenderMode) this.m_RenderMode;
-            }
+            get => 
+                ((DetailRenderMode) this.m_RenderMode);
             set
             {
                 this.m_RenderMode = (int) value;
@@ -178,10 +156,8 @@
         }
         public bool usePrototypeMesh
         {
-            get
-            {
-                return (this.m_UsePrototypeMesh != 0);
-            }
+            get => 
+                (this.m_UsePrototypeMesh != 0);
             set
             {
                 this.m_UsePrototypeMesh = !value ? 0 : 1;

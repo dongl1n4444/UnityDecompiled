@@ -41,23 +41,14 @@
             this._data.Clear();
         }
 
-        public uint GetIndex(MethodReference method)
-        {
-            return this._data[method];
-        }
+        public uint GetIndex(MethodReference method) => 
+            this._data[method];
 
-        public bool HasIndex(MethodReference method)
-        {
-            return this._data.ContainsKey(method);
-        }
+        public bool HasIndex(MethodReference method) => 
+            this._data.ContainsKey(method);
 
-        public IDictionary<MethodReference, uint> Items
-        {
-            get
-            {
-                return this._data;
-            }
-        }
+        public IDictionary<MethodReference, uint> Items =>
+            this._data;
     }
 }
 

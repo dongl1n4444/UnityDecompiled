@@ -23,25 +23,17 @@
             CrashReportingSettings.enabled = enabled;
         }
 
-        public bool GetCaptureEditorExceptions()
-        {
-            return CrashReportingSettings.captureEditorExceptions;
-        }
+        public bool GetCaptureEditorExceptions() => 
+            CrashReportingSettings.captureEditorExceptions;
 
-        public override string GetServiceDisplayName()
-        {
-            return "Game Performance";
-        }
+        public override string GetServiceDisplayName() => 
+            "Game Performance";
 
-        public override string GetServiceName()
-        {
-            return "Game Performance";
-        }
+        public override string GetServiceName() => 
+            "Game Performance";
 
-        public override bool IsServiceEnabled()
-        {
-            return CrashReportingSettings.enabled;
-        }
+        public override bool IsServiceEnabled() => 
+            CrashReportingSettings.enabled;
 
         public void SetCaptureEditorExceptions(bool captureEditorExceptions)
         {

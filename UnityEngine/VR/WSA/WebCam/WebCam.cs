@@ -14,13 +14,8 @@
         /// <summary>
         /// <para>Specifies what mode the Web Camera is currently in.</para>
         /// </summary>
-        public static WebCamMode Mode
-        {
-            get
-            {
-                return (WebCamMode) GetWebCamModeState_Internal();
-            }
-        }
+        public static WebCamMode Mode =>
+            ((WebCamMode) GetWebCamModeState_Internal());
     }
 }
 

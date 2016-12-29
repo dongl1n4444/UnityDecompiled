@@ -114,10 +114,8 @@
             return State.EmptySearchFilter;
         }
 
-        private bool IsNullOrEmpty<T>(T[] list)
-        {
-            return ((list == null) || (list.Length == 0));
-        }
+        private bool IsNullOrEmpty<T>(T[] list) => 
+            ((list == null) || (list.Length == 0));
 
         public bool IsSearching()
         {
@@ -217,7 +215,7 @@
         {
             string str2;
             string str = "SearchFilter: ";
-            str = str + string.Format("[Area: {0}, State: {1}]", this.m_SearchArea, this.GetState());
+            str = str + $"[Area: {this.m_SearchArea}, State: {this.GetState()}]";
             if (!string.IsNullOrEmpty(this.m_NameFilter))
             {
                 str = str + "[Name: " + this.m_NameFilter + "]";
@@ -257,10 +255,8 @@
 
         public string[] assetBundleNames
         {
-            get
-            {
-                return this.m_AssetBundleNames;
-            }
+            get => 
+                this.m_AssetBundleNames;
             set
             {
                 this.m_AssetBundleNames = value;
@@ -269,10 +265,8 @@
 
         public string[] assetLabels
         {
-            get
-            {
-                return this.m_AssetLabels;
-            }
+            get => 
+                this.m_AssetLabels;
             set
             {
                 this.m_AssetLabels = value;
@@ -281,10 +275,8 @@
 
         public string[] classNames
         {
-            get
-            {
-                return this.m_ClassNames;
-            }
+            get => 
+                this.m_ClassNames;
             set
             {
                 this.m_ClassNames = value;
@@ -293,10 +285,8 @@
 
         public string[] folders
         {
-            get
-            {
-                return this.m_Folders;
-            }
+            get => 
+                this.m_Folders;
             set
             {
                 this.m_Folders = value;
@@ -305,10 +295,8 @@
 
         public string nameFilter
         {
-            get
-            {
-                return this.m_NameFilter;
-            }
+            get => 
+                this.m_NameFilter;
             set
             {
                 this.m_NameFilter = value;
@@ -317,10 +305,8 @@
 
         public int[] referencingInstanceIDs
         {
-            get
-            {
-                return this.m_ReferencingInstanceIDs;
-            }
+            get => 
+                this.m_ReferencingInstanceIDs;
             set
             {
                 this.m_ReferencingInstanceIDs = value;
@@ -329,10 +315,8 @@
 
         public string[] scenePaths
         {
-            get
-            {
-                return this.m_ScenePaths;
-            }
+            get => 
+                this.m_ScenePaths;
             set
             {
                 this.m_ScenePaths = value;
@@ -341,10 +325,8 @@
 
         public SearchArea searchArea
         {
-            get
-            {
-                return this.m_SearchArea;
-            }
+            get => 
+                this.m_SearchArea;
             set
             {
                 this.m_SearchArea = value;
@@ -353,10 +335,8 @@
 
         public bool showAllHits
         {
-            get
-            {
-                return this.m_ShowAllHits;
-            }
+            get => 
+                this.m_ShowAllHits;
             set
             {
                 this.m_ShowAllHits = value;
@@ -365,10 +345,8 @@
 
         public string[] versionControlStates
         {
-            get
-            {
-                return this.m_VersionControlStates;
-            }
+            get => 
+                this.m_VersionControlStates;
             set
             {
                 this.m_VersionControlStates = value;

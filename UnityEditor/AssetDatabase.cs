@@ -72,10 +72,8 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool Contains(Object obj)
-        {
-            return Contains(obj.GetInstanceID());
-        }
+        public static bool Contains(Object obj) => 
+            Contains(obj.GetInstanceID());
 
         /// <summary>
         /// <para>Duplicates the asset at path and stores it at newPath.</para>
@@ -164,10 +162,8 @@
         /// <returns>
         /// <para>Array of matching asset GUIDs.</para>
         /// </returns>
-        public static string[] FindAssets(string filter)
-        {
-            return FindAssets(filter, null);
-        }
+        public static string[] FindAssets(string filter) => 
+            FindAssets(filter, null);
 
         private static string[] FindAssets(SearchFilter searchFilter)
         {
@@ -241,10 +237,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string[] GetAssetBundleDependencies(string assetBundleName, bool recursive);
         [Obsolete("Method GetAssetBundleNames has been deprecated. Use GetAllAssetBundleNames instead.")]
-        public string[] GetAssetBundleNames()
-        {
-            return GetAllAssetBundleNames();
-        }
+        public string[] GetAssetBundleNames() => 
+            GetAllAssetBundleNames();
 
         /// <summary>
         /// <para>Returns the hash of all the dependencies of an asset.</para>
@@ -274,10 +268,8 @@
         /// <returns>
         /// <para>The asset path name, or null, or an empty string if the asset does not exist.</para>
         /// </returns>
-        public static string GetAssetPath(int instanceID)
-        {
-            return GetAssetPathFromInstanceID(instanceID);
-        }
+        public static string GetAssetPath(int instanceID) => 
+            GetAssetPathFromInstanceID(instanceID);
 
         /// <summary>
         /// <para>Returns the path name relative to the project folder where the asset is stored.</para>
@@ -310,10 +302,8 @@
         /// <param name="assetName"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string[] GetAssetPathsFromAssetBundleAndAssetName(string assetBundleName, string assetName);
-        public static T GetBuiltinExtraResource<T>(string path) where T: Object
-        {
-            return (T) GetBuiltinExtraResource(typeof(T), path);
-        }
+        public static T GetBuiltinExtraResource<T>(string path) where T: Object => 
+            ((T) GetBuiltinExtraResource(typeof(T), path));
 
         [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
         public static extern Object GetBuiltinExtraResource(Type type, string path);
@@ -331,10 +321,8 @@
         /// <returns>
         /// <para>The paths of all assets that the input depends on.</para>
         /// </returns>
-        public static string[] GetDependencies(string pathName)
-        {
-            return GetDependencies(pathName, true);
-        }
+        public static string[] GetDependencies(string pathName) => 
+            GetDependencies(pathName, true);
 
         /// <summary>
         /// <para>Given an array of pathNames, returns the list of all assets that the input depend on.</para>
@@ -344,10 +332,8 @@
         /// <returns>
         /// <para>The paths of all assets that the input depends on.</para>
         /// </returns>
-        public static string[] GetDependencies(string[] pathNames)
-        {
-            return GetDependencies(pathNames, true);
-        }
+        public static string[] GetDependencies(string[] pathNames) => 
+            GetDependencies(pathNames, true);
 
         /// <summary>
         /// <para>Given a pathName, returns the list of all assets that it depends on.</para>
@@ -357,10 +343,8 @@
         /// <returns>
         /// <para>The paths of all assets that the input depends on.</para>
         /// </returns>
-        public static string[] GetDependencies(string pathName, bool recursive)
-        {
-            return GetDependencies(new string[] { pathName }, recursive);
-        }
+        public static string[] GetDependencies(string pathName, bool recursive) => 
+            GetDependencies(new string[] { pathName }, recursive);
 
         /// <summary>
         /// <para>Given an array of pathNames, returns the list of all assets that the input depend on.</para>
@@ -402,10 +386,8 @@
         /// <para>The path to the .meta text file or empty string if the file does not exist.</para>
         /// </returns>
         [Obsolete("GetTextMetaDataPathFromAssetPath has been renamed to GetTextMetaFilePathFromAssetPath (UnityUpgradable) -> GetTextMetaFilePathFromAssetPath(*)")]
-        public static string GetTextMetaDataPathFromAssetPath(string path)
-        {
-            return null;
-        }
+        public static string GetTextMetaDataPathFromAssetPath(string path) => 
+            null;
 
         /// <summary>
         /// <para>Gets the path to the text .meta file associated with an asset.</para>
@@ -542,10 +524,8 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool IsForeignAsset(Object obj)
-        {
-            return IsForeignAsset(obj.GetInstanceID());
-        }
+        public static bool IsForeignAsset(Object obj) => 
+            IsForeignAsset(obj.GetInstanceID());
 
         /// <summary>
         /// <para>Is asset a main asset in the project window?</para>
@@ -559,10 +539,8 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool IsMainAsset(Object obj)
-        {
-            return IsMainAsset(obj.GetInstanceID());
-        }
+        public static bool IsMainAsset(Object obj) => 
+            IsMainAsset(obj.GetInstanceID());
 
         /// <summary>
         /// <para>Returns true if the main asset object at assetPath is loaded in memory.</para>
@@ -576,10 +554,8 @@
             return IsMetaFileOpenForEdit(assetObject, out str);
         }
 
-        public static bool IsMetaFileOpenForEdit(Object assetObject, out string message)
-        {
-            return IsOpenForEdit(GetTextMetaFilePathFromAssetPath(GetAssetOrScenePath(assetObject)), out message);
-        }
+        public static bool IsMetaFileOpenForEdit(Object assetObject, out string message) => 
+            IsOpenForEdit(GetTextMetaFilePathFromAssetPath(GetAssetOrScenePath(assetObject)), out message);
 
         /// <summary>
         /// <para>Is asset a native asset?</para>
@@ -593,10 +569,8 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        public static bool IsNativeAsset(Object obj)
-        {
-            return IsNativeAsset(obj.GetInstanceID());
-        }
+        public static bool IsNativeAsset(Object obj) => 
+            IsNativeAsset(obj.GetInstanceID());
 
         /// <summary>
         /// <para>Use IsOpenForEdit to determine if the asset is open for edit by the version control.</para>
@@ -624,20 +598,14 @@
         /// <returns>
         /// <para>True is the asset can be edited.</para>
         /// </returns>
-        public static bool IsOpenForEdit(Object assetObject)
-        {
-            return IsOpenForEdit(GetAssetOrScenePath(assetObject));
-        }
+        public static bool IsOpenForEdit(Object assetObject) => 
+            IsOpenForEdit(GetAssetOrScenePath(assetObject));
 
-        public static bool IsOpenForEdit(string assetOrMetaFilePath, out string message)
-        {
-            return AssetModificationProcessorInternal.IsOpenForEdit(assetOrMetaFilePath, out message);
-        }
+        public static bool IsOpenForEdit(string assetOrMetaFilePath, out string message) => 
+            AssetModificationProcessorInternal.IsOpenForEdit(assetOrMetaFilePath, out message);
 
-        public static bool IsOpenForEdit(Object assetObject, out string message)
-        {
-            return IsOpenForEdit(GetAssetOrScenePath(assetObject), out message);
-        }
+        public static bool IsOpenForEdit(Object assetObject, out string message) => 
+            IsOpenForEdit(GetAssetOrScenePath(assetObject), out message);
 
         /// <summary>
         /// <para>Does the asset form part of another asset?</para>
@@ -651,10 +619,8 @@
         /// </summary>
         /// <param name="obj">The asset Object to query.</param>
         /// <param name="instanceID">Instance ID of the asset Object to query.</param>
-        public static bool IsSubAsset(Object obj)
-        {
-            return IsSubAsset(obj.GetInstanceID());
-        }
+        public static bool IsSubAsset(Object obj) => 
+            IsSubAsset(obj.GetInstanceID());
 
         /// <summary>
         /// <para>Given an absolute path to a folder, returns true if it exists, false otherwise.</para>
@@ -674,10 +640,8 @@
         /// <param name="assetPath">Filesystem path to the asset.</param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern Object[] LoadAllAssetsAtPath(string assetPath);
-        public static T LoadAssetAtPath<T>(string assetPath) where T: Object
-        {
-            return (T) LoadAssetAtPath(assetPath, typeof(T));
-        }
+        public static T LoadAssetAtPath<T>(string assetPath) where T: Object => 
+            ((T) LoadAssetAtPath(assetPath, typeof(T)));
 
         /// <summary>
         /// <para>Returns the first asset object of type type at given path assetPath.</para>
@@ -770,10 +734,8 @@
         /// <param name="instanceID"></param>
         /// <param name="lineNumber"></param>
         /// <param name="target"></param>
-        public static bool OpenAsset(Object target, [DefaultValue("-1")] int lineNumber)
-        {
-            return ((target != null) && OpenAsset(target.GetInstanceID(), lineNumber));
-        }
+        public static bool OpenAsset(Object target, [DefaultValue("-1")] int lineNumber) => 
+            ((target != null) && OpenAsset(target.GetInstanceID(), lineNumber));
 
         [ExcludeFromDocs]
         public static void Refresh()

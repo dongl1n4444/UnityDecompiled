@@ -18,7 +18,7 @@
             this._elementTypeMarshalInfoWriter = MarshalDataCollector.MarshalInfoWriterFor(this._elementType, marshalType, marshalInfo, false, true, false, null);
             if (this._elementTypeMarshalInfoWriter.MarshaledTypes.Length > 1)
             {
-                throw new InvalidOperationException(string.Format("BlittableByReferenceMarshalInfoWriter cannot marshal {0}&.", type.ElementType.FullName));
+                throw new InvalidOperationException($"BlittableByReferenceMarshalInfoWriter cannot marshal {type.ElementType.FullName}&.");
             }
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(this._elementTypeMarshalInfoWriter.MarshaledTypes[0].Name + "*", this._elementTypeMarshalInfoWriter.MarshaledTypes[0].DecoratedName + "*") };
         }
@@ -30,14 +30,14 @@
 
         public override string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
         {
-            string name = string.Format("_{0}_empty", DefaultMarshalInfoWriter.CleanVariableName(variableName));
+            string name = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_empty";
             writer.WriteVariable(this._elementType, name);
             return DefaultMarshalInfoWriter.Naming.AddressOf(name);
         }
 
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
         {
-            string str = string.Format("_{0}_empty", variableName.GetNiceName());
+            string str = $"_{variableName.GetNiceName()}_empty";
             this._elementTypeMarshalInfoWriter.WriteNativeVariableDeclarationOfType(writer, str);
             return DefaultMarshalInfoWriter.Naming.AddressOf(str);
         }
@@ -57,7 +57,7 @@
             string str = DefaultMarshalInfoWriter.Naming.ForVariable(base._typeRef);
             if (str != this._marshaledTypes[0].DecoratedName)
             {
-                return string.Format("reinterpret_cast<{0}>({1})", str, variableName);
+                return $"reinterpret_cast<{str}>({variableName})";
             }
             return variableName;
         }
@@ -71,7 +71,7 @@
         {
             if (DefaultMarshalInfoWriter.Naming.ForVariable(base._typeRef) != this._marshaledTypes[0].DecoratedName)
             {
-                return string.Format("reinterpret_cast<{0}>({1})", this._marshaledTypes[0].DecoratedName, sourceVariable.Load());
+                return $"reinterpret_cast<{this._marshaledTypes[0].DecoratedName}>({sourceVariable.Load()})";
             }
             return sourceVariable.Load();
         }
@@ -82,21 +82,11 @@
             writer.WriteLine("{0} = {1};", args);
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
-        public override int NativeSizeWithoutPointers
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public override int NativeSizeWithoutPointers =>
+            0;
     }
 }
 

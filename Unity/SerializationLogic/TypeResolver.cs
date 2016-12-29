@@ -71,20 +71,14 @@
             }
         }
 
-        private static MemberReference ElementTypeFor(MethodSpecification genericInstanceMethod)
-        {
-            return genericInstanceMethod.ElementMethod;
-        }
+        private static MemberReference ElementTypeFor(MethodSpecification genericInstanceMethod) => 
+            genericInstanceMethod.ElementMethod;
 
-        private static MemberReference ElementTypeFor(TypeSpecification genericInstanceType)
-        {
-            return genericInstanceType.ElementType;
-        }
+        private static MemberReference ElementTypeFor(TypeSpecification genericInstanceType) => 
+            genericInstanceType.ElementType;
 
-        private TypeReference GenericArgumentAt(string key, int position)
-        {
-            return this._context[key].GenericInstance.GenericArguments[position];
-        }
+        private TypeReference GenericArgumentAt(string key, int position) => 
+            this._context[key].GenericInstance.GenericArguments[position];
 
         public void Remove(GenericInstanceMethod genericInstanceMethod)
         {

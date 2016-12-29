@@ -8,26 +8,20 @@
 
     internal class BooLanguage : SupportedLanguage
     {
-        public override ScriptCompilerBase CreateCompiler(MonoIsland island, bool buildingForEditor, BuildTarget targetPlatform, bool runUpdater)
-        {
-            return new BooCompiler(island, runUpdater);
-        }
+        public override ScriptCompilerBase CreateCompiler(MonoIsland island, bool buildingForEditor, BuildTarget targetPlatform, bool runUpdater) => 
+            new BooCompiler(island, runUpdater);
 
-        public override string GetExtensionICanCompile()
-        {
-            return "boo";
-        }
+        public override string GetExtensionICanCompile() => 
+            "boo";
 
-        public override string GetLanguageName()
-        {
-            return "Boo";
-        }
+        public override string GetLanguageName() => 
+            "Boo";
 
         public override string GetNamespace(string fileName, string definedSymbols)
         {
             try
             {
-                return Enumerable.First<Module>(BooParser.ParseFile(fileName).get_Modules()).get_Namespace().get_Name();
+                return BooParser.ParseFile(fileName).get_Modules().First<Module>().get_Namespace().get_Name();
             }
             catch
             {

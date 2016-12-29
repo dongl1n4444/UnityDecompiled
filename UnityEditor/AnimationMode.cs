@@ -35,10 +35,8 @@
         /// </summary>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool InAnimationMode();
-        internal static bool InAnimationPlaybackMode()
-        {
-            return s_InAnimationPlaybackMode;
-        }
+        internal static bool InAnimationPlaybackMode() => 
+            s_InAnimationPlaybackMode;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_AddPropertyModification(ref EditorCurveBinding binding, PropertyModification modification, bool keepPrefabOverride);
@@ -92,13 +90,8 @@
         /// <summary>
         /// <para>The color used to show that a property is currently being animated.</para>
         /// </summary>
-        public static Color animatedPropertyColor
-        {
-            get
-            {
-                return (!EditorGUIUtility.isProSkin ? s_AnimatedPropertyColorLight : s_AnimatedPropertyColorDark);
-            }
-        }
+        public static Color animatedPropertyColor =>
+            (!EditorGUIUtility.isProSkin ? s_AnimatedPropertyColorLight : s_AnimatedPropertyColorDark);
 
         internal delegate void AnimationModeChangedCallback(bool newValue);
     }

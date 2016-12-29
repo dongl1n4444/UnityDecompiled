@@ -44,7 +44,7 @@
             }
             if ((this.type == NDesk.Options.OptionValueType.None) && (maxValueCount > 1))
             {
-                throw new ArgumentException(string.Format("Cannot provide maxValueCount of {0} for OptionValueType.None.", maxValueCount), "maxValueCount");
+                throw new ArgumentException($"Cannot provide maxValueCount of {maxValueCount} for OptionValueType.None.", "maxValueCount");
             }
             if ((Array.IndexOf<string>(this.names, "<>") >= 0) && (((this.names.Length == 1) && (this.type != NDesk.Options.OptionValueType.None)) || ((this.names.Length > 1) && (this.MaxValueCount > 1))))
             {
@@ -62,7 +62,7 @@
                     case '{':
                         if (startIndex != -1)
                         {
-                            throw new ArgumentException(string.Format("Ill-formed name/value separator found in \"{0}\".", name), "prototype");
+                            throw new ArgumentException($"Ill-formed name/value separator found in "{name}".", "prototype");
                         }
                         startIndex = i + 1;
                         break;
@@ -70,7 +70,7 @@
                     case '}':
                         if (startIndex == -1)
                         {
-                            throw new ArgumentException(string.Format("Ill-formed name/value separator found in \"{0}\".", name), "prototype");
+                            throw new ArgumentException($"Ill-formed name/value separator found in "{name}".", "prototype");
                         }
                         seps.Add(name.Substring(startIndex, i - startIndex));
                         startIndex = -1;
@@ -86,14 +86,12 @@
             }
             if (startIndex != -1)
             {
-                throw new ArgumentException(string.Format("Ill-formed name/value separator found in \"{0}\".", name), "prototype");
+                throw new ArgumentException($"Ill-formed name/value separator found in "{name}".", "prototype");
             }
         }
 
-        public string[] GetNames()
-        {
-            return (string[]) this.names.Clone();
-        }
+        public string[] GetNames() => 
+            ((string[]) this.names.Clone());
 
         public string[] GetValueSeparators()
         {
@@ -148,7 +146,7 @@
                     this.names[i] = name.Substring(0, length);
                     if ((ch != '\0') && (ch != name[length]))
                     {
-                        throw new ArgumentException(string.Format("Conflicting option types: '{0}' vs. '{1}'.", ch, name[length]), "prototype");
+                        throw new ArgumentException($"Conflicting option types: '{ch}' vs. '{name[length]}'.", "prototype");
                     }
                     ch = name[length];
                     AddSeparators(name, length, seps);
@@ -160,7 +158,7 @@
             }
             if ((this.count <= 1) && (seps.Count != 0))
             {
-                throw new ArgumentException(string.Format("Cannot provide key/value separators for Options taking {0} value(s).", this.count), "prototype");
+                throw new ArgumentException($"Cannot provide key/value separators for Options taking {this.count} value(s).", "prototype");
             }
             if (this.count > 1)
             {
@@ -180,58 +178,26 @@
             return ((ch != '=') ? NDesk.Options.OptionValueType.Optional : NDesk.Options.OptionValueType.Required);
         }
 
-        public override string ToString()
-        {
-            return this.Prototype;
-        }
+        public override string ToString() => 
+            this.Prototype;
 
-        public string Description
-        {
-            get
-            {
-                return this.description;
-            }
-        }
+        public string Description =>
+            this.description;
 
-        public int MaxValueCount
-        {
-            get
-            {
-                return this.count;
-            }
-        }
+        public int MaxValueCount =>
+            this.count;
 
-        internal string[] Names
-        {
-            get
-            {
-                return this.names;
-            }
-        }
+        internal string[] Names =>
+            this.names;
 
-        public NDesk.Options.OptionValueType OptionValueType
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+        public NDesk.Options.OptionValueType OptionValueType =>
+            this.type;
 
-        public string Prototype
-        {
-            get
-            {
-                return this.prototype;
-            }
-        }
+        public string Prototype =>
+            this.prototype;
 
-        internal string[] ValueSeparators
-        {
-            get
-            {
-                return this.separators;
-            }
-        }
+        internal string[] ValueSeparators =>
+            this.separators;
     }
 }
 

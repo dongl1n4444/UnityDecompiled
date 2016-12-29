@@ -23,19 +23,15 @@
         /// <para>A more complex move function taking absolute movement deltas.</para>
         /// </summary>
         /// <param name="motion"></param>
-        public CollisionFlags Move(Vector3 motion)
-        {
-            return INTERNAL_CALL_Move(this, ref motion);
-        }
+        public CollisionFlags Move(Vector3 motion) => 
+            INTERNAL_CALL_Move(this, ref motion);
 
         /// <summary>
         /// <para>Moves the character with speed.</para>
         /// </summary>
         /// <param name="speed"></param>
-        public bool SimpleMove(Vector3 speed)
-        {
-            return INTERNAL_CALL_SimpleMove(this, ref speed);
-        }
+        public bool SimpleMove(Vector3 speed) => 
+            INTERNAL_CALL_SimpleMove(this, ref speed);
 
         /// <summary>
         /// <para>The center of the character's capsule relative to the transform's position.</para>

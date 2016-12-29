@@ -37,25 +37,17 @@
             m_Gradient2 = gradient2;
         }
 
-        public static bool HasDoubleAnimationCurve()
-        {
-            return ((m_AnimationCurve1 != null) && (m_AnimationCurve2 != null));
-        }
+        public static bool HasDoubleAnimationCurve() => 
+            ((m_AnimationCurve1 != null) && (m_AnimationCurve2 != null));
 
-        public static bool HasDoubleGradient()
-        {
-            return ((m_Gradient1 != null) && (m_Gradient2 != null));
-        }
+        public static bool HasDoubleGradient() => 
+            ((m_Gradient1 != null) && (m_Gradient2 != null));
 
-        public static bool HasSingleAnimationCurve()
-        {
-            return ((m_AnimationCurve1 != null) && (m_AnimationCurve2 == null));
-        }
+        public static bool HasSingleAnimationCurve() => 
+            ((m_AnimationCurve1 != null) && (m_AnimationCurve2 == null));
 
-        public static bool HasSingleGradient()
-        {
-            return ((m_Gradient1 != null) && (m_Gradient2 == null));
-        }
+        public static bool HasSingleGradient() => 
+            ((m_Gradient1 != null) && (m_Gradient2 == null));
 
         public static void PasteAnimationCurves(SerializedProperty animCurveProperty, SerializedProperty animCurveProperty2, SerializedProperty scalarProperty, Rect curveRanges, ParticleSystemCurveEditor particleSystemCurveEditor)
         {

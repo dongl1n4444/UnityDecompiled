@@ -34,13 +34,8 @@
             this.CheckTypeReference(node);
         }
 
-        public Set<Assembly> ReferencedAssemblies
-        {
-            get
-            {
-                return this._assemblies;
-            }
-        }
+        public Set<Assembly> ReferencedAssemblies =>
+            this._assemblies;
     }
 }
 

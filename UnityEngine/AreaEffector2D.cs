@@ -26,10 +26,8 @@
         [Obsolete("AreaEffector2D.forceDirection has been deprecated. Use AreaEffector2D.forceAngle instead (UnityUpgradable) -> forceAngle", true)]
         public float forceDirection
         {
-            get
-            {
-                return this.forceAngle;
-            }
+            get => 
+                this.forceAngle;
             set
             {
                 this.forceAngle = value;

@@ -34,28 +34,17 @@
             }
         }
 
-        public override string GetServiceDisplayName()
-        {
-            return "Unity Collab";
-        }
+        public override string GetServiceDisplayName() => 
+            "Unity Collab";
 
-        public override string GetServiceName()
-        {
-            return "Collab";
-        }
+        public override string GetServiceName() => 
+            "Collab";
 
-        public bool IsCollabUIAccessible()
-        {
-            return (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
-        }
+        public bool IsCollabUIAccessible() => 
+            (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
 
-        public static CollabAccess Instance
-        {
-            get
-            {
-                return s_instance;
-            }
-        }
+        public static CollabAccess Instance =>
+            s_instance;
     }
 }
 

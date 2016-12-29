@@ -19,15 +19,13 @@
         public static ITypeProviderService TypeProvider;
 
         [DebuggerHidden]
-        internal static IEnumerable<MethodDefinition> GetArrayInterfaceMethods(TypeDefinition arrayType, TypeDefinition interfaceType, string arrayMethodPrefix)
-        {
-            return new <GetArrayInterfaceMethods>c__Iterator0 { 
+        internal static IEnumerable<MethodDefinition> GetArrayInterfaceMethods(TypeDefinition arrayType, TypeDefinition interfaceType, string arrayMethodPrefix) => 
+            new <GetArrayInterfaceMethods>c__Iterator0 { 
                 interfaceType = interfaceType,
                 arrayType = arrayType,
                 arrayMethodPrefix = arrayMethodPrefix,
                 $PC = -2
             };
-        }
 
         internal static MethodReference InflateArrayMethod(MethodDefinition method, TypeReference elementType)
         {
@@ -48,7 +46,7 @@
             TypeDefinition interfaceType = mainModule.GetType("System.Collections.Generic.ICollection`1");
             TypeDefinition definition4 = mainModule.GetType("System.Collections.Generic.IList`1");
             TypeDefinition definition5 = mainModule.GetType("System.Collections.Generic.IEnumerable`1");
-            return Enumerable.Concat<MethodReference>(Enumerable.Concat<MethodReference>(Enumerable.Concat<MethodReference>(Enumerable.Empty<MethodReference>(), Enumerable.Select<MethodDefinition, MethodReference>(GetArrayInterfaceMethods(type, interfaceType, "InternalArray__ICollection_"), new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__0))), Enumerable.Select<MethodDefinition, MethodReference>(GetArrayInterfaceMethods(type, definition4, "InternalArray__"), new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__1))), Enumerable.Select<MethodDefinition, MethodReference>(GetArrayInterfaceMethods(type, definition5, "InternalArray__IEnumerable_"), new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__2)));
+            return Enumerable.Empty<MethodReference>().Concat<MethodReference>(GetArrayInterfaceMethods(type, interfaceType, "InternalArray__ICollection_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__0))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition4, "InternalArray__").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__1))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition5, "InternalArray__IEnumerable_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__2)));
         }
 
         private static bool IsGenericInstanceWithMoreThanOneGenericArgument(TypeReference type)
@@ -64,10 +62,8 @@
             return false;
         }
 
-        private static bool IsSpecialCollectionGenericInterface(string typeFullName)
-        {
-            return ((typeFullName.Contains("System.Collections.Generic.ICollection`1") || typeFullName.Contains("System.Collections.Generic.IEnumerable`1")) || typeFullName.Contains("System.Collections.Generic.IList`1"));
-        }
+        private static bool IsSpecialCollectionGenericInterface(string typeFullName) => 
+            ((typeFullName.Contains("System.Collections.Generic.ICollection`1") || typeFullName.Contains("System.Collections.Generic.IEnumerable`1")) || typeFullName.Contains("System.Collections.Generic.IList`1"));
 
         internal static IEnumerable<TypeReference> TypeAndAllBaseAndInterfaceTypesFor(TypeReference type)
         {
@@ -75,14 +71,14 @@
             while (type != null)
             {
                 list.Add(type);
-                foreach (TypeReference reference in Extensions.GetInterfaces(type))
+                foreach (TypeReference reference in type.GetInterfaces())
                 {
                     if (!IsGenericInstanceWithMoreThanOneGenericArgument(reference) && !IsSpecialCollectionGenericInterface(reference.FullName))
                     {
                         list.Add(reference);
                     }
                 }
-                type = Extensions.GetBaseType(type);
+                type = type.GetBaseType();
             }
             return list;
         }
@@ -151,7 +147,7 @@
                         this.$locvar2.<>f__ref$0 = this;
                         this.$locvar2.<>f__ref$2 = this.$locvar1;
                         this.$locvar2.methodName = this.<method>__0.Name;
-                        this.<arrayMethod>__2 = Enumerable.SingleOrDefault<MethodDefinition>(this.arrayType.Methods, new Func<MethodDefinition, bool>(this.$locvar2, (IntPtr) this.<>m__0));
+                        this.<arrayMethod>__2 = this.arrayType.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this.$locvar2, (IntPtr) this.<>m__0));
                         if (this.<arrayMethod>__2 != null)
                         {
                             this.$current = this.<arrayMethod>__2;
@@ -197,28 +193,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.MethodDefinition>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.MethodDefinition>.GetEnumerator();
 
-            MethodDefinition IEnumerator<MethodDefinition>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            MethodDefinition IEnumerator<MethodDefinition>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
 
             private sealed class <GetArrayInterfaceMethods>c__AnonStorey2
             {
@@ -231,10 +213,8 @@
                 internal ArrayTypeInfoWriter.<GetArrayInterfaceMethods>c__Iterator0.<GetArrayInterfaceMethods>c__AnonStorey2 <>f__ref$2;
                 internal string methodName;
 
-                internal bool <>m__0(MethodDefinition m)
-                {
-                    return (((m.Name.Length == (this.<>f__ref$2.arrayMethodPrefix.Length + this.methodName.Length)) && m.Name.StartsWith(this.<>f__ref$2.arrayMethodPrefix)) && m.Name.EndsWith(this.methodName));
-                }
+                internal bool <>m__0(MethodDefinition m) => 
+                    (((m.Name.Length == (this.<>f__ref$2.arrayMethodPrefix.Length + this.methodName.Length)) && m.Name.StartsWith(this.<>f__ref$2.arrayMethodPrefix)) && m.Name.EndsWith(this.methodName));
             }
         }
 
@@ -243,20 +223,14 @@
         {
             internal ArrayType arrayType;
 
-            internal MethodReference <>m__0(MethodDefinition m)
-            {
-                return ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
-            }
+            internal MethodReference <>m__0(MethodDefinition m) => 
+                ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
 
-            internal MethodReference <>m__1(MethodDefinition m)
-            {
-                return ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
-            }
+            internal MethodReference <>m__1(MethodDefinition m) => 
+                ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
 
-            internal MethodReference <>m__2(MethodDefinition m)
-            {
-                return ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
-            }
+            internal MethodReference <>m__2(MethodDefinition m) => 
+                ArrayTypeInfoWriter.InflateArrayMethod(m, this.arrayType.ElementType);
         }
     }
 }

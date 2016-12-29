@@ -28,20 +28,14 @@
             this._marshaledTypes = new MarshaledType[] { new MarshaledType("void*", "void*") };
         }
 
-        public override bool CanMarshalTypeFromNative()
-        {
-            return false;
-        }
+        public override bool CanMarshalTypeFromNative() => 
+            false;
 
-        public override bool CanMarshalTypeToNative()
-        {
-            return !this._forByReferenceType;
-        }
+        public override bool CanMarshalTypeToNative() => 
+            !this._forByReferenceType;
 
-        public override string GetMarshalingException()
-        {
-            return string.Format("il2cpp_codegen_get_marshal_directive_exception(\"HandleRefs cannot be marshaled ByRef or from unmanaged to managed.\")", base._typeRef);
-        }
+        public override string GetMarshalingException() => 
+            string.Format("il2cpp_codegen_get_marshal_directive_exception(\"HandleRefs cannot be marshaled ByRef or from unmanaged to managed.\")", base._typeRef);
 
         public override void WriteMarshaledTypeForwardDeclaration(CppCodeWriter writer)
         {
@@ -67,18 +61,18 @@
             {
                 <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__0);
             }
-            FieldDefinition field = Enumerable.SingleOrDefault<FieldDefinition>(this._typeDefinition.Fields, <>f__am$cache0);
+            FieldDefinition field = this._typeDefinition.Fields.SingleOrDefault<FieldDefinition>(<>f__am$cache0);
             if ((field == null) && (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45))
             {
                 if (<>f__am$cache1 == null)
                 {
                     <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__1);
                 }
-                field = Enumerable.SingleOrDefault<FieldDefinition>(this._typeDefinition.Fields, <>f__am$cache1);
+                field = this._typeDefinition.Fields.SingleOrDefault<FieldDefinition>(<>f__am$cache1);
             }
             if (field == null)
             {
-                throw new InvalidOperationException(string.Format("Unable to locate the handle field on {0}", this._typeDefinition));
+                throw new InvalidOperationException($"Unable to locate the handle field on {this._typeDefinition}");
             }
             object[] args = new object[4];
             args[0] = destinationVariable;
@@ -88,17 +82,12 @@
             {
                 <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__2);
             }
-            args[3] = DefaultMarshalInfoWriter.Naming.ForFieldGetter(Enumerable.Single<FieldDefinition>(DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields, <>f__am$cache2));
+            args[3] = DefaultMarshalInfoWriter.Naming.ForFieldGetter(DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache2));
             writer.WriteLine("{0} = {1}.{2}().{3}();", args);
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
     }
 }
 

@@ -165,7 +165,7 @@
             if (graphicsAPIs != null)
             {
                 GraphicsDeviceType item = (GraphicsDeviceType) Enum.Parse(typeof(GraphicsDeviceType), options[selected], true);
-                List<GraphicsDeviceType> list = Enumerable.ToList<GraphicsDeviceType>(graphicsAPIs);
+                List<GraphicsDeviceType> list = graphicsAPIs.ToList<GraphicsDeviceType>();
                 list.Add(item);
                 graphicsAPIs = list.ToArray();
                 PlayerSettings.SetGraphicsAPIs(platform, graphicsAPIs);
@@ -355,10 +355,8 @@
             }
         }
 
-        private bool CanRemoveGraphicsDeviceElement(ReorderableList list)
-        {
-            return (list.list.Count >= 2);
-        }
+        private bool CanRemoveGraphicsDeviceElement(ReorderableList list) => 
+            (list.list.Count >= 2);
 
         private void CommonSettings()
         {
@@ -537,7 +535,7 @@
                     if (!this.m_GraphicsDeviceLists.ContainsKey(storey.targetPlatform))
                     {
                         GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(storey.targetPlatform);
-                        List<GraphicsDeviceType> elements = (graphicsAPIs == null) ? new List<GraphicsDeviceType>() : Enumerable.ToList<GraphicsDeviceType>(graphicsAPIs);
+                        List<GraphicsDeviceType> elements = (graphicsAPIs == null) ? new List<GraphicsDeviceType>() : graphicsAPIs.ToList<GraphicsDeviceType>();
                         ReorderableList list2 = new ReorderableList(elements, typeof(GraphicsDeviceType), true, true, true, true) {
                             onAddDropdownCallback = new ReorderableList.AddDropdownCallbackDelegate(storey2.<>m__0),
                             onCanRemoveCallback = new ReorderableList.CanRemoveCallbackDelegate(this.CanRemoveGraphicsDeviceElement),
@@ -661,10 +659,8 @@
             this.EndSettingsBox();
         }
 
-        private bool IsMobileTarget(BuildTargetGroup targetGroup)
-        {
-            return ((((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || ((targetGroup == BuildTargetGroup.Android) || (targetGroup == BuildTargetGroup.Tizen))) || (targetGroup == BuildTargetGroup.SamsungTV));
-        }
+        private bool IsMobileTarget(BuildTargetGroup targetGroup) => 
+            ((((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || ((targetGroup == BuildTargetGroup.Android) || (targetGroup == BuildTargetGroup.Tizen))) || (targetGroup == BuildTargetGroup.SamsungTV));
 
         private void KinectGUI()
         {
@@ -887,7 +883,7 @@
             if (targetGroup == BuildTargetGroup.Android)
             {
                 GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(targetPlatform);
-                if (Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES2))
+                if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2))
                 {
                     EditorGUILayout.PropertyField(this.m_RequireES31, Styles.require31, new GUILayoutOption[0]);
                     EditorGUILayout.PropertyField(this.m_RequireES31AEP, Styles.requireAEP, new GUILayoutOption[0]);
@@ -1207,7 +1203,7 @@
                     if (targetGroup == BuildTargetGroup.iPhone)
                     {
                         GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(BuildTarget.iOS);
-                        bool flag = !Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES2);
+                        bool flag = !graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2);
                         Version version = new Version(8, 0);
                         Version version2 = new Version(6, 0);
                         Version version3 = !string.IsNullOrEmpty(PlayerSettings.iOS.targetOSVersionString) ? new Version(PlayerSettings.iOS.targetOSVersionString) : version2;
@@ -1219,7 +1215,7 @@
                     if (targetGroup == BuildTargetGroup.tvOS)
                     {
                         GraphicsDeviceType[] source = PlayerSettings.GetGraphicsAPIs(BuildTarget.tvOS);
-                        if (Enumerable.Contains<GraphicsDeviceType>(source, GraphicsDeviceType.OpenGLES3) || Enumerable.Contains<GraphicsDeviceType>(source, GraphicsDeviceType.OpenGLES2))
+                        if (source.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) || source.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2))
                         {
                             EditorGUILayout.HelpBox(Styles.colorSpaceTVOSWarning.text, MessageType.Warning);
                         }
@@ -1227,7 +1223,7 @@
                     if (targetGroup == BuildTargetGroup.Android)
                     {
                         GraphicsDeviceType[] typeArray3 = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
-                        if (!(Enumerable.Contains<GraphicsDeviceType>(typeArray3, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(typeArray3, GraphicsDeviceType.OpenGLES2)) || (PlayerSettings.Android.minSdkVersion < AndroidSdkVersions.AndroidApiLevel18))
+                        if (!(typeArray3.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !typeArray3.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2)) || (PlayerSettings.Android.minSdkVersion < AndroidSdkVersions.AndroidApiLevel18))
                         {
                             EditorGUILayout.HelpBox(Styles.colorSpaceAndroidWarning.text, MessageType.Warning);
                         }
@@ -1322,35 +1318,38 @@
             if (this.m_VRSettings.TargetGroupSupportsVirtualReality(targetGroup))
             {
                 this.m_VRSettings.DevicesGUI(targetGroup);
-                bool flag7 = TargetSupportsSinglePassStereoRendering(targetGroup);
-                bool flag8 = TargetSupportsStereoInstancingRendering(targetGroup);
-                if (PlayerSettings.virtualRealitySupported)
+                using (new EditorGUI.DisabledScope(EditorApplication.isPlaying))
                 {
-                    int num3 = (1 + (!flag7 ? 0 : 1)) + (!flag8 ? 0 : 1);
-                    GUIContent[] displayedOptions = new GUIContent[num3];
-                    int[] optionValues = new int[num3];
-                    int index = 0;
-                    displayedOptions[index] = Styles.kStereoRenderingMethodsAll[0];
-                    optionValues[index++] = kStereoRenderingMethodValues[0];
-                    if (flag7)
+                    bool flag7 = TargetSupportsSinglePassStereoRendering(targetGroup);
+                    bool flag8 = TargetSupportsStereoInstancingRendering(targetGroup);
+                    if (PlayerSettings.virtualRealitySupported)
                     {
-                        displayedOptions[index] = Styles.kStereoRenderingMethodsAll[1];
-                        optionValues[index++] = kStereoRenderingMethodValues[1];
+                        int num3 = (1 + (!flag7 ? 0 : 1)) + (!flag8 ? 0 : 1);
+                        GUIContent[] displayedOptions = new GUIContent[num3];
+                        int[] optionValues = new int[num3];
+                        int index = 0;
+                        displayedOptions[index] = Styles.kStereoRenderingMethodsAll[0];
+                        optionValues[index++] = kStereoRenderingMethodValues[0];
+                        if (flag7)
+                        {
+                            displayedOptions[index] = Styles.kStereoRenderingMethodsAll[1];
+                            optionValues[index++] = kStereoRenderingMethodValues[1];
+                        }
+                        if (flag8)
+                        {
+                            displayedOptions[index] = Styles.kStereoRenderingMethodsAll[2];
+                            optionValues[index++] = kStereoRenderingMethodValues[2];
+                        }
+                        if (!flag8 && (this.m_StereoRenderingPath.intValue == 2))
+                        {
+                            this.m_StereoRenderingPath.intValue = 1;
+                        }
+                        if (!flag7 && (this.m_StereoRenderingPath.intValue == 1))
+                        {
+                            this.m_StereoRenderingPath.intValue = 0;
+                        }
+                        EditorGUILayout.IntPopup(this.m_StereoRenderingPath, displayedOptions, optionValues, EditorGUIUtility.TextContent("Stereo Rendering Method*"), new GUILayoutOption[0]);
                     }
-                    if (flag8)
-                    {
-                        displayedOptions[index] = Styles.kStereoRenderingMethodsAll[2];
-                        optionValues[index++] = kStereoRenderingMethodValues[2];
-                    }
-                    if (!flag8 && (this.m_StereoRenderingPath.intValue == 2))
-                    {
-                        this.m_StereoRenderingPath.intValue = 1;
-                    }
-                    if (!flag7 && (this.m_StereoRenderingPath.intValue == 1))
-                    {
-                        this.m_StereoRenderingPath.intValue = 0;
-                    }
-                    EditorGUILayout.IntPopup(this.m_StereoRenderingPath, displayedOptions, optionValues, EditorGUIUtility.TextContent("Stereo Rendering Method*"), new GUILayoutOption[0]);
                 }
             }
             if (TargetSupportsProtectedGraphicsMem(targetGroup))
@@ -1404,7 +1403,7 @@
                 }
                 else
                 {
-                    List<GraphicsDeviceType> list2 = Enumerable.ToList<GraphicsDeviceType>(graphicsAPIs);
+                    List<GraphicsDeviceType> list2 = graphicsAPIs.ToList<GraphicsDeviceType>();
                     list2.RemoveAt(list.index);
                     graphicsAPIs = list2.ToArray();
                     this.ApplyChangedGraphicsAPIList(target, graphicsAPIs, list.index == 0);
@@ -1610,7 +1609,7 @@
             if (this.m_GraphicsDeviceLists.ContainsKey(target))
             {
                 GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(target);
-                List<GraphicsDeviceType> list = (graphicsAPIs == null) ? new List<GraphicsDeviceType>() : Enumerable.ToList<GraphicsDeviceType>(graphicsAPIs);
+                List<GraphicsDeviceType> list = (graphicsAPIs == null) ? new List<GraphicsDeviceType>() : graphicsAPIs.ToList<GraphicsDeviceType>();
                 this.m_GraphicsDeviceLists[target].list = list;
             }
         }
@@ -1624,30 +1623,20 @@
             return (targetGroup == BuildTargetGroup.Standalone);
         }
 
-        private static bool TargetSupportsProtectedGraphicsMem(BuildTargetGroup targetGroup)
-        {
-            return (targetGroup == BuildTargetGroup.Android);
-        }
+        private static bool TargetSupportsProtectedGraphicsMem(BuildTargetGroup targetGroup) => 
+            (targetGroup == BuildTargetGroup.Android);
 
-        private static bool TargetSupportsSinglePassStereoRendering(BuildTargetGroup targetGroup)
-        {
-            return Enumerable.Contains<BuildTargetGroup>(kSinglePassStereoRenderingTargetGroups, targetGroup);
-        }
+        private static bool TargetSupportsSinglePassStereoRendering(BuildTargetGroup targetGroup) => 
+            kSinglePassStereoRenderingTargetGroups.Contains<BuildTargetGroup>(targetGroup);
 
-        private static bool TargetSupportsStereoInstancingRendering(BuildTargetGroup targetGroup)
-        {
-            return Enumerable.Contains<BuildTargetGroup>(kStereoInstancingRenderingTargetGroups, targetGroup);
-        }
+        private static bool TargetSupportsStereoInstancingRendering(BuildTargetGroup targetGroup) => 
+            kStereoInstancingRenderingTargetGroups.Contains<BuildTargetGroup>(targetGroup);
 
-        public override bool UseDefaultMargins()
-        {
-            return false;
-        }
+        public override bool UseDefaultMargins() => 
+            false;
 
-        private static bool WillEditorUseFirstGraphicsAPI(BuildTarget targetPlatform)
-        {
-            return (((Application.platform == RuntimePlatform.WindowsEditor) && (targetPlatform == BuildTarget.StandaloneWindows)) || ((Application.platform == RuntimePlatform.OSXEditor) && (targetPlatform == BuildTarget.StandaloneOSXUniversal)));
-        }
+        private static bool WillEditorUseFirstGraphicsAPI(BuildTarget targetPlatform) => 
+            (((Application.platform == RuntimePlatform.WindowsEditor) && (targetPlatform == BuildTarget.StandaloneWindows)) || ((Application.platform == RuntimePlatform.OSXEditor) && (targetPlatform == BuildTarget.StandaloneOSXUniversal)));
 
         private PlayerSettingsSplashScreenEditor splashScreenEditor
         {

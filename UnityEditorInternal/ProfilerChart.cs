@@ -96,10 +96,8 @@
 
         public bool active
         {
-            get
-            {
-                return this.m_Active;
-            }
+            get => 
+                this.m_Active;
             set
             {
                 if (this.m_Active != value)

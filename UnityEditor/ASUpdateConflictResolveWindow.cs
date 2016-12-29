@@ -140,10 +140,8 @@
             return false;
         }
 
-        public bool CanContinue()
-        {
-            return this.enableContinueButton;
-        }
+        public bool CanContinue() => 
+            this.enableContinueButton;
 
         private void ContextMenuClick(object userData, string[] options, int selected)
         {
@@ -517,15 +515,11 @@
             return true;
         }
 
-        public string[] GetDownloadConflicts()
-        {
-            return this.downloadConflicts;
-        }
+        public string[] GetDownloadConflicts() => 
+            this.downloadConflicts;
 
-        public string[] GetNameConflicts()
-        {
-            return this.nameConflicts;
-        }
+        public string[] GetNameConflicts() => 
+            this.nameConflicts;
 
         private string[] GetSelectedGUIDs()
         {

@@ -18,20 +18,14 @@
         private SerializedProperty m_WebGLTemplate;
         private WebGLTemplateManager m_WebGLTemplateManager = new WebGLTemplateManager();
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
-        public override bool HasPublishSection()
-        {
-            return true;
-        }
+        public override bool HasPublishSection() => 
+            true;
 
-        public override bool HasResolutionSection()
-        {
-            return true;
-        }
+        public override bool HasResolutionSection() => 
+            true;
 
         public override void OnEnable(PlayerSettingsEditor settingsEditor)
         {

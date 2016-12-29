@@ -125,39 +125,22 @@
 
         public bool debugMode
         {
-            get
-            {
-                return this.m_DebugMode;
-            }
+            get => 
+                this.m_DebugMode;
             set
             {
                 this.m_DebugMode = value;
             }
         }
 
-        public bool isInitialized
-        {
-            get
-            {
-                return (this.m_Configuration != null);
-            }
-        }
+        public bool isInitialized =>
+            (this.m_Configuration != null);
 
-        public bool isSupported
-        {
-            get
-            {
-                return Application.isEditor;
-            }
-        }
+        public bool isSupported =>
+            Application.isEditor;
 
-        public string version
-        {
-            get
-            {
-                return "2.0.6";
-            }
-        }
+        public string version =>
+            "2.0.6";
 
         [CompilerGenerated]
         private sealed class <Initialize>c__AnonStorey0

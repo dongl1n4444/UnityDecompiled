@@ -34,23 +34,13 @@
             this._storeGenerator.Invoke();
         }
 
-        public int Index
-        {
-            get
-            {
-                return this._index;
-            }
-        }
+        public int Index =>
+            this._index;
 
         public bool IsUsed { get; private set; }
 
-        public TypeReference Type
-        {
-            get
-            {
-                return this._type;
-            }
-        }
+        public TypeReference Type =>
+            this._type;
     }
 }
 

@@ -11,10 +11,8 @@
         {
         }
 
-        protected override string GetMethodNameInGeneratedCode()
-        {
-            return "Invoke";
-        }
+        protected override string GetMethodNameInGeneratedCode() => 
+            "Invoke";
 
         protected override void WriteMethodPrologue(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
@@ -28,13 +26,8 @@
             writer.WriteLine();
         }
 
-        protected override bool UseQueryInterfaceToObtainInterfacePointer
-        {
-            get
-            {
-                return true;
-            }
-        }
+        protected override bool UseQueryInterfaceToObtainInterfacePointer =>
+            true;
     }
 }
 

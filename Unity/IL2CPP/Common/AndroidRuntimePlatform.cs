@@ -4,13 +4,8 @@
 
     public class AndroidRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "Android";
-            }
-        }
+        public override string Name =>
+            "Android";
     }
 }
 

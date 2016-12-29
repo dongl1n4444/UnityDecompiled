@@ -11,18 +11,14 @@
         /// <summary>
         /// <para>Create an IAchievement instance.</para>
         /// </summary>
-        public static IAchievement CreateAchievement()
-        {
-            return Active.CreateAchievement();
-        }
+        public static IAchievement CreateAchievement() => 
+            Active.CreateAchievement();
 
         /// <summary>
         /// <para>Create an ILeaderboard instance.</para>
         /// </summary>
-        public static ILeaderboard CreateLeaderboard()
-        {
-            return Active.CreateLeaderboard();
-        }
+        public static ILeaderboard CreateLeaderboard() => 
+            Active.CreateLeaderboard();
 
         public static void LoadAchievementDescriptions(Action<IAchievementDescription[]> callback)
         {
@@ -75,10 +71,8 @@
         /// </summary>
         public static ISocialPlatform Active
         {
-            get
-            {
-                return ActivePlatform.Instance;
-            }
+            get => 
+                ActivePlatform.Instance;
             set
             {
                 ActivePlatform.Instance = value;
@@ -88,13 +82,8 @@
         /// <summary>
         /// <para>The local user (potentially not logged in).</para>
         /// </summary>
-        public static ILocalUser localUser
-        {
-            get
-            {
-                return Active.localUser;
-            }
-        }
+        public static ILocalUser localUser =>
+            Active.localUser;
     }
 }
 

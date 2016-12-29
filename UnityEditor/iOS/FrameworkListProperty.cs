@@ -31,15 +31,11 @@
             this.ResetValues();
         }
 
-        private static GUIContent BuildFrameworksLabel(string label, int enabled)
-        {
-            return EditorGUIUtility.TextContent(string.Format("{0} ({1} enabled)", label, enabled));
-        }
+        private static GUIContent BuildFrameworksLabel(string label, int enabled) => 
+            EditorGUIUtility.TextContent($"{label} ({enabled} enabled)");
 
-        private GUIContent GetDefaultFrameworksLabel()
-        {
-            return BuildFrameworksLabel("Default frameworks", this.m_defaultFrameworks.Count);
-        }
+        private GUIContent GetDefaultFrameworksLabel() => 
+            BuildFrameworksLabel("Default frameworks", this.m_defaultFrameworks.Count);
 
         private GUIContent GetRareFrameworksLabel()
         {

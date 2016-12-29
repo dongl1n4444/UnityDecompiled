@@ -34,10 +34,8 @@
         [Obsolete("Configuring smooth sphere collisions is no longer needed. PhysX3 has a better behaviour in place.")]
         public bool smoothSphereCollisions
         {
-            get
-            {
-                return true;
-            }
+            get => 
+                true;
             set
             {
             }

@@ -86,10 +86,8 @@
         /// </summary>
         public AnimationEvent[] events
         {
-            get
-            {
-                return (AnimationEvent[]) this.GetEventsInternal();
-            }
+            get => 
+                ((AnimationEvent[]) this.GetEventsInternal());
             set
             {
                 this.SetEventsInternal(value);

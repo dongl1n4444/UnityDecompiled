@@ -70,7 +70,7 @@ internal static class MetroAssemblyCSharpCreator
                 builder.AppendLine();
             }
             builder.AppendLine("    </Compile>");
-            additionalReferencePath = string.Format("-additionalAssemblyPath=\"{0}\"", MetroVisualStudioSolutionHelper.GetAssemblyCSharpFirstpassDllDir(wsaSDK));
+            additionalReferencePath = $"-additionalAssemblyPath="{MetroVisualStudioSolutionHelper.GetAssemblyCSharpFirstpassDllDir(wsaSDK)}"";
         }
         else
         {
@@ -90,7 +90,7 @@ internal static class MetroAssemblyCSharpCreator
         {
             <>f__am$cache0 = new Func<MonoIsland?, bool>(null, (IntPtr) <CreateAssemblyCSharp>m__0);
         }
-        MonoIsland? nullable = Enumerable.FirstOrDefault<MonoIsland?>(Enumerable.Cast<MonoIsland?>(InternalEditorUtility.GetMonoIslands()), <>f__am$cache0);
+        MonoIsland? nullable = Enumerable.FirstOrDefault<MonoIsland?>(InternalEditorUtility.GetMonoIslands().Cast<MonoIsland?>(), <>f__am$cache0);
         string preTargets = "  <Import Project=\"$(ProjectDir)..\\..\\..\\UnityCommon.props\" />";
         string postTargets = GetSerializationWeaverTargets(relativeFinalProjectDirectory, includeUnet, additionalReferencePath);
         CreateAssemblyCSharp(project, playerPackage, assemblyName, nullable.Value._defines, plugins, builder.ToString(), preTargets, postTargets, wsaSDK, additionalProjectReferences);
@@ -108,7 +108,7 @@ internal static class MetroAssemblyCSharpCreator
                 string strB = Path.GetDirectoryName(project2.Path);
                 if (string.Compare(strA, strB, true) == 0)
                 {
-                    throw new Exception(string.Format("Projects {0} and {1} should be in different folders.", strA, strB));
+                    throw new Exception($"Projects {strA} and {strB} should be in different folders.");
                 }
                 builder.AppendLine("    <ProjectReference Include=\"" + project2.Path.Replace('/', '\\') + "\">");
                 builder.AppendLine("      <Project>{" + project2.Guid + "}</Project>");
@@ -150,7 +150,7 @@ internal static class MetroAssemblyCSharpCreator
                 break;
 
             default:
-                throw new Exception(string.Format("Unknown Windows Store Apps SDK: {0}", wsaSDK));
+                throw new Exception($"Unknown Windows Store Apps SDK: {wsaSDK}");
         }
         if (File.Exists(project.Path))
         {
@@ -211,7 +211,7 @@ internal static class MetroAssemblyCSharpCreator
                 break;
 
             default:
-                throw new Exception(string.Format("Unknown Windows Store Apps SDK: {0}", wsaSDK));
+                throw new Exception($"Unknown Windows Store Apps SDK: {wsaSDK}");
         }
         string str4 = "DEBUG;TRACE;ENABLE_PROFILER;" + str2;
         string str5 = "TRACE;ENABLE_PROFILER;" + str2;
@@ -287,7 +287,7 @@ internal static class MetroAssemblyCSharpCreator
             {
                 if (wsaSDK != WSASDK.PhoneSDK81)
                 {
-                    throw new Exception(string.Format("Invalid Windows Store Apps SDK in universal app: {0}", wsaSDK));
+                    throw new Exception($"Invalid Windows Store Apps SDK in universal app: {wsaSDK}");
                 }
             }
             else
@@ -302,7 +302,7 @@ internal static class MetroAssemblyCSharpCreator
     private static string GetSerializationWeaverTargets(string finalProjectDir, bool includeUnet, string additionalReferencePath)
     {
         XElement element = new XElement("PropertyGroup", new XElement("TargetsTriggeredByCompilation", "$(TargetsTriggeredByCompilation);RunSerializationWeaver"));
-        string str = !includeUnet ? string.Empty : string.Format("-unity-networking=\"{0}Unprocessed\\UnityEngine.Networking.dll\"", finalProjectDir);
+        string str = !includeUnet ? string.Empty : $"-unity-networking="{finalProjectDir}Unprocessed\UnityEngine.Networking.dll"";
         string[] textArray1 = new string[] { "\"$(UnityWSAToolsDir)SerializationWeaver\\SerializationWeaver.exe\" \"$(TargetDir)Unprocessed\\$(TargetFileName)\" -pdb -verbose -unity-engine=\"", finalProjectDir, "Unprocessed\\UnityEngine.dll\" ", str, " ", additionalReferencePath, " \"$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)').TrimEnd('\\'))\"" };
         string str2 = string.Concat(textArray1);
         object[] content = new object[7];

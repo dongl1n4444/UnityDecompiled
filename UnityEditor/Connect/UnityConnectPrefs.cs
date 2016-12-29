@@ -77,10 +77,8 @@
             return 0;
         }
 
-        public static string ServicePrefKey(string baseKey, string serviceName)
-        {
-            return (baseKey + "/" + serviceName);
-        }
+        public static string ServicePrefKey(string baseKey, string serviceName) => 
+            (baseKey + "/" + serviceName);
 
         public static void ShowPanelPrefUI()
         {

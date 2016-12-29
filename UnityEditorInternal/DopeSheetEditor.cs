@@ -48,7 +48,7 @@
 
         private void AddKeyToDopeline(AddKeyToDopelineContext context)
         {
-            AnimationWindowUtility.AddKeyframes(this.state, Enumerable.ToArray<AnimationWindowCurve>(context.dopeline.curves), context.time);
+            AnimationWindowUtility.AddKeyframes(this.state, context.dopeline.curves.ToArray<AnimationWindowCurve>(), context.time);
         }
 
         private bool AnyKeyIsSelectedAtTime(DopeLine dopeLine, int keyIndex)
@@ -625,7 +625,7 @@
         private void HandleDopelineDoubleclick(DopeLine dopeline)
         {
             AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
-            AnimationWindowUtility.AddKeyframes(this.state, Enumerable.ToArray<AnimationWindowCurve>(dopeline.curves), time);
+            AnimationWindowUtility.AddKeyframes(this.state, dopeline.curves.ToArray<AnimationWindowCurve>(), time);
             if (!this.state.playing && this.state.syncTimeDuringDrag)
             {
                 this.state.frame = time.frame;
@@ -1081,13 +1081,8 @@
             return true;
         }
 
-        internal int assetPreviewManagerID
-        {
-            get
-            {
-                return ((this.m_Owner == null) ? 0 : this.m_Owner.GetInstanceID());
-            }
-        }
+        internal int assetPreviewManagerID =>
+            ((this.m_Owner == null) ? 0 : this.m_Owner.GetInstanceID());
 
         public float contentHeight
         {
@@ -1102,21 +1097,11 @@
             }
         }
 
-        public override Bounds drawingBounds
-        {
-            get
-            {
-                return this.m_Bounds;
-            }
-        }
+        public override Bounds drawingBounds =>
+            this.m_Bounds;
 
-        public bool isDragging
-        {
-            get
-            {
-                return this.m_IsDragging;
-            }
-        }
+        public bool isDragging =>
+            this.m_IsDragging;
 
         public Bounds selectionBounds
         {
@@ -1147,10 +1132,8 @@
         {
             internal Type valueType;
 
-            internal bool <>m__0(AnimationWindowCurve curve)
-            {
-                return (curve.valueType == this.valueType);
-            }
+            internal bool <>m__0(AnimationWindowCurve curve) => 
+                (curve.valueType == this.valueType);
         }
 
         [CompilerGenerated]
@@ -1158,10 +1141,8 @@
         {
             internal ChangedCurve changedCurve;
 
-            internal bool <>m__0(AnimationWindowCurve c)
-            {
-                return (this.changedCurve.curveId == c.GetHashCode());
-            }
+            internal bool <>m__0(AnimationWindowCurve c) => 
+                (this.changedCurve.curveId == c.GetHashCode());
         }
 
         [StructLayout(LayoutKind.Sequential)]

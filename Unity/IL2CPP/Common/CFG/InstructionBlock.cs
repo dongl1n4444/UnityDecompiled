@@ -38,16 +38,12 @@
             this._successors.AddRange(blocks);
         }
 
-        public int CompareTo(InstructionBlock block)
-        {
-            return (this.first.Offset - block.First.Offset);
-        }
+        public int CompareTo(InstructionBlock block) => 
+            (this.first.Offset - block.First.Offset);
 
         [DebuggerHidden]
-        public IEnumerator<Instruction> GetEnumerator()
-        {
-            return new <GetEnumerator>c__Iterator0 { $this = this };
-        }
+        public IEnumerator<Instruction> GetEnumerator() => 
+            new <GetEnumerator>c__Iterator0 { $this = this };
 
         public void MarkIsAliveRecursive()
         {
@@ -70,25 +66,16 @@
             this.IsDead = true;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.GetEnumerator();
 
-        public IEnumerable<InstructionBlock> ExceptionSuccessors
-        {
-            get
-            {
-                return this._exceptionSuccessors;
-            }
-        }
+        public IEnumerable<InstructionBlock> ExceptionSuccessors =>
+            this._exceptionSuccessors;
 
         public Instruction First
         {
-            get
-            {
-                return this.first;
-            }
+            get => 
+                this.first;
             internal set
             {
                 this.first = value;
@@ -97,10 +84,8 @@
 
         public int Index
         {
-            get
-            {
-                return this.index;
-            }
+            get => 
+                this.index;
             internal set
             {
                 this.index = value;
@@ -113,23 +98,16 @@
 
         public Instruction Last
         {
-            get
-            {
-                return this.last;
-            }
+            get => 
+                this.last;
             internal set
             {
                 this.last = value;
             }
         }
 
-        public IEnumerable<InstructionBlock> Successors
-        {
-            get
-            {
-                return this._successors;
-            }
-        }
+        public IEnumerable<InstructionBlock> Successors =>
+            this._successors;
 
         [CompilerGenerated]
         private sealed class <GetEnumerator>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<Instruction>
@@ -185,23 +163,11 @@
                 throw new NotSupportedException();
             }
 
-            Instruction IEnumerator<Instruction>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            Instruction IEnumerator<Instruction>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

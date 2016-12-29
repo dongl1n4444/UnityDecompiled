@@ -28,30 +28,20 @@
         /// <returns>
         /// <para>True if zero.</para>
         /// </returns>
-        public bool IsEmpty()
-        {
-            return (this.m_Value == 0);
-        }
+        public bool IsEmpty() => 
+            (this.m_Value == 0);
 
-        public override int GetHashCode()
-        {
-            return (int) this.m_Value;
-        }
+        public override int GetHashCode() => 
+            ((int) this.m_Value);
 
-        public override bool Equals(object obj)
-        {
-            return ((obj is NetworkInstanceId) && (this == ((NetworkInstanceId) obj)));
-        }
+        public override bool Equals(object obj) => 
+            ((obj is NetworkInstanceId) && (this == ((NetworkInstanceId) obj)));
 
-        public static bool operator ==(NetworkInstanceId c1, NetworkInstanceId c2)
-        {
-            return (c1.m_Value == c2.m_Value);
-        }
+        public static bool operator ==(NetworkInstanceId c1, NetworkInstanceId c2) => 
+            (c1.m_Value == c2.m_Value);
 
-        public static bool operator !=(NetworkInstanceId c1, NetworkInstanceId c2)
-        {
-            return (c1.m_Value != c2.m_Value);
-        }
+        public static bool operator !=(NetworkInstanceId c1, NetworkInstanceId c2) => 
+            (c1.m_Value != c2.m_Value);
 
         /// <summary>
         /// <para>Returns a string of "NetID:value".</para>
@@ -59,21 +49,14 @@
         /// <returns>
         /// <para>String representation of this object.</para>
         /// </returns>
-        public override string ToString()
-        {
-            return this.m_Value.ToString();
-        }
+        public override string ToString() => 
+            this.m_Value.ToString();
 
         /// <summary>
         /// <para>The internal value of this identifier.</para>
         /// </summary>
-        public uint Value
-        {
-            get
-            {
-                return this.m_Value;
-            }
-        }
+        public uint Value =>
+            this.m_Value;
         static NetworkInstanceId()
         {
             Invalid = new NetworkInstanceId(uint.MaxValue);

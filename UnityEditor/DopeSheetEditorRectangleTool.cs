@@ -97,8 +97,8 @@
             {
                 if (!Mathf.Approximately(this.selectionBounds.size.x, 0f))
                 {
-                    GUIContent content = new GUIContent(string.Format("{0}", this.m_DopeSheetEditor.FormatTime(this.selectionBounds.min.x, this.m_State.frameRate, this.m_State.timeFormat)));
-                    GUIContent content2 = new GUIContent(string.Format("{0}", this.m_DopeSheetEditor.FormatTime(this.selectionBounds.max.x, this.m_State.frameRate, this.m_State.timeFormat)));
+                    GUIContent content = new GUIContent($"{this.m_DopeSheetEditor.FormatTime(this.selectionBounds.min.x, this.m_State.frameRate, this.m_State.timeFormat)}");
+                    GUIContent content2 = new GUIContent($"{this.m_DopeSheetEditor.FormatTime(this.selectionBounds.max.x, this.m_State.frameRate, this.m_State.timeFormat)}");
                     Vector2 vector4 = base.styles.dragLabel.CalcSize(content);
                     Vector2 vector5 = base.styles.dragLabel.CalcSize(content2);
                     EditorGUI.DoDropShadowLabel(new Rect(this.m_Layout.leftLabelAnchor.x - vector4.x, this.m_Layout.leftLabelAnchor.y, vector4.x, vector4.y), content, base.styles.dragLabel, 0.3f);
@@ -106,7 +106,7 @@
                 }
                 else
                 {
-                    GUIContent content3 = new GUIContent(string.Format("{0}", this.m_DopeSheetEditor.FormatTime(this.selectionBounds.center.x, this.m_State.frameRate, this.m_State.timeFormat)));
+                    GUIContent content3 = new GUIContent($"{this.m_DopeSheetEditor.FormatTime(this.selectionBounds.center.x, this.m_State.frameRate, this.m_State.timeFormat)}");
                     Vector2 vector7 = base.styles.dragLabel.CalcSize(content3);
                     EditorGUI.DoDropShadowLabel(new Rect(this.m_Layout.leftLabelAnchor.x, this.m_Layout.leftLabelAnchor.y, vector7.x, vector7.y), content3, base.styles.dragLabel, 0.3f);
                 }
@@ -285,37 +285,17 @@
             }
         }
 
-        private float frameRate
-        {
-            get
-            {
-                return this.m_State.frameRate;
-            }
-        }
+        private float frameRate =>
+            this.m_State.frameRate;
 
-        private bool hasSelection
-        {
-            get
-            {
-                return (this.m_State.selectedKeys.Count > 0);
-            }
-        }
+        private bool hasSelection =>
+            (this.m_State.selectedKeys.Count > 0);
 
-        private bool isDragging
-        {
-            get
-            {
-                return (this.m_IsDragging || this.m_DopeSheetEditor.isDragging);
-            }
-        }
+        private bool isDragging =>
+            (this.m_IsDragging || this.m_DopeSheetEditor.isDragging);
 
-        private Bounds selectionBounds
-        {
-            get
-            {
-                return this.m_DopeSheetEditor.selectionBounds;
-            }
-        }
+        private Bounds selectionBounds =>
+            this.m_DopeSheetEditor.selectionBounds;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct ToolLayout

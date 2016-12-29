@@ -45,15 +45,11 @@
             return builder.ToString();
         }
 
-        public string[] GetErrorOutput()
-        {
-            return this._stderr.GetOutput();
-        }
+        public string[] GetErrorOutput() => 
+            this._stderr.GetOutput();
 
-        public string GetErrorOutputAsString()
-        {
-            return GetOutputAsString(this.GetErrorOutput());
-        }
+        public string GetErrorOutputAsString() => 
+            GetOutputAsString(this.GetErrorOutput());
 
         private static string GetOutputAsString(string[] output)
         {
@@ -65,25 +61,17 @@
             return builder.ToString();
         }
 
-        public ProcessStartInfo GetProcessStartInfo()
-        {
-            return this._process.StartInfo;
-        }
+        public ProcessStartInfo GetProcessStartInfo() => 
+            this._process.StartInfo;
 
-        public Stream GetStandardInput()
-        {
-            return this._stdin;
-        }
+        public Stream GetStandardInput() => 
+            this._stdin;
 
-        public string[] GetStandardOutput()
-        {
-            return this._stdout.GetOutput();
-        }
+        public string[] GetStandardOutput() => 
+            this._stdout.GetOutput();
 
-        public string GetStandardOutputAsString()
-        {
-            return GetOutputAsString(this.GetStandardOutput());
-        }
+        public string GetStandardOutputAsString() => 
+            GetOutputAsString(this.GetStandardOutput());
 
         public void Kill()
         {
@@ -157,18 +145,11 @@
             this._process.WaitForExit();
         }
 
-        public bool WaitForExit(int milliseconds)
-        {
-            return this._process.WaitForExit(milliseconds);
-        }
+        public bool WaitForExit(int milliseconds) => 
+            this._process.WaitForExit(milliseconds);
 
-        public int ExitCode
-        {
-            get
-            {
-                return this._process.ExitCode;
-            }
-        }
+        public int ExitCode =>
+            this._process.ExitCode;
 
         public bool HasExited
         {
@@ -189,13 +170,8 @@
             }
         }
 
-        public int Id
-        {
-            get
-            {
-                return this._process.Id;
-            }
-        }
+        public int Id =>
+            this._process.Id;
     }
 }
 

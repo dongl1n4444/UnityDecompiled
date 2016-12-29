@@ -99,10 +99,8 @@
         /// <para>Samples the height at the given position defined in world space, relative to the terrain space.</para>
         /// </summary>
         /// <param name="worldPosition"></param>
-        public float SampleHeight(Vector3 worldPosition)
-        {
-            return INTERNAL_CALL_SampleHeight(this, ref worldPosition);
-        }
+        public float SampleHeight(Vector3 worldPosition) => 
+            INTERNAL_CALL_SampleHeight(this, ref worldPosition);
 
         /// <summary>
         /// <para>Lets you setup the connection between neighboring Terrains.</para>
@@ -269,10 +267,8 @@
         [Obsolete("use basemapDistance", true)]
         public float splatmapDistance
         {
-            get
-            {
-                return this.basemapDistance;
-            }
+            get => 
+                this.basemapDistance;
             set
             {
                 this.basemapDistance = value;

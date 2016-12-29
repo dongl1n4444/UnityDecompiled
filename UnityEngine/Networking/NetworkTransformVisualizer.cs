@@ -135,10 +135,8 @@
         /// </summary>
         public GameObject visualizerPrefab
         {
-            get
-            {
-                return this.m_VisualizerPrefab;
-            }
+            get => 
+                this.m_VisualizerPrefab;
             set
             {
                 this.m_VisualizerPrefab = value;

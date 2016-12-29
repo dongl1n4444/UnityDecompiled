@@ -58,20 +58,16 @@
             UnityAdsEngineSetDidFinishCallback(<>f__mg$cache3);
         }
 
-        public PlacementState GetPlacementState(string placementId)
-        {
-            return (PlacementState) ((int) UnityAdsEngineGetPlacementState(placementId));
-        }
+        public PlacementState GetPlacementState(string placementId) => 
+            ((PlacementState) ((int) UnityAdsEngineGetPlacementState(placementId)));
 
         public void Initialize(string gameId, bool testMode)
         {
             UnityAdsEngineInitialize(gameId, testMode);
         }
 
-        public bool IsReady(string placementId)
-        {
-            return UnityAdsEngineIsReady(placementId);
-        }
+        public bool IsReady(string placementId) => 
+            UnityAdsEngineIsReady(placementId);
 
         public void SetMetaData(MetaData metaData)
         {
@@ -127,33 +123,33 @@
             }
         }
 
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern bool UnityAdsEngineGetDebugMode();
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern long UnityAdsEngineGetPlacementState(string placementId);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern string UnityAdsEngineGetVersion();
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineInitialize(string gameId, bool testMode);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern bool UnityAdsEngineIsInitialized();
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern bool UnityAdsEngineIsReady(string placementId);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern bool UnityAdsEngineIsSupported();
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineSetDebugMode(bool debugMode);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineSetDidErrorCallback(unityAdsDidError callback);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineSetDidFinishCallback(unityAdsDidFinish callback);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineSetDidStartCallback(unityAdsDidStart callback);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineSetMetaData(string category, string data);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineSetReadyCallback(unityAdsReady callback);
-        [DllImport("__Internal")]
+        [DllImport("__InternalDynamic")]
         private static extern void UnityAdsEngineShow(string placementId);
         [MonoPInvokeCallback(typeof(unityAdsReady))]
         private static void UnityAdsReady(string placementId)
@@ -170,39 +166,22 @@
 
         public bool debugMode
         {
-            get
-            {
-                return UnityAdsEngineGetDebugMode();
-            }
+            get => 
+                UnityAdsEngineGetDebugMode();
             set
             {
                 UnityAdsEngineSetDebugMode(value);
             }
         }
 
-        public bool isInitialized
-        {
-            get
-            {
-                return UnityAdsEngineIsInitialized();
-            }
-        }
+        public bool isInitialized =>
+            UnityAdsEngineIsInitialized();
 
-        public bool isSupported
-        {
-            get
-            {
-                return UnityAdsEngineIsSupported();
-            }
-        }
+        public bool isSupported =>
+            UnityAdsEngineIsSupported();
 
-        public string version
-        {
-            get
-            {
-                return UnityAdsEngineGetVersion();
-            }
-        }
+        public string version =>
+            UnityAdsEngineGetVersion();
 
         [CompilerGenerated]
         private sealed class <UnityAdsDidError>c__AnonStorey1

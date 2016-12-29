@@ -28,45 +28,28 @@
             }
         }
 
-        public static bool IsLinux()
-        {
-            return (!IsWindows() && Directory.Exists("/proc"));
-        }
+        public static bool IsLinux() => 
+            (!IsWindows() && Directory.Exists("/proc"));
 
-        public static bool IsOSX()
-        {
-            return (!IsWindows() && !IsLinux());
-        }
+        public static bool IsOSX() => 
+            (!IsWindows() && !IsLinux());
 
-        public static bool IsWindows()
-        {
-            return PortabilityUtilities.IsWindows();
-        }
+        public static bool IsWindows() => 
+            PortabilityUtilities.IsWindows();
 
-        public static bool RunningOnIl2Cpp()
-        {
-            return _runningOnIl2Cpp;
-        }
+        public static bool RunningOnIl2Cpp() => 
+            _runningOnIl2Cpp;
 
-        public static bool RunningWithMono()
-        {
-            return _runningWithMono;
-        }
+        public static bool RunningWithMono() => 
+            _runningWithMono;
 
-        public static Architecture ManagedRuntimeArchitecture
-        {
-            get
-            {
-                return ((IntPtr.Size != 4) ? Architecture.x64 : Architecture.x86);
-            }
-        }
+        public static Architecture ManagedRuntimeArchitecture =>
+            ((IntPtr.Size != 4) ? Architecture.x64 : Architecture.x86);
 
         public static Architecture NativeCompilerArchitecture
         {
-            get
-            {
-                return ((_nativeCompilerArchitecture != Architecture.UseManagedRuntimeArchitecture) ? _nativeCompilerArchitecture : ManagedRuntimeArchitecture);
-            }
+            get => 
+                ((_nativeCompilerArchitecture != Architecture.UseManagedRuntimeArchitecture) ? _nativeCompilerArchitecture : ManagedRuntimeArchitecture);
             set
             {
                 _nativeCompilerArchitecture = value;

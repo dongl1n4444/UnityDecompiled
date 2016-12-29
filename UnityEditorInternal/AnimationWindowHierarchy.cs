@@ -21,15 +21,11 @@
             this.m_TreeView.EndNameEditing(acceptChanges);
         }
 
-        public Vector2 GetContentSize()
-        {
-            return this.m_TreeView.GetContentSize();
-        }
+        public Vector2 GetContentSize() => 
+            this.m_TreeView.GetContentSize();
 
-        public Rect GetTotalRect()
-        {
-            return this.m_TreeView.GetTotalRect();
-        }
+        public Rect GetTotalRect() => 
+            this.m_TreeView.GetTotalRect();
 
         public void Init(EditorWindow owner, Rect rect)
         {
@@ -54,10 +50,8 @@
             return (TreeViewController.GetIndexOfID(this.m_TreeView.data.GetRows(), id) >= 0);
         }
 
-        internal virtual bool IsRenamingNodeAllowed(TreeViewItem node)
-        {
-            return true;
-        }
+        internal virtual bool IsRenamingNodeAllowed(TreeViewItem node) => 
+            true;
 
         public void OnGUI(Rect position)
         {

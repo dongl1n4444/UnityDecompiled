@@ -57,7 +57,7 @@
                         }
                     }
                     Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
-                    throw new Exception(string.Format("{0} did not run properly!", exe));
+                    throw new Exception($"{exe} did not run properly!");
                 }
             }
         }
@@ -71,7 +71,7 @@
                 if (program.ExitCode != 0)
                 {
                     Debug.LogError("Failed running " + exe + " " + args + "\n\n" + program.GetAllOutput());
-                    throw new Exception(string.Format("{0} did not run properly!", exe));
+                    throw new Exception($"{exe} did not run properly!");
                 }
             }
         }

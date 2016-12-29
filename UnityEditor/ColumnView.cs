@@ -44,7 +44,7 @@
                 DragAndDropDelay delay2 = (DragAndDropDelay) GUIUtility.GetStateObject(typeof(DragAndDropDelay), listView.ID);
                 if (delay2.CanStartDrag())
                 {
-                    object data = (getDataForDraggingFunction != null) ? getDataForDraggingFunction(columnViewElements[listView.row].value) : null;
+                    object data = getDataForDraggingFunction?.Invoke(columnViewElements[listView.row].value);
                     if (data != null)
                     {
                         DragAndDrop.PrepareStartDrag();
@@ -285,21 +285,11 @@
             return KeyCode.None;
         }
 
-        public bool isSearching
-        {
-            get
-            {
-                return (this.searchText != string.Empty);
-            }
-        }
+        public bool isSearching =>
+            (this.searchText != string.Empty);
 
-        public string searchText
-        {
-            get
-            {
-                return this.m_SearchText;
-            }
-        }
+        public string searchText =>
+            this.m_SearchText;
 
         public delegate void ObjectColumnFunction(object value);
 

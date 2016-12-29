@@ -21,10 +21,8 @@
         /// </summary>
         public string path
         {
-            get
-            {
-                return this.m_Path;
-            }
+            get => 
+                this.m_Path;
             set
             {
                 this.m_Path = value;
@@ -35,10 +33,8 @@
         /// </summary>
         public bool isLoaded
         {
-            get
-            {
-                return this.m_IsLoaded;
-            }
+            get => 
+                this.m_IsLoaded;
             set
             {
                 this.m_IsLoaded = value;
@@ -49,10 +45,8 @@
         /// </summary>
         public bool isActive
         {
-            get
-            {
-                return this.m_IsActive;
-            }
+            get => 
+                this.m_IsActive;
             set
             {
                 this.m_IsActive = value;

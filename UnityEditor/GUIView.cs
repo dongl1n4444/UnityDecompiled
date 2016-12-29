@@ -118,10 +118,8 @@
 
         public bool wantsMouseMove
         {
-            get
-            {
-                return this.m_WantsMouseMove;
-            }
+            get => 
+                this.m_WantsMouseMove;
             set
             {
                 this.m_WantsMouseMove = value;
@@ -130,10 +128,8 @@
         }
         internal bool backgroundValid
         {
-            get
-            {
-                return this.m_BackgroundValid;
-            }
+            get => 
+                this.m_BackgroundValid;
             set
             {
                 this.m_BackgroundValid = value;
@@ -141,10 +137,8 @@
         }
         public bool autoRepaintOnSceneChange
         {
-            get
-            {
-                return this.m_AutoRepaintOnSceneChange;
-            }
+            get => 
+                this.m_AutoRepaintOnSceneChange;
             set
             {
                 this.m_AutoRepaintOnSceneChange = value;
@@ -153,10 +147,8 @@
         }
         public int depthBufferBits
         {
-            get
-            {
-                return this.m_DepthBufferBits;
-            }
+            get => 
+                this.m_DepthBufferBits;
             set
             {
                 this.m_DepthBufferBits = value;
@@ -164,10 +156,8 @@
         }
         public int antiAlias
         {
-            get
-            {
-                return this.m_AntiAlias;
-            }
+            get => 
+                this.m_AntiAlias;
             set
             {
                 this.m_AntiAlias = value;

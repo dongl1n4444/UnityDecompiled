@@ -16,50 +16,23 @@
             this.m_DeviceType = deviceType;
         }
 
-        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder()
-        {
-            return new AndroidIl2CppNativeCodeBuilder(this.m_DeviceType);
-        }
+        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder() => 
+            new AndroidIl2CppNativeCodeBuilder(this.m_DeviceType);
 
-        public override bool developmentMode
-        {
-            get
-            {
-                return this.m_IsDevelopmentBuild;
-            }
-        }
+        public override bool developmentMode =>
+            this.m_IsDevelopmentBuild;
 
-        public override bool enableStackTraces
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool enableStackTraces =>
+            false;
 
-        public override string[] libraryPaths
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public override string[] libraryPaths =>
+            new string[0];
 
-        public override bool loadSymbols
-        {
-            get
-            {
-                return this.m_IsDevelopmentBuild;
-            }
-        }
+        public override bool loadSymbols =>
+            this.m_IsDevelopmentBuild;
 
-        public override string nativeLibraryFileName
-        {
-            get
-            {
-                return "libil2cpp.so";
-            }
-        }
+        public override string nativeLibraryFileName =>
+            "libil2cpp.so";
     }
 }
 

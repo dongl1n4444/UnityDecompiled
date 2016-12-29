@@ -13,10 +13,8 @@
         /// <para>Gets the motor force of the joint given the specified timestep.</para>
         /// </summary>
         /// <param name="timeStep">The time to calculate the motor force for.</param>
-        public float GetMotorForce(float timeStep)
-        {
-            return INTERNAL_CALL_GetMotorForce(this, timeStep);
-        }
+        public float GetMotorForce(float timeStep) => 
+            INTERNAL_CALL_GetMotorForce(this, timeStep);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float INTERNAL_CALL_GetMotorForce(SliderJoint2D self, float timeStep);

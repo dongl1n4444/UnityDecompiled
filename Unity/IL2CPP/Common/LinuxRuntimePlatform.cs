@@ -4,13 +4,8 @@
 
     public class LinuxRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "Linux";
-            }
-        }
+        public override string Name =>
+            "Linux";
     }
 }
 

@@ -41,7 +41,7 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<string, int>, string>(null, (IntPtr) <Write>m__1);
             }
-            string[] values = Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, int>, string>(Enumerable.OrderBy<KeyValuePair<string, int>, int>(methodTables.MethodPointers, <>f__am$cache0), <>f__am$cache1));
+            string[] values = methodTables.MethodPointers.OrderBy<KeyValuePair<string, int>, int>(<>f__am$cache0).Select<KeyValuePair<string, int>, string>(<>f__am$cache1).ToArray<string>();
             this._writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_Il2CppGenericMethodPointers", values, false);
             return new TableInfo(values.Length, "extern const Il2CppMethodPointer", "g_Il2CppGenericMethodPointers");
         }
@@ -53,7 +53,7 @@
             {
                 <>f__am$cache2 = new Func<MethodReference, bool>(null, (IntPtr) <WriteIncludesFor>m__2);
             }
-            foreach (MethodReference reference in Enumerable.Where<MethodReference>(GenericMethodsCollection.Items.Keys, <>f__am$cache2))
+            foreach (MethodReference reference in GenericMethodsCollection.Items.Keys.Where<MethodReference>(<>f__am$cache2))
             {
                 string item = MethodTables.MethodPointerNameFor(reference);
                 if ((item != Naming.Null) && set.Add(item))

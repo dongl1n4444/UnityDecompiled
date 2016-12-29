@@ -104,15 +104,11 @@
             return this._compilationResult.get_GeneratedAssembly().GetType("script");
         }
 
-        public static object Eval(EvaluationContext context, string code)
-        {
-            return new Evaluator(context, code).Run();
-        }
+        public static object Eval(EvaluationContext context, string code) => 
+            new Evaluator(context, code).Run();
 
-        private Type GetCachedScript()
-        {
-            return this.GetEvaluationDomain().GetCachedScript(this._cacheKey);
-        }
+        private Type GetCachedScript() => 
+            this.GetEvaluationDomain().GetCachedScript(this._cacheKey);
 
         private EvaluationDomain GetEvaluationDomain()
         {
@@ -124,10 +120,8 @@
             return evaluationDomain;
         }
 
-        public static bool IsTainted(CompileUnit cu)
-        {
-            return cu.ContainsAnnotation(TaintedAnnotation);
-        }
+        public static bool IsTainted(CompileUnit cu) => 
+            cu.ContainsAnnotation(TaintedAnnotation);
 
         public object Run()
         {

@@ -8,13 +8,8 @@
         {
         }
 
-        public static bool inBatchMode
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public static bool inBatchMode =>
+            false;
     }
 }
 

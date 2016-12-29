@@ -139,15 +139,11 @@
             ms_NotificationMessage = null;
         }
 
-        public string GetConnectedProfiler()
-        {
-            return ProfilerDriver.GetConnectionIdentifier(ProfilerDriver.connectedProfiler);
-        }
+        public string GetConnectedProfiler() => 
+            ProfilerDriver.GetConnectionIdentifier(ProfilerDriver.connectedProfiler);
 
-        public bool IsEditor()
-        {
-            return ProfilerDriver.IsConnectionEditor();
-        }
+        public bool IsEditor() => 
+            ProfilerDriver.IsConnectionEditor();
 
         public void OnGUI(Rect connectRect, GUIContent profilerLabel)
         {
@@ -189,12 +185,12 @@
                 {
                     <>f__am$cache5 = new Func<ProfilerChoise, string>(null, (IntPtr) <OnGUI>m__5);
                 }
-                string[] options = Enumerable.ToArray<string>(Enumerable.Select<ProfilerChoise, string>(profilers, <>f__am$cache5));
+                string[] options = Enumerable.Select<ProfilerChoise, string>(profilers, <>f__am$cache5).ToArray<string>();
                 if (<>f__am$cache6 == null)
                 {
                     <>f__am$cache6 = new Func<ProfilerChoise, bool>(null, (IntPtr) <OnGUI>m__6);
                 }
-                bool[] enabled = Enumerable.ToArray<bool>(Enumerable.Select<ProfilerChoise, bool>(profilers, <>f__am$cache6));
+                bool[] enabled = Enumerable.Select<ProfilerChoise, bool>(profilers, <>f__am$cache6).ToArray<bool>();
                 if (<>f__am$cache7 == null)
                 {
                     <>f__am$cache7 = p => p.IsSelected.Invoke();
@@ -234,7 +230,7 @@
         private void SelectProfilerClick(object userData, string[] options, int selected)
         {
             List<ProfilerChoise> source = (List<ProfilerChoise>) userData;
-            if (selected < Enumerable.Count<ProfilerChoise>(source))
+            if (selected < source.Count<ProfilerChoise>())
             {
                 ProfilerChoise choise = source[selected];
                 choise.ConnectTo.Invoke();
@@ -246,10 +242,8 @@
         {
             internal string url;
 
-            internal bool <>m__0()
-            {
-                return ((ProfilerDriver.connectedProfiler == 0xfeee) && (ProfilerDriver.directConnectionUrl == this.url));
-            }
+            internal bool <>m__0() => 
+                ((ProfilerDriver.connectedProfiler == 0xfeee) && (ProfilerDriver.directConnectionUrl == this.url));
 
             internal void <>m__1()
             {
@@ -284,10 +278,8 @@
         {
             internal int guid;
 
-            internal bool <>m__0()
-            {
-                return (ProfilerDriver.connectedProfiler == this.guid);
-            }
+            internal bool <>m__0() => 
+                (ProfilerDriver.connectedProfiler == this.guid);
 
             internal void <>m__1()
             {

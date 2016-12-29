@@ -60,10 +60,8 @@
             return keys;
         }
 
-        private Rect GetCurveEditorRect()
-        {
-            return new Rect(0f, 0f, base.position.width, base.position.height - 46f);
-        }
+        private Rect GetCurveEditorRect() => 
+            new Rect(0f, 0f, base.position.width, base.position.height - 46f);
 
         private CurveWrapper[] GetCurveWrapperArray()
         {
@@ -394,10 +392,8 @@
 
         public static Color color
         {
-            get
-            {
-                return instance.m_Color;
-            }
+            get => 
+                instance.m_Color;
             set
             {
                 instance.m_Color = value;
@@ -421,10 +417,8 @@
 
         public static AnimationCurve curve
         {
-            get
-            {
-                return instance.m_Curve;
-            }
+            get => 
+                instance.m_Curve;
             set
             {
                 if (value == null)
@@ -463,13 +457,8 @@
             }
         }
 
-        public static bool visible
-        {
-            get
-            {
-                return (s_SharedCurveEditor != null);
-            }
-        }
+        public static bool visible =>
+            (s_SharedCurveEditor != null);
 
         internal class Styles
         {

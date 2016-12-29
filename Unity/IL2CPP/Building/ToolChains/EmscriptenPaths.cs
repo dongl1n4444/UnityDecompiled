@@ -80,13 +80,8 @@
             return WebGlExternalRoot.Combine(append);
         }
 
-        public static NPath BaseLocation
-        {
-            get
-            {
-                return new NPath(new Uri(AssemblyExtensions.GetCodeBasePortable(TypeExtensions.GetAssemblyPortable(typeof(EmscriptenToolChain)))).LocalPath);
-            }
-        }
+        public static NPath BaseLocation =>
+            new NPath(new Uri(typeof(EmscriptenToolChain).GetAssemblyPortable().GetCodeBasePortable()).LocalPath);
 
         public static NPath BinaryenRoot
         {
@@ -127,10 +122,8 @@
         public static Dictionary<string, string> EmscriptenEnvironmentVariables
         {
             [CompilerGenerated]
-            get
-            {
-                return <EmscriptenEnvironmentVariables>k__BackingField;
-            }
+            get => 
+                <EmscriptenEnvironmentVariables>k__BackingField;
             [CompilerGenerated]
             private set
             {
@@ -176,13 +169,8 @@
             }
         }
 
-        public static NPath LinuxEmscriptenSdkRoot
-        {
-            get
-            {
-                return MacEmscriptenSdkRoot;
-            }
-        }
+        public static NPath LinuxEmscriptenSdkRoot =>
+            MacEmscriptenSdkRoot;
 
         public static string LlcExecutableName
         {
@@ -270,13 +258,8 @@
             }
         }
 
-        public static NPath WebGlExternalRoot
-        {
-            get
-            {
-                return WebGLExternalRootForCurrentUnityVersion;
-            }
-        }
+        public static NPath WebGlExternalRoot =>
+            WebGLExternalRootForCurrentUnityVersion;
 
         private static NPath WebGLExternalRootForCurrentUnityVersion
         {

@@ -17,15 +17,11 @@
             UnityConnectServiceCollection.instance.AddService(cloudService);
         }
 
-        public override string GetServiceDisplayName()
-        {
-            return "Unity Build";
-        }
+        public override string GetServiceDisplayName() => 
+            "Unity Build";
 
-        public override string GetServiceName()
-        {
-            return "Build";
-        }
+        public override string GetServiceName() => 
+            "Build";
     }
 }
 

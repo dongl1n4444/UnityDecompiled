@@ -15,10 +15,8 @@
             this._size = size;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{{ {0}, {1}, {2} }}", this._fieldIndex, this._typeIndex, this._size);
-        }
+        public override string ToString() => 
+            $"{{ {this._fieldIndex}, {this._typeIndex}, {this._size} }}";
     }
 }
 

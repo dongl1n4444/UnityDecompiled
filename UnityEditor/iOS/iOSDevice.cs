@@ -68,13 +68,8 @@
             this.remotePort = -1;
         }
 
-        public string Id
-        {
-            get
-            {
-                return this.id;
-            }
-        }
+        public string Id =>
+            this.id;
     }
 }
 

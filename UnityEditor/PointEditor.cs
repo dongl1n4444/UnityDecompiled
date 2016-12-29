@@ -41,7 +41,7 @@
             {
                 <>f__am$cache0 = new Func<KeyValuePair<int, float>, float>(null, (IntPtr) <FindNearest>m__0);
             }
-            return Enumerable.First<KeyValuePair<int, float>>(Enumerable.OrderBy<KeyValuePair<int, float>, float>(dictionary, <>f__am$cache0)).Key;
+            return Enumerable.OrderBy<KeyValuePair<int, float>, float>(dictionary, <>f__am$cache0).First<KeyValuePair<int, float>>().Key;
         }
 
         private static Rect FromToRect(Vector2 from, Vector2 to)
@@ -202,7 +202,7 @@
         Label_02F5:
             if (flag2)
             {
-                selection = Enumerable.ToList<int>(Enumerable.Distinct<int>(selection));
+                selection = selection.Distinct<int>().ToList<int>();
             }
             return flag2;
         }
@@ -212,10 +212,8 @@
         {
             internal IEditablePoint points;
 
-            internal Vector3 <>m__0(Vector3 current, int index)
-            {
-                return (current + this.points.GetPosition(index));
-            }
+            internal Vector3 <>m__0(Vector3 current, int index) => 
+                (current + this.points.GetPosition(index));
         }
     }
 }

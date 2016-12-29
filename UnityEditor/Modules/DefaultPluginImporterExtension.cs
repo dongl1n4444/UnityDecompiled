@@ -33,10 +33,8 @@
             }
         }
 
-        public virtual string CalculateFinalPluginPath(string platformName, PluginImporter imp)
-        {
-            return Path.GetFileName(imp.assetPath);
-        }
+        public virtual string CalculateFinalPluginPath(string platformName, PluginImporter imp) => 
+            Path.GetFileName(imp.assetPath);
 
         public virtual bool CheckFileCollisions(string buildTargetName)
         {
@@ -59,7 +57,7 @@
                     if (num != 1)
                     {
                         flag = true;
-                        builder.AppendLine(string.Format("Plugin '{0}' is used from several locations:", Path.GetFileName(pair.Key)));
+                        builder.AppendLine($"Plugin '{Path.GetFileName(pair.Key)}' is used from several locations:");
                         foreach (PluginImporter importer2 in list)
                         {
                             builder.AppendLine(" " + importer2.assetPath + " would be copied to <PluginPath>/" + pair.Key.Replace(@"\", "/"));
@@ -80,7 +78,7 @@
             <GetCompatiblePlugins>c__AnonStorey0 storey = new <GetCompatiblePlugins>c__AnonStorey0 {
                 buildTargetName = buildTargetName
             };
-            PluginImporter[] importerArray = Enumerable.ToArray<PluginImporter>(Enumerable.Where<PluginImporter>(PluginImporter.GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)));
+            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(PluginImporter.GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<PluginImporter>();
             Dictionary<string, List<PluginImporter>> dictionary = new Dictionary<string, List<PluginImporter>>();
             foreach (PluginImporter importer in importerArray)
             {
@@ -102,10 +100,8 @@
             return dictionary;
         }
 
-        public virtual bool HasModified(PluginImporterInspector inspector)
-        {
-            return this.hasModified;
-        }
+        public virtual bool HasModified(PluginImporterInspector inspector) => 
+            this.hasModified;
 
         public virtual void OnDisable(PluginImporterInspector inspector)
         {
@@ -153,10 +149,8 @@
         {
             internal string buildTargetName;
 
-            internal bool <>m__0(PluginImporter imp)
-            {
-                return ((imp.GetCompatibleWithPlatform(this.buildTargetName) || imp.GetCompatibleWithAnyPlatform()) && !string.IsNullOrEmpty(imp.assetPath));
-            }
+            internal bool <>m__0(PluginImporter imp) => 
+                ((imp.GetCompatibleWithPlatform(this.buildTargetName) || imp.GetCompatibleWithAnyPlatform()) && !string.IsNullOrEmpty(imp.assetPath));
         }
 
         internal class Property

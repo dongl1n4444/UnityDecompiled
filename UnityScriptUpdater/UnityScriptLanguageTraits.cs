@@ -7,10 +7,8 @@
 
     public class UnityScriptLanguageTraits : BooBasedLanguageTraits
     {
-        public override string ArrayTypeReferenceTypeName(ArrayTypeReference arrayReference)
-        {
-            return arrayReference.get_ElementType().ToString();
-        }
+        public override string ArrayTypeReferenceTypeName(ArrayTypeReference arrayReference) => 
+            arrayReference.get_ElementType().ToString();
 
         public override int ArtificialAstNodeLength(Node node)
         {
@@ -47,16 +45,12 @@
                 return false;
             }
             ReferenceExpression expression2 = expression.get_Left() as ReferenceExpression;
-            if (expression2 == null)
-            {
-                return false;
-            }
-            return expression2.get_Name().Contains("$switch$");
+            return expression2?.get_Name().Contains("$switch$");
         }
 
         private bool IsInsideBlock(Expression node)
         {
-            Statement parentStmt = BooExtensions.FindRootStatement(node);
+            Statement parentStmt = node.FindRootStatement();
             Statement candidateBlock = parentStmt.get_ParentNode();
             return (((this.IsSwitchCondition(candidateBlock, parentStmt) || this.IsExpandedSwitchStatementCase(candidateBlock)) || this.IsExpandedDefaultSwitchCase(candidateBlock, parentStmt)) || ((candidateBlock.get_NodeType() == 0x20) && (candidateBlock.get_EndSourceLocation().get_Line() != -1)));
         }
@@ -76,67 +70,32 @@
         {
             if (!this.IsInsideBlock(node))
             {
-                Statement statement = BooExtensions.FindRootStatement(node);
-                updateCollector.Insert(BooExtensions.SourcePosition(BooExtensions.FindExpressionRoot(statement)), "{ ", node.get_LexicalInfo(), null).InclusiveRange = false;
+                Statement statement = node.FindRootStatement();
+                updateCollector.Insert(statement.FindExpressionRoot().SourcePosition(), "{ ", node.get_LexicalInfo(), null).InclusiveRange = false;
                 updateCollector.Insert(new SourcePosition(statement.get_EndSourceLocation().get_Line(), statement.get_EndSourceLocation().get_Column() + 1), " }", node.get_LexicalInfo(), null);
             }
         }
 
-        public override int ArrayReferenceTypeNameOffset
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public override int ArrayReferenceTypeNameOffset =>
+            0;
 
-        public override string EmptyStatement
-        {
-            get
-            {
-                return "";
-            }
-        }
+        public override string EmptyStatement =>
+            "";
 
-        public override char ImportSeparator
-        {
-            get
-            {
-                return ';';
-            }
-        }
+        public override char ImportSeparator =>
+            ';';
 
-        public override string NewExpression
-        {
-            get
-            {
-                return "new ";
-            }
-        }
+        public override string NewExpression =>
+            "new ";
 
-        public override string StatementSeparator
-        {
-            get
-            {
-                return "; ";
-            }
-        }
+        public override string StatementSeparator =>
+            "; ";
 
-        public override string VarDeclaration
-        {
-            get
-            {
-                return "var ";
-            }
-        }
+        public override string VarDeclaration =>
+            "var ";
 
-        public override string VarDeclarationSeparator
-        {
-            get
-            {
-                return ":";
-            }
-        }
+        public override string VarDeclarationSeparator =>
+            ":";
     }
 }
 

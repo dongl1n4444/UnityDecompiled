@@ -100,15 +100,11 @@ internal abstract class ManifestWSA
         this.Images = null;
     }
 
-    protected virtual XElement CreateApplicationElement()
-    {
-        return new XElement((XName) (this.DefaultNamespace + "Application"), new object[] { new XAttribute("Id", "App"), new XAttribute("Executable", "$targetnametoken$.exe"), new XAttribute("EntryPoint", this.PackageName + ".App") });
-    }
+    protected virtual XElement CreateApplicationElement() => 
+        new XElement((XName) (this.DefaultNamespace + "Application"), new object[] { new XAttribute("Id", "App"), new XAttribute("Executable", "$targetnametoken$.exe"), new XAttribute("EntryPoint", this.PackageName + ".App") });
 
-    protected virtual XElement CreateApplicationsElement()
-    {
-        return new XElement((XName) (this.DefaultNamespace + "Applications"));
-    }
+    protected virtual XElement CreateApplicationsElement() => 
+        new XElement((XName) (this.DefaultNamespace + "Applications"));
 
     protected virtual XElement CreateCapabilitiesElement()
     {
@@ -164,10 +160,8 @@ internal abstract class ManifestWSA
         return new XElement((XName) (this.GetNamespaceForCapability(cap) + "Capability"), new XAttribute("Name", str));
     }
 
-    protected virtual XElement CreateDependenciesElement()
-    {
-        return null;
-    }
+    protected virtual XElement CreateDependenciesElement() => 
+        null;
 
     protected virtual XElement CreateExtensionsElement()
     {
@@ -202,15 +196,11 @@ internal abstract class ManifestWSA
         return new XElement((XName) (this.GetNamespaceForFileTypeAssociationExtension() + "Extension"), new object[] { new XAttribute("Category", "windows.fileTypeAssociation"), element2 });
     }
 
-    private XElement CreateHIDDevice(XNamespace @namespace, string usageDesc)
-    {
-        return new XElement((XName) (@namespace + "Device"), new object[] { new XAttribute("Id", "any"), new XElement((XName) (@namespace + "Function"), new XAttribute("Type", usageDesc)) });
-    }
+    private XElement CreateHIDDevice(XNamespace @namespace, string usageDesc) => 
+        new XElement((XName) (@namespace + "Device"), new object[] { new XAttribute("Id", "any"), new XElement((XName) (@namespace + "Function"), new XAttribute("Type", usageDesc)) });
 
-    protected virtual XElement CreateHumanInterfaceDeviceCapabilityElement()
-    {
-        return null;
-    }
+    protected virtual XElement CreateHumanInterfaceDeviceCapabilityElement() => 
+        null;
 
     protected virtual XElement CreateHumanInterfaceDeviceCapabilityElement(XNamespace @namespace)
     {
@@ -221,15 +211,11 @@ internal abstract class ManifestWSA
         return new XElement((XName) (@namespace + "DeviceCapability"), content);
     }
 
-    protected virtual XElement CreateIdentityElement()
-    {
-        return new XElement((XName) (this.DefaultNamespace + "Identity"), new object[] { new XAttribute("Name", this.PackageName), new XAttribute("Publisher", "CN=" + PlayerSettings.WSA.certificateSubject), new XAttribute("Version", PlayerSettings.WSA.packageVersion) });
-    }
+    protected virtual XElement CreateIdentityElement() => 
+        new XElement((XName) (this.DefaultNamespace + "Identity"), new object[] { new XAttribute("Name", this.PackageName), new XAttribute("Publisher", "CN=" + PlayerSettings.WSA.certificateSubject), new XAttribute("Version", PlayerSettings.WSA.packageVersion) });
 
-    protected virtual XElement CreateInitialRotationPreferenceElement()
-    {
-        return null;
-    }
+    protected virtual XElement CreateInitialRotationPreferenceElement() => 
+        null;
 
     protected XElement CreateInitialRotationPreferenceElement(XNamespace elementNamespace, List<UIOrientation> supportedOrientations)
     {
@@ -275,25 +261,17 @@ internal abstract class ManifestWSA
         return null;
     }
 
-    protected virtual XElement CreatePackageElement()
-    {
-        return new XElement((XName) (this.DefaultNamespace + "Package"));
-    }
+    protected virtual XElement CreatePackageElement() => 
+        new XElement((XName) (this.DefaultNamespace + "Package"));
 
-    protected virtual XElement CreatePhoneIdentityElement()
-    {
-        return null;
-    }
+    protected virtual XElement CreatePhoneIdentityElement() => 
+        null;
 
-    protected virtual XElement CreatePrerequisitesElement()
-    {
-        return null;
-    }
+    protected virtual XElement CreatePrerequisitesElement() => 
+        null;
 
-    protected virtual XElement CreatePropertiesElement()
-    {
-        return new XElement((XName) (this.DefaultNamespace + "Properties"), new object[] { new XElement((XName) (this.DefaultNamespace + "DisplayName"), PlayerSettings.productName), new XElement((XName) (this.DefaultNamespace + "PublisherDisplayName"), PlayerSettings.companyName), new XElement((XName) (this.DefaultNamespace + "Logo"), this.StoreLogo) });
-    }
+    protected virtual XElement CreatePropertiesElement() => 
+        new XElement((XName) (this.DefaultNamespace + "Properties"), new object[] { new XElement((XName) (this.DefaultNamespace + "DisplayName"), PlayerSettings.productName), new XElement((XName) (this.DefaultNamespace + "PublisherDisplayName"), PlayerSettings.companyName), new XElement((XName) (this.DefaultNamespace + "Logo"), this.StoreLogo) });
 
     protected virtual XElement CreateProtocolExtensionElement()
     {
@@ -306,36 +284,26 @@ internal abstract class ManifestWSA
         return new XElement((XName) (this.GetNamespaceForProtocolExtension() + "Extension"), new object[] { new XAttribute("Category", "windows.protocol"), element2 });
     }
 
-    protected virtual XElement CreateResourcesElement()
-    {
-        return new XElement((XName) (this.DefaultNamespace + "Resources"), new XElement((XName) (this.DefaultNamespace + "Resource"), new XAttribute("Language", "x-generate")));
-    }
+    protected virtual XElement CreateResourcesElement() => 
+        new XElement((XName) (this.DefaultNamespace + "Resources"), new XElement((XName) (this.DefaultNamespace + "Resource"), new XAttribute("Language", "x-generate")));
 
     protected abstract XElement CreateVisualElementsElement();
     [DebuggerHidden]
-    protected IEnumerable<XElement> GetFileTypeAssociationItems(PlayerSettings.WSASupportedFileType[] types)
-    {
-        return new <GetFileTypeAssociationItems>c__Iterator0 { 
+    protected IEnumerable<XElement> GetFileTypeAssociationItems(PlayerSettings.WSASupportedFileType[] types) => 
+        new <GetFileTypeAssociationItems>c__Iterator0 { 
             types = types,
             $this = this,
             $PC = -2
         };
-    }
 
-    protected virtual XNamespace GetNamespaceForCapability(PlayerSettings.WSACapability cap)
-    {
-        return this.DefaultNamespace;
-    }
+    protected virtual XNamespace GetNamespaceForCapability(PlayerSettings.WSACapability cap) => 
+        this.DefaultNamespace;
 
-    protected virtual XNamespace GetNamespaceForFileTypeAssociationExtension()
-    {
-        return this.DefaultNamespace;
-    }
+    protected virtual XNamespace GetNamespaceForFileTypeAssociationExtension() => 
+        this.DefaultNamespace;
 
-    protected virtual XNamespace GetNamespaceForProtocolExtension()
-    {
-        return this.DefaultNamespace;
-    }
+    protected virtual XNamespace GetNamespaceForProtocolExtension() => 
+        this.DefaultNamespace;
 
     protected XElement GetSplashScreenElement(XNamespace @namespace, string image)
     {
@@ -371,13 +339,8 @@ internal abstract class ManifestWSA
         return false;
     }
 
-    protected string BackgroundColor
-    {
-        get
-        {
-            return MetroVisualStudioSolutionHelper.ColorToXAMLAttribute(PlayerSettings.WSA.tileBackgroundColor);
-        }
-    }
+    protected string BackgroundColor =>
+        MetroVisualStudioSolutionHelper.ColorToXAMLAttribute(PlayerSettings.WSA.tileBackgroundColor);
 
     protected abstract XNamespace DefaultNamespace { get; }
 
@@ -390,7 +353,7 @@ internal abstract class ManifestWSA
             {
                 if (tileForegroundText != PlayerSettings.WSAApplicationForegroundText.Dark)
                 {
-                    throw new Exception(string.Format("Invalid WSAApplicationForegroundText value ({0}).", PlayerSettings.WSA.tileForegroundText));
+                    throw new Exception($"Invalid WSAApplicationForegroundText value ({PlayerSettings.WSA.tileForegroundText}).");
                 }
             }
             else
@@ -403,21 +366,11 @@ internal abstract class ManifestWSA
 
     protected ProjectImages Images { get; private set; }
 
-    protected virtual string PackageName
-    {
-        get
-        {
-            return Utility.GetPackageName(true);
-        }
-    }
+    protected virtual string PackageName =>
+        Utility.GetPackageName(true);
 
-    protected string ProductId
-    {
-        get
-        {
-            return PlayerSettings.productGUID.ToString("D", CultureInfo.InvariantCulture);
-        }
-    }
+    protected string ProductId =>
+        PlayerSettings.productGUID.ToString("D", CultureInfo.InvariantCulture);
 
     protected abstract string StoreLogo { get; }
 
@@ -501,28 +454,14 @@ internal abstract class ManifestWSA
         }
 
         [DebuggerHidden]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.System.Collections.Generic.IEnumerable<System.Xml.Linq.XElement>.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.System.Collections.Generic.IEnumerable<System.Xml.Linq.XElement>.GetEnumerator();
 
-        XElement IEnumerator<XElement>.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        XElement IEnumerator<XElement>.Current =>
+            this.$current;
 
-        object IEnumerator.Current
-        {
-            [DebuggerHidden]
-            get
-            {
-                return this.$current;
-            }
-        }
+        object IEnumerator.Current =>
+            this.$current;
     }
 }
 

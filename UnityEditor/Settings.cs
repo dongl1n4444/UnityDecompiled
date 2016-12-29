@@ -42,7 +42,7 @@
 
         private static void Load()
         {
-            if (Enumerable.Any<IPrefType>(m_AddedPrefs))
+            if (m_AddedPrefs.Any<IPrefType>())
             {
                 List<IPrefType> list = new List<IPrefType>(m_AddedPrefs);
                 m_AddedPrefs.Clear();
@@ -54,10 +54,8 @@
         }
 
         [DebuggerHidden]
-        internal static IEnumerable<KeyValuePair<string, T>> Prefs<T>() where T: IPrefType
-        {
-            return new <Prefs>c__Iterator0<T> { $PC = -2 };
-        }
+        internal static IEnumerable<KeyValuePair<string, T>> Prefs<T>() where T: IPrefType => 
+            new <Prefs>c__Iterator0<T> { $PC = -2 };
 
         internal static void Set<T>(string name, T value) where T: IPrefType
         {
@@ -172,28 +170,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string,T>>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string,T>>.GetEnumerator();
 
-            KeyValuePair<string, T> IEnumerator<KeyValuePair<string, T>>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            KeyValuePair<string, T> IEnumerator<KeyValuePair<string, T>>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

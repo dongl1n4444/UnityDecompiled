@@ -159,10 +159,8 @@
             GUILayout.EndArea();
         }
 
-        private GUIContent GetGUIContentLink(bool active)
-        {
-            return (!active ? styles.sLinkInactive : styles.sLinkActive);
-        }
+        private GUIContent GetGUIContentLink(bool active) => 
+            (!active ? styles.sLinkInactive : styles.sLinkActive);
 
         private float GetHeight()
         {
@@ -174,15 +172,11 @@
             return windowHeight;
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(this.m_WindowWidth + (((this.m_LookDevView.config.lookDevMode != LookDevMode.Single1) && (this.m_LookDevView.config.lookDevMode != LookDevMode.Single2)) ? (this.m_WindowWidth + kIconSize) : 0f), this.GetHeight());
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(this.m_WindowWidth + (((this.m_LookDevView.config.lookDevMode != LookDevMode.Single1) && (this.m_LookDevView.config.lookDevMode != LookDevMode.Single2)) ? (this.m_WindowWidth + kIconSize) : 0f), this.GetHeight());
 
-        private bool NeedLoD()
-        {
-            return ((this.m_LookDevView.config.GetObjectLoDCount(LookDevEditionContext.Left) > 1) || (this.m_LookDevView.config.GetObjectLoDCount(LookDevEditionContext.Right) > 1));
-        }
+        private bool NeedLoD() => 
+            ((this.m_LookDevView.config.GetObjectLoDCount(LookDevEditionContext.Left) > 1) || (this.m_LookDevView.config.GetObjectLoDCount(LookDevEditionContext.Right) > 1));
 
         public override void OnGUI(Rect rect)
         {
@@ -205,13 +199,8 @@
             }
         }
 
-        public static Styles styles
-        {
-            get
-            {
-                return s_Styles;
-            }
-        }
+        public static Styles styles =>
+            s_Styles;
 
         public class Styles
         {

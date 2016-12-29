@@ -28,20 +28,14 @@
             module.set_Item(pragma, false);
         }
 
-        public static bool IsDisabledOn(Module module, string pragma)
-        {
-            return RuntimeServices.EqualityOperator(false, module.get_Item(pragma));
-        }
+        public static bool IsDisabledOn(Module module, string pragma) => 
+            RuntimeServices.EqualityOperator(false, module.get_Item(pragma));
 
-        public static bool IsEnabledOn(Module module, string pragma)
-        {
-            return RuntimeServices.EqualityOperator(true, module.get_Item(pragma));
-        }
+        public static bool IsEnabledOn(Module module, string pragma) => 
+            RuntimeServices.EqualityOperator(true, module.get_Item(pragma));
 
-        public static bool IsValid(string pragma)
-        {
-            return RuntimeServices.op_Member(pragma, ValidPragmas);
-        }
+        public static bool IsValid(string pragma) => 
+            RuntimeServices.op_Member(pragma, ValidPragmas);
 
         public static bool TryToEnableOn(Module module, string pragma)
         {
@@ -49,13 +43,8 @@
             return !module.ContainsAnnotation(pragma);
         }
 
-        public static string[] All
-        {
-            get
-            {
-                return (string[]) RuntimeServices.GetRange1(ValidPragmas, 0);
-            }
-        }
+        public static string[] All =>
+            ((string[]) RuntimeServices.GetRange1(ValidPragmas, 0));
     }
 }
 

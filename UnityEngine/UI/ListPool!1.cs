@@ -20,10 +20,8 @@
             l.Clear();
         }
 
-        public static List<T> Get()
-        {
-            return ListPool<T>.s_ListPool.Get();
-        }
+        public static List<T> Get() => 
+            ListPool<T>.s_ListPool.Get();
 
         public static void Release(List<T> toRelease)
         {

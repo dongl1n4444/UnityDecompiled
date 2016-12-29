@@ -4,14 +4,10 @@
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class TypeBuilderExtensions
     {
-        [Extension]
-        public static Type CreateTypePortable(TypeBuilder typeBuilder)
-        {
-            return typeBuilder.CreateType();
-        }
+        public static Type CreateTypePortable(this TypeBuilder typeBuilder) => 
+            typeBuilder.CreateType();
     }
 }
 

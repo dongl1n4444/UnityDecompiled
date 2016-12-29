@@ -37,10 +37,8 @@
             }
         }
 
-        private float GetHeight()
-        {
-            return (16f * this.m_Data.Count);
-        }
+        private float GetHeight() => 
+            (16f * this.m_Data.Count);
 
         private float GetWidth()
         {

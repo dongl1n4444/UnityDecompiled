@@ -33,10 +33,8 @@
             this.m_ShowAddNewPresetItem = this.m_ModifyItemUI != null;
         }
 
-        private bool AllowDeleteClick(int index)
-        {
-            return ((this.IsDeleteModiferPressed() && this.m_ItemProvider.IsModificationAllowed(index)) && (GUIUtility.hotControl == 0));
-        }
+        private bool AllowDeleteClick(int index) => 
+            ((this.IsDeleteModiferPressed() && this.m_ItemProvider.IsModificationAllowed(index)) && (GUIUtility.hotControl == 0));
 
         protected Vector2 CalcSize()
         {
@@ -119,15 +117,11 @@
             }
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return this.CalcSize();
-        }
+        public override Vector2 GetWindowSize() => 
+            this.CalcSize();
 
-        private bool IsDeleteModiferPressed()
-        {
-            return Event.current.alt;
-        }
+        private bool IsDeleteModiferPressed() => 
+            Event.current.alt;
 
         public override void OnGUI(Rect rect)
         {
@@ -268,13 +262,8 @@
             }
         }
 
-        private int maxIndex
-        {
-            get
-            {
-                return (!this.m_ShowAddNewPresetItem ? (this.m_ItemProvider.Count() - 1) : this.m_ItemProvider.Count());
-            }
-        }
+        private int maxIndex =>
+            (!this.m_ShowAddNewPresetItem ? (this.m_ItemProvider.Count() - 1) : this.m_ItemProvider.Count());
 
         public int selectedIndex { get; set; }
 

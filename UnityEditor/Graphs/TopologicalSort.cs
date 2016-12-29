@@ -41,21 +41,11 @@
             }
         }
 
-        public static IEnumerable<Node> deadNodes
-        {
-            get
-            {
-                return new <>c__Iterator0 { $PC = -2 };
-            }
-        }
+        public static IEnumerable<Node> deadNodes =>
+            new <>c__Iterator0 { $PC=-2 };
 
-        public static List<Node> SortedNodes
-        {
-            get
-            {
-                return s_SortedNodes;
-            }
-        }
+        public static List<Node> SortedNodes =>
+            s_SortedNodes;
 
         [CompilerGenerated]
         private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<Node>, IEnumerator, IDisposable, IEnumerator<Node>
@@ -160,28 +150,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<UnityEditor.Graphs.Node>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<UnityEditor.Graphs.Node>.GetEnumerator();
 
-            Node IEnumerator<Node>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            Node IEnumerator<Node>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         private enum NodeState

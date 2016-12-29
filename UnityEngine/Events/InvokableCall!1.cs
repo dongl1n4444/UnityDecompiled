@@ -16,13 +16,11 @@
 
         public InvokableCall(object target, MethodInfo theFunction) : base(target, theFunction)
         {
-            this.Delegate += ((UnityAction<T1>) NetFxCoreExtensions.CreateDelegate(theFunction, typeof(UnityAction<T1>), target));
+            this.Delegate += ((UnityAction<T1>) theFunction.CreateDelegate(typeof(UnityAction<T1>), target));
         }
 
-        public override bool Find(object targetObj, MethodInfo method)
-        {
-            return ((this.Delegate.Target == targetObj) && NetFxCoreExtensions.GetMethodInfo(this.Delegate).Equals(method));
-        }
+        public override bool Find(object targetObj, MethodInfo method) => 
+            ((this.Delegate.Target == targetObj) && this.Delegate.GetMethodInfo().Equals(method));
 
         public override void Invoke(object[] args)
         {

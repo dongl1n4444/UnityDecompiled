@@ -16,10 +16,8 @@
         private bool m_IgnoreTimeScale;
         public Color startColor
         {
-            get
-            {
-                return this.m_StartColor;
-            }
+            get => 
+                this.m_StartColor;
             set
             {
                 this.m_StartColor = value;
@@ -27,10 +25,8 @@
         }
         public Color targetColor
         {
-            get
-            {
-                return this.m_TargetColor;
-            }
+            get => 
+                this.m_TargetColor;
             set
             {
                 this.m_TargetColor = value;
@@ -38,10 +34,8 @@
         }
         public ColorTweenMode tweenMode
         {
-            get
-            {
-                return this.m_TweenMode;
-            }
+            get => 
+                this.m_TweenMode;
             set
             {
                 this.m_TweenMode = value;
@@ -49,10 +43,8 @@
         }
         public float duration
         {
-            get
-            {
-                return this.m_Duration;
-            }
+            get => 
+                this.m_Duration;
             set
             {
                 this.m_Duration = value;
@@ -60,10 +52,8 @@
         }
         public bool ignoreTimeScale
         {
-            get
-            {
-                return this.m_IgnoreTimeScale;
-            }
+            get => 
+                this.m_IgnoreTimeScale;
             set
             {
                 this.m_IgnoreTimeScale = value;
@@ -97,20 +87,14 @@
             this.m_Target.AddListener(callback);
         }
 
-        public bool GetIgnoreTimescale()
-        {
-            return this.m_IgnoreTimeScale;
-        }
+        public bool GetIgnoreTimescale() => 
+            this.m_IgnoreTimeScale;
 
-        public float GetDuration()
-        {
-            return this.m_Duration;
-        }
+        public float GetDuration() => 
+            this.m_Duration;
 
-        public bool ValidTarget()
-        {
-            return (this.m_Target != null);
-        }
+        public bool ValidTarget() => 
+            (this.m_Target != null);
         public class ColorTweenCallback : UnityEvent<Color>
         {
         }

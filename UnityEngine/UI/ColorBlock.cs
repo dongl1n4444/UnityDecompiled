@@ -28,10 +28,8 @@
         /// </summary>
         public Color normalColor
         {
-            get
-            {
-                return this.m_NormalColor;
-            }
+            get => 
+                this.m_NormalColor;
             set
             {
                 this.m_NormalColor = value;
@@ -42,10 +40,8 @@
         /// </summary>
         public Color highlightedColor
         {
-            get
-            {
-                return this.m_HighlightedColor;
-            }
+            get => 
+                this.m_HighlightedColor;
             set
             {
                 this.m_HighlightedColor = value;
@@ -56,10 +52,8 @@
         /// </summary>
         public Color pressedColor
         {
-            get
-            {
-                return this.m_PressedColor;
-            }
+            get => 
+                this.m_PressedColor;
             set
             {
                 this.m_PressedColor = value;
@@ -70,10 +64,8 @@
         /// </summary>
         public Color disabledColor
         {
-            get
-            {
-                return this.m_DisabledColor;
-            }
+            get => 
+                this.m_DisabledColor;
             set
             {
                 this.m_DisabledColor = value;
@@ -84,10 +76,8 @@
         /// </summary>
         public float colorMultiplier
         {
-            get
-            {
-                return this.m_ColorMultiplier;
-            }
+            get => 
+                this.m_ColorMultiplier;
             set
             {
                 this.m_ColorMultiplier = value;
@@ -98,10 +88,8 @@
         /// </summary>
         public float fadeDuration
         {
-            get
-            {
-                return this.m_FadeDuration;
-            }
+            get => 
+                this.m_FadeDuration;
             set
             {
                 this.m_FadeDuration = value;
@@ -110,44 +98,29 @@
         /// <summary>
         /// <para>Simple getter for the default ColorBlock.</para>
         /// </summary>
-        public static ColorBlock defaultColorBlock
-        {
-            get
-            {
-                return new ColorBlock { 
-                    m_NormalColor = (Color) new Color32(0xff, 0xff, 0xff, 0xff),
-                    m_HighlightedColor = (Color) new Color32(0xf5, 0xf5, 0xf5, 0xff),
-                    m_PressedColor = (Color) new Color32(200, 200, 200, 0xff),
-                    m_DisabledColor = (Color) new Color32(200, 200, 200, 0x80),
-                    colorMultiplier = 1f,
-                    fadeDuration = 0.1f
-                };
-            }
-        }
-        public override bool Equals(object obj)
-        {
-            return ((obj is ColorBlock) && this.Equals((ColorBlock) obj));
-        }
+        public static ColorBlock defaultColorBlock =>
+            new ColorBlock { 
+                m_NormalColor=(Color) new Color32(0xff, 0xff, 0xff, 0xff),
+                m_HighlightedColor=(Color) new Color32(0xf5, 0xf5, 0xf5, 0xff),
+                m_PressedColor=(Color) new Color32(200, 200, 200, 0xff),
+                m_DisabledColor=(Color) new Color32(200, 200, 200, 0x80),
+                colorMultiplier=1f,
+                fadeDuration=0.1f
+            };
+        public override bool Equals(object obj) => 
+            ((obj is ColorBlock) && this.Equals((ColorBlock) obj));
 
-        public bool Equals(ColorBlock other)
-        {
-            return (((((this.normalColor == other.normalColor) && (this.highlightedColor == other.highlightedColor)) && ((this.pressedColor == other.pressedColor) && (this.disabledColor == other.disabledColor))) && (this.colorMultiplier == other.colorMultiplier)) && (this.fadeDuration == other.fadeDuration));
-        }
+        public bool Equals(ColorBlock other) => 
+            (((((this.normalColor == other.normalColor) && (this.highlightedColor == other.highlightedColor)) && ((this.pressedColor == other.pressedColor) && (this.disabledColor == other.disabledColor))) && (this.colorMultiplier == other.colorMultiplier)) && (this.fadeDuration == other.fadeDuration));
 
-        public static bool operator ==(ColorBlock point1, ColorBlock point2)
-        {
-            return point1.Equals(point2);
-        }
+        public static bool operator ==(ColorBlock point1, ColorBlock point2) => 
+            point1.Equals(point2);
 
-        public static bool operator !=(ColorBlock point1, ColorBlock point2)
-        {
-            return !point1.Equals(point2);
-        }
+        public static bool operator !=(ColorBlock point1, ColorBlock point2) => 
+            !point1.Equals(point2);
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            base.GetHashCode();
     }
 }
 

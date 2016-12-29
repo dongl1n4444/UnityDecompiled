@@ -92,10 +92,8 @@
             }
         }
 
-        public static bool ConvertableUnityObjects(System.Type t1, System.Type t2)
-        {
-            return ((typeof(UnityEngine.Component).IsAssignableFrom(t1) || typeof(GameObject).IsAssignableFrom(t1)) && (typeof(UnityEngine.Component).IsAssignableFrom(t2) || typeof(GameObject).IsAssignableFrom(t2)));
-        }
+        public static bool ConvertableUnityObjects(System.Type t1, System.Type t2) => 
+            ((typeof(UnityEngine.Component).IsAssignableFrom(t1) || typeof(GameObject).IsAssignableFrom(t1)) && (typeof(UnityEngine.Component).IsAssignableFrom(t2) || typeof(GameObject).IsAssignableFrom(t2)));
 
         public static object ConvertActualValueIfPossible(object value, System.Type toType)
         {
@@ -173,7 +171,7 @@
                     disposable.Dispose();
                 }
             }
-            return new CodeSnippetExpression(string.Format("new {0} {{ {1} }}", SerializedType.GetFullName(this.type), builder));
+            return new CodeSnippetExpression($"new {SerializedType.GetFullName(this.type)} {{ {builder} }}");
         }
 
         private string ConvertFromListOrArray(object o)
@@ -398,10 +396,8 @@
             return ((this.refValues.Count != 0) ? this.refValues[0] : null);
         }
 
-        private static bool IsPrimitive(System.Type t)
-        {
-            return (t.IsPrimitive || (t == typeof(string)));
-        }
+        private static bool IsPrimitive(System.Type t) => 
+            (t.IsPrimitive || (t == typeof(string)));
 
         public static bool IsSceneReferenceType(System.Type t)
         {
@@ -462,10 +458,8 @@
             }
         }
 
-        private static object TryGetDefaultValue(System.Type type)
-        {
-            return (!type.IsValueType ? null : Activator.CreateInstance(type));
-        }
+        private static object TryGetDefaultValue(System.Type type) => 
+            (!type.IsValueType ? null : Activator.CreateInstance(type));
 
         public static bool ValidPropertyType(System.Type type)
         {
@@ -555,29 +549,14 @@
             }
         }
 
-        public bool hasValue
-        {
-            get
-            {
-                return (!this.isSceneReferenceType ? !string.IsNullOrEmpty(this.stringValue) : (this.refValues.Count != 0));
-            }
-        }
+        public bool hasValue =>
+            (!this.isSceneReferenceType ? !string.IsNullOrEmpty(this.stringValue) : (this.refValues.Count != 0));
 
-        public bool isGeneric
-        {
-            get
-            {
-                return SerializedType.IsGeneric(this.m_TypeString);
-            }
-        }
+        public bool isGeneric =>
+            SerializedType.IsGeneric(this.m_TypeString);
 
-        public bool isIList
-        {
-            get
-            {
-                return typeof(IList).IsAssignableFrom(this.type);
-            }
-        }
+        public bool isIList =>
+            typeof(IList).IsAssignableFrom(this.type);
 
         public bool isSceneReferenceType
         {
@@ -593,10 +572,8 @@
 
         public string name
         {
-            get
-            {
-                return this.m_Name;
-            }
+            get => 
+                this.m_Name;
             set
             {
                 this.m_Name = value;
@@ -620,33 +597,21 @@
             }
         }
 
-        public string stringValue
-        {
-            get
-            {
-                return this.m_Value;
-            }
-        }
+        public string stringValue =>
+            this.m_Value;
 
         public System.Type type
         {
-            get
-            {
-                return SerializedType.FromString(this.m_TypeString);
-            }
+            get => 
+                SerializedType.FromString(this.m_TypeString);
             set
             {
                 this.m_TypeString = SerializedType.ToString(value);
             }
         }
 
-        public string typeString
-        {
-            get
-            {
-                return this.m_TypeString;
-            }
-        }
+        public string typeString =>
+            this.m_TypeString;
 
         public object value
         {

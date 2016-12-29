@@ -121,7 +121,7 @@
 
         public void OnEnable()
         {
-            this.m_ControllerContext = (AnimatorControllerTool.tool == null) ? null : AnimatorControllerTool.tool.animatorController;
+            this.m_ControllerContext = AnimatorControllerTool.tool?.animatorController;
             this.m_LayerIndexContext = (AnimatorControllerTool.tool == null) ? -1 : AnimatorControllerTool.tool.selectedLayerIndex;
         }
 
@@ -171,21 +171,11 @@
             }
         }
 
-        public AnimatorState state
-        {
-            get
-            {
-                return (this.m_Target as AnimatorState);
-            }
-        }
+        public AnimatorState state =>
+            (this.m_Target as AnimatorState);
 
-        public AnimatorStateMachine stateMachine
-        {
-            get
-            {
-                return (this.m_Target as AnimatorStateMachine);
-            }
-        }
+        public AnimatorStateMachine stateMachine =>
+            (this.m_Target as AnimatorStateMachine);
 
         internal static Styles styles
         {

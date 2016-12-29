@@ -17,23 +17,13 @@
         /// <summary>
         /// <para>Name of this C++ unity type.</para>
         /// </summary>
-        public string name
-        {
-            get
-            {
-                return this.m_Name;
-            }
-        }
+        public string name =>
+            this.m_Name;
         /// <summary>
         /// <para>ClassId of the base class of this C++ class.</para>
         /// </summary>
-        public int baseClassId
-        {
-            get
-            {
-                return this.m_BaseClassId;
-            }
-        }
+        public int baseClassId =>
+            this.m_BaseClassId;
     }
 }
 

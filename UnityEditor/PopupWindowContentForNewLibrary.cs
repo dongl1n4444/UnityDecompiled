@@ -27,10 +27,8 @@
             }
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(350f, (this.m_WantedSize.height <= 0f) ? 90f : this.m_WantedSize.height);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(350f, (this.m_WantedSize.height <= 0f) ? 90f : this.m_WantedSize.height);
 
         private void KeyboardHandling(EditorWindow editorWindow)
         {

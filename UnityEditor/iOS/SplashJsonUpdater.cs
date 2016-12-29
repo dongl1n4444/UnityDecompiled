@@ -32,7 +32,7 @@
                 entry.SetString("subtype", splash.subtype);
             }
             entry.SetString("extent", "full-screen");
-            entry.SetString("scale", string.Format("{0}x", splash.scale));
+            entry.SetString("scale", $"{splash.scale}x");
         }
 
         internal static string CreateJsonString(List<SplashScreen> splashes)

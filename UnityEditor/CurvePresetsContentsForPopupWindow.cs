@@ -44,10 +44,8 @@
             }
         }
 
-        public static string GetBasePrefText(CurveLibraryType curveLibraryType)
-        {
-            return GetExtension(curveLibraryType);
-        }
+        public static string GetBasePrefText(CurveLibraryType curveLibraryType) => 
+            GetExtension(curveLibraryType);
 
         private static string GetExtension(CurveLibraryType curveLibraryType)
         {
@@ -66,15 +64,11 @@
             return "curves";
         }
 
-        public PresetLibraryEditor<CurvePresetLibrary> GetPresetLibraryEditor()
-        {
-            return this.m_CurveLibraryEditor;
-        }
+        public PresetLibraryEditor<CurvePresetLibrary> GetPresetLibraryEditor() => 
+            this.m_CurveLibraryEditor;
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(240f, 330f);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(240f, 330f);
 
         public void InitIfNeeded()
         {
@@ -141,10 +135,8 @@
 
         public AnimationCurve curveToSaveAsPreset
         {
-            get
-            {
-                return this.m_Curve;
-            }
+            get => 
+                this.m_Curve;
             set
             {
                 this.m_Curve = value;

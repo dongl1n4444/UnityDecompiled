@@ -17,10 +17,8 @@
             this.RefreshList();
         }
 
-        private static WindowRevert GetWindow()
-        {
-            return EditorWindow.GetWindow<WindowRevert>(true, "Version Control Revert");
-        }
+        private static WindowRevert GetWindow() => 
+            EditorWindow.GetWindow<WindowRevert>(true, "Version Control Revert");
 
         public void OnEnable()
         {

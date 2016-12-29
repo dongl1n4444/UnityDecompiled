@@ -17,10 +17,8 @@
         /// <summary>
         /// <para>Override this method to specify how tall the GUI for this decorator is in pixels.</para>
         /// </summary>
-        public virtual float GetHeight()
-        {
-            return 16f;
-        }
+        public virtual float GetHeight() => 
+            16f;
 
         /// <summary>
         /// <para>Override this method to make your own GUI for the decorator.
@@ -34,13 +32,8 @@
         /// <summary>
         /// <para>The PropertyAttribute for the decorator. (Read Only)</para>
         /// </summary>
-        public PropertyAttribute attribute
-        {
-            get
-            {
-                return this.m_Attribute;
-            }
-        }
+        public PropertyAttribute attribute =>
+            this.m_Attribute;
     }
 }
 

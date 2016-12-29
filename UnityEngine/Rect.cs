@@ -57,13 +57,8 @@
         /// <summary>
         /// <para>Shorthand for writing new Rect(0,0,0,0).</para>
         /// </summary>
-        public static Rect zero
-        {
-            get
-            {
-                return new Rect(0f, 0f, 0f, 0f);
-            }
-        }
+        public static Rect zero =>
+            new Rect(0f, 0f, 0f, 0f);
         /// <summary>
         /// <para>Creates a rectangle from min/max coordinate values.</para>
         /// </summary>
@@ -74,10 +69,8 @@
         /// <returns>
         /// <para>A rectangle matching the specified coordinates.</para>
         /// </returns>
-        public static Rect MinMaxRect(float xmin, float ymin, float xmax, float ymax)
-        {
-            return new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
-        }
+        public static Rect MinMaxRect(float xmin, float ymin, float xmax, float ymax) => 
+            new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
 
         /// <summary>
         /// <para>Set components of an existing Rect.</para>
@@ -99,10 +92,8 @@
         /// </summary>
         public float x
         {
-            get
-            {
-                return this.m_XMin;
-            }
+            get => 
+                this.m_XMin;
             set
             {
                 this.m_XMin = value;
@@ -113,10 +104,8 @@
         /// </summary>
         public float y
         {
-            get
-            {
-                return this.m_YMin;
-            }
+            get => 
+                this.m_YMin;
             set
             {
                 this.m_YMin = value;
@@ -127,10 +116,8 @@
         /// </summary>
         public Vector2 position
         {
-            get
-            {
-                return new Vector2(this.m_XMin, this.m_YMin);
-            }
+            get => 
+                new Vector2(this.m_XMin, this.m_YMin);
             set
             {
                 this.m_XMin = value.x;
@@ -142,10 +129,8 @@
         /// </summary>
         public Vector2 center
         {
-            get
-            {
-                return new Vector2(this.x + (this.m_Width / 2f), this.y + (this.m_Height / 2f));
-            }
+            get => 
+                new Vector2(this.x + (this.m_Width / 2f), this.y + (this.m_Height / 2f));
             set
             {
                 this.m_XMin = value.x - (this.m_Width / 2f);
@@ -157,10 +142,8 @@
         /// </summary>
         public Vector2 min
         {
-            get
-            {
-                return new Vector2(this.xMin, this.yMin);
-            }
+            get => 
+                new Vector2(this.xMin, this.yMin);
             set
             {
                 this.xMin = value.x;
@@ -172,10 +155,8 @@
         /// </summary>
         public Vector2 max
         {
-            get
-            {
-                return new Vector2(this.xMax, this.yMax);
-            }
+            get => 
+                new Vector2(this.xMax, this.yMax);
             set
             {
                 this.xMax = value.x;
@@ -187,10 +168,8 @@
         /// </summary>
         public float width
         {
-            get
-            {
-                return this.m_Width;
-            }
+            get => 
+                this.m_Width;
             set
             {
                 this.m_Width = value;
@@ -201,10 +180,8 @@
         /// </summary>
         public float height
         {
-            get
-            {
-                return this.m_Height;
-            }
+            get => 
+                this.m_Height;
             set
             {
                 this.m_Height = value;
@@ -215,10 +192,8 @@
         /// </summary>
         public Vector2 size
         {
-            get
-            {
-                return new Vector2(this.m_Width, this.m_Height);
-            }
+            get => 
+                new Vector2(this.m_Width, this.m_Height);
             set
             {
                 this.m_Width = value.x;
@@ -230,10 +205,8 @@
         /// </summary>
         public float xMin
         {
-            get
-            {
-                return this.m_XMin;
-            }
+            get => 
+                this.m_XMin;
             set
             {
                 float xMax = this.xMax;
@@ -246,10 +219,8 @@
         /// </summary>
         public float yMin
         {
-            get
-            {
-                return this.m_YMin;
-            }
+            get => 
+                this.m_YMin;
             set
             {
                 float yMax = this.yMax;
@@ -262,10 +233,8 @@
         /// </summary>
         public float xMax
         {
-            get
-            {
-                return (this.m_Width + this.m_XMin);
-            }
+            get => 
+                (this.m_Width + this.m_XMin);
             set
             {
                 this.m_Width = value - this.m_XMin;
@@ -276,10 +245,8 @@
         /// </summary>
         public float yMax
         {
-            get
-            {
-                return (this.m_Height + this.m_YMin);
-            }
+            get => 
+                (this.m_Height + this.m_YMin);
             set
             {
                 this.m_Height = value - this.m_YMin;
@@ -293,10 +260,8 @@
         /// <returns>
         /// <para>True if the point lies within the specified rectangle.</para>
         /// </returns>
-        public bool Contains(Vector2 point)
-        {
-            return ((((point.x >= this.xMin) && (point.x < this.xMax)) && (point.y >= this.yMin)) && (point.y < this.yMax));
-        }
+        public bool Contains(Vector2 point) => 
+            ((((point.x >= this.xMin) && (point.x < this.xMax)) && (point.y >= this.yMin)) && (point.y < this.yMax));
 
         /// <summary>
         /// <para>Returns true if the x and y components of point is a point inside this rectangle. If allowInverse is present and true, the width and height of the Rect are allowed to take negative values (ie, the min value is greater than the max), and the test will still work.</para>
@@ -306,10 +271,8 @@
         /// <returns>
         /// <para>True if the point lies within the specified rectangle.</para>
         /// </returns>
-        public bool Contains(Vector3 point)
-        {
-            return ((((point.x >= this.xMin) && (point.x < this.xMax)) && (point.y >= this.yMin)) && (point.y < this.yMax));
-        }
+        public bool Contains(Vector3 point) => 
+            ((((point.x >= this.xMin) && (point.x < this.xMax)) && (point.y >= this.yMin)) && (point.y < this.yMax));
 
         /// <summary>
         /// <para>Returns true if the x and y components of point is a point inside this rectangle. If allowInverse is present and true, the width and height of the Rect are allowed to take negative values (ie, the min value is greater than the max), and the test will still work.</para>
@@ -355,10 +318,8 @@
         /// </summary>
         /// <param name="other">Other rectangle to test overlapping with.</param>
         /// <param name="allowInverse">Does the test allow the widths and heights of the Rects to be negative?</param>
-        public bool Overlaps(Rect other)
-        {
-            return ((((other.xMax > this.xMin) && (other.xMin < this.xMax)) && (other.yMax > this.yMin)) && (other.yMin < this.yMax));
-        }
+        public bool Overlaps(Rect other) => 
+            ((((other.xMax > this.xMin) && (other.xMin < this.xMax)) && (other.yMax > this.yMin)) && (other.yMin < this.yMax));
 
         /// <summary>
         /// <para>Returns true if the other rectangle overlaps this one. If allowInverse is present and true, the widths and heights of the Rects are allowed to take negative values (ie, the min value is greater than the max), and the test will still work.</para>
@@ -381,35 +342,25 @@
         /// </summary>
         /// <param name="rectangle">Rectangle to get a point inside.</param>
         /// <param name="normalizedRectCoordinates">Normalized coordinates to get a point for.</param>
-        public static Vector2 NormalizedToPoint(Rect rectangle, Vector2 normalizedRectCoordinates)
-        {
-            return new Vector2(Mathf.Lerp(rectangle.x, rectangle.xMax, normalizedRectCoordinates.x), Mathf.Lerp(rectangle.y, rectangle.yMax, normalizedRectCoordinates.y));
-        }
+        public static Vector2 NormalizedToPoint(Rect rectangle, Vector2 normalizedRectCoordinates) => 
+            new Vector2(Mathf.Lerp(rectangle.x, rectangle.xMax, normalizedRectCoordinates.x), Mathf.Lerp(rectangle.y, rectangle.yMax, normalizedRectCoordinates.y));
 
         /// <summary>
         /// <para>Returns the normalized coordinates cooresponding the the point.</para>
         /// </summary>
         /// <param name="rectangle">Rectangle to get normalized coordinates inside.</param>
         /// <param name="point">A point inside the rectangle to get normalized coordinates for.</param>
-        public static Vector2 PointToNormalized(Rect rectangle, Vector2 point)
-        {
-            return new Vector2(Mathf.InverseLerp(rectangle.x, rectangle.xMax, point.x), Mathf.InverseLerp(rectangle.y, rectangle.yMax, point.y));
-        }
+        public static Vector2 PointToNormalized(Rect rectangle, Vector2 point) => 
+            new Vector2(Mathf.InverseLerp(rectangle.x, rectangle.xMax, point.x), Mathf.InverseLerp(rectangle.y, rectangle.yMax, point.y));
 
-        public static bool operator !=(Rect lhs, Rect rhs)
-        {
-            return ((((lhs.x != rhs.x) || (lhs.y != rhs.y)) || (lhs.width != rhs.width)) || (lhs.height != rhs.height));
-        }
+        public static bool operator !=(Rect lhs, Rect rhs) => 
+            ((((lhs.x != rhs.x) || (lhs.y != rhs.y)) || (lhs.width != rhs.width)) || (lhs.height != rhs.height));
 
-        public static bool operator ==(Rect lhs, Rect rhs)
-        {
-            return ((((lhs.x == rhs.x) && (lhs.y == rhs.y)) && (lhs.width == rhs.width)) && (lhs.height == rhs.height));
-        }
+        public static bool operator ==(Rect lhs, Rect rhs) => 
+            ((((lhs.x == rhs.x) && (lhs.y == rhs.y)) && (lhs.width == rhs.width)) && (lhs.height == rhs.height));
 
-        public override int GetHashCode()
-        {
-            return (((this.x.GetHashCode() ^ (this.width.GetHashCode() << 2)) ^ (this.y.GetHashCode() >> 2)) ^ (this.height.GetHashCode() >> 1));
-        }
+        public override int GetHashCode() => 
+            (((this.x.GetHashCode() ^ (this.width.GetHashCode() << 2)) ^ (this.y.GetHashCode() >> 2)) ^ (this.height.GetHashCode() >> 1));
 
         public override bool Equals(object other)
         {
@@ -442,37 +393,17 @@
         }
 
         [Obsolete("use xMin")]
-        public float left
-        {
-            get
-            {
-                return this.m_XMin;
-            }
-        }
+        public float left =>
+            this.m_XMin;
         [Obsolete("use xMax")]
-        public float right
-        {
-            get
-            {
-                return (this.m_XMin + this.m_Width);
-            }
-        }
+        public float right =>
+            (this.m_XMin + this.m_Width);
         [Obsolete("use yMin")]
-        public float top
-        {
-            get
-            {
-                return this.m_YMin;
-            }
-        }
+        public float top =>
+            this.m_YMin;
         [Obsolete("use yMax")]
-        public float bottom
-        {
-            get
-            {
-                return (this.m_YMin + this.m_Height);
-            }
-        }
+        public float bottom =>
+            (this.m_YMin + this.m_Height);
     }
 }
 

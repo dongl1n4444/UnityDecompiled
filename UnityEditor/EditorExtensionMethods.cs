@@ -6,14 +6,12 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [Extension]
     internal static class EditorExtensionMethods
     {
-        [Extension]
-        internal static List<Enum> EnumGetNonObsoleteValues(Type type)
+        internal static List<Enum> EnumGetNonObsoleteValues(this Type type)
         {
             string[] names = Enum.GetNames(type);
-            Enum[] enumArray = Enumerable.ToArray<Enum>(Enumerable.Cast<Enum>(Enum.GetValues(type)));
+            Enum[] enumArray = Enum.GetValues(type).Cast<Enum>().ToArray<Enum>();
             List<Enum> list = new List<Enum>();
             for (int i = 0; i < names.Length; i++)
             {
@@ -34,8 +32,7 @@
             return list;
         }
 
-        [Extension]
-        internal static Type GetArrayOrListElementType(Type listType)
+        internal static Type GetArrayOrListElementType(this Type listType)
         {
             if (listType.IsArray)
             {
@@ -48,14 +45,10 @@
             return null;
         }
 
-        [Extension]
-        internal static bool IsArrayOrList(Type listType)
-        {
-            return (listType.IsArray || (listType.IsGenericType && (listType.GetGenericTypeDefinition() == typeof(List<>))));
-        }
+        internal static bool IsArrayOrList(this Type listType) => 
+            (listType.IsArray || (listType.IsGenericType && (listType.GetGenericTypeDefinition() == typeof(List<>))));
 
-        [Extension]
-        internal static bool MainActionKeyForControl(Event evt, int controlId)
+        internal static bool MainActionKeyForControl(this Event evt, int controlId)
         {
             if (GUIUtility.keyboardControl != controlId)
             {

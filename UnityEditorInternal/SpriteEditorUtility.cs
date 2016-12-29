@@ -130,10 +130,8 @@
             return Vector2.zero;
         }
 
-        public static Rect RoundedRect(Rect rect)
-        {
-            return new Rect((float) Mathf.RoundToInt(rect.xMin), (float) Mathf.RoundToInt(rect.yMin), (float) Mathf.RoundToInt(rect.width), (float) Mathf.RoundToInt(rect.height));
-        }
+        public static Rect RoundedRect(Rect rect) => 
+            new Rect((float) Mathf.RoundToInt(rect.xMin), (float) Mathf.RoundToInt(rect.yMin), (float) Mathf.RoundToInt(rect.width), (float) Mathf.RoundToInt(rect.height));
 
         public static Rect RoundToInt(Rect r)
         {

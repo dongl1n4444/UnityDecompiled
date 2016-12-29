@@ -36,13 +36,11 @@
             return options;
         }
 
-        public Scene PrepareScene(string sceneName)
-        {
-            return base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
-                PlaymodeTestsControllerExtensions.AddEventHandlerMonoBehaviour<ResultsRenderer>(runner);
+        public Scene PrepareScene(string sceneName) => 
+            base.CreateBootstrapScene(sceneName, delegate (PlaymodeTestsController runner) {
+                runner.AddEventHandlerMonoBehaviour<ResultsRenderer>();
                 runner.settings = this.m_Settings;
             });
-        }
 
         public override void Run()
         {

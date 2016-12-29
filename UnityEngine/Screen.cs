@@ -74,13 +74,8 @@
         public static bool fullScreen { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetResolution has been deprecated. Use resolutions instead (UnityUpgradable) -> resolutions", true)]
-        public static Resolution[] GetResolution
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public static Resolution[] GetResolution =>
+            null;
 
         /// <summary>
         /// <para>The current height of the screen window in pixels (Read Only).</para>
@@ -94,10 +89,8 @@
         [Obsolete("Property lockCursor has been deprecated. Use Cursor.lockState and Cursor.visible instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public static bool lockCursor
         {
-            get
-            {
-                return (CursorLockMode.Locked == Cursor.lockState);
-            }
+            get => 
+                (CursorLockMode.Locked == Cursor.lockState);
             set
             {
                 if (value)
@@ -130,10 +123,8 @@
         public static bool showCursor
         {
             [CompilerGenerated]
-            get
-            {
-                return <showCursor>k__BackingField;
-            }
+            get => 
+                <showCursor>k__BackingField;
             [CompilerGenerated]
             set
             {

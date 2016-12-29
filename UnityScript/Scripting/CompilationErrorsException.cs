@@ -13,13 +13,8 @@
             this._errors = errors;
         }
 
-        public CompilerErrorCollection Errors
-        {
-            get
-            {
-                return this._errors;
-            }
-        }
+        public CompilerErrorCollection Errors =>
+            this._errors;
     }
 }
 

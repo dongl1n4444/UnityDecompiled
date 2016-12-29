@@ -88,10 +88,8 @@
         [Obsolete("Use HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);", true)]
         public Ray mouseRay
         {
-            get
-            {
-                return new Ray(Vector3.up, Vector3.up);
-            }
+            get => 
+                new Ray(Vector3.up, Vector3.up);
             set
             {
             }
@@ -101,10 +99,8 @@
         /// </summary>
         public bool shift
         {
-            get
-            {
-                return ((this.modifiers & EventModifiers.Shift) != EventModifiers.None);
-            }
+            get => 
+                ((this.modifiers & EventModifiers.Shift) != EventModifiers.None);
             set
             {
                 if (!value)
@@ -122,10 +118,8 @@
         /// </summary>
         public bool control
         {
-            get
-            {
-                return ((this.modifiers & EventModifiers.Control) != EventModifiers.None);
-            }
+            get => 
+                ((this.modifiers & EventModifiers.Control) != EventModifiers.None);
             set
             {
                 if (!value)
@@ -143,10 +137,8 @@
         /// </summary>
         public bool alt
         {
-            get
-            {
-                return ((this.modifiers & EventModifiers.Alt) != EventModifiers.None);
-            }
+            get => 
+                ((this.modifiers & EventModifiers.Alt) != EventModifiers.None);
             set
             {
                 if (!value)
@@ -164,10 +156,8 @@
         /// </summary>
         public bool command
         {
-            get
-            {
-                return ((this.modifiers & EventModifiers.Command) != EventModifiers.None);
-            }
+            get => 
+                ((this.modifiers & EventModifiers.Command) != EventModifiers.None);
             set
             {
                 if (!value)
@@ -185,10 +175,8 @@
         /// </summary>
         public bool capsLock
         {
-            get
-            {
-                return ((this.modifiers & EventModifiers.CapsLock) != EventModifiers.None);
-            }
+            get => 
+                ((this.modifiers & EventModifiers.CapsLock) != EventModifiers.None);
             set
             {
                 if (!value)
@@ -206,10 +194,8 @@
         /// </summary>
         public bool numeric
         {
-            get
-            {
-                return ((this.modifiers & EventModifiers.Numeric) != EventModifiers.None);
-            }
+            get => 
+                ((this.modifiers & EventModifiers.Numeric) != EventModifiers.None);
             set
             {
                 if (!value)
@@ -225,13 +211,8 @@
         /// <summary>
         /// <para>Is the current keypress a function key? (Read Only)</para>
         /// </summary>
-        public bool functionKey
-        {
-            get
-            {
-                return ((this.modifiers & EventModifiers.FunctionKey) != EventModifiers.None);
-            }
-        }
+        public bool functionKey =>
+            ((this.modifiers & EventModifiers.FunctionKey) != EventModifiers.None);
         /// <summary>
         /// <para>The current event that's being processed right now.</para>
         /// </summary>

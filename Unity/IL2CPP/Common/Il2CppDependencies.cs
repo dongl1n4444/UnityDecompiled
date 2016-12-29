@@ -23,13 +23,8 @@
             return _root.Combine(append);
         }
 
-        internal static bool Available
-        {
-            get
-            {
-                return (_root != null);
-            }
-        }
+        internal static bool Available =>
+            (_root != null);
 
         internal static bool HasUnusedByteCodeStripper
         {

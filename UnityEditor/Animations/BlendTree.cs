@@ -68,20 +68,16 @@
         /// </summary>
         /// <param name="position">The position of the child. When using 2D blend trees.</param>
         /// <param name="threshold">The threshold of the child. When using 1D blend trees.</param>
-        public BlendTree CreateBlendTreeChild(float threshold)
-        {
-            return this.CreateBlendTreeChild(Vector2.zero, threshold);
-        }
+        public BlendTree CreateBlendTreeChild(float threshold) => 
+            this.CreateBlendTreeChild(Vector2.zero, threshold);
 
         /// <summary>
         /// <para>Utility function to add a child blend tree to a blend tree.</para>
         /// </summary>
         /// <param name="position">The position of the child. When using 2D blend trees.</param>
         /// <param name="threshold">The threshold of the child. When using 1D blend trees.</param>
-        public BlendTree CreateBlendTreeChild(Vector2 position)
-        {
-            return this.CreateBlendTreeChild(position, 0f);
-        }
+        public BlendTree CreateBlendTreeChild(Vector2 position) => 
+            this.CreateBlendTreeChild(position, 0f);
 
         internal BlendTree CreateBlendTreeChild(Vector2 position, float threshold)
         {

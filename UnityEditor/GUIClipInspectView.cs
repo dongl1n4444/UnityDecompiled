@@ -48,10 +48,8 @@
             EditorGUILayout.EndScrollView();
         }
 
-        protected override int GetInstructionCount()
-        {
-            return this.m_ClipList.Count;
-        }
+        protected override int GetInstructionCount() => 
+            this.m_ClipList.Count;
 
         internal override string GetInstructionListName(int index)
         {

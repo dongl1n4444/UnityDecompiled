@@ -39,18 +39,14 @@
             {
                 <>f__am$cache2 = new Func<CustomAttribute, int>(null, (IntPtr) <Add>m__2);
             }
-            this._attributeTypeIndices.AddRange(Enumerable.Select<CustomAttribute, int>(customAttributes, <>f__am$cache2));
+            this._attributeTypeIndices.AddRange(customAttributes.Select<CustomAttribute, int>(<>f__am$cache2));
         }
 
-        public IEnumerable<int> GetAttributeTypeIndices()
-        {
-            return this._attributeTypeIndices;
-        }
+        public IEnumerable<int> GetAttributeTypeIndices() => 
+            this._attributeTypeIndices;
 
-        public IEnumerable<AttributeTypeRange> GetAttributeTypeRanges()
-        {
-            return this._attributeTypeRanges;
-        }
+        public IEnumerable<AttributeTypeRange> GetAttributeTypeRanges() => 
+            this._attributeTypeRanges;
 
         public string[] GetEntries()
         {
@@ -62,38 +58,26 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<string, uint>, string>(null, (IntPtr) <GetEntries>m__1);
             }
-            return Enumerable.ToArray<string>(Enumerable.Select<KeyValuePair<string, uint>, string>(Enumerable.OrderBy<KeyValuePair<string, uint>, uint>(this._indices, <>f__am$cache0), <>f__am$cache1));
+            return this._indices.OrderBy<KeyValuePair<string, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<string, uint>, string>(<>f__am$cache1).ToArray<string>();
         }
 
-        public uint GetIndex(AssemblyDefinition assembly)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(assembly));
-        }
+        public uint GetIndex(AssemblyDefinition assembly) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(assembly));
 
-        public uint GetIndex(EventDefinition eventDefinition)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(eventDefinition));
-        }
+        public uint GetIndex(EventDefinition eventDefinition) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(eventDefinition));
 
-        public uint GetIndex(FieldDefinition fieldDefinition)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(fieldDefinition));
-        }
+        public uint GetIndex(FieldDefinition fieldDefinition) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(fieldDefinition));
 
-        public uint GetIndex(MethodDefinition methodDefinition)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(methodDefinition));
-        }
+        public uint GetIndex(MethodDefinition methodDefinition) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(methodDefinition));
 
-        public uint GetIndex(PropertyDefinition propertyDefinition)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(propertyDefinition));
-        }
+        public uint GetIndex(PropertyDefinition propertyDefinition) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(propertyDefinition));
 
-        public uint GetIndex(TypeDefinition type)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(type));
-        }
+        public uint GetIndex(TypeDefinition type) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(type));
 
         private uint GetIndex(string name)
         {
@@ -102,18 +86,11 @@
             return num;
         }
 
-        public uint GetIndex(ParameterDefinition parameterDefinition, MethodDefinition methodDefinition)
-        {
-            return this.GetIndex(Naming.ForCustomAttributesCacheGenerator(parameterDefinition, methodDefinition));
-        }
+        public uint GetIndex(ParameterDefinition parameterDefinition, MethodDefinition methodDefinition) => 
+            this.GetIndex(Naming.ForCustomAttributesCacheGenerator(parameterDefinition, methodDefinition));
 
-        public int Count
-        {
-            get
-            {
-                return this._indices.Count;
-            }
-        }
+        public int Count =>
+            this._indices.Count;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct AttributeTypeRange

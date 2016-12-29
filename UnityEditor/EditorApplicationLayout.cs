@@ -44,10 +44,8 @@
             }
         }
 
-        internal static bool IsInitializingPlaymodeLayout()
-        {
-            return (m_GameView != null);
-        }
+        internal static bool IsInitializingPlaymodeLayout() => 
+            (m_GameView != null);
 
         internal static void SetPausemodeLayout()
         {

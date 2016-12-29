@@ -100,23 +100,16 @@
         /// <summary>
         /// <para>true if toast was activated by user.</para>
         /// </summary>
-        public bool activated
-        {
-            get
-            {
-                return GetActivated(this.m_ToastId);
-            }
-        }
+        public bool activated =>
+            GetActivated(this.m_ToastId);
 
         /// <summary>
         /// <para>Arguments to be passed for application when toast notification is activated.</para>
         /// </summary>
         public string arguments
         {
-            get
-            {
-                return GetArguments(this.m_ToastId);
-            }
+            get => 
+                GetArguments(this.m_ToastId);
             set
             {
                 SetArguments(this.m_ToastId, value);
@@ -126,24 +119,14 @@
         /// <summary>
         /// <para>true if toast notification was dismissed (for any reason).</para>
         /// </summary>
-        public bool dismissed
-        {
-            get
-            {
-                return GetDismissed(this.m_ToastId, false);
-            }
-        }
+        public bool dismissed =>
+            GetDismissed(this.m_ToastId, false);
 
         /// <summary>
         /// <para>true if toast notification was explicitly dismissed by user.</para>
         /// </summary>
-        public bool dismissedByUser
-        {
-            get
-            {
-                return GetDismissed(this.m_ToastId, true);
-            }
-        }
+        public bool dismissedByUser =>
+            GetDismissed(this.m_ToastId, true);
     }
 }
 

@@ -189,7 +189,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
                     {
                         str3 = path;
                     }
-                    else if (MetroVisualStudioSolutionHelper.IsManifestFileName(path))
+                    else if (path.IsManifestFileName())
                     {
                         string str8 = Path.Combine(Path.GetDirectoryName(path), "Package.appxmanifest");
                         dictionary3[str8] = path;
@@ -230,7 +230,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
                                     else
                                     {
                                         string fileName = Path.GetFileName(path);
-                                        if (!Enumerable.Contains<string>(storey.unprocessedPlugins, fileName, StringComparer.InvariantCultureIgnoreCase))
+                                        if (!storey.unprocessedPlugins.Contains<string>(fileName, StringComparer.InvariantCultureIgnoreCase))
                                         {
                                             storey.unprocessedPlugins.Add(fileName);
                                         }
@@ -257,16 +257,16 @@ internal class MetroCSharpVisualStudioSolutionCreator
         }
         catch (Exception exception)
         {
-            throw new Exception(string.Format("Failed to get files from {0}, {1}", currentSrcDirectory, exception.Message));
+            throw new Exception($"Failed to get files from {currentSrcDirectory}, {exception.Message}");
         }
-        unprocessedDllFiles = Enumerable.ToList<string>(Enumerable.Where<string>(unprocessedDllFiles, new Func<string, bool>(storey, (IntPtr) this.<>m__0)));
+        unprocessedDllFiles = Enumerable.Where<string>(unprocessedDllFiles, new Func<string, bool>(storey, (IntPtr) this.<>m__0)).ToList<string>();
         if (str3 == null)
         {
-            throw new Exception(string.Format("Failed to find *.pfx file in {0}", currentSrcDirectory));
+            throw new Exception($"Failed to find *.pfx file in {currentSrcDirectory}");
         }
         if (str4 == null)
         {
-            throw new Exception(string.Format("Failed to find *.appxmanifest file in {0}", currentSrcDirectory));
+            throw new Exception($"Failed to find *.appxmanifest file in {currentSrcDirectory}");
         }
         MetroVisualStudioSolutionHelper.AddPluginPreBuildEvents(templateBuilders, this.LibraryCollections);
         MetroVisualStudioSolutionHelper.AddAssemblyConverterCommands(this.PlayerPackage, this.SourceBuild, templateBuilders, this.LibraryCollections, this.GenerateReferenceProjects, assemblyCSharpDllPaths, assemblyCSharpFirstpassDllPaths);
@@ -295,13 +295,13 @@ internal class MetroCSharpVisualStudioSolutionCreator
             {
                 <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CreateSolutionFileFrom>m__0);
             }
-            List<string> list6 = Enumerable.ToList<string>(Enumerable.Where<string>(first, <>f__am$cache0));
+            List<string> list6 = Enumerable.Where<string>(first, <>f__am$cache0).ToList<string>();
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <CreateSolutionFileFrom>m__1);
             }
             IEnumerable<string> second = Enumerable.Where<string>(first, <>f__am$cache1);
-            IEnumerable<string> enumerable2 = Enumerable.Except<string>(first, Enumerable.Union<string>(list6, second));
+            IEnumerable<string> enumerable2 = first.Except<string>(list6.Union<string>(second));
             string[] strArray4 = UnityGeneratedCreator.CSharp.Create(Path.Combine(currentSrcDirectory, str18));
             foreach (string str19 in strArray4)
             {
@@ -313,7 +313,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
             {
                 <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <CreateSolutionFileFrom>m__2);
             }
-            list6 = Enumerable.ToList<string>(Enumerable.Select<string, string>(list6, <>f__am$cache2));
+            list6 = Enumerable.Select<string, string>(list6, <>f__am$cache2).ToList<string>();
             if (<>f__am$cache3 == null)
             {
                 <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <CreateSolutionFileFrom>m__3);
@@ -327,9 +327,9 @@ internal class MetroCSharpVisualStudioSolutionCreator
             if (this.GenerateReferenceProjects)
             {
                 string[] textArray8 = new string[] { assemblyCSharpFirstpassDllPaths[WSASDK.PhoneSDK81], assemblyCSharpDllPaths[WSASDK.PhoneSDK81] };
-                second = Enumerable.Union<string>(second, textArray8);
+                second = second.Union<string>(textArray8);
                 string[] textArray9 = new string[] { assemblyCSharpFirstpassDllPaths[WSASDK.SDK81], assemblyCSharpDllPaths[WSASDK.SDK81] };
-                enumerable2 = Enumerable.Union<string>(enumerable2, textArray9);
+                enumerable2 = enumerable2.Union<string>(textArray9);
             }
             string str21 = Path.Combine(str16, this.Name + ".Windows.csproj");
             string str22 = Path.Combine(str17, this.Name + ".WindowsPhone.csproj");
@@ -340,8 +340,8 @@ internal class MetroCSharpVisualStudioSolutionCreator
             sharedProjectItemsPath = Path.ChangeExtension(Path.Combine("..", str23), ".projitems");
             this.WriteCSProjUserProps(Path.Combine(currentSrcDirectory, str24), WSASDK.SDK81);
             this.WriteCSProjUserProps(Path.Combine(currentSrcDirectory, str25), WSASDK.PhoneSDK81);
-            this.WriteCSProj(Path.Combine(currentSrcDirectory, str21), Path.Combine("..", str3), Enumerable.ToArray<string>(enumerable2), WSASDK.SDK81, unityPropsPath, this.LibraryCollections[WSASDK.SDK81]);
-            this.WriteCSProj(Path.Combine(currentSrcDirectory, str22), Path.Combine("..", str3), Enumerable.ToArray<string>(second), WSASDK.PhoneSDK81, unityPropsPath, this.LibraryCollections[WSASDK.PhoneSDK81]);
+            this.WriteCSProj(Path.Combine(currentSrcDirectory, str21), Path.Combine("..", str3), enumerable2.ToArray<string>(), WSASDK.SDK81, unityPropsPath, this.LibraryCollections[WSASDK.SDK81]);
+            this.WriteCSProj(Path.Combine(currentSrcDirectory, str22), Path.Combine("..", str3), second.ToArray<string>(), WSASDK.PhoneSDK81, unityPropsPath, this.LibraryCollections[WSASDK.PhoneSDK81]);
             WriteSHProj(Path.Combine(currentSrcDirectory, str23), list6.ToArray());
             list4.Add(str21);
             dontOverwriteFiles.Add(this.Name + ".Windows.csproj");
@@ -407,7 +407,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
         foreach (string str37 in first)
         {
             string file = str37;
-            if (MetroVisualStudioSolutionHelper.IsManifestFileName(file))
+            if (file.IsManifestFileName())
             {
                 file = dictionary3[file];
             }
@@ -456,9 +456,9 @@ internal class MetroCSharpVisualStudioSolutionCreator
         StringBuilder builder = new StringBuilder();
         foreach (string str in strArray)
         {
-            string str2 = !Enumerable.Contains<string>(availableProjectConfigs, str) ? Enumerable.Last<string>(availableProjectConfigs) : str;
-            builder.AppendLine(string.Format("\t\t{{{0}}}.{1}|{2}.ActiveCfg = {3}|{4}", new object[] { guid, str, srcSolutionPlatform, str2, dstProjectPlatform }));
-            builder.AppendLine(string.Format("\t\t{{{0}}}.{1}|{2}.Build.0 = {3}|{4}", new object[] { guid, str, srcSolutionPlatform, str2, dstProjectPlatform }));
+            string str2 = !availableProjectConfigs.Contains<string>(str) ? availableProjectConfigs.Last<string>() : str;
+            builder.AppendLine($"		{{{guid}}}.{str}|{srcSolutionPlatform}.ActiveCfg = {str2}|{dstProjectPlatform}");
+            builder.AppendLine($"		{{{guid}}}.{str}|{srcSolutionPlatform}.Build.0 = {str2}|{dstProjectPlatform}");
         }
         return builder.ToString();
     }
@@ -489,7 +489,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
         {
             return "ApplicationDefinition";
         }
-        if (MetroVisualStudioSolutionHelper.IsManifestFileName(file))
+        if (file.IsManifestFileName())
         {
             return "AppxManifest";
         }
@@ -521,7 +521,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
     {
         string fileName = Path.GetFileName(file);
         string extension = Path.GetExtension(fileName);
-        bool flag = (((string.Equals(extension, ".pfx", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".dll", StringComparison.InvariantCultureIgnoreCase)) || (string.Equals(extension, ".winmd", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".pdb", StringComparison.InvariantCultureIgnoreCase))) || (string.Equals(extension, ".mdb", StringComparison.InvariantCultureIgnoreCase) || string.Equals(fileName, "project.json", StringComparison.InvariantCultureIgnoreCase))) || MetroVisualStudioSolutionHelper.IsManifestFileName(file);
+        bool flag = (((string.Equals(extension, ".pfx", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".dll", StringComparison.InvariantCultureIgnoreCase)) || (string.Equals(extension, ".winmd", StringComparison.InvariantCultureIgnoreCase) || string.Equals(extension, ".pdb", StringComparison.InvariantCultureIgnoreCase))) || (string.Equals(extension, ".mdb", StringComparison.InvariantCultureIgnoreCase) || string.Equals(fileName, "project.json", StringComparison.InvariantCultureIgnoreCase))) || file.IsManifestFileName();
         if (!flag)
         {
             bool flag2 = EditorUserBuildSettings.wsaGenerateReferenceProjects && ((fileName == (Utility.AssemblyCSharpName + ".dll")) || (fileName == (Utility.AssemblyCSharpFirstPassName + ".dll")));
@@ -534,7 +534,8 @@ internal class MetroCSharpVisualStudioSolutionCreator
     {
         string contents = File.ReadAllText(fullPath);
         string oldValue = "appCallbacks.SetBridge(_bridge);";
-        contents = contents.Replace(oldValue, oldValue + string.Format("\r\n\t\t\t\tappCallbacks.ParseCommandLineArgsFromFiles(\"{0}\");", cmdLineArgsFile));
+        contents = contents.Replace(oldValue, oldValue + $"
+				appCallbacks.ParseCommandLineArgsFromFiles("{cmdLineArgsFile}");");
         File.WriteAllText(fullPath, contents, Encoding.UTF8);
     }
 
@@ -548,7 +549,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
                 continue;
             }
             string tagForFile = GetTagForFile(basePath, str);
-            builder.AppendLine(string.Format("    <{0} Include=\"{1}\">", tagForFile, str));
+            builder.AppendLine($"    <{tagForFile} Include="{str}">");
             if (tagForFile != null)
             {
                 if (tagForFile == "Page")
@@ -565,28 +566,28 @@ internal class MetroCSharpVisualStudioSolutionCreator
         Label_008E:
             if (str.IndexOf(".xaml.") != -1)
             {
-                builder.AppendLine(string.Format("      <DependentUpon>{0}</DependentUpon>", GetXamlFileFromCSFile(str)));
+                builder.AppendLine($"      <DependentUpon>{GetXamlFileFromCSFile(str)}</DependentUpon>");
             }
         Label_00C2:
-            builder.AppendLine(string.Format("    </{0}>", tagForFile));
+            builder.AppendLine($"    </{tagForFile}>");
         }
         foreach (Library library in libraryCollection)
         {
             if (library.Native && !library.WinMd)
             {
-                builder.AppendLine(string.Format("    <Content Include=\"{0}.dll\" />", library.Name));
+                builder.AppendLine($"    <Content Include="{library.Name}.dll" />");
                 builder.AppendLine(string.Format("    <Content Include=\"{0}.pdb\" Condition=\"Exists('{0}.pdb')\" />", library.Name));
             }
             else if (!generateReferenceProjects || (!string.Equals(library.Name, Utility.AssemblyCSharpName, StringComparison.InvariantCultureIgnoreCase) && !string.Equals(library.Name, Utility.AssemblyCSharpFirstPassName, StringComparison.InvariantCultureIgnoreCase)))
             {
-                builder.AppendLine(string.Format("    <Reference Include=\"{0}\">", library.Name));
+                builder.AppendLine($"    <Reference Include="{library.Name}">");
                 if (library.Native && library.WinMd)
                 {
-                    builder.AppendLine(string.Format(@"      <HintPath>.\{0}.{1}</HintPath>", library.Name, !library.WinMd ? "dll" : "winmd"));
+                    builder.AppendLine($"      <HintPath>.\{library.Name}.{!library.WinMd ? "dll" : "winmd"}</HintPath>");
                 }
                 else
                 {
-                    builder.AppendLine(string.Format(@"      <HintPath>.\Unprocessed\{0}.{1}</HintPath>", library.Name, !library.WinMd ? "dll" : "winmd"));
+                    builder.AppendLine($"      <HintPath>.\Unprocessed\{library.Name}.{!library.WinMd ? "dll" : "winmd"}</HintPath>");
                 }
                 builder.AppendLine("    </Reference>");
             }
@@ -601,7 +602,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
         {
             return false;
         }
-        return (Enumerable.Contains<string>(fileSystemEntries, Path.Combine(this.InstallPath, "Players")) || (Enumerable.Contains<string>(fileSystemEntries, Path.Combine(this.InstallPath, "Unity")) || (Enumerable.Contains<string>(fileSystemEntries, Path.Combine(this.InstallPath, this.Name)) || Enumerable.Contains<string>(fileSystemEntries, Path.Combine(this.InstallPath, this.Name + ".sln")))));
+        return (fileSystemEntries.Contains<string>(Path.Combine(this.InstallPath, "Players")) || (fileSystemEntries.Contains<string>(Path.Combine(this.InstallPath, "Unity")) || (fileSystemEntries.Contains<string>(Path.Combine(this.InstallPath, this.Name)) || fileSystemEntries.Contains<string>(Path.Combine(this.InstallPath, this.Name + ".sln")))));
     }
 
     private void WriteCSProj(string fileName, string pfxFile, string[] files, WSASDK wsaSDK, string unityPropsPath, LibraryCollection libraryCollection)
@@ -638,7 +639,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
         }
         if (!string.IsNullOrEmpty(sharedProjectItemsPath))
         {
-            builder2.AppendLine(string.Format("  <Import Project=\"{0}\" Label=\"Shared\" />", sharedProjectItemsPath));
+            builder2.AppendLine($"  <Import Project="{sharedProjectItemsPath}" Label="Shared" />");
             builder.AppendLine("<SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>");
         }
         string str7 = string.Empty;
@@ -756,7 +757,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
             string assemblyCSharpGuid = MetroAssemblyCSharpCreator.GetAssemblyCSharpGuid(pair.Key);
             source[pair.Key].AppendLine(string.Format("\t\t{{{0}}} = {{{0}}}", assemblyCSharpGuid));
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(pair.Value);
-            builder2.AppendLine(string.Format("Project(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"{0}\", \"{1}\", \"{{{2}}}\"", fileNameWithoutExtension, Path.GetFullPath(pair.Value), assemblyCSharpGuid));
+            builder2.AppendLine($"Project("{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}") = "{fileNameWithoutExtension}", "{Path.GetFullPath(pair.Value)}", "{{{assemblyCSharpGuid}}}"");
             builder2.AppendLine("EndProject");
             builder.Append(GenerateConfigMappings(assemblyCSharpGuid, "x86", "x86", MetroAssemblyCSharpCreator.availableConfigs));
             if (EditorUserBuildSettings.wsaSDK == WSASDK.UWP)
@@ -770,7 +771,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
             string assemblyCSharpFirstpassGuid = MetroAssemblyCSharpCreator.GetAssemblyCSharpFirstpassGuid(pair2.Key);
             source[pair2.Key].AppendLine(string.Format("\t\t{{{0}}} = {{{0}}}", assemblyCSharpFirstpassGuid));
             string introduced20 = Path.GetFileNameWithoutExtension(pair2.Value);
-            builder2.AppendLine(string.Format("Project(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"{0}\", \"{1}\", \"{{{2}}}\"", introduced20, Path.GetFullPath(pair2.Value), assemblyCSharpFirstpassGuid));
+            builder2.AppendLine($"Project("{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}") = "{introduced20}", "{Path.GetFullPath(pair2.Value)}", "{{{assemblyCSharpFirstpassGuid}}}"");
             builder2.AppendLine("EndProject");
             builder.Append(GenerateConfigMappings(assemblyCSharpFirstpassGuid, "x86", "x86", MetroAssemblyCSharpCreator.availableConfigs));
             builder.Append(GenerateConfigMappings(assemblyCSharpFirstpassGuid, "ARM", "ARM", MetroAssemblyCSharpCreator.availableConfigs));
@@ -781,20 +782,15 @@ internal class MetroCSharpVisualStudioSolutionCreator
         }
         else
         {
-            str6 = string.Format(str, new object[] { this.Name, Enumerable.First<KeyValuePair<WSASDK, StringBuilder>>(source).Value, builder2, builder });
+            str6 = string.Format(str, new object[] { this.Name, source.First<KeyValuePair<WSASDK, StringBuilder>>().Value, builder2, builder });
         }
         File.WriteAllText(solutionFileName, str6, Encoding.UTF8);
     }
 
     public string[] DontOverwriteFiles { get; set; }
 
-    public Dictionary<WSABuildType, bool> EnableDotNetNative
-    {
-        get
-        {
-            return this.enableDotNetNative;
-        }
-    }
+    public Dictionary<WSABuildType, bool> EnableDotNetNative =>
+        this.enableDotNetNative;
 
     private bool GenerateReferenceProjects { get; set; }
 
@@ -815,10 +811,8 @@ internal class MetroCSharpVisualStudioSolutionCreator
     {
         internal List<string> unprocessedPlugins;
 
-        internal bool <>m__0(string x)
-        {
-            return !this.unprocessedPlugins.Contains(Path.GetFileName(x));
-        }
+        internal bool <>m__0(string x) => 
+            !this.unprocessedPlugins.Contains(Path.GetFileName(x));
     }
 }
 

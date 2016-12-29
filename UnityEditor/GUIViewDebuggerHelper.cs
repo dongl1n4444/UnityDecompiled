@@ -17,13 +17,11 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void GetClipInstructionsInternal(object clipInstructions);
-        internal static GUIContent GetContentFromInstruction(int instructionIndex)
-        {
-            return new GUIContent { 
+        internal static GUIContent GetContentFromInstruction(int instructionIndex) => 
+            new GUIContent { 
                 text = GetContentTextFromInstruction(instructionIndex),
                 image = GetContentImageFromInstruction(instructionIndex)
             };
-        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Texture GetContentImageFromInstruction(int instructionIndex);

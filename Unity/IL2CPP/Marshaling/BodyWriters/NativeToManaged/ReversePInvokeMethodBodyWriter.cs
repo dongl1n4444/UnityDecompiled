@@ -53,7 +53,7 @@
                 {
                     <>f__am$cache6 = new Func<CustomAttributeArgument, object>(null, (IntPtr) <GetCallingConvention>m__7);
                 }
-                TypeReference reference = Enumerable.FirstOrDefault<object>(Enumerable.Select<CustomAttributeArgument, object>(Enumerable.Where<CustomAttributeArgument>(pInvokeCallbackAttribute.ConstructorArguments, <>f__am$cache5), <>f__am$cache6)) as TypeReference;
+                TypeReference reference = pInvokeCallbackAttribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__am$cache5).Select<CustomAttributeArgument, object>(<>f__am$cache6).FirstOrDefault<object>() as TypeReference;
                 if (reference == null)
                 {
                     return "DEFAULT_CALL";
@@ -67,7 +67,7 @@
                 {
                     <>f__am$cache7 = new Func<CustomAttribute, bool>(null, (IntPtr) <GetCallingConvention>m__8);
                 }
-                CustomAttribute attribute2 = Enumerable.FirstOrDefault<CustomAttribute>(definition.CustomAttributes, <>f__am$cache7);
+                CustomAttribute attribute2 = definition.CustomAttributes.FirstOrDefault<CustomAttribute>(<>f__am$cache7);
                 if ((attribute2 == null) || !attribute2.HasConstructorArguments)
                 {
                     return "DEFAULT_CALL";
@@ -105,13 +105,13 @@
             {
                 <>f__am$cache2 = new Func<CustomAttributeArgument, object>(null, (IntPtr) <GetInteropMethod>m__3);
             }
-            TypeReference reference2 = Enumerable.FirstOrDefault<object>(Enumerable.Select<CustomAttributeArgument, object>(Enumerable.Where<CustomAttributeArgument>(pInvokeCallbackAttribute.ConstructorArguments, <>f__am$cache1), <>f__am$cache2)) as TypeReference;
+            TypeReference reference2 = pInvokeCallbackAttribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__am$cache1).Select<CustomAttributeArgument, object>(<>f__am$cache2).FirstOrDefault<object>() as TypeReference;
             if (reference2 == null)
             {
                 return method;
             }
             TypeDefinition type = reference2.Resolve();
-            if ((type == null) || !Extensions.IsDelegate(type))
+            if ((type == null) || !type.IsDelegate())
             {
                 return method;
             }
@@ -119,7 +119,7 @@
             {
                 <>f__am$cache3 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetInteropMethod>m__4);
             }
-            MethodDefinition definition3 = Enumerable.SingleOrDefault<MethodDefinition>(type.Methods, <>f__am$cache3);
+            MethodDefinition definition3 = type.Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache3);
             if (definition3 == null)
             {
                 return method;
@@ -140,8 +140,8 @@
             {
                 <>f__am$cache0 = new Func<MarshaledType, string>(null, (IntPtr) <GetMethodSignature>m__1);
             }
-            string str4 = EnumerableExtensions.AggregateWithComma(Enumerable.Select<MarshaledType, string>(base._marshaledParameterTypes, <>f__am$cache0));
-            return string.Format("extern \"C\" {0} {1} {2}({3})", new object[] { decoratedName, callingConvention, str, str4 });
+            string str4 = base._marshaledParameterTypes.Select<MarshaledType, string>(<>f__am$cache0).AggregateWithComma();
+            return $"extern "C" {decoratedName} {callingConvention} {str}({str4})";
         }
 
         private static CustomAttribute GetPInvokeCallbackAttribute(MethodDefinition methodDef)
@@ -150,7 +150,7 @@
             {
                 <>f__am$cache4 = new Func<CustomAttribute, bool>(null, (IntPtr) <GetPInvokeCallbackAttribute>m__5);
             }
-            return Enumerable.FirstOrDefault<CustomAttribute>(methodDef.CustomAttributes, <>f__am$cache4);
+            return methodDef.CustomAttributes.FirstOrDefault<CustomAttribute>(<>f__am$cache4);
         }
 
         public static bool IsReversePInvokeWrapperNecessary(MethodReference method)

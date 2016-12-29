@@ -15,7 +15,7 @@
         [Inject]
         public static INamingService Naming;
 
-        public void Add(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs)
+        public void Add(TypeReference type, int attrs = 0)
         {
             type = Naming.RemoveModifiers(type);
             Il2CppTypeData key = new Il2CppTypeData(type, attrs);
@@ -50,18 +50,18 @@
             this._data.Clear();
         }
 
-        public int GetIndex(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs)
+        public int GetIndex(TypeReference type, int attrs = 0)
         {
             int num;
             Il2CppTypeData key = new Il2CppTypeData(Naming.RemoveModifiers(type), attrs);
             if (!this._data.TryGetValue(key, out num))
             {
-                throw new InvalidOperationException(string.Format("Il2CppTypeIndexFor type {0} does not exist.", type.FullName));
+                throw new InvalidOperationException($"Il2CppTypeIndexFor type {type.FullName} does not exist.");
             }
             return num;
         }
 
-        public int GetOrCreateIndex(TypeReference type, [Optional, DefaultParameterValue(0)] int attrs)
+        public int GetOrCreateIndex(TypeReference type, int attrs = 0)
         {
             int num;
             Il2CppTypeData key = new Il2CppTypeData(Naming.RemoveModifiers(type), attrs);
@@ -73,13 +73,8 @@
             return this._data[key];
         }
 
-        public IDictionary<Il2CppTypeData, int> Items
-        {
-            get
-            {
-                return this._data;
-            }
-        }
+        public IDictionary<Il2CppTypeData, int> Items =>
+            this._data;
     }
 }
 

@@ -74,7 +74,7 @@
                                         r.xMin += EditorGUI.indent;
                                         Rect removeButtonRect = GetRemoveButtonRect(r);
                                         r.xMax = removeButtonRect.x;
-                                        GUI.Label(r, string.Format("{0}: {1} ({2})", event2, buffer.name, EditorUtility.FormatBytes(buffer.sizeInBytes)), EditorStyles.miniLabel);
+                                        GUI.Label(r, $"{event2}: {buffer.name} ({EditorUtility.FormatBytes(buffer.sizeInBytes)})", EditorStyles.miniLabel);
                                         if (GUI.Button(removeButtonRect, Styles.iconRemove, Styles.invisibleButton))
                                         {
                                             target.RemoveCommandBuffer(event2, buffer);
@@ -224,10 +224,8 @@
             return new Rect(r.xMax - vector.x, r.y + ((int) ((r.height / 2f) - (vector.y / 2f))), vector.x, vector.y);
         }
 
-        private static bool IsDeferredRenderingPath(RenderingPath rp)
-        {
-            return ((rp == RenderingPath.DeferredLighting) || (rp == RenderingPath.DeferredShading));
-        }
+        private static bool IsDeferredRenderingPath(RenderingPath rp) => 
+            ((rp == RenderingPath.DeferredLighting) || (rp == RenderingPath.DeferredShading));
 
         private static bool IsViewPortRectValidToRender(Rect normalizedViewPortRect)
         {
@@ -529,13 +527,8 @@
             return ((BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget) == BuildTargetGroup.Standalone) || (displayNames != null));
         }
 
-        private Camera camera
-        {
-            get
-            {
-                return (base.target as Camera);
-            }
-        }
+        private Camera camera =>
+            (base.target as Camera);
 
         private Camera previewCamera
         {

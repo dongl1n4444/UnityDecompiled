@@ -19,20 +19,12 @@
         internal static int m_TotalNumRuntimeInitializeMethods;
 
         [RequiredByNativeCode]
-        private static RuntimeInitializeClassInfo[] GetRuntimeInitializeClassInfos()
-        {
-            if (m_RuntimeInitializeClassInfoList == null)
-            {
-                return null;
-            }
-            return m_RuntimeInitializeClassInfoList.ToArray();
-        }
+        private static RuntimeInitializeClassInfo[] GetRuntimeInitializeClassInfos() => 
+            m_RuntimeInitializeClassInfoList?.ToArray();
 
         [RequiredByNativeCode]
-        private static int GetTotalNumRuntimeInitializeMethods()
-        {
-            return m_TotalNumRuntimeInitializeMethods;
-        }
+        private static int GetTotalNumRuntimeInitializeMethods() => 
+            m_TotalNumRuntimeInitializeMethods;
 
         private static void ProcessEditorInitializeOnLoad(Type type)
         {
@@ -87,11 +79,7 @@
                     list.Add(i);
                 }
             }
-            if (list == null)
-            {
-                return null;
-            }
-            return list.ToArray();
+            return list?.ToArray();
         }
 
         private static void ProcessStaticMethodAttributes(Type type)
@@ -165,10 +153,8 @@
         internal static Assembly[] loadedAssemblies
         {
             [CompilerGenerated]
-            get
-            {
-                return <loadedAssemblies>k__BackingField;
-            }
+            get => 
+                <loadedAssemblies>k__BackingField;
             [CompilerGenerated]
             private set
             {
@@ -193,10 +179,8 @@
         {
             internal Type parent;
 
-            internal bool <>m__0(Type klass)
-            {
-                return klass.IsSubclassOf(this.parent);
-            }
+            internal bool <>m__0(Type klass) => 
+                klass.IsSubclassOf(this.parent);
         }
     }
 }

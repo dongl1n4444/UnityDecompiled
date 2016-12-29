@@ -6,41 +6,23 @@
 
     internal class TargetExtension : DefaultPlatformSupportModule
     {
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new LinuxDesktopStandalonePostProcessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new LinuxDesktopStandalonePostProcessor();
 
-        public override IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return new DesktopStandaloneBuildWindowExtension();
-        }
+        public override IBuildWindowExtension CreateBuildWindowExtension() => 
+            new DesktopStandaloneBuildWindowExtension();
 
-        public override IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return new DesktopPluginImporterExtension();
-        }
+        public override IPluginImporterExtension CreatePluginImporterExtension() => 
+            new DesktopPluginImporterExtension();
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return new DesktopStandalonePostProcessor.ScriptingImplementations();
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            new DesktopStandalonePostProcessor.ScriptingImplementations();
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "LinuxStandaloneEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "LinuxStandaloneEditorExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "LinuxStandalone";
-            }
-        }
+        public override string TargetName =>
+            "LinuxStandalone";
     }
 }
 

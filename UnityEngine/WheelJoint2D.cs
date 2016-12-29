@@ -13,10 +13,8 @@
         /// <para>Gets the motor torque of the joint given the specified timestep.</para>
         /// </summary>
         /// <param name="timeStep">The time to calculate the motor torque for.</param>
-        public float GetMotorTorque(float timeStep)
-        {
-            return INTERNAL_CALL_GetMotorTorque(this, timeStep);
-        }
+        public float GetMotorTorque(float timeStep) => 
+            INTERNAL_CALL_GetMotorTorque(this, timeStep);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float INTERNAL_CALL_GetMotorTorque(WheelJoint2D self, float timeStep);

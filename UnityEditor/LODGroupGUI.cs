@@ -24,10 +24,8 @@
         public const int kSliderBarTopMargin = 0x12;
         private static GUIStyles s_Styles;
 
-        public static Rect CalcLODButton(Rect totalRect, float percentage)
-        {
-            return new Rect((totalRect.x + Mathf.Round(totalRect.width * (1f - percentage))) - 5f, totalRect.y, 10f, totalRect.height);
-        }
+        public static Rect CalcLODButton(Rect totalRect, float percentage) => 
+            new Rect((totalRect.x + Mathf.Round(totalRect.width * (1f - percentage))) - 5f, totalRect.y, 10f, totalRect.height);
 
         private static Rect CalcLODRange(Rect totalRect, float startPercent, float endPercent)
         {
@@ -68,7 +66,8 @@
                 GUI.color = kCulledLODColor;
                 Styles.m_LODSliderRange.Draw(culledBox, GUIContent.none, false, false, false, false);
                 GUI.color = color;
-                string text = string.Format("Culled\n{0:0}%", previousLODPercentage * 100f);
+                string text = $"Culled
+{previousLODPercentage * 100f:0}%";
                 Styles.m_LODSliderText.Draw(culledBox, text, false, false, false, false);
             }
         }
@@ -81,7 +80,8 @@
         private static void DrawLODRange(LODInfo currentLOD, float previousLODPercentage, bool isSelected)
         {
             Color backgroundColor = GUI.backgroundColor;
-            string text = string.Format("{0}\n{1:0}%", currentLOD.LODName, previousLODPercentage * 100f);
+            string text = $"{currentLOD.LODName}
+{previousLODPercentage * 100f:0}%";
             if (isSelected)
             {
                 Rect rangePosition = currentLOD.m_RangePosition;
@@ -132,10 +132,8 @@
             GUI.Label(area, "---", style);
         }
 
-        public static float GetCameraPercent(Vector2 position, Rect sliderRect)
-        {
-            return LinearizeScreenPercentage(Mathf.Clamp((float) (1f - ((position.x - sliderRect.x) / sliderRect.width)), (float) 0.01f, (float) 1f));
-        }
+        public static float GetCameraPercent(Vector2 position, Rect sliderRect) => 
+            LinearizeScreenPercentage(Mathf.Clamp((float) (1f - ((position.x - sliderRect.x) / sliderRect.width)), (float) 0.01f, (float) 1f));
 
         public static Rect GetCulledBox(Rect totalRect, float previousLODPercentage)
         {
@@ -146,10 +144,8 @@
             return rect;
         }
 
-        public static float LinearizeScreenPercentage(float percentage)
-        {
-            return (percentage * percentage);
-        }
+        public static float LinearizeScreenPercentage(float percentage) => 
+            (percentage * percentage);
 
         public static void SetSelectedLODLevelPercentage(float newScreenPercentage, int lod, List<LODInfo> lods)
         {
@@ -192,15 +188,11 @@
             internal int lod;
             internal List<LODGroupGUI.LODInfo> lods;
 
-            internal bool <>m__0(LODGroupGUI.LODInfo x)
-            {
-                return (x.LODLevel == (this.lods[this.lod].LODLevel + 1));
-            }
+            internal bool <>m__0(LODGroupGUI.LODInfo x) => 
+                (x.LODLevel == (this.lods[this.lod].LODLevel + 1));
 
-            internal bool <>m__1(LODGroupGUI.LODInfo x)
-            {
-                return (x.LODLevel == (this.lods[this.lod].LODLevel - 1));
-            }
+            internal bool <>m__1(LODGroupGUI.LODInfo x) => 
+                (x.LODLevel == (this.lods[this.lod].LODLevel - 1));
         }
 
         public class GUIStyles
@@ -259,10 +251,8 @@
 
             public float ScreenPercent
             {
-                get
-                {
-                    return LODGroupGUI.DelinearizeScreenPercentage(this.RawScreenPercent);
-                }
+                get => 
+                    LODGroupGUI.DelinearizeScreenPercentage(this.RawScreenPercent);
                 set
                 {
                     this.RawScreenPercent = LODGroupGUI.LinearizeScreenPercentage(value);

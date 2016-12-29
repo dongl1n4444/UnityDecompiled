@@ -43,20 +43,14 @@
             this._propagateChanges = this.get_TypeSystemServices().Map(new __ProcessAssignmentToDuckMembers_Initialize$callable0$25_95__(UnityRuntimeServices.PropagateValueTypeChanges).Method);
         }
 
-        public bool IsFieldReference(Node node)
-        {
-            return (0x40 == TypeSystemServices.GetEntity(node).get_EntityType());
-        }
+        public bool IsFieldReference(Node node) => 
+            (0x40 == TypeSystemServices.GetEntity(node).get_EntityType());
 
-        public override bool IsReadOnlyMember(MemberReferenceExpression node)
-        {
-            return (!this.IsSpecialMemberTarget(node) ? base.IsReadOnlyMember(node) : false);
-        }
+        public override bool IsReadOnlyMember(MemberReferenceExpression node) => 
+            (!this.IsSpecialMemberTarget(node) ? base.IsReadOnlyMember(node) : false);
 
-        public override bool IsSpecialMemberTarget(Expression node)
-        {
-            return this.get_TypeSystemServices().IsQuackBuiltin(node);
-        }
+        public override bool IsSpecialMemberTarget(Expression node) => 
+            this.get_TypeSystemServices().IsQuackBuiltin(node);
 
         public override void PropagateChanges(MethodInvocationExpression eval, List chain)
         {

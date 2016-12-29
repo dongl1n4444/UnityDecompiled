@@ -4,13 +4,8 @@
 
     public class WindowsDesktopRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "WindowsDesktop";
-            }
-        }
+        public override string Name =>
+            "WindowsDesktop";
     }
 }
 

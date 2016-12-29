@@ -13,58 +13,26 @@
             this.m_DevelopmentBuild = developmentBuild;
         }
 
-        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder()
-        {
-            return new LinuxStandaloneIL2CppNativeCodeBuilder(this.target);
-        }
+        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder() => 
+            new LinuxStandaloneIL2CppNativeCodeBuilder(this.target);
 
-        public override bool developmentMode
-        {
-            get
-            {
-                return this.m_DevelopmentBuild;
-            }
-        }
+        public override bool developmentMode =>
+            this.m_DevelopmentBuild;
 
-        public override bool emitNullChecks
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool emitNullChecks =>
+            false;
 
-        public override bool enableStackTraces
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool enableStackTraces =>
+            false;
 
-        public override string[] includePaths
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public override string[] includePaths =>
+            new string[0];
 
-        public override string nativeLibraryFileName
-        {
-            get
-            {
-                return "libUserAssembly.so";
-            }
-        }
+        public override string nativeLibraryFileName =>
+            "libUserAssembly.so";
 
-        public bool platformHasPrecompiledLibIl2Cpp
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool platformHasPrecompiledLibIl2Cpp =>
+            false;
     }
 }
 

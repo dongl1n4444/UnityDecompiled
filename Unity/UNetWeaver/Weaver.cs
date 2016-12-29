@@ -1761,10 +1761,8 @@
         {
             internal string fullName;
 
-            internal bool <>m__0(ExportedType t)
-            {
-                return (t.FullName == this.fullName);
-            }
+            internal bool <>m__0(ExportedType t) => 
+                (t.FullName == this.fullName);
         }
     }
 }

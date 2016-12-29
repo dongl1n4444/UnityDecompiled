@@ -16,7 +16,7 @@
         static APIUpdaterRuntimeServices()
         {
             System.Type type = typeof(Component);
-            ComponentsFromUnityEngine = Enumerable.ToList<System.Type>(Enumerable.Where<System.Type>(type.Assembly.GetTypes(), new Func<System.Type, bool>(type, (IntPtr) type.IsAssignableFrom)));
+            ComponentsFromUnityEngine = Enumerable.Where<System.Type>(type.Assembly.GetTypes(), new Func<System.Type, bool>(type, (IntPtr) type.IsAssignableFrom)).ToList<System.Type>();
         }
 
         [Obsolete("AddComponent(string) has been deprecated. Use GameObject.AddComponent<T>() / GameObject.AddComponent(Type) instead.\nAPI Updater could not automatically update the original call to AddComponent(string name), because it was unable to resolve the type specified in parameter 'name'.\nInstead, this call has been replaced with a call to APIUpdaterRuntimeServices.AddComponent() so you can try to test your game in the editor.\nIn order to be able to build the game, replace this call (APIUpdaterRuntimeServices.AddComponent()) with a call to GameObject.AddComponent<T>() / GameObject.AddComponent(Type).")]
@@ -28,10 +28,8 @@
             return ((componentType != null) ? go.AddComponent(componentType) : null);
         }
 
-        private static bool IsMarkedAsObsolete(System.Type t)
-        {
-            return Enumerable.Any<object>(t.GetCustomAttributes(typeof(ObsoleteAttribute), false));
-        }
+        private static bool IsMarkedAsObsolete(System.Type t) => 
+            t.GetCustomAttributes(typeof(ObsoleteAttribute), false).Any<object>();
 
         private static System.Type ResolveType(string name, Assembly callingAssembly, string sourceInfo)
         {
@@ -73,15 +71,11 @@
         {
             internal string name;
 
-            internal bool <>m__0(System.Type t)
-            {
-                return (((t.Name == this.name) || (t.FullName == this.name)) && !APIUpdaterRuntimeServices.IsMarkedAsObsolete(t));
-            }
+            internal bool <>m__0(System.Type t) => 
+                (((t.Name == this.name) || (t.FullName == this.name)) && !APIUpdaterRuntimeServices.IsMarkedAsObsolete(t));
 
-            internal bool <>m__1(System.Type t)
-            {
-                return ((t.Name == this.name) && typeof(Component).IsAssignableFrom(t));
-            }
+            internal bool <>m__1(System.Type t) => 
+                ((t.Name == this.name) && typeof(Component).IsAssignableFrom(t));
         }
     }
 }

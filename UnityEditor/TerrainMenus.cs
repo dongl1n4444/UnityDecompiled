@@ -17,7 +17,7 @@
             asset.SetDetailResolution(0x400, asset.detailResolutionPerPatch);
             AssetDatabase.CreateAsset(asset, AssetDatabase.GenerateUniqueAssetPath("Assets/New Terrain.asset"));
             GameObject context = menuCommand.context as GameObject;
-            string uniqueNameForSibling = GameObjectUtility.GetUniqueNameForSibling((context == null) ? null : context.transform, "Terrain");
+            string uniqueNameForSibling = GameObjectUtility.GetUniqueNameForSibling(context?.transform, "Terrain");
             GameObject child = Terrain.CreateTerrainGameObject(asset);
             child.name = uniqueNameForSibling;
             GameObjectUtility.SetParentAndAlign(child, context);

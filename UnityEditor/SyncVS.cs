@@ -78,7 +78,7 @@
                 {
                     return false;
                 }
-                RegistryKey key2 = key.OpenSubKey(string.Format(@"11.{0}\RuntimeDebug", num));
+                RegistryKey key2 = key.OpenSubKey($"11.{num}\RuntimeDebug");
                 if (key2 == null)
                 {
                     return false;
@@ -121,7 +121,7 @@
         private static string DeriveProgramFilesSentinel()
         {
             char[] separator = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
-            string str = Enumerable.LastOrDefault<string>(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Split(separator));
+            string str = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Split(separator).LastOrDefault<string>();
             if (!string.IsNullOrEmpty(str))
             {
                 int startIndex = str.LastIndexOf("(x86)");
@@ -171,7 +171,7 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<VisualStudioVersion, string>, string>(null, (IntPtr) <FindBestVisualStudio>m__1);
             }
-            return Enumerable.FirstOrDefault<string>(Enumerable.Select<KeyValuePair<VisualStudioVersion, string>, string>(Enumerable.OrderByDescending<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(InstalledVisualStudios, <>f__am$cache0), <>f__am$cache1));
+            return Enumerable.Select<KeyValuePair<VisualStudioVersion, string>, string>(Enumerable.OrderByDescending<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(InstalledVisualStudios, <>f__am$cache0), <>f__am$cache1).FirstOrDefault<string>();
         }
 
         private static IDictionary<VisualStudioVersion, string> GetInstalledVisualStudios()
@@ -187,7 +187,7 @@
                         VisualStudioVersion current = (VisualStudioVersion) enumerator.Current;
                         try
                         {
-                            string environmentVariable = Environment.GetEnvironmentVariable(string.Format("VS{0}0COMNTOOLS", (int) current));
+                            string environmentVariable = Environment.GetEnvironmentVariable($"VS{(int) current}0COMNTOOLS");
                             if (!string.IsNullOrEmpty(environmentVariable))
                             {
                                 string[] components = new string[] { environmentVariable, "..", "IDE", "devenv.exe" };
@@ -198,10 +198,10 @@
                                     continue;
                                 }
                             }
-                            environmentVariable = GetRegistryValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{0}.0", (int) current), "InstallDir");
+                            environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{(int) current}.0", "InstallDir");
                             if (string.IsNullOrEmpty(environmentVariable))
                             {
-                                environmentVariable = GetRegistryValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\{0}.0", (int) current), "InstallDir");
+                                environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\{(int) current}.0", "InstallDir");
                             }
                             if (!string.IsNullOrEmpty(environmentVariable))
                             {
@@ -213,7 +213,7 @@
                                     continue;
                                 }
                             }
-                            environmentVariable = GetRegistryValue(string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{0}.0\Debugger", (int) current), "FEQARuntimeImplDll");
+                            environmentVariable = GetRegistryValue($"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\{(int) current}.0\Debugger", "FEQARuntimeImplDll");
                             if (!string.IsNullOrEmpty(environmentVariable))
                             {
                                 string str4 = DeriveVisualStudioPath(environmentVariable);
@@ -284,13 +284,11 @@
 
         public static void PostprocessSyncProject(string[] importedAssets, string[] addedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
-            Synchronizer.SyncIfNeeded(Enumerable.Union<string>(addedAssets, Enumerable.Union<string>(deletedAssets, Enumerable.Union<string>(movedAssets, movedFromAssetPaths))));
+            Synchronizer.SyncIfNeeded(addedAssets.Union<string>(deletedAssets.Union<string>(movedAssets.Union<string>(movedFromAssetPaths))));
         }
 
-        public static bool ProjectExists()
-        {
-            return Synchronizer.SolutionExists();
-        }
+        public static bool ProjectExists() => 
+            Synchronizer.SolutionExists();
 
         private static void SetVisualStudioAsEditorIfNoEditorWasSet()
         {
@@ -335,10 +333,8 @@
         internal static Dictionary<VisualStudioVersion, string> InstalledVisualStudios
         {
             [CompilerGenerated]
-            get
-            {
-                return <InstalledVisualStudios>k__BackingField;
-            }
+            get => 
+                <InstalledVisualStudios>k__BackingField;
             [CompilerGenerated]
             private set
             {
@@ -348,68 +344,32 @@
 
         private class SolutionSynchronizationSettings : DefaultSolutionSynchronizationSettings
         {
-            protected override string FrameworksPath()
-            {
-                return EditorApplication.applicationContentsPath;
-            }
+            protected override string FrameworksPath() => 
+                EditorApplication.applicationContentsPath;
 
-            public override string GetProjectFooterTemplate(ScriptingLanguage language)
-            {
-                return EditorPrefs.GetString("VSProjectFooter", base.GetProjectFooterTemplate(language));
-            }
+            public override string GetProjectFooterTemplate(ScriptingLanguage language) => 
+                EditorPrefs.GetString("VSProjectFooter", base.GetProjectFooterTemplate(language));
 
-            public override string GetProjectHeaderTemplate(ScriptingLanguage language)
-            {
-                return EditorPrefs.GetString("VSProjectHeader", base.GetProjectHeaderTemplate(language));
-            }
+            public override string GetProjectHeaderTemplate(ScriptingLanguage language) => 
+                EditorPrefs.GetString("VSProjectHeader", base.GetProjectHeaderTemplate(language));
 
-            public override string[] Defines
-            {
-                get
-                {
-                    return EditorUserBuildSettings.activeScriptCompilationDefines;
-                }
-            }
+            public override string[] Defines =>
+                EditorUserBuildSettings.activeScriptCompilationDefines;
 
-            public override string EditorAssemblyPath
-            {
-                get
-                {
-                    return InternalEditorUtility.GetEditorAssemblyPath();
-                }
-            }
+            public override string EditorAssemblyPath =>
+                InternalEditorUtility.GetEditorAssemblyPath();
 
-            public override string EngineAssemblyPath
-            {
-                get
-                {
-                    return InternalEditorUtility.GetEngineAssemblyPath();
-                }
-            }
+            public override string EngineAssemblyPath =>
+                InternalEditorUtility.GetEngineAssemblyPath();
 
-            internal static bool IsOSX
-            {
-                get
-                {
-                    return (Environment.OSVersion.Platform == PlatformID.Unix);
-                }
-            }
+            internal static bool IsOSX =>
+                (Environment.OSVersion.Platform == PlatformID.Unix);
 
-            internal static bool IsWindows
-            {
-                get
-                {
-                    return ((!IsOSX && (Path.DirectorySeparatorChar == '\\')) && (Environment.NewLine == "\r\n"));
-                }
-            }
+            internal static bool IsWindows =>
+                ((!IsOSX && (Path.DirectorySeparatorChar == '\\')) && (Environment.NewLine == "\r\n"));
 
-            public override string SolutionTemplate
-            {
-                get
-                {
-                    return EditorPrefs.GetString("VSSolutionText", base.SolutionTemplate);
-                }
-            }
+            public override string SolutionTemplate =>
+                EditorPrefs.GetString("VSSolutionText", base.SolutionTemplate);
 
             public override int VisualStudioVersion
             {

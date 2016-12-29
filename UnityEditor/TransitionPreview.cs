@@ -294,10 +294,8 @@
             return num;
         }
 
-        public bool HasPreviewGUI()
-        {
-            return true;
-        }
+        public bool HasPreviewGUI() => 
+            true;
 
         private void Init(Animator scenePreviewObject, Motion motion)
         {
@@ -319,10 +317,8 @@
             }
         }
 
-        private bool MustResample(TransitionInfo info)
-        {
-            return (this.mustResample || !info.IsEqual(this.m_RefTransitionInfo));
-        }
+        private bool MustResample(TransitionInfo info) => 
+            (this.mustResample || !info.IsEqual(this.m_RefTransitionInfo));
 
         public void OnDestroy()
         {
@@ -584,10 +580,8 @@
 
         public bool mustResample
         {
-            get
-            {
-                return this.m_MustResample;
-            }
+            get => 
+                this.m_MustResample;
             set
             {
                 this.m_MustResample = value;
@@ -622,10 +616,8 @@
                 this.m_ExitTime = 0.5f;
             }
 
-            public bool IsEqual(TransitionPreview.TransitionInfo info)
-            {
-                return ((((this.m_SrcState == info.m_SrcState) && (this.m_DstState == info.m_DstState)) && (Mathf.Approximately(this.m_TransitionDuration, info.m_TransitionDuration) && Mathf.Approximately(this.m_TransitionOffset, info.m_TransitionOffset))) && Mathf.Approximately(this.m_ExitTime, info.m_ExitTime));
-            }
+            public bool IsEqual(TransitionPreview.TransitionInfo info) => 
+                ((((this.m_SrcState == info.m_SrcState) && (this.m_DstState == info.m_DstState)) && (Mathf.Approximately(this.m_TransitionDuration, info.m_TransitionDuration) && Mathf.Approximately(this.m_TransitionOffset, info.m_TransitionOffset))) && Mathf.Approximately(this.m_ExitTime, info.m_ExitTime));
 
             public void Set(AnimatorStateTransition transition, AnimatorState srcState, AnimatorState dstState)
             {

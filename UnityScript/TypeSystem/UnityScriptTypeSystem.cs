@@ -22,10 +22,8 @@
             this._AbstractGenerator = this.Map(typeof(AbstractGenerator));
         }
 
-        public override bool CanBeReachedByPromotion(IType expected, IType actual)
-        {
-            return (!base.CanBeReachedByPromotion(expected, actual) ? (!expected.get_IsEnum() ? (actual.get_IsEnum() && this.IsIntegerNumber(expected)) : this.IsIntegerNumber(actual)) : true);
-        }
+        public override bool CanBeReachedByPromotion(IType expected, IType actual) => 
+            (!base.CanBeReachedByPromotion(expected, actual) ? (!expected.get_IsEnum() ? (actual.get_IsEnum() && this.IsIntegerNumber(expected)) : this.IsIntegerNumber(actual)) : true);
 
         public bool IsGenerator(IMethod method)
         {
@@ -33,10 +31,8 @@
             return ((type != base.IEnumeratorType) ? type.IsSubclassOf(this._AbstractGenerator) : true);
         }
 
-        public bool IsScriptType(IType type)
-        {
-            return type.IsSubclassOf(this._ScriptBaseType);
-        }
+        public bool IsScriptType(IType type) => 
+            type.IsSubclassOf(this._ScriptBaseType);
 
         public override void PrepareBuiltinFunctions()
         {
@@ -69,21 +65,11 @@
             this.AddPrimitiveType("Array", this.Map(typeof(Array)));
         }
 
-        public IType ScriptBaseType
-        {
-            get
-            {
-                return this._ScriptBaseType;
-            }
-        }
+        public IType ScriptBaseType =>
+            this._ScriptBaseType;
 
-        public UnityScriptCompilerParameters UnityScriptParameters
-        {
-            get
-            {
-                return (UnityScriptCompilerParameters) this.get_Context().get_Parameters();
-            }
-        }
+        public UnityScriptCompilerParameters UnityScriptParameters =>
+            ((UnityScriptCompilerParameters) this.get_Context().get_Parameters());
     }
 }
 

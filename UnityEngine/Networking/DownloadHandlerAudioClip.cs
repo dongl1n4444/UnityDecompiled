@@ -27,10 +27,8 @@
         /// <returns>
         /// <para>A copy of the downloaded data.</para>
         /// </returns>
-        protected override byte[] GetData()
-        {
-            return this.InternalGetData();
-        }
+        protected override byte[] GetData() => 
+            this.InternalGetData();
 
         protected override string GetText()
         {
@@ -50,10 +48,8 @@
         /// <returns>
         /// <para>The same as DownloadHandlerAudioClip.audioClip</para>
         /// </returns>
-        public static AudioClip GetContent(UnityWebRequest www)
-        {
-            return DownloadHandler.GetCheckedDownloader<DownloadHandlerAudioClip>(www).audioClip;
-        }
+        public static AudioClip GetContent(UnityWebRequest www) => 
+            DownloadHandler.GetCheckedDownloader<DownloadHandlerAudioClip>(www).audioClip;
     }
 }
 

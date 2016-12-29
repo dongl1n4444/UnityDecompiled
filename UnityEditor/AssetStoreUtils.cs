@@ -20,22 +20,16 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void Download(string id, string url, string[] destination, string key, string jsonData, bool resumeOK, [DefaultValue("null")] DownloadDoneCallback doneCallback);
-        public static string GetAssetStoreSearchUrl()
-        {
-            return GetAssetStoreUrl().Replace("https", "http");
-        }
+        public static string GetAssetStoreSearchUrl() => 
+            GetAssetStoreUrl().Replace("https", "http");
 
-        public static string GetAssetStoreUrl()
-        {
-            return "https://shawarma.unity3d.com";
-        }
+        public static string GetAssetStoreUrl() => 
+            "https://shawarma.unity3d.com";
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLoaderPath();
-        public static string GetOfflinePath()
-        {
-            return Uri.EscapeUriString(EditorApplication.applicationContentsPath + "/Resources/offline.html");
-        }
+        public static string GetOfflinePath() => 
+            Uri.EscapeUriString(EditorApplication.applicationContentsPath + "/Resources/offline.html");
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void RegisterDownloadDelegate(ScriptableObject d);

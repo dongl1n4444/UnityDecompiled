@@ -56,7 +56,7 @@
             foreach (AssetBrandAssetItem item in this.m_Items)
             {
                 JsonElementDict dict = array.AddDict();
-                dict.SetString("size", string.Format("{0}x{1}", item.width, item.height));
+                dict.SetString("size", $"{item.width}x{item.height}");
                 dict.SetString("idiom", item.idiom);
                 dict.SetString("role", item.role);
                 dict.SetString("filename", Path.GetFileName(item.item.path));

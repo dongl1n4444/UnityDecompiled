@@ -425,10 +425,8 @@
             return num;
         }
 
-        private int GetTabAtMousePos(Vector2 mousePos, Rect position)
-        {
-            return (int) Mathf.Min((float) ((mousePos.x - position.xMin) / this.GetTabWidth(position.width)), (float) 100f);
-        }
+        private int GetTabAtMousePos(Vector2 mousePos, Rect position) => 
+            ((int) Mathf.Min((float) ((mousePos.x - position.xMin) / this.GetTabWidth(position.width)), (float) 100f));
 
         private float GetTabWidth(float width)
         {
@@ -712,10 +710,8 @@
 
         public int selected
         {
-            get
-            {
-                return this.m_Selected;
-            }
+            get => 
+                this.m_Selected;
             set
             {
                 if (this.m_Selected != value)
@@ -730,13 +726,8 @@
             }
         }
 
-        private Rect tabRect
-        {
-            get
-            {
-                return new Rect(0f, 0f, base.position.width, 17f);
-            }
-        }
+        private Rect tabRect =>
+            new Rect(0f, 0f, base.position.width, 17f);
     }
 }
 

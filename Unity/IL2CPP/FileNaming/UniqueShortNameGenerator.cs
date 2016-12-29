@@ -22,7 +22,7 @@
                 nonUniqueShortName = nonUniqueShortName.Substring(0, 60 - str.Length);
             }
             string str2 = nonUniqueShortName;
-            str2 = string.Format("{0}{1}", str2, str);
+            str2 = $"{str2}{str}";
             if (this._shortNameToType.TryGetValue(str2, out reference) && !Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(reference, type, TypeComparisonMode.Exact))
             {
                 str2 = this.MakeUniqueWithSuffix(nonUniqueShortName);
@@ -50,7 +50,7 @@
                 num = 0;
             }
             this._nextShortNameSuffix[nonUniqueShortName] = num + 1;
-            return string.Format("{0}_{1}", nonUniqueShortName, num);
+            return $"{nonUniqueShortName}_{num}";
         }
     }
 }

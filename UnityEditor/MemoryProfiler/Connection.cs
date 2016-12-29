@@ -19,10 +19,8 @@
         /// </summary>
         public int from
         {
-            get
-            {
-                return this.m_From;
-            }
+            get => 
+                this.m_From;
             set
             {
                 this.m_From = value;
@@ -33,10 +31,8 @@
         /// </summary>
         public int to
         {
-            get
-            {
-                return this.m_To;
-            }
+            get => 
+                this.m_To;
             set
             {
                 this.m_To = value;

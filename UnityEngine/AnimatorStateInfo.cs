@@ -32,103 +32,56 @@
         /// <summary>
         /// <para>The full path hash for this state.</para>
         /// </summary>
-        public int fullPathHash
-        {
-            get
-            {
-                return this.m_FullPath;
-            }
-        }
+        public int fullPathHash =>
+            this.m_FullPath;
         /// <summary>
         /// <para>The hashed name of the State.</para>
         /// </summary>
         [Obsolete("Use AnimatorStateInfo.fullPathHash instead.")]
-        public int nameHash
-        {
-            get
-            {
-                return this.m_Path;
-            }
-        }
+        public int nameHash =>
+            this.m_Path;
         /// <summary>
         /// <para>The hash is generated using Animator::StringToHash. The string to pass doest not include the parent layer's name.</para>
         /// </summary>
-        public int shortNameHash
-        {
-            get
-            {
-                return this.m_Name;
-            }
-        }
+        public int shortNameHash =>
+            this.m_Name;
         /// <summary>
         /// <para>Normalized time of the State.</para>
         /// </summary>
-        public float normalizedTime
-        {
-            get
-            {
-                return this.m_NormalizedTime;
-            }
-        }
+        public float normalizedTime =>
+            this.m_NormalizedTime;
         /// <summary>
         /// <para>Current duration of the state.</para>
         /// </summary>
-        public float length
-        {
-            get
-            {
-                return this.m_Length;
-            }
-        }
+        public float length =>
+            this.m_Length;
         /// <summary>
         /// <para>The playback speed of the animation. 1 is the normal playback speed.</para>
         /// </summary>
-        public float speed
-        {
-            get
-            {
-                return this.m_Speed;
-            }
-        }
+        public float speed =>
+            this.m_Speed;
         /// <summary>
         /// <para>The speed multiplier for this state.</para>
         /// </summary>
-        public float speedMultiplier
-        {
-            get
-            {
-                return this.m_SpeedMultiplier;
-            }
-        }
+        public float speedMultiplier =>
+            this.m_SpeedMultiplier;
         /// <summary>
         /// <para>The Tag of the State.</para>
         /// </summary>
-        public int tagHash
-        {
-            get
-            {
-                return this.m_Tag;
-            }
-        }
+        public int tagHash =>
+            this.m_Tag;
         /// <summary>
         /// <para>Does tag match the tag of the active state in the statemachine.</para>
         /// </summary>
         /// <param name="tag"></param>
-        public bool IsTag(string tag)
-        {
-            return (Animator.StringToHash(tag) == this.m_Tag);
-        }
+        public bool IsTag(string tag) => 
+            (Animator.StringToHash(tag) == this.m_Tag);
 
         /// <summary>
         /// <para>Is the state looping.</para>
         /// </summary>
-        public bool loop
-        {
-            get
-            {
-                return (this.m_Loop != 0);
-            }
-        }
+        public bool loop =>
+            (this.m_Loop != 0);
     }
 }
 

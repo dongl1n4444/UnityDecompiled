@@ -234,10 +234,8 @@
         /// <returns>
         /// <para>True if able to listen.</para>
         /// </returns>
-        public bool Listen(int serverListenPort)
-        {
-            return this.Listen(serverListenPort, this.m_HostTopology);
-        }
+        public bool Listen(int serverListenPort) => 
+            this.Listen(serverListenPort, this.m_HostTopology);
 
         /// <summary>
         /// <para>This starts the server listening for connections on the specified port.</para>
@@ -574,45 +572,28 @@
         /// <summary>
         /// <para>A read-only list of the current connections being managed.</para>
         /// </summary>
-        public ReadOnlyCollection<NetworkConnection> connections
-        {
-            get
-            {
-                return this.m_ConnectionsReadOnly;
-            }
-        }
+        public ReadOnlyCollection<NetworkConnection> connections =>
+            this.m_ConnectionsReadOnly;
 
         /// <summary>
         /// <para>The message handler functions that are registered.</para>
         /// </summary>
-        public Dictionary<short, NetworkMessageDelegate> handlers
-        {
-            get
-            {
-                return this.m_MessageHandlers.GetHandlers();
-            }
-        }
+        public Dictionary<short, NetworkMessageDelegate> handlers =>
+            this.m_MessageHandlers.GetHandlers();
 
         /// <summary>
         /// <para>The transport layer host-topology that the server is configured with.</para>
         /// </summary>
-        public HostTopology hostTopology
-        {
-            get
-            {
-                return this.m_HostTopology;
-            }
-        }
+        public HostTopology hostTopology =>
+            this.m_HostTopology;
 
         /// <summary>
         /// <para>The network port that the server is listening on.</para>
         /// </summary>
         public int listenPort
         {
-            get
-            {
-                return this.m_ListenPort;
-            }
+            get => 
+                this.m_ListenPort;
             set
             {
                 this.m_ListenPort = value;
@@ -622,45 +603,28 @@
         /// <summary>
         /// <para>The internal buffer that the server reads data from the network into. This will contain the most recent data read from the network when OnData() is called.</para>
         /// </summary>
-        public byte[] messageBuffer
-        {
-            get
-            {
-                return this.m_MsgBuffer;
-            }
-        }
+        public byte[] messageBuffer =>
+            this.m_MsgBuffer;
 
         /// <summary>
         /// <para>A NetworkReader object that is bound to the server's messageBuffer.</para>
         /// </summary>
-        public NetworkReader messageReader
-        {
-            get
-            {
-                return this.m_MsgReader;
-            }
-        }
+        public NetworkReader messageReader =>
+            this.m_MsgReader;
 
         /// <summary>
         /// <para>The type of class to be created for new network connections from clients.</para>
         /// </summary>
-        public System.Type networkConnectionClass
-        {
-            get
-            {
-                return this.m_NetworkConnectionClass;
-            }
-        }
+        public System.Type networkConnectionClass =>
+            this.m_NetworkConnectionClass;
 
         /// <summary>
         /// <para>The transport layer hostId of the server.</para>
         /// </summary>
         public int serverHostId
         {
-            get
-            {
-                return this.m_ServerHostId;
-            }
+            get => 
+                this.m_ServerHostId;
             set
             {
                 this.m_ServerHostId = value;
@@ -672,10 +636,8 @@
         /// </summary>
         public bool useWebSockets
         {
-            get
-            {
-                return this.m_UseWebSockets;
-            }
+            get => 
+                this.m_UseWebSockets;
             set
             {
                 this.m_UseWebSockets = value;

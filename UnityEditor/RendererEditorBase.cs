@@ -84,12 +84,12 @@
                 {
                     <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <m_ReflectionProbeUsageNames>m__0);
                 }
-                this.m_ReflectionProbeUsageNames = Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache0));
+                this.m_ReflectionProbeUsageNames = Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache0).ToArray<string>();
                 if (<>f__am$cache1 == null)
                 {
                     <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <m_LightProbeUsageNames>m__1);
                 }
-                this.m_LightProbeUsageNames = Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache1));
+                this.m_LightProbeUsageNames = Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache1).ToArray<string>();
                 if (<>f__am$cache2 == null)
                 {
                     <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <m_ReflectionProbeUsageOptions>m__2);
@@ -98,7 +98,7 @@
                 {
                     <>f__am$cache3 = new Func<string, GUIContent>(null, (IntPtr) <m_ReflectionProbeUsageOptions>m__3);
                 }
-                this.m_ReflectionProbeUsageOptions = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache2)), <>f__am$cache3));
+                this.m_ReflectionProbeUsageOptions = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache2).ToArray<string>(), <>f__am$cache3).ToArray<GUIContent>();
                 if (<>f__am$cache4 == null)
                 {
                     <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <m_LightProbeBlendModeOptions>m__4);
@@ -107,55 +107,41 @@
                 {
                     <>f__am$cache5 = new Func<string, GUIContent>(null, (IntPtr) <m_LightProbeBlendModeOptions>m__5);
                 }
-                this.m_LightProbeBlendModeOptions = Enumerable.ToArray<GUIContent>(Enumerable.Select<string, GUIContent>(Enumerable.ToArray<string>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache4)), <>f__am$cache5));
+                this.m_LightProbeBlendModeOptions = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache4).ToArray<string>(), <>f__am$cache5).ToArray<GUIContent>();
                 this.m_BlendInfo = new List<ReflectionProbeBlendInfo>();
             }
 
             [CompilerGenerated]
-            private static string <m_LightProbeBlendModeOptions>m__4(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <m_LightProbeBlendModeOptions>m__4(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static GUIContent <m_LightProbeBlendModeOptions>m__5(string x)
-            {
-                return new GUIContent(x);
-            }
+            private static GUIContent <m_LightProbeBlendModeOptions>m__5(string x) => 
+                new GUIContent(x);
 
             [CompilerGenerated]
-            private static string <m_LightProbeUsageNames>m__1(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <m_LightProbeUsageNames>m__1(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static string <m_ReflectionProbeUsageNames>m__0(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <m_ReflectionProbeUsageNames>m__0(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static string <m_ReflectionProbeUsageOptions>m__2(string x)
-            {
-                return ObjectNames.NicifyVariableName(x);
-            }
+            private static string <m_ReflectionProbeUsageOptions>m__2(string x) => 
+                ObjectNames.NicifyVariableName(x);
 
             [CompilerGenerated]
-            private static GUIContent <m_ReflectionProbeUsageOptions>m__3(string x)
-            {
-                return new GUIContent(x);
-            }
+            private static GUIContent <m_ReflectionProbeUsageOptions>m__3(string x) => 
+                new GUIContent(x);
 
-            internal static string[] GetFieldsStringArray()
-            {
-                return new string[] { "m_LightProbeUsage", "m_LightProbeVolumeOverride", "m_ReflectionProbeUsage", "m_ProbeAnchor" };
-            }
+            internal static string[] GetFieldsStringArray() => 
+                new string[] { "m_LightProbeUsage", "m_LightProbeVolumeOverride", "m_ReflectionProbeUsage", "m_ProbeAnchor" };
 
             internal bool HasValidLightProbeProxyVolumeOverride(Renderer renderer, int selectionCount)
             {
-                LightProbeProxyVolume volume = (renderer.lightProbeProxyVolumeOverride == null) ? null : renderer.lightProbeProxyVolumeOverride.GetComponent<LightProbeProxyVolume>();
-                return (this.IsUsingLightProbeProxyVolume(selectionCount) && ((volume == null) || (volume.boundingBoxMode != LightProbeProxyVolume.BoundingBoxMode.AutomaticLocal)));
+                LightProbeProxyVolume component = renderer.lightProbeProxyVolumeOverride?.GetComponent<LightProbeProxyVolume>();
+                return (this.IsUsingLightProbeProxyVolume(selectionCount) && ((component == null) || (component.boundingBoxMode != LightProbeProxyVolume.BoundingBoxMode.AutomaticLocal)));
             }
 
             internal void Initialize(SerializedObject serializedObject)
@@ -167,10 +153,8 @@
                 this.m_ReceiveShadows = serializedObject.FindProperty("m_ReceiveShadows");
             }
 
-            internal bool IsUsingLightProbeProxyVolume(int selectionCount)
-            {
-                return (((selectionCount == 1) && (this.m_LightProbeUsage.intValue == 2)) || (((selectionCount > 1) && !this.m_LightProbeUsage.hasMultipleDifferentValues) && (this.m_LightProbeUsage.intValue == 2)));
-            }
+            internal bool IsUsingLightProbeProxyVolume(int selectionCount) => 
+                (((selectionCount == 1) && (this.m_LightProbeUsage.intValue == 2)) || (((selectionCount > 1) && !this.m_LightProbeUsage.hasMultipleDifferentValues) && (this.m_LightProbeUsage.intValue == 2)));
 
             internal void OnGUI(Object[] selection, Renderer renderer, bool useMiniStyle)
             {

@@ -43,27 +43,17 @@
 
         public NPath AndroidNdkRootDir { get; private set; }
 
-        public IEnumerable<string> ArchitectureCompilerFlags
-        {
-            get
-            {
-                return new <>c__Iterator1 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public IEnumerable<string> ArchitectureCompilerFlags =>
+            new <>c__Iterator1 { 
+                $this=this,
+                $PC=-2
+            };
 
-        public IEnumerable<string> ArchitectureLinkerFlags
-        {
-            get
-            {
-                return new <>c__Iterator2 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public IEnumerable<string> ArchitectureLinkerFlags =>
+            new <>c__Iterator2 { 
+                $this=this,
+                $PC=-2
+            };
 
         public NPath CCompilerPath
         {
@@ -92,16 +82,11 @@
             }
         }
 
-        public IEnumerable<NPath> GnuStlIncludePaths
-        {
-            get
-            {
-                return new <>c__Iterator0 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public IEnumerable<NPath> GnuStlIncludePaths =>
+            new <>c__Iterator0 { 
+                $this=this,
+                $PC=-2
+            };
 
         public NPath GnuStlLibrary
         {
@@ -137,13 +122,8 @@
             }
         }
 
-        public NPath LinkerPath
-        {
-            get
-            {
-                return this.CppCompilerPath;
-            }
-        }
+        public NPath LinkerPath =>
+            this.CppCompilerPath;
 
         public NPath ObjCopyPath
         {
@@ -154,13 +134,8 @@
             }
         }
 
-        public string Platform
-        {
-            get
-            {
-                return this._architectureSettings.Platform;
-            }
-        }
+        public string Platform =>
+            this._architectureSettings.Platform;
 
         public NPath SysRoot
         {
@@ -248,28 +223,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -369,28 +330,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -490,28 +437,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

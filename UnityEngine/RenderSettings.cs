@@ -120,10 +120,8 @@
         [Obsolete("Use RenderSettings.ambientIntensity instead (UnityUpgradable) -> ambientIntensity", false)]
         public static float ambientSkyboxAmount
         {
-            get
-            {
-                return ambientIntensity;
-            }
+            get => 
+                ambientIntensity;
             set
             {
                 ambientIntensity = value;

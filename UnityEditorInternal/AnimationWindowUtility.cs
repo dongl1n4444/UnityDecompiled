@@ -232,7 +232,7 @@
 
         internal static AnimationClip CreateNewClip(string gameObjectName)
         {
-            string message = string.Format("Create a new animation for the game object '{0}':", gameObjectName);
+            string message = $"Create a new animation for the game object '{gameObjectName}':";
             string activeFolderPath = ProjectWindowUtil.GetActiveFolderPath();
             if (s_LastPathUsedForNewClip != null)
             {
@@ -711,19 +711,15 @@
             return propertyName;
         }
 
-        public static int GetPropertyNodeID(int setId, string path, Type type, string propertyName)
-        {
-            return (setId.ToString() + path + type.Name + propertyName).GetHashCode();
-        }
+        public static int GetPropertyNodeID(int setId, string path, Type type, string propertyName) => 
+            (setId.ToString() + path + type.Name + propertyName).GetHashCode();
 
-        public static EditorCurveBinding GetRenamedBinding(EditorCurveBinding binding, string newPath)
-        {
-            return new EditorCurveBinding { 
+        public static EditorCurveBinding GetRenamedBinding(EditorCurveBinding binding, string newPath) => 
+            new EditorCurveBinding { 
                 path = newPath,
                 propertyName = binding.propertyName,
                 type = binding.type
             };
-        }
 
         internal static bool HasOtherRotationCurve(AnimationClip clip, EditorCurveBinding rotationBinding)
         {
@@ -830,15 +826,11 @@
             return false;
         }
 
-        public static bool IsNodePhantom(AnimationWindowHierarchyNode node)
-        {
-            return (node.binding.HasValue && node.binding.Value.isPhantom);
-        }
+        public static bool IsNodePhantom(AnimationWindowHierarchyNode node) => 
+            (node.binding.HasValue && node.binding.Value.isPhantom);
 
-        public static bool IsRectTransformPosition(EditorCurveBinding curveBinding)
-        {
-            return ((curveBinding.type == typeof(RectTransform)) && (GetPropertyGroupName(curveBinding.propertyName) == "m_LocalPosition"));
-        }
+        public static bool IsRectTransformPosition(EditorCurveBinding curveBinding) => 
+            ((curveBinding.type == typeof(RectTransform)) && (GetPropertyGroupName(curveBinding.propertyName) == "m_LocalPosition"));
 
         internal static bool IsRotationCurve(EditorCurveBinding curveBinding)
         {
@@ -846,10 +838,8 @@
             return ((propertyGroupName == "m_LocalRotation") || (propertyGroupName == "localEulerAnglesRaw"));
         }
 
-        public static bool IsTransformType(Type type)
-        {
-            return ((type == typeof(Transform)) || (type == typeof(RectTransform)));
-        }
+        public static bool IsTransformType(Type type) => 
+            ((type == typeof(Transform)) || (type == typeof(RectTransform)));
 
         public static string NicifyPropertyGroupName(Type animatableObjectType, string propertyGroupName)
         {
@@ -932,10 +922,8 @@
         {
             internal AnimationWindowCurve targetCurve;
 
-            internal bool <>m__0(AnimationWindowCurve clipboardCurve)
-            {
-                return (clipboardCurve.binding == this.targetCurve.binding);
-            }
+            internal bool <>m__0(AnimationWindowCurve clipboardCurve) => 
+                (clipboardCurve.binding == this.targetCurve.binding);
         }
     }
 }

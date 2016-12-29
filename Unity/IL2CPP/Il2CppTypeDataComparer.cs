@@ -6,15 +6,11 @@
 
     internal class Il2CppTypeDataComparer : EqualityComparer<Il2CppTypeData>
     {
-        public override bool Equals(Il2CppTypeData x, Il2CppTypeData y)
-        {
-            return ((x.Attrs == y.Attrs) && TypeReferenceEqualityComparer.AreEqual(x.Type, y.Type, TypeComparisonMode.Exact));
-        }
+        public override bool Equals(Il2CppTypeData x, Il2CppTypeData y) => 
+            ((x.Attrs == y.Attrs) && TypeReferenceEqualityComparer.AreEqual(x.Type, y.Type, TypeComparisonMode.Exact));
 
-        public override int GetHashCode(Il2CppTypeData obj)
-        {
-            return (TypeReferenceEqualityComparer.GetHashCodeFor(obj.Type) + obj.Attrs);
-        }
+        public override int GetHashCode(Il2CppTypeData obj) => 
+            (TypeReferenceEqualityComparer.GetHashCodeFor(obj.Type) + obj.Attrs);
     }
 }
 

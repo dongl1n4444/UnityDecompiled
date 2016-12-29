@@ -16,10 +16,8 @@
         private static Func<BuildTarget, string> <>f__mg$cache0;
         private static readonly string kScriptsOnlyError = "Linux standalone doesn't support scripts-only build";
 
-        private static string ArchitecturePostFixFor(BuildTarget buildTarget)
-        {
-            return ((buildTarget != BuildTarget.StandaloneLinux64) ? "x86" : "x86_64");
-        }
+        private static string ArchitecturePostFixFor(BuildTarget buildTarget) => 
+            ((buildTarget != BuildTarget.StandaloneLinux64) ? "x86" : "x86_64");
 
         protected override void CopyDataForBuildsFolder()
         {
@@ -55,25 +53,19 @@
             FileUtil.DeleteFileOrDirectory(this.FullDataFolderPath);
         }
 
-        public string GetExtension(BuildTarget target, BuildOptions options)
-        {
-            return ArchitecturePostFixFor(target);
-        }
+        public string GetExtension(BuildTarget target, BuildOptions options) => 
+            ArchitecturePostFixFor(target);
 
-        protected override IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target)
-        {
-            return new LinuxStandaloneIl2CppPlatformProvider(target, base.DataFolder, base.Development);
-        }
+        protected override IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target) => 
+            new LinuxStandaloneIl2CppPlatformProvider(target, base.DataFolder, base.Development);
 
         public string GetScriptLayoutFileFromBuild(BuildOptions options, string installPath, string fileName)
         {
             throw new NotImplementedException(kScriptsOnlyError);
         }
 
-        protected override string GetVariationName()
-        {
-            return this.VariationNameFor(base.Target);
-        }
+        protected override string GetVariationName() => 
+            this.VariationNameFor(base.Target);
 
         public void LaunchPlayer(BuildLaunchPlayerArgs args)
         {
@@ -111,10 +103,8 @@
             throw new NotImplementedException(kScriptsOnlyError);
         }
 
-        public string PrepareForBuild(BuildOptions options, BuildTarget target)
-        {
-            return null;
-        }
+        public string PrepareForBuild(BuildOptions options, BuildTarget target) => 
+            null;
 
         protected override void RenameFilesInStagingArea()
         {
@@ -149,20 +139,14 @@
             FileUtil.MoveFileOrDirectory(Path.Combine(base.StagingArea, from), Path.Combine(base.StagingArea, to));
         }
 
-        public bool SupportsInstallInBuildFolder()
-        {
-            return true;
-        }
+        public bool SupportsInstallInBuildFolder() => 
+            true;
 
-        public bool SupportsScriptsOnlyBuild()
-        {
-            return false;
-        }
+        public bool SupportsScriptsOnlyBuild() => 
+            false;
 
-        private string VariationNameFor(BuildTarget target)
-        {
-            return string.Format("{0}_{1}_{2}_{3}", new object[] { this.PlatformStringFor(target), !this.Headless ? "withgfx" : "headless", !base.Development ? "nondevelopment" : "development", this.ScriptingBackend });
-        }
+        private string VariationNameFor(BuildTarget target) => 
+            $"{this.PlatformStringFor(target)}_{(!this.Headless ? "withgfx" : "headless")}_{(!base.Development ? "nondevelopment" : "development")}_{this.ScriptingBackend}";
 
         protected override string DestinationFolderForInstallingIntoBuildsFolder
         {
@@ -172,21 +156,11 @@
             }
         }
 
-        private string FullDataFolderPath
-        {
-            get
-            {
-                return Path.Combine(this.DestinationFolder, Path.GetFileNameWithoutExtension(base.InstallPath) + "_Data");
-            }
-        }
+        private string FullDataFolderPath =>
+            Path.Combine(this.DestinationFolder, Path.GetFileNameWithoutExtension(base.InstallPath) + "_Data");
 
-        private bool Headless
-        {
-            get
-            {
-                return ((this.m_PostProcessArgs.options & BuildOptions.EnableHeadlessMode) != BuildOptions.CompressTextures);
-            }
-        }
+        private bool Headless =>
+            ((this.m_PostProcessArgs.options & BuildOptions.EnableHeadlessMode) != BuildOptions.CompressTextures);
 
         private string ScriptingBackend
         {

@@ -71,12 +71,14 @@
             Process process = new Process {
                 StartInfo = { 
                     FileName = crossCompilerAbsolutePath,
-                    Arguments = str
+                    Arguments = str,
+                    EnvironmentVariables = { 
+                        ["MONO_PATH"] = assembliesAbsoluteDirectory,
+                        ["GAC_PATH"] = assembliesAbsoluteDirectory,
+                        ["GC_DONT_GC"] = "yes please"
+                    }
                 }
             };
-            process.StartInfo.EnvironmentVariables["MONO_PATH"] = assembliesAbsoluteDirectory;
-            process.StartInfo.EnvironmentVariables["GAC_PATH"] = assembliesAbsoluteDirectory;
-            process.StartInfo.EnvironmentVariables["GC_DONT_GC"] = "yes please";
             if ((crossCompileOptions & CrossCompileOptions.ExplicitNullChecks) != CrossCompileOptions.Dynamic)
             {
                 process.StartInfo.EnvironmentVariables["MONO_DEBUG"] = "explicit-null-checks";
@@ -144,10 +146,8 @@
             }
         }
 
-        public static bool CrossCompileAOTDirectoryParallel(BuildTarget buildTarget, CrossCompileOptions crossCompileOptions, string sourceAssembliesFolder, string targetCrossCompiledASMFolder, string additionalOptions)
-        {
-            return CrossCompileAOTDirectoryParallel(buildTarget, crossCompileOptions, sourceAssembliesFolder, targetCrossCompiledASMFolder, "", additionalOptions);
-        }
+        public static bool CrossCompileAOTDirectoryParallel(BuildTarget buildTarget, CrossCompileOptions crossCompileOptions, string sourceAssembliesFolder, string targetCrossCompiledASMFolder, string additionalOptions) => 
+            CrossCompileAOTDirectoryParallel(buildTarget, crossCompileOptions, sourceAssembliesFolder, targetCrossCompiledASMFolder, "", additionalOptions);
 
         public static bool CrossCompileAOTDirectoryParallel(string crossCompilerPath, BuildTarget buildTarget, CrossCompileOptions crossCompileOptions, string sourceAssembliesFolder, string targetCrossCompiledASMFolder, string additionalOptions)
         {
@@ -225,7 +225,7 @@
 
         public static void DisplayAOTProgressBar(int totalFiles, int filesFinished)
         {
-            string info = string.Format("AOT cross compile ({0}/{1})", (filesFinished + 1).ToString(), totalFiles.ToString());
+            string info = $"AOT cross compile ({(filesFinished + 1).ToString()}/{totalFiles.ToString()})";
             EditorUtility.DisplayProgressBar("Building Player", info, 0.95f);
         }
 

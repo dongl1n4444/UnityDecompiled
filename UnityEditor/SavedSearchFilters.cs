@@ -58,20 +58,14 @@
             local2.m_SavedFiltersChanged = (Action) Delegate.Combine(local2.m_SavedFiltersChanged, callback);
         }
 
-        public static int AddSavedFilter(string displayName, SearchFilter filter, float previewSize)
-        {
-            return ScriptableSingleton<SavedSearchFilters>.instance.Add(displayName, filter, previewSize, GetRootInstanceID(), true);
-        }
+        public static int AddSavedFilter(string displayName, SearchFilter filter, float previewSize) => 
+            ScriptableSingleton<SavedSearchFilters>.instance.Add(displayName, filter, previewSize, GetRootInstanceID(), true);
 
-        public static int AddSavedFilterAfterInstanceID(string displayName, SearchFilter filter, float previewSize, int insertAfterID, bool addAsChild)
-        {
-            return ScriptableSingleton<SavedSearchFilters>.instance.Add(displayName, filter, previewSize, insertAfterID, addAsChild);
-        }
+        public static int AddSavedFilterAfterInstanceID(string displayName, SearchFilter filter, float previewSize, int insertAfterID, bool addAsChild) => 
+            ScriptableSingleton<SavedSearchFilters>.instance.Add(displayName, filter, previewSize, insertAfterID, addAsChild);
 
-        public static bool AllowsHierarchy()
-        {
-            return ScriptableSingleton<SavedSearchFilters>.instance.m_AllowHierarchy;
-        }
+        public static bool AllowsHierarchy() => 
+            ScriptableSingleton<SavedSearchFilters>.instance.m_AllowHierarchy;
 
         private TreeViewItem BuildTreeView()
         {
@@ -103,10 +97,8 @@
             return root;
         }
 
-        public static bool CanMoveSavedFilter(int instanceID, int parentInstanceID, int targetInstanceID, bool after)
-        {
-            return ScriptableSingleton<SavedSearchFilters>.instance.IsValidMove(instanceID, parentInstanceID, targetInstanceID, after);
-        }
+        public static bool CanMoveSavedFilter(int instanceID, int parentInstanceID, int targetInstanceID, bool after) => 
+            ScriptableSingleton<SavedSearchFilters>.instance.IsValidMove(instanceID, parentInstanceID, targetInstanceID, after);
 
         private void Changed()
         {
@@ -118,10 +110,8 @@
             }
         }
 
-        public static TreeViewItem ConvertToTreeView()
-        {
-            return ScriptableSingleton<SavedSearchFilters>.instance.BuildTreeView();
-        }
+        public static TreeViewItem ConvertToTreeView() => 
+            ScriptableSingleton<SavedSearchFilters>.instance.BuildTreeView();
 
         private SavedFilter Find(int instanceID)
         {
@@ -197,10 +187,8 @@
             return 0;
         }
 
-        public static int GetRootInstanceID()
-        {
-            return ScriptableSingleton<SavedSearchFilters>.instance.GetRoot();
-        }
+        public static int GetRootInstanceID() => 
+            ScriptableSingleton<SavedSearchFilters>.instance.GetRoot();
 
         private List<SavedFilter> GetSavedFilterAndChildren(int instanceID)
         {
@@ -263,10 +251,8 @@
             }
         }
 
-        public static bool IsSavedFilter(int instanceID)
-        {
-            return (ScriptableSingleton<SavedSearchFilters>.instance.IndexOf(instanceID) >= 0);
-        }
+        public static bool IsSavedFilter(int instanceID) => 
+            (ScriptableSingleton<SavedSearchFilters>.instance.IndexOf(instanceID) >= 0);
 
         private bool IsValidMove(int instanceID, int parentInstanceID, int targetInstanceID, bool after)
         {
@@ -374,7 +360,7 @@
             {
                 int iD = this.m_SavedFilters[i].m_ID;
                 SavedFilter filter = this.m_SavedFilters[i];
-                str = str + string.Format(": {0} ({1})({2})({3}) ", new object[] { filter.m_Name, iD, filter.m_Depth, filter.m_PreviewSize });
+                str = str + $": {filter.m_Name} ({iD})({filter.m_Depth})({filter.m_PreviewSize}) ";
             }
             return str;
         }

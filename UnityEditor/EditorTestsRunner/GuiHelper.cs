@@ -21,7 +21,7 @@
 
         private static IEnumerable<TypeDefinition> CollectTypeDefinitions(IEnumerable<TypeDefinition> collection)
         {
-            List<TypeDefinition> list = Enumerable.ToList<TypeDefinition>(collection);
+            List<TypeDefinition> list = collection.ToList<TypeDefinition>();
             foreach (TypeDefinition definition in collection)
             {
                 if (definition.HasNestedTypes)
@@ -165,20 +165,14 @@
             internal EditorTestResult test;
             internal string testName;
 
-            internal bool <>m__0(TypeDefinition t)
-            {
-                return (t.FullName == this.testName);
-            }
+            internal bool <>m__0(TypeDefinition t) => 
+                (t.FullName == this.testName);
 
-            internal bool <>m__1(MethodDefinition t)
-            {
-                return (t.Name == this.test.test.methodName);
-            }
+            internal bool <>m__1(MethodDefinition t) => 
+                (t.Name == this.test.test.methodName);
 
-            internal bool <>m__2(MethodDefinition t)
-            {
-                return (t.Name == this.test.test.methodName);
-            }
+            internal bool <>m__2(MethodDefinition t) => 
+                (t.Name == this.test.test.methodName);
         }
     }
 }

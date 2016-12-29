@@ -251,10 +251,8 @@
         /// </summary>
         public bool alignByGeometry
         {
-            get
-            {
-                return this.m_FontData.alignByGeometry;
-            }
+            get => 
+                this.m_FontData.alignByGeometry;
             set
             {
                 if (this.m_FontData.alignByGeometry != value)
@@ -270,10 +268,8 @@
         /// </summary>
         public TextAnchor alignment
         {
-            get
-            {
-                return this.m_FontData.alignment;
-            }
+            get => 
+                this.m_FontData.alignment;
             set
             {
                 if (this.m_FontData.alignment != value)
@@ -328,34 +324,22 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float flexibleHeight
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleHeight =>
+            -1f;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float flexibleWidth
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleWidth =>
+            -1f;
 
         /// <summary>
         /// <para>The Font used by the text.</para>
         /// </summary>
         public Font font
         {
-            get
-            {
-                return this.m_FontData.font;
-            }
+            get => 
+                this.m_FontData.font;
             set
             {
                 if (this.m_FontData.font != value)
@@ -374,10 +358,8 @@
         /// </summary>
         public int fontSize
         {
-            get
-            {
-                return this.m_FontData.fontSize;
-            }
+            get => 
+                this.m_FontData.fontSize;
             set
             {
                 if (this.m_FontData.fontSize != value)
@@ -394,10 +376,8 @@
         /// </summary>
         public FontStyle fontStyle
         {
-            get
-            {
-                return this.m_FontData.fontStyle;
-            }
+            get => 
+                this.m_FontData.fontStyle;
             set
             {
                 if (this.m_FontData.fontStyle != value)
@@ -414,10 +394,8 @@
         /// </summary>
         public HorizontalWrapMode horizontalOverflow
         {
-            get
-            {
-                return this.m_FontData.horizontalOverflow;
-            }
+            get => 
+                this.m_FontData.horizontalOverflow;
             set
             {
                 if (this.m_FontData.horizontalOverflow != value)
@@ -432,23 +410,16 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual int layoutPriority
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public virtual int layoutPriority =>
+            0;
 
         /// <summary>
         /// <para>Line spacing, specified as a factor of font line height. A value of 1 will produce normal line spacing.</para>
         /// </summary>
         public float lineSpacing
         {
-            get
-            {
-                return this.m_FontData.lineSpacing;
-            }
+            get => 
+                this.m_FontData.lineSpacing;
             set
             {
                 if (this.m_FontData.lineSpacing != value)
@@ -482,24 +453,14 @@
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float minHeight
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public virtual float minHeight =>
+            0f;
 
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
-        public virtual float minWidth
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public virtual float minWidth =>
+            0f;
 
         /// <summary>
         /// <para>(Read Only) Provides information about how fonts are scale to the screen.</para>
@@ -554,10 +515,8 @@
         /// </summary>
         public bool resizeTextForBestFit
         {
-            get
-            {
-                return this.m_FontData.bestFit;
-            }
+            get => 
+                this.m_FontData.bestFit;
             set
             {
                 if (this.m_FontData.bestFit != value)
@@ -574,10 +533,8 @@
         /// </summary>
         public int resizeTextMaxSize
         {
-            get
-            {
-                return this.m_FontData.maxSize;
-            }
+            get => 
+                this.m_FontData.maxSize;
             set
             {
                 if (this.m_FontData.maxSize != value)
@@ -594,10 +551,8 @@
         /// </summary>
         public int resizeTextMinSize
         {
-            get
-            {
-                return this.m_FontData.minSize;
-            }
+            get => 
+                this.m_FontData.minSize;
             set
             {
                 if (this.m_FontData.minSize != value)
@@ -614,10 +569,8 @@
         /// </summary>
         public bool supportRichText
         {
-            get
-            {
-                return this.m_FontData.richText;
-            }
+            get => 
+                this.m_FontData.richText;
             set
             {
                 if (this.m_FontData.richText != value)
@@ -634,10 +587,8 @@
         /// </summary>
         public virtual string text
         {
-            get
-            {
-                return this.m_Text;
-            }
+            get => 
+                this.m_Text;
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -662,10 +613,8 @@
         /// </summary>
         public VerticalWrapMode verticalOverflow
         {
-            get
-            {
-                return this.m_FontData.verticalOverflow;
-            }
+            get => 
+                this.m_FontData.verticalOverflow;
             set
             {
                 if (this.m_FontData.verticalOverflow != value)

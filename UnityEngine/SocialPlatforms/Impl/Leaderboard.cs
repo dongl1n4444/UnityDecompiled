@@ -36,10 +36,8 @@
             this.m_UserIDs = new string[0];
         }
 
-        public string[] GetUserFilter()
-        {
-            return this.m_UserIDs;
-        }
+        public string[] GetUserFilter() => 
+            this.m_UserIDs;
 
         public void LoadScores(Action<bool> callback)
         {
@@ -82,49 +80,24 @@
 
         public string id { get; set; }
 
-        public bool loading
-        {
-            get
-            {
-                return ActivePlatform.Instance.GetLoading(this);
-            }
-        }
+        public bool loading =>
+            ActivePlatform.Instance.GetLoading(this);
 
-        public IScore localUserScore
-        {
-            get
-            {
-                return this.m_LocalUserScore;
-            }
-        }
+        public IScore localUserScore =>
+            this.m_LocalUserScore;
 
-        public uint maxRange
-        {
-            get
-            {
-                return this.m_MaxRange;
-            }
-        }
+        public uint maxRange =>
+            this.m_MaxRange;
 
         public Range range { get; set; }
 
-        public IScore[] scores
-        {
-            get
-            {
-                return this.m_Scores;
-            }
-        }
+        public IScore[] scores =>
+            this.m_Scores;
 
         public TimeScope timeScope { get; set; }
 
-        public string title
-        {
-            get
-            {
-                return this.m_Title;
-            }
-        }
+        public string title =>
+            this.m_Title;
 
         public UserScope userScope { get; set; }
     }

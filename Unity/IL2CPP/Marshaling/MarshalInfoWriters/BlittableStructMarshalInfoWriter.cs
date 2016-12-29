@@ -22,13 +22,8 @@
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(name, name) };
         }
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
         public override int NativeSizeWithoutPointers
         {
@@ -38,7 +33,7 @@
                 {
                     <>f__am$cache0 = new Func<DefaultMarshalInfoWriter, int>(null, (IntPtr) <get_NativeSizeWithoutPointers>m__0);
                 }
-                return Enumerable.Sum(Enumerable.Select<DefaultMarshalInfoWriter, int>(MarshalingUtils.GetFieldMarshalInfoWriters(this._type, this._marshalType), <>f__am$cache0));
+                return MarshalingUtils.GetFieldMarshalInfoWriters(this._type, this._marshalType).Select<DefaultMarshalInfoWriter, int>(<>f__am$cache0).Sum();
             }
         }
     }

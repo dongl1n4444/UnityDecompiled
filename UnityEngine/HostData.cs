@@ -25,10 +25,8 @@
         /// </summary>
         public bool useNat
         {
-            get
-            {
-                return (this.m_Nat != 0);
-            }
+            get => 
+                (this.m_Nat != 0);
             set
             {
                 this.m_Nat = !value ? 0 : 1;
@@ -39,10 +37,8 @@
         /// </summary>
         public string gameType
         {
-            get
-            {
-                return this.m_GameType;
-            }
+            get => 
+                this.m_GameType;
             set
             {
                 this.m_GameType = value;
@@ -53,10 +49,8 @@
         /// </summary>
         public string gameName
         {
-            get
-            {
-                return this.m_GameName;
-            }
+            get => 
+                this.m_GameName;
             set
             {
                 this.m_GameName = value;
@@ -67,10 +61,8 @@
         /// </summary>
         public int connectedPlayers
         {
-            get
-            {
-                return this.m_ConnectedPlayers;
-            }
+            get => 
+                this.m_ConnectedPlayers;
             set
             {
                 this.m_ConnectedPlayers = value;
@@ -81,10 +73,8 @@
         /// </summary>
         public int playerLimit
         {
-            get
-            {
-                return this.m_PlayerLimit;
-            }
+            get => 
+                this.m_PlayerLimit;
             set
             {
                 this.m_PlayerLimit = value;
@@ -95,10 +85,8 @@
         /// </summary>
         public string[] ip
         {
-            get
-            {
-                return this.m_IP;
-            }
+            get => 
+                this.m_IP;
             set
             {
                 this.m_IP = value;
@@ -109,10 +97,8 @@
         /// </summary>
         public int port
         {
-            get
-            {
-                return this.m_Port;
-            }
+            get => 
+                this.m_Port;
             set
             {
                 this.m_Port = value;
@@ -123,10 +109,8 @@
         /// </summary>
         public bool passwordProtected
         {
-            get
-            {
-                return (this.m_PasswordProtected != 0);
-            }
+            get => 
+                (this.m_PasswordProtected != 0);
             set
             {
                 this.m_PasswordProtected = !value ? 0 : 1;
@@ -137,10 +121,8 @@
         /// </summary>
         public string comment
         {
-            get
-            {
-                return this.m_Comment;
-            }
+            get => 
+                this.m_Comment;
             set
             {
                 this.m_Comment = value;
@@ -151,10 +133,8 @@
         /// </summary>
         public string guid
         {
-            get
-            {
-                return this.m_GUID;
-            }
+            get => 
+                this.m_GUID;
             set
             {
                 this.m_GUID = value;

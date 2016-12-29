@@ -8,10 +8,8 @@
     [Serializable]
     public class Lint : AbstractFastVisitorCompilerStep
     {
-        public bool IsBoolean(Expression e)
-        {
-            return (e.get_ExpressionType() == this.get_TypeSystemServices().BoolType);
-        }
+        public bool IsBoolean(Expression e) => 
+            (e.get_ExpressionType() == this.get_TypeSystemServices().BoolType);
 
         public override void OnBinaryExpression(BinaryExpression node)
         {

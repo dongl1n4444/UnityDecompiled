@@ -73,25 +73,19 @@
             return null;
         }
 
-        private static string FormattedTextContent(string localeString, params object[] args)
-        {
-            return string.Format(EditorGUIUtility.TextContent(localeString).text, args);
-        }
+        private static string FormattedTextContent(string localeString, params object[] args) => 
+            string.Format(EditorGUIUtility.TextContent(localeString).text, args);
 
-        private static bool IsMobileBuildTarget(BuildTarget target)
-        {
-            return (((target == BuildTarget.iOS) || (target == BuildTarget.Android)) || (target == BuildTarget.Tizen));
-        }
+        private static bool IsMobileBuildTarget(BuildTarget target) => 
+            (((target == BuildTarget.iOS) || (target == BuildTarget.Android)) || (target == BuildTarget.Tizen));
 
         [CompilerGenerated]
         private sealed class <CheckMaterial>c__AnonStorey0
         {
             internal string shaderName;
 
-            internal bool <>m__0(string s)
-            {
-                return (s == this.shaderName);
-            }
+            internal bool <>m__0(string s) => 
+                (s == this.shaderName);
         }
     }
 }

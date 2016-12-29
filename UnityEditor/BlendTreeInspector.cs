@@ -494,10 +494,8 @@
             }
         }
 
-        public float ClickDragFloat(Rect position, float value)
-        {
-            return this.ClickDragFloat(position, value, false);
-        }
+        public float ClickDragFloat(Rect position, float value) => 
+            this.ClickDragFloat(position, value, false);
 
         public float ClickDragFloat(Rect position, float value, bool alignRight)
         {
@@ -1116,10 +1114,8 @@
             return rectArray;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_PreviewBlendTree != null) && this.m_PreviewBlendTree.HasPreviewGUI());
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_PreviewBlendTree != null) && this.m_PreviewBlendTree.HasPreviewGUI());
 
         private void Init()
         {
@@ -1654,7 +1650,7 @@
                 {
                     <>f__am$cache2 = new Func<float, float>(null, (IntPtr) <ValidatePositions>m__2);
                 }
-                List<float> list = Enumerable.ToList<float>(Enumerable.OrderBy<float, float>(Enumerable.Select<Vector2, float>(Enumerable.Where<Vector2>(motionPositions, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2));
+                List<float> list = Enumerable.OrderBy<float, float>(Enumerable.Select<Vector2, float>(Enumerable.Where<Vector2>(motionPositions, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToList<float>();
                 float num3 = 0f;
                 float num4 = 180f;
                 for (int k = 0; k < list.Count; k++)
@@ -1700,13 +1696,8 @@
             }
         }
 
-        private int ParameterCount
-        {
-            get
-            {
-                return ((this.m_BlendType.intValue <= 0) ? 1 : ((this.m_BlendType.intValue >= 4) ? 0 : 2));
-            }
-        }
+        private int ParameterCount =>
+            ((this.m_BlendType.intValue <= 0) ? 1 : ((this.m_BlendType.intValue >= 4) ? 0 : 2));
 
         private enum ChildPropertyToCompute
         {

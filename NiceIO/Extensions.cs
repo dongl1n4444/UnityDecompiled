@@ -6,11 +6,9 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
-    [Extension]
     public static class Extensions
     {
-        [Extension]
-        public static IEnumerable<NPath> Copy(IEnumerable<NPath> self, NPath dest)
+        public static IEnumerable<NPath> Copy(this IEnumerable<NPath> self, NPath dest)
         {
             <Copy>c__AnonStorey0 storey = new <Copy>c__AnonStorey0 {
                 dest = dest
@@ -20,17 +18,13 @@
                 throw new ArgumentException("When copying multiple files, the destination cannot be a relative path");
             }
             storey.dest.EnsureDirectoryExists("");
-            return Enumerable.ToArray<NPath>(Enumerable.Select<NPath, NPath>(self, new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)));
+            return self.Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
         }
 
-        [Extension]
-        public static IEnumerable<NPath> Copy(IEnumerable<NPath> self, string dest)
-        {
-            return Copy(self, new NPath(dest));
-        }
+        public static IEnumerable<NPath> Copy(this IEnumerable<NPath> self, string dest) => 
+            self.Copy(new NPath(dest));
 
-        [Extension]
-        public static IEnumerable<NPath> Delete(IEnumerable<NPath> self)
+        public static IEnumerable<NPath> Delete(this IEnumerable<NPath> self)
         {
             foreach (NPath path in self)
             {
@@ -39,17 +33,15 @@
             return self;
         }
 
-        [Extension]
-        public static IEnumerable<string> InQuotes(IEnumerable<NPath> self, [Optional, DefaultParameterValue(0)] SlashMode forward)
+        public static IEnumerable<string> InQuotes(this IEnumerable<NPath> self, SlashMode forward = 0)
         {
             <InQuotes>c__AnonStorey2 storey = new <InQuotes>c__AnonStorey2 {
                 forward = forward
             };
-            return Enumerable.Select<NPath, string>(self, new Func<NPath, string>(storey, (IntPtr) this.<>m__0));
+            return self.Select<NPath, string>(new Func<NPath, string>(storey, (IntPtr) this.<>m__0));
         }
 
-        [Extension]
-        public static IEnumerable<NPath> Move(IEnumerable<NPath> self, NPath dest)
+        public static IEnumerable<NPath> Move(this IEnumerable<NPath> self, NPath dest)
         {
             <Move>c__AnonStorey1 storey = new <Move>c__AnonStorey1 {
                 dest = dest
@@ -59,20 +51,14 @@
                 throw new ArgumentException("When moving multiple files, the destination cannot be a relative path");
             }
             storey.dest.EnsureDirectoryExists("");
-            return Enumerable.ToArray<NPath>(Enumerable.Select<NPath, NPath>(self, new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)));
+            return self.Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
         }
 
-        [Extension]
-        public static IEnumerable<NPath> Move(IEnumerable<NPath> self, string dest)
-        {
-            return Move(self, new NPath(dest));
-        }
+        public static IEnumerable<NPath> Move(this IEnumerable<NPath> self, string dest) => 
+            self.Move(new NPath(dest));
 
-        [Extension]
-        public static NPath ToNPath(string path)
-        {
-            return new NPath(path);
-        }
+        public static NPath ToNPath(this string path) => 
+            new NPath(path);
 
         [CompilerGenerated]
         private sealed class <Copy>c__AnonStorey0
@@ -91,10 +77,8 @@
         {
             internal SlashMode forward;
 
-            internal string <>m__0(NPath p)
-            {
-                return p.InQuotes(this.forward);
-            }
+            internal string <>m__0(NPath p) => 
+                p.InQuotes(this.forward);
         }
 
         [CompilerGenerated]

@@ -7,11 +7,9 @@
     /// <summary>
     /// <para>Method extension for Physics in Particle System.</para>
     /// </summary>
-    [Extension]
     public static class ParticlePhysicsExtensions
     {
-        [Extension]
-        public static int GetCollisionEvents(ParticleSystem ps, GameObject go, List<ParticleCollisionEvent> collisionEvents)
+        public static int GetCollisionEvents(this ParticleSystem ps, GameObject go, List<ParticleCollisionEvent> collisionEvents)
         {
             if (go == null)
             {
@@ -30,8 +28,8 @@
         /// <param name="go">The GameObject for which to retrieve collision events.</param>
         /// <param name="collisionEvents">Array to write collision events to.</param>
         /// <param name="ps"></param>
-        [Extension, Obsolete("GetCollisionEvents function using ParticleCollisionEvent[] is deprecated. Use List<ParticleCollisionEvent> instead.", false)]
-        public static int GetCollisionEvents(ParticleSystem ps, GameObject go, ParticleCollisionEvent[] collisionEvents)
+        [Obsolete("GetCollisionEvents function using ParticleCollisionEvent[] is deprecated. Use List<ParticleCollisionEvent> instead.", false)]
+        public static int GetCollisionEvents(this ParticleSystem ps, GameObject go, ParticleCollisionEvent[] collisionEvents)
         {
             if (go == null)
             {
@@ -48,11 +46,8 @@
         /// <para>Safe array size for use with ParticleSystem.GetCollisionEvents.</para>
         /// </summary>
         /// <param name="ps"></param>
-        [Extension]
-        public static int GetSafeCollisionEventSize(ParticleSystem ps)
-        {
-            return ParticleSystemExtensionsImpl.GetSafeCollisionEventSize(ps);
-        }
+        public static int GetSafeCollisionEventSize(this ParticleSystem ps) => 
+            ParticleSystemExtensionsImpl.GetSafeCollisionEventSize(ps);
 
         /// <summary>
         /// <para>Safe array size for use with ParticleSystem.GetTriggerParticles.</para>
@@ -62,14 +57,10 @@
         /// <returns>
         /// <para>Number of particles with this trigger event type.</para>
         /// </returns>
-        [Extension]
-        public static int GetSafeTriggerParticlesSize(ParticleSystem ps, ParticleSystemTriggerEventType type)
-        {
-            return ParticleSystemExtensionsImpl.GetSafeTriggerParticlesSize(ps, (int) type);
-        }
+        public static int GetSafeTriggerParticlesSize(this ParticleSystem ps, ParticleSystemTriggerEventType type) => 
+            ParticleSystemExtensionsImpl.GetSafeTriggerParticlesSize(ps, (int) type);
 
-        [Extension]
-        public static int GetTriggerParticles(ParticleSystem ps, ParticleSystemTriggerEventType type, List<ParticleSystem.Particle> particles)
+        public static int GetTriggerParticles(this ParticleSystem ps, ParticleSystemTriggerEventType type, List<ParticleSystem.Particle> particles)
         {
             if (particles == null)
             {
@@ -78,8 +69,7 @@
             return ParticleSystemExtensionsImpl.GetTriggerParticles(ps, (int) type, particles);
         }
 
-        [Extension]
-        public static void SetTriggerParticles(ParticleSystem ps, ParticleSystemTriggerEventType type, List<ParticleSystem.Particle> particles)
+        public static void SetTriggerParticles(this ParticleSystem ps, ParticleSystemTriggerEventType type, List<ParticleSystem.Particle> particles)
         {
             if (particles == null)
             {
@@ -88,8 +78,7 @@
             ParticleSystemExtensionsImpl.SetTriggerParticles(ps, (int) type, particles, 0, particles.Count);
         }
 
-        [Extension]
-        public static void SetTriggerParticles(ParticleSystem ps, ParticleSystemTriggerEventType type, List<ParticleSystem.Particle> particles, int offset, int count)
+        public static void SetTriggerParticles(this ParticleSystem ps, ParticleSystemTriggerEventType type, List<ParticleSystem.Particle> particles, int offset, int count)
         {
             if (particles == null)
             {

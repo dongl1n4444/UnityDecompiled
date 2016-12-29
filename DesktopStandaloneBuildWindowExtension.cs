@@ -54,15 +54,11 @@ internal class DesktopStandaloneBuildWindowExtension : DefaultBuildWindowExtensi
         return BuildTarget.StandaloneLinux;
     }
 
-    public override bool EnabledBuildAndRunButton()
-    {
-        return true;
-    }
+    public override bool EnabledBuildAndRunButton() => 
+        true;
 
-    public override bool EnabledBuildButton()
-    {
-        return true;
-    }
+    public override bool EnabledBuildButton() => 
+        true;
 
     private static Dictionary<GUIContent, BuildTarget> GetArchitecturesForPlatform(BuildTarget target)
     {

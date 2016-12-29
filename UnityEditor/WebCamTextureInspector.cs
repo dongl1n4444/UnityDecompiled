@@ -17,10 +17,8 @@
             return (str + "  " + TextureUtil.GetTextureFormatString(textureFormat));
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (base.target != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (base.target != null);
 
         private static void Init()
         {

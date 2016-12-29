@@ -54,10 +54,8 @@
         /// <returns>
         /// <para>True if the value is non-zero.</para>
         /// </returns>
-        public bool IsValid()
-        {
-            return ((((((((((((((((this.i0 | this.i1) | this.i2) | this.i3) | this.i4) | this.i5) | this.i6) | this.i7) | this.i8) | this.i9) | this.i10) | this.i11) | this.i12) | this.i13) | this.i14) | this.i15) != 0);
-        }
+        public bool IsValid() => 
+            ((((((((((((((((this.i0 | this.i1) | this.i2) | this.i3) | this.i4) | this.i5) | this.i6) | this.i7) | this.i8) | this.i9) | this.i10) | this.i11) | this.i12) | this.i13) | this.i14) | this.i15) != 0);
 
         private static int HexToNumber(char c)
         {
@@ -121,10 +119,8 @@
         /// <returns>
         /// <para>A hex asset string.</para>
         /// </returns>
-        public override string ToString()
-        {
-            return string.Format("{0:x2}{1:x2}{2:x2}{3:x2}{4:x2}{5:x2}{6:x2}{7:x2}{8:x2}{9:x2}{10:x2}{11:x2}{12:x2}{13:x2}{14:x2}{15:x2}", new object[] { this.i0, this.i1, this.i2, this.i3, this.i4, this.i5, this.i6, this.i7, this.i8, this.i9, this.i10, this.i11, this.i12, this.i13, this.i14, this.i15 });
-        }
+        public override string ToString() => 
+            $"{this.i0:x2}{this.i1:x2}{this.i2:x2}{this.i3:x2}{this.i4:x2}{this.i5:x2}{this.i6:x2}{this.i7:x2}{this.i8:x2}{this.i9:x2}{this.i10:x2}{this.i11:x2}{this.i12:x2}{this.i13:x2}{this.i14:x2}{this.i15:x2}";
     }
 }
 

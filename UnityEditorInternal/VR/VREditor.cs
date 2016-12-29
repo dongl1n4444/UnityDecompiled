@@ -16,7 +16,7 @@
             <GetEnabledVRDeviceInfo>c__AnonStorey1 storey = new <GetEnabledVRDeviceInfo>c__AnonStorey1 {
                 enabledVRDevices = GetVREnabledDevicesOnTarget(target)
             };
-            return Enumerable.ToArray<VRDeviceInfoEditor>(Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfoByTarget(target), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfoByTarget(target), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<VRDeviceInfoEditor>();
         }
 
         public static VRDeviceInfoEditor[] GetEnabledVRDeviceInfo(BuildTargetGroup targetGroup)
@@ -24,20 +24,16 @@
             <GetEnabledVRDeviceInfo>c__AnonStorey0 storey = new <GetEnabledVRDeviceInfo>c__AnonStorey0 {
                 enabledVRDevices = GetVREnabledDevicesOnTargetGroup(targetGroup)
             };
-            return Enumerable.ToArray<VRDeviceInfoEditor>(Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfo(targetGroup), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfo(targetGroup), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<VRDeviceInfoEditor>();
         }
 
         [Obsolete("Use GetVREnabledOnTargetGroup instead.")]
-        public static bool GetVREnabled(BuildTargetGroup targetGroup)
-        {
-            return GetVREnabledOnTargetGroup(targetGroup);
-        }
+        public static bool GetVREnabled(BuildTargetGroup targetGroup) => 
+            GetVREnabledOnTargetGroup(targetGroup);
 
         [Obsolete("Use GetVREnabledDevicesOnTargetGroup instead.")]
-        public static string[] GetVREnabledDevices(BuildTargetGroup targetGroup)
-        {
-            return GetVREnabledDevicesOnTargetGroup(targetGroup);
-        }
+        public static string[] GetVREnabledDevices(BuildTargetGroup targetGroup) => 
+            GetVREnabledDevicesOnTargetGroup(targetGroup);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string[] GetVREnabledDevicesOnTarget(BuildTarget target);
@@ -67,10 +63,8 @@
         {
             internal string[] enabledVRDevices;
 
-            internal bool <>m__0(VRDeviceInfoEditor d)
-            {
-                return Enumerable.Contains<string>(this.enabledVRDevices, d.deviceNameKey);
-            }
+            internal bool <>m__0(VRDeviceInfoEditor d) => 
+                this.enabledVRDevices.Contains<string>(d.deviceNameKey);
         }
 
         [CompilerGenerated]
@@ -78,10 +72,8 @@
         {
             internal string[] enabledVRDevices;
 
-            internal bool <>m__0(VRDeviceInfoEditor d)
-            {
-                return Enumerable.Contains<string>(this.enabledVRDevices, d.deviceNameKey);
-            }
+            internal bool <>m__0(VRDeviceInfoEditor d) => 
+                this.enabledVRDevices.Contains<string>(d.deviceNameKey);
         }
     }
 }

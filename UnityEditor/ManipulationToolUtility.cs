@@ -70,10 +70,8 @@
         public static Vector3 minDragDifference
         {
             [CompilerGenerated]
-            get
-            {
-                return <minDragDifference>k__BackingField;
-            }
+            get => 
+                <minDragDifference>k__BackingField;
             [CompilerGenerated]
             set
             {

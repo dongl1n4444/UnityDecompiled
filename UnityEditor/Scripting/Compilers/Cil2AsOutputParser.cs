@@ -10,22 +10,18 @@
 
     internal class Cil2AsOutputParser : UnityScriptCompilerOutputParser
     {
-        private static CompilerMessage CompilerErrorFor(StringBuilder currentErrorBuffer)
-        {
-            return new CompilerMessage { 
+        private static CompilerMessage CompilerErrorFor(StringBuilder currentErrorBuffer) => 
+            new CompilerMessage { 
                 type = CompilerMessageType.Error,
                 message = currentErrorBuffer.ToString()
             };
-        }
 
         [DebuggerHidden]
-        public override IEnumerable<CompilerMessage> Parse(string[] errorOutput, string[] standardOutput, bool compilationHadFailure)
-        {
-            return new <Parse>c__Iterator0 { 
+        public override IEnumerable<CompilerMessage> Parse(string[] errorOutput, string[] standardOutput, bool compilationHadFailure) => 
+            new <Parse>c__Iterator0 { 
                 errorOutput = errorOutput,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <Parse>c__Iterator0 : IEnumerable, IEnumerable<CompilerMessage>, IEnumerator, IDisposable, IEnumerator<CompilerMessage>
@@ -132,28 +128,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<UnityEditor.Scripting.Compilers.CompilerMessage>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<UnityEditor.Scripting.Compilers.CompilerMessage>.GetEnumerator();
 
-            CompilerMessage IEnumerator<CompilerMessage>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            CompilerMessage IEnumerator<CompilerMessage>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

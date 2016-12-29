@@ -325,13 +325,8 @@
             EditorPrefs.SetString("HolographicRemoting.RemoteMachineHistory", string.Join(",", this.m_RemoteMachineHistory));
         }
 
-        private bool RemoteMachineNameSpecified
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(this.m_RemoteMachineAddress);
-            }
-        }
+        private bool RemoteMachineNameSpecified =>
+            !string.IsNullOrEmpty(this.m_RemoteMachineAddress);
     }
 }
 

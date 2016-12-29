@@ -28,7 +28,7 @@
             {
                 <>f__am$cache0 = new Func<Object, GameObject>(null, (IntPtr) <OnEnable>m__0);
             }
-            this.m_GameObjectsSerializedObject = new SerializedObject(Enumerable.ToArray<GameObject>(Enumerable.Select<Object, GameObject>(base.targets, <>f__am$cache0)));
+            this.m_GameObjectsSerializedObject = new SerializedObject(Enumerable.Select<Object, GameObject>(base.targets, <>f__am$cache0).ToArray<GameObject>());
             this.m_GameObjectStaticFlags = this.m_GameObjectsSerializedObject.FindProperty("m_StaticEditorFlags");
             base.InitializeProbeFields();
         }

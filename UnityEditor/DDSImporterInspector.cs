@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(DDSImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(DDSImporter))]
     internal class DDSImporterInspector : AssetImporterInspector
     {
         public override void OnInspectorGUI()
@@ -23,13 +23,8 @@
             GUILayout.EndHorizontal();
         }
 
-        internal override bool showImportedObject
-        {
-            get
-            {
-                return false;
-            }
-        }
+        internal override bool showImportedObject =>
+            false;
     }
 }
 

@@ -15,13 +15,8 @@
     public struct AnimatorControllerPlayable
     {
         internal AnimationPlayable handle;
-        internal Playable node
-        {
-            get
-            {
-                return this.handle.node;
-            }
-        }
+        internal Playable node =>
+            this.handle.node;
         /// <summary>
         /// <para>Creates an AnimatorControllerPlayable.</para>
         /// </summary>
@@ -43,26 +38,17 @@
             this.node.Destroy();
         }
 
-        public static implicit operator Playable(AnimatorControllerPlayable s)
-        {
-            return s.node;
-        }
+        public static implicit operator Playable(AnimatorControllerPlayable s) => 
+            s.node;
 
-        public static implicit operator AnimationPlayable(AnimatorControllerPlayable s)
-        {
-            return s.handle;
-        }
+        public static implicit operator AnimationPlayable(AnimatorControllerPlayable s) => 
+            s.handle;
 
         /// <summary>
         /// <para>RuntimeAnimatorController played by this playable.</para>
         /// </summary>
-        public RuntimeAnimatorController animatorController
-        {
-            get
-            {
-                return GetAnimatorControllerInternal(ref this);
-            }
-        }
+        public RuntimeAnimatorController animatorController =>
+            GetAnimatorControllerInternal(ref this);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern RuntimeAnimatorController GetAnimatorControllerInternal(ref AnimatorControllerPlayable that);
         /// <summary>
@@ -70,20 +56,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public float GetFloat(string name)
-        {
-            return GetFloatString(ref this, name);
-        }
+        public float GetFloat(string name) => 
+            GetFloatString(ref this, name);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetFloat.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public float GetFloat(int id)
-        {
-            return GetFloatID(ref this, id);
-        }
+        public float GetFloat(int id) => 
+            GetFloatID(ref this, id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.SetFloat.</para>
@@ -112,20 +94,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool GetBool(string name)
-        {
-            return GetBoolString(ref this, name);
-        }
+        public bool GetBool(string name) => 
+            GetBoolString(ref this, name);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetBool.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool GetBool(int id)
-        {
-            return GetBoolID(ref this, id);
-        }
+        public bool GetBool(int id) => 
+            GetBoolID(ref this, id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.SetBool.</para>
@@ -154,20 +132,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public int GetInteger(string name)
-        {
-            return GetIntegerString(ref this, name);
-        }
+        public int GetInteger(string name) => 
+            GetIntegerString(ref this, name);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetInteger.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public int GetInteger(int id)
-        {
-            return GetIntegerID(ref this, id);
-        }
+        public int GetInteger(int id) => 
+            GetIntegerID(ref this, id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.SetInteger.</para>
@@ -236,31 +210,22 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool IsParameterControlledByCurve(string name)
-        {
-            return IsParameterControlledByCurveString(ref this, name);
-        }
+        public bool IsParameterControlledByCurve(string name) => 
+            IsParameterControlledByCurveString(ref this, name);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.IsParameterControlledByCurve.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool IsParameterControlledByCurve(int id)
-        {
-            return IsParameterControlledByCurveID(ref this, id);
-        }
+        public bool IsParameterControlledByCurve(int id) => 
+            IsParameterControlledByCurveID(ref this, id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.layerCount.</para>
         /// </summary>
-        public int layerCount
-        {
-            get
-            {
-                return GetLayerCountInternal(ref this);
-            }
-        }
+        public int layerCount =>
+            GetLayerCountInternal(ref this);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int GetLayerCountInternal(ref AnimatorControllerPlayable that);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -269,10 +234,8 @@
         /// <para>See IAnimatorControllerPlayable.GetLayerName.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public string GetLayerName(int layerIndex)
-        {
-            return GetLayerNameInternal(ref this, layerIndex);
-        }
+        public string GetLayerName(int layerIndex) => 
+            GetLayerNameInternal(ref this, layerIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int GetLayerIndexInternal(ref AnimatorControllerPlayable that, string layerName);
@@ -280,10 +243,8 @@
         /// <para>See IAnimatorControllerPlayable.GetLayerIndex.</para>
         /// </summary>
         /// <param name="layerName"></param>
-        public int GetLayerIndex(string layerName)
-        {
-            return GetLayerIndexInternal(ref this, layerName);
-        }
+        public int GetLayerIndex(string layerName) => 
+            GetLayerIndexInternal(ref this, layerName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float GetLayerWeightInternal(ref AnimatorControllerPlayable that, int layerIndex);
@@ -291,10 +252,8 @@
         /// <para>See IAnimatorControllerPlayable.GetLayerWeight.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public float GetLayerWeight(int layerIndex)
-        {
-            return GetLayerWeightInternal(ref this, layerIndex);
-        }
+        public float GetLayerWeight(int layerIndex) => 
+            GetLayerWeightInternal(ref this, layerIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void SetLayerWeightInternal(ref AnimatorControllerPlayable that, int layerIndex, float weight);
@@ -314,10 +273,8 @@
         /// <para>See IAnimatorControllerPlayable.GetCurrentAnimatorStateInfo.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public AnimatorStateInfo GetCurrentAnimatorStateInfo(int layerIndex)
-        {
-            return GetCurrentAnimatorStateInfoInternal(ref this, layerIndex);
-        }
+        public AnimatorStateInfo GetCurrentAnimatorStateInfo(int layerIndex) => 
+            GetCurrentAnimatorStateInfoInternal(ref this, layerIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimatorStateInfo GetNextAnimatorStateInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
@@ -325,10 +282,8 @@
         /// <para>See IAnimatorControllerPlayable.GetNextAnimatorStateInfo.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public AnimatorStateInfo GetNextAnimatorStateInfo(int layerIndex)
-        {
-            return GetNextAnimatorStateInfoInternal(ref this, layerIndex);
-        }
+        public AnimatorStateInfo GetNextAnimatorStateInfo(int layerIndex) => 
+            GetNextAnimatorStateInfoInternal(ref this, layerIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimatorTransitionInfo GetAnimatorTransitionInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
@@ -336,10 +291,8 @@
         /// <para>See IAnimatorControllerPlayable.GetAnimatorTransitionInfo.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public AnimatorTransitionInfo GetAnimatorTransitionInfo(int layerIndex)
-        {
-            return GetAnimatorTransitionInfoInternal(ref this, layerIndex);
-        }
+        public AnimatorTransitionInfo GetAnimatorTransitionInfo(int layerIndex) => 
+            GetAnimatorTransitionInfoInternal(ref this, layerIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimatorClipInfo[] GetCurrentAnimatorClipInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
@@ -347,10 +300,8 @@
         /// <para>See IAnimatorControllerPlayable.GetCurrentAnimatorClipInfo.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public AnimatorClipInfo[] GetCurrentAnimatorClipInfo(int layerIndex)
-        {
-            return GetCurrentAnimatorClipInfoInternal(ref this, layerIndex);
-        }
+        public AnimatorClipInfo[] GetCurrentAnimatorClipInfo(int layerIndex) => 
+            GetCurrentAnimatorClipInfoInternal(ref this, layerIndex);
 
         public void GetCurrentAnimatorClipInfo(int layerIndex, List<AnimatorClipInfo> clips)
         {
@@ -378,19 +329,15 @@
         /// <para>See IAnimatorControllerPlayable.GetCurrentAnimatorClipInfoCount.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public int GetCurrentAnimatorClipInfoCount(int layerIndex)
-        {
-            return this.GetAnimatorClipInfoCountInternal(ref this, layerIndex, true);
-        }
+        public int GetCurrentAnimatorClipInfoCount(int layerIndex) => 
+            this.GetAnimatorClipInfoCountInternal(ref this, layerIndex, true);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetNextAnimatorClipInfoCount.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public int GetNextAnimatorClipInfoCount(int layerIndex)
-        {
-            return this.GetAnimatorClipInfoCountInternal(ref this, layerIndex, false);
-        }
+        public int GetNextAnimatorClipInfoCount(int layerIndex) => 
+            this.GetAnimatorClipInfoCountInternal(ref this, layerIndex, false);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimatorClipInfo[] GetNextAnimatorClipInfoInternal(ref AnimatorControllerPlayable that, int layerIndex);
@@ -398,15 +345,11 @@
         /// <para>See IAnimatorControllerPlayable.GetNextAnimatorClipInfo.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public AnimatorClipInfo[] GetNextAnimatorClipInfo(int layerIndex)
-        {
-            return GetNextAnimatorClipInfoInternal(ref this, layerIndex);
-        }
+        public AnimatorClipInfo[] GetNextAnimatorClipInfo(int layerIndex) => 
+            GetNextAnimatorClipInfoInternal(ref this, layerIndex);
 
-        internal string ResolveHash(int hash)
-        {
-            return ResolveHashInternal(ref this, hash);
-        }
+        internal string ResolveHash(int hash) => 
+            ResolveHashInternal(ref this, hash);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string ResolveHashInternal(ref AnimatorControllerPlayable that, int hash);
@@ -416,23 +359,16 @@
         /// <para>See IAnimatorControllerPlayable.IsInTransition.</para>
         /// </summary>
         /// <param name="layerIndex"></param>
-        public bool IsInTransition(int layerIndex)
-        {
-            return IsInTransitionInternal(ref this, layerIndex);
-        }
+        public bool IsInTransition(int layerIndex) => 
+            IsInTransitionInternal(ref this, layerIndex);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int GetParameterCountInternal(ref AnimatorControllerPlayable that);
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.parameterCount.</para>
         /// </summary>
-        public int parameterCount
-        {
-            get
-            {
-                return GetParameterCountInternal(ref this);
-            }
-        }
+        public int parameterCount =>
+            GetParameterCountInternal(ref this);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern AnimatorControllerParameter[] GetParametersArrayInternal(ref AnimatorControllerPlayable that);
         /// <summary>
@@ -744,10 +680,8 @@
         /// </summary>
         /// <param name="layerIndex"></param>
         /// <param name="stateID"></param>
-        public bool HasState(int layerIndex, int stateID)
-        {
-            return this.HasStateInternal(ref this, layerIndex, stateID);
-        }
+        public bool HasState(int layerIndex, int stateID) => 
+            this.HasStateInternal(ref this, layerIndex, stateID);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool HasStateInternal(ref AnimatorControllerPlayable that, int layerIndex, int stateID);
@@ -792,10 +726,8 @@
         /// </summary>
         public PlayState state
         {
-            get
-            {
-                return Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetPlayStateValidated(*((Playable*) this), value, base.GetType());
@@ -806,10 +738,8 @@
         /// </summary>
         public double time
         {
-            get
-            {
-                return Playables.GetTimeValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetTimeValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetTimeValidated(*((Playable*) this), value, base.GetType());
@@ -820,10 +750,8 @@
         /// </summary>
         public double duration
         {
-            get
-            {
-                return Playables.GetDurationValidated(*((Playable*) this), base.GetType());
-            }
+            get => 
+                Playables.GetDurationValidated(*((Playable*) this), base.GetType());
             set
             {
                 Playables.SetDurationValidated(*((Playable*) this), value, base.GetType());
@@ -832,35 +760,23 @@
         /// <summary>
         /// <para>Returns true if the Playable is valid. A playable can be invalid if it was disposed. This is different from a Null playable.</para>
         /// </summary>
-        public unsafe bool IsValid()
-        {
-            return Playables.IsValid(*((Playable*) this));
-        }
+        public unsafe bool IsValid() => 
+            Playables.IsValid(*((Playable*) this));
 
-        public T CastTo<T>() where T: struct
-        {
-            return this.handle.CastTo<T>();
-        }
+        public T CastTo<T>() where T: struct => 
+            this.handle.CastTo<T>();
 
-        public static bool operator ==(AnimatorControllerPlayable x, Playable y)
-        {
-            return Playables.Equals((Playable) x, y);
-        }
+        public static bool operator ==(AnimatorControllerPlayable x, Playable y) => 
+            Playables.Equals((Playable) x, y);
 
-        public static bool operator !=(AnimatorControllerPlayable x, Playable y)
-        {
-            return !Playables.Equals((Playable) x, y);
-        }
+        public static bool operator !=(AnimatorControllerPlayable x, Playable y) => 
+            !Playables.Equals((Playable) x, y);
 
-        public override unsafe bool Equals(object p)
-        {
-            return Playables.Equals(*((Playable*) this), p);
-        }
+        public override unsafe bool Equals(object p) => 
+            Playables.Equals(*((Playable*) this), p);
 
-        public override int GetHashCode()
-        {
-            return this.node.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.node.GetHashCode();
     }
 }
 

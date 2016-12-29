@@ -21,10 +21,8 @@
             return new StringBuilder("function(").Append(str).Append("): ").Append(str2).ToString();
         }
 
-        public override string FormatGenericArguments(IEnumerable<string> genericArgs)
-        {
-            return new StringBuilder(".<").Append(Builtins.join(genericArgs, ", ")).Append(">").ToString();
-        }
+        public override string FormatGenericArguments(IEnumerable<string> genericArgs) => 
+            new StringBuilder(".<").Append(Builtins.join(genericArgs, ", ")).Append(">").ToString();
 
         public override string FormatType(IType type)
         {
@@ -59,10 +57,8 @@
                 this.$$locals$339 = $$locals$339;
             }
 
-            public override IEnumerator<string> GetEnumerator()
-            {
-                return new Enumerator(this.$this$338, this.$$locals$339);
-            }
+            public override IEnumerator<string> GetEnumerator() => 
+                new Enumerator(this.$this$338, this.$$locals$339);
 
             [Serializable]
             internal class Enumerator : IEnumerator<string>, IDisposable, ICloneable
@@ -79,41 +75,27 @@
                     this.Reset();
                 }
 
-                public override object Clone()
-                {
-                    return this.MemberwiseClone();
-                }
+                public override object Clone() => 
+                    this.MemberwiseClone();
 
                 public override void Dispose()
                 {
                     this.$$enumerator.Dispose();
                 }
 
-                public override bool MoveNext()
-                {
-                    return this.$$enumerator.MoveNext();
-                }
+                public override bool MoveNext() => 
+                    this.$$enumerator.MoveNext();
 
                 public override void Reset()
                 {
                     this.$$enumerator = this.$$locals$337.$signature.get_Parameters().GetEnumerator();
                 }
 
-                public override string Current
-                {
-                    get
-                    {
-                        return this.$$current;
-                    }
-                }
+                public override string Current =>
+                    this.$$current;
 
-                public override object System.Collections.IEnumerator.Current
-                {
-                    get
-                    {
-                        return this.$$current;
-                    }
-                }
+                public override object System.Collections.IEnumerator.Current =>
+                    this.$$current;
             }
         }
 

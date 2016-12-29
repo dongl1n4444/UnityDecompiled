@@ -52,7 +52,7 @@
                 {
                     genericInstanceType.GenericArguments.Add(this.TypeReferenceFor(info));
                 }
-                Unity.Cecil.Visitor.Extensions.Accept(genericInstanceType, this._visitor);
+                genericInstanceType.Accept(this._visitor);
                 typeByName = genericInstanceType;
             }
             if (typeNameInfo.IsPointer)
@@ -68,7 +68,7 @@
             {
                 type2 = new ArrayType(type2, typeNameInfo.Ranks[i]);
             }
-            Unity.Cecil.Visitor.Extensions.Accept(type2, this._visitor);
+            type2.Accept(this._visitor);
             return type2;
         }
 
@@ -87,7 +87,7 @@
             {
                 <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <CecilElementTypeNameFor>m__0);
             }
-            return Enumerable.Aggregate<string, string>(typeNameInfo.Nested, name, <>f__am$cache0);
+            return typeNameInfo.Nested.Aggregate<string, string>(name, <>f__am$cache0);
         }
 
         private TypeReference GetTypeByName(string name, AssemblyNameParseInfo assembly)
@@ -102,14 +102,10 @@
                 {
                     <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <GetTypeByName>m__1);
                 }
-                return Enumerable.FirstOrDefault<TypeDefinition>(Enumerable.Select<AssemblyDefinition, TypeDefinition>(this._usedAssemblies, new Func<AssemblyDefinition, TypeDefinition>(storey, (IntPtr) this.<>m__0)), <>f__am$cache1);
+                return this._usedAssemblies.Select<AssemblyDefinition, TypeDefinition>(new Func<AssemblyDefinition, TypeDefinition>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<TypeDefinition>(<>f__am$cache1);
             }
-            AssemblyDefinition definition = Enumerable.FirstOrDefault<AssemblyDefinition>(this._usedAssemblies, new Func<AssemblyDefinition, bool>(storey, (IntPtr) this.<>m__1));
-            if (definition == null)
-            {
-                return null;
-            }
-            return definition.MainModule.GetType(storey.name);
+            AssemblyDefinition definition = this._usedAssemblies.FirstOrDefault<AssemblyDefinition>(new Func<AssemblyDefinition, bool>(storey, (IntPtr) this.<>m__1));
+            return definition?.MainModule.GetType(storey.name);
         }
         [CompilerGenerated]
         private sealed class <GetTypeByName>c__AnonStorey0
@@ -117,15 +113,11 @@
             internal AssemblyNameParseInfo assembly;
             internal string name;
 
-            internal TypeDefinition <>m__0(AssemblyDefinition a)
-            {
-                return a.MainModule.GetType(this.name);
-            }
+            internal TypeDefinition <>m__0(AssemblyDefinition a) => 
+                a.MainModule.GetType(this.name);
 
-            internal bool <>m__1(AssemblyDefinition a)
-            {
-                return (a.Name.Name == this.assembly.Name);
-            }
+            internal bool <>m__1(AssemblyDefinition a) => 
+                (a.Name.Name == this.assembly.Name);
         }
     }
 }

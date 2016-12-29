@@ -17,10 +17,8 @@
         /// </summary>
         public GameObject prefab
         {
-            get
-            {
-                return this.m_Prefab;
-            }
+            get => 
+                this.m_Prefab;
             set
             {
                 this.m_Prefab = value;
@@ -31,10 +29,8 @@
         /// </summary>
         public float bendFactor
         {
-            get
-            {
-                return this.m_BendFactor;
-            }
+            get => 
+                this.m_BendFactor;
             set
             {
                 this.m_BendFactor = value;

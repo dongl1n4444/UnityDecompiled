@@ -4,11 +4,9 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
-    [Extension]
     public static class SafeHandleExtensions
     {
-        [Extension]
-        public static void ClosePortable(SafeHandle handle)
+        public static void ClosePortable(this SafeHandle handle)
         {
             handle.Close();
         }

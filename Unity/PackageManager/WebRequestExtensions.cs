@@ -4,11 +4,9 @@
     using System.Net;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class WebRequestExtensions
     {
-        [Extension]
-        public static WebResponse GetResponseWithoutException(WebRequest request)
+        public static WebResponse GetResponseWithoutException(this WebRequest request)
         {
             try
             {

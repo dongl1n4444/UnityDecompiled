@@ -27,10 +27,8 @@
             return fullName;
         }
 
-        private static string CreateName(Type type, MethodInfo method)
-        {
-            return ((method == null) ? type.FullName : method.Name);
-        }
+        private static string CreateName(Type type, MethodInfo method) => 
+            ((method == null) ? type.FullName : method.Name);
 
         protected override void ResultUpdated(TestResult result)
         {

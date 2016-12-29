@@ -85,10 +85,8 @@
         {
             internal ComponentUtility.IsDesiredComponent componentFilter;
 
-            internal bool <>m__0(Component x)
-            {
-                return !this.componentFilter(x);
-            }
+            internal bool <>m__0(Component x) => 
+                !this.componentFilter(x);
         }
 
         [CompilerGenerated]
@@ -96,15 +94,11 @@
         {
             internal ComponentUtility.IsDesiredComponent componentFilter;
 
-            internal bool <>m__0(Component x)
-            {
-                return !this.componentFilter(x);
-            }
+            internal bool <>m__0(Component x) => 
+                !this.componentFilter(x);
 
-            internal bool <>m__1(Component x)
-            {
-                return !this.componentFilter(x);
-            }
+            internal bool <>m__1(Component x) => 
+                !this.componentFilter(x);
         }
 
         public delegate bool IsDesiredComponent(Component c);

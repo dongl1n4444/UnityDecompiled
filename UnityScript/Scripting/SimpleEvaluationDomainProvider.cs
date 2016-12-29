@@ -29,20 +29,14 @@
             this._imports = imports;
         }
 
-        public override Assembly[] GetAssemblyReferences()
-        {
-            return new Assembly[0];
-        }
+        public override Assembly[] GetAssemblyReferences() => 
+            new Assembly[0];
 
-        public override EvaluationDomain GetEvaluationDomain()
-        {
-            return this._domain;
-        }
+        public override EvaluationDomain GetEvaluationDomain() => 
+            this._domain;
 
-        public override string[] GetImports()
-        {
-            return this._imports;
-        }
+        public override string[] GetImports() => 
+            this._imports;
     }
 }
 

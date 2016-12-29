@@ -138,7 +138,7 @@
             InstallerState state = Enumerable.FirstOrDefault<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey, (IntPtr) this.<>m__0));
             if (state != null)
             {
-                Debug.Log(string.Format("Cancelling installation of {0}", state.module.Name));
+                Debug.Log($"Cancelling installation of {state.module.Name}");
                 state.installer.Cancel(false);
             }
         }
@@ -172,7 +172,7 @@
                             module = enumerator.Current
                         };
                         bool flag2 = storey.module.BasePath != null;
-                        GUIContent content2 = new GUIContent(string.Format("{0} {1}", storey.module.Info.Version, !flag2 ? string.Empty : "(downloaded)"));
+                        GUIContent content2 = new GUIContent($"{storey.module.Info.Version} {!flag2 ? string.Empty : "(downloaded)"}");
                         GUILayout.BeginHorizontal(new GUILayoutOption[0]);
                         GUILayout.Space((float) num2);
                         GUILayout.Label(content2, new GUILayoutOption[0]);
@@ -190,7 +190,7 @@
                             }
                             else
                             {
-                                GUILayout.Label(string.Format("{0}... ({1})", state.message, state.progress.ToString("P")), new GUILayoutOption[0]);
+                                GUILayout.Label($"{state.message}... ({state.progress.ToString("P")})", new GUILayoutOption[0]);
                                 if (GUILayout.Button(Styles.cancelButtonContent, new GUILayoutOption[0]))
                                 {
                                     this.CancelPackage(storey.module);
@@ -309,7 +309,7 @@
 
         private void ListPackages(IEnumerable<PackageInfo> packages, int listsKeyboardID)
         {
-            if (Enumerable.Any<PackageInfo>(packages))
+            if (packages.Any<PackageInfo>())
             {
                 foreach (PackageInfo info in packages)
                 {
@@ -353,7 +353,7 @@
                             packageType = (PackageType) current
                         };
                         IEnumerable<PackageInfo> source = Enumerable.Where<PackageInfo>(this.allListedPackages, new Func<PackageInfo, bool>(storey, (IntPtr) this.<>m__0));
-                        if (Enumerable.Any<PackageInfo>(source))
+                        if (source.Any<PackageInfo>())
                         {
                             if (packageTypeContents.ContainsKey(storey.packageType))
                             {
@@ -415,7 +415,7 @@
                     flag = true;
                 }
             }
-            this.SelectedPackage = Enumerable.First<PackageInfo>(source);
+            this.SelectedPackage = source.First<PackageInfo>();
         }
 
         private void SelectPrev()
@@ -449,13 +449,8 @@
             EditorGUILayout.EndHorizontal();
         }
 
-        private IEnumerable<PackageInfo> allListedPackages
-        {
-            get
-            {
-                return Enumerable.Union<PackageInfo>(this.availablePackages, this.localPackages, packageNameComparer);
-            }
-        }
+        private IEnumerable<PackageInfo> allListedPackages =>
+            this.availablePackages.Union<PackageInfo>(this.localPackages, packageNameComparer);
 
         private IEnumerable<PackageInfo> availablePackages
         {
@@ -501,10 +496,8 @@
 
         internal Window parent
         {
-            get
-            {
-                return this.m_Parent;
-            }
+            get => 
+                this.m_Parent;
             set
             {
                 this.m_Parent = value;
@@ -515,9 +508,9 @@
         {
             get
             {
-                if ((this.selectedPackageHash == -1) && (Enumerable.Count<PackageInfo>(this.allListedPackages) > 0))
+                if ((this.selectedPackageHash == -1) && (this.allListedPackages.Count<PackageInfo>() > 0))
                 {
-                    this.selectedPackageHash = Enumerable.First<PackageInfo>(this.allListedPackages).GetHashCode();
+                    this.selectedPackageHash = this.allListedPackages.First<PackageInfo>().GetHashCode();
                 }
                 if (hashToPackageCache.ContainsKey(this.selectedPackageHash))
                 {
@@ -551,10 +544,8 @@
         {
             internal PackageVersion loadedVersion;
 
-            internal bool <>m__0(IvyModule v)
-            {
-                return ((v.BasePath == null) && (v.Version > this.loadedVersion));
-            }
+            internal bool <>m__0(IvyModule v) => 
+                ((v.BasePath == null) && (v.Version > this.loadedVersion));
         }
 
         [CompilerGenerated]
@@ -562,10 +553,8 @@
         {
             internal IvyModule module;
 
-            internal bool <>m__0(ListView.InstallerState i)
-            {
-                return (i.module == this.module);
-            }
+            internal bool <>m__0(ListView.InstallerState i) => 
+                (i.module == this.module);
         }
 
         [CompilerGenerated]
@@ -573,10 +562,8 @@
         {
             internal IvyModule module;
 
-            internal bool <>m__0(ListView.InstallerState i)
-            {
-                return (i.module == this.module);
-            }
+            internal bool <>m__0(ListView.InstallerState i) => 
+                (i.module == this.module);
         }
 
         [CompilerGenerated]
@@ -584,10 +571,8 @@
         {
             internal IvyModule module;
 
-            internal bool <>m__0(ListView.InstallerState i)
-            {
-                return (i.module == this.module);
-            }
+            internal bool <>m__0(ListView.InstallerState i) => 
+                (i.module == this.module);
         }
 
         [CompilerGenerated]
@@ -595,10 +580,8 @@
         {
             internal PackageType packageType;
 
-            internal bool <>m__0(PackageInfo p)
-            {
-                return (p.type == this.packageType);
-            }
+            internal bool <>m__0(PackageInfo p) => 
+                (p.type == this.packageType);
         }
 
         private class InstallerState
@@ -613,15 +596,11 @@
 
         private class PackageNameComparer : IEqualityComparer<PackageInfo>
         {
-            public bool Equals(PackageInfo x, PackageInfo y)
-            {
-                return x.packageName.Equals(y.packageName);
-            }
+            public bool Equals(PackageInfo x, PackageInfo y) => 
+                x.packageName.Equals(y.packageName);
 
-            public int GetHashCode(PackageInfo obj)
-            {
-                return obj.packageName.GetHashCode();
-            }
+            public int GetHashCode(PackageInfo obj) => 
+                obj.packageName.GetHashCode();
         }
     }
 }

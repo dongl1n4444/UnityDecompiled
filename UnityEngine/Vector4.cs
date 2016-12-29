@@ -148,10 +148,8 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="t"></param>
-        public static Vector4 LerpUnclamped(Vector4 a, Vector4 b, float t)
-        {
-            return new Vector4(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t), a.w + ((b.w - a.w) * t));
-        }
+        public static Vector4 LerpUnclamped(Vector4 a, Vector4 b, float t) => 
+            new Vector4(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t), a.w + ((b.w - a.w) * t));
 
         /// <summary>
         /// <para>Moves a point current towards target.</para>
@@ -175,10 +173,8 @@
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static Vector4 Scale(Vector4 a, Vector4 b)
-        {
-            return new Vector4(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
-        }
+        public static Vector4 Scale(Vector4 a, Vector4 b) => 
+            new Vector4(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w);
 
         /// <summary>
         /// <para>Multiplies every component of this vector by the same component of scale.</para>
@@ -192,10 +188,8 @@
             this.w *= scale.w;
         }
 
-        public override int GetHashCode()
-        {
-            return (((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2)) ^ (this.w.GetHashCode() >> 1));
-        }
+        public override int GetHashCode() => 
+            (((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2)) ^ (this.w.GetHashCode() >> 1));
 
         public override bool Equals(object other)
         {
@@ -240,167 +234,106 @@
         /// <summary>
         /// <para>Returns this vector with a magnitude of 1 (Read Only).</para>
         /// </summary>
-        public Vector4 normalized
-        {
-            get
-            {
-                return Normalize(this);
-            }
-        }
+        public Vector4 normalized =>
+            Normalize(this);
         /// <summary>
         /// <para>Dot Product of two vectors.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static float Dot(Vector4 a, Vector4 b)
-        {
-            return ((((a.x * b.x) + (a.y * b.y)) + (a.z * b.z)) + (a.w * b.w));
-        }
+        public static float Dot(Vector4 a, Vector4 b) => 
+            ((((a.x * b.x) + (a.y * b.y)) + (a.z * b.z)) + (a.w * b.w));
 
         /// <summary>
         /// <para>Projects a vector onto another vector.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static Vector4 Project(Vector4 a, Vector4 b)
-        {
-            return (Vector4) ((b * Dot(a, b)) / Dot(b, b));
-        }
+        public static Vector4 Project(Vector4 a, Vector4 b) => 
+            ((Vector4) ((b * Dot(a, b)) / Dot(b, b)));
 
         /// <summary>
         /// <para>Returns the distance between a and b.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static float Distance(Vector4 a, Vector4 b)
-        {
-            return Magnitude(a - b);
-        }
+        public static float Distance(Vector4 a, Vector4 b) => 
+            Magnitude(a - b);
 
-        public static float Magnitude(Vector4 a)
-        {
-            return Mathf.Sqrt(Dot(a, a));
-        }
+        public static float Magnitude(Vector4 a) => 
+            Mathf.Sqrt(Dot(a, a));
 
         /// <summary>
         /// <para>Returns the length of this vector (Read Only).</para>
         /// </summary>
-        public float magnitude
-        {
-            get
-            {
-                return Mathf.Sqrt(Dot(this, this));
-            }
-        }
+        public float magnitude =>
+            Mathf.Sqrt(Dot(this, this));
         /// <summary>
         /// <para>Returns the squared length of this vector (Read Only).</para>
         /// </summary>
-        public float sqrMagnitude
-        {
-            get
-            {
-                return Dot(this, this);
-            }
-        }
+        public float sqrMagnitude =>
+            Dot(this, this);
         /// <summary>
         /// <para>Returns a vector that is made from the smallest components of two vectors.</para>
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static Vector4 Min(Vector4 lhs, Vector4 rhs)
-        {
-            return new Vector4(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z), Mathf.Min(lhs.w, rhs.w));
-        }
+        public static Vector4 Min(Vector4 lhs, Vector4 rhs) => 
+            new Vector4(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z), Mathf.Min(lhs.w, rhs.w));
 
         /// <summary>
         /// <para>Returns a vector that is made from the largest components of two vectors.</para>
         /// </summary>
         /// <param name="lhs"></param>
         /// <param name="rhs"></param>
-        public static Vector4 Max(Vector4 lhs, Vector4 rhs)
-        {
-            return new Vector4(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z), Mathf.Max(lhs.w, rhs.w));
-        }
+        public static Vector4 Max(Vector4 lhs, Vector4 rhs) => 
+            new Vector4(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z), Mathf.Max(lhs.w, rhs.w));
 
         /// <summary>
         /// <para>Shorthand for writing Vector4(0,0,0,0).</para>
         /// </summary>
-        public static Vector4 zero
-        {
-            get
-            {
-                return new Vector4(0f, 0f, 0f, 0f);
-            }
-        }
+        public static Vector4 zero =>
+            new Vector4(0f, 0f, 0f, 0f);
         /// <summary>
         /// <para>Shorthand for writing Vector4(1,1,1,1).</para>
         /// </summary>
-        public static Vector4 one
-        {
-            get
-            {
-                return new Vector4(1f, 1f, 1f, 1f);
-            }
-        }
-        public static Vector4 operator +(Vector4 a, Vector4 b)
-        {
-            return new Vector4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
-        }
+        public static Vector4 one =>
+            new Vector4(1f, 1f, 1f, 1f);
+        public static Vector4 operator +(Vector4 a, Vector4 b) => 
+            new Vector4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
 
-        public static Vector4 operator -(Vector4 a, Vector4 b)
-        {
-            return new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
-        }
+        public static Vector4 operator -(Vector4 a, Vector4 b) => 
+            new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 
-        public static Vector4 operator -(Vector4 a)
-        {
-            return new Vector4(-a.x, -a.y, -a.z, -a.w);
-        }
+        public static Vector4 operator -(Vector4 a) => 
+            new Vector4(-a.x, -a.y, -a.z, -a.w);
 
-        public static Vector4 operator *(Vector4 a, float d)
-        {
-            return new Vector4(a.x * d, a.y * d, a.z * d, a.w * d);
-        }
+        public static Vector4 operator *(Vector4 a, float d) => 
+            new Vector4(a.x * d, a.y * d, a.z * d, a.w * d);
 
-        public static Vector4 operator *(float d, Vector4 a)
-        {
-            return new Vector4(a.x * d, a.y * d, a.z * d, a.w * d);
-        }
+        public static Vector4 operator *(float d, Vector4 a) => 
+            new Vector4(a.x * d, a.y * d, a.z * d, a.w * d);
 
-        public static Vector4 operator /(Vector4 a, float d)
-        {
-            return new Vector4(a.x / d, a.y / d, a.z / d, a.w / d);
-        }
+        public static Vector4 operator /(Vector4 a, float d) => 
+            new Vector4(a.x / d, a.y / d, a.z / d, a.w / d);
 
-        public static bool operator ==(Vector4 lhs, Vector4 rhs)
-        {
-            return (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
-        }
+        public static bool operator ==(Vector4 lhs, Vector4 rhs) => 
+            (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
 
-        public static bool operator !=(Vector4 lhs, Vector4 rhs)
-        {
-            return (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
-        }
+        public static bool operator !=(Vector4 lhs, Vector4 rhs) => 
+            (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
 
-        public static implicit operator Vector4(Vector3 v)
-        {
-            return new Vector4(v.x, v.y, v.z, 0f);
-        }
+        public static implicit operator Vector4(Vector3 v) => 
+            new Vector4(v.x, v.y, v.z, 0f);
 
-        public static implicit operator Vector3(Vector4 v)
-        {
-            return new Vector3(v.x, v.y, v.z);
-        }
+        public static implicit operator Vector3(Vector4 v) => 
+            new Vector3(v.x, v.y, v.z);
 
-        public static implicit operator Vector4(Vector2 v)
-        {
-            return new Vector4(v.x, v.y, 0f, 0f);
-        }
+        public static implicit operator Vector4(Vector2 v) => 
+            new Vector4(v.x, v.y, 0f, 0f);
 
-        public static implicit operator Vector2(Vector4 v)
-        {
-            return new Vector2(v.x, v.y);
-        }
+        public static implicit operator Vector2(Vector4 v) => 
+            new Vector2(v.x, v.y);
 
         /// <summary>
         /// <para>Returns a nicely formatted string for this vector.</para>
@@ -422,15 +355,11 @@
             return UnityString.Format("({0}, {1}, {2}, {3})", args);
         }
 
-        public static float SqrMagnitude(Vector4 a)
-        {
-            return Dot(a, a);
-        }
+        public static float SqrMagnitude(Vector4 a) => 
+            Dot(a, a);
 
-        public float SqrMagnitude()
-        {
-            return Dot(this, this);
-        }
+        public float SqrMagnitude() => 
+            Dot(this, this);
     }
 }
 

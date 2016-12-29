@@ -4,11 +4,9 @@
     using System.Net.Sockets;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class SocketExtensions
     {
-        [Extension]
-        public static void DisposePortable(Socket socket)
+        public static void DisposePortable(this Socket socket)
         {
             socket.Close();
         }

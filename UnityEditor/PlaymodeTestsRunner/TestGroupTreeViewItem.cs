@@ -10,10 +10,8 @@
         {
         }
 
-        public override bool IsVisible(FilteringOptions options)
-        {
-            return base.IsVisible(options);
-        }
+        public override bool IsVisible(FilteringOptions options) => 
+            base.IsVisible(options);
 
         protected override void ResultUpdated(TestResult result)
         {

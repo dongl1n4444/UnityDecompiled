@@ -17,10 +17,8 @@
             return (base.GetType() == obj.GetType());
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetType().GetHashCode();
-        }
+        public override int GetHashCode() => 
+            base.GetType().GetHashCode();
 
         public static bool operator ==(RuntimePlatform left, RuntimePlatform right)
         {
@@ -31,10 +29,8 @@
             return (left.GetType() == right.GetType());
         }
 
-        public static bool operator !=(RuntimePlatform left, RuntimePlatform right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(RuntimePlatform left, RuntimePlatform right) => 
+            !(left == right);
 
         public static RuntimePlatform Current
         {
@@ -56,13 +52,8 @@
             }
         }
 
-        public virtual bool ExecutesOnHostMachine
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool ExecutesOnHostMachine =>
+            true;
 
         public abstract string Name { get; }
     }

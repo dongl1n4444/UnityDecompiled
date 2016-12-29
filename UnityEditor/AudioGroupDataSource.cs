@@ -49,10 +49,8 @@
             }
         }
 
-        public static int GetUniqueNodeID(AudioMixerGroupController group)
-        {
-            return group.GetInstanceID();
-        }
+        public static int GetUniqueNodeID(AudioMixerGroupController group) => 
+            group.GetInstanceID();
 
         public override bool IsRenamingItemAllowed(TreeViewItem node)
         {

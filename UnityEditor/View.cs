@@ -62,20 +62,10 @@
             }
         }
 
-        public Vector2 minSize
-        {
-            get
-            {
-                return this.m_MinSize;
-            }
-        }
-        public Vector2 maxSize
-        {
-            get
-            {
-                return this.m_MaxSize;
-            }
-        }
+        public Vector2 minSize =>
+            this.m_MinSize;
+        public Vector2 maxSize =>
+            this.m_MaxSize;
         internal void SetMinMaxSizes(Vector2 min, Vector2 max)
         {
             if ((this.minSize != min) || (this.maxSize != max))
@@ -117,10 +107,8 @@
 
         public Rect position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 this.SetPosition(value);
@@ -162,27 +150,12 @@
                 return windowPosition;
             }
         }
-        public ContainerWindow window
-        {
-            get
-            {
-                return this.m_Window;
-            }
-        }
-        public View parent
-        {
-            get
-            {
-                return this.m_Parent;
-            }
-        }
-        public View[] children
-        {
-            get
-            {
-                return this.m_Children;
-            }
-        }
+        public ContainerWindow window =>
+            this.m_Window;
+        public View parent =>
+            this.m_Parent;
+        public View[] children =>
+            this.m_Children;
         public int IndexOfChild(View child)
         {
             int num = 0;
@@ -264,10 +237,8 @@
             }
         }
 
-        protected virtual bool OnFocus()
-        {
-            return true;
-        }
+        protected virtual bool OnFocus() => 
+            true;
     }
 }
 

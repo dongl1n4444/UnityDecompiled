@@ -33,10 +33,8 @@
             }
         }
 
-        public override bool CanBeParent(TreeViewItem item)
-        {
-            return true;
-        }
+        public override bool CanBeParent(TreeViewItem item) => 
+            true;
 
         public override void FetchData()
         {

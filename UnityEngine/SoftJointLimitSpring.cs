@@ -16,10 +16,8 @@
         /// </summary>
         public float spring
         {
-            get
-            {
-                return this.m_Spring;
-            }
+            get => 
+                this.m_Spring;
             set
             {
                 this.m_Spring = value;
@@ -30,10 +28,8 @@
         /// </summary>
         public float damper
         {
-            get
-            {
-                return this.m_Damper;
-            }
+            get => 
+                this.m_Damper;
             set
             {
                 this.m_Damper = value;

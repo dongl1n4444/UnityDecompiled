@@ -79,10 +79,8 @@
         /// </summary>
         public Texture texture
         {
-            get
-            {
-                return this.m_Texture;
-            }
+            get => 
+                this.m_Texture;
             set
             {
                 if (this.m_Texture != value)
@@ -99,10 +97,8 @@
         /// </summary>
         public Rect uvRect
         {
-            get
-            {
-                return this.m_UVRect;
-            }
+            get => 
+                this.m_UVRect;
             set
             {
                 if (this.m_UVRect != value)

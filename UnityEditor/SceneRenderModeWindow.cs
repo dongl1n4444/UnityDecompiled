@@ -121,20 +121,14 @@
             rect.y += 3f;
         }
 
-        public static GUIContent GetGUIContent(DrawCameraMode drawCameraMode)
-        {
-            return Styles.sRenderModeOptions[(int) drawCameraMode];
-        }
+        public static GUIContent GetGUIContent(DrawCameraMode drawCameraMode) => 
+            Styles.sRenderModeOptions[(int) drawCameraMode];
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(205f, this.m_WindowHeight);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(205f, this.m_WindowHeight);
 
-        private bool IsModeDisabled(DrawCameraMode mode)
-        {
-            return ((!this.m_EnableBakedGI.boolValue && (mode == DrawCameraMode.Baked)) || ((!this.m_EnableRealtimeGI.boolValue && !this.m_EnableBakedGI.boolValue) && (mode >= DrawCameraMode.Charting)));
-        }
+        private bool IsModeDisabled(DrawCameraMode mode) => 
+            ((!this.m_EnableBakedGI.boolValue && (mode == DrawCameraMode.Baked)) || ((!this.m_EnableRealtimeGI.boolValue && !this.m_EnableBakedGI.boolValue) && (mode >= DrawCameraMode.Charting)));
 
         public override void OnGUI(Rect rect)
         {

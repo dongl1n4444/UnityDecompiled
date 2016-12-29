@@ -9,7 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(PluginImporter))]
+    [CustomEditor(typeof(PluginImporter)), CanEditMultipleObjects]
     internal class PluginImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -116,15 +116,13 @@
             return list2.ToArray();
         }
 
-        internal Compatibility GetPlatformCompatibility(string platformName)
-        {
-            return this.m_CompatibleWithPlatform[(int) BuildPipeline.GetBuildTargetByName(platformName)];
-        }
+        internal Compatibility GetPlatformCompatibility(string platformName) => 
+            this.m_CompatibleWithPlatform[(int) BuildPipeline.GetBuildTargetByName(platformName)];
 
         private static int GetPlatformGroupArraySize()
         {
             int num = 0;
-            foreach (BuildTarget target in EditorExtensionMethods.EnumGetNonObsoleteValues(typeof(BuildTarget)))
+            foreach (BuildTarget target in typeof(BuildTarget).EnumGetNonObsoleteValues())
             {
                 if (num < (target + 1))
                 {
@@ -137,7 +135,7 @@
         private static List<BuildTarget> GetValidBuildTargets()
         {
             List<BuildTarget> list = new List<BuildTarget>();
-            foreach (BuildTarget target in EditorExtensionMethods.EnumGetNonObsoleteValues(typeof(BuildTarget)))
+            foreach (BuildTarget target in typeof(BuildTarget).EnumGetNonObsoleteValues())
             {
                 if (((target > ~BuildTarget.iPhone) && !IgnorePlatform(target)) && ((!ModuleManager.IsPlatformSupported(target) || ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(target))) || IsStandaloneTarget(target)))
                 {
@@ -168,20 +166,14 @@
             return flag;
         }
 
-        private static bool IgnorePlatform(BuildTarget platform)
-        {
-            return false;
-        }
+        private static bool IgnorePlatform(BuildTarget platform) => 
+            false;
 
-        private bool IsEditingPlatformSettingsSupported()
-        {
-            return (base.targets.Length == 1);
-        }
+        private bool IsEditingPlatformSettingsSupported() => 
+            (base.targets.Length == 1);
 
-        private static bool IsStandaloneTarget(BuildTarget buildTarget)
-        {
-            return Enumerable.Contains<BuildTarget>(m_StandaloneTargets, buildTarget);
-        }
+        private static bool IsStandaloneTarget(BuildTarget buildTarget) => 
+            m_StandaloneTargets.Contains<BuildTarget>(buildTarget);
 
         private void OnDisable()
         {
@@ -485,10 +477,8 @@
             throw new InvalidEnumArgumentException("Invalid value: " + value.ToString());
         }
 
-        private Compatibility SwitchToInclude(Compatibility value)
-        {
-            return value;
-        }
+        private Compatibility SwitchToInclude(Compatibility value) => 
+            value;
 
         private Compatibility ToggleWithMixedValue(Compatibility value, string title)
         {
@@ -503,13 +493,8 @@
             return value;
         }
 
-        internal IPluginImporterExtension[] additionalExtensions
-        {
-            get
-            {
-                return new IPluginImporterExtension[] { this.editorExtension, this.desktopExtension };
-            }
-        }
+        internal IPluginImporterExtension[] additionalExtensions =>
+            new IPluginImporterExtension[] { this.editorExtension, this.desktopExtension };
 
         private Compatibility compatibleWithStandalone
         {
@@ -559,39 +544,22 @@
             }
         }
 
-        internal PluginImporter importer
-        {
-            get
-            {
-                return (base.target as PluginImporter);
-            }
-        }
+        internal PluginImporter importer =>
+            (base.target as PluginImporter);
 
-        internal PluginImporter[] importers
-        {
-            get
-            {
-                return Enumerable.ToArray<PluginImporter>(Enumerable.Cast<PluginImporter>(base.targets));
-            }
-        }
+        internal PluginImporter[] importers =>
+            base.targets.Cast<PluginImporter>().ToArray<PluginImporter>();
 
-        internal override bool showImportedObject
-        {
-            get
-            {
-                return false;
-            }
-        }
+        internal override bool showImportedObject =>
+            false;
 
         [CompilerGenerated]
         private sealed class <ResetValues>c__AnonStorey0
         {
             internal BuildTarget platform;
 
-            internal bool <>m__0(PluginImporter imp)
-            {
-                return imp.GetCompatibleWithPlatform(this.platform);
-            }
+            internal bool <>m__0(PluginImporter imp) => 
+                imp.GetCompatibleWithPlatform(this.platform);
         }
 
         [CompilerGenerated]
@@ -599,10 +567,8 @@
         {
             internal BuildTarget platform;
 
-            internal bool <>m__0(PluginImporter imp)
-            {
-                return !imp.GetExcludeFromAnyPlatform(this.platform);
-            }
+            internal bool <>m__0(PluginImporter imp) => 
+                !imp.GetExcludeFromAnyPlatform(this.platform);
         }
 
         internal enum Compatibility

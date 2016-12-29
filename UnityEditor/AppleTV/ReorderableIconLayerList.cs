@@ -100,10 +100,8 @@
 
         public List<Texture2D> textures
         {
-            get
-            {
-                return (List<Texture2D>) this.m_List.list;
-            }
+            get => 
+                ((List<Texture2D>) this.m_List.list);
             set
             {
                 this.m_List.list = value;

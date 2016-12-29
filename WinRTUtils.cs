@@ -3,9 +3,7 @@ using UnityEditor;
 
 internal class WinRTUtils
 {
-    public static string GetProcessorArchitecture(BuildTarget target)
-    {
-        return "x86";
-    }
+    public static string GetProcessorArchitecture(BuildTarget target) => 
+        "x86";
 }
 

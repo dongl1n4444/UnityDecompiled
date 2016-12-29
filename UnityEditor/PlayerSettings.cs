@@ -70,10 +70,8 @@
         /// <para>Returns a list of icon sizes for the specified platform.</para>
         /// </summary>
         /// <param name="platform"></param>
-        public static int[] GetIconSizesForTargetGroup(BuildTargetGroup platform)
-        {
-            return GetIconWidthsForPlatform(GetPlatformName(platform));
-        }
+        public static int[] GetIconSizesForTargetGroup(BuildTargetGroup platform) => 
+            GetIconWidthsForPlatform(GetPlatformName(platform));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int[] GetIconWidthsForPlatform(string platform);
@@ -411,10 +409,8 @@
         [Obsolete("The option alwaysDisplayWatermark is deprecated and is always false", true)]
         public static bool alwaysDisplayWatermark
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -455,10 +451,8 @@
         /// </summary>
         public static string cloudProjectId
         {
-            get
-            {
-                return cloudProjectIdRaw;
-            }
+            get => 
+                cloudProjectIdRaw;
             internal set
             {
                 cloudProjectIdRaw = value;
@@ -562,10 +556,8 @@
         [Obsolete("Use AssetBundles instead for streaming data", true)]
         public static int firstStreamedLevelWithResources
         {
-            get
-            {
-                return 0;
-            }
+            get => 
+                0;
             set
             {
             }
@@ -607,10 +599,8 @@
         [Obsolete("Use PlayerSettings.iOS.locationUsageDescription instead (UnityUpgradable) -> UnityEditor.PlayerSettings/iOS.locationUsageDescription", false)]
         public static string locationUsageDescription
         {
-            get
-            {
-                return iOS.locationUsageDescription;
-            }
+            get => 
+                iOS.locationUsageDescription;
             set
             {
                 iOS.locationUsageDescription = value;
@@ -632,10 +622,8 @@
         [Obsolete("mobileRenderingPath is ignored, use UnityEditor.Rendering.TierSettings with UnityEditor.Rendering.SetTierSettings/GetTierSettings instead", false)]
         public static RenderingPath mobileRenderingPath
         {
-            get
-            {
-                return EditorGraphicsSettings.GetCurrentTierSettings().renderingPath;
-            }
+            get => 
+                EditorGraphicsSettings.GetCurrentTierSettings().renderingPath;
             set
             {
             }
@@ -655,13 +643,8 @@
 
         public static bool openGLRequireES31AEP { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-        public static Guid productGUID
-        {
-            get
-            {
-                return new Guid(productGUIDRaw);
-            }
-        }
+        public static Guid productGUID =>
+            new Guid(productGUIDRaw);
 
         private static byte[] productGUIDRaw { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
@@ -681,10 +664,8 @@
         [Obsolete("renderingPath is ignored, use UnityEditor.Rendering.TierSettings with UnityEditor.Rendering.SetTierSettings/GetTierSettings instead", false)]
         public static RenderingPath renderingPath
         {
-            get
-            {
-                return EditorGraphicsSettings.GetCurrentTierSettings().renderingPath;
-            }
+            get => 
+                EditorGraphicsSettings.GetCurrentTierSettings().renderingPath;
             set
             {
             }
@@ -761,10 +742,8 @@
         [Obsolete("targetGlesGraphics is ignored, use SetGraphicsAPIs/GetGraphicsAPIs APIs", false)]
         public static TargetGlesGraphics targetGlesGraphics
         {
-            get
-            {
-                return TargetGlesGraphics.Automatic;
-            }
+            get => 
+                TargetGlesGraphics.Automatic;
             set
             {
             }
@@ -773,10 +752,8 @@
         [Obsolete("targetIOSGraphics is ignored, use SetGraphicsAPIs/GetGraphicsAPIs APIs", false)]
         public static TargetIOSGraphics targetIOSGraphics
         {
-            get
-            {
-                return TargetIOSGraphics.Automatic;
-            }
+            get => 
+                TargetIOSGraphics.Automatic;
             set
             {
             }
@@ -905,10 +882,8 @@
         {
             internal BuildTargetGroup targetGroup;
 
-            internal bool <>m__0(BuildPlayerWindow.BuildPlatform p)
-            {
-                return (p.targetGroup == this.targetGroup);
-            }
+            internal bool <>m__0(BuildPlayerWindow.BuildPlatform p) => 
+                (p.targetGroup == this.targetGroup);
         }
 
         /// <summary>
@@ -1015,10 +990,8 @@
             [Obsolete("This has been replaced by disableDepthAndStencilBuffers")]
             public static bool use24BitDepthBuffer
             {
-                get
-                {
-                    return !disableDepthAndStencilBuffers;
-                }
+                get => 
+                    !disableDepthAndStencilBuffers;
                 set
                 {
                 }
@@ -1035,10 +1008,8 @@
         /// </summary>
         public sealed class iOS
         {
-            internal static iOSDeviceRequirementGroup AddDeviceRequirementsForAssetBundleVariant(string name)
-            {
-                return new iOSDeviceRequirementGroup(name);
-            }
+            internal static iOSDeviceRequirementGroup AddDeviceRequirementsForAssetBundleVariant(string name) => 
+                new iOSDeviceRequirementGroup(name);
 
             [MethodImpl(MethodImplOptions.InternalCall)]
             private static extern bool CheckAssetBundleVariantHasDeviceRequirements(string name);
@@ -1110,10 +1081,8 @@
             [Obsolete("exitOnSuspend is deprecated, use appInBackgroundBehavior", false)]
             public static bool exitOnSuspend
             {
-                get
-                {
-                    return (appInBackgroundBehavior == iOSAppInBackgroundBehavior.Exit);
-                }
+                get => 
+                    (appInBackgroundBehavior == iOSAppInBackgroundBehavior.Exit);
                 set
                 {
                     appInBackgroundBehavior = iOSAppInBackgroundBehavior.Exit;
@@ -1146,10 +1115,8 @@
             [Obsolete("Use PlayerSettings.muteOtherAudioSources instead (UnityUpgradable) -> UnityEditor.PlayerSettings.muteOtherAudioSources", false)]
             public static bool overrideIPodMusic
             {
-                get
-                {
-                    return PlayerSettings.muteOtherAudioSources;
-                }
+                get => 
+                    PlayerSettings.muteOtherAudioSources;
                 set
                 {
                     PlayerSettings.muteOtherAudioSources = value;
@@ -1210,10 +1177,8 @@
             [Obsolete("Use Screen.SetResolution at runtime", true)]
             public static iOSTargetResolution targetResolution
             {
-                get
-                {
-                    return iOSTargetResolution.Native;
-                }
+                get => 
+                    iOSTargetResolution.Native;
                 set
                 {
                 }
@@ -2057,13 +2022,11 @@
             /// <returns>
             /// <para>The new logo.</para>
             /// </returns>
-            public static PlayerSettings.SplashScreenLogo Create([DefaultValue("k_MinLogoTime")] float duration, [DefaultValue("null")] Sprite logo)
-            {
-                return new PlayerSettings.SplashScreenLogo { 
+            public static PlayerSettings.SplashScreenLogo Create([DefaultValue("k_MinLogoTime")] float duration, [DefaultValue("null")] Sprite logo) => 
+                new PlayerSettings.SplashScreenLogo { 
                     m_Duration = duration,
                     m_Logo = logo
                 };
-            }
 
             [ExcludeFromDocs]
             public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo()
@@ -2079,23 +2042,19 @@
             /// <returns>
             /// <para>The new logo.</para>
             /// </returns>
-            public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo([DefaultValue("k_MinLogoTime")] float duration)
-            {
-                return new PlayerSettings.SplashScreenLogo { 
+            public static PlayerSettings.SplashScreenLogo CreateWithUnityLogo([DefaultValue("k_MinLogoTime")] float duration) => 
+                new PlayerSettings.SplashScreenLogo { 
                     m_Duration = duration,
                     m_Logo = s_UnityLogo
                 };
-            }
 
             /// <summary>
             /// <para>The Sprite that is shown during this logo. If this is null, then no logo will be displayed for the duration.</para>
             /// </summary>
             public Sprite logo
             {
-                get
-                {
-                    return this.m_Logo;
-                }
+                get => 
+                    this.m_Logo;
                 set
                 {
                     this.m_Logo = value;
@@ -2104,22 +2063,15 @@
             /// <summary>
             /// <para>The Unity logo Sprite.</para>
             /// </summary>
-            public static Sprite unityLogo
-            {
-                get
-                {
-                    return s_UnityLogo;
-                }
-            }
+            public static Sprite unityLogo =>
+                s_UnityLogo;
             /// <summary>
             /// <para>The total time in seconds for which the logo is shown. The minimum duration is 2 seconds.</para>
             /// </summary>
             public float duration
             {
-                get
-                {
-                    return Mathf.Max(this.m_Duration, 2f);
-                }
+                get => 
+                    Mathf.Max(this.m_Duration, 2f);
                 set
                 {
                     this.m_Duration = Mathf.Max(value, 2f);
@@ -2543,10 +2495,8 @@
             [Obsolete("PlayerSettings.WSA.enableIndependentInputSource is deprecated. Use PlayerSettings.WSA.inputSource.", false)]
             public static bool enableIndependentInputSource
             {
-                get
-                {
-                    return (inputSource == PlayerSettings.WSAInputSource.IndependentInputSource);
-                }
+                get => 
+                    (inputSource == PlayerSettings.WSAInputSource.IndependentInputSource);
                 set
                 {
                     inputSource = !value ? PlayerSettings.WSAInputSource.CoreWindow : PlayerSettings.WSAInputSource.IndependentInputSource;
@@ -2608,7 +2558,7 @@
                     }
                     catch (Exception exception)
                     {
-                        throw new Exception(string.Format("{0}, the raw string was {1}", exception.Message, packageVersionRaw));
+                        throw new Exception($"{exception.Message}, the raw string was {packageVersionRaw}");
                     }
                     return version;
                 }
@@ -2804,10 +2754,8 @@
                 /// </summary>
                 public static PlayerSettings.WSAFileTypeAssociations fileTypeAssociations
                 {
-                    get
-                    {
-                        return PlayerSettings.WSA.internalFileTypeAssociations;
-                    }
+                    get => 
+                        PlayerSettings.WSA.internalFileTypeAssociations;
                     set
                     {
                         PlayerSettings.WSA.internalFileTypeAssociations = value;
@@ -2824,10 +2772,8 @@
                 /// </summary>
                 public static string protocolName
                 {
-                    get
-                    {
-                        return PlayerSettings.WSA.internalProtocolName;
-                    }
+                    get => 
+                        PlayerSettings.WSA.internalProtocolName;
                     set
                     {
                         PlayerSettings.WSA.internalProtocolName = value;

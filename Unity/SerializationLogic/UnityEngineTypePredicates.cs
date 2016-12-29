@@ -38,56 +38,38 @@
             serializableStructs = new string[] { "UnityEngine.AnimationCurve", "UnityEngine.Color32", "UnityEngine.Gradient", "UnityEngine.GUIStyle", "UnityEngine.RectOffset", "UnityEngine.Matrix4x4" };
         }
 
-        public static bool IsColor32(TypeReference type)
-        {
-            return TypeReferenceExtensions.IsAssignableTo(type, "UnityEngine.Color32");
-        }
+        public static bool IsColor32(TypeReference type) => 
+            type.IsAssignableTo("UnityEngine.Color32");
 
-        public static bool IsGradient(TypeReference type)
-        {
-            return TypeReferenceExtensions.IsAssignableTo(type, "UnityEngine.Gradient");
-        }
+        public static bool IsGradient(TypeReference type) => 
+            type.IsAssignableTo("UnityEngine.Gradient");
 
-        public static bool IsGUIStyle(TypeReference type)
-        {
-            return TypeReferenceExtensions.IsAssignableTo(type, "UnityEngine.GUIStyle");
-        }
+        public static bool IsGUIStyle(TypeReference type) => 
+            type.IsAssignableTo("UnityEngine.GUIStyle");
 
-        public static bool IsMatrix4x4(TypeReference type)
-        {
-            return TypeReferenceExtensions.IsAssignableTo(type, "UnityEngine.Matrix4x4");
-        }
+        public static bool IsMatrix4x4(TypeReference type) => 
+            type.IsAssignableTo("UnityEngine.Matrix4x4");
 
-        private static bool IsMonoBehaviour(TypeDefinition typeDefinition)
-        {
-            return TypeDefinitionExtensions.IsSubclassOf(typeDefinition, "UnityEngine.MonoBehaviour");
-        }
+        private static bool IsMonoBehaviour(TypeDefinition typeDefinition) => 
+            typeDefinition.IsSubclassOf("UnityEngine.MonoBehaviour");
 
-        public static bool IsMonoBehaviour(TypeReference type)
-        {
-            return IsMonoBehaviour(ResolutionExtensions.CheckedResolve(type));
-        }
+        public static bool IsMonoBehaviour(TypeReference type) => 
+            IsMonoBehaviour(type.CheckedResolve());
 
-        public static bool IsRectOffset(TypeReference type)
-        {
-            return TypeReferenceExtensions.IsAssignableTo(type, "UnityEngine.RectOffset");
-        }
+        public static bool IsRectOffset(TypeReference type) => 
+            type.IsAssignableTo("UnityEngine.RectOffset");
 
-        private static bool IsScriptableObject(TypeDefinition temp)
-        {
-            return TypeDefinitionExtensions.IsSubclassOf(temp, "UnityEngine.ScriptableObject");
-        }
+        private static bool IsScriptableObject(TypeDefinition temp) => 
+            temp.IsSubclassOf("UnityEngine.ScriptableObject");
 
-        public static bool IsScriptableObject(TypeReference type)
-        {
-            return IsScriptableObject(ResolutionExtensions.CheckedResolve(type));
-        }
+        public static bool IsScriptableObject(TypeReference type) => 
+            IsScriptableObject(type.CheckedResolve());
 
         public static bool IsSerializableUnityStruct(TypeReference type)
         {
             foreach (string str in serializableStructs)
             {
-                if (TypeReferenceExtensions.IsAssignableTo(type, str))
+                if (type.IsAssignableTo(str))
                 {
                     return true;
                 }
@@ -95,10 +77,8 @@
             return false;
         }
 
-        public static bool IsSerializeFieldAttribute(TypeReference attributeType)
-        {
-            return (attributeType.FullName == "UnityEngine.SerializeField");
-        }
+        public static bool IsSerializeFieldAttribute(TypeReference attributeType) => 
+            (attributeType.FullName == "UnityEngine.SerializeField");
 
         public static bool IsUnityEngineObject(TypeReference type)
         {
@@ -111,18 +91,14 @@
             {
                 return false;
             }
-            return ((type.FullName == "UnityEngine.Object") || TypeDefinitionExtensions.IsSubclassOf(definition, "UnityEngine.Object"));
+            return ((type.FullName == "UnityEngine.Object") || definition.IsSubclassOf("UnityEngine.Object"));
         }
 
-        public static bool IsUnityEngineValueType(TypeReference type)
-        {
-            return ((TypeReferenceExtensions.SafeNamespace(type) == "UnityEngine") && TypesThatShouldHaveHadSerializableAttribute.Contains(type.Name));
-        }
+        public static bool IsUnityEngineValueType(TypeReference type) => 
+            ((type.SafeNamespace() == "UnityEngine") && TypesThatShouldHaveHadSerializableAttribute.Contains(type.Name));
 
-        public static bool ShouldHaveHadSerializableAttribute(TypeReference type)
-        {
-            return IsUnityEngineValueType(type);
-        }
+        public static bool ShouldHaveHadSerializableAttribute(TypeReference type) => 
+            IsUnityEngineValueType(type);
     }
 }
 

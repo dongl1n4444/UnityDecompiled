@@ -22,10 +22,10 @@
             this._marshalAsInspectable = (marshalType == MarshalType.WindowsRuntime) || ((marshalInfo != null) && (marshalInfo.NativeType == (NativeType.CustomMarshaler | NativeType.Boolean)));
             TypeDefinition definition = type.Resolve();
             this._isSealed = definition.IsSealed;
-            this._isClass = ((marshalType == MarshalType.WindowsRuntime) && !Extensions.IsInterface(definition)) && !Extensions.IsSystemObject(type);
-            this._defaultInterface = !this._isClass ? type : Extensions.ExtractDefaultInterface(definition);
+            this._isClass = ((marshalType == MarshalType.WindowsRuntime) && !definition.IsInterface()) && !type.IsSystemObject();
+            this._defaultInterface = !this._isClass ? type : definition.ExtractDefaultInterface();
             this._managedTypeName = !this._isClass ? DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(DefaultMarshalInfoWriter.TypeProvider.SystemObject) : DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(type);
-            if (Extensions.IsSystemObject(type))
+            if (type.IsSystemObject())
             {
                 this._interfaceTypeName = !this._marshalAsInspectable ? "Il2CppIUnknown" : "Il2CppIInspectable";
             }
@@ -59,9 +59,9 @@
 
         public override void WriteMarshaledTypeForwardDeclaration(CppCodeWriter writer)
         {
-            if (!Extensions.IsSystemObject(base._typeRef))
+            if (!base._typeRef.IsSystemObject())
             {
-                writer.AddForwardDeclaration(string.Format("struct {0}", this._interfaceTypeName));
+                writer.AddForwardDeclaration($"struct {this._interfaceTypeName}");
             }
         }
 
@@ -99,7 +99,7 @@
             writer.WriteLine("if ({0} != {1})", args);
             using (new BlockWriter(writer, false))
             {
-                TypeReference type = (!Extensions.IsInterface(base._typeRef) && Extensions.IsComOrWindowsRuntimeType(base._typeRef.Resolve())) ? base._typeRef : DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference;
+                TypeReference type = (!base._typeRef.IsInterface() && base._typeRef.Resolve().IsComOrWindowsRuntimeType()) ? base._typeRef : DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference;
                 if (this._isSealed)
                 {
                     object[] objArray2 = new object[] { this._managedTypeName, variableName, metadataAccess.TypeInfoFor(base._typeRef) };
@@ -147,13 +147,8 @@
             }
         }
 
-        public sealed override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public sealed override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
     }
 }
 

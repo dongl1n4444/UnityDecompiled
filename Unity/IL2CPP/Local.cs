@@ -18,29 +18,14 @@
             this._expression = expression;
         }
 
-        public string Expression
-        {
-            get
-            {
-                return this._expression;
-            }
-        }
+        public string Expression =>
+            this._expression;
 
-        public string IdentifierExpression
-        {
-            get
-            {
-                return (Naming.ForVariable(this._type) + " " + this._expression);
-            }
-        }
+        public string IdentifierExpression =>
+            (Naming.ForVariable(this._type) + " " + this._expression);
 
-        public TypeReference Type
-        {
-            get
-            {
-                return this._type;
-            }
-        }
+        public TypeReference Type =>
+            this._type;
     }
 }
 

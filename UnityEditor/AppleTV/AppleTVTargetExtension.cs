@@ -56,10 +56,8 @@
             return this.m_pluginImporterExtension;
         }
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return new AppleTVScriptingImplementations();
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            new AppleTVScriptingImplementations();
 
         public override ISettingEditorExtension CreateSettingsEditorExtension()
         {
@@ -70,45 +68,20 @@
             return this.settingsEditor;
         }
 
-        public override string[] AssemblyReferencesForEditorCsharpProject
-        {
-            get
-            {
-                return this.assemblyReferencesForUserScripts;
-            }
-        }
+        public override string[] AssemblyReferencesForEditorCsharpProject =>
+            this.assemblyReferencesForUserScripts;
 
-        public override string[] AssemblyReferencesForUserScripts
-        {
-            get
-            {
-                return this.assemblyReferencesForUserScripts;
-            }
-        }
+        public override string[] AssemblyReferencesForUserScripts =>
+            this.assemblyReferencesForUserScripts;
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "iOSEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "iOSEditorExtensions";
 
-        public override string[] NativeLibraries
-        {
-            get
-            {
-                return this.nativeLibraries;
-            }
-        }
+        public override string[] NativeLibraries =>
+            this.nativeLibraries;
 
-        public override string TargetName
-        {
-            get
-            {
-                return "tvOS";
-            }
-        }
+        public override string TargetName =>
+            "tvOS";
     }
 }
 

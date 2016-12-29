@@ -67,15 +67,11 @@
             }
         }
 
-        public static Color GetLastPickedColor()
-        {
-            return s_LastPickedColor;
-        }
+        public static Color GetLastPickedColor() => 
+            s_LastPickedColor;
 
-        public static Color GetPickedColor()
-        {
-            return InternalEditorUtility.ReadScreenPixel(s_PickCoordinates, 1, 1)[0];
-        }
+        public static Color GetPickedColor() => 
+            InternalEditorUtility.ReadScreenPixel(s_PickCoordinates, 1, 1)[0];
 
         public void OnDestroy()
         {

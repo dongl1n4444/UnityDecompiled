@@ -41,10 +41,8 @@
             this.m_Preview = null;
         }
 
-        public Projector GetPreviewProjector()
-        {
-            return this.m_BrushProjector;
-        }
+        public Projector GetPreviewProjector() => 
+            this.m_BrushProjector;
 
         public float GetStrengthInt(int ix, int iy)
         {

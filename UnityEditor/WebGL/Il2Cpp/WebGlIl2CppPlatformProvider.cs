@@ -27,90 +27,38 @@
             this.m_BuildReport = _buildReport;
         }
 
-        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder()
-        {
-            return new WebGLIl2CppNativeCodeBuilder(PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full, this.LinkerFlags, this.Libs, this.JsPre, this.JsLib);
-        }
+        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder() => 
+            new WebGLIl2CppNativeCodeBuilder(PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full, this.LinkerFlags, this.Libs, this.JsPre, this.JsLib);
 
-        public override BuildReport buildReport
-        {
-            get
-            {
-                return this.m_BuildReport;
-            }
-        }
+        public override BuildReport buildReport =>
+            this.m_BuildReport;
 
-        public override bool developmentMode
-        {
-            get
-            {
-                return this.m_IsDevelopmentBuild;
-            }
-        }
+        public override bool developmentMode =>
+            this.m_IsDevelopmentBuild;
 
-        public override bool emitNullChecks
-        {
-            get
-            {
-                return (PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full);
-            }
-        }
+        public override bool emitNullChecks =>
+            (PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full);
 
-        public override bool enableArrayBoundsCheck
-        {
-            get
-            {
-                return (PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full);
-            }
-        }
+        public override bool enableArrayBoundsCheck =>
+            (PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full);
 
-        public override bool enableStackTraces
-        {
-            get
-            {
-                return (PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full);
-            }
-        }
+        public override bool enableStackTraces =>
+            (PlayerSettings.WebGL.exceptionSupport == WebGLExceptionSupport.Full);
 
-        public override string[] includePaths
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public override string[] includePaths =>
+            new string[0];
 
-        public override string[] libraryPaths
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public override string[] libraryPaths =>
+            new string[0];
 
-        public override bool loadSymbols
-        {
-            get
-            {
-                return this.m_IsDevelopmentBuild;
-            }
-        }
+        public override bool loadSymbols =>
+            this.m_IsDevelopmentBuild;
 
-        public override string nativeLibraryFileName
-        {
-            get
-            {
-                return this.m_NativeLibraryFileName;
-            }
-        }
+        public override string nativeLibraryFileName =>
+            this.m_NativeLibraryFileName;
 
-        public override bool supportsEngineStripping
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool supportsEngineStripping =>
+            true;
     }
 }
 

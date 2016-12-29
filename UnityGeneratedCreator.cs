@@ -78,25 +78,15 @@ internal abstract class UnityGeneratedCreator
         {
             str = this.unityOrientationToMs[PlayerSettings.defaultInterfaceOrientation];
         }
-        return string.Format("DisplayInformation.AutoRotationPreferences = {0};", str);
+        return $"DisplayInformation.AutoRotationPreferences = {str};";
     }
 
     protected abstract string IndentCodeLine();
 
-    internal static UnityGeneratedCreator Cpp
-    {
-        get
-        {
-            return new UnityGeneratedCreatorCpp();
-        }
-    }
+    internal static UnityGeneratedCreator Cpp =>
+        new UnityGeneratedCreatorCpp();
 
-    internal static UnityGeneratedCreator CSharp
-    {
-        get
-        {
-            return new UnityGeneratedCreatorCSharp();
-        }
-    }
+    internal static UnityGeneratedCreator CSharp =>
+        new UnityGeneratedCreatorCSharp();
 }
 

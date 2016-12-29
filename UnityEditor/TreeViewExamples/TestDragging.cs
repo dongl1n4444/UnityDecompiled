@@ -42,7 +42,7 @@
                     {
                         <>f__am$cache1 = new Func<TreeViewItem, BackendData.Foo>(null, (IntPtr) <DoDrag>m__1);
                     }
-                    List<BackendData.Foo> draggedItems = Enumerable.ToList<BackendData.Foo>(Enumerable.Select<TreeViewItem, BackendData.Foo>(Enumerable.Where<TreeViewItem>(genericData.m_DraggedItems, <>f__am$cache0), <>f__am$cache1));
+                    List<BackendData.Foo> draggedItems = Enumerable.Select<TreeViewItem, BackendData.Foo>(Enumerable.Where<TreeViewItem>(genericData.m_DraggedItems, <>f__am$cache0), <>f__am$cache1).ToList<BackendData.Foo>();
                     if (<>f__am$cache2 == null)
                     {
                         <>f__am$cache2 = new Func<TreeViewItem, bool>(null, (IntPtr) <DoDrag>m__2);
@@ -51,7 +51,7 @@
                     {
                         <>f__am$cache3 = new Func<TreeViewItem, int>(null, (IntPtr) <DoDrag>m__3);
                     }
-                    int[] selectedIDs = Enumerable.ToArray<int>(Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(genericData.m_DraggedItems, <>f__am$cache2), <>f__am$cache3));
+                    int[] selectedIDs = Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(genericData.m_DraggedItems, <>f__am$cache2), <>f__am$cache3).ToArray<int>();
                     int insertionIndex = TreeViewDragging.GetInsertionIndex(parentItem, targetItem, dropPos);
                     this.m_BackendData.ReparentSelection(item.foo, insertionIndex, draggedItems);
                     base.m_TreeView.ReloadData();
@@ -62,10 +62,8 @@
             return DragAndDropVisualMode.None;
         }
 
-        private List<TreeViewItem> GetItemsFromIDs(IEnumerable<int> draggedItemIDs)
-        {
-            return TreeViewUtility.FindItemsInList(draggedItemIDs, base.m_TreeView.data.GetRows());
-        }
+        private List<TreeViewItem> GetItemsFromIDs(IEnumerable<int> draggedItemIDs) => 
+            TreeViewUtility.FindItemsInList(draggedItemIDs, base.m_TreeView.data.GetRows());
 
         public override void StartDrag(TreeViewItem draggedItem, List<int> draggedItemIDs)
         {

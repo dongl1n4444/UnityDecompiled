@@ -44,7 +44,7 @@
                 }
                 catch (IOException)
                 {
-                    CancelPostProcess.AbortBuild("Unable to create new apk!", string.Format("Unable to write target apk because {0} is a non-empty directory", path));
+                    CancelPostProcess.AbortBuild("Unable to create new apk!", $"Unable to write target apk because {path} is a non-empty directory");
                 }
             }
             else
@@ -52,18 +52,18 @@
                 File.Delete(path);
                 if (File.Exists(path))
                 {
-                    CancelPostProcess.AbortBuild("Unable to delete old apk!", string.Format("Target apk could not be overwritten: {0}", path));
+                    CancelPostProcess.AbortBuild("Unable to delete old apk!", $"Target apk could not be overwritten: {path}");
                 }
             }
             FileUtil.MoveFileOrDirectory(Path.Combine(this._stagingArea, "Package.apk"), path);
             if (!File.Exists(path))
             {
-                CancelPostProcess.AbortBuild("Unable to create new apk!", string.Format("Unable to move file '{0}' -> '{1}", Path.Combine(this._stagingArea, "Package.apk"), path));
+                CancelPostProcess.AbortBuild("Unable to create new apk!", $"Unable to move file '{Path.Combine(this._stagingArea, "Package.apk")}' -> '{path}");
             }
             if (this._useObb && File.Exists(Path.Combine(this._stagingArea, "main.obb")))
             {
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
-                string str3 = Path.Combine(Path.GetDirectoryName(path), string.Format("{0}.main.obb", fileNameWithoutExtension));
+                string str3 = Path.Combine(Path.GetDirectoryName(path), $"{fileNameWithoutExtension}.main.obb");
                 FileUtil.DeleteFileOrDirectory(str3);
                 FileUtil.MoveFileOrDirectory(Path.Combine(this._stagingArea, "main.obb"), str3);
             }
@@ -115,8 +115,8 @@
                     foreach (string str3 in strArray)
                     {
                         string str4 = "obb";
-                        string str5 = string.Format("main.{0}.{1}.obb", bundleVersionCode.ToString(), this._packageName);
-                        string dst = string.Format("{0}/{1}/{2}/{3}", new object[] { str3, str4, this._packageName, str5 });
+                        string str5 = $"main.{bundleVersionCode.ToString()}.{this._packageName}.obb";
+                        string dst = $"{str3}/{str4}/{this._packageName}/{str5}";
                         try
                         {
                             device.Push(Path.Combine(this._stagingArea, "main.obb"), dst, null);
@@ -140,7 +140,7 @@
                     {
                         this.OnProgress(this, "Setting up profiler tunnel");
                     }
-                    device.Forward(string.Format("tcp:{0}", ProfilerDriver.directConnectionPort), "localabstract:Unity-" + this._packageName, null);
+                    device.Forward($"tcp:{ProfilerDriver.directConnectionPort}", "localabstract:Unity-" + this._packageName, null);
                 }
                 string activityWithLaunchIntent = new AndroidManifest(path).GetActivityWithLaunchIntent();
                 if (activityWithLaunchIntent.Length == 0)
@@ -155,13 +155,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Publishing output package";
-            }
-        }
+        public string Name =>
+            "Publishing output package";
     }
 }
 

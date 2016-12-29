@@ -27,25 +27,19 @@
         private extern byte[] InternalGetData();
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern float InternalGetProgress();
-        internal override string GetContentType()
-        {
-            return this.InternalGetContentType();
-        }
+        internal override string GetContentType() => 
+            this.InternalGetContentType();
 
         internal override void SetContentType(string newContentType)
         {
             this.InternalSetContentType(newContentType);
         }
 
-        internal override byte[] GetData()
-        {
-            return this.InternalGetData();
-        }
+        internal override byte[] GetData() => 
+            this.InternalGetData();
 
-        internal override float GetProgress()
-        {
-            return this.InternalGetProgress();
-        }
+        internal override float GetProgress() => 
+            this.InternalGetProgress();
     }
 }
 

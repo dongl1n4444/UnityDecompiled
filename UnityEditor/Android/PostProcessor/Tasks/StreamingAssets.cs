@@ -53,13 +53,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Preparing streaming assets";
-            }
-        }
+        public string Name =>
+            "Preparing streaming assets";
     }
 }
 

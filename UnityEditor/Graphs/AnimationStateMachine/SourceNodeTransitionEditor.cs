@@ -72,7 +72,7 @@
 
         public void AcquireController()
         {
-            this.m_Controller = (AnimatorControllerTool.tool == null) ? null : AnimatorControllerTool.tool.animatorController;
+            this.m_Controller = AnimatorControllerTool.tool?.animatorController;
             if (this.m_Controller != null)
             {
                 this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ResetTransitionList));
@@ -132,10 +132,8 @@
             }
         }
 
-        public bool HasPreviewGUI()
-        {
-            return ((this.m_TransitionInspector != null) && this.m_TransitionInspector.HasPreviewGUI());
-        }
+        public bool HasPreviewGUI() => 
+            ((this.m_TransitionInspector != null) && this.m_TransitionInspector.HasPreviewGUI());
 
         public void OnDestroy()
         {

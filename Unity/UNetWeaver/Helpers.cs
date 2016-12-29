@@ -106,11 +106,8 @@
             return parameters;
         }
 
-        public static string UnityEngineDLLDirectoryName()
-        {
-            string directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
-            return ((directoryName == null) ? null : directoryName.Replace(@"file:\", ""));
-        }
+        public static string UnityEngineDLLDirectoryName() => 
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)?.Replace(@"file:\", "");
 
         private class AddSearchDirectoryHelper
         {

@@ -17,7 +17,7 @@
             string name = assembly.Name.Name;
             if (this._assemblies.ContainsKey(name))
             {
-                throw new Exception(string.Format("Assembly \"{0}\" is already registered.", name));
+                throw new Exception($"Assembly "{name}" is already registered.");
             }
             this._assemblies.Add(name, assembly);
         }
@@ -73,20 +73,16 @@
             throw new AssemblyResolutionException(name);
         }
 
-        public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters)
-        {
-            return this.Resolve(AssemblyNameReference.Parse(fullName), parameters);
-        }
+        public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters) => 
+            this.Resolve(AssemblyNameReference.Parse(fullName), parameters);
 
         [CompilerGenerated]
         private sealed class <AddSearchDirectory>c__AnonStorey0
         {
             internal string path;
 
-            internal bool <>m__0(string p)
-            {
-                return string.Equals(p, this.path, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string p) => 
+                string.Equals(p, this.path, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

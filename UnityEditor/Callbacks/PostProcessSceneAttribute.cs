@@ -30,13 +30,8 @@
             this.m_version = version;
         }
 
-        internal int version
-        {
-            get
-            {
-                return this.m_version;
-            }
-        }
+        internal int version =>
+            this.m_version;
     }
 }
 

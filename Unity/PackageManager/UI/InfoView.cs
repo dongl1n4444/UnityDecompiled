@@ -46,7 +46,7 @@
         private void DoHeader()
         {
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.Label(string.Format("{0} ({1})", this.package.name, this.package.version), Styles.infoHeader, new GUILayoutOption[0]);
+            GUILayout.Label($"{this.package.name} ({this.package.version})", Styles.infoHeader, new GUILayoutOption[0]);
             GUILayout.EndHorizontal();
         }
 
@@ -103,10 +103,8 @@
             }
         }
 
-        private bool IsDownloadingNotes()
-        {
-            return Enumerable.Any<DownloaderState>(this.downloaderStates, new Func<DownloaderState, bool>(this, (IntPtr) this.<IsDownloadingNotes>m__3));
-        }
+        private bool IsDownloadingNotes() => 
+            Enumerable.Any<DownloaderState>(this.downloaderStates, new Func<DownloaderState, bool>(this, (IntPtr) this.<IsDownloadingNotes>m__3));
 
         public void OnGUI()
         {
@@ -152,15 +150,13 @@
 
         public PackageInfo package
         {
-            get
-            {
-                return PackageInfoExtensions.Refresh(this.m_Package);
-            }
+            get => 
+                this.m_Package.Refresh();
             set
             {
                 if (this.m_Package != value)
                 {
-                    this.m_Package = PackageInfoExtensions.Refresh(value);
+                    this.m_Package = value.Refresh();
                     this.UpdateReleaseNotes();
                 }
             }
@@ -172,10 +168,8 @@
             internal InfoView $this;
             internal PackageInfo version;
 
-            internal bool <>m__0(InfoView.DownloaderState i)
-            {
-                return (i.package == this.version);
-            }
+            internal bool <>m__0(InfoView.DownloaderState i) => 
+                (i.package == this.version);
 
             internal void <>m__1(Task t, bool success)
             {
@@ -189,7 +183,7 @@
                     File.Copy(result, Path.Combine(Settings.installLocation, Path.GetFileName(result)), true);
                     if (Enumerable.First<InfoView.DownloaderState>(this.$this.downloaderStates, new Func<InfoView.DownloaderState, bool>(storey, (IntPtr) this.<>m__0)).package == this.version)
                     {
-                        PackageInfoExtensions.Refresh(this.version);
+                        this.version.Refresh();
                     }
                 }
             }
@@ -199,10 +193,8 @@
                 internal InfoView.<DownloadReleaseNotes>c__AnonStorey0 <>f__ref$0;
                 internal Task t;
 
-                internal bool <>m__0(InfoView.DownloaderState x)
-                {
-                    return (x.downloader == this.t);
-                }
+                internal bool <>m__0(InfoView.DownloaderState x) => 
+                    (x.downloader == this.t);
             }
         }
 

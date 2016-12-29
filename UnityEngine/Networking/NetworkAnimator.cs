@@ -117,10 +117,8 @@
         /// <returns>
         /// <para>True if the parameter should be sent.</para>
         /// </returns>
-        public bool GetParameterAutoSend(int index)
-        {
-            return ((this.m_ParameterSendBits & (((int) 1) << index)) != 0);
-        }
+        public bool GetParameterAutoSend(int index) => 
+            ((this.m_ParameterSendBits & (((int) 1) << index)) != 0);
 
         internal void HandleAnimMsg(AnimationMessage msg, NetworkReader reader)
         {
@@ -469,10 +467,8 @@
         /// </summary>
         public Animator animator
         {
-            get
-            {
-                return this.m_Animator;
-            }
+            get => 
+                this.m_Animator;
             set
             {
                 this.m_Animator = value;

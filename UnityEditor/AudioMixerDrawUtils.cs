@@ -187,10 +187,8 @@
             GUI.DrawTextureWithTexCoords(rect, styles.leftToRightShadowTexture, texCoords);
         }
 
-        public static float GetAlpha()
-        {
-            return (!GUI.enabled ? 0.7f : 1f);
-        }
+        public static float GetAlpha() => 
+            (!GUI.enabled ? 0.7f : 1f);
 
         public static Color GetEffectColor(AudioMixerEffectController effect)
         {
@@ -254,13 +252,8 @@
             GL.Vertex3(x + vertexOffset, y + vertexOffset, 0f);
         }
 
-        public static Styles styles
-        {
-            get
-            {
-                return s_Styles;
-            }
-        }
+        public static Styles styles =>
+            s_Styles;
 
         public class Styles
         {
@@ -349,10 +342,8 @@
                 }
             }
 
-            private static GUIStyle GetStyle(string styleName)
-            {
-                return styleName;
-            }
+            private static GUIStyle GetStyle(string styleName) => 
+                styleName;
         }
     }
 }

@@ -177,20 +177,14 @@
             }
         }
 
-        private Rect GetScreenRect()
-        {
-            return GUIUtility.GUIToScreenRect(this.m_EditFieldRect);
-        }
+        private Rect GetScreenRect() => 
+            GUIUtility.GUIToScreenRect(this.m_EditFieldRect);
 
-        public bool HasKeyboardFocus()
-        {
-            return (GUI.GetNameOfFocusedControl() == this.k_RenameOverlayFocusName);
-        }
+        public bool HasKeyboardFocus() => 
+            (GUI.GetNameOfFocusedControl() == this.k_RenameOverlayFocusName);
 
-        public bool IsRenaming()
-        {
-            return this.m_IsRenaming;
-        }
+        public bool IsRenaming() => 
+            this.m_IsRenaming;
 
         public bool OnEvent()
         {
@@ -213,10 +207,8 @@
             return true;
         }
 
-        public bool OnGUI()
-        {
-            return this.OnGUI(null);
-        }
+        public bool OnGUI() => 
+            this.OnGUI(null);
 
         public bool OnGUI(GUIStyle textFieldStyle)
         {
@@ -292,10 +284,8 @@
 
         public Rect editFieldRect
         {
-            get
-            {
-                return this.m_EditFieldRect;
-            }
+            get => 
+                this.m_EditFieldRect;
             set
             {
                 this.m_EditFieldRect = value;
@@ -304,55 +294,28 @@
 
         public bool isRenamingFilename
         {
-            get
-            {
-                return this.m_IsRenamingFilename;
-            }
+            get => 
+                this.m_IsRenamingFilename;
             set
             {
                 this.m_IsRenamingFilename = value;
             }
         }
 
-        public bool isWaitingForDelay
-        {
-            get
-            {
-                return this.m_IsWaitingForDelay;
-            }
-        }
+        public bool isWaitingForDelay =>
+            this.m_IsWaitingForDelay;
 
-        public string name
-        {
-            get
-            {
-                return this.m_Name;
-            }
-        }
+        public string name =>
+            this.m_Name;
 
-        public string originalName
-        {
-            get
-            {
-                return this.m_OriginalName;
-            }
-        }
+        public string originalName =>
+            this.m_OriginalName;
 
-        public bool userAcceptedRename
-        {
-            get
-            {
-                return this.m_UserAcceptedRename;
-            }
-        }
+        public bool userAcceptedRename =>
+            this.m_UserAcceptedRename;
 
-        public int userData
-        {
-            get
-            {
-                return this.m_UserData;
-            }
-        }
+        public int userData =>
+            this.m_UserData;
     }
 }
 

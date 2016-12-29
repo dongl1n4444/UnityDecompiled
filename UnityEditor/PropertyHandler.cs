@@ -87,7 +87,7 @@
             }
             else if (attribute is ContextMenuItemAttribute)
             {
-                if (!EditorExtensionMethods.IsArrayOrList(propertyType))
+                if (!propertyType.IsArrayOrList())
                 {
                     if (this.contextMenuItems == null)
                     {
@@ -109,14 +109,14 @@
             {
                 if (typeof(PropertyDrawer).IsAssignableFrom(drawerTypeForType))
                 {
-                    if ((propertyType == null) || !EditorExtensionMethods.IsArrayOrList(propertyType))
+                    if ((propertyType == null) || !propertyType.IsArrayOrList())
                     {
                         this.m_PropertyDrawer = (PropertyDrawer) Activator.CreateInstance(drawerTypeForType);
                         this.m_PropertyDrawer.m_FieldInfo = field;
                         this.m_PropertyDrawer.m_Attribute = attribute;
                     }
                 }
-                else if (typeof(DecoratorDrawer).IsAssignableFrom(drawerTypeForType) && (((field == null) || !EditorExtensionMethods.IsArrayOrList(field.FieldType)) || EditorExtensionMethods.IsArrayOrList(propertyType)))
+                else if (typeof(DecoratorDrawer).IsAssignableFrom(drawerTypeForType) && (((field == null) || !field.FieldType.IsArrayOrList()) || propertyType.IsArrayOrList()))
                 {
                     DecoratorDrawer item = (DecoratorDrawer) Activator.CreateInstance(drawerTypeForType);
                     item.m_Attribute = attribute;
@@ -209,37 +209,17 @@
             return this.OnGUI(toggleRect, property, label, includeChildren);
         }
 
-        public bool empty
-        {
-            get
-            {
-                return ((((this.m_DecoratorDrawers == null) && (this.tooltip == null)) && (this.propertyDrawer == null)) && (this.contextMenuItems == null));
-            }
-        }
+        public bool empty =>
+            ((((this.m_DecoratorDrawers == null) && (this.tooltip == null)) && (this.propertyDrawer == null)) && (this.contextMenuItems == null));
 
-        public bool hasPropertyDrawer
-        {
-            get
-            {
-                return (this.propertyDrawer != null);
-            }
-        }
+        public bool hasPropertyDrawer =>
+            (this.propertyDrawer != null);
 
-        private bool isCurrentlyNested
-        {
-            get
-            {
-                return (((this.m_PropertyDrawer != null) && Enumerable.Any<PropertyDrawer>(ScriptAttributeUtility.s_DrawerStack)) && (this.m_PropertyDrawer == ScriptAttributeUtility.s_DrawerStack.Peek()));
-            }
-        }
+        private bool isCurrentlyNested =>
+            (((this.m_PropertyDrawer != null) && ScriptAttributeUtility.s_DrawerStack.Any<PropertyDrawer>()) && (this.m_PropertyDrawer == ScriptAttributeUtility.s_DrawerStack.Peek()));
 
-        private PropertyDrawer propertyDrawer
-        {
-            get
-            {
-                return (!this.isCurrentlyNested ? this.m_PropertyDrawer : null);
-            }
-        }
+        private PropertyDrawer propertyDrawer =>
+            (!this.isCurrentlyNested ? this.m_PropertyDrawer : null);
 
         [CompilerGenerated]
         private sealed class <AddMenuItems>c__AnonStorey0

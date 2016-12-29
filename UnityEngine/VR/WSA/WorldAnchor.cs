@@ -28,21 +28,14 @@
             }
         }
 
-        private bool IsLocated_Internal()
-        {
-            return INTERNAL_CALL_IsLocated_Internal(this);
-        }
+        private bool IsLocated_Internal() => 
+            INTERNAL_CALL_IsLocated_Internal(this);
 
         /// <summary>
         /// <para>Returns true if this WorldAnchor is located (read only).  A return of false typically indicates a loss of tracking.</para>
         /// </summary>
-        public bool isLocated
-        {
-            get
-            {
-                return this.IsLocated_Internal();
-            }
-        }
+        public bool isLocated =>
+            this.IsLocated_Internal();
 
         /// <summary>
         /// <para>Event that is fired when this object's tracking state changes.</para>

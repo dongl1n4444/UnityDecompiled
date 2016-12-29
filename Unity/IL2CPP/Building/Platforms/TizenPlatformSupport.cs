@@ -7,15 +7,11 @@
 
     internal class TizenPlatformSupport : PlatformSupport
     {
-        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors)
-        {
-            return new TizenToolChain(architecture, buildConfiguration);
-        }
+        public override CppToolChain MakeCppToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
+            new TizenToolChain(architecture, buildConfiguration);
 
-        public override bool Supports(RuntimePlatform platform)
-        {
-            return (platform is TizenRuntimePlatform);
-        }
+        public override bool Supports(RuntimePlatform platform) => 
+            (platform is TizenRuntimePlatform);
     }
 }
 

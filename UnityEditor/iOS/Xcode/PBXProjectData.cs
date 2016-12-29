@@ -108,7 +108,7 @@
             foreach (PBXNativeTargetData data10 in this.nativeTargets.GetObjects())
             {
                 comments.Add(data10.guid, data10.name);
-                comments.Add(data10.buildConfigList, string.Format("Build configuration list for PBXNativeTarget \"{0}\"", data10.name));
+                comments.Add(data10.buildConfigList, $"Build configuration list for PBXNativeTarget "{data10.name}"");
             }
             foreach (PBXVariantGroupData data11 in this.variantGroups.GetObjects())
             {
@@ -144,14 +144,14 @@
                     PBXFileReferenceData data2 = this.FileRefsGet(data.fileRef);
                     if (data2 != null)
                     {
-                        comments.Add(str, string.Format("{0} in {1}", data2.name, sectName));
+                        comments.Add(str, $"{data2.name} in {sectName}");
                     }
                     else
                     {
                         PBXReferenceProxyData data3 = this.references[data.fileRef];
                         if (data3 != null)
                         {
-                            comments.Add(str, string.Format("{0} in {1}", data3.path, sectName));
+                            comments.Add(str, $"{data3.path} in {sectName}");
                         }
                     }
                 }
@@ -168,15 +168,11 @@
             this.buildFiles.AddEntry(buildFile);
         }
 
-        public PBXBuildFileData BuildFilesGet(string guid)
-        {
-            return this.buildFiles[guid];
-        }
+        public PBXBuildFileData BuildFilesGet(string guid) => 
+            this.buildFiles[guid];
 
-        public IEnumerable<PBXBuildFileData> BuildFilesGetAll()
-        {
-            return this.buildFiles.GetObjects();
-        }
+        public IEnumerable<PBXBuildFileData> BuildFilesGetAll() => 
+            this.buildFiles.GetObjects();
 
         public PBXBuildFileData BuildFilesGetForSourceFile(string targetGuid, string fileGuid)
         {
@@ -378,10 +374,8 @@
             this.m_GuidToParentGroupMap.Add(fileRef.guid, parent);
         }
 
-        public PBXFileReferenceData FileRefsGet(string guid)
-        {
-            return this.fileRefs[guid];
-        }
+        public PBXFileReferenceData FileRefsGet(string guid) => 
+            this.fileRefs[guid];
 
         public PBXFileReferenceData FileRefsGetByProjectPath(string path)
         {
@@ -427,15 +421,11 @@
             this.groups.AddEntry(gr);
         }
 
-        public PBXGroupData GroupsGet(string guid)
-        {
-            return this.groups[guid];
-        }
+        public PBXGroupData GroupsGet(string guid) => 
+            this.groups[guid];
 
-        public PBXGroupData GroupsGetByChild(string childGuid)
-        {
-            return this.m_GuidToParentGroupMap[childGuid];
-        }
+        public PBXGroupData GroupsGetByChild(string childGuid) => 
+            this.m_GuidToParentGroupMap[childGuid];
 
         public PBXGroupData GroupsGetByProjectPath(string sourceGroup)
         {
@@ -446,10 +436,8 @@
             return null;
         }
 
-        public PBXGroupData GroupsGetMainGroup()
-        {
-            return this.groups[this.project.project.mainGroup];
-        }
+        public PBXGroupData GroupsGetMainGroup() => 
+            this.groups[this.project.project.mainGroup];
 
         public void GroupsRemove(string guid)
         {
@@ -816,10 +804,8 @@
         {
             internal string prevSectionName;
 
-            internal bool <>m__0(string x)
-            {
-                return (x == this.prevSectionName);
-            }
+            internal bool <>m__0(string x) => 
+                (x == this.prevSectionName);
         }
 
         [CompilerGenerated]
@@ -827,10 +813,8 @@
         {
             internal Dictionary<string, bool> allGuids;
 
-            internal bool <>m__0(PBXBuildFileData o)
-            {
-                return ((o.fileRef == null) || !this.allGuids.ContainsKey(o.fileRef));
-            }
+            internal bool <>m__0(PBXBuildFileData o) => 
+                ((o.fileRef == null) || !this.allGuids.ContainsKey(o.fileRef));
         }
     }
 }

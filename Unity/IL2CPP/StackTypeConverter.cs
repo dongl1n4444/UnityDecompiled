@@ -15,7 +15,7 @@
         public static string CppStackTypeFor(TypeReference type)
         {
             TypeReference a = StackTypeFor(type);
-            if (Extensions.IsSameType(a, TypeProvider.NativeIntTypeReference) || a.IsByReference)
+            if (a.IsSameType(TypeProvider.NativeIntTypeReference) || a.IsByReference)
             {
                 return Naming.ForIntPtrT;
             }
@@ -53,18 +53,18 @@
             {
                 return StackTypeFor(type4.ElementType);
             }
-            if ((Extensions.IsSameType(type, TypeProvider.NativeIntTypeReference) || Extensions.IsSameType(type, TypeProvider.NativeUIntTypeReference)) || type.IsPointer)
+            if ((type.IsSameType(TypeProvider.NativeIntTypeReference) || type.IsSameType(TypeProvider.NativeUIntTypeReference)) || type.IsPointer)
             {
                 return TypeProvider.NativeIntTypeReference;
             }
-            if (!Extensions.IsValueType(type))
+            if (!type.IsValueType())
             {
                 return TypeProvider.ObjectTypeReference;
             }
             MetadataType metadataType = type.MetadataType;
-            if (Extensions.IsValueType(type) && Extensions.IsEnum(type))
+            if (type.IsValueType() && type.IsEnum())
             {
-                metadataType = Extensions.GetUnderlyingEnumType(type).MetadataType;
+                metadataType = type.GetUnderlyingEnumType().MetadataType;
             }
             switch (metadataType)
             {
@@ -92,7 +92,7 @@
                 case MetadataType.UIntPtr:
                     return TypeProvider.NativeIntTypeReference;
             }
-            throw new ArgumentException(string.Format("Cannot get stack type for {0}", type.Name));
+            throw new ArgumentException($"Cannot get stack type for {type.Name}");
         }
 
         public static TypeReference StackTypeForBinaryOperation(TypeReference type)

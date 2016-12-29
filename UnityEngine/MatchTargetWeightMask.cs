@@ -27,10 +27,8 @@
         /// </summary>
         public Vector3 positionXYZWeight
         {
-            get
-            {
-                return this.m_PositionXYZWeight;
-            }
+            get => 
+                this.m_PositionXYZWeight;
             set
             {
                 this.m_PositionXYZWeight = value;
@@ -41,10 +39,8 @@
         /// </summary>
         public float rotationWeight
         {
-            get
-            {
-                return this.m_RotationWeight;
-            }
+            get => 
+                this.m_RotationWeight;
             set
             {
                 this.m_RotationWeight = value;

@@ -42,12 +42,12 @@
         private void MakeDefaultStateCallback()
         {
             this.draggingDefaultState = true;
-            base.graphGUI.edgeGUI.BeginSlotDragging(Enumerable.First<Slot>(base.outputSlots), true, false);
+            base.graphGUI.edgeGUI.BeginSlotDragging(base.outputSlots.First<Slot>(), true, false);
         }
 
         private void MakeTransitionCallback()
         {
-            base.graphGUI.edgeGUI.BeginSlotDragging(Enumerable.First<Slot>(base.outputSlots), true, false);
+            base.graphGUI.edgeGUI.BeginSlotDragging(base.outputSlots.First<Slot>(), true, false);
         }
 
         public override void NodeUI(UnityEditor.Graphs.GraphGUI host)
@@ -65,7 +65,7 @@
             }
             if (UnityEditor.Graphs.AnimationStateMachine.Node.IsLeftClick())
             {
-                host.edgeGUI.EndSlotDragging(Enumerable.First<Slot>(base.inputSlots), true);
+                host.edgeGUI.EndSlotDragging(base.inputSlots.First<Slot>(), true);
             }
         }
 
@@ -75,33 +75,21 @@
             this.m_StateMachine.entryPosition = (Vector3) new Vector2(this.position.x, this.position.y);
         }
 
-        public override UnityEngine.Object selectionObject
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public override UnityEngine.Object selectionObject =>
+            this;
 
         public AnimatorStateMachine stateMachine
         {
-            get
-            {
-                return this.m_StateMachine;
-            }
+            get => 
+                this.m_StateMachine;
             set
             {
                 this.m_StateMachine = value;
             }
         }
 
-        public override UnityEngine.Object undoableObject
-        {
-            get
-            {
-                return this.m_StateMachine;
-            }
-        }
+        public override UnityEngine.Object undoableObject =>
+            this.m_StateMachine;
 
         [CompilerGenerated]
         private sealed class <Connect>c__AnonStorey0

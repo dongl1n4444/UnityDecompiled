@@ -29,10 +29,8 @@
             return this.m_Title;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return (this.m_Transform != null);
-        }
+        public override bool HasPreviewGUI() => 
+            (this.m_Transform != null);
 
         public override void Initialize(UnityEngine.Object[] targets)
         {

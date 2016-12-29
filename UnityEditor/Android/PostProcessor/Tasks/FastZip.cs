@@ -56,13 +56,13 @@
             string str9 = " libs=lib";
             foreach (string str10 in libraries.GetLibraryDirectories())
             {
-                str9 = str9 + string.Format(" {0}=libs", str10);
+                str9 = str9 + $" {str10}=libs";
             }
             string str11 = " --apk";
             if (PlayerSettings.Android.keyaliasName.Length != 0)
             {
                 string str12 = !Path.IsPathRooted(PlayerSettings.Android.keystoreName) ? Path.Combine(Directory.GetCurrentDirectory(), PlayerSettings.Android.keystoreName) : PlayerSettings.Android.keystoreName;
-                str11 = string.Format(" -A --sign={0},{1},{2}", str12, PlayerSettings.Android.keyaliasPass, PlayerSettings.Android.keyaliasName);
+                str11 = $" -A --sign={str12},{PlayerSettings.Android.keyaliasPass},{PlayerSettings.Android.keyaliasName}";
             }
             string[] textArray1 = new string[] { str3, str8, str11, str9, " bin/classes.dex assets -0 -Z bin/resources.ap_ raw=assets" };
             str6 = string.Concat(textArray1);
@@ -86,13 +86,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "fastzip";
-            }
-        }
+        public string Name =>
+            "fastzip";
     }
 }
 

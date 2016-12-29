@@ -34,10 +34,8 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<string> NextColor()
-        {
-            return new <NextColor>c__Iterator0 { $PC = -2 };
-        }
+        private static IEnumerable<string> NextColor() => 
+            new <NextColor>c__Iterator0 { $PC = -2 };
 
         [CompilerGenerated]
         private sealed class <NextColor>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -106,28 +104,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

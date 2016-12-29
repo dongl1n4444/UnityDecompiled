@@ -117,7 +117,7 @@
             }
         }
 
-        public override void WriteFieldDeclaration(CppCodeWriter writer, FieldReference field, [Optional, DefaultParameterValue(null)] string fieldNameSuffix)
+        public override void WriteFieldDeclaration(CppCodeWriter writer, FieldReference field, string fieldNameSuffix = null)
         {
             if (this.IsFixedSizeString)
             {
@@ -136,7 +136,7 @@
             this.FreeMarshaledString(writer, variableName);
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             if (!this._canReferenceOriginalManagedString)
             {
@@ -148,14 +148,12 @@
         {
         }
 
-        public override string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
-        {
-            return DefaultMarshalInfoWriter.Naming.Null;
-        }
+        public override string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess) => 
+            DefaultMarshalInfoWriter.Naming.Null;
 
         public override string WriteMarshalReturnValueToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, IRuntimeMetadataAccess metadataAccess)
         {
-            string variableName = string.Format("_{0}_marshaled", sourceVariable.GetNiceName());
+            string variableName = $"_{sourceVariable.GetNiceName()}_marshaled";
             this.WriteNativeVariableDeclarationOfType(writer, variableName);
             this.WriteMarshalVariableToNative(writer, sourceVariable, variableName, null, metadataAccess, true);
             return variableName;
@@ -220,7 +218,7 @@
                 {
                     if (this._nativeType != (Mono.Cecil.NativeType.Error | Mono.Cecil.NativeType.Boolean))
                     {
-                        throw new InvalidOperationException(string.Format("StringMarshalInfoWriter doesn't know how to marshal {0} while maintaining reference to original managed string.", this._nativeType));
+                        throw new InvalidOperationException($"StringMarshalInfoWriter doesn't know how to marshal {this._nativeType} while maintaining reference to original managed string.");
                     }
                     string niceName = sourceVariable.GetNiceName();
                     string str4 = niceName + "NativeView";
@@ -244,7 +242,7 @@
                         {
                             <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__0);
                         }
-                        FieldDefinition field = Enumerable.Single<FieldDefinition>(DefaultMarshalInfoWriter.TypeProvider.SystemString.Fields, <>f__am$cache0);
+                        FieldDefinition field = DefaultMarshalInfoWriter.TypeProvider.SystemString.Fields.Single<FieldDefinition>(<>f__am$cache0);
                         object[] objArray5 = new object[] { destinationVariable, sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.ForFieldAddressGetter(field) };
                         writer.WriteLine("{0} = {1}->{2}();", objArray5);
                     }
@@ -273,37 +271,17 @@
             }
         }
 
-        private int BytesPerCharacter
-        {
-            get
-            {
-                return (!this.IsWideString ? 1 : 2);
-            }
-        }
+        private int BytesPerCharacter =>
+            (!this.IsWideString ? 1 : 2);
 
-        private bool IsFixedSizeString
-        {
-            get
-            {
-                return (this._nativeType == Mono.Cecil.NativeType.FixedSysString);
-            }
-        }
+        private bool IsFixedSizeString =>
+            (this._nativeType == Mono.Cecil.NativeType.FixedSysString);
 
-        private bool IsWideString
-        {
-            get
-            {
-                return ((((this._nativeType == Mono.Cecil.NativeType.LPWStr) || (this._nativeType == Mono.Cecil.NativeType.BStr)) || (this._nativeType == (Mono.Cecil.NativeType.Error | Mono.Cecil.NativeType.Boolean))) || (this.IsFixedSizeString && this._useUnicodeCharSet));
-            }
-        }
+        private bool IsWideString =>
+            ((((this._nativeType == Mono.Cecil.NativeType.LPWStr) || (this._nativeType == Mono.Cecil.NativeType.BStr)) || (this._nativeType == (Mono.Cecil.NativeType.Error | Mono.Cecil.NativeType.Boolean))) || (this.IsFixedSizeString && this._useUnicodeCharSet));
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
         public override int NativeSizeWithoutPointers
         {
@@ -317,13 +295,8 @@
             }
         }
 
-        public Mono.Cecil.NativeType NativeType
-        {
-            get
-            {
-                return this._nativeType;
-            }
-        }
+        public Mono.Cecil.NativeType NativeType =>
+            this._nativeType;
     }
 }
 

@@ -28,10 +28,8 @@
             return test.get_TestName().get_FullName().GetHashCode();
         }
 
-        public virtual bool IsVisible(FilteringOptions options)
-        {
-            return true;
-        }
+        public virtual bool IsVisible(FilteringOptions options) => 
+            true;
 
         protected virtual void ResultUpdated(EditorTestResult result)
         {
@@ -44,21 +42,11 @@
             this.ResultUpdated(this.m_EditorTestResult);
         }
 
-        public EditorTestResult result
-        {
-            get
-            {
-                return this.m_EditorTestResult;
-            }
-        }
+        public EditorTestResult result =>
+            this.m_EditorTestResult;
 
-        public TestName testName
-        {
-            get
-            {
-                return this.m_Test.get_TestName();
-            }
-        }
+        public TestName testName =>
+            this.m_Test.get_TestName();
     }
 }
 

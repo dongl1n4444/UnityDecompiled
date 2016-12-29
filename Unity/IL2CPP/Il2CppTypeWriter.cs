@@ -35,7 +35,7 @@
             }
             object[] args = new object[] { MetadataWriter.Naming.ForArrayType(arrayType) };
             base.WriteLine("Il2CppArrayType {0} = ", args);
-            string[] initializers = new string[] { string.Format("&{0}", MetadataWriter.Naming.ForIl2CppType(arrayType.ElementType, 0)), arrayType.Rank.ToString(), 0.ToString(), 0.ToString(), MetadataWriter.Naming.Null, MetadataWriter.Naming.Null };
+            string[] initializers = new string[] { $"&{MetadataWriter.Naming.ForIl2CppType(arrayType.ElementType, 0)}", arrayType.Rank.ToString(), 0.ToString(), 0.ToString(), MetadataWriter.Naming.Null, MetadataWriter.Naming.Null };
             base.WriteArrayInitializer(initializers, MetadataWriter.ArrayTerminator.None);
             return ("&" + MetadataWriter.Naming.ForArrayType(arrayType));
         }
@@ -54,7 +54,7 @@
             {
                 <>f__am$cache0 = new Func<Il2CppTypeData, TypeReference>(null, (IntPtr) <WriteIl2CppTypeDefinitions>m__0);
             }
-            foreach (IGrouping<TypeReference, Il2CppTypeData> grouping in Enumerable.GroupBy<Il2CppTypeData, TypeReference>(items.Keys, <>f__am$cache0, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()))
+            foreach (IGrouping<TypeReference, Il2CppTypeData> grouping in items.Keys.GroupBy<Il2CppTypeData, TypeReference>(<>f__am$cache0, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()))
             {
                 string str;
                 base.Writer.WriteLine();
@@ -97,7 +97,7 @@
             {
                 <>f__am$cache2 = new Func<KeyValuePair<Il2CppTypeData, int>, string>(null, (IntPtr) <WriteIl2CppTypeDefinitions>m__2);
             }
-            return MetadataWriter.WriteTable<KeyValuePair<Il2CppTypeData, int>>(base.Writer, "extern const Il2CppType* const ", "g_Il2CppTypeTable", Enumerable.ToArray<KeyValuePair<Il2CppTypeData, int>>(Enumerable.OrderBy<KeyValuePair<Il2CppTypeData, int>, int>(items, <>f__am$cache1)), <>f__am$cache2);
+            return MetadataWriter.WriteTable<KeyValuePair<Il2CppTypeData, int>>(base.Writer, "extern const Il2CppType* const ", "g_Il2CppTypeTable", items.OrderBy<KeyValuePair<Il2CppTypeData, int>, int>(<>f__am$cache1).ToArray<KeyValuePair<Il2CppTypeData, int>>(), <>f__am$cache2);
         }
 
         private string WritePointerDataValue(PointerType pointerType)

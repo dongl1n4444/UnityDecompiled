@@ -33,10 +33,8 @@
             }
         }
 
-        public bool Contains(int i)
-        {
-            return this.m_SelectedPoints.Contains(i);
-        }
+        public bool Contains(int i) => 
+            this.m_SelectedPoints.Contains(i);
 
         public void DeleteSelection()
         {
@@ -56,10 +54,8 @@
             this.m_SelectedPoints.Clear();
         }
 
-        public IEnumerator<int> GetEnumerator()
-        {
-            return this.m_SelectedPoints.GetEnumerator();
-        }
+        public IEnumerator<int> GetEnumerator() => 
+            this.m_SelectedPoints.GetEnumerator();
 
         public void MoveSelection(Vector3 delta)
         {
@@ -216,34 +212,17 @@
             this.m_ShapeEditor.Repaint.Invoke();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.GetEnumerator();
 
-        public int Count
-        {
-            get
-            {
-                return this.m_SelectedPoints.Count;
-            }
-        }
+        public int Count =>
+            this.m_SelectedPoints.Count;
 
-        public HashSet<int> indices
-        {
-            get
-            {
-                return this.m_SelectedPoints;
-            }
-        }
+        public HashSet<int> indices =>
+            this.m_SelectedPoints;
 
-        public bool isSelecting
-        {
-            get
-            {
-                return (GUIUtility.hotControl == this.k_RectSelectionID);
-            }
-        }
+        public bool isSelecting =>
+            (GUIUtility.hotControl == this.k_RectSelectionID);
     }
 }
 

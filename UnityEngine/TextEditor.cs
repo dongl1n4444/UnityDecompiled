@@ -49,10 +49,8 @@
             return false;
         }
 
-        public bool CanPaste()
-        {
-            return (GUIUtility.systemCopyBuffer.Length != 0);
-        }
+        public bool CanPaste() => 
+            (GUIUtility.systemCopyBuffer.Length != 0);
 
         private void ClampTextIndex(ref int index)
         {
@@ -550,10 +548,8 @@
             this.ReplaceSelection(c.ToString());
         }
 
-        private static bool isLetterLikeChar(char c)
-        {
-            return (char.IsLetterOrDigit(c) || (c == '\''));
-        }
+        private static bool isLetterLikeChar(char c) => 
+            (char.IsLetterOrDigit(c) || (c == '\''));
 
         public bool IsOverSelection(Vector2 cursorPosition)
         {
@@ -1378,10 +1374,8 @@
         [Obsolete("Please use 'text' instead of 'content'", false)]
         public GUIContent content
         {
-            get
-            {
-                return this.m_Content;
-            }
+            get => 
+                this.m_Content;
             set
             {
                 this.m_Content = value;
@@ -1390,10 +1384,8 @@
 
         public int cursorIndex
         {
-            get
-            {
-                return this.m_CursorIndex;
-            }
+            get => 
+                this.m_CursorIndex;
             set
             {
                 int cursorIndex = this.m_CursorIndex;
@@ -1406,20 +1398,13 @@
             }
         }
 
-        public bool hasSelection
-        {
-            get
-            {
-                return (this.cursorIndex != this.selectIndex);
-            }
-        }
+        public bool hasSelection =>
+            (this.cursorIndex != this.selectIndex);
 
         public Rect position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 if (this.m_Position != value)
@@ -1448,10 +1433,8 @@
 
         public int selectIndex
         {
-            get
-            {
-                return this.m_SelectIndex;
-            }
+            get => 
+                this.m_SelectIndex;
             set
             {
                 this.m_SelectIndex = value;
@@ -1461,10 +1444,8 @@
 
         public string text
         {
-            get
-            {
-                return this.m_Content.text;
-            }
+            get => 
+                this.m_Content.text;
             set
             {
                 this.m_Content.text = value;

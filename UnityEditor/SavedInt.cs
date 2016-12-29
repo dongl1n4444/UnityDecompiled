@@ -23,10 +23,8 @@
             }
         }
 
-        public static implicit operator int(SavedInt s)
-        {
-            return s.value;
-        }
+        public static implicit operator int(SavedInt s) => 
+            s.value;
 
         public int value
         {

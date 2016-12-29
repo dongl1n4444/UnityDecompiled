@@ -34,10 +34,8 @@
             this.SetupSplitter();
         }
 
-        private static float Clamp(float value, float min, float max)
-        {
-            return ((value >= min) ? ((value <= max) ? value : max) : min);
-        }
+        private static float Clamp(float value, float min, float max) => 
+            ((value >= min) ? ((value <= max) ? value : max) : min);
 
         protected static void DrawBackground(int row, bool selected)
         {
@@ -125,15 +123,11 @@
             return false;
         }
 
-        protected static Rect GenerateRect(int row)
-        {
-            return new Rect(1f, 16f * row, GUIClip.visibleRect.width, 16f);
-        }
+        protected static Rect GenerateRect(int row) => 
+            new Rect(1f, 16f * row, GUIClip.visibleRect.width, 16f);
 
-        public MemoryElement GetRoot()
-        {
-            return this.m_Root;
-        }
+        public MemoryElement GetRoot() => 
+            this.m_Root;
 
         protected void HandleKeyboard()
         {
@@ -333,10 +327,8 @@
 
         public bool RequiresRefresh
         {
-            get
-            {
-                return this.m_RequiresRefresh;
-            }
+            get => 
+                this.m_RequiresRefresh;
             set
             {
                 this.m_RequiresRefresh = value;

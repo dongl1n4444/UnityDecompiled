@@ -11,13 +11,8 @@
             this.mJavaStackTrace = javaStackTrace;
         }
 
-        public override string StackTrace
-        {
-            get
-            {
-                return (this.mJavaStackTrace + base.StackTrace);
-            }
-        }
+        public override string StackTrace =>
+            (this.mJavaStackTrace + base.StackTrace);
     }
 }
 

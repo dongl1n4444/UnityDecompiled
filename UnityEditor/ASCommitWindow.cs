@@ -165,10 +165,8 @@
             }
         }
 
-        internal bool CanCommit()
-        {
-            return (this.pv2state.folders.Length != 0);
-        }
+        internal bool CanCommit() => 
+            (this.pv2state.folders.Length != 0);
 
         internal void CommitFinished(bool actionResult)
         {
@@ -526,10 +524,8 @@
             return true;
         }
 
-        private bool DoShowMyDiff(bool binary)
-        {
-            return DoShowDiff(GetParentViewSelectedItems(!this.pv2hasSelection ? this.pv1state : this.pv2state, false, false), binary);
-        }
+        private bool DoShowMyDiff(bool binary) => 
+            DoShowDiff(GetParentViewSelectedItems(!this.pv2hasSelection ? this.pv1state : this.pv2state, false, false), binary);
 
         private bool DoTransfer(ref ParentViewFolder[] foldersFrom, ref ParentViewFolder[] foldersTo, int folder, int file, ref List<string> guidsOfFoldersToRemove, bool leftToRight)
         {
@@ -676,10 +672,8 @@
             return -1;
         }
 
-        internal static AssetsItem[] GetCommits()
-        {
-            return AssetServer.GetChangedAssetsItems();
-        }
+        internal static AssetsItem[] GetCommits() => 
+            AssetServer.GetChangedAssetsItems();
 
         internal string[] GetItemsToCommit()
         {
@@ -776,10 +770,8 @@
             return list;
         }
 
-        private static bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck)
-        {
-            return ((flagToCheck & flags) != ChangeFlags.None);
-        }
+        private static bool HasFlag(ChangeFlags flags, ChangeFlags flagToCheck) => 
+            ((flagToCheck & flags) != ChangeFlags.None);
 
         private static int IndexOfFolderWithGUID(ParentViewFolder[] folders, string guid)
         {
@@ -820,10 +812,8 @@
             }
         }
 
-        internal static bool IsDiscardableAsset(string guid, ChangeFlags changeFlags)
-        {
-            return ((AssetServer.IsConstantGUID(guid) == 0) || (!HasFlag(changeFlags, ChangeFlags.Created) && !HasFlag(changeFlags, ChangeFlags.Undeleted)));
-        }
+        internal static bool IsDiscardableAsset(string guid, ChangeFlags changeFlags) => 
+            ((AssetServer.IsConstantGUID(guid) == 0) || (!HasFlag(changeFlags, ChangeFlags.Created) && !HasFlag(changeFlags, ChangeFlags.Undeleted)));
 
         public static bool MarkAllFolderDependenciesForDiscarding(ParentViewState pvState, ParentViewState anotherPvState)
         {
@@ -1274,10 +1264,8 @@
             AssetServer.SetCommitSelectionGUIDs(list.ToArray());
         }
 
-        internal static bool ShowDiscardWarning()
-        {
-            return EditorUtility.DisplayDialog("Discard changes", "More items will be discarded then initially selected. Dependencies of selected items where all marked in commit window. Please review.", "Discard", "Cancel");
-        }
+        internal static bool ShowDiscardWarning() => 
+            EditorUtility.DisplayDialog("Discard changes", "More items will be discarded then initially selected. Dependencies of selected items where all marked in commit window. Please review.", "Discard", "Cancel");
 
         public static bool SomethingDiscardableSelected(ParentViewState st)
         {

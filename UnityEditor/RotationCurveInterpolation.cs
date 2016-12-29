@@ -30,10 +30,8 @@
             return selection;
         }
 
-        public static char ExtractComponentCharacter(string name)
-        {
-            return name[name.Length - 1];
-        }
+        public static char ExtractComponentCharacter(string name) => 
+            name[name.Length - 1];
 
         private static EditorCurveBinding[] GenerateTransformCurveBindingArray(string path, string property, Type type, int count)
         {
@@ -45,10 +43,8 @@
             return bindingArray;
         }
 
-        public static int GetCurveIndexFromName(string name)
-        {
-            return (ExtractComponentCharacter(name) - 'x');
-        }
+        public static int GetCurveIndexFromName(string name) => 
+            (ExtractComponentCharacter(name) - 'x');
 
         public static State GetCurveState(AnimationClip clip, EditorCurveBinding[] selection)
         {

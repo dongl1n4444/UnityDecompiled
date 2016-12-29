@@ -180,7 +180,7 @@
 
         public void AddFields(IEnumerable<FieldDefinition> fields, MarshalType marshalType)
         {
-            FieldDefinition[] itemsToAdd = Enumerable.ToArray<FieldDefinition>(fields);
+            FieldDefinition[] itemsToAdd = fields.ToArray<FieldDefinition>();
             AddUnique<FieldDefinition>(this._fields, itemsToAdd, delegate (FieldDefinition field) {
                 this.AddString(field.Name);
                 Il2CppTypeCollector.Add(field.FieldType, (int) field.Attributes);
@@ -205,7 +205,7 @@
                     {
                         <>f__am$cache1D = new Func<TypeReference, int, int>(null, (IntPtr) <AddGenericParameters>m__26);
                     }
-                    this._genericParameterConstraints.AddRange(Enumerable.Select<TypeReference, int>(genericParameter.Constraints, <>f__am$cache1D));
+                    this._genericParameterConstraints.AddRange(genericParameter.Constraints.Select<TypeReference, int>(<>f__am$cache1D));
                 }
             });
         }
@@ -230,7 +230,7 @@
                         {
                             <>f__mg$cache1 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(null, (IntPtr) CreateRGCTXEntry);
                         }
-                        this._rgctxEntries.AddRange(Enumerable.Select<RuntimeGenericData, KeyValuePair<int, uint>>(source, <>f__mg$cache1));
+                        this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, KeyValuePair<int, uint>>(<>f__mg$cache1));
                     }
                 }
                 if (!method.DeclaringType.HasGenericParameters && !method.HasGenericParameters)
@@ -242,7 +242,7 @@
 
         private void AddParameters(IEnumerable<ParameterDefinition> parameters)
         {
-            ParameterDefinition[] itemsToAdd = Enumerable.ToArray<ParameterDefinition>(parameters);
+            ParameterDefinition[] itemsToAdd = parameters.ToArray<ParameterDefinition>();
             AddUnique<ParameterDefinition>(this._parameters, itemsToAdd, delegate (ParameterDefinition parameter) {
                 this.AddString(parameter.Name);
                 Il2CppTypeCollector.Add(parameter.ParameterType, (int) parameter.Attributes);
@@ -259,7 +259,7 @@
         {
             foreach (AssemblyDefinition definition in assemblies)
             {
-                List<AssemblyDefinition> source = Enumerable.ToList<AssemblyDefinition>(AssemblyDependencies.GetReferencedAssembliesFor(definition));
+                List<AssemblyDefinition> source = AssemblyDependencies.GetReferencedAssembliesFor(definition).ToList<AssemblyDefinition>();
                 if (source.Count == 0)
                 {
                     this._firstReferencedAssemblyIndexCache.Add(definition, new Tuple<int, int>(-1, 0));
@@ -267,7 +267,7 @@
                 else
                 {
                     this._firstReferencedAssemblyIndexCache.Add(definition, new Tuple<int, int>(this._referencedAssemblyTable.Count, source.Count));
-                    this._referencedAssemblyTable.AddRange(Enumerable.Select<AssemblyDefinition, int>(Enumerable.Distinct<AssemblyDefinition>(source), new Func<AssemblyDefinition, int>(this, (IntPtr) this.GetAssemblyIndex)));
+                    this._referencedAssemblyTable.AddRange(source.Distinct<AssemblyDefinition>().Select<AssemblyDefinition, int>(new Func<AssemblyDefinition, int>(this, (IntPtr) this.GetAssemblyIndex)));
                 }
             }
         }
@@ -300,11 +300,11 @@
                 {
                     <>f__am$cache1B = new Func<MethodDefinition, bool>(null, (IntPtr) <AddTypeInfos>m__24);
                 }
-                this.AddMethods(Enumerable.Where<MethodDefinition>(type.Methods, <>f__am$cache1B));
+                this.AddMethods(type.Methods.Where<MethodDefinition>(<>f__am$cache1B));
                 this.AddFields(type.Fields, MarshalType.PInvoke);
                 this.AddProperties(type.Properties);
                 this.AddEvents(type.Events);
-                if (Extensions.IsComOrWindowsRuntimeInterface(type) && !type.HasGenericParameters)
+                if (type.IsComOrWindowsRuntimeInterface() && !type.HasGenericParameters)
                 {
                     this._guids.Add(type, this._guids.Count);
                 }
@@ -312,7 +312,7 @@
                 {
                     this.AddTypeInfos(type.NestedTypes);
                     this._nestedTypesStart.Add(type, this._nestedTypes.Count);
-                    this._nestedTypes.AddRange(Enumerable.Select<TypeDefinition, int>(type.NestedTypes, new Func<TypeDefinition, int>(this, (IntPtr) this.GetTypeInfoIndex)));
+                    this._nestedTypes.AddRange(type.NestedTypes.Select<TypeDefinition, int>(new Func<TypeDefinition, int>(this, (IntPtr) this.GetTypeInfoIndex)));
                 }
                 if (type.HasInterfaces)
                 {
@@ -321,7 +321,7 @@
                     {
                         <>f__am$cache1C = new Func<InterfaceImplementation, int, int>(null, (IntPtr) <AddTypeInfos>m__25);
                     }
-                    this._interfaces.AddRange(Enumerable.Select<InterfaceImplementation, int>(type.Interfaces, <>f__am$cache1C));
+                    this._interfaces.AddRange(type.Interfaces.Select<InterfaceImplementation, int>(<>f__am$cache1C));
                 }
                 if (type.HasGenericParameters)
                 {
@@ -336,7 +336,7 @@
                         {
                             <>f__mg$cache0 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(null, (IntPtr) CreateRGCTXEntry);
                         }
-                        this._rgctxEntries.AddRange(Enumerable.Select<RuntimeGenericData, KeyValuePair<int, uint>>(source, <>f__mg$cache0));
+                        this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, KeyValuePair<int, uint>>(<>f__mg$cache0));
                     }
                 }
             });
@@ -354,12 +354,12 @@
         {
             if (items.Contains(item))
             {
-                throw new Exception(string.Format("Attempting to add unique metadata item {0} multiple times.", item));
+                throw new Exception($"Attempting to add unique metadata item {item} multiple times.");
             }
             items.Add(item);
         }
 
-        private static void AddUnique<T>(Dictionary<T, int> items, IEnumerable<T> itemsToAdd, [Optional, DefaultParameterValue(null)] Action<T> onAdd)
+        private static void AddUnique<T>(Dictionary<T, int> items, IEnumerable<T> itemsToAdd, Action<T> onAdd = null)
         {
             foreach (T local in itemsToAdd)
             {
@@ -367,12 +367,12 @@
             }
         }
 
-        private static void AddUnique<T>(Dictionary<T, int> items, T item, [Optional, DefaultParameterValue(null)] Action<T> onAdd)
+        private static void AddUnique<T>(Dictionary<T, int> items, T item, Action<T> onAdd = null)
         {
             int count;
             if (items.TryGetValue(item, out count))
             {
-                throw new Exception(string.Format("Attempting to add unique metadata item {0} multiple times.", item));
+                throw new Exception($"Attempting to add unique metadata item {item} multiple times.");
             }
             count = items.Count;
             items.Add(item, count);
@@ -390,17 +390,17 @@
                 {
                     this.AddVTables(definition.NestedTypes);
                 }
-                if (!definition.IsInterface || Extensions.IsComOrWindowsRuntimeType(definition))
+                if (!definition.IsInterface || definition.IsComOrWindowsRuntimeType())
                 {
                     VTable table = new VTableBuilder().VTableFor(definition, null);
                     this._vtableMethodsStart.Add(definition, this._vtableMethods.Count);
-                    this._vtableMethods.AddRange(Enumerable.Select<MethodReference, uint>(table.Slots, new Func<MethodReference, uint>(this, (IntPtr) this.<AddVTables>m__3)));
+                    this._vtableMethods.AddRange(table.Slots.Select<MethodReference, uint>(new Func<MethodReference, uint>(this, (IntPtr) this.<AddVTables>m__3)));
                     this._interfaceOffsetsStart.Add(definition, this._interfaceOffsets.Count);
                     if (<>f__am$cache0 == null)
                     {
                         <>f__am$cache0 = new Func<KeyValuePair<TypeReference, int>, KeyValuePair<int, int>>(null, (IntPtr) <AddVTables>m__4);
                     }
-                    this._interfaceOffsets.AddRange(Enumerable.Select<KeyValuePair<TypeReference, int>, KeyValuePair<int, int>>(table.InterfaceOffsets, <>f__am$cache0));
+                    this._interfaceOffsets.AddRange(table.InterfaceOffsets.Select<KeyValuePair<TypeReference, int>, KeyValuePair<int, int>>(<>f__am$cache0));
                 }
             }
         }
@@ -431,26 +431,22 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<FieldDefaultValue> DefaultValueFromFields(MetadataCollector metadataCollector, IIl2CppTypeCollectorWriterService typeCollector, IEnumerable<FieldDefinition> fields)
-        {
-            return new <DefaultValueFromFields>c__Iterator0 { 
+        private static IEnumerable<FieldDefaultValue> DefaultValueFromFields(MetadataCollector metadataCollector, IIl2CppTypeCollectorWriterService typeCollector, IEnumerable<FieldDefinition> fields) => 
+            new <DefaultValueFromFields>c__Iterator0 { 
                 fields = fields,
                 metadataCollector = metadataCollector,
                 typeCollector = typeCollector,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        private static IEnumerable<ParameterDefaultValue> FromParameters(MetadataCollector metadataCollector, IIl2CppTypeCollectorWriterService typeCollector, IEnumerable<ParameterDefinition> parameters)
-        {
-            return new <FromParameters>c__Iterator2 { 
+        private static IEnumerable<ParameterDefaultValue> FromParameters(MetadataCollector metadataCollector, IIl2CppTypeCollectorWriterService typeCollector, IEnumerable<ParameterDefinition> parameters) => 
+            new <FromParameters>c__Iterator2 { 
                 parameters = parameters,
                 metadataCollector = metadataCollector,
                 typeCollector = typeCollector,
                 $PC = -2
             };
-        }
 
         public ReadOnlyCollection<AssemblyDefinition> GetAssemblies()
         {
@@ -462,23 +458,17 @@
             {
                 <>f__am$cache18 = new Func<KeyValuePair<AssemblyDefinition, int>, AssemblyDefinition>(null, (IntPtr) <GetAssemblies>m__21);
             }
-            return CollectionExtensions.AsReadOnlyPortable<AssemblyDefinition>(Enumerable.ToArray<AssemblyDefinition>(Enumerable.Select<KeyValuePair<AssemblyDefinition, int>, AssemblyDefinition>(Enumerable.OrderBy<KeyValuePair<AssemblyDefinition, int>, int>(this._assemblies, <>f__am$cache17), <>f__am$cache18)));
+            return this._assemblies.OrderBy<KeyValuePair<AssemblyDefinition, int>, int>(<>f__am$cache17).Select<KeyValuePair<AssemblyDefinition, int>, AssemblyDefinition>(<>f__am$cache18).ToArray<AssemblyDefinition>().AsReadOnlyPortable<AssemblyDefinition>();
         }
 
-        public int GetAssemblyIndex(AssemblyDefinition assembly)
-        {
-            return this._assemblies[assembly];
-        }
+        public int GetAssemblyIndex(AssemblyDefinition assembly) => 
+            this._assemblies[assembly];
 
-        public ReadOnlyCollection<byte> GetDefaultValueData()
-        {
-            return this._defaultValueData.AsReadOnly();
-        }
+        public ReadOnlyCollection<byte> GetDefaultValueData() => 
+            this._defaultValueData.AsReadOnly();
 
-        public int GetEventIndex(EventDefinition @event)
-        {
-            return this._events[@event];
-        }
+        public int GetEventIndex(EventDefinition @event) => 
+            this._events[@event];
 
         public ReadOnlyCollection<EventDefinition> GetEvents()
         {
@@ -490,7 +480,7 @@
             {
                 <>f__am$cache10 = new Func<KeyValuePair<EventDefinition, int>, EventDefinition>(null, (IntPtr) <GetEvents>m__19);
             }
-            return CollectionExtensions.AsReadOnlyPortable<EventDefinition>(Enumerable.ToArray<EventDefinition>(Enumerable.Select<KeyValuePair<EventDefinition, int>, EventDefinition>(Enumerable.OrderBy<KeyValuePair<EventDefinition, int>, int>(this._events, <>f__am$cacheF), <>f__am$cache10)));
+            return this._events.OrderBy<KeyValuePair<EventDefinition, int>, int>(<>f__am$cacheF).Select<KeyValuePair<EventDefinition, int>, EventDefinition>(<>f__am$cache10).ToArray<EventDefinition>().AsReadOnlyPortable<EventDefinition>();
         }
 
         public ReadOnlyCollection<FieldDefaultValue> GetFieldDefaultValues()
@@ -503,18 +493,14 @@
             {
                 <>f__am$cache4 = new Func<KeyValuePair<FieldDefaultValue, int>, FieldDefaultValue>(null, (IntPtr) <GetFieldDefaultValues>m__D);
             }
-            return CollectionExtensions.AsReadOnlyPortable<FieldDefaultValue>(Enumerable.ToArray<FieldDefaultValue>(Enumerable.Select<KeyValuePair<FieldDefaultValue, int>, FieldDefaultValue>(Enumerable.OrderBy<KeyValuePair<FieldDefaultValue, int>, int>(this._fieldDefaultValues, <>f__am$cache3), <>f__am$cache4)));
+            return this._fieldDefaultValues.OrderBy<KeyValuePair<FieldDefaultValue, int>, int>(<>f__am$cache3).Select<KeyValuePair<FieldDefaultValue, int>, FieldDefaultValue>(<>f__am$cache4).ToArray<FieldDefaultValue>().AsReadOnlyPortable<FieldDefaultValue>();
         }
 
-        public int GetFieldIndex(FieldDefinition field)
-        {
-            return this._fields[field];
-        }
+        public int GetFieldIndex(FieldDefinition field) => 
+            this._fields[field];
 
-        public ReadOnlyCollection<FieldMarshaledSize> GetFieldMarshaledSizes()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<FieldMarshaledSize>(this._fieldMarshaledSizes.ToArray());
-        }
+        public ReadOnlyCollection<FieldMarshaledSize> GetFieldMarshaledSizes() => 
+            this._fieldMarshaledSizes.ToArray().AsReadOnlyPortable<FieldMarshaledSize>();
 
         public ReadOnlyCollection<FieldDefinition> GetFields()
         {
@@ -526,7 +512,7 @@
             {
                 <>f__am$cache2 = new Func<KeyValuePair<FieldDefinition, int>, FieldDefinition>(null, (IntPtr) <GetFields>m__B);
             }
-            return CollectionExtensions.AsReadOnlyPortable<FieldDefinition>(Enumerable.ToArray<FieldDefinition>(Enumerable.Select<KeyValuePair<FieldDefinition, int>, FieldDefinition>(Enumerable.OrderBy<KeyValuePair<FieldDefinition, int>, int>(this._fields, <>f__am$cache1), <>f__am$cache2)));
+            return this._fields.OrderBy<KeyValuePair<FieldDefinition, int>, int>(<>f__am$cache1).Select<KeyValuePair<FieldDefinition, int>, FieldDefinition>(<>f__am$cache2).ToArray<FieldDefinition>().AsReadOnlyPortable<FieldDefinition>();
         }
 
         public int GetFirstIndexInReferencedAssemblyTableForAssembly(AssemblyDefinition assembly, out int length)
@@ -556,23 +542,17 @@
             {
                 <>f__am$cache12 = new Func<KeyValuePair<IGenericParameterProvider, int>, IGenericParameterProvider>(null, (IntPtr) <GetGenericContainers>m__1B);
             }
-            return CollectionExtensions.AsReadOnlyPortable<IGenericParameterProvider>(Enumerable.ToArray<IGenericParameterProvider>(Enumerable.Select<KeyValuePair<IGenericParameterProvider, int>, IGenericParameterProvider>(Enumerable.OrderBy<KeyValuePair<IGenericParameterProvider, int>, int>(this._genericContainers, <>f__am$cache11), <>f__am$cache12)));
+            return this._genericContainers.OrderBy<KeyValuePair<IGenericParameterProvider, int>, int>(<>f__am$cache11).Select<KeyValuePair<IGenericParameterProvider, int>, IGenericParameterProvider>(<>f__am$cache12).ToArray<IGenericParameterProvider>().AsReadOnlyPortable<IGenericParameterProvider>();
         }
 
-        public ReadOnlyCollection<int> GetGenericParameterConstraints()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<int>(this._genericParameterConstraints.ToArray());
-        }
+        public ReadOnlyCollection<int> GetGenericParameterConstraints() => 
+            this._genericParameterConstraints.ToArray().AsReadOnlyPortable<int>();
 
-        public int GetGenericParameterConstraintsStartIndex(GenericParameter genericParameter)
-        {
-            return this._genericParameterConstraintsStart[genericParameter];
-        }
+        public int GetGenericParameterConstraintsStartIndex(GenericParameter genericParameter) => 
+            this._genericParameterConstraintsStart[genericParameter];
 
-        public int GetGenericParameterIndex(GenericParameter genericParameter)
-        {
-            return this._genericParameters[genericParameter];
-        }
+        public int GetGenericParameterIndex(GenericParameter genericParameter) => 
+            this._genericParameters[genericParameter];
 
         public ReadOnlyCollection<GenericParameter> GetGenericParameters()
         {
@@ -584,7 +564,7 @@
             {
                 <>f__am$cache14 = new Func<KeyValuePair<GenericParameter, int>, GenericParameter>(null, (IntPtr) <GetGenericParameters>m__1D);
             }
-            return CollectionExtensions.AsReadOnlyPortable<GenericParameter>(Enumerable.ToArray<GenericParameter>(Enumerable.Select<KeyValuePair<GenericParameter, int>, GenericParameter>(Enumerable.OrderBy<KeyValuePair<GenericParameter, int>, int>(this._genericParameters, <>f__am$cache13), <>f__am$cache14)));
+            return this._genericParameters.OrderBy<KeyValuePair<GenericParameter, int>, int>(<>f__am$cache13).Select<KeyValuePair<GenericParameter, int>, GenericParameter>(<>f__am$cache14).ToArray<GenericParameter>().AsReadOnlyPortable<GenericParameter>();
         }
 
         public int GetGuidIndex(TypeDefinition type)
@@ -597,30 +577,20 @@
             return -1;
         }
 
-        public ReadOnlyCollection<KeyValuePair<int, int>> GetInterfaceOffsets()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<KeyValuePair<int, int>>(this._interfaceOffsets.ToArray());
-        }
+        public ReadOnlyCollection<KeyValuePair<int, int>> GetInterfaceOffsets() => 
+            this._interfaceOffsets.ToArray().AsReadOnlyPortable<KeyValuePair<int, int>>();
 
-        public int GetInterfaceOffsetsStartIndex(TypeDefinition type)
-        {
-            return this._interfaceOffsetsStart[type];
-        }
+        public int GetInterfaceOffsetsStartIndex(TypeDefinition type) => 
+            this._interfaceOffsetsStart[type];
 
-        public ReadOnlyCollection<int> GetInterfaces()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<int>(this._interfaces.ToArray());
-        }
+        public ReadOnlyCollection<int> GetInterfaces() => 
+            this._interfaces.ToArray().AsReadOnlyPortable<int>();
 
-        public int GetInterfacesStartIndex(TypeDefinition type)
-        {
-            return this._interfacesStart[type];
-        }
+        public int GetInterfacesStartIndex(TypeDefinition type) => 
+            this._interfacesStart[type];
 
-        public int GetMethodIndex(MethodDefinition method)
-        {
-            return this._methods[method];
-        }
+        public int GetMethodIndex(MethodDefinition method) => 
+            this._methods[method];
 
         public ReadOnlyCollection<MethodDefinition> GetMethods()
         {
@@ -632,13 +602,11 @@
             {
                 <>f__am$cacheA = new Func<KeyValuePair<MethodDefinition, int>, MethodDefinition>(null, (IntPtr) <GetMethods>m__13);
             }
-            return CollectionExtensions.AsReadOnlyPortable<MethodDefinition>(Enumerable.ToArray<MethodDefinition>(Enumerable.Select<KeyValuePair<MethodDefinition, int>, MethodDefinition>(Enumerable.OrderBy<KeyValuePair<MethodDefinition, int>, int>(this._methods, <>f__am$cache9), <>f__am$cacheA)));
+            return this._methods.OrderBy<KeyValuePair<MethodDefinition, int>, int>(<>f__am$cache9).Select<KeyValuePair<MethodDefinition, int>, MethodDefinition>(<>f__am$cacheA).ToArray<MethodDefinition>().AsReadOnlyPortable<MethodDefinition>();
         }
 
-        public int GetModuleIndex(ModuleDefinition module)
-        {
-            return this._modules[module];
-        }
+        public int GetModuleIndex(ModuleDefinition module) => 
+            this._modules[module];
 
         public ReadOnlyCollection<ModuleDefinition> GetModules()
         {
@@ -650,18 +618,14 @@
             {
                 <>f__am$cache16 = new Func<KeyValuePair<ModuleDefinition, int>, ModuleDefinition>(null, (IntPtr) <GetModules>m__1F);
             }
-            return CollectionExtensions.AsReadOnlyPortable<ModuleDefinition>(Enumerable.ToArray<ModuleDefinition>(Enumerable.Select<KeyValuePair<ModuleDefinition, int>, ModuleDefinition>(Enumerable.OrderBy<KeyValuePair<ModuleDefinition, int>, int>(this._modules, <>f__am$cache15), <>f__am$cache16)));
+            return this._modules.OrderBy<KeyValuePair<ModuleDefinition, int>, int>(<>f__am$cache15).Select<KeyValuePair<ModuleDefinition, int>, ModuleDefinition>(<>f__am$cache16).ToArray<ModuleDefinition>().AsReadOnlyPortable<ModuleDefinition>();
         }
 
-        public ReadOnlyCollection<int> GetNestedTypes()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<int>(this._nestedTypes.ToArray());
-        }
+        public ReadOnlyCollection<int> GetNestedTypes() => 
+            this._nestedTypes.ToArray().AsReadOnlyPortable<int>();
 
-        public int GetNestedTypesStartIndex(TypeDefinition type)
-        {
-            return this._nestedTypesStart[type];
-        }
+        public int GetNestedTypesStartIndex(TypeDefinition type) => 
+            this._nestedTypesStart[type];
 
         public ReadOnlyCollection<ParameterDefaultValue> GetParameterDefaultValues()
         {
@@ -673,13 +637,11 @@
             {
                 <>f__am$cache6 = new Func<KeyValuePair<ParameterDefaultValue, int>, ParameterDefaultValue>(null, (IntPtr) <GetParameterDefaultValues>m__F);
             }
-            return CollectionExtensions.AsReadOnlyPortable<ParameterDefaultValue>(Enumerable.ToArray<ParameterDefaultValue>(Enumerable.Select<KeyValuePair<ParameterDefaultValue, int>, ParameterDefaultValue>(Enumerable.OrderBy<KeyValuePair<ParameterDefaultValue, int>, int>(this._parameterDefaultValues, <>f__am$cache5), <>f__am$cache6)));
+            return this._parameterDefaultValues.OrderBy<KeyValuePair<ParameterDefaultValue, int>, int>(<>f__am$cache5).Select<KeyValuePair<ParameterDefaultValue, int>, ParameterDefaultValue>(<>f__am$cache6).ToArray<ParameterDefaultValue>().AsReadOnlyPortable<ParameterDefaultValue>();
         }
 
-        public int GetParameterIndex(ParameterDefinition parameter)
-        {
-            return this._parameters[parameter];
-        }
+        public int GetParameterIndex(ParameterDefinition parameter) => 
+            this._parameters[parameter];
 
         public ReadOnlyCollection<ParameterDefinition> GetParameters()
         {
@@ -691,7 +653,7 @@
             {
                 <>f__am$cacheC = new Func<KeyValuePair<ParameterDefinition, int>, ParameterDefinition>(null, (IntPtr) <GetParameters>m__15);
             }
-            return CollectionExtensions.AsReadOnlyPortable<ParameterDefinition>(Enumerable.ToArray<ParameterDefinition>(Enumerable.Select<KeyValuePair<ParameterDefinition, int>, ParameterDefinition>(Enumerable.OrderBy<KeyValuePair<ParameterDefinition, int>, int>(this._parameters, <>f__am$cacheB), <>f__am$cacheC)));
+            return this._parameters.OrderBy<KeyValuePair<ParameterDefinition, int>, int>(<>f__am$cacheB).Select<KeyValuePair<ParameterDefinition, int>, ParameterDefinition>(<>f__am$cacheC).ToArray<ParameterDefinition>().AsReadOnlyPortable<ParameterDefinition>();
         }
 
         public ReadOnlyCollection<PropertyDefinition> GetProperties()
@@ -704,23 +666,17 @@
             {
                 <>f__am$cacheE = new Func<KeyValuePair<PropertyDefinition, int>, PropertyDefinition>(null, (IntPtr) <GetProperties>m__17);
             }
-            return CollectionExtensions.AsReadOnlyPortable<PropertyDefinition>(Enumerable.ToArray<PropertyDefinition>(Enumerable.Select<KeyValuePair<PropertyDefinition, int>, PropertyDefinition>(Enumerable.OrderBy<KeyValuePair<PropertyDefinition, int>, int>(this._properties, <>f__am$cacheD), <>f__am$cacheE)));
+            return this._properties.OrderBy<KeyValuePair<PropertyDefinition, int>, int>(<>f__am$cacheD).Select<KeyValuePair<PropertyDefinition, int>, PropertyDefinition>(<>f__am$cacheE).ToArray<PropertyDefinition>().AsReadOnlyPortable<PropertyDefinition>();
         }
 
-        public int GetPropertyIndex(PropertyDefinition property)
-        {
-            return this._properties[property];
-        }
+        public int GetPropertyIndex(PropertyDefinition property) => 
+            this._properties[property];
 
-        public ReadOnlyCollection<int> GetReferencedAssemblyIndiciesIntoAssemblyTable()
-        {
-            return this._referencedAssemblyTable.AsReadOnly();
-        }
+        public ReadOnlyCollection<int> GetReferencedAssemblyIndiciesIntoAssemblyTable() => 
+            this._referencedAssemblyTable.AsReadOnly();
 
-        public ReadOnlyCollection<KeyValuePair<int, uint>> GetRGCTXEntries()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<KeyValuePair<int, uint>>(this._rgctxEntries.ToArray());
-        }
+        public ReadOnlyCollection<KeyValuePair<int, uint>> GetRGCTXEntries() => 
+            this._rgctxEntries.ToArray().AsReadOnlyPortable<KeyValuePair<int, uint>>();
 
         public int GetRGCTXEntriesCount(IGenericParameterProvider provider)
         {
@@ -742,20 +698,14 @@
             return -1;
         }
 
-        public ReadOnlyCollection<byte> GetStringData()
-        {
-            return this._stringData.AsReadOnly();
-        }
+        public ReadOnlyCollection<byte> GetStringData() => 
+            this._stringData.AsReadOnly();
 
-        public int GetStringIndex(string str)
-        {
-            return this._strings[str];
-        }
+        public int GetStringIndex(string str) => 
+            this._strings[str];
 
-        public int GetTypeInfoIndex(TypeDefinition type)
-        {
-            return this._typeInfos[type];
-        }
+        public int GetTypeInfoIndex(TypeDefinition type) => 
+            this._typeInfos[type];
 
         public ReadOnlyCollection<TypeDefinition> GetTypeInfos()
         {
@@ -767,7 +717,7 @@
             {
                 <>f__am$cache8 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetTypeInfos>m__11);
             }
-            return CollectionExtensions.AsReadOnlyPortable<TypeDefinition>(Enumerable.ToArray<TypeDefinition>(Enumerable.Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(Enumerable.OrderBy<KeyValuePair<TypeDefinition, int>, int>(this._typeInfos, <>f__am$cache7), <>f__am$cache8)));
+            return this._typeInfos.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache7).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache8).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
 
         public ReadOnlyCollection<TypeDefinition> GetTypesWithGuids()
@@ -780,13 +730,11 @@
             {
                 <>f__am$cache1A = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetTypesWithGuids>m__23);
             }
-            return CollectionExtensions.AsReadOnlyPortable<TypeDefinition>(Enumerable.ToArray<TypeDefinition>(Enumerable.Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(Enumerable.OrderBy<KeyValuePair<TypeDefinition, int>, int>(this._guids, <>f__am$cache19), <>f__am$cache1A)));
+            return this._guids.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache19).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache1A).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
 
-        public ReadOnlyCollection<uint> GetVTableMethods()
-        {
-            return CollectionExtensions.AsReadOnlyPortable<uint>(this._vtableMethods.ToArray());
-        }
+        public ReadOnlyCollection<uint> GetVTableMethods() => 
+            this._vtableMethods.ToArray().AsReadOnlyPortable<uint>();
 
         public int GetVTableMethodsStartIndex(TypeDefinition type)
         {
@@ -799,16 +747,14 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<FieldMarshaledSize> MarshaledSizeFromFields(MetadataCollector metadataCollector, IIl2CppTypeCollectorWriterService typeCollector, IEnumerable<FieldDefinition> fields, MarshalType marshalType)
-        {
-            return new <MarshaledSizeFromFields>c__Iterator1 { 
+        private static IEnumerable<FieldMarshaledSize> MarshaledSizeFromFields(MetadataCollector metadataCollector, IIl2CppTypeCollectorWriterService typeCollector, IEnumerable<FieldDefinition> fields, MarshalType marshalType) => 
+            new <MarshaledSizeFromFields>c__Iterator1 { 
                 fields = fields,
                 marshalType = marshalType,
                 metadataCollector = metadataCollector,
                 typeCollector = typeCollector,
                 $PC = -2
             };
-        }
 
         [CompilerGenerated]
         private sealed class <DefaultValueFromFields>c__Iterator0 : IEnumerable, IEnumerable<FieldDefaultValue>, IEnumerator, IDisposable, IEnumerator<FieldDefaultValue>
@@ -940,28 +886,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Metadata.Fields.FieldDefaultValue>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Metadata.Fields.FieldDefaultValue>.GetEnumerator();
 
-            FieldDefaultValue IEnumerator<FieldDefaultValue>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            FieldDefaultValue IEnumerator<FieldDefaultValue>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1076,28 +1008,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Metadata.ParameterDefaultValue>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Metadata.ParameterDefaultValue>.GetEnumerator();
 
-            ParameterDefaultValue IEnumerator<ParameterDefaultValue>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            ParameterDefaultValue IEnumerator<ParameterDefaultValue>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1216,28 +1134,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Metadata.Fields.FieldMarshaledSize>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Metadata.Fields.FieldMarshaledSize>.GetEnumerator();
 
-            FieldMarshaledSize IEnumerator<FieldMarshaledSize>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            FieldMarshaledSize IEnumerator<FieldMarshaledSize>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

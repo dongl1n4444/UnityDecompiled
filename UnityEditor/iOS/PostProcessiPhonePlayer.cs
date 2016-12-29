@@ -60,12 +60,12 @@
                             string variantNameFromPath = Utils.GetVariantNameFromPath(variant.path);
                             if (variantNameFromPath == null)
                             {
-                                throw new Exception(string.Format("Resource variants must have extensions: {0}", variant.path));
+                                throw new Exception($"Resource variants must have extensions: {variant.path}");
                             }
                             iOSDeviceRequirementGroup deviceRequirementsForAssetBundleVariant = PlayerSettings.iOS.GetDeviceRequirementsForAssetBundleVariant(variantNameFromPath);
                             if (deviceRequirementsForAssetBundleVariant == null)
                             {
-                                throw new Exception(string.Format("Please configure resource variant '{0}' in player settings", variantNameFromPath));
+                                throw new Exception($"Please configure resource variant '{variantNameFromPath}' in player settings");
                             }
                             if (deviceRequirementsForAssetBundleVariant.count > 0)
                             {
@@ -496,7 +496,7 @@
             ProjectPaths paths = new ProjectPaths {
                 playerPackage = UnityEditor.BuildPipeline.GetPlaybackEngineDirectory(BuildTarget.iOS, BuildOptions.CompressTextures)
             };
-            string progressMessage = string.Format("Building {0} {1} {2} library", !EditorUserBuildSettings.development ? "release" : "development", str3, str5);
+            string progressMessage = $"Building {!EditorUserBuildSettings.development ? "release" : "development"} {str3} {str5} library";
             if (!RunJam(paths, config, devPlayer, str3, platform, str5, "", "Building runtime static library", progressMessage))
             {
                 EditorUtility.DisplayDialog("Error", "Failed building static library. Check Editor.log for details.", "OK");
@@ -529,7 +529,7 @@
             string str4 = project.ProjectGuid();
             if ((targetGuid == null) || (str3 == null))
             {
-                throw new Exception(string.Format("Deletion of either of the \"{0}\" or \"{1}\" targets is not supported", PBXProject.GetUnityTargetName(), PBXProject.GetUnityTestTargetName()));
+                throw new Exception($"Deletion of either of the "{PBXProject.GetUnityTargetName()}" or "{PBXProject.GetUnityTestTargetName()}" targets is not supported");
             }
             string[] targetGuids = new string[] { targetGuid, str3 };
             string[] strArray2 = new string[] { targetGuid, str3, str4 };
@@ -855,10 +855,8 @@
             }
         }
 
-        private static string CreateTagNameFromFileName(string filename)
-        {
-            return filename;
-        }
+        private static string CreateTagNameFromFileName(string filename) => 
+            filename;
 
         private static IncludedFileList CrossCompileManagedDlls(BuildSettings bs, ProjectPaths paths, AssemblyReferenceChecker checker, RuntimeClassRegistry usedClassRegistry)
         {
@@ -905,12 +903,13 @@
 
         private static UsedFeatures DetermineUsedFeatures(AssemblyReferenceChecker checker)
         {
+            bool flag = checker.HasReferenceToMethod("ReplayKit::StartBroadcasting(UnityEngine.Apple.ReplayKit.ReplayKit/BroadcastStatusCallback,System.Boolean", true) || checker.HasReferenceToMethod("ReplayKit::StartRecording(System.Boolean", true);
             return new UsedFeatures { 
-                camera = checker.HasReferenceToType("UnityEngine.WebCamTexture"),
+                camera = checker.HasReferenceToType("UnityEngine.WebCamTexture") || flag,
                 gameCenter = checker.HasReferenceToType("UnityEngine.Social"),
                 gyroscope = checker.HasReferenceToType("UnityEngine.Gyroscope"),
                 location = checker.HasReferenceToType("UnityEngine.LocationService"),
-                microphone = checker.HasReferenceToType("UnityEngine.Microphone"),
+                microphone = checker.HasReferenceToType("UnityEngine.Microphone") || flag,
                 remoteNotifications = checker.HasReferenceToType("UnityEngine.iOS.RemoteNotification") || checker.HasReferenceToMethod("UnityEngine.iOS.NotificationServices::RegisterForNotifications"),
                 replayKit = checker.HasReferenceToType("UnityEngine.Apple.ReplayKit"),
                 controller = checker.HasReferenceToMethod("UnityEngine.Input::GetJoystickNames"),
@@ -923,7 +922,7 @@
             UnityType type = UnityType.FindTypeByName(name);
             if (type == null)
             {
-                throw new ArgumentException(string.Format("Could not map typename '{0}' to type info (IPhonePlayer class registration skipped classes)", name));
+                throw new ArgumentException($"Could not map typename '{name}' to type info (IPhonePlayer class registration skipped classes)");
             }
             return type;
         }
@@ -1051,7 +1050,7 @@
                     str2 = str2 + "-dev";
                 }
             }
-            return Path.Combine(paths.EditorTrampoline(), string.Format("Libraries/{0}{1}.a", str, str2));
+            return Path.Combine(paths.EditorTrampoline(), $"Libraries/{str}{str2}.a");
         }
 
         private static string GetPluginDestinationPath(string destDir, string assetPath)
@@ -1232,7 +1231,7 @@
                         Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
                         if (!File.Exists(sourcePath))
                         {
-                            throw new Exception(string.Format("The required file: '{0}' does not exist", sourcePath));
+                            throw new Exception($"The required file: '{sourcePath}' does not exist");
                         }
                         FileMirroring.MirrorFile(sourcePath, destinationPath, GetFileComparer(bs.targetGroup));
                     }
@@ -1308,20 +1307,14 @@
             return new Regex(@"^[a-zA-Z]+(\.[a-zA-Z0-9-]+){2,}$").IsMatch(id);
         }
 
-        private static bool IsHeaderFile(string fileName)
-        {
-            return (Path.GetExtension(fileName) == ".h");
-        }
+        private static bool IsHeaderFile(string fileName) => 
+            (Path.GetExtension(fileName) == ".h");
 
-        private static bool IsIl2CppEmbeddedResourcesFile(string fileName)
-        {
-            return fileName.EndsWith("-resources.dat");
-        }
+        private static bool IsIl2CppEmbeddedResourcesFile(string fileName) => 
+            fileName.EndsWith("-resources.dat");
 
-        internal static bool IsiOSBundlePlugin(string path)
-        {
-            return Utils.IsPathExtensionOneOf(path, kiOSBundlePluginExtensions);
-        }
+        internal static bool IsiOSBundlePlugin(string path) => 
+            Utils.IsPathExtensionOneOf(path, kiOSBundlePluginExtensions);
 
         private static bool IsMetalUsed(BuildSettings bs)
         {
@@ -1417,12 +1410,12 @@
                                 if (File.Exists(str3))
                                 {
                                     str2 = str3;
-                                    UnityEngine.Debug.LogWarning(string.Format("Not all image layers are defined for '{0}'. Duplicating another layer", name));
+                                    UnityEngine.Debug.LogWarning($"Not all image layers are defined for '{name}'. Duplicating another layer");
                                     break;
                                 }
                             }
                         }
-                        AssetImageStackLayer layer = stack.AddLayer(string.Format("Layer-{0}", i));
+                        AssetImageStackLayer layer = stack.AddLayer($"Layer-{i}");
                         DeviceRequirement requirement2 = new DeviceRequirement().AddDevice("tv").AddScale("1x");
                         layer.GetImageSet().AddVariant(requirement2, str2);
                     }
@@ -1595,7 +1588,7 @@
         {
             Regex regex = new Regex(@"^.*#\s*define\s+" + name);
             Regex regex2 = new Regex(@"^.*#\s*define\s+" + name + @"(:?|\s|\s.*[^\\])$");
-            for (int i = 0; i < Enumerable.Count<string>(lines); i++)
+            for (int i = 0; i < lines.Count<string>(); i++)
             {
                 if (regex.Match(lines[i]).Success)
                 {
@@ -1702,7 +1695,7 @@
             {
                 if (bs.targetOsVersion < postProcessorSettings.MinimumOsVersion)
                 {
-                    UnityEngine.Debug.LogWarning(string.Format("{0} deployment target version is set to {1}, but Unity supports only versions starting from {2}.", postProcessorSettings.OsName, bs.targetOsVersion, postProcessorSettings.MinimumOsVersion));
+                    UnityEngine.Debug.LogWarning($"{postProcessorSettings.OsName} deployment target version is set to {bs.targetOsVersion}, but Unity supports only versions starting from {postProcessorSettings.MinimumOsVersion}.");
                 }
             }
             else
@@ -1767,20 +1760,14 @@
             return paths;
         }
 
-        internal static bool ShouldAddPluginToProject(string path)
-        {
-            return Utils.IsPathExtensionOneOf(path, kiOSPluginFileExtensions);
-        }
+        internal static bool ShouldAddPluginToProject(string path) => 
+            Utils.IsPathExtensionOneOf(path, kiOSPluginFileExtensions);
 
-        internal static bool ShouldCopyPluginFile(string path)
-        {
-            return (Path.GetExtension(path) != ".dll");
-        }
+        internal static bool ShouldCopyPluginFile(string path) => 
+            (Path.GetExtension(path) != ".dll");
 
-        private static bool ShouldStripByteCodeInManagedDlls(BuildSettings bs)
-        {
-            return (((!bs.UseIl2Cpp() && (PlayerSettings.strippingLevel >= StrippingLevel.StripByteCode)) && (bs.sdkType == SdkType.Device)) && (!bs.allowDebugging || !bs.isDevelopmentPlayer));
-        }
+        private static bool ShouldStripByteCodeInManagedDlls(BuildSettings bs) => 
+            (((!bs.UseIl2Cpp() && (PlayerSettings.strippingLevel >= StrippingLevel.StripByteCode)) && (bs.sdkType == SdkType.Device)) && (!bs.allowDebugging || !bs.isDevelopmentPlayer));
 
         private static bool ShouldUseRelativeSymlinkForFile(string srcPath, string dstPath)
         {
@@ -1797,10 +1784,8 @@
             return true;
         }
 
-        internal static bool ShouldUseXcodeReferenceForPlugin(string path)
-        {
-            return Utils.IsPathExtensionOneOf(path, kiOSEditablePluginFileExtensions);
-        }
+        internal static bool ShouldUseXcodeReferenceForPlugin(string path) => 
+            Utils.IsPathExtensionOneOf(path, kiOSEditablePluginFileExtensions);
 
         private static void StripByteCodeInManagedDlls(BuildTarget target, ProjectPaths paths, AssemblyReferenceChecker checker)
         {
@@ -1882,7 +1867,7 @@
             {
                 ReplaceCppMacro(lines, pair.Key, !pair.Value ? "0" : "1");
             }
-            if (!Enumerable.SequenceEqual<string>(lines, second))
+            if (!lines.SequenceEqual<string>(second))
             {
                 File.WriteAllLines(file, lines);
             }
@@ -1913,14 +1898,14 @@
                 locationUsageDescription = PlayerSettings.iOS.locationUsageDescription,
                 microphoneUsageDescription = PlayerSettings.iOS.microphoneUsageDescription,
                 allowHTTP = PlayerSettings.iOS.allowHTTPDownload,
-                supportedURLSchemes = Enumerable.ToList<string>(PlayerSettings.iOS.GetURLSchemes()),
+                supportedURLSchemes = PlayerSettings.iOS.GetURLSchemes().ToList<string>(),
                 tvOSRequireExtendedGameController = PlayerSettings.tvOS.requireExtendedGameController,
                 isAppleTV = bs.IsAppleTVEnabled()
             };
             if (!PlayerSettings.GetUseDefaultGraphicsAPIs(bs.target))
             {
                 GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(bs.target);
-                data.requireES3 = Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES2);
+                data.requireES3 = graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2);
                 data.requireMetal = (graphicsAPIs.Length == 1) && (graphicsAPIs[0] == GraphicsDeviceType.Metal);
             }
             try
@@ -2067,13 +2052,8 @@
             }
         }
 
-        private static IXcodeController XcodeController
-        {
-            get
-            {
-                return XcodeControllerFactory.CreateXcodeController();
-            }
-        }
+        private static IXcodeController XcodeController =>
+            XcodeControllerFactory.CreateXcodeController();
 
         [CompilerGenerated]
         private sealed class <AddPluginFiles>c__AnonStorey3
@@ -2167,25 +2147,17 @@
             public bool installInBuildFolder;
             public bool allowDebugging;
             public bool autoRunPlayer;
-            public bool UseIl2Cpp()
-            {
-                return (this.backend == ScriptingImplementation.IL2CPP);
-            }
+            public bool UseIl2Cpp() => 
+                (this.backend == ScriptingImplementation.IL2CPP);
 
-            public bool IsIPadEnabled()
-            {
-                return ((this.target == BuildTarget.iOS) && ((this.targetDevice == iOSTargetDevice.iPadOnly) || (this.targetDevice == iOSTargetDevice.iPhoneAndiPad)));
-            }
+            public bool IsIPadEnabled() => 
+                ((this.target == BuildTarget.iOS) && ((this.targetDevice == iOSTargetDevice.iPadOnly) || (this.targetDevice == iOSTargetDevice.iPhoneAndiPad)));
 
-            public bool IsIPhoneEnabled()
-            {
-                return ((this.target == BuildTarget.iOS) && ((this.targetDevice == iOSTargetDevice.iPhoneOnly) || (this.targetDevice == iOSTargetDevice.iPhoneAndiPad)));
-            }
+            public bool IsIPhoneEnabled() => 
+                ((this.target == BuildTarget.iOS) && ((this.targetDevice == iOSTargetDevice.iPhoneOnly) || (this.targetDevice == iOSTargetDevice.iPhoneAndiPad)));
 
-            public bool IsAppleTVEnabled()
-            {
-                return (this.target == BuildTarget.tvOS);
-            }
+            public bool IsAppleTVEnabled() => 
+                (this.target == BuildTarget.tvOS);
 
             public bool IsDeviceTypeEnabled(UnityEditor.iOS.DeviceType type)
             {
@@ -2233,300 +2205,184 @@
             public string stagingAreaData;
             public string stagingAreaDataManaged;
 
-            public string DataInstall()
-            {
-                return Path.Combine(this.installPath, "Data");
-            }
+            public string DataInstall() => 
+                Path.Combine(this.installPath, "Data");
 
-            public string DataStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "Data");
-            }
+            public string DataStaging() => 
+                Path.Combine(this.StagingTrampoline(), "Data");
 
-            public string DevProjectEditorTrampoline()
-            {
-                return Path.Combine(this.playerPackage, "Trampoline-UnityDevProject");
-            }
+            public string DevProjectEditorTrampoline() => 
+                Path.Combine(this.playerPackage, "Trampoline-UnityDevProject");
 
-            public string DevProjectFileList()
-            {
-                return Path.Combine(this.playerPackage, "xcode_file_list.txt");
-            }
+            public string DevProjectFileList() => 
+                Path.Combine(this.playerPackage, "xcode_file_list.txt");
 
-            public string DevProjectInstallPath()
-            {
-                return Path.Combine(this.playerPackage, "Workspace-UnityDevProject");
-            }
+            public string DevProjectInstallPath() => 
+                Path.Combine(this.playerPackage, "Workspace-UnityDevProject");
 
-            public string DevProjectLibList()
-            {
-                return Path.Combine(this.playerPackage, "xcode_lib_list.txt");
-            }
+            public string DevProjectLibList() => 
+                Path.Combine(this.playerPackage, "xcode_lib_list.txt");
 
-            public string DevProjectPBXProjectStaging()
-            {
-                return Path.Combine(this.DevProjectStagingTrampoline(), "UnityDevProject.xcodeproj/project.pbxproj");
-            }
+            public string DevProjectPBXProjectStaging() => 
+                Path.Combine(this.DevProjectStagingTrampoline(), "UnityDevProject.xcodeproj/project.pbxproj");
 
-            public string DevProjectStagingTrampoline()
-            {
-                return Path.Combine(this.stagingArea, "Trampoline-UnityDevProject");
-            }
+            public string DevProjectStagingTrampoline() => 
+                Path.Combine(this.stagingArea, "Trampoline-UnityDevProject");
 
-            public string EditorProTrampoline()
-            {
-                return Path.Combine(this.playerPackage, "Trampoline-ProExtras");
-            }
+            public string EditorProTrampoline() => 
+                Path.Combine(this.playerPackage, "Trampoline-ProExtras");
 
-            public string EditorTrampoline()
-            {
-                return Path.Combine(this.playerPackage, "Trampoline");
-            }
+            public string EditorTrampoline() => 
+                Path.Combine(this.playerPackage, "Trampoline");
 
-            public string FeatureRegistrationStaging()
-            {
-                return Path.Combine(this.LibrariesStaging(), "RegisterFeatures.cpp");
-            }
+            public string FeatureRegistrationStaging() => 
+                Path.Combine(this.LibrariesStaging(), "RegisterFeatures.cpp");
 
-            public string IconOutputFolder()
-            {
-                return this.stagingArea;
-            }
+            public string IconOutputFolder() => 
+                this.stagingArea;
 
-            public string IconPathInstall()
-            {
-                return Path.Combine(this.ImagesAssetCatalogInstall(), "AppIcon.appiconset");
-            }
+            public string IconPathInstall() => 
+                Path.Combine(this.ImagesAssetCatalogInstall(), "AppIcon.appiconset");
 
-            public string IconSourceFolder()
-            {
-                return Path.Combine(this.playerPackage, "Icons");
-            }
+            public string IconSourceFolder() => 
+                Path.Combine(this.playerPackage, "Icons");
 
-            public string ImagesAssetCatalogInstall()
-            {
-                return Path.Combine(this.installPath, "Unity-iPhone/Images.xcassets");
-            }
+            public string ImagesAssetCatalogInstall() => 
+                Path.Combine(this.installPath, "Unity-iPhone/Images.xcassets");
 
-            public string InternalIl2cppOutputPath()
-            {
-                return this.m_InternalIl2cppOutputStaging;
-            }
+            public string InternalIl2cppOutputPath() => 
+                this.m_InternalIl2cppOutputStaging;
 
-            public string LaunchScreenFallbackSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreenImage-default.png");
-            }
+            public string LaunchScreenFallbackSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreenImage-default.png");
 
-            public string LaunchScreeniPadInstall()
-            {
-                return Path.Combine(this.installPath, "LaunchScreen-iPad.png");
-            }
+            public string LaunchScreeniPadInstall() => 
+                Path.Combine(this.installPath, "LaunchScreen-iPad.png");
 
-            public string LaunchScreeniPadOutput()
-            {
-                return Path.Combine(this.SplashScreenOutputFolder(), "LaunchScreen-iPad.png");
-            }
+            public string LaunchScreeniPadOutput() => 
+                Path.Combine(this.SplashScreenOutputFolder(), "LaunchScreen-iPad.png");
 
-            public string LaunchScreeniPadStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPad.png");
-            }
+            public string LaunchScreeniPadStaging() => 
+                Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPad.png");
 
-            public string LaunchScreeniPadXibConstantSizeSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPadConstantSize.xib");
-            }
+            public string LaunchScreeniPadXibConstantSizeSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPadConstantSize.xib");
 
-            public string LaunchScreeniPadXibDefaultSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPadDefault.xib");
-            }
+            public string LaunchScreeniPadXibDefaultSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPadDefault.xib");
 
-            public string LaunchScreeniPadXibInstall()
-            {
-                return Path.Combine(this.installPath, "LaunchScreen-iPad.xib");
-            }
+            public string LaunchScreeniPadXibInstall() => 
+                Path.Combine(this.installPath, "LaunchScreen-iPad.xib");
 
-            public string LaunchScreeniPadXibRelativeSizeSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPadRelativeSize.xib");
-            }
+            public string LaunchScreeniPadXibRelativeSizeSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPadRelativeSize.xib");
 
-            public string LaunchScreeniPadXibStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPad.xib");
-            }
+            public string LaunchScreeniPadXibStaging() => 
+                Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPad.xib");
 
-            public string LaunchScreeniPhoneLandscapeInstall()
-            {
-                return Path.Combine(this.installPath, "LaunchScreen-iPhoneLandscape.png");
-            }
+            public string LaunchScreeniPhoneLandscapeInstall() => 
+                Path.Combine(this.installPath, "LaunchScreen-iPhoneLandscape.png");
 
-            public string LaunchScreeniPhoneLandscapeOutput()
-            {
-                return Path.Combine(this.SplashScreenOutputFolder(), "LaunchScreen-iPhoneLandscape.png");
-            }
+            public string LaunchScreeniPhoneLandscapeOutput() => 
+                Path.Combine(this.SplashScreenOutputFolder(), "LaunchScreen-iPhoneLandscape.png");
 
-            public string LaunchScreeniPhoneLandscapeStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhoneLandscape.png");
-            }
+            public string LaunchScreeniPhoneLandscapeStaging() => 
+                Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhoneLandscape.png");
 
-            public string LaunchScreeniPhonePortraitInstall()
-            {
-                return Path.Combine(this.installPath, "LaunchScreen-iPhonePortrait.png");
-            }
+            public string LaunchScreeniPhonePortraitInstall() => 
+                Path.Combine(this.installPath, "LaunchScreen-iPhonePortrait.png");
 
-            public string LaunchScreeniPhonePortraitOutput()
-            {
-                return Path.Combine(this.SplashScreenOutputFolder(), "LaunchScreen-iPhonePortrait.png");
-            }
+            public string LaunchScreeniPhonePortraitOutput() => 
+                Path.Combine(this.SplashScreenOutputFolder(), "LaunchScreen-iPhonePortrait.png");
 
-            public string LaunchScreeniPhonePortraitStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhonePortrait.png");
-            }
+            public string LaunchScreeniPhonePortraitStaging() => 
+                Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhonePortrait.png");
 
-            public string LaunchScreeniPhoneXibConstantSizeSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPhoneConstantSize.xib");
-            }
+            public string LaunchScreeniPhoneXibConstantSizeSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPhoneConstantSize.xib");
 
-            public string LaunchScreeniPhoneXibDefaultSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPhoneDefault.xib");
-            }
+            public string LaunchScreeniPhoneXibDefaultSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPhoneDefault.xib");
 
-            public string LaunchScreeniPhoneXibInstall()
-            {
-                return Path.Combine(this.installPath, "LaunchScreen-iPhone.xib");
-            }
+            public string LaunchScreeniPhoneXibInstall() => 
+                Path.Combine(this.installPath, "LaunchScreen-iPhone.xib");
 
-            public string LaunchScreeniPhoneXibRelativeSizeSource()
-            {
-                return Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPhoneRelativeSize.xib");
-            }
+            public string LaunchScreeniPhoneXibRelativeSizeSource() => 
+                Path.Combine(this.SplashScreenSourceFolder(), "LaunchScreeniPhoneRelativeSize.xib");
 
-            public string LaunchScreeniPhoneXibStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhone.xib");
-            }
+            public string LaunchScreeniPhoneXibStaging() => 
+                Path.Combine(this.StagingTrampoline(), "LaunchScreen-iPhone.xib");
 
-            public string LibrariesInstall()
-            {
-                return Path.Combine(this.installPath, "Libraries");
-            }
+            public string LibrariesInstall() => 
+                Path.Combine(this.installPath, "Libraries");
 
-            public string LibrariesStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "Libraries");
-            }
+            public string LibrariesStaging() => 
+                Path.Combine(this.StagingTrampoline(), "Libraries");
 
-            public string PBXProjectInstall()
-            {
-                return Path.Combine(this.installPath, "Unity-iPhone.xcodeproj/project.pbxproj");
-            }
+            public string PBXProjectInstall() => 
+                Path.Combine(this.installPath, "Unity-iPhone.xcodeproj/project.pbxproj");
 
-            public string PBXProjectStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "Unity-iPhone.xcodeproj/project.pbxproj");
-            }
+            public string PBXProjectStaging() => 
+                Path.Combine(this.StagingTrampoline(), "Unity-iPhone.xcodeproj/project.pbxproj");
 
-            public string PlistInstall()
-            {
-                return Path.Combine(this.installPath, "Info.plist");
-            }
+            public string PlistInstall() => 
+                Path.Combine(this.installPath, "Info.plist");
 
-            public string PlistStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "Info.plist");
-            }
+            public string PlistStaging() => 
+                Path.Combine(this.StagingTrampoline(), "Info.plist");
 
             public void SetInternalIl2cppOutputPath(string path)
             {
                 this.m_InternalIl2cppOutputStaging = path;
             }
 
-            public string SplashPathInstall()
-            {
-                return Path.Combine(this.ImagesAssetCatalogInstall(), "LaunchImage.launchimage");
-            }
+            public string SplashPathInstall() => 
+                Path.Combine(this.ImagesAssetCatalogInstall(), "LaunchImage.launchimage");
 
-            public string SplashScreenOutputFolder()
-            {
-                return this.stagingArea;
-            }
+            public string SplashScreenOutputFolder() => 
+                this.stagingArea;
 
-            public string SplashScreenSharedOutput()
-            {
-                return Path.Combine(this.SplashScreenOutputFolder(), "Shared.png");
-            }
+            public string SplashScreenSharedOutput() => 
+                Path.Combine(this.SplashScreenOutputFolder(), "Shared.png");
 
-            public string SplashScreenSourceFolder()
-            {
-                return Path.Combine(this.playerPackage, "SplashScreens");
-            }
+            public string SplashScreenSourceFolder() => 
+                Path.Combine(this.playerPackage, "SplashScreens");
 
-            public string StagingTrampoline()
-            {
-                return Path.Combine(this.stagingArea, "Trampoline");
-            }
+            public string StagingTrampoline() => 
+                Path.Combine(this.stagingArea, "Trampoline");
 
-            public string TempInstall()
-            {
-                return Path.Combine(this.installPath, "Temp");
-            }
+            public string TempInstall() => 
+                Path.Combine(this.installPath, "Temp");
 
-            public string TempStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "Temp");
-            }
+            public string TempStaging() => 
+                Path.Combine(this.StagingTrampoline(), "Temp");
 
-            public string tvOSLargeIconOutputBase()
-            {
-                return Path.Combine(this.IconOutputFolder(), "TVOS-LargeIconLayer-{0}.png");
-            }
+            public string tvOSLargeIconOutputBase() => 
+                Path.Combine(this.IconOutputFolder(), "TVOS-LargeIconLayer-{0}.png");
 
-            public string tvOSSmallIconOutputBase()
-            {
-                return Path.Combine(this.IconOutputFolder(), "TVOS-SmallIconLayer-{0}.png");
-            }
+            public string tvOSSmallIconOutputBase() => 
+                Path.Combine(this.IconOutputFolder(), "TVOS-SmallIconLayer-{0}.png");
 
-            public string tvOSTopShelfImageOutputBase()
-            {
-                return Path.Combine(this.IconOutputFolder(), "TVOS-TopShelfImageLayer-{0}.png");
-            }
+            public string tvOSTopShelfImageOutputBase() => 
+                Path.Combine(this.IconOutputFolder(), "TVOS-TopShelfImageLayer-{0}.png");
 
-            public string tvOSTopShelfImageWideOutputBase()
-            {
-                return Path.Combine(this.IconOutputFolder(), "TVOS-TopShelfImageWideLayer-{0}.png");
-            }
+            public string tvOSTopShelfImageWideOutputBase() => 
+                Path.Combine(this.IconOutputFolder(), "TVOS-TopShelfImageWideLayer-{0}.png");
 
-            public string UnityAssetCatalogInstall()
-            {
-                return Path.Combine(this.installPath, "UnityData.xcassets");
-            }
+            public string UnityAssetCatalogInstall() => 
+                Path.Combine(this.installPath, "UnityData.xcassets");
 
-            public string UnityAssetCatalogStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "UnityData.xcassets");
-            }
+            public string UnityAssetCatalogStaging() => 
+                Path.Combine(this.StagingTrampoline(), "UnityData.xcassets");
 
-            public string UnityImagesAssetCatalogInstall()
-            {
-                return Path.Combine(this.installPath, "UnityImages.xcassets");
-            }
+            public string UnityImagesAssetCatalogInstall() => 
+                Path.Combine(this.installPath, "UnityImages.xcassets");
 
-            public string UnityTree()
-            {
-                return FileUtil.DeleteLastPathNameComponent(FileUtil.DeleteLastPathNameComponent(this.playerPackage));
-            }
+            public string UnityTree() => 
+                FileUtil.DeleteLastPathNameComponent(FileUtil.DeleteLastPathNameComponent(this.playerPackage));
 
-            public string XcSchemeStaging()
-            {
-                return Path.Combine(this.StagingTrampoline(), "Unity-iPhone.xcodeproj/xcshareddata/xcschemes/Unity-iPhone.xcscheme");
-            }
+            public string XcSchemeStaging() => 
+                Path.Combine(this.StagingTrampoline(), "Unity-iPhone.xcodeproj/xcshareddata/xcschemes/Unity-iPhone.xcscheme");
         }
 
         internal enum SymlinkType

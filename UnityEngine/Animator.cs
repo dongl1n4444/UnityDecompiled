@@ -166,17 +166,13 @@
         /// <param name="layerIndex"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern AnimatorTransitionInfo GetAnimatorTransitionInfo(int layerIndex);
-        public T GetBehaviour<T>() where T: StateMachineBehaviour
-        {
-            return (this.GetBehaviour(typeof(T)) as T);
-        }
+        public T GetBehaviour<T>() where T: StateMachineBehaviour => 
+            (this.GetBehaviour(typeof(T)) as T);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern ScriptableObject GetBehaviour(System.Type type);
-        public T[] GetBehaviours<T>() where T: StateMachineBehaviour
-        {
-            return ConvertStateMachineBehaviour<T>(this.GetBehaviours(typeof(T)));
-        }
+        public T[] GetBehaviours<T>() where T: StateMachineBehaviour => 
+            ConvertStateMachineBehaviour<T>(this.GetBehaviours(typeof(T)));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern ScriptableObject[] GetBehaviours(System.Type type);
@@ -205,20 +201,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool GetBool(int id)
-        {
-            return this.GetBoolID(id);
-        }
+        public bool GetBool(int id) => 
+            this.GetBoolID(id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetBool.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool GetBool(string name)
-        {
-            return this.GetBoolString(name);
-        }
+        public bool GetBool(string name) => 
+            this.GetBoolString(name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool GetBoolID(int id);
@@ -229,10 +221,8 @@
         /// </summary>
         /// <param name="layerIndex">The layer's index.</param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("GetCurrentAnimationClipState is obsolete. Use GetCurrentAnimatorClipInfo instead (UnityUpgradable) -> GetCurrentAnimatorClipInfo(*)", true)]
-        public AnimationInfo[] GetCurrentAnimationClipState(int layerIndex)
-        {
-            return null;
-        }
+        public AnimationInfo[] GetCurrentAnimationClipState(int layerIndex) => 
+            null;
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetCurrentAnimatorClipInfo.</para>
@@ -268,20 +258,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public float GetFloat(int id)
-        {
-            return this.GetFloatID(id);
-        }
+        public float GetFloat(int id) => 
+            this.GetFloatID(id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetFloat.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public float GetFloat(string name)
-        {
-            return this.GetFloatString(name);
-        }
+        public float GetFloat(string name) => 
+            this.GetFloatString(name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern float GetFloatID(int id);
@@ -388,20 +374,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public int GetInteger(int id)
-        {
-            return this.GetIntegerID(id);
-        }
+        public int GetInteger(int id) => 
+            this.GetIntegerID(id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetInteger.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public int GetInteger(string name)
-        {
-            return this.GetIntegerString(name);
-        }
+        public int GetInteger(string name) => 
+            this.GetIntegerString(name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern int GetIntegerID(int id);
@@ -430,10 +412,8 @@
         /// </summary>
         /// <param name="layerIndex">The layer's index.</param>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("GetNextAnimationClipState is obsolete. Use GetNextAnimatorClipInfo instead (UnityUpgradable) -> GetNextAnimatorClipInfo(*)", true)]
-        public AnimationInfo[] GetNextAnimationClipState(int layerIndex)
-        {
-            return null;
-        }
+        public AnimationInfo[] GetNextAnimationClipState(int layerIndex) => 
+            null;
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.GetNextAnimatorClipInfo.</para>
@@ -483,20 +463,16 @@
         /// </summary>
         /// <param name="id">The id of the parameter. The id is generated using Animator::StringToHash.</param>
         [Obsolete("GetQuaternion is deprecated.")]
-        public Quaternion GetQuaternion(int id)
-        {
-            return Quaternion.identity;
-        }
+        public Quaternion GetQuaternion(int id) => 
+            Quaternion.identity;
 
         /// <summary>
         /// <para>Gets the value of a quaternion parameter.</para>
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         [Obsolete("GetQuaternion is deprecated.")]
-        public Quaternion GetQuaternion(string name)
-        {
-            return Quaternion.identity;
-        }
+        public Quaternion GetQuaternion(string name) => 
+            Quaternion.identity;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern string GetStats();
@@ -505,20 +481,16 @@
         /// </summary>
         /// <param name="id">The id of the parameter. The id is generated using Animator::StringToHash.</param>
         [Obsolete("GetVector is deprecated.")]
-        public Vector3 GetVector(int id)
-        {
-            return Vector3.zero;
-        }
+        public Vector3 GetVector(int id) => 
+            Vector3.zero;
 
         /// <summary>
         /// <para>Gets the value of a vector parameter.</para>
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         [Obsolete("GetVector is deprecated.")]
-        public Vector3 GetVector(string name)
-        {
-            return Vector3.zero;
-        }
+        public Vector3 GetVector(string name) => 
+            Vector3.zero;
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.HasState.</para>
@@ -607,20 +579,16 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool IsParameterControlledByCurve(int id)
-        {
-            return this.IsParameterControlledByCurveID(id);
-        }
+        public bool IsParameterControlledByCurve(int id) => 
+            this.IsParameterControlledByCurveID(id);
 
         /// <summary>
         /// <para>See IAnimatorControllerPlayable.IsParameterControlledByCurve.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="id"></param>
-        public bool IsParameterControlledByCurve(string name)
-        {
-            return this.IsParameterControlledByCurveString(name);
-        }
+        public bool IsParameterControlledByCurve(string name) => 
+            this.IsParameterControlledByCurveString(name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern bool IsParameterControlledByCurveID(int id);
@@ -1275,10 +1243,8 @@
         [Obsolete("Use Animator.updateMode instead")]
         public bool animatePhysics
         {
-            get
-            {
-                return (this.updateMode == AnimatorUpdateMode.AnimatePhysics);
-            }
+            get => 
+                (this.updateMode == AnimatorUpdateMode.AnimatePhysics);
             set
             {
                 this.updateMode = !value ? AnimatorUpdateMode.Normal : AnimatorUpdateMode.AnimatePhysics;

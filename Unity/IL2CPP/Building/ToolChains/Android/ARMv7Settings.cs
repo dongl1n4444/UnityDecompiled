@@ -9,61 +9,26 @@
 
     internal class ARMv7Settings : TargetArchitectureSettings
     {
-        public override string ABI
-        {
-            get
-            {
-                return "armeabi-v7a";
-            }
-        }
+        public override string ABI =>
+            "armeabi-v7a";
 
-        public override string Arch
-        {
-            get
-            {
-                return "arm";
-            }
-        }
+        public override string Arch =>
+            "arm";
 
-        public override string BinPrefix
-        {
-            get
-            {
-                return "arm-linux-androideabi";
-            }
-        }
+        public override string BinPrefix =>
+            "arm-linux-androideabi";
 
-        public override IEnumerable<string> CxxFlags
-        {
-            get
-            {
-                return new <>c__Iterator0 { $PC = -2 };
-            }
-        }
+        public override IEnumerable<string> CxxFlags =>
+            new <>c__Iterator0 { $PC=-2 };
 
-        public override IEnumerable<string> LDFlags
-        {
-            get
-            {
-                return new <>c__Iterator1 { $PC = -2 };
-            }
-        }
+        public override IEnumerable<string> LDFlags =>
+            new <>c__Iterator1 { $PC=-2 };
 
-        public override string Platform
-        {
-            get
-            {
-                return "armv7-none-linux-androideabi";
-            }
-        }
+        public override string Platform =>
+            "armv7-none-linux-androideabi";
 
-        public override string TCPrefix
-        {
-            get
-            {
-                return "arm-linux-androideabi";
-            }
-        }
+        public override string TCPrefix =>
+            "arm-linux-androideabi";
 
         [CompilerGenerated]
         private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<string>, IEnumerator, IDisposable, IEnumerator<string>
@@ -117,28 +82,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -193,28 +144,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

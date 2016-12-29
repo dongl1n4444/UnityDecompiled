@@ -327,23 +327,16 @@
             }
         }
 
-        private bool showingStickyHeaders
-        {
-            get
-            {
-                return (SceneManager.sceneCount > 1);
-            }
-        }
+        private bool showingStickyHeaders =>
+            (SceneManager.sceneCount > 1);
 
         [CompilerGenerated]
         private sealed class <DoStickySceneHeaders>c__AnonStorey0
         {
             internal GameObjectTreeViewItem firstItem;
 
-            internal bool <>m__0(GameObjectTreeViewItem p)
-            {
-                return (p.scene == this.firstItem.scene);
-            }
+            internal bool <>m__0(GameObjectTreeViewItem p) => 
+                (p.scene == this.firstItem.scene);
         }
 
         private enum GameObjectColorType

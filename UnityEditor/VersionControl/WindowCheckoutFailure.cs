@@ -41,10 +41,8 @@
             this.RefreshList();
         }
 
-        private static WindowCheckoutFailure GetWindow()
-        {
-            return EditorWindow.GetWindow<WindowCheckoutFailure>(true, "Version Control Check Out Failed");
-        }
+        private static WindowCheckoutFailure GetWindow() => 
+            EditorWindow.GetWindow<WindowCheckoutFailure>(true, "Version Control Check Out Failed");
 
         public void OnEnable()
         {

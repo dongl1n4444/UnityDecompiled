@@ -21,10 +21,8 @@
             }
         }
 
-        private ShadowInfo GetCurrentShadowInfo()
-        {
-            return this.m_HDRIList[this.m_LookDevView.config.lookDevContexts[(int) this.m_LookDevView.config.currentEditionContext].currentHDRIIndex].shadowInfo;
-        }
+        private ShadowInfo GetCurrentShadowInfo() => 
+            this.m_HDRIList[this.m_LookDevView.config.lookDevContexts[(int) this.m_LookDevView.config.currentEditionContext].currentHDRIIndex].shadowInfo;
 
         public void InsertHDRI(Cubemap cubemap)
         {
@@ -167,31 +165,19 @@
 
         public bool dirty
         {
-            get
-            {
-                return this.m_Dirty;
-            }
+            get => 
+                this.m_Dirty;
             set
             {
                 this.m_Dirty = value;
             }
         }
 
-        public int hdriCount
-        {
-            get
-            {
-                return this.hdriList.Count;
-            }
-        }
+        public int hdriCount =>
+            this.hdriList.Count;
 
-        public List<CubemapInfo> hdriList
-        {
-            get
-            {
-                return this.m_HDRIList;
-            }
-        }
+        public List<CubemapInfo> hdriList =>
+            this.m_HDRIList;
 
         [CompilerGenerated]
         private sealed class <InsertHDRI>c__AnonStorey0
@@ -200,20 +186,14 @@
             internal Cubemap cubemap0;
             internal Cubemap cubemap1;
 
-            internal bool <>m__0(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap);
-            }
+            internal bool <>m__0(CubemapInfo x) => 
+                (x.cubemap == this.cubemap);
 
-            internal bool <>m__1(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap0);
-            }
+            internal bool <>m__1(CubemapInfo x) => 
+                (x.cubemap == this.cubemap0);
 
-            internal bool <>m__2(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap1);
-            }
+            internal bool <>m__2(CubemapInfo x) => 
+                (x.cubemap == this.cubemap1);
         }
 
         [CompilerGenerated]
@@ -221,15 +201,11 @@
         {
             internal CubemapInfo shadowCubemapInfo;
 
-            internal bool <>m__0(CubemapInfo x)
-            {
-                return (x == this.shadowCubemapInfo);
-            }
+            internal bool <>m__0(CubemapInfo x) => 
+                (x == this.shadowCubemapInfo);
 
-            internal bool <>m__1(CubemapInfo x)
-            {
-                return (x == this.shadowCubemapInfo);
-            }
+            internal bool <>m__1(CubemapInfo x) => 
+                (x == this.shadowCubemapInfo);
         }
 
         [CompilerGenerated]
@@ -237,10 +213,8 @@
         {
             internal Cubemap cubemap;
 
-            internal bool <>m__0(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap);
-            }
+            internal bool <>m__0(CubemapInfo x) => 
+                (x.cubemap == this.cubemap);
         }
 
         [CompilerGenerated]
@@ -249,15 +223,11 @@
             internal Cubemap cubemap0;
             internal Cubemap cubemap1;
 
-            internal bool <>m__0(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap0);
-            }
+            internal bool <>m__0(CubemapInfo x) => 
+                (x.cubemap == this.cubemap0);
 
-            internal bool <>m__1(CubemapInfo x)
-            {
-                return (x.cubemap == this.cubemap1);
-            }
+            internal bool <>m__1(CubemapInfo x) => 
+                (x.cubemap == this.cubemap1);
         }
     }
 }

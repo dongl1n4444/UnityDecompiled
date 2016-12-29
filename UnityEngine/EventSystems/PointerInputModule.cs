@@ -90,10 +90,8 @@
         /// <para>Return the current MouseState.</para>
         /// </summary>
         /// <param name="id"></param>
-        protected virtual MouseState GetMousePointerEventData()
-        {
-            return this.GetMousePointerEventData(0);
-        }
+        protected virtual MouseState GetMousePointerEventData() => 
+            this.GetMousePointerEventData(0);
 
         /// <summary>
         /// <para>Return the current MouseState.</para>
@@ -288,10 +286,8 @@
 
             public PointerEventData.InputButton button
             {
-                get
-                {
-                    return this.m_Button;
-                }
+                get => 
+                    this.m_Button;
                 set
                 {
                     this.m_Button = value;
@@ -300,10 +296,8 @@
 
             public PointerInputModule.MouseButtonEventData eventData
             {
-                get
-                {
-                    return this.m_EventData;
-                }
+                get => 
+                    this.m_EventData;
                 set
                 {
                     this.m_EventData = value;
@@ -328,18 +322,14 @@
             /// <summary>
             /// <para>Was the button pressed this frame?</para>
             /// </summary>
-            public bool PressedThisFrame()
-            {
-                return ((this.buttonState == PointerEventData.FramePressState.Pressed) || (this.buttonState == PointerEventData.FramePressState.PressedAndReleased));
-            }
+            public bool PressedThisFrame() => 
+                ((this.buttonState == PointerEventData.FramePressState.Pressed) || (this.buttonState == PointerEventData.FramePressState.PressedAndReleased));
 
             /// <summary>
             /// <para>Was the button released this frame?</para>
             /// </summary>
-            public bool ReleasedThisFrame()
-            {
-                return ((this.buttonState == PointerEventData.FramePressState.Released) || (this.buttonState == PointerEventData.FramePressState.PressedAndReleased));
-            }
+            public bool ReleasedThisFrame() => 
+                ((this.buttonState == PointerEventData.FramePressState.Released) || (this.buttonState == PointerEventData.FramePressState.PressedAndReleased));
         }
 
         protected class MouseState

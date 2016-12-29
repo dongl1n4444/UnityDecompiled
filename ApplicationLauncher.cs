@@ -120,10 +120,8 @@ internal class ApplicationLauncher
         return new ApplicationLauncherImpl(args.playerPackage, Path.GetFullPath(FileUtil.NiceWinPath(args.installPath)), Utility.GetVsName(), GetConfiguration(), wsaSDK, EditorUserBuildSettings.wsaSDK, deployTarget);
     }
 
-    private static string GetConfiguration()
-    {
-        return (!EditorUserBuildSettings.development ? "Master" : "Release");
-    }
+    private static string GetConfiguration() => 
+        (!EditorUserBuildSettings.development ? "Master" : "Release");
 
     [CompilerGenerated]
     private sealed class <BuildAndRunOnBoth>c__AnonStorey0

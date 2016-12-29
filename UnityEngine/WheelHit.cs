@@ -22,10 +22,8 @@
         /// </summary>
         public Collider collider
         {
-            get
-            {
-                return this.m_Collider;
-            }
+            get => 
+                this.m_Collider;
             set
             {
                 this.m_Collider = value;
@@ -36,10 +34,8 @@
         /// </summary>
         public Vector3 point
         {
-            get
-            {
-                return this.m_Point;
-            }
+            get => 
+                this.m_Point;
             set
             {
                 this.m_Point = value;
@@ -50,10 +46,8 @@
         /// </summary>
         public Vector3 normal
         {
-            get
-            {
-                return this.m_Normal;
-            }
+            get => 
+                this.m_Normal;
             set
             {
                 this.m_Normal = value;
@@ -64,10 +58,8 @@
         /// </summary>
         public Vector3 forwardDir
         {
-            get
-            {
-                return this.m_ForwardDir;
-            }
+            get => 
+                this.m_ForwardDir;
             set
             {
                 this.m_ForwardDir = value;
@@ -78,10 +70,8 @@
         /// </summary>
         public Vector3 sidewaysDir
         {
-            get
-            {
-                return this.m_SidewaysDir;
-            }
+            get => 
+                this.m_SidewaysDir;
             set
             {
                 this.m_SidewaysDir = value;
@@ -92,10 +82,8 @@
         /// </summary>
         public float force
         {
-            get
-            {
-                return this.m_Force;
-            }
+            get => 
+                this.m_Force;
             set
             {
                 this.m_Force = value;
@@ -106,10 +94,8 @@
         /// </summary>
         public float forwardSlip
         {
-            get
-            {
-                return this.m_ForwardSlip;
-            }
+            get => 
+                this.m_ForwardSlip;
             set
             {
                 this.m_Force = this.m_ForwardSlip;
@@ -120,10 +106,8 @@
         /// </summary>
         public float sidewaysSlip
         {
-            get
-            {
-                return this.m_SidewaysSlip;
-            }
+            get => 
+                this.m_SidewaysSlip;
             set
             {
                 this.m_SidewaysSlip = value;

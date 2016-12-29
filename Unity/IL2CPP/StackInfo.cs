@@ -21,10 +21,8 @@
             this.Type = local.Type;
         }
 
-        public override string ToString()
-        {
-            return this.Expression;
-        }
+        public override string ToString() => 
+            this.Expression;
     }
 }
 

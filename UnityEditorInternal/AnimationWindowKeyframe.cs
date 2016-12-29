@@ -72,10 +72,8 @@
 
         public AnimationWindowCurve curve
         {
-            get
-            {
-                return this.m_curve;
-            }
+            get => 
+                this.m_curve;
             set
             {
                 this.m_curve = value;
@@ -85,30 +83,21 @@
 
         public float inTangent
         {
-            get
-            {
-                return this.m_InTangent;
-            }
+            get => 
+                this.m_InTangent;
             set
             {
                 this.m_InTangent = value;
             }
         }
 
-        public bool isPPtrCurve
-        {
-            get
-            {
-                return this.curve.isPPtrCurve;
-            }
-        }
+        public bool isPPtrCurve =>
+            this.curve.isPPtrCurve;
 
         public float outTangent
         {
-            get
-            {
-                return this.m_OutTangent;
-            }
+            get => 
+                this.m_OutTangent;
             set
             {
                 this.m_OutTangent = value;
@@ -117,10 +106,8 @@
 
         public float time
         {
-            get
-            {
-                return this.m_time;
-            }
+            get => 
+                this.m_time;
             set
             {
                 this.m_time = value;
@@ -131,10 +118,8 @@
 
         public object value
         {
-            get
-            {
-                return this.m_value;
-            }
+            get => 
+                this.m_value;
             set
             {
                 this.m_value = value;

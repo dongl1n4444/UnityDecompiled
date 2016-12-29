@@ -11,10 +11,8 @@
         public string Revision;
         public string RevisionConstraint;
 
-        public IvyDependency Clone()
-        {
-            return Cloner.CloneObject<IvyDependency>(this);
-        }
+        public IvyDependency Clone() => 
+            Cloner.CloneObject<IvyDependency>(this);
     }
 }
 

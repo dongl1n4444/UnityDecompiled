@@ -28,10 +28,8 @@
             Directory.CreateDirectory(EmscriptenPaths.workingDirForEmscriptenCompiler);
         }
 
-        public static string GetCompilerFlags(bool exceptionSupport)
-        {
-            return ("-Oz" + (exceptionSupport ? "" : " -DIL2CPP_EXCEPTION_DISABLED=1 "));
-        }
+        public static string GetCompilerFlags(bool exceptionSupport) => 
+            ("-Oz" + (exceptionSupport ? "" : " -DIL2CPP_EXCEPTION_DISABLED=1 "));
 
         public static IEnumerable<string> GetIncludeFullPaths(IEnumerable<string> includePaths)
         {

@@ -80,7 +80,7 @@
                 style.Draw(position, mixedValueContent, controlID, false);
                 return mask;
             }
-            if (((event2.type == EventType.MouseDown) && position.Contains(event2.mousePosition)) || EditorExtensionMethods.MainActionKeyForControl(event2, controlID))
+            if (((event2.type == EventType.MouseDown) && position.Contains(event2.mousePosition)) || event2.MainActionKeyForControl(controlID))
             {
                 MaskCallbackInfo.m_Instance = new MaskCallbackInfo(controlID);
                 event2.Use();

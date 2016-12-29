@@ -7,10 +7,8 @@
 
     internal sealed class TerrainInspectorUtil
     {
-        public static bool CheckTreeDistance(TerrainData terrainData, Vector3 position, int prototypeIndex, float distanceBias)
-        {
-            return INTERNAL_CALL_CheckTreeDistance(terrainData, ref position, prototypeIndex, distanceBias);
-        }
+        public static bool CheckTreeDistance(TerrainData terrainData, Vector3 position, int prototypeIndex, float distanceBias) => 
+            INTERNAL_CALL_CheckTreeDistance(terrainData, ref position, prototypeIndex, distanceBias);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetPrototypeCount(TerrainData terrainData);

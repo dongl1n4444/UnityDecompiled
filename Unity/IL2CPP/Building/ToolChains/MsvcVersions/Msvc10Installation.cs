@@ -1,6 +1,5 @@
 ﻿namespace Unity.IL2CPP.Building.ToolChains.MsvcVersions
 {
-    using Microsoft.Win32;
     using NiceIO;
     using System;
     using System.Collections;
@@ -15,43 +14,26 @@
     {
         public Msvc10Installation(NPath visualStudioDir) : base(new Version(10, 0), visualStudioDir)
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v7.0A");
-            if (key != null)
-            {
-                string str = (string) key.GetValue("InstallationFolder");
-                if (!string.IsNullOrEmpty(str))
-                {
-                    base.SDKDirectory = new NPath(str);
-                }
-            }
+            base.SDKDirectory = WindowsSDKs.GetWindows7SDKDirectory();
         }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetIncludeDirectories()
-        {
-            return new <GetIncludeDirectories>c__Iterator0 { 
+        public override IEnumerable<NPath> GetIncludeDirectories(Architecture architecture) => 
+            new <GetIncludeDirectories>c__Iterator0 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        public override IEnumerable<NPath> GetLibDirectories(Architecture architecture, [Optional, DefaultParameterValue(null)] string sdkSubset)
-        {
-            return new <GetLibDirectories>c__Iterator1 { 
+        public override IEnumerable<NPath> GetLibDirectories(Architecture architecture, string sdkSubset = null) => 
+            new <GetLibDirectories>c__Iterator1 { 
                 architecture = architecture,
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override IEnumerable<Type> SupportedArchitectures
-        {
-            get
-            {
-                return new Type[] { typeof(x86Architecture), typeof(x64Architecture) };
-            }
-        }
+        public override IEnumerable<Type> SupportedArchitectures =>
+            new Type[] { typeof(x86Architecture), typeof(x64Architecture) };
 
         [CompilerGenerated]
         private sealed class <GetIncludeDirectories>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
@@ -120,28 +102,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -242,28 +210,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

@@ -84,10 +84,8 @@
             return (((current.type == EventType.MouseDown) && (current.button == 0)) && (current.clickCount == 1));
         }
 
-        protected static bool IsRightClick()
-        {
-            return (Event.current.type == EventType.ContextClick);
-        }
+        protected static bool IsRightClick() => 
+            (Event.current.type == EventType.ContextClick);
 
         private static void PopulateSubNodeList(StateMachineNode toStateMachineNode, ref List<ChildAnimatorState> stateList, ref List<ChildAnimatorStateMachine> stateMachineList, ref AnimatorStateMachine parentStateMachine)
         {
@@ -119,31 +117,19 @@
             stateMachineList.Add(item);
         }
 
-        public virtual UnityEngine.Object selectionObject
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual UnityEngine.Object selectionObject =>
+            null;
 
-        public virtual UnityEngine.Object undoableObject
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public virtual UnityEngine.Object undoableObject =>
+            null;
 
         [CompilerGenerated]
         private sealed class <GenericMenuForStateMachineNode>c__AnonStorey0
         {
             internal AnimatorStateMachine currentParent;
 
-            internal bool <>m__0(ChildAnimatorStateMachine sm)
-            {
-                return sm.stateMachine.IsDirectParent(this.currentParent);
-            }
+            internal bool <>m__0(ChildAnimatorStateMachine sm) => 
+                sm.stateMachine.IsDirectParent(this.currentParent);
         }
     }
 }

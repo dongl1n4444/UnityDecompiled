@@ -10,10 +10,8 @@
     [Serializable]
     public class IntroduceReturnValue : AbstractCompilerStep
     {
-        public bool IsVoid(Expression e)
-        {
-            return RuntimeServices.EqualityOperator(TypeSystemServices.GetExpressionType(e), this.get_TypeSystemServices().VoidType);
-        }
+        public bool IsVoid(Expression e) => 
+            RuntimeServices.EqualityOperator(TypeSystemServices.GetExpressionType(e), this.get_TypeSystemServices().VoidType);
 
         public ExpressionStatement LastExpressionStatement(Method method)
         {

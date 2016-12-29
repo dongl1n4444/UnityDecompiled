@@ -33,10 +33,8 @@
         {
         }
 
-        private static uint GetEncodedMetadataUsageIndex(uint index, Il2CppMetadataUsage type)
-        {
-            return ((((uint) type) << 0x1d) | index);
-        }
+        private static uint GetEncodedMetadataUsageIndex(uint index, Il2CppMetadataUsage type) => 
+            ((((uint) type) << 0x1d) | index);
 
         private List<KeyValuePair<uint, uint>> GetValues(MetadataUsage metadataUsage, Dictionary<string, uint> items, IMetadataCollection metadataCollection)
         {
@@ -106,19 +104,19 @@
             {
                 <>f__am$cache1 = new Func<KeyValuePair<string, uint>, string>(null, (IntPtr) <WriteMetadataUsage>m__1);
             }
-            base.Writer.WriteArrayInitializer("extern void** const", "g_MetadataUsages", Enumerable.Select<KeyValuePair<string, uint>, string>(Enumerable.OrderBy<KeyValuePair<string, uint>, uint>(storey.items, <>f__am$cache0), <>f__am$cache1), false);
+            base.Writer.WriteArrayInitializer("extern void** const", "g_MetadataUsages", storey.items.OrderBy<KeyValuePair<string, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<string, uint>, string>(<>f__am$cache1), false);
             if (<>f__am$cache2 == null)
             {
                 <>f__am$cache2 = new Func<KeyValuePair<string, MetadataUsage>, string>(null, (IntPtr) <WriteMetadataUsage>m__2);
             }
-            KeyValuePair<string, MetadataUsage>[] source = Enumerable.ToArray<KeyValuePair<string, MetadataUsage>>(Enumerable.OrderBy<KeyValuePair<string, MetadataUsage>, string>(MetadataUsageCollector.GetUsages(), <>f__am$cache2));
-            usagePairs1.AddRange(Enumerable.SelectMany<KeyValuePair<string, MetadataUsage>, KeyValuePair<uint, uint>>(source, new Func<KeyValuePair<string, MetadataUsage>, IEnumerable<KeyValuePair<uint, uint>>>(storey, (IntPtr) this.<>m__0)));
+            KeyValuePair<string, MetadataUsage>[] source = MetadataUsageCollector.GetUsages().OrderBy<KeyValuePair<string, MetadataUsage>, string>(<>f__am$cache2).ToArray<KeyValuePair<string, MetadataUsage>>();
+            usagePairs1.AddRange(source.SelectMany<KeyValuePair<string, MetadataUsage>, KeyValuePair<uint, uint>>(new Func<KeyValuePair<string, MetadataUsage>, IEnumerable<KeyValuePair<uint, uint>>>(storey, (IntPtr) this.<>m__0)));
             int num = 0;
             uint key = 0;
             List<KeyValuePair<uint, uint>> collection = new List<KeyValuePair<uint, uint>>(source.Length);
             foreach (KeyValuePair<string, MetadataUsage> pair in source)
             {
-                base.Writer.WriteStatement(string.Format("extern const uint32_t {0} = {1}", pair.Key, num++));
+                base.Writer.WriteStatement($"extern const uint32_t {pair.Key} = {num++}");
                 collection.Add(new KeyValuePair<uint, uint>(key, (uint) pair.Value.UsageCount));
                 key += (uint) pair.Value.UsageCount;
             }
@@ -133,10 +131,8 @@
             internal Dictionary<string, uint> items;
             internal IMetadataCollection metadataCollection;
 
-            internal IEnumerable<KeyValuePair<uint, uint>> <>m__0(KeyValuePair<string, MetadataUsage> item)
-            {
-                return this.$this.GetValues(item.Value, this.items, this.metadataCollection);
-            }
+            internal IEnumerable<KeyValuePair<uint, uint>> <>m__0(KeyValuePair<string, MetadataUsage> item) => 
+                this.$this.GetValues(item.Value, this.items, this.metadataCollection);
         }
 
         private enum Il2CppMetadataUsage

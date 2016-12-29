@@ -39,29 +39,14 @@
             this.m_Underage = value;
         }
 
-        public bool authenticated
-        {
-            get
-            {
-                return this.m_Authenticated;
-            }
-        }
+        public bool authenticated =>
+            this.m_Authenticated;
 
-        public IUserProfile[] friends
-        {
-            get
-            {
-                return this.m_Friends;
-            }
-        }
+        public IUserProfile[] friends =>
+            this.m_Friends;
 
-        public bool underage
-        {
-            get
-            {
-                return this.m_Underage;
-            }
-        }
+        public bool underage =>
+            this.m_Underage;
     }
 }
 

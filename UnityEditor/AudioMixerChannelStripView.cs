@@ -166,10 +166,8 @@
             }
         }
 
-        private bool CanDuplicateDraggedEffect()
-        {
-            return ((this.IsMovingEffect() && (this.m_MovingSrcGroup != null)) && !this.m_MovingSrcGroup.effects[this.m_MovingEffectSrcIndex].IsAttenuation());
-        }
+        private bool CanDuplicateDraggedEffect() => 
+            ((this.IsMovingEffect() && (this.m_MovingSrcGroup != null)) && !this.m_MovingSrcGroup.effects[this.m_MovingEffectSrcIndex].IsAttenuation());
 
         private void ClearEffectDragging(ref int highlightEffectIndex)
         {
@@ -491,7 +489,7 @@
             this.styles.totalVULevel.padding.right = (int) ((p.stripRect.width - num) * 0.5f);
             float num2 = Mathf.Max(p.vuinfo_level[8], -80f);
             Rect position = p.bgRects[p.kTotalVULevelIndex];
-            GUI.Label(position, string.Format("{0:F1} dB", num2), this.styles.totalVULevel);
+            GUI.Label(position, $"{num2:F1} dB", this.styles.totalVULevel);
         }
 
         private float DoVUMeters(Rect vuRect, float attenuationMarkerHeight, ChannelStripParams p)
@@ -753,7 +751,7 @@
                         {
                             AudioMixerEffectController sourceEffect = this.m_MovingSrcGroup.effects[this.m_MovingEffectSrcIndex];
                             AudioMixerEffectController controller2 = this.m_MovingSrcGroup.controller.CopyEffect(sourceEffect);
-                            List<AudioMixerEffectController> targetEffects = Enumerable.ToList<AudioMixerEffectController>(this.m_MovingDstGroup.effects);
+                            List<AudioMixerEffectController> targetEffects = this.m_MovingDstGroup.effects.ToList<AudioMixerEffectController>();
                             if (AudioMixerController.InsertEffect(controller2, ref targetEffects, this.m_MovingEffectDstIndex))
                             {
                                 this.m_MovingDstGroup.effects = targetEffects.ToArray();
@@ -761,7 +759,7 @@
                         }
                         else if (this.m_MovingSrcGroup == this.m_MovingDstGroup)
                         {
-                            List<AudioMixerEffectController> sourceEffects = Enumerable.ToList<AudioMixerEffectController>(this.m_MovingSrcGroup.effects);
+                            List<AudioMixerEffectController> sourceEffects = this.m_MovingSrcGroup.effects.ToList<AudioMixerEffectController>();
                             if (AudioMixerController.MoveEffect(ref sourceEffects, this.m_MovingEffectSrcIndex, ref sourceEffects, this.m_MovingEffectDstIndex))
                             {
                                 this.m_MovingSrcGroup.effects = sourceEffects.ToArray();
@@ -769,8 +767,8 @@
                         }
                         else if (!this.m_MovingSrcGroup.effects[this.m_MovingEffectSrcIndex].IsAttenuation())
                         {
-                            List<AudioMixerEffectController> list3 = Enumerable.ToList<AudioMixerEffectController>(this.m_MovingSrcGroup.effects);
-                            List<AudioMixerEffectController> list4 = Enumerable.ToList<AudioMixerEffectController>(this.m_MovingDstGroup.effects);
+                            List<AudioMixerEffectController> list3 = this.m_MovingSrcGroup.effects.ToList<AudioMixerEffectController>();
+                            List<AudioMixerEffectController> list4 = this.m_MovingDstGroup.effects.ToList<AudioMixerEffectController>();
                             if (AudioMixerController.MoveEffect(ref list3, this.m_MovingEffectSrcIndex, ref list4, this.m_MovingEffectDstIndex))
                             {
                                 this.m_MovingSrcGroup.effects = list3.ToArray();
@@ -894,7 +892,7 @@
         {
             if ((this.m_ChangingWetMixIndex == this.m_IndexCounter) && showLevel)
             {
-                return string.Format("{0:F1} dB", effect.GetValueForMixLevel(this.m_Controller, snapshot));
+                return $"{effect.GetValueForMixLevel(this.m_Controller, snapshot):F1} dB";
             }
             if (effect.IsSend() && (effect.sendTarget != null))
             {
@@ -951,15 +949,13 @@
             bool keepMultiSelection = Event.current.shift || clickedControlInGroup;
             bool useShiftAsActionKey = false;
             storey.newSelection = InternalEditorUtility.GetNewSelection(clickedGroup.GetInstanceID(), allInstanceIDs, selectedInstanceIDs, lastClickedInstanceID, keepMultiSelection, useShiftAsActionKey, allowMultiSelection);
-            Selection.objects = Enumerable.ToList<AudioMixerGroupController>(Enumerable.Where<AudioMixerGroupController>(p.allGroups, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0))).ToArray();
+            Selection.objects = Enumerable.Where<AudioMixerGroupController>(p.allGroups, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0)).ToList<AudioMixerGroupController>().ToArray();
             this.m_Controller.OnUnitySelectionChanged();
             InspectorWindow.RepaintAllInspectors();
         }
 
-        private bool HasFocus()
-        {
-            return (this.m_FocusIndex == this.m_IndexCounter);
-        }
+        private bool HasFocus() => 
+            (this.m_FocusIndex == this.m_IndexCounter);
 
         public float HorizontalFader(Rect r, float value, float minValue, float maxValue, int direction, float dragScale)
         {
@@ -1012,35 +1008,23 @@
             AudioMixerUtility.RepaintAudioMixerAndInspectors();
         }
 
-        private bool IsAdjustingWetMix()
-        {
-            return (this.m_ChangingWetMixIndex != -1);
-        }
+        private bool IsAdjustingWetMix() => 
+            (this.m_ChangingWetMixIndex != -1);
 
-        private bool IsDuplicateKeyPressed()
-        {
-            return Event.current.alt;
-        }
+        private bool IsDuplicateKeyPressed() => 
+            Event.current.alt;
 
-        private bool IsFocusActive()
-        {
-            return (this.m_FocusIndex != -1);
-        }
+        private bool IsFocusActive() => 
+            (this.m_FocusIndex != -1);
 
-        private bool IsMovingEffect()
-        {
-            return (this.m_MovingEffectSrcIndex != -1);
-        }
+        private bool IsMovingEffect() => 
+            (this.m_MovingEffectSrcIndex != -1);
 
-        private bool IsRectSelectionActive()
-        {
-            return (GUIUtility.hotControl == this.m_RectSelectionControlID);
-        }
+        private bool IsRectSelectionActive() => 
+            (GUIUtility.hotControl == this.m_RectSelectionControlID);
 
-        public static float Lerp(float x1, float x2, float t)
-        {
-            return (x1 + ((x2 - x1) * t));
-        }
+        public static float Lerp(float x1, float x2, float t) => 
+            (x1 + ((x2 - x1) * t));
 
         public void OnGUI(Rect rect, bool showReferencedBuses, bool showBusConnections, bool showBusConnectionsOfSelection, List<AudioMixerGroupController> allGroups, Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap, bool sortGroupsAlphabetically, bool showDeveloperOverlays, AudioMixerGroupController scrollToItem)
         {
@@ -1054,7 +1038,7 @@
                 this.m_EffectInteractionControlID = GUIUtility.GetControlID(kEffectDraggingHashCode, FocusType.Passive);
                 this.m_IndexCounter = 0;
                 Event current = Event.current;
-                List<AudioMixerGroupController> sortedGroups = Enumerable.ToList<AudioMixerGroupController>(this.m_Controller.GetCurrentViewGroupList());
+                List<AudioMixerGroupController> sortedGroups = this.m_Controller.GetCurrentViewGroupList().ToList<AudioMixerGroupController>();
                 if (sortGroupsAlphabetically)
                 {
                     sortedGroups.Sort(this.m_GroupComparer);
@@ -1087,7 +1071,7 @@
                         }
                     }
                 }
-                List<AudioMixerGroupController> collection = Enumerable.ToList<AudioMixerGroupController>(source);
+                List<AudioMixerGroupController> collection = source.ToList<AudioMixerGroupController>();
                 collection.Sort(this.m_GroupComparer);
                 int count = sortedGroups.Count;
                 if (showReferencedBuses && (collection.Count > 0))
@@ -1512,13 +1496,8 @@
             }
         }
 
-        private AudioMixerDrawUtils.Styles styles
-        {
-            get
-            {
-                return AudioMixerDrawUtils.styles;
-            }
-        }
+        private AudioMixerDrawUtils.Styles styles =>
+            AudioMixerDrawUtils.styles;
 
         [CompilerGenerated]
         private sealed class <DoEffectSlotInsertEffectPopup>c__AnonStorey1
@@ -1544,10 +1523,8 @@
         {
             internal List<int> newSelection;
 
-            internal bool <>m__0(AudioMixerGroupController x)
-            {
-                return this.newSelection.Contains(x.GetInstanceID());
-            }
+            internal bool <>m__0(AudioMixerGroupController x) => 
+                this.newSelection.Contains(x.GetInstanceID());
         }
 
         private class BusConnection

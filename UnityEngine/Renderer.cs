@@ -106,10 +106,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property lightmapTilingOffset has been deprecated. Use lightmapScaleOffset (UnityUpgradable) -> lightmapScaleOffset", true)]
         public Vector4 lightmapTilingOffset
         {
-            get
-            {
-                return Vector4.zero;
-            }
+            get => 
+                Vector4.zero;
             set
             {
             }
@@ -118,10 +116,8 @@
         [Obsolete("Use probeAnchor instead (UnityUpgradable) -> probeAnchor", true)]
         public Transform lightProbeAnchor
         {
-            get
-            {
-                return this.probeAnchor;
-            }
+            get => 
+                this.probeAnchor;
             set
             {
                 this.probeAnchor = value;
@@ -169,10 +165,8 @@
         [Obsolete("motionVectors property is deprecated. Use motionVectorGenerationMode instead.")]
         private bool motionVectors
         {
-            get
-            {
-                return (this.motionVectorGenerationMode == MotionVectorGenerationMode.Object);
-            }
+            get => 
+                (this.motionVectorGenerationMode == MotionVectorGenerationMode.Object);
             set
             {
                 this.motionVectorGenerationMode = !value ? MotionVectorGenerationMode.Camera : MotionVectorGenerationMode.Object;

@@ -144,9 +144,9 @@
                 }
                 textStyle10.normal.textColor = ScaleAlpha(col, storey.blend);
                 EditorGUI.DrawRect(new Rect(r.x + num15, r.y, 1f, r.height), textStyle10.normal.textColor);
-                DrawText((r.x + num15) + 4f, r.y + 6f, string.Format("Threshold: {0:F1} dB", (float) threshold));
+                DrawText((r.x + num15) + 4f, r.y + 6f, $"Threshold: {(float) threshold:F1} dB");
                 textStyle10.normal.textColor = ScaleAlpha(black, storey.blend);
-                DrawText(r.x + 4f, (r.y + r.height) - 10f, (sidechainLevel >= -80f) ? string.Format("Input: {0:F1} dB", sidechainLevel) : "Input: None");
+                DrawText(r.x + 4f, (r.y + r.height) - 10f, (sidechainLevel >= -80f) ? $"Input: {sidechainLevel:F1} dB" : "Input: None");
                 if (dragtype == DragType.Ratio)
                 {
                     float num18 = r.height / r.width;
@@ -254,34 +254,17 @@
             return true;
         }
 
-        protected static Color ScaleAlpha(Color col, float blend)
-        {
-            return new Color(col.r, col.g, col.b, col.a * blend);
-        }
+        protected static Color ScaleAlpha(Color col, float blend) => 
+            new Color(col.r, col.g, col.b, col.a * blend);
 
-        public override string Description
-        {
-            get
-            {
-                return "Volume Ducking";
-            }
-        }
+        public override string Description =>
+            "Volume Ducking";
 
-        public override string Name
-        {
-            get
-            {
-                return "Duck Volume";
-            }
-        }
+        public override string Name =>
+            "Duck Volume";
 
-        public override string Vendor
-        {
-            get
-            {
-                return "Unity Technologies";
-            }
-        }
+        public override string Vendor =>
+            "Unity Technologies";
 
         [CompilerGenerated]
         private sealed class <CurveDisplay>c__AnonStorey0

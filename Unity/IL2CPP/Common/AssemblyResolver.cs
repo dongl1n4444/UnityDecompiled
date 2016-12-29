@@ -34,23 +34,17 @@
                 throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[assembly.Name.Name].MainModule.FullyQualifiedName, assembly.MainModule.FullyQualifiedName));
             }
             this._assemblies.Add(assembly.Name.Name, assembly);
-            this._searchDirectories.Add(Extensions.ToNPath(assembly.MainModule.FullyQualifiedName).Parent);
+            this._searchDirectories.Add(assembly.MainModule.FullyQualifiedName.ToNPath().Parent);
         }
 
-        public IEnumerable<NPath> GetSearchDirectories()
-        {
-            return this._searchDirectories;
-        }
+        public IEnumerable<NPath> GetSearchDirectories() => 
+            this._searchDirectories;
 
-        public bool IsAssemblyCached(AssemblyNameReference assemblyName)
-        {
-            return this._assemblies.ContainsKey(assemblyName.Name);
-        }
+        public bool IsAssemblyCached(AssemblyNameReference assemblyName) => 
+            this._assemblies.ContainsKey(assemblyName.Name);
 
-        public bool IsAssemblyCached(string name)
-        {
-            return this._assemblies.ContainsKey(name);
-        }
+        public bool IsAssemblyCached(string name) => 
+            this._assemblies.ContainsKey(name);
 
         public AssemblyDefinition Resolve(AssemblyNameReference name)
         {
@@ -75,15 +69,11 @@
             return this.Resolve(AssemblyNameReference.Parse(fullName));
         }
 
-        public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
-        {
-            return this.Resolve(name);
-        }
+        public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters) => 
+            this.Resolve(name);
 
-        public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters)
-        {
-            return this.Resolve(fullName);
-        }
+        public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters) => 
+            this.Resolve(fullName);
 
         private AssemblyDefinition ResolveInternal(AssemblyNameReference name)
         {

@@ -30,7 +30,7 @@
                 }
             }
             ListPool<Canvas>.Release(results);
-            return ((canvas == null) ? null : canvas.transform);
+            return canvas?.transform;
         }
 
         /// <summary>

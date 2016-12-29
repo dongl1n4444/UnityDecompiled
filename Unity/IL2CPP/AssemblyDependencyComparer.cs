@@ -64,7 +64,7 @@
 
         private bool FirstRecursivelyReferencesSecond(AssemblyDefinition first, AssemblyDefinition second, HashSet<string> assemblyNamesAlreadyVisited)
         {
-            if (Extensions.References(first, second))
+            if (first.References(second))
             {
                 return true;
             }
@@ -84,10 +84,8 @@
             return false;
         }
 
-        private bool IsSpecialAssembly(AssemblyDefinition assembly)
-        {
-            return _specialAssemblies.Contains(assembly.Name.Name);
-        }
+        private bool IsSpecialAssembly(AssemblyDefinition assembly) => 
+            _specialAssemblies.Contains(assembly.Name.Name);
 
         public static Dictionary<string, int> MaximumDepthForEachAssembly(IEnumerable<AssemblyDefinition> assemblies)
         {

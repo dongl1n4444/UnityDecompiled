@@ -38,22 +38,16 @@
         }
 
         [CompilerGenerated]
-        private static bool <AnimationWindowManipulator>m__0(AnimationWindowManipulator manipulator, Event evt)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowManipulator>m__0(AnimationWindowManipulator manipulator, Event evt) => 
+            false;
 
         [CompilerGenerated]
-        private static bool <AnimationWindowManipulator>m__1(AnimationWindowManipulator manipulator, Event evt)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowManipulator>m__1(AnimationWindowManipulator manipulator, Event evt) => 
+            false;
 
         [CompilerGenerated]
-        private static bool <AnimationWindowManipulator>m__2(AnimationWindowManipulator manipulator, Event evt)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowManipulator>m__2(AnimationWindowManipulator manipulator, Event evt) => 
+            false;
 
         public virtual void HandleEvents()
         {

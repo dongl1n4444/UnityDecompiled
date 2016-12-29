@@ -178,8 +178,8 @@
                     {
                         if (flag)
                         {
-                            GUIContent content = new GUIContent(string.Format("{0}", this.m_CurveEditor.FormatTime(this.selectionBounds.min.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)));
-                            GUIContent content2 = new GUIContent(string.Format("{0}", this.m_CurveEditor.FormatTime(this.selectionBounds.max.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)));
+                            GUIContent content = new GUIContent($"{this.m_CurveEditor.FormatTime(this.selectionBounds.min.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)}");
+                            GUIContent content2 = new GUIContent($"{this.m_CurveEditor.FormatTime(this.selectionBounds.max.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)}");
                             Vector2 vector5 = base.styles.dragLabel.CalcSize(content);
                             Vector2 vector6 = base.styles.dragLabel.CalcSize(content2);
                             EditorGUI.DoDropShadowLabel(new Rect(this.m_Layout.leftLabelAnchor.x - vector5.x, this.m_Layout.leftLabelAnchor.y, vector5.x, vector5.y), content, base.styles.dragLabel, 0.3f);
@@ -187,7 +187,7 @@
                         }
                         else
                         {
-                            GUIContent content3 = new GUIContent(string.Format("{0}", this.m_CurveEditor.FormatTime(this.selectionBounds.center.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)));
+                            GUIContent content3 = new GUIContent($"{this.m_CurveEditor.FormatTime(this.selectionBounds.center.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)}");
                             Vector2 vector8 = base.styles.dragLabel.CalcSize(content3);
                             EditorGUI.DoDropShadowLabel(new Rect(this.m_Layout.leftLabelAnchor.x, this.m_Layout.leftLabelAnchor.y, vector8.x, vector8.y), content3, base.styles.dragLabel, 0.3f);
                         }
@@ -196,8 +196,8 @@
                     {
                         if (flag2)
                         {
-                            GUIContent content4 = new GUIContent(string.Format("{0}", this.m_CurveEditor.FormatValue(this.selectionBounds.min.y)));
-                            GUIContent content5 = new GUIContent(string.Format("{0}", this.m_CurveEditor.FormatValue(this.selectionBounds.max.y)));
+                            GUIContent content4 = new GUIContent($"{this.m_CurveEditor.FormatValue(this.selectionBounds.min.y)}");
+                            GUIContent content5 = new GUIContent($"{this.m_CurveEditor.FormatValue(this.selectionBounds.max.y)}");
                             Vector2 vector11 = base.styles.dragLabel.CalcSize(content4);
                             Vector2 vector12 = base.styles.dragLabel.CalcSize(content5);
                             EditorGUI.DoDropShadowLabel(new Rect(this.m_Layout.bottomLabelAnchor.x, this.m_Layout.bottomLabelAnchor.y, vector11.x, vector11.y), content4, base.styles.dragLabel, 0.3f);
@@ -205,7 +205,7 @@
                         }
                         else
                         {
-                            GUIContent content6 = new GUIContent(string.Format("{0}", this.m_CurveEditor.FormatValue(this.selectionBounds.center.y)));
+                            GUIContent content6 = new GUIContent($"{this.m_CurveEditor.FormatValue(this.selectionBounds.center.y)}");
                             Vector2 vector14 = base.styles.dragLabel.CalcSize(content6);
                             EditorGUI.DoDropShadowLabel(new Rect(this.m_Layout.topLabelAnchor.x, this.m_Layout.topLabelAnchor.y - vector14.y, vector14.x, vector14.y), content6, base.styles.dragLabel, 0.3f);
                         }
@@ -215,7 +215,7 @@
                 {
                     Vector2 vector15 = (!flag && !flag2) ? this.selectionBounds.center : new Vector2(base.PixelToTime(Event.current.mousePosition.x, this.frameRate), base.PixelToValue(Event.current.mousePosition.y));
                     Vector2 vector18 = new Vector2(base.TimeToPixel(vector15.x), base.ValueToPixel(vector15.y));
-                    GUIContent content7 = new GUIContent(string.Format("{0}, {1}", this.m_CurveEditor.FormatTime(vector15.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat), this.m_CurveEditor.FormatValue(vector15.y)));
+                    GUIContent content7 = new GUIContent($"{this.m_CurveEditor.FormatTime(vector15.x, this.m_CurveEditor.invSnap, this.m_CurveEditor.timeFormat)}, {this.m_CurveEditor.FormatValue(vector15.y)}");
                     Vector2 vector19 = base.styles.dragLabel.CalcSize(content7);
                     EditorGUI.DoDropShadowLabel(new Rect(vector18.x, vector18.y - vector19.y, vector19.x, vector19.y), content7, base.styles.dragLabel, 0.3f);
                 }
@@ -615,29 +615,14 @@
             }
         }
 
-        private float frameRate
-        {
-            get
-            {
-                return this.m_CurveEditor.invSnap;
-            }
-        }
+        private float frameRate =>
+            this.m_CurveEditor.invSnap;
 
-        private bool hasSelection
-        {
-            get
-            {
-                return (this.m_CurveEditor.hasSelection && !this.m_CurveEditor.IsDraggingCurveOrRegion());
-            }
-        }
+        private bool hasSelection =>
+            (this.m_CurveEditor.hasSelection && !this.m_CurveEditor.IsDraggingCurveOrRegion());
 
-        private Bounds selectionBounds
-        {
-            get
-            {
-                return this.m_CurveEditor.selectionBounds;
-            }
-        }
+        private Bounds selectionBounds =>
+            this.m_CurveEditor.selectionBounds;
 
         private enum DragMode
         {

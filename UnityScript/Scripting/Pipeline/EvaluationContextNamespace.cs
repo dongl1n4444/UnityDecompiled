@@ -20,10 +20,8 @@
         protected INamespace _scriptContainerNamespace;
         protected TypeSystemServices _tss;
 
-        internal EvaluationContextEntity $Resolve$closure$212(IEntity entity)
-        {
-            return new EvaluationContextEntity((IMember) entity);
-        }
+        internal EvaluationContextEntity $Resolve$closure$212(IEntity entity) => 
+            new EvaluationContextEntity((IMember) entity);
 
         public EvaluationContextNamespace(TypeSystemServices tss, INamespace parent, EvaluationContext context)
         {
@@ -52,10 +50,8 @@
             this._activeScripts = this._context.GetActiveScripts();
         }
 
-        public override IEnumerable<IEntity> GetMembers()
-        {
-            return null;
-        }
+        public override IEnumerable<IEntity> GetMembers() => 
+            null;
 
         public object MapEntity(IEntity entity, EntityMapper mapper)
         {
@@ -79,47 +75,25 @@
             return (!this.Resolve(this._contextNamespace, targetList, name, filter) ? (!this.Resolve(this._scriptContainerNamespace, targetList, name, filter) ? this.Resolve(type, targetList, name, filter, mapper) : true) : true);
         }
 
-        public bool Resolve(INamespace ns, ICollection<IEntity> targetList, string name, Boo.Lang.Compiler.TypeSystem.EntityType filter)
-        {
-            return this.Resolve(ns, targetList, name, filter, new EntityMapper(this.$Resolve$closure$212));
-        }
+        public bool Resolve(INamespace ns, ICollection<IEntity> targetList, string name, Boo.Lang.Compiler.TypeSystem.EntityType filter) => 
+            this.Resolve(ns, targetList, name, filter, new EntityMapper(this.$Resolve$closure$212));
 
         public bool Resolve(INamespace ns, ICollection<IEntity> targetList, string name, Boo.Lang.Compiler.TypeSystem.EntityType filter, EntityMapper mapper)
         {
             // This item is obfuscated and can not be translated.
         }
 
-        public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType
-        {
-            get
-            {
-                return 0x1000;
-            }
-        }
+        public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType =>
+            0x1000;
 
-        public override string FullName
-        {
-            get
-            {
-                return this.Name;
-            }
-        }
+        public override string FullName =>
+            this.Name;
 
-        public override string Name
-        {
-            get
-            {
-                return "EvaluationContext";
-            }
-        }
+        public override string Name =>
+            "EvaluationContext";
 
-        public override INamespace ParentNamespace
-        {
-            get
-            {
-                return this._parent;
-            }
-        }
+        public override INamespace ParentNamespace =>
+            this._parent;
 
         [Serializable]
         internal class $Resolve$closure$211
@@ -135,10 +109,8 @@
                 this.$this$278 = $this$278;
             }
 
-            public ActiveScriptEntity Invoke(IEntity entity)
-            {
-                return new ActiveScriptEntity(this.$this$278._context.GetActiveScriptId(this.$$235$276[this.$$234$277]), (IMember) entity);
-            }
+            public ActiveScriptEntity Invoke(IEntity entity) => 
+                new ActiveScriptEntity(this.$this$278._context.GetActiveScriptId(this.$$235$276[this.$$234$277]), (IMember) entity);
         }
 
         [Serializable, CompilerGenerated]

@@ -33,17 +33,13 @@
             this.m_SignedRange = signedRange;
         }
 
-        public bool IsSingleCurve()
-        {
-            return ((this.minCurve == null) || (this.minCurve.length == 0));
-        }
+        public bool IsSingleCurve() => 
+            ((this.minCurve == null) || (this.minCurve.length == 0));
 
         public AnimationCurve maxCurve
         {
-            get
-            {
-                return this.m_MaxCurve;
-            }
+            get => 
+                this.m_MaxCurve;
             set
             {
                 this.m_MaxCurve = value;
@@ -52,10 +48,8 @@
 
         public AnimationCurve minCurve
         {
-            get
-            {
-                return this.m_MinCurve;
-            }
+            get => 
+                this.m_MinCurve;
             set
             {
                 this.m_MinCurve = value;
@@ -64,10 +58,8 @@
 
         public bool signedRange
         {
-            get
-            {
-                return this.m_SignedRange;
-            }
+            get => 
+                this.m_SignedRange;
             set
             {
                 this.m_SignedRange = value;

@@ -288,10 +288,8 @@
             return true;
         }
 
-        public bool SendWriter(NetworkWriter writer)
-        {
-            return this.SendBytes(writer.AsArraySegment().Array, writer.AsArraySegment().Count);
-        }
+        public bool SendWriter(NetworkWriter writer) => 
+            this.SendBytes(writer.AsArraySegment().Array, writer.AsArraySegment().Count);
 
         public bool SetOption(ChannelOption option, int value)
         {

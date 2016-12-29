@@ -61,7 +61,7 @@
             writer.WriteLine("</manifest>");
             writer.Close();
             string[] source = File.ReadAllLines(manifestPath);
-            File.WriteAllLines(manifestPath, Enumerable.ToArray<string>(Enumerable.Distinct<string>(source)));
+            File.WriteAllLines(manifestPath, source.Distinct<string>().ToArray<string>());
         }
 
         private static void CreateProject(string stagingArea)
@@ -299,7 +299,7 @@
             if (flag)
             {
                 progress.Step("Installing", EditorGUIUtility.TextContent("Installing application on device...").text);
-                if (TizenUtilities.InstallTpkPackage(bundleIdentifier + "-" + GetValidVersionString() + "-arm.tpk"))
+                if (TizenUtilities.InstallTpkPackage(installPath))
                 {
                     if (developmentPlayer)
                     {
@@ -322,10 +322,8 @@
             return builder.ToString();
         }
 
-        private static bool ValidateCommandResult(string output)
-        {
-            return ((!output.Contains("error: device not found") && !output.Contains("error: device offline")) && !output.Contains("failed"));
-        }
+        private static bool ValidateCommandResult(string output) => 
+            ((!output.Contains("error: device not found") && !output.Contains("error: device offline")) && !output.Contains("failed"));
 
         private class Progress
         {
@@ -354,20 +352,14 @@
             internal float currentBuildStep = 0f;
             internal float numBuildSteps = 0f;
 
-            public float Advance()
-            {
-                return (++this.currentBuildStep / this.numBuildSteps);
-            }
+            public float Advance() => 
+                (++this.currentBuildStep / this.numBuildSteps);
 
-            public float Get()
-            {
-                return (this.currentBuildStep / this.numBuildSteps);
-            }
+            public float Get() => 
+                (this.currentBuildStep / this.numBuildSteps);
 
-            public float LastValue()
-            {
-                return ((this.currentBuildStep - 1f) / this.numBuildSteps);
-            }
+            public float LastValue() => 
+                ((this.currentBuildStep - 1f) / this.numBuildSteps);
 
             public void Reset(float numSteps)
             {

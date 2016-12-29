@@ -23,10 +23,10 @@
             if (bytes.Count != 0)
             {
             }
-            return ((<>f__am$cache0 != null) ? "0" : EnumerableExtensions.AggregateWithComma(Enumerable.Select<byte, string>(bytes, <>f__am$cache0)));
+            return ((<>f__am$cache0 != null) ? "0" : bytes.Select<byte, string>(<>f__am$cache0).AggregateWithComma());
         }
 
-        private static string CheckFloatingPointFormatting(string stringValue, [Optional, DefaultParameterValue("")] string suffix)
+        private static string CheckFloatingPointFormatting(string stringValue, string suffix = "")
         {
             if (!stringValue.Contains("."))
             {
@@ -35,7 +35,7 @@
                     stringValue = stringValue.Replace("E", string.Format(".0E", new object[0])) + suffix;
                     return stringValue;
                 }
-                stringValue = stringValue + string.Format(".0{0}", suffix);
+                stringValue = stringValue + $".0{suffix}";
                 return stringValue;
             }
             if (suffix == "f")
@@ -54,15 +54,11 @@
             return ("/* " + str + " */");
         }
 
-        public static string EscapeString(string str)
-        {
-            return str.Replace(@"\", @"\\").Replace("\n", @"\n").Replace("\r", @"\r").Replace("\"", "\\\"");
-        }
+        public static string EscapeString(string str) => 
+            str.Replace(@"\", @"\\").Replace("\n", @"\n").Replace("\r", @"\r").Replace("\"", "\\\"");
 
-        public static string FormatChar(char c)
-        {
-            return ("(Il2CppChar)" + ((int) c));
-        }
+        public static string FormatChar(char c) => 
+            ("(Il2CppChar)" + ((int) c));
 
         internal static string Quote(object val)
         {
@@ -80,7 +76,7 @@
             {
                 <>f__am$cache1 = new Func<string, byte, string>(null, (IntPtr) <Stringify>m__1);
             }
-            return Quote(Enumerable.Aggregate<byte, string>(hash, "", <>f__am$cache1));
+            return Quote(hash.Aggregate<byte, string>("", <>f__am$cache1));
         }
 
         internal static string StringRepresentationFor(double value)

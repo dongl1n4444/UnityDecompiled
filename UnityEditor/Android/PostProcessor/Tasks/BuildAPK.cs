@@ -35,32 +35,32 @@
             AndroidLibraries libraries = context.Get<AndroidLibraries>("AndroidLibraries");
             bool flag2 = PlayerSettings.Android.keyaliasName.Length != 0;
             string str = Path.Combine(Environment.CurrentDirectory, this._stagingArea);
-            string[] first = new string[] { "apk", string.Format("{0}/Package_unaligned.apk", str), "-z", string.Format("{0}/assets.ap_", str), "-z", string.Format("{0}/bin/resources.ap_", str), "-nf", string.Format("{0}/libs", str), "-f", string.Format("{0}/bin/classes.dex", str), "-v" };
+            string[] first = new string[] { "apk", $"{str}/Package_unaligned.apk", "-z", $"{str}/assets.ap_", "-z", $"{str}/bin/resources.ap_", "-nf", $"{str}/libs", "-f", $"{str}/bin/classes.dex", "-v" };
             foreach (string str2 in libraries.GetLibraryDirectories())
             {
                 string[] second = new string[] { "-nf", str2 };
-                first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, second));
+                first = first.Concat<string>(second).ToArray<string>();
             }
             foreach (string str3 in libraries.GetAssetsDirectories())
             {
                 string[] textArray3 = new string[] { "-A", str3 };
-                first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, textArray3));
+                first = first.Concat<string>(textArray3).ToArray<string>();
             }
             if (flag2)
             {
                 string str4 = !Path.IsPathRooted(PlayerSettings.Android.keystoreName) ? Path.Combine(Directory.GetCurrentDirectory(), PlayerSettings.Android.keystoreName) : PlayerSettings.Android.keystoreName;
                 string[] textArray4 = new string[] { "-k", str4, "-kp", PlayerSettings.Android.keystorePass, "-kk", PlayerSettings.Android.keyaliasName, "-kkp", PlayerSettings.Android.keyaliasPass };
-                first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, textArray4));
+                first = first.Concat<string>(textArray4).ToArray<string>();
             }
             if (flag || Unsupported.IsDeveloperBuild())
             {
                 string[] textArray5 = new string[] { "-d" };
-                first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, textArray5));
+                first = first.Concat<string>(textArray5).ToArray<string>();
             }
             if (File.Exists(Path.Combine(this._stagingArea, "raw.ap_")))
             {
-                string[] textArray6 = new string[] { "-z", string.Format("{0}/raw.ap_", str) };
-                first = Enumerable.ToArray<string>(Enumerable.Concat<string>(first, textArray6));
+                string[] textArray6 = new string[] { "-z", $"{str}/raw.ap_" };
+                first = first.Concat<string>(textArray6).ToArray<string>();
             }
             string message = TasksCommon.SDKTool(context, first, this._stagingArea, "Failed to build apk.");
             string fileName = Path.Combine(this._stagingArea, "Package_unaligned.apk");
@@ -90,13 +90,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Creating APK package";
-            }
-        }
+        public string Name =>
+            "Creating APK package";
     }
 }
 

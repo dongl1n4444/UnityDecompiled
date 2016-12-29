@@ -92,45 +92,29 @@
             return (((this.r.Equals(color.r) && this.g.Equals(color.g)) && this.b.Equals(color.b)) && this.a.Equals(color.a));
         }
 
-        public static Color operator +(Color a, Color b)
-        {
-            return new Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a);
-        }
+        public static Color operator +(Color a, Color b) => 
+            new Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a);
 
-        public static Color operator -(Color a, Color b)
-        {
-            return new Color(a.r - b.r, a.g - b.g, a.b - b.b, a.a - b.a);
-        }
+        public static Color operator -(Color a, Color b) => 
+            new Color(a.r - b.r, a.g - b.g, a.b - b.b, a.a - b.a);
 
-        public static Color operator *(Color a, Color b)
-        {
-            return new Color(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a);
-        }
+        public static Color operator *(Color a, Color b) => 
+            new Color(a.r * b.r, a.g * b.g, a.b * b.b, a.a * b.a);
 
-        public static Color operator *(Color a, float b)
-        {
-            return new Color(a.r * b, a.g * b, a.b * b, a.a * b);
-        }
+        public static Color operator *(Color a, float b) => 
+            new Color(a.r * b, a.g * b, a.b * b, a.a * b);
 
-        public static Color operator *(float b, Color a)
-        {
-            return new Color(a.r * b, a.g * b, a.b * b, a.a * b);
-        }
+        public static Color operator *(float b, Color a) => 
+            new Color(a.r * b, a.g * b, a.b * b, a.a * b);
 
-        public static Color operator /(Color a, float b)
-        {
-            return new Color(a.r / b, a.g / b, a.b / b, a.a / b);
-        }
+        public static Color operator /(Color a, float b) => 
+            new Color(a.r / b, a.g / b, a.b / b, a.a / b);
 
-        public static bool operator ==(Color lhs, Color rhs)
-        {
-            return (lhs == rhs);
-        }
+        public static bool operator ==(Color lhs, Color rhs) => 
+            (lhs == rhs);
 
-        public static bool operator !=(Color lhs, Color rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static bool operator !=(Color lhs, Color rhs) => 
+            !(lhs == rhs);
 
         /// <summary>
         /// <para>Linearly interpolates between colors a and b by t.</para>
@@ -150,185 +134,98 @@
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="t"></param>
-        public static Color LerpUnclamped(Color a, Color b, float t)
-        {
-            return new Color(a.r + ((b.r - a.r) * t), a.g + ((b.g - a.g) * t), a.b + ((b.b - a.b) * t), a.a + ((b.a - a.a) * t));
-        }
+        public static Color LerpUnclamped(Color a, Color b, float t) => 
+            new Color(a.r + ((b.r - a.r) * t), a.g + ((b.g - a.g) * t), a.b + ((b.b - a.b) * t), a.a + ((b.a - a.a) * t));
 
-        internal Color RGBMultiplied(float multiplier)
-        {
-            return new Color(this.r * multiplier, this.g * multiplier, this.b * multiplier, this.a);
-        }
+        internal Color RGBMultiplied(float multiplier) => 
+            new Color(this.r * multiplier, this.g * multiplier, this.b * multiplier, this.a);
 
-        internal Color AlphaMultiplied(float multiplier)
-        {
-            return new Color(this.r, this.g, this.b, this.a * multiplier);
-        }
+        internal Color AlphaMultiplied(float multiplier) => 
+            new Color(this.r, this.g, this.b, this.a * multiplier);
 
-        internal Color RGBMultiplied(Color multiplier)
-        {
-            return new Color(this.r * multiplier.r, this.g * multiplier.g, this.b * multiplier.b, this.a);
-        }
+        internal Color RGBMultiplied(Color multiplier) => 
+            new Color(this.r * multiplier.r, this.g * multiplier.g, this.b * multiplier.b, this.a);
 
         /// <summary>
         /// <para>Solid red. RGBA is (1, 0, 0, 1).</para>
         /// </summary>
-        public static Color red
-        {
-            get
-            {
-                return new Color(1f, 0f, 0f, 1f);
-            }
-        }
+        public static Color red =>
+            new Color(1f, 0f, 0f, 1f);
         /// <summary>
         /// <para>Solid green. RGBA is (0, 1, 0, 1).</para>
         /// </summary>
-        public static Color green
-        {
-            get
-            {
-                return new Color(0f, 1f, 0f, 1f);
-            }
-        }
+        public static Color green =>
+            new Color(0f, 1f, 0f, 1f);
         /// <summary>
         /// <para>Solid blue. RGBA is (0, 0, 1, 1).</para>
         /// </summary>
-        public static Color blue
-        {
-            get
-            {
-                return new Color(0f, 0f, 1f, 1f);
-            }
-        }
+        public static Color blue =>
+            new Color(0f, 0f, 1f, 1f);
         /// <summary>
         /// <para>Solid white. RGBA is (1, 1, 1, 1).</para>
         /// </summary>
-        public static Color white
-        {
-            get
-            {
-                return new Color(1f, 1f, 1f, 1f);
-            }
-        }
+        public static Color white =>
+            new Color(1f, 1f, 1f, 1f);
         /// <summary>
         /// <para>Solid black. RGBA is (0, 0, 0, 1).</para>
         /// </summary>
-        public static Color black
-        {
-            get
-            {
-                return new Color(0f, 0f, 0f, 1f);
-            }
-        }
+        public static Color black =>
+            new Color(0f, 0f, 0f, 1f);
         /// <summary>
         /// <para>Yellow. RGBA is (1, 0.92, 0.016, 1), but the color is nice to look at!</para>
         /// </summary>
-        public static Color yellow
-        {
-            get
-            {
-                return new Color(1f, 0.9215686f, 0.01568628f, 1f);
-            }
-        }
+        public static Color yellow =>
+            new Color(1f, 0.9215686f, 0.01568628f, 1f);
         /// <summary>
         /// <para>Cyan. RGBA is (0, 1, 1, 1).</para>
         /// </summary>
-        public static Color cyan
-        {
-            get
-            {
-                return new Color(0f, 1f, 1f, 1f);
-            }
-        }
+        public static Color cyan =>
+            new Color(0f, 1f, 1f, 1f);
         /// <summary>
         /// <para>Magenta. RGBA is (1, 0, 1, 1).</para>
         /// </summary>
-        public static Color magenta
-        {
-            get
-            {
-                return new Color(1f, 0f, 1f, 1f);
-            }
-        }
+        public static Color magenta =>
+            new Color(1f, 0f, 1f, 1f);
         /// <summary>
         /// <para>Gray. RGBA is (0.5, 0.5, 0.5, 1).</para>
         /// </summary>
-        public static Color gray
-        {
-            get
-            {
-                return new Color(0.5f, 0.5f, 0.5f, 1f);
-            }
-        }
+        public static Color gray =>
+            new Color(0.5f, 0.5f, 0.5f, 1f);
         /// <summary>
         /// <para>English spelling for gray. RGBA is the same (0.5, 0.5, 0.5, 1).</para>
         /// </summary>
-        public static Color grey
-        {
-            get
-            {
-                return new Color(0.5f, 0.5f, 0.5f, 1f);
-            }
-        }
+        public static Color grey =>
+            new Color(0.5f, 0.5f, 0.5f, 1f);
         /// <summary>
         /// <para>Completely transparent. RGBA is (0, 0, 0, 0).</para>
         /// </summary>
-        public static Color clear
-        {
-            get
-            {
-                return new Color(0f, 0f, 0f, 0f);
-            }
-        }
+        public static Color clear =>
+            new Color(0f, 0f, 0f, 0f);
         /// <summary>
         /// <para>The grayscale value of the color. (Read Only)</para>
         /// </summary>
-        public float grayscale
-        {
-            get
-            {
-                return (((0.299f * this.r) + (0.587f * this.g)) + (0.114f * this.b));
-            }
-        }
+        public float grayscale =>
+            (((0.299f * this.r) + (0.587f * this.g)) + (0.114f * this.b));
         /// <summary>
         /// <para>A linear value of an sRGB color.</para>
         /// </summary>
-        public Color linear
-        {
-            get
-            {
-                return new Color(Mathf.GammaToLinearSpace(this.r), Mathf.GammaToLinearSpace(this.g), Mathf.GammaToLinearSpace(this.b), this.a);
-            }
-        }
+        public Color linear =>
+            new Color(Mathf.GammaToLinearSpace(this.r), Mathf.GammaToLinearSpace(this.g), Mathf.GammaToLinearSpace(this.b), this.a);
         /// <summary>
         /// <para>A version of the color that has had the gamma curve applied.</para>
         /// </summary>
-        public Color gamma
-        {
-            get
-            {
-                return new Color(Mathf.LinearToGammaSpace(this.r), Mathf.LinearToGammaSpace(this.g), Mathf.LinearToGammaSpace(this.b), this.a);
-            }
-        }
+        public Color gamma =>
+            new Color(Mathf.LinearToGammaSpace(this.r), Mathf.LinearToGammaSpace(this.g), Mathf.LinearToGammaSpace(this.b), this.a);
         /// <summary>
         /// <para>Returns the maximum color component value: Max(r,g,b).</para>
         /// </summary>
-        public float maxColorComponent
-        {
-            get
-            {
-                return Mathf.Max(Mathf.Max(this.r, this.g), this.b);
-            }
-        }
-        public static implicit operator Vector4(Color c)
-        {
-            return new Vector4(c.r, c.g, c.b, c.a);
-        }
+        public float maxColorComponent =>
+            Mathf.Max(Mathf.Max(this.r, this.g), this.b);
+        public static implicit operator Vector4(Color c) => 
+            new Vector4(c.r, c.g, c.b, c.a);
 
-        public static implicit operator Color(Vector4 v)
-        {
-            return new Color(v.x, v.y, v.z, v.w);
-        }
+        public static implicit operator Color(Vector4 v) => 
+            new Color(v.x, v.y, v.z, v.w);
 
         public float this[int index]
         {
@@ -439,10 +336,8 @@
         /// <returns>
         /// <para>An opaque colour with HSV matching the input.</para>
         /// </returns>
-        public static Color HSVToRGB(float H, float S, float V)
-        {
-            return HSVToRGB(H, S, V, true);
-        }
+        public static Color HSVToRGB(float H, float S, float V) => 
+            HSVToRGB(H, S, V, true);
 
         /// <summary>
         /// <para>Creates an RGB colour from HSV input.</para>

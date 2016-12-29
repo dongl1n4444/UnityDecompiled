@@ -18,10 +18,8 @@
             }
         }
 
-        public bool HasLabels()
-        {
-            return ((Event.current.type == EventType.Repaint) && ((this.leftLabel != null) && (this.rightLabel != null)));
-        }
+        public bool HasLabels() => 
+            ((Event.current.type == EventType.Repaint) && ((this.leftLabel != null) && (this.rightLabel != null)));
     }
 }
 

@@ -68,7 +68,7 @@
 
         private void BuildAssetList()
         {
-            this.m_ExportPackageItems = Enumerable.ToArray<ExportPackageItem>(GetAssetItemsForExport(Selection.assetGUIDsDeepSelection, this.m_IncludeDependencies));
+            this.m_ExportPackageItems = GetAssetItemsForExport(Selection.assetGUIDsDeepSelection, this.m_IncludeDependencies).ToArray<ExportPackageItem>();
             this.m_Tree = null;
             this.m_TreeViewState = null;
         }
@@ -121,7 +121,7 @@
                 string[] collection = new string[0];
                 guids = new HashSet<string>(AssetServer.CollectAllChildren(AssetServer.GetRootGUID(), collection));
             }
-            ExportPackageItem[] itemArray = PackageUtility.BuildExportPackageItemsList(Enumerable.ToArray<string>(guids), includeDependencies);
+            ExportPackageItem[] itemArray = PackageUtility.BuildExportPackageItemsList(guids.ToArray<string>(), includeDependencies);
             if (includeDependencies)
             {
                 if (<>f__am$cache0 == null)
@@ -130,20 +130,18 @@
                 }
                 if (Enumerable.Any<ExportPackageItem>(itemArray, <>f__am$cache0))
                 {
-                    itemArray = PackageUtility.BuildExportPackageItemsList(Enumerable.ToArray<string>(Enumerable.Union<string>(guids, InternalEditorUtility.GetAllScriptGUIDs())), includeDependencies);
+                    itemArray = PackageUtility.BuildExportPackageItemsList(guids.Union<string>(InternalEditorUtility.GetAllScriptGUIDs()).ToArray<string>(), includeDependencies);
                 }
             }
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<ExportPackageItem, bool>(null, (IntPtr) <GetAssetItemsForExport>m__1);
             }
-            return Enumerable.ToArray<ExportPackageItem>(Enumerable.Where<ExportPackageItem>(itemArray, <>f__am$cache1));
+            return Enumerable.Where<ExportPackageItem>(itemArray, <>f__am$cache1).ToArray<ExportPackageItem>();
         }
 
-        private bool HasValidAssetList()
-        {
-            return (this.m_ExportPackageItems != null);
-        }
+        private bool HasValidAssetList() => 
+            (this.m_ExportPackageItems != null);
 
         public void OnGUI()
         {
@@ -214,13 +212,8 @@
             }
         }
 
-        public ExportPackageItem[] items
-        {
-            get
-            {
-                return this.m_ExportPackageItems;
-            }
-        }
+        public ExportPackageItem[] items =>
+            this.m_ExportPackageItems;
 
         internal static class Styles
         {

@@ -45,7 +45,7 @@
             RegenerateList();
             Type type = m_policyTypeCache[m_selectedPolicy];
             IPackerPolicy policy = Activator.CreateInstance(type) as IPackerPolicy;
-            return string.Format("{0}::{1}", type.AssemblyQualifiedName, policy.GetVersion());
+            return $"{type.AssemblyQualifiedName}::{policy.GetVersion()}";
         }
 
         /// <summary>
@@ -92,21 +92,21 @@
                     }
                     catch (Exception exception)
                     {
-                        Debug.Log(string.Format("SpritePacker failed to get types from {0}. Error: {1}", assembly.FullName, exception.Message));
+                        Debug.Log($"SpritePacker failed to get types from {assembly.FullName}. Error: {exception.Message}");
                     }
                 }
                 if (<>f__am$cache0 == null)
                 {
                     <>f__am$cache0 = new Func<Type, string>(null, (IntPtr) <RegenerateList>m__0);
                 }
-                m_policies = Enumerable.ToArray<string>(Enumerable.Select<Type, string>(list, <>f__am$cache0));
+                m_policies = Enumerable.Select<Type, string>(list, <>f__am$cache0).ToArray<string>();
                 m_policyTypeCache = new Dictionary<string, Type>();
                 foreach (Type type2 in list)
                 {
                     if (m_policyTypeCache.ContainsKey(type2.Name))
                     {
                         Type type3 = m_policyTypeCache[type2.Name];
-                        Debug.LogError(string.Format("Duplicate Sprite Packer policies found: {0} and {1}. Please rename one.", type2.FullName, type3.FullName));
+                        Debug.LogError($"Duplicate Sprite Packer policies found: {type2.FullName} and {type3.FullName}. Please rename one.");
                     }
                     else
                     {
@@ -114,7 +114,7 @@
                     }
                 }
                 m_selectedPolicy = !string.IsNullOrEmpty(PlayerSettings.spritePackerPolicy) ? PlayerSettings.spritePackerPolicy : kDefaultPolicy;
-                if (!Enumerable.Contains<string>(m_policies, m_selectedPolicy))
+                if (!m_policies.Contains<string>(m_selectedPolicy))
                 {
                     SetSelectedPolicy(kDefaultPolicy);
                 }
@@ -181,7 +181,7 @@
                 {
                     throw new ArgumentNullException();
                 }
-                if (!Enumerable.Contains<string>(m_policies, value))
+                if (!m_policies.Contains<string>(value))
                 {
                     throw new ArgumentException("Specified policy {0} is not in the policy list.", value);
                 }

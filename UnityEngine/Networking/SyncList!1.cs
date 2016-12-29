@@ -42,10 +42,8 @@
             this.SendMsg(Operation<T>.OP_CLEAR, 0);
         }
 
-        public bool Contains(T item)
-        {
-            return this.m_Objects.Contains(item);
-        }
+        public bool Contains(T item) => 
+            this.m_Objects.Contains(item);
 
         public void CopyTo(T[] array, int index)
         {
@@ -58,10 +56,8 @@
             this.SendMsg(Operation<T>.OP_DIRTY, index, this.m_Objects[index]);
         }
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return this.m_Objects.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => 
+            this.m_Objects.GetEnumerator();
 
         public void HandleMsg(NetworkReader reader)
         {
@@ -101,10 +97,8 @@
             }
         }
 
-        public int IndexOf(T item)
-        {
-            return this.m_Objects.IndexOf(item);
-        }
+        public int IndexOf(T item) => 
+            this.m_Objects.IndexOf(item);
 
         public void InitializeBehaviour(NetworkBehaviour beh, int cmdHash)
         {
@@ -179,45 +173,29 @@
         }
 
         protected abstract void SerializeItem(NetworkWriter writer, T item);
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => 
+            this.GetEnumerator();
 
         public SyncListChanged<T> Callback
         {
-            get
-            {
-                return this.m_Callback;
-            }
+            get => 
+                this.m_Callback;
             set
             {
                 this.m_Callback = value;
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return this.m_Objects.Count;
-            }
-        }
+        public int Count =>
+            this.m_Objects.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly =>
+            false;
 
         public T this[int i]
         {
-            get
-            {
-                return this.m_Objects[i];
-            }
+            get => 
+                this.m_Objects[i];
             set
             {
                 T local = this.m_Objects[i];

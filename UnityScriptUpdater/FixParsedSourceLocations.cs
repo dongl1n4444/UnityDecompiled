@@ -13,20 +13,18 @@
             base.traits = new UnityScriptLanguageTraits();
         }
 
-        private bool IsConstructorInvocation(MethodInvocationExpression node)
-        {
-            return ((node.get_Target().get_Entity() != null) && (node.get_Target().get_Entity().get_EntityType() == 0x10));
-        }
+        private bool IsConstructorInvocation(MethodInvocationExpression node) => 
+            ((node.get_Target().get_Entity() != null) && (node.get_Target().get_Entity().get_EntityType() == 0x10));
 
         public override void OnExpressionStatement(ExpressionStatement node)
         {
             base.OnExpressionStatement(node);
             base.EnsureDocumentInitialized(node);
             Expression expression = node.get_Expression();
-            SourceLocation self = base.doc.TokenSourceLocationFollowing(BooExtensions.AsLexicalInfo(expression.get_EndSourceLocation(), null), ";");
+            SourceLocation self = base.doc.TokenSourceLocationFollowing(expression.get_EndSourceLocation().AsLexicalInfo(null), ";");
             if (self != null)
             {
-                node.set_EndSourceLocation(BooExtensions.OffsetedBy(self, 0, -2));
+                node.set_EndSourceLocation(self.OffsetedBy(0, -2));
             }
         }
 
@@ -36,7 +34,7 @@
             if (this.IsConstructorInvocation(node))
             {
                 base.EnsureDocumentInitialized(node);
-                node.set_LexicalInfo(BooExtensions.AsLexicalInfo(base.doc.FindPrevious(node.get_LexicalInfo(), 'n'), node.get_LexicalInfo().get_FileName()));
+                node.set_LexicalInfo(base.doc.FindPrevious(node.get_LexicalInfo(), 'n').AsLexicalInfo(node.get_LexicalInfo().get_FileName()));
             }
         }
     }

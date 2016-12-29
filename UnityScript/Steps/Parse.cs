@@ -113,10 +113,8 @@
 
             public CompilerErrorCollection Errors
             {
-                get
-                {
-                    return this.$Errors$35;
-                }
+                get => 
+                    this.$Errors$35;
                 set
                 {
                     this.$Errors$35 = value;

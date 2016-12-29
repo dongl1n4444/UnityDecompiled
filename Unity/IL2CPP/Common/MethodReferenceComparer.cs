@@ -63,7 +63,7 @@
             return true;
         }
 
-        public static bool AreSignaturesEqual(MethodReference x, MethodReference y, [Optional, DefaultParameterValue(0)] TypeComparisonMode comparisonMode)
+        public static bool AreSignaturesEqual(MethodReference x, MethodReference y, TypeComparisonMode comparisonMode = 0)
         {
             if (x.HasThis != y.HasThis)
             {
@@ -91,15 +91,11 @@
             return true;
         }
 
-        public override bool Equals(MethodReference x, MethodReference y)
-        {
-            return AreEqual(x, y);
-        }
+        public override bool Equals(MethodReference x, MethodReference y) => 
+            AreEqual(x, y);
 
-        public override int GetHashCode(MethodReference obj)
-        {
-            return GetHashCodeFor(obj);
-        }
+        public override int GetHashCode(MethodReference obj) => 
+            GetHashCodeFor(obj);
 
         public static int GetHashCodeFor(MethodReference obj)
         {

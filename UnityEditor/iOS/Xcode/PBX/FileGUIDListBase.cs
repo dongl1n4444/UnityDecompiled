@@ -24,13 +24,8 @@
             this.files = base.GetPropertyList("files");
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
     }
 }
 

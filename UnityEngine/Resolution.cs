@@ -18,10 +18,8 @@
         /// </summary>
         public int width
         {
-            get
-            {
-                return this.m_Width;
-            }
+            get => 
+                this.m_Width;
             set
             {
                 this.m_Width = value;
@@ -32,10 +30,8 @@
         /// </summary>
         public int height
         {
-            get
-            {
-                return this.m_Height;
-            }
+            get => 
+                this.m_Height;
             set
             {
                 this.m_Height = value;
@@ -46,10 +42,8 @@
         /// </summary>
         public int refreshRate
         {
-            get
-            {
-                return this.m_RefreshRate;
-            }
+            get => 
+                this.m_RefreshRate;
             set
             {
                 this.m_RefreshRate = value;

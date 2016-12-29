@@ -636,25 +636,17 @@
             return 0f;
         }
 
-        private float GetTonemappingExposureAdjusment()
-        {
-            return ((!this.m_HDR || !this.m_UseTonemappingPreview) ? -1f : this.m_HDRValues.m_ExposureAdjustment);
-        }
+        private float GetTonemappingExposureAdjusment() => 
+            ((!this.m_HDR || !this.m_UseTonemappingPreview) ? -1f : this.m_HDRValues.m_ExposureAdjustment);
 
-        private string GetXAxisLabel(ColorBoxMode colorBoxMode)
-        {
-            return this.m_ColorBoxXAxisLabels[(int) colorBoxMode];
-        }
+        private string GetXAxisLabel(ColorBoxMode colorBoxMode) => 
+            this.m_ColorBoxXAxisLabels[(int) colorBoxMode];
 
-        private string GetYAxisLabel(ColorBoxMode colorBoxMode)
-        {
-            return this.m_ColorBoxYAxisLabels[(int) colorBoxMode];
-        }
+        private string GetYAxisLabel(ColorBoxMode colorBoxMode) => 
+            this.m_ColorBoxYAxisLabels[(int) colorBoxMode];
 
-        private string GetZAxisLabel(ColorBoxMode colorBoxMode)
-        {
-            return this.m_ColorBoxZAxisLabels[(int) colorBoxMode];
-        }
+        private string GetZAxisLabel(ColorBoxMode colorBoxMode) => 
+            this.m_ColorBoxZAxisLabels[(int) colorBoxMode];
 
         private void HandleCopyPasteEvents()
         {
@@ -775,14 +767,12 @@
             }
         }
 
-        public static Texture2D MakeTexture(int width, int height)
-        {
-            return new Texture2D(width, height, TextureFormat.RGBA32, false) { 
+        public static Texture2D MakeTexture(int width, int height) => 
+            new Texture2D(width, height, TextureFormat.RGBA32, false) { 
                 hideFlags = HideFlags.HideAndDontSave,
                 wrapMode = TextureWrapMode.Clamp,
                 hideFlags = HideFlags.HideAndDontSave
             };
-        }
 
         public void OnDestroy()
         {
@@ -982,10 +972,8 @@
             base.Repaint();
         }
 
-        private static float PhotographicTonemapping(float value, float exposureAdjustment)
-        {
-            return (1f - Mathf.Pow(2f, -exposureAdjustment * value));
-        }
+        private static float PhotographicTonemapping(float value, float exposureAdjustment) => 
+            (1f - Mathf.Pow(2f, -exposureAdjustment * value));
 
         private void PollOSColorPicker()
         {
@@ -1097,7 +1085,7 @@
                 {
                     if (((c.r > 1f) || (c.g > 1f)) || (c.b > 1f))
                     {
-                        Debug.LogError(string.Format("Invalid normalized color: {0}, normalize value: {1}", c, this.m_HDRValues.m_HDRScaleFactor));
+                        Debug.LogError($"Invalid normalized color: {c}, normalize value: {this.m_HDRValues.m_HDRScaleFactor}");
                     }
                     this.m_resetKeyboardControl = true;
                     this.SetNormalizedColor(c);
@@ -1503,21 +1491,11 @@
             }
         }
 
-        public static ColorPickerHDRConfig defaultHDRConfig
-        {
-            get
-            {
-                return m_DefaultHDRConfig;
-            }
-        }
+        public static ColorPickerHDRConfig defaultHDRConfig =>
+            m_DefaultHDRConfig;
 
-        private float fieldWidth
-        {
-            get
-            {
-                return (!this.m_HDR ? 30f : 40f);
-            }
-        }
+        private float fieldWidth =>
+            (!this.m_HDR ? 30f : 40f);
 
         public static ColorPicker get
         {
@@ -1540,21 +1518,11 @@
             }
         }
 
-        public static string presetsEditorPrefID
-        {
-            get
-            {
-                return "Color";
-            }
-        }
+        public static string presetsEditorPrefID =>
+            "Color";
 
-        public static bool visible
-        {
-            get
-            {
-                return (s_SharedColorPicker != null);
-            }
-        }
+        public static bool visible =>
+            (s_SharedColorPicker != null);
 
         private enum ColorBoxMode
         {

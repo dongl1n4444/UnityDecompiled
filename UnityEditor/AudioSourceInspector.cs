@@ -258,10 +258,8 @@
             }
         }
 
-        public Vector2 GetAxisScalars()
-        {
-            return new Vector2(this.m_MaxDistance.floatValue, 1f);
-        }
+        public Vector2 GetAxisScalars() => 
+            new Vector2(this.m_MaxDistance.floatValue, 1f);
 
         private CurveWrapper GetCurveWrapper(AnimationCurve curve, AudioCurveWrapper audioCurve)
         {
@@ -336,19 +334,13 @@
             return list.ToArray();
         }
 
-        private List<AudioCurveWrapper> GetShownAudioCurves()
-        {
-            return Enumerable.ToList<AudioCurveWrapper>(Enumerable.Where<AudioCurveWrapper>(this.m_AudioCurves, new Func<AudioCurveWrapper, bool>(this, (IntPtr) this.<GetShownAudioCurves>m__1)));
-        }
+        private List<AudioCurveWrapper> GetShownAudioCurves() => 
+            Enumerable.Where<AudioCurveWrapper>(this.m_AudioCurves, new Func<AudioCurveWrapper, bool>(this, (IntPtr) this.<GetShownAudioCurves>m__1)).ToList<AudioCurveWrapper>();
 
         private Vector3 GetSourcePos(Object target)
         {
             AudioSource source = (AudioSource) target;
-            if (source == null)
-            {
-                return new Vector3(0f, 0f, 0f);
-            }
-            return source.transform.position;
+            return source?.transform.position;
         }
 
         private void HandleLowPassFilter()

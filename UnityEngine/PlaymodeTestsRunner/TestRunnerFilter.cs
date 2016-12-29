@@ -22,15 +22,11 @@
             this.names = names;
         }
 
-        public bool Matches(string name)
-        {
-            return this.NameMatches(name);
-        }
+        public bool Matches(string name) => 
+            this.NameMatches(name);
 
-        public bool Matches(TestResult result)
-        {
-            return this.NameMatches(result.fullName);
-        }
+        public bool Matches(TestResult result) => 
+            this.NameMatches(result.fullName);
 
         private bool NameMatches(string name)
         {

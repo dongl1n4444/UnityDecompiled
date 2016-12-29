@@ -65,39 +65,19 @@
             return string.Concat(objArray1);
         }
 
-        public DateTime date
-        {
-            get
-            {
-                return this.m_Date;
-            }
-        }
+        public DateTime date =>
+            this.m_Date;
 
-        public string formattedValue
-        {
-            get
-            {
-                return this.m_FormattedValue;
-            }
-        }
+        public string formattedValue =>
+            this.m_FormattedValue;
 
         public string leaderboardID { get; set; }
 
-        public int rank
-        {
-            get
-            {
-                return this.m_Rank;
-            }
-        }
+        public int rank =>
+            this.m_Rank;
 
-        public string userID
-        {
-            get
-            {
-                return this.m_UserID;
-            }
-        }
+        public string userID =>
+            this.m_UserID;
 
         public long value { get; set; }
     }

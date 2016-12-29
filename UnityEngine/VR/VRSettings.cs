@@ -86,10 +86,8 @@
         /// </summary>
         public static float renderViewportScale
         {
-            get
-            {
-                return renderViewportScaleInternal;
-            }
+            get => 
+                renderViewportScaleInternal;
             set
             {
                 if ((value < 0f) || (value > 1f))

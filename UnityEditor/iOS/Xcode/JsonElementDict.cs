@@ -8,10 +8,8 @@
     {
         private SortedDictionary<string, JsonElement> m_PrivateValue = new SortedDictionary<string, JsonElement>();
 
-        public bool Contains(string key)
-        {
-            return this.values.ContainsKey(key);
-        }
+        public bool Contains(string key) => 
+            this.values.ContainsKey(key);
 
         public JsonElementArray CreateArray(string key)
         {
@@ -63,13 +61,8 @@
             }
         }
 
-        public IDictionary<string, JsonElement> values
-        {
-            get
-            {
-                return this.m_PrivateValue;
-            }
-        }
+        public IDictionary<string, JsonElement> values =>
+            this.m_PrivateValue;
     }
 }
 

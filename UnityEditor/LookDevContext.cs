@@ -22,10 +22,8 @@
             this.m_Properties[3].floatValue = 0f;
         }
 
-        public LookDevPropertyValue GetProperty(LookDevProperty property)
-        {
-            return this.m_Properties[(int) property];
-        }
+        public LookDevPropertyValue GetProperty(LookDevProperty property) => 
+            this.m_Properties[(int) property];
 
         public void UpdateProperty(LookDevProperty property, int value)
         {
@@ -39,10 +37,8 @@
 
         public int currentHDRIIndex
         {
-            get
-            {
-                return this.m_Properties[1].intValue;
-            }
+            get => 
+                this.m_Properties[1].intValue;
             set
             {
                 this.m_Properties[1].intValue = value;
@@ -51,39 +47,22 @@
 
         public float envRotation
         {
-            get
-            {
-                return this.m_Properties[3].floatValue;
-            }
+            get => 
+                this.m_Properties[3].floatValue;
             set
             {
                 this.m_Properties[3].floatValue = value;
             }
         }
 
-        public float exposureValue
-        {
-            get
-            {
-                return this.m_Properties[0].floatValue;
-            }
-        }
+        public float exposureValue =>
+            this.m_Properties[0].floatValue;
 
-        public int lodIndex
-        {
-            get
-            {
-                return this.m_Properties[4].intValue;
-            }
-        }
+        public int lodIndex =>
+            this.m_Properties[4].intValue;
 
-        public int shadingMode
-        {
-            get
-            {
-                return this.m_Properties[2].intValue;
-            }
-        }
+        public int shadingMode =>
+            this.m_Properties[2].intValue;
 
         [Serializable]
         public class LookDevPropertyValue

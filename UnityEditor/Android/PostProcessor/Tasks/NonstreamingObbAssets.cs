@@ -48,13 +48,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Processing OBB assets";
-            }
-        }
+        public string Name =>
+            "Processing OBB assets";
     }
 }
 

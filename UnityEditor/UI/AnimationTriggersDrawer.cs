@@ -11,10 +11,8 @@
     [CustomPropertyDrawer(typeof(AnimationTriggers), true)]
     public class AnimationTriggersDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
-        {
-            return ((4f * EditorGUIUtility.singleLineHeight) + (3f * EditorGUIUtility.standardVerticalSpacing));
-        }
+        public override float GetPropertyHeight(SerializedProperty prop, GUIContent label) => 
+            ((4f * EditorGUIUtility.singleLineHeight) + (3f * EditorGUIUtility.standardVerticalSpacing));
 
         public override void OnGUI(Rect rect, SerializedProperty prop, GUIContent label)
         {

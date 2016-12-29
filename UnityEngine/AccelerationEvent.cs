@@ -16,23 +16,13 @@
         /// <summary>
         /// <para>Value of acceleration.</para>
         /// </summary>
-        public Vector3 acceleration
-        {
-            get
-            {
-                return new Vector3(this.x, this.y, this.z);
-            }
-        }
+        public Vector3 acceleration =>
+            new Vector3(this.x, this.y, this.z);
         /// <summary>
         /// <para>Amount of time passed since last accelerometer measurement.</para>
         /// </summary>
-        public float deltaTime
-        {
-            get
-            {
-                return this.m_TimeDelta;
-            }
-        }
+        public float deltaTime =>
+            this.m_TimeDelta;
     }
 }
 

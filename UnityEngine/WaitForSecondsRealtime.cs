@@ -18,13 +18,8 @@
             this.waitTime = Time.realtimeSinceStartup + time;
         }
 
-        public override bool keepWaiting
-        {
-            get
-            {
-                return (Time.realtimeSinceStartup < this.waitTime);
-            }
-        }
+        public override bool keepWaiting =>
+            (Time.realtimeSinceStartup < this.waitTime);
     }
 }
 

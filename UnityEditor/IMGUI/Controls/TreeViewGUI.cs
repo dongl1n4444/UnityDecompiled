@@ -92,10 +92,8 @@
             }
         }
 
-        public virtual bool BeginRename(TreeViewItem item, float delay)
-        {
-            return this.GetRenameOverlay().BeginRename(item.displayName, item.id, delay);
-        }
+        public virtual bool BeginRename(TreeViewItem item, float delay) => 
+            this.GetRenameOverlay().BeginRename(item.displayName, item.id, delay);
 
         public virtual void BeginRowGUI()
         {
@@ -242,10 +240,8 @@
             }
         }
 
-        public virtual float GetContentIndent(TreeViewItem item)
-        {
-            return (this.GetFoldoutIndent(item) + s_Styles.foldoutWidth);
-        }
+        public virtual float GetContentIndent(TreeViewItem item) => 
+            (this.GetFoldoutIndent(item) + s_Styles.foldoutWidth);
 
         public virtual void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
         {
@@ -278,10 +274,8 @@
             return (this.k_BaseIndent + (item.depth * this.indentWidth));
         }
 
-        protected virtual Texture GetIconForItem(TreeViewItem item)
-        {
-            return item.icon;
-        }
+        protected virtual Texture GetIconForItem(TreeViewItem item) => 
+            item.icon;
 
         protected float GetMaxWidth(IList<TreeViewItem> rows)
         {
@@ -308,20 +302,14 @@
             return num;
         }
 
-        public virtual int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView)
-        {
-            return (int) Mathf.Floor(heightOfTreeView / this.k_LineHeight);
-        }
+        public virtual int GetNumRowsOnPageUpDown(TreeViewItem fromItem, bool pageUp, float heightOfTreeView) => 
+            ((int) Mathf.Floor(heightOfTreeView / this.k_LineHeight));
 
-        public virtual Rect GetRectForFraming(int row)
-        {
-            return this.GetRowRect(row, 1f);
-        }
+        public virtual Rect GetRectForFraming(int row) => 
+            this.GetRowRect(row, 1f);
 
-        protected RenameOverlay GetRenameOverlay()
-        {
-            return this.m_TreeView.state.renameOverlay;
-        }
+        protected RenameOverlay GetRenameOverlay() => 
+            this.m_TreeView.state.renameOverlay;
 
         public virtual Rect GetRenameRect(Rect rowRect, int row, TreeViewItem item)
         {
@@ -333,15 +321,11 @@
             return new Rect(rowRect.x + num, rowRect.y, rowRect.width - num, 16f);
         }
 
-        public virtual Rect GetRowRect(int row, float rowWidth)
-        {
-            return new Rect(0f, this.GetTopPixelOfRow(row), rowWidth, this.k_LineHeight);
-        }
+        public virtual Rect GetRowRect(int row, float rowWidth) => 
+            new Rect(0f, this.GetTopPixelOfRow(row), rowWidth, this.k_LineHeight);
 
-        private float GetTopPixelOfRow(int row)
-        {
-            return ((row * this.k_LineHeight) + this.topRowMargin);
-        }
+        private float GetTopPixelOfRow(int row) => 
+            ((row * this.k_LineHeight) + this.topRowMargin);
 
         public virtual Vector2 GetTotalSize()
         {
@@ -377,10 +361,8 @@
             }
         }
 
-        protected virtual bool IsRenaming(int id)
-        {
-            return ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == id)) && !this.GetRenameOverlay().isWaitingForDelay);
-        }
+        protected virtual bool IsRenaming(int id) => 
+            ((this.GetRenameOverlay().IsRenaming() && (this.GetRenameOverlay().userData == id)) && !this.GetRenameOverlay().isWaitingForDelay);
 
         protected virtual void OnContentGUI(Rect rect, int row, TreeViewItem item, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
         {
@@ -430,21 +412,11 @@
         {
         }
 
-        public virtual float bottomRowMargin
-        {
-            get
-            {
-                return this.k_BottomRowMargin;
-            }
-        }
+        public virtual float bottomRowMargin =>
+            this.k_BottomRowMargin;
 
-        public float halfDropBetweenHeight
-        {
-            get
-            {
-                return this.k_HalfDropBetweenHeight;
-            }
-        }
+        public float halfDropBetweenHeight =>
+            this.k_HalfDropBetweenHeight;
 
         public float iconLeftPadding { get; set; }
 
@@ -452,29 +424,14 @@
 
         public float iconRightPadding { get; set; }
 
-        public float iconTotalPadding
-        {
-            get
-            {
-                return (this.iconLeftPadding + this.iconRightPadding);
-            }
-        }
+        public float iconTotalPadding =>
+            (this.iconLeftPadding + this.iconRightPadding);
 
-        public float indentWidth
-        {
-            get
-            {
-                return (this.k_IndentWidth + this.iconTotalPadding);
-            }
-        }
+        public float indentWidth =>
+            (this.k_IndentWidth + this.iconTotalPadding);
 
-        public virtual float topRowMargin
-        {
-            get
-            {
-                return this.k_TopRowMargin;
-            }
-        }
+        public virtual float topRowMargin =>
+            this.k_TopRowMargin;
 
         [CompilerGenerated]
         private sealed class <BeginPingItem>c__AnonStorey0
@@ -526,13 +483,8 @@
                 this.insertion.overflow = new RectOffset(4, 0, 0, 0);
             }
 
-            public float foldoutWidth
-            {
-                get
-                {
-                    return TreeViewGUI.s_Styles.foldout.fixedWidth;
-                }
-            }
+            public float foldoutWidth =>
+                TreeViewGUI.s_Styles.foldout.fixedWidth;
         }
     }
 }

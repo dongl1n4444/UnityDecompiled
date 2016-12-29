@@ -8,10 +8,8 @@
     {
         private const int kLineHeight = 13;
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            return (((!EditorGUIUtility.wideMode ? 16f : 0f) + 16f) + ((((MultilineAttribute) base.attribute).lines - 1) * 13));
-        }
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 
+            (((!EditorGUIUtility.wideMode ? 16f : 0f) + 16f) + ((((MultilineAttribute) base.attribute).lines - 1) * 13));
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

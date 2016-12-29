@@ -77,10 +77,8 @@
                 base.showRootItem = false;
             }
 
-            public override bool CanBeMultiSelected(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool CanBeMultiSelected(TreeViewItem item) => 
+                false;
 
             private static void CloseLastHierarchyLevel(List<FDTreeHierarchyLevel> eventStack, int prevFrameEventIndex)
             {
@@ -147,10 +145,8 @@
                 base.m_RootItem = level.item;
             }
 
-            public override bool IsRenamingItemAllowed(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+                false;
 
             public void SetEvents(FrameDebuggerEvent[] frameEvents)
             {
@@ -185,10 +181,8 @@
             {
             }
 
-            protected override Texture GetIconForItem(TreeViewItem item)
-            {
-                return null;
-            }
+            protected override Texture GetIconForItem(TreeViewItem item) => 
+                null;
 
             protected override void OnContentGUI(Rect rect, int row, TreeViewItem itemRaw, string label, bool selected, bool focused, bool useBoldFont, bool isPinging)
             {

@@ -45,10 +45,8 @@
             return list;
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return ((this.m_TransitionsEditor != null) && this.m_TransitionsEditor.HasPreviewGUI());
-        }
+        public override bool HasPreviewGUI() => 
+            ((this.m_TransitionsEditor != null) && this.m_TransitionsEditor.HasPreviewGUI());
 
         private void Init()
         {
@@ -180,7 +178,7 @@
                 List<string> list = this.CollectParameters(this.controllerContext, parameterType);
                 if ((list.Count == 0) && valueParameterActive.boolValue)
                 {
-                    EditorGUILayout.HelpBox(string.Format("Must have at least one Parameter of type {0} in the AnimatorController", parameterType.ToString()), MessageType.Error);
+                    EditorGUILayout.HelpBox($"Must have at least one Parameter of type {parameterType.ToString()} in the AnimatorController", MessageType.Error);
                 }
                 else
                 {
@@ -215,7 +213,7 @@
                     List<string> list = this.CollectParameters(this.controllerContext, parameterType);
                     if ((list.Count == 0) && valueParameterActive.boolValue)
                     {
-                        EditorGUILayout.HelpBox(string.Format("Must have at least one Parameter of type {0} in the AnimatorController", parameterType.ToString()), MessageType.Error);
+                        EditorGUILayout.HelpBox($"Must have at least one Parameter of type {parameterType.ToString()} in the AnimatorController", MessageType.Error);
                     }
                     else
                     {
@@ -259,19 +257,14 @@
             {
                 if (this.m_ControllerContext == null)
                 {
-                    this.m_ControllerContext = (AnimatorControllerTool.tool == null) ? null : AnimatorControllerTool.tool.animatorController;
+                    this.m_ControllerContext = AnimatorControllerTool.tool?.animatorController;
                 }
                 return this.m_ControllerContext;
             }
         }
 
-        private AnimatorState state
-        {
-            get
-            {
-                return (base.target as AnimatorState);
-            }
-        }
+        private AnimatorState state =>
+            (base.target as AnimatorState);
     }
 }
 

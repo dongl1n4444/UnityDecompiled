@@ -17,7 +17,6 @@
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Metadata;
 
-    [Extension]
     public static class Extensions
     {
         [CompilerGenerated]
@@ -66,25 +65,19 @@
         public static ITypeProviderService TypeProvider;
 
         [CompilerGenerated]
-        private static T <Chunk`1>m__10<T>(ChunkItem<T> x)
-        {
-            return x.Value;
-        }
+        private static T <Chunk`1>m__10<T>(ChunkItem<T> x) => 
+            x.Value;
 
         [CompilerGenerated]
-        private static ChunkItem<T> <Chunk`1>m__9<T>(T value, int index)
-        {
-            return new ChunkItem<T> { 
+        private static ChunkItem<T> <Chunk`1>m__9<T>(T value, int index) => 
+            new ChunkItem<T> { 
                 Index = index,
                 Value = value
             };
-        }
 
         [CompilerGenerated]
-        private static List<T> <Chunk`1>m__A<T>(IGrouping<int, ChunkItem<T>> g)
-        {
-            return Enumerable.ToList<T>(Enumerable.Select<ChunkItem<T>, T>(g, new Func<ChunkItem<T>, T>(null, <Chunk`1>m__10<T>)));
-        }
+        private static List<T> <Chunk`1>m__A<T>(IGrouping<int, ChunkItem<T>> g) => 
+            g.Select<ChunkItem<T>, T>(new Func<ChunkItem<T>, T>(null, <Chunk`1>m__10<T>)).ToList<T>();
 
         private static void AddInterfacesRecursive(TypeReference type, HashSet<TypeReference> interfaces)
         {
@@ -102,19 +95,17 @@
             }
         }
 
-        [Extension]
-        public static List<List<T>> Chunk<T>(IEnumerable<T> foo, int size)
+        public static List<List<T>> Chunk<T>(this IEnumerable<T> foo, int size)
         {
             <Chunk>c__AnonStorey3<T> storey = new <Chunk>c__AnonStorey3<T> {
                 size = size
             };
-            return Enumerable.ToList<List<T>>(Enumerable.Select<IGrouping<int, ChunkItem<T>>, List<T>>(Enumerable.GroupBy<ChunkItem<T>, int>(Enumerable.Select<T, ChunkItem<T>>(foo, new Func<T, int, ChunkItem<T>>(null, (IntPtr) <Chunk`1>m__9<T>)), new Func<ChunkItem<T>, int>(storey, (IntPtr) this.<>m__0)), new Func<IGrouping<int, ChunkItem<T>>, List<T>>(null, (IntPtr) <Chunk`1>m__A<T>)));
+            return foo.Select<T, ChunkItem<T>>(new Func<T, int, ChunkItem<T>>(null, (IntPtr) <Chunk`1>m__9<T>)).GroupBy<ChunkItem<T>, int>(new Func<ChunkItem<T>, int>(storey, (IntPtr) this.<>m__0)).Select<IGrouping<int, ChunkItem<T>>, List<T>>(new Func<IGrouping<int, ChunkItem<T>>, List<T>>(null, (IntPtr) <Chunk`1>m__A<T>)).ToList<List<T>>();
         }
 
-        [Extension]
-        public static bool ContainsGenericParameters(MethodReference method)
+        public static bool ContainsGenericParameters(this MethodReference method)
         {
-            if (ContainsGenericParameters(method.DeclaringType))
+            if (method.DeclaringType.ContainsGenericParameters())
             {
                 return true;
             }
@@ -123,7 +114,7 @@
             {
                 foreach (TypeReference reference in method2.GenericArguments)
                 {
-                    if (ContainsGenericParameters(reference))
+                    if (reference.ContainsGenericParameters())
                     {
                         return true;
                     }
@@ -132,8 +123,7 @@
             return false;
         }
 
-        [Extension]
-        public static bool ContainsGenericParameters(TypeReference typeReference)
+        public static bool ContainsGenericParameters(this TypeReference typeReference)
         {
             if (typeReference is GenericParameter)
             {
@@ -142,32 +132,32 @@
             ArrayType type = typeReference as ArrayType;
             if (type != null)
             {
-                return ContainsGenericParameters(type.ElementType);
+                return type.ElementType.ContainsGenericParameters();
             }
             PointerType type2 = typeReference as PointerType;
             if (type2 != null)
             {
-                return ContainsGenericParameters(type2.ElementType);
+                return type2.ElementType.ContainsGenericParameters();
             }
             ByReferenceType type3 = typeReference as ByReferenceType;
             if (type3 != null)
             {
-                return ContainsGenericParameters(type3.ElementType);
+                return type3.ElementType.ContainsGenericParameters();
             }
             SentinelType type4 = typeReference as SentinelType;
             if (type4 != null)
             {
-                return ContainsGenericParameters(type4.ElementType);
+                return type4.ElementType.ContainsGenericParameters();
             }
             PinnedType type5 = typeReference as PinnedType;
             if (type5 != null)
             {
-                return ContainsGenericParameters(type5.ElementType);
+                return type5.ElementType.ContainsGenericParameters();
             }
             RequiredModifierType type6 = typeReference as RequiredModifierType;
             if (type6 != null)
             {
-                return ContainsGenericParameters(type6.ElementType);
+                return type6.ElementType.ContainsGenericParameters();
             }
             GenericInstanceType type7 = typeReference as GenericInstanceType;
             if (type7 != null)
@@ -176,7 +166,7 @@
                 {
                     <>f__mg$cache1 = new Func<TypeReference, bool>(null, (IntPtr) ContainsGenericParameters);
                 }
-                return Enumerable.Any<TypeReference>(type7.GenericArguments, <>f__mg$cache1);
+                return type7.GenericArguments.Any<TypeReference>(<>f__mg$cache1);
             }
             if (typeReference is TypeSpecification)
             {
@@ -185,8 +175,7 @@
             return false;
         }
 
-        [Extension]
-        public static bool DerivesFrom(TypeReference type, TypeReference potentialBaseType, [Optional, DefaultParameterValue(true)] bool checkInterfaces)
+        public static bool DerivesFrom(this TypeReference type, TypeReference potentialBaseType, bool checkInterfaces = true)
         {
             while (type != null)
             {
@@ -196,7 +185,7 @@
                 }
                 if (checkInterfaces)
                 {
-                    foreach (TypeReference reference in GetInterfaces(type))
+                    foreach (TypeReference reference in type.GetInterfaces())
                     {
                         if (Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(reference, potentialBaseType, TypeComparisonMode.Exact))
                         {
@@ -204,28 +193,22 @@
                         }
                     }
                 }
-                type = GetBaseType(type);
+                type = type.GetBaseType();
             }
             return false;
         }
 
-        [Extension]
-        public static bool DerivesFromObject(TypeReference typeReference)
+        public static bool DerivesFromObject(this TypeReference typeReference)
         {
-            TypeReference baseType = GetBaseType(typeReference);
-            if (baseType == null)
-            {
-                return false;
-            }
-            return (baseType.MetadataType == MetadataType.Object);
+            TypeReference baseType = typeReference.GetBaseType();
+            return (baseType?.MetadataType == MetadataType.Object);
         }
 
-        [Extension]
-        public static TypeReference ExtractDefaultInterface(TypeDefinition type)
+        public static TypeReference ExtractDefaultInterface(this TypeDefinition type)
         {
             if (!type.IsWindowsRuntime)
             {
-                throw new ArgumentException(string.Format("Extracting default interface is only valid for Windows Runtime types. {0} is not a Windows Runtime type.", type.FullName));
+                throw new ArgumentException($"Extracting default interface is only valid for Windows Runtime types. {type.FullName} is not a Windows Runtime type.");
             }
             foreach (InterfaceImplementation implementation in type.Interfaces)
             {
@@ -237,11 +220,10 @@
                     }
                 }
             }
-            throw new InvalidProgramException(string.Format("Windows Runtime class {0} has no default interface!", type));
+            throw new InvalidProgramException($"Windows Runtime class {type} has no default interface!");
         }
 
-        [Extension]
-        public static IEnumerable<TypeReference> GetActivationFactoryTypes(TypeReference type)
+        public static IEnumerable<TypeReference> GetActivationFactoryTypes(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
             if (!definition.IsWindowsRuntime || definition.IsValueType)
@@ -252,22 +234,20 @@
             {
                 <>f__am$cache6 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <GetActivationFactoryTypes>m__6);
             }
-            return GetTypesFromSpecificAttribute(definition, "Windows.Foundation.Metadata.ActivatableAttribute", <>f__am$cache6);
+            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ActivatableAttribute", <>f__am$cache6);
         }
 
-        [Extension]
-        public static IEnumerable<TypeReference> GetAllFactoryTypes(TypeReference type)
+        public static IEnumerable<TypeReference> GetAllFactoryTypes(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
             if (!definition.IsWindowsRuntime || definition.IsValueType)
             {
                 return Enumerable.Empty<TypeReference>();
             }
-            return Enumerable.Distinct<TypeReference>(Enumerable.Concat<TypeReference>(Enumerable.Concat<TypeReference>(GetActivationFactoryTypes(definition), GetComposableFactoryTypes(definition)), GetStaticFactoryTypes(definition)), new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            return definition.GetActivationFactoryTypes().Concat<TypeReference>(definition.GetComposableFactoryTypes()).Concat<TypeReference>(definition.GetStaticFactoryTypes()).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
         }
 
-        [Extension]
-        public static TypeReference GetBaseType(TypeReference typeReference)
+        public static TypeReference GetBaseType(this TypeReference typeReference)
         {
             if (typeReference is TypeSpecification)
             {
@@ -282,24 +262,23 @@
                 SentinelType type = typeReference as SentinelType;
                 if (type != null)
                 {
-                    return GetBaseType(type.ElementType);
+                    return type.ElementType.GetBaseType();
                 }
                 PinnedType type2 = typeReference as PinnedType;
                 if (type2 != null)
                 {
-                    return GetBaseType(type2.ElementType);
+                    return type2.ElementType.GetBaseType();
                 }
                 RequiredModifierType type3 = typeReference as RequiredModifierType;
                 if (type3 != null)
                 {
-                    return GetBaseType(type3.ElementType);
+                    return type3.ElementType.GetBaseType();
                 }
             }
             return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(typeReference).Resolve(typeReference.Resolve().BaseType);
         }
 
-        [Extension]
-        public static IEnumerable<TypeReference> GetComposableFactoryTypes(TypeReference type)
+        public static IEnumerable<TypeReference> GetComposableFactoryTypes(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
             if (!definition.IsWindowsRuntime || definition.IsValueType)
@@ -310,57 +289,49 @@
             {
                 <>f__am$cache7 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <GetComposableFactoryTypes>m__7);
             }
-            return GetTypesFromSpecificAttribute(definition, "Windows.Foundation.Metadata.ComposableAttribute", <>f__am$cache7);
+            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ComposableAttribute", <>f__am$cache7);
         }
 
-        [Extension]
-        public static IEnumerable<CustomAttribute> GetConstructibleCustomAttributes(ICustomAttributeProvider customAttributeProvider)
+        public static IEnumerable<CustomAttribute> GetConstructibleCustomAttributes(this ICustomAttributeProvider customAttributeProvider)
         {
             if (<>f__am$cacheD == null)
             {
                 <>f__am$cacheD = new Func<CustomAttribute, bool>(null, (IntPtr) <GetConstructibleCustomAttributes>m__F);
             }
-            return Enumerable.Where<CustomAttribute>(customAttributeProvider.CustomAttributes, <>f__am$cacheD);
+            return customAttributeProvider.CustomAttributes.Where<CustomAttribute>(<>f__am$cacheD);
         }
 
-        [Extension]
-        public static Guid GetGuid(TypeReference type)
-        {
-            return GuidProvider.GuidFor(type);
-        }
+        public static Guid GetGuid(this TypeReference type) => 
+            GuidProvider.GuidFor(type);
 
-        [Extension]
-        public static ReadOnlyCollection<TypeReference> GetInterfaces(TypeReference type)
+        public static ReadOnlyCollection<TypeReference> GetInterfaces(this TypeReference type)
         {
             HashSet<TypeReference> interfaces = new HashSet<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
             AddInterfacesRecursive(type, interfaces);
-            return Enumerable.ToList<TypeReference>(interfaces).AsReadOnly();
+            return interfaces.ToList<TypeReference>().AsReadOnly();
         }
 
-        [Extension]
-        public static ReadOnlyCollection<MethodReference> GetMethods(TypeReference type)
+        public static ReadOnlyCollection<MethodReference> GetMethods(this TypeReference type)
         {
             if (<>f__am$cache1 == null)
             {
                 <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetMethods>m__1);
             }
-            return GetMethods(type, <>f__am$cache1);
+            return type.GetMethods(<>f__am$cache1);
         }
 
-        [Extension]
-        private static ReadOnlyCollection<MethodReference> GetMethods(TypeReference type, Func<MethodDefinition, bool> filter)
+        private static ReadOnlyCollection<MethodReference> GetMethods(this TypeReference type, Func<MethodDefinition, bool> filter)
         {
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
             List<MethodReference> list = new List<MethodReference>();
-            foreach (MethodDefinition definition in Enumerable.Where<MethodDefinition>(type.Resolve().Methods, filter))
+            foreach (MethodDefinition definition in type.Resolve().Methods.Where<MethodDefinition>(filter))
             {
                 list.Add(resolver.Resolve(definition));
             }
             return list.AsReadOnly();
         }
 
-        [Extension]
-        public static TypeReference GetNonPinnedAndNonByReferenceType(TypeReference type)
+        public static TypeReference GetNonPinnedAndNonByReferenceType(this TypeReference type)
         {
             type = Naming.RemoveModifiers(type);
             TypeReference elementType = type;
@@ -377,8 +348,7 @@
             return elementType;
         }
 
-        [Extension]
-        public static MethodReference GetOverridenInterfaceMethod(MethodReference overridingMethod, IEnumerable<TypeReference> candidateInterfaces)
+        public static MethodReference GetOverridenInterfaceMethod(this MethodReference overridingMethod, IEnumerable<TypeReference> candidateInterfaces)
         {
             <GetOverridenInterfaceMethod>c__AnonStorey2 storey = new <GetOverridenInterfaceMethod>c__AnonStorey2 {
                 overridingMethod = overridingMethod
@@ -388,7 +358,7 @@
             {
                 if (definition.Overrides.Count != 1)
                 {
-                    throw new InvalidOperationException(string.Format("Cannot choose overriden method for '{0}'", storey.overridingMethod.FullName));
+                    throw new InvalidOperationException($"Cannot choose overriden method for '{storey.overridingMethod.FullName}'");
                 }
                 return Unity.IL2CPP.ILPreProcessor.TypeResolver.For(storey.overridingMethod.DeclaringType, storey.overridingMethod).Resolve(definition.Overrides[0]);
             }
@@ -396,11 +366,10 @@
             {
                 <>f__am$cache8 = new Func<TypeReference, IEnumerable<MethodReference>>(null, (IntPtr) <GetOverridenInterfaceMethod>m__8);
             }
-            return Enumerable.FirstOrDefault<MethodReference>(Enumerable.SelectMany<TypeReference, MethodReference>(candidateInterfaces, <>f__am$cache8), new Func<MethodReference, bool>(storey, (IntPtr) this.<>m__0));
+            return candidateInterfaces.SelectMany<TypeReference, MethodReference>(<>f__am$cache8).FirstOrDefault<MethodReference>(new Func<MethodReference, bool>(storey, (IntPtr) this.<>m__0));
         }
 
-        [Extension]
-        public static IEnumerable<TypeReference> GetStaticFactoryTypes(TypeReference type)
+        public static IEnumerable<TypeReference> GetStaticFactoryTypes(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
             if (!definition.IsWindowsRuntime || definition.IsValueType)
@@ -411,30 +380,26 @@
             {
                 <>f__am$cache5 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <GetStaticFactoryTypes>m__5);
             }
-            return GetTypesFromSpecificAttribute(definition, "Windows.Foundation.Metadata.StaticAttribute", <>f__am$cache5);
+            return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.StaticAttribute", <>f__am$cache5);
         }
 
-        [Extension, DebuggerHidden]
-        public static IEnumerable<TypeDefinition> GetTypeHierarchy(TypeDefinition type)
-        {
-            return new <GetTypeHierarchy>c__Iterator0 { 
+        [DebuggerHidden]
+        public static IEnumerable<TypeDefinition> GetTypeHierarchy(this TypeDefinition type) => 
+            new <GetTypeHierarchy>c__Iterator0 { 
                 type = type,
                 <$>type = type,
                 $PC = -2
             };
-        }
 
-        [Extension]
-        private static IEnumerable<TypeReference> GetTypesFromSpecificAttribute(TypeDefinition type, string attributeName, Func<CustomAttribute, TypeReference> customAttributeSelector)
+        private static IEnumerable<TypeReference> GetTypesFromSpecificAttribute(this TypeDefinition type, string attributeName, Func<CustomAttribute, TypeReference> customAttributeSelector)
         {
             <GetTypesFromSpecificAttribute>c__AnonStorey1 storey = new <GetTypesFromSpecificAttribute>c__AnonStorey1 {
                 attributeName = attributeName
             };
-            return Enumerable.Select<CustomAttribute, TypeReference>(Enumerable.Where<CustomAttribute>(type.CustomAttributes, new Func<CustomAttribute, bool>(storey, (IntPtr) this.<>m__0)), customAttributeSelector);
+            return type.CustomAttributes.Where<CustomAttribute>(new Func<CustomAttribute, bool>(storey, (IntPtr) this.<>m__0)).Select<CustomAttribute, TypeReference>(customAttributeSelector);
         }
 
-        [Extension]
-        public static TypeReference GetUnderlyingEnumType(TypeReference type)
+        public static TypeReference GetUnderlyingEnumType(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
             if (definition == null)
@@ -449,21 +414,19 @@
             {
                 <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetUnderlyingEnumType>m__2);
             }
-            return Enumerable.Single<FieldDefinition>(definition.Fields, <>f__am$cache2).FieldType;
+            return definition.Fields.Single<FieldDefinition>(<>f__am$cache2).FieldType;
         }
 
-        [Extension]
-        public static ReadOnlyCollection<MethodReference> GetVirtualMethods(TypeReference type)
+        public static ReadOnlyCollection<MethodReference> GetVirtualMethods(this TypeReference type)
         {
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetVirtualMethods>m__0);
             }
-            return GetMethods(type, <>f__am$cache0);
+            return type.GetMethods(<>f__am$cache0);
         }
 
-        [Extension]
-        public static bool HasActivationFactories(TypeReference type)
+        public static bool HasActivationFactories(this TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
             if (!definition.IsWindowsRuntime || definition.IsValueType)
@@ -474,11 +437,10 @@
             {
                 <>f__am$cache4 = new Func<CustomAttribute, bool>(null, (IntPtr) <HasActivationFactories>m__4);
             }
-            return Enumerable.Any<CustomAttribute>(definition.CustomAttributes, <>f__am$cache4);
+            return definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cache4);
         }
 
-        [Extension]
-        public static bool HasFinalizer(TypeDefinition type)
+        public static bool HasFinalizer(this TypeDefinition type)
         {
             if (type.IsInterface)
             {
@@ -492,24 +454,22 @@
             {
                 return false;
             }
-            if (!HasFinalizer(type.BaseType.Resolve()))
+            if (!type.BaseType.Resolve().HasFinalizer())
             {
             }
-            return ((<>f__mg$cache0 != null) || (Enumerable.SingleOrDefault<MethodDefinition>(type.Methods, <>f__mg$cache0) != null));
+            return ((<>f__mg$cache0 != null) || (type.Methods.SingleOrDefault<MethodDefinition>(<>f__mg$cache0) != null));
         }
 
-        [Extension]
-        public static bool HasStaticConstructor(TypeReference typeReference)
+        public static bool HasStaticConstructor(this TypeReference typeReference)
         {
             TypeDefinition definition = typeReference.Resolve();
             if (definition == null)
             {
             }
-            return ((<>f__mg$cache2 == null) && (Enumerable.SingleOrDefault<MethodDefinition>(definition.Methods, <>f__mg$cache2) != null));
+            return ((<>f__mg$cache2 == null) && (definition.Methods.SingleOrDefault<MethodDefinition>(<>f__mg$cache2) != null));
         }
 
-        [Extension]
-        public static bool HasStaticFields(TypeReference typeReference)
+        public static bool HasStaticFields(this TypeReference typeReference)
         {
             if (typeReference.IsArray)
             {
@@ -519,16 +479,15 @@
             {
                 <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <HasStaticFields>m__3);
             }
-            return Enumerable.Any<FieldDefinition>(typeReference.Resolve().Fields, <>f__am$cache3);
+            return typeReference.Resolve().Fields.Any<FieldDefinition>(<>f__am$cache3);
         }
 
-        [Extension]
-        public static IEnumerable<TypeReference> ImplementedComOrWindowsRuntimeInterfaces(TypeDefinition typeDefinition)
+        public static IEnumerable<TypeReference> ImplementedComOrWindowsRuntimeInterfaces(this TypeDefinition typeDefinition)
         {
             List<TypeReference> list = new List<TypeReference>();
             foreach (InterfaceImplementation implementation in typeDefinition.Interfaces)
             {
-                if (IsComOrWindowsRuntimeInterface(implementation.InterfaceType))
+                if (implementation.InterfaceType.IsComOrWindowsRuntimeInterface())
                 {
                     list.Add(implementation.InterfaceType);
                 }
@@ -536,19 +495,17 @@
             return list;
         }
 
-        [Extension]
-        public static bool IsAttribute(TypeReference type)
+        public static bool IsAttribute(this TypeReference type)
         {
             if (type.FullName == "System.Attribute")
             {
                 return true;
             }
             TypeDefinition definition = type.Resolve();
-            return (((definition != null) && (definition.BaseType != null)) && IsAttribute(definition.BaseType));
+            return (((definition != null) && (definition.BaseType != null)) && definition.BaseType.IsAttribute());
         }
 
-        [Extension]
-        public static bool IsComInterface(TypeReference type)
+        public static bool IsComInterface(this TypeReference type)
         {
             if (type.IsArray)
             {
@@ -559,27 +516,22 @@
                 return false;
             }
             TypeDefinition definition = type.Resolve();
-            return ((((definition != null) && definition.IsInterface) && definition.IsImport) && !IsWindowsRuntimeProjection(definition));
+            return ((((definition != null) && definition.IsInterface) && definition.IsImport) && !definition.IsWindowsRuntimeProjection());
         }
 
-        [Extension]
-        public static bool IsComOrWindowsRuntimeInterface(MethodDefinition method)
+        public static bool IsComOrWindowsRuntimeInterface(this MethodDefinition method)
         {
-            if (!IsComOrWindowsRuntimeMethod(method))
+            if (!method.IsComOrWindowsRuntimeMethod())
             {
                 return false;
             }
             return method.DeclaringType.IsInterface;
         }
 
-        [Extension]
-        public static bool IsComOrWindowsRuntimeInterface(MethodReference method)
-        {
-            return IsComOrWindowsRuntimeInterface(method.Resolve());
-        }
+        public static bool IsComOrWindowsRuntimeInterface(this MethodReference method) => 
+            method.Resolve().IsComOrWindowsRuntimeInterface();
 
-        [Extension]
-        public static bool IsComOrWindowsRuntimeInterface(TypeReference type)
+        public static bool IsComOrWindowsRuntimeInterface(this TypeReference type)
         {
             if (type.IsArray)
             {
@@ -598,18 +550,17 @@
             {
                 return false;
             }
-            return IsComOrWindowsRuntimeType(definition);
+            return definition.IsComOrWindowsRuntimeType();
         }
 
-        [Extension]
-        public static bool IsComOrWindowsRuntimeMethod(MethodDefinition method)
+        public static bool IsComOrWindowsRuntimeMethod(this MethodDefinition method)
         {
             TypeDefinition declaringType = method.DeclaringType;
             if (declaringType.IsWindowsRuntime)
             {
                 return true;
             }
-            if (IsIl2CppComObject(declaringType))
+            if (declaringType.IsIl2CppComObject())
             {
                 return true;
             }
@@ -617,43 +568,32 @@
             {
                 return false;
             }
-            return ((method.IsInternalCall || IsFinalizerMethod(method)) || declaringType.IsInterface);
+            return ((method.IsInternalCall || method.IsFinalizerMethod()) || declaringType.IsInterface);
         }
 
-        [Extension]
-        public static bool IsComOrWindowsRuntimeType(TypeDefinition type)
+        public static bool IsComOrWindowsRuntimeType(this TypeDefinition type)
         {
             if (type.IsValueType)
             {
                 return false;
             }
-            if (IsDelegate(type))
+            if (type.IsDelegate())
             {
                 return false;
             }
-            return (IsIl2CppComObject(type) || (type.IsImport || type.IsWindowsRuntime));
+            return (type.IsIl2CppComObject() || (type.IsImport || type.IsWindowsRuntime));
         }
 
-        [Extension]
-        public static bool IsDefinedInMscorlib(MemberReference memberReference)
-        {
-            return (memberReference.Module.Assembly.Name.Name == "mscorlib");
-        }
+        public static bool IsDefinedInMscorlib(this MemberReference memberReference) => 
+            (memberReference.Module.Assembly.Name.Name == "mscorlib");
 
-        [Extension]
-        public static bool IsDefinedInUnityEngine(MemberReference memberReference)
-        {
-            return memberReference.Module.Assembly.Name.Name.Contains("UnityEngine");
-        }
+        public static bool IsDefinedInUnityEngine(this MemberReference memberReference) => 
+            memberReference.Module.Assembly.Name.Name.Contains("UnityEngine");
 
-        [Extension]
-        public static bool IsDelegate(TypeDefinition type)
-        {
-            return ((type.BaseType != null) && (type.BaseType.FullName == "System.MulticastDelegate"));
-        }
+        public static bool IsDelegate(this TypeDefinition type) => 
+            ((type.BaseType != null) && (type.BaseType.FullName == "System.MulticastDelegate"));
 
-        [Extension]
-        public static bool IsEnum(TypeReference type)
+        public static bool IsEnum(this TypeReference type)
         {
             if (type.IsArray)
             {
@@ -664,21 +604,13 @@
                 return false;
             }
             TypeDefinition definition = type.Resolve();
-            if (definition == null)
-            {
-                throw new Exception("Failed to resolve type reference");
-            }
-            return definition.IsEnum;
+            return definition?.IsEnum;
         }
 
-        [Extension]
-        public static bool IsFinalizerMethod(MethodDefinition method)
-        {
-            return ((((method.Name == "Finalize") && (method.ReturnType.MetadataType == MetadataType.Void)) && !method.HasParameters) && (((ushort) (method.Attributes & (MethodAttributes.CompilerControlled | MethodAttributes.Family))) != 0));
-        }
+        public static bool IsFinalizerMethod(this MethodDefinition method) => 
+            ((((method.Name == "Finalize") && (method.ReturnType.MetadataType == MetadataType.Void)) && !method.HasParameters) && (((ushort) (method.Attributes & (MethodAttributes.CompilerControlled | MethodAttributes.Family))) != 0));
 
-        [Extension]
-        public static bool IsGenericParameter(TypeReference typeReference)
+        public static bool IsGenericParameter(this TypeReference typeReference)
         {
             if (typeReference is ArrayType)
             {
@@ -695,32 +627,19 @@
             return typeReference.GetElementType().IsGenericParameter;
         }
 
-        [Extension]
-        public static bool IsIActivationFactory(TypeReference typeReference)
-        {
-            return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.IActivationFactoryTypeReference, TypeComparisonMode.Exact);
-        }
+        public static bool IsIActivationFactory(this TypeReference typeReference) => 
+            Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.IActivationFactoryTypeReference, TypeComparisonMode.Exact);
 
-        [Extension]
-        public static bool IsIl2CppComObject(TypeReference typeReference)
-        {
-            return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.Il2CppComObjectTypeReference, TypeComparisonMode.Exact);
-        }
+        public static bool IsIl2CppComObject(this TypeReference typeReference) => 
+            Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.Il2CppComObjectTypeReference, TypeComparisonMode.Exact);
 
-        [Extension]
-        public static bool IsIntegralPointerType(TypeReference typeReference)
-        {
-            return ((typeReference.MetadataType == MetadataType.IntPtr) || (typeReference.MetadataType == MetadataType.UIntPtr));
-        }
+        public static bool IsIntegralPointerType(this TypeReference typeReference) => 
+            ((typeReference.MetadataType == MetadataType.IntPtr) || (typeReference.MetadataType == MetadataType.UIntPtr));
 
-        [Extension]
-        public static bool IsIntegralType(TypeReference type)
-        {
-            return (IsSignedIntegralType(type) || IsUnsignedIntegralType(type));
-        }
+        public static bool IsIntegralType(this TypeReference type) => 
+            (type.IsSignedIntegralType() || type.IsUnsignedIntegralType());
 
-        [Extension]
-        public static bool IsInterface(TypeReference type)
+        public static bool IsInterface(this TypeReference type)
         {
             if (type.IsArray)
             {
@@ -734,14 +653,10 @@
             return ((definition != null) && definition.IsInterface);
         }
 
-        [Extension]
-        public static bool IsNativeIntegralType(TypeReference typeReference)
-        {
-            return (Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.NativeIntTypeReference, TypeComparisonMode.Exact) || Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.NativeUIntTypeReference, TypeComparisonMode.Exact));
-        }
+        public static bool IsNativeIntegralType(this TypeReference typeReference) => 
+            (Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.NativeIntTypeReference, TypeComparisonMode.Exact) || Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(typeReference, TypeProvider.NativeUIntTypeReference, TypeComparisonMode.Exact));
 
-        [Extension]
-        public static bool IsNormalStatic(FieldReference field)
+        public static bool IsNormalStatic(this FieldReference field)
         {
             FieldDefinition definition = field.Resolve();
             if (definition.IsLiteral)
@@ -760,11 +675,10 @@
             {
                 <>f__am$cache9 = new Func<CustomAttribute, bool>(null, (IntPtr) <IsNormalStatic>m__B);
             }
-            return Enumerable.All<CustomAttribute>(definition.CustomAttributes, <>f__am$cache9);
+            return definition.CustomAttributes.All<CustomAttribute>(<>f__am$cache9);
         }
 
-        [Extension]
-        public static bool IsNullable(TypeReference type)
+        public static bool IsNullable(this TypeReference type)
         {
             if (type.IsArray)
             {
@@ -775,15 +689,10 @@
                 return false;
             }
             GenericInstanceType type2 = type as GenericInstanceType;
-            if (type2 == null)
-            {
-                return false;
-            }
-            return (type2.ElementType.FullName == "System.Nullable`1");
+            return (type2?.ElementType.FullName == "System.Nullable`1");
         }
 
-        [Extension]
-        public static bool IsPrimitiveCppType(string typeName)
+        public static bool IsPrimitiveCppType(this string typeName)
         {
             if (typeName != null)
             {
@@ -858,8 +767,7 @@
             return false;
         }
 
-        [Extension]
-        public static bool IsPrimitiveType(MetadataType type)
+        public static bool IsPrimitiveType(this MetadataType type)
         {
             switch (type)
             {
@@ -880,46 +788,28 @@
             return false;
         }
 
-        [Extension]
-        public static bool IsSameType(TypeReference a, TypeReference b)
-        {
-            return Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(a, b, TypeComparisonMode.Exact);
-        }
+        public static bool IsSameType(this TypeReference a, TypeReference b) => 
+            Unity.IL2CPP.Common.TypeReferenceEqualityComparer.AreEqual(a, b, TypeComparisonMode.Exact);
 
-        [Extension]
-        public static bool IsSignedIntegralType(TypeReference type)
-        {
-            return ((((type.MetadataType == MetadataType.SByte) || (type.MetadataType == MetadataType.Int16)) || (type.MetadataType == MetadataType.Int32)) || (type.MetadataType == MetadataType.Int64));
-        }
+        public static bool IsSignedIntegralType(this TypeReference type) => 
+            ((((type.MetadataType == MetadataType.SByte) || (type.MetadataType == MetadataType.Int16)) || (type.MetadataType == MetadataType.Int32)) || (type.MetadataType == MetadataType.Int64));
 
-        [Extension]
-        public static bool IsSpecialSystemBaseType(TypeReference typeReference)
-        {
-            return (((typeReference.FullName == "System.Object") || (typeReference.FullName == "System.ValueType")) || (typeReference.FullName == "System.Enum"));
-        }
+        public static bool IsSpecialSystemBaseType(this TypeReference typeReference) => 
+            (((typeReference.FullName == "System.Object") || (typeReference.FullName == "System.ValueType")) || (typeReference.FullName == "System.Enum"));
 
-        [Extension]
-        public static bool IsStaticConstructor(MethodReference methodReference)
+        public static bool IsStaticConstructor(this MethodReference methodReference)
         {
             MethodDefinition definition = methodReference.Resolve();
-            if (definition == null)
-            {
-                return false;
-            }
-            return ((definition.IsConstructor && definition.IsStatic) && (definition.Parameters.Count == 0));
+            return ((definition?.IsConstructor && definition.IsStatic) && (definition.Parameters.Count == 0));
         }
 
-        [Extension]
-        public static bool IsStripped(MethodReference method)
-        {
-            return method.Name.StartsWith("$__Stripped");
-        }
+        public static bool IsStripped(this MethodReference method) => 
+            method.Name.StartsWith("$__Stripped");
 
-        [Extension]
-        public static bool IsStructWithNoInstanceFields(TypeReference typeReference)
+        public static bool IsStructWithNoInstanceFields(this TypeReference typeReference)
         {
             System.Boolean ReflectorVariable0;
-            if (!IsValueType(typeReference) || IsEnum(typeReference))
+            if (!typeReference.IsValueType() || typeReference.IsEnum())
             {
                 return false;
             }
@@ -935,45 +825,31 @@
             {
                 ReflectorVariable0 = false;
             }
-            return (ReflectorVariable0 ? ((<>f__am$cacheB != null) || Enumerable.All<FieldDefinition>(definition.Fields, <>f__am$cacheB)) : false);
+            return (ReflectorVariable0 ? ((<>f__am$cacheB != null) || definition.Fields.All<FieldDefinition>(<>f__am$cacheB)) : false);
         }
 
-        [Extension]
-        public static bool IsSystemArray(TypeReference typeReference)
-        {
-            return ((typeReference.FullName == "System.Array") && (typeReference.Resolve().Module.Name == "mscorlib.dll"));
-        }
+        public static bool IsSystemArray(this TypeReference typeReference) => 
+            ((typeReference.FullName == "System.Array") && (typeReference.Resolve().Module.Name == "mscorlib.dll"));
 
-        [Extension]
-        public static bool IsSystemObject(TypeReference typeReference)
-        {
-            return (typeReference.MetadataType == MetadataType.Object);
-        }
+        public static bool IsSystemObject(this TypeReference typeReference) => 
+            (typeReference.MetadataType == MetadataType.Object);
 
-        [Extension]
-        public static bool IsSystemType(TypeReference typeReference)
-        {
-            return ((typeReference.FullName == "System.Type") && (typeReference.Resolve().Module.Name == "mscorlib.dll"));
-        }
+        public static bool IsSystemType(this TypeReference typeReference) => 
+            ((typeReference.FullName == "System.Type") && (typeReference.Resolve().Module.Name == "mscorlib.dll"));
 
-        [Extension]
-        public static bool IsThreadStatic(FieldReference field)
+        public static bool IsThreadStatic(this FieldReference field)
         {
             FieldDefinition definition = field.Resolve();
             if (definition.IsStatic && definition.HasCustomAttributes)
             {
             }
-            return ((<>f__am$cacheA == null) && Enumerable.Any<CustomAttribute>(definition.CustomAttributes, <>f__am$cacheA));
+            return ((<>f__am$cacheA == null) && definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cacheA));
         }
 
-        [Extension]
-        public static bool IsUnsignedIntegralType(TypeReference type)
-        {
-            return ((((type.MetadataType == MetadataType.Byte) || (type.MetadataType == MetadataType.UInt16)) || (type.MetadataType == MetadataType.UInt32)) || (type.MetadataType == MetadataType.UInt64));
-        }
+        public static bool IsUnsignedIntegralType(this TypeReference type) => 
+            ((((type.MetadataType == MetadataType.Byte) || (type.MetadataType == MetadataType.UInt16)) || (type.MetadataType == MetadataType.UInt32)) || (type.MetadataType == MetadataType.UInt64));
 
-        [Extension]
-        public static bool IsValueType(TypeReference typeReference)
+        public static bool IsValueType(this TypeReference typeReference)
         {
             if (typeReference.IsValueType)
             {
@@ -998,48 +874,35 @@
             PinnedType type = typeReference as PinnedType;
             if (type != null)
             {
-                return IsValueType(type.ElementType);
+                return type.ElementType.IsValueType();
             }
             return typeReference.Resolve().IsValueType;
         }
 
-        [Extension]
-        public static bool IsVoid(TypeReference type)
-        {
-            return (type.MetadataType == MetadataType.Void);
-        }
+        public static bool IsVoid(this TypeReference type) => 
+            (type.MetadataType == MetadataType.Void);
 
-        [Extension]
-        public static bool IsVolatile(FieldReference fieldReference)
-        {
-            return (((fieldReference != null) && fieldReference.FieldType.IsRequiredModifier) && ((RequiredModifierType) fieldReference.FieldType).ModifierType.Name.Contains("IsVolatile"));
-        }
+        public static bool IsVolatile(this FieldReference fieldReference) => 
+            (((fieldReference != null) && fieldReference.FieldType.IsRequiredModifier) && ((RequiredModifierType) fieldReference.FieldType).ModifierType.Name.Contains("IsVolatile"));
 
-        [Extension]
-        public static bool IsWindowsRuntimeProjection(TypeDefinition type)
-        {
-            return type.IsWindowsRuntimeProjection;
-        }
+        public static bool IsWindowsRuntimeProjection(this TypeDefinition type) => 
+            type.IsWindowsRuntimeProjection;
 
-        [Extension]
-        public static bool IsWindowsRuntimeProjection(TypeReference type)
-        {
-            return type.GetElementType().IsWindowsRuntimeProjection;
-        }
+        public static bool IsWindowsRuntimeProjection(this TypeReference type) => 
+            type.GetElementType().IsWindowsRuntimeProjection;
 
-        [Extension]
-        public static bool NeedsComCallableWrapper(TypeDefinition type)
+        public static bool NeedsComCallableWrapper(this TypeDefinition type)
         {
-            if (!IsComOrWindowsRuntimeType(type))
+            if (!type.IsComOrWindowsRuntimeType())
             {
-                if (Enumerable.Any<TypeReference>(ImplementedComOrWindowsRuntimeInterfaces(type)))
+                if (type.ImplementedComOrWindowsRuntimeInterfaces().Any<TypeReference>())
                 {
                     return true;
                 }
                 while (type.BaseType != null)
                 {
                     type = type.BaseType.Resolve();
-                    if (Enumerable.Any<TypeReference>(ImplementedComOrWindowsRuntimeInterfaces(type)) || IsComOrWindowsRuntimeType(type))
+                    if (type.ImplementedComOrWindowsRuntimeInterfaces().Any<TypeReference>() || type.IsComOrWindowsRuntimeType())
                     {
                         return true;
                     }
@@ -1048,37 +911,31 @@
             return false;
         }
 
-        [Extension]
-        public static bool References(AssemblyDefinition assemblyDoingTheReferencing, AssemblyDefinition assemblyBeingReference)
+        public static bool References(this AssemblyDefinition assemblyDoingTheReferencing, AssemblyDefinition assemblyBeingReference)
         {
             if (<>f__am$cacheC == null)
             {
                 <>f__am$cacheC = new Func<AssemblyDefinition, string>(null, (IntPtr) <References>m__E);
             }
-            return Enumerable.Contains<string>(Enumerable.Select<AssemblyDefinition, string>(AssemblyDependencies.GetReferencedAssembliesFor(assemblyDoingTheReferencing), <>f__am$cacheC), assemblyBeingReference.Name.Name);
+            return AssemblyDependencies.GetReferencedAssembliesFor(assemblyDoingTheReferencing).Select<AssemblyDefinition, string>(<>f__am$cacheC).Contains<string>(assemblyBeingReference.Name.Name);
         }
 
-        [Extension]
-        public static bool ShouldProcessAsInternalCall(MethodReference methodReference)
+        public static bool ShouldProcessAsInternalCall(this MethodReference methodReference)
         {
             MethodDefinition definition = methodReference.Resolve();
             return ((definition != null) && (definition.IsInternalCall && !definition.HasGenericParameters));
         }
 
-        [Extension]
-        public static bool StoresNonFieldsInStaticFields(TypeReference type)
-        {
-            return HasActivationFactories(type);
-        }
+        public static bool StoresNonFieldsInStaticFields(this TypeReference type) => 
+            type.HasActivationFactories();
 
-        [Extension]
-        public static string ToInitializer(Guid guid)
+        public static string ToInitializer(this Guid guid)
         {
             byte[] buffer = guid.ToByteArray();
             uint num = BitConverter.ToUInt32(buffer, 0);
             ushort num2 = BitConverter.ToUInt16(buffer, 4);
             ushort num3 = BitConverter.ToUInt16(buffer, 6);
-            return ('{' + string.Format(" 0x{0:x}, 0x{1:x}, 0x{2:x}, 0x{3:x}, 0x{4:x}, 0x{5:x}, 0x{6:x}, 0x{7:x}, 0x{8:x}, 0x{9:x}, 0x{10:x} ", new object[] { num, num2, num3, buffer[8], buffer[9], buffer[10], buffer[11], buffer[12], buffer[13], buffer[14], buffer[15] }) + '}');
+            return ('{' + $" 0x{num:x}, 0x{num2:x}, 0x{num3:x}, 0x{buffer[8]:x}, 0x{buffer[9]:x}, 0x{buffer[10]:x}, 0x{buffer[11]:x}, 0x{buffer[12]:x}, 0x{buffer[13]:x}, 0x{buffer[14]:x}, 0x{buffer[15]:x} " + '}');
         }
 
         [CompilerGenerated]
@@ -1086,10 +943,8 @@
         {
             internal int size;
 
-            internal int <>m__0(Extensions.ChunkItem<T> x)
-            {
-                return (x.Index / this.size);
-            }
+            internal int <>m__0(Extensions.ChunkItem<T> x) => 
+                (x.Index / this.size);
         }
 
         [CompilerGenerated]
@@ -1097,10 +952,8 @@
         {
             internal MethodReference overridingMethod;
 
-            internal bool <>m__0(MethodReference interfaceMethod)
-            {
-                return ((this.overridingMethod.Name == interfaceMethod.Name) && VirtualMethodResolution.MethodSignaturesMatchIgnoreStaticness(interfaceMethod, this.overridingMethod));
-            }
+            internal bool <>m__0(MethodReference interfaceMethod) => 
+                ((this.overridingMethod.Name == interfaceMethod.Name) && VirtualMethodResolution.MethodSignaturesMatchIgnoreStaticness(interfaceMethod, this.overridingMethod));
         }
 
         [CompilerGenerated]
@@ -1129,7 +982,7 @@
                         break;
 
                     case 1:
-                        this.type = (this.type.BaseType == null) ? null : this.type.BaseType.Resolve();
+                        this.type = this.type.BaseType?.Resolve();
                         break;
 
                     default:
@@ -1166,28 +1019,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeDefinition>.GetEnumerator();
 
-            TypeDefinition IEnumerator<TypeDefinition>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeDefinition IEnumerator<TypeDefinition>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1195,10 +1034,8 @@
         {
             internal string attributeName;
 
-            internal bool <>m__0(CustomAttribute ca)
-            {
-                return (ca.AttributeType.FullName == this.attributeName);
-            }
+            internal bool <>m__0(CustomAttribute ca) => 
+                (ca.AttributeType.FullName == this.attributeName);
         }
 
         [StructLayout(LayoutKind.Sequential)]

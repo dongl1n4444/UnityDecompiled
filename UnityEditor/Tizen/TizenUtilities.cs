@@ -37,10 +37,8 @@
             return IsValidResponse(ExecuteSystemProcess(GetTizenShellPath(), args, "/"), true);
         }
 
-        private static string ExecuteSystemProcess(string command, string args, string workingdir)
-        {
-            return ExecuteSystemProcess(command, args, workingdir, false, "", "");
-        }
+        private static string ExecuteSystemProcess(string command, string args, string workingdir) => 
+            ExecuteSystemProcess(command, args, workingdir, false, "", "");
 
         private static string ExecuteSystemProcess(string command, string args, string workingdir, bool displayProgress, string progressTitle, string progressInfo)
         {
@@ -111,7 +109,7 @@
                 {
                     break;
                 }
-                Console.WriteLine(string.Format("SDB - No device found, will retry {0} time(s).", num));
+                Console.WriteLine($"SDB - No device found, will retry {num} time(s).");
             }
             UnityEngine.Debug.LogWarning("SDB - No device found - output:\n" + str);
             return list;
@@ -140,25 +138,30 @@
             return bundleVersion;
         }
 
-        public static bool InstallTpkPackage(string packageFile)
+        public static bool InstallTpkPackage(string installPath)
         {
             string args = "";
             if (PlayerSettings.Tizen.deploymentTargetType == 1)
             {
-                args = " -e install \"" + Path.GetFullPath("Temp/StagingArea/build/") + packageFile + "\"";
+                string[] components = new string[] { FileUtil.UnityGetDirectoryName(installPath), "Emulator", FileUtil.UnityGetFileName(installPath) };
+                args = " -e install \"" + Paths.Combine(components) + "\"";
             }
             else
             {
-                string[] textArray1 = new string[] { " -s ", PlayerSettings.Tizen.deploymentTarget, " install \"", Path.GetFullPath("Temp/StagingArea/build/"), packageFile, "\"" };
-                args = string.Concat(textArray1);
+                string[] textArray2 = new string[5];
+                textArray2[0] = " -s ";
+                textArray2[1] = PlayerSettings.Tizen.deploymentTarget;
+                textArray2[2] = " install \"";
+                string[] textArray3 = new string[] { FileUtil.UnityGetDirectoryName(installPath), "Device", FileUtil.UnityGetFileName(installPath) };
+                textArray2[3] = Paths.Combine(textArray3);
+                textArray2[4] = "\"";
+                args = string.Concat(textArray2);
             }
             return IsValidResponse(ExecuteSystemProcess(sdb_exe, args, "/"), true);
         }
 
-        internal static bool IsMobileDevice(string model)
-        {
-            return model.Contains("SM-");
-        }
+        internal static bool IsMobileDevice(string model) => 
+            model.Contains("SM-");
 
         private static bool IsValidResponse(string output, bool acceptNoError)
         {

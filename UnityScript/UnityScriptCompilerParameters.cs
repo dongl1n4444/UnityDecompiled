@@ -26,30 +26,20 @@
         [NonSerialized]
         public const int DefaultTabSize = 8;
 
-        internal UnityScriptEntityFormatter $constructor$closure$48()
-        {
-            return new UnityScriptEntityFormatter();
-        }
+        internal UnityScriptEntityFormatter $constructor$closure$48() => 
+            new UnityScriptEntityFormatter();
 
-        internal UnityScriptTypeSystem $constructor$closure$49()
-        {
-            return new UnityScriptTypeSystem();
-        }
+        internal UnityScriptTypeSystem $constructor$closure$49() => 
+            new UnityScriptTypeSystem();
 
-        internal UnityCallableResolutionService $constructor$closure$50()
-        {
-            return new UnityCallableResolutionService();
-        }
+        internal UnityCallableResolutionService $constructor$closure$50() => 
+            new UnityCallableResolutionService();
 
-        internal UnityDowncastPermissions $constructor$closure$51()
-        {
-            return new UnityDowncastPermissions();
-        }
+        internal UnityDowncastPermissions $constructor$closure$51() => 
+            new UnityDowncastPermissions();
 
-        internal UnityScriptAmbiance $constructor$closure$52()
-        {
-            return new UnityScriptAmbiance();
-        }
+        internal UnityScriptAmbiance $constructor$closure$52() => 
+            new UnityScriptAmbiance();
 
         public UnityScriptCompilerParameters() : this(true)
         {
@@ -106,10 +96,8 @@
 
         public string DisableEval
         {
-            get
-            {
-                return this.$DisableEval$24;
-            }
+            get => 
+                this.$DisableEval$24;
             set
             {
                 this.$DisableEval$24 = value;
@@ -118,10 +106,8 @@
 
         public override bool Ducky
         {
-            get
-            {
-                return !this.get_Strict();
-            }
+            get => 
+                !this.get_Strict();
             set
             {
                 throw new Exception("Ducky is always equals not Strict. Set Strict instead.");
@@ -130,10 +116,8 @@
 
         public bool Expando
         {
-            get
-            {
-                return this.$Expando$22;
-            }
+            get => 
+                this.$Expando$22;
             set
             {
                 this.$Expando$22 = value;
@@ -142,10 +126,8 @@
 
         public bool GlobalVariablesBecomeFields
         {
-            get
-            {
-                return this.$GlobalVariablesBecomeFields$23;
-            }
+            get => 
+                this.$GlobalVariablesBecomeFields$23;
             set
             {
                 this.$GlobalVariablesBecomeFields$23 = value;
@@ -154,10 +136,8 @@
 
         public List<string> Imports
         {
-            get
-            {
-                return this.$Imports$21;
-            }
+            get => 
+                this.$Imports$21;
             set
             {
                 this.$Imports$21 = value;
@@ -166,10 +146,8 @@
 
         public Type ScriptBaseType
         {
-            get
-            {
-                return this.$ScriptBaseType$19;
-            }
+            get => 
+                this.$ScriptBaseType$19;
             set
             {
                 this.$ScriptBaseType$19 = value;
@@ -178,10 +156,8 @@
 
         public string ScriptMainMethod
         {
-            get
-            {
-                return this.$ScriptMainMethod$20;
-            }
+            get => 
+                this.$ScriptMainMethod$20;
             set
             {
                 this.$ScriptMainMethod$20 = value;
@@ -190,10 +166,8 @@
 
         public int TabSize
         {
-            get
-            {
-                return this.$TabSize$25;
-            }
+            get => 
+                this.$TabSize$25;
             set
             {
                 this.$TabSize$25 = value;

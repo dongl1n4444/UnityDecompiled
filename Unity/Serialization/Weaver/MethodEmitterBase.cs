@@ -114,10 +114,8 @@
             this.Processor.Emit(OpCodes.Callvirt, this.MethodRefFor(type, name));
         }
 
-        protected static bool CanInlineLoopOn(TypeReference typeReference)
-        {
-            return (UnitySerializationLogic.IsSupportedCollection(typeReference) && !IsSystemByte(CecilUtils.ElementTypeOfCollection(typeReference)));
-        }
+        protected static bool CanInlineLoopOn(TypeReference typeReference) => 
+            (UnitySerializationLogic.IsSupportedCollection(typeReference) && !IsSystemByte(CecilUtils.ElementTypeOfCollection(typeReference)));
 
         protected void Ceq()
         {
@@ -129,10 +127,8 @@
             this.Processor.Emit(OpCodes.Clt);
         }
 
-        private TypeReference ConcreteImplementationFor(TypeDefinition stateIntefrace)
-        {
-            return new TypeReference("UnityEngine.Serialization", stateIntefrace.Name.Substring(1), this.Module, this.UnityEngineScope());
-        }
+        private TypeReference ConcreteImplementationFor(TypeDefinition stateIntefrace) => 
+            new TypeReference("UnityEngine.Serialization", stateIntefrace.Name.Substring(1), this.Module, this.UnityEngineScope());
 
         protected void ConstructAndStoreSerializableObject(FieldReference fieldRef)
         {
@@ -165,10 +161,8 @@
             this.Processor.Emit(OpCodes.Conv_I4);
         }
 
-        private MethodReference CountMethodFor(TypeReference typeReference)
-        {
-            return new MethodReference("get_Count", this.Import(typeof(int)), TypeReferenceFor(typeReference)) { HasThis = true };
-        }
+        private MethodReference CountMethodFor(TypeReference typeReference) => 
+            new MethodReference("get_Count", this.Import(typeof(int)), TypeReferenceFor(typeReference)) { HasThis = true };
 
         protected void CreateMethodDef(string methodName)
         {
@@ -178,7 +172,7 @@
             this.Processor = this.MethodDefinition.Body.GetILProcessor();
             this._variablesGenerator = new LocalVariablesGenerator(this.MethodDefinition, this.Processor);
             this.EmitMethodBody();
-            MethodBodyRocks.OptimizeMacros(this.MethodDefinition.Body);
+            this.MethodDefinition.Body.OptimizeMacros();
         }
 
         private MethodReference DefaultConstructorFor(TypeReference typeReference)
@@ -192,22 +186,18 @@
             {
                 <>f__am$cache2 = new Func<Mono.Cecil.MethodDefinition, bool>(null, (IntPtr) <DefaultConstructorFor>m__2);
             }
-            if (Enumerable.SingleOrDefault<Mono.Cecil.MethodDefinition>(definition.Methods, <>f__am$cache2) == null)
+            if (definition.Methods.SingleOrDefault<Mono.Cecil.MethodDefinition>(<>f__am$cache2) == null)
             {
                 return null;
             }
             return new MethodReference(".ctor", this.Module.TypeSystem.Void, typeReference) { HasThis = true };
         }
 
-        protected Instruction DefineLabel()
-        {
-            return this.Processor.Create(OpCodes.Nop);
-        }
+        protected Instruction DefineLabel() => 
+            this.Processor.Create(OpCodes.Nop);
 
-        protected LocalVariable DefineLocal(TypeReference type)
-        {
-            return this._variablesGenerator.Create(type);
-        }
+        protected LocalVariable DefineLocal(TypeReference type) => 
+            this._variablesGenerator.Create(type);
 
         private void Emit(OpCode opcode)
         {
@@ -330,7 +320,7 @@
             {
                 TypeReference reference2 = storey.baseTypes.Pop();
                 TypeDefinition definition = reference2.Resolve();
-                foreach (FieldDefinition definition2 in Enumerable.Where<FieldDefinition>(Enumerable.Where<FieldDefinition>(definition.Fields, new Func<FieldDefinition, bool>(this, (IntPtr) this.ShouldProcess)), new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (FieldDefinition definition2 in definition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.ShouldProcess)).Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
                 {
                     this.EmitInstructionsFor(this.ResolveGenericFieldReference(definition2));
                     if (!definition2.IsPublic && !definition2.IsFamily)
@@ -356,7 +346,7 @@
             }
             this.InjectAfterDeserialize();
             this.MethodBodySuffix();
-            MethodBodyRocks.OptimizeMacros(this.MethodDefinition.Body);
+            this.MethodDefinition.Body.OptimizeMacros();
         }
 
         protected void EmitStoreField(FieldReference fieldDef)
@@ -458,7 +448,7 @@
             {
                 <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <FilteredFields>m__0);
             }
-            return Enumerable.Where<FieldDefinition>(Enumerable.Where<FieldDefinition>(this.TypeDef.Fields, new Func<FieldDefinition, bool>(this, (IntPtr) this.ShouldProcess)), <>f__am$cache0);
+            return this.TypeDef.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.ShouldProcess)).Where<FieldDefinition>(<>f__am$cache0);
         }
 
         private static Mono.Cecil.MethodDefinition FindMethodReference(TypeDefinition typeDefinition, string name)
@@ -466,7 +456,7 @@
             <FindMethodReference>c__AnonStorey5 storey = new <FindMethodReference>c__AnonStorey5 {
                 name = name
             };
-            Mono.Cecil.MethodDefinition definition = Enumerable.FirstOrDefault<Mono.Cecil.MethodDefinition>(typeDefinition.Methods, new Func<Mono.Cecil.MethodDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            Mono.Cecil.MethodDefinition definition = typeDefinition.Methods.FirstOrDefault<Mono.Cecil.MethodDefinition>(new Func<Mono.Cecil.MethodDefinition, bool>(storey, (IntPtr) this.<>m__0));
             if (definition != null)
             {
                 return definition;
@@ -475,7 +465,7 @@
             {
                 <>f__am$cache1 = new Func<Mono.Cecil.MethodDefinition, bool>(null, (IntPtr) <FindMethodReference>m__1);
             }
-            return Enumerable.FirstOrDefault<Mono.Cecil.MethodDefinition>(Enumerable.Where<Mono.Cecil.MethodDefinition>(typeDefinition.Methods, <>f__am$cache1), new Func<Mono.Cecil.MethodDefinition, bool>(storey, (IntPtr) this.<>m__1));
+            return typeDefinition.Methods.Where<Mono.Cecil.MethodDefinition>(<>f__am$cache1).FirstOrDefault<Mono.Cecil.MethodDefinition>(new Func<Mono.Cecil.MethodDefinition, bool>(storey, (IntPtr) this.<>m__1));
         }
 
         protected MethodReference GetItemMethodRefFor(TypeReference typeReference)
@@ -493,41 +483,33 @@
             <IfTypeImplementsInterface>c__AnonStorey3 storey = new <IfTypeImplementsInterface>c__AnonStorey3 {
                 interfaceName = interfaceName
             };
-            return (Enumerable.FirstOrDefault<TypeReference>(InterfacesOf(this._typeDef), new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)) != null);
+            return (InterfacesOf(this._typeDef).FirstOrDefault<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)) != null);
         }
 
-        protected FieldReference Import(FieldInfo fieldInfo)
-        {
-            return this.Module.ImportReference(fieldInfo);
-        }
+        protected FieldReference Import(FieldInfo fieldInfo) => 
+            this.Module.ImportReference(fieldInfo);
 
-        protected TypeReference Import(System.Type type)
-        {
-            return this.Module.ImportReference(type);
-        }
+        protected TypeReference Import(System.Type type) => 
+            this.Module.ImportReference(type);
 
         protected abstract void InjectAfterDeserialize();
         protected abstract void InjectBeforeSerialize();
         [DebuggerHidden]
-        protected static IEnumerable<TypeReference> InterfacesOf(TypeDefinition typeDefinition)
-        {
-            return new <InterfacesOf>c__Iterator0 { 
+        protected static IEnumerable<TypeReference> InterfacesOf(TypeDefinition typeDefinition) => 
+            new <InterfacesOf>c__Iterator0 { 
                 typeDefinition = typeDefinition,
                 $PC = -2
             };
-        }
 
-        private static bool InvocationRequiresTypeRef(TypeReference typeRef)
-        {
-            return ((!IsUnityEngineObject(typeRef) && !UnityEngineTypePredicates.IsSerializableUnityStruct(typeRef)) && ShouldImplementIDeserializable(typeRef));
-        }
+        private static bool InvocationRequiresTypeRef(TypeReference typeRef) => 
+            ((!IsUnityEngineObject(typeRef) && !UnityEngineTypePredicates.IsSerializableUnityStruct(typeRef)) && ShouldImplementIDeserializable(typeRef));
 
         protected void InvokeMethodIfTypeImplementsInterface(string interfaceName, string methodName)
         {
             <InvokeMethodIfTypeImplementsInterface>c__AnonStorey4 storey = new <InvokeMethodIfTypeImplementsInterface>c__AnonStorey4 {
                 interfaceName = interfaceName
             };
-            TypeReference type = Enumerable.FirstOrDefault<TypeReference>(InterfacesOf(this._typeDef), new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
+            TypeReference type = InterfacesOf(this._typeDef).FirstOrDefault<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
             if (type != null)
             {
                 if (this._typeDef.IsValueType)
@@ -544,17 +526,15 @@
             }
         }
 
-        protected static bool IsEnum(TypeReference typeRef)
-        {
-            return (!typeRef.IsArray && typeRef.Resolve().IsEnum);
-        }
+        protected static bool IsEnum(TypeReference typeRef) => 
+            (!typeRef.IsArray && typeRef.Resolve().IsEnum);
 
         private static bool IsHiddenByParentClass(IEnumerable<TypeReference> parentTypes, FieldDefinition fieldDefinition, TypeDefinition processingType)
         {
             <IsHiddenByParentClass>c__AnonStorey2 storey = new <IsHiddenByParentClass>c__AnonStorey2 {
                 fieldDefinition = fieldDefinition
             };
-            return (Enumerable.Any<FieldDefinition>(processingType.Fields, new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)) || Enumerable.Any<TypeReference>(parentTypes, new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__1)));
+            return (processingType.Fields.Any<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)) || parentTypes.Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__1)));
         }
 
         protected void Isinst(TypeReference typeReference)
@@ -598,20 +578,14 @@
             return true;
         }
 
-        protected static bool IsSystemByte(TypeReference typeRef)
-        {
-            return (typeRef.FullName == "System.Byte");
-        }
+        protected static bool IsSystemByte(TypeReference typeRef) => 
+            (typeRef.FullName == "System.Byte");
 
-        private static bool IsSystemString(TypeReference typeRef)
-        {
-            return (typeRef.FullName == "System.String");
-        }
+        private static bool IsSystemString(TypeReference typeRef) => 
+            (typeRef.FullName == "System.String");
 
-        protected static bool IsUnityEngineObject(TypeReference typeRef)
-        {
-            return UnityEngineTypePredicates.IsUnityEngineObject(typeRef);
-        }
+        protected static bool IsUnityEngineObject(TypeReference typeRef) => 
+            UnityEngineTypePredicates.IsUnityEngineObject(typeRef);
 
         protected void Ldarg_0()
         {
@@ -740,17 +714,15 @@
             this.Ret();
         }
 
-        protected MethodReference MethodRefFor(System.Type type, string name)
-        {
-            return this.Module.ImportReference(type.GetMethod(name));
-        }
+        protected MethodReference MethodRefFor(System.Type type, string name) => 
+            this.Module.ImportReference(type.GetMethod(name));
 
-        protected MethodReference MethodRefFor(TypeDefinition typeDefinition, string name, [Optional, DefaultParameterValue(false)] bool checkInBaseTypes)
+        protected MethodReference MethodRefFor(TypeDefinition typeDefinition, string name, bool checkInBaseTypes = false)
         {
             Mono.Cecil.MethodDefinition method = FindMethodReference(typeDefinition, name);
             if ((method == null) && checkInBaseTypes)
             {
-                for (TypeDefinition definition2 = typeDefinition.BaseType.Resolve(); definition2 != null; definition2 = (definition2.BaseType == null) ? null : definition2.BaseType.Resolve())
+                for (TypeDefinition definition2 = typeDefinition.BaseType.Resolve(); definition2 != null; definition2 = definition2.BaseType?.Resolve())
                 {
                     method = FindMethodReference(definition2, name);
                     if (method != null)
@@ -799,20 +771,16 @@
             return "IDeserializable";
         }
 
-        protected bool NeedsDepthCheck(TypeReference type)
-        {
-            return ((type.MetadataType == MetadataType.Class) || ((type is ArrayType) || CecilUtils.IsGenericList(type)));
-        }
+        protected bool NeedsDepthCheck(TypeReference type) => 
+            ((type.MetadataType == MetadataType.Class) || ((type is ArrayType) || CecilUtils.IsGenericList(type)));
 
         protected void Newobj(MethodReference ctor)
         {
             this.Processor.Emit(OpCodes.Newobj, ctor);
         }
 
-        protected ParameterDefinition ParamDef(string name, System.Type type)
-        {
-            return new ParameterDefinition(name, Mono.Cecil.ParameterAttributes.None, this.Import(type));
-        }
+        protected ParameterDefinition ParamDef(string name, System.Type type) => 
+            new ParameterDefinition(name, Mono.Cecil.ParameterAttributes.None, this.Import(type));
 
         protected static bool RequiresAlignment(TypeReference typeRef)
         {
@@ -829,10 +797,8 @@
             return (UnitySerializationLogic.IsSupportedCollection(typeRef) && RequiresAlignment(CecilUtils.ElementTypeOfCollection(typeRef)));
         }
 
-        protected static bool RequiresBoxing(TypeReference typeRef)
-        {
-            return IsStruct(typeRef);
-        }
+        protected static bool RequiresBoxing(TypeReference typeRef) => 
+            IsStruct(typeRef);
 
         private TypeReference ResolveDeclaringType(TypeReference declaringType)
         {
@@ -860,10 +826,8 @@
             this.Emit(OpCodes.Ret);
         }
 
-        private ParameterDefinition SelfUnitySerializableParam()
-        {
-            return new ParameterDefinition("self", Mono.Cecil.ParameterAttributes.None, this.Module.ImportReference(this._serializationBridgeProvider.UnitySerializableInterface));
-        }
+        private ParameterDefinition SelfUnitySerializableParam() => 
+            new ParameterDefinition("self", Mono.Cecil.ParameterAttributes.None, this.Module.ImportReference(this._serializationBridgeProvider.UnitySerializableInterface));
 
         private MethodReference SerializationWeaverInjectedConstructorFor(TypeReference typeReference)
         {
@@ -887,10 +851,8 @@
             return this.Module.ImportReference(method);
         }
 
-        protected static bool ShouldImplementIDeserializable(TypeReference typeRef)
-        {
-            return UnitySerializationLogic.ShouldImplementIDeserializable(typeRef);
-        }
+        protected static bool ShouldImplementIDeserializable(TypeReference typeRef) => 
+            UnitySerializationLogic.ShouldImplementIDeserializable(typeRef);
 
         protected abstract bool ShouldProcess(FieldDefinition fieldDefinition);
         protected void Starg(ushort value)
@@ -910,15 +872,11 @@
             this.Processor.Emit(OpCodes.Stelem_Ref);
         }
 
-        protected static string ToPascalCase(string name)
-        {
-            return (char.ToUpper(name[0]) + name.Substring(1));
-        }
+        protected static string ToPascalCase(string name) => 
+            (char.ToUpper(name[0]) + name.Substring(1));
 
-        protected TypeReference TypeOf(FieldReference fieldDef)
-        {
-            return this.Module.ImportReference(this.TypeResolver.Resolve(fieldDef.FieldType));
-        }
+        protected TypeReference TypeOf(FieldReference fieldDef) => 
+            this.Module.ImportReference(this.TypeResolver.Resolve(fieldDef.FieldType));
 
         protected static TypeReference TypeReferenceFor(TypeReference typeReference)
         {
@@ -936,13 +894,11 @@
             {
                 <>f__am$cache3 = new Func<AssemblyNameReference, bool>(null, (IntPtr) <UnityEngineScope>m__3);
             }
-            return Enumerable.First<AssemblyNameReference>(this.Module.AssemblyReferences, <>f__am$cache3);
+            return this.Module.AssemblyReferences.First<AssemblyNameReference>(<>f__am$cache3);
         }
 
-        protected TypeReference VoidTypeRef()
-        {
-            return this.Module.TypeSystem.Void;
-        }
+        protected TypeReference VoidTypeRef() => 
+            this.Module.TypeSystem.Void;
 
         protected bool WillUnitySerialize(FieldDefinition fieldDefinition)
         {
@@ -962,7 +918,7 @@
             }
             catch (Exception exception)
             {
-                throw new Exception(string.Format("Exception while processing {0} {1}, error {2}", fieldDefinition.FieldType.FullName, fieldDefinition.FullName, exception.Message));
+                throw new Exception($"Exception while processing {fieldDefinition.FieldType.FullName} {fieldDefinition.FullName}, error {exception.Message}");
             }
             return flag;
         }
@@ -986,23 +942,13 @@
 
         protected Mono.Cecil.MethodDefinition MethodDefinition { get; set; }
 
-        protected ModuleDefinition Module
-        {
-            get
-            {
-                return this.TypeDef.Module;
-            }
-        }
+        protected ModuleDefinition Module =>
+            this.TypeDef.Module;
 
         protected ILProcessor Processor { get; set; }
 
-        protected TypeDefinition TypeDef
-        {
-            get
-            {
-                return this._typeDef;
-            }
-        }
+        protected TypeDefinition TypeDef =>
+            this._typeDef;
 
         [CompilerGenerated]
         private sealed class <EmitMethodBody>c__AnonStorey1
@@ -1010,10 +956,8 @@
             internal MethodEmitterBase $this;
             internal Stack<TypeReference> baseTypes;
 
-            internal bool <>m__0(FieldDefinition f)
-            {
-                return !MethodEmitterBase.IsHiddenByParentClass(this.baseTypes, f, this.$this.TypeDef);
-            }
+            internal bool <>m__0(FieldDefinition f) => 
+                !MethodEmitterBase.IsHiddenByParentClass(this.baseTypes, f, this.$this.TypeDef);
         }
 
         [CompilerGenerated]
@@ -1046,20 +990,14 @@
         {
             internal string name;
 
-            internal bool <>m__0(MethodDefinition m)
-            {
-                return (m.Name == this.name);
-            }
+            internal bool <>m__0(MethodDefinition m) => 
+                (m.Name == this.name);
 
-            internal bool <>m__1(MethodDefinition m)
-            {
-                return Enumerable.Any<MethodReference>(m.Overrides, new Func<MethodReference, bool>(this, (IntPtr) this.<>m__2));
-            }
+            internal bool <>m__1(MethodDefinition m) => 
+                m.Overrides.Any<MethodReference>(new Func<MethodReference, bool>(this, (IntPtr) this.<>m__2));
 
-            internal bool <>m__2(MethodReference o)
-            {
-                return (o.Name == this.name);
-            }
+            internal bool <>m__2(MethodReference o) => 
+                (o.Name == this.name);
         }
 
         [CompilerGenerated]
@@ -1067,10 +1005,8 @@
         {
             internal string interfaceName;
 
-            internal bool <>m__0(TypeReference i)
-            {
-                return (i.FullName == this.interfaceName);
-            }
+            internal bool <>m__0(TypeReference i) => 
+                (i.FullName == this.interfaceName);
         }
 
         [CompilerGenerated]
@@ -1143,7 +1079,7 @@
                     }
                     this.$locvar0.Dispose();
                 }
-                this.<current>__0 = (this.<current>__0.BaseType == null) ? null : this.<current>__0.BaseType.Resolve();
+                this.<current>__0 = this.<current>__0.BaseType?.Resolve();
             Label_00F1:
                 if (this.<current>__0 != null)
                 {
@@ -1173,28 +1109,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeReference>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Mono.Cecil.TypeReference>.GetEnumerator();
 
-            TypeReference IEnumerator<TypeReference>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            TypeReference IEnumerator<TypeReference>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1202,10 +1124,8 @@
         {
             internal string interfaceName;
 
-            internal bool <>m__0(TypeReference i)
-            {
-                return (i.FullName == this.interfaceName);
-            }
+            internal bool <>m__0(TypeReference i) => 
+                (i.FullName == this.interfaceName);
         }
 
         [CompilerGenerated]
@@ -1213,20 +1133,14 @@
         {
             internal FieldDefinition fieldDefinition;
 
-            internal bool <>m__0(FieldDefinition f)
-            {
-                return (f.Name == this.fieldDefinition.Name);
-            }
+            internal bool <>m__0(FieldDefinition f) => 
+                (f.Name == this.fieldDefinition.Name);
 
-            internal bool <>m__1(TypeReference t)
-            {
-                return Enumerable.Any<FieldDefinition>(t.Resolve().Fields, new Func<FieldDefinition, bool>(this, (IntPtr) this.<>m__2));
-            }
+            internal bool <>m__1(TypeReference t) => 
+                t.Resolve().Fields.Any<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.<>m__2));
 
-            internal bool <>m__2(FieldDefinition f)
-            {
-                return (f.Name == this.fieldDefinition.Name);
-            }
+            internal bool <>m__2(FieldDefinition f) => 
+                (f.Name == this.fieldDefinition.Name);
         }
     }
 }

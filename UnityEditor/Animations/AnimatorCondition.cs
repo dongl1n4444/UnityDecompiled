@@ -17,10 +17,8 @@
         /// </summary>
         public AnimatorConditionMode mode
         {
-            get
-            {
-                return this.m_ConditionMode;
-            }
+            get => 
+                this.m_ConditionMode;
             set
             {
                 this.m_ConditionMode = value;
@@ -31,10 +29,8 @@
         /// </summary>
         public string parameter
         {
-            get
-            {
-                return this.m_ConditionEvent;
-            }
+            get => 
+                this.m_ConditionEvent;
             set
             {
                 this.m_ConditionEvent = value;
@@ -45,10 +41,8 @@
         /// </summary>
         public float threshold
         {
-            get
-            {
-                return this.m_EventTreshold;
-            }
+            get => 
+                this.m_EventTreshold;
             set
             {
                 this.m_EventTreshold = value;

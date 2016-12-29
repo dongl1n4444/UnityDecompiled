@@ -21,10 +21,8 @@
         /// </summary>
         public Vector3 position
         {
-            get
-            {
-                return this.m_Position;
-            }
+            get => 
+                this.m_Position;
             set
             {
                 this.m_Position = value;
@@ -35,10 +33,8 @@
         /// </summary>
         public Vector3 normal
         {
-            get
-            {
-                return this.m_Normal;
-            }
+            get => 
+                this.m_Normal;
             set
             {
                 this.m_Normal = value;
@@ -49,10 +45,8 @@
         /// </summary>
         public float distance
         {
-            get
-            {
-                return this.m_Distance;
-            }
+            get => 
+                this.m_Distance;
             set
             {
                 this.m_Distance = value;
@@ -63,10 +57,8 @@
         /// </summary>
         public int mask
         {
-            get
-            {
-                return this.m_Mask;
-            }
+            get => 
+                this.m_Mask;
             set
             {
                 this.m_Mask = value;
@@ -77,10 +69,8 @@
         /// </summary>
         public bool hit
         {
-            get
-            {
-                return (this.m_Hit != 0);
-            }
+            get => 
+                (this.m_Hit != 0);
             set
             {
                 this.m_Hit = !value ? 0 : 1;

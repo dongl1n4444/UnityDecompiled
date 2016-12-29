@@ -18,37 +18,36 @@
             this.Init();
         }
 
-        private void CheckIfChild(Object subEmitter)
+        private bool CheckIfChild(Object subEmitter)
         {
-            if (subEmitter != null)
+            ParticleSystem root = base.m_ParticleSystemUI.m_ParticleEffectUI.GetRoot();
+            if (!IsChild(subEmitter as ParticleSystem, root))
             {
-                ParticleSystem root = base.m_ParticleSystemUI.m_ParticleEffectUI.GetRoot();
-                if (!IsChild(subEmitter as ParticleSystem, root))
+                string message = $"The assigned sub emitter is not a child of the current root particle system GameObject: '{root.gameObject.name}' and is therefore NOT considered a part of the current effect. Do you want to reparent it?";
+                if (!EditorUtility.DisplayDialog("Reparent GameObjects", message, "Yes, Reparent", "No, Remove"))
                 {
-                    string message = string.Format("The assigned sub emitter is not a child of the current root particle system GameObject: '{0}' and is therefore NOT considered a part of the current effect. Do you want to reparent it?", root.gameObject.name);
-                    if (EditorUtility.DisplayDialog("Reparent GameObjects", message, "Yes, Reparent", "No"))
+                    return false;
+                }
+                if (EditorUtility.IsPersistent(subEmitter))
+                {
+                    GameObject obj2 = Object.Instantiate(subEmitter) as GameObject;
+                    if (obj2 != null)
                     {
-                        if (EditorUtility.IsPersistent(subEmitter))
-                        {
-                            GameObject obj2 = Object.Instantiate(subEmitter) as GameObject;
-                            if (obj2 != null)
-                            {
-                                obj2.transform.parent = base.m_ParticleSystemUI.m_ParticleSystem.transform;
-                                obj2.transform.localPosition = Vector3.zero;
-                                obj2.transform.localRotation = Quaternion.identity;
-                            }
-                        }
-                        else
-                        {
-                            ParticleSystem system2 = subEmitter as ParticleSystem;
-                            if (system2 != null)
-                            {
-                                Undo.SetTransformParent(system2.gameObject.transform.transform, base.m_ParticleSystemUI.m_ParticleSystem.transform, "Reparent sub emitter");
-                            }
-                        }
+                        obj2.transform.parent = base.m_ParticleSystemUI.m_ParticleSystem.transform;
+                        obj2.transform.localPosition = Vector3.zero;
+                        obj2.transform.localRotation = Quaternion.identity;
+                    }
+                }
+                else
+                {
+                    ParticleSystem system2 = subEmitter as ParticleSystem;
+                    if (system2 != null)
+                    {
+                        Undo.SetTransformParent(system2.gameObject.transform.transform, base.m_ParticleSystemUI.m_ParticleSystem.transform, "Reparent sub emitter");
                     }
                 }
             }
+            return true;
         }
 
         private void CreateSubEmitter(SerializedProperty objectRefProp, int index, SubEmitterType type)
@@ -184,11 +183,17 @@
                         string str = ParticleSystemEditorUtils.CheckCircularReferences(subEmitter);
                         if (str.Length == 0)
                         {
-                            this.CheckIfChild(objectReferenceValue);
+                            if (!this.CheckIfChild(objectReferenceValue))
+                            {
+                                flag = false;
+                            }
                         }
                         else
                         {
-                            string message = string.Format("'{0}' could not be assigned as subemitter on '{1}' due to circular referencing!\nBacktrace: {2} \n\nReference will be removed.", subEmitter.gameObject.name, base.m_ParticleSystemUI.m_ParticleSystem.gameObject.name, str);
+                            string message = $"'{subEmitter.gameObject.name}' could not be assigned as subemitter on '{base.m_ParticleSystemUI.m_ParticleSystem.gameObject.name}' due to circular referencing!
+Backtrace: {str} 
+
+Reference will be removed.";
                             EditorUtility.DisplayDialog("Circular References Detected", message, "Ok");
                             flag = false;
                         }

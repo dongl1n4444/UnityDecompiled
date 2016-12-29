@@ -76,10 +76,8 @@
         internal static AnimationWindowSelection selection
         {
             [CompilerGenerated]
-            get
-            {
-                return <selection>k__BackingField;
-            }
+            get => 
+                <selection>k__BackingField;
             [CompilerGenerated]
             set
             {

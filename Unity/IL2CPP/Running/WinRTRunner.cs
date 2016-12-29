@@ -9,6 +9,7 @@
     using System.Threading;
     using Unity.IL2CPP;
     using Unity.IL2CPP.Building.ToolChains;
+    using Unity.IL2CPP.Building.ToolChains.MsvcVersions.VisualStudioAPI;
     using Unity.IL2CPP.Common;
     using Unity.TinyProfiling;
 
@@ -24,14 +25,52 @@
             return builder.ToString();
         }
 
-        public override IEnumerable<string> GetAdditionalIncludes()
+        public override IEnumerable<string> GetAdditionalIncludes() => 
+            new string[] { "windows.h", "ActivateApp.h" };
+
+        private static string GetMsBuildForVisualStudio2017()
         {
-            return new string[] { "windows.h", "ActivateApp.h" };
+            string str;
+            try
+            {
+                IEnumSetupInstances instances = new SetupConfiguration().EnumInstances();
+                object[] rgelt = new object[1];
+                while (true)
+                {
+                    int num;
+                    instances.Next(rgelt.Length, rgelt, out num);
+                    if (num == 0)
+                    {
+                        return null;
+                    }
+                    ISetupInstance2 instance = rgelt[0] as ISetupInstance2;
+                    if (instance != null)
+                    {
+                        try
+                        {
+                            string[] append = new string[] { "MSBuild", "15.0", "bin", "MSBuild.exe" };
+                            NPath path = instance.GetInstallationPath().ToNPath().Combine(append);
+                            if (path.FileExists(""))
+                            {
+                                return path.ToString();
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                str = null;
+            }
+            return str;
         }
 
         private static string GetMsBuildPathAtVersion(string msvcVersionNumber)
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(string.Format(@"SOFTWARE\Microsoft\MSBuild\ToolsVersions\{0}", msvcVersionNumber));
+            RegistryKey key = Registry.LocalMachine.OpenSubKey($"SOFTWARE\Microsoft\MSBuild\ToolsVersions\{msvcVersionNumber}");
             if (key == null)
             {
                 return null;
@@ -61,11 +100,11 @@
             NPath path = new NPath(Path.GetDirectoryName(executable)).Combine(append);
             if (!File.Exists(executable))
             {
-                throw new ArgumentException(string.Format("Specified executable (\"{0}\") does not exist!", executable));
+                throw new ArgumentException($"Specified executable ("{executable}") does not exist!");
             }
             if (!path.Exists(""))
             {
-                throw new ArgumentException(string.Format("AppX manifest was not found next to the executable at \"{0}\"!", path));
+                throw new ArgumentException($"AppX manifest was not found next to the executable at "{path}"!");
             }
             WinRTManifest.AddActivatableClasses(path);
             using (Mutex mutex = new Mutex(true, @"Global\WinRTRunnerBuild", out flag))
@@ -100,18 +139,26 @@
             get
             {
                 string str;
-                string msBuildPathAtVersion = GetMsBuildPathAtVersion("14.0");
-                if (msBuildPathAtVersion != null)
+                string text1 = GetMsBuildForVisualStudio2017();
+                if (text1 != null)
                 {
-                    str = msBuildPathAtVersion;
+                    str = text1;
                 }
                 else
                 {
-                    str = GetMsBuildPathAtVersion("12.0");
+                    string msBuildPathAtVersion = GetMsBuildPathAtVersion("14.0");
+                    if (msBuildPathAtVersion != null)
+                    {
+                        str = msBuildPathAtVersion;
+                    }
+                    else
+                    {
+                        str = GetMsBuildPathAtVersion("12.0");
+                    }
                 }
                 if (str == null)
                 {
-                    throw new Exception("Visual Studio 2013 or Visual Studio 2015 must be installed!");
+                    throw new Exception("Visual Studio 2013 or Visual Studio 2015 or Visual Studio 2017 must be installed!");
                 }
                 return str;
             }

@@ -16,10 +16,8 @@
         /// <returns>
         /// <para>The platform specific game identifier.</para>
         /// </returns>
-        public static string GetGameId(RuntimePlatform platform)
-        {
-            return UnityAdsSettings.GetGameId(platform);
-        }
+        public static string GetGameId(RuntimePlatform platform) => 
+            UnityAdsSettings.GetGameId(platform);
 
         /// <summary>
         /// <para>Returns if a specific platform is enabled.</para>
@@ -28,10 +26,8 @@
         /// <returns>
         /// <para>Boolean for the platform.</para>
         /// </returns>
-        public static bool IsPlatformEnabled(RuntimePlatform platform)
-        {
-            return UnityAdsSettings.IsPlatformEnabled(platform);
-        }
+        public static bool IsPlatformEnabled(RuntimePlatform platform) => 
+            UnityAdsSettings.IsPlatformEnabled(platform);
 
         /// <summary>
         /// <para>Sets the game identifier for the specified platform.</para>
@@ -58,10 +54,8 @@
         /// </summary>
         public static bool enabled
         {
-            get
-            {
-                return UnityAdsSettings.enabled;
-            }
+            get => 
+                UnityAdsSettings.enabled;
             set
             {
                 UnityAdsSettings.enabled = value;
@@ -73,10 +67,8 @@
         /// </summary>
         public static bool initializeOnStartup
         {
-            get
-            {
-                return UnityAdsSettings.initializeOnStartup;
-            }
+            get => 
+                UnityAdsSettings.initializeOnStartup;
             set
             {
                 UnityAdsSettings.initializeOnStartup = value;
@@ -88,10 +80,8 @@
         /// </summary>
         public static bool testMode
         {
-            get
-            {
-                return UnityAdsSettings.testMode;
-            }
+            get => 
+                UnityAdsSettings.testMode;
             set
             {
                 UnityAdsSettings.testMode = value;

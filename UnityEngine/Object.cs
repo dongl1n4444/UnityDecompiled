@@ -23,17 +23,13 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern UnityEngine.Object Internal_CloneSingleWithParent(UnityEngine.Object data, Transform parent, bool worldPositionStays);
         [ThreadAndSerializationSafe]
-        private static UnityEngine.Object Internal_InstantiateSingle(UnityEngine.Object data, Vector3 pos, Quaternion rot)
-        {
-            return INTERNAL_CALL_Internal_InstantiateSingle(data, ref pos, ref rot);
-        }
+        private static UnityEngine.Object Internal_InstantiateSingle(UnityEngine.Object data, Vector3 pos, Quaternion rot) => 
+            INTERNAL_CALL_Internal_InstantiateSingle(data, ref pos, ref rot);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern UnityEngine.Object INTERNAL_CALL_Internal_InstantiateSingle(UnityEngine.Object data, ref Vector3 pos, ref Quaternion rot);
-        private static UnityEngine.Object Internal_InstantiateSingleWithParent(UnityEngine.Object data, Transform parent, Vector3 pos, Quaternion rot)
-        {
-            return INTERNAL_CALL_Internal_InstantiateSingleWithParent(data, parent, ref pos, ref rot);
-        }
+        private static UnityEngine.Object Internal_InstantiateSingleWithParent(UnityEngine.Object data, Transform parent, Vector3 pos, Quaternion rot) => 
+            INTERNAL_CALL_Internal_InstantiateSingleWithParent(data, parent, ref pos, ref rot);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern UnityEngine.Object INTERNAL_CALL_Internal_InstantiateSingleWithParent(UnityEngine.Object data, Transform parent, ref Vector3 pos, ref Quaternion rot);
@@ -130,10 +126,8 @@
         /// <para>The array of objects found matching the type specified.</para>
         /// </returns>
         [Obsolete("Please use Resources.FindObjectsOfTypeAll instead")]
-        public static UnityEngine.Object[] FindObjectsOfTypeAll(System.Type type)
-        {
-            return Resources.FindObjectsOfTypeAll(type);
-        }
+        public static UnityEngine.Object[] FindObjectsOfTypeAll(System.Type type) => 
+            Resources.FindObjectsOfTypeAll(type);
 
         /// <summary>
         /// <para>Returns the name of the game object.</para>
@@ -152,10 +146,8 @@
             return this.m_InstanceID;
         }
 
-        public override int GetHashCode()
-        {
-            return this.m_InstanceID;
-        }
+        public override int GetHashCode() => 
+            this.m_InstanceID;
 
         public override bool Equals(object other)
         {
@@ -167,10 +159,8 @@
             return CompareBaseObjects(this, rhs);
         }
 
-        public static implicit operator bool(UnityEngine.Object exists)
-        {
-            return !CompareBaseObjects(exists, null);
-        }
+        public static implicit operator bool(UnityEngine.Object exists) => 
+            !CompareBaseObjects(exists, null);
 
         private static bool CompareBaseObjects(UnityEngine.Object lhs, UnityEngine.Object rhs)
         {
@@ -204,10 +194,8 @@
             return DoesObjectWithInstanceIDExist(o.GetInstanceID());
         }
 
-        private IntPtr GetCachedPtr()
-        {
-            return this.m_CachedPtr;
-        }
+        private IntPtr GetCachedPtr() => 
+            this.m_CachedPtr;
 
         /// <summary>
         /// <para>Clones the object original and returns the clone.</para>
@@ -283,10 +271,8 @@
         /// <para>The instantiated clone.</para>
         /// </returns>
         [TypeInferenceRule(TypeInferenceRules.TypeOfFirstArgument)]
-        public static UnityEngine.Object Instantiate(UnityEngine.Object original, Transform parent)
-        {
-            return Instantiate(original, parent, false);
-        }
+        public static UnityEngine.Object Instantiate(UnityEngine.Object original, Transform parent) => 
+            Instantiate(original, parent, false);
 
         /// <summary>
         /// <para>Clones the object original and returns the clone.</para>
@@ -316,35 +302,23 @@
             return (T) Internal_CloneSingle(original);
         }
 
-        public static T Instantiate<T>(T original, Vector3 position, Quaternion rotation) where T: UnityEngine.Object
-        {
-            return (T) Instantiate(original, position, rotation);
-        }
+        public static T Instantiate<T>(T original, Vector3 position, Quaternion rotation) where T: UnityEngine.Object => 
+            ((T) Instantiate(original, position, rotation));
 
-        public static T Instantiate<T>(T original, Vector3 position, Quaternion rotation, Transform parent) where T: UnityEngine.Object
-        {
-            return (T) Instantiate(original, position, rotation, parent);
-        }
+        public static T Instantiate<T>(T original, Vector3 position, Quaternion rotation, Transform parent) where T: UnityEngine.Object => 
+            ((T) Instantiate(original, position, rotation, parent));
 
-        public static T Instantiate<T>(T original, Transform parent) where T: UnityEngine.Object
-        {
-            return Instantiate<T>(original, parent, true);
-        }
+        public static T Instantiate<T>(T original, Transform parent) where T: UnityEngine.Object => 
+            Instantiate<T>(original, parent, true);
 
-        public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays) where T: UnityEngine.Object
-        {
-            return (T) Instantiate(original, parent, worldPositionStays);
-        }
+        public static T Instantiate<T>(T original, Transform parent, bool worldPositionStays) where T: UnityEngine.Object => 
+            ((T) Instantiate(original, parent, worldPositionStays));
 
-        public static T[] FindObjectsOfType<T>() where T: UnityEngine.Object
-        {
-            return Resources.ConvertObjects<T>(FindObjectsOfType(typeof(T)));
-        }
+        public static T[] FindObjectsOfType<T>() where T: UnityEngine.Object => 
+            Resources.ConvertObjects<T>(FindObjectsOfType(typeof(T)));
 
-        public static T FindObjectOfType<T>() where T: UnityEngine.Object
-        {
-            return (T) FindObjectOfType(typeof(T));
-        }
+        public static T FindObjectOfType<T>() where T: UnityEngine.Object => 
+            ((T) FindObjectOfType(typeof(T)));
 
         private static void CheckNullArgument(object arg, string message)
         {
@@ -372,15 +346,11 @@
             return null;
         }
 
-        public static bool operator ==(UnityEngine.Object x, UnityEngine.Object y)
-        {
-            return CompareBaseObjects(x, y);
-        }
+        public static bool operator ==(UnityEngine.Object x, UnityEngine.Object y) => 
+            CompareBaseObjects(x, y);
 
-        public static bool operator !=(UnityEngine.Object x, UnityEngine.Object y)
-        {
-            return !CompareBaseObjects(x, y);
-        }
+        public static bool operator !=(UnityEngine.Object x, UnityEngine.Object y) => 
+            !CompareBaseObjects(x, y);
     }
 }
 

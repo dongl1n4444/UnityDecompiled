@@ -29,13 +29,8 @@
             return dict;
         }
 
-        public string path
-        {
-            get
-            {
-                return this.m_Path;
-            }
-        }
+        public string path =>
+            this.m_Path;
     }
 }
 

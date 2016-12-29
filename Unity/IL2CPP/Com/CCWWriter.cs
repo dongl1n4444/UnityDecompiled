@@ -50,14 +50,14 @@
         {
             this._type = type;
             this._typeName = Naming.ForTypeNameOnly(type) + "CCW";
-            this._functionDeclaration = string.Format("extern \"C\" Il2CppIManagedObjectHolder* {0}(Il2CppObject* obj)", Naming.ForCreateComCallableWrapperFunction(type));
+            this._functionDeclaration = $"extern "C" Il2CppIManagedObjectHolder* {Naming.ForCreateComCallableWrapperFunction(type)}(Il2CppObject* obj)";
             this._interfaceMethodMappings = new List<InterfaceMethodMapping>();
             this._interfacesToImplement = new List<TypeReference>();
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <CCWWriter>m__0);
             }
-            this._canForwardMethodsToBaseClass = Enumerable.Any<TypeDefinition>(Extensions.GetTypeHierarchy(type), <>f__am$cache0);
+            this._canForwardMethodsToBaseClass = type.GetTypeHierarchy().Any<TypeDefinition>(<>f__am$cache0);
             IEnumerable<InterfaceImplementationMapping> allImplementedInteropInterfacesInTypeHierarchy = GetAllImplementedInteropInterfacesInTypeHierarchy(this._type);
             if (<>f__mg$cache0 == null)
             {
@@ -67,7 +67,7 @@
             {
                 <>f__am$cache1 = new Func<InterfaceImplementationMapping, TypeReference>(null, (IntPtr) <CCWWriter>m__1);
             }
-            IEnumerable<TypeReference> enumerable2 = Enumerable.Distinct<TypeReference>(Enumerable.Select<InterfaceImplementationMapping, TypeReference>(Enumerable.Where<InterfaceImplementationMapping>(allImplementedInteropInterfacesInTypeHierarchy, <>f__mg$cache0), <>f__am$cache1), new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
+            IEnumerable<TypeReference> enumerable2 = allImplementedInteropInterfacesInTypeHierarchy.Where<InterfaceImplementationMapping>(<>f__mg$cache0).Select<InterfaceImplementationMapping, TypeReference>(<>f__am$cache1).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
             VTable table = new VTableBuilder().VTableFor(type, null);
             foreach (TypeReference reference in enumerable2)
             {
@@ -76,18 +76,18 @@
                 {
                     <>f__am$cache2 = new Func<MethodReference, bool>(null, (IntPtr) <CCWWriter>m__2);
                 }
-                IEnumerable<MethodReference> enumerable3 = Enumerable.Where<MethodReference>(Extensions.GetMethods(reference), <>f__am$cache2);
+                IEnumerable<MethodReference> enumerable3 = reference.GetMethods().Where<MethodReference>(<>f__am$cache2);
                 bool flag = false;
                 List<InterfaceMethodMapping> collection = new List<InterfaceMethodMapping>();
                 int num2 = 0;
                 foreach (MethodReference reference2 in enumerable3)
                 {
-                    if (!Extensions.IsStripped(reference2))
+                    if (!reference2.IsStripped())
                     {
                         MethodReference managedMethod = table.Slots[num + num2];
                         collection.Add(new InterfaceMethodMapping(reference2, managedMethod));
                         num2++;
-                        if (!Extensions.IsComOrWindowsRuntimeType(managedMethod.DeclaringType.Resolve()))
+                        if (!managedMethod.DeclaringType.Resolve().IsComOrWindowsRuntimeType())
                         {
                             flag = true;
                         }
@@ -107,37 +107,29 @@
             {
                 <>f__am$cache3 = new Func<InterfaceImplementationMapping, TypeReference>(null, (IntPtr) <CCWWriter>m__3);
             }
-            this._allInteropInterfaces = Enumerable.ToArray<TypeReference>(Enumerable.Select<InterfaceImplementationMapping, TypeReference>(allImplementedInteropInterfacesInTypeHierarchy, <>f__am$cache3));
-            this._interfacesToForwardToBaseClass = Enumerable.ToArray<TypeReference>(Enumerable.Except<TypeReference>(this._allInteropInterfaces, this._interfacesToImplement, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()));
+            this._allInteropInterfaces = allImplementedInteropInterfacesInTypeHierarchy.Select<InterfaceImplementationMapping, TypeReference>(<>f__am$cache3).ToArray<TypeReference>();
+            this._interfacesToForwardToBaseClass = this._allInteropInterfaces.Except<TypeReference>(this._interfacesToImplement, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()).ToArray<TypeReference>();
         }
 
         [CompilerGenerated]
-        private static bool <CCWWriter>m__0(TypeDefinition t)
-        {
-            return Extensions.IsComOrWindowsRuntimeType(t);
-        }
+        private static bool <CCWWriter>m__0(TypeDefinition t) => 
+            t.IsComOrWindowsRuntimeType();
 
         [CompilerGenerated]
-        private static TypeReference <CCWWriter>m__1(InterfaceImplementationMapping i)
-        {
-            return i.InterfaceImplementation.InterfaceType;
-        }
+        private static TypeReference <CCWWriter>m__1(InterfaceImplementationMapping i) => 
+            i.InterfaceImplementation.InterfaceType;
 
         [CompilerGenerated]
-        private static bool <CCWWriter>m__2(MethodReference m)
-        {
-            return (m.HasThis && m.Resolve().IsVirtual);
-        }
+        private static bool <CCWWriter>m__2(MethodReference m) => 
+            (m.HasThis && m.Resolve().IsVirtual);
 
         [CompilerGenerated]
-        private static TypeReference <CCWWriter>m__3(InterfaceImplementationMapping i)
-        {
-            return i.InterfaceImplementation.InterfaceType;
-        }
+        private static TypeReference <CCWWriter>m__3(InterfaceImplementationMapping i) => 
+            i.InterfaceImplementation.InterfaceType;
 
         private static bool CanImplementInCCW(InterfaceImplementationMapping mapping)
         {
-            if (!Extensions.IsComOrWindowsRuntimeType(mapping.DeclaringType))
+            if (!mapping.DeclaringType.IsComOrWindowsRuntimeType())
             {
                 return true;
             }
@@ -145,7 +137,7 @@
             {
                 <>f__am$cache6 = new Func<CustomAttribute, bool>(null, (IntPtr) <CanImplementInCCW>m__6);
             }
-            return Enumerable.Any<CustomAttribute>(mapping.InterfaceImplementation.CustomAttributes, <>f__am$cache6);
+            return mapping.InterfaceImplementation.CustomAttributes.Any<CustomAttribute>(<>f__am$cache6);
         }
 
         private static IEnumerable<InterfaceImplementationMapping> GetAllImplementedInteropInterfacesInTypeHierarchy(TypeDefinition typeDefinition)
@@ -154,7 +146,7 @@
             {
                 <>f__am$cache5 = new Func<TypeDefinition, IEnumerable<InterfaceImplementationMapping>>(null, (IntPtr) <GetAllImplementedInteropInterfacesInTypeHierarchy>m__5);
             }
-            return Enumerable.SelectMany<TypeDefinition, InterfaceImplementationMapping>(Extensions.GetTypeHierarchy(typeDefinition), <>f__am$cache5);
+            return typeDefinition.GetTypeHierarchy().SelectMany<TypeDefinition, InterfaceImplementationMapping>(<>f__am$cache5);
         }
 
         private string GetBaseTypeName()
@@ -187,13 +179,13 @@
             writer.WriteLine(this._functionDeclaration);
             using (new BlockWriter(writer, false))
             {
-                writer.WriteLine(string.Format("return {0}::__CreateInstance(obj);", this._typeName));
+                writer.WriteLine($"return {this._typeName}::__CreateInstance(obj);");
             }
         }
 
         private void WriteGetIidsDefinition(CppCodeWriter writer)
         {
-            writer.WriteLine(string.Format("il2cpp_hresult_t STDCALL {0}::GetIids(uint32_t* iidCount, Il2CppGuid** iids)", this._typeName));
+            writer.WriteLine($"il2cpp_hresult_t STDCALL {this._typeName}::GetIids(uint32_t* iidCount, Il2CppGuid** iids)");
             using (new BlockWriter(writer, false))
             {
                 int num = 0;
@@ -204,19 +196,19 @@
                         num++;
                     }
                 }
-                writer.WriteLine(string.Format("Il2CppGuid* interfaceIds = il2cpp_codegen_marshal_allocate_array<Il2CppGuid>({0});", num));
+                writer.WriteLine($"Il2CppGuid* interfaceIds = il2cpp_codegen_marshal_allocate_array<Il2CppGuid>({num});");
                 int num3 = 0;
                 foreach (TypeReference reference2 in this._allInteropInterfaces)
                 {
                     if (reference2.Resolve().IsWindowsRuntime)
                     {
                         string str = Naming.ForTypeNameOnly(reference2);
-                        writer.WriteLine(string.Format("interfaceIds[{0}] = {1}::IID;", num3, str));
+                        writer.WriteLine($"interfaceIds[{num3}] = {str}::IID;");
                         num3++;
                     }
                 }
                 writer.WriteLine();
-                writer.WriteLine(string.Format("*iidCount = {0};", num));
+                writer.WriteLine($"*iidCount = {num};");
                 writer.WriteLine("*iids = interfaceIds;");
                 writer.WriteLine("return IL2CPP_S_OK;");
             }
@@ -255,22 +247,22 @@
 
         private void WriteQueryInterfaceDefinition(CppCodeWriter writer)
         {
-            writer.WriteLine(string.Format("il2cpp_hresult_t STDCALL {0}::QueryInterface(const Il2CppGuid& iid, void** object)", this._typeName));
+            writer.WriteLine($"il2cpp_hresult_t STDCALL {this._typeName}::QueryInterface(const Il2CppGuid& iid, void** object)");
             using (new BlockWriter(writer, false))
             {
                 if (<>f__am$cache4 == null)
                 {
                     <>f__am$cache4 = new Func<TypeReference, string>(null, (IntPtr) <WriteQueryInterfaceDefinition>m__4);
                 }
-                string str = EnumerableExtensions.AggregateWith(Enumerable.Select<TypeReference, string>(this._interfacesToForwardToBaseClass, <>f__am$cache4), " || ");
-                writer.WriteLine(string.Format("if ({0})", str));
+                string str = this._interfacesToForwardToBaseClass.Select<TypeReference, string>(<>f__am$cache4).AggregateWith(" || ");
+                writer.WriteLine($"if ({str})");
                 using (new BlockWriter(writer, false))
                 {
                     string str2 = Naming.ForVariable(this._type);
                     string str3 = Naming.ForIl2CppComObjectIdentityField();
-                    writer.WriteLine(string.Format("return (({0})GetManagedObjectInline())->{1}->QueryInterface(iid, object);", str2, str3));
+                    writer.WriteLine($"return (({str2})GetManagedObjectInline())->{str3}->QueryInterface(iid, object);");
                 }
-                writer.WriteLine(string.Format("return {0}::QueryInterface(iid, object);", this.GetBaseTypeName()));
+                writer.WriteLine($"return {this.GetBaseTypeName()}::QueryInterface(iid, object);");
             }
         }
 
@@ -281,10 +273,10 @@
                 writer.AddIncludeForTypeDefinition(reference);
             }
             string baseTypeName = this.GetBaseTypeName();
-            writer.WriteLine(string.Format("struct {0} : {1}", this._typeName, baseTypeName));
+            writer.WriteLine($"struct {this._typeName} : {baseTypeName}");
             using (new BlockWriter(writer, true))
             {
-                writer.WriteLine(string.Format("inline {0}(Il2CppObject* obj) : {1}(obj) {{}}", this._typeName, baseTypeName));
+                writer.WriteLine($"inline {this._typeName}(Il2CppObject* obj) : {baseTypeName}(obj) {{}}");
                 if (this._interfacesToForwardToBaseClass.Length > 0)
                 {
                     writer.WriteLine("virtual il2cpp_hresult_t STDCALL QueryInterface(const Il2CppGuid& iid, void** object) IL2CPP_OVERRIDE;");
@@ -305,10 +297,8 @@
         {
             internal TypeDefinition t;
 
-            internal CCWWriter.InterfaceImplementationMapping <>m__0(InterfaceImplementation i)
-            {
-                return new CCWWriter.InterfaceImplementationMapping(this.t, i);
-            }
+            internal CCWWriter.InterfaceImplementationMapping <>m__0(InterfaceImplementation i) => 
+                new CCWWriter.InterfaceImplementationMapping(this.t, i);
         }
 
         [CompilerGenerated]
@@ -326,12 +316,12 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage)
             {
-                if (Extensions.IsStripped(this.<>f__ref$0.mapping.InterfaceMethod))
+                if (this.<>f__ref$0.mapping.InterfaceMethod.IsStripped())
                 {
                     bodyWriter.WriteCommentedLine("Managed method has been stripped");
                     bodyWriter.WriteLine("return IL2CPP_E_ILLEGAL_METHOD_CALL;");
                 }
-                else if (!Extensions.IsComOrWindowsRuntimeType(this.<>f__ref$0.mapping.ManagedMethod.Resolve().DeclaringType))
+                else if (!this.<>f__ref$0.mapping.ManagedMethod.Resolve().DeclaringType.IsComOrWindowsRuntimeType())
                 {
                     IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this.<>f__ref$0.mapping.ManagedMethod, metadataUsage, methodUsage);
                     new ComCallableWrapperMethodBodyWriter(this.<>f__ref$0.mapping.ManagedMethod, this.<>f__ref$0.mapping.InterfaceMethod, this.marshalType).WriteMethodBody(bodyWriter, metadataAccess);
@@ -342,7 +332,7 @@
                     string str2 = CCWWriter.Naming.ForComTypeInterfaceFieldGetter(this.<>f__ref$0.mapping.InterfaceMethod.DeclaringType);
                     string str3 = CCWWriter.Naming.ForMethod(this.<>f__ref$0.mapping.InterfaceMethod);
                     string str4 = ComInterfaceWriter.BuildMethodParameterList(this.<>f__ref$0.mapping.ManagedMethod, this.<>f__ref$0.mapping.InterfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver.For(this.<>f__ref$0.$this._type), this.marshalType, false);
-                    bodyWriter.WriteLine(string.Format("return (({0})GetManagedObjectInline())->{1}()->{2}({3});", new object[] { str, str2, str3, str4 }));
+                    bodyWriter.WriteLine($"return (({str})GetManagedObjectInline())->{str2}()->{str3}({str4});");
                 }
             }
         }

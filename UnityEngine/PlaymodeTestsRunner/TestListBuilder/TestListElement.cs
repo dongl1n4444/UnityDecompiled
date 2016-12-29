@@ -41,10 +41,8 @@
             this.AddChildren(children);
         }
 
-        public IEnumerable<TestListElement> GetChildren()
-        {
-            return this.children;
-        }
+        public IEnumerable<TestListElement> GetChildren() => 
+            this.children;
 
         public virtual IEnumerable<TestListElement> GetFlattenedHierarchy()
         {

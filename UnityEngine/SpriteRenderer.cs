@@ -59,10 +59,8 @@
         /// </summary>
         public Sprite sprite
         {
-            get
-            {
-                return this.GetSprite_INTERNAL();
-            }
+            get => 
+                this.GetSprite_INTERNAL();
             set
             {
                 this.SetSprite_INTERNAL(value);

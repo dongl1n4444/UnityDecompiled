@@ -41,7 +41,7 @@
         {
             GenericMenu menu = new GenericMenu();
             List<Object> source = FindAssetsOfType(classNames);
-            if (Enumerable.Any<Object>(source))
+            if (source.Any<Object>())
             {
                 if (<>f__am$cache0 == null)
                 {

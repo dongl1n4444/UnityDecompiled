@@ -16,7 +16,7 @@
         {
             InflatedCollectionCollector generics = new InflatedCollectionCollector();
             GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
-            Unity.Cecil.Visitor.Extensions.Accept(type, visitor);
+            type.Accept(visitor);
             return generics;
         }
 
@@ -32,14 +32,14 @@
         public static void Collect(InflatedCollectionCollector generics, GenericInstanceType type)
         {
             GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
-            Unity.Cecil.Visitor.Extensions.Accept(type, visitor);
+            type.Accept(visitor);
         }
 
         private static InflatedCollectionCollector CollectPerAssembly(AssemblyDefinition assembly)
         {
             InflatedCollectionCollector generics = new InflatedCollectionCollector();
             GenericContextFreeVisitor visitor = new GenericContextFreeVisitor(generics);
-            Unity.Cecil.Visitor.Extensions.Accept(assembly, visitor);
+            assembly.Accept(visitor);
             return generics;
         }
 

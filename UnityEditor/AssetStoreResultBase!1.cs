@@ -23,7 +23,7 @@
             {
                 if (response.job.responseCode >= 300)
                 {
-                    this.error = string.Format("HTTP status code {0}", response.job.responseCode);
+                    this.error = $"HTTP status code {response.job.responseCode}";
                 }
                 else if (response.dict.ContainsKey("error"))
                 {

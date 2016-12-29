@@ -55,20 +55,16 @@
             return newTransition;
         }
 
-        public T AddStateMachineBehaviour<T>() where T: StateMachineBehaviour
-        {
-            return (this.AddStateMachineBehaviour(typeof(T)) as T);
-        }
+        public T AddStateMachineBehaviour<T>() where T: StateMachineBehaviour => 
+            (this.AddStateMachineBehaviour(typeof(T)) as T);
 
         /// <summary>
         /// <para>Adds a state machine behaviour class of type stateMachineBehaviourType to the AnimatorState. C# Users can use a generic version.</para>
         /// </summary>
         /// <param name="stateMachineBehaviourType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType)
-        {
-            return (StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType);
-        }
+        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType) => 
+            ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType));
 
         /// <summary>
         /// <para>Utility function to add an outgoing transition to the destination state.</para>
@@ -172,10 +168,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern MonoScript GetBehaviourMonoScript(int index);
         [Obsolete("GetMotion() is obsolete. Use motion", true)]
-        public Motion GetMotion()
-        {
-            return null;
-        }
+        public Motion GetMotion() => 
+            null;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType);
@@ -295,22 +289,12 @@
         public AnimatorStateTransition[] transitions { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
         [Obsolete("uniqueName does not exist anymore. Consider using .name instead.", true)]
-        public string uniqueName
-        {
-            get
-            {
-                return "";
-            }
-        }
+        public string uniqueName =>
+            "";
 
         [Obsolete("uniqueNameHash does not exist anymore.", true)]
-        public int uniqueNameHash
-        {
-            get
-            {
-                return -1;
-            }
-        }
+        public int uniqueNameHash =>
+            -1;
 
         /// <summary>
         /// <para>Whether or not the AnimatorStates writes back the default values for properties that are not animated by its Motion.</para>
@@ -322,10 +306,8 @@
         {
             internal AnimatorState destinationState;
 
-            internal bool <>m__0(AnimatorStateTransition t)
-            {
-                return (t.destinationState == this.destinationState);
-            }
+            internal bool <>m__0(AnimatorStateTransition t) => 
+                (t.destinationState == this.destinationState);
         }
     }
 }

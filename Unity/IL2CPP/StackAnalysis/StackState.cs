@@ -12,7 +12,7 @@
         public StackState Clone()
         {
             StackState state = new StackState();
-            foreach (Entry entry in Enumerable.Reverse<Entry>(this._entries))
+            foreach (Entry entry in this._entries.Reverse<Entry>())
             {
                 state.Entries.Push(entry.Clone());
             }
@@ -41,21 +41,11 @@
             this._entries = new Stack<Entry>(collection);
         }
 
-        public Stack<Entry> Entries
-        {
-            get
-            {
-                return this._entries;
-            }
-        }
+        public Stack<Entry> Entries =>
+            this._entries;
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return (this._entries.Count == 0);
-            }
-        }
+        public bool IsEmpty =>
+            (this._entries.Count == 0);
     }
 }
 

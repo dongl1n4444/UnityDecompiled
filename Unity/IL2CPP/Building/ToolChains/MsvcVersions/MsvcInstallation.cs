@@ -18,6 +18,10 @@
         private static Func<System.Version, int> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<System.Version, int> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cache3;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NPath <SDKDirectory>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -30,6 +34,7 @@
             System.Version version = new System.Version(10, 0);
             System.Version version2 = new System.Version(12, 0);
             System.Version version3 = new System.Version(14, 0);
+            System.Version key = new System.Version(15, 0);
             NPath visualStudioInstallationFolder = GetVisualStudioInstallationFolder(version);
             NPath visualStudioDir = GetVisualStudioInstallationFolder(version2);
             NPath path3 = GetVisualStudioInstallationFolder(version3);
@@ -57,6 +62,14 @@
                     _installations.Add(version3, installation3);
                 }
             }
+            if (Msvc15Installation.IsInstalled)
+            {
+                Msvc15Installation installation4 = new Msvc15Installation();
+                if (installation4.HasCppSDK)
+                {
+                    _installations.Add(key, installation4);
+                }
+            }
         }
 
         protected MsvcInstallation(System.Version visualStudioVersion)
@@ -71,16 +84,24 @@
             this.Version = visualStudioVersion;
         }
 
-        public abstract IEnumerable<NPath> GetIncludeDirectories();
-        public static MsvcInstallation GetInstallation(System.Version version)
+        public abstract IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Building.Architecture architecture);
+        public static MsvcInstallation GetLatestInstallationAtLeast(System.Version version)
         {
-            <GetInstallation>c__AnonStorey0 storey = new <GetInstallation>c__AnonStorey0 {
+            <GetLatestInstallationAtLeast>c__AnonStorey0 storey = new <GetLatestInstallationAtLeast>c__AnonStorey0 {
                 version = version
             };
-            System.Version version2 = Enumerable.FirstOrDefault<System.Version>(_installations.Keys, new Func<System.Version, bool>(storey, (IntPtr) this.<>m__0));
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstallationAtLeast>m__2);
+            }
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstallationAtLeast>m__3);
+            }
+            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache2).ThenByDescending<System.Version, int>(<>f__am$cache3).Where<System.Version>(new Func<System.Version, bool>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<System.Version>();
             if (version2 == null)
             {
-                throw new Exception(string.Format("MSVC Installation version {0}.{1} is not installed on current machine!", storey.version.Major, storey.version.Minor));
+                throw new Exception($"MSVC Installation version {storey.version.Major}.{storey.version.Minor} or later is not installed on current machine!");
             }
             return _installations[version2];
         }
@@ -95,7 +116,7 @@
             {
                 <>f__am$cache1 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstalled>m__1);
             }
-            System.Version version = Enumerable.FirstOrDefault<System.Version>(Enumerable.ThenByDescending<System.Version, int>(Enumerable.OrderByDescending<System.Version, int>(_installations.Keys, <>f__am$cache0), <>f__am$cache1));
+            System.Version version = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache0).ThenByDescending<System.Version, int>(<>f__am$cache1).FirstOrDefault<System.Version>();
             if (version == null)
             {
                 throw new Exception("No MSVC installations were found on the machine!");
@@ -103,7 +124,7 @@
             return _installations[version];
         }
 
-        public abstract IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Building.Architecture architecture, [Optional, DefaultParameterValue(null)] string sdkSubset);
+        public abstract IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Building.Architecture architecture, string sdkSubset = null);
         public virtual string GetPathEnvVariable(Unity.IL2CPP.Building.Architecture architecture)
         {
             NPath path;
@@ -118,7 +139,7 @@
                     string[] textArray3 = new string[] { "x86" };
                     path2 = this.SDKDirectory.Combine(textArray2).Combine(textArray3);
                 }
-                return string.Format("{0};{1}", path, path2);
+                return $"{path};{path2}";
             }
             string[] append = new string[] { "VC", "bin", "amd64" };
             path = this.VisualStudioDirectory.Combine(append);
@@ -130,17 +151,17 @@
             }
             if (path2 != null)
             {
-                return string.Format("{0};{1}", path, path2);
+                return $"{path};{path2}";
             }
             return path.ToString();
         }
 
         public virtual IEnumerable<NPath> GetPlatformMetadataReferences()
         {
-            throw new NotSupportedException(string.Format("{0} does not support platform metadata", base.GetType().Name));
+            throw new NotSupportedException($"{base.GetType().Name} does not support platform metadata");
         }
 
-        public NPath GetSDKToolPath(string toolName)
+        public virtual NPath GetSDKToolPath(string toolName)
         {
             string[] append = new string[] { "bin" };
             NPath path = this.SDKDirectory.Combine(append);
@@ -160,14 +181,14 @@
 
         public virtual NPath GetUnionMetadataDirectory()
         {
-            throw new NotSupportedException(string.Format("{0} does not support union metadata", base.GetType().Name));
+            throw new NotSupportedException($"{base.GetType().Name} does not support union metadata");
         }
 
         protected static NPath GetVisualStudioInstallationFolder(System.Version version)
         {
             if (PlatformUtils.IsWindows())
             {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(string.Format(@"SOFTWARE\Microsoft\VisualStudio\{0}.{1}_Config", version.Major, version.Minor));
+                RegistryKey key = Registry.CurrentUser.OpenSubKey($"SOFTWARE\Microsoft\VisualStudio\{version.Major}.{version.Minor}_Config");
                 if (key != null)
                 {
                     string str = (string) key.GetValue("InstallDir");
@@ -180,7 +201,7 @@
             return null;
         }
 
-        public NPath GetVSToolPath(Unity.IL2CPP.Building.Architecture architecture, string toolName)
+        public virtual NPath GetVSToolPath(Unity.IL2CPP.Building.Architecture architecture, string toolName)
         {
             string[] append = new string[] { "VC", "bin" };
             NPath path = this.VisualStudioDirectory.Combine(append);
@@ -204,21 +225,14 @@
 
         public virtual IEnumerable<NPath> GetWindowsMetadataReferences()
         {
-            throw new NotSupportedException(string.Format("{0} does not support windows metadata", base.GetType().Name));
+            throw new NotSupportedException($"{base.GetType().Name} does not support windows metadata");
         }
 
-        public virtual bool HasMetadataDirectories()
-        {
-            return false;
-        }
+        public virtual bool HasMetadataDirectories() => 
+            false;
 
-        protected bool HasCppSDK
-        {
-            get
-            {
-                return ((this.SDKDirectory != null) && this.SDKDirectory.Exists(""));
-            }
-        }
+        protected bool HasCppSDK =>
+            ((this.SDKDirectory != null) && this.SDKDirectory.Exists(""));
 
         protected NPath SDKDirectory { get; set; }
 
@@ -226,17 +240,15 @@
 
         public System.Version Version { get; set; }
 
-        protected NPath VisualStudioDirectory { get; set; }
+        protected virtual NPath VisualStudioDirectory { get; set; }
 
         [CompilerGenerated]
-        private sealed class <GetInstallation>c__AnonStorey0
+        private sealed class <GetLatestInstallationAtLeast>c__AnonStorey0
         {
             internal Version version;
 
-            internal bool <>m__0(Version k)
-            {
-                return (k == this.version);
-            }
+            internal bool <>m__0(Version v) => 
+                (v >= this.version);
         }
     }
 }

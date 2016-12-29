@@ -7,20 +7,10 @@ internal class WinRTIl2CppPlatformProvider : BaseIl2CppPlatformProvider
     {
     }
 
-    public override bool enableStackTraces
-    {
-        get
-        {
-            return false;
-        }
-    }
+    public override bool enableStackTraces =>
+        false;
 
-    public override bool loadSymbols
-    {
-        get
-        {
-            return true;
-        }
-    }
+    public override bool loadSymbols =>
+        true;
 }
 

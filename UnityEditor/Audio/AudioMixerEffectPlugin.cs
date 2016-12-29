@@ -41,15 +41,11 @@
             return false;
         }
 
-        public override int GetSampleRate()
-        {
-            return AudioSettings.outputSampleRate;
-        }
+        public override int GetSampleRate() => 
+            AudioSettings.outputSampleRate;
 
-        public override bool IsPluginEditableAndEnabled()
-        {
-            return (AudioMixerController.EditingTargetSnapshot() && !this.m_Effect.bypass);
-        }
+        public override bool IsPluginEditableAndEnabled() => 
+            (AudioMixerController.EditingTargetSnapshot() && !this.m_Effect.bypass);
 
         public override bool SetFloatParameter(string name, float value)
         {

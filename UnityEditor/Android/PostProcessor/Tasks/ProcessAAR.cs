@@ -54,18 +54,15 @@
                 if (!File.Exists(Path.Combine(str7, AndroidLibraries.ProjectPropertiesFileName)))
                 {
                     int num3 = context.Get<int>("TargetSDKVersion");
-                    File.WriteAllText(Path.Combine(str7, AndroidLibraries.ProjectPropertiesFileName), string.Format("android.library=true\n\ntarget=android-{0}", num3));
+                    File.WriteAllText(Path.Combine(str7, AndroidLibraries.ProjectPropertiesFileName), $"android.library=true
+
+target=android-{num3}");
                 }
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Processing AAR plugins";
-            }
-        }
+        public string Name =>
+            "Processing AAR plugins";
     }
 }
 

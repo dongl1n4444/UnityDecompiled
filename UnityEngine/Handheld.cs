@@ -71,10 +71,8 @@
         /// <param name="bgColor">Background color.</param>
         /// <param name="controlMode">How the playback controls are to be displayed.</param>
         /// <param name="scalingMode">How the movie is to be scaled to fit the screen.</param>
-        public static bool PlayFullScreenMovie(string path, [DefaultValue("Color.black")] Color bgColor, [DefaultValue("FullScreenMovieControlMode.Full")] FullScreenMovieControlMode controlMode, [DefaultValue("FullScreenMovieScalingMode.AspectFit")] FullScreenMovieScalingMode scalingMode)
-        {
-            return INTERNAL_CALL_PlayFullScreenMovie(path, ref bgColor, controlMode, scalingMode);
-        }
+        public static bool PlayFullScreenMovie(string path, [DefaultValue("Color.black")] Color bgColor, [DefaultValue("FullScreenMovieControlMode.Full")] FullScreenMovieControlMode controlMode, [DefaultValue("FullScreenMovieScalingMode.AspectFit")] FullScreenMovieScalingMode scalingMode) => 
+            INTERNAL_CALL_PlayFullScreenMovie(path, ref bgColor, controlMode, scalingMode);
 
         /// <summary>
         /// <para>Sets the desired activity indicator style.</para>

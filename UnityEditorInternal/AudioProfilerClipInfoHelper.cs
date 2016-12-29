@@ -33,10 +33,8 @@
             return "Unknown";
         }
 
-        public static int GetLastColumnIndex()
-        {
-            return 5;
-        }
+        public static int GetLastColumnIndex() => 
+            5;
 
         public class AudioProfilerClipInfoComparer : IComparer<AudioProfilerClipInfoWrapper>
         {

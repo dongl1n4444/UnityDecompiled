@@ -47,10 +47,8 @@
             }
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(160f, 82f);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(160f, 82f);
 
         public override void OnGUI(Rect rect)
         {

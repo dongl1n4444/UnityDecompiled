@@ -121,7 +121,7 @@
             <AddScriptableObjectToHierarchy>c__AnonStorey0 storey = new <AddScriptableObjectToHierarchy>c__AnonStorey0 {
                 selectionItem = selectionItem
             };
-            EditorCurveBinding[] curveBindings = Enumerable.ToArray<EditorCurveBinding>(Enumerable.Where<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Func<EditorCurveBinding, bool>(storey, (IntPtr) this.<>m__0)));
+            EditorCurveBinding[] curveBindings = Enumerable.Where<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Func<EditorCurveBinding, bool>(storey, (IntPtr) this.<>m__0)).ToArray<EditorCurveBinding>();
             TreeViewItem item = null;
             if (curveBindings.Length > 0)
             {
@@ -217,10 +217,8 @@
         public static bool showEntireHierarchy
         {
             [CompilerGenerated]
-            get
-            {
-                return <showEntireHierarchy>k__BackingField;
-            }
+            get => 
+                <showEntireHierarchy>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -233,10 +231,8 @@
         {
             internal AnimationWindowSelectionItem selectionItem;
 
-            internal bool <>m__0(EditorCurveBinding c)
-            {
-                return !AnimationWindowUtility.IsCurveCreated(this.selectionItem.animationClip, c);
-            }
+            internal bool <>m__0(EditorCurveBinding c) => 
+                !AnimationWindowUtility.IsCurveCreated(this.selectionItem.animationClip, c);
         }
     }
 }

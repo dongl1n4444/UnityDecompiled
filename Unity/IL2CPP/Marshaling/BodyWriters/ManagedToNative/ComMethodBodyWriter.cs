@@ -17,10 +17,8 @@
             this._interfaceType = interfaceMethod.DeclaringType;
         }
 
-        private static MarshalType GetMarshalType(MethodReference interfaceMethod)
-        {
-            return (!Extensions.IsComInterface(interfaceMethod.DeclaringType) ? MarshalType.WindowsRuntime : MarshalType.COM);
-        }
+        private static MarshalType GetMarshalType(MethodReference interfaceMethod) => 
+            (!interfaceMethod.DeclaringType.IsComInterface() ? MarshalType.WindowsRuntime : MarshalType.COM);
 
         private string GetMethodCallExpression(string[] localVariableNames)
         {
@@ -35,7 +33,7 @@
                 }
                 str = str + '&' + InteropMethodBodyWriter.Naming.ForInteropReturnValue();
             }
-            string str3 = string.Format("{0} = {1}->{2}({3}{4})", new object[] { InteropMethodBodyWriter.Naming.ForInteropHResultVariable(), InteropMethodBodyWriter.Naming.ForInteropInterfaceVariable(this._interfaceType), this.GetMethodNameInGeneratedCode(), functionCallParametersExpression, str });
+            string str3 = $"{InteropMethodBodyWriter.Naming.ForInteropHResultVariable()} = {InteropMethodBodyWriter.Naming.ForInteropInterfaceVariable(this._interfaceType)}->{this.GetMethodNameInGeneratedCode()}({functionCallParametersExpression}{str})";
             if (!this.UseQueryInterfaceToObtainInterfacePointer)
             {
                 str3 = "const il2cpp_hresult_t " + str3;
@@ -78,20 +76,15 @@
             }
             else
             {
-                string str3 = !this._actualMethod.HasThis ? string.Format("(({0}*){1}->static_fields)", InteropMethodBodyWriter.Naming.ForStaticFieldsStruct(this._actualMethod.DeclaringType), metadataAccess.TypeInfoFor(this._actualMethod.DeclaringType)) : string.Format("{0}", InteropMethodBodyWriter.Naming.ThisParameterName);
+                string str3 = !this._actualMethod.HasThis ? $"(({InteropMethodBodyWriter.Naming.ForStaticFieldsStruct(this._actualMethod.DeclaringType)}*){metadataAccess.TypeInfoFor(this._actualMethod.DeclaringType)}->static_fields)" : $"{InteropMethodBodyWriter.Naming.ThisParameterName}";
                 object[] objArray3 = new object[] { InteropMethodBodyWriter.Naming.ForTypeNameOnly(this._interfaceType), InteropMethodBodyWriter.Naming.ForInteropInterfaceVariable(this._interfaceType), str3, InteropMethodBodyWriter.Naming.ForComTypeInterfaceFieldGetter(this._interfaceType) };
                 writer.WriteLine("{0}* {1} = {2}->{3}();", objArray3);
             }
             writer.WriteLine();
         }
 
-        protected virtual bool UseQueryInterfaceToObtainInterfacePointer
-        {
-            get
-            {
-                return Extensions.IsInterface(this._actualMethod.DeclaringType);
-            }
-        }
+        protected virtual bool UseQueryInterfaceToObtainInterfacePointer =>
+            this._actualMethod.DeclaringType.IsInterface();
     }
 }
 

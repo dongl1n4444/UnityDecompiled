@@ -170,10 +170,8 @@ internal abstract class DesktopStandalonePostProcessor
 
     protected abstract void DeleteDestination();
     protected abstract IIl2CppPlatformProvider GetPlatformProvider(BuildTarget target);
-    protected virtual string GetVariationName()
-    {
-        return string.Format("{0}_{1}", this.PlatformStringFor(this.m_PostProcessArgs.target), !this.Development ? "nondevelopment" : "development");
-    }
+    protected virtual string GetVariationName() => 
+        $"{this.PlatformStringFor(this.m_PostProcessArgs.target)}_{(!this.Development ? "nondevelopment" : "development")}";
 
     protected abstract string PlatformStringFor(BuildTarget target);
     public void PostProcess()
@@ -227,73 +225,33 @@ internal abstract class DesktopStandalonePostProcessor
         }
     }
 
-    protected string DataFolder
-    {
-        get
-        {
-            return (this.StagingArea + "/Data");
-        }
-    }
+    protected string DataFolder =>
+        (this.StagingArea + "/Data");
 
-    protected virtual string DestinationFolder
-    {
-        get
-        {
-            return FileUtil.UnityGetDirectoryName(this.m_PostProcessArgs.installPath);
-        }
-    }
+    protected virtual string DestinationFolder =>
+        FileUtil.UnityGetDirectoryName(this.m_PostProcessArgs.installPath);
 
     protected abstract string DestinationFolderForInstallingIntoBuildsFolder { get; }
 
-    protected bool Development
-    {
-        get
-        {
-            return ((this.m_PostProcessArgs.options & BuildOptions.Development) != BuildOptions.CompressTextures);
-        }
-    }
+    protected bool Development =>
+        ((this.m_PostProcessArgs.options & BuildOptions.Development) != BuildOptions.CompressTextures);
 
-    protected bool InstallingIntoBuildsFolder
-    {
-        get
-        {
-            return ((this.m_PostProcessArgs.options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures);
-        }
-    }
+    protected bool InstallingIntoBuildsFolder =>
+        ((this.m_PostProcessArgs.options & BuildOptions.InstallInBuildFolder) != BuildOptions.CompressTextures);
 
-    protected string InstallPath
-    {
-        get
-        {
-            return this.m_PostProcessArgs.installPath;
-        }
-    }
+    protected string InstallPath =>
+        this.m_PostProcessArgs.installPath;
 
-    protected string StagingArea
-    {
-        get
-        {
-            return this.m_PostProcessArgs.stagingArea;
-        }
-    }
+    protected string StagingArea =>
+        this.m_PostProcessArgs.stagingArea;
 
     protected abstract string StagingAreaPluginsFolder { get; }
 
-    protected BuildTarget Target
-    {
-        get
-        {
-            return this.m_PostProcessArgs.target;
-        }
-    }
+    protected BuildTarget Target =>
+        this.m_PostProcessArgs.target;
 
-    protected bool UseIl2Cpp
-    {
-        get
-        {
-            return (PlayerSettings.GetScriptingBackend(BuildTargetGroup.Standalone) == ScriptingImplementation.IL2CPP);
-        }
-    }
+    protected bool UseIl2Cpp =>
+        (PlayerSettings.GetScriptingBackend(BuildTargetGroup.Standalone) == ScriptingImplementation.IL2CPP);
 
     internal class ScriptingImplementations : IScriptingImplementations
     {

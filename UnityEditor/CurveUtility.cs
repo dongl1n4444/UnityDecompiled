@@ -22,10 +22,8 @@
             return ((key.outTangent + key.inTangent) * 0.5f);
         }
 
-        public static Color GetBalancedColor(Color c)
-        {
-            return new Color(0.15f + (0.75f * c.r), 0.2f + (0.6f * c.g), 0.1f + (0.9f * c.b));
-        }
+        public static Color GetBalancedColor(Color c) => 
+            new Color(0.15f + (0.75f * c.r), 0.2f + (0.6f * c.g), 0.1f + (0.9f * c.b));
 
         public static string GetClipName(AnimationClip clip)
         {
@@ -59,10 +57,8 @@
             return iconKey;
         }
 
-        public static int GetPathAndTypeID(string path, Type type)
-        {
-            return ((path.GetHashCode() * 0x1b) ^ type.GetHashCode());
-        }
+        public static int GetPathAndTypeID(string path, Type type) => 
+            ((path.GetHashCode() * 0x1b) ^ type.GetHashCode());
 
         public static Color GetPropertyColor(string name)
         {

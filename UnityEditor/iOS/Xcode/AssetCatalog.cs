@@ -18,15 +18,11 @@
             this.m_Root = new AssetFolder(path, null, authorId);
         }
 
-        public AssetBrandAssetGroup OpenBrandAssetGroup(string relativePath)
-        {
-            return this.OpenFolderForResource(relativePath).OpenBrandAssetGroup(Path.GetFileName(relativePath));
-        }
+        public AssetBrandAssetGroup OpenBrandAssetGroup(string relativePath) => 
+            this.OpenFolderForResource(relativePath).OpenBrandAssetGroup(Path.GetFileName(relativePath));
 
-        public AssetDataSet OpenDataSet(string relativePath)
-        {
-            return this.OpenFolderForResource(relativePath).OpenDataSet(Path.GetFileName(relativePath));
-        }
+        public AssetDataSet OpenDataSet(string relativePath) => 
+            this.OpenFolderForResource(relativePath).OpenDataSet(Path.GetFileName(relativePath));
 
         public AssetFolder OpenFolder(string relativePath)
         {
@@ -49,7 +45,7 @@
 
         private AssetFolder OpenFolderForResource(string relativePath)
         {
-            List<string> list = Enumerable.ToList<string>(PBXPath.Split(relativePath));
+            List<string> list = PBXPath.Split(relativePath).ToList<string>();
             list.RemoveAt(list.Count - 1);
             AssetFolder root = this.root;
             foreach (string str in list)
@@ -59,15 +55,11 @@
             return root;
         }
 
-        public AssetImageSet OpenImageSet(string relativePath)
-        {
-            return this.OpenFolderForResource(relativePath).OpenImageSet(Path.GetFileName(relativePath));
-        }
+        public AssetImageSet OpenImageSet(string relativePath) => 
+            this.OpenFolderForResource(relativePath).OpenImageSet(Path.GetFileName(relativePath));
 
-        public AssetImageStack OpenImageStack(string relativePath)
-        {
-            return this.OpenFolderForResource(relativePath).OpenImageStack(Path.GetFileName(relativePath));
-        }
+        public AssetImageStack OpenImageStack(string relativePath) => 
+            this.OpenFolderForResource(relativePath).OpenImageStack(Path.GetFileName(relativePath));
 
         public AssetFolder OpenNamespacedFolder(string relativeBasePath, string namespacePath)
         {
@@ -91,21 +83,11 @@
             this.m_Root.Write(warnings);
         }
 
-        public string path
-        {
-            get
-            {
-                return this.m_Root.path;
-            }
-        }
+        public string path =>
+            this.m_Root.path;
 
-        public AssetFolder root
-        {
-            get
-            {
-                return this.m_Root;
-            }
-        }
+        public AssetFolder root =>
+            this.m_Root;
     }
 }
 

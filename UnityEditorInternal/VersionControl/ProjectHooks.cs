@@ -6,10 +6,8 @@
 
     internal class ProjectHooks
     {
-        public static Rect GetOverlayRect(Rect drawRect)
-        {
-            return Overlay.GetOverlayRect(drawRect);
-        }
+        public static Rect GetOverlayRect(Rect drawRect) => 
+            Overlay.GetOverlayRect(drawRect);
 
         public static void OnProjectWindowItem(string guid, Rect drawRect)
         {

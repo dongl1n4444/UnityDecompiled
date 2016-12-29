@@ -32,7 +32,7 @@
             int num3 = 0;
             foreach (string str in this.undos)
             {
-                GUILayout.Label(string.Format("[{0}] - {1}", num3++, str), new GUILayoutOption[0]);
+                GUILayout.Label($"[{num3++}] - {str}", new GUILayoutOption[0]);
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
@@ -43,7 +43,7 @@
             num3 = 0;
             foreach (string str2 in this.redos)
             {
-                GUILayout.Label(string.Format("[{0}] - {1}", num3++, str2), new GUILayoutOption[0]);
+                GUILayout.Label($"[{num3++}] - {str2}", new GUILayoutOption[0]);
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
@@ -53,7 +53,7 @@
         private void Update()
         {
             Undo.GetRecords(this.newUndos, this.newRedos);
-            if (!Enumerable.SequenceEqual<string>(this.undos, this.newUndos) || !Enumerable.SequenceEqual<string>(this.redos, this.newRedos))
+            if (!this.undos.SequenceEqual<string>(this.newUndos) || !this.redos.SequenceEqual<string>(this.newRedos))
             {
                 this.undos = new List<string>(this.newUndos);
                 this.redos = new List<string>(this.newRedos);

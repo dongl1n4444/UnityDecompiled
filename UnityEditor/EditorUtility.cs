@@ -14,10 +14,8 @@
     public sealed class EditorUtility
     {
         [Obsolete("Use BuildPipeline.BuildAssetBundle instead")]
-        public static bool BuildResourceFile(Object[] selection, string pathName)
-        {
-            return BuildPipeline.BuildAssetBundle(null, selection, pathName, BuildAssetBundleOptions.CompleteAssets);
-        }
+        public static bool BuildResourceFile(Object[] selection, string pathName) => 
+            BuildPipeline.BuildAssetBundle(null, selection, pathName, BuildAssetBundleOptions.CompleteAssets);
 
         /// <summary>
         /// <para>Removes progress bar.</para>
@@ -39,10 +37,8 @@
         /// <param name="roots"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern Object[] CollectDependencies(Object[] roots);
-        public static string[] CompileCSharp(string[] sources, string[] references, string[] defines, string outputFile)
-        {
-            return MonoCSharpCompiler.Compile(sources, references, defines, outputFile);
-        }
+        public static string[] CompileCSharp(string[] sources, string[] references, string[] defines, string outputFile) => 
+            MonoCSharpCompiler.Compile(sources, references, defines, outputFile);
 
         private static void CompressTexture(Texture2D texture, TextureFormat format)
         {
@@ -94,10 +90,8 @@
         }
 
         [Obsolete("Use PrefabUtility.CreateEmptyPrefab")]
-        public static Object CreateEmptyPrefab(string path)
-        {
-            return PrefabUtility.CreateEmptyPrefab(path);
-        }
+        public static Object CreateEmptyPrefab(string path) => 
+            PrefabUtility.CreateEmptyPrefab(path);
 
         /// <summary>
         /// <para>Creates a game object with HideFlags and specified components.</para>
@@ -302,10 +296,8 @@
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use AssetDatabase.LoadAssetAtPath")]
         public static extern Object FindAsset(string path, Type type);
         [Obsolete("Use PrefabUtility.FindPrefabRoot")]
-        public static GameObject FindPrefabRoot(GameObject source)
-        {
-            return PrefabUtility.FindPrefabRoot(source);
-        }
+        public static GameObject FindPrefabRoot(GameObject source) => 
+            PrefabUtility.FindPrefabRoot(source);
 
         /// <summary>
         /// <para>Brings the project window to the front and focuses it.</para>
@@ -320,20 +312,16 @@
         /// <para>Returns a text for a number of bytes.</para>
         /// </summary>
         /// <param name="bytes"></param>
-        public static string FormatBytes(int bytes)
-        {
-            return FormatBytes((long) bytes);
-        }
+        public static string FormatBytes(int bytes) => 
+            FormatBytes((long) bytes);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string FormatBytes(long bytes);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string GetActiveNativePlatformSupportModuleName();
         [Obsolete("Use AssetDatabase.GetAssetPath")]
-        public static string GetAssetPath(Object asset)
-        {
-            return AssetDatabase.GetAssetPath(asset);
-        }
+        public static string GetAssetPath(Object asset) => 
+            AssetDatabase.GetAssetPath(asset);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GetDirtyIndex(int instanceID);
@@ -346,16 +334,12 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GetObjectEnabled(Object target);
         [Obsolete("Use PrefabUtility.GetPrefabParent")]
-        public static Object GetPrefabParent(Object source)
-        {
-            return PrefabUtility.GetPrefabParent(source);
-        }
+        public static Object GetPrefabParent(Object source) => 
+            PrefabUtility.GetPrefabParent(source);
 
         [Obsolete("Use PrefabUtility.GetPrefabType")]
-        public static PrefabType GetPrefabType(Object target)
-        {
-            return PrefabUtility.GetPrefabType(target);
-        }
+        public static PrefabType GetPrefabType(Object target) => 
+            PrefabUtility.GetPrefabType(target);
 
         internal static void InitInstantiatedPreviewRecursive(GameObject go)
         {
@@ -417,10 +401,8 @@
         }
 
         [Obsolete("Use PrefabUtility.InstantiatePrefab")]
-        public static Object InstantiatePrefab(Object target)
-        {
-            return PrefabUtility.InstantiatePrefab(target);
-        }
+        public static Object InstantiatePrefab(Object target) => 
+            PrefabUtility.InstantiatePrefab(target);
 
         internal static Object InstantiateRemoveAllNonAnimationComponents(Object original, Vector3 position, Quaternion rotation)
         {
@@ -456,10 +438,8 @@
             Private_DisplayPopupMenu(position, menuItemPath, context, contextUserData);
         }
 
-        private static Object Internal_InstantiateRemoveAllNonAnimationComponentsSingle(Object data, Vector3 pos, Quaternion rot)
-        {
-            return INTERNAL_CALL_Internal_InstantiateRemoveAllNonAnimationComponentsSingle(data, ref pos, ref rot);
-        }
+        private static Object Internal_InstantiateRemoveAllNonAnimationComponentsSingle(Object data, Vector3 pos, Quaternion rot) => 
+            INTERNAL_CALL_Internal_InstantiateRemoveAllNonAnimationComponentsSingle(data, ref pos, ref rot);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string Internal_SaveFilePanelInProject(string title, string defaultName, string extension, string message, string path);
@@ -535,22 +515,16 @@
         }
 
         [Obsolete("Use PrefabUtility.CreateEmptyPrefab")]
-        public static bool ReconnectToLastPrefab(GameObject go)
-        {
-            return PrefabUtility.ReconnectToLastPrefab(go);
-        }
+        public static bool ReconnectToLastPrefab(GameObject go) => 
+            PrefabUtility.ReconnectToLastPrefab(go);
 
         [Obsolete("Use PrefabUtility.ReplacePrefab")]
-        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab)
-        {
-            return PrefabUtility.ReplacePrefab(go, targetPrefab, ReplacePrefabOptions.Default);
-        }
+        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab) => 
+            PrefabUtility.ReplacePrefab(go, targetPrefab, ReplacePrefabOptions.Default);
 
         [Obsolete("Use PrefabUtility.ReplacePrefab")]
-        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab, ReplacePrefabOptions options)
-        {
-            return PrefabUtility.ReplacePrefab(go, targetPrefab, options);
-        }
+        public static GameObject ReplacePrefab(GameObject go, Object targetPrefab, ReplacePrefabOptions options) => 
+            PrefabUtility.ReplacePrefab(go, targetPrefab, options);
 
         internal static void ResetMouseDown()
         {
@@ -559,10 +533,8 @@
         }
 
         [Obsolete("Use PrefabUtility.ResetToPrefabState")]
-        public static bool ResetToPrefabState(Object source)
-        {
-            return PrefabUtility.ResetToPrefabState(source);
-        }
+        public static bool ResetToPrefabState(Object source) => 
+            PrefabUtility.ResetToPrefabState(source);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void RevealInFinder(string path);
@@ -584,15 +556,11 @@
         /// <param name="defaultName"></param>
         /// <param name="extension"></param>
         /// <param name="message"></param>
-        public static string SaveFilePanelInProject(string title, string defaultName, string extension, string message)
-        {
-            return Internal_SaveFilePanelInProject(title, defaultName, extension, message, "Assets");
-        }
+        public static string SaveFilePanelInProject(string title, string defaultName, string extension, string message) => 
+            Internal_SaveFilePanelInProject(title, defaultName, extension, message, "Assets");
 
-        public static string SaveFilePanelInProject(string title, string defaultName, string extension, string message, string path)
-        {
-            return Internal_SaveFilePanelInProject(title, defaultName, extension, message, path);
-        }
+        public static string SaveFilePanelInProject(string title, string defaultName, string extension, string message, string path) => 
+            Internal_SaveFilePanelInProject(title, defaultName, extension, message, path);
 
         /// <summary>
         /// <para>Displays the "save folder" dialog and returns the selected path name.</para>

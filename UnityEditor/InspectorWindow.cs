@@ -75,7 +75,7 @@
                     {
                         <>f__am$cache2 = new Func<Object, GameObject>(null, (IntPtr) <AddComponentButton>m__2);
                     }
-                    if (AddComponentWindow.Show(position, Enumerable.ToArray<GameObject>(Enumerable.Select<Object, GameObject>(firstNonImportInspectorEditor.targets, <>f__am$cache2))))
+                    if (AddComponentWindow.Show(position, Enumerable.Select<Object, GameObject>(firstNonImportInspectorEditor.targets, <>f__am$cache2).ToArray<GameObject>()))
                     {
                         GUIUtility.ExitGUI();
                     }
@@ -219,10 +219,8 @@
             }
         }
 
-        private static bool Dragging(Rect rect)
-        {
-            return (((Event.current.type == EventType.DragUpdated) || (Event.current.type == EventType.DragPerform)) && rect.Contains(Event.current.mousePosition));
-        }
+        private static bool Dragging(Rect rect) => 
+            (((Event.current.type == EventType.DragUpdated) || (Event.current.type == EventType.DragPerform)) && rect.Contains(Event.current.mousePosition));
 
         private void DrawEditor(Editor editor, int editorIndex, bool rebuildOptimizedGUIBlock, ref bool showImportedObjectBarNext, ref Rect importedObjectBarRect)
         {
@@ -659,7 +657,7 @@
                 GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(17f) };
                 EditorGUILayout.BeginHorizontal(GUIContent.none, styles.preToolbar, options);
                 Editor firstNonImportInspectorEditor = this.GetFirstNonImportInspectorEditor(this.tracker.activeEditors);
-                Object target = (firstNonImportInspectorEditor != null) ? firstNonImportInspectorEditor.target : null;
+                Object target = firstNonImportInspectorEditor?.target;
                 int controlID = GUIUtility.GetControlID(FocusType.Passive);
                 GUILayout.FlexibleSpace();
                 Rect lastRect = GUILayoutUtility.GetLastRect();
@@ -799,10 +797,8 @@
             }
         }
 
-        public static InspectorWindow[] GetAllInspectorWindows()
-        {
-            return m_AllInspectors.ToArray();
-        }
+        public static InspectorWindow[] GetAllInspectorWindows() => 
+            m_AllInspectors.ToArray();
 
         public IPreviewable[] GetEditorsWithPreviews(Editor[] editors)
         {
@@ -823,7 +819,7 @@
                     source.Add(previewable);
                 }
             }
-            return Enumerable.ToArray<IPreviewable>(source);
+            return source.ToArray<IPreviewable>();
         }
 
         public IPreviewable GetEditorThatControlsPreview(IPreviewable[] editors)
@@ -835,7 +831,7 @@
                     return this.m_SelectedPreview;
                 }
                 IPreviewable lastInteractedEditor = this.GetLastInteractedEditor();
-                Type type = (lastInteractedEditor == null) ? null : lastInteractedEditor.GetType();
+                Type type = lastInteractedEditor?.GetType();
                 IPreviewable previewable3 = null;
                 IPreviewable previewable4 = null;
                 foreach (IPreviewable previewable5 in editors)
@@ -897,22 +893,14 @@
         public Object GetInspectedObject()
         {
             Editor firstNonImportInspectorEditor = this.GetFirstNonImportInspectorEditor(this.tracker.activeEditors);
-            if (firstNonImportInspectorEditor == null)
-            {
-                return null;
-            }
-            return firstNonImportInspectorEditor.target;
+            return firstNonImportInspectorEditor?.target;
         }
 
-        internal static List<InspectorWindow> GetInspectors()
-        {
-            return m_AllInspectors;
-        }
+        internal static List<InspectorWindow> GetInspectors() => 
+            m_AllInspectors;
 
-        public virtual Editor GetLastInteractedEditor()
-        {
-            return this.m_LastInteractedEditor;
-        }
+        public virtual Editor GetLastInteractedEditor() => 
+            this.m_LastInteractedEditor;
 
         private IEnumerable<IPreviewable> GetPreviewsForType(Editor editor)
         {
@@ -1242,10 +1230,8 @@
 
         public bool isLocked
         {
-            get
-            {
-                return this.tracker.isLocked;
-            }
+            get => 
+                this.tracker.isLocked;
             set
             {
                 this.tracker.isLocked = value;
@@ -1283,10 +1269,8 @@
         {
             internal ActiveEditorTracker sharedTracker;
 
-            internal bool <>m__0(InspectorWindow i)
-            {
-                return ((i.m_Tracker != null) && i.m_Tracker.Equals(this.sharedTracker));
-            }
+            internal bool <>m__0(InspectorWindow i) => 
+                ((i.m_Tracker != null) && i.m_Tracker.Equals(this.sharedTracker));
         }
 
         internal class Styles

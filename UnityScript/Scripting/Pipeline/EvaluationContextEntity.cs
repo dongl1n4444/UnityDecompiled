@@ -13,45 +13,20 @@
             this._delegate = @delegate;
         }
 
-        public IMember Delegate
-        {
-            get
-            {
-                return this._delegate;
-            }
-        }
+        public IMember Delegate =>
+            this._delegate;
 
-        public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType
-        {
-            get
-            {
-                return this._delegate.get_EntityType();
-            }
-        }
+        public override Boo.Lang.Compiler.TypeSystem.EntityType EntityType =>
+            this._delegate.get_EntityType();
 
-        public override string FullName
-        {
-            get
-            {
-                return this._delegate.get_FullName();
-            }
-        }
+        public override string FullName =>
+            this._delegate.get_FullName();
 
-        public override string Name
-        {
-            get
-            {
-                return this._delegate.get_Name();
-            }
-        }
+        public override string Name =>
+            this._delegate.get_Name();
 
-        public override IType Type
-        {
-            get
-            {
-                return this._delegate.get_Type();
-            }
-        }
+        public override IType Type =>
+            this._delegate.get_Type();
     }
 }
 

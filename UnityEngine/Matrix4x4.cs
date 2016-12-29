@@ -47,54 +47,35 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_Transpose(ref Matrix4x4 m, out Matrix4x4 value);
-        internal static bool Invert(Matrix4x4 inMatrix, out Matrix4x4 dest)
-        {
-            return INTERNAL_CALL_Invert(ref inMatrix, out dest);
-        }
+        internal static bool Invert(Matrix4x4 inMatrix, out Matrix4x4 dest) => 
+            INTERNAL_CALL_Invert(ref inMatrix, out dest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_Invert(ref Matrix4x4 inMatrix, out Matrix4x4 dest);
         /// <summary>
         /// <para>The inverse of this matrix (Read Only).</para>
         /// </summary>
-        public Matrix4x4 inverse
-        {
-            get
-            {
-                return Inverse(this);
-            }
-        }
+        public Matrix4x4 inverse =>
+            Inverse(this);
         /// <summary>
         /// <para>Returns the transpose of this matrix (Read Only).</para>
         /// </summary>
-        public Matrix4x4 transpose
-        {
-            get
-            {
-                return Transpose(this);
-            }
-        }
+        public Matrix4x4 transpose =>
+            Transpose(this);
         /// <summary>
         /// <para>Is this the identity matrix?</para>
         /// </summary>
         public bool isIdentity { [MethodImpl(MethodImplOptions.InternalCall)] get; }
-        public static float Determinant(Matrix4x4 m)
-        {
-            return INTERNAL_CALL_Determinant(ref m);
-        }
+        public static float Determinant(Matrix4x4 m) => 
+            INTERNAL_CALL_Determinant(ref m);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float INTERNAL_CALL_Determinant(ref Matrix4x4 m);
         /// <summary>
         /// <para>The determinant of the matrix.</para>
         /// </summary>
-        public float determinant
-        {
-            get
-            {
-                return Determinant(this);
-            }
-        }
+        public float determinant =>
+            Determinant(this);
         /// <summary>
         /// <para>Sets this matrix to a translation, rotation and scaling matrix.</para>
         /// </summary>
@@ -157,10 +138,8 @@
         private static extern void INTERNAL_CALL_Perspective(float fov, float aspect, float zNear, float zFar, out Matrix4x4 value);
         public float this[int row, int column]
         {
-            get
-            {
-                return this[row + (column * 4)];
-            }
+            get => 
+                this[row + (column * 4)];
             set
             {
                 this[row + (column * 4)] = value;
@@ -295,10 +274,8 @@
                 }
             }
         }
-        public override int GetHashCode()
-        {
-            return (((this.GetColumn(0).GetHashCode() ^ (this.GetColumn(1).GetHashCode() << 2)) ^ (this.GetColumn(2).GetHashCode() >> 2)) ^ (this.GetColumn(3).GetHashCode() >> 1));
-        }
+        public override int GetHashCode() => 
+            (((this.GetColumn(0).GetHashCode() ^ (this.GetColumn(1).GetHashCode() << 2)) ^ (this.GetColumn(2).GetHashCode() >> 2)) ^ (this.GetColumn(3).GetHashCode() >> 1));
 
         public override bool Equals(object other)
         {
@@ -310,9 +287,8 @@
             return (((this.GetColumn(0).Equals(matrixx.GetColumn(0)) && this.GetColumn(1).Equals(matrixx.GetColumn(1))) && this.GetColumn(2).Equals(matrixx.GetColumn(2))) && this.GetColumn(3).Equals(matrixx.GetColumn(3)));
         }
 
-        public static Matrix4x4 operator *(Matrix4x4 lhs, Matrix4x4 rhs)
-        {
-            return new Matrix4x4 { 
+        public static Matrix4x4 operator *(Matrix4x4 lhs, Matrix4x4 rhs) => 
+            new Matrix4x4 { 
                 m00 = (((lhs.m00 * rhs.m00) + (lhs.m01 * rhs.m10)) + (lhs.m02 * rhs.m20)) + (lhs.m03 * rhs.m30),
                 m01 = (((lhs.m00 * rhs.m01) + (lhs.m01 * rhs.m11)) + (lhs.m02 * rhs.m21)) + (lhs.m03 * rhs.m31),
                 m02 = (((lhs.m00 * rhs.m02) + (lhs.m01 * rhs.m12)) + (lhs.m02 * rhs.m22)) + (lhs.m03 * rhs.m32),
@@ -330,7 +306,6 @@
                 m32 = (((lhs.m30 * rhs.m02) + (lhs.m31 * rhs.m12)) + (lhs.m32 * rhs.m22)) + (lhs.m33 * rhs.m32),
                 m33 = (((lhs.m30 * rhs.m03) + (lhs.m31 * rhs.m13)) + (lhs.m32 * rhs.m23)) + (lhs.m33 * rhs.m33)
             };
-        }
 
         public static Vector4 operator *(Matrix4x4 lhs, Vector4 v)
         {
@@ -342,33 +317,25 @@
             return vector;
         }
 
-        public static bool operator ==(Matrix4x4 lhs, Matrix4x4 rhs)
-        {
-            return ((((lhs.GetColumn(0) == rhs.GetColumn(0)) && (lhs.GetColumn(1) == rhs.GetColumn(1))) && (lhs.GetColumn(2) == rhs.GetColumn(2))) && (lhs.GetColumn(3) == rhs.GetColumn(3)));
-        }
+        public static bool operator ==(Matrix4x4 lhs, Matrix4x4 rhs) => 
+            ((((lhs.GetColumn(0) == rhs.GetColumn(0)) && (lhs.GetColumn(1) == rhs.GetColumn(1))) && (lhs.GetColumn(2) == rhs.GetColumn(2))) && (lhs.GetColumn(3) == rhs.GetColumn(3)));
 
-        public static bool operator !=(Matrix4x4 lhs, Matrix4x4 rhs)
-        {
-            return !(lhs == rhs);
-        }
+        public static bool operator !=(Matrix4x4 lhs, Matrix4x4 rhs) => 
+            !(lhs == rhs);
 
         /// <summary>
         /// <para>Get a column of the matrix.</para>
         /// </summary>
         /// <param name="i"></param>
-        public Vector4 GetColumn(int i)
-        {
-            return new Vector4(this[0, i], this[1, i], this[2, i], this[3, i]);
-        }
+        public Vector4 GetColumn(int i) => 
+            new Vector4(this[0, i], this[1, i], this[2, i], this[3, i]);
 
         /// <summary>
         /// <para>Returns a row of the matrix.</para>
         /// </summary>
         /// <param name="i"></param>
-        public Vector4 GetRow(int i)
-        {
-            return new Vector4(this[i, 0], this[i, 1], this[i, 2], this[i, 3]);
-        }
+        public Vector4 GetRow(int i) => 
+            new Vector4(this[i, 0], this[i, 1], this[i, 2], this[i, 3]);
 
         /// <summary>
         /// <para>Sets a column of the matrix.</para>
@@ -444,9 +411,8 @@
         /// <para>Creates a scaling matrix.</para>
         /// </summary>
         /// <param name="v"></param>
-        public static Matrix4x4 Scale(Vector3 v)
-        {
-            return new Matrix4x4 { 
+        public static Matrix4x4 Scale(Vector3 v) => 
+            new Matrix4x4 { 
                 m00 = v.x,
                 m01 = 0f,
                 m02 = 0f,
@@ -464,62 +430,51 @@
                 m32 = 0f,
                 m33 = 1f
             };
-        }
 
         /// <summary>
         /// <para>Returns a matrix with all elements set to zero (Read Only).</para>
         /// </summary>
-        public static Matrix4x4 zero
-        {
-            get
-            {
-                return new Matrix4x4 { 
-                    m00 = 0f,
-                    m01 = 0f,
-                    m02 = 0f,
-                    m03 = 0f,
-                    m10 = 0f,
-                    m11 = 0f,
-                    m12 = 0f,
-                    m13 = 0f,
-                    m20 = 0f,
-                    m21 = 0f,
-                    m22 = 0f,
-                    m23 = 0f,
-                    m30 = 0f,
-                    m31 = 0f,
-                    m32 = 0f,
-                    m33 = 0f
-                };
-            }
-        }
+        public static Matrix4x4 zero =>
+            new Matrix4x4 { 
+                m00=0f,
+                m01=0f,
+                m02=0f,
+                m03=0f,
+                m10=0f,
+                m11=0f,
+                m12=0f,
+                m13=0f,
+                m20=0f,
+                m21=0f,
+                m22=0f,
+                m23=0f,
+                m30=0f,
+                m31=0f,
+                m32=0f,
+                m33=0f
+            };
         /// <summary>
         /// <para>Returns the identity matrix (Read Only).</para>
         /// </summary>
-        public static Matrix4x4 identity
-        {
-            get
-            {
-                return new Matrix4x4 { 
-                    m00 = 1f,
-                    m01 = 0f,
-                    m02 = 0f,
-                    m03 = 0f,
-                    m10 = 0f,
-                    m11 = 1f,
-                    m12 = 0f,
-                    m13 = 0f,
-                    m20 = 0f,
-                    m21 = 0f,
-                    m22 = 1f,
-                    m23 = 0f,
-                    m30 = 0f,
-                    m31 = 0f,
-                    m32 = 0f,
-                    m33 = 1f
-                };
-            }
-        }
+        public static Matrix4x4 identity =>
+            new Matrix4x4 { 
+                m00=1f,
+                m01=0f,
+                m02=0f,
+                m03=0f,
+                m10=0f,
+                m11=1f,
+                m12=0f,
+                m13=0f,
+                m20=0f,
+                m21=0f,
+                m22=1f,
+                m23=0f,
+                m30=0f,
+                m31=0f,
+                m32=0f,
+                m33=1f
+            };
         /// <summary>
         /// <para>Returns a nicely formatted string for this matrix.</para>
         /// </summary>

@@ -177,29 +177,14 @@
             }
         }
 
-        public AnimatorControllerLayer layer
-        {
-            get
-            {
-                return this.m_Layer;
-            }
-        }
+        public AnimatorControllerLayer layer =>
+            this.m_Layer;
 
-        public int layerIndex
-        {
-            get
-            {
-                return this.m_LayerIndex;
-            }
-        }
+        public int layerIndex =>
+            this.m_LayerIndex;
 
-        private Vector2 windowSize
-        {
-            get
-            {
-                return new Vector2(250f, EditorGUIUtility.singleLineHeight * 7f);
-            }
-        }
+        private Vector2 windowSize =>
+            new Vector2(250f, EditorGUIUtility.singleLineHeight * 7f);
 
         private class Styles
         {

@@ -6,7 +6,7 @@
     using UnityEngine.Events;
     using UnityEngine.Rendering;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Light))]
+    [CustomEditor(typeof(Light)), CanEditMultipleObjects]
     internal class LightEditor : Editor
     {
         internal static Color kGizmoDisabledLight = new Color(0.5294118f, 0.454902f, 0.1960784f, 0.5019608f);
@@ -73,7 +73,7 @@
                                         r.xMin += EditorGUI.indent;
                                         Rect removeButtonRect = GetRemoveButtonRect(r);
                                         r.xMax = removeButtonRect.x;
-                                        GUI.Label(r, string.Format("{0}: {1} ({2})", event2, buffer.name, EditorUtility.FormatBytes(buffer.sizeInBytes)), EditorStyles.miniLabel);
+                                        GUI.Label(r, $"{event2}: {buffer.name} ({EditorUtility.FormatBytes(buffer.sizeInBytes)})", EditorStyles.miniLabel);
                                         if (GUI.Button(removeButtonRect, s_Styles.iconRemove, s_Styles.invisibleButton))
                                         {
                                             target.RemoveCommandBuffer(event2, buffer);
@@ -347,165 +347,65 @@
             this.SetOptions(this.m_BakedShadowRadiusOptions, initialize, this.bakedShadowRadius);
         }
 
-        private bool areaOptionsValue
-        {
-            get
-            {
-                return (this.typeIsSame && (this.light.type == LightType.Area));
-            }
-        }
+        private bool areaOptionsValue =>
+            (this.typeIsSame && (this.light.type == LightType.Area));
 
-        private bool areaWarningValue
-        {
-            get
-            {
-                return (this.typeIsSame && (this.light.type == LightType.Area));
-            }
-        }
+        private bool areaWarningValue =>
+            (this.typeIsSame && (this.light.type == LightType.Area));
 
-        private bool bakedShadowAngle
-        {
-            get
-            {
-                return ((this.typeIsSame && (this.light.type == LightType.Directional)) && this.isBakedOrMixed);
-            }
-        }
+        private bool bakedShadowAngle =>
+            ((this.typeIsSame && (this.light.type == LightType.Directional)) && this.isBakedOrMixed);
 
-        private bool bakedShadowRadius
-        {
-            get
-            {
-                return ((this.typeIsSame && ((this.light.type == LightType.Point) || (this.light.type == LightType.Spot))) && this.isBakedOrMixed);
-            }
-        }
+        private bool bakedShadowRadius =>
+            ((this.typeIsSame && ((this.light.type == LightType.Point) || (this.light.type == LightType.Spot))) && this.isBakedOrMixed);
 
-        private bool bakingWarningValue
-        {
-            get
-            {
-                return ((!Lightmapping.bakedGI && this.lightmappingTypeIsSame) && this.isBakedOrMixed);
-            }
-        }
+        private bool bakingWarningValue =>
+            ((!Lightmapping.bakedGI && this.lightmappingTypeIsSame) && this.isBakedOrMixed);
 
-        private bool bounceWarningValue
-        {
-            get
-            {
-                return (((this.typeIsSame && ((this.light.type == LightType.Point) || (this.light.type == LightType.Spot))) && ((this.lightmappingTypeIsSame && this.isRealtime) && !this.m_BounceIntensity.hasMultipleDifferentValues)) && (this.m_BounceIntensity.floatValue > 0f));
-            }
-        }
+        private bool bounceWarningValue =>
+            (((this.typeIsSame && ((this.light.type == LightType.Point) || (this.light.type == LightType.Spot))) && ((this.lightmappingTypeIsSame && this.isRealtime) && !this.m_BounceIntensity.hasMultipleDifferentValues)) && (this.m_BounceIntensity.floatValue > 0f));
 
-        private Texture cookie
-        {
-            get
-            {
-                return (this.m_Cookie.objectReferenceValue as Texture);
-            }
-        }
+        private Texture cookie =>
+            (this.m_Cookie.objectReferenceValue as Texture);
 
-        private bool cookieWarningValue
-        {
-            get
-            {
-                return (((this.typeIsSame && (this.light.type == LightType.Spot)) && (!this.m_Cookie.hasMultipleDifferentValues && (this.cookie != null))) && (this.cookie.wrapMode != TextureWrapMode.Clamp));
-            }
-        }
+        private bool cookieWarningValue =>
+            (((this.typeIsSame && (this.light.type == LightType.Spot)) && (!this.m_Cookie.hasMultipleDifferentValues && (this.cookie != null))) && (this.cookie.wrapMode != TextureWrapMode.Clamp));
 
-        private bool dirOptionsValue
-        {
-            get
-            {
-                return (this.typeIsSame && (this.light.type == LightType.Directional));
-            }
-        }
+        private bool dirOptionsValue =>
+            (this.typeIsSame && (this.light.type == LightType.Directional));
 
-        private bool isBakedOrMixed
-        {
-            get
-            {
-                return !this.isRealtime;
-            }
-        }
+        private bool isBakedOrMixed =>
+            !this.isRealtime;
 
-        private bool isCompletelyBaked
-        {
-            get
-            {
-                return (this.m_Lightmapping.intValue == 2);
-            }
-        }
+        private bool isCompletelyBaked =>
+            (this.m_Lightmapping.intValue == 2);
 
-        private bool isRealtime
-        {
-            get
-            {
-                return (this.m_Lightmapping.intValue == 4);
-            }
-        }
+        private bool isRealtime =>
+            (this.m_Lightmapping.intValue == 4);
 
-        private Light light
-        {
-            get
-            {
-                return (base.target as Light);
-            }
-        }
+        private Light light =>
+            (base.target as Light);
 
-        private bool lightmappingTypeIsSame
-        {
-            get
-            {
-                return !this.m_Lightmapping.hasMultipleDifferentValues;
-            }
-        }
+        private bool lightmappingTypeIsSame =>
+            !this.m_Lightmapping.hasMultipleDifferentValues;
 
-        private bool pointOptionsValue
-        {
-            get
-            {
-                return (this.typeIsSame && (this.light.type == LightType.Point));
-            }
-        }
+        private bool pointOptionsValue =>
+            (this.typeIsSame && (this.light.type == LightType.Point));
 
-        private bool runtimeOptionsValue
-        {
-            get
-            {
-                return (this.typeIsSame && ((this.light.type != LightType.Area) && !this.isCompletelyBaked));
-            }
-        }
+        private bool runtimeOptionsValue =>
+            (this.typeIsSame && ((this.light.type != LightType.Area) && !this.isCompletelyBaked));
 
-        private bool shadowOptionsValue
-        {
-            get
-            {
-                return (this.shadowTypeIsSame && (this.light.shadows != LightShadows.None));
-            }
-        }
+        private bool shadowOptionsValue =>
+            (this.shadowTypeIsSame && (this.light.shadows != LightShadows.None));
 
-        private bool shadowTypeIsSame
-        {
-            get
-            {
-                return !this.m_ShadowsType.hasMultipleDifferentValues;
-            }
-        }
+        private bool shadowTypeIsSame =>
+            !this.m_ShadowsType.hasMultipleDifferentValues;
 
-        private bool spotOptionsValue
-        {
-            get
-            {
-                return (this.typeIsSame && (this.light.type == LightType.Spot));
-            }
-        }
+        private bool spotOptionsValue =>
+            (this.typeIsSame && (this.light.type == LightType.Spot));
 
-        private bool typeIsSame
-        {
-            get
-            {
-                return !this.m_Type.hasMultipleDifferentValues;
-            }
-        }
+        private bool typeIsSame =>
+            !this.m_Type.hasMultipleDifferentValues;
 
         private class Styles
         {

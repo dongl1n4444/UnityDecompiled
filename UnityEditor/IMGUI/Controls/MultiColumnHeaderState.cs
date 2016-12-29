@@ -36,28 +36,16 @@
             }
         }
 
-        public Column[] columns
-        {
-            get
-            {
-                return this.m_Columns;
-            }
-        }
+        public Column[] columns =>
+            this.m_Columns;
 
-        public int previousSortedColumnIndex
-        {
-            get
-            {
-                return this.m_PreviousSortedColumnIndex;
-            }
-        }
+        public int previousSortedColumnIndex =>
+            this.m_PreviousSortedColumnIndex;
 
         public int sortedColumnIndex
         {
-            get
-            {
-                return this.m_SortedColumnIndex;
-            }
+            get => 
+                this.m_SortedColumnIndex;
             set
             {
                 if (value != this.m_SortedColumnIndex)
@@ -70,10 +58,8 @@
 
         public int[] visibleColumns
         {
-            get
-            {
-                return this.m_VisibleColumns;
-            }
+            get => 
+                this.m_VisibleColumns;
             set
             {
                 if (value == null)
@@ -88,13 +74,8 @@
             }
         }
 
-        public float widthOfAllVisibleColumns
-        {
-            get
-            {
-                return Enumerable.Sum<int>(this.visibleColumns, new Func<int, float>(this, (IntPtr) this.<get_widthOfAllVisibleColumns>m__0));
-            }
-        }
+        public float widthOfAllVisibleColumns =>
+            Enumerable.Sum<int>(this.visibleColumns, new Func<int, float>(this, (IntPtr) this.<get_widthOfAllVisibleColumns>m__0));
 
         [Serializable]
         public class Column

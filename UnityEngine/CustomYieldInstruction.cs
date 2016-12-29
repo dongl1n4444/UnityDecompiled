@@ -12,22 +12,15 @@
         {
         }
 
-        public bool MoveNext()
-        {
-            return this.keepWaiting;
-        }
+        public bool MoveNext() => 
+            this.keepWaiting;
 
         public void Reset()
         {
         }
 
-        public object Current
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public object Current =>
+            null;
 
         /// <summary>
         /// <para>Indicates if coroutine should be kept suspended.</para>

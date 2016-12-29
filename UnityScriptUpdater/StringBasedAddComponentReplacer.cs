@@ -9,10 +9,8 @@
         {
         }
 
-        protected override string GenericMethodSyntaxFor(string methodName, string typeName)
-        {
-            return (methodName + ".<" + typeName + ">");
-        }
+        protected override string GenericMethodSyntaxFor(string methodName, string typeName) => 
+            (methodName + ".<" + typeName + ">");
     }
 }
 

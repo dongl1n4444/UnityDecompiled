@@ -32,20 +32,13 @@
         /// <summary>
         /// <para>Get if the hash value is valid or not. (Read Only)</para>
         /// </summary>
-        public bool isValid
-        {
-            get
-            {
-                return ((((this.m_u32_0 != 0) || (this.m_u32_1 != 0)) || (this.m_u32_2 != 0)) || (this.m_u32_3 != 0));
-            }
-        }
+        public bool isValid =>
+            ((((this.m_u32_0 != 0) || (this.m_u32_1 != 0)) || (this.m_u32_2 != 0)) || (this.m_u32_3 != 0));
         /// <summary>
         /// <para>Convert Hash128 to string.</para>
         /// </summary>
-        public override string ToString()
-        {
-            return Internal_Hash128ToString(this.m_u32_0, this.m_u32_1, this.m_u32_2, this.m_u32_3);
-        }
+        public override string ToString() => 
+            Internal_Hash128ToString(this.m_u32_0, this.m_u32_1, this.m_u32_2, this.m_u32_3);
 
         /// <summary>
         /// <para>Convert the input string to Hash128.</para>
@@ -62,25 +55,17 @@
         private static extern void INTERNAL_CALL_Parse(string hashString, out Hash128 value);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Internal_Hash128ToString(uint d0, uint d1, uint d2, uint d3);
-        public override bool Equals(object obj)
-        {
-            return ((obj is Hash128) && (this == ((Hash128) obj)));
-        }
+        public override bool Equals(object obj) => 
+            ((obj is Hash128) && (this == ((Hash128) obj)));
 
-        public override int GetHashCode()
-        {
-            return (((this.m_u32_0.GetHashCode() ^ this.m_u32_1.GetHashCode()) ^ this.m_u32_2.GetHashCode()) ^ this.m_u32_3.GetHashCode());
-        }
+        public override int GetHashCode() => 
+            (((this.m_u32_0.GetHashCode() ^ this.m_u32_1.GetHashCode()) ^ this.m_u32_2.GetHashCode()) ^ this.m_u32_3.GetHashCode());
 
-        public static bool operator ==(Hash128 hash1, Hash128 hash2)
-        {
-            return ((((hash1.m_u32_0 == hash2.m_u32_0) && (hash1.m_u32_1 == hash2.m_u32_1)) && (hash1.m_u32_2 == hash2.m_u32_2)) && (hash1.m_u32_3 == hash2.m_u32_3));
-        }
+        public static bool operator ==(Hash128 hash1, Hash128 hash2) => 
+            ((((hash1.m_u32_0 == hash2.m_u32_0) && (hash1.m_u32_1 == hash2.m_u32_1)) && (hash1.m_u32_2 == hash2.m_u32_2)) && (hash1.m_u32_3 == hash2.m_u32_3));
 
-        public static bool operator !=(Hash128 hash1, Hash128 hash2)
-        {
-            return !(hash1 == hash2);
-        }
+        public static bool operator !=(Hash128 hash1, Hash128 hash2) => 
+            !(hash1 == hash2);
     }
 }
 

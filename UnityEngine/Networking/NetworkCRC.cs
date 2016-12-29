@@ -42,7 +42,7 @@
             singleton.m_Scripts.Clear();
             foreach (System.Type type in callingAssembly.GetTypes())
             {
-                if (DotNetCompatibility.GetBaseType(type) == typeof(NetworkBehaviour))
+                if (type.GetBaseType() == typeof(NetworkBehaviour))
                 {
                     MethodInfo method = type.GetMethod(".cctor", BindingFlags.Static);
                     if (method != null)
@@ -53,10 +53,8 @@
             }
         }
 
-        internal static bool Validate(CRCMessageEntry[] scripts, int numChannels)
-        {
-            return singleton.ValidateInternal(scripts, numChannels);
-        }
+        internal static bool Validate(CRCMessageEntry[] scripts, int numChannels) => 
+            singleton.ValidateInternal(scripts, numChannels);
 
         private bool ValidateInternal(CRCMessageEntry[] remoteScripts, int numChannels)
         {
@@ -107,10 +105,8 @@
         /// </summary>
         public static bool scriptCRCCheck
         {
-            get
-            {
-                return singleton.m_ScriptCRCCheck;
-            }
+            get => 
+                singleton.m_ScriptCRCCheck;
             set
             {
                 singleton.m_ScriptCRCCheck = value;
@@ -120,13 +116,8 @@
         /// <summary>
         /// <para>A dictionary of script QoS channels.</para>
         /// </summary>
-        public Dictionary<string, int> scripts
-        {
-            get
-            {
-                return this.m_Scripts;
-            }
-        }
+        public Dictionary<string, int> scripts =>
+            this.m_Scripts;
 
         internal static NetworkCRC singleton
         {

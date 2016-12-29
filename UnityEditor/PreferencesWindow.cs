@@ -199,7 +199,7 @@
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             EditorGUILayout.PrefixLabel(label, popup);
             int[] selected = new int[0];
-            if (Enumerable.Contains<string>(paths, selectedString))
+            if (paths.Contains<string>(selectedString))
             {
                 selected = new int[] { Array.IndexOf<string>(paths, selectedString) };
             }
@@ -224,10 +224,8 @@
             return Environment.GetEnvironmentVariable("ProgramFiles");
         }
 
-        private InternalEditorUtility.ScriptEditor GetSelectedScriptEditor()
-        {
-            return InternalEditorUtility.GetScriptEditorFromPath(this.m_ScriptEditorPath.str);
-        }
+        private InternalEditorUtility.ScriptEditor GetSelectedScriptEditor() => 
+            InternalEditorUtility.GetScriptEditorFromPath(this.m_ScriptEditorPath.str);
 
         private void HandleKeys()
         {
@@ -248,10 +246,8 @@
             }
         }
 
-        private bool IsSelectedScriptEditorSpecial()
-        {
-            return InternalEditorUtility.IsScriptEditorSpecial(this.m_ScriptEditorPath.str);
-        }
+        private bool IsSelectedScriptEditorSpecial() => 
+            InternalEditorUtility.IsScriptEditorSpecial(this.m_ScriptEditorPath.str);
 
         private void OnEnable()
         {
@@ -624,7 +620,7 @@
                     {
                         this.m_EditorLanguageNames[i] = availableEditorLanguages[i].ToString();
                     }
-                    string item = string.Format("Default ( {0} )", LocalizationDatabase.GetDefaultEditorLanguage().ToString());
+                    string item = $"Default ( {LocalizationDatabase.GetDefaultEditorLanguage().ToString()} )";
                     ArrayUtility.Insert<string>(ref this.m_EditorLanguageNames, 0, "");
                     ArrayUtility.Insert<string>(ref this.m_EditorLanguageNames, 0, item);
                 }
@@ -839,7 +835,7 @@
                                 builder.Append("Alt+");
                             }
                             builder.Append(keyboardEvent.keyCode);
-                            this.m_InvalidKeyMessage = string.Format("Key {0} can't be used for action \"{1}\" because it's already used for action \"{2}\"", builder, this.m_SelectedKey.Name, pair2.Key);
+                            this.m_InvalidKeyMessage = $"Key {builder} can't be used for action "{this.m_SelectedKey.Name}" because it's already used for action "{pair2.Key}"";
                             break;
                         }
                     }
@@ -955,20 +951,13 @@
             }
         }
 
-        private Section selectedSection
-        {
-            get
-            {
-                return this.m_Sections[this.m_SelectedSectionIndex];
-            }
-        }
+        private Section selectedSection =>
+            this.m_Sections[this.m_SelectedSectionIndex];
 
         private int selectedSectionIndex
         {
-            get
-            {
-                return this.m_SelectedSectionIndex;
-            }
+            get => 
+                this.m_SelectedSectionIndex;
             set
             {
                 if (this.m_SelectedSectionIndex != value)
@@ -1058,15 +1047,11 @@
                 this.str = s;
             }
 
-            public static implicit operator string(PreferencesWindow.RefString s)
-            {
-                return s.str;
-            }
+            public static implicit operator string(PreferencesWindow.RefString s) => 
+                s.str;
 
-            public override string ToString()
-            {
-                return this.str;
-            }
+            public override string ToString() => 
+                this.str;
         }
 
         private class Section

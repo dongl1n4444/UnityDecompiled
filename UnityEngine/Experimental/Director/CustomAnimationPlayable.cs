@@ -29,15 +29,11 @@
         /// <returns>
         /// <para>Returns the index of the port the playable was connected to.</para>
         /// </returns>
-        public int AddInput(Playable input)
-        {
-            return AnimationPlayableUtilities.AddInputValidated((AnimationPlayable) this, input, base.GetType());
-        }
+        public int AddInput(Playable input) => 
+            AnimationPlayableUtilities.AddInputValidated((AnimationPlayable) this, input, base.GetType());
 
-        public T CastTo<T>() where T: struct
-        {
-            return this.handle.CastTo<T>();
-        }
+        public T CastTo<T>() where T: struct => 
+            this.handle.CastTo<T>();
 
         /// <summary>
         /// <para>Call this method to release the resources associated to this Playable.</para>
@@ -54,10 +50,8 @@
         /// <returns>
         /// <para>Playable connected at the index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected.</para>
         /// </returns>
-        public Playable GetInput(int inputPort)
-        {
-            return Playables.GetInputValidated((Playable) this, inputPort, base.GetType());
-        }
+        public Playable GetInput(int inputPort) => 
+            Playables.GetInputValidated((Playable) this, inputPort, base.GetType());
 
         /// <summary>
         /// <para>Get the weight of the Playable at a specified index.</para>
@@ -66,10 +60,8 @@
         /// <returns>
         /// <para>Weight of the input Playable. Returns -1 if there is no input connected at this input index.</para>
         /// </returns>
-        public float GetInputWeight(int index)
-        {
-            return Playables.GetInputWeightValidated((Playable) this, index, base.GetType());
-        }
+        public float GetInputWeight(int index) => 
+            Playables.GetInputWeightValidated((Playable) this, index, base.GetType());
 
         /// <summary>
         /// <para>Returns the Playable connected at the specified output index.</para>
@@ -78,10 +70,8 @@
         /// <returns>
         /// <para>Playable connected at the output index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected.</para>
         /// </returns>
-        public Playable GetOutput(int outputPort)
-        {
-            return Playables.GetOutputValidated((Playable) this, outputPort, base.GetType());
-        }
+        public Playable GetOutput(int outputPort) => 
+            Playables.GetOutputValidated((Playable) this, outputPort, base.GetType());
 
         /// <summary>
         /// <para>Override this method to perform custom operations when the PlayState changes.</para>
@@ -99,18 +89,14 @@
         {
         }
 
-        public static implicit operator AnimationPlayable(CustomAnimationPlayable s)
-        {
-            return s.handle;
-        }
+        public static implicit operator AnimationPlayable(CustomAnimationPlayable s) => 
+            s.handle;
 
-        public static implicit operator Playable(CustomAnimationPlayable s)
-        {
-            return new Playable { 
+        public static implicit operator Playable(CustomAnimationPlayable s) => 
+            new Playable { 
                 m_Handle = s.node.m_Handle,
                 m_Version = s.node.m_Version
             };
-        }
 
         /// <summary>
         /// <para>Override this method to manage input connections and change weights on inputs.</para>
@@ -126,10 +112,8 @@
         /// <returns>
         /// <para>Returns false if the removal fails.</para>
         /// </returns>
-        public bool RemoveAllInputs()
-        {
-            return AnimationPlayableUtilities.RemoveAllInputsValidated((AnimationPlayable) this, base.GetType());
-        }
+        public bool RemoveAllInputs() => 
+            AnimationPlayableUtilities.RemoveAllInputsValidated((AnimationPlayable) this, base.GetType());
 
         /// <summary>
         /// <para>Removes a playable from the list of inputs.</para>
@@ -138,10 +122,8 @@
         /// <returns>
         /// <para>Returns false if the removal could not be removed because it wasn't found.</para>
         /// </returns>
-        public bool RemoveInput(int index)
-        {
-            return AnimationPlayableUtilities.RemoveInputValidated((AnimationPlayable) this, index, base.GetType());
-        }
+        public bool RemoveInput(int index) => 
+            AnimationPlayableUtilities.RemoveInputValidated((AnimationPlayable) this, index, base.GetType());
 
         internal void SetHandle(int version, IntPtr playableHandle)
         {
@@ -157,15 +139,11 @@
         /// <returns>
         /// <para>Returns false if the operation could not be completed.</para>
         /// </returns>
-        public bool SetInput(Playable source, int index)
-        {
-            return AnimationPlayableUtilities.SetInputValidated((AnimationPlayable) this, source, index, base.GetType());
-        }
+        public bool SetInput(Playable source, int index) => 
+            AnimationPlayableUtilities.SetInputValidated((AnimationPlayable) this, source, index, base.GetType());
 
-        public bool SetInputs(IEnumerable<Playable> sources)
-        {
-            return AnimationPlayableUtilities.SetInputsValidated((AnimationPlayable) this, sources, base.GetType());
-        }
+        public bool SetInputs(IEnumerable<Playable> sources) => 
+            AnimationPlayableUtilities.SetInputsValidated((AnimationPlayable) this, sources, base.GetType());
 
         /// <summary>
         /// <para>Set the weight of an input.</para>
@@ -182,10 +160,8 @@
         /// </summary>
         public double duration
         {
-            get
-            {
-                return Playables.GetDurationValidated((Playable) this, base.GetType());
-            }
+            get => 
+                Playables.GetDurationValidated((Playable) this, base.GetType());
             set
             {
                 Playables.SetDurationValidated((Playable) this, value, base.GetType());
@@ -195,42 +171,25 @@
         /// <summary>
         /// <para>The count of inputs on the Playable. This count includes slots that aren't connected to anything.</para>
         /// </summary>
-        public int inputCount
-        {
-            get
-            {
-                return Playables.GetInputCountValidated((Playable) this, base.GetType());
-            }
-        }
+        public int inputCount =>
+            Playables.GetInputCountValidated((Playable) this, base.GetType());
 
-        internal Playable node
-        {
-            get
-            {
-                return (Playable) this.handle;
-            }
-        }
+        internal Playable node =>
+            ((Playable) this.handle);
 
         /// <summary>
         /// <para>The count of ouputs on the Playable.  Currently only 1 output is supported.</para>
         /// </summary>
-        public int outputCount
-        {
-            get
-            {
-                return Playables.GetOutputCountValidated((Playable) this, base.GetType());
-            }
-        }
+        public int outputCount =>
+            Playables.GetOutputCountValidated((Playable) this, base.GetType());
 
         /// <summary>
         /// <para>Current Experimental.Director.PlayState of this playable. This indicates whether the Playable is currently playing or paused.</para>
         /// </summary>
         public PlayState state
         {
-            get
-            {
-                return Playables.GetPlayStateValidated((Playable) this, base.GetType());
-            }
+            get => 
+                Playables.GetPlayStateValidated((Playable) this, base.GetType());
             set
             {
                 Playables.SetPlayStateValidated((Playable) this, value, base.GetType());
@@ -242,10 +201,8 @@
         /// </summary>
         public double time
         {
-            get
-            {
-                return Playables.GetTimeValidated((Playable) this, base.GetType());
-            }
+            get => 
+                Playables.GetTimeValidated((Playable) this, base.GetType());
             set
             {
                 Playables.SetTimeValidated((Playable) this, value, base.GetType());

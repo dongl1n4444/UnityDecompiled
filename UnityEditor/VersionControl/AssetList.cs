@@ -86,10 +86,8 @@
         {
             internal Asset asset;
 
-            internal bool <>m__0(Asset p)
-            {
-                return p.IsChildOf(this.asset);
-            }
+            internal bool <>m__0(Asset p) => 
+                p.IsChildOf(this.asset);
         }
     }
 }

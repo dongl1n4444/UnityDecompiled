@@ -30,10 +30,8 @@
         /// <returns>
         /// <para>Placement state.</para>
         /// </returns>
-        public static PlacementState GetPlacementState()
-        {
-            return GetPlacementState(null);
-        }
+        public static PlacementState GetPlacementState() => 
+            GetPlacementState(null);
 
         /// <summary>
         /// <para>Returns the placement state.</para>
@@ -42,10 +40,8 @@
         /// <returns>
         /// <para>Placement state.</para>
         /// </returns>
-        public static PlacementState GetPlacementState(string placementId)
-        {
-            return s_Platform.GetPlacementState(!string.IsNullOrEmpty(placementId) ? placementId : null);
-        }
+        public static PlacementState GetPlacementState(string placementId) => 
+            s_Platform.GetPlacementState(!string.IsNullOrEmpty(placementId) ? placementId : null);
 
         /// <summary>
         /// <para>Manually initializes the advertisement system. Normally this is done from editor, and you should only call this method if you are using UnityAds with automatic initialization disabled.</para>
@@ -89,10 +85,8 @@
             }
         }
 
-        private static bool IsEnabled()
-        {
-            return (UnityAdsSettings.enabled && UnityAdsSettings.IsPlatformEnabled(Application.platform));
-        }
+        private static bool IsEnabled() => 
+            (UnityAdsSettings.enabled && UnityAdsSettings.IsPlatformEnabled(Application.platform));
 
         /// <summary>
         /// <para>Returns whether an advertisement is ready to be shown. Placements are configured per game in the UnityAds admin site, where you can also set your default placement.</para>
@@ -101,10 +95,8 @@
         /// <returns>
         /// <para>If the placement is ready.</para>
         /// </returns>
-        public static bool IsReady()
-        {
-            return IsReady(null);
-        }
+        public static bool IsReady() => 
+            IsReady(null);
 
         /// <summary>
         /// <para>Returns whether an advertisement is ready to be shown. Placements are configured per game in the UnityAds admin site, where you can also set your default placement.</para>
@@ -113,10 +105,8 @@
         /// <returns>
         /// <para>If the placement is ready.</para>
         /// </returns>
-        public static bool IsReady(string placementId)
-        {
-            return s_Platform.IsReady(!string.IsNullOrEmpty(placementId) ? placementId : null);
-        }
+        public static bool IsReady(string placementId) => 
+            s_Platform.IsReady(!string.IsNullOrEmpty(placementId) ? placementId : null);
 
         private static void Load()
         {
@@ -255,10 +245,8 @@
         [Obsolete("Use Advertisement.debugMode instead.")]
         public static DebugLevel debugLevel
         {
-            get
-            {
-                return (DebugLevel) s_DebugLevel;
-            }
+            get => 
+                ((DebugLevel) s_DebugLevel);
             set
             {
                 s_DebugLevel = (DebugLevelInternal) value;
@@ -270,10 +258,8 @@
         /// </summary>
         public static bool debugMode
         {
-            get
-            {
-                return s_Platform.debugMode;
-            }
+            get => 
+                s_Platform.debugMode;
             set
             {
                 s_Platform.debugMode = value;
@@ -283,31 +269,19 @@
         /// <summary>
         /// <para>Returns the game identifier for the current platform.</para>
         /// </summary>
-        public static string gameId
-        {
-            get
-            {
-                return UnityAdsSettings.GetGameId(Application.platform);
-            }
-        }
+        public static string gameId =>
+            UnityAdsSettings.GetGameId(Application.platform);
 
-        private static bool initializeOnStartup
-        {
-            get
-            {
-                return UnityAdsSettings.initializeOnStartup;
-            }
-        }
+        private static bool initializeOnStartup =>
+            UnityAdsSettings.initializeOnStartup;
 
         /// <summary>
         /// <para>Returns whether the advertisement system is initialized successfully.</para>
         /// </summary>
         public static bool isInitialized
         {
-            get
-            {
-                return s_Initialized;
-            }
+            get => 
+                s_Initialized;
             private set
             {
                 s_Initialized = value;
@@ -319,10 +293,8 @@
         /// </summary>
         public static bool isShowing
         {
-            get
-            {
-                return s_Showing;
-            }
+            get => 
+                s_Showing;
             private set
             {
                 s_Showing = value;
@@ -332,35 +304,20 @@
         /// <summary>
         /// <para>Returns if the current platform is supported by the advertisement system.</para>
         /// </summary>
-        public static bool isSupported
-        {
-            get
-            {
-                return (((Application.isEditor && s_EditorSupportedPlatform) || ((Application.platform == RuntimePlatform.IPhonePlayer) || (Application.platform == RuntimePlatform.Android))) && IsEnabled());
-            }
-        }
+        public static bool isSupported =>
+            (((Application.isEditor && s_EditorSupportedPlatform) || ((Application.platform == RuntimePlatform.IPhonePlayer) || (Application.platform == RuntimePlatform.Android))) && IsEnabled());
 
         /// <summary>
         /// <para>Returns whether the testing mode is enabled.</para>
         /// </summary>
-        public static bool testMode
-        {
-            get
-            {
-                return UnityAdsSettings.testMode;
-            }
-        }
+        public static bool testMode =>
+            UnityAdsSettings.testMode;
 
         /// <summary>
         /// <para>Returns the current Unity Ads version.</para>
         /// </summary>
-        public static string version
-        {
-            get
-            {
-                return s_Platform.version;
-            }
-        }
+        public static string version =>
+            s_Platform.version;
 
         [CompilerGenerated]
         private sealed class <Show>c__AnonStorey0

@@ -40,10 +40,8 @@
             return list;
         }
 
-        private static string CacheDirectoryPathFor(string builderCacheDirectory)
-        {
-            return (builderCacheDirectory + "/il2cpp_cache");
-        }
+        private static string CacheDirectoryPathFor(string builderCacheDirectory) => 
+            (builderCacheDirectory + "/il2cpp_cache");
 
         public static void ClearAndPrepareCacheDirectory(Il2CppNativeCodeBuilder builder)
         {
@@ -61,20 +59,14 @@
             }
         }
 
-        private static string EditorVersionFilenameFor(string editorVersion)
-        {
-            return string.Format("il2cpp_cache {0}", editorVersion);
-        }
+        private static string EditorVersionFilenameFor(string editorVersion) => 
+            $"il2cpp_cache {editorVersion}";
 
-        private static string FormatArgument(string name, string value)
-        {
-            return string.Format("--{0}=\"{1}\"", name, value);
-        }
+        private static string FormatArgument(string name, string value) => 
+            $"--{name}="{value}"";
 
-        public static string ObjectFilePathInCacheDirectoryFor(string builderCacheDirectory)
-        {
-            return CacheDirectoryPathFor(builderCacheDirectory);
-        }
+        public static string ObjectFilePathInCacheDirectoryFor(string builderCacheDirectory) => 
+            CacheDirectoryPathFor(builderCacheDirectory);
 
         public static void PrepareCacheDirectory(Il2CppNativeCodeBuilder builder, string currentEditorVersion)
         {

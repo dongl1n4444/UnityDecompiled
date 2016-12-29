@@ -89,7 +89,7 @@
                 resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(reference2);
                 foreach (MethodDefinition definition2 in definition.Methods)
                 {
-                    if (Extensions.IsFinalizerMethod(definition2))
+                    if (definition2.IsFinalizerMethod())
                     {
                         method = resolver.Resolve(definition2);
                         break;
@@ -121,7 +121,7 @@
         {
             Instruction instruction;
             VariableDefinition definition;
-            if (!Extensions.IsValueType(type))
+            if (!type.IsValueType())
             {
                 instruction = Instruction.Create(OpCodes.Ldnull);
                 goto Label_00F3;
@@ -165,41 +165,35 @@
             instruction.Offset = instruction.Previous.Offset + instruction.Previous.GetSize();
         }
 
-        internal static bool IsGenericVirtualMethod(MethodDefinition method)
-        {
-            return (method.IsVirtual && method.HasGenericParameters);
-        }
+        internal static bool IsGenericVirtualMethod(MethodDefinition method) => 
+            (method.IsVirtual && method.HasGenericParameters);
 
-        internal static bool IsGetOrSetGenericValueImplOnArray(MethodReference method)
-        {
-            return (Extensions.IsSystemArray(method.DeclaringType) && ((method.Name == "GetGenericValueImpl") || (method.Name == "SetGenericValueImpl")));
-        }
+        internal static bool IsGetOrSetGenericValueImplOnArray(MethodReference method) => 
+            (method.DeclaringType.IsSystemArray() && ((method.Name == "GetGenericValueImpl") || (method.Name == "SetGenericValueImpl")));
 
         private static bool IsUnconstructibleWindowsRuntimeClass(TypeReference type, out string errorMessage)
         {
-            if (Extensions.IsAttribute(type))
+            if (type.IsAttribute())
             {
-                errorMessage = string.Format("Cannot construct type '{0}'. Windows Runtime attribute types are not constructable.", type.FullName);
+                errorMessage = $"Cannot construct type '{type.FullName}'. Windows Runtime attribute types are not constructable.";
                 return true;
             }
             TypeReference reference = WindowsRuntimeProjections.ProjectToCLR(type);
             if (reference != type)
             {
-                errorMessage = string.Format("Cannot construct type '{0}'. It has no managed representation. Instead, use '{1}'.", type.FullName, reference.FullName);
+                errorMessage = $"Cannot construct type '{type.FullName}'. It has no managed representation. Instead, use '{reference.FullName}'.";
                 return true;
             }
             errorMessage = null;
             return false;
         }
 
-        internal static bool MethodCanBeDirectlyCalled(MethodDefinition method)
-        {
-            return ((!method.DeclaringType.IsInterface && !method.IsAbstract) || Extensions.IsComOrWindowsRuntimeInterface(method.DeclaringType));
-        }
+        internal static bool MethodCanBeDirectlyCalled(MethodDefinition method) => 
+            ((!method.DeclaringType.IsInterface && !method.IsAbstract) || method.DeclaringType.IsComOrWindowsRuntimeInterface());
 
         internal static bool MethodNeedsInvoker(MethodDefinition method)
         {
-            if (method.IsConstructor && Extensions.IsDelegate(method.DeclaringType))
+            if (method.IsConstructor && method.DeclaringType.IsDelegate())
             {
                 return false;
             }
@@ -220,7 +214,7 @@
             {
                 return false;
             }
-            if (Extensions.IsStripped(method))
+            if (method.IsStripped())
             {
                 return false;
             }
@@ -229,22 +223,22 @@
 
         private static void ReleaseCachedInterfaces(CppCodeWriter writer, TypeDefinition declaringType)
         {
-            TypeReference[] referenceArray = Enumerable.ToArray<TypeReference>(Extensions.ImplementedComOrWindowsRuntimeInterfaces(declaringType));
+            TypeReference[] referenceArray = declaringType.ImplementedComOrWindowsRuntimeInterfaces().ToArray<TypeReference>();
             if (referenceArray.Length != 0)
             {
-                bool flag = Enumerable.Count<TypeReference>(Extensions.GetComposableFactoryTypes(declaringType)) > 0;
+                bool flag = declaringType.GetComposableFactoryTypes().Count<TypeReference>() > 0;
                 if (flag)
                 {
-                    writer.WriteLine(string.Format("if ({0}->klass->is_import_or_windows_runtime)", Naming.ThisParameterName));
+                    writer.WriteLine($"if ({Naming.ThisParameterName}->klass->is_import_or_windows_runtime)");
                     writer.BeginBlock();
                 }
                 foreach (TypeReference reference in referenceArray)
                 {
                     string str = Naming.ForComTypeInterfaceFieldName(reference);
-                    writer.WriteLine(string.Format("if ({0}->{1} != {2})", Naming.ThisParameterName, str, Naming.Null));
+                    writer.WriteLine($"if ({Naming.ThisParameterName}->{str} != {Naming.Null})");
                     using (new BlockWriter(writer, false))
                     {
-                        writer.WriteLine(string.Format("{0}->{1}->Release();", Naming.ThisParameterName, str));
+                        writer.WriteLine($"{Naming.ThisParameterName}->{str}->Release();");
                     }
                 }
                 if (flag)
@@ -255,7 +249,7 @@
                 foreach (TypeReference reference2 in referenceArray)
                 {
                     string str2 = Naming.ForComTypeInterfaceFieldName(reference2);
-                    writer.WriteLine(string.Format("{0}->{1} = {2};", Naming.ThisParameterName, str2, Naming.Null));
+                    writer.WriteLine($"{Naming.ThisParameterName}->{str2} = {Naming.Null};");
                 }
                 writer.WriteLine();
             }
@@ -264,16 +258,16 @@
         private static void ReleaseIl2CppObjectIdentity(CppCodeWriter writer)
         {
             string str = Naming.ForIl2CppComObjectIdentityField();
-            writer.WriteLine(string.Format("if ({0}->{1} != {2})", Naming.ThisParameterName, str, Naming.Null));
+            writer.WriteLine($"if ({Naming.ThisParameterName}->{str} != {Naming.Null})");
             using (new BlockWriter(writer, false))
             {
-                writer.WriteLine(string.Format("if ({0}->klass->is_import_or_windows_runtime)", Naming.ThisParameterName));
+                writer.WriteLine($"if ({Naming.ThisParameterName}->klass->is_import_or_windows_runtime)");
                 using (new BlockWriter(writer, false))
                 {
-                    writer.WriteLine(string.Format("il2cpp_codegen_il2cpp_com_object_cleanup({0});", Naming.ThisParameterName));
+                    writer.WriteLine($"il2cpp_codegen_il2cpp_com_object_cleanup({Naming.ThisParameterName});");
                 }
-                writer.WriteLine(string.Format("{0}->{1}->Release();", Naming.ThisParameterName, str));
-                writer.WriteLine(string.Format("{0}->{1} = {2};", Naming.ThisParameterName, str, Naming.Null));
+                writer.WriteLine($"{Naming.ThisParameterName}->{str}->Release();");
+                writer.WriteLine($"{Naming.ThisParameterName}->{str} = {Naming.Null};");
             }
             writer.WriteLine();
         }
@@ -290,7 +284,7 @@
                     {
                         <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <ReplaceWithHardcodedAlternativeIfPresent>m__4);
                     }
-                    MethodDefinition definition3 = Enumerable.Single<MethodDefinition>(type.Methods, <>f__am$cache4);
+                    MethodDefinition definition3 = type.Methods.Single<MethodDefinition>(<>f__am$cache4);
                     writer.AddIncludeForMethodDeclarations(type);
                     object[] args = new object[] { Emit.Call(Naming.ForMethod(definition3), Emit.Cast(new ByReferenceType(type), Naming.ThisParameterName), metadataAccess.HiddenMethodInfo(definition3)) };
                     writer.WriteLine("return {0};", args);
@@ -299,7 +293,7 @@
                 case "R System.Array::UnsafeMov(S)":
                 {
                     TypeReference variableType = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(method.DeclaringType, method).Resolve(method.ReturnType);
-                    object[] objArray2 = new object[] { Naming.ForVariable(variableType), Naming.ForParameterName(Enumerable.First<ParameterDefinition>(method.Parameters)) };
+                    object[] objArray2 = new object[] { Naming.ForVariable(variableType), Naming.ForParameterName(method.Parameters.First<ParameterDefinition>()) };
                     writer.WriteLine("return static_cast<{0}>({1});", objArray2);
                     return true;
                 }
@@ -309,10 +303,8 @@
             return false;
         }
 
-        private static bool ReturnsVoid(MethodReference method)
-        {
-            return (method.ReturnType.MetadataType == MetadataType.Void);
-        }
+        private static bool ReturnsVoid(MethodReference method) => 
+            (method.ReturnType.MetadataType == MetadataType.Void);
 
         private static bool ShouldWriteIncludeForParameter(TypeReference resolvedParameterType)
         {
@@ -338,7 +330,7 @@
             using (new BlockWriter(this._writer, false))
             {
                 string str3;
-                if (Extensions.IsNullable(method.DeclaringType))
+                if (method.DeclaringType.IsNullable())
                 {
                     object[] args = new object[] { Naming.ForVariable(method.DeclaringType) };
                     this._writer.WriteLine("{0} _thisAdjusted;", args);
@@ -347,7 +339,7 @@
                     {
                         <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteAdjustorThunk>m__1);
                     }
-                    objArray2[0] = Naming.ForFieldSetter(Enumerable.Single<FieldDefinition>(method.DeclaringType.Resolve().Fields, <>f__am$cache1));
+                    objArray2[0] = Naming.ForFieldSetter(method.DeclaringType.Resolve().Fields.Single<FieldDefinition>(<>f__am$cache1));
                     objArray2[1] = Naming.ForVariable(((GenericInstanceType) method.DeclaringType).GenericArguments[0]);
                     objArray2[2] = Naming.ThisParameterName;
                     this._writer.WriteLine("_thisAdjusted.{0}(*reinterpret_cast<{1}*>({2} + 1));", objArray2);
@@ -356,7 +348,7 @@
                     {
                         <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteAdjustorThunk>m__2);
                     }
-                    objArray3[0] = Naming.ForFieldSetter(Enumerable.Single<FieldDefinition>(method.DeclaringType.Resolve().Fields, <>f__am$cache2));
+                    objArray3[0] = Naming.ForFieldSetter(method.DeclaringType.Resolve().Fields.Single<FieldDefinition>(<>f__am$cache2));
                     this._writer.WriteLine("_thisAdjusted.{0}(true);", objArray3);
                     str3 = "&_thisAdjusted";
                 }
@@ -374,7 +366,7 @@
                     arguments.Add(Naming.ForParameterName(method.Parameters[i]));
                 }
                 arguments.Add("method");
-                if (Extensions.IsNullable(method.DeclaringType))
+                if (method.DeclaringType.IsNullable())
                 {
                     if (method.ReturnType.MetadataType != MetadataType.Void)
                     {
@@ -390,7 +382,7 @@
                     {
                         <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteAdjustorThunk>m__3);
                     }
-                    objArray6[0] = Naming.ForFieldGetter(Enumerable.Single<FieldDefinition>(method.DeclaringType.Resolve().Fields, <>f__am$cache3));
+                    objArray6[0] = Naming.ForFieldGetter(method.DeclaringType.Resolve().Fields.Single<FieldDefinition>(<>f__am$cache3));
                     objArray6[1] = Naming.ForVariable(((GenericInstanceType) method.DeclaringType).GenericArguments[0]);
                     objArray6[2] = Naming.ThisParameterName;
                     this._writer.WriteLine("*reinterpret_cast<{1}*>({2} + 1) = _thisAdjusted.{0}();", objArray6);
@@ -451,7 +443,7 @@
         private static void WriteMethodBodyForComOrWindowsRuntimeFinalizer(MethodDefinition finalizer, CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
             TypeDefinition declaringType = finalizer.DeclaringType;
-            if (!Extensions.IsIl2CppComObject(declaringType))
+            if (!declaringType.IsIl2CppComObject())
             {
                 ReleaseCachedInterfaces(writer, declaringType);
             }
@@ -467,7 +459,7 @@
             MethodDefinition methodDefinition = method.Resolve();
             if (methodDefinition.IsConstructor)
             {
-                if (methodDefinition.DeclaringType.IsImport && !Extensions.IsWindowsRuntimeProjection(methodDefinition.DeclaringType))
+                if (methodDefinition.DeclaringType.IsImport && !methodDefinition.DeclaringType.IsWindowsRuntimeProjection())
                 {
                     WriteMethodBodyForComObjectConstructor(method, writer, methodDefinition);
                 }
@@ -476,7 +468,7 @@
                     WriteMethodBodyForWindowsRuntimeObjectConstructor(method, writer, methodDefinition, metadataAccess);
                 }
             }
-            else if (Extensions.IsFinalizerMethod(methodDefinition))
+            else if (methodDefinition.IsFinalizerMethod())
             {
                 WriteMethodBodyForComOrWindowsRuntimeFinalizer(methodDefinition, writer, metadataAccess);
             }
@@ -493,18 +485,18 @@
         private static void WriteMethodBodyForDirectComOrWindowsRuntimeCall(MethodReference method, CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
         {
             MethodDefinition definition = method.Resolve();
-            if (!Extensions.IsComOrWindowsRuntimeMethod(definition))
+            if (!definition.IsComOrWindowsRuntimeMethod())
             {
                 throw new InvalidOperationException("WriteMethodBodyForDirectComOrWindowsRuntimeCall called for non-COM and non-Windows Runtime method");
             }
-            MethodReference reference = !definition.DeclaringType.IsInterface ? Extensions.GetOverridenInterfaceMethod(method, Extensions.GetInterfaces(method.DeclaringType)) : method;
+            MethodReference reference = !definition.DeclaringType.IsInterface ? method.GetOverridenInterfaceMethod(method.DeclaringType.GetInterfaces()) : method;
             if (reference == null)
             {
-                writer.WriteStatement(Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_missing_method_exception(\"The method '{0}' has no implementation.\")", method.FullName)));
+                writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_missing_method_exception("The method '{method.FullName}' has no implementation.")"));
             }
-            else if (!Extensions.IsComOrWindowsRuntimeInterface(reference.DeclaringType))
+            else if (!reference.DeclaringType.IsComOrWindowsRuntimeInterface())
             {
-                writer.WriteStatement(Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_not_supported_exception(\"Cannot call method '{0}' (overriding '{1}'). IL2CPP does not yet support calling projected methods.\")", method.FullName, reference.FullName)));
+                writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_not_supported_exception("Cannot call method '{method.FullName}' (overriding '{reference.FullName}'). IL2CPP does not yet support calling projected methods.")"));
             }
             else
             {
@@ -526,12 +518,12 @@
                 arguments = !IntrinsicRemap.HasCustomArguments(methodToCall) ? arguments : IntrinsicRemap.GetCustomArguments(methodToCall, methodToCall, metadataAccess, arguments);
                 if (methodToCall.ReturnType.MetadataType != MetadataType.Void)
                 {
-                    object[] args = new object[] { str, EnumerableExtensions.AggregateWithComma(arguments) };
+                    object[] args = new object[] { str, arguments.AggregateWithComma() };
                     writer.WriteLine("return {0}({1});", args);
                 }
                 else
                 {
-                    object[] objArray2 = new object[] { str, EnumerableExtensions.AggregateWithComma(arguments) };
+                    object[] objArray2 = new object[] { str, arguments.AggregateWithComma() };
                     writer.WriteLine("{0}({1});", objArray2);
                 }
             }
@@ -539,7 +531,7 @@
             {
                 if (methodToCall.HasGenericParameters)
                 {
-                    throw new NotSupportedException(string.Format("Internal calls cannot have generic parameters: {0}", methodToCall.FullName));
+                    throw new NotSupportedException($"Internal calls cannot have generic parameters: {methodToCall.FullName}");
                 }
                 string str2 = !ReturnsVoid(methodToCall) ? "return " : string.Empty;
                 string icall = method.FullName.Substring(method.FullName.IndexOf(" ") + 1);
@@ -566,14 +558,14 @@
             MethodDefinition definition = method.Resolve();
             if (!MethodCanBeDirectlyCalled(definition))
             {
-                throw new InvalidOperationException(string.Format("Trying to generate a body for method '{0}'", method.FullName));
+                throw new InvalidOperationException($"Trying to generate a body for method '{method.FullName}'");
             }
             DebuggerSupportFactory.GetDebuggerSupport().WriteCallStackInformation(writer, method, new KeyValuePair<string, TypeReference>[0], metadataAccess);
             if (((definition.IsRuntime && !definition.IsInternalCall) && !definition.DeclaringType.IsInterface) && (method.DeclaringType.Resolve().BaseType.FullName == "System.MulticastDelegate"))
             {
                 new DelegateMethodsWriter(writer).WriteMethodBodyForIsRuntimeMethod(method, metadataAccess);
             }
-            else if (Extensions.IsComOrWindowsRuntimeMethod(definition))
+            else if (definition.IsComOrWindowsRuntimeMethod())
             {
                 WriteMethodBodyForComOrWindowsRuntimeMethod(method, writer, metadataAccess);
             }
@@ -605,7 +597,7 @@
             }
             if (IsUnconstructibleWindowsRuntimeClass(method.DeclaringType, out str))
             {
-                writer.WriteStatement(Emit.RaiseManagedException(string.Format("il2cpp_codegen_get_invalid_operation_exception(\"{0}\")", str)));
+                writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_invalid_operation_exception("{str}")"));
             }
             else
             {
@@ -651,7 +643,7 @@
         internal void WriteMethodDeclarationsFor(Func<MethodDefinition, bool> filter)
         {
             TypeDefinition definition = this._type.Resolve();
-            foreach (MethodDefinition definition2 in Enumerable.Where<MethodDefinition>(definition.Methods, filter))
+            foreach (MethodDefinition definition2 in definition.Methods.Where<MethodDefinition>(filter))
             {
                 MethodReference method = definition2;
                 GenericInstanceType genericInstanceType = this._type as GenericInstanceType;
@@ -665,7 +657,7 @@
             {
                 MarshalDataCollector.MarshalInfoWriterFor(this._type, type2, null, false, false, false, null).WriteMarshalFunctionDeclarations(this._writer);
             }
-            if (Extensions.NeedsComCallableWrapper(definition))
+            if (definition.NeedsComCallableWrapper())
             {
                 new CCWWriter(definition).WriteCreateCCWDeclaration(this._writer);
             }
@@ -717,7 +709,7 @@
                 }
                 WriteMethodWithMetadataInitialization(this._writer, sharedMethodSignature, storey.method.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), Naming.ForMethod(storey.method));
                 this.WriteMethodForDelegatePInvokeIfNeeded(this._writer, storey.method, methodCollector);
-                if (storey.method.HasThis && Extensions.IsValueType(storey.method.DeclaringType))
+                if (storey.method.HasThis && storey.method.DeclaringType.IsValueType())
                 {
                     this.WriteAdjustorThunk(storey.method, methodCollector);
                 }
@@ -735,7 +727,7 @@
             {
                 <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <WriteMethodDefinitions>m__0);
             }
-            foreach (MethodDefinition definition2 in Enumerable.Where<MethodDefinition>(definition.Methods, <>f__am$cache0))
+            foreach (MethodDefinition definition2 in definition.Methods.Where<MethodDefinition>(<>f__am$cache0))
             {
                 ErrorInformation.CurrentlyProcessing.Method = definition2;
                 if (CodeGenOptions.EnableErrorMessageTest)
@@ -754,7 +746,7 @@
             {
                 MarshalDataCollector.MarshalInfoWriterFor(this._type, type2, null, false, false, false, null).WriteMarshalFunctionDefinitions(this._writer, methodCollector);
             }
-            if (Extensions.NeedsComCallableWrapper(definition))
+            if (definition.NeedsComCallableWrapper())
             {
                 methodCollector.AddCCWMarshallingFunction(definition);
                 new CCWWriter(definition).WriteCreateCCWDefinition(this._writer);
@@ -783,7 +775,7 @@
             object[] args = new object[] { "s_Il2CppMethodInitialized" };
             writer.WriteLine("if (!{0})", args);
             writer.BeginBlock();
-            writer.WriteStatement(string.Format("il2cpp_codegen_initialize_method ({0})", identifier));
+            writer.WriteStatement($"il2cpp_codegen_initialize_method ({identifier})");
             writer.WriteStatement(Emit.Assign("s_Il2CppMethodInitialized", "true"));
             writer.EndBlock(false);
         }

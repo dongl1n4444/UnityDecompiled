@@ -19,13 +19,8 @@
 
         internal static string Internal_UserGeneratedProjectSuffix { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
-        public static string[] projectGenerationBuiltinExtensions
-        {
-            get
-            {
-                return Enumerable.ToArray<string>(SolutionSynchronizer.BuiltinSupportedExtensions.Keys);
-            }
-        }
+        public static string[] projectGenerationBuiltinExtensions =>
+            SolutionSynchronizer.BuiltinSupportedExtensions.Keys.ToArray<string>();
 
         public static string projectGenerationRootNamespace { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
 
@@ -38,7 +33,7 @@
                 {
                     <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <get_projectGenerationUserExtensions>m__0);
                 }
-                return Enumerable.ToArray<string>(Enumerable.Select<string, string>(Internal_ProjectGenerationUserExtensions.Split(separator, StringSplitOptions.RemoveEmptyEntries), <>f__am$cache0));
+                return Enumerable.Select<string, string>(Internal_ProjectGenerationUserExtensions.Split(separator, StringSplitOptions.RemoveEmptyEntries), <>f__am$cache0).ToArray<string>();
             }
             set
             {

@@ -34,19 +34,15 @@
                 {
                     <>f__am$cache0 = new Func<CompilerMessage, string>(null, (IntPtr) <Compile>m__0);
                 }
-                return Enumerable.ToArray<string>(Enumerable.Select<CompilerMessage, string>(compiler.GetCompilerMessages(), <>f__am$cache0));
+                return Enumerable.Select<CompilerMessage, string>(compiler.GetCompilerMessages(), <>f__am$cache0).ToArray<string>();
             }
         }
 
-        protected override CompilerOutputParserBase CreateOutputParser()
-        {
-            return new MonoCSharpCompilerOutputParser();
-        }
+        protected override CompilerOutputParserBase CreateOutputParser() => 
+            new MonoCSharpCompilerOutputParser();
 
-        private string[] GetAdditionalReferences()
-        {
-            return new string[] { "System.Runtime.Serialization.dll", "System.Xml.Linq.dll", "UnityScript.dll", "UnityScript.Lang.dll", "Boo.Lang.dll" };
-        }
+        private string[] GetAdditionalReferences() => 
+            new string[] { "System.Runtime.Serialization.dll", "System.Xml.Linq.dll", "UnityScript.dll", "UnityScript.Lang.dll", "Boo.Lang.dll" };
 
         private string GetCompilerPath(List<string> arguments)
         {
@@ -77,7 +73,7 @@
             {
                 arguments.Add("-r:" + ScriptCompilerBase.PrepareFileName(str));
             }
-            foreach (string str2 in Enumerable.Distinct<string>(this._island._defines))
+            foreach (string str2 in this._island._defines.Distinct<string>())
             {
                 arguments.Add("-define:" + str2);
             }

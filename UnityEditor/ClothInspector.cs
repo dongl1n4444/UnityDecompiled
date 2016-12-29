@@ -339,10 +339,8 @@
             return Color.Lerp(Color.yellow, Color.green, (val - 0.7f) / 0.3f);
         }
 
-        private GUIContent GetModeString(DrawMode mode)
-        {
-            return s_ModeStrings[(int) mode];
-        }
+        private GUIContent GetModeString(DrawMode mode) => 
+            s_ModeStrings[(int) mode];
 
         private int GetMouseVertex(Event e)
         {
@@ -1174,20 +1172,13 @@
             this.state.ManipulateBackfaces = !this.state.ManipulateBackfaces;
         }
 
-        private Cloth cloth
-        {
-            get
-            {
-                return (Cloth) base.target;
-            }
-        }
+        private Cloth cloth =>
+            ((Cloth) base.target);
 
         private DrawMode drawMode
         {
-            get
-            {
-                return this.state.DrawMode;
-            }
+            get => 
+                this.state.DrawMode;
             set
             {
                 if (this.state.DrawMode != value)
@@ -1199,21 +1190,11 @@
             }
         }
 
-        public bool editing
-        {
-            get
-            {
-                return ((EditMode.editMode == EditMode.SceneViewEditMode.Cloth) && EditMode.IsOwner(this));
-            }
-        }
+        public bool editing =>
+            ((EditMode.editMode == EditMode.SceneViewEditMode.Cloth) && EditMode.IsOwner(this));
 
-        private ClothInspectorState state
-        {
-            get
-            {
-                return ScriptableSingleton<ClothInspectorState>.instance;
-            }
-        }
+        private ClothInspectorState state =>
+            ScriptableSingleton<ClothInspectorState>.instance;
 
         public enum DrawMode
         {

@@ -53,10 +53,8 @@
             return false;
         }
 
-        private static Vector3[] BoundsToPoints(Bounds bounds)
-        {
-            return new Vector3[] { new Vector3(bounds.min.x, bounds.min.y, bounds.min.z), new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), new Vector3(bounds.min.x, bounds.max.y, bounds.min.z), new Vector3(bounds.min.x, bounds.max.y, bounds.max.z), new Vector3(bounds.max.x, bounds.min.y, bounds.min.z), new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), new Vector3(bounds.max.x, bounds.max.y, bounds.min.z), new Vector3(bounds.max.x, bounds.max.y, bounds.max.z) };
-        }
+        private static Vector3[] BoundsToPoints(Bounds bounds) => 
+            new Vector3[] { new Vector3(bounds.min.x, bounds.min.y, bounds.min.z), new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), new Vector3(bounds.min.x, bounds.max.y, bounds.min.z), new Vector3(bounds.min.x, bounds.max.y, bounds.max.z), new Vector3(bounds.max.x, bounds.min.y, bounds.min.z), new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), new Vector3(bounds.max.x, bounds.max.y, bounds.min.z), new Vector3(bounds.max.x, bounds.max.y, bounds.max.z) };
 
         public static void ChangeEditMode(SceneViewEditMode mode, Bounds bounds, Editor caller)
         {
@@ -150,15 +148,11 @@
             ChangeEditMode(SceneViewEditMode.None, new Bounds(), null);
         }
 
-        private static Vector3[] GetPoints(Bounds bounds)
-        {
-            return BoundsToPoints(bounds);
-        }
+        private static Vector3[] GetPoints(Bounds bounds) => 
+            BoundsToPoints(bounds);
 
-        public static bool IsOwner(Editor editor)
-        {
-            return (editor.GetInstanceID() == ownerID);
-        }
+        public static bool IsOwner(Editor editor) => 
+            (editor.GetInstanceID() == ownerID);
 
         public static void OnSelectionChange()
         {
@@ -188,17 +182,13 @@
             }
         }
 
-        private static bool SeenByCamera(Camera camera, Bounds bounds)
-        {
-            return AnyPointSeenByCamera(camera, GetPoints(bounds));
-        }
+        private static bool SeenByCamera(Camera camera, Bounds bounds) => 
+            AnyPointSeenByCamera(camera, GetPoints(bounds));
 
         public static SceneViewEditMode editMode
         {
-            get
-            {
-                return s_EditMode;
-            }
+            get => 
+                s_EditMode;
             private set
             {
                 if ((s_EditMode == SceneViewEditMode.None) && (value != SceneViewEditMode.None))
@@ -221,10 +211,8 @@
 
         private static int ownerID
         {
-            get
-            {
-                return s_OwnerID;
-            }
+            get => 
+                s_OwnerID;
             set
             {
                 s_OwnerID = value;
@@ -238,10 +226,8 @@
 
         private static Tool toolBeforeEnteringEditMode
         {
-            get
-            {
-                return s_ToolBeforeEnteringEditMode;
-            }
+            get => 
+                s_ToolBeforeEnteringEditMode;
             set
             {
                 s_ToolBeforeEnteringEditMode = value;

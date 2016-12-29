@@ -46,10 +46,8 @@
             return false;
         }
 
-        internal static bool HasMouseDown(InternalListViewState ilvState, Rect r)
-        {
-            return HasMouseDown(ilvState, r, 0);
-        }
+        internal static bool HasMouseDown(InternalListViewState ilvState, Rect r) => 
+            HasMouseDown(ilvState, r, 0);
 
         internal static bool HasMouseDown(InternalListViewState ilvState, Rect r, int button)
         {
@@ -63,10 +61,8 @@
             return false;
         }
 
-        internal static bool HasMouseUp(InternalListViewState ilvState, Rect r)
-        {
-            return HasMouseUp(ilvState, r, 0);
-        }
+        internal static bool HasMouseUp(InternalListViewState ilvState, Rect r) => 
+            HasMouseUp(ilvState, r, 0);
 
         internal static bool HasMouseUp(InternalListViewState ilvState, Rect r, int button)
         {
@@ -93,15 +89,11 @@
             return SendKey(ilvState, Event.current.keyCode, totalCols);
         }
 
-        internal static Vector2 ListViewScrollToRow(InternalListViewState ilvState, int row)
-        {
-            return ListViewScrollToRow(ilvState, ilvState.state.scrollPos, row);
-        }
+        internal static Vector2 ListViewScrollToRow(InternalListViewState ilvState, int row) => 
+            ListViewScrollToRow(ilvState, ilvState.state.scrollPos, row);
 
-        internal static int ListViewScrollToRow(InternalListViewState ilvState, int currPosY, int row)
-        {
-            return (int) ListViewScrollToRow(ilvState, new Vector2(0f, (float) currPosY), row).y;
-        }
+        internal static int ListViewScrollToRow(InternalListViewState ilvState, int currPosY, int row) => 
+            ((int) ListViewScrollToRow(ilvState, new Vector2(0f, (float) currPosY), row).y);
 
         internal static Vector2 ListViewScrollToRow(InternalListViewState ilvState, Vector2 currPos, int row)
         {
@@ -336,10 +328,8 @@
             {
             }
 
-            public IEnumerator GetEnumerator()
-            {
-                return this;
-            }
+            public IEnumerator GetEnumerator() => 
+                this;
 
             public bool MoveNext()
             {
@@ -619,21 +609,11 @@
                 this.yPos = this.yFrom;
             }
 
-            ListViewElement IEnumerator<ListViewElement>.Current
-            {
-                get
-                {
-                    return this.element;
-                }
-            }
+            ListViewElement IEnumerator<ListViewElement>.Current =>
+                this.element;
 
-            object IEnumerator.Current
-            {
-                get
-                {
-                    return this.element;
-                }
-            }
+            object IEnumerator.Current =>
+                this.element;
         }
     }
 }

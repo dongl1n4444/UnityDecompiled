@@ -45,10 +45,8 @@
             }
         }
 
-        internal static TreeViewItem FindItem(int id, TreeViewItem searchFromThisItem)
-        {
-            return FindItemRecursive(id, searchFromThisItem);
-        }
+        internal static TreeViewItem FindItem(int id, TreeViewItem searchFromThisItem) => 
+            FindItemRecursive(id, searchFromThisItem);
 
         internal static TreeViewItem FindItemInList<T>(int id, IList<T> treeViewItems) where T: TreeViewItem
         {
@@ -87,7 +85,7 @@
             <FindItemsInList>c__AnonStorey0 storey = new <FindItemsInList>c__AnonStorey0 {
                 itemIDs = itemIDs
             };
-            return Enumerable.ToList<TreeViewItem>(Enumerable.Where<TreeViewItem>(treeViewItems, new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Where<TreeViewItem>(treeViewItems, new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)).ToList<TreeViewItem>();
         }
 
         private static void GetExpandedRowsRecursive(TreeView treeView, TreeViewItem item, IList<TreeViewItem> expandedRows)
@@ -233,10 +231,8 @@
         {
             internal int id;
 
-            internal bool <>m__0(T t)
-            {
-                return (t.id == this.id);
-            }
+            internal bool <>m__0(T t) => 
+                (t.id == this.id);
         }
 
         [CompilerGenerated]
@@ -244,10 +240,8 @@
         {
             internal IEnumerable<int> itemIDs;
 
-            internal bool <>m__0(TreeViewItem x)
-            {
-                return Enumerable.Contains<int>(this.itemIDs, x.id);
-            }
+            internal bool <>m__0(TreeViewItem x) => 
+                this.itemIDs.Contains<int>(x.id);
         }
     }
 }

@@ -14,9 +14,8 @@
         public string resultFilePath;
         public bool sceneBased;
 
-        public static PlaymodeTestsControllerSettings CreateRunnerSettings(TestRunnerFilter filter)
-        {
-            return new PlaymodeTestsControllerSettings { 
+        public static PlaymodeTestsControllerSettings CreateRunnerSettings(TestRunnerFilter filter) => 
+            new PlaymodeTestsControllerSettings { 
                 filter = filter,
                 sceneBased = false,
                 bootstrapScene = null,
@@ -24,7 +23,6 @@
                 isBatchModeRun = false,
                 originalScene = null
             };
-        }
     }
 }
 

@@ -17,16 +17,16 @@
         {
             <GetInterfaceMethod>c__AnonStorey0 storey = new <GetInterfaceMethod>c__AnonStorey0();
             TypeReference declaringType = method.DeclaringType;
-            if (Extensions.IsInterface(declaringType))
+            if (declaringType.IsInterface())
             {
                 return method;
             }
-            storey.staticInterfaces = Enumerable.ToArray<TypeReference>(Extensions.GetAllFactoryTypes(declaringType));
-            IEnumerable<TypeReference> candidateInterfaces = Enumerable.Where<TypeReference>(Extensions.GetInterfaces(declaringType), new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
-            MethodReference overridenInterfaceMethod = Extensions.GetOverridenInterfaceMethod(method, candidateInterfaces);
+            storey.staticInterfaces = declaringType.GetAllFactoryTypes().ToArray<TypeReference>();
+            IEnumerable<TypeReference> candidateInterfaces = declaringType.GetInterfaces().Where<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
+            MethodReference overridenInterfaceMethod = method.GetOverridenInterfaceMethod(candidateInterfaces);
             if (overridenInterfaceMethod == null)
             {
-                throw new InvalidOperationException(string.Format("Could not find overriden method for {0}", method.FullName));
+                throw new InvalidOperationException($"Could not find overriden method for {method.FullName}");
             }
             return overridenInterfaceMethod;
         }
@@ -42,7 +42,7 @@
                     <>f__ref$0 = this,
                     iface = iface
                 };
-                return !Enumerable.Any<TypeReference>(this.staticInterfaces, new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.staticInterfaces.Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
             }
 
             private sealed class <GetInterfaceMethod>c__AnonStorey1
@@ -50,10 +50,8 @@
                 internal ComInstanceMethodBodyWriter.<GetInterfaceMethod>c__AnonStorey0 <>f__ref$0;
                 internal TypeReference iface;
 
-                internal bool <>m__0(TypeReference nonInstanceInterface)
-                {
-                    return (this.iface == nonInstanceInterface);
-                }
+                internal bool <>m__0(TypeReference nonInstanceInterface) => 
+                    (this.iface == nonInstanceInterface);
             }
         }
     }

@@ -35,20 +35,14 @@
             base.SetPersistentListenerState(persistentEventCount, callState);
         }
 
-        protected override MethodInfo FindMethod_Impl(string name, object targetObj)
-        {
-            return UnityEventBase.GetValidMethodInfo(targetObj, name, new System.Type[0]);
-        }
+        protected override MethodInfo FindMethod_Impl(string name, object targetObj) => 
+            UnityEventBase.GetValidMethodInfo(targetObj, name, new System.Type[0]);
 
-        private static BaseInvokableCall GetDelegate(UnityAction action)
-        {
-            return new InvokableCall(action);
-        }
+        private static BaseInvokableCall GetDelegate(UnityAction action) => 
+            new InvokableCall(action);
 
-        internal override BaseInvokableCall GetDelegate(object target, MethodInfo theFunction)
-        {
-            return new InvokableCall(target, theFunction);
-        }
+        internal override BaseInvokableCall GetDelegate(object target, MethodInfo theFunction) => 
+            new InvokableCall(target, theFunction);
 
         /// <summary>
         /// <para>Invoke all registered callbacks (runtime and persistent).</para>
@@ -76,7 +70,7 @@
         /// <param name="call">Callback function.</param>
         public void RemoveListener(UnityAction call)
         {
-            base.RemoveListener(call.Target, NetFxCoreExtensions.GetMethodInfo(call));
+            base.RemoveListener(call.Target, call.GetMethodInfo());
         }
     }
 }

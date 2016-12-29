@@ -60,9 +60,9 @@
         {
             foreach (Assembly assembly in assemblies)
             {
-                foreach (Module module in AssemblyExtensions.GetModulesPortable(assembly))
+                foreach (Module module in assembly.GetModulesPortable())
                 {
-                    this.Install(ModuleExtensions.GetTypesPortable(module));
+                    this.Install(module.GetTypesPortable());
                 }
             }
         }
@@ -83,7 +83,7 @@
 
         private void InstallOnType(Type type)
         {
-            foreach (Type type2 in TypeExtensions.GetNestedTypesPortable(type))
+            foreach (Type type2 in type.GetNestedTypesPortable())
             {
                 this.InstallOnType(type2);
             }
@@ -97,7 +97,7 @@
                         Type fieldType = info.FieldType;
                         if (!this._serviceMap.TryGetValue(fieldType, out info2))
                         {
-                            throw new ArgumentException(string.Format("Field {0} cannot be injected because type is not bound", fieldType));
+                            throw new ArgumentException($"Field {fieldType} cannot be injected because type is not bound");
                         }
                         info.SetValue(null, info2.CreateInstanceFor(info));
                     }
@@ -126,29 +126,14 @@
                 return this._instance;
             }
 
-            public Type ConcreteType
-            {
-                get
-                {
-                    return this._concreteType;
-                }
-            }
+            public Type ConcreteType =>
+                this._concreteType;
 
-            public object Instance
-            {
-                get
-                {
-                    return this._instance;
-                }
-            }
+            public object Instance =>
+                this._instance;
 
-            public List<FieldInfo> InstanceFields
-            {
-                get
-                {
-                    return this._instanceFields;
-                }
-            }
+            public List<FieldInfo> InstanceFields =>
+                this._instanceFields;
         }
     }
 }

@@ -26,15 +26,11 @@
         private static extern bool INTERNAL_CALL_Internal_Raycast(Collider col, ref Ray ray, out RaycastHit hitInfo, float maxDistance);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void INTERNAL_get_bounds(out Bounds value);
-        private static bool Internal_Raycast(Collider col, Ray ray, out RaycastHit hitInfo, float maxDistance)
-        {
-            return INTERNAL_CALL_Internal_Raycast(col, ref ray, out hitInfo, maxDistance);
-        }
+        private static bool Internal_Raycast(Collider col, Ray ray, out RaycastHit hitInfo, float maxDistance) => 
+            INTERNAL_CALL_Internal_Raycast(col, ref ray, out hitInfo, maxDistance);
 
-        public bool Raycast(Ray ray, out RaycastHit hitInfo, float maxDistance)
-        {
-            return Internal_Raycast(this, ray, out hitInfo, maxDistance);
-        }
+        public bool Raycast(Ray ray, out RaycastHit hitInfo, float maxDistance) => 
+            Internal_Raycast(this, ray, out hitInfo, maxDistance);
 
         /// <summary>
         /// <para>The rigidbody the collider is attached to.</para>

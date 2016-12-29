@@ -6,13 +6,8 @@
     {
         private readonly GUIContent m_Content = new GUIContent(EditorGUIUtility.FindTexture("DefaultSorting"), "Transform Child Order");
 
-        public override GUIContent content
-        {
-            get
-            {
-                return this.m_Content;
-            }
-        }
+        public override GUIContent content =>
+            this.m_Content;
     }
 }
 

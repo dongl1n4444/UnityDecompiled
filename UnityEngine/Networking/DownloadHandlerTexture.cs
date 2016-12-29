@@ -34,21 +34,14 @@
         /// <returns>
         /// <para>A copy of the downloaded data.</para>
         /// </returns>
-        protected override byte[] GetData()
-        {
-            return this.InternalGetData();
-        }
+        protected override byte[] GetData() => 
+            this.InternalGetData();
 
         /// <summary>
         /// <para>Returns the downloaded Texture, or null. (Read Only)</para>
         /// </summary>
-        public Texture2D texture
-        {
-            get
-            {
-                return this.InternalGetTexture();
-            }
-        }
+        public Texture2D texture =>
+            this.InternalGetTexture();
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern Texture2D InternalGetTexture();
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -60,10 +53,8 @@
         /// <returns>
         /// <para>The same as DownloadHandlerTexture.texture</para>
         /// </returns>
-        public static Texture2D GetContent(UnityWebRequest www)
-        {
-            return DownloadHandler.GetCheckedDownloader<DownloadHandlerTexture>(www).texture;
-        }
+        public static Texture2D GetContent(UnityWebRequest www) => 
+            DownloadHandler.GetCheckedDownloader<DownloadHandlerTexture>(www).texture;
     }
 }
 

@@ -38,13 +38,8 @@
         /// <summary>
         /// <para>SerializedObject this property belongs to (Read Only).</para>
         /// </summary>
-        public SerializedObject serializedObject
-        {
-            get
-            {
-                return this.m_SerializedObject;
-            }
-        }
+        public SerializedObject serializedObject =>
+            this.m_SerializedObject;
         /// <summary>
         /// <para>Does this property represent multiple different values due to multi-object editing? (Read Only)</para>
         /// </summary>
@@ -389,10 +384,8 @@
         /// <para>Retrieves an iterator that allows you to iterator over the current nexting of a serialized property.</para>
         /// </summary>
         [DebuggerHidden]
-        public IEnumerator GetEnumerator()
-        {
-            return new <GetEnumerator>c__Iterator0 { $this = this };
-        }
+        public IEnumerator GetEnumerator() => 
+            new <GetEnumerator>c__Iterator0 { $this = this };
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern bool FindPropertyInternal(string propertyPath);
@@ -608,23 +601,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

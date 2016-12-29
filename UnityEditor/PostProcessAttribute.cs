@@ -14,13 +14,8 @@
         }
 
         [Obsolete("PostProcessAttribute has been renamed. Use callbackOrder of CallbackOrderAttribute.")]
-        internal int GetPostprocessOrder
-        {
-            get
-            {
-                return this.m_PostprocessOrder;
-            }
-        }
+        internal int GetPostprocessOrder =>
+            this.m_PostprocessOrder;
     }
 }
 

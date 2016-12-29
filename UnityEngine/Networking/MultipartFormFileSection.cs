@@ -116,13 +116,8 @@
         /// <returns>
         /// <para>The Content-Type header for this section, or null.</para>
         /// </returns>
-        public string contentType
-        {
-            get
-            {
-                return this.content;
-            }
-        }
+        public string contentType =>
+            this.content;
 
         /// <summary>
         /// <para>Returns a string denoting the desired filename of this section on the destination server.</para>
@@ -130,13 +125,8 @@
         /// <returns>
         /// <para>The desired file name of this section, or null if this is not a file section.</para>
         /// </returns>
-        public string fileName
-        {
-            get
-            {
-                return this.file;
-            }
-        }
+        public string fileName =>
+            this.file;
 
         /// <summary>
         /// <para>Returns the raw binary data contained in this section. Will not return null or a zero-length array.</para>
@@ -144,13 +134,8 @@
         /// <returns>
         /// <para>The raw binary data contained in this section. Will not be null or empty.</para>
         /// </returns>
-        public byte[] sectionData
-        {
-            get
-            {
-                return this.data;
-            }
-        }
+        public byte[] sectionData =>
+            this.data;
 
         /// <summary>
         /// <para>Returns the name of this section, if any.</para>
@@ -158,13 +143,8 @@
         /// <returns>
         /// <para>The section's name, or null.</para>
         /// </returns>
-        public string sectionName
-        {
-            get
-            {
-                return this.name;
-            }
-        }
+        public string sectionName =>
+            this.name;
     }
 }
 

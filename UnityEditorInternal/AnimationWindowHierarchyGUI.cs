@@ -173,7 +173,7 @@
             {
                 this.state.SelectHierarchyItem(node.id, false, false);
                 AnimationWindowHierarchyNode[] source = new AnimationWindowHierarchyNode[] { node };
-                this.GenerateMenu(Enumerable.ToList<AnimationWindowHierarchyNode>(source), enabled).DropDown(rect);
+                this.GenerateMenu(source.ToList<AnimationWindowHierarchyNode>(), enabled).DropDown(rect);
                 Event.current.Use();
             }
         }
@@ -264,7 +264,7 @@
                         {
                             flag = true;
                         }
-                        string gameObjectName = this.GetGameObjectName((selectionBinding == null) ? null : selectionBinding.rootGameObject, node.path);
+                        string gameObjectName = this.GetGameObjectName(selectionBinding?.rootGameObject, node.path);
                         str3 = !string.IsNullOrEmpty(gameObjectName) ? (gameObjectName + " : ") : "";
                     }
                     TreeViewGUI.s_Styles.content = new GUIContent(str3 + node.displayName + str, this.GetIconForItem(node), tooltip);
@@ -564,7 +564,7 @@
                     }
                 }
             }
-            return Enumerable.ToList<AnimationWindowCurve>(Enumerable.Distinct<AnimationWindowCurve>(source));
+            return source.Distinct<AnimationWindowCurve>().ToList<AnimationWindowCurve>();
         }
 
         public override void GetFirstAndLastRowVisible(out int firstRowVisible, out int lastRowVisible)
@@ -794,11 +794,11 @@
                     List<AnimationWindowCurve> list = null;
                     if ((parent is AnimationWindowHierarchyPropertyGroupNode) || (parent is AnimationWindowHierarchyPropertyNode))
                     {
-                        list = AnimationWindowUtility.FilterCurves(Enumerable.ToArray<AnimationWindowCurve>(parent.curves), parent.path, parent.animatableObjectType, parent.propertyName);
+                        list = AnimationWindowUtility.FilterCurves(parent.curves.ToArray<AnimationWindowCurve>(), parent.path, parent.animatableObjectType, parent.propertyName);
                     }
                     else
                     {
-                        list = AnimationWindowUtility.FilterCurves(Enumerable.ToArray<AnimationWindowCurve>(parent.curves), parent.path, parent.animatableObjectType);
+                        list = AnimationWindowUtility.FilterCurves(parent.curves.ToArray<AnimationWindowCurve>(), parent.path, parent.animatableObjectType);
                     }
                     foreach (AnimationWindowCurve curve in list)
                     {

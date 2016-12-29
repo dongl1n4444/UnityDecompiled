@@ -307,10 +307,8 @@
             throw new JSONParseException("Cannot parse json value starting with '" + this.json.Substring(this.idx, 5) + "' at " + this.PosMsg());
         }
 
-        private string PosMsg()
-        {
-            return ("line " + this.line.ToString() + ", column " + this.linechar.ToString());
-        }
+        private string PosMsg() => 
+            ("line " + this.line.ToString() + ", column " + this.linechar.ToString());
 
         public static JSONValue SimpleParse(string jsondata)
         {

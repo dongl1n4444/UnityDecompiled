@@ -14,10 +14,8 @@
             this.m_ModuleName = name;
         }
 
-        public static string Concat(string a, string b)
-        {
-            return (a + "." + b);
-        }
+        public static string Concat(string a, string b) => 
+            (a + "." + b);
 
         public SerializedProperty GetProperty(string name)
         {
@@ -59,18 +57,11 @@
             return property;
         }
 
-        public string GetUniqueModuleName()
-        {
-            return Concat("" + this.m_Object.targetObject.GetInstanceID(), this.m_ModuleName);
-        }
+        public string GetUniqueModuleName() => 
+            Concat("" + this.m_Object.targetObject.GetInstanceID(), this.m_ModuleName);
 
-        internal SerializedObject serializedObject
-        {
-            get
-            {
-                return this.m_Object;
-            }
-        }
+        internal SerializedObject serializedObject =>
+            this.m_Object;
     }
 }
 

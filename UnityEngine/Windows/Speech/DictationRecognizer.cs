@@ -223,13 +223,8 @@
         /// <summary>
         /// <para>Indicates the status of dictation recognizer.</para>
         /// </summary>
-        public SpeechSystemStatus Status
-        {
-            get
-            {
-                return (!(this.m_Recognizer != IntPtr.Zero) ? SpeechSystemStatus.Stopped : GetStatus(this.m_Recognizer));
-            }
-        }
+        public SpeechSystemStatus Status =>
+            (!(this.m_Recognizer != IntPtr.Zero) ? SpeechSystemStatus.Stopped : GetStatus(this.m_Recognizer));
 
         /// <summary>
         /// <para>Delegate for DictationComplete event.</para>

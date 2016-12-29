@@ -73,40 +73,26 @@
             return null;
         }
 
-        public static IEnumerable<ConstructorInfo> GetConstructors(Type type)
-        {
-            return type.GetConstructors();
-        }
+        public static IEnumerable<ConstructorInfo> GetConstructors(Type type) => 
+            type.GetConstructors();
 
-        public static ConstructorDelegate GetContructor(ConstructorInfo constructorInfo)
-        {
-            return GetConstructorByReflection(constructorInfo);
-        }
+        public static ConstructorDelegate GetContructor(ConstructorInfo constructorInfo) => 
+            GetConstructorByReflection(constructorInfo);
 
-        public static ConstructorDelegate GetContructor(Type type, params Type[] argsType)
-        {
-            return GetConstructorByReflection(type, argsType);
-        }
+        public static ConstructorDelegate GetContructor(Type type, params Type[] argsType) => 
+            GetConstructorByReflection(type, argsType);
 
-        public static IEnumerable<FieldInfo> GetFields(Type type)
-        {
-            return type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-        }
+        public static IEnumerable<FieldInfo> GetFields(Type type) => 
+            type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
-        public static Type[] GetGenericTypeArguments(Type type)
-        {
-            return type.GetGenericArguments();
-        }
+        public static Type[] GetGenericTypeArguments(Type type) => 
+            type.GetGenericArguments();
 
-        public static GetDelegate GetGetMethod(FieldInfo fieldInfo)
-        {
-            return GetGetMethodByReflection(fieldInfo);
-        }
+        public static GetDelegate GetGetMethod(FieldInfo fieldInfo) => 
+            GetGetMethodByReflection(fieldInfo);
 
-        public static GetDelegate GetGetMethod(PropertyInfo propertyInfo)
-        {
-            return GetGetMethodByReflection(propertyInfo);
-        }
+        public static GetDelegate GetGetMethod(PropertyInfo propertyInfo) => 
+            GetGetMethodByReflection(propertyInfo);
 
         public static GetDelegate GetGetMethodByReflection(FieldInfo fieldInfo)
         {
@@ -124,25 +110,17 @@
             return new GetDelegate(storey.<>m__0);
         }
 
-        public static MethodInfo GetGetterMethodInfo(PropertyInfo propertyInfo)
-        {
-            return propertyInfo.GetGetMethod(true);
-        }
+        public static MethodInfo GetGetterMethodInfo(PropertyInfo propertyInfo) => 
+            propertyInfo.GetGetMethod(true);
 
-        public static IEnumerable<PropertyInfo> GetProperties(Type type)
-        {
-            return type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-        }
+        public static IEnumerable<PropertyInfo> GetProperties(Type type) => 
+            type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 
-        public static SetDelegate GetSetMethod(FieldInfo fieldInfo)
-        {
-            return GetSetMethodByReflection(fieldInfo);
-        }
+        public static SetDelegate GetSetMethod(FieldInfo fieldInfo) => 
+            GetSetMethodByReflection(fieldInfo);
 
-        public static SetDelegate GetSetMethod(PropertyInfo propertyInfo)
-        {
-            return GetSetMethodByReflection(propertyInfo);
-        }
+        public static SetDelegate GetSetMethod(PropertyInfo propertyInfo) => 
+            GetSetMethodByReflection(propertyInfo);
 
         public static SetDelegate GetSetMethodByReflection(FieldInfo fieldInfo)
         {
@@ -160,20 +138,14 @@
             return new SetDelegate(storey.<>m__0);
         }
 
-        public static MethodInfo GetSetterMethodInfo(PropertyInfo propertyInfo)
-        {
-            return propertyInfo.GetSetMethod(true);
-        }
+        public static MethodInfo GetSetterMethodInfo(PropertyInfo propertyInfo) => 
+            propertyInfo.GetSetMethod(true);
 
-        public static bool IsAssignableFrom(Type type1, Type type2)
-        {
-            return type1.IsAssignableFrom(type2);
-        }
+        public static bool IsAssignableFrom(Type type1, Type type2) => 
+            type1.IsAssignableFrom(type2);
 
-        public static bool IsNullableType(Type type)
-        {
-            return (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>)));
-        }
+        public static bool IsNullableType(Type type) => 
+            (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>)));
 
         public static bool IsTypeDictionary(Type type)
         {
@@ -198,25 +170,19 @@
             return (((genericTypeDefinition == typeof(IList<>)) || (genericTypeDefinition == typeof(ICollection<>))) || (genericTypeDefinition == typeof(IEnumerable<>)));
         }
 
-        public static bool IsValueType(Type type)
-        {
-            return type.IsValueType;
-        }
+        public static bool IsValueType(Type type) => 
+            type.IsValueType;
 
-        public static object ToNullableType(object obj, Type nullableType)
-        {
-            return ((obj != null) ? Convert.ChangeType(obj, Nullable.GetUnderlyingType(nullableType), CultureInfo.InvariantCulture) : null);
-        }
+        public static object ToNullableType(object obj, Type nullableType) => 
+            ((obj != null) ? Convert.ChangeType(obj, Nullable.GetUnderlyingType(nullableType), CultureInfo.InvariantCulture) : null);
 
         [CompilerGenerated]
         private sealed class <GetConstructorByReflection>c__AnonStorey0
         {
             internal ConstructorInfo constructorInfo;
 
-            internal object <>m__0(object[] args)
-            {
-                return this.constructorInfo.Invoke(args);
-            }
+            internal object <>m__0(object[] args) => 
+                this.constructorInfo.Invoke(args);
         }
 
         [CompilerGenerated]
@@ -224,10 +190,8 @@
         {
             internal MethodInfo methodInfo;
 
-            internal object <>m__0(object source)
-            {
-                return this.methodInfo.Invoke(source, ReflectionUtils.EmptyObjects);
-            }
+            internal object <>m__0(object source) => 
+                this.methodInfo.Invoke(source, ReflectionUtils.EmptyObjects);
         }
 
         [CompilerGenerated]
@@ -235,10 +199,8 @@
         {
             internal FieldInfo fieldInfo;
 
-            internal object <>m__0(object source)
-            {
-                return this.fieldInfo.GetValue(source);
-            }
+            internal object <>m__0(object source) => 
+                this.fieldInfo.GetValue(source);
         }
 
         [CompilerGenerated]
@@ -310,8 +272,9 @@
                         {
                             return local2;
                         }
-                        Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>(this._dictionary);
-                        dictionary[key] = local;
+                        Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>(this._dictionary) {
+                            [key] = local
+                        };
                         this._dictionary = dictionary;
                     }
                 }
@@ -328,10 +291,8 @@
                 throw new NotImplementedException();
             }
 
-            public bool ContainsKey(TKey key)
-            {
-                return this._dictionary.ContainsKey(key);
-            }
+            public bool ContainsKey(TKey key) => 
+                this._dictionary.ContainsKey(key);
 
             public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
             {
@@ -352,10 +313,8 @@
                 return local2;
             }
 
-            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-            {
-                return this._dictionary.GetEnumerator();
-            }
+            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => 
+                this._dictionary.GetEnumerator();
 
             public bool Remove(TKey key)
             {
@@ -367,10 +326,8 @@
                 throw new NotImplementedException();
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this._dictionary.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this._dictionary.GetEnumerator();
 
             public bool TryGetValue(TKey key, out TValue value)
             {
@@ -378,13 +335,8 @@
                 return true;
             }
 
-            public int Count
-            {
-                get
-                {
-                    return this._dictionary.Count;
-                }
-            }
+            public int Count =>
+                this._dictionary.Count;
 
             public bool IsReadOnly
             {
@@ -396,31 +348,19 @@
 
             public TValue this[TKey key]
             {
-                get
-                {
-                    return this.Get(key);
-                }
+                get => 
+                    this.Get(key);
                 set
                 {
                     throw new NotImplementedException();
                 }
             }
 
-            public ICollection<TKey> Keys
-            {
-                get
-                {
-                    return this._dictionary.Keys;
-                }
-            }
+            public ICollection<TKey> Keys =>
+                this._dictionary.Keys;
 
-            public ICollection<TValue> Values
-            {
-                get
-                {
-                    return this._dictionary.Values;
-                }
-            }
+            public ICollection<TValue> Values =>
+                this._dictionary.Values;
         }
 
         public delegate TValue ThreadSafeDictionaryValueFactory<TKey, TValue>(TKey key);

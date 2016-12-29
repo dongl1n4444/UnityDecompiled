@@ -307,10 +307,8 @@
         /// <returns>
         /// <para>True if the GestureRecognizer is receiving events or false otherwise.</para>
         /// </returns>
-        public bool IsCapturingGestures()
-        {
-            return ((this.m_Recognizer != IntPtr.Zero) && this.Internal_IsCapturingGestures(this.m_Recognizer));
-        }
+        public bool IsCapturingGestures() => 
+            ((this.m_Recognizer != IntPtr.Zero) && this.Internal_IsCapturingGestures(this.m_Recognizer));
 
         /// <summary>
         /// <para>Set the recognizable gestures to the ones specified in newMaskValues and return the old settings.</para>

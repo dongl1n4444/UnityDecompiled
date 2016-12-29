@@ -18,20 +18,14 @@
         private static Regex sMissingType = new Regex("[^`]*`(?<type_name>[^']+)'[^`]+`(?<namespace>[^']+)'", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
         private static Regex sUnknownTypeOrNamespace = new Regex("[^`]*`(?<type_name>[^']+)'.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        protected override string GetErrorIdentifier()
-        {
-            return "error";
-        }
+        protected override string GetErrorIdentifier() => 
+            "error";
 
-        protected override Regex GetInternalErrorOutputRegex()
-        {
-            return sInternalErrorCompilerOutput;
-        }
+        protected override Regex GetInternalErrorOutputRegex() => 
+            sInternalErrorCompilerOutput;
 
-        protected override Regex GetOutputRegex()
-        {
-            return sCompilerOutput;
-        }
+        protected override Regex GetOutputRegex() => 
+            sCompilerOutput;
 
         protected override NormalizedCompilerStatus NormalizedStatusFor(Match match)
         {

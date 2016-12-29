@@ -121,10 +121,8 @@
             internal string assemblyName;
             internal string suffix;
 
-            internal bool <>m__0(string x)
-            {
-                return x.Equals(this.assemblyName + this.suffix, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string x) => 
+                x.Equals(this.assemblyName + this.suffix, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

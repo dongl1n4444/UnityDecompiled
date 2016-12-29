@@ -2,7 +2,7 @@
 {
     using System;
 
-    [CustomEditor(typeof(SketchUpImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SketchUpImporter))]
     internal class SketchUpImporterEditor : ModelImporterEditor
     {
         internal override void OnEnable()
@@ -15,13 +15,8 @@
             base.OnEnable();
         }
 
-        internal override bool showImportedObject
-        {
-            get
-            {
-                return (base.activeEditor is SketchUpImporterModelEditor);
-            }
-        }
+        internal override bool showImportedObject =>
+            (base.activeEditor is SketchUpImporterModelEditor);
     }
 }
 

@@ -78,10 +78,8 @@
         /// <returns>
         /// <para>Moving.</para>
         /// </returns>
-        public bool IsPointerMoving()
-        {
-            return (this.delta.sqrMagnitude > 0f);
-        }
+        public bool IsPointerMoving() => 
+            (this.delta.sqrMagnitude > 0f);
 
         /// <summary>
         /// <para>Is scroll being used on the input device.</para>
@@ -89,10 +87,8 @@
         /// <returns>
         /// <para>Scrolling.</para>
         /// </returns>
-        public bool IsScrolling()
-        {
-            return (this.scrollDelta.sqrMagnitude > 0f);
-        }
+        public bool IsScrolling() => 
+            (this.scrollDelta.sqrMagnitude > 0f);
 
         public override string ToString()
         {
@@ -142,13 +138,8 @@
         /// <summary>
         /// <para>The camera associated with the last OnPointerEnter event.</para>
         /// </summary>
-        public Camera enterEventCamera
-        {
-            get
-            {
-                return ((this.pointerCurrentRaycast.module != null) ? this.pointerCurrentRaycast.module.eventCamera : null);
-            }
-        }
+        public Camera enterEventCamera =>
+            this.pointerCurrentRaycast.module?.eventCamera;
 
         /// <summary>
         /// <para>The GameObject for the last press event.</para>
@@ -180,10 +171,8 @@
         /// </summary>
         public GameObject pointerPress
         {
-            get
-            {
-                return this.m_PointerPress;
-            }
+            get => 
+                this.m_PointerPress;
             set
             {
                 if (this.m_PointerPress != value)
@@ -207,13 +196,8 @@
         /// <summary>
         /// <para>The camera associated with the last OnPointerPress event.</para>
         /// </summary>
-        public Camera pressEventCamera
-        {
-            get
-            {
-                return ((this.pointerPressRaycast.module != null) ? this.pointerPressRaycast.module.eventCamera : null);
-            }
-        }
+        public Camera pressEventCamera =>
+            this.pointerPressRaycast.module?.eventCamera;
 
         /// <summary>
         /// <para>Position of the press.</para>

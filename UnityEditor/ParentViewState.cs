@@ -156,20 +156,14 @@
             this.initialSelectedItem = -1;
         }
 
-        internal static int CompareViewFile(ParentViewFile p1, ParentViewFile p2)
-        {
-            return string.Compare(p1.name, p2.name, true);
-        }
+        internal static int CompareViewFile(ParentViewFile p1, ParentViewFile p2) => 
+            string.Compare(p1.name, p2.name, true);
 
-        internal static int CompareViewFolder(ParentViewFolder p1, ParentViewFolder p2)
-        {
-            return string.Compare(p1.name, p2.name, true);
-        }
+        internal static int CompareViewFolder(ParentViewFolder p1, ParentViewFolder p2) => 
+            string.Compare(p1.name, p2.name, true);
 
-        public int GetFoldersCount()
-        {
-            return this.folders.Length;
-        }
+        public int GetFoldersCount() => 
+            this.folders.Length;
 
         public int GetLineCount()
         {

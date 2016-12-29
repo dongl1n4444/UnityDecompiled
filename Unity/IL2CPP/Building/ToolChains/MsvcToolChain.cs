@@ -70,7 +70,7 @@
                     if (!path2.Exists("") || forceRebuild)
                     {
                         Shell.ExecuteResult result;
-                        invocation.Arguments = EnumerableExtensions.Append<string>(invocation.Arguments, this.ManifestOutputArgumentFor(path2));
+                        invocation.Arguments = invocation.Arguments.Append<string>(this.ManifestOutputArgumentFor(path2));
                         using (TinyProfiler.Section("Compile manifest", path2.ToString()))
                         {
                             result = invocation.Execute();
@@ -106,7 +106,7 @@
                     {
                         <>f__am$cache0 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <CompileIDL>m__0);
                     }
-                    NPath[] data = Enumerable.ToArray<NPath>(Enumerable.SelectMany<NPath, NPath>(directories.SourceDirectories, <>f__am$cache0));
+                    NPath[] data = directories.SourceDirectories.SelectMany<NPath, NPath>(<>f__am$cache0).ToArray<NPath>();
                     if (data.Length != 0)
                     {
                         yb.idlResultDirectory = workingDirectory.EnsureDirectoryExists("idlGenerated");
@@ -119,7 +119,7 @@
                             {
                                 throw new BuilderFailedException(string.Format(result.StdOut + "{0}{0}Invocation was: " + result.Invocation.Summary(), Environment.NewLine));
                             }
-                            context.AddCompileInstructions(Enumerable.Select<NPath, CppCompilationInstruction>(result.OutputDirectory.Files("*_i.c", false), new Func<NPath, CppCompilationInstruction>(yb, (IntPtr) this.<>m__1)));
+                            context.AddCompileInstructions(result.OutputDirectory.Files("*_i.c", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(yb, (IntPtr) this.<>m__1)));
                             context.AddIncludeDirectory(result.OutputDirectory);
                             foreach (NPath path in result.OutputDirectory.Files("*.tlb", false))
                             {
@@ -137,53 +137,39 @@
             }
         }
 
-        public override NPath CompilerExecutableFor(NPath sourceFile)
-        {
-            return this.MsvcInstallation.GetVSToolPath(base.Architecture, "cl.exe");
-        }
+        public override NPath CompilerExecutableFor(NPath sourceFile) => 
+            this.MsvcInstallation.GetVSToolPath(base.Architecture, "cl.exe");
 
         [DebuggerHidden]
-        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction)
-        {
-            return new <CompilerFlagsFor>c__Iterator4 { 
+        public override IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction) => 
+            new <CompilerFlagsFor>c__Iterator4 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override CppToolChainContext CreateToolChainContext()
-        {
-            return new MsvcToolChainContext();
-        }
+        public override CppToolChainContext CreateToolChainContext() => 
+            new MsvcToolChainContext();
 
         [DebuggerHidden]
-        protected virtual IEnumerable<string> DefaultCompilerFlags(CppCompilationInstruction cppCompilationInstruction)
-        {
-            return new <DefaultCompilerFlags>c__Iterator5 { 
+        protected virtual IEnumerable<string> DefaultCompilerFlags(CppCompilationInstruction cppCompilationInstruction) => 
+            new <DefaultCompilerFlags>c__Iterator5 { 
                 cppCompilationInstruction = cppCompilationInstruction,
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override bool DynamicLibrariesHaveToSitNextToExecutable()
-        {
-            return true;
-        }
+        public override bool DynamicLibrariesHaveToSitNextToExecutable() => 
+            true;
 
-        public override Dictionary<string, string> EnvVars()
-        {
-            return new Dictionary<string, string> { { 
+        public override Dictionary<string, string> EnvVars() => 
+            new Dictionary<string, string> { { 
                 "PATH",
                 this.MsvcInstallation.GetPathEnvVariable(base.Architecture)
             } };
-        }
 
-        public override string ExecutableExtension()
-        {
-            return ".exe";
-        }
+        public override string ExecutableExtension() => 
+            ".exe";
 
         private void FindModuleDefinitionFiles(ProgramBuildDescription programBuildDescription, CppToolChainContext toolChainContext)
         {
@@ -197,7 +183,7 @@
                     {
                         <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <FindModuleDefinitionFiles>m__1);
                     }
-                    NPath[] source = Enumerable.ToArray<NPath>(Enumerable.SelectMany<NPath, NPath>(directories.SourceDirectories, <>f__am$cache1));
+                    NPath[] source = directories.SourceDirectories.SelectMany<NPath, NPath>(<>f__am$cache1).ToArray<NPath>();
                     if (source.Length != 0)
                     {
                         if (source.Length > 1)
@@ -210,53 +196,45 @@
                             {
                                 <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <FindModuleDefinitionFiles>m__3);
                             }
-                            throw new BuilderFailedException(string.Format("Found more than one module definition file in source directories:{0}\t{1}", Environment.NewLine, Enumerable.Aggregate<string>(Enumerable.Select<NPath, string>(source, <>f__am$cache2), <>f__am$cache3)));
+                            throw new BuilderFailedException($"Found more than one module definition file in source directories:{Environment.NewLine}	{source.Select<NPath, string>(<>f__am$cache2).Aggregate<string>(<>f__am$cache3)}");
                         }
                         MsvcToolChainContext context = (MsvcToolChainContext) toolChainContext;
-                        context.ModuleDefinitionPath = Enumerable.Single<NPath>(source);
+                        context.ModuleDefinitionPath = source.Single<NPath>();
                     }
                 }
             }
         }
 
         [DebuggerHidden]
-        public static IEnumerable<string> FlagsToMakeWarningsErrorsFor(string sourceFile)
-        {
-            return new <FlagsToMakeWarningsErrorsFor>c__Iterator9 { $PC = -2 };
-        }
+        public static IEnumerable<string> FlagsToMakeWarningsErrorsFor(string sourceFile) => 
+            new <FlagsToMakeWarningsErrorsFor>c__Iterator9 { $PC = -2 };
 
         [DebuggerHidden]
-        protected virtual IEnumerable<string> GetDefaultLinkerArgs(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile)
-        {
-            return new <GetDefaultLinkerArgs>c__Iterator3 { 
+        protected virtual IEnumerable<string> GetDefaultLinkerArgs(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile) => 
+            new <GetDefaultLinkerArgs>c__Iterator3 { 
                 outputFile = outputFile,
                 staticLibraries = staticLibraries,
                 dynamicLibraries = dynamicLibraries,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        private IEnumerable<string> IdlCompilerArgumentsFor(NPath idl)
-        {
-            return new <IdlCompilerArgumentsFor>c__Iterator6 { 
+        private IEnumerable<string> IdlCompilerArgumentsFor(NPath idl) => 
+            new <IdlCompilerArgumentsFor>c__Iterator6 { 
                 idl = idl,
                 $this = this,
                 $PC = -2
             };
-        }
 
         [DebuggerHidden]
-        private IEnumerable<string> IdlOutputArgumentsFor(NPath outputDir, NPath outputTlbPath, NPath outputWinmdPath)
-        {
-            return new <IdlOutputArgumentsFor>c__Iterator7 { 
+        private IEnumerable<string> IdlOutputArgumentsFor(NPath outputDir, NPath outputTlbPath, NPath outputWinmdPath) => 
+            new <IdlOutputArgumentsFor>c__Iterator7 { 
                 outputDir = outputDir,
                 outputTlbPath = outputTlbPath,
                 outputWinmdPath = outputWinmdPath,
                 $PC = -2
             };
-        }
 
         public override CppProgramBuilder.LinkerInvocation MakeLinkerInvocation(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags, CppToolChainContext toolChainContext)
         {
@@ -277,22 +255,22 @@
             {
                 inputs.Add("/MANIFESTUAC:NO");
                 inputs.Add("/MANIFEST:EMBED");
-                inputs.Add(string.Format("/MANIFESTINPUT:{0}", context.ManifestPath.InQuotes()));
+                inputs.Add($"/MANIFESTINPUT:{context.ManifestPath.InQuotes()}");
                 list.Add(context.ManifestPath);
             }
             if (context.ModuleDefinitionPath != null)
             {
-                inputs.Add(string.Format("/DEF:{0}", context.ModuleDefinitionPath.InQuotes()));
+                inputs.Add($"/DEF:{context.ModuleDefinitionPath.InQuotes()}");
                 list.Add(context.ModuleDefinitionPath);
             }
             ya.bestWorkingDirectory = PickBestDirectoryToUseAsWorkingDirectoryFromObjectFilePaths(objectFiles);
-            IEnumerable<string> enumerable = Enumerable.Select<NPath, string>(objectFiles, new Func<NPath, string>(ya, (IntPtr) this.<>m__0));
+            IEnumerable<string> enumerable = objectFiles.Select<NPath, string>(new Func<NPath, string>(ya, (IntPtr) this.<>m__0));
             inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.GetDefaultLinkerArgs)));
             string tempFileName = Path.GetTempFileName();
-            File.WriteAllText(tempFileName, ExtensionMethods.SeparateWithSpaces(ExtensionMethods.InQuotes(enumerable)), Encoding.UTF8);
+            File.WriteAllText(tempFileName, enumerable.InQuotes().SeparateWithSpaces(), Encoding.UTF8);
             CppProgramBuilder.LinkerInvocation invocation = new CppProgramBuilder.LinkerInvocation();
             Shell.ExecuteArgs args = new Shell.ExecuteArgs {
-                Arguments = ExtensionMethods.SeparateWithSpaces(EnumerableExtensions.Append<string>(inputs, "@" + ExtensionMethods.InQuotes(tempFileName))),
+                Arguments = inputs.Append<string>(("@" + tempFileName.InQuotes())).SeparateWithSpaces(),
                 Executable = this.MsvcInstallation.GetVSToolPath(base.Architecture, "link.exe").ToString(),
                 EnvVars = this.EnvVars(),
                 WorkingDirectory = ya.bestWorkingDirectory.ToString()
@@ -304,24 +282,18 @@
         }
 
         [DebuggerHidden]
-        private IEnumerable<string> ManifestCompilerArgumentsFor(NPath tlbFile, NPath outputFile)
-        {
-            return new <ManifestCompilerArgumentsFor>c__Iterator8 { 
+        private IEnumerable<string> ManifestCompilerArgumentsFor(NPath tlbFile, NPath outputFile) => 
+            new <ManifestCompilerArgumentsFor>c__Iterator8 { 
                 outputFile = outputFile,
                 tlbFile = tlbFile,
                 $PC = -2
             };
-        }
 
-        private string ManifestOutputArgumentFor(NPath path)
-        {
-            return string.Format("/out:{0}", path.InQuotes());
-        }
+        private string ManifestOutputArgumentFor(NPath path) => 
+            $"/out:{path.InQuotes()}";
 
-        public override string ObjectExtension()
-        {
-            return ".obj";
-        }
+        public override string ObjectExtension() => 
+            ".obj";
 
         public override void OnBeforeCompile(ProgramBuildDescription programBuildDescription, CppToolChainContext toolChainContext, NPath workingDirectory, bool forceRebuild, bool verbose)
         {
@@ -332,13 +304,11 @@
         }
 
         [DebuggerHidden]
-        public override IEnumerable<string> OutputArgumentFor(NPath objectFile)
-        {
-            return new <OutputArgumentFor>c__Iterator2 { 
+        public override IEnumerable<string> OutputArgumentFor(NPath objectFile) => 
+            new <OutputArgumentFor>c__Iterator2 { 
                 objectFile = objectFile,
                 $PC = -2
             };
-        }
 
         private static NPath PickBestDirectoryToUseAsWorkingDirectoryFromObjectFilePaths(IEnumerable<NPath> objectFiles)
         {
@@ -374,64 +344,39 @@
             return key;
         }
 
-        public override IEnumerable<Type> SupportedArchitectures()
-        {
-            return this.MsvcInstallation.SupportedArchitectures;
-        }
+        public override IEnumerable<Type> SupportedArchitectures() => 
+            this.MsvcInstallation.SupportedArchitectures;
 
         [DebuggerHidden]
-        public override IEnumerable<string> ToolChainDefines()
-        {
-            return new <ToolChainDefines>c__Iterator0 { 
+        public override IEnumerable<string> ToolChainDefines() => 
+            new <ToolChainDefines>c__Iterator0 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override IEnumerable<NPath> ToolChainIncludePaths()
-        {
-            return this.MsvcInstallation.GetIncludeDirectories();
-        }
+        public override IEnumerable<NPath> ToolChainIncludePaths() => 
+            this.MsvcInstallation.GetIncludeDirectories(base.Architecture);
 
-        public override IEnumerable<NPath> ToolChainLibraryPaths()
-        {
-            return this.MsvcInstallation.GetLibDirectories(base.Architecture, null);
-        }
+        public override IEnumerable<NPath> ToolChainLibraryPaths() => 
+            this.MsvcInstallation.GetLibDirectories(base.Architecture, null);
 
         [DebuggerHidden]
-        public override IEnumerable<string> ToolChainStaticLibraries()
-        {
-            return new <ToolChainStaticLibraries>c__Iterator1 { 
+        public override IEnumerable<string> ToolChainStaticLibraries() => 
+            new <ToolChainStaticLibraries>c__Iterator1 { 
                 $this = this,
                 $PC = -2
             };
-        }
 
-        public override string DynamicLibraryExtension
-        {
-            get
-            {
-                return ".dll";
-            }
-        }
+        public override string DynamicLibraryExtension =>
+            ".dll";
 
-        public override string MapFileParserFormat
-        {
-            get
-            {
-                return "MSVC";
-            }
-        }
+        public override string MapFileParserFormat =>
+            "MSVC";
 
         public abstract Unity.IL2CPP.Building.ToolChains.MsvcVersions.MsvcInstallation MsvcInstallation { get; }
 
-        public override bool SupportsMapFileParser
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool SupportsMapFileParser =>
+            true;
 
         [CompilerGenerated]
         private sealed class <CompileIDL>c__AnonStoreyB
@@ -446,7 +391,7 @@
             internal MsvcToolChain.IdlCompilationResult <>m__0(NPath idl)
             {
                 Shell.ExecuteResult result2;
-                string hashForAllHeaderFilesPossiblyInfluencingCompilation = this.$this._idlHashProvider.HashForAllIncludableFilesInDirectories(EnumerableExtensions.Append<NPath>(this.includePaths, idl.Parent));
+                string hashForAllHeaderFilesPossiblyInfluencingCompilation = this.$this._idlHashProvider.HashForAllIncludableFilesInDirectories(this.includePaths.Append<NPath>(idl.Parent));
                 CompilationInvocation invocation = new CompilationInvocation {
                     CompilerExecutable = this.$this.MsvcInstallation.GetSDKToolPath("midl.exe"),
                     SourceFile = idl,
@@ -455,7 +400,7 @@
                 };
                 string[] append = new string[] { invocation.Hash(hashForAllHeaderFilesPossiblyInfluencingCompilation) };
                 NPath outputDirectory = this.idlResultDirectory.Combine(append);
-                if ((outputDirectory.DirectoryExists("") && (Enumerable.Count<NPath>(outputDirectory.Files(false)) > 0)) && !this.forceRebuild)
+                if ((outputDirectory.DirectoryExists("") && (outputDirectory.Files(false).Count<NPath>() > 0)) && !this.forceRebuild)
                 {
                     return MsvcToolChain.IdlCompilationResult.SuccessfulResult(outputDirectory);
                 }
@@ -464,7 +409,7 @@
                 NPath outputTlbPath = outputDirectory.Combine(textArray2);
                 string[] textArray3 = new string[] { this.programBuildDescription.OutputFile.ChangeExtension(".winmd").FileName };
                 NPath outputWinmdPath = outputDirectory.Combine(textArray3);
-                invocation.Arguments = Enumerable.Concat<string>(invocation.Arguments, this.$this.IdlOutputArgumentsFor(outputDirectory, outputTlbPath, outputWinmdPath));
+                invocation.Arguments = invocation.Arguments.Concat<string>(this.$this.IdlOutputArgumentsFor(outputDirectory, outputTlbPath, outputWinmdPath));
                 using (TinyProfiler.Section("Compile IDL", idl.ToString()))
                 {
                     result2 = invocation.Execute();
@@ -477,15 +422,13 @@
                 return result3;
             }
 
-            internal CppCompilationInstruction <>m__1(NPath sourceFile)
-            {
-                return new CppCompilationInstruction { 
+            internal CppCompilationInstruction <>m__1(NPath sourceFile) => 
+                new CppCompilationInstruction { 
                     SourceFile = sourceFile,
                     CompilerFlags = this.programBuildDescription.AdditionalCompilerFlags,
                     IncludePaths = this.programBuildDescription.AdditionalIncludePathsFor(sourceFile),
                     Defines = this.programBuildDescription.AdditionalDefinesFor(sourceFile)
                 };
-            }
         }
 
         [CompilerGenerated]
@@ -690,28 +633,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -727,10 +656,8 @@
             internal string <p>__1;
             internal CppCompilationInstruction cppCompilationInstruction;
 
-            private static bool <>m__0(string flag)
-            {
-                return flag.ToLower().StartsWith("/clr");
-            }
+            private static bool <>m__0(string flag) => 
+                flag.ToLower().StartsWith("/clr");
 
             [DebuggerHidden]
             public void Dispose()
@@ -767,7 +694,7 @@
                         {
                             <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <>m__0);
                         }
-                        this.<hasClrFlag>__0 = Enumerable.Any<string>(this.cppCompilationInstruction.CompilerFlags, <>f__am$cache0);
+                        this.<hasClrFlag>__0 = this.cppCompilationInstruction.CompilerFlags.Any<string>(<>f__am$cache0);
                         this.$current = (this.$this.BuildConfiguration != BuildConfiguration.Debug) ? "/MD" : "/MDd";
                         if (!this.$disposing)
                         {
@@ -1050,28 +977,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1126,28 +1039,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1405,7 +1304,7 @@
                     while (this.$locvar0.MoveNext())
                     {
                         this.<library>__0 = this.$locvar0.Current;
-                        this.$current = ExtensionMethods.InQuotes(this.<library>__0);
+                        this.$current = this.<library>__0.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 0x10;
@@ -1478,7 +1377,7 @@
                         this.$locvar2.Dispose();
                     }
                 }
-                this.$locvar3 = ExtensionMethods.PrefixedWith(Extensions.InQuotes(this.$this.ToolChainLibraryPaths(), SlashMode.Native), "/LIBPATH:").GetEnumerator();
+                this.$locvar3 = this.$this.ToolChainLibraryPaths().InQuotes(SlashMode.Native).PrefixedWith("/LIBPATH:").GetEnumerator();
                 num = 0xfffffffd;
             Label_048D:
                 try
@@ -1534,28 +1433,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1571,15 +1456,11 @@
             internal NPath[] <toolChainIncludes>__0;
             internal NPath idl;
 
-            private static string <>m__0(NPath x)
-            {
-                return x.ToString();
-            }
+            private static string <>m__0(NPath x) => 
+                x.ToString();
 
-            private static string <>m__1(string x, string y)
-            {
-                return (x + ";" + y);
-            }
+            private static string <>m__1(string x, string y) => 
+                (x + ";" + y);
 
             [DebuggerHidden]
             public void Dispose()
@@ -1675,7 +1556,7 @@
                         goto Label_025A;
 
                     case 10:
-                        this.$current = string.Format("/metadata_dir \"{0}\"", this.$this.MsvcInstallation.GetUnionMetadataDirectory());
+                        this.$current = $"/metadata_dir "{this.$this.MsvcInstallation.GetUnionMetadataDirectory()}"";
                         if (!this.$disposing)
                         {
                             this.$PC = 11;
@@ -1686,7 +1567,7 @@
                         goto Label_02C6;
 
                     case 12:
-                        this.$current = string.Format("/h \"{0}_h.h\"", this.idl.FileNameWithoutExtension);
+                        this.$current = $"/h "{this.idl.FileNameWithoutExtension}_h.h"";
                         if (!this.$disposing)
                         {
                             this.$PC = 13;
@@ -1708,7 +1589,7 @@
                     default:
                         goto Label_0343;
                 }
-                this.<toolChainIncludes>__0 = Enumerable.ToArray<NPath>(this.$this.ToolChainIncludePaths());
+                this.<toolChainIncludes>__0 = this.$this.ToolChainIncludePaths().ToArray<NPath>();
                 if (this.<toolChainIncludes>__0.Length > 0)
                 {
                     if (<>f__am$cache0 == null)
@@ -1719,8 +1600,8 @@
                     {
                         <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <>m__1);
                     }
-                    this.<aggregatedIncludes>__1 = Enumerable.Aggregate<string>(Enumerable.Select<NPath, string>(this.<toolChainIncludes>__0, <>f__am$cache0), <>f__am$cache1);
-                    this.$current = string.Format("/I \"{0}\"", this.<aggregatedIncludes>__1);
+                    this.<aggregatedIncludes>__1 = this.<toolChainIncludes>__0.Select<NPath, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
+                    this.$current = $"/I "{this.<aggregatedIncludes>__1}"";
                     if (!this.$disposing)
                     {
                         this.$PC = 9;
@@ -1770,28 +1651,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1818,7 +1685,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.$current = string.Format("/out{0}", this.outputDir.InQuotes());
+                        this.$current = $"/out{this.outputDir.InQuotes()}";
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -1826,7 +1693,7 @@
                         goto Label_00C0;
 
                     case 1:
-                        this.$current = string.Format("/tlb {0}", this.outputTlbPath.InQuotes());
+                        this.$current = $"/tlb {this.outputTlbPath.InQuotes()}";
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -1834,7 +1701,7 @@
                         goto Label_00C0;
 
                     case 2:
-                        this.$current = string.Format("/winmd {0}", this.outputWinmdPath.InQuotes());
+                        this.$current = $"/winmd {this.outputWinmdPath.InQuotes()}";
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -1871,28 +1738,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -1949,7 +1802,7 @@
                         goto Label_010B;
 
                     case 2:
-                        this.$current = string.Format("/identity:\"{0},type=win32,version=1.0.0.0\"", this.outputFile.FileNameWithoutExtension);
+                        this.$current = $"/identity:"{this.outputFile.FileNameWithoutExtension},type=win32,version=1.0.0.0"";
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -1957,7 +1810,7 @@
                         goto Label_010B;
 
                     case 3:
-                        this.$current = string.Format("/tlb:{0}", this.tlbFile.InQuotes());
+                        this.$current = $"/tlb:{this.tlbFile.InQuotes()}";
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -1965,7 +1818,7 @@
                         goto Label_010B;
 
                     case 4:
-                        this.$current = string.Format("/dll:{0}", ExtensionMethods.InQuotes(this.outputFile.FileName));
+                        this.$current = $"/dll:{this.outputFile.FileName.InQuotes()}";
                         if (!this.$disposing)
                         {
                             this.$PC = 5;
@@ -2001,28 +1854,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -2088,28 +1927,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -2291,28 +2116,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -2423,28 +2234,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         private class IdlCompilationResult
@@ -2458,23 +2255,19 @@
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <Success>k__BackingField;
 
-            public static MsvcToolChain.IdlCompilationResult FromShellExecuteResult(Shell.ExecuteResult shellExecuteResult, CompilationInvocation invocation, NPath outputDirectory)
-            {
-                return new MsvcToolChain.IdlCompilationResult { 
+            public static MsvcToolChain.IdlCompilationResult FromShellExecuteResult(Shell.ExecuteResult shellExecuteResult, CompilationInvocation invocation, NPath outputDirectory) => 
+                new MsvcToolChain.IdlCompilationResult { 
                     Success = shellExecuteResult.ExitCode == 0,
                     StdOut = (shellExecuteResult.StdOut + Environment.NewLine + shellExecuteResult.StdErr).Trim(),
                     OutputDirectory = outputDirectory,
                     Invocation = invocation
                 };
-            }
 
-            public static MsvcToolChain.IdlCompilationResult SuccessfulResult(NPath outputDirectory)
-            {
-                return new MsvcToolChain.IdlCompilationResult { 
+            public static MsvcToolChain.IdlCompilationResult SuccessfulResult(NPath outputDirectory) => 
+                new MsvcToolChain.IdlCompilationResult { 
                     Success = true,
                     OutputDirectory = outputDirectory
                 };
-            }
 
             public CompilationInvocation Invocation { get; private set; }
 

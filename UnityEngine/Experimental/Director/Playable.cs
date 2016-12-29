@@ -25,22 +25,16 @@
         /// <summary>
         /// <para>Returns true if the Playable is valid. A playable can be invalid if it was disposed. This is different from a Null playable.</para>
         /// </summary>
-        public bool IsValid()
-        {
-            return IsValidInternal(ref this);
-        }
+        public bool IsValid() => 
+            IsValidInternal(ref this);
 
-        private static bool IsValidInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_IsValidInternal(ref playable);
-        }
+        private static bool IsValidInternal(ref Playable playable) => 
+            INTERNAL_CALL_IsValidInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_IsValidInternal(ref Playable playable);
-        public T CastTo<T>() where T: struct
-        {
-            return (T) Playables.CastToInternal(typeof(T), this.m_Handle, this.m_Version);
-        }
+        public T CastTo<T>() where T: struct => 
+            ((T) Playables.CastToInternal(typeof(T), this.m_Handle, this.m_Version));
 
         /// <summary>
         /// <para>Use GetTypeOf to get the Type of Playable.</para>
@@ -49,25 +43,16 @@
         /// <returns>
         /// <para>The Type of Playable.</para>
         /// </returns>
-        public static Type GetTypeOf(Playable playable)
-        {
-            return Playables.GetTypeOfInternal(playable.m_Handle, playable.m_Version);
-        }
+        public static Type GetTypeOf(Playable playable) => 
+            Playables.GetTypeOfInternal(playable.m_Handle, playable.m_Version);
 
         /// <summary>
         /// <para>A Null Playable used to create empty input connections.</para>
         /// </summary>
-        public static Playable Null
-        {
-            get
-            {
-                return new Playable { m_Version = 10 };
-            }
-        }
-        public static bool Connect(Playable source, Playable target)
-        {
-            return Connect(source, target, -1, -1);
-        }
+        public static Playable Null =>
+            new Playable { m_Version=10 };
+        public static bool Connect(Playable source, Playable target) => 
+            Connect(source, target, -1, -1);
 
         /// <summary>
         /// <para>Connects two Playables together.</para>
@@ -79,10 +64,8 @@
         /// <returns>
         /// <para>Returns false if the operation could not be completed.</para>
         /// </returns>
-        public static bool Connect(Playable source, Playable target, int sourceOutputPort, int targetInputPort)
-        {
-            return Playables.ConnectInternal(ref source, ref target, sourceOutputPort, targetInputPort);
-        }
+        public static bool Connect(Playable source, Playable target, int sourceOutputPort, int targetInputPort) => 
+            Playables.ConnectInternal(ref source, ref target, sourceOutputPort, targetInputPort);
 
         /// <summary>
         /// <para>Disconnects an input from a Playable.</para>
@@ -98,42 +81,28 @@
             }
         }
 
-        public static T Create<T>() where T: CustomAnimationPlayable, new()
-        {
-            return (InternalCreate(typeof(T)) as T);
-        }
+        public static T Create<T>() where T: CustomAnimationPlayable, new() => 
+            (InternalCreate(typeof(T)) as T);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern object InternalCreate(Type type);
         /// <summary>
         /// <para>The count of inputs on the Playable. This count includes slots that aren't connected to anything. This is equivalent to, but much faster than calling GetInputs().Length.</para>
         /// </summary>
-        public int inputCount
-        {
-            get
-            {
-                return GetInputCountInternal(ref this);
-            }
-        }
+        public int inputCount =>
+            GetInputCountInternal(ref this);
         /// <summary>
         /// <para>The count of ouputs on the Playable.  Currently only 1 output is supported.</para>
         /// </summary>
-        public int outputCount
-        {
-            get
-            {
-                return GetOutputCountInternal(ref this);
-            }
-        }
+        public int outputCount =>
+            GetOutputCountInternal(ref this);
         /// <summary>
         /// <para>Current Experimental.Director.PlayState of this playable. This indicates whether the Playable is currently playing or paused.</para>
         /// </summary>
         public PlayState state
         {
-            get
-            {
-                return GetPlayStateInternal(ref this);
-            }
+            get => 
+                GetPlayStateInternal(ref this);
             set
             {
                 SetPlayStateInternal(ref this, value);
@@ -144,61 +113,36 @@
         /// </summary>
         public double time
         {
-            get
-            {
-                return GetTimeInternal(ref this);
-            }
+            get => 
+                GetTimeInternal(ref this);
             set
             {
                 SetTimeInternal(ref this, value);
             }
         }
-        internal bool canChangeInputs
-        {
-            get
-            {
-                return CanChangeInputsInternal(ref this);
-            }
-        }
-        internal bool canSetWeights
-        {
-            get
-            {
-                return CanSetWeightsInternal(ref this);
-            }
-        }
-        internal bool canDestroy
-        {
-            get
-            {
-                return CanDestroyInternal(ref this);
-            }
-        }
-        private static bool CanChangeInputsInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_CanChangeInputsInternal(ref playable);
-        }
+        internal bool canChangeInputs =>
+            CanChangeInputsInternal(ref this);
+        internal bool canSetWeights =>
+            CanSetWeightsInternal(ref this);
+        internal bool canDestroy =>
+            CanDestroyInternal(ref this);
+        private static bool CanChangeInputsInternal(ref Playable playable) => 
+            INTERNAL_CALL_CanChangeInputsInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_CanChangeInputsInternal(ref Playable playable);
-        private static bool CanSetWeightsInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_CanSetWeightsInternal(ref playable);
-        }
+        private static bool CanSetWeightsInternal(ref Playable playable) => 
+            INTERNAL_CALL_CanSetWeightsInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_CanSetWeightsInternal(ref Playable playable);
-        private static bool CanDestroyInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_CanDestroyInternal(ref playable);
-        }
+        private static bool CanDestroyInternal(ref Playable playable) => 
+            INTERNAL_CALL_CanDestroyInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_CanDestroyInternal(ref Playable playable);
-        private static PlayState GetPlayStateInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_GetPlayStateInternal(ref playable);
-        }
+        private static PlayState GetPlayStateInternal(ref Playable playable) => 
+            INTERNAL_CALL_GetPlayStateInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern PlayState INTERNAL_CALL_GetPlayStateInternal(ref Playable playable);
@@ -209,10 +153,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_SetPlayStateInternal(ref Playable playable, PlayState playState);
-        private static double GetTimeInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_GetTimeInternal(ref playable);
-        }
+        private static double GetTimeInternal(ref Playable playable) => 
+            INTERNAL_CALL_GetTimeInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern double INTERNAL_CALL_GetTimeInternal(ref Playable playable);
@@ -228,19 +170,15 @@
         /// </summary>
         public double duration
         {
-            get
-            {
-                return GetDurationInternal(ref this);
-            }
+            get => 
+                GetDurationInternal(ref this);
             set
             {
                 SetDurationInternal(ref this, value);
             }
         }
-        private static double GetDurationInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_GetDurationInternal(ref playable);
-        }
+        private static double GetDurationInternal(ref Playable playable) => 
+            INTERNAL_CALL_GetDurationInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern double INTERNAL_CALL_GetDurationInternal(ref Playable playable);
@@ -251,17 +189,13 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_SetDurationInternal(ref Playable playable, double duration);
-        private static int GetInputCountInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_GetInputCountInternal(ref playable);
-        }
+        private static int GetInputCountInternal(ref Playable playable) => 
+            INTERNAL_CALL_GetInputCountInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int INTERNAL_CALL_GetInputCountInternal(ref Playable playable);
-        private static int GetOutputCountInternal(ref Playable playable)
-        {
-            return INTERNAL_CALL_GetOutputCountInternal(ref playable);
-        }
+        private static int GetOutputCountInternal(ref Playable playable) => 
+            INTERNAL_CALL_GetOutputCountInternal(ref playable);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern int INTERNAL_CALL_GetOutputCountInternal(ref Playable playable);
@@ -287,10 +221,8 @@
         /// <returns>
         /// <para>Playable connected at the index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected via Playable.Disconnect.</para>
         /// </returns>
-        public Playable GetInput(int inputPort)
-        {
-            return GetInputInternal(ref this, inputPort);
-        }
+        public Playable GetInput(int inputPort) => 
+            GetInputInternal(ref this, inputPort);
 
         private static Playable GetInputInternal(ref Playable playable, int index)
         {
@@ -323,10 +255,8 @@
         /// <returns>
         /// <para>Playable connected at the output index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected via Playable.Disconnect.</para>
         /// </returns>
-        public Playable GetOutput(int outputPort)
-        {
-            return GetOutputInternal(ref this, outputPort);
-        }
+        public Playable GetOutput(int outputPort) => 
+            GetOutputInternal(ref this, outputPort);
 
         private static Playable GetOutputInternal(ref Playable playable, int index)
         {
@@ -382,47 +312,31 @@
         /// <returns>
         /// <para>Weight of the input Playable. Returns -1 if there is no input connected at this input index.</para>
         /// </returns>
-        public float GetInputWeight(int index)
-        {
-            return GetInputWeightInternal(ref this, index);
-        }
+        public float GetInputWeight(int index) => 
+            GetInputWeightInternal(ref this, index);
 
-        private static float GetInputWeightInternal(ref Playable playable, int index)
-        {
-            return INTERNAL_CALL_GetInputWeightInternal(ref playable, index);
-        }
+        private static float GetInputWeightInternal(ref Playable playable, int index) => 
+            INTERNAL_CALL_GetInputWeightInternal(ref playable, index);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern float INTERNAL_CALL_GetInputWeightInternal(ref Playable playable, int index);
-        public static bool operator ==(Playable x, Playable y)
-        {
-            return CompareVersion(x, y);
-        }
+        public static bool operator ==(Playable x, Playable y) => 
+            CompareVersion(x, y);
 
-        public static bool operator !=(Playable x, Playable y)
-        {
-            return !CompareVersion(x, y);
-        }
+        public static bool operator !=(Playable x, Playable y) => 
+            !CompareVersion(x, y);
 
-        public override bool Equals(object p)
-        {
-            return ((p != null) && (p.GetHashCode() == this.GetHashCode()));
-        }
+        public override bool Equals(object p) => 
+            ((p != null) && (p.GetHashCode() == this.GetHashCode()));
 
-        public override int GetHashCode()
-        {
-            return (((int) this.m_Handle) ^ this.m_Version);
-        }
+        public override int GetHashCode() => 
+            (((int) this.m_Handle) ^ this.m_Version);
 
-        internal static bool CompareVersion(Playable lhs, Playable rhs)
-        {
-            return ((lhs.m_Handle == rhs.m_Handle) && (lhs.m_Version == rhs.m_Version));
-        }
+        internal static bool CompareVersion(Playable lhs, Playable rhs) => 
+            ((lhs.m_Handle == rhs.m_Handle) && (lhs.m_Version == rhs.m_Version));
 
-        internal bool CheckInputBounds(int inputIndex)
-        {
-            return this.CheckInputBounds(inputIndex, false);
-        }
+        internal bool CheckInputBounds(int inputIndex) => 
+            this.CheckInputBounds(inputIndex, false);
 
         internal bool CheckInputBounds(int inputIndex, bool acceptAny)
         {

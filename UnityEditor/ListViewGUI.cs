@@ -54,45 +54,29 @@
             return new ListViewShared.ListViewElementsEnumerator(ilvState, colWidths, yFrom, yTo, dragTitle, new Rect(0f, (float) (yFrom * state.rowHeight), pos.width, (float) state.rowHeight));
         }
 
-        public static bool HasMouseDown(Rect r)
-        {
-            return ListViewShared.HasMouseDown(ilvState, r, 0);
-        }
+        public static bool HasMouseDown(Rect r) => 
+            ListViewShared.HasMouseDown(ilvState, r, 0);
 
-        public static bool HasMouseDown(Rect r, int button)
-        {
-            return ListViewShared.HasMouseDown(ilvState, r, button);
-        }
+        public static bool HasMouseDown(Rect r, int button) => 
+            ListViewShared.HasMouseDown(ilvState, r, button);
 
-        public static bool HasMouseUp(Rect r)
-        {
-            return ListViewShared.HasMouseUp(ilvState, r, 0);
-        }
+        public static bool HasMouseUp(Rect r) => 
+            ListViewShared.HasMouseUp(ilvState, r, 0);
 
-        public static ListViewShared.ListViewElementsEnumerator ListView(Rect pos, ListViewState state)
-        {
-            return DoListView(pos, state, null, string.Empty);
-        }
+        public static ListViewShared.ListViewElementsEnumerator ListView(Rect pos, ListViewState state) => 
+            DoListView(pos, state, null, string.Empty);
 
-        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return ListView(state, (ListViewOptions) 0, null, string.Empty, style, options);
-        }
+        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, GUIStyle style, params GUILayoutOption[] options) => 
+            ListView(state, (ListViewOptions) 0, null, string.Empty, style, options);
 
-        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, int[] colWidths, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return ListView(state, (ListViewOptions) 0, colWidths, string.Empty, style, options);
-        }
+        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, int[] colWidths, GUIStyle style, params GUILayoutOption[] options) => 
+            ListView(state, (ListViewOptions) 0, colWidths, string.Empty, style, options);
 
-        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, ListViewOptions lvOptions, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return ListView(state, lvOptions, null, string.Empty, style, options);
-        }
+        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, ListViewOptions lvOptions, GUIStyle style, params GUILayoutOption[] options) => 
+            ListView(state, lvOptions, null, string.Empty, style, options);
 
-        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, ListViewOptions lvOptions, string dragTitle, GUIStyle style, params GUILayoutOption[] options)
-        {
-            return ListView(state, lvOptions, null, dragTitle, style, options);
-        }
+        public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, ListViewOptions lvOptions, string dragTitle, GUIStyle style, params GUILayoutOption[] options) => 
+            ListView(state, lvOptions, null, dragTitle, style, options);
 
         public static ListViewShared.ListViewElementsEnumerator ListView(ListViewState state, ListViewOptions lvOptions, int[] colWidths, string dragTitle, GUIStyle style, params GUILayoutOption[] options)
         {
@@ -121,10 +105,8 @@
             return DoListView(GUILayoutUtility.GetRect(1f, (float) ((state.totalRows * state.rowHeight) + 3)), state, colWidths, string.Empty);
         }
 
-        public static bool MultiSelection(int prevSelected, int currSelected, ref int initialSelected, ref bool[] selectedItems)
-        {
-            return ListViewShared.MultiSelection(ilvState, prevSelected, currSelected, ref initialSelected, ref selectedItems);
-        }
+        public static bool MultiSelection(int prevSelected, int currSelected, ref int initialSelected, ref bool[] selectedItems) => 
+            ListViewShared.MultiSelection(ilvState, prevSelected, currSelected, ref initialSelected, ref selectedItems);
     }
 }
 

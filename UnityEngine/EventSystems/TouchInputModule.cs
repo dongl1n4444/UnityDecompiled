@@ -51,10 +51,8 @@
         /// <returns>
         /// <para>Supported.</para>
         /// </returns>
-        public override bool IsModuleSupported()
-        {
-            return (this.forceModuleActive || base.input.touchSupported);
-        }
+        public override bool IsModuleSupported() => 
+            (this.forceModuleActive || base.input.touchSupported);
 
         /// <summary>
         /// <para>See BaseInputModule.</para>
@@ -230,10 +228,8 @@
             this.m_MousePosition = base.input.mousePosition;
         }
 
-        private bool UseFakeInput()
-        {
-            return !base.input.touchSupported;
-        }
+        private bool UseFakeInput() => 
+            !base.input.touchSupported;
 
         /// <summary>
         /// <para>Can this module be activated on a standalone platform?</para>
@@ -241,10 +237,8 @@
         [Obsolete("allowActivationOnStandalone has been deprecated. Use forceModuleActive instead (UnityUpgradable) -> forceModuleActive")]
         public bool allowActivationOnStandalone
         {
-            get
-            {
-                return this.m_ForceModuleActive;
-            }
+            get => 
+                this.m_ForceModuleActive;
             set
             {
                 this.m_ForceModuleActive = value;
@@ -256,10 +250,8 @@
         /// </summary>
         public bool forceModuleActive
         {
-            get
-            {
-                return this.m_ForceModuleActive;
-            }
+            get => 
+                this.m_ForceModuleActive;
             set
             {
                 this.m_ForceModuleActive = value;

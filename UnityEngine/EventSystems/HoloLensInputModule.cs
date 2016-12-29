@@ -42,46 +42,34 @@
             base.m_InputOverride = this.m_HoloLensInput;
         }
 
-        protected override bool ForceAutoSelect()
-        {
-            return true;
-        }
+        protected override bool ForceAutoSelect() => 
+            true;
 
         public void HoloLensInput_GestureNotifier()
         {
             this.m_HasGestureToProcess = true;
         }
 
-        public EventSystem HoloLensInput_GetEventSystem()
-        {
-            return base.eventSystem;
-        }
+        public EventSystem HoloLensInput_GetEventSystem() => 
+            base.eventSystem;
 
-        public float HoloLensInput_GetScreenOffsetScalar()
-        {
-            return this.m_NormalizedNavigationToScreenOffsetScalar;
-        }
+        public float HoloLensInput_GetScreenOffsetScalar() => 
+            this.m_NormalizedNavigationToScreenOffsetScalar;
 
-        public float HoloLensInput_GetTimeToPressOnTap()
-        {
-            return this.m_TimeToPressOnTap;
-        }
+        public float HoloLensInput_GetTimeToPressOnTap() => 
+            this.m_TimeToPressOnTap;
 
         /// <summary>
         /// <para>See BaseInputModule.</para>
         /// </summary>
-        public override bool IsModuleSupported()
-        {
-            return (base.IsModuleSupported() && string.Equals(VRSettings.loadedDeviceName, "HoloLens"));
-        }
+        public override bool IsModuleSupported() => 
+            (base.IsModuleSupported() && string.Equals(VRSettings.loadedDeviceName, "HoloLens"));
 
         /// <summary>
         /// <para>See BaseInputModule.</para>
         /// </summary>
-        public override bool ShouldActivateModule()
-        {
-            return ((base.forceModuleActive || this.m_HasGestureToProcess) || !this.m_HasBeenActivated);
-        }
+        public override bool ShouldActivateModule() => 
+            ((base.forceModuleActive || this.m_HasGestureToProcess) || !this.m_HasBeenActivated);
 
         /// <summary>
         /// <para>See BaseInputModule.</para>
@@ -97,10 +85,8 @@
         /// </summary>
         public float normalizedNavigationToScreenOffsetScalar
         {
-            get
-            {
-                return this.m_NormalizedNavigationToScreenOffsetScalar;
-            }
+            get => 
+                this.m_NormalizedNavigationToScreenOffsetScalar;
             set
             {
                 this.m_NormalizedNavigationToScreenOffsetScalar = value;
@@ -112,10 +98,8 @@
         /// </summary>
         public float timeToPressOnTap
         {
-            get
-            {
-                return this.m_TimeToPressOnTap;
-            }
+            get => 
+                this.m_TimeToPressOnTap;
             set
             {
                 this.m_TimeToPressOnTap = value;

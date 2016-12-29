@@ -7,10 +7,8 @@
     /// </summary>
     public class SyncListBool : SyncList<bool>
     {
-        protected override bool DeserializeItem(NetworkReader reader)
-        {
-            return reader.ReadBoolean();
-        }
+        protected override bool DeserializeItem(NetworkReader reader) => 
+            reader.ReadBoolean();
 
         [Obsolete("ReadReference is now used instead")]
         public static SyncListBool ReadInstance(NetworkReader reader)

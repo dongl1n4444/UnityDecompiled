@@ -462,7 +462,7 @@
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(120f) };
             this.m_ViewType = (ProfilerViewType) EditorGUILayout.IntPopup((int) this.m_ViewType, displayedOptions, optionValues, EditorStyles.toolbarDropDown, options);
             GUILayout.FlexibleSpace();
-            GUILayout.Label(string.Format("CPU:{0}ms   GPU:{1}ms", property.frameTime, property.frameGpuTime), EditorStyles.miniLabel, new GUILayoutOption[0]);
+            GUILayout.Label($"CPU:{property.frameTime}ms   GPU:{property.frameGpuTime}ms", EditorStyles.miniLabel, new GUILayoutOption[0]);
             GUI.enabled = ProfilerDriver.GetNextFrameIndex(this.m_CurrentFrame) == -1;
             if (GUILayout.Button(!GUI.enabled ? ms_Styles.noFrameDebugger : ms_Styles.frameDebugger, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
@@ -714,15 +714,11 @@
             return rect;
         }
 
-        public int GetActiveVisibleFrameIndex()
-        {
-            return ((this.m_CurrentFrame != -1) ? this.m_CurrentFrame : this.m_LastFrameFromTick);
-        }
+        public int GetActiveVisibleFrameIndex() => 
+            ((this.m_CurrentFrame != -1) ? this.m_CurrentFrame : this.m_LastFrameFromTick);
 
-        public string GetSearch()
-        {
-            return this.m_SearchString;
-        }
+        public string GetSearch() => 
+            this.m_SearchString;
 
         private void HandleCommandEvents()
         {
@@ -789,10 +785,8 @@
             }
         }
 
-        public bool IsSearching()
-        {
-            return (!string.IsNullOrEmpty(this.m_SearchString) && (this.m_SearchString.Length > 0));
-        }
+        public bool IsSearching() => 
+            (!string.IsNullOrEmpty(this.m_SearchString) && (this.m_SearchString.Length > 0));
 
         private void MemRecordModeClick(object userData, string[] options, int selected)
         {
@@ -1307,13 +1301,8 @@
             this.m_Charts[1].m_Chart.m_NotSupportedWarning = str2;
         }
 
-        private bool wantsMemoryRefresh
-        {
-            get
-            {
-                return this.m_MemoryListView.RequiresRefresh;
-            }
-        }
+        private bool wantsMemoryRefresh =>
+            this.m_MemoryListView.RequiresRefresh;
 
         internal class Styles
         {

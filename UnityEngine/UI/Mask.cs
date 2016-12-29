@@ -74,18 +74,14 @@
         /// </summary>
         /// <param name="sp"></param>
         /// <param name="eventCamera"></param>
-        public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
-        {
-            return (!base.isActiveAndEnabled || RectTransformUtility.RectangleContainsScreenPoint(this.rectTransform, sp, eventCamera));
-        }
+        public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera) => 
+            (!base.isActiveAndEnabled || RectTransformUtility.RectangleContainsScreenPoint(this.rectTransform, sp, eventCamera));
 
         /// <summary>
         /// <para>See:IMask.</para>
         /// </summary>
-        public virtual bool MaskEnabled()
-        {
-            return (this.IsActive() && (this.graphic != null));
-        }
+        public virtual bool MaskEnabled() => 
+            (this.IsActive() && (this.graphic != null));
 
         /// <summary>
         /// <para>See MonoBehaviour.OnDisable.</para>
@@ -183,10 +179,8 @@
         /// </summary>
         public bool showMaskGraphic
         {
-            get
-            {
-                return this.m_ShowMaskGraphic;
-            }
+            get => 
+                this.m_ShowMaskGraphic;
             set
             {
                 if (this.m_ShowMaskGraphic != value)

@@ -57,7 +57,7 @@
             {
                 <>f__am$cache1 = new Func<PopupList.ListElement, GUIContent>(null, (IntPtr) <DrawLabelList>m__1);
             }
-            foreach (GUIContent content in Enumerable.Take<GUIContent>(Enumerable.Select<PopupList.ListElement, GUIContent>(Enumerable.OrderBy<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, new Func<PopupList.ListElement, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0), <>f__am$cache1), s_MaxShownLabels))
+            foreach (GUIContent content in Enumerable.Select<PopupList.ListElement, GUIContent>(Enumerable.OrderBy<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, new Func<PopupList.ListElement, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0), <>f__am$cache1).Take<GUIContent>(s_MaxShownLabels))
             {
                 Rect position = GUILayoutUtility.GetRect(content, style);
                 if ((Event.current.type == EventType.Repaint) && (position.xMax >= xMax))
@@ -189,7 +189,7 @@
                 foreach (Object obj2 in this.m_CurrentAssetsSet)
                 {
                     bool flag2 = false;
-                    List<string> list = Enumerable.ToList<string>(AssetDatabase.GetLabels(obj2));
+                    List<string> list = AssetDatabase.GetLabels(obj2).ToList<string>();
                     if (this.m_ChangeWasAdd)
                     {
                         if (!list.Contains(this.m_ChangedLabel))
@@ -227,10 +227,8 @@
         {
             internal bool partiallySelected;
 
-            internal bool <>m__0(PopupList.ListElement i)
-            {
-                return (!this.partiallySelected ? i.selected : i.partiallySelected);
-            }
+            internal bool <>m__0(PopupList.ListElement i) => 
+                (!this.partiallySelected ? i.selected : i.partiallySelected);
         }
 
         [CompilerGenerated]
@@ -238,15 +236,11 @@
         {
             internal KeyValuePair<string, float> pair;
 
-            internal bool <>m__0(string label)
-            {
-                return string.Equals(label, this.pair.Key, StringComparison.OrdinalIgnoreCase);
-            }
+            internal bool <>m__0(string label) => 
+                string.Equals(label, this.pair.Key, StringComparison.OrdinalIgnoreCase);
 
-            internal bool <>m__1(string label)
-            {
-                return string.Equals(label, this.pair.Key, StringComparison.OrdinalIgnoreCase);
-            }
+            internal bool <>m__1(string label) => 
+                string.Equals(label, this.pair.Key, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

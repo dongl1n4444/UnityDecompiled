@@ -6,15 +6,11 @@
 
     public class AssemblyDefinitionComparer : IEqualityComparer<AssemblyDefinition>
     {
-        public bool Equals(AssemblyDefinition x, AssemblyDefinition y)
-        {
-            return (x.FullName == y.FullName);
-        }
+        public bool Equals(AssemblyDefinition x, AssemblyDefinition y) => 
+            (x.FullName == y.FullName);
 
-        public int GetHashCode(AssemblyDefinition obj)
-        {
-            return obj.FullName.GetHashCode();
-        }
+        public int GetHashCode(AssemblyDefinition obj) => 
+            obj.FullName.GetHashCode();
     }
 }
 

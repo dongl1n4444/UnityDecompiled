@@ -242,10 +242,8 @@
             return color;
         }
 
-        internal static Texture2D GetSplashScreenActualBackgroundImage(Rect windowRect)
-        {
-            return INTERNAL_CALL_GetSplashScreenActualBackgroundImage(ref windowRect);
-        }
+        internal static Texture2D GetSplashScreenActualBackgroundImage(Rect windowRect) => 
+            INTERNAL_CALL_GetSplashScreenActualBackgroundImage(ref windowRect);
 
         internal static Rect GetSplashScreenActualUVs(Rect windowRect)
         {

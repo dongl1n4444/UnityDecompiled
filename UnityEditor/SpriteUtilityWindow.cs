@@ -207,10 +207,8 @@
             }
         }
 
-        private float Log2(float x)
-        {
-            return (float) (Math.Log((double) x) / Math.Log(2.0));
-        }
+        private float Log2(float x) => 
+            ((float) (Math.Log((double) x) / Math.Log(2.0)));
 
         internal override void OnResized()
         {

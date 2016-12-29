@@ -31,15 +31,11 @@
         /// <returns>
         /// <para>The list of UVs generated.</para>
         /// </returns>
-        public static Vector2[] GeneratePerTriangleUV(Mesh src, UnwrapParam settings)
-        {
-            return GeneratePerTriangleUVImpl(src, settings);
-        }
+        public static Vector2[] GeneratePerTriangleUV(Mesh src, UnwrapParam settings) => 
+            GeneratePerTriangleUVImpl(src, settings);
 
-        internal static Vector2[] GeneratePerTriangleUVImpl(Mesh src, UnwrapParam settings)
-        {
-            return INTERNAL_CALL_GeneratePerTriangleUVImpl(src, ref settings);
-        }
+        internal static Vector2[] GeneratePerTriangleUVImpl(Mesh src, UnwrapParam settings) => 
+            INTERNAL_CALL_GeneratePerTriangleUVImpl(src, ref settings);
 
         /// <summary>
         /// <para>Will auto generate uv2 with default settings for provided mesh, and fill them in.</para>

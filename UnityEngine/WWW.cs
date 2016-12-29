@@ -186,10 +186,8 @@
         /// <returns>
         /// <para>The returned AudioClip.</para>
         /// </returns>
-        public AudioClip GetAudioClip(bool threeD)
-        {
-            return this.GetAudioClip(threeD, false);
-        }
+        public AudioClip GetAudioClip(bool threeD) => 
+            this.GetAudioClip(threeD, false);
 
         /// <summary>
         /// <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
@@ -202,10 +200,8 @@
         /// <returns>
         /// <para>The returned AudioClip.</para>
         /// </returns>
-        public AudioClip GetAudioClip(bool threeD, bool stream)
-        {
-            return this.GetAudioClip(threeD, stream, AudioType.UNKNOWN);
-        }
+        public AudioClip GetAudioClip(bool threeD, bool stream) => 
+            this.GetAudioClip(threeD, stream, AudioType.UNKNOWN);
 
         /// <summary>
         /// <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
@@ -218,10 +214,8 @@
         /// <returns>
         /// <para>The returned AudioClip.</para>
         /// </returns>
-        public AudioClip GetAudioClip(bool threeD, bool stream, AudioType audioType)
-        {
-            return this.GetAudioClipInternal(threeD, stream, false, audioType);
-        }
+        public AudioClip GetAudioClip(bool threeD, bool stream, AudioType audioType) => 
+            this.GetAudioClipInternal(threeD, stream, false, audioType);
 
         /// <summary>
         /// <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
@@ -231,10 +225,8 @@
         /// <returns>
         /// <para>The returned AudioClip.</para>
         /// </returns>
-        public AudioClip GetAudioClipCompressed()
-        {
-            return this.GetAudioClipCompressed(true);
-        }
+        public AudioClip GetAudioClipCompressed() => 
+            this.GetAudioClipCompressed(true);
 
         /// <summary>
         /// <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
@@ -244,10 +236,8 @@
         /// <returns>
         /// <para>The returned AudioClip.</para>
         /// </returns>
-        public AudioClip GetAudioClipCompressed(bool threeD)
-        {
-            return this.GetAudioClipCompressed(threeD, AudioType.UNKNOWN);
-        }
+        public AudioClip GetAudioClipCompressed(bool threeD) => 
+            this.GetAudioClipCompressed(threeD, AudioType.UNKNOWN);
 
         /// <summary>
         /// <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
@@ -257,10 +247,8 @@
         /// <returns>
         /// <para>The returned AudioClip.</para>
         /// </returns>
-        public AudioClip GetAudioClipCompressed(bool threeD, AudioType audioType)
-        {
-            return this.GetAudioClipInternal(threeD, false, true, audioType);
-        }
+        public AudioClip GetAudioClipCompressed(bool threeD, AudioType audioType) => 
+            this.GetAudioClipInternal(threeD, false, true, audioType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern AudioClip GetAudioClipInternal(bool threeD, bool stream, bool compressed, AudioType audioType);
@@ -299,10 +287,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern Texture2D GetTexture(bool markNonReadable);
         [Obsolete("All blocking WWW functions have been deprecated, please use one of the asynchronous functions instead.", true)]
-        public static Texture2D GetTextureFromURL(string url)
-        {
-            return new WWW(url).texture;
-        }
+        public static Texture2D GetTextureFromURL(string url) => 
+            new WWW(url).texture;
 
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("All blocking WWW functions have been deprecated, please use one of the asynchronous functions instead.", true)]
         public static extern string GetURL(string url);
@@ -348,10 +334,8 @@
             return LoadFromCacheOrDownload(url, hash, crc);
         }
 
-        public static WWW LoadFromCacheOrDownload(string url, Hash128 hash, [UnityEngine.Internal.DefaultValue("0")] uint crc)
-        {
-            return new WWW(url, hash, crc);
-        }
+        public static WWW LoadFromCacheOrDownload(string url, Hash128 hash, [UnityEngine.Internal.DefaultValue("0")] uint crc) => 
+            new WWW(url, hash, crc);
 
         /// <summary>
         /// <para>Replaces the contents of an existing Texture2D with an image from the downloaded data.</para>
@@ -443,13 +427,8 @@
         /// <summary>
         /// <para>Returns a AudioClip generated from the downloaded data (Read Only).</para>
         /// </summary>
-        public AudioClip audioClip
-        {
-            get
-            {
-                return this.GetAudioClip(true);
-            }
-        }
+        public AudioClip audioClip =>
+            this.GetAudioClip(true);
 
         /// <summary>
         /// <para>Returns the contents of the fetched web page as a byte array (Read Only).</para>
@@ -462,21 +441,11 @@
         public int bytesDownloaded { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("Please use WWW.text instead")]
-        public string data
-        {
-            get
-            {
-                return this.text;
-            }
-        }
+        public string data =>
+            this.text;
 
-        internal static Encoding DefaultEncoding
-        {
-            get
-            {
-                return Encoding.ASCII;
-            }
-        }
+        internal static Encoding DefaultEncoding =>
+            Encoding.ASCII;
 
         /// <summary>
         /// <para>Returns an error message if there was an error during the download (Read Only).</para>
@@ -497,13 +466,8 @@
         /// <para>Load an Ogg Vorbis file into the audio clip.</para>
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property WWW.oggVorbis has been deprecated. Use WWW.audioClip instead (UnityUpgradable).", true)]
-        public AudioClip oggVorbis
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public AudioClip oggVorbis =>
+            null;
 
         /// <summary>
         /// <para>How far has the download progressed (Read Only).</para>
@@ -548,24 +512,14 @@
         /// <summary>
         /// <para>Returns a Texture2D generated from the downloaded data (Read Only).</para>
         /// </summary>
-        public Texture2D texture
-        {
-            get
-            {
-                return this.GetTexture(false);
-            }
-        }
+        public Texture2D texture =>
+            this.GetTexture(false);
 
         /// <summary>
         /// <para>Returns a non-readable Texture2D generated from the downloaded data (Read Only).</para>
         /// </summary>
-        public Texture2D textureNonReadable
-        {
-            get
-            {
-                return this.GetTexture(true);
-            }
-        }
+        public Texture2D textureNonReadable =>
+            this.GetTexture(true);
 
         /// <summary>
         /// <para>Priority of AssetBundle decompression thread.</para>

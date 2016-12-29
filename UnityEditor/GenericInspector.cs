@@ -22,10 +22,8 @@
             return flag;
         }
 
-        private bool IsMissingMonoBehaviourTarget()
-        {
-            return ((base.target.GetType() == typeof(MonoBehaviour)) || (base.target.GetType() == typeof(ScriptableObject)));
-        }
+        private bool IsMissingMonoBehaviourTarget() => 
+            ((base.target.GetType() == typeof(MonoBehaviour)) || (base.target.GetType() == typeof(ScriptableObject)));
 
         public bool MissingMonoBehaviourGUI()
         {
@@ -69,10 +67,8 @@
             }
         }
 
-        internal override bool OnOptimizedInspectorGUI(Rect contentRect)
-        {
-            return base.OptimizedInspectorGUIImplementation(contentRect);
-        }
+        internal override bool OnOptimizedInspectorGUI(Rect contentRect) => 
+            base.OptimizedInspectorGUIImplementation(contentRect);
     }
 }
 

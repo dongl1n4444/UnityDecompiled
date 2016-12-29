@@ -28,10 +28,8 @@
             GUILayout.Label(GUIContent.none, styles.sSeparator, new GUILayoutOption[0]);
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(180f, this.m_WindowHeight);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(180f, this.m_WindowHeight);
 
         public override void OnGUI(Rect rect)
         {

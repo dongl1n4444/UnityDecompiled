@@ -25,10 +25,8 @@
         /// </summary>
         public ushort MaxPacketSize
         {
-            get
-            {
-                return this.m_MaxPacketSize;
-            }
+            get => 
+                this.m_MaxPacketSize;
             set
             {
                 this.m_MaxPacketSize = value;
@@ -40,10 +38,8 @@
         /// </summary>
         public ushort ReactorMaximumReceivedMessages
         {
-            get
-            {
-                return this.m_ReactorMaximumReceivedMessages;
-            }
+            get => 
+                this.m_ReactorMaximumReceivedMessages;
             set
             {
                 this.m_ReactorMaximumReceivedMessages = value;
@@ -55,10 +51,8 @@
         /// </summary>
         public ushort ReactorMaximumSentMessages
         {
-            get
-            {
-                return this.m_ReactorMaximumSentMessages;
-            }
+            get => 
+                this.m_ReactorMaximumSentMessages;
             set
             {
                 this.m_ReactorMaximumSentMessages = value;
@@ -70,10 +64,8 @@
         /// </summary>
         public UnityEngine.Networking.ReactorModel ReactorModel
         {
-            get
-            {
-                return this.m_ReactorModel;
-            }
+            get => 
+                this.m_ReactorModel;
             set
             {
                 this.m_ReactorModel = value;
@@ -85,10 +77,8 @@
         /// </summary>
         public uint ThreadAwakeTimeout
         {
-            get
-            {
-                return this.m_ThreadAwakeTimeout;
-            }
+            get => 
+                this.m_ThreadAwakeTimeout;
             set
             {
                 if (value == 0)

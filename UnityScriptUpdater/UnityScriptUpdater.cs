@@ -23,10 +23,8 @@
         {
         }
 
-        protected override BooCompiler CreateCompiler()
-        {
-            return new MyUnityScriptCompiler().GetCompiler();
-        }
+        protected override BooCompiler CreateCompiler() => 
+            new MyUnityScriptCompiler().GetCompiler();
 
         private Type FindMonoBehaviour(IEnumerable<string> references)
         {
@@ -42,10 +40,8 @@
             throw new Exception("MonoBehaviour not found");
         }
 
-        protected override FixParsedSourceLocations NewParsedSourceLocationFixer(IAPIUpdaterListener listener, Dictionary<string, SourceFile> sources)
-        {
-            return new FixParsedSourceLocations(this.TabSize, sources, listener);
-        }
+        protected override FixParsedSourceLocations NewParsedSourceLocationFixer(IAPIUpdaterListener listener, Dictionary<string, SourceFile> sources) => 
+            new FixParsedSourceLocations(this.TabSize, sources, listener);
 
         protected override ReplacingAstVisitor[] PostProcessPipeline(ReplacingAstVisitor[] pipeline, BooUpdateContext context)
         {
@@ -94,28 +90,16 @@
             base._compiler.get_Parameters().set_Pipeline(pipeline);
         }
 
-        protected override bool FixExpressionStatements
-        {
-            get
-            {
-                return true;
-            }
-        }
+        protected override bool FixExpressionStatements =>
+            true;
 
-        protected override int TabSize
-        {
-            get
-            {
-                return 8;
-            }
-        }
+        protected override int TabSize =>
+            8;
 
         private class MyUnityScriptCompiler : UnityScriptCompiler
         {
-            public BooCompiler GetCompiler()
-            {
-                return base._compiler;
-            }
+            public BooCompiler GetCompiler() => 
+                base._compiler;
         }
     }
 }

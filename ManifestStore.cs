@@ -25,25 +25,13 @@ internal abstract class ManifestStore : ManifestWSA
         return new XElement((XName) (this.DefaultNamespace + "Prerequisites"), new object[] { new XElement((XName) (this.DefaultNamespace + "OSMinVersion"), content), new XElement((XName) (this.DefaultNamespace + "OSMaxVersionTested"), content) });
     }
 
-    protected XElement GetSplashScreenElement(XNamespace @namespace)
-    {
-        return base.GetSplashScreenElement(@namespace, base.Images.storeSplashScreenImage);
-    }
+    protected XElement GetSplashScreenElement(XNamespace @namespace) => 
+        base.GetSplashScreenElement(@namespace, base.Images.storeSplashScreenImage);
 
-    protected override XNamespace DefaultNamespace
-    {
-        get
-        {
-            return this._defaultNamespace;
-        }
-    }
+    protected override XNamespace DefaultNamespace =>
+        this._defaultNamespace;
 
-    protected override string StoreLogo
-    {
-        get
-        {
-            return base.Images.storeStoreLogo;
-        }
-    }
+    protected override string StoreLogo =>
+        base.Images.storeStoreLogo;
 }
 

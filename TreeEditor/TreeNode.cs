@@ -74,10 +74,8 @@
             rad = this.group.GetRadiusAtTime(this, time, false);
         }
 
-        public float GetRadiusAtTime(float time)
-        {
-            return this.group.GetRadiusAtTime(this, time, false);
-        }
+        public float GetRadiusAtTime(float time) => 
+            this.group.GetRadiusAtTime(this, time, false);
 
         public float GetScale()
         {
@@ -117,10 +115,8 @@
 
         public int uniqueID
         {
-            get
-            {
-                return this._uniqueID;
-            }
+            get => 
+                this._uniqueID;
             set
             {
                 if (this._uniqueID == -1)

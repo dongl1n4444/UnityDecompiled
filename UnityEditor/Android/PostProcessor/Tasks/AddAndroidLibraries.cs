@@ -22,13 +22,8 @@
             context.Set<AndroidLibraries>("AndroidLibraries", libraries);
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Processing Android libraries";
-            }
-        }
+        public string Name =>
+            "Processing Android libraries";
     }
 }
 

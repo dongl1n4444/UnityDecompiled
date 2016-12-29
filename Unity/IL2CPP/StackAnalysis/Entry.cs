@@ -24,10 +24,8 @@
             return entry;
         }
 
-        public static Entry For(TypeReference typeReference)
-        {
-            return new Entry { Types = { typeReference } };
-        }
+        public static Entry For(TypeReference typeReference) => 
+            new Entry { Types = { typeReference } };
 
         public static Entry ForNull(TypeReference typeReference)
         {
@@ -40,13 +38,8 @@
 
         public bool NullValue { get; internal set; }
 
-        public HashSet<TypeReference> Types
-        {
-            get
-            {
-                return this._types;
-            }
-        }
+        public HashSet<TypeReference> Types =>
+            this._types;
     }
 }
 

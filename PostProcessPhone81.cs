@@ -17,7 +17,7 @@ internal class PostProcessPhone81 : PostProcessWSA
     [CompilerGenerated]
     private static Func<string, string> <>f__am$cache0;
 
-    public PostProcessPhone81(BuildPostProcessArgs args, [Optional, DefaultParameterValue(null)] string stagingArea) : base(args, WSASDK.PhoneSDK81, stagingArea)
+    public PostProcessPhone81(BuildPostProcessArgs args, string stagingArea = null) : base(args, WSASDK.PhoneSDK81, stagingArea)
     {
     }
 
@@ -67,25 +67,17 @@ internal class PostProcessPhone81 : PostProcessWSA
         base._images.phoneStoreLogo = base.CheckImageConsistencyAndGetName(textArray6);
     }
 
-    protected override ManifestWSA CreateManifestBuilder()
-    {
-        return new ManifestPhone81();
-    }
+    protected override ManifestWSA CreateManifestBuilder() => 
+        new ManifestPhone81();
 
-    protected override string GetAssemblyConverterPlatform()
-    {
-        return "wp81";
-    }
+    protected override string GetAssemblyConverterPlatform() => 
+        "wp81";
 
-    protected override string GetPlayerFilesSourceDirectory()
-    {
-        return base.GetPlayerFilesSourceDirectory("WindowsPhone81");
-    }
+    protected override string GetPlayerFilesSourceDirectory() => 
+        base.GetPlayerFilesSourceDirectory("WindowsPhone81");
 
-    protected override string GetPlayerFilesTargetDirectory()
-    {
-        return base.GetPlayerFilesTargetDirectory("WindowsPhone81");
-    }
+    protected override string GetPlayerFilesTargetDirectory() => 
+        base.GetPlayerFilesTargetDirectory("WindowsPhone81");
 
     protected override string GetReferenceAssembliesDirectory()
     {
@@ -96,30 +88,20 @@ internal class PostProcessPhone81 : PostProcessWSA
         return _referenceAssembliesDirectory;
     }
 
-    protected override string GetResourceCompilerPath()
-    {
-        return Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
-    }
+    protected override string GetResourceCompilerPath() => 
+        Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
 
-    protected override string GetSDKNotFoundErrorMessage()
-    {
-        return "Make sure Visual Studio 2013 and Windows Phone SDK 8.1 is installed.";
-    }
+    protected override string GetSDKNotFoundErrorMessage() => 
+        "Make sure Visual Studio 2013 and Windows Phone SDK 8.1 is installed.";
 
-    protected override string GetTemplateDirectorySource()
-    {
-        return base.GetTemplateDirectorySource("Windows81");
-    }
+    protected override string GetTemplateDirectorySource() => 
+        base.GetTemplateDirectorySource("Windows81");
 
-    protected override Version GetToolsVersion()
-    {
-        return new Version(12, 0);
-    }
+    protected override Version GetToolsVersion() => 
+        new Version(12, 0);
 
-    protected override IEnumerable<string> GetUnityAssemblies()
-    {
-        return new string[] { @"Phone\UnityEngine.dll", @"Phone\WinRTLegacy.dll" };
-    }
+    protected override IEnumerable<string> GetUnityAssemblies() => 
+        new string[] { @"Phone\UnityEngine.dll", @"Phone\WinRTLegacy.dll" };
 
     protected override IEnumerable<string> GetUnityPluginOverwrites()
     {
@@ -135,11 +117,7 @@ internal class PostProcessPhone81 : PostProcessWSA
         try
         {
             XElement element = XDocument.Load(path).Element("{http://schemas.microsoft.com/appx/2010/manifest}Package");
-            if (element == null)
-            {
-                return false;
-            }
-            return (element.Element("{http://schemas.microsoft.com/appx/2014/phone/manifest}PhoneIdentity") != null);
+            return (element?.Element("{http://schemas.microsoft.com/appx/2014/phone/manifest}PhoneIdentity") != null);
         }
         catch
         {

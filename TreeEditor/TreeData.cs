@@ -48,10 +48,8 @@
             return g;
         }
 
-        public TreeNode AddNode(TreeGroup g, TreeNode parent)
-        {
-            return this.AddNode(g, parent, true);
-        }
+        public TreeNode AddNode(TreeGroup g, TreeNode parent) => 
+            this.AddNode(g, parent, true);
 
         public TreeNode AddNode(TreeGroup g, TreeNode parent, bool validate)
         {
@@ -347,10 +345,8 @@
             }
         }
 
-        public static int GetAdaptiveHeightSegments(float h, float adaptiveQuality)
-        {
-            return (int) Mathf.Max((float) (h * adaptiveQuality), (float) 2f);
-        }
+        public static int GetAdaptiveHeightSegments(float h, float adaptiveQuality) => 
+            ((int) Mathf.Max((float) (h * adaptiveQuality), (float) 2f));
 
         public static int GetAdaptiveRadialSegments(float r, float adaptiveQuality)
         {
@@ -540,10 +536,8 @@
             return null;
         }
 
-        private int GetGroupCount()
-        {
-            return ((1 + this.branchGroups.Length) + this.leafGroups.Length);
-        }
+        private int GetGroupCount() => 
+            ((1 + this.branchGroups.Length) + this.leafGroups.Length);
 
         public TreeNode GetNode(int id)
         {
@@ -566,10 +560,8 @@
             return null;
         }
 
-        private int GetNodeCount()
-        {
-            return this.nodes.Length;
-        }
+        private int GetNodeCount() => 
+            this.nodes.Length;
 
         public void Initialize()
         {

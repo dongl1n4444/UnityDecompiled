@@ -26,7 +26,7 @@
 
         public void WriteNullCheckIfNeeded(StackInfo stackInfo)
         {
-            if ((this.ShouldEmitNullChecksForMethod() && !Extensions.IsValueType(stackInfo.Type)) && (!stackInfo.Type.IsByReference || !((ByReferenceType) stackInfo.Type).ElementType.IsValueType))
+            if ((this.ShouldEmitNullChecksForMethod() && !stackInfo.Type.IsValueType()) && (!stackInfo.Type.IsByReference || !((ByReferenceType) stackInfo.Type).ElementType.IsValueType))
             {
                 this.RecordNullCheckEmitted();
                 object[] args = new object[] { Emit.NullCheck(stackInfo.Type, stackInfo.Expression) };
@@ -36,7 +36,7 @@
 
         public void WriteNullCheckForInvocationIfNeeded(MethodReference methodReference, IList<string> args)
         {
-            if ((this.ShouldEmitNullChecksForMethod() && methodReference.HasThis) && (!Extensions.IsValueType(methodReference.DeclaringType) && (args[0] != Naming.ThisParameterName)))
+            if ((this.ShouldEmitNullChecksForMethod() && methodReference.HasThis) && (!methodReference.DeclaringType.IsValueType() && (args[0] != Naming.ThisParameterName)))
             {
                 this.RecordNullCheckEmitted();
                 object[] objArray1 = new object[] { Emit.NullCheck(args[0]) };
@@ -49,10 +49,8 @@
             StatsService.RecordNullCheckEmitted(this._methodDefinition);
         }
 
-        private bool ShouldEmitNullChecksForMethod()
-        {
-            return CompilerServicesSupport.HasNullChecksSupportEnabled(this._methodDefinition, this._nullChecksGloballyEnabled);
-        }
+        private bool ShouldEmitNullChecksForMethod() => 
+            CompilerServicesSupport.HasNullChecksSupportEnabled(this._methodDefinition, this._nullChecksGloballyEnabled);
     }
 }
 

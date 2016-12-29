@@ -29,33 +29,25 @@
         /// <param name="assets">List of assets to add to version control system.</param>
         /// <param name="recursive">Set this true if adding should be done recursively into subfolders.</param>
         /// <param name="asset">Single asset to add to version control system.</param>
-        public static Task Add(AssetList assets, bool recursive)
-        {
-            return Internal_Add(assets.ToArray(), recursive);
-        }
+        public static Task Add(AssetList assets, bool recursive) => 
+            Internal_Add(assets.ToArray(), recursive);
 
         /// <summary>
         /// <para>Given a list of assets this function returns true if Add is a valid task to perform.</para>
         /// </summary>
         /// <param name="assets">List of assets to test.</param>
-        public static bool AddIsValid(AssetList assets)
-        {
-            return Internal_AddIsValid(assets.ToArray());
-        }
+        public static bool AddIsValid(AssetList assets) => 
+            Internal_AddIsValid(assets.ToArray());
 
-        internal static Asset CacheStatus(string assetPath)
-        {
-            return Internal_CacheStatus(assetPath);
-        }
+        internal static Asset CacheStatus(string assetPath) => 
+            Internal_CacheStatus(assetPath);
 
         /// <summary>
         /// <para>Given a changeset only containing the changeset ID, this will start a task for quering the description of the changeset.</para>
         /// </summary>
         /// <param name="changeset">Changeset to query description of.</param>
-        public static Task ChangeSetDescription(ChangeSet changeset)
-        {
-            return Internal_ChangeSetDescription(changeset);
-        }
+        public static Task ChangeSetDescription(ChangeSet changeset) => 
+            Internal_ChangeSetDescription(changeset);
 
         /// <summary>
         /// <para>Move an asset or list of assets from their current changeset to a new changeset.</para>
@@ -104,10 +96,8 @@
         /// <param name="changeset">Changeset to move asset to.</param>
         /// <param name="asset">Asset to move to changeset.</param>
         /// <param name="changesetID">ChangesetID to move asset to.</param>
-        public static Task ChangeSetMove(AssetList assets, ChangeSet changeset)
-        {
-            return Internal_ChangeSetMove(assets.ToArray(), changeset);
-        }
+        public static Task ChangeSetMove(AssetList assets, ChangeSet changeset) => 
+            Internal_ChangeSetMove(assets.ToArray(), changeset);
 
         /// <summary>
         /// <para>Get a list of pending changesets owned by the current user.</para>
@@ -130,10 +120,8 @@
         /// </summary>
         /// <param name="changeset">Changeset to query for assets.</param>
         /// <param name="changesetID">ChangesetID to query for assets.</param>
-        public static Task ChangeSetStatus(ChangeSet changeset)
-        {
-            return Internal_ChangeSetStatus(changeset);
-        }
+        public static Task ChangeSetStatus(ChangeSet changeset) => 
+            Internal_ChangeSetStatus(changeset);
 
         /// <summary>
         /// <para>Checkout an asset or list of asset from the version control system.</para>
@@ -165,10 +153,8 @@
         /// <param name="assets">List of assets to checkout.</param>
         /// <param name="mode">Tell the Provider to checkout the asset, the .meta file or both.</param>
         /// <param name="asset">Asset to checkout.</param>
-        public static Task Checkout(AssetList assets, CheckoutMode mode)
-        {
-            return Internal_Checkout(assets.ToArray(), mode);
-        }
+        public static Task Checkout(AssetList assets, CheckoutMode mode) => 
+            Internal_Checkout(assets.ToArray(), mode);
 
         /// <summary>
         /// <para>Checkout an asset or list of asset from the version control system.</para>
@@ -176,10 +162,8 @@
         /// <param name="assets">List of assets to checkout.</param>
         /// <param name="mode">Tell the Provider to checkout the asset, the .meta file or both.</param>
         /// <param name="asset">Asset to checkout.</param>
-        public static Task Checkout(string[] assets, CheckoutMode mode)
-        {
-            return Internal_CheckoutStrings(assets, mode);
-        }
+        public static Task Checkout(string[] assets, CheckoutMode mode) => 
+            Internal_CheckoutStrings(assets, mode);
 
         /// <summary>
         /// <para>Checkout an asset or list of asset from the version control system.</para>
@@ -216,20 +200,16 @@
         /// </summary>
         /// <param name="assets">List of assets.</param>
         /// <param name="asset">Single asset.</param>
-        public static bool CheckoutIsValid(Asset asset)
-        {
-            return CheckoutIsValid(asset, CheckoutMode.Exact);
-        }
+        public static bool CheckoutIsValid(Asset asset) => 
+            CheckoutIsValid(asset, CheckoutMode.Exact);
 
         /// <summary>
         /// <para>Given an asset or a  list of assets this function returns true if Checkout is a valid task to perform.</para>
         /// </summary>
         /// <param name="assets">List of assets.</param>
         /// <param name="asset">Single asset.</param>
-        public static bool CheckoutIsValid(AssetList assets)
-        {
-            return CheckoutIsValid(assets, CheckoutMode.Exact);
-        }
+        public static bool CheckoutIsValid(AssetList assets) => 
+            CheckoutIsValid(assets, CheckoutMode.Exact);
 
         public static bool CheckoutIsValid(Asset asset, CheckoutMode mode)
         {
@@ -237,10 +217,8 @@
             return Internal_CheckoutIsValid(assets, mode);
         }
 
-        public static bool CheckoutIsValid(AssetList assets, CheckoutMode mode)
-        {
-            return Internal_CheckoutIsValid(assets.ToArray(), mode);
-        }
+        public static bool CheckoutIsValid(AssetList assets, CheckoutMode mode) => 
+            Internal_CheckoutIsValid(assets.ToArray(), mode);
 
         /// <summary>
         /// <para>This will invalidate the cached state information for all assets.</para>
@@ -253,10 +231,8 @@
         /// <param name="assetProjectPath">Project path of asset.</param>
         /// <param name="assets">List of assets to delete.</param>
         /// <param name="asset">Asset to delete.</param>
-        public static Task Delete(string assetProjectPath)
-        {
-            return Internal_DeleteAtProjectPath(assetProjectPath);
-        }
+        public static Task Delete(string assetProjectPath) => 
+            Internal_DeleteAtProjectPath(assetProjectPath);
 
         /// <summary>
         /// <para>This will statt a task for deleting an asset or assets both from disk and from version control system.</para>
@@ -276,47 +252,37 @@
         /// <param name="assetProjectPath">Project path of asset.</param>
         /// <param name="assets">List of assets to delete.</param>
         /// <param name="asset">Asset to delete.</param>
-        public static Task Delete(AssetList assets)
-        {
-            return Internal_Delete(assets.ToArray());
-        }
+        public static Task Delete(AssetList assets) => 
+            Internal_Delete(assets.ToArray());
 
         /// <summary>
         /// <para>Starts a task that will attempt to delete the given changeset.</para>
         /// </summary>
         /// <param name="changesets">List of changetsets.</param>
-        public static Task DeleteChangeSets(UnityEditor.VersionControl.ChangeSets changesets)
-        {
-            return Internal_DeleteChangeSets(changesets.ToArray());
-        }
+        public static Task DeleteChangeSets(UnityEditor.VersionControl.ChangeSets changesets) => 
+            Internal_DeleteChangeSets(changesets.ToArray());
 
         /// <summary>
         /// <para>Test if deleting a changeset is a valid task to perform.</para>
         /// </summary>
         /// <param name="changesets">Changeset to test.</param>
-        public static bool DeleteChangeSetsIsValid(UnityEditor.VersionControl.ChangeSets changesets)
-        {
-            return Internal_DeleteChangeSetsIsValid(changesets.ToArray());
-        }
+        public static bool DeleteChangeSetsIsValid(UnityEditor.VersionControl.ChangeSets changesets) => 
+            Internal_DeleteChangeSetsIsValid(changesets.ToArray());
 
         /// <summary>
         /// <para>Starts a task for showing a diff of the given assest versus their head revision.</para>
         /// </summary>
         /// <param name="assets">List of assets.</param>
         /// <param name="includingMetaFiles">Whether or not to include .meta.</param>
-        public static Task DiffHead(AssetList assets, bool includingMetaFiles)
-        {
-            return Internal_DiffHead(assets.ToArray(), includingMetaFiles);
-        }
+        public static Task DiffHead(AssetList assets, bool includingMetaFiles) => 
+            Internal_DiffHead(assets.ToArray(), includingMetaFiles);
 
         /// <summary>
         /// <para>Return true is starting a Diff task is a valid operation.</para>
         /// </summary>
         /// <param name="assets">List of assets.</param>
-        public static bool DiffIsValid(AssetList assets)
-        {
-            return Internal_DiffIsValid(assets.ToArray());
-        }
+        public static bool DiffIsValid(AssetList assets) => 
+            Internal_DiffIsValid(assets.ToArray());
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int GenerateID();
@@ -379,10 +345,8 @@
         /// </summary>
         /// <param name="assets">List of assets to update.</param>
         /// <param name="asset">Asset to update.</param>
-        public static Task GetLatest(AssetList assets)
-        {
-            return Internal_GetLatest(assets.ToArray());
-        }
+        public static Task GetLatest(AssetList assets) => 
+            Internal_GetLatest(assets.ToArray());
 
         /// <summary>
         /// <para>Returns true if getting the latest version of an asset is a valid operation.</para>
@@ -400,10 +364,8 @@
         /// </summary>
         /// <param name="assets">List of assets to test.</param>
         /// <param name="asset">Asset to test.</param>
-        public static bool GetLatestIsValid(AssetList assets)
-        {
-            return Internal_GetLatestIsValid(assets.ToArray());
-        }
+        public static bool GetLatestIsValid(AssetList assets) => 
+            Internal_GetLatestIsValid(assets.ToArray());
 
         /// <summary>
         /// <para>Start a task for quering the version control server for incoming changes.</para>
@@ -426,10 +388,8 @@
         /// </summary>
         /// <param name="changeset">Incoming changeset.</param>
         /// <param name="changesetID">Incoming changesetid.</param>
-        public static Task IncomingChangeSetAssets(ChangeSet changeset)
-        {
-            return Internal_IncomingChangeSetAssets(changeset);
-        }
+        public static Task IncomingChangeSetAssets(ChangeSet changeset) => 
+            Internal_IncomingChangeSetAssets(changeset);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern Task Internal_Add(Asset[] assets, bool recursive);
@@ -535,10 +495,8 @@
         /// <param name="assets">List of assets to lock/unlock.</param>
         /// <param name="locked">True to lock assets, false to unlock assets.</param>
         /// <param name="asset">Asset to lock/unlock.</param>
-        public static Task Lock(AssetList assets, bool locked)
-        {
-            return Internal_Lock(assets.ToArray(), locked);
-        }
+        public static Task Lock(AssetList assets, bool locked) => 
+            Internal_Lock(assets.ToArray(), locked);
 
         /// <summary>
         /// <para>Return true if the task can be executed.</para>
@@ -556,54 +514,42 @@
         /// </summary>
         /// <param name="assets">List of assets to test.</param>
         /// <param name="asset">Asset to test.</param>
-        public static bool LockIsValid(AssetList assets)
-        {
-            return Internal_LockIsValid(assets.ToArray());
-        }
+        public static bool LockIsValid(AssetList assets) => 
+            Internal_LockIsValid(assets.ToArray());
 
         /// <summary>
         /// <para>This method will initiate a merge task handle merging of the conflicting assets.</para>
         /// </summary>
         /// <param name="assets">The list of conflicting assets to be merged.</param>
         /// <param name="method">How to merge the assets.</param>
-        public static Task Merge(AssetList assets, MergeMethod method)
-        {
-            return Internal_Merge(assets.ToArray(), method);
-        }
+        public static Task Merge(AssetList assets, MergeMethod method) => 
+            Internal_Merge(assets.ToArray(), method);
 
         /// <summary>
         /// <para>Uses the version control plugin to move an asset from one path to another.</para>
         /// </summary>
         /// <param name="from">Path to source asset.</param>
         /// <param name="to">Path to destination.</param>
-        public static Task Move(string from, string to)
-        {
-            return Internal_MoveAsStrings(from, to);
-        }
+        public static Task Move(string from, string to) => 
+            Internal_MoveAsStrings(from, to);
 
-        internal static bool PromptAndCheckoutIfNeeded(string[] assets, string promptIfCheckoutIsNeeded)
-        {
-            return Internal_PromptAndCheckoutIfNeeded(assets, promptIfCheckoutIsNeeded);
-        }
+        internal static bool PromptAndCheckoutIfNeeded(string[] assets, string promptIfCheckoutIsNeeded) => 
+            Internal_PromptAndCheckoutIfNeeded(assets, promptIfCheckoutIsNeeded);
 
         /// <summary>
         /// <para>Start a task that will resolve conflicting assets in version control.</para>
         /// </summary>
         /// <param name="assets">The list of asset to mark as resolved.</param>
         /// <param name="resolveMethod">How the assets should be resolved.</param>
-        public static Task Resolve(AssetList assets, ResolveMethod resolveMethod)
-        {
-            return Internal_Resolve(assets.ToArray(), resolveMethod);
-        }
+        public static Task Resolve(AssetList assets, ResolveMethod resolveMethod) => 
+            Internal_Resolve(assets.ToArray(), resolveMethod);
 
         /// <summary>
         /// <para>Tests if any of the assets in the list is resolvable.</para>
         /// </summary>
         /// <param name="assets">The list of asset to be resolved.</param>
-        public static bool ResolveIsValid(AssetList assets)
-        {
-            return Internal_ResolveIsValid(assets.ToArray());
-        }
+        public static bool ResolveIsValid(AssetList assets) => 
+            Internal_ResolveIsValid(assets.ToArray());
 
         /// <summary>
         /// <para>Reverts the specified assets by undoing any changes done since last time you synced.</para>
@@ -623,15 +569,11 @@
         /// <param name="assets">The list of assets to be reverted.</param>
         /// <param name="mode">How to revert the assets.</param>
         /// <param name="asset">The asset to be reverted.</param>
-        public static Task Revert(AssetList assets, RevertMode mode)
-        {
-            return Internal_Revert(assets.ToArray(), mode);
-        }
+        public static Task Revert(AssetList assets, RevertMode mode) => 
+            Internal_Revert(assets.ToArray(), mode);
 
-        internal static Task RevertChangeSets(UnityEditor.VersionControl.ChangeSets changesets, RevertMode mode)
-        {
-            return Internal_RevertChangeSets(changesets.ToArray(), mode);
-        }
+        internal static Task RevertChangeSets(UnityEditor.VersionControl.ChangeSets changesets, RevertMode mode) => 
+            Internal_RevertChangeSets(changesets.ToArray(), mode);
 
         /// <summary>
         /// <para>Return true if Revert is a valid task to perform.</para>
@@ -651,20 +593,14 @@
         /// <param name="assets">List of assets to test.</param>
         /// <param name="mode">Revert mode to test for.</param>
         /// <param name="asset">Asset to test.</param>
-        public static bool RevertIsValid(AssetList assets, RevertMode mode)
-        {
-            return Internal_RevertIsValid(assets.ToArray(), mode);
-        }
+        public static bool RevertIsValid(AssetList assets, RevertMode mode) => 
+            Internal_RevertIsValid(assets.ToArray(), mode);
 
-        internal static Task SetFileMode(AssetList assets, FileMode mode)
-        {
-            return Internal_SetFileMode(assets.ToArray(), mode);
-        }
+        internal static Task SetFileMode(AssetList assets, FileMode mode) => 
+            Internal_SetFileMode(assets.ToArray(), mode);
 
-        internal static Task SetFileMode(string[] assets, FileMode mode)
-        {
-            return Internal_SetFileModeStrings(assets, mode);
-        }
+        internal static Task SetFileMode(string[] assets, FileMode mode) => 
+            Internal_SetFileModeStrings(assets, mode);
 
         /// <summary>
         /// <para>Start a task that will fetch the most recent status from revision control system.</para>
@@ -684,10 +620,8 @@
         /// <param name="assets">The assets fetch new state for.</param>
         /// <param name="asset">The asset path to fetch new state for.</param>
         /// <param name="recursively">If any assets specified are folders this flag will get status for all descendants of the folder as well.</param>
-        public static Task Status(AssetList assets)
-        {
-            return Internal_Status(assets.ToArray(), true);
-        }
+        public static Task Status(AssetList assets) => 
+            Internal_Status(assets.ToArray(), true);
 
         /// <summary>
         /// <para>Start a task that will fetch the most recent status from revision control system.</para>
@@ -695,10 +629,8 @@
         /// <param name="assets">The assets fetch new state for.</param>
         /// <param name="asset">The asset path to fetch new state for.</param>
         /// <param name="recursively">If any assets specified are folders this flag will get status for all descendants of the folder as well.</param>
-        public static Task Status(string[] assets)
-        {
-            return Internal_StatusStrings(assets, true);
-        }
+        public static Task Status(string[] assets) => 
+            Internal_StatusStrings(assets, true);
 
         /// <summary>
         /// <para>Start a task that will fetch the most recent status from revision control system.</para>
@@ -718,10 +650,8 @@
         /// <param name="assets">The assets fetch new state for.</param>
         /// <param name="asset">The asset path to fetch new state for.</param>
         /// <param name="recursively">If any assets specified are folders this flag will get status for all descendants of the folder as well.</param>
-        public static Task Status(string[] assets, bool recursively)
-        {
-            return Internal_StatusStrings(assets, recursively);
-        }
+        public static Task Status(string[] assets, bool recursively) => 
+            Internal_StatusStrings(assets, recursively);
 
         /// <summary>
         /// <para>Start a task that will fetch the most recent status from revision control system.</para>
@@ -753,10 +683,8 @@
         /// <param name="assets">The assets fetch new state for.</param>
         /// <param name="asset">The asset path to fetch new state for.</param>
         /// <param name="recursively">If any assets specified are folders this flag will get status for all descendants of the folder as well.</param>
-        public static Task Status(AssetList assets, bool recursively)
-        {
-            return Internal_Status(assets.ToArray(), recursively);
-        }
+        public static Task Status(AssetList assets, bool recursively) => 
+            Internal_Status(assets.ToArray(), recursively);
 
         /// <summary>
         /// <para>Start a task that submits the assets to version control.</para>
@@ -765,20 +693,16 @@
         /// <param name="list">The list of assets to submit.</param>
         /// <param name="description">The description of the changeset.</param>
         /// <param name="saveOnly">If true then only save the changeset to be submitted later.</param>
-        public static Task Submit(ChangeSet changeset, AssetList list, string description, bool saveOnly)
-        {
-            return Internal_Submit(changeset, (list == null) ? null : list.ToArray(), description, saveOnly);
-        }
+        public static Task Submit(ChangeSet changeset, AssetList list, string description, bool saveOnly) => 
+            Internal_Submit(changeset, list?.ToArray(), description, saveOnly);
 
         /// <summary>
         /// <para>Returns true if submitting the assets is a valid operation.</para>
         /// </summary>
         /// <param name="changeset">The changeset to submit.</param>
         /// <param name="assets">The asset to submit.</param>
-        public static bool SubmitIsValid(ChangeSet changeset, AssetList assets)
-        {
-            return Internal_SubmitIsValid(changeset, (assets == null) ? null : assets.ToArray());
-        }
+        public static bool SubmitIsValid(ChangeSet changeset, AssetList assets) => 
+            Internal_SubmitIsValid(changeset, assets?.ToArray());
 
         /// <summary>
         /// <para>Returns true if locking the assets is a valid operation.</para>
@@ -796,10 +720,8 @@
         /// </summary>
         /// <param name="assets">The assets to lock.</param>
         /// <param name="asset">The asset to lock.</param>
-        public static bool UnlockIsValid(AssetList assets)
-        {
-            return Internal_UnlockIsValid(assets.ToArray());
-        }
+        public static bool UnlockIsValid(AssetList assets) => 
+            Internal_UnlockIsValid(assets.ToArray());
 
         /// <summary>
         /// <para>Start a task that sends the version control settings to the version control system.</para>

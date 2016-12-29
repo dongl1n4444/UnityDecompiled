@@ -4,15 +4,11 @@
 
     internal class Statement
     {
-        public static string Expression(string expression)
-        {
-            return (expression + ";");
-        }
+        public static string Expression(string expression) => 
+            (expression + ";");
 
-        public static string Return(string expression)
-        {
-            return ("return " + Expression(expression));
-        }
+        public static string Return(string expression) => 
+            ("return " + Expression(expression));
     }
 }
 

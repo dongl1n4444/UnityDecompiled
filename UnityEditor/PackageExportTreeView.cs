@@ -147,7 +147,7 @@
             IList<TreeViewItem> rows = this.m_TreeView.data.GetRows();
             foreach (TreeViewItem item in rows)
             {
-                if (Enumerable.Contains<int>(selectedIDs, item.id))
+                if (selectedIDs.Contains<int>(item.id))
                 {
                     PackageExportTreeViewItem item2 = item as PackageExportTreeViewItem;
                     if (item2 != null)
@@ -164,13 +164,8 @@
             this.ComputeEnabledStateForFolders();
         }
 
-        public ExportPackageItem[] items
-        {
-            get
-            {
-                return this.m_PackageExport.items;
-            }
-        }
+        public ExportPackageItem[] items =>
+            this.m_PackageExport.items;
 
         public enum EnabledState
         {
@@ -290,10 +285,8 @@
                 return base.IsExpandable(item);
             }
 
-            public override bool IsRenamingItemAllowed(TreeViewItem item)
-            {
-                return false;
-            }
+            public override bool IsRenamingItemAllowed(TreeViewItem item) => 
+                false;
         }
 
         private class PackageExportTreeViewGUI : TreeViewGUI
@@ -333,7 +326,7 @@
                 Toggle(this.m_PackageExportView.items, pitem, toggleRect);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    if ((base.m_TreeView.GetSelection().Length <= 1) || !Enumerable.Contains<int>(base.m_TreeView.GetSelection(), pitem.id))
+                    if ((base.m_TreeView.GetSelection().Length <= 1) || !base.m_TreeView.GetSelection().Contains<int>(pitem.id))
                     {
                         int[] selectedIDs = new int[] { pitem.id };
                         base.m_TreeView.SetSelection(selectedIDs, false);
@@ -427,10 +420,8 @@
 
             public PackageExportTreeView.EnabledState enabledState
             {
-                get
-                {
-                    return ((this.item == null) ? this.m_EnabledState : ((PackageExportTreeView.EnabledState) this.item.enabledStatus));
-                }
+                get => 
+                    ((this.item == null) ? this.m_EnabledState : ((PackageExportTreeView.EnabledState) this.item.enabledStatus));
                 set
                 {
                     if (this.item != null)
@@ -444,13 +435,8 @@
                 }
             }
 
-            public bool isFolder
-            {
-                get
-                {
-                    return ((this.item == null) || this.item.isFolder);
-                }
-            }
+            public bool isFolder =>
+                ((this.item == null) || this.item.isFolder);
 
             public ExportPackageItem item { get; set; }
         }

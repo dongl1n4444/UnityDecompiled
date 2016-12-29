@@ -7,10 +7,8 @@
     /// </summary>
     public sealed class SyncListString : SyncList<string>
     {
-        protected override string DeserializeItem(NetworkReader reader)
-        {
-            return reader.ReadString();
-        }
+        protected override string DeserializeItem(NetworkReader reader) => 
+            reader.ReadString();
 
         [Obsolete("ReadReference is now used instead")]
         public static SyncListString ReadInstance(NetworkReader reader)

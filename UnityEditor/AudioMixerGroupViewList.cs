@@ -158,7 +158,7 @@
                     {
                         <>f__am$cache0 = new Func<AudioMixerGroupController, GUID>(null, (IntPtr) <RecreateListControl>m__0);
                     }
-                    item.guids = Enumerable.ToArray<GUID>(Enumerable.Select<AudioMixerGroupController, GUID>(this.m_Controller.GetAllAudioGroupsSlow(), <>f__am$cache0));
+                    item.guids = Enumerable.Select<AudioMixerGroupController, GUID>(this.m_Controller.GetAllAudioGroupsSlow(), <>f__am$cache0).ToArray<GUID>();
                     item.name = "View";
                     this.m_Views.Add(item);
                     this.SaveToBackend();

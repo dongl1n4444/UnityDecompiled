@@ -122,16 +122,12 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern string[] GetHDRWarnings();
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true)]
-        public float GetScreenHeight()
-        {
-            return 0f;
-        }
+        public float GetScreenHeight() => 
+            0f;
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true)]
-        public float GetScreenWidth()
-        {
-            return 0f;
-        }
+        public float GetScreenWidth() => 
+            0f;
 
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetStereoProjectionMatrices is deprecated. Use GetStereoProjectionMatrix(StereoscopicEye eye) instead.")]
         public extern Matrix4x4[] GetStereoProjectionMatrices();
@@ -252,15 +248,11 @@
             return INTERNAL_CALL_RaycastTry(this, ref ray, distance, layerMask, useGlobal);
         }
 
-        internal GameObject RaycastTry(Ray ray, float distance, int layerMask, [UnityEngine.Internal.DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction)
-        {
-            return INTERNAL_CALL_RaycastTry(this, ref ray, distance, layerMask, queryTriggerInteraction);
-        }
+        internal GameObject RaycastTry(Ray ray, float distance, int layerMask, [UnityEngine.Internal.DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction) => 
+            INTERNAL_CALL_RaycastTry(this, ref ray, distance, layerMask, queryTriggerInteraction);
 
-        internal GameObject RaycastTry2D(Ray ray, float distance, int layerMask)
-        {
-            return INTERNAL_CALL_RaycastTry2D(this, ref ray, distance, layerMask);
-        }
+        internal GameObject RaycastTry2D(Ray ray, float distance, int layerMask) => 
+            INTERNAL_CALL_RaycastTry2D(this, ref ray, distance, layerMask);
 
         /// <summary>
         /// <para>Remove all command buffers set on this camera.</para>
@@ -309,10 +301,8 @@
         /// <returns>
         /// <para>False is rendering fails, else true.</para>
         /// </returns>
-        public bool RenderToCubemap(Cubemap cubemap, [UnityEngine.Internal.DefaultValue("63")] int faceMask)
-        {
-            return this.Internal_RenderToCubemapTexture(cubemap, faceMask);
-        }
+        public bool RenderToCubemap(Cubemap cubemap, [UnityEngine.Internal.DefaultValue("63")] int faceMask) => 
+            this.Internal_RenderToCubemapTexture(cubemap, faceMask);
 
         /// <summary>
         /// <para>Render into a cubemap from this camera.</para>
@@ -322,10 +312,8 @@
         /// <returns>
         /// <para>False is rendering fails, else true.</para>
         /// </returns>
-        public bool RenderToCubemap(RenderTexture cubemap, [UnityEngine.Internal.DefaultValue("63")] int faceMask)
-        {
-            return this.Internal_RenderToCubemapRT(cubemap, faceMask);
-        }
+        public bool RenderToCubemap(RenderTexture cubemap, [UnityEngine.Internal.DefaultValue("63")] int faceMask) => 
+            this.Internal_RenderToCubemapRT(cubemap, faceMask);
 
         /// <summary>
         /// <para>Render the camera with shader replacement.</para>
@@ -663,10 +651,8 @@
         [Obsolete("use Camera.farClipPlane instead.")]
         public float far
         {
-            get
-            {
-                return this.farClipPlane;
-            }
+            get => 
+                this.farClipPlane;
             set
             {
                 this.farClipPlane = value;
@@ -686,10 +672,8 @@
         [Obsolete("use Camera.fieldOfView instead.")]
         public float fov
         {
-            get
-            {
-                return this.fieldOfView;
-            }
+            get => 
+                this.fieldOfView;
             set
             {
                 this.fieldOfView = value;
@@ -704,10 +688,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true)]
         public bool isOrthoGraphic
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -729,21 +711,14 @@
         public static Camera main { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property mainCamera has been deprecated. Use Camera.main instead (UnityUpgradable) -> main", true)]
-        public static Camera mainCamera
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public static Camera mainCamera =>
+            null;
 
         [Obsolete("use Camera.nearClipPlane instead.")]
         public float near
         {
-            get
-            {
-                return this.nearClipPlane;
-            }
+            get => 
+                this.nearClipPlane;
             set
             {
                 this.nearClipPlane = value;

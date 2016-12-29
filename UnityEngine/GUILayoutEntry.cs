@@ -165,20 +165,13 @@
             return string.Concat(objArray1);
         }
 
-        public virtual RectOffset margin
-        {
-            get
-            {
-                return this.style.margin;
-            }
-        }
+        public virtual RectOffset margin =>
+            this.style.margin;
 
         public GUIStyle style
         {
-            get
-            {
-                return this.m_Style;
-            }
+            get => 
+                this.m_Style;
             set
             {
                 this.m_Style = value;

@@ -73,28 +73,20 @@
         }
 
         [CompilerGenerated]
-        private static bool <AnimationWindowPolicy>m__0(ref int[] sizes, ref int[] minSizes)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowPolicy>m__0(ref int[] sizes, ref int[] minSizes) => 
+            false;
 
         [CompilerGenerated]
-        private static bool <AnimationWindowPolicy>m__1(ref float frameRate)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowPolicy>m__1(ref float frameRate) => 
+            false;
 
         [CompilerGenerated]
-        private static bool <AnimationWindowPolicy>m__2(ref float time)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowPolicy>m__2(ref float time) => 
+            false;
 
         [CompilerGenerated]
-        private static bool <AnimationWindowPolicy>m__3(ref float horizontalScale, ref float horizontalTranslation)
-        {
-            return false;
-        }
+        private static bool <AnimationWindowPolicy>m__3(ref float horizontalScale, ref float horizontalTranslation) => 
+            false;
 
         [CompilerGenerated]
         private static void <AnimationWindowPolicy>m__4(int[] sizes)

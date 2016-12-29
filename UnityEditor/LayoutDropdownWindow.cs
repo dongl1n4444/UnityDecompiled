@@ -257,10 +257,8 @@
             return LayoutMode.Undefined;
         }
 
-        public override Vector2 GetWindowSize()
-        {
-            return new Vector2(262f, 300f);
-        }
+        public override Vector2 GetWindowSize() => 
+            new Vector2(262f, 300f);
 
         public override void OnClose()
         {

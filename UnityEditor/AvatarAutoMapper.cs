@@ -451,10 +451,8 @@
             return num;
         }
 
-        private string GetMatchString(BoneMatch match)
-        {
-            return (this.GetNameOfBone(match.item.bone) + ":" + ((match.bone != null) ? match.bone.name : "null"));
-        }
+        private string GetMatchString(BoneMatch match) => 
+            (this.GetNameOfBone(match.item.bone) + ":" + ((match.bone != null) ? match.bone.name : "null"));
 
         private string GetNameOfBone(int boneIndex)
         {
@@ -628,10 +626,8 @@
             }
         }
 
-        private bool MatchesSideKeywords(string boneName, bool left)
-        {
-            return (boneName.ToLower().Contains(!left ? "right" : "left") || (Regex.Match(boneName, !left ? @"(^|.*[ \.:_-])[rR]($|[ \.:_-].*)" : @"(^|.*[ \.:_-])[lL]($|[ \.:_-].*)").Length > 0));
-        }
+        private bool MatchesSideKeywords(string boneName, bool left) => 
+            (boneName.ToLower().Contains(!left ? "right" : "left") || (Regex.Match(boneName, !left ? @"(^|.*[ \.:_-])[rR]($|[ \.:_-].*)" : @"(^|.*[ \.:_-])[lL]($|[ \.:_-].*)").Length > 0));
 
         private List<BoneMatch> RecursiveFindPotentialBoneMatches(BoneMatch parentMatch, BoneMappingItem goalItem, bool confirmedChoice)
         {
@@ -740,10 +736,8 @@
             }
         }
 
-        private bool ShareTransformPath(Transform commonParent, Transform childA, Transform childB)
-        {
-            return (this.IsParentOfOther(commonParent, childA, childB) || this.IsParentOfOther(commonParent, childB, childA));
-        }
+        private bool ShareTransformPath(Transform commonParent, Transform childA, Transform childB) => 
+            (this.IsParentOfOther(commonParent, childA, childB) || this.IsParentOfOther(commonParent, childB, childA));
 
         [StructLayout(LayoutKind.Sequential)]
         private struct BoneMappingItem
@@ -822,14 +816,8 @@
                 this.item = item;
             }
 
-            public int CompareTo(AvatarAutoMapper.BoneMatch other)
-            {
-                if (other == null)
-                {
-                    return 1;
-                }
-                return other.totalSiblingScore.CompareTo(this.totalSiblingScore);
-            }
+            public int CompareTo(AvatarAutoMapper.BoneMatch other) => 
+                other?.totalSiblingScore.CompareTo(this.totalSiblingScore);
 
             public AvatarAutoMapper.BoneMatch humanBoneParent
             {
@@ -844,13 +832,8 @@
                 }
             }
 
-            public float totalSiblingScore
-            {
-                get
-                {
-                    return (this.score + this.siblingScore);
-                }
-            }
+            public float totalSiblingScore =>
+                (this.score + this.siblingScore);
         }
 
         [StructLayout(LayoutKind.Sequential)]

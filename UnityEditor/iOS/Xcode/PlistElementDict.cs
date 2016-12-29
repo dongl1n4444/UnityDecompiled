@@ -53,13 +53,8 @@
             }
         }
 
-        public IDictionary<string, PlistElement> values
-        {
-            get
-            {
-                return this.m_PrivateValue;
-            }
-        }
+        public IDictionary<string, PlistElement> values =>
+            this.m_PrivateValue;
     }
 }
 

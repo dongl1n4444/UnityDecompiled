@@ -9,13 +9,8 @@
         [SerializeField]
         private List<iOSDevice> devices = new List<iOSDevice>();
 
-        internal static List<iOSDevice> Devices
-        {
-            get
-            {
-                return ScriptableSingleton<ExtensionData>.instance.devices;
-            }
-        }
+        internal static List<iOSDevice> Devices =>
+            ScriptableSingleton<ExtensionData>.instance.devices;
     }
 }
 

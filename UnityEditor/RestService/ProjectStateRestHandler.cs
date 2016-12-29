@@ -29,7 +29,7 @@
             <FindEmptyDirectories>c__AnonStorey2 storey = new <FindEmptyDirectories>c__AnonStorey2 {
                 files = files
             };
-            return Enumerable.ToArray<string>(Enumerable.Where<string>(FindPotentialEmptyDirectories(path), new Func<string, bool>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Where<string>(FindPotentialEmptyDirectories(path), new Func<string, bool>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
         }
 
         private static IEnumerable<string> FindPotentialEmptyDirectories(string path)
@@ -79,7 +79,7 @@
             {
                 storey.extension = storey.extension.Substring(1);
             }
-            return Enumerable.Any<string>(Enumerable.Concat<string>(EditorSettings.projectGenerationBuiltinExtensions, EditorSettings.projectGenerationUserExtensions), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(EditorSettings.projectGenerationBuiltinExtensions.Concat<string>(EditorSettings.projectGenerationUserExtensions), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
         }
 
         private static JSONValue JsonForIsland(Island island)
@@ -88,14 +88,14 @@
             {
                 return 0;
             }
-            JSONValue value3 = new JSONValue();
-            value3["name"] = island.Name;
-            value3["language"] = !island.Name.Contains("Boo") ? (!island.Name.Contains("UnityScript") ? "C#" : "UnityScript") : "Boo";
-            value3["files"] = Handler.ToJSON(island.MonoIsland._files);
-            value3["defines"] = Handler.ToJSON(island.MonoIsland._defines);
-            value3["references"] = Handler.ToJSON(island.MonoIsland._references);
-            value3["basedirectory"] = ProjectPath;
-            return value3;
+            return new JSONValue { 
+                ["name"] = island.Name,
+                ["language"] = !island.Name.Contains("Boo") ? (!island.Name.Contains("UnityScript") ? "C#" : "UnityScript") : "Boo",
+                ["files"] = Handler.ToJSON(island.MonoIsland._files),
+                ["defines"] = Handler.ToJSON(island.MonoIsland._defines),
+                ["references"] = Handler.ToJSON(island.MonoIsland._references),
+                ["basedirectory"] = ProjectPath
+            };
         }
 
         private static JSONValue JsonForProject()
@@ -104,7 +104,7 @@
             {
                 <>f__am$cache0 = new Func<MonoIsland, Island>(null, (IntPtr) <JsonForProject>m__0);
             }
-            List<Island> list = Enumerable.ToList<Island>(Enumerable.Select<MonoIsland, Island>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache0));
+            List<Island> list = Enumerable.Select<MonoIsland, Island>(InternalEditorUtility.GetMonoIslands(), <>f__am$cache0).ToList<Island>();
             foreach (Island island in list)
             {
                 List<string> list2 = new List<string>();
@@ -139,7 +139,7 @@
             {
                 <>f__am$cache1 = new Func<Island, IEnumerable<string>>(null, (IntPtr) <JsonForProject>m__1);
             }
-            string[] files = Enumerable.ToArray<string>(Enumerable.Distinct<string>(Enumerable.Concat<string>(Enumerable.SelectMany<Island, string>(list, <>f__am$cache1), GetAllSupportedFiles())));
+            string[] files = Enumerable.SelectMany<Island, string>(list, <>f__am$cache1).Concat<string>(GetAllSupportedFiles()).Distinct<string>().ToArray<string>();
             string[] strings = RelativeToProjectPath(FindEmptyDirectories(AssetsPath, files));
             JSONValue value2 = new JSONValue();
             if (<>f__am$cache2 == null)
@@ -150,11 +150,12 @@
             {
                 <>f__am$cache3 = new Func<JSONValue, bool>(null, (IntPtr) <JsonForProject>m__3);
             }
-            value2["islands"] = new JSONValue(Enumerable.ToList<JSONValue>(Enumerable.Where<JSONValue>(Enumerable.Select<Island, JSONValue>(list, <>f__am$cache2), <>f__am$cache3)));
+            value2["islands"] = new JSONValue(Enumerable.Where<JSONValue>(Enumerable.Select<Island, JSONValue>(list, <>f__am$cache2), <>f__am$cache3).ToList<JSONValue>());
             value2["basedirectory"] = ProjectPath;
-            JSONValue value3 = new JSONValue();
-            value3["files"] = Handler.ToJSON(files);
-            value3["emptydirectories"] = Handler.ToJSON(strings);
+            JSONValue value3 = new JSONValue {
+                ["files"] = Handler.ToJSON(files),
+                ["emptydirectories"] = Handler.ToJSON(strings)
+            };
             value2["assetdatabase"] = value3;
             return value2;
         }
@@ -169,24 +170,14 @@
             <RelativeToProjectPath>c__AnonStorey4 storey = new <RelativeToProjectPath>c__AnonStorey4 {
                 projectPath = !ProjectPath.EndsWith("/") ? (ProjectPath + "/") : ProjectPath
             };
-            return Enumerable.ToArray<string>(Enumerable.Select<string, string>(paths, new Func<string, string>(storey, (IntPtr) this.<>m__0)));
+            return Enumerable.Select<string, string>(paths, new Func<string, string>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
         }
 
-        private static string AssetsPath
-        {
-            get
-            {
-                return (ProjectPath + "/Assets");
-            }
-        }
+        private static string AssetsPath =>
+            (ProjectPath + "/Assets");
 
-        private static string ProjectPath
-        {
-            get
-            {
-                return Path.GetDirectoryName(Application.dataPath);
-            }
-        }
+        private static string ProjectPath =>
+            Path.GetDirectoryName(Application.dataPath);
 
         [CompilerGenerated]
         private sealed class <FindEmptyDirectories>c__AnonStorey2
@@ -207,10 +198,8 @@
                 internal ProjectStateRestHandler.<FindEmptyDirectories>c__AnonStorey2 <>f__ref$2;
                 internal string d;
 
-                internal bool <>m__0(string f)
-                {
-                    return f.StartsWith(this.d);
-                }
+                internal bool <>m__0(string f) => 
+                    f.StartsWith(this.d);
             }
         }
 
@@ -219,10 +208,8 @@
         {
             internal string extension;
 
-            internal bool <>m__0(string s)
-            {
-                return string.Equals(s, this.extension, StringComparison.InvariantCultureIgnoreCase);
-            }
+            internal bool <>m__0(string s) => 
+                string.Equals(s, this.extension, StringComparison.InvariantCultureIgnoreCase);
         }
 
         [CompilerGenerated]
@@ -230,10 +217,8 @@
         {
             internal string refName;
 
-            internal bool <>m__0(ProjectStateRestHandler.Island i)
-            {
-                return (i.Name == this.refName);
-            }
+            internal bool <>m__0(ProjectStateRestHandler.Island i) => 
+                (i.Name == this.refName);
         }
 
         [CompilerGenerated]
@@ -241,10 +226,8 @@
         {
             internal string projectPath;
 
-            internal string <>m__0(string d)
-            {
-                return (!d.StartsWith(this.projectPath) ? d : d.Substring(this.projectPath.Length));
-            }
+            internal string <>m__0(string d) => 
+                (!d.StartsWith(this.projectPath) ? d : d.Substring(this.projectPath.Length));
         }
 
         public class Island

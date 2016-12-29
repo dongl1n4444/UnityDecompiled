@@ -327,48 +327,29 @@
             }
         }
 
-        private Element[] activeTree
-        {
-            get
-            {
-                return ((this.m_Search != "") ? this.m_SearchTree : this.m_Tree);
-            }
-        }
+        private Element[] activeTree =>
+            ((this.m_Search != "") ? this.m_SearchTree : this.m_Tree);
 
         internal static string className
         {
-            get
-            {
-                return s_AddComponentWindow.m_ClassName;
-            }
+            get => 
+                s_AddComponentWindow.m_ClassName;
             set
             {
                 s_AddComponentWindow.m_ClassName = value;
             }
         }
 
-        internal static AnimatorController controller
-        {
-            get
-            {
-                return s_AddComponentWindow.m_Controller;
-            }
-        }
+        internal static AnimatorController controller =>
+            s_AddComponentWindow.m_Controller;
 
-        internal static int layerIndex
-        {
-            get
-            {
-                return s_AddComponentWindow.m_LayerIndex;
-            }
-        }
+        internal static int layerIndex =>
+            s_AddComponentWindow.m_LayerIndex;
 
         internal static string searchName
         {
-            get
-            {
-                return s_AddComponentWindow.m_Search;
-            }
+            get => 
+                s_AddComponentWindow.m_Search;
             set
             {
                 s_AddComponentWindow.m_Search = value;
@@ -377,10 +358,8 @@
 
         private int selectedIndex
         {
-            get
-            {
-                return this.m_SelectedIndex;
-            }
+            get => 
+                this.m_SelectedIndex;
             set
             {
                 Element[] activeTree = this.activeTree;
@@ -388,13 +367,8 @@
             }
         }
 
-        internal static UnityEngine.Object[] targets
-        {
-            get
-            {
-                return s_AddComponentWindow.m_Targets;
-            }
-        }
+        internal static UnityEngine.Object[] targets =>
+            s_AddComponentWindow.m_Targets;
 
         private class Element : IComparable
         {
@@ -405,15 +379,11 @@
                 this.content = new GUIContent(name);
             }
 
-            public virtual bool CanShow()
-            {
-                return false;
-            }
+            public virtual bool CanShow() => 
+                false;
 
-            public int CompareTo(object o)
-            {
-                return this.name.CompareTo((o as AddStateMachineBehaviourComponentWindow.Element).name);
-            }
+            public int CompareTo(object o) => 
+                this.name.CompareTo((o as AddStateMachineBehaviourComponentWindow.Element).name);
 
             public virtual void Create()
             {
@@ -423,10 +393,8 @@
             {
             }
 
-            public virtual bool IsShow()
-            {
-                return false;
-            }
+            public virtual bool IsShow() => 
+                false;
 
             public virtual bool OnGUI(bool selected)
             {
@@ -453,13 +421,8 @@
             {
             }
 
-            public string name
-            {
-                get
-                {
-                    return this.content.text;
-                }
-            }
+            public string name =>
+                this.content.text;
         }
 
         internal enum Language
@@ -488,15 +451,11 @@
                 this.isStateMachine = stateMachine;
             }
 
-            public bool CanCreate()
-            {
-                return ((((AddStateMachineBehaviourComponentWindow.className.Length > 0) && !File.Exists(this.TargetPath())) && (!this.ClassAlreadyExists() && !this.ClassNameIsInvalid())) && !this.InvalidTargetPath());
-            }
+            public bool CanCreate() => 
+                ((((AddStateMachineBehaviourComponentWindow.className.Length > 0) && !File.Exists(this.TargetPath())) && (!this.ClassAlreadyExists() && !this.ClassNameIsInvalid())) && !this.InvalidTargetPath());
 
-            public override bool CanShow()
-            {
-                return true;
-            }
+            public override bool CanShow() => 
+                true;
 
             private bool ClassAlreadyExists()
             {
@@ -515,10 +474,8 @@
                 return Enumerable.Any<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), new Func<Assembly, bool>(storey, (IntPtr) this.<>m__0));
             }
 
-            private bool ClassNameIsInvalid()
-            {
-                return !CodeGenerator.IsValidLanguageIndependentIdentifier(AddStateMachineBehaviourComponentWindow.className);
-            }
+            private bool ClassNameIsInvalid() => 
+                !CodeGenerator.IsValidLanguageIndependentIdentifier(AddStateMachineBehaviourComponentWindow.className);
 
             public override void Create()
             {
@@ -573,15 +530,11 @@
                 this.isShow = false;
             }
 
-            private bool InvalidTargetPath()
-            {
-                return ((this.m_Directory.IndexOfAny(this.kInvalidPathChars) >= 0) || Enumerable.Contains<string>(this.TargetDir().Split(this.kPathSepChars, StringSplitOptions.None), string.Empty));
-            }
+            private bool InvalidTargetPath() => 
+                ((this.m_Directory.IndexOfAny(this.kInvalidPathChars) >= 0) || this.TargetDir().Split(this.kPathSepChars, StringSplitOptions.None).Contains<string>(string.Empty));
 
-            public override bool IsShow()
-            {
-                return this.isShow;
-            }
+            public override bool IsShow() => 
+                this.isShow;
 
             public override bool OnGUI(bool selected)
             {
@@ -623,23 +576,14 @@
                 this.isShow = true;
             }
 
-            private string TargetDir()
-            {
-                return Path.Combine("Assets", this.m_Directory.Trim(this.kPathSepChars));
-            }
+            private string TargetDir() => 
+                Path.Combine("Assets", this.m_Directory.Trim(this.kPathSepChars));
 
-            public string TargetPath()
-            {
-                return Path.Combine(this.TargetDir(), AddStateMachineBehaviourComponentWindow.className + "." + this.extension);
-            }
+            public string TargetPath() => 
+                Path.Combine(this.TargetDir(), AddStateMachineBehaviourComponentWindow.className + "." + this.extension);
 
-            private string extension
-            {
-                get
-                {
-                    return "cs";
-                }
-            }
+            private string extension =>
+                "cs";
 
             private string templatePath
             {
@@ -659,10 +603,8 @@
             {
                 internal string className;
 
-                internal bool <>m__0(Assembly a)
-                {
-                    return (a.GetType(this.className, false) != null);
-                }
+                internal bool <>m__0(Assembly a) => 
+                    (a.GetType(this.className, false) != null);
             }
         }
 

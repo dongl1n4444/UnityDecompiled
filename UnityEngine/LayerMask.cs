@@ -12,10 +12,8 @@
     public struct LayerMask
     {
         private int m_Mask;
-        public static implicit operator int(LayerMask mask)
-        {
-            return mask.m_Mask;
-        }
+        public static implicit operator int(LayerMask mask) => 
+            mask.m_Mask;
 
         public static implicit operator LayerMask(int intVal)
         {
@@ -29,10 +27,8 @@
         /// </summary>
         public int value
         {
-            get
-            {
-                return this.m_Mask;
-            }
+            get => 
+                this.m_Mask;
             set
             {
                 this.m_Mask = value;

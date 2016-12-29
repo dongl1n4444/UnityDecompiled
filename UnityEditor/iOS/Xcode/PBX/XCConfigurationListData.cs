@@ -35,13 +35,8 @@
             this.buildConfigs = base.GetPropertyList("buildConfigurations");
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
     }
 }
 

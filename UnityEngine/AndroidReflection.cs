@@ -83,15 +83,11 @@
             return ptr2;
         }
 
-        public static bool IsAssignableFrom(System.Type t, System.Type from)
-        {
-            return t.IsAssignableFrom(from);
-        }
+        public static bool IsAssignableFrom(System.Type t, System.Type from) => 
+            t.IsAssignableFrom(from);
 
-        public static bool IsPrimitive(System.Type t)
-        {
-            return t.IsPrimitive;
-        }
+        public static bool IsPrimitive(System.Type t) => 
+            t.IsPrimitive;
 
         public static IntPtr NewProxyInstance(int delegateHandle, IntPtr interfaze)
         {

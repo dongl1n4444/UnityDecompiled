@@ -43,10 +43,8 @@
         /// </summary>
         public SphereCollider first
         {
-            get
-            {
-                return this.m_First;
-            }
+            get => 
+                this.m_First;
             set
             {
                 this.m_First = value;
@@ -57,10 +55,8 @@
         /// </summary>
         public SphereCollider second
         {
-            get
-            {
-                return this.m_Second;
-            }
+            get => 
+                this.m_Second;
             set
             {
                 this.m_Second = value;

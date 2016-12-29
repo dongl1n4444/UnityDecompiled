@@ -36,20 +36,14 @@
         private static extern string Internal_GetGUID(int index);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern string Internal_GetLocalGUID();
-        public static bool operator ==(NetworkPlayer lhs, NetworkPlayer rhs)
-        {
-            return (lhs.index == rhs.index);
-        }
+        public static bool operator ==(NetworkPlayer lhs, NetworkPlayer rhs) => 
+            (lhs.index == rhs.index);
 
-        public static bool operator !=(NetworkPlayer lhs, NetworkPlayer rhs)
-        {
-            return (lhs.index != rhs.index);
-        }
+        public static bool operator !=(NetworkPlayer lhs, NetworkPlayer rhs) => 
+            (lhs.index != rhs.index);
 
-        public override int GetHashCode()
-        {
-            return this.index.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.index.GetHashCode();
 
         public override bool Equals(object other)
         {
@@ -106,31 +100,19 @@
         /// <summary>
         /// <para>Returns the index number for this network player.</para>
         /// </summary>
-        public override string ToString()
-        {
-            return this.index.ToString();
-        }
+        public override string ToString() => 
+            this.index.ToString();
 
         /// <summary>
         /// <para>Returns the external IP address of the network interface.</para>
         /// </summary>
-        public string externalIP
-        {
-            get
-            {
-                return Internal_GetExternalIP();
-            }
-        }
+        public string externalIP =>
+            Internal_GetExternalIP();
         /// <summary>
         /// <para>Returns the external port of the network interface.</para>
         /// </summary>
-        public int externalPort
-        {
-            get
-            {
-                return Internal_GetExternalPort();
-            }
-        }
+        public int externalPort =>
+            Internal_GetExternalPort();
         internal static NetworkPlayer unassigned
         {
             get

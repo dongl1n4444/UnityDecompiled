@@ -27,10 +27,8 @@
             this.Init(m, name);
         }
 
-        public static Color GetGradientAsColor(SerializedProperty gradientProp)
-        {
-            return gradientProp.gradientValue.constantColor;
-        }
+        public static Color GetGradientAsColor(SerializedProperty gradientProp) => 
+            gradientProp.gradientValue.constantColor;
 
         private void Init(SerializedModule m, string name)
         {
@@ -62,10 +60,8 @@
 
         public MinMaxGradientState state
         {
-            get
-            {
-                return (MinMaxGradientState) this.m_MinMaxState.intValue;
-            }
+            get => 
+                ((MinMaxGradientState) this.m_MinMaxState.intValue);
             set
             {
                 this.SetMinMaxState(value);

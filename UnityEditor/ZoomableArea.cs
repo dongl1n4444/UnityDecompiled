@@ -176,25 +176,17 @@
             }
         }
 
-        public Vector2 DrawingToViewTransformPoint(Vector2 lhs)
-        {
-            return new Vector2((lhs.x * this.m_Scale.x) + this.m_Translation.x, (lhs.y * this.m_Scale.y) + this.m_Translation.y);
-        }
+        public Vector2 DrawingToViewTransformPoint(Vector2 lhs) => 
+            new Vector2((lhs.x * this.m_Scale.x) + this.m_Translation.x, (lhs.y * this.m_Scale.y) + this.m_Translation.y);
 
-        public Vector3 DrawingToViewTransformPoint(Vector3 lhs)
-        {
-            return new Vector3((lhs.x * this.m_Scale.x) + this.m_Translation.x, (lhs.y * this.m_Scale.y) + this.m_Translation.y, 0f);
-        }
+        public Vector3 DrawingToViewTransformPoint(Vector3 lhs) => 
+            new Vector3((lhs.x * this.m_Scale.x) + this.m_Translation.x, (lhs.y * this.m_Scale.y) + this.m_Translation.y, 0f);
 
-        public Vector2 DrawingToViewTransformVector(Vector2 lhs)
-        {
-            return new Vector2(lhs.x * this.m_Scale.x, lhs.y * this.m_Scale.y);
-        }
+        public Vector2 DrawingToViewTransformVector(Vector2 lhs) => 
+            new Vector2(lhs.x * this.m_Scale.x, lhs.y * this.m_Scale.y);
 
-        public Vector3 DrawingToViewTransformVector(Vector3 lhs)
-        {
-            return new Vector3(lhs.x * this.m_Scale.x, lhs.y * this.m_Scale.y, 0f);
-        }
+        public Vector3 DrawingToViewTransformVector(Vector3 lhs) => 
+            new Vector3(lhs.x * this.m_Scale.x, lhs.y * this.m_Scale.y, 0f);
 
         public void EndViewGUI()
         {
@@ -340,15 +332,11 @@
             this.SetScaleFocused(zoomAround, (Vector2) (num2 * this.m_Scale), Event.current.shift, EditorGUI.actionKey);
         }
 
-        private bool IsPanEvent()
-        {
-            return (((Event.current.button == 0) && Event.current.alt) || ((Event.current.button == 2) && !Event.current.command));
-        }
+        private bool IsPanEvent() => 
+            (((Event.current.button == 0) && Event.current.alt) || ((Event.current.button == 2) && !Event.current.command));
 
-        private bool IsZoomEvent()
-        {
-            return ((Event.current.button == 1) && Event.current.alt);
-        }
+        private bool IsZoomEvent() => 
+            ((Event.current.button == 1) && Event.current.alt);
 
         public Vector2 NormalizeInViewSpace(Vector2 vec)
         {
@@ -370,15 +358,11 @@
             this.EnforceScaleAndRange();
         }
 
-        public float PixelDeltaToTime(Rect rect)
-        {
-            return (this.shownArea.width / rect.width);
-        }
+        public float PixelDeltaToTime(Rect rect) => 
+            (this.shownArea.width / rect.width);
 
-        public float PixelToTime(float pixelX, Rect rect)
-        {
-            return ((((pixelX - rect.x) * this.shownArea.width) / rect.width) + this.shownArea.x);
-        }
+        public float PixelToTime(float pixelX, Rect rect) => 
+            ((((pixelX - rect.x) * this.shownArea.width) / rect.width) + this.shownArea.x);
 
         private void SetAllowExceed(ref float rangeEnd, ref bool allowExceed, float value)
         {
@@ -590,73 +574,44 @@
             }
         }
 
-        public float TimeToPixel(float time, Rect rect)
-        {
-            return ((((time - this.shownArea.x) / this.shownArea.width) * rect.width) + rect.x);
-        }
+        public float TimeToPixel(float time, Rect rect) => 
+            ((((time - this.shownArea.x) / this.shownArea.width) * rect.width) + rect.x);
 
-        public Vector2 ViewToDrawingTransformPoint(Vector2 lhs)
-        {
-            return new Vector2((lhs.x - this.m_Translation.x) / this.m_Scale.x, (lhs.y - this.m_Translation.y) / this.m_Scale.y);
-        }
+        public Vector2 ViewToDrawingTransformPoint(Vector2 lhs) => 
+            new Vector2((lhs.x - this.m_Translation.x) / this.m_Scale.x, (lhs.y - this.m_Translation.y) / this.m_Scale.y);
 
-        public Vector3 ViewToDrawingTransformPoint(Vector3 lhs)
-        {
-            return new Vector3((lhs.x - this.m_Translation.x) / this.m_Scale.x, (lhs.y - this.m_Translation.y) / this.m_Scale.y, 0f);
-        }
+        public Vector3 ViewToDrawingTransformPoint(Vector3 lhs) => 
+            new Vector3((lhs.x - this.m_Translation.x) / this.m_Scale.x, (lhs.y - this.m_Translation.y) / this.m_Scale.y, 0f);
 
-        public Vector2 ViewToDrawingTransformVector(Vector2 lhs)
-        {
-            return new Vector2(lhs.x / this.m_Scale.x, lhs.y / this.m_Scale.y);
-        }
+        public Vector2 ViewToDrawingTransformVector(Vector2 lhs) => 
+            new Vector2(lhs.x / this.m_Scale.x, lhs.y / this.m_Scale.y);
 
-        public Vector3 ViewToDrawingTransformVector(Vector3 lhs)
-        {
-            return new Vector3(lhs.x / this.m_Scale.x, lhs.y / this.m_Scale.y, 0f);
-        }
+        public Vector3 ViewToDrawingTransformVector(Vector3 lhs) => 
+            new Vector3(lhs.x / this.m_Scale.x, lhs.y / this.m_Scale.y, 0f);
 
         public float bottommargin
         {
-            get
-            {
-                return this.m_MarginBottom;
-            }
+            get => 
+                this.m_MarginBottom;
             set
             {
                 this.m_MarginBottom = value;
             }
         }
 
-        public virtual Bounds drawingBounds
-        {
-            get
-            {
-                return new Bounds(new Vector3((this.hBaseRangeMin + this.hBaseRangeMax) * 0.5f, (this.vBaseRangeMin + this.vBaseRangeMax) * 0.5f, 0f), new Vector3(this.hBaseRangeMax - this.hBaseRangeMin, this.vBaseRangeMax - this.vBaseRangeMin, 1f));
-            }
-        }
+        public virtual Bounds drawingBounds =>
+            new Bounds(new Vector3((this.hBaseRangeMin + this.hBaseRangeMax) * 0.5f, (this.vBaseRangeMin + this.vBaseRangeMax) * 0.5f, 0f), new Vector3(this.hBaseRangeMax - this.hBaseRangeMin, this.vBaseRangeMax - this.vBaseRangeMin, 1f));
 
-        public Matrix4x4 drawingToViewMatrix
-        {
-            get
-            {
-                return Matrix4x4.TRS((Vector3) this.m_Translation, Quaternion.identity, new Vector3(this.m_Scale.x, this.m_Scale.y, 1f));
-            }
-        }
+        public Matrix4x4 drawingToViewMatrix =>
+            Matrix4x4.TRS((Vector3) this.m_Translation, Quaternion.identity, new Vector3(this.m_Scale.x, this.m_Scale.y, 1f));
 
-        public Rect drawRect
-        {
-            get
-            {
-                return this.m_DrawArea;
-            }
-        }
+        public Rect drawRect =>
+            this.m_DrawArea;
 
         public bool enableMouseInput
         {
-            get
-            {
-                return this.m_EnableMouseInput;
-            }
+            get => 
+                this.m_EnableMouseInput;
             set
             {
                 this.m_EnableMouseInput = value;
@@ -665,10 +620,8 @@
 
         public bool hAllowExceedBaseRangeMax
         {
-            get
-            {
-                return this.m_HAllowExceedBaseRangeMax;
-            }
+            get => 
+                this.m_HAllowExceedBaseRangeMax;
             set
             {
                 this.m_HAllowExceedBaseRangeMax = value;
@@ -677,10 +630,8 @@
 
         public bool hAllowExceedBaseRangeMin
         {
-            get
-            {
-                return this.m_HAllowExceedBaseRangeMin;
-            }
+            get => 
+                this.m_HAllowExceedBaseRangeMin;
             set
             {
                 this.m_HAllowExceedBaseRangeMin = value;
@@ -689,10 +640,8 @@
 
         public float hBaseRangeMax
         {
-            get
-            {
-                return this.m_HBaseRangeMax;
-            }
+            get => 
+                this.m_HBaseRangeMax;
             set
             {
                 this.m_HBaseRangeMax = value;
@@ -701,10 +650,8 @@
 
         public float hBaseRangeMin
         {
-            get
-            {
-                return this.m_HBaseRangeMin;
-            }
+            get => 
+                this.m_HBaseRangeMin;
             set
             {
                 this.m_HBaseRangeMin = value;
@@ -713,10 +660,8 @@
 
         public bool hRangeLocked
         {
-            get
-            {
-                return this.m_HRangeLocked;
-            }
+            get => 
+                this.m_HRangeLocked;
             set
             {
                 this.m_HRangeLocked = value;
@@ -725,10 +670,8 @@
 
         public float hRangeMax
         {
-            get
-            {
-                return (!this.hAllowExceedBaseRangeMax ? this.hBaseRangeMax : float.PositiveInfinity);
-            }
+            get => 
+                (!this.hAllowExceedBaseRangeMax ? this.hBaseRangeMax : float.PositiveInfinity);
             set
             {
                 this.SetAllowExceed(ref this.m_HBaseRangeMax, ref this.m_HAllowExceedBaseRangeMax, value);
@@ -737,10 +680,8 @@
 
         public float hRangeMin
         {
-            get
-            {
-                return (!this.hAllowExceedBaseRangeMin ? this.hBaseRangeMin : float.NegativeInfinity);
-            }
+            get => 
+                (!this.hAllowExceedBaseRangeMin ? this.hBaseRangeMin : float.NegativeInfinity);
             set
             {
                 this.SetAllowExceed(ref this.m_HBaseRangeMin, ref this.m_HAllowExceedBaseRangeMin, value);
@@ -749,10 +690,8 @@
 
         public float hScaleMax
         {
-            get
-            {
-                return this.m_HScaleMax;
-            }
+            get => 
+                this.m_HScaleMax;
             set
             {
                 this.m_HScaleMax = Mathf.Clamp(value, 1E-05f, 100000f);
@@ -761,10 +700,8 @@
 
         public float hScaleMin
         {
-            get
-            {
-                return this.m_HScaleMin;
-            }
+            get => 
+                this.m_HScaleMin;
             set
             {
                 this.m_HScaleMin = Mathf.Clamp(value, 1E-05f, 100000f);
@@ -773,10 +710,8 @@
 
         public bool hSlider
         {
-            get
-            {
-                return this.m_HSlider;
-            }
+            get => 
+                this.m_HSlider;
             set
             {
                 Rect rect = this.rect;
@@ -787,10 +722,8 @@
 
         public bool ignoreScrollWheelUntilClicked
         {
-            get
-            {
-                return this.m_IgnoreScrollWheelUntilClicked;
-            }
+            get => 
+                this.m_IgnoreScrollWheelUntilClicked;
             set
             {
                 this.m_IgnoreScrollWheelUntilClicked = value;
@@ -799,10 +732,8 @@
 
         public float leftmargin
         {
-            get
-            {
-                return this.m_MarginLeft;
-            }
+            get => 
+                this.m_MarginLeft;
             set
             {
                 this.m_MarginLeft = value;
@@ -817,20 +748,13 @@
             }
         }
 
-        public Vector2 mousePositionInDrawing
-        {
-            get
-            {
-                return this.ViewToDrawingTransformPoint(Event.current.mousePosition);
-            }
-        }
+        public Vector2 mousePositionInDrawing =>
+            this.ViewToDrawingTransformPoint(Event.current.mousePosition);
 
         public Rect rect
         {
-            get
-            {
-                return new Rect(this.drawRect.x, this.drawRect.y, this.drawRect.width + (!this.m_VSlider ? 0f : this.styles.visualSliderWidth), this.drawRect.height + (!this.m_HSlider ? 0f : this.styles.visualSliderWidth));
-            }
+            get => 
+                new Rect(this.drawRect.x, this.drawRect.y, this.drawRect.width + (!this.m_VSlider ? 0f : this.styles.visualSliderWidth), this.drawRect.height + (!this.m_HSlider ? 0f : this.styles.visualSliderWidth));
             set
             {
                 Rect rect = new Rect(value.x, value.y, value.width - (!this.m_VSlider ? 0f : this.styles.visualSliderWidth), value.height - (!this.m_HSlider ? 0f : this.styles.visualSliderWidth));
@@ -853,30 +777,21 @@
 
         public float rightmargin
         {
-            get
-            {
-                return this.m_MarginRight;
-            }
+            get => 
+                this.m_MarginRight;
             set
             {
                 this.m_MarginRight = value;
             }
         }
 
-        public Vector2 scale
-        {
-            get
-            {
-                return this.m_Scale;
-            }
-        }
+        public Vector2 scale =>
+            this.m_Scale;
 
         public bool scaleWithWindow
         {
-            get
-            {
-                return this.m_ScaleWithWindow;
-            }
+            get => 
+                this.m_ScaleWithWindow;
             set
             {
                 this.m_ScaleWithWindow = value;
@@ -917,10 +832,8 @@
 
         public Rect shownAreaInsideMargins
         {
-            get
-            {
-                return this.shownAreaInsideMarginsInternal;
-            }
+            get => 
+                this.shownAreaInsideMarginsInternal;
             set
             {
                 this.shownAreaInsideMarginsInternal = value;
@@ -988,30 +901,21 @@
 
         public float topmargin
         {
-            get
-            {
-                return this.m_MarginTop;
-            }
+            get => 
+                this.m_MarginTop;
             set
             {
                 this.m_MarginTop = value;
             }
         }
 
-        public Vector2 translation
-        {
-            get
-            {
-                return this.m_Translation;
-            }
-        }
+        public Vector2 translation =>
+            this.m_Translation;
 
         public bool uniformScale
         {
-            get
-            {
-                return this.m_UniformScale;
-            }
+            get => 
+                this.m_UniformScale;
             set
             {
                 this.m_UniformScale = value;
@@ -1020,10 +924,8 @@
 
         public YDirection upDirection
         {
-            get
-            {
-                return this.m_UpDirection;
-            }
+            get => 
+                this.m_UpDirection;
             set
             {
                 if (this.m_UpDirection != value)
@@ -1036,10 +938,8 @@
 
         public bool vAllowExceedBaseRangeMax
         {
-            get
-            {
-                return this.m_VAllowExceedBaseRangeMax;
-            }
+            get => 
+                this.m_VAllowExceedBaseRangeMax;
             set
             {
                 this.m_VAllowExceedBaseRangeMax = value;
@@ -1048,10 +948,8 @@
 
         public bool vAllowExceedBaseRangeMin
         {
-            get
-            {
-                return this.m_VAllowExceedBaseRangeMin;
-            }
+            get => 
+                this.m_VAllowExceedBaseRangeMin;
             set
             {
                 this.m_VAllowExceedBaseRangeMin = value;
@@ -1060,10 +958,8 @@
 
         public float vBaseRangeMax
         {
-            get
-            {
-                return this.m_VBaseRangeMax;
-            }
+            get => 
+                this.m_VBaseRangeMax;
             set
             {
                 this.m_VBaseRangeMax = value;
@@ -1072,10 +968,8 @@
 
         public float vBaseRangeMin
         {
-            get
-            {
-                return this.m_VBaseRangeMin;
-            }
+            get => 
+                this.m_VBaseRangeMin;
             set
             {
                 this.m_VBaseRangeMin = value;
@@ -1084,10 +978,8 @@
 
         public bool vRangeLocked
         {
-            get
-            {
-                return this.m_VRangeLocked;
-            }
+            get => 
+                this.m_VRangeLocked;
             set
             {
                 this.m_VRangeLocked = value;
@@ -1096,10 +988,8 @@
 
         public float vRangeMax
         {
-            get
-            {
-                return (!this.vAllowExceedBaseRangeMax ? this.vBaseRangeMax : float.PositiveInfinity);
-            }
+            get => 
+                (!this.vAllowExceedBaseRangeMax ? this.vBaseRangeMax : float.PositiveInfinity);
             set
             {
                 this.SetAllowExceed(ref this.m_VBaseRangeMax, ref this.m_VAllowExceedBaseRangeMax, value);
@@ -1108,10 +998,8 @@
 
         public float vRangeMin
         {
-            get
-            {
-                return (!this.vAllowExceedBaseRangeMin ? this.vBaseRangeMin : float.NegativeInfinity);
-            }
+            get => 
+                (!this.vAllowExceedBaseRangeMin ? this.vBaseRangeMin : float.NegativeInfinity);
             set
             {
                 this.SetAllowExceed(ref this.m_VBaseRangeMin, ref this.m_VAllowExceedBaseRangeMin, value);
@@ -1120,10 +1008,8 @@
 
         public float vScaleMax
         {
-            get
-            {
-                return this.m_VScaleMax;
-            }
+            get => 
+                this.m_VScaleMax;
             set
             {
                 this.m_VScaleMax = Mathf.Clamp(value, 1E-05f, 100000f);
@@ -1132,10 +1018,8 @@
 
         public float vScaleMin
         {
-            get
-            {
-                return this.m_VScaleMin;
-            }
+            get => 
+                this.m_VScaleMin;
             set
             {
                 this.m_VScaleMin = Mathf.Clamp(value, 1E-05f, 100000f);
@@ -1144,10 +1028,8 @@
 
         public bool vSlider
         {
-            get
-            {
-                return this.m_VSlider;
-            }
+            get => 
+                this.m_VSlider;
             set
             {
                 Rect rect = this.rect;

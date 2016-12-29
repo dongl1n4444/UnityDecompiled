@@ -112,10 +112,8 @@
         /// <returns>
         /// <para>The AnimatorState that was created for this state.</para>
         /// </returns>
-        public AnimatorState AddState(string name)
-        {
-            return this.AddState(name, (this.states.Length <= 0) ? new Vector3(200f, 0f, 0f) : (this.states[this.states.Length - 1].position + new Vector3(35f, 65f)));
-        }
+        public AnimatorState AddState(string name) => 
+            this.AddState(name, (this.states.Length <= 0) ? new Vector3(200f, 0f, 0f) : (this.states[this.states.Length - 1].position + new Vector3(35f, 65f)));
 
         /// <summary>
         /// <para>Utility function to add a state to the state machine.</para>
@@ -164,10 +162,8 @@
         /// <returns>
         /// <para>The newly created Animations.AnimatorStateMachine state machine.</para>
         /// </returns>
-        public AnimatorStateMachine AddStateMachine(string name)
-        {
-            return this.AddStateMachine(name, Vector3.zero);
-        }
+        public AnimatorStateMachine AddStateMachine(string name) => 
+            this.AddStateMachine(name, Vector3.zero);
 
         /// <summary>
         /// <para>Utility function to add a state machine to the state machine.</para>
@@ -208,20 +204,16 @@
             this.stateMachines = stateMachines;
         }
 
-        public T AddStateMachineBehaviour<T>() where T: StateMachineBehaviour
-        {
-            return (this.AddStateMachineBehaviour(typeof(T)) as T);
-        }
+        public T AddStateMachineBehaviour<T>() where T: StateMachineBehaviour => 
+            (this.AddStateMachineBehaviour(typeof(T)) as T);
 
         /// <summary>
         /// <para>Adds a state machine behaviour class of type stateMachineBehaviourType to the AnimatorStateMachine. C# Users can use a generic version.</para>
         /// </summary>
         /// <param name="stateMachineBehaviourType"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
-        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType)
-        {
-            return (StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType);
-        }
+        public StateMachineBehaviour AddStateMachineBehaviour(Type stateMachineBehaviourType) => 
+            ((StateMachineBehaviour) this.Internal_AddStateMachineBehaviourWithType(stateMachineBehaviourType));
 
         /// <summary>
         /// <para>Utility function to add an outgoing transition from the source state machine to the exit of it's parent state machine.</para>
@@ -399,10 +391,8 @@
         }
 
         [Obsolete("GetTransitionsFromState is obsolete. Use AnimatorState.transitions instead.", true)]
-        private AnimatorState GetTransitionsFromState(AnimatorState state)
-        {
-            return null;
-        }
+        private AnimatorState GetTransitionsFromState(AnimatorState state) => 
+            null;
 
         internal bool HasState(AnimatorState state)
         {
@@ -734,22 +724,12 @@
         }
 
         [Obsolete("stateCount is obsolete. Use .states.Length  instead.", true)]
-        private int stateCount
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        private int stateCount =>
+            0;
 
         [Obsolete("stateMachineCount is obsolete. Use .stateMachines.Length instead.", true)]
-        private int stateMachineCount
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        private int stateMachineCount =>
+            0;
 
         /// <summary>
         /// <para>The list of sub state machines.</para>
@@ -792,33 +772,22 @@
         internal int transitionCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("uniqueNameHash does not exist anymore.", true)]
-        private int uniqueNameHash
-        {
-            get
-            {
-                return -1;
-            }
-        }
+        private int uniqueNameHash =>
+            -1;
 
         [CompilerGenerated]
         private sealed class <FindParent>c__AnonStorey8
         {
             internal AnimatorStateMachine stateMachine;
 
-            internal bool <>m__0(ChildAnimatorStateMachine childSM)
-            {
-                return (childSM.stateMachine == this.stateMachine);
-            }
+            internal bool <>m__0(ChildAnimatorStateMachine childSM) => 
+                (childSM.stateMachine == this.stateMachine);
 
-            internal bool <>m__1(ChildAnimatorStateMachine sm)
-            {
-                return Enumerable.Any<ChildAnimatorStateMachine>(sm.stateMachine.stateMachines, new Func<ChildAnimatorStateMachine, bool>(this, (IntPtr) this.<>m__2));
-            }
+            internal bool <>m__1(ChildAnimatorStateMachine sm) => 
+                Enumerable.Any<ChildAnimatorStateMachine>(sm.stateMachine.stateMachines, new Func<ChildAnimatorStateMachine, bool>(this, (IntPtr) this.<>m__2));
 
-            internal bool <>m__2(ChildAnimatorStateMachine childSM)
-            {
-                return (childSM.stateMachine == this.stateMachine);
-            }
+            internal bool <>m__2(ChildAnimatorStateMachine childSM) => 
+                (childSM.stateMachine == this.stateMachine);
         }
 
         [CompilerGenerated]
@@ -826,10 +795,8 @@
         {
             internal int nameHash;
 
-            internal bool <>m__0(ChildAnimatorState s)
-            {
-                return (s.state.nameHash == this.nameHash);
-            }
+            internal bool <>m__0(ChildAnimatorState s) => 
+                (s.state.nameHash == this.nameHash);
         }
 
         [CompilerGenerated]
@@ -837,10 +804,8 @@
         {
             internal string name;
 
-            internal bool <>m__0(ChildAnimatorState s)
-            {
-                return (s.state.name == this.name);
-            }
+            internal bool <>m__0(ChildAnimatorState s) => 
+                (s.state.name == this.name);
         }
 
         [CompilerGenerated]
@@ -855,10 +820,8 @@
             internal AnimatorStateMachine.<FindStateMachine>c__AnonStorey9 <>f__ref$9;
             internal int i;
 
-            internal bool <>m__0(ChildAnimatorStateMachine t)
-            {
-                return (t.stateMachine.name == this.<>f__ref$9.smNames[this.i]);
-            }
+            internal bool <>m__0(ChildAnimatorStateMachine t) => 
+                (t.stateMachine.name == this.<>f__ref$9.smNames[this.i]);
         }
 
         [CompilerGenerated]
@@ -866,10 +829,8 @@
         {
             internal AnimatorState state;
 
-            internal bool <>m__0(ChildAnimatorStateMachine sm)
-            {
-                return sm.stateMachine.HasState(this.state, false);
-            }
+            internal bool <>m__0(ChildAnimatorStateMachine sm) => 
+                sm.stateMachine.HasState(this.state, false);
         }
 
         [CompilerGenerated]
@@ -877,10 +838,8 @@
         {
             internal AnimatorState destinationState;
 
-            internal bool <>m__0(AnimatorStateTransition t)
-            {
-                return (t.destinationState == this.destinationState);
-            }
+            internal bool <>m__0(AnimatorStateTransition t) => 
+                (t.destinationState == this.destinationState);
         }
 
         [CompilerGenerated]
@@ -888,10 +847,8 @@
         {
             internal AnimatorState state;
 
-            internal bool <>m__0(ChildAnimatorState s)
-            {
-                return (s.state == this.state);
-            }
+            internal bool <>m__0(ChildAnimatorState s) => 
+                (s.state == this.state);
         }
 
         [CompilerGenerated]
@@ -899,10 +856,8 @@
         {
             internal AnimatorStateMachine child;
 
-            internal bool <>m__0(ChildAnimatorStateMachine sm)
-            {
-                return (sm.stateMachine == this.child);
-            }
+            internal bool <>m__0(ChildAnimatorStateMachine sm) => 
+                (sm.stateMachine == this.child);
         }
 
         [CompilerGenerated]
@@ -911,15 +866,11 @@
             internal AnimatorState stateA;
             internal AnimatorState stateB;
 
-            internal bool <>m__0(AnimatorStateTransition t)
-            {
-                return (t.destinationState == this.stateB);
-            }
+            internal bool <>m__0(AnimatorStateTransition t) => 
+                (t.destinationState == this.stateB);
 
-            internal bool <>m__1(AnimatorStateTransition t)
-            {
-                return (t.destinationState == this.stateA);
-            }
+            internal bool <>m__1(AnimatorStateTransition t) => 
+                (t.destinationState == this.stateA);
         }
 
         [CompilerGenerated]
@@ -927,10 +878,8 @@
         {
             internal AnimatorStateMachine stateMachine;
 
-            internal bool <>m__0(ChildAnimatorStateMachine sm)
-            {
-                return (sm.stateMachine == this.stateMachine);
-            }
+            internal bool <>m__0(ChildAnimatorStateMachine sm) => 
+                (sm.stateMachine == this.stateMachine);
         }
 
         [CompilerGenerated]
@@ -938,10 +887,8 @@
         {
             internal AnimatorStateTransition transition;
 
-            internal bool <>m__0(AnimatorStateTransition t)
-            {
-                return (t == this.transition);
-            }
+            internal bool <>m__0(AnimatorStateTransition t) => 
+                (t == this.transition);
         }
 
         [CompilerGenerated]
@@ -949,10 +896,8 @@
         {
             internal AnimatorTransition transition;
 
-            internal bool <>m__0(AnimatorTransition t)
-            {
-                return (t == this.transition);
-            }
+            internal bool <>m__0(AnimatorTransition t) => 
+                (t == this.transition);
         }
     }
 }

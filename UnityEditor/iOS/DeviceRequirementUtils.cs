@@ -82,10 +82,8 @@
             m_KeyDescriptions = dictionary2;
         }
 
-        public static string GetDefaultValueForKey(string key)
-        {
-            return m_KeyDescriptions[key].defaultValue;
-        }
+        public static string GetDefaultValueForKey(string key) => 
+            m_KeyDescriptions[key].defaultValue;
 
         public static string GetKeyDescription(string key)
         {
@@ -96,15 +94,11 @@
             return (LocalizationDatabase.GetLocalizedString("(Custom)") + " " + key);
         }
 
-        public static string[] GetKnownKeys()
-        {
-            return Enumerable.ToArray<string>(m_KeyDescriptions.Keys);
-        }
+        public static string[] GetKnownKeys() => 
+            m_KeyDescriptions.Keys.ToArray<string>();
 
-        public static string[] GetKnownValuesForKey(string key)
-        {
-            return Enumerable.ToArray<string>(m_KeyDescriptions[key].valueNames.Keys);
-        }
+        public static string[] GetKnownValuesForKey(string key) => 
+            m_KeyDescriptions[key].valueNames.Keys.ToArray<string>();
 
         public static string GetValueDescription(string key, string value)
         {
@@ -184,10 +178,8 @@
         {
             internal string value;
 
-            internal bool <>m__0(string v)
-            {
-                return (v == this.value);
-            }
+            internal bool <>m__0(string v) => 
+                (v == this.value);
         }
 
         [CompilerGenerated]
@@ -195,10 +187,8 @@
         {
             internal string key;
 
-            internal bool <>m__0(string s)
-            {
-                return (s == this.key);
-            }
+            internal bool <>m__0(string s) => 
+                (s == this.key);
         }
 
         private class RequirementDesc

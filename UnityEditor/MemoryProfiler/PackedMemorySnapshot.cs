@@ -33,79 +33,44 @@
         /// <summary>
         /// <para>Connections is an array of from,to pairs that describe which things are keeping which other things alive.</para>
         /// </summary>
-        public Connection[] connections
-        {
-            get
-            {
-                return this.m_Connections;
-            }
-        }
+        public Connection[] connections =>
+            this.m_Connections;
 
         /// <summary>
         /// <para>All GC handles in use in the memorysnapshot.</para>
         /// </summary>
-        public PackedGCHandle[] gcHandles
-        {
-            get
-            {
-                return this.m_GcHandles;
-            }
-        }
+        public PackedGCHandle[] gcHandles =>
+            this.m_GcHandles;
 
         /// <summary>
         /// <para>Array of actual managed heap memory sections.</para>
         /// </summary>
-        public MemorySection[] managedHeapSections
-        {
-            get
-            {
-                return this.m_ManagedHeapSections;
-            }
-        }
+        public MemorySection[] managedHeapSections =>
+            this.m_ManagedHeapSections;
 
         /// <summary>
         /// <para>All native C++ objects that were loaded at time of the snapshot.</para>
         /// </summary>
-        public PackedNativeUnityEngineObject[] nativeObjects
-        {
-            get
-            {
-                return this.m_NativeObjects;
-            }
-        }
+        public PackedNativeUnityEngineObject[] nativeObjects =>
+            this.m_NativeObjects;
 
         /// <summary>
         /// <para>Descriptions of all the C++ unity types the profiled player knows about.</para>
         /// </summary>
-        public PackedNativeType[] nativeTypes
-        {
-            get
-            {
-                return this.m_NativeTypes;
-            }
-        }
+        public PackedNativeType[] nativeTypes =>
+            this.m_NativeTypes;
 
         /// <summary>
         /// <para>Descriptions of all the managed types that were known to the virtual machine when the snapshot was taken.</para>
         /// </summary>
-        public TypeDescription[] typeDescriptions
-        {
-            get
-            {
-                return this.m_TypeDescriptions;
-            }
-        }
+        public TypeDescription[] typeDescriptions =>
+            this.m_TypeDescriptions;
 
         /// <summary>
         /// <para>Information about the virtual machine running executing the managade code inside the player.</para>
         /// </summary>
-        public VirtualMachineInformation virtualMachineInformation
-        {
-            get
-            {
-                return this.m_VirtualMachineInformation;
-            }
-        }
+        public VirtualMachineInformation virtualMachineInformation =>
+            this.m_VirtualMachineInformation;
     }
 }
 

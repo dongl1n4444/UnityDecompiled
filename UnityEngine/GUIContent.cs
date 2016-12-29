@@ -107,10 +107,8 @@
         /// </summary>
         public string text
         {
-            get
-            {
-                return this.m_Text;
-            }
+            get => 
+                this.m_Text;
             set
             {
                 this.m_Text = value;
@@ -121,10 +119,8 @@
         /// </summary>
         public Texture image
         {
-            get
-            {
-                return this.m_Image;
-            }
+            get => 
+                this.m_Image;
             set
             {
                 this.m_Image = value;
@@ -135,10 +131,8 @@
         /// </summary>
         public string tooltip
         {
-            get
-            {
-                return this.m_Tooltip;
-            }
+            get => 
+                this.m_Tooltip;
             set
             {
                 this.m_Tooltip = value;

@@ -247,10 +247,8 @@
         [Obsolete("Use animationCompression instead", true)]
         private bool reduceKeyframes
         {
-            get
-            {
-                return false;
-            }
+            get => 
+                false;
             set
             {
             }
@@ -302,10 +300,8 @@
         /// </summary>
         public Avatar sourceAvatar
         {
-            get
-            {
-                return this.sourceAvatarInternal;
-            }
+            get => 
+                this.sourceAvatarInternal;
             set
             {
                 Avatar avatar = value;
@@ -331,10 +327,8 @@
         [Obsolete("splitAnimations has been deprecated please use clipAnimations instead.", true)]
         public bool splitAnimations
         {
-            get
-            {
-                return (this.clipAnimations.Length != 0);
-            }
+            get => 
+                (this.clipAnimations.Length != 0);
             set
             {
             }
@@ -346,10 +340,8 @@
         [Obsolete("Please use tangentImportMode instead")]
         public bool splitTangentsAcrossSeams
         {
-            get
-            {
-                return (this.importTangents == ModelImporterTangents.CalculateLegacyWithSplitTangents);
-            }
+            get => 
+                (this.importTangents == ModelImporterTangents.CalculateLegacyWithSplitTangents);
             set
             {
                 if ((this.importTangents == ModelImporterTangents.CalculateLegacyWithSplitTangents) && !value)

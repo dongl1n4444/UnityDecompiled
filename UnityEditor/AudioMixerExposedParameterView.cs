@@ -146,13 +146,8 @@
             return ((leftStyle.CalcSize(GUIContent.Temp(this.GetNameOfElement(index))).x + vector.x) + 25f);
         }
 
-        private float height
-        {
-            get
-            {
-                return this.m_ReorderableListWithRenameAndScrollView.list.GetHeight();
-            }
-        }
+        private float height =>
+            this.m_ReorderableListWithRenameAndScrollView.list.GetHeight();
     }
 }
 

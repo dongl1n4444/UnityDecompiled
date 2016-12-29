@@ -33,10 +33,8 @@
         }
 
         [CompilerGenerated]
-        private static string <OptionSet>m__0(string f)
-        {
-            return f;
-        }
+        private static string <OptionSet>m__0(string f) => 
+            f;
 
         public OptionSet Add(Option option)
         {
@@ -44,25 +42,17 @@
             return this;
         }
 
-        public OptionSet Add(string prototype, OptionAction<string, string> action)
-        {
-            return this.Add(prototype, null, action);
-        }
+        public OptionSet Add(string prototype, OptionAction<string, string> action) => 
+            this.Add(prototype, null, action);
 
-        public OptionSet Add<TKey, TValue>(string prototype, OptionAction<TKey, TValue> action)
-        {
-            return this.Add<TKey, TValue>(prototype, null, action);
-        }
+        public OptionSet Add<TKey, TValue>(string prototype, OptionAction<TKey, TValue> action) => 
+            this.Add<TKey, TValue>(prototype, null, action);
 
-        public OptionSet Add(string prototype, Action<string> action)
-        {
-            return this.Add(prototype, null, action);
-        }
+        public OptionSet Add(string prototype, Action<string> action) => 
+            this.Add(prototype, null, action);
 
-        public OptionSet Add<T>(string prototype, Action<T> action)
-        {
-            return this.Add<T>(prototype, null, action);
-        }
+        public OptionSet Add<T>(string prototype, Action<T> action) => 
+            this.Add<T>(prototype, null, action);
 
         public OptionSet Add(string prototype, string description, OptionAction<string, string> action)
         {
@@ -78,10 +68,8 @@
             return this;
         }
 
-        public OptionSet Add<TKey, TValue>(string prototype, string description, OptionAction<TKey, TValue> action)
-        {
-            return this.Add(new ActionOption<TKey, TValue>(prototype, description, action));
-        }
+        public OptionSet Add<TKey, TValue>(string prototype, string description, OptionAction<TKey, TValue> action) => 
+            this.Add(new ActionOption<TKey, TValue>(prototype, description, action));
 
         public OptionSet Add(string prototype, string description, Action<string> action)
         {
@@ -97,10 +85,8 @@
             return this;
         }
 
-        public OptionSet Add<T>(string prototype, string description, Action<T> action)
-        {
-            return this.Add(new ActionOption<T>(prototype, description, action));
-        }
+        public OptionSet Add<T>(string prototype, string description, Action<T> action) => 
+            this.Add(new ActionOption<T>(prototype, description, action));
 
         private void AddImpl(Option option)
         {
@@ -127,10 +113,8 @@
             }
         }
 
-        protected virtual OptionContext CreateOptionContext()
-        {
-            return new OptionContext(this);
-        }
+        protected virtual OptionContext CreateOptionContext() => 
+            new OptionContext(this);
 
         private static string GetArgumentName(int index, int maxIndex, string description)
         {
@@ -531,7 +515,7 @@
             }
             else if (c.OptionValues.Count > c.Option.MaxValueCount)
             {
-                throw new OptionException(this.localizer(string.Format("Error: Found {0} option values when expecting {1}.", c.OptionValues.Count, c.Option.MaxValueCount)), c.OptionName);
+                throw new OptionException(this.localizer($"Error: Found {c.OptionValues.Count} option values when expecting {c.Option.MaxValueCount}."), c.OptionName);
             }
         }
 
@@ -643,13 +627,8 @@
             return true;
         }
 
-        public ConverterPortable<string, string> MessageLocalizer
-        {
-            get
-            {
-                return this.localizer;
-            }
-        }
+        public ConverterPortable<string, string> MessageLocalizer =>
+            this.localizer;
 
         [CompilerGenerated]
         private sealed class <Add>c__AnonStorey0

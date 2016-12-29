@@ -54,13 +54,8 @@
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Splitting assets";
-            }
-        }
+        public string Name =>
+            "Splitting assets";
     }
 }
 

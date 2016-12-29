@@ -20,14 +20,12 @@
         private static Func<CustomAttribute, bool> <>f__am$cache1;
 
         [DebuggerHidden]
-        private static IEnumerable<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>> AllFieldsFor(TypeDefinition definition, Unity.SerializationLogic.TypeResolver typeResolver)
-        {
-            return new <AllFieldsFor>c__Iterator0 { 
+        private static IEnumerable<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>> AllFieldsFor(TypeDefinition definition, Unity.SerializationLogic.TypeResolver typeResolver) => 
+            new <AllFieldsFor>c__Iterator0 { 
                 definition = definition,
                 typeResolver = typeResolver,
                 $PC = -2
             };
-        }
 
         private static bool CanFieldContainUnityEngineObjectReference(TypeReference typeReference, FieldDefinition t, Unity.SerializationLogic.TypeResolver typeResolver)
         {
@@ -52,7 +50,7 @@
             {
                 return true;
             }
-            if (TypeReferenceExtensions.IsEnum(typeReference))
+            if (typeReference.IsEnum())
             {
                 return false;
             }
@@ -101,25 +99,17 @@
             return false;
         }
 
-        private static bool IsConst(FieldDefinition fieldDefinition)
-        {
-            return (fieldDefinition.IsLiteral && !fieldDefinition.IsInitOnly);
-        }
+        private static bool IsConst(FieldDefinition fieldDefinition) => 
+            (fieldDefinition.IsLiteral && !fieldDefinition.IsInitOnly);
 
-        private static bool IsDelegate(TypeReference typeReference)
-        {
-            return TypeReferenceExtensions.IsAssignableTo(typeReference, "System.Delegate");
-        }
+        private static bool IsDelegate(TypeReference typeReference) => 
+            typeReference.IsAssignableTo("System.Delegate");
 
-        private static bool IsFieldTypeSerializable(TypeReference typeReference)
-        {
-            return (IsTypeSerializable(typeReference) || IsSupportedCollection(typeReference));
-        }
+        private static bool IsFieldTypeSerializable(TypeReference typeReference) => 
+            (IsTypeSerializable(typeReference) || IsSupportedCollection(typeReference));
 
-        public static bool IsNonSerialized(TypeReference typeDeclaration)
-        {
-            return ((typeDeclaration == null) || (TypeReferenceExtensions.IsEnum(typeDeclaration) || (typeDeclaration.HasGenericParameters || ((typeDeclaration.MetadataType == MetadataType.Object) || (typeDeclaration.FullName.StartsWith("System.") || (typeDeclaration.IsArray || ((typeDeclaration.FullName == "UnityEngine.MonoBehaviour") || (typeDeclaration.FullName == "UnityEngine.ScriptableObject"))))))));
-        }
+        public static bool IsNonSerialized(TypeReference typeDeclaration) => 
+            ((typeDeclaration == null) || (typeDeclaration.IsEnum() || (typeDeclaration.HasGenericParameters || ((typeDeclaration.MetadataType == MetadataType.Object) || (typeDeclaration.FullName.StartsWith("System.") || (typeDeclaration.IsArray || ((typeDeclaration.FullName == "UnityEngine.MonoBehaviour") || (typeDeclaration.FullName == "UnityEngine.ScriptableObject"))))))));
 
         private static bool IsOrExtendsGenericDictionary(TypeReference typeReference)
         {
@@ -130,7 +120,7 @@
                 {
                     return true;
                 }
-                definition = ResolutionExtensions.CheckedResolve(reference);
+                definition = reference.CheckedResolve();
                 if (definition == null)
                 {
                     break;
@@ -176,7 +166,7 @@
 
         private static bool IsTypeSerializable(TypeReference typeReference)
         {
-            if (TypeReferenceExtensions.IsAssignableTo(typeReference, "UnityScript.Lang.Array"))
+            if (typeReference.IsAssignableTo("UnityScript.Lang.Array"))
             {
                 return false;
             }
@@ -184,18 +174,14 @@
             {
                 return false;
             }
-            return (((IsSerializablePrimitive(typeReference) || TypeReferenceExtensions.IsEnum(typeReference)) || (IsUnityEngineObject(typeReference) || UnityEngineTypePredicates.IsSerializableUnityStruct(typeReference))) || ShouldImplementIDeserializable(typeReference));
+            return (((IsSerializablePrimitive(typeReference) || typeReference.IsEnum()) || (IsUnityEngineObject(typeReference) || UnityEngineTypePredicates.IsSerializableUnityStruct(typeReference))) || ShouldImplementIDeserializable(typeReference));
         }
 
-        private static bool IsUnityEngineObject(TypeReference typeReference)
-        {
-            return UnityEngineTypePredicates.IsUnityEngineObject(typeReference);
-        }
+        private static bool IsUnityEngineObject(TypeReference typeReference) => 
+            UnityEngineTypePredicates.IsUnityEngineObject(typeReference);
 
-        public static bool ShouldFieldBePPtrRemapped(FieldDefinition fieldDefinition)
-        {
-            return ShouldFieldBePPtrRemapped(fieldDefinition, new Unity.SerializationLogic.TypeResolver(null));
-        }
+        public static bool ShouldFieldBePPtrRemapped(FieldDefinition fieldDefinition) => 
+            ShouldFieldBePPtrRemapped(fieldDefinition, new Unity.SerializationLogic.TypeResolver(null));
 
         public static bool ShouldFieldBePPtrRemapped(FieldDefinition fieldDefinition, Unity.SerializationLogic.TypeResolver typeResolver)
         {
@@ -206,10 +192,8 @@
             return CanTypeContainUnityEngineObjectReference(typeResolver.Resolve(fieldDefinition.FieldType));
         }
 
-        private static bool ShouldHaveHadAllFieldsPublic(FieldDefinition field)
-        {
-            return UnityEngineTypePredicates.IsUnityEngineValueType(field.DeclaringType);
-        }
+        private static bool ShouldHaveHadAllFieldsPublic(FieldDefinition field) => 
+            UnityEngineTypePredicates.IsUnityEngineValueType(field.DeclaringType);
 
         public static bool ShouldImplementIDeserializable(TypeReference typeDeclaration)
         {
@@ -223,11 +207,11 @@
             }
             try
             {
-                if (((!UnityEngineTypePredicates.IsMonoBehaviour(typeDeclaration) && !UnityEngineTypePredicates.IsScriptableObject(typeDeclaration)) && (ResolutionExtensions.CheckedResolve(typeDeclaration).IsSerializable && !ResolutionExtensions.CheckedResolve(typeDeclaration).IsAbstract)) && (<>f__am$cache1 == null))
+                if (((!UnityEngineTypePredicates.IsMonoBehaviour(typeDeclaration) && !UnityEngineTypePredicates.IsScriptableObject(typeDeclaration)) && (typeDeclaration.CheckedResolve().IsSerializable && !typeDeclaration.CheckedResolve().IsAbstract)) && (<>f__am$cache1 == null))
                 {
                     <>f__am$cache1 = new Func<CustomAttribute, bool>(null, (IntPtr) <ShouldImplementIDeserializable>m__1);
                 }
-                return (!Enumerable.Any<CustomAttribute>(ResolutionExtensions.CheckedResolve(typeDeclaration).CustomAttributes, <>f__am$cache1) || UnityEngineTypePredicates.ShouldHaveHadSerializableAttribute(typeDeclaration));
+                return (!Enumerable.Any<CustomAttribute>(typeDeclaration.CheckedResolve().CustomAttributes, <>f__am$cache1) || UnityEngineTypePredicates.ShouldHaveHadSerializableAttribute(typeDeclaration));
             }
             catch (Exception)
             {
@@ -256,10 +240,8 @@
             return false;
         }
 
-        public static bool WillUnitySerialize(FieldDefinition fieldDefinition)
-        {
-            return WillUnitySerialize(fieldDefinition, new Unity.SerializationLogic.TypeResolver(null));
-        }
+        public static bool WillUnitySerialize(FieldDefinition fieldDefinition) => 
+            WillUnitySerialize(fieldDefinition, new Unity.SerializationLogic.TypeResolver(null));
 
         public static bool WillUnitySerialize(FieldDefinition fieldDefinition, Unity.SerializationLogic.TypeResolver typeResolver)
         {
@@ -454,28 +436,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Mono.Cecil.FieldDefinition,Unity.SerializationLogic.TypeResolver>>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<Mono.Cecil.FieldDefinition,Unity.SerializationLogic.TypeResolver>>.GetEnumerator();
 
-            KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> IEnumerator<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> IEnumerator<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -483,15 +451,11 @@
         {
             internal TypeDefinition definition;
 
-            internal bool <>m__0(KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> kv)
-            {
-                return (kv.Value.Resolve(kv.Key.FieldType).Resolve() != this.definition);
-            }
+            internal bool <>m__0(KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> kv) => 
+                (kv.Value.Resolve(kv.Key.FieldType).Resolve() != this.definition);
 
-            internal bool <>m__1(KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> kv)
-            {
-                return UnitySerializationLogic.CanFieldContainUnityEngineObjectReference(this.definition, kv.Key, kv.Value);
-            }
+            internal bool <>m__1(KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver> kv) => 
+                UnitySerializationLogic.CanFieldContainUnityEngineObjectReference(this.definition, kv.Key, kv.Value);
         }
     }
 }

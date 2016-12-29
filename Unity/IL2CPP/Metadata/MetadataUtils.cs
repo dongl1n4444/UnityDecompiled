@@ -33,9 +33,9 @@
             {
                 return ConstantDataFor(constantProvider, type.GenericArguments[0], name);
             }
-            if (Extensions.IsEnum(declaredParameterOrFieldType))
+            if (declaredParameterOrFieldType.IsEnum())
             {
-                declaredParameterOrFieldType = Extensions.GetUnderlyingEnumType(declaredParameterOrFieldType);
+                declaredParameterOrFieldType = declaredParameterOrFieldType.GetUnderlyingEnumType();
             }
             object constant = constantProvider.Constant;
             if (DetermineMetadataTypeForDefaultValueBasedOnTypeOfConstant(declaredParameterOrFieldType.MetadataType, constant) != declaredParameterOrFieldType.MetadataType)
@@ -93,7 +93,7 @@
                 case MetadataType.Object:
                     if (constant != null)
                     {
-                        throw new InvalidOperationException(string.Format("Default value for field {0} must be null.", name));
+                        throw new InvalidOperationException($"Default value for field {name} must be null.");
                     }
                     return null;
             }
@@ -192,9 +192,9 @@
 
         public static TypeReference GetUnderlyingType(TypeReference type)
         {
-            if (Extensions.IsEnum(type))
+            if (type.IsEnum())
             {
-                return Extensions.GetUnderlyingEnumType(type);
+                return type.GetUnderlyingEnumType();
             }
             return type;
         }

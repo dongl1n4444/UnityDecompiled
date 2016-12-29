@@ -48,10 +48,8 @@
         /// </summary>
         /// <param name="platform">Target platform.</param>
         /// <param name="platformName"></param>
-        public bool GetCompatibleWithPlatform(BuildTarget platform)
-        {
-            return this.GetCompatibleWithPlatform(BuildPipeline.GetBuildTargetName(platform));
-        }
+        public bool GetCompatibleWithPlatform(BuildTarget platform) => 
+            this.GetCompatibleWithPlatform(BuildPipeline.GetBuildTargetName(platform));
 
         /// <summary>
         /// <para>Returns editor specific data for specified key.</para>
@@ -76,19 +74,15 @@
         /// </summary>
         /// <param name="platform">Target platform.</param>
         /// <param name="platformName"></param>
-        public bool GetExcludeFromAnyPlatform(BuildTarget platform)
-        {
-            return this.GetExcludeFromAnyPlatform(BuildPipeline.GetBuildTargetName(platform));
-        }
+        public bool GetExcludeFromAnyPlatform(BuildTarget platform) => 
+            this.GetExcludeFromAnyPlatform(BuildPipeline.GetBuildTargetName(platform));
 
         [DebuggerHidden]
-        internal static IEnumerable<PluginDesc> GetExtensionPlugins(BuildTarget target)
-        {
-            return new <GetExtensionPlugins>c__Iterator0 { 
+        internal static IEnumerable<PluginDesc> GetExtensionPlugins(BuildTarget target) => 
+            new <GetExtensionPlugins>c__Iterator0 { 
                 target = target,
                 $PC = -2
             };
-        }
 
         /// <summary>
         /// <para>Returns all plugin importers for specfied platform.</para>
@@ -102,7 +96,7 @@
             };
             List<PluginImporter> list = new List<PluginImporter>();
             Dictionary<string, PluginImporter> dictionary = new Dictionary<string, PluginImporter>();
-            PluginImporter[] importerArray = Enumerable.ToArray<PluginImporter>(Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)));
+            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<PluginImporter>();
             IPluginImporterExtension pluginImporterExtension = ModuleManager.GetPluginImporterExtension(storey.platformName);
             if (pluginImporterExtension == null)
             {
@@ -143,10 +137,8 @@
         /// </summary>
         /// <param name="platform">Target platform.</param>
         /// <param name="platformName">Name of the target platform.</param>
-        public static PluginImporter[] GetImporters(BuildTarget platform)
-        {
-            return GetImporters(BuildPipeline.GetBuildTargetName(platform));
-        }
+        public static PluginImporter[] GetImporters(BuildTarget platform) => 
+            GetImporters(BuildPipeline.GetBuildTargetName(platform));
 
         /// <summary>
         /// <para>Identifies whether or not this plugin will be overridden if a plugin of the same name is placed in your project folder.</para>
@@ -169,10 +161,8 @@
         /// <param name="platform">Target platform.</param>
         /// <param name="key">Key value for data.</param>
         /// <param name="platformName"></param>
-        public string GetPlatformData(BuildTarget platform, string key)
-        {
-            return this.GetPlatformData(BuildPipeline.GetBuildTargetName(platform), key);
-        }
+        public string GetPlatformData(BuildTarget platform, string key) => 
+            this.GetPlatformData(BuildPipeline.GetBuildTargetName(platform), key);
 
         private static bool IsCompatible(PluginImporter imp, string platformName)
         {
@@ -424,28 +414,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<UnityEditorInternal.PluginDesc>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<UnityEditorInternal.PluginDesc>.GetEnumerator();
 
-            PluginDesc IEnumerator<PluginDesc>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            PluginDesc IEnumerator<PluginDesc>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -453,10 +429,8 @@
         {
             internal string platformName;
 
-            internal bool <>m__0(PluginImporter imp)
-            {
-                return PluginImporter.IsCompatible(imp, this.platformName);
-            }
+            internal bool <>m__0(PluginImporter imp) => 
+                PluginImporter.IsCompatible(imp, this.platformName);
         }
     }
 }

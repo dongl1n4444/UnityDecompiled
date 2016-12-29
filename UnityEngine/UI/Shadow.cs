@@ -77,10 +77,8 @@
         /// </summary>
         public Color effectColor
         {
-            get
-            {
-                return this.m_EffectColor;
-            }
+            get => 
+                this.m_EffectColor;
             set
             {
                 this.m_EffectColor = value;
@@ -96,10 +94,8 @@
         /// </summary>
         public Vector2 effectDistance
         {
-            get
-            {
-                return this.m_EffectDistance;
-            }
+            get => 
+                this.m_EffectDistance;
             set
             {
                 if (value.x > 600f)
@@ -134,10 +130,8 @@
         /// </summary>
         public bool useGraphicAlpha
         {
-            get
-            {
-                return this.m_UseGraphicAlpha;
-            }
+            get => 
+                this.m_UseGraphicAlpha;
             set
             {
                 this.m_UseGraphicAlpha = value;

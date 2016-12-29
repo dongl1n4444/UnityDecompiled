@@ -155,29 +155,14 @@
             }
         }
 
-        public static bool active
-        {
-            get
-            {
-                return (s_MouseDownState != null);
-            }
-        }
+        public static bool active =>
+            (s_MouseDownState != null);
 
-        public static bool individualSpace
-        {
-            get
-            {
-                return ((Tools.pivotRotation == PivotRotation.Local) && (Tools.pivotMode == PivotMode.Pivot));
-            }
-        }
+        public static bool individualSpace =>
+            ((Tools.pivotRotation == PivotRotation.Local) && (Tools.pivotMode == PivotMode.Pivot));
 
-        public static Vector3 mouseDownHandlePosition
-        {
-            get
-            {
-                return s_StartHandlePosition;
-            }
-        }
+        public static Vector3 mouseDownHandlePosition =>
+            s_StartHandlePosition;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct TransformData

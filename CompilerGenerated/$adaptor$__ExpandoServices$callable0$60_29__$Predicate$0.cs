@@ -13,15 +13,11 @@
             this.$from = from;
         }
 
-        public static Predicate<Expando> Adapt(__ExpandoServices$callable0$60_29__ from)
-        {
-            return new Predicate<Expando>(new $adaptor$__ExpandoServices$callable0$60_29__$Predicate$0(from).Invoke);
-        }
+        public static Predicate<Expando> Adapt(__ExpandoServices$callable0$60_29__ from) => 
+            new Predicate<Expando>(new $adaptor$__ExpandoServices$callable0$60_29__$Predicate$0(from).Invoke);
 
-        public bool Invoke(Expando obj)
-        {
-            return this.$from(obj);
-        }
+        public bool Invoke(Expando obj) => 
+            this.$from(obj);
     }
 }
 

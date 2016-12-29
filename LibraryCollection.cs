@@ -17,27 +17,25 @@ internal class LibraryCollection : KeyedCollection<string, Library>
     {
     }
 
-    protected override string GetKeyForItem(Library library)
-    {
-        return library.Name;
-    }
+    protected override string GetKeyForItem(Library library) => 
+        library.Name;
 
-    public void RegisterManagedDll(string name, bool process, [Optional, DefaultParameterValue(null)] string directory)
+    public void RegisterManagedDll(string name, bool process, string directory = null)
     {
         if (base.Contains(name))
         {
-            throw new Exception(string.Format("Duplicate library {0}.", name));
+            throw new Exception($"Duplicate library {name}.");
         }
         Library item = new Library(name, false, false, process, directory);
         item.RegisterArch("AnyCPU");
         base.Add(item);
     }
 
-    public void RegisterPlayerWinMd(string name, [Optional, DefaultParameterValue(null)] string directory)
+    public void RegisterPlayerWinMd(string name, string directory = null)
     {
         if (base.Contains(name))
         {
-            throw new Exception(string.Format("Duplicate library {0}.", name));
+            throw new Exception($"Duplicate library {name}.");
         }
         Library item = new Library(name, true, true, false, directory);
         item.RegisterArch("Player");
@@ -58,7 +56,7 @@ internal class LibraryCollection : KeyedCollection<string, Library>
             string key = grouping.Key;
             if (base.Contains(key))
             {
-                throw new Exception(string.Format("Duplicate plugin {0}.", key));
+                throw new Exception($"Duplicate plugin {key}.");
             }
             List<PluginData> list = new List<PluginData>();
             if (<>f__am$cache1 == null)
@@ -77,14 +75,14 @@ internal class LibraryCollection : KeyedCollection<string, Library>
                 {
                     if ((!data.AnySdk && nullable.HasValue) && nullable.Value)
                     {
-                        throw new Exception(string.Format("{0} plugin has conflicting SDK values.", data.Name));
+                        throw new Exception($"{data.Name} plugin has conflicting SDK values.");
                     }
                     nullable = new bool?(data.AnySdk);
                     if (data.Native)
                     {
                         if (flag)
                         {
-                            throw new Exception(string.Format("Duplicate plugin {0}.", data.Name));
+                            throw new Exception($"Duplicate plugin {data.Name}.");
                         }
                         flag = true;
                     }
@@ -92,7 +90,7 @@ internal class LibraryCollection : KeyedCollection<string, Library>
                     {
                         if (flag2)
                         {
-                            throw new Exception(string.Format("Duplicate plugin {0}.", data.Name));
+                            throw new Exception($"Duplicate plugin {data.Name}.");
                         }
                         flag2 = true;
                     }
@@ -102,7 +100,7 @@ internal class LibraryCollection : KeyedCollection<string, Library>
                     }
                     else if (nullable3.Value != data.Process)
                     {
-                        throw new Exception(string.Format("{0} plugin has conflicting \"Don't process\" values.", data.Name));
+                        throw new Exception($"{data.Name} plugin has conflicting "Don't process" values.");
                     }
                 }
                 PluginData item = new PluginData {
@@ -132,15 +130,15 @@ internal class LibraryCollection : KeyedCollection<string, Library>
                     PluginData data5 = list[i];
                     if (data5.AnySdk != data4.AnySdk)
                     {
-                        throw new Exception(string.Format("Plugin {0} must have identical settings for all SDKs.", key));
+                        throw new Exception($"Plugin {key} must have identical settings for all SDKs.");
                     }
                     if ((data5.Native != data4.Native) && (data5.WinMd == data4.WinMd))
                     {
-                        throw new Exception(string.Format("Plugin {0}.{1} cannot have both native and managed copies.", key, !data4.WinMd ? "dll" : "winmd"));
+                        throw new Exception($"Plugin {key}.{!data4.WinMd ? "dll" : "winmd"} cannot have both native and managed copies.");
                     }
                     if (data5.Process != data4.Process)
                     {
-                        throw new Exception(string.Format("All copies of plugin {0} must have the same \"Don't process\" setting.", key));
+                        throw new Exception($"All copies of plugin {key} must have the same "Don't process" setting.");
                     }
                     native |= list[i].Native;
                     winMd |= list[i].WinMd;
@@ -178,7 +176,7 @@ internal class LibraryCollection : KeyedCollection<string, Library>
                 Library item = base[key];
                 if (!item.AnyCpu)
                 {
-                    throw new Exception(string.Format("Plugin placeholder {0} cannot be architecture specific.", key));
+                    throw new Exception($"Plugin placeholder {key} cannot be architecture specific.");
                 }
                 base.Remove(item);
             }

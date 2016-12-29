@@ -126,8 +126,8 @@
             Keyframe[] keys = this.m_Curve.keys;
             if (keys.Length > 0)
             {
-                Vector3 firstPoint = new Vector3(this.rangeStart, Enumerable.First<Keyframe>(keys).value);
-                Vector3 lastPoint = new Vector3(this.rangeEnd, Enumerable.Last<Keyframe>(keys).value);
+                Vector3 firstPoint = new Vector3(this.rangeStart, keys.First<Keyframe>().value);
+                Vector3 lastPoint = new Vector3(this.rangeEnd, keys.Last<Keyframe>().value);
                 DrawCurveWrapped(minTime, maxTime, this.rangeStart, this.rangeEnd, this.preWrapMode, this.postWrapMode, this.m_CurveMesh, firstPoint, lastPoint, transform, color, wrapColor);
             }
         }
@@ -408,10 +408,8 @@
             return ((this.m_Curve.Evaluate(time + num) - this.m_Curve.Evaluate(time - num)) / (num * 2f));
         }
 
-        public float EvaluateCurveSlow(float time)
-        {
-            return this.m_Curve.Evaluate(time);
-        }
+        public float EvaluateCurveSlow(float time) => 
+            this.m_Curve.Evaluate(time);
 
         public void FlushCache()
         {
@@ -452,15 +450,11 @@
             return new Bounds(new Vector3((maxTime + minTime) * 0.5f, (negativeInfinity + positiveInfinity) * 0.5f, 0f), new Vector3(maxTime - minTime, negativeInfinity - positiveInfinity, 0f));
         }
 
-        public AnimationCurve GetCurve()
-        {
-            return this.m_Curve;
-        }
+        public AnimationCurve GetCurve() => 
+            this.m_Curve;
 
-        private Vector3[] GetPoints()
-        {
-            return this.GetPoints(this.rangeStart, this.rangeEnd);
-        }
+        private Vector3[] GetPoints() => 
+            this.GetPoints(this.rangeStart, this.rangeEnd);
 
         private Vector3[] GetPoints(float minTime, float maxTime)
         {
@@ -497,15 +491,11 @@
             return Mathf.Clamp(Mathf.RoundToInt(1000f * (num2 / num)), 1, 50);
         }
 
-        public float RangeEnd()
-        {
-            return this.rangeEnd;
-        }
+        public float RangeEnd() => 
+            this.rangeEnd;
 
-        public float RangeStart()
-        {
-            return this.rangeStart;
-        }
+        public float RangeStart() => 
+            this.rangeStart;
 
         public void SetCustomRange(float start, float end)
         {
@@ -538,21 +528,11 @@
             }
         }
 
-        private float rangeEnd
-        {
-            get
-            {
-                return ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.m_Curve.length <= 0)) ? this.m_CustomRangeEnd : this.m_Curve.keys[this.m_Curve.length - 1].time);
-            }
-        }
+        private float rangeEnd =>
+            ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.m_Curve.length <= 0)) ? this.m_CustomRangeEnd : this.m_Curve.keys[this.m_Curve.length - 1].time);
 
-        private float rangeStart
-        {
-            get
-            {
-                return ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.m_Curve.length <= 0)) ? this.m_CustomRangeStart : this.m_Curve.keys[0].time);
-            }
-        }
+        private float rangeStart =>
+            ((((this.m_CustomRangeStart != 0f) || (this.m_CustomRangeEnd != 0f)) || (this.m_Curve.length <= 0)) ? this.m_CustomRangeStart : this.m_Curve.keys[0].time);
     }
 }
 

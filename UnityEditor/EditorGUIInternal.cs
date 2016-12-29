@@ -20,15 +20,13 @@
             GUI.BeginWindows(skinMode, editorWindowInstanceID);
         }
 
-        internal static Vector2 DoBeginScrollViewForward(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, GUIStyle background)
-        {
-            return GUI.DoBeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, background);
-        }
+        internal static Vector2 DoBeginScrollViewForward(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, GUIStyle background) => 
+            GUI.DoBeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, background);
 
         internal static bool DoToggleForward(Rect position, int id, bool value, GUIContent content, GUIStyle style)
         {
             Event current = Event.current;
-            if (EditorExtensionMethods.MainActionKeyForControl(current, id))
+            if (current.MainActionKeyForControl(id))
             {
                 value = !value;
                 current.Use();
@@ -57,15 +55,11 @@
             return flag2;
         }
 
-        internal static string GetMouseTooltip()
-        {
-            return GUI.mouseTooltip;
-        }
+        internal static string GetMouseTooltip() => 
+            GUI.mouseTooltip;
 
-        internal static Rect GetTooltipRect()
-        {
-            return GUI.tooltipRect;
-        }
+        internal static Rect GetTooltipRect() => 
+            GUI.tooltipRect;
     }
 }
 

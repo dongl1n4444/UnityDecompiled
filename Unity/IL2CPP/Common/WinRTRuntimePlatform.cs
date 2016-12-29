@@ -4,13 +4,8 @@
 
     public class WinRTRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "WinRT";
-            }
-        }
+        public override string Name =>
+            "WinRT";
     }
 }
 

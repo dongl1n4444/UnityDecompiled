@@ -30,9 +30,8 @@
         [SerializeField]
         public bool showSucceeded = true;
 
-        internal FilteringOptions BuildFilteringOptions()
-        {
-            return new FilteringOptions { 
+        internal FilteringOptions BuildFilteringOptions() => 
+            new FilteringOptions { 
                 showSucceeded = this.showSucceeded,
                 showFailed = this.showFailed,
                 showIgnored = this.showIgnored,
@@ -40,7 +39,6 @@
                 nameFilter = this.filterByName,
                 categories = this.GetSelectedCategories()
             };
-        }
 
         public string[] GetSelectedCategories()
         {
@@ -48,7 +46,7 @@
             {
                 return new string[0];
             }
-            return Enumerable.ToArray<string>(Enumerable.Where<string>(this.availableCategories, new Func<string, int, bool>(this, (IntPtr) this.<GetSelectedCategories>m__0)));
+            return Enumerable.Where<string>(this.availableCategories, new Func<string, int, bool>(this, (IntPtr) this.<GetSelectedCategories>m__0)).ToArray<string>();
         }
 
         public void OnGUI()

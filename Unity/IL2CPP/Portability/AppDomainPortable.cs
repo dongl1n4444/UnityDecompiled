@@ -7,25 +7,17 @@
 
     public static class AppDomainPortable
     {
-        public static Assembly CurrentDomainLoadPortable(string assemblyString)
-        {
-            return AppDomain.CurrentDomain.Load(assemblyString);
-        }
+        public static Assembly CurrentDomainLoadPortable(string assemblyString) => 
+            AppDomain.CurrentDomain.Load(assemblyString);
 
-        public static AssemblyBuilder DefineDynamicAssemblyPortable(AssemblyName assemblyName, AssemblyBuilderAccess access, string dir)
-        {
-            return AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, access, dir);
-        }
+        public static AssemblyBuilder DefineDynamicAssemblyPortable(AssemblyName assemblyName, AssemblyBuilderAccess access, string dir) => 
+            AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, access, dir);
 
-        public static IEnumerable<Assembly> GetAllAssembliesInCurrentAppDomainPortable()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies();
-        }
+        public static IEnumerable<Assembly> GetAllAssembliesInCurrentAppDomainPortable() => 
+            AppDomain.CurrentDomain.GetAssemblies();
 
-        public static string GetCurrentDomainFriendlyNamePortable()
-        {
-            return AppDomain.CurrentDomain.FriendlyName;
-        }
+        public static string GetCurrentDomainFriendlyNamePortable() => 
+            AppDomain.CurrentDomain.FriendlyName;
     }
 }
 

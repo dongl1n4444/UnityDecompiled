@@ -10,10 +10,8 @@
         private const string kTextFieldId = "IPWindow";
         internal string m_IPString = GetLastIPString();
 
-        public static string GetLastIPString()
-        {
-            return EditorPrefs.GetString("ProfilerLastIP", "");
-        }
+        public static string GetLastIPString() => 
+            EditorPrefs.GetString("ProfilerLastIP", "");
 
         private void OnGUI()
         {

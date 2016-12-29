@@ -54,13 +54,13 @@
         private static void ProcessMethods(TypeDefinition type)
         {
             <ProcessMethods>c__AnonStorey0 storey = new <ProcessMethods>c__AnonStorey0 {
-                isComInterface = Unity.IL2CPP.Extensions.IsComInterface(type)
+                isComInterface = type.IsComInterface()
             };
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<MethodDefinition, MethodReturnType>(null, (IntPtr) <ProcessMethods>m__0);
             }
-            foreach (MethodReturnType type2 in Enumerable.Select<MethodDefinition, MethodReturnType>(type.Methods, <>f__am$cache0))
+            foreach (MethodReturnType type2 in type.Methods.Select<MethodDefinition, MethodReturnType>(<>f__am$cache0))
             {
                 if (storey.isComInterface)
                 {
@@ -72,7 +72,7 @@
             {
                 <>f__am$cache1 = new Func<MethodDefinition, IEnumerable<ParameterDefinition>>(null, (IntPtr) <ProcessMethods>m__1);
             }
-            IEnumerable<ParameterDefinition> enumerable = Enumerable.SelectMany<MethodDefinition, ParameterDefinition>(Enumerable.Where<MethodDefinition>(type.Methods, new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache1);
+            IEnumerable<ParameterDefinition> enumerable = type.Methods.Where<MethodDefinition>(new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__0)).SelectMany<MethodDefinition, ParameterDefinition>(<>f__am$cache1);
             foreach (ParameterDefinition definition in enumerable)
             {
                 ProcessObject(definition.ParameterType, definition, NativeType.Struct);
@@ -118,10 +118,8 @@
         {
             internal bool isComInterface;
 
-            internal bool <>m__0(MethodDefinition m)
-            {
-                return (this.isComInterface || m.IsPInvokeImpl);
-            }
+            internal bool <>m__0(MethodDefinition m) => 
+                (this.isComInterface || m.IsPInvokeImpl);
         }
     }
 }

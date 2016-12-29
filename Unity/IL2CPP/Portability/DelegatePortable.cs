@@ -5,10 +5,8 @@
 
     public static class DelegatePortable
     {
-        public static Delegate CreateDelegatePortable(Type type, MethodInfo methodInfo)
-        {
-            return Delegate.CreateDelegate(type, methodInfo);
-        }
+        public static Delegate CreateDelegatePortable(Type type, MethodInfo methodInfo) => 
+            Delegate.CreateDelegate(type, methodInfo);
     }
 }
 

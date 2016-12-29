@@ -64,7 +64,7 @@
                 {
                     <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <Write>m__0);
                 }
-                TypeDefinition[] definitionArray = Enumerable.ToArray<TypeDefinition>(Enumerable.Where<TypeDefinition>(typeList, <>f__am$cache0));
+                TypeDefinition[] definitionArray = typeList.Where<TypeDefinition>(<>f__am$cache0).ToArray<TypeDefinition>();
                 using (TinyProfiler.Section("Types", "Declarations"))
                 {
                     foreach (TypeDefinition definition in definitionArray)
@@ -116,7 +116,7 @@
             {
                 <>f__am$cache3 = new Func<KeyValuePair<MethodReference, uint>, MethodReference>(null, (IntPtr) <WriteCollectedMetadata>m__3);
             }
-            MethodTables methodPointerTables = MethodTables.CollectMethodTables(Enumerable.Select<KeyValuePair<MethodReference, uint>, MethodReference>(Il2CppGenericMethodCollector.Items, <>f__am$cache3));
+            MethodTables methodPointerTables = MethodTables.CollectMethodTables(Il2CppGenericMethodCollector.Items.Select<KeyValuePair<MethodReference, uint>, MethodReference>(<>f__am$cache3));
             UnresolvedVirtualsTablesInfo virtualCallTables = VirtualCallCollector.WriteUnresolvedStubs(outputDir);
             using (TinyProfiler.Section("WriteCodeRegistration", ""))
             {
@@ -131,17 +131,17 @@
         private static void WriteComTypeDeclaration(SourceCodeWriter writer, TypeReference type)
         {
             TypeDefinition definition = type.Resolve();
-            if ((definition.IsImport && !definition.IsInterface) && !Unity.IL2CPP.Extensions.IsWindowsRuntimeProjection(definition))
+            if ((definition.IsImport && !definition.IsInterface) && !definition.IsWindowsRuntimeProjection())
             {
                 writer.WriteCommentedLine(type.FullName);
-                writer.WriteStatement(Emit.Assign("const Il2CppGuid " + Naming.ForTypeNameOnly(type) + "::CLSID", Unity.IL2CPP.Extensions.ToInitializer(Unity.IL2CPP.Extensions.GetGuid(definition))));
+                writer.WriteStatement(Emit.Assign("const Il2CppGuid " + Naming.ForTypeNameOnly(type) + "::CLSID", definition.GetGuid().ToInitializer()));
             }
-            else if (Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeInterface(type))
+            else if (type.IsComOrWindowsRuntimeInterface())
             {
                 writer.WriteCommentedLine(type.FullName);
-                writer.WriteStatement(Emit.Assign("const Il2CppGuid " + Naming.ForTypeNameOnly(type) + "::IID", Unity.IL2CPP.Extensions.ToInitializer(Unity.IL2CPP.Extensions.GetGuid(type))));
+                writer.WriteStatement(Emit.Assign("const Il2CppGuid " + Naming.ForTypeNameOnly(type) + "::IID", type.GetGuid().ToInitializer()));
             }
-            if (Unity.IL2CPP.Extensions.NeedsComCallableWrapper(definition))
+            if (definition.NeedsComCallableWrapper())
             {
                 new CCWWriter(definition).WriteMethodDefinitions(writer);
             }
@@ -157,7 +157,7 @@
                 foreach (string str in strArray)
                 {
                     TypeDefinition type = TypeProvider.Corlib.MainModule.GetType(str);
-                    if (Unity.IL2CPP.Extensions.IsValueType(type) || (type.Name == "Array"))
+                    if (type.IsValueType() || (type.Name == "Array"))
                     {
                         writer.AddIncludeForTypeDefinition(type);
                     }
@@ -197,8 +197,8 @@
             {
                 <>f__am$cache4 = new Func<GenericInstanceMethod, string>(null, (IntPtr) <WriteGenericMethods>m__4);
             }
-            IOrderedEnumerable<GenericInstanceMethod> foo = Enumerable.OrderBy<GenericInstanceMethod, string>(genericsCollectionCollector.Methods, <>f__am$cache4);
-            foreach (List<GenericInstanceMethod> list in Unity.IL2CPP.Extensions.Chunk<GenericInstanceMethod>(foo, 0x3e8))
+            IOrderedEnumerable<GenericInstanceMethod> foo = genericsCollectionCollector.Methods.OrderBy<GenericInstanceMethod, string>(<>f__am$cache4);
+            foreach (List<GenericInstanceMethod> list in foo.Chunk<GenericInstanceMethod>(0x3e8))
             {
                 string[] append = new string[] { "GenericMethods" + num++ + ".cpp" };
                 using (SourceCodeWriter writer = new SourceCodeWriter(this._outputDir.Combine(append)))
@@ -266,8 +266,8 @@
             {
                 <>f__am$cache5 = new Func<TypeReference, string>(null, (IntPtr) <WriteMethodSourceFiles>m__5);
             }
-            IOrderedEnumerable<TypeReference> foo = Enumerable.OrderBy<TypeReference, string>(typeList, <>f__am$cache5);
-            foreach (List<TypeReference> list in Unity.IL2CPP.Extensions.Chunk<TypeReference>(foo, 100))
+            IOrderedEnumerable<TypeReference> foo = typeList.OrderBy<TypeReference, string>(<>f__am$cache5);
+            foreach (List<TypeReference> list in foo.Chunk<TypeReference>(100))
             {
                 object[] objArray1 = new object[] { "Bulk_", fileName, "_", num++, ".cpp" };
                 string details = string.Concat(objArray1);
@@ -303,17 +303,17 @@
 
         private void WriteTypeDefinitionFor(NPath outputDirectory, TypeReference type)
         {
-            if (!Unity.IL2CPP.Extensions.IsInterface(type) || Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeInterface(type))
+            if (!type.IsInterface() || type.IsComOrWindowsRuntimeInterface())
             {
                 string[] append = new string[] { FileNameProvider.Instance.ForTypeDefinition(type) };
                 using (SourceCodeWriter writer = new SourceCodeWriter(outputDirectory.Combine(append)))
                 {
                     writer.AddStdInclude("stdint.h");
-                    if (Unity.IL2CPP.Extensions.IsSystemArray(type))
+                    if (type.IsSystemArray())
                     {
                         writer.WriteLine("struct Il2CppArrayBounds;");
                     }
-                    if (!Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeInterface(type))
+                    if (!type.IsComOrWindowsRuntimeInterface())
                     {
                         new TypeDefinitionWriter().WriteTypeDefinitionFor(type, writer);
                     }
@@ -353,7 +353,7 @@
                     {
                         <>f__am$cache0 = new Func<GenericInstanceType, bool>(null, (IntPtr) <>m__5);
                     }
-                    foreach (GenericInstanceType type in Enumerable.Where<GenericInstanceType>(this.genericsCollectionCollector.TypeMethodDeclarations, <>f__am$cache0))
+                    foreach (GenericInstanceType type in this.genericsCollectionCollector.TypeMethodDeclarations.Where<GenericInstanceType>(<>f__am$cache0))
                     {
                         if (<>f__am$cache1 == null)
                         {
@@ -372,7 +372,7 @@
                     {
                         SourceWriter.<>f__mg$cache0 = new Func<ArrayType, ModuleDefinition>(null, (IntPtr) ArrayUtilities.ModuleDefinitionForElementTypeOf);
                     }
-                    foreach (IGrouping<ModuleDefinition, ArrayType> grouping in Enumerable.GroupBy<ArrayType, ModuleDefinition>(this.genericsCollectionCollector.Arrays, SourceWriter.<>f__mg$cache0))
+                    foreach (IGrouping<ModuleDefinition, ArrayType> grouping in this.genericsCollectionCollector.Arrays.GroupBy<ArrayType, ModuleDefinition>(SourceWriter.<>f__mg$cache0))
                     {
                         string[] append = new string[] { FileNameProvider.Instance.ForModule(grouping.Key) + "_ArrayTypes.h" };
                         using (SourceCodeWriter writer = new SourceCodeWriter(this.$this._outputDir.Combine(append)))
@@ -412,15 +412,11 @@
                 }
             }
 
-            private static bool <>m__5(GenericInstanceType t)
-            {
-                return (!Unity.IL2CPP.Extensions.IsInterface(t) || Unity.IL2CPP.Extensions.IsComOrWindowsRuntimeInterface(t));
-            }
+            private static bool <>m__5(GenericInstanceType t) => 
+                (!t.IsInterface() || t.IsComOrWindowsRuntimeInterface());
 
-            private static bool <>m__6(MethodDefinition m)
-            {
-                return !m.HasGenericParameters;
-            }
+            private static bool <>m__6(MethodDefinition m) => 
+                !m.HasGenericParameters;
         }
     }
 }

@@ -94,10 +94,8 @@
             this._typeDef.Methods.Add(SerializeMethodEmitter.SerializeMethodDefinitionFor(this._typeDef, this._serializationBridgeProvider));
         }
 
-        private static MethodAttributes DefaultConstructorAttributes()
-        {
-            return (MethodAttributes.CompilerControlled | MethodAttributes.FamANDAssem | MethodAttributes.Family | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName);
-        }
+        private static MethodAttributes DefaultConstructorAttributes() => 
+            (MethodAttributes.CompilerControlled | MethodAttributes.FamANDAssem | MethodAttributes.Family | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName);
 
         private MethodReference EmptyConstructorFor(TypeReference typeReference)
         {
@@ -110,7 +108,7 @@
             {
                 <>f__mg$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) IsEmptyConstructor);
             }
-            if (Enumerable.SingleOrDefault<MethodDefinition>(definition.Methods, <>f__mg$cache0) == null)
+            if (definition.Methods.SingleOrDefault<MethodDefinition>(<>f__mg$cache0) == null)
             {
                 return null;
             }
@@ -122,10 +120,8 @@
             CStringStore.SaveCStringStore(module);
         }
 
-        private static bool IsEmptyConstructor(MethodDefinition methodDefinition)
-        {
-            return ((methodDefinition.Name == ".ctor") && !methodDefinition.HasParameters);
-        }
+        private static bool IsEmptyConstructor(MethodDefinition methodDefinition) => 
+            ((methodDefinition.Name == ".ctor") && !methodDefinition.HasParameters);
 
         private bool IsSerializationWeaverInjectedConstructor(MethodDefinition methodDefinition)
         {
@@ -141,7 +137,7 @@
             <MakeImplement>c__AnonStorey0 storey = new <MakeImplement>c__AnonStorey0 {
                 typeDefinition = typeDefinition
             };
-            if (Enumerable.Any<InterfaceImplementation>(this._typeDef.Interfaces, new Func<InterfaceImplementation, bool>(storey, (IntPtr) this.<>m__0)))
+            if (this._typeDef.Interfaces.Any<InterfaceImplementation>(new Func<InterfaceImplementation, bool>(storey, (IntPtr) this.<>m__0)))
             {
                 return false;
             }
@@ -177,10 +173,8 @@
             }
         }
 
-        private ParameterDefinition SelfUnitySerializableParam()
-        {
-            return new ParameterDefinition("self", ParameterAttributes.None, this.Module.ImportReference(this._serializationBridgeProvider.UnitySerializableInterface));
-        }
+        private ParameterDefinition SelfUnitySerializableParam() => 
+            new ParameterDefinition("self", ParameterAttributes.None, this.Module.ImportReference(this._serializationBridgeProvider.UnitySerializableInterface));
 
         private MethodReference SerializationWeaverInjectedConstructorFor(TypeReference typeReference)
         {
@@ -189,7 +183,7 @@
             {
                 return null;
             }
-            if (Enumerable.SingleOrDefault<MethodDefinition>(definition.Methods, new Func<MethodDefinition, bool>(this, (IntPtr) this.IsSerializationWeaverInjectedConstructor)) == null)
+            if (definition.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this, (IntPtr) this.IsSerializationWeaverInjectedConstructor)) == null)
             {
                 return null;
             }
@@ -219,23 +213,16 @@
             new SerializationWeaver(typeDef, serializationInferfaceProvider).Weave();
         }
 
-        private ModuleDefinition Module
-        {
-            get
-            {
-                return this._typeDef.Module;
-            }
-        }
+        private ModuleDefinition Module =>
+            this._typeDef.Module;
 
         [CompilerGenerated]
         private sealed class <MakeImplement>c__AnonStorey0
         {
             internal TypeDefinition typeDefinition;
 
-            internal bool <>m__0(InterfaceImplementation i)
-            {
-                return (i.InterfaceType.FullName == this.typeDefinition.FullName);
-            }
+            internal bool <>m__0(InterfaceImplementation i) => 
+                (i.InterfaceType.FullName == this.typeDefinition.FullName);
         }
     }
 }

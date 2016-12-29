@@ -23,10 +23,8 @@
             this.owner = owner;
         }
 
-        public override bool BeginRename(TreeViewItem item, float delay)
-        {
-            return false;
-        }
+        public override bool BeginRename(TreeViewItem item, float delay) => 
+            false;
 
         protected override Texture GetIconForItem(TreeViewItem item)
         {
@@ -37,10 +35,8 @@
             return null;
         }
 
-        protected override bool IsRenaming(int id)
-        {
-            return false;
-        }
+        protected override bool IsRenaming(int id) => 
+            false;
 
         public override void OnRowGUI(Rect rowRect, TreeViewItem node, int row, bool selected, bool focused)
         {

@@ -17,15 +17,11 @@
             UnityConnectServiceCollection.instance.AddService(cloudService);
         }
 
-        public override string GetServiceDisplayName()
-        {
-            return "Multiplayer";
-        }
+        public override string GetServiceDisplayName() => 
+            "Multiplayer";
 
-        public override string GetServiceName()
-        {
-            return "UNet";
-        }
+        public override string GetServiceName() => 
+            "UNet";
 
         public void SetMultiplayerId(int id)
         {

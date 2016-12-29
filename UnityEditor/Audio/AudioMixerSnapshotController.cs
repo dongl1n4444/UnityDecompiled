@@ -18,15 +18,11 @@
             INTERNAL_CALL_ClearTransitionTypeOverride(this, guid);
         }
 
-        public bool GetTransitionTypeOverride(GUID guid, out ParameterTransitionType type)
-        {
-            return INTERNAL_CALL_GetTransitionTypeOverride(this, guid, out type);
-        }
+        public bool GetTransitionTypeOverride(GUID guid, out ParameterTransitionType type) => 
+            INTERNAL_CALL_GetTransitionTypeOverride(this, guid, out type);
 
-        public bool GetValue(GUID guid, out float value)
-        {
-            return INTERNAL_CALL_GetValue(this, guid, out value);
-        }
+        public bool GetValue(GUID guid, out float value) => 
+            INTERNAL_CALL_GetValue(this, guid, out value);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void INTERNAL_CALL_ClearTransitionTypeOverride(AudioMixerSnapshotController self, GUID guid);

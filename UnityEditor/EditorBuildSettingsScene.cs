@@ -48,10 +48,8 @@
         /// </summary>
         public bool enabled
         {
-            get
-            {
-                return (this.m_Enabled != 0);
-            }
+            get => 
+                (this.m_Enabled != 0);
             set
             {
                 this.m_Enabled = !value ? 0 : 1;
@@ -64,10 +62,8 @@
         /// </summary>
         public string path
         {
-            get
-            {
-                return this.m_Path;
-            }
+            get => 
+                this.m_Path;
             set
             {
                 this.m_Path = value.Replace(@"\", "/");
@@ -83,7 +79,7 @@
             {
                 <>f__am$cache1 = new Func<EditorBuildSettingsScene, string>(null, (IntPtr) <GetActiveSceneList>m__1);
             }
-            return Enumerable.ToArray<string>(Enumerable.Select<EditorBuildSettingsScene, string>(Enumerable.Where<EditorBuildSettingsScene>(scenes, <>f__am$cache0), <>f__am$cache1));
+            return Enumerable.Select<EditorBuildSettingsScene, string>(Enumerable.Where<EditorBuildSettingsScene>(scenes, <>f__am$cache0), <>f__am$cache1).ToArray<string>();
         }
     }
 }

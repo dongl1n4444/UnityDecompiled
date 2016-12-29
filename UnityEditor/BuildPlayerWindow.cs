@@ -334,10 +334,8 @@
             }
         }
 
-        private static bool BuildPlayerWithDefaultSettings(bool askForBuildLocation, BuildOptions forceOptions)
-        {
-            return BuildPlayerWithDefaultSettings(askForBuildLocation, forceOptions, true);
-        }
+        private static bool BuildPlayerWithDefaultSettings(bool askForBuildLocation, BuildOptions forceOptions) => 
+            BuildPlayerWithDefaultSettings(askForBuildLocation, forceOptions, true);
 
         private static bool BuildPlayerWithDefaultSettings(bool askForBuildLocation, BuildOptions forceOptions, bool first)
         {
@@ -485,17 +483,11 @@
                 throw new Exception("Build platforms are not initialized.");
             }
             BuildPlatform platform = s_BuildPlatforms.BuildPlatformFromTargetGroup(selectedBuildTargetGroup);
-            if (platform == null)
-            {
-                throw new Exception("Could not find build platform for target group " + selectedBuildTargetGroup);
-            }
-            return platform.DefaultTarget;
+            return platform?.DefaultTarget;
         }
 
-        private static bool FolderIsEmpty(string path)
-        {
-            return (!Directory.Exists(path) || ((Directory.GetDirectories(path).Length == 0) && (Directory.GetFiles(path).Length == 0)));
-        }
+        private static bool FolderIsEmpty(string path) => 
+            (!Directory.Exists(path) || ((Directory.GetDirectories(path).Length == 0) && (Directory.GetFiles(path).Length == 0)));
 
         private static string GetPlaybackEngineDownloadURL(string moduleName)
         {
@@ -617,7 +609,7 @@
             GUILayout.FlexibleSpace();
             if (EditorGUILayout.LinkLabel(styles.learnAboutUnityCloudBuild, new GUILayoutOption[0]))
             {
-                Application.OpenURL(string.Format("{0}/from/editor/buildsettings?upid={1}&pid={2}&currentplatform={3}&selectedplatform={4}&unityversion={5}", new object[] { WebURLs.cloudBuildPage, PlayerSettings.cloudProjectId, PlayerSettings.productGUID, EditorUserBuildSettings.activeBuildTarget, CalculateSelectedBuildTarget(), Application.unityVersion }));
+                Application.OpenURL($"{WebURLs.cloudBuildPage}/from/editor/buildsettings?upid={PlayerSettings.cloudProjectId}&pid={PlayerSettings.productGUID}&currentplatform={EditorUserBuildSettings.activeBuildTarget}&selectedplatform={CalculateSelectedBuildTarget()}&unityversion={Application.unityVersion}");
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(6f);
@@ -658,15 +650,11 @@
             }
         }
 
-        private static bool IsAnyStandaloneModuleLoaded()
-        {
-            return ((ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(BuildTarget.StandaloneLinux)) || ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(BuildTarget.StandaloneOSXIntel))) || ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(BuildTarget.StandaloneWindows)));
-        }
+        private static bool IsAnyStandaloneModuleLoaded() => 
+            ((ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(BuildTarget.StandaloneLinux)) || ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(BuildTarget.StandaloneOSXIntel))) || ModuleManager.IsPlatformSupportLoaded(ModuleManager.GetTargetStringFromBuildTarget(BuildTarget.StandaloneWindows)));
 
-        internal static bool IsBuildTargetGroupSupported(BuildTarget target)
-        {
-            return ((target == BuildTarget.StandaloneWindows) || BuildPipeline.IsBuildTargetSupported(target));
-        }
+        internal static bool IsBuildTargetGroupSupported(BuildTarget target) => 
+            ((target == BuildTarget.StandaloneWindows) || BuildPipeline.IsBuildTargetSupported(target));
 
         private static bool IsColorSpaceValid(BuildPlatform platform)
         {
@@ -677,7 +665,7 @@
                 if (platform.targetGroup == BuildTargetGroup.iPhone)
                 {
                     GraphicsDeviceType[] graphicsAPIs = PlayerSettings.GetGraphicsAPIs(BuildTarget.iOS);
-                    flag = !Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(graphicsAPIs, GraphicsDeviceType.OpenGLES2);
+                    flag = !graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2);
                     Version version = new Version(8, 0);
                     Version version2 = new Version(6, 0);
                     Version version3 = !string.IsNullOrEmpty(PlayerSettings.iOS.targetOSVersionString) ? new Version(PlayerSettings.iOS.targetOSVersionString) : version2;
@@ -686,12 +674,12 @@
                 else if (platform.targetGroup == BuildTargetGroup.tvOS)
                 {
                     GraphicsDeviceType[] source = PlayerSettings.GetGraphicsAPIs(BuildTarget.tvOS);
-                    flag = !Enumerable.Contains<GraphicsDeviceType>(source, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(source, GraphicsDeviceType.OpenGLES2);
+                    flag = !source.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !source.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2);
                 }
                 else if (platform.targetGroup == BuildTargetGroup.Android)
                 {
                     GraphicsDeviceType[] typeArray3 = PlayerSettings.GetGraphicsAPIs(BuildTarget.Android);
-                    flag = Enumerable.Contains<GraphicsDeviceType>(typeArray3, GraphicsDeviceType.OpenGLES3) && !Enumerable.Contains<GraphicsDeviceType>(typeArray3, GraphicsDeviceType.OpenGLES2);
+                    flag = typeArray3.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES3) && !typeArray3.Contains<GraphicsDeviceType>(GraphicsDeviceType.OpenGLES2);
                     flag2 = PlayerSettings.Android.minSdkVersion >= AndroidSdkVersions.AndroidApiLevel18;
                 }
                 return (flag && flag2);
@@ -699,10 +687,8 @@
             return true;
         }
 
-        private static bool IsMetroPlayer(BuildTarget target)
-        {
-            return (target == BuildTarget.WSAPlayer);
-        }
+        private static bool IsMetroPlayer(BuildTarget target) => 
+            (target == BuildTarget.WSAPlayer);
 
         private bool IsModuleInstalled(BuildTarget buildTarget)
         {
@@ -878,7 +864,7 @@
                         {
                             Application.OpenURL("http://unity3d.com/legal/eula");
                         }
-                        if (GUILayout.Button(string.Format("Add {0} to your Unity Pro license", s_BuildPlatforms.GetBuildTargetDisplayName(target)), EditorStyles.miniButton, new GUILayoutOption[0]))
+                        if (GUILayout.Button($"Add {s_BuildPlatforms.GetBuildTargetDisplayName(target)} to your Unity Pro license", EditorStyles.miniButton, new GUILayoutOption[0]))
                         {
                             Application.OpenURL("http://unity3d.com/get-unity");
                         }
@@ -1066,10 +1052,8 @@
         {
             internal string scenePath;
 
-            internal bool <>m__0(EditorBuildSettingsScene s)
-            {
-                return (s.path == this.scenePath);
-            }
+            internal bool <>m__0(EditorBuildSettingsScene s) => 
+                (s.path == this.scenePath);
         }
 
         [CompilerGenerated]
@@ -1077,10 +1061,8 @@
         {
             internal Scene scene;
 
-            internal bool <>m__0(EditorBuildSettingsScene s)
-            {
-                return (s.path == this.scene.path);
-            }
+            internal bool <>m__0(EditorBuildSettingsScene s) => 
+                (s.path == this.scene.path);
         }
 
         public class BuildPlatform
@@ -1252,10 +1234,8 @@
 
         public class SceneSorter : IComparer
         {
-            int IComparer.Compare(object x, object y)
-            {
-                return new CaseInsensitiveComparer().Compare(y, x);
-            }
+            int IComparer.Compare(object x, object y) => 
+                new CaseInsensitiveComparer().Compare(y, x);
         }
 
         private class Styles
@@ -1346,10 +1326,8 @@
                 }
             }
 
-            public GUIContent GetDownloadErrorForTarget(BuildTarget target)
-            {
-                return null;
-            }
+            public GUIContent GetDownloadErrorForTarget(BuildTarget target) => 
+                null;
 
             public GUIContent GetTargetNotInstalled(int index, int item)
             {

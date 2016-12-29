@@ -8,10 +8,8 @@
         private const string k_AssertionFailed = "Assertion failed.";
         private const string k_Expected = "Expected:";
 
-        public static string BooleanFailureMessage(bool expected)
-        {
-            return GetMessage("Value was " + !expected, expected.ToString());
-        }
+        public static string BooleanFailureMessage(bool expected) => 
+            GetMessage("Value was " + !expected, expected.ToString());
 
         public static string GetEqualityMessage(object actual, object expected, bool expectEqual)
         {

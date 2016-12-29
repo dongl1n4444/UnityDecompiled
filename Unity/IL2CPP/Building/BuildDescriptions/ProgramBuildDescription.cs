@@ -20,15 +20,11 @@
         {
         }
 
-        public virtual IEnumerable<string> AdditionalDefinesFor(NPath path)
-        {
-            return Enumerable.Empty<string>();
-        }
+        public virtual IEnumerable<string> AdditionalDefinesFor(NPath path) => 
+            Enumerable.Empty<string>();
 
-        public virtual IEnumerable<NPath> AdditionalIncludePathsFor(NPath path)
-        {
-            return Enumerable.Empty<NPath>();
-        }
+        public virtual IEnumerable<NPath> AdditionalIncludePathsFor(NPath path) => 
+            Enumerable.Empty<NPath>();
 
         public virtual void FinalizeBuild(CppToolChain toolChain)
         {
@@ -38,31 +34,16 @@
         {
         }
 
-        public virtual IEnumerable<string> AdditionalCompilerFlags
-        {
-            get
-            {
-                return Enumerable.Empty<string>();
-            }
-        }
+        public virtual IEnumerable<string> AdditionalCompilerFlags =>
+            Enumerable.Empty<string>();
 
-        public virtual IEnumerable<string> AdditionalLinkerFlags
-        {
-            get
-            {
-                return Enumerable.Empty<string>();
-            }
-        }
+        public virtual IEnumerable<string> AdditionalLinkerFlags =>
+            Enumerable.Empty<string>();
 
         public abstract IEnumerable<CppCompilationInstruction> CppCompileInstructions { get; }
 
-        public virtual IEnumerable<NPath> DynamicLibraries
-        {
-            get
-            {
-                return new <>c__Iterator0 { $PC = -2 };
-            }
-        }
+        public virtual IEnumerable<NPath> DynamicLibraries =>
+            new <>c__Iterator0 { $PC=-2 };
 
         public abstract NPath GlobalCacheDirectory { get; }
 
@@ -85,13 +66,8 @@
             }
         }
 
-        public virtual IEnumerable<NPath> StaticLibraries
-        {
-            get
-            {
-                return Enumerable.Empty<NPath>();
-            }
-        }
+        public virtual IEnumerable<NPath> StaticLibraries =>
+            Enumerable.Empty<NPath>();
 
         [CompilerGenerated]
         private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<NPath>, IEnumerator, IDisposable, IEnumerator<NPath>
@@ -131,28 +107,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

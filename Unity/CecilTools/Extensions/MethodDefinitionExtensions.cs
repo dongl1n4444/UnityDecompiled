@@ -4,11 +4,9 @@
     using System;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     internal static class MethodDefinitionExtensions
     {
-        [Extension]
-        public static bool IsConversionOperator(MethodDefinition method)
+        public static bool IsConversionOperator(this MethodDefinition method)
         {
             if (!method.IsSpecialName)
             {
@@ -17,40 +15,23 @@
             return ((method.Name == "op_Implicit") || (method.Name == "op_Explicit"));
         }
 
-        public static bool IsDefaultConstructor(MethodDefinition m)
-        {
-            return ((m.IsConstructor && !m.IsStatic) && (m.Parameters.Count == 0));
-        }
+        public static bool IsDefaultConstructor(MethodDefinition m) => 
+            ((m.IsConstructor && !m.IsStatic) && (m.Parameters.Count == 0));
 
-        [Extension]
-        public static bool IsSimpleGetter(MethodDefinition original)
-        {
-            return (original.IsGetter && (original.Parameters.Count == 0));
-        }
+        public static bool IsSimpleGetter(this MethodDefinition original) => 
+            (original.IsGetter && (original.Parameters.Count == 0));
 
-        [Extension]
-        public static bool IsSimplePropertyAccessor(MethodDefinition method)
-        {
-            return (IsSimpleGetter(method) || IsSimpleSetter(method));
-        }
+        public static bool IsSimplePropertyAccessor(this MethodDefinition method) => 
+            (method.IsSimpleGetter() || method.IsSimpleSetter());
 
-        [Extension]
-        public static bool IsSimpleSetter(MethodDefinition original)
-        {
-            return (original.IsSetter && (original.Parameters.Count == 1));
-        }
+        public static bool IsSimpleSetter(this MethodDefinition original) => 
+            (original.IsSetter && (original.Parameters.Count == 1));
 
-        [Extension]
-        public static string PropertyName(MethodDefinition self)
-        {
-            return self.Name.Substring(4);
-        }
+        public static string PropertyName(this MethodDefinition self) => 
+            self.Name.Substring(4);
 
-        [Extension]
-        public static bool SameAs(MethodDefinition self, MethodDefinition other)
-        {
-            return (self.FullName == other.FullName);
-        }
+        public static bool SameAs(this MethodDefinition self, MethodDefinition other) => 
+            (self.FullName == other.FullName);
     }
 }
 

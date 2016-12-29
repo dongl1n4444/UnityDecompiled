@@ -32,10 +32,8 @@
         private bool m_KeystoreCreate = false;
         private PlayerSettingsEditor m_SettingsEditor;
 
-        public override bool CanShowUnitySplashScreen()
-        {
-            return true;
-        }
+        public override bool CanShowUnitySplashScreen() => 
+            true;
 
         public override void ConfigurationSectionGUI()
         {
@@ -65,10 +63,8 @@
             EditorGUILayout.Space();
         }
 
-        public override bool HasIdentificationGUI()
-        {
-            return true;
-        }
+        public override bool HasIdentificationGUI() => 
+            true;
 
         public override void IconSectionGUI()
         {
@@ -333,10 +329,8 @@
             }
         }
 
-        public override bool SupportsOrientation()
-        {
-            return true;
-        }
+        public override bool SupportsOrientation() => 
+            true;
     }
 }
 

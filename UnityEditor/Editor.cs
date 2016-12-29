@@ -27,13 +27,8 @@
         internal static bool m_AllowMultiObjectAccess = true;
         private static Styles s_Styles;
         private const float kImageSectionWidth = 44f;
-        internal bool canEditMultipleObjects
-        {
-            get
-            {
-                return (base.GetType().GetCustomAttributes(typeof(CanEditMultipleObjects), false).Length > 0);
-            }
-        }
+        internal bool canEditMultipleObjects =>
+            (base.GetType().GetCustomAttributes(typeof(CanEditMultipleObjects), false).Length > 0);
         /// <summary>
         /// <para>Make a custom editor for targetObject or targetObjects.</para>
         /// </summary>
@@ -113,10 +108,8 @@
         /// </summary>
         public Object target
         {
-            get
-            {
-                return this.m_Targets[this.referenceTargetIndex];
-            }
+            get => 
+                this.m_Targets[this.referenceTargetIndex];
             set
             {
                 throw new InvalidOperationException("You can't set the target on an editor.");
@@ -138,10 +131,8 @@
         }
         internal virtual int referenceTargetIndex
         {
-            get
-            {
-                return Mathf.Clamp(this.m_ReferenceTargetIndex, 0, this.m_Targets.Length - 1);
-            }
+            get => 
+                Mathf.Clamp(this.m_ReferenceTargetIndex, 0, this.m_Targets.Length - 1);
             set
             {
                 this.m_ReferenceTargetIndex = (Math.Abs((int) (value * this.m_Targets.Length)) + value) % this.m_Targets.Length;
@@ -272,7 +263,7 @@
             while (iterator.NextVisible(enterChildren))
             {
                 enterChildren = false;
-                if (!Enumerable.Contains<string>(propertyToExclude, iterator.name))
+                if (!propertyToExclude.Contains<string>(iterator.name))
                 {
                     EditorGUILayout.PropertyField(iterator, true, new GUILayoutOption[0]);
                 }
@@ -282,10 +273,8 @@
         /// <summary>
         /// <para>Draw the built-in inspector.</para>
         /// </summary>
-        public bool DrawDefaultInspector()
-        {
-            return this.DoDrawDefaultInspector();
-        }
+        public bool DrawDefaultInspector() => 
+            this.DoDrawDefaultInspector();
 
         /// <summary>
         /// <para>Implement this function to make a custom inspector.</para>
@@ -298,10 +287,8 @@
         /// <summary>
         /// <para>Does this edit require to be repainted constantly in its current state?</para>
         /// </summary>
-        public virtual bool RequiresConstantRepaint()
-        {
-            return false;
-        }
+        public virtual bool RequiresConstantRepaint() => 
+            false;
 
         internal void InternalSetTargets(Object[] t)
         {
@@ -328,10 +315,8 @@
 
         internal bool isInspectorDirty
         {
-            get
-            {
-                return (this.m_IsDirty != 0);
-            }
+            get => 
+                (this.m_IsDirty != 0);
             set
             {
                 this.m_IsDirty = !value ? 0 : 1;
@@ -351,18 +336,14 @@
         /// <returns>
         /// <para>True if this component can be Previewed in its current state.</para>
         /// </returns>
-        public virtual bool HasPreviewGUI()
-        {
-            return this.preview.HasPreviewGUI();
-        }
+        public virtual bool HasPreviewGUI() => 
+            this.preview.HasPreviewGUI();
 
         /// <summary>
         /// <para>Override this method if you want to change the label of the Preview area.</para>
         /// </summary>
-        public virtual GUIContent GetPreviewTitle()
-        {
-            return this.preview.GetPreviewTitle();
-        }
+        public virtual GUIContent GetPreviewTitle() => 
+            this.preview.GetPreviewTitle();
 
         /// <summary>
         /// <para>Override this method if you want to render a static preview that shows.</para>
@@ -371,10 +352,8 @@
         /// <param name="subAssets"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public virtual Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height)
-        {
-            return null;
-        }
+        public virtual Texture2D RenderStaticPreview(string assetPath, Object[] subAssets, int width, int height) => 
+            null;
 
         /// <summary>
         /// <para>Implement to create your own custom preview for the preview area of the inspector, primary editor headers and the object selector.</para>
@@ -407,10 +386,8 @@
         /// <summary>
         /// <para>Implement this method to show asset information on top of the asset preview.</para>
         /// </summary>
-        public virtual string GetInfoString()
-        {
-            return this.preview.GetInfoString();
-        }
+        public virtual string GetInfoString() => 
+            this.preview.GetInfoString();
 
         internal virtual void OnAssetStoreInspectorGUI()
         {
@@ -433,13 +410,8 @@
                 return this.m_DummyPreview;
             }
         }
-        internal PropertyHandlerCache propertyHandlerCache
-        {
-            get
-            {
-                return this.m_PropertyHandlerCache;
-            }
-        }
+        internal PropertyHandlerCache propertyHandlerCache =>
+            this.m_PropertyHandlerCache;
         internal static bool DoDrawDefaultInspector(SerializedObject obj)
         {
             EditorGUI.BeginChangeCheck();
@@ -456,10 +428,8 @@
             return EditorGUI.EndChangeCheck();
         }
 
-        internal bool DoDrawDefaultInspector()
-        {
-            return DoDrawDefaultInspector(this.serializedObject);
-        }
+        internal bool DoDrawDefaultInspector() => 
+            DoDrawDefaultInspector(this.serializedObject);
 
         /// <summary>
         /// <para>Call this function to draw the header of the editor.</para>
@@ -571,10 +541,8 @@
             EditorGUILayout.BeginVertical(style, new GUILayoutOption[0]);
         }
 
-        internal static Rect DrawHeaderGUI(Editor editor, string header)
-        {
-            return DrawHeaderGUI(editor, header, 0f);
-        }
+        internal static Rect DrawHeaderGUI(Editor editor, string header) => 
+            DrawHeaderGUI(editor, header, 0f);
 
         internal static Rect DrawHeaderGUI(Editor editor, string header, float leftMargin)
         {
@@ -728,10 +696,8 @@
         /// <summary>
         /// <para>Override this method in subclasses to return false if you don't want default margins.</para>
         /// </summary>
-        public virtual bool UseDefaultMargins()
-        {
-            return true;
-        }
+        public virtual bool UseDefaultMargins() => 
+            true;
 
         public void Initialize(Object[] targets)
         {

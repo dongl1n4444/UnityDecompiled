@@ -289,10 +289,8 @@
             }
         }
 
-        private bool IsAxisAligned(Vector3 v)
-        {
-            return (((Mathf.Abs((float) (v.x * v.y)) < 0.0001f) && (Mathf.Abs((float) (v.y * v.z)) < 0.0001f)) && (Mathf.Abs((float) (v.z * v.x)) < 0.0001f));
-        }
+        private bool IsAxisAligned(Vector3 v) => 
+            (((Mathf.Abs((float) (v.x * v.y)) < 0.0001f) && (Mathf.Abs((float) (v.y * v.z)) < 0.0001f)) && (Mathf.Abs((float) (v.z * v.x)) < 0.0001f));
 
         internal void OnGUI(SceneView view)
         {
@@ -490,29 +488,14 @@
             view.LookAt(view.pivot, view.rotation, view.size, ortho);
         }
 
-        private float faded2Dgray
-        {
-            get
-            {
-                return this.dirNameVisible[8].faded;
-            }
-        }
+        private float faded2Dgray =>
+            this.dirNameVisible[8].faded;
 
-        private float fadedRotationLock
-        {
-            get
-            {
-                return Mathf.Lerp(0.4f, 1f, this.m_RotationLocked.faded);
-            }
-        }
+        private float fadedRotationLock =>
+            Mathf.Lerp(0.4f, 1f, this.m_RotationLocked.faded);
 
-        private float fadedVisibility
-        {
-            get
-            {
-                return (this.m_Visible.faded * this.fadedRotationLock);
-            }
-        }
+        private float fadedVisibility =>
+            (this.m_Visible.faded * this.fadedRotationLock);
 
         private static Styles styles
         {

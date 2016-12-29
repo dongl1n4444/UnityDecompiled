@@ -28,10 +28,8 @@
         /// </summary>
         public string disabledTrigger
         {
-            get
-            {
-                return this.m_DisabledTrigger;
-            }
+            get => 
+                this.m_DisabledTrigger;
             set
             {
                 this.m_DisabledTrigger = value;
@@ -43,10 +41,8 @@
         /// </summary>
         public string highlightedTrigger
         {
-            get
-            {
-                return this.m_HighlightedTrigger;
-            }
+            get => 
+                this.m_HighlightedTrigger;
             set
             {
                 this.m_HighlightedTrigger = value;
@@ -58,10 +54,8 @@
         /// </summary>
         public string normalTrigger
         {
-            get
-            {
-                return this.m_NormalTrigger;
-            }
+            get => 
+                this.m_NormalTrigger;
             set
             {
                 this.m_NormalTrigger = value;
@@ -73,10 +67,8 @@
         /// </summary>
         public string pressedTrigger
         {
-            get
-            {
-                return this.m_PressedTrigger;
-            }
+            get => 
+                this.m_PressedTrigger;
             set
             {
                 this.m_PressedTrigger = value;

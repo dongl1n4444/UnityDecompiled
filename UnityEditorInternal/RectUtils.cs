@@ -37,10 +37,8 @@
             return rect;
         }
 
-        public static Rect Inflate(Rect a, float factor)
-        {
-            return Inflate(a, factor, factor);
-        }
+        public static Rect Inflate(Rect a, float factor) => 
+            Inflate(a, factor, factor);
 
         public static Rect Inflate(Rect a, float factorX, float factorY)
         {
@@ -153,10 +151,8 @@
             return rect;
         }
 
-        public static Rect OffsetX(Rect r, float offsetX)
-        {
-            return Offset(r, offsetX, 0f);
-        }
+        public static Rect OffsetX(Rect r, float offsetX) => 
+            Offset(r, offsetX, 0f);
     }
 }
 

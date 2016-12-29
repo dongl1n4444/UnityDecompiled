@@ -63,31 +63,16 @@
             return string.Concat(objArray1);
         }
 
-        public bool completed
-        {
-            get
-            {
-                return this.m_Completed;
-            }
-        }
+        public bool completed =>
+            this.m_Completed;
 
-        public bool hidden
-        {
-            get
-            {
-                return this.m_Hidden;
-            }
-        }
+        public bool hidden =>
+            this.m_Hidden;
 
         public string id { get; set; }
 
-        public DateTime lastReportedDate
-        {
-            get
-            {
-                return this.m_LastReportedDate;
-            }
-        }
+        public DateTime lastReportedDate =>
+            this.m_LastReportedDate;
 
         public double percentCompleted { get; set; }
     }

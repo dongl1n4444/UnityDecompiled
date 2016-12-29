@@ -4,21 +4,11 @@
 
     public class EmscriptenJavaScriptArchitecture : Architecture
     {
-        public override int Bits
-        {
-            get
-            {
-                return 0x20;
-            }
-        }
+        public override int Bits =>
+            0x20;
 
-        public override string Name
-        {
-            get
-            {
-                return "EmscriptenJavaScript";
-            }
-        }
+        public override string Name =>
+            "EmscriptenJavaScript";
     }
 }
 

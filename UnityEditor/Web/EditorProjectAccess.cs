@@ -38,37 +38,25 @@
             EditorApplication.isPlaying = true;
         }
 
-        public string GetBuildTarget()
-        {
-            return EditorUserBuildSettings.activeBuildTarget.ToString();
-        }
+        public string GetBuildTarget() => 
+            EditorUserBuildSettings.activeBuildTarget.ToString();
 
-        public int GetEditorSkinIndex()
-        {
-            return EditorGUIUtility.skinIndex;
-        }
+        public int GetEditorSkinIndex() => 
+            EditorGUIUtility.skinIndex;
 
-        public string GetEnvironment()
-        {
-            return UnityConnect.instance.GetEnvironment();
-        }
+        public string GetEnvironment() => 
+            UnityConnect.instance.GetEnvironment();
 
-        public string GetOrganizationID()
-        {
-            return UnityConnect.instance.projectInfo.organizationId;
-        }
+        public string GetOrganizationID() => 
+            UnityConnect.instance.projectInfo.organizationId;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetProjectEditorVersion();
-        public string GetProjectGUID()
-        {
-            return UnityConnect.instance.projectInfo.projectGUID;
-        }
+        public string GetProjectGUID() => 
+            UnityConnect.instance.projectInfo.projectGUID;
 
-        public string GetProjectIcon()
-        {
-            return null;
-        }
+        public string GetProjectIcon() => 
+            null;
 
         public string GetProjectName()
         {
@@ -80,67 +68,47 @@
             return PlayerSettings.productName;
         }
 
-        public string GetProjectPath()
-        {
-            return Directory.GetCurrentDirectory();
-        }
+        public string GetProjectPath() => 
+            Directory.GetCurrentDirectory();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string GetRESTServiceURI();
-        public string GetUserAccessToken()
-        {
-            return UnityConnect.instance.GetAccessToken();
-        }
+        public string GetUserAccessToken() => 
+            UnityConnect.instance.GetAccessToken();
 
-        public string GetUserDisplayName()
-        {
-            return UnityConnect.instance.userInfo.displayName;
-        }
+        public string GetUserDisplayName() => 
+            UnityConnect.instance.userInfo.displayName;
 
-        public string GetUserName()
-        {
-            return UnityConnect.instance.userInfo.userName;
-        }
+        public string GetUserName() => 
+            UnityConnect.instance.userInfo.userName;
 
-        public string GetUserPrimaryOrganizationId()
-        {
-            return UnityConnect.instance.userInfo.primaryOrg;
-        }
+        public string GetUserPrimaryOrganizationId() => 
+            UnityConnect.instance.userInfo.primaryOrg;
 
         public void GoToHistory()
         {
             CollabHistoryWindow.ShowHistoryWindow().Focus();
         }
 
-        public bool IsLoggedIn()
-        {
-            return UnityConnect.instance.loggedIn;
-        }
+        public bool IsLoggedIn() => 
+            UnityConnect.instance.loggedIn;
 
-        public bool IsOnline()
-        {
-            return UnityConnect.instance.online;
-        }
+        public bool IsOnline() => 
+            UnityConnect.instance.online;
 
-        public bool IsPlayMode()
-        {
-            return EditorApplication.isPlaying;
-        }
+        public bool IsPlayMode() => 
+            EditorApplication.isPlaying;
 
-        public bool IsProjectBound()
-        {
-            return UnityConnect.instance.projectInfo.projectBound;
-        }
+        public bool IsProjectBound() => 
+            UnityConnect.instance.projectInfo.projectBound;
 
         public void OpenLink(string link)
         {
             Help.BrowseURL(link);
         }
 
-        public bool SaveCurrentModifiedScenesIfUserWantsTo()
-        {
-            return EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
-        }
+        public bool SaveCurrentModifiedScenesIfUserWantsTo() => 
+            EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
         public void ShowToolbarDropdown()
         {

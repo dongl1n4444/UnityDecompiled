@@ -82,15 +82,11 @@
             }
         }
 
-        public override int GetNetworkChannel()
-        {
-            return 1;
-        }
+        public override int GetNetworkChannel() => 
+            1;
 
-        public override float GetNetworkSendInterval()
-        {
-            return this.m_SendInterval;
-        }
+        public override float GetNetworkSendInterval() => 
+            this.m_SendInterval;
 
         internal static void HandleChildTransform(NetworkMessage netMsg)
         {
@@ -345,23 +341,16 @@
         /// <summary>
         /// <para>A unique Identifier for this NetworkTransformChild component on this root object.</para>
         /// </summary>
-        public uint childIndex
-        {
-            get
-            {
-                return this.m_ChildIndex;
-            }
-        }
+        public uint childIndex =>
+            this.m_ChildIndex;
 
         /// <summary>
         /// <para>A callback function to allow server side validation of the movement of the child object.</para>
         /// </summary>
         public NetworkTransform.ClientMoveCallback3D clientMoveCallback3D
         {
-            get
-            {
-                return this.m_ClientMoveCallback3D;
-            }
+            get => 
+                this.m_ClientMoveCallback3D;
             set
             {
                 this.m_ClientMoveCallback3D = value;
@@ -373,10 +362,8 @@
         /// </summary>
         public float interpolateMovement
         {
-            get
-            {
-                return this.m_InterpolateMovement;
-            }
+            get => 
+                this.m_InterpolateMovement;
             set
             {
                 this.m_InterpolateMovement = value;
@@ -388,10 +375,8 @@
         /// </summary>
         public float interpolateRotation
         {
-            get
-            {
-                return this.m_InterpolateRotation;
-            }
+            get => 
+                this.m_InterpolateRotation;
             set
             {
                 this.m_InterpolateRotation = value;
@@ -401,23 +386,16 @@
         /// <summary>
         /// <para>The most recent time when a movement synchronization packet arrived for this object.</para>
         /// </summary>
-        public float lastSyncTime
-        {
-            get
-            {
-                return this.m_LastClientSyncTime;
-            }
-        }
+        public float lastSyncTime =>
+            this.m_LastClientSyncTime;
 
         /// <summary>
         /// <para>The distance that an object can move without sending a movement synchronization update.</para>
         /// </summary>
         public float movementThreshold
         {
-            get
-            {
-                return this.m_MovementThreshold;
-            }
+            get => 
+                this.m_MovementThreshold;
             set
             {
                 this.m_MovementThreshold = value;
@@ -429,10 +407,8 @@
         /// </summary>
         public NetworkTransform.CompressionSyncMode rotationSyncCompression
         {
-            get
-            {
-                return this.m_RotationSyncCompression;
-            }
+            get => 
+                this.m_RotationSyncCompression;
             set
             {
                 this.m_RotationSyncCompression = value;
@@ -444,10 +420,8 @@
         /// </summary>
         public float sendInterval
         {
-            get
-            {
-                return this.m_SendInterval;
-            }
+            get => 
+                this.m_SendInterval;
             set
             {
                 this.m_SendInterval = value;
@@ -459,10 +433,8 @@
         /// </summary>
         public NetworkTransform.AxisSyncMode syncRotationAxis
         {
-            get
-            {
-                return this.m_SyncRotationAxis;
-            }
+            get => 
+                this.m_SyncRotationAxis;
             set
             {
                 this.m_SyncRotationAxis = value;
@@ -474,10 +446,8 @@
         /// </summary>
         public Transform target
         {
-            get
-            {
-                return this.m_Target;
-            }
+            get => 
+                this.m_Target;
             set
             {
                 this.m_Target = value;
@@ -488,24 +458,14 @@
         /// <summary>
         /// <para>The target position interpolating towards.</para>
         /// </summary>
-        public Vector3 targetSyncPosition
-        {
-            get
-            {
-                return this.m_TargetSyncPosition;
-            }
-        }
+        public Vector3 targetSyncPosition =>
+            this.m_TargetSyncPosition;
 
         /// <summary>
         /// <para>The target rotation interpolating towards.</para>
         /// </summary>
-        public Quaternion targetSyncRotation3D
-        {
-            get
-            {
-                return this.m_TargetSyncRotation3D;
-            }
-        }
+        public Quaternion targetSyncRotation3D =>
+            this.m_TargetSyncRotation3D;
     }
 }
 

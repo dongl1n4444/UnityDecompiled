@@ -36,14 +36,14 @@
             }
             if ((type is TypeSpecification) || (type is GenericParameter))
             {
-                throw new InvalidOperationException(string.Format("Cannot retrieve GUID for {0}", type.FullName));
+                throw new InvalidOperationException($"Cannot retrieve GUID for {type.FullName}");
             }
             TypeDefinition definition = type.Resolve();
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<CustomAttribute, bool>(null, (IntPtr) <GuidFor>m__0);
             }
-            CustomAttribute attribute = Enumerable.SingleOrDefault<CustomAttribute>(definition.CustomAttributes, <>f__am$cache0);
+            CustomAttribute attribute = definition.CustomAttributes.SingleOrDefault<CustomAttribute>(<>f__am$cache0);
             if (attribute != null)
             {
                 CustomAttributeArgument argument = attribute.ConstructorArguments[0];
@@ -53,10 +53,10 @@
             {
                 <>f__am$cache1 = new Func<CustomAttribute, bool>(null, (IntPtr) <GuidFor>m__1);
             }
-            attribute = Enumerable.SingleOrDefault<CustomAttribute>(definition.CustomAttributes, <>f__am$cache1);
+            attribute = definition.CustomAttributes.SingleOrDefault<CustomAttribute>(<>f__am$cache1);
             if (attribute == null)
             {
-                throw new InvalidOperationException(string.Format("'{0}' doesn't have a GUID.", type.FullName));
+                throw new InvalidOperationException($"'{type.FullName}' doesn't have a GUID.");
             }
             CustomAttributeArgument argument2 = attribute.ConstructorArguments[0];
             CustomAttributeArgument argument3 = attribute.ConstructorArguments[1];
@@ -125,22 +125,22 @@
             TypeDefinition definition = WindowsRuntimeProjections.ProjectToWindowsRuntime(type.Resolve()).Resolve();
             if (((type.MetadataType != MetadataType.Class) && (type.MetadataType != MetadataType.ValueType)) && (type.MetadataType != MetadataType.GenericInstance))
             {
-                throw new InvalidOperationException(string.Format("Cannot compute type identifier for {0}, as its metadata type is not supported: {1}.", type.FullName, type.MetadataType));
+                throw new InvalidOperationException($"Cannot compute type identifier for {type.FullName}, as its metadata type is not supported: {type.MetadataType}.");
             }
             if (!definition.IsWindowsRuntime)
             {
-                throw new InvalidOperationException(string.Format("Cannot compute type identifier for {0}, as it is not a Windows Runtime type.", type.FullName));
+                throw new InvalidOperationException($"Cannot compute type identifier for {type.FullName}, as it is not a Windows Runtime type.");
             }
             GenericInstanceType type3 = type as GenericInstanceType;
             if (type3 != null)
             {
-                return string.Format("pinterface({{{0}}};{1})", Extensions.GetGuid(definition).ToString(), IdentifierFor(type3.GenericArguments));
+                return $"pinterface({{{definition.GetGuid().ToString()}}};{IdentifierFor(type3.GenericArguments)})";
             }
             if (definition.MetadataType == MetadataType.ValueType)
             {
-                if (Extensions.IsEnum(definition))
+                if (definition.IsEnum())
                 {
-                    return string.Format("enum({0};{1})", definition.FullName, IdentifierFor(Extensions.GetUnderlyingEnumType(definition)));
+                    return $"enum({definition.FullName};{IdentifierFor(definition.GetUnderlyingEnumType())})";
                 }
                 if (<>f__am$cache3 == null)
                 {
@@ -150,24 +150,24 @@
                 {
                     <>f__am$cache4 = new Func<FieldDefinition, TypeReference>(null, (IntPtr) <IdentifierFor>m__4);
                 }
-                IEnumerable<TypeReference> nameElements = Enumerable.Select<FieldDefinition, TypeReference>(Enumerable.Where<FieldDefinition>(definition.Fields, <>f__am$cache3), <>f__am$cache4);
-                return string.Format("struct({0};{1})", definition.FullName, IdentifierFor(nameElements));
+                IEnumerable<TypeReference> nameElements = definition.Fields.Where<FieldDefinition>(<>f__am$cache3).Select<FieldDefinition, TypeReference>(<>f__am$cache4);
+                return $"struct({definition.FullName};{IdentifierFor(nameElements)})";
             }
             if (definition.IsInterface)
             {
-                return string.Format("{{{0}}}", Extensions.GetGuid(definition).ToString());
+                return $"{{{definition.GetGuid().ToString()}}}";
             }
-            if (Extensions.IsDelegate(definition))
+            if (definition.IsDelegate())
             {
-                return string.Format("delegate({{{0}}})", Extensions.GetGuid(definition).ToString());
+                return $"delegate({{{definition.GetGuid().ToString()}}})";
             }
-            TypeReference reference = Extensions.ExtractDefaultInterface(definition);
+            TypeReference reference = definition.ExtractDefaultInterface();
             GenericInstanceType type4 = reference as GenericInstanceType;
             if (type4 != null)
             {
-                return string.Format("rc({0};{1})", definition.FullName, IdentifierFor(type4));
+                return $"rc({definition.FullName};{IdentifierFor(type4)})";
             }
-            return string.Format("rc({0};{{{1}}})", definition.FullName, Extensions.GetGuid(reference).ToString());
+            return $"rc({definition.FullName};{{{reference.GetGuid().ToString()}}})";
         }
 
         public static string IdentifierFor(IEnumerable<TypeReference> nameElements)
@@ -176,7 +176,7 @@
             {
                 <>f__am$cache2 = new Func<TypeReference, string>(null, (IntPtr) <IdentifierFor>m__2);
             }
-            return EnumerableExtensions.AggregateWith(Enumerable.Select<TypeReference, string>(nameElements, <>f__am$cache2), ";");
+            return nameElements.Select<TypeReference, string>(<>f__am$cache2).AggregateWith(";");
         }
 
         private static Guid ParameterizedGuidFromTypeIdentifier(string typeIdentifier)
@@ -192,7 +192,7 @@
             int a = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(buffer, 0));
             short b = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 4));
             short c = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(buffer, 6));
-            byte[] d = Enumerable.ToArray<byte>(Enumerable.Take<byte>(Enumerable.Skip<byte>(buffer, 8), 8));
+            byte[] d = buffer.Skip<byte>(8).Take<byte>(8).ToArray<byte>();
             c = (short) (c & 0xfff);
             c = (short) (c | 0x5000);
             d[0] = (byte) (d[0] & 0x3f);

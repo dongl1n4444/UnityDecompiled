@@ -27,10 +27,8 @@
         private bool m_ShowLayerCollisionMatrix = true;
         private static bool s_ShowGizmoSettings;
 
-        private static bool GetValue(int layerA, int layerB)
-        {
-            return !Physics2D.GetIgnoreLayerCollision(layerA, layerB);
-        }
+        private static bool GetValue(int layerA, int layerB) => 
+            !Physics2D.GetIgnoreLayerCollision(layerA, layerB);
 
         public void OnDisable()
         {

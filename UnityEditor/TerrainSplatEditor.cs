@@ -70,20 +70,14 @@
             this.m_Smoothness = prototype.smoothness;
         }
 
-        private static bool IsUsingMetallic(Terrain.MaterialType materialType, Material materialTemplate)
-        {
-            return ((materialType == Terrain.MaterialType.BuiltInStandard) || (((materialType == Terrain.MaterialType.Custom) && (materialTemplate != null)) && materialTemplate.HasProperty("_Metallic0")));
-        }
+        private static bool IsUsingMetallic(Terrain.MaterialType materialType, Material materialTemplate) => 
+            ((materialType == Terrain.MaterialType.BuiltInStandard) || (((materialType == Terrain.MaterialType.Custom) && (materialTemplate != null)) && materialTemplate.HasProperty("_Metallic0")));
 
-        private static bool IsUsingSmoothness(Terrain.MaterialType materialType, Material materialTemplate)
-        {
-            return ((materialType == Terrain.MaterialType.BuiltInStandard) || (((materialType == Terrain.MaterialType.Custom) && (materialTemplate != null)) && materialTemplate.HasProperty("_Smoothness0")));
-        }
+        private static bool IsUsingSmoothness(Terrain.MaterialType materialType, Material materialTemplate) => 
+            ((materialType == Terrain.MaterialType.BuiltInStandard) || (((materialType == Terrain.MaterialType.Custom) && (materialTemplate != null)) && materialTemplate.HasProperty("_Smoothness0")));
 
-        private static bool IsUsingSpecular(Terrain.MaterialType materialType, Material materialTemplate)
-        {
-            return ((materialType == Terrain.MaterialType.BuiltInStandard) || (((materialType == Terrain.MaterialType.Custom) && (materialTemplate != null)) && materialTemplate.HasProperty("_Specular0")));
-        }
+        private static bool IsUsingSpecular(Terrain.MaterialType materialType, Material materialTemplate) => 
+            ((materialType == Terrain.MaterialType.BuiltInStandard) || (((materialType == Terrain.MaterialType.Custom) && (materialTemplate != null)) && materialTemplate.HasProperty("_Specular0")));
 
         private void OnGUI()
         {

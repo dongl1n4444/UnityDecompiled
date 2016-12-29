@@ -24,10 +24,8 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern bool ContainsParameterGUID(GUID guid);
-        public bool DisallowsBypass()
-        {
-            return (((this.IsSend() || this.IsReceive()) || this.IsDuckVolume()) || this.IsAttenuation());
-        }
+        public bool DisallowsBypass() => 
+            (((this.IsSend() || this.IsReceive()) || this.IsDuckVolume()) || this.IsAttenuation());
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern float GetCPUUsage(AudioMixerController controller);
@@ -48,10 +46,8 @@
         public extern GUID GetGUIDForMixLevel();
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern GUID GetGUIDForParameter(string parameterName);
-        public string GetSendTargetDisplayString(Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap)
-        {
-            return ((this.sendTarget == null) ? string.Empty : this.sendTarget.GetDisplayString(effectMap));
-        }
+        public string GetSendTargetDisplayString(Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap) => 
+            ((this.sendTarget == null) ? string.Empty : this.sendTarget.GetDisplayString(effectMap));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern float GetValueForMixLevel(AudioMixerController controller, AudioMixerSnapshotController snapshot);
@@ -59,25 +55,17 @@
         public extern float GetValueForParameter(AudioMixerController controller, AudioMixerSnapshotController snapshot, string parameterName);
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_CreateAudioMixerEffectController(AudioMixerEffectController mono, string name);
-        public bool IsAttenuation()
-        {
-            return (this.effectName == "Attenuation");
-        }
+        public bool IsAttenuation() => 
+            (this.effectName == "Attenuation");
 
-        public bool IsDuckVolume()
-        {
-            return (this.effectName == "Duck Volume");
-        }
+        public bool IsDuckVolume() => 
+            (this.effectName == "Duck Volume");
 
-        public bool IsReceive()
-        {
-            return (this.effectName == "Receive");
-        }
+        public bool IsReceive() => 
+            (this.effectName == "Receive");
 
-        public bool IsSend()
-        {
-            return (this.effectName == "Send");
-        }
+        public bool IsSend() => 
+            (this.effectName == "Send");
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern void PreallocateGUIDs();

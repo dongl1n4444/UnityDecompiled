@@ -181,10 +181,8 @@
         /// </summary>
         public uint AckDelay
         {
-            get
-            {
-                return this.m_AckDelay;
-            }
+            get => 
+                this.m_AckDelay;
             set
             {
                 this.m_AckDelay = value;
@@ -196,10 +194,8 @@
         /// </summary>
         public uint AllCostTimeout
         {
-            get
-            {
-                return this.m_AllCostTimeout;
-            }
+            get => 
+                this.m_AllCostTimeout;
             set
             {
                 this.m_AllCostTimeout = value;
@@ -209,34 +205,22 @@
         /// <summary>
         /// <para>Return amount of channels for current configuration.</para>
         /// </summary>
-        public int ChannelCount
-        {
-            get
-            {
-                return this.m_Channels.Count;
-            }
-        }
+        public int ChannelCount =>
+            this.m_Channels.Count;
 
         /// <summary>
         /// <para>Allow access to channels list.</para>
         /// </summary>
-        public List<ChannelQOS> Channels
-        {
-            get
-            {
-                return this.m_Channels;
-            }
-        }
+        public List<ChannelQOS> Channels =>
+            this.m_Channels;
 
         /// <summary>
         /// <para>Timeout in ms which library will wait before it will send another connection request.</para>
         /// </summary>
         public uint ConnectTimeout
         {
-            get
-            {
-                return this.m_ConnectTimeout;
-            }
+            get => 
+                this.m_ConnectTimeout;
             set
             {
                 this.m_ConnectTimeout = value;
@@ -248,10 +232,8 @@
         /// </summary>
         public uint DisconnectTimeout
         {
-            get
-            {
-                return this.m_DisconnectTimeout;
-            }
+            get => 
+                this.m_DisconnectTimeout;
             set
             {
                 this.m_DisconnectTimeout = value;
@@ -263,10 +245,8 @@
         /// </summary>
         public ushort FragmentSize
         {
-            get
-            {
-                return this.m_FragmentSize;
-            }
+            get => 
+                this.m_FragmentSize;
             set
             {
                 this.m_FragmentSize = value;
@@ -278,10 +258,8 @@
         /// </summary>
         public bool IsAcksLong
         {
-            get
-            {
-                return this.m_IsAcksLong;
-            }
+            get => 
+                this.m_IsAcksLong;
             set
             {
                 this.m_IsAcksLong = value;
@@ -293,10 +271,8 @@
         /// </summary>
         public ushort MaxCombinedReliableMessageCount
         {
-            get
-            {
-                return this.m_MaxCombinedReliableMessageCount;
-            }
+            get => 
+                this.m_MaxCombinedReliableMessageCount;
             set
             {
                 this.m_MaxCombinedReliableMessageCount = value;
@@ -308,10 +284,8 @@
         /// </summary>
         public ushort MaxCombinedReliableMessageSize
         {
-            get
-            {
-                return this.m_MaxCombinedReliableMessageSize;
-            }
+            get => 
+                this.m_MaxCombinedReliableMessageSize;
             set
             {
                 this.m_MaxCombinedReliableMessageSize = value;
@@ -323,10 +297,8 @@
         /// </summary>
         public byte MaxConnectionAttempt
         {
-            get
-            {
-                return this.m_MaxConnectionAttempt;
-            }
+            get => 
+                this.m_MaxConnectionAttempt;
             set
             {
                 this.m_MaxConnectionAttempt = value;
@@ -338,10 +310,8 @@
         /// </summary>
         public ushort MaxSentMessageQueueSize
         {
-            get
-            {
-                return this.m_MaxSentMessageQueueSize;
-            }
+            get => 
+                this.m_MaxSentMessageQueueSize;
             set
             {
                 this.m_MaxSentMessageQueueSize = value;
@@ -353,10 +323,8 @@
         /// </summary>
         public uint MinUpdateTimeout
         {
-            get
-            {
-                return this.m_MinUpdateTimeout;
-            }
+            get => 
+                this.m_MinUpdateTimeout;
             set
             {
                 if (value == 0)
@@ -372,10 +340,8 @@
         /// </summary>
         public byte NetworkDropThreshold
         {
-            get
-            {
-                return this.m_NetworkDropThreshold;
-            }
+            get => 
+                this.m_NetworkDropThreshold;
             set
             {
                 this.m_NetworkDropThreshold = value;
@@ -387,10 +353,8 @@
         /// </summary>
         public byte OverflowDropThreshold
         {
-            get
-            {
-                return this.m_OverflowDropThreshold;
-            }
+            get => 
+                this.m_OverflowDropThreshold;
             set
             {
                 this.m_OverflowDropThreshold = value;
@@ -402,10 +366,8 @@
         /// </summary>
         public ushort PacketSize
         {
-            get
-            {
-                return this.m_PacketSize;
-            }
+            get => 
+                this.m_PacketSize;
             set
             {
                 this.m_PacketSize = value;
@@ -417,10 +379,8 @@
         /// </summary>
         public uint PingTimeout
         {
-            get
-            {
-                return this.m_PingTimeout;
-            }
+            get => 
+                this.m_PingTimeout;
             set
             {
                 this.m_PingTimeout = value;
@@ -432,10 +392,8 @@
         /// </summary>
         public uint ReducedPingTimeout
         {
-            get
-            {
-                return this.m_ReducedPingTimeout;
-            }
+            get => 
+                this.m_ReducedPingTimeout;
             set
             {
                 this.m_ReducedPingTimeout = value;
@@ -447,10 +405,8 @@
         /// </summary>
         public uint ResendTimeout
         {
-            get
-            {
-                return this.m_ResendTimeout;
-            }
+            get => 
+                this.m_ResendTimeout;
             set
             {
                 this.m_ResendTimeout = value;
@@ -462,10 +418,8 @@
         /// </summary>
         public bool UsePlatformSpecificProtocols
         {
-            get
-            {
-                return this.m_UsePlatformSpecificProtocols;
-            }
+            get => 
+                this.m_UsePlatformSpecificProtocols;
             set
             {
                 if ((value && (Application.platform != RuntimePlatform.PS4)) && (Application.platform != RuntimePlatform.PSP2))
@@ -481,10 +435,8 @@
         /// </summary>
         public ushort WebSocketReceiveBufferMaxSize
         {
-            get
-            {
-                return this.m_WebSocketReceiveBufferMaxSize;
-            }
+            get => 
+                this.m_WebSocketReceiveBufferMaxSize;
             set
             {
                 this.m_WebSocketReceiveBufferMaxSize = value;

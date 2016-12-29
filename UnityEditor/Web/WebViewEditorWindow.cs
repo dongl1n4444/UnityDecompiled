@@ -338,10 +338,8 @@
 
         public string initialOpenUrl
         {
-            get
-            {
-                return this.m_InitialOpenURL;
-            }
+            get => 
+                this.m_InitialOpenURL;
             set
             {
                 this.m_InitialOpenURL = value;

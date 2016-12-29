@@ -5,104 +5,55 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class TypeExtensions
     {
-        [Extension]
-        public static bool ContainsGenericParametersPortable(Type type)
-        {
-            return type.ContainsGenericParameters;
-        }
+        public static bool ContainsGenericParametersPortable(this Type type) => 
+            type.ContainsGenericParameters;
 
-        [Extension]
-        public static Assembly GetAssemblyPortable(Type type)
-        {
-            return type.Assembly;
-        }
+        public static Assembly GetAssemblyPortable(this Type type) => 
+            type.Assembly;
 
-        [Extension]
-        public static Type GetBaseTypePortable(Type type)
-        {
-            return type.BaseType;
-        }
+        public static Type GetBaseTypePortable(this Type type) => 
+            type.BaseType;
 
-        [Extension]
-        public static IEnumerable<object> GetCustomAttributesPortable(Type type, Type attributeType, bool inherit)
-        {
-            return type.GetCustomAttributes(attributeType, inherit);
-        }
+        public static IEnumerable<object> GetCustomAttributesPortable(this Type type, Type attributeType, bool inherit) => 
+            type.GetCustomAttributes(attributeType, inherit);
 
-        [Extension]
-        public static Type GetGenericTypeDefinitionPortable(Type type)
-        {
-            return type.GetGenericTypeDefinition();
-        }
+        public static Type GetGenericTypeDefinitionPortable(this Type type) => 
+            type.GetGenericTypeDefinition();
 
-        [Extension]
-        public static MethodInfo GetMethodPortable(Type type, string name, BindingFlags flags, Type[] parameters)
-        {
-            return type.GetMethod(name, flags, null, parameters, new ParameterModifier[0]);
-        }
+        public static MethodInfo GetMethodPortable(this Type type, string name, BindingFlags flags, Type[] parameters) => 
+            type.GetMethod(name, flags, null, parameters, new ParameterModifier[0]);
 
-        [Extension]
-        public static Module GetModulePortable(Type type)
-        {
-            return type.Module;
-        }
+        public static Module GetModulePortable(this Type type) => 
+            type.Module;
 
-        [Extension]
-        public static Type GetNestedTypePortable(Type type, string name)
-        {
-            return type.GetNestedType(name);
-        }
+        public static Type GetNestedTypePortable(this Type type, string name) => 
+            type.GetNestedType(name);
 
-        [Extension]
-        public static Type[] GetNestedTypesPortable(Type type)
-        {
-            return type.GetNestedTypes();
-        }
+        public static Type[] GetNestedTypesPortable(this Type type) => 
+            type.GetNestedTypes();
 
-        [Extension]
-        public static Type GetTypePortable(Exception type)
-        {
-            return type.GetType();
-        }
+        public static Type GetTypePortable(this Exception type) => 
+            type.GetType();
 
-        [Extension]
-        public static bool IsAbstractPortable(Type type)
-        {
-            return type.IsAbstract;
-        }
+        public static bool IsAbstractPortable(this Type type) => 
+            type.IsAbstract;
 
-        [Extension]
-        public static bool IsEnumPortable(Type type)
-        {
-            return type.IsEnum;
-        }
+        public static bool IsEnumPortable(this Type type) => 
+            type.IsEnum;
 
-        [Extension]
-        public static bool IsGenericTypeDefinitionPortable(Type type)
-        {
-            return type.IsGenericTypeDefinition;
-        }
+        public static bool IsGenericTypeDefinitionPortable(this Type type) => 
+            type.IsGenericTypeDefinition;
 
-        [Extension]
-        public static bool IsGenericTypePortable(Type type)
-        {
-            return type.IsGenericType;
-        }
+        public static bool IsGenericTypePortable(this Type type) => 
+            type.IsGenericType;
 
-        [Extension]
-        public static bool IsInterfacePortable(Type type)
-        {
-            return type.IsInterface;
-        }
+        public static bool IsInterfacePortable(this Type type) => 
+            type.IsInterface;
 
-        [Extension]
-        public static bool IsSubclassOfPortable(Type type, Type c)
-        {
-            return type.IsSubclassOf(c);
-        }
+        public static bool IsSubclassOfPortable(this Type type, Type c) => 
+            type.IsSubclassOf(c);
     }
 }
 

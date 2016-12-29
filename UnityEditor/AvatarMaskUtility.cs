@@ -122,10 +122,8 @@
         {
             internal string path;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.path == s);
-            }
+            internal bool <>m__0(string s) => 
+                (this.path == s);
         }
 
         [CompilerGenerated]
@@ -140,10 +138,8 @@
             internal AvatarMaskUtility.<TokeniseHumanTransformsPath>c__AnonStorey5 <>f__ref$5;
             internal int i;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.<>f__ref$5.humanTransforms[this.i] == FileUtil.GetLastPathNameComponent(s));
-            }
+            internal bool <>m__0(string s) => 
+                (this.<>f__ref$5.humanTransforms[this.i] == FileUtil.GetLastPathNameComponent(s));
         }
 
         [CompilerGenerated]
@@ -151,10 +147,8 @@
         {
             internal string path;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.path == s);
-            }
+            internal bool <>m__0(string s) => 
+                (this.path == s);
         }
 
         [CompilerGenerated]
@@ -169,10 +163,8 @@
             internal AvatarMaskUtility.<UpdateTransformMask>c__AnonStorey0 <>f__ref$0;
             internal int i;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.<>f__ref$0.refTransformsPath[this.i] == s);
-            }
+            internal bool <>m__0(string s) => 
+                (this.<>f__ref$0.refTransformsPath[this.i] == s);
         }
 
         [CompilerGenerated]
@@ -187,10 +179,8 @@
             internal AvatarMaskUtility.<UpdateTransformMask>c__AnonStorey2 <>f__ref$2;
             internal int i;
 
-            internal bool <>m__0(string s)
-            {
-                return (this.<>f__ref$2.refTransformsPath[this.i] == s);
-            }
+            internal bool <>m__0(string s) => 
+                (this.<>f__ref$2.refTransformsPath[this.i] == s);
         }
     }
 }

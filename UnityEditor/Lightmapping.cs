@@ -32,19 +32,15 @@
         /// <para>Starts a synchronous bake job, but only bakes light probes.</para>
         /// </summary>
         [Obsolete("BakeLightProbesOnly has been deprecated. Use Bake instead (UnityUpgradable) -> Bake()", true)]
-        public static bool BakeLightProbesOnly()
-        {
-            return false;
-        }
+        public static bool BakeLightProbesOnly() => 
+            false;
 
         /// <summary>
         /// <para>Starts an asynchronous bake job, but only bakes light probes.</para>
         /// </summary>
         [Obsolete("BakeLightProbesOnlyAsync has been deprecated. Use BakeAsync instead (UnityUpgradable) -> BakeAsync()", true)]
-        public static bool BakeLightProbesOnlyAsync()
-        {
-            return false;
-        }
+        public static bool BakeLightProbesOnlyAsync() => 
+            false;
 
         /// <summary>
         /// <para>Bakes an array of scenes.</para>
@@ -95,19 +91,15 @@
         /// <para>Starts a synchronous bake job for the selected objects.</para>
         /// </summary>
         [Obsolete("BakeSelected has been deprecated. Use Bake instead (UnityUpgradable) -> Bake()", true)]
-        public static bool BakeSelected()
-        {
-            return false;
-        }
+        public static bool BakeSelected() => 
+            false;
 
         /// <summary>
         /// <para>Starts an asynchronous bake job for the selected objects.</para>
         /// </summary>
         [Obsolete("BakeSelectedAsync has been deprecated. Use BakeAsync instead (UnityUpgradable) -> BakeAsync()", true)]
-        public static bool BakeSelectedAsync()
-        {
-            return false;
-        }
+        public static bool BakeSelectedAsync() => 
+            false;
 
         /// <summary>
         /// <para>Cancels the currently running asynchronous bake job.</para>
@@ -198,10 +190,8 @@
         [Obsolete("lightmapSnapshot has been deprecated. Use lightingDataAsset instead (UnityUpgradable) -> lightingDataAsset", true)]
         public static LightmapSnapshot lightmapSnapshot
         {
-            get
-            {
-                return null;
-            }
+            get => 
+                null;
             set
             {
             }

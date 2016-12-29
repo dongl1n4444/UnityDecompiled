@@ -44,7 +44,7 @@
             int index = -1;
             float[] destinationArray = new float[normalizedCascadePartitions.Length + 1];
             Array.Copy(normalizedCascadePartitions, destinationArray, normalizedCascadePartitions.Length);
-            destinationArray[destinationArray.Length - 1] = 1f - Enumerable.Sum(normalizedCascadePartitions);
+            destinationArray[destinationArray.Length - 1] = 1f - normalizedCascadePartitions.Sum();
             int controlID = GUIUtility.GetControlID(s_CascadeSliderId, FocusType.Passive);
             Event current = Event.current;
             int activePartition = -1;
@@ -59,7 +59,8 @@
                 x += width;
                 GUI.color = Color.white;
                 Rect rect3 = rect2;
-                string t = string.Format("{0}\n{1:F1}%", i, num8 * 100f);
+                string t = $"{i}
+{num8 * 100f:F1}%";
                 GUI.Label(rect3, GUIContent.Temp(t, t), s_TextCenteredStyle);
                 if (i == (destinationArray.Length - 1))
                 {

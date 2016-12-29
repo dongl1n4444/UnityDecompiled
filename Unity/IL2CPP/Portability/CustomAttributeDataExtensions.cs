@@ -4,14 +4,10 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     public static class CustomAttributeDataExtensions
     {
-        [Extension]
-        public static ConstructorInfo GetConstructorInfoPortable(CustomAttributeData target)
-        {
-            return target.Constructor;
-        }
+        public static ConstructorInfo GetConstructorInfoPortable(this CustomAttributeData target) => 
+            target.Constructor;
     }
 }
 

@@ -86,10 +86,8 @@
         /// </summary>
         /// <param name="GUID"></param>
         /// <param name="password"></param>
-        public static NetworkConnectionError Connect(string GUID, [DefaultValue("\"\"")] string password)
-        {
-            return Internal_ConnectToGuid(GUID, password);
-        }
+        public static NetworkConnectionError Connect(string GUID, [DefaultValue("\"\"")] string password) => 
+            Internal_ConnectToGuid(GUID, password);
 
         /// <summary>
         /// <para>Connect to the host represented by a HostData structure returned by the Master Server.</para>
@@ -115,10 +113,8 @@
         /// <param name="IP"></param>
         /// <param name="remotePort"></param>
         /// <param name="password"></param>
-        public static NetworkConnectionError Connect(string IP, int remotePort, [DefaultValue("\"\"")] string password)
-        {
-            return Internal_ConnectToSingleIP(IP, remotePort, 0, password);
-        }
+        public static NetworkConnectionError Connect(string IP, int remotePort, [DefaultValue("\"\"")] string password) => 
+            Internal_ConnectToSingleIP(IP, remotePort, 0, password);
 
         /// <summary>
         /// <para>This function is exactly like Network.Connect but can accept an array of IP addresses.</para>
@@ -126,10 +122,8 @@
         /// <param name="IPs"></param>
         /// <param name="remotePort"></param>
         /// <param name="password"></param>
-        public static NetworkConnectionError Connect(string[] IPs, int remotePort, [DefaultValue("\"\"")] string password)
-        {
-            return Internal_ConnectToIPs(IPs, remotePort, 0, password);
-        }
+        public static NetworkConnectionError Connect(string[] IPs, int remotePort, [DefaultValue("\"\"")] string password) => 
+            Internal_ConnectToIPs(IPs, remotePort, 0, password);
 
         /// <summary>
         /// <para>Destroy the object across the network.</para>
@@ -186,19 +180,15 @@
         /// <para>The last average ping time to the given player in milliseconds.</para>
         /// </summary>
         /// <param name="player"></param>
-        public static int GetAveragePing(NetworkPlayer player)
-        {
-            return INTERNAL_CALL_GetAveragePing(ref player);
-        }
+        public static int GetAveragePing(NetworkPlayer player) => 
+            INTERNAL_CALL_GetAveragePing(ref player);
 
         /// <summary>
         /// <para>The last ping time to the given player in milliseconds.</para>
         /// </summary>
         /// <param name="player"></param>
-        public static int GetLastPing(NetworkPlayer player)
-        {
-            return INTERNAL_CALL_GetLastPing(ref player);
-        }
+        public static int GetLastPing(NetworkPlayer player) => 
+            INTERNAL_CALL_GetLastPing(ref player);
 
         /// <summary>
         /// <para>Check if this machine has a public IP address.</para>
@@ -217,10 +207,8 @@
         /// <param name="listenPort"></param>
         /// <param name="useNat"></param>
         [Obsolete("Use the IntializeServer(connections, listenPort, useNat) function instead")]
-        public static NetworkConnectionError InitializeServer(int connections, int listenPort)
-        {
-            return Internal_InitializeServerDeprecated(connections, listenPort);
-        }
+        public static NetworkConnectionError InitializeServer(int connections, int listenPort) => 
+            Internal_InitializeServerDeprecated(connections, listenPort);
 
         /// <summary>
         /// <para>Initialize the server.</para>
@@ -238,10 +226,8 @@
         /// <param name="rotation"></param>
         /// <param name="group"></param>
         [TypeInferenceRule(TypeInferenceRules.TypeOfFirstArgument)]
-        public static UnityEngine.Object Instantiate(UnityEngine.Object prefab, Vector3 position, Quaternion rotation, int group)
-        {
-            return INTERNAL_CALL_Instantiate(prefab, ref position, ref rotation, group);
-        }
+        public static UnityEngine.Object Instantiate(UnityEngine.Object prefab, Vector3 position, Quaternion rotation, int group) => 
+            INTERNAL_CALL_Instantiate(prefab, ref position, ref rotation, group);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void Internal_AllocateViewID(out NetworkViewID viewID);

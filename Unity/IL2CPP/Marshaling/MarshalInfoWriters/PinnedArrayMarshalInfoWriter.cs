@@ -14,7 +14,7 @@
         {
         }
 
-        public override void WriteMarshalCleanupEmptyVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupEmptyVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             object[] args = new object[] { variableName };
             writer.WriteLine("il2cpp_codegen_marshal_free({0});", args);
@@ -30,7 +30,7 @@
             writer.WriteLine("{0} = {1};", objArray2);
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
         }
 
@@ -66,7 +66,7 @@
 
         public override string WriteMarshalReturnValueToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, IRuntimeMetadataAccess metadataAccess)
         {
-            string variableName = string.Format("_{0}_marshaled", sourceVariable.GetNiceName());
+            string variableName = $"_{sourceVariable.GetNiceName()}_marshaled";
             this.WriteNativeVariableDeclarationOfType(writer, variableName);
             object[] args = new object[] { sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.Null };
             writer.WriteLine("if ({0} != {1})", args);
@@ -118,10 +118,8 @@
             internal ManagedMarshalValue destinationVariable;
             internal string variableName;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.$this.WriteArraySizeFromManagedArray(bodyWriter, this.destinationVariable, this.variableName);
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.$this.WriteArraySizeFromManagedArray(bodyWriter, this.destinationVariable, this.variableName);
         }
 
         [CompilerGenerated]
@@ -131,10 +129,8 @@
             internal string destinationVariable;
             internal ManagedMarshalValue sourceVariable;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.$this.WriteArraySizeFromManagedArray(bodyWriter, this.sourceVariable, this.destinationVariable);
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.$this.WriteArraySizeFromManagedArray(bodyWriter, this.sourceVariable, this.destinationVariable);
         }
 
         [CompilerGenerated]
@@ -142,10 +138,8 @@
         {
             internal string arraySizeVariable;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.arraySizeVariable;
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.arraySizeVariable;
         }
 
         [CompilerGenerated]
@@ -153,10 +147,8 @@
         {
             internal string arraySize;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.arraySize;
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.arraySize;
         }
     }
 }

@@ -19,10 +19,8 @@
             return str;
         }
 
-        public static bool Copy(Stream source, Stream destination, int chunkSize)
-        {
-            return Copy(source, destination, chunkSize, 0L, null, 0x3e8);
-        }
+        public static bool Copy(Stream source, Stream destination, int chunkSize) => 
+            Copy(source, destination, chunkSize, 0L, null, 0x3e8);
 
         public static bool Copy(Stream source, Stream destination, int chunkSize, long totalSize, Func<long, long, bool> progress, int progressUpdateRate)
         {

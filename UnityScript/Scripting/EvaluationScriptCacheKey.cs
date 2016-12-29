@@ -23,10 +23,8 @@
             return ((key != null) ? (key._code == this._code) : false);
         }
 
-        public override int GetHashCode()
-        {
-            return (this._contextType.GetHashCode() ^ this._code.GetHashCode());
-        }
+        public override int GetHashCode() => 
+            (this._contextType.GetHashCode() ^ this._code.GetHashCode());
     }
 }
 

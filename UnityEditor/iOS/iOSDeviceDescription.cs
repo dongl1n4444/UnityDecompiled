@@ -22,10 +22,8 @@
             this.model = model;
         }
 
-        public bool IsValid()
-        {
-            return ((this.type != null) && (this.model != null));
-        }
+        public bool IsValid() => 
+            ((this.type != null) && (this.model != null));
     }
 }
 

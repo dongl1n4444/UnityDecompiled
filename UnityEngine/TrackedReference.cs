@@ -30,25 +30,17 @@
             return (x.m_Ptr == y.m_Ptr);
         }
 
-        public static bool operator !=(TrackedReference x, TrackedReference y)
-        {
-            return !(x == y);
-        }
+        public static bool operator !=(TrackedReference x, TrackedReference y) => 
+            !(x == y);
 
-        public override bool Equals(object o)
-        {
-            return ((o as TrackedReference) == this);
-        }
+        public override bool Equals(object o) => 
+            ((o as TrackedReference) == this);
 
-        public override int GetHashCode()
-        {
-            return (int) this.m_Ptr;
-        }
+        public override int GetHashCode() => 
+            ((int) this.m_Ptr);
 
-        public static implicit operator bool(TrackedReference exists)
-        {
-            return (exists != null);
-        }
+        public static implicit operator bool(TrackedReference exists) => 
+            (exists != null);
     }
 }
 

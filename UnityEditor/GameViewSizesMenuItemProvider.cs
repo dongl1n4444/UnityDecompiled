@@ -35,20 +35,14 @@
             return size;
         }
 
-        public int Count()
-        {
-            return this.m_GameViewSizeGroup.GetTotalCount();
-        }
+        public int Count() => 
+            this.m_GameViewSizeGroup.GetTotalCount();
 
-        public object Create()
-        {
-            return new GameViewSize(GameViewSizeType.FixedResolution, 0, 0, "");
-        }
+        public object Create() => 
+            new GameViewSize(GameViewSizeType.FixedResolution, 0, 0, "");
 
-        public object GetItem(int index)
-        {
-            return this.m_GameViewSizeGroup.GetGameViewSize(index);
-        }
+        public object GetItem(int index) => 
+            this.m_GameViewSizeGroup.GetGameViewSize(index);
 
         public string GetName(int index)
         {
@@ -60,15 +54,11 @@
             return "";
         }
 
-        public int[] GetSeperatorIndices()
-        {
-            return new int[] { (this.m_GameViewSizeGroup.GetBuiltinCount() - 1) };
-        }
+        public int[] GetSeperatorIndices() => 
+            new int[] { (this.m_GameViewSizeGroup.GetBuiltinCount() - 1) };
 
-        public bool IsModificationAllowed(int index)
-        {
-            return this.m_GameViewSizeGroup.IsCustomSize(index);
-        }
+        public bool IsModificationAllowed(int index) => 
+            this.m_GameViewSizeGroup.IsCustomSize(index);
 
         public void Move(int index, int destIndex, bool insertAfterDestIndex)
         {

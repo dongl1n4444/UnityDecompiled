@@ -597,13 +597,8 @@
             return str;
         }
 
-        public override RectOffset margin
-        {
-            get
-            {
-                return this.m_Margin;
-            }
-        }
+        public override RectOffset margin =>
+            this.m_Margin;
     }
 }
 

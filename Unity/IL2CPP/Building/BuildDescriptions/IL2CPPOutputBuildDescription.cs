@@ -52,10 +52,10 @@
             this._libil2cppCacheDirectory = other._libil2cppCacheDirectory;
         }
 
-        public IL2CPPOutputBuildDescription(NPath sourceDirectory, NPath cacheDirectory, NPath outputFile, DotNetProfile dotnetProfile, CppToolChain cppToolChain, NPath dataFolder, bool forceRebuildMapFileParser, bool libil2cppAsDynamicLibrary, [Optional, DefaultParameterValue(null)] IEnumerable<string> additionalDefines, [Optional, DefaultParameterValue(null)] IEnumerable<NPath> additionalIncludeDirectories, [Optional, DefaultParameterValue(null)] IEnumerable<NPath> staticLibraries, [Optional, DefaultParameterValue(null)] IEnumerable<string> specifiedCompilerFlags, [Optional, DefaultParameterValue(null)] IEnumerable<string> specifiedLinkerFlags, [Optional, DefaultParameterValue(null)] NPath libil2cppCacheDirectory, [Optional, DefaultParameterValue(null)] NPath mapFileParser)
+        public IL2CPPOutputBuildDescription(NPath sourceDirectory, NPath cacheDirectory, NPath outputFile, DotNetProfile dotnetProfile, CppToolChain cppToolChain, NPath dataFolder, bool forceRebuildMapFileParser, bool libil2cppAsDynamicLibrary, IEnumerable<string> additionalDefines = null, IEnumerable<NPath> additionalIncludeDirectories = null, IEnumerable<NPath> staticLibraries = null, IEnumerable<string> specifiedCompilerFlags = null, IEnumerable<string> specifiedLinkerFlags = null, NPath libil2cppCacheDirectory = null, NPath mapFileParser = null)
         {
             this._sourceDirectory = sourceDirectory;
-            this._cacheDirectory = (cacheDirectory == null) ? null : cacheDirectory.EnsureDirectoryExists("");
+            this._cacheDirectory = cacheDirectory?.EnsureDirectoryExists("");
             this._cppToolChain = cppToolChain;
             this.ForceRebuildMapFileParser = forceRebuildMapFileParser;
             if (staticLibraries == null)
@@ -87,58 +87,52 @@
             if (dotnetProfile == DotNetProfile.Net45)
             {
                 string[] second = new string[] { "NET_4_0" };
-                this._additionalDefines = Enumerable.Concat<string>(this._additionalDefines, second);
+                this._additionalDefines = this._additionalDefines.Concat<string>(second);
             }
         }
 
         [DebuggerHidden]
-        public override IEnumerable<string> AdditionalDefinesFor(NPath sourceFile)
-        {
-            return new <AdditionalDefinesFor>c__Iterator1 { 
+        public override IEnumerable<string> AdditionalDefinesFor(NPath sourceFile) => 
+            new <AdditionalDefinesFor>c__Iterator1 { 
                 sourceFile = sourceFile,
                 $this = this,
                 $PC = -2
             };
-        }
 
         public override IEnumerable<NPath> AdditionalIncludePathsFor(NPath sourceFile)
         {
             if (this.IsBoehmFile(sourceFile))
             {
-                return Enumerable.Concat<NPath>(this._additionalIncludeDirectories, this.BoehmIncludeDirs);
+                return this._additionalIncludeDirectories.Concat<NPath>(this.BoehmIncludeDirs);
             }
             if (this.IsLibIL2CPPFile(sourceFile))
             {
-                return Enumerable.Concat<NPath>(this._additionalIncludeDirectories, this.LibIL2CPPIncludeDirs);
+                return this._additionalIncludeDirectories.Concat<NPath>(this.LibIL2CPPIncludeDirs);
             }
-            return Enumerable.Concat<NPath>(this._additionalIncludeDirectories, EnumerableExtensions.Append<NPath>(this.LibIL2CPPIncludeDirs, this._sourceDirectory));
+            return this._additionalIncludeDirectories.Concat<NPath>(this.LibIL2CPPIncludeDirs.Append<NPath>(this._sourceDirectory));
         }
 
         [DebuggerHidden]
-        protected virtual IEnumerable<string> BoehmDefines()
-        {
-            return new <BoehmDefines>c__Iterator3 { $PC = -2 };
-        }
+        protected virtual IEnumerable<string> BoehmDefines() => 
+            new <BoehmDefines>c__Iterator3 { $PC = -2 };
 
         private NPath BuildMapFileParser()
         {
             using (TinyProfiler.Section("BuildMapFileParser", ""))
             {
-                NPath cacheDirectory = (this._cacheDirectory == null) ? null : this._cacheDirectory.Combine(new string[] { "MapFileParserCache" }).EnsureDirectoryExists("");
+                NPath cacheDirectory = this._cacheDirectory?.Combine(new string[] { "MapFileParserCache" }).EnsureDirectoryExists("");
                 return CppProgramBuilder.Create(RuntimePlatform.Current, new MapFileParserBuildDescription(cacheDirectory), false, Unity.IL2CPP.Building.Architecture.BestThisMachineCanRun, BuildConfiguration.Release, this.ForceRebuildMapFileParser, false).Build();
             }
         }
 
-        private CppCompilationInstruction CppCompilationInstructionFor(NPath sourceFile, NPath cacheDirectory)
-        {
-            return new CppCompilationInstruction { 
+        private CppCompilationInstruction CppCompilationInstructionFor(NPath sourceFile, NPath cacheDirectory) => 
+            new CppCompilationInstruction { 
                 SourceFile = sourceFile,
                 Defines = this.AdditionalDefinesFor(sourceFile),
                 IncludePaths = this.AdditionalIncludePathsFor(sourceFile),
                 CompilerFlags = this.AdditionalCompilerFlags,
                 CacheDirectory = cacheDirectory
             };
-        }
 
         public override void FinalizeBuild(CppToolChain toolChain)
         {
@@ -157,21 +151,17 @@
             }
         }
 
-        protected virtual bool IsBoehmFile(NPath sourceFile)
-        {
-            return sourceFile.IsChildOf(BoehmDir);
-        }
+        protected virtual bool IsBoehmFile(NPath sourceFile) => 
+            sourceFile.IsChildOf(BoehmDir);
 
-        protected virtual bool IsLibIL2CPPFile(NPath sourceFile)
-        {
-            return sourceFile.IsChildOf(LibIL2CPPDir);
-        }
+        protected virtual bool IsLibIL2CPPFile(NPath sourceFile) => 
+            sourceFile.IsChildOf(LibIL2CPPDir);
 
         protected virtual IEnumerable<CppCompilationInstruction> LibIL2CPPCompileInstructions()
         {
             NPath[] foldersToGlob = new NPath[] { LibIL2CPPDir };
             string[] append = new string[] { "extra/gc.c" };
-            return Enumerable.Select<NPath, CppCompilationInstruction>(EnumerableExtensions.Append<NPath>(SourceFilesIn(foldersToGlob), BoehmDir.Combine(append)), new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<LibIL2CPPCompileInstructions>m__0));
+            return SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<LibIL2CPPCompileInstructions>m__0));
         }
 
         public override void OnBeforeLink(NPath workingDirectory, IEnumerable<NPath> objectFiles, CppToolChainContext toolChainContext, bool forceRebuild, bool verbose)
@@ -188,7 +178,7 @@
             NPath path = outputFile.ChangeExtension("map");
             string[] append = new string[] { "SymbolMap" };
             NPath path2 = this._dataFolder.Combine(append);
-            string str = string.Format("-format={0} \"{1}\" \"{2}\"", toolChain.MapFileParserFormat, path, path2);
+            string str = $"-format={toolChain.MapFileParserFormat} "{path}" "{path2}"";
             Console.WriteLine("Encoding map file using command: {0} {1}", mapFileParser, str);
             using (TinyProfiler.Section("Running MapFileParser", ""))
             {
@@ -206,7 +196,7 @@
             {
                 <>f__am$cache1 = new Func<NPath, bool>(null, (IntPtr) <SourceFilesIn>m__2);
             }
-            return Enumerable.Where<NPath>(Enumerable.SelectMany<NPath, NPath>(foldersToGlob, <>f__am$cache0), <>f__am$cache1);
+            return foldersToGlob.SelectMany<NPath, NPath>(<>f__am$cache0).Where<NPath>(<>f__am$cache1);
         }
 
         public override IEnumerable<string> AdditionalCompilerFlags
@@ -243,13 +233,8 @@
             }
         }
 
-        protected static NPath BoehmDir
-        {
-            get
-            {
-                return ((CommonPaths.Il2CppRoot == null) ? null : CommonPaths.Il2CppRoot.Combine(new string[] { "external/boehmgc" }));
-            }
-        }
+        protected static NPath BoehmDir =>
+            CommonPaths.Il2CppRoot?.Combine(new string[] { "external/boehmgc" });
 
         protected virtual IEnumerable<NPath> BoehmIncludeDirs
         {
@@ -264,45 +249,25 @@
             }
         }
 
-        public override IEnumerable<CppCompilationInstruction> CppCompileInstructions
-        {
-            get
-            {
-                return new <>c__Iterator0 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public override IEnumerable<CppCompilationInstruction> CppCompileInstructions =>
+            new <>c__Iterator0 { 
+                $this=this,
+                $PC=-2
+            };
 
-        public override IEnumerable<NPath> DynamicLibraries
-        {
-            get
-            {
-                return new <>c__Iterator2 { 
-                    $this = this,
-                    $PC = -2
-                };
-            }
-        }
+        public override IEnumerable<NPath> DynamicLibraries =>
+            new <>c__Iterator2 { 
+                $this=this,
+                $PC=-2
+            };
 
         public bool ForceRebuildMapFileParser { get; private set; }
 
-        public override NPath GlobalCacheDirectory
-        {
-            get
-            {
-                return this._cacheDirectory;
-            }
-        }
+        public override NPath GlobalCacheDirectory =>
+            this._cacheDirectory;
 
-        protected static NPath LibIL2CPPDir
-        {
-            get
-            {
-                return ((CommonPaths.Il2CppRoot == null) ? null : CommonPaths.Il2CppRoot.Combine(new string[] { "libil2cpp" }));
-            }
-        }
+        protected static NPath LibIL2CPPDir =>
+            CommonPaths.Il2CppRoot?.Combine(new string[] { "libil2cpp" });
 
         public NPath LibIL2CppDynamicLibraryLocation
         {
@@ -326,13 +291,8 @@
             }
         }
 
-        public override IEnumerable<NPath> StaticLibraries
-        {
-            get
-            {
-                return this._staticLibraries;
-            }
-        }
+        public override IEnumerable<NPath> StaticLibraries =>
+            this._staticLibraries;
 
         [CompilerGenerated]
         private sealed class <>c__Iterator0 : IEnumerable, IEnumerable<CppCompilationInstruction>, IEnumerator, IDisposable, IEnumerator<CppCompilationInstruction>
@@ -346,10 +306,8 @@
             internal CppCompilationInstruction <i>__0;
             internal CppCompilationInstruction <i>__1;
 
-            internal CppCompilationInstruction <>m__0(NPath sourceFile)
-            {
-                return this.$this.CppCompilationInstructionFor(sourceFile, this.$this._cacheDirectory);
-            }
+            internal CppCompilationInstruction <>m__0(NPath sourceFile) => 
+                this.$this.CppCompilationInstructionFor(sourceFile, this.$this._cacheDirectory);
 
             [DebuggerHidden]
             public void Dispose()
@@ -397,7 +355,7 @@
                     case 0:
                     {
                         NPath[] foldersToGlob = new NPath[] { this.$this._sourceDirectory };
-                        this.$locvar0 = Enumerable.Select<NPath, CppCompilationInstruction>(IL2CPPOutputBuildDescription.SourceFilesIn(foldersToGlob), new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<>m__0)).GetEnumerator();
+                        this.$locvar0 = IL2CPPOutputBuildDescription.SourceFilesIn(foldersToGlob).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<>m__0)).GetEnumerator();
                         num = 0xfffffffd;
                         break;
                     }
@@ -489,28 +447,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Building.CppCompilationInstruction>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<Unity.IL2CPP.Building.CppCompilationInstruction>.GetEnumerator();
 
-            CppCompilationInstruction IEnumerator<CppCompilationInstruction>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            CppCompilationInstruction IEnumerator<CppCompilationInstruction>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -574,28 +518,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<NiceIO.NPath>.GetEnumerator();
 
-            NPath IEnumerator<NPath>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            NPath IEnumerator<NPath>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -764,28 +694,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -938,28 +854,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<string>.GetEnumerator();
 
-            string IEnumerator<string>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            string IEnumerator<string>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         public class LibIL2CPPDynamicLibProgramDescription : ProgramBuildDescription
@@ -974,21 +876,11 @@
                 this._cacheDirectory = cacheDirectory;
             }
 
-            public override IEnumerable<CppCompilationInstruction> CppCompileInstructions
-            {
-                get
-                {
-                    return this._cppCompileInstructions;
-                }
-            }
+            public override IEnumerable<CppCompilationInstruction> CppCompileInstructions =>
+                this._cppCompileInstructions;
 
-            public override NPath GlobalCacheDirectory
-            {
-                get
-                {
-                    return this._cacheDirectory;
-                }
-            }
+            public override NPath GlobalCacheDirectory =>
+                this._cacheDirectory;
         }
 
         private class MapFileParserBuildDescription : ProgramBuildDescription
@@ -1014,17 +906,12 @@
                     {
                         <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <get_CppCompileInstructions>m__0);
                     }
-                    return Enumerable.Select<NPath, CppCompilationInstruction>(Enumerable.Where<NPath>(CommonPaths.Il2CppRoot.Combine(append).Files("*.cpp", true), <>f__am$cache0), new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__1));
+                    return CommonPaths.Il2CppRoot.Combine(append).Files("*.cpp", true).Where<NPath>(<>f__am$cache0).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__1));
                 }
             }
 
-            public override NPath GlobalCacheDirectory
-            {
-                get
-                {
-                    return this._cacheDirectory;
-                }
-            }
+            public override NPath GlobalCacheDirectory =>
+                this._cacheDirectory;
 
             public override NPath OutputFile
             {

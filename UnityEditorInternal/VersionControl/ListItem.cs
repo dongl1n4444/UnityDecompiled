@@ -157,10 +157,8 @@
 
         public string[] Actions
         {
-            get
-            {
-                return this.actions;
-            }
+            get => 
+                this.actions;
             set
             {
                 this.actions = value;
@@ -169,10 +167,8 @@
 
         public UnityEditor.VersionControl.Asset Asset
         {
-            get
-            {
-                return (this.item as UnityEditor.VersionControl.Asset);
-            }
+            get => 
+                (this.item as UnityEditor.VersionControl.Asset);
             set
             {
                 this.item = value;
@@ -181,30 +177,21 @@
 
         public bool CanAccept
         {
-            get
-            {
-                return this.accept;
-            }
+            get => 
+                this.accept;
             set
             {
                 this.accept = value;
             }
         }
 
-        public bool CanExpand
-        {
-            get
-            {
-                return ((this.item is ChangeSet) || this.HasChildren);
-            }
-        }
+        public bool CanExpand =>
+            ((this.item is ChangeSet) || this.HasChildren);
 
         public ChangeSet Change
         {
-            get
-            {
-                return (this.item as ChangeSet);
-            }
+            get => 
+                (this.item as ChangeSet);
             set
             {
                 this.item = value;
@@ -226,10 +213,8 @@
 
         public bool Dummy
         {
-            get
-            {
-                return this.dummy;
-            }
+            get => 
+                this.dummy;
             set
             {
                 this.dummy = value;
@@ -238,10 +223,8 @@
 
         public bool Exclusive
         {
-            get
-            {
-                return this.exclusive;
-            }
+            get => 
+                this.exclusive;
             set
             {
                 this.exclusive = value;
@@ -250,46 +233,27 @@
 
         public bool Expanded
         {
-            get
-            {
-                return this.expanded;
-            }
+            get => 
+                this.expanded;
             set
             {
                 this.expanded = value;
             }
         }
 
-        public ListItem FirstChild
-        {
-            get
-            {
-                return this.firstChild;
-            }
-        }
+        public ListItem FirstChild =>
+            this.firstChild;
 
-        public bool HasActions
-        {
-            get
-            {
-                return ((this.actions != null) && (this.actions.Length != 0));
-            }
-        }
+        public bool HasActions =>
+            ((this.actions != null) && (this.actions.Length != 0));
 
-        public bool HasChildren
-        {
-            get
-            {
-                return (this.FirstChild != null);
-            }
-        }
+        public bool HasChildren =>
+            (this.FirstChild != null);
 
         public bool Hidden
         {
-            get
-            {
-                return this.hidden;
-            }
+            get => 
+                this.hidden;
             set
             {
                 this.hidden = value;
@@ -327,10 +291,8 @@
 
         public int Indent
         {
-            get
-            {
-                return this.indent;
-            }
+            get => 
+                this.indent;
             set
             {
                 this.SetIntent(this, value);
@@ -339,43 +301,29 @@
 
         public object Item
         {
-            get
-            {
-                return this.item;
-            }
+            get => 
+                this.item;
             set
             {
                 this.item = value;
             }
         }
 
-        public ListItem LastChild
-        {
-            get
-            {
-                return this.lastChild;
-            }
-        }
+        public ListItem LastChild =>
+            this.lastChild;
 
         public string Name
         {
-            get
-            {
-                return this.name;
-            }
+            get => 
+                this.name;
             set
             {
                 this.name = value;
             }
         }
 
-        public ListItem Next
-        {
-            get
-            {
-                return this.next;
-            }
-        }
+        public ListItem Next =>
+            this.next;
 
         public ListItem NextOpen
         {
@@ -447,21 +395,11 @@
             }
         }
 
-        public ListItem Parent
-        {
-            get
-            {
-                return this.parent;
-            }
-        }
+        public ListItem Parent =>
+            this.parent;
 
-        public ListItem Prev
-        {
-            get
-            {
-                return this.prev;
-            }
-        }
+        public ListItem Prev =>
+            this.prev;
 
         public ListItem PrevOpen
         {

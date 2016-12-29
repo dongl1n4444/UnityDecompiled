@@ -134,15 +134,13 @@
             return builder.ToString();
         }
 
-        private string GetProjectActiveConfigurations(string projectGuid)
-        {
-            return string.Format(DefaultSynchronizationSettings.SolutionProjectConfigurationTemplate, projectGuid);
-        }
+        private string GetProjectActiveConfigurations(string projectGuid) => 
+            string.Format(DefaultSynchronizationSettings.SolutionProjectConfigurationTemplate, projectGuid);
 
         private string GetProjectEntries(IEnumerable<MonoIsland> islands)
         {
             IEnumerable<string> source = Enumerable.Select<MonoIsland, string>(islands, new Func<MonoIsland, string>(this, (IntPtr) this.<GetProjectEntries>m__2));
-            return string.Join(WindowsNewline, Enumerable.ToArray<string>(source));
+            return string.Join(WindowsNewline, source.ToArray<string>());
         }
 
         public static string GetProjectExtension(ScriptingLanguage language)
@@ -154,22 +152,18 @@
             return ProjectExtensions[language];
         }
 
-        private static bool IsAdditionalInternalAssemblyReference(bool isBuildingEditorProject, string reference)
-        {
-            return (isBuildingEditorProject && Enumerable.Contains<string>(ModuleUtils.GetAdditionalReferencesForEditorCsharpProject(), reference));
-        }
+        private static bool IsAdditionalInternalAssemblyReference(bool isBuildingEditorProject, string reference) => 
+            (isBuildingEditorProject && ModuleUtils.GetAdditionalReferencesForEditorCsharpProject().Contains<string>(reference));
 
         [Obsolete("Use AssemblyHelper.IsManagedAssembly")]
-        public static bool IsManagedAssembly(string file)
-        {
-            return AssemblyHelper.IsManagedAssembly(file);
-        }
+        public static bool IsManagedAssembly(string file) => 
+            AssemblyHelper.IsManagedAssembly(file);
 
         private bool IsSupportedExtension(string extension)
         {
             char[] trimChars = new char[] { '.' };
             extension = extension.TrimStart(trimChars);
-            return (BuiltinSupportedExtensions.ContainsKey(extension) || Enumerable.Contains<string>(this.ProjectSupportedExtensions, extension));
+            return (BuiltinSupportedExtensions.ContainsKey(extension) || this.ProjectSupportedExtensions.Contains<string>(extension));
         }
 
         private static Mode ModeForCurrentExternalEditor()
@@ -187,26 +181,20 @@
             return (!EditorPrefs.GetBool("kExternalEditorSupportsUnityProj", false) ? Mode.UnityScriptAsPrecompiledAssembly : Mode.UnityScriptAsUnityProj);
         }
 
-        public bool ProjectExists(MonoIsland island)
-        {
-            return File.Exists(this.ProjectFile(island));
-        }
+        public bool ProjectExists(MonoIsland island) => 
+            File.Exists(this.ProjectFile(island));
 
         public string ProjectFile(MonoIsland island)
         {
             ScriptingLanguage language = ScriptingLanguageFor(island);
-            return Path.Combine(this._projectDirectory, string.Format("{0}{1}", Path.GetFileNameWithoutExtension(island._output), ProjectExtensions[language]));
+            return Path.Combine(this._projectDirectory, $"{Path.GetFileNameWithoutExtension(island._output)}{ProjectExtensions[language]}");
         }
 
-        private string ProjectFooter(MonoIsland island)
-        {
-            return string.Format(this._settings.GetProjectFooterTemplate(ScriptingLanguageFor(island)), this.ReadExistingMonoDevelopProjectProperties(island));
-        }
+        private string ProjectFooter(MonoIsland island) => 
+            string.Format(this._settings.GetProjectFooterTemplate(ScriptingLanguageFor(island)), this.ReadExistingMonoDevelopProjectProperties(island));
 
-        private string ProjectGuid(string assembly)
-        {
-            return SolutionGuidGenerator.GuidForProject(this._projectName + Path.GetFileNameWithoutExtension(assembly));
-        }
+        private string ProjectGuid(string assembly) => 
+            SolutionGuidGenerator.GuidForProject(this._projectName + Path.GetFileNameWithoutExtension(assembly));
 
         private string ProjectHeader(MonoIsland island)
         {
@@ -226,7 +214,7 @@
             objArray1[3] = this._settings.EngineAssemblyPath;
             objArray1[4] = this._settings.EditorAssemblyPath;
             string[] first = new string[] { "DEBUG", "TRACE" };
-            objArray1[5] = string.Join(";", Enumerable.ToArray<string>(Enumerable.Distinct<string>(Enumerable.Concat<string>(Enumerable.Concat<string>(first, this._settings.Defines), island._defines))));
+            objArray1[5] = string.Join(";", first.Concat<string>(this._settings.Defines).Concat<string>(island._defines).Distinct<string>().ToArray<string>());
             objArray1[6] = MSBuildNamespaceUri;
             objArray1[7] = Path.GetFileNameWithoutExtension(island._output);
             objArray1[8] = EditorSettings.projectGenerationRootNamespace;
@@ -264,7 +252,7 @@
             }
             builder.Append(allAssetsProject);
             List<string> list3 = new List<string>();
-            foreach (string str5 in Enumerable.Union<string>(first, island._references))
+            foreach (string str5 in first.Union<string>(island._references))
             {
                 if ((!str5.EndsWith("/UnityEditor.dll") && !str5.EndsWith("/UnityEngine.dll")) && (!str5.EndsWith(@"\UnityEditor.dll") && !str5.EndsWith(@"\UnityEngine.dll")))
                 {
@@ -425,10 +413,8 @@
             return ScriptingLanguage.None;
         }
 
-        private static ScriptingLanguage ScriptingLanguageFor(MonoIsland island)
-        {
-            return ScriptingLanguageFor(island.GetExtensionOfSourceFiles());
-        }
+        private static ScriptingLanguage ScriptingLanguageFor(MonoIsland island) => 
+            ScriptingLanguageFor(island.GetExtensionOfSourceFiles());
 
         private void SetupProjectSupportedExtensions()
         {
@@ -441,20 +427,14 @@
             return ((extension == ".dll") || this.IsSupportedExtension(extension));
         }
 
-        public bool SolutionExists()
-        {
-            return File.Exists(this.SolutionFile());
-        }
+        public bool SolutionExists() => 
+            File.Exists(this.SolutionFile());
 
-        internal string SolutionFile()
-        {
-            return Path.Combine(this._projectDirectory, string.Format("{0}.sln", this._projectName));
-        }
+        internal string SolutionFile() => 
+            Path.Combine(this._projectDirectory, $"{this._projectName}.sln");
 
-        private string SolutionGuid()
-        {
-            return SolutionGuidGenerator.GuidForSolution(this._projectName);
-        }
+        private string SolutionGuid() => 
+            SolutionGuidGenerator.GuidForSolution(this._projectName);
 
         private string SolutionText(IEnumerable<MonoIsland> islands, Mode mode)
         {
@@ -467,7 +447,7 @@
             }
             IEnumerable<MonoIsland> enumerable = RelevantIslandsForMode(islands, mode);
             string projectEntries = this.GetProjectEntries(enumerable);
-            string str4 = string.Join(WindowsNewline, Enumerable.ToArray<string>(Enumerable.Select<MonoIsland, string>(enumerable, new Func<MonoIsland, string>(this, (IntPtr) this.<SolutionText>m__1))));
+            string str4 = string.Join(WindowsNewline, Enumerable.Select<MonoIsland, string>(enumerable, new Func<MonoIsland, string>(this, (IntPtr) this.<SolutionText>m__1)).ToArray<string>());
             return string.Format(this._settings.SolutionTemplate, new object[] { str, str2, projectEntries, str4, this.ReadExistingMonoDevelopSolutionProperties() });
         }
 
@@ -543,10 +523,8 @@
         {
             internal SolutionSynchronizer.Mode mode;
 
-            internal bool <>m__0(MonoIsland i)
-            {
-                return ((this.mode == SolutionSynchronizer.Mode.UnityScriptAsUnityProj) || (ScriptingLanguage.CSharp == SolutionSynchronizer.ScriptingLanguageFor(i)));
-            }
+            internal bool <>m__0(MonoIsland i) => 
+                ((this.mode == SolutionSynchronizer.Mode.UnityScriptAsUnityProj) || (ScriptingLanguage.CSharp == SolutionSynchronizer.ScriptingLanguageFor(i)));
         }
 
         private enum Mode

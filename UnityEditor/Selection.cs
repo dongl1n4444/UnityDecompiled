@@ -39,20 +39,16 @@
         /// </summary>
         /// <param name="instanceID"></param>
         /// <param name="obj"></param>
-        public static bool Contains(int instanceID)
-        {
-            return (Array.IndexOf<int>(instanceIDs, instanceID) != -1);
-        }
+        public static bool Contains(int instanceID) => 
+            (Array.IndexOf<int>(instanceIDs, instanceID) != -1);
 
         /// <summary>
         /// <para>Returns whether an object is contained in the current selection.</para>
         /// </summary>
         /// <param name="instanceID"></param>
         /// <param name="obj"></param>
-        public static bool Contains(Object obj)
-        {
-            return Contains(obj.GetInstanceID());
-        }
+        public static bool Contains(Object obj) => 
+            Contains(obj.GetInstanceID());
 
         /// <summary>
         /// <para>Returns the current selection filtered by type and mode.</para>

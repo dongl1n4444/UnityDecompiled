@@ -21,19 +21,19 @@
             this.thisParameter = InteropMethodBodyWriter.Naming.ThisParameterName;
             this.identityField = InteropMethodBodyWriter.Naming.ForIl2CppComObjectIdentityField();
             this.constructedObjectType = constructor.DeclaringType;
-            TypeReference[] activationFactoryTypes = Enumerable.ToArray<TypeReference>(Extensions.GetActivationFactoryTypes(this.constructedObjectType));
+            TypeReference[] activationFactoryTypes = this.constructedObjectType.GetActivationFactoryTypes().ToArray<TypeReference>();
             if ((constructor.Parameters.Count != 0) || (activationFactoryTypes.Length == 0))
             {
                 this.factoryMethod = GetFactoryMethod(constructor, activationFactoryTypes, false);
                 if (this.factoryMethod == null)
                 {
-                    TypeReference[] referenceArray2 = Enumerable.ToArray<TypeReference>(Extensions.GetComposableFactoryTypes(this.constructedObjectType));
+                    TypeReference[] referenceArray2 = this.constructedObjectType.GetComposableFactoryTypes().ToArray<TypeReference>();
                     this.factoryMethod = GetFactoryMethod(constructor, referenceArray2, true);
                     this.isComposingConstructor = true;
                 }
                 if (this.factoryMethod == null)
                 {
-                    throw new InvalidOperationException(string.Format(string.Format("Could not find factory method for Windows Runtime constructor {0}!", constructor.FullName), new object[0]));
+                    throw new InvalidOperationException(string.Format($"Could not find factory method for Windows Runtime constructor {constructor.FullName}!", new object[0]));
                 }
             }
         }
@@ -42,51 +42,51 @@
         {
             string str = metadataAccess.TypeInfoFor(this.constructedObjectType);
             string str2 = InteropMethodBodyWriter.Naming.ForMethod(this.factoryMethod);
-            TypeReference interfaceType = Extensions.ExtractDefaultInterface(this.constructedObjectType.Resolve());
+            TypeReference interfaceType = this.constructedObjectType.Resolve().ExtractDefaultInterface();
             string str3 = InteropMethodBodyWriter.Naming.ForComTypeInterfaceFieldName(interfaceType);
-            writer.WriteLine(string.Format("Il2CppIInspectable* outerInstance = {0};", InteropMethodBodyWriter.Naming.Null));
-            writer.WriteLine(string.Format("Il2CppIInspectable** innerInstance = {0};", InteropMethodBodyWriter.Naming.Null));
-            writer.WriteLine(string.Format("bool isComposedConstruction = {0}->klass != {1};", this.thisParameter, str));
+            writer.WriteLine($"Il2CppIInspectable* outerInstance = {InteropMethodBodyWriter.Naming.Null};");
+            writer.WriteLine($"Il2CppIInspectable** innerInstance = {InteropMethodBodyWriter.Naming.Null};");
+            writer.WriteLine($"bool isComposedConstruction = {this.thisParameter}->klass != {str};");
             WriteDeclareActivationFactory(writer, this.factoryMethod.DeclaringType, staticFieldsAccess);
             writer.WriteLine();
             writer.WriteLine("if (isComposedConstruction)");
             using (new BlockWriter(writer, false))
             {
-                writer.WriteLine(string.Format("outerInstance = il2cpp_codegen_com_get_or_create_ccw<Il2CppIInspectable>({0});", this.thisParameter));
-                writer.WriteLine(string.Format("innerInstance = reinterpret_cast<Il2CppIInspectable**>(&{0}->{1});", this.thisParameter, this.identityField));
+                writer.WriteLine($"outerInstance = il2cpp_codegen_com_get_or_create_ccw<Il2CppIInspectable>({this.thisParameter});");
+                writer.WriteLine($"innerInstance = reinterpret_cast<Il2CppIInspectable**>(&{this.thisParameter}->{this.identityField});");
             }
             writer.WriteLine();
-            writer.WriteLine(string.Format("il2cpp_hresult_t hr = activationFactory->{0}({1}outerInstance, innerInstance, &{2}->{3});", new object[] { str2, parameters, this.thisParameter, str3 }));
+            writer.WriteLine($"il2cpp_hresult_t hr = activationFactory->{str2}({parameters}outerInstance, innerInstance, &{this.thisParameter}->{str3});");
             writer.WriteLine("il2cpp_codegen_com_raise_exception_if_failed(hr);");
             writer.WriteLine();
             writer.WriteLine("if (isComposedConstruction)");
             using (new BlockWriter(writer, false))
             {
                 writer.WriteLine("outerInstance->Release();");
-                writer.WriteLine(string.Format("{0}->{1}->Release();", this.thisParameter, str3));
+                writer.WriteLine($"{this.thisParameter}->{str3}->Release();");
             }
             writer.WriteLine("else");
             using (new BlockWriter(writer, false))
             {
-                writer.WriteLine(string.Format("hr = {0}->{1}->QueryInterface(Il2CppIUnknown::IID, reinterpret_cast<void**>(&{2}->{3}));", new object[] { this.thisParameter, str3, this.thisParameter, this.identityField }));
+                writer.WriteLine($"hr = {this.thisParameter}->{str3}->QueryInterface(Il2CppIUnknown::IID, reinterpret_cast<void**>(&{this.thisParameter}->{this.identityField}));");
                 writer.WriteLine("il2cpp_codegen_com_raise_exception_if_failed(hr);");
                 writer.WriteLine();
-                writer.WriteLine(string.Format("il2cpp_codegen_com_register_rcw({0});", this.thisParameter));
+                writer.WriteLine($"il2cpp_codegen_com_register_rcw({this.thisParameter});");
             }
         }
 
         private void ActivateThroughCustomActivationFactory(CppCodeWriter writer, string staticFieldsAccess, string parameters)
         {
             string str = InteropMethodBodyWriter.Naming.ForMethod(this.factoryMethod);
-            string str2 = InteropMethodBodyWriter.Naming.ForComTypeInterfaceFieldName(Extensions.ExtractDefaultInterface(this.constructedObjectType.Resolve()));
+            string str2 = InteropMethodBodyWriter.Naming.ForComTypeInterfaceFieldName(this.constructedObjectType.Resolve().ExtractDefaultInterface());
             WriteDeclareActivationFactory(writer, this.factoryMethod.DeclaringType, staticFieldsAccess);
-            writer.WriteLine(string.Format("il2cpp_hresult_t hr = activationFactory->{0}({1}&{2}->{3});", new object[] { str, parameters, this.thisParameter, str2 }));
+            writer.WriteLine($"il2cpp_hresult_t hr = activationFactory->{str}({parameters}&{this.thisParameter}->{str2});");
             writer.WriteLine("il2cpp_codegen_com_raise_exception_if_failed(hr);");
             writer.WriteLine();
-            writer.WriteLine(string.Format("hr = {0}->{1}->QueryInterface(Il2CppIUnknown::IID, reinterpret_cast<void**>(&{2}->{3}));", new object[] { this.thisParameter, str2, this.thisParameter, this.identityField }));
+            writer.WriteLine($"hr = {this.thisParameter}->{str2}->QueryInterface(Il2CppIUnknown::IID, reinterpret_cast<void**>(&{this.thisParameter}->{this.identityField}));");
             writer.WriteLine("il2cpp_codegen_com_raise_exception_if_failed(hr);");
             writer.WriteLine();
-            writer.WriteLine(string.Format("il2cpp_codegen_com_register_rcw({0});", this.thisParameter));
+            writer.WriteLine($"il2cpp_codegen_com_register_rcw({this.thisParameter});");
         }
 
         private static MethodReference GetFactoryMethod(MethodReference constructor, IEnumerable<TypeReference> activationFactoryTypes, bool isComposing)
@@ -121,24 +121,24 @@
         private void WriteActivateThroughIActivationFactory(CppCodeWriter writer, string staticFieldsAccess, string parameters)
         {
             WriteDeclareActivationFactory(writer, InteropMethodBodyWriter.TypeProvider.IActivationFactoryTypeReference, staticFieldsAccess);
-            writer.WriteLine(string.Format("il2cpp_hresult_t hr = activationFactory->ActivateInstance({0}reinterpret_cast<Il2CppIInspectable**>(&{1}->{2}));", parameters, this.thisParameter, this.identityField));
+            writer.WriteLine($"il2cpp_hresult_t hr = activationFactory->ActivateInstance({parameters}reinterpret_cast<Il2CppIInspectable**>(&{this.thisParameter}->{this.identityField}));");
             writer.WriteLine("il2cpp_codegen_com_raise_exception_if_failed(hr);");
             writer.WriteLine();
-            writer.WriteLine(string.Format("il2cpp_codegen_com_register_rcw({0});", this.thisParameter));
+            writer.WriteLine($"il2cpp_codegen_com_register_rcw({this.thisParameter});");
         }
 
         private static void WriteDeclareActivationFactory(CppCodeWriter writer, TypeReference factoryType, string staticFieldsAccess)
         {
             string str = InteropMethodBodyWriter.Naming.ForTypeNameOnly(factoryType);
             string str2 = InteropMethodBodyWriter.Naming.ForComTypeInterfaceFieldGetter(factoryType);
-            writer.WriteLine(string.Format("{0}* activationFactory = {1}->{2}();", str, staticFieldsAccess, str2));
+            writer.WriteLine($"{str}* activationFactory = {staticFieldsAccess}->{str2}();");
         }
 
         protected override void WriteInteropCallStatement(CppCodeWriter writer, string[] localVariableNames, IRuntimeMetadataAccess metadataAccess)
         {
             string str = InteropMethodBodyWriter.Naming.ForStaticFieldsStruct(this.constructedObjectType);
             string str2 = metadataAccess.TypeInfoFor(this.constructedObjectType);
-            string staticFieldsAccess = string.Format(string.Format("(({0}*){1}->static_fields)", str, str2), new object[0]);
+            string staticFieldsAccess = string.Format($"(({str}*){str2}->static_fields)", new object[0]);
             string functionCallParametersExpression = base.GetFunctionCallParametersExpression(localVariableNames);
             if (functionCallParametersExpression.Length > 0)
             {

@@ -225,10 +225,8 @@
         }
 
         [DebuggerHidden]
-        private IEnumerator CaretBlink()
-        {
-            return new <CaretBlink>c__Iterator0 { $this = this };
-        }
+        private IEnumerator CaretBlink() => 
+            new <CaretBlink>c__Iterator0 { $this = this };
 
         protected void ClampPos(ref int pos)
         {
@@ -684,10 +682,8 @@
         {
         }
 
-        private bool InPlaceEditing()
-        {
-            return !TouchScreenKeyboard.isSupported;
-        }
+        private bool InPlaceEditing() => 
+            !TouchScreenKeyboard.isSupported;
 
         private void Insert(char c)
         {
@@ -1028,19 +1024,15 @@
             }
         }
 
-        private bool MayDrag(PointerEventData eventData)
-        {
-            return (((this.IsActive() && this.IsInteractable()) && ((eventData.button == PointerEventData.InputButton.Left) && (this.m_TextComponent != null))) && (this.m_Keyboard == null));
-        }
+        private bool MayDrag(PointerEventData eventData) => 
+            (((this.IsActive() && this.IsInteractable()) && ((eventData.button == PointerEventData.InputButton.Left) && (this.m_TextComponent != null))) && (this.m_Keyboard == null));
 
         [DebuggerHidden]
-        private IEnumerator MouseDragOutsideRect(PointerEventData eventData)
-        {
-            return new <MouseDragOutsideRect>c__Iterator1 { 
+        private IEnumerator MouseDragOutsideRect(PointerEventData eventData) => 
+            new <MouseDragOutsideRect>c__Iterator1 { 
                 eventData = eventData,
                 $this = this
             };
-        }
 
         private void MoveDown(bool shift)
         {
@@ -1695,10 +1687,8 @@
             }
         }
 
-        Transform ICanvasElement.get_transform()
-        {
-            return base.transform;
-        }
+        Transform ICanvasElement.get_transform() => 
+            base.transform;
 
         private void UpdateGeometry()
         {
@@ -1896,10 +1886,8 @@
         /// </summary>
         public char asteriskChar
         {
-            get
-            {
-                return this.m_AsteriskChar;
-            }
+            get => 
+                this.m_AsteriskChar;
             set
             {
                 if (SetPropertyUtility.SetStruct<char>(ref this.m_AsteriskChar, value))
@@ -1926,10 +1914,8 @@
         /// </summary>
         public float caretBlinkRate
         {
-            get
-            {
-                return this.m_CaretBlinkRate;
-            }
+            get => 
+                this.m_CaretBlinkRate;
             set
             {
                 if (SetPropertyUtility.SetStruct<float>(ref this.m_CaretBlinkRate, value) && this.m_AllowInput)
@@ -1944,10 +1930,8 @@
         /// </summary>
         public Color caretColor
         {
-            get
-            {
-                return (!this.customCaretColor ? this.textComponent.color : this.m_CaretColor);
-            }
+            get => 
+                (!this.customCaretColor ? this.textComponent.color : this.m_CaretColor);
             set
             {
                 if (SetPropertyUtility.SetColor(ref this.m_CaretColor, value))
@@ -1962,10 +1946,8 @@
         /// </summary>
         public int caretPosition
         {
-            get
-            {
-                return (this.m_CaretSelectPosition + this.compositionString.Length);
-            }
+            get => 
+                (this.m_CaretSelectPosition + this.compositionString.Length);
             set
             {
                 this.selectionAnchorPosition = value;
@@ -1975,10 +1957,8 @@
 
         protected int caretPositionInternal
         {
-            get
-            {
-                return (this.m_CaretPosition + this.compositionString.Length);
-            }
+            get => 
+                (this.m_CaretPosition + this.compositionString.Length);
             set
             {
                 this.m_CaretPosition = value;
@@ -1992,10 +1972,8 @@
         [Obsolete("caretSelectPosition has been deprecated. Use selectionFocusPosition instead (UnityUpgradable) -> selectionFocusPosition", true)]
         public int caretSelectPosition
         {
-            get
-            {
-                return this.selectionFocusPosition;
-            }
+            get => 
+                this.selectionFocusPosition;
             protected set
             {
                 this.selectionFocusPosition = value;
@@ -2004,10 +1982,8 @@
 
         protected int caretSelectPositionInternal
         {
-            get
-            {
-                return (this.m_CaretSelectPosition + this.compositionString.Length);
-            }
+            get => 
+                (this.m_CaretSelectPosition + this.compositionString.Length);
             set
             {
                 this.m_CaretSelectPosition = value;
@@ -2020,10 +1996,8 @@
         /// </summary>
         public int caretWidth
         {
-            get
-            {
-                return this.m_CaretWidth;
-            }
+            get => 
+                this.m_CaretWidth;
             set
             {
                 if (SetPropertyUtility.SetStruct<int>(ref this.m_CaretWidth, value))
@@ -2038,10 +2012,8 @@
         /// </summary>
         public int characterLimit
         {
-            get
-            {
-                return this.m_CharacterLimit;
-            }
+            get => 
+                this.m_CharacterLimit;
             set
             {
                 if (SetPropertyUtility.SetStruct<int>(ref this.m_CharacterLimit, Math.Max(0, value)))
@@ -2056,10 +2028,8 @@
         /// </summary>
         public CharacterValidation characterValidation
         {
-            get
-            {
-                return this.m_CharacterValidation;
-            }
+            get => 
+                this.m_CharacterValidation;
             set
             {
                 if (SetPropertyUtility.SetStruct<CharacterValidation>(ref this.m_CharacterValidation, value))
@@ -2071,33 +2041,24 @@
 
         private static string clipboard
         {
-            get
-            {
-                return GUIUtility.systemCopyBuffer;
-            }
+            get => 
+                GUIUtility.systemCopyBuffer;
             set
             {
                 GUIUtility.systemCopyBuffer = value;
             }
         }
 
-        private string compositionString
-        {
-            get
-            {
-                return ((this.input == null) ? Input.compositionString : this.input.compositionString);
-            }
-        }
+        private string compositionString =>
+            ((this.input == null) ? Input.compositionString : this.input.compositionString);
 
         /// <summary>
         /// <para>Specifies the type of the input text content.</para>
         /// </summary>
         public ContentType contentType
         {
-            get
-            {
-                return this.m_ContentType;
-            }
+            get => 
+                this.m_ContentType;
             set
             {
                 if (SetPropertyUtility.SetStruct<ContentType>(ref this.m_ContentType, value))
@@ -2112,10 +2073,8 @@
         /// </summary>
         public bool customCaretColor
         {
-            get
-            {
-                return this.m_CustomCaretColor;
-            }
+            get => 
+                this.m_CustomCaretColor;
             set
             {
                 if (this.m_CustomCaretColor != value)
@@ -2126,29 +2085,14 @@
             }
         }
 
-        public virtual float flexibleHeight
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleHeight =>
+            -1f;
 
-        public virtual float flexibleWidth
-        {
-            get
-            {
-                return -1f;
-            }
-        }
+        public virtual float flexibleWidth =>
+            -1f;
 
-        private bool hasSelection
-        {
-            get
-            {
-                return (this.caretPositionInternal != this.caretSelectPositionInternal);
-            }
-        }
+        private bool hasSelection =>
+            (this.caretPositionInternal != this.caretSelectPositionInternal);
 
         private BaseInput input
         {
@@ -2167,10 +2111,8 @@
         /// </summary>
         public InputType inputType
         {
-            get
-            {
-                return this.m_InputType;
-            }
+            get => 
+                this.m_InputType;
             set
             {
                 if (SetPropertyUtility.SetStruct<InputType>(ref this.m_InputType, value))
@@ -2183,23 +2125,16 @@
         /// <summary>
         /// <para>Does the InputField currently have focus and is able to process events.</para>
         /// </summary>
-        public bool isFocused
-        {
-            get
-            {
-                return this.m_AllowInput;
-            }
-        }
+        public bool isFocused =>
+            this.m_AllowInput;
 
         /// <summary>
         /// <para>They type of mobile keyboard that will be used.</para>
         /// </summary>
         public TouchScreenKeyboardType keyboardType
         {
-            get
-            {
-                return this.m_KeyboardType;
-            }
+            get => 
+                this.m_KeyboardType;
             set
             {
                 if (SetPropertyUtility.SetStruct<TouchScreenKeyboardType>(ref this.m_KeyboardType, value))
@@ -2209,23 +2144,16 @@
             }
         }
 
-        public virtual int layoutPriority
-        {
-            get
-            {
-                return 1;
-            }
-        }
+        public virtual int layoutPriority =>
+            1;
 
         /// <summary>
         /// <para>The LineType used by the InputField.</para>
         /// </summary>
         public LineType lineType
         {
-            get
-            {
-                return this.m_LineType;
-            }
+            get => 
+                this.m_LineType;
             set
             {
                 if (SetPropertyUtility.SetStruct<LineType>(ref this.m_LineType, value))
@@ -2249,42 +2177,25 @@
             }
         }
 
-        public virtual float minHeight
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public virtual float minHeight =>
+            0f;
 
-        public virtual float minWidth
-        {
-            get
-            {
-                return 0f;
-            }
-        }
+        public virtual float minWidth =>
+            0f;
 
         /// <summary>
         /// <para>If the input field supports multiple lines.</para>
         /// </summary>
-        public bool multiLine
-        {
-            get
-            {
-                return ((this.m_LineType == LineType.MultiLineNewline) || (this.lineType == LineType.MultiLineSubmit));
-            }
-        }
+        public bool multiLine =>
+            ((this.m_LineType == LineType.MultiLineNewline) || (this.lineType == LineType.MultiLineSubmit));
 
         /// <summary>
         /// <para>The Unity Event to call when editing has ended.</para>
         /// </summary>
         public SubmitEvent onEndEdit
         {
-            get
-            {
-                return this.m_OnEndEdit;
-            }
+            get => 
+                this.m_OnEndEdit;
             set
             {
                 SetPropertyUtility.SetClass<SubmitEvent>(ref this.m_OnEndEdit, value);
@@ -2296,10 +2207,8 @@
         /// </summary>
         public OnValidateInput onValidateInput
         {
-            get
-            {
-                return this.m_OnValidateInput;
-            }
+            get => 
+                this.m_OnValidateInput;
             set
             {
                 SetPropertyUtility.SetClass<OnValidateInput>(ref this.m_OnValidateInput, value);
@@ -2312,10 +2221,8 @@
         [Obsolete("onValueChange has been renamed to onValueChanged")]
         public OnChangeEvent onValueChange
         {
-            get
-            {
-                return this.onValueChanged;
-            }
+            get => 
+                this.onValueChanged;
             set
             {
                 this.onValueChanged = value;
@@ -2327,10 +2234,8 @@
         /// </summary>
         public OnChangeEvent onValueChanged
         {
-            get
-            {
-                return this.m_OnValueChanged;
-            }
+            get => 
+                this.m_OnValueChanged;
             set
             {
                 SetPropertyUtility.SetClass<OnChangeEvent>(ref this.m_OnValueChanged, value);
@@ -2344,10 +2249,8 @@
         /// </summary>
         public Graphic placeholder
         {
-            get
-            {
-                return this.m_Placeholder;
-            }
+            get => 
+                this.m_Placeholder;
             set
             {
                 SetPropertyUtility.SetClass<Graphic>(ref this.m_Placeholder, value);
@@ -2385,10 +2288,8 @@
         /// </summary>
         public bool readOnly
         {
-            get
-            {
-                return this.m_ReadOnly;
-            }
+            get => 
+                this.m_ReadOnly;
             set
             {
                 this.m_ReadOnly = value;
@@ -2400,10 +2301,8 @@
         /// </summary>
         public int selectionAnchorPosition
         {
-            get
-            {
-                return (this.m_CaretPosition + this.compositionString.Length);
-            }
+            get => 
+                (this.m_CaretPosition + this.compositionString.Length);
             set
             {
                 if (this.compositionString.Length == 0)
@@ -2419,10 +2318,8 @@
         /// </summary>
         public Color selectionColor
         {
-            get
-            {
-                return this.m_SelectionColor;
-            }
+            get => 
+                this.m_SelectionColor;
             set
             {
                 if (SetPropertyUtility.SetColor(ref this.m_SelectionColor, value))
@@ -2437,10 +2334,8 @@
         /// </summary>
         public int selectionFocusPosition
         {
-            get
-            {
-                return (this.m_CaretSelectPosition + this.compositionString.Length);
-            }
+            get => 
+                (this.m_CaretSelectPosition + this.compositionString.Length);
             set
             {
                 if (this.compositionString.Length == 0)
@@ -2451,13 +2346,8 @@
             }
         }
 
-        private bool shouldActivateOnSelect
-        {
-            get
-            {
-                return (Application.platform != RuntimePlatform.tvOS);
-            }
-        }
+        private bool shouldActivateOnSelect =>
+            (Application.platform != RuntimePlatform.tvOS);
 
         /// <summary>
         /// <para>Should the mobile keyboard input be hidden.</para>
@@ -2493,10 +2383,8 @@
         /// </summary>
         public string text
         {
-            get
-            {
-                return this.m_Text;
-            }
+            get => 
+                this.m_Text;
             set
             {
                 if (this.text != value)
@@ -2566,10 +2454,8 @@
         /// </summary>
         public Text textComponent
         {
-            get
-            {
-                return this.m_TextComponent;
-            }
+            get => 
+                this.m_TextComponent;
             set
             {
                 SetPropertyUtility.SetClass<Text>(ref this.m_TextComponent, value);
@@ -2579,13 +2465,8 @@
         /// <summary>
         /// <para>If the UI.InputField was canceled and will revert back to the original text upon DeactivateInputField.</para>
         /// </summary>
-        public bool wasCanceled
-        {
-            get
-            {
-                return this.m_WasCanceled;
-            }
-        }
+        public bool wasCanceled =>
+            this.m_WasCanceled;
 
         [CompilerGenerated]
         private sealed class <CaretBlink>c__Iterator0 : IEnumerator, IDisposable, IEnumerator<object>
@@ -2655,23 +2536,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         [CompilerGenerated]
@@ -2746,23 +2615,11 @@
                 throw new NotSupportedException();
             }
 
-            object IEnumerator<object>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator<object>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
 
         /// <summary>

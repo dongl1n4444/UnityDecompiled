@@ -13,50 +13,23 @@
             this.m_DevelopmentBuild = developmentBuild;
         }
 
-        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder()
-        {
-            return new OSXStandaloneIL2CppNativeCodeBuilder(this.target);
-        }
+        public override Il2CppNativeCodeBuilder CreateIl2CppNativeCodeBuilder() => 
+            new OSXStandaloneIL2CppNativeCodeBuilder(this.target);
 
-        public override bool developmentMode
-        {
-            get
-            {
-                return this.m_DevelopmentBuild;
-            }
-        }
+        public override bool developmentMode =>
+            this.m_DevelopmentBuild;
 
-        public override bool emitNullChecks
-        {
-            get
-            {
-                return this.m_DevelopmentBuild;
-            }
-        }
+        public override bool emitNullChecks =>
+            this.m_DevelopmentBuild;
 
-        public override bool enableStackTraces
-        {
-            get
-            {
-                return this.m_DevelopmentBuild;
-            }
-        }
+        public override bool enableStackTraces =>
+            this.m_DevelopmentBuild;
 
-        public override string[] includePaths
-        {
-            get
-            {
-                return new string[0];
-            }
-        }
+        public override string[] includePaths =>
+            new string[0];
 
-        public override string nativeLibraryFileName
-        {
-            get
-            {
-                return "UserAssembly.dylib";
-            }
-        }
+        public override string nativeLibraryFileName =>
+            "UserAssembly.dylib";
     }
 }
 

@@ -38,10 +38,8 @@
         [Obsolete("use BoxCollider.size instead.")]
         public Vector3 extents
         {
-            get
-            {
-                return (Vector3) (this.size * 0.5f);
-            }
+            get => 
+                ((Vector3) (this.size * 0.5f));
             set
             {
                 this.size = (Vector3) (value * 2f);

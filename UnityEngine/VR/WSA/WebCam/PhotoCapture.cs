@@ -69,10 +69,8 @@
         /// <returns>
         /// <para>A native COM pointer to the IVideoDeviceController.</para>
         /// </returns>
-        public IntPtr GetUnsafePointerToVideoDeviceController()
-        {
-            return GetUnsafePointerToVideoDeviceController_Internal(this.m_NativePtr);
-        }
+        public IntPtr GetUnsafePointerToVideoDeviceController() => 
+            GetUnsafePointerToVideoDeviceController_Internal(this.m_NativePtr);
 
         [ThreadAndSerializationSafe]
         private static IntPtr GetUnsafePointerToVideoDeviceController_Internal(IntPtr photoCaptureObj)
@@ -152,13 +150,11 @@
             return result;
         }
 
-        private static PhotoCaptureResult MakeCaptureResult(CaptureResultType resultType, long hResult)
-        {
-            return new PhotoCaptureResult { 
+        private static PhotoCaptureResult MakeCaptureResult(CaptureResultType resultType, long hResult) => 
+            new PhotoCaptureResult { 
                 resultType = resultType,
                 hResult = hResult
             };
-        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void StartPhotoMode_Internal(IntPtr photoCaptureObj, OnPhotoModeStartedCallback onPhotoModeStartedCallback, float hologramOpacity, float frameRate, int cameraResolutionWidth, int cameraResolutionHeight, int pixelFormat);
@@ -302,13 +298,8 @@
             /// <summary>
             /// <para>Indicates whether or not the operation was successful.</para>
             /// </summary>
-            public bool success
-            {
-                get
-                {
-                    return (this.resultType == PhotoCapture.CaptureResultType.Success);
-                }
-            }
+            public bool success =>
+                (this.resultType == PhotoCapture.CaptureResultType.Success);
         }
     }
 }

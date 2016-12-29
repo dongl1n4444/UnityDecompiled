@@ -4,20 +4,13 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     internal static class NetFxCoreExtensions
     {
-        [Extension]
-        public static Delegate CreateDelegate(MethodInfo self, Type delegateType, object target)
-        {
-            return Delegate.CreateDelegate(delegateType, target, self);
-        }
+        public static Delegate CreateDelegate(this MethodInfo self, Type delegateType, object target) => 
+            Delegate.CreateDelegate(delegateType, target, self);
 
-        [Extension]
-        public static MethodInfo GetMethodInfo(Delegate self)
-        {
-            return self.Method;
-        }
+        public static MethodInfo GetMethodInfo(this Delegate self) => 
+            self.Method;
     }
 }
 

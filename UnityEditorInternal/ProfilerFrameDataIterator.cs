@@ -45,13 +45,8 @@
         public int group { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("Use instanceId instead (UnityUpgradable) -> instanceId")]
-        public int id
-        {
-            get
-            {
-                return this.instanceId;
-            }
-        }
+        public int id =>
+            this.instanceId;
 
         public int instanceId { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 

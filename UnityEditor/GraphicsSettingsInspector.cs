@@ -78,13 +78,8 @@
             }
         }
 
-        private Object graphicsSettings
-        {
-            get
-            {
-                return GraphicsSettings.GetGraphicsSettings();
-            }
-        }
+        private Object graphicsSettings =>
+            GraphicsSettings.GetGraphicsSettings();
 
         private Editor shaderPreloadEditor
         {

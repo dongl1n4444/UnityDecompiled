@@ -27,10 +27,8 @@
         /// </summary>
         public Vector3 origin
         {
-            get
-            {
-                return this.m_Origin;
-            }
+            get => 
+                this.m_Origin;
             set
             {
                 this.m_Origin = value;
@@ -41,10 +39,8 @@
         /// </summary>
         public Vector3 direction
         {
-            get
-            {
-                return this.m_Direction;
-            }
+            get => 
+                this.m_Direction;
             set
             {
                 this.m_Direction = value.normalized;
@@ -54,10 +50,8 @@
         /// <para>Returns a point at distance units along the ray.</para>
         /// </summary>
         /// <param name="distance"></param>
-        public Vector3 GetPoint(float distance)
-        {
-            return (this.m_Origin + ((Vector3) (this.m_Direction * distance)));
-        }
+        public Vector3 GetPoint(float distance) => 
+            (this.m_Origin + ((Vector3) (this.m_Direction * distance)));
 
         /// <summary>
         /// <para>Returns a nicely formatted string for this ray.</para>

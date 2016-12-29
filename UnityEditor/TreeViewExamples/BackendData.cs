@@ -46,10 +46,8 @@
             }
         }
 
-        public Foo Find(int id)
-        {
-            return this.FindRecursive(id, this.m_Root);
-        }
+        public Foo Find(int id) => 
+            this.FindRecursive(id, this.m_Root);
 
         public static Foo FindItemRecursive(Foo item, int id)
         {
@@ -188,13 +186,8 @@
 
         public int IDCounter { get; private set; }
 
-        public Foo root
-        {
-            get
-            {
-                return this.m_Root;
-            }
-        }
+        public Foo root =>
+            this.m_Root;
 
         public class Foo
         {
@@ -202,11 +195,11 @@
             private List<BackendData.Foo> <children>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <depth>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private int <id>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <name>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private BackendData.Foo <parent>k__BackingField;
 
             public Foo(string name, int depth, int id)
@@ -220,13 +213,8 @@
 
             public int depth { get; set; }
 
-            public bool hasChildren
-            {
-                get
-                {
-                    return ((this.children != null) && (this.children.Count > 0));
-                }
-            }
+            public bool hasChildren =>
+                ((this.children != null) && (this.children.Count > 0));
 
             public int id { get; set; }
 

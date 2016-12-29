@@ -30,15 +30,11 @@
             this._jsLib = jsLib;
         }
 
-        public override IEnumerable<string> ConvertIncludesToFullPaths(IEnumerable<string> relativeIncludePaths)
-        {
-            return EmscriptenCompiler.GetIncludeFullPaths(relativeIncludePaths);
-        }
+        public override IEnumerable<string> ConvertIncludesToFullPaths(IEnumerable<string> relativeIncludePaths) => 
+            EmscriptenCompiler.GetIncludeFullPaths(relativeIncludePaths);
 
-        public override string ConvertOutputFileToFullPath(string outputFileRelativePath)
-        {
-            return EmscriptenCompiler.GetOutFileFullPath(outputFileRelativePath);
-        }
+        public override string ConvertOutputFileToFullPath(string outputFileRelativePath) => 
+            EmscriptenCompiler.GetOutFileFullPath(outputFileRelativePath);
 
         protected override void SetupEnvironment(ProcessStartInfo startInfo)
         {
@@ -66,53 +62,23 @@
             }
         }
 
-        public override string CacheDirectory
-        {
-            get
-            {
-                return EmscriptenPaths.cacheDirForIl2CppIncrementalBuildArtifacts;
-            }
-        }
+        public override string CacheDirectory =>
+            EmscriptenPaths.cacheDirForIl2CppIncrementalBuildArtifacts;
 
-        public override string CompilerArchitecture
-        {
-            get
-            {
-                return "EmscriptenJavaScript";
-            }
-        }
+        public override string CompilerArchitecture =>
+            "EmscriptenJavaScript";
 
-        public override string CompilerFlags
-        {
-            get
-            {
-                return EmscriptenCompiler.GetCompilerFlags(this._enableExceptionSupport);
-            }
-        }
+        public override string CompilerFlags =>
+            EmscriptenCompiler.GetCompilerFlags(this._enableExceptionSupport);
 
-        public override string CompilerPlatform
-        {
-            get
-            {
-                return "WebGL";
-            }
-        }
+        public override string CompilerPlatform =>
+            "WebGL";
 
-        public override string LinkerFlags
-        {
-            get
-            {
-                return this._linkerFlags;
-            }
-        }
+        public override string LinkerFlags =>
+            this._linkerFlags;
 
-        public override bool SetsUpEnvironment
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool SetsUpEnvironment =>
+            true;
     }
 }
 

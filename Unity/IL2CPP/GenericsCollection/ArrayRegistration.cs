@@ -5,10 +5,8 @@
 
     internal static class ArrayRegistration
     {
-        public static bool ShouldForce2DArrayFor(TypeDefinition type)
-        {
-            return (type.MetadataType == MetadataType.Single);
-        }
+        public static bool ShouldForce2DArrayFor(TypeDefinition type) => 
+            (type.MetadataType == MetadataType.Single);
     }
 }
 

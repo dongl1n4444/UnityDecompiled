@@ -80,16 +80,12 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         private extern void Internal_SetPreloadAudioData(bool flag);
         [Obsolete("AudioImporter.maxBitrate is deprecated.", true)]
-        internal int maxBitrate(AudioType type)
-        {
-            return 0;
-        }
+        internal int maxBitrate(AudioType type) => 
+            0;
 
         [Obsolete("AudioImporter.minBitrate is deprecated.", true)]
-        internal int minBitrate(AudioType type)
-        {
-            return 0;
-        }
+        internal int minBitrate(AudioType type) => 
+            0;
 
         /// <summary>
         /// <para>Sets the override sample settings for the given platform.</para>
@@ -116,10 +112,8 @@
         [Obsolete("Setting and getting import channels is not used anymore (use forceToMono instead)", true)]
         public AudioImporterChannels channels
         {
-            get
-            {
-                return AudioImporterChannels.Automatic;
-            }
+            get => 
+                AudioImporterChannels.Automatic;
             set
             {
             }
@@ -136,10 +130,8 @@
         [Obsolete("Setting/Getting decompressOnLoad is deprecated. Use AudioImporterSampleSettings.loadType instead.")]
         private bool decompressOnLoad
         {
-            get
-            {
-                return (this.defaultSampleSettings.loadType == AudioClipLoadType.DecompressOnLoad);
-            }
+            get => 
+                (this.defaultSampleSettings.loadType == AudioClipLoadType.DecompressOnLoad);
             set
             {
                 AudioImporterSampleSettings defaultSampleSettings = this.defaultSampleSettings;
@@ -167,10 +159,8 @@
         [Obsolete("Setting and getting the compression format is not used anymore (use compressionFormat in defaultSampleSettings instead). Source audio file is assumed to be PCM Wav.")]
         private AudioImporterFormat format
         {
-            get
-            {
-                return ((this.defaultSampleSettings.compressionFormat != AudioCompressionFormat.PCM) ? AudioImporterFormat.Compressed : AudioImporterFormat.Native);
-            }
+            get => 
+                ((this.defaultSampleSettings.compressionFormat != AudioCompressionFormat.PCM) ? AudioImporterFormat.Compressed : AudioImporterFormat.Native);
             set
             {
                 AudioImporterSampleSettings defaultSampleSettings = this.defaultSampleSettings;
@@ -190,10 +180,8 @@
         /// </summary>
         public bool loadInBackground
         {
-            get
-            {
-                return this.Internal_GetLoadInBackground();
-            }
+            get => 
+                this.Internal_GetLoadInBackground();
             set
             {
                 this.Internal_SetLoadInBackground(value);
@@ -218,23 +206,16 @@
         internal int origSize { [MethodImpl(MethodImplOptions.InternalCall)] get; }
 
         [Obsolete("AudioImporter.origType is deprecated.", true)]
-        internal AudioType origType
-        {
-            get
-            {
-                return AudioType.UNKNOWN;
-            }
-        }
+        internal AudioType origType =>
+            AudioType.UNKNOWN;
 
         /// <summary>
         /// <para>Preloads audio data of the clip when the clip asset is loaded. When this flag is off, scripts have to call AudioClip.LoadAudioData() to load the data before the clip can be played. Properties like length, channels and format are available before the audio data has been loaded.</para>
         /// </summary>
         public bool preloadAudioData
         {
-            get
-            {
-                return this.Internal_GetPreloadAudioData();
-            }
+            get => 
+                this.Internal_GetPreloadAudioData();
             set
             {
                 this.Internal_SetPreloadAudioData(value);
@@ -244,10 +225,8 @@
         [Obsolete("AudioImporter.quality is no longer supported. Use AudioImporterSampleSettings.")]
         private float quality
         {
-            get
-            {
-                return this.defaultSampleSettings.quality;
-            }
+            get => 
+                this.defaultSampleSettings.quality;
             set
             {
                 AudioImporterSampleSettings defaultSampleSettings = this.defaultSampleSettings;

@@ -9,25 +9,17 @@
         {
         }
 
-        public virtual bool IsClassATest(Type type)
-        {
-            return false;
-        }
+        public virtual bool IsClassATest(Type type) => 
+            false;
 
-        public virtual bool IsClassTestSupported()
-        {
-            return false;
-        }
+        public virtual bool IsClassTestSupported() => 
+            false;
 
-        public virtual bool IsMethodATest(MethodInfo method)
-        {
-            return false;
-        }
+        public virtual bool IsMethodATest(MethodInfo method) => 
+            false;
 
-        public virtual bool IsMethodTestSupported()
-        {
-            return false;
-        }
+        public virtual bool IsMethodTestSupported() => 
+            false;
     }
 }
 

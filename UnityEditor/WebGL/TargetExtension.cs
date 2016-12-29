@@ -7,10 +7,8 @@
     {
         private static WebGlBuildWindowExtension s_BuildWindow;
 
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new WebGlBuildPostprocessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new WebGlBuildPostprocessor();
 
         public override IBuildWindowExtension CreateBuildWindowExtension()
         {
@@ -26,31 +24,17 @@
             return extension;
         }
 
-        public override ISettingEditorExtension CreateSettingsEditorExtension()
-        {
-            return new WebGlSettingsExtension();
-        }
+        public override ISettingEditorExtension CreateSettingsEditorExtension() => 
+            new WebGlSettingsExtension();
 
-        public override IUserAssembliesValidator CreateUserAssembliesValidatorExtension()
-        {
-            return null;
-        }
+        public override IUserAssembliesValidator CreateUserAssembliesValidatorExtension() => 
+            null;
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "WebGLExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "WebGLExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "WebGL";
-            }
-        }
+        public override string TargetName =>
+            "WebGL";
     }
 }
 

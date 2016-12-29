@@ -8,10 +8,8 @@
     {
         private GenericPresetLibraryInspector<DoubleCurvePresetLibrary> m_GenericPresetLibraryInspector;
 
-        private string GetHeader(string filePath)
-        {
-            return "Particle Curve Preset Library";
-        }
+        private string GetHeader(string filePath) => 
+            "Particle Curve Preset Library";
 
         public void OnDestroy()
         {

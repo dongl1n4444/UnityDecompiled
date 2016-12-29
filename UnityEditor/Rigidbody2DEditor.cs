@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Rigidbody2D))]
+    [CustomEditor(typeof(Rigidbody2D)), CanEditMultipleObjects]
     internal class Rigidbody2DEditor : Editor
     {
         private const int k_ToggleOffset = 30;

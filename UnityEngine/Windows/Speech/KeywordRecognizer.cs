@@ -42,7 +42,7 @@
             {
                 if (keywords[i] == null)
                 {
-                    throw new ArgumentNullException(string.Format("Keyword at index {0} is null.", i));
+                    throw new ArgumentNullException($"Keyword at index {i} is null.");
                 }
             }
             this.Keywords = keywords;

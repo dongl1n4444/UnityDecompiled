@@ -35,25 +35,17 @@
         {
         }
 
-        public override bool CanMarshalAsInputParameter(MarshaledParameter parameter)
-        {
-            return base.MarshalInfoWriterFor(parameter).CanMarshalTypeToNative();
-        }
+        public override bool CanMarshalAsInputParameter(MarshaledParameter parameter) => 
+            base.MarshalInfoWriterFor(parameter).CanMarshalTypeToNative();
 
-        public override bool CanMarshalAsOutputParameter(MethodReturnType methodReturnType)
-        {
-            return base.MarshalInfoWriterFor(methodReturnType).CanMarshalTypeFromNative();
-        }
+        public override bool CanMarshalAsOutputParameter(MethodReturnType methodReturnType) => 
+            base.MarshalInfoWriterFor(methodReturnType).CanMarshalTypeFromNative();
 
-        public override bool CanMarshalAsOutputParameter(MarshaledParameter parameter)
-        {
-            return base.MarshalInfoWriterFor(parameter).CanMarshalTypeFromNative();
-        }
+        public override bool CanMarshalAsOutputParameter(MarshaledParameter parameter) => 
+            base.MarshalInfoWriterFor(parameter).CanMarshalTypeFromNative();
 
-        public override string GetPrettyCalleeName()
-        {
-            return "Native function";
-        }
+        public override string GetPrettyCalleeName() => 
+            "Native function";
 
         public override void WriteMarshalCleanupEmptyParameter(CppCodeWriter writer, string valueName, MarshaledParameter parameter, IRuntimeMetadataAccess metadataAccess)
         {
@@ -245,10 +237,8 @@
                 bodyWriter.WriteCommentedLine("Marshaling of parameter '{0}' to native representation", parameters);
             }
 
-            internal string <>m__1(CppCodeWriter bodyWriter)
-            {
-                return this.$this.MarshalInfoWriterFor(this.parameter).WriteMarshalEmptyVariableToNative(bodyWriter, new ManagedMarshalValue(this.parameter.NameInGeneratedCode), this.parameters);
-            }
+            internal string <>m__1(CppCodeWriter bodyWriter) => 
+                this.$this.MarshalInfoWriterFor(this.parameter).WriteMarshalEmptyVariableToNative(bodyWriter, new ManagedMarshalValue(this.parameter.NameInGeneratedCode), this.parameters);
         }
 
         [CompilerGenerated]
@@ -264,10 +254,8 @@
                 bodyWriter.WriteCommentedLine("Marshaling of parameter '{0}' to native representation", parameters);
             }
 
-            internal string <>m__1(CppCodeWriter bodyWriter)
-            {
-                return this.$this.MarshalInfoWriterFor(this.parameter).WriteMarshalVariableToNative(bodyWriter, new ManagedMarshalValue(this.parameter.NameInGeneratedCode), this.parameter.Name, this.metadataAccess);
-            }
+            internal string <>m__1(CppCodeWriter bodyWriter) => 
+                this.$this.MarshalInfoWriterFor(this.parameter).WriteMarshalVariableToNative(bodyWriter, new ManagedMarshalValue(this.parameter.NameInGeneratedCode), this.parameter.Name, this.metadataAccess);
         }
 
         [CompilerGenerated]

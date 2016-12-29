@@ -35,10 +35,8 @@
             s_CachedRepoType = EditorPrefs.GetString("pmRepositoryType");
         }
 
-        private static string MapRepoTypeToUrl(string repoType)
-        {
-            return MapRepoTypeToUrl(repoType, null);
-        }
+        private static string MapRepoTypeToUrl(string repoType) => 
+            MapRepoTypeToUrl(repoType, null);
 
         private static string MapRepoTypeToUrl(string repoType, string repoUrl)
         {
@@ -131,10 +129,8 @@
         public static string downloadLocation
         {
             [CompilerGenerated]
-            get
-            {
-                return <downloadLocation>k__BackingField;
-            }
+            get => 
+                <downloadLocation>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -145,10 +141,8 @@
         public static string editorInstallPath
         {
             [CompilerGenerated]
-            get
-            {
-                return <editorInstallPath>k__BackingField;
-            }
+            get => 
+                <editorInstallPath>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -188,20 +182,13 @@
             }
         }
 
-        public static bool inTestMode
-        {
-            get
-            {
-                return (Environment.GetEnvironmentVariable("UNITY_PACKAGEMANAGERTESTMODE") == "1");
-            }
-        }
+        public static bool inTestMode =>
+            (Environment.GetEnvironmentVariable("UNITY_PACKAGEMANAGERTESTMODE") == "1");
 
         public static string repoType
         {
-            get
-            {
-                return s_CachedRepoType;
-            }
+            get => 
+                s_CachedRepoType;
             private set
             {
                 if (ThreadUtils.InMainThread)
@@ -242,21 +229,14 @@
             }
         }
 
-        public static bool teamcity
-        {
-            get
-            {
-                return (Environment.GetEnvironmentVariable("UNITY_THISISABUILDMACHINE") == "1");
-            }
-        }
+        public static bool teamcity =>
+            (Environment.GetEnvironmentVariable("UNITY_THISISABUILDMACHINE") == "1");
 
         public static PackageVersion unityVersion
         {
             [CompilerGenerated]
-            get
-            {
-                return <unityVersion>k__BackingField;
-            }
+            get => 
+                <unityVersion>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -278,10 +258,8 @@
 
         public static UpdateMode updateMode
         {
-            get
-            {
-                return s_CachedUpdateMode;
-            }
+            get => 
+                s_CachedUpdateMode;
             set
             {
                 if (ThreadUtils.InMainThread)

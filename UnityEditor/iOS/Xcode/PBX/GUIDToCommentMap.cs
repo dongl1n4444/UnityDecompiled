@@ -29,7 +29,7 @@
             {
                 return guid;
             }
-            return string.Format("{0} /* {1} */", guid, str);
+            return $"{guid} /* {str} */";
         }
 
         public void WriteStringBuilder(StringBuilder sb, string guid)

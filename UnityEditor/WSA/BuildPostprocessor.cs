@@ -39,7 +39,7 @@
                     break;
 
                 default:
-                    throw new NotSupportedException(string.Format("{0} is not supported.", wsaSDK));
+                    throw new NotSupportedException($"{wsaSDK} is not supported.");
             }
             swsa.Process();
         }
@@ -57,10 +57,8 @@
             return NuGet.Restore(target);
         }
 
-        public override bool SupportsInstallInBuildFolder()
-        {
-            return true;
-        }
+        public override bool SupportsInstallInBuildFolder() => 
+            true;
     }
 }
 

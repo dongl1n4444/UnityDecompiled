@@ -205,20 +205,13 @@
             EditorApplication.Internal_CallSearchHasChanged();
         }
 
-        internal bool hasSearchFilter
-        {
-            get
-            {
-                return (this.m_SearchFilter != "");
-            }
-        }
+        internal bool hasSearchFilter =>
+            (this.m_SearchFilter != "");
 
         internal bool hasSearchFilterFocus
         {
-            get
-            {
-                return this.m_HasSearchFilterFocus;
-            }
+            get => 
+                this.m_HasSearchFilterFocus;
             set
             {
                 this.m_HasSearchFilterFocus = value;
@@ -227,10 +220,8 @@
 
         internal SearchMode searchMode
         {
-            get
-            {
-                return this.m_SearchMode;
-            }
+            get => 
+                this.m_SearchMode;
             set
             {
                 this.m_SearchMode = value;

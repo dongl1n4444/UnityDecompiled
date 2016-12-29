@@ -79,61 +79,32 @@
             return type;
         }
 
-        public static ReadOnlyCollection<UnityType> GetTypes()
-        {
-            return ms_typesReadOnly;
-        }
+        public static ReadOnlyCollection<UnityType> GetTypes() => 
+            ms_typesReadOnly;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern UnityTypeTransport[] Internal_GetAllTypes();
-        public bool IsDerivedFrom(UnityType baseClass)
-        {
-            return ((this.runtimeTypeIndex - baseClass.runtimeTypeIndex) < baseClass.descendantCount);
-        }
+        public bool IsDerivedFrom(UnityType baseClass) => 
+            ((this.runtimeTypeIndex - baseClass.runtimeTypeIndex) < baseClass.descendantCount);
 
         public UnityType baseClass { get; private set; }
 
         public UnityTypeFlags flags { get; private set; }
 
-        public bool hasNativeNamespace
-        {
-            get
-            {
-                return (this.nativeNamespace.Length > 0);
-            }
-        }
+        public bool hasNativeNamespace =>
+            (this.nativeNamespace.Length > 0);
 
-        public bool isAbstract
-        {
-            get
-            {
-                return ((this.flags & UnityTypeFlags.Abstract) != 0);
-            }
-        }
+        public bool isAbstract =>
+            ((this.flags & UnityTypeFlags.Abstract) != 0);
 
-        public bool isDeprecated
-        {
-            get
-            {
-                return ((this.flags & UnityTypeFlags.Deprecated) != 0);
-            }
-        }
+        public bool isDeprecated =>
+            ((this.flags & UnityTypeFlags.Deprecated) != 0);
 
-        public bool isEditorOnly
-        {
-            get
-            {
-                return ((this.flags & UnityTypeFlags.EditorOnly) != 0);
-            }
-        }
+        public bool isEditorOnly =>
+            ((this.flags & UnityTypeFlags.EditorOnly) != 0);
 
-        public bool isSealed
-        {
-            get
-            {
-                return ((this.flags & UnityTypeFlags.Sealed) != 0);
-            }
-        }
+        public bool isSealed =>
+            ((this.flags & UnityTypeFlags.Sealed) != 0);
 
         public string name { get; private set; }
 
@@ -141,23 +112,16 @@
 
         public int persistentTypeID { get; private set; }
 
-        public string qualifiedName
-        {
-            get
-            {
-                return (!this.hasNativeNamespace ? this.name : (this.nativeNamespace + "::" + this.name));
-            }
-        }
+        public string qualifiedName =>
+            (!this.hasNativeNamespace ? this.name : (this.nativeNamespace + "::" + this.name));
 
         [CompilerGenerated]
         private sealed class <FindTypeByNameCaseInsensitive>c__AnonStorey0
         {
             internal string name;
 
-            internal bool <>m__0(UnityType t)
-            {
-                return string.Equals(this.name, t.name, StringComparison.OrdinalIgnoreCase);
-            }
+            internal bool <>m__0(UnityType t) => 
+                string.Equals(this.name, t.name, StringComparison.OrdinalIgnoreCase);
         }
 
         [StructLayout(LayoutKind.Sequential), UsedByNativeCode]

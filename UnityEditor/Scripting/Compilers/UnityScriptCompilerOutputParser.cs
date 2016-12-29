@@ -11,15 +11,11 @@
         private static Regex sCompilerOutput = new Regex(@"\s*(?<filename>.*)\((?<line>\d+),(?<column>\d+)\):\s*[BU]C(?<type>W|E)(?<id>[^:]*):\s*(?<message>.*)", RegexOptions.ExplicitCapture);
         private static Regex sUnknownTypeOrNamespace = new Regex("[^']*'(?<type_name>[^']+)'.*", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        protected override string GetErrorIdentifier()
-        {
-            return "E";
-        }
+        protected override string GetErrorIdentifier() => 
+            "E";
 
-        protected override Regex GetOutputRegex()
-        {
-            return sCompilerOutput;
-        }
+        protected override Regex GetOutputRegex() => 
+            sCompilerOutput;
 
         protected override NormalizedCompilerStatus NormalizedStatusFor(Match match)
         {

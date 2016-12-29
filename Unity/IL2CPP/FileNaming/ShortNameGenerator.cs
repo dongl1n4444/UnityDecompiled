@@ -11,25 +11,17 @@
         [Inject]
         public static INamingService Naming;
 
-        private static string NonUniqueShortNameFor(ArrayType type)
-        {
-            return (NonUniqueShortNameFor(type.ElementType) + "_arr" + ((type.Rank <= 1) ? "" : type.Rank.ToString(CultureInfo.InvariantCulture)));
-        }
+        private static string NonUniqueShortNameFor(ArrayType type) => 
+            (NonUniqueShortNameFor(type.ElementType) + "_arr" + ((type.Rank <= 1) ? "" : type.Rank.ToString(CultureInfo.InvariantCulture)));
 
-        private static string NonUniqueShortNameFor(GenericInstanceType type)
-        {
-            return (NonUniqueShortNameFor(type.ElementType) + "_gen");
-        }
+        private static string NonUniqueShortNameFor(GenericInstanceType type) => 
+            (NonUniqueShortNameFor(type.ElementType) + "_gen");
 
-        internal static string NonUniqueShortNameFor(MethodReference method)
-        {
-            return Naming.ForMethodNameOnly(method);
-        }
+        internal static string NonUniqueShortNameFor(MethodReference method) => 
+            Naming.ForMethodNameOnly(method);
 
-        private static string NonUniqueShortNameFor(TypeDefinition type)
-        {
-            return Naming.ForFile(type);
-        }
+        private static string NonUniqueShortNameFor(TypeDefinition type) => 
+            Naming.ForFile(type);
 
         internal static string NonUniqueShortNameFor(TypeReference type)
         {

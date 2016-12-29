@@ -84,10 +84,8 @@
         /// <returns>
         /// <para>True if player was added.</para>
         /// </returns>
-        public static bool AddPlayer(short playerControllerId)
-        {
-            return AddPlayer(null, playerControllerId);
-        }
+        public static bool AddPlayer(short playerControllerId) => 
+            AddPlayer(null, playerControllerId);
 
         /// <summary>
         /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
@@ -98,10 +96,8 @@
         /// <returns>
         /// <para>True if player was added.</para>
         /// </returns>
-        public static bool AddPlayer(NetworkConnection readyConn, short playerControllerId)
-        {
-            return AddPlayer(readyConn, playerControllerId, null);
-        }
+        public static bool AddPlayer(NetworkConnection readyConn, short playerControllerId) => 
+            AddPlayer(readyConn, playerControllerId, null);
 
         /// <summary>
         /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
@@ -321,10 +317,8 @@
         /// <returns>
         /// <para>The game object that matches the netId.</para>
         /// </returns>
-        public static GameObject FindLocalObject(NetworkInstanceId netId)
-        {
-            return s_NetworkScene.FindLocalObject(netId);
-        }
+        public static GameObject FindLocalObject(NetworkInstanceId netId) => 
+            s_NetworkScene.FindLocalObject(netId);
 
         internal static bool GetPlayerController(short playerControllerId, out PlayerController player)
         {
@@ -359,7 +353,7 @@
             }
             if (NetworkScene.GetSpawnHandler(assetId, out delegate2))
             {
-                return DotNetCompatibility.GetMethodName(delegate2);
+                return delegate2.GetMethodName();
             }
             return "unknown";
         }
@@ -1053,79 +1047,44 @@
         /// <summary>
         /// <para>A list of all players added to the game.</para>
         /// </summary>
-        public static List<PlayerController> localPlayers
-        {
-            get
-            {
-                return s_LocalPlayers;
-            }
-        }
+        public static List<PlayerController> localPlayers =>
+            s_LocalPlayers;
 
         /// <summary>
         /// <para>This is a dictionary of networked objects that have been spawned on the client.</para>
         /// </summary>
-        public static Dictionary<NetworkInstanceId, NetworkIdentity> objects
-        {
-            get
-            {
-                return s_NetworkScene.localObjects;
-            }
-        }
+        public static Dictionary<NetworkInstanceId, NetworkIdentity> objects =>
+            s_NetworkScene.localObjects;
 
         /// <summary>
         /// <para>This is a dictionary of the prefabs that are registered on the client with ClientScene.RegisterPrefab().</para>
         /// </summary>
-        public static Dictionary<NetworkHash128, GameObject> prefabs
-        {
-            get
-            {
-                return NetworkScene.guidToPrefab;
-            }
-        }
+        public static Dictionary<NetworkHash128, GameObject> prefabs =>
+            NetworkScene.guidToPrefab;
 
         /// <summary>
         /// <para>Returns true when a client's connection has been set to ready.</para>
         /// </summary>
-        public static bool ready
-        {
-            get
-            {
-                return s_IsReady;
-            }
-        }
+        public static bool ready =>
+            s_IsReady;
 
         /// <summary>
         /// <para>The NetworkConnection object that is currently "ready". This is the connection to the server where objects are spawned from.</para>
         /// </summary>
-        public static NetworkConnection readyConnection
-        {
-            get
-            {
-                return s_ReadyConnection;
-            }
-        }
+        public static NetworkConnection readyConnection =>
+            s_ReadyConnection;
 
         /// <summary>
         /// <para>The reconnectId to use when a client reconnects to the new host of a game after the old host was lost.</para>
         /// </summary>
-        public static int reconnectId
-        {
-            get
-            {
-                return s_ReconnectId;
-            }
-        }
+        public static int reconnectId =>
+            s_ReconnectId;
 
         /// <summary>
         /// <para>This is dictionary of the disabled NetworkIdentity objects in the scene that could be spawned by messages from the server.</para>
         /// </summary>
-        public static Dictionary<NetworkSceneId, NetworkIdentity> spawnableObjects
-        {
-            get
-            {
-                return s_SpawnableObjects;
-            }
-        }
+        public static Dictionary<NetworkSceneId, NetworkIdentity> spawnableObjects =>
+            s_SpawnableObjects;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct PendingOwner

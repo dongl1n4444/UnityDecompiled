@@ -4,13 +4,8 @@
 
     public class TizenRuntimePlatform : RuntimePlatform
     {
-        public override string Name
-        {
-            get
-            {
-                return "Tizen";
-            }
-        }
+        public override string Name =>
+            "Tizen";
     }
 }
 

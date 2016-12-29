@@ -18,13 +18,8 @@
             return Convert.ToInt64(span.TotalSeconds);
         }
 
-        public static DateTime now
-        {
-            get
-            {
-                return DateTime.Now;
-            }
-        }
+        public static DateTime now =>
+            DateTime.Now;
     }
 }
 

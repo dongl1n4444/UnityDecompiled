@@ -10,7 +10,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(RectTransform))]
+    [CustomEditor(typeof(RectTransform)), CanEditMultipleObjects]
     internal class RectTransformEditor : Editor
     {
         [CompilerGenerated]
@@ -586,7 +586,7 @@
             using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey, (IntPtr) this.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Count<float>(Enumerable.Distinct<float>(Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)))) >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 float f = EditorGUI.FloatField(position, label, num);
                 if (EditorGUI.EndChangeCheck())
@@ -609,7 +609,7 @@
             using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey, (IntPtr) this.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Count<float>(Enumerable.Distinct<float>(Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)))) >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 int id = GUIUtility.GetControlID(s_FloatFieldHash, FocusType.Keyboard, position);
                 Rect labelPosition = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
@@ -627,10 +627,8 @@
             }
         }
 
-        private Vector3 GetAnchorLocal(RectTransform guiParent, Vector2 anchor)
-        {
-            return (Vector3) NormalizedToPointUnclamped(guiParent.rect, anchor);
-        }
+        private Vector3 GetAnchorLocal(RectTransform guiParent, Vector2 anchor) => 
+            ((Vector3) NormalizedToPointUnclamped(guiParent.rect, anchor));
 
         private Rect GetColumnRect(Rect totalRect, int column)
         {
@@ -780,15 +778,11 @@
             }
         }
 
-        private float LerpUnclamped(float a, float b, float t)
-        {
-            return ((a * (1f - t)) + (b * t));
-        }
+        private float LerpUnclamped(float a, float b, float t) => 
+            ((a * (1f - t)) + (b * t));
 
-        private static Vector2 NormalizedToPointUnclamped(Rect rectangle, Vector2 normalizedRectCoordinates)
-        {
-            return new Vector2(Mathf.LerpUnclamped(rectangle.x, rectangle.xMax, normalizedRectCoordinates.x), Mathf.LerpUnclamped(rectangle.y, rectangle.yMax, normalizedRectCoordinates.y));
-        }
+        private static Vector2 NormalizedToPointUnclamped(Rect rectangle, Vector2 normalizedRectCoordinates) => 
+            new Vector2(Mathf.LerpUnclamped(rectangle.x, rectangle.xMax, normalizedRectCoordinates.x), Mathf.LerpUnclamped(rectangle.y, rectangle.yMax, normalizedRectCoordinates.y));
 
         private void OnDisable()
         {
@@ -1035,15 +1029,11 @@
             SceneView.RepaintAll();
         }
 
-        private static float Round(float value)
-        {
-            return Mathf.Floor(0.5f + value);
-        }
+        private static float Round(float value) => 
+            Mathf.Floor(0.5f + value);
 
-        private static int RoundToInt(float value)
-        {
-            return Mathf.FloorToInt(0.5f + value);
-        }
+        private static int RoundToInt(float value) => 
+            Mathf.FloorToInt(0.5f + value);
 
         public static void SetAnchorSmart(RectTransform rect, float value, int axis, bool isMax, bool smart)
         {
@@ -1554,15 +1544,11 @@
             internal DrivenTransformProperties driven;
             internal RectTransformEditor.FloatGetter getter;
 
-            internal bool <>m__0(Object x)
-            {
-                return (((x as RectTransform).drivenProperties & this.driven) != DrivenTransformProperties.None);
-            }
+            internal bool <>m__0(Object x) => 
+                (((x as RectTransform).drivenProperties & this.driven) != DrivenTransformProperties.None);
 
-            internal float <>m__1(Object x)
-            {
-                return this.getter(x as RectTransform);
-            }
+            internal float <>m__1(Object x) => 
+                this.getter(x as RectTransform);
         }
 
         [CompilerGenerated]
@@ -1571,15 +1557,11 @@
             internal DrivenTransformProperties driven;
             internal RectTransformEditor.FloatGetter getter;
 
-            internal bool <>m__0(Object x)
-            {
-                return (((x as RectTransform).drivenProperties & this.driven) != DrivenTransformProperties.None);
-            }
+            internal bool <>m__0(Object x) => 
+                (((x as RectTransform).drivenProperties & this.driven) != DrivenTransformProperties.None);
 
-            internal float <>m__1(Object x)
-            {
-                return this.getter(x as RectTransform);
-            }
+            internal float <>m__1(Object x) => 
+                this.getter(x as RectTransform);
         }
 
         private enum AnchorFusedState

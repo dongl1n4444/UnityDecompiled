@@ -25,21 +25,11 @@
             return data;
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
 
-        public string path
-        {
-            get
-            {
-                return base.GetPropertyString("path");
-            }
-        }
+        public string path =>
+            base.GetPropertyString("path");
     }
 }
 

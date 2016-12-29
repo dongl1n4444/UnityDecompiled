@@ -16,48 +16,18 @@
         {
         }
 
-        public string authorName
-        {
-            get
-            {
-                return this.m_AuthorName;
-            }
-        }
-        public string author
-        {
-            get
-            {
-                return this.m_Author;
-            }
-        }
-        public string comment
-        {
-            get
-            {
-                return this.m_Comment;
-            }
-        }
-        public string revisionID
-        {
-            get
-            {
-                return this.m_RevisionID;
-            }
-        }
-        public string reference
-        {
-            get
-            {
-                return this.m_Reference;
-            }
-        }
-        public ulong timeStamp
-        {
-            get
-            {
-                return this.m_TimeStamp;
-            }
-        }
+        public string authorName =>
+            this.m_AuthorName;
+        public string author =>
+            this.m_Author;
+        public string comment =>
+            this.m_Comment;
+        public string revisionID =>
+            this.m_RevisionID;
+        public string reference =>
+            this.m_Reference;
+        public ulong timeStamp =>
+            this.m_TimeStamp;
     }
 }
 

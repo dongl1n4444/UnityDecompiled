@@ -117,10 +117,8 @@
         }
 
         [DebuggerHidden]
-        private static IEnumerable<T> FindEditorWindowsOfType<T>() where T: class
-        {
-            return new <FindEditorWindowsOfType>c__Iterator0<T> { $PC = -2 };
-        }
+        private static IEnumerable<T> FindEditorWindowsOfType<T>() where T: class => 
+            new <FindEditorWindowsOfType>c__Iterator0<T> { $PC = -2 };
 
         internal static void FindFirstGameViewAndSetToMaximizeOnPlay()
         {
@@ -156,10 +154,8 @@
             return null;
         }
 
-        internal static bool IsMaximized(EditorWindow window)
-        {
-            return (window.m_Parent is MaximizedHostView);
-        }
+        internal static bool IsMaximized(EditorWindow window) => 
+            (window.m_Parent is MaximizedHostView);
 
         private static void LoadDefaultLayout()
         {
@@ -686,21 +682,11 @@
             }
         }
 
-        internal static string layoutsPreferencesPath
-        {
-            get
-            {
-                return (InternalEditorUtility.unityPreferencesFolder + "/Layouts");
-            }
-        }
+        internal static string layoutsPreferencesPath =>
+            (InternalEditorUtility.unityPreferencesFolder + "/Layouts");
 
-        internal static string layoutsProjectPath
-        {
-            get
-            {
-                return (Directory.GetCurrentDirectory() + "/Library");
-            }
-        }
+        internal static string layoutsProjectPath =>
+            (Directory.GetCurrentDirectory() + "/Library");
 
         [CompilerGenerated]
         private sealed class <FindEditorWindowsOfType>c__Iterator0<T> : IEnumerable, IEnumerable<T>, IEnumerator, IDisposable, IEnumerator<T> where T: class
@@ -775,28 +761,14 @@
             }
 
             [DebuggerHidden]
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => 
+                this.System.Collections.Generic.IEnumerable<T>.GetEnumerator();
 
-            T IEnumerator<T>.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            T IEnumerator<T>.Current =>
+                this.$current;
 
-            object IEnumerator.Current
-            {
-                [DebuggerHidden]
-                get
-                {
-                    return this.$current;
-                }
-            }
+            object IEnumerator.Current =>
+                this.$current;
         }
     }
 }

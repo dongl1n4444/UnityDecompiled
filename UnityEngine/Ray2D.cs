@@ -29,10 +29,8 @@
         /// </summary>
         public Vector2 origin
         {
-            get
-            {
-                return this.m_Origin;
-            }
+            get => 
+                this.m_Origin;
             set
             {
                 this.m_Origin = value;
@@ -43,10 +41,8 @@
         /// </summary>
         public Vector2 direction
         {
-            get
-            {
-                return this.m_Direction;
-            }
+            get => 
+                this.m_Direction;
             set
             {
                 this.m_Direction = value.normalized;
@@ -56,10 +52,8 @@
         /// <para>Get a point that lies a given distance along a ray.</para>
         /// </summary>
         /// <param name="distance">Distance of the desired point along the path of the ray.</param>
-        public Vector2 GetPoint(float distance)
-        {
-            return (this.m_Origin + ((Vector2) (this.m_Direction * distance)));
-        }
+        public Vector2 GetPoint(float distance) => 
+            (this.m_Origin + ((Vector2) (this.m_Direction * distance)));
 
         public override string ToString()
         {

@@ -21,15 +21,11 @@
             this.ParseExact(hexRepresentation);
         }
 
-        public static bool operator ==(GUID x, GUID y)
-        {
-            return ((((x.m_Value0 == y.m_Value0) && (x.m_Value1 == y.m_Value1)) && (x.m_Value2 == y.m_Value2)) && (x.m_Value3 == y.m_Value3));
-        }
+        public static bool operator ==(GUID x, GUID y) => 
+            ((((x.m_Value0 == y.m_Value0) && (x.m_Value1 == y.m_Value1)) && (x.m_Value2 == y.m_Value2)) && (x.m_Value3 == y.m_Value3));
 
-        public static bool operator !=(GUID x, GUID y)
-        {
-            return !(x == y);
-        }
+        public static bool operator !=(GUID x, GUID y) => 
+            !(x == y);
 
         public override bool Equals(object obj)
         {
@@ -37,15 +33,11 @@
             return (guid == this);
         }
 
-        public override int GetHashCode()
-        {
-            return this.m_Value0.GetHashCode();
-        }
+        public override int GetHashCode() => 
+            this.m_Value0.GetHashCode();
 
-        public bool Empty()
-        {
-            return ((((this.m_Value0 == 0) && (this.m_Value1 == 0)) && (this.m_Value2 == 0)) && (this.m_Value3 == 0));
-        }
+        public bool Empty() => 
+            ((((this.m_Value0 == 0) && (this.m_Value1 == 0)) && (this.m_Value2 == 0)) && (this.m_Value3 == 0));
 
         public bool ParseExact(string hex)
         {

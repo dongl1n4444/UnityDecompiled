@@ -30,15 +30,11 @@
             this._typeRef = type;
         }
 
-        public virtual bool CanMarshalTypeFromNative()
-        {
-            return this.CanMarshalTypeToNative();
-        }
+        public virtual bool CanMarshalTypeFromNative() => 
+            this.CanMarshalTypeToNative();
 
-        public virtual bool CanMarshalTypeToNative()
-        {
-            return true;
-        }
+        public virtual bool CanMarshalTypeToNative() => 
+            true;
 
         protected static string CleanVariableName(string variableName)
         {
@@ -50,37 +46,29 @@
             return Naming.Clean(variableName);
         }
 
-        public virtual string DecorateVariable(string unmarshaledParameterName, string marshaledVariableName)
-        {
-            return marshaledVariableName;
-        }
+        public virtual string DecorateVariable(string unmarshaledParameterName, string marshaledVariableName) => 
+            marshaledVariableName;
 
         public virtual string GetMarshalingException()
         {
-            throw new NotSupportedException(string.Format("Cannot retrieve marshaling exception for type ({0}) that can be marshaled.", new object[0]));
+            throw new NotSupportedException($"Cannot retrieve marshaling exception for type ({new object[0]}) that can be marshaled.");
         }
 
-        public virtual string GetMarshalingFromNativeException()
-        {
-            return this.GetMarshalingException();
-        }
+        public virtual string GetMarshalingFromNativeException() => 
+            this.GetMarshalingException();
 
-        public virtual bool TreatAsValueType()
-        {
-            return Extensions.IsValueType(this._typeRef);
-        }
+        public virtual bool TreatAsValueType() => 
+            this._typeRef.IsValueType();
 
-        public virtual string UndecorateVariable(string variableName)
-        {
-            return variableName;
-        }
+        public virtual string UndecorateVariable(string variableName) => 
+            variableName;
 
         public virtual void WriteDeclareAndAllocateObject(CppCodeWriter writer, string unmarshaledVariableName, string marshaledVariableName, IRuntimeMetadataAccess metadataAccess)
         {
             writer.WriteVariable(this._typeRef, unmarshaledVariableName);
         }
 
-        public virtual void WriteFieldDeclaration(CppCodeWriter writer, FieldReference field, [Optional, DefaultParameterValue(null)] string fieldNameSuffix)
+        public virtual void WriteFieldDeclaration(CppCodeWriter writer, FieldReference field, string fieldNameSuffix = null)
         {
             foreach (MarshaledType type in this.MarshaledTypes)
             {
@@ -117,32 +105,30 @@
             this.WriteMarshalCleanupVariable(writer, variableName, metadataAccess, null);
         }
 
-        public virtual void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public virtual void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
         }
 
         public virtual void WriteMarshaledTypeForwardDeclaration(CppCodeWriter writer)
         {
-            if (!Extensions.IsEnum(this._typeRef) && !Extensions.IsSystemObject(this._typeRef))
+            if (!this._typeRef.IsEnum() && !this._typeRef.IsSystemObject())
             {
                 foreach (MarshaledType type in this.MarshaledTypes)
                 {
-                    writer.AddForwardDeclaration(string.Format("struct {0}", type.Name));
+                    writer.AddForwardDeclaration($"struct {type.Name}");
                 }
             }
         }
 
         public virtual string WriteMarshalEmptyVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, IRuntimeMetadataAccess metadataAccess)
         {
-            string name = string.Format("_{0}_empty", CleanVariableName(variableName));
+            string name = $"_{CleanVariableName(variableName)}_empty";
             writer.WriteVariable(this._typeRef, name);
             return name;
         }
 
-        public virtual string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
-        {
-            return variableName.Load();
-        }
+        public virtual string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters) => 
+            variableName.Load();
 
         public virtual void WriteMarshalFunctionDeclarations(CppCodeWriter writer)
         {
@@ -161,25 +147,19 @@
         {
         }
 
-        public virtual string WriteMarshalReturnValueToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, IRuntimeMetadataAccess metadataAccess)
-        {
-            return this.WriteMarshalVariableToNative(writer, sourceVariable, null, metadataAccess);
-        }
+        public virtual string WriteMarshalReturnValueToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, IRuntimeMetadataAccess metadataAccess) => 
+            this.WriteMarshalVariableToNative(writer, sourceVariable, null, metadataAccess);
 
-        public virtual string WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
-        {
-            return variableName;
-        }
+        public virtual string WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess) => 
+            variableName;
 
         public virtual void WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
         {
             writer.WriteLine(destinationVariable.Store(variableName));
         }
 
-        public virtual string WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
-        {
-            return sourceVariable.Load();
-        }
+        public virtual string WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess) => 
+            sourceVariable.Load();
 
         public virtual void WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
         {
@@ -200,17 +180,17 @@
                     object[] args = new object[] { type.Name, variableName + type.VariableName };
                     writer.WriteLine("{0} {1} = NULL;", args);
                 }
-                else if ((this._typeRef.MetadataType == MetadataType.Class) && !Extensions.DerivesFromObject(this._typeRef))
+                else if ((this._typeRef.MetadataType == MetadataType.Class) && !this._typeRef.DerivesFromObject())
                 {
                     object[] objArray2 = new object[] { type.Name, variableName + type.VariableName };
                     writer.WriteLine("{0} {1} = {0}();", objArray2);
                 }
-                else if (Extensions.IsPrimitiveType(this._typeRef.MetadataType))
+                else if (this._typeRef.MetadataType.IsPrimitiveType())
                 {
                     object[] objArray3 = new object[] { type.Name, variableName + type.VariableName, CppCodeWriter.InitializerStringForPrimitiveType(this._typeRef.MetadataType) };
                     writer.WriteLine("{0} {1} = {2};", objArray3);
                 }
-                else if (Extensions.IsPrimitiveCppType(type.Name))
+                else if (type.Name.IsPrimitiveCppType())
                 {
                     object[] objArray4 = new object[] { type.Name, variableName + type.VariableName, CppCodeWriter.InitializerStringForPrimitiveCppType(type.Name) };
                     writer.WriteLine("{0} {1} = {2};", objArray4);
@@ -223,39 +203,19 @@
             }
         }
 
-        public virtual bool HasNativeStructDefinition
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool HasNativeStructDefinition =>
+            false;
 
-        public virtual string MarshalCleanupFunctionName
-        {
-            get
-            {
-                return Naming.Null;
-            }
-        }
+        public virtual string MarshalCleanupFunctionName =>
+            Naming.Null;
 
         public abstract MarshaledType[] MarshaledTypes { get; }
 
-        public virtual string MarshalFromNativeFunctionName
-        {
-            get
-            {
-                return Naming.Null;
-            }
-        }
+        public virtual string MarshalFromNativeFunctionName =>
+            Naming.Null;
 
-        public virtual string MarshalToNativeFunctionName
-        {
-            get
-            {
-                return Naming.Null;
-            }
-        }
+        public virtual string MarshalToNativeFunctionName =>
+            Naming.Null;
 
         public virtual string NativeSize
         {
@@ -269,17 +229,12 @@
                 {
                     <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <get_NativeSize>m__1);
                 }
-                return Enumerable.Aggregate<string>(Enumerable.Select<MarshaledType, string>(this.MarshaledTypes, <>f__am$cache0), <>f__am$cache1);
+                return this.MarshaledTypes.Select<MarshaledType, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
             }
         }
 
-        public virtual int NativeSizeWithoutPointers
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public virtual int NativeSizeWithoutPointers =>
+            0;
     }
 }
 

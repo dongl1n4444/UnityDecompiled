@@ -72,7 +72,7 @@
             this._elementTypeMarshalInfoWriter = MarshalDataCollector.MarshalInfoWriterFor(this._elementType, marshalType, info, false, false, true, null);
             if (this._elementTypeMarshalInfoWriter.MarshaledTypes.Length > 1)
             {
-                throw new InvalidOperationException(string.Format("ArrayMarshalInfoWriter cannot marshal arrays of {0}.", this._elementType.FullName));
+                throw new InvalidOperationException($"ArrayMarshalInfoWriter cannot marshal arrays of {this._elementType.FullName}.");
             }
             this._arrayMarshaledTypeName = this._elementTypeMarshalInfoWriter.MarshaledTypes[0].DecoratedName + "*";
             if (marshalType == MarshalType.WindowsRuntime)
@@ -114,20 +114,14 @@
             }
         }
 
-        public override bool CanMarshalTypeFromNative()
-        {
-            return this._elementTypeMarshalInfoWriter.CanMarshalTypeFromNative();
-        }
+        public override bool CanMarshalTypeFromNative() => 
+            this._elementTypeMarshalInfoWriter.CanMarshalTypeFromNative();
 
-        public override bool CanMarshalTypeToNative()
-        {
-            return this._elementTypeMarshalInfoWriter.CanMarshalTypeToNative();
-        }
+        public override bool CanMarshalTypeToNative() => 
+            this._elementTypeMarshalInfoWriter.CanMarshalTypeToNative();
 
-        public override string GetMarshalingException()
-        {
-            return this._elementTypeMarshalInfoWriter.GetMarshalingException();
-        }
+        public override string GetMarshalingException() => 
+            this._elementTypeMarshalInfoWriter.GetMarshalingException();
 
         protected string MarshaledArraySizeFor(string nativeArray, IList<MarshaledParameter> methodParameters)
         {
@@ -143,12 +137,12 @@
                     {
                         return parameter.NameInGeneratedCode;
                     }
-                    return string.Format("static_cast<int32_t>({0})", parameter.NameInGeneratedCode);
+                    return $"static_cast<int32_t>({parameter.NameInGeneratedCode})";
                 }
                 case ArraySizeOptions.UseFirstMarshaledType:
-                    return string.Format("static_cast<int32_t>({0}{1})", nativeArray, this.MarshaledTypes[0].VariableName);
+                    return $"static_cast<int32_t>({nativeArray}{this.MarshaledTypes[0].VariableName})";
             }
-            throw new InvalidOperationException(string.Format("Unknown ArraySizeOptions: {0}", this._arraySizeSelection));
+            throw new InvalidOperationException($"Unknown ArraySizeOptions: {this._arraySizeSelection}");
         }
 
         protected string WriteArraySizeFromManagedArray(CppCodeWriter writer, ManagedMarshalValue managedArray, string nativeArray)
@@ -156,7 +150,7 @@
             string str;
             if (this._arraySizeSelection != ArraySizeOptions.UseFirstMarshaledType)
             {
-                str = string.Format("_{0}_Length", managedArray.GetNiceName());
+                str = $"_{managedArray.GetNiceName()}_Length";
                 object[] objArray1 = new object[] { str, managedArray.Load() };
                 writer.WriteLine("int32_t {0} = ({1})->max_length;", objArray1);
                 return str;
@@ -164,7 +158,7 @@
             str = nativeArray + this._marshaledTypes[0].VariableName;
             object[] args = new object[] { str, managedArray.Load() };
             writer.WriteLine("{0} = static_cast<uint32_t>(({1})->max_length);", args);
-            return string.Format("static_cast<int32_t>({0})", str);
+            return $"static_cast<int32_t>({str})";
         }
 
         protected void WriteAssignNullArray(CppCodeWriter writer, string destinationVariable)
@@ -212,7 +206,7 @@
             outerWriter.WriteIfNotEmpty(new Action<CppCodeWriter>(storey.<>m__0), writeLoopBody, <>f__am$cache0);
         }
 
-        public abstract override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName);
+        public abstract override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null);
         public override void WriteMarshaledTypeForwardDeclaration(CppCodeWriter writer)
         {
             this._elementTypeMarshalInfoWriter.WriteMarshaledTypeForwardDeclaration(writer);
@@ -224,7 +218,7 @@
                 methodParameters = methodParameters,
                 metadataAccess = metadataAccess,
                 $this = this,
-                emptyVariableName = string.Format("_{0}_empty", DefaultMarshalInfoWriter.CleanVariableName(variableName))
+                emptyVariableName = $"_{DefaultMarshalInfoWriter.CleanVariableName(variableName)}_empty"
             };
             ManagedMarshalValue value2 = new ManagedMarshalValue(storey.emptyVariableName);
             writer.WriteVariable(base._typeRef, storey.emptyVariableName);
@@ -245,14 +239,14 @@
 
         public override string WriteMarshalEmptyVariableToNative(CppCodeWriter writer, ManagedMarshalValue variableName, IList<MarshaledParameter> methodParameters)
         {
-            string str = string.Format("_{0}_marshaled", variableName.GetNiceName());
+            string str = $"_{variableName.GetNiceName()}_marshaled";
             this.WriteNativeVariableDeclarationOfType(writer, str);
             object[] args = new object[] { variableName.Load(), DefaultMarshalInfoWriter.Naming.Null };
             writer.WriteLine("if ({0} != {1})", args);
             using (new BlockWriter(writer, false))
             {
                 string str2 = this.WriteArraySizeFromManagedArray(writer, variableName, str);
-                string str3 = !this.NeedsTrailingNullElement ? str2 : string.Format("({0} + 1)", str2);
+                string str3 = !this.NeedsTrailingNullElement ? str2 : $"({str2} + 1)";
                 object[] objArray2 = new object[] { str, this._elementTypeMarshalInfoWriter.MarshaledTypes[0].DecoratedName, str3 };
                 writer.WriteLine("{0} = il2cpp_codegen_marshal_allocate_array<{1}>({2});", objArray2);
                 object[] objArray3 = new object[] { str, str3, this._elementTypeMarshalInfoWriter.MarshaledTypes[0].DecoratedName };
@@ -314,29 +308,14 @@
         public abstract override void WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess);
         public abstract override void WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess);
 
-        public override MarshaledType[] MarshaledTypes
-        {
-            get
-            {
-                return this._marshaledTypes;
-            }
-        }
+        public override MarshaledType[] MarshaledTypes =>
+            this._marshaledTypes;
 
-        public override string NativeSize
-        {
-            get
-            {
-                return "-1";
-            }
-        }
+        public override string NativeSize =>
+            "-1";
 
-        protected bool NeedsTrailingNullElement
-        {
-            get
-            {
-                return ((this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter) && (this._marshalType != MarshalType.WindowsRuntime));
-            }
-        }
+        protected bool NeedsTrailingNullElement =>
+            ((this._elementTypeMarshalInfoWriter is StringMarshalInfoWriter) && (this._marshalType != MarshalType.WindowsRuntime));
 
         [CompilerGenerated]
         private sealed class <WriteCleanupLoop>c__AnonStorey6
@@ -347,7 +326,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter)
             {
-                this.$this._elementTypeMarshalInfoWriter.WriteMarshalCleanupVariable(bodyWriter, this.$this._elementTypeMarshalInfoWriter.UndecorateVariable(string.Format("({0})[i]", this.variableName)), this.metadataAccess, null);
+                this.$this._elementTypeMarshalInfoWriter.WriteMarshalCleanupVariable(bodyWriter, this.$this._elementTypeMarshalInfoWriter.UndecorateVariable($"({this.variableName})[i]"), this.metadataAccess, null);
             }
         }
 
@@ -370,10 +349,8 @@
             internal ArrayMarshalInfoWriter.<WriteMarshalEmptyVariableFromNative>c__AnonStorey2 <>f__ref$2;
             internal string arraySize;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.arraySize;
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.arraySize;
 
             internal void <>m__1(CppCodeWriter bodyWriter)
             {
@@ -405,7 +382,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter)
             {
-                string variableName = this.$this._elementTypeMarshalInfoWriter.UndecorateVariable(string.Format("({0})[i]", this.variableName));
+                string variableName = this.$this._elementTypeMarshalInfoWriter.UndecorateVariable($"({this.variableName})[i]");
                 string str2 = this.$this._elementTypeMarshalInfoWriter.WriteMarshalVariableFromNative(bodyWriter, variableName, this.methodParameters, this.returnValue, this.forNativeWrapperOfManagedMethod, this.metadataAccess);
                 object[] args = new object[] { Emit.StoreArrayElement(this.destinationVariable.Load(), "i", str2, false) };
                 bodyWriter.WriteLine("{0};", args);
@@ -419,10 +396,8 @@
             internal string destinationVariable;
             internal IList<MarshaledParameter> methodParameters;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.$this.MarshaledArraySizeFor(this.destinationVariable, this.methodParameters);
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.$this.MarshaledArraySizeFor(this.destinationVariable, this.methodParameters);
         }
 
         [CompilerGenerated]
@@ -436,7 +411,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter)
             {
-                this.$this._elementTypeMarshalInfoWriter.WriteMarshalVariableToNative(bodyWriter, new ManagedMarshalValue(this.sourceVariable, "i"), this.$this._elementTypeMarshalInfoWriter.UndecorateVariable(string.Format("({0})[i]", this.destinationVariable)), this.managedVariableName, this.metadataAccess);
+                this.$this._elementTypeMarshalInfoWriter.WriteMarshalVariableToNative(bodyWriter, new ManagedMarshalValue(this.sourceVariable, "i"), this.$this._elementTypeMarshalInfoWriter.UndecorateVariable($"({this.destinationVariable})[i]"), this.managedVariableName, this.metadataAccess);
             }
         }
 

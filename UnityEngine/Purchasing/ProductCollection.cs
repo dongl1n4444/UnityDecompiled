@@ -27,7 +27,7 @@
         internal void AddProducts(IEnumerable<Product> products)
         {
             this.m_ProductSet.UnionWith(products);
-            this.m_Products = Enumerable.ToArray<Product>(this.m_ProductSet);
+            this.m_Products = this.m_ProductSet.ToArray<Product>();
             if (<>f__am$cache0 == null)
             {
                 <>f__am$cache0 = new Func<Product, string>(null, (IntPtr) <AddProducts>m__0);
@@ -71,24 +71,14 @@
         /// <summary>
         /// <para>All products.</para>
         /// </summary>
-        public Product[] all
-        {
-            get
-            {
-                return this.m_Products;
-            }
-        }
+        public Product[] all =>
+            this.m_Products;
 
         /// <summary>
         /// <para>The set of products.</para>
         /// </summary>
-        public HashSet<Product> set
-        {
-            get
-            {
-                return this.m_ProductSet;
-            }
-        }
+        public HashSet<Product> set =>
+            this.m_ProductSet;
     }
 }
 

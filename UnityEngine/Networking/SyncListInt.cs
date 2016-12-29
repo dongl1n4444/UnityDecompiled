@@ -7,10 +7,8 @@
     /// </summary>
     public class SyncListInt : SyncList<int>
     {
-        protected override int DeserializeItem(NetworkReader reader)
-        {
-            return (int) reader.ReadPackedUInt32();
-        }
+        protected override int DeserializeItem(NetworkReader reader) => 
+            ((int) reader.ReadPackedUInt32());
 
         [Obsolete("ReadReference is now used instead")]
         public static SyncListInt ReadInstance(NetworkReader reader)

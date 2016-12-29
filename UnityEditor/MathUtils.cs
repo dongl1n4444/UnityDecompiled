@@ -178,20 +178,14 @@
             return Mathf.Pow(10f, (float) Mathf.RoundToInt(Mathf.Log10(positiveNumber)));
         }
 
-        internal static int GetNumberOfDecimalsForMinimumDifference(double minDifference)
-        {
-            return (int) Math.Max(0.0, -Math.Floor(Math.Log10(Math.Abs(minDifference))));
-        }
+        internal static int GetNumberOfDecimalsForMinimumDifference(double minDifference) => 
+            ((int) Math.Max(0.0, -Math.Floor(Math.Log10(Math.Abs(minDifference)))));
 
-        internal static int GetNumberOfDecimalsForMinimumDifference(float minDifference)
-        {
-            return Mathf.Clamp(-Mathf.FloorToInt(Mathf.Log10(Mathf.Abs(minDifference))), 0, 15);
-        }
+        internal static int GetNumberOfDecimalsForMinimumDifference(float minDifference) => 
+            Mathf.Clamp(-Mathf.FloorToInt(Mathf.Log10(Mathf.Abs(minDifference))), 0, 15);
 
-        public static Quaternion GetQuatConjugate(Quaternion q)
-        {
-            return new Quaternion(-q.x, -q.y, -q.z, q.w);
-        }
+        public static Quaternion GetQuatConjugate(Quaternion q) => 
+            new Quaternion(-q.x, -q.y, -q.z, q.w);
 
         public static Quaternion GetQuatExp(Quaternion q)
         {
@@ -209,10 +203,8 @@
             return quaternion;
         }
 
-        public static float GetQuatLength(Quaternion q)
-        {
-            return Mathf.Sqrt((((q.x * q.x) + (q.y * q.y)) + (q.z * q.z)) + (q.w * q.w));
-        }
+        public static float GetQuatLength(Quaternion q) => 
+            Mathf.Sqrt((((q.x * q.x) + (q.y * q.y)) + (q.z * q.z)) + (q.w * q.w));
 
         public static Quaternion GetQuatLog(Quaternion q)
         {

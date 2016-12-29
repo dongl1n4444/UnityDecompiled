@@ -19,10 +19,8 @@
         /// </summary>
         public float extremumSlip
         {
-            get
-            {
-                return this.m_ExtremumSlip;
-            }
+            get => 
+                this.m_ExtremumSlip;
             set
             {
                 this.m_ExtremumSlip = value;
@@ -33,10 +31,8 @@
         /// </summary>
         public float extremumValue
         {
-            get
-            {
-                return this.m_ExtremumValue;
-            }
+            get => 
+                this.m_ExtremumValue;
             set
             {
                 this.m_ExtremumValue = value;
@@ -47,10 +43,8 @@
         /// </summary>
         public float asymptoteSlip
         {
-            get
-            {
-                return this.m_AsymptoteSlip;
-            }
+            get => 
+                this.m_AsymptoteSlip;
             set
             {
                 this.m_AsymptoteSlip = value;
@@ -61,10 +55,8 @@
         /// </summary>
         public float asymptoteValue
         {
-            get
-            {
-                return this.m_AsymptoteValue;
-            }
+            get => 
+                this.m_AsymptoteValue;
             set
             {
                 this.m_AsymptoteValue = value;
@@ -75,10 +67,8 @@
         /// </summary>
         public float stiffness
         {
-            get
-            {
-                return this.m_Stiffness;
-            }
+            get => 
+                this.m_Stiffness;
             set
             {
                 this.m_Stiffness = value;

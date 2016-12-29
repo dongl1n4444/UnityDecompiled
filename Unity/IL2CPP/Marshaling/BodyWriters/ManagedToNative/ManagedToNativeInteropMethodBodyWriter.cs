@@ -34,7 +34,7 @@
                 string str3 = InteropMethodBodyWriter.Naming.ForInteropReturnValue() + marshaledTypes[j].VariableName;
                 elements.Add("&" + writer2.DecorateVariable(null, str3));
             }
-            return EnumerableExtensions.AggregateWithComma(elements);
+            return elements.AggregateWithComma();
         }
 
         protected override void WriteMethodEpilogue(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)

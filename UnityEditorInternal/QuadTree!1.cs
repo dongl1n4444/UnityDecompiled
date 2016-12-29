@@ -34,10 +34,8 @@
             this.m_Root.DebugDraw(this.m_ScreenSpaceOffset);
         }
 
-        public List<T> Elements()
-        {
-            return this.m_Root.GetElementsIncludingChildren();
-        }
+        public List<T> Elements() => 
+            this.m_Root.GetElementsIncludingChildren();
 
         public void Insert(List<T> items)
         {
@@ -71,28 +69,16 @@
             this.m_Root = new QuadTreeNode<T>(this.m_Rectangle);
         }
 
-        public int Count
-        {
-            get
-            {
-                return this.m_Root.CountItemsIncludingChildren();
-            }
-        }
+        public int Count =>
+            this.m_Root.CountItemsIncludingChildren();
 
-        public Rect rectangle
-        {
-            get
-            {
-                return this.m_Rectangle;
-            }
-        }
+        public Rect rectangle =>
+            this.m_Rectangle;
 
         public Vector2 screenSpaceOffset
         {
-            get
-            {
-                return this.m_ScreenSpaceOffset;
-            }
+            get => 
+                this.m_ScreenSpaceOffset;
             set
             {
                 this.m_ScreenSpaceOffset = value;

@@ -48,29 +48,22 @@
                 string str = value2.Get("download.url").AsString(true);
                 string str2 = value2.Get("download.key").AsString(true);
                 bool resumeOK = (str == url) && (str2 == key);
-                JSONValue value6 = new JSONValue();
-                value6["url"] = url;
-                value6["key"] = key;
-                JSONValue value7 = new JSONValue();
-                value7["download"] = value6;
-                AssetStoreUtils.Download(package_id, url, destination, key, value7.ToString(), resumeOK, doneCallback);
+                JSONValue value6 = new JSONValue {
+                    ["url"] = url,
+                    ["key"] = key
+                };
+                AssetStoreUtils.Download(package_id, url, destination, key, new JSONValue { ["download"] = value6 }.ToString(), resumeOK, doneCallback);
             }
         }
 
-        public string GetAuthToken()
-        {
-            return InternalEditorUtility.GetAuthToken();
-        }
+        public string GetAuthToken() => 
+            InternalEditorUtility.GetAuthToken();
 
-        public bool GetDockedStatus()
-        {
-            return this.docked;
-        }
+        public bool GetDockedStatus() => 
+            this.docked;
 
-        public float GetFloat(string key)
-        {
-            return EditorPrefs.GetFloat(key);
-        }
+        public float GetFloat(string key) => 
+            EditorPrefs.GetFloat(key);
 
         public string GetInitialOpenURL()
         {
@@ -93,15 +86,11 @@
             return s_Instance;
         }
 
-        public int GetInt(string key)
-        {
-            return EditorPrefs.GetInt(key);
-        }
+        public int GetInt(string key) => 
+            EditorPrefs.GetInt(key);
 
-        public int[] GetLicenseFlags()
-        {
-            return InternalEditorUtility.GetLicenseFlags();
-        }
+        public int[] GetLicenseFlags() => 
+            InternalEditorUtility.GetLicenseFlags();
 
         public PackageList GetPackageList()
         {
@@ -157,44 +146,32 @@
                     dictionary[package.id] = package;
                 }
             }
-            Package[] packageArray = Enumerable.ToArray<Package>(dictionary.Values);
+            Package[] packageArray = dictionary.Values.ToArray<Package>();
             return new PackageList { results = packageArray };
         }
 
-        public int GetSkinIndex()
-        {
-            return EditorGUIUtility.skinIndex;
-        }
+        public int GetSkinIndex() => 
+            EditorGUIUtility.skinIndex;
 
-        public string GetString(string key)
-        {
-            return EditorPrefs.GetString(key);
-        }
+        public string GetString(string key) => 
+            EditorPrefs.GetString(key);
 
-        public bool HasKey(string key)
-        {
-            return EditorPrefs.HasKey(key);
-        }
+        public bool HasKey(string key) => 
+            EditorPrefs.HasKey(key);
 
-        private bool IsBuiltinStandardAsset(string path)
-        {
-            return s_StandardPackageRegExp.IsMatch(path);
-        }
+        private bool IsBuiltinStandardAsset(string path) => 
+            s_StandardPackageRegExp.IsMatch(path);
 
         public void OpenBrowser(string url)
         {
             Application.OpenURL(url);
         }
 
-        public bool OpenPackage(string id)
-        {
-            return this.OpenPackage(id, "default");
-        }
+        public bool OpenPackage(string id) => 
+            this.OpenPackage(id, "default");
 
-        public bool OpenPackage(string id, string action)
-        {
-            return OpenPackageInternal(id);
-        }
+        public bool OpenPackage(string id, string action) => 
+            OpenPackageInternal(id);
 
         public static bool OpenPackageInternal(string id)
         {
@@ -286,10 +263,8 @@
                 }
             }
 
-            public override string ToString()
-            {
-                return string.Format("{{label={0}, id={1}}}", this.label, this.id);
-            }
+            public override string ToString() => 
+                $"{{label={this.label}, id={this.id}}}";
         }
 
         public class Link
@@ -309,10 +284,8 @@
                 }
             }
 
-            public override string ToString()
-            {
-                return string.Format("{{type={0}, id={1}}}", this.type, this.id);
-            }
+            public override string ToString() => 
+                $"{{type={this.type}, id={this.id}}}";
         }
 
         public class Package
@@ -380,10 +353,8 @@
                 }
             }
 
-            public override string ToString()
-            {
-                return string.Format("{{title={0}, id={1}, publisher={2}, category={3}, pubdate={8}, version={4}, version_id={5}, description={9}, link={10}, local_icon={6}, local_path={7}}}", new object[] { this.title, this.id, this.publisher, this.category, this.version, this.version_id, this.local_icon, this.local_path, this.pubdate, this.description, this.link });
-            }
+            public override string ToString() => 
+                string.Format("{{title={0}, id={1}, publisher={2}, category={3}, pubdate={8}, version={4}, version_id={5}, description={9}, link={10}, local_icon={6}, local_path={7}}}", new object[] { this.title, this.id, this.publisher, this.category, this.version, this.version_id, this.local_icon, this.local_path, this.pubdate, this.description, this.link });
         }
 
         public class PackageList

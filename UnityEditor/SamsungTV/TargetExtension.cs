@@ -9,41 +9,23 @@
         private static SamsungTVBuildWindowExtension buildWindow;
         private STVPluginImporterExtension pluginImporterExtension;
 
-        public override IBuildPostprocessor CreateBuildPostprocessor()
-        {
-            return new SamsungTVBuildPostprocessor();
-        }
+        public override IBuildPostprocessor CreateBuildPostprocessor() => 
+            new SamsungTVBuildPostprocessor();
 
-        public override IBuildWindowExtension CreateBuildWindowExtension()
-        {
-            return ((buildWindow != null) ? buildWindow : (buildWindow = new SamsungTVBuildWindowExtension()));
-        }
+        public override IBuildWindowExtension CreateBuildWindowExtension() => 
+            ((buildWindow != null) ? buildWindow : (buildWindow = new SamsungTVBuildWindowExtension()));
 
-        public override IPluginImporterExtension CreatePluginImporterExtension()
-        {
-            return ((this.pluginImporterExtension != null) ? this.pluginImporterExtension : (this.pluginImporterExtension = new STVPluginImporterExtension()));
-        }
+        public override IPluginImporterExtension CreatePluginImporterExtension() => 
+            ((this.pluginImporterExtension != null) ? this.pluginImporterExtension : (this.pluginImporterExtension = new STVPluginImporterExtension()));
 
-        public override ISettingEditorExtension CreateSettingsEditorExtension()
-        {
-            return new SamsungTVSettingsEditorExtension();
-        }
+        public override ISettingEditorExtension CreateSettingsEditorExtension() => 
+            new SamsungTVSettingsEditorExtension();
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "SamsungTVEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "SamsungTVEditorExtensions";
 
-        public override string TargetName
-        {
-            get
-            {
-                return "SamsungTV";
-            }
-        }
+        public override string TargetName =>
+            "SamsungTV";
     }
 }
 

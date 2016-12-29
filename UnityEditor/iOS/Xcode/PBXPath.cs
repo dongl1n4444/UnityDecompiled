@@ -41,14 +41,8 @@
             }
         }
 
-        public static string FixSlashes(string path)
-        {
-            if (path == null)
-            {
-                return null;
-            }
-            return path.Replace('\\', '/');
-        }
+        public static string FixSlashes(string path) => 
+            path?.Replace('\\', '/');
 
         public static string GetCurrentDirectory()
         {

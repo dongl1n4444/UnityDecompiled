@@ -54,23 +54,13 @@
             this.m_Stack.Push(element);
         }
 
-        public int countActive
-        {
-            get
-            {
-                return (this.countAll - this.countInactive);
-            }
-        }
+        public int countActive =>
+            (this.countAll - this.countInactive);
 
         public int countAll { get; private set; }
 
-        public int countInactive
-        {
-            get
-            {
-                return this.m_Stack.Count;
-            }
-        }
+        public int countInactive =>
+            this.m_Stack.Count;
     }
 }
 

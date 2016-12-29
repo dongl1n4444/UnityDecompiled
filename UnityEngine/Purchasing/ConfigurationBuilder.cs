@@ -30,10 +30,8 @@
         /// <returns>
         /// <para>The referenced instance. Suitable for chaining.</para>
         /// </returns>
-        public ConfigurationBuilder AddProduct(string id, ProductType type)
-        {
-            return this.AddProduct(id, type, null);
-        }
+        public ConfigurationBuilder AddProduct(string id, ProductType type) => 
+            this.AddProduct(id, type, null);
 
         /// <summary>
         /// <para>Add a product with a Unity IAP ID, type and optional set of store-specific IDs.</para>
@@ -65,10 +63,8 @@
             return this;
         }
 
-        public T Configure<T>() where T: IStoreConfiguration
-        {
-            return this.m_Factory.GetConfig<T>();
-        }
+        public T Configure<T>() where T: IStoreConfiguration => 
+            this.m_Factory.GetConfig<T>();
 
         /// <summary>
         /// <para>Get an instance of ConfigurationBuilder.</para>
@@ -78,29 +74,17 @@
         /// <returns>
         /// <para>New instance.</para>
         /// </returns>
-        public static ConfigurationBuilder Instance(IPurchasingModule first, params IPurchasingModule[] rest)
-        {
-            return new ConfigurationBuilder(new PurchasingFactory(first, rest));
-        }
+        public static ConfigurationBuilder Instance(IPurchasingModule first, params IPurchasingModule[] rest) => 
+            new ConfigurationBuilder(new PurchasingFactory(first, rest));
 
-        internal PurchasingFactory factory
-        {
-            get
-            {
-                return this.m_Factory;
-            }
-        }
+        internal PurchasingFactory factory =>
+            this.m_Factory;
 
         /// <summary>
         /// <para>The products built so far.</para>
         /// </summary>
-        public HashSet<ProductDefinition> products
-        {
-            get
-            {
-                return this.m_Products;
-            }
-        }
+        public HashSet<ProductDefinition> products =>
+            this.m_Products;
 
         /// <summary>
         /// <para>If set Unity IAP will retrieve your product catalog from Unity cloud services, allowing you to change your catalog dynamically without updating your App.</para>

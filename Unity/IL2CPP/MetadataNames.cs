@@ -4,69 +4,29 @@
 
     internal class MetadataNames
     {
-        public string DebugMethodInfo
-        {
-            get
-            {
-                return "DebugMethodInfo";
-            }
-        }
+        public string DebugMethodInfo =>
+            "DebugMethodInfo";
 
-        public string DebugMethodInfoOffsetTable
-        {
-            get
-            {
-                return "DebugMethodInfoOffsetTable";
-            }
-        }
+        public string DebugMethodInfoOffsetTable =>
+            "DebugMethodInfoOffsetTable";
 
-        public string DebugTypeInfo
-        {
-            get
-            {
-                return "DebugTypeInfo";
-            }
-        }
+        public string DebugTypeInfo =>
+            "DebugTypeInfo";
 
-        public string GenericClass
-        {
-            get
-            {
-                return "GenericClass";
-            }
-        }
+        public string GenericClass =>
+            "GenericClass";
 
-        public string Il2CppClass
-        {
-            get
-            {
-                return "il2cpp_TypeInfo";
-            }
-        }
+        public string Il2CppClass =>
+            "il2cpp_TypeInfo";
 
-        public string MethodInfo
-        {
-            get
-            {
-                return "MethodInfo";
-            }
-        }
+        public string MethodInfo =>
+            "MethodInfo";
 
-        public string StaticFields
-        {
-            get
-            {
-                return "StaticFields";
-            }
-        }
+        public string StaticFields =>
+            "StaticFields";
 
-        public string ThreadStaticFields
-        {
-            get
-            {
-                return "ThreadStaticFields";
-            }
-        }
+        public string ThreadStaticFields =>
+            "ThreadStaticFields";
     }
 }
 

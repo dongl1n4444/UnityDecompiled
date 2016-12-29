@@ -13,10 +13,8 @@
             this.currPos = this.SkipComments(0);
         }
 
-        private string GetErrorMsg()
-        {
-            return ("Invalid PBX project (parsing line " + this.tokens[this.currPos].line + ")");
-        }
+        private string GetErrorMsg() => 
+            ("Invalid PBX project (parsing line " + this.tokens[this.currPos].line + ")");
 
         private int Inc()
         {

@@ -13,45 +13,20 @@
             this.m_IsDevelopmentBuild = isDevelopmentBuild;
         }
 
-        public override bool developmentMode
-        {
-            get
-            {
-                return this.m_IsDevelopmentBuild;
-            }
-        }
+        public override bool developmentMode =>
+            this.m_IsDevelopmentBuild;
 
-        public override bool enableStackTraces
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool enableStackTraces =>
+            false;
 
-        public override bool loadSymbols
-        {
-            get
-            {
-                return this.m_IsDevelopmentBuild;
-            }
-        }
+        public override bool loadSymbols =>
+            this.m_IsDevelopmentBuild;
 
-        public bool platformHasPrecompiledLibIl2Cpp
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool platformHasPrecompiledLibIl2Cpp =>
+            false;
 
-        public override bool supportsEngineStripping
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool supportsEngineStripping =>
+            true;
     }
 }
 

@@ -13,7 +13,7 @@
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Summary>k__BackingField;
 
-        public HelpDetailsAttribute(string summary, [Optional, DefaultParameterValue(null)] string customValueDescription)
+        public HelpDetailsAttribute(string summary, string customValueDescription = null)
         {
             this.Summary = summary;
             this.CustomValueDescription = customValueDescription;

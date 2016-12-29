@@ -67,7 +67,7 @@
             }
             if (useObb)
             {
-                CopyFile(Path.Combine(stagingArea, "main.obb"), Path.Combine(targetPath, string.Format("{0}.main.obb", productName)));
+                CopyFile(Path.Combine(stagingArea, "main.obb"), Path.Combine(targetPath, $"{productName}.main.obb"));
             }
             else
             {
@@ -106,11 +106,12 @@
             string str2 = Paths.Combine(components);
             string target = Path.Combine(str, "libs");
             Directory.CreateDirectory(str);
-            string str4 = Paths.NormalizePath(EditorPrefs.GetString("AndroidSdkRoot"));
+            string str4 = EditorPrefs.GetString("AndroidSdkRoot").NormalizePath();
             string path = Path.Combine(str, "local.properties");
             if (!File.Exists(path) || flag)
             {
-                File.WriteAllText(path, string.Format("sdk.dir={0}\n", str4.Replace(@"\", @"\\")));
+                File.WriteAllText(path, $"sdk.dir={str4.Replace(@"\", @"\\")}
+");
             }
             CopyFile(unityJavaLibrary, Path.Combine(Path.Combine(str, "libs"), "unity-classes.jar"));
             CopyFile(Path.Combine(unityAndroidBuildTools, "UnityProGuardTemplate.txt"), Path.Combine(str, "proguard-unity.txt"));
@@ -139,7 +140,8 @@
             {
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(str8);
                 string fileName = Path.GetFileName(str8);
-                str7 = str7 + string.Format("\tcompile(name: '{0}', ext:'aar')\n", fileNameWithoutExtension);
+                str7 = str7 + $"	compile(name: '{fileNameWithoutExtension}', ext:'aar')
+";
                 CopyFile(str8, Path.Combine(target, fileName));
             }
             templateValues["DEPS"] = str7;
@@ -160,7 +162,7 @@
             WriteGradleBuildFiles(str, str11, androidLibraries, templateValues);
             if (useObb)
             {
-                CopyFile(Path.Combine(stagingArea, "main.obb"), Path.Combine(str, string.Format("{0}.main.obb", productName)));
+                CopyFile(Path.Combine(stagingArea, "main.obb"), Path.Combine(str, $"{productName}.main.obb"));
             }
             else
             {
@@ -168,7 +170,7 @@
             }
         }
 
-        private static void GenerateAndroidManifest(string targetPath, string stagingArea, string packageName, [Optional, DefaultParameterValue(true)] bool debugAttr)
+        private static void GenerateAndroidManifest(string targetPath, string stagingArea, string packageName, bool debugAttr = true)
         {
             AndroidManifest manifest = new AndroidManifest(Path.Combine(stagingArea, "AndroidManifest.xml"));
             foreach (string str in UnityActivities)
@@ -260,8 +262,10 @@
                 }
                 templateValues["LIBSDKTARGET"] = result.ToString();
                 string fileName = Path.GetFileName(str6);
-                str4 = str4 + string.Format("\tcompile project(':{0}')\n", fileName);
-                contents = contents + string.Format("include '{0}'\n", fileName);
+                str4 = str4 + $"	compile project(':{fileName}')
+";
+                contents = contents + $"include '{fileName}'
+";
                 string target = Path.Combine(projectPath, fileName);
                 CopyDir(str6, target);
                 string str12 = TemplateReplace(template, templateValues);
@@ -272,7 +276,10 @@
             if (PlayerSettings.Android.keyaliasName.Length != 0)
             {
                 string str14 = !Path.IsPathRooted(PlayerSettings.Android.keystoreName) ? Path.Combine(Directory.GetCurrentDirectory(), PlayerSettings.Android.keystoreName) : PlayerSettings.Android.keystoreName;
-                string str15 = string.Format("\t\tstoreFile file('{0}')\n\t\tstorePassword '{1}'\n\t\tkeyAlias '{2}'\n\t\tkeyPassword '{3}'", new object[] { str14, PlayerSettings.Android.keystorePass, PlayerSettings.Android.keyaliasName, PlayerSettings.Android.keyaliasPass });
+                string str15 = $"		storeFile file('{str14}')
+		storePassword '{PlayerSettings.Android.keystorePass}'
+		keyAlias '{PlayerSettings.Android.keyaliasName}'
+		keyPassword '{PlayerSettings.Android.keyaliasPass}'";
                 templateValues["SIGN"] = "\tsigningConfigs { release {\n" + str15 + "\n\t} }\n";
                 templateValues["SIGNCONFIG"] = "signingConfig signingConfigs.release";
             }

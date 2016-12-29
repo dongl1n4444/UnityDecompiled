@@ -36,7 +36,7 @@
                 {
                     <>f__am$cache0 = new Func<Resolution, int>(null, (IntPtr) <CameraParameters>m__0);
                 }
-                Resolution resolution = Enumerable.First<Resolution>(Enumerable.OrderByDescending<Resolution, int>(PhotoCapture.SupportedResolutions, <>f__am$cache0));
+                Resolution resolution = Enumerable.OrderByDescending<Resolution, int>(PhotoCapture.SupportedResolutions, <>f__am$cache0).First<Resolution>();
                 this.m_CameraResolutionWidth = resolution.width;
                 this.m_CameraResolutionHeight = resolution.height;
             }
@@ -46,12 +46,12 @@
                 {
                     <>f__am$cache1 = new Func<Resolution, int>(null, (IntPtr) <CameraParameters>m__1);
                 }
-                Resolution resolution2 = Enumerable.First<Resolution>(Enumerable.OrderByDescending<Resolution, int>(VideoCapture.SupportedResolutions, <>f__am$cache1));
+                Resolution resolution2 = Enumerable.OrderByDescending<Resolution, int>(VideoCapture.SupportedResolutions, <>f__am$cache1).First<Resolution>();
                 if (<>f__am$cache2 == null)
                 {
                     <>f__am$cache2 = new Func<float, float>(null, (IntPtr) <CameraParameters>m__2);
                 }
-                float num = Enumerable.First<float>(Enumerable.OrderByDescending<float, float>(VideoCapture.GetSupportedFrameRatesForResolution(resolution2), <>f__am$cache2));
+                float num = Enumerable.OrderByDescending<float, float>(VideoCapture.GetSupportedFrameRatesForResolution(resolution2), <>f__am$cache2).First<float>();
                 this.m_CameraResolutionWidth = resolution2.width;
                 this.m_CameraResolutionHeight = resolution2.height;
                 this.m_FrameRate = num;
@@ -63,10 +63,8 @@
         /// </summary>
         public float hologramOpacity
         {
-            get
-            {
-                return this.m_HologramOpacity;
-            }
+            get => 
+                this.m_HologramOpacity;
             set
             {
                 this.m_HologramOpacity = value;
@@ -77,10 +75,8 @@
         /// </summary>
         public float frameRate
         {
-            get
-            {
-                return this.m_FrameRate;
-            }
+            get => 
+                this.m_FrameRate;
             set
             {
                 this.m_FrameRate = value;
@@ -91,10 +87,8 @@
         /// </summary>
         public int cameraResolutionWidth
         {
-            get
-            {
-                return this.m_CameraResolutionWidth;
-            }
+            get => 
+                this.m_CameraResolutionWidth;
             set
             {
                 this.m_CameraResolutionWidth = value;
@@ -105,10 +99,8 @@
         /// </summary>
         public int cameraResolutionHeight
         {
-            get
-            {
-                return this.m_CameraResolutionHeight;
-            }
+            get => 
+                this.m_CameraResolutionHeight;
             set
             {
                 this.m_CameraResolutionHeight = value;
@@ -119,32 +111,24 @@
         /// </summary>
         public CapturePixelFormat pixelFormat
         {
-            get
-            {
-                return this.m_PixelFormat;
-            }
+            get => 
+                this.m_PixelFormat;
             set
             {
                 this.m_PixelFormat = value;
             }
         }
         [CompilerGenerated]
-        private static int <CameraParameters>m__0(Resolution res)
-        {
-            return (res.width * res.height);
-        }
+        private static int <CameraParameters>m__0(Resolution res) => 
+            (res.width * res.height);
 
         [CompilerGenerated]
-        private static int <CameraParameters>m__1(Resolution res)
-        {
-            return (res.width * res.height);
-        }
+        private static int <CameraParameters>m__1(Resolution res) => 
+            (res.width * res.height);
 
         [CompilerGenerated]
-        private static float <CameraParameters>m__2(float fps)
-        {
-            return fps;
-        }
+        private static float <CameraParameters>m__2(float fps) => 
+            fps;
     }
 }
 

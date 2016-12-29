@@ -64,13 +64,8 @@
             this.m_NeedsUpdate = true;
         }
 
-        public int Count
-        {
-            get
-            {
-                return (this.m_PersistentCalls.Count + this.m_RuntimeCalls.Count);
-            }
-        }
+        public int Count =>
+            (this.m_PersistentCalls.Count + this.m_RuntimeCalls.Count);
     }
 }
 

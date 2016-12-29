@@ -5,13 +5,8 @@
 
     public class UnusedByteCodeStripper
     {
-        public static bool Available
-        {
-            get
-            {
-                return (Il2CppDependencies.HasUnusedByteCodeStripper || UnitySourceCode.Available);
-            }
-        }
+        public static bool Available =>
+            (Il2CppDependencies.HasUnusedByteCodeStripper || UnitySourceCode.Available);
 
         public static NPath Path
         {

@@ -14,28 +14,16 @@ internal class OverwriteFilesInfo
         this.KeepAll = false;
     }
 
-    public Dictionary<string, bool> DoOverwrite
-    {
-        get
-        {
-            return ((this.doOverwrite == null) ? (this.doOverwrite = new Dictionary<string, bool>()) : this.doOverwrite);
-        }
-    }
+    public Dictionary<string, bool> DoOverwrite =>
+        ((this.doOverwrite == null) ? (this.doOverwrite = new Dictionary<string, bool>()) : this.doOverwrite);
 
-    public Dictionary<string, string> Hashes
-    {
-        get
-        {
-            return ((this.hashes == null) ? (this.hashes = new Dictionary<string, string>()) : this.hashes);
-        }
-    }
+    public Dictionary<string, string> Hashes =>
+        ((this.hashes == null) ? (this.hashes = new Dictionary<string, string>()) : this.hashes);
 
     public bool KeepAll
     {
-        get
-        {
-            return this.keepAll;
-        }
+        get => 
+            this.keepAll;
         set
         {
             this.keepAll = value;
@@ -49,10 +37,8 @@ internal class OverwriteFilesInfo
 
     public bool OverwriteAll
     {
-        get
-        {
-            return this.overwriteAll;
-        }
+        get => 
+            this.overwriteAll;
         set
         {
             this.overwriteAll = value;
@@ -64,12 +50,7 @@ internal class OverwriteFilesInfo
         }
     }
 
-    public List<string> UserModified
-    {
-        get
-        {
-            return ((this.userModified == null) ? (this.userModified = new List<string>()) : this.userModified);
-        }
-    }
+    public List<string> UserModified =>
+        ((this.userModified == null) ? (this.userModified = new List<string>()) : this.userModified);
 }
 

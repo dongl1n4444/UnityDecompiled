@@ -71,10 +71,8 @@
             this.m_Inspector = inspector;
         }
 
-        protected bool HasModified()
-        {
-            return this.serializedObject.hasModifiedProperties;
-        }
+        protected bool HasModified() => 
+            this.serializedObject.hasModifiedProperties;
 
         public virtual void OnDestroy()
         {
@@ -108,53 +106,23 @@
             this.serializedObject.Update();
         }
 
-        protected Avatar avatarAsset
-        {
-            get
-            {
-                return this.m_Inspector.avatar;
-            }
-        }
+        protected Avatar avatarAsset =>
+            this.m_Inspector.avatar;
 
-        protected GameObject gameObject
-        {
-            get
-            {
-                return this.m_Inspector.m_GameObject;
-            }
-        }
+        protected GameObject gameObject =>
+            this.m_Inspector.m_GameObject;
 
-        protected Dictionary<Transform, bool> modelBones
-        {
-            get
-            {
-                return this.m_Inspector.m_ModelBones;
-            }
-        }
+        protected Dictionary<Transform, bool> modelBones =>
+            this.m_Inspector.m_ModelBones;
 
-        protected GameObject prefab
-        {
-            get
-            {
-                return this.m_Inspector.prefab;
-            }
-        }
+        protected GameObject prefab =>
+            this.m_Inspector.prefab;
 
-        protected Transform root
-        {
-            get
-            {
-                return ((this.gameObject != null) ? this.gameObject.transform : null);
-            }
-        }
+        protected Transform root =>
+            this.gameObject?.transform;
 
-        protected SerializedObject serializedObject
-        {
-            get
-            {
-                return this.m_Inspector.serializedObject;
-            }
-        }
+        protected SerializedObject serializedObject =>
+            this.m_Inspector.serializedObject;
     }
 }
 

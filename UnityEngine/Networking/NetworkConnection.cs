@@ -94,10 +94,8 @@
         /// <returns>
         /// <para>True if a handler function was found.</para>
         /// </returns>
-        public bool CheckHandler(short msgType)
-        {
-            return this.m_MessageHandlersDict.ContainsKey(msgType);
-        }
+        public bool CheckHandler(short msgType) => 
+            this.m_MessageHandlersDict.ContainsKey(msgType);
 
         /// <summary>
         /// <para>Disconnects this connection.</para>
@@ -406,20 +404,14 @@
         /// <returns>
         /// <para>True if a handler function was found and invoked.</para>
         /// </returns>
-        public bool InvokeHandlerNoData(short msgType)
-        {
-            return this.InvokeHandler(msgType, null, 0);
-        }
+        public bool InvokeHandlerNoData(short msgType) => 
+            this.InvokeHandler(msgType, null, 0);
 
-        private static bool IsReliableQoS(QosType qos)
-        {
-            return ((((qos == QosType.Reliable) || (qos == QosType.ReliableFragmented)) || (qos == QosType.ReliableSequenced)) || (qos == QosType.ReliableStateUpdate));
-        }
+        private static bool IsReliableQoS(QosType qos) => 
+            ((((qos == QosType.Reliable) || (qos == QosType.ReliableFragmented)) || (qos == QosType.ReliableSequenced)) || (qos == QosType.ReliableStateUpdate));
 
-        private static bool IsSequencedQoS(QosType qos)
-        {
-            return ((qos == QosType.ReliableSequenced) || (qos == QosType.UnreliableSequenced));
-        }
+        private static bool IsSequencedQoS(QosType qos) => 
+            ((qos == QosType.ReliableSequenced) || (qos == QosType.UnreliableSequenced));
 
         private void LogSend(byte[] bytes)
         {
@@ -521,10 +513,8 @@
         /// <returns>
         /// <para>True if the message was sent.</para>
         /// </returns>
-        public virtual bool Send(short msgType, MessageBase msg)
-        {
-            return this.SendByChannel(msgType, msg, 0);
-        }
+        public virtual bool Send(short msgType, MessageBase msg) => 
+            this.SendByChannel(msgType, msg, 0);
 
         /// <summary>
         /// <para>This sends a network message on the connection using a specific transport layer channel.</para>
@@ -569,10 +559,8 @@
         /// <returns>
         /// <para>True if the message was sent.</para>
         /// </returns>
-        public virtual bool SendUnreliable(short msgType, MessageBase msg)
-        {
-            return this.SendByChannel(msgType, msg, 1);
-        }
+        public virtual bool SendUnreliable(short msgType, MessageBase msg) => 
+            this.SendByChannel(msgType, msg, 1);
 
         /// <summary>
         /// <para>This sends the contents of a NetworkWriter object on the connection.</para>
@@ -646,10 +634,8 @@
         /// <summary>
         /// <para>Returns a string representation of the NetworkConnection object state.</para>
         /// </summary>
-        public override string ToString()
-        {
-            return string.Format("hostId: {0} connectionId: {1} isReady: {2} channel count: {3}", new object[] { this.hostId, this.connectionId, this.isReady, (this.m_Channels == null) ? 0 : this.m_Channels.Length });
-        }
+        public override string ToString() => 
+            $"hostId: {this.hostId} connectionId: {this.connectionId} isReady: {this.isReady} channel count: {((this.m_Channels == null) ? 0 : this.m_Channels.Length)}";
 
         /// <summary>
         /// <para>This virtual function allows custom network connection classes to process data from the network before it is passed to the application.</para>
@@ -662,10 +648,8 @@
             this.HandleBytes(bytes, numBytes, channelId);
         }
 
-        public virtual bool TransportSend(byte[] bytes, int numBytes, int channelId, out byte error)
-        {
-            return NetworkTransport.Send(this.hostId, this.connectionId, channelId, bytes, numBytes, out error);
-        }
+        public virtual bool TransportSend(byte[] bytes, int numBytes, int channelId, out byte error) => 
+            NetworkTransport.Send(this.hostId, this.connectionId, channelId, bytes, numBytes, out error);
 
         /// <summary>
         /// <para>This removes the handler registered for a message Id.</para>
@@ -679,66 +663,39 @@
         /// <summary>
         /// <para>A list of the NetworkIdentity objects owned by this connection.</para>
         /// </summary>
-        public HashSet<NetworkInstanceId> clientOwnedObjects
-        {
-            get
-            {
-                return this.m_ClientOwnedObjects;
-            }
-        }
+        public HashSet<NetworkInstanceId> clientOwnedObjects =>
+            this.m_ClientOwnedObjects;
 
         /// <summary>
         /// <para>True if the connection is connected to a remote end-point.</para>
         /// </summary>
-        public bool isConnected
-        {
-            get
-            {
-                return (this.hostId != -1);
-            }
-        }
+        public bool isConnected =>
+            (this.hostId != -1);
 
         /// <summary>
         /// <para>The last error associated with this connection.</para>
         /// </summary>
         public NetworkError lastError
         {
-            get
-            {
-                return this.error;
-            }
+            get => 
+                this.error;
             internal set
             {
                 this.error = value;
             }
         }
 
-        internal Dictionary<short, PacketStat> packetStats
-        {
-            get
-            {
-                return this.m_PacketStats;
-            }
-        }
+        internal Dictionary<short, PacketStat> packetStats =>
+            this.m_PacketStats;
 
         /// <summary>
         /// <para>The list of players for this connection.</para>
         /// </summary>
-        public List<PlayerController> playerControllers
-        {
-            get
-            {
-                return this.m_PlayerControllers;
-            }
-        }
+        public List<PlayerController> playerControllers =>
+            this.m_PlayerControllers;
 
-        internal HashSet<NetworkIdentity> visList
-        {
-            get
-            {
-                return this.m_VisList;
-            }
-        }
+        internal HashSet<NetworkIdentity> visList =>
+            this.m_VisList;
 
         /// <summary>
         /// <para>Structure used to track the number and size of packets of each packets type.</para>

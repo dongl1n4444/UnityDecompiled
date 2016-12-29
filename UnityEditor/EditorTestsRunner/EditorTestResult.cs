@@ -120,10 +120,8 @@
 
         public double duration
         {
-            get
-            {
-                return this.m_Duration;
-            }
+            get => 
+                this.m_Duration;
             set
             {
                 this.m_Duration = value;
@@ -132,82 +130,46 @@
 
         public bool executed
         {
-            get
-            {
-                return this.m_Executed;
-            }
+            get => 
+                this.m_Executed;
             set
             {
                 this.m_Executed = value;
             }
         }
 
-        public string fullName
-        {
-            get
-            {
-                return this.test.fullName;
-            }
-        }
+        public string fullName =>
+            this.test.fullName;
 
-        public string id
-        {
-            get
-            {
-                return this.test.id;
-            }
-        }
+        public string id =>
+            this.test.id;
 
-        public bool isError
-        {
-            get
-            {
-                return (this.resultState == TestResultState.Error);
-            }
-        }
+        public bool isError =>
+            (this.resultState == TestResultState.Error);
 
-        public bool isFailure
-        {
-            get
-            {
-                return (this.resultState == TestResultState.Failure);
-            }
-        }
+        public bool isFailure =>
+            (this.resultState == TestResultState.Failure);
 
         public bool isIgnored
         {
-            get
-            {
-                return this.m_IsIgnored;
-            }
+            get => 
+                this.m_IsIgnored;
             set
             {
                 this.m_IsIgnored = value;
             }
         }
 
-        public bool isInconclusive
-        {
-            get
-            {
-                return (this.resultState == TestResultState.Inconclusive);
-            }
-        }
+        public bool isInconclusive =>
+            (this.resultState == TestResultState.Inconclusive);
 
-        public bool isSuccess
-        {
-            get
-            {
-                return (this.resultState == TestResultState.Success);
-            }
-        }
+        public bool isSuccess =>
+            (this.resultState == TestResultState.Success);
 
         public string logs
         {
-            get
-            {
-                return this.m_Logs;
-            }
+            get => 
+                this.m_Logs;
             set
             {
                 this.m_Logs = value;
@@ -216,30 +178,21 @@
 
         public string message
         {
-            get
-            {
-                return this.m_Message;
-            }
+            get => 
+                this.m_Message;
             set
             {
                 this.m_Message = value;
             }
         }
 
-        public string name
-        {
-            get
-            {
-                return this.test.methodName;
-            }
-        }
+        public string name =>
+            this.test.methodName;
 
         public bool outdated
         {
-            get
-            {
-                return this.m_Outdated;
-            }
+            get => 
+                this.m_Outdated;
             set
             {
                 this.m_Outdated = value;
@@ -248,10 +201,8 @@
 
         public TestResultState resultState
         {
-            get
-            {
-                return this.m_ResultState;
-            }
+            get => 
+                this.m_ResultState;
             set
             {
                 this.m_ResultState = value;
@@ -260,10 +211,8 @@
 
         public string stackTrace
         {
-            get
-            {
-                return this.m_StackTrace;
-            }
+            get => 
+                this.m_StackTrace;
             set
             {
                 this.m_StackTrace = value;
@@ -272,10 +221,8 @@
 
         public EditorTestInfo test
         {
-            get
-            {
-                return this.m_Test;
-            }
+            get => 
+                this.m_Test;
             set
             {
                 this.m_Test = value;

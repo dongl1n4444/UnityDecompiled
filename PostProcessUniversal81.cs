@@ -122,25 +122,17 @@ internal class PostProcessUniversal81 : PostProcessWSA
         throw new InvalidOperationException();
     }
 
-    protected override string GetResourceCompilerPath()
-    {
-        return Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
-    }
+    protected override string GetResourceCompilerPath() => 
+        Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
 
-    protected override string GetTemplateDirectorySource()
-    {
-        return base.GetTemplateDirectorySource("Windows81");
-    }
+    protected override string GetTemplateDirectorySource() => 
+        base.GetTemplateDirectorySource("Windows81");
 
-    protected override string GetTemplateDirectoryTarget()
-    {
-        return this._stagingAreaShared;
-    }
+    protected override string GetTemplateDirectoryTarget() => 
+        this._stagingAreaShared;
 
-    protected override Version GetToolsVersion()
-    {
-        return new Version(12, 0);
-    }
+    protected override Version GetToolsVersion() => 
+        new Version(12, 0);
 
     public override void MoveDataManagedToRoot()
     {
@@ -187,9 +179,8 @@ internal class PostProcessUniversal81 : PostProcessWSA
         this._phone.RunSerializationWeaver();
     }
 
-    protected override Dictionary<WSASDK, LibraryCollection> TEMP_GetLibraryCollections()
-    {
-        return new Dictionary<WSASDK, LibraryCollection>(2) { 
+    protected override Dictionary<WSASDK, LibraryCollection> TEMP_GetLibraryCollections() => 
+        new Dictionary<WSASDK, LibraryCollection>(2) { 
             { 
                 WSASDK.SDK81,
                 this._store.Libraries
@@ -199,6 +190,5 @@ internal class PostProcessUniversal81 : PostProcessWSA
                 this._phone.Libraries
             }
         };
-    }
 }
 

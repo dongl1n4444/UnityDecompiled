@@ -14,7 +14,7 @@
         {
         }
 
-        public override void WriteFieldDeclaration(CppCodeWriter writer, FieldReference field, [Optional, DefaultParameterValue(null)] string fieldNameSuffix)
+        public override void WriteFieldDeclaration(CppCodeWriter writer, FieldReference field, string fieldNameSuffix = null)
         {
             string str = DefaultMarshalInfoWriter.Naming.ForField(field) + fieldNameSuffix;
             object[] args = new object[] { base._elementTypeMarshalInfoWriter.MarshaledTypes[0].DecoratedName, str, base._arraySize };
@@ -27,7 +27,7 @@
             writer.AddIncludeForTypeDefinition(base._elementType);
         }
 
-        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, [Optional, DefaultParameterValue(null)] string managedVariableName)
+        public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
             base.WriteCleanupLoop(writer, variableName, metadataAccess, new Func<CppCodeWriter, string>(this, (IntPtr) this.<WriteMarshalCleanupVariable>m__1));
         }
@@ -75,10 +75,8 @@
             internal IList<MarshaledParameter> methodParameters;
             internal string variableName;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.$this.MarshaledArraySizeFor(this.variableName, this.methodParameters);
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.$this.MarshaledArraySizeFor(this.variableName, this.methodParameters);
         }
 
         [CompilerGenerated]
@@ -86,10 +84,8 @@
         {
             internal string arraySize;
 
-            internal string <>m__0(CppCodeWriter bodyWriter)
-            {
-                return this.arraySize;
-            }
+            internal string <>m__0(CppCodeWriter bodyWriter) => 
+                this.arraySize;
         }
     }
 }

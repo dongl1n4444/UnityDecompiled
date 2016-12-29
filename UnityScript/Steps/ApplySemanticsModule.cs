@@ -11,10 +11,8 @@
         {
         }
 
-        public static LexicalInfo Copy(LexicalInfo li)
-        {
-            return new LexicalInfo(li.get_FileName(), li.get_Line(), li.get_Column());
-        }
+        public static LexicalInfo Copy(LexicalInfo li) => 
+            new LexicalInfo(li.get_FileName(), li.get_Line(), li.get_Column());
     }
 }
 

@@ -355,7 +355,7 @@
             UnityEngine.Animator component = go.GetComponent<UnityEngine.Animator>();
             if (component != null)
             {
-                Avatar avatar = (component == null) ? null : component.avatar;
+                Avatar avatar = component?.avatar;
                 if ((avatar != null) && avatar.isHuman)
                 {
                     return ModelImporterAnimationType.Human;
@@ -416,15 +416,11 @@
             return null;
         }
 
-        private static GameObject GetGenericAnimationFallback()
-        {
-            return (GameObject) EditorGUIUtility.Load("Avatar/DefaultGeneric.fbx");
-        }
+        private static GameObject GetGenericAnimationFallback() => 
+            ((GameObject) EditorGUIUtility.Load("Avatar/DefaultGeneric.fbx"));
 
-        private static GameObject GetHumanoidFallback()
-        {
-            return (GameObject) EditorGUIUtility.Load("Avatar/DefaultAvatar.fbx");
-        }
+        private static GameObject GetHumanoidFallback() => 
+            ((GameObject) EditorGUIUtility.Load("Avatar/DefaultAvatar.fbx"));
 
         protected void HandleMouseDown(Event evt, int id, Rect previewRect)
         {
@@ -754,10 +750,8 @@
             return texture2;
         }
 
-        private int Repeat(int t, int length)
-        {
-            return (((t % length) + length) % length);
-        }
+        private int Repeat(int t, int length) => 
+            (((t % length) + length) % length);
 
         public void ResetPreviewInstance()
         {
@@ -846,29 +840,14 @@
             InternalEditorUtility.RemoveCustomLighting();
         }
 
-        public ModelImporterAnimationType animationClipType
-        {
-            get
-            {
-                return GetAnimationType(this.m_SourcePreviewMotion);
-            }
-        }
+        public ModelImporterAnimationType animationClipType =>
+            GetAnimationType(this.m_SourcePreviewMotion);
 
-        public UnityEngine.Animator Animator
-        {
-            get
-            {
-                return ((this.m_PreviewInstance == null) ? null : (this.m_PreviewInstance.GetComponent(typeof(UnityEngine.Animator)) as UnityEngine.Animator));
-            }
-        }
+        public UnityEngine.Animator Animator =>
+            ((this.m_PreviewInstance == null) ? null : (this.m_PreviewInstance.GetComponent(typeof(UnityEngine.Animator)) as UnityEngine.Animator));
 
-        public Vector3 bodyPosition
-        {
-            get
-            {
-                return (((this.Animator == null) || !this.Animator.isHuman) ? GameObjectInspector.GetRenderableCenterRecurse(this.m_PreviewInstance, 2, 8) : this.Animator.GetBodyPositionInternal());
-            }
-        }
+        public Vector3 bodyPosition =>
+            (((this.Animator == null) || !this.Animator.isHuman) ? GameObjectInspector.GetRenderableCenterRecurse(this.m_PreviewInstance, 2, 8) : this.Animator.GetBodyPositionInternal());
 
         protected MouseCursor currentCursor
         {
@@ -889,13 +868,8 @@
             }
         }
 
-        public bool IKOnFeet
-        {
-            get
-            {
-                return this.m_IKOnFeet;
-            }
-        }
+        public bool IKOnFeet =>
+            this.m_IKOnFeet;
 
         public OnAvatarChange OnAvatarChangeFunc
         {
@@ -905,20 +879,13 @@
             }
         }
 
-        public GameObject PreviewObject
-        {
-            get
-            {
-                return this.m_PreviewInstance;
-            }
-        }
+        public GameObject PreviewObject =>
+            this.m_PreviewInstance;
 
         public bool ShowIKOnFeetButton
         {
-            get
-            {
-                return this.m_ShowIKOnFeetButton;
-            }
+            get => 
+                this.m_ShowIKOnFeetButton;
             set
             {
                 this.m_ShowIKOnFeetButton = value;

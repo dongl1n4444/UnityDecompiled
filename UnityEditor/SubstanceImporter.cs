@@ -171,10 +171,8 @@
         /// <param name="prototypeName"></param>
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern string InstantiateMaterial(string prototypeName);
-        internal static bool IsProceduralTextureSlot(Material material, Texture tex, string name)
-        {
-            return ((((material is ProceduralMaterial) && (tex is ProceduralTexture)) && CanShaderPropertyHostProceduralOutput(name, (tex as ProceduralTexture).GetProceduralOutputType())) && IsSubstanceParented(tex as ProceduralTexture, material as ProceduralMaterial));
-        }
+        internal static bool IsProceduralTextureSlot(Material material, Texture tex, string name) => 
+            ((((material is ProceduralMaterial) && (tex is ProceduralTexture)) && CanShaderPropertyHostProceduralOutput(name, (tex as ProceduralTexture).GetProceduralOutputType())) && IsSubstanceParented(tex as ProceduralTexture, material as ProceduralMaterial));
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool IsSubstanceParented(ProceduralTexture texture, ProceduralMaterial material);

@@ -98,13 +98,8 @@
             }
         }
 
-        private Object graphicsSettings
-        {
-            get
-            {
-                return GraphicsSettings.GetGraphicsSettings();
-            }
-        }
+        private Object graphicsSettings =>
+            GraphicsSettings.GetGraphicsSettings();
 
         private Editor shaderPreloadEditor
         {
@@ -187,45 +182,20 @@
                 base.serializedObject.ApplyModifiedProperties();
             }
 
-            private string deferredReflString
-            {
-                get
-                {
-                    return LocalizationDatabase.GetLocalizedString("Deferred Reflections|Shader settings for deferred reflections");
-                }
-            }
+            private string deferredReflString =>
+                LocalizationDatabase.GetLocalizedString("Deferred Reflections|Shader settings for deferred reflections");
 
-            private string deferredString
-            {
-                get
-                {
-                    return LocalizationDatabase.GetLocalizedString("Deferred|Shader settings for Deferred Shading");
-                }
-            }
+            private string deferredString =>
+                LocalizationDatabase.GetLocalizedString("Deferred|Shader settings for Deferred Shading");
 
-            private string legacyDeferredString
-            {
-                get
-                {
-                    return LocalizationDatabase.GetLocalizedString("Legacy Deferred|Shader settings for Legacy (light prepass) Deferred Lighting");
-                }
-            }
+            private string legacyDeferredString =>
+                LocalizationDatabase.GetLocalizedString("Legacy Deferred|Shader settings for Legacy (light prepass) Deferred Lighting");
 
-            private string motionVectorsString
-            {
-                get
-                {
-                    return LocalizationDatabase.GetLocalizedString("Motion Vectors|Shader for generation of Motion Vectors when the rendering camera has renderMotionVectors set to true");
-                }
-            }
+            private string motionVectorsString =>
+                LocalizationDatabase.GetLocalizedString("Motion Vectors|Shader for generation of Motion Vectors when the rendering camera has renderMotionVectors set to true");
 
-            private string screenShadowsString
-            {
-                get
-                {
-                    return LocalizationDatabase.GetLocalizedString("Screen Space Shadows|Shader settings for cascaded shadow maps");
-                }
-            }
+            private string screenShadowsString =>
+                LocalizationDatabase.GetLocalizedString("Screen Space Shadows|Shader settings for cascaded shadow maps");
         }
 
         internal class BuiltinShaderSettings
@@ -280,7 +250,7 @@
                 base.serializedObject.ApplyModifiedProperties();
                 EditorGUILayout.PropertyField(this.m_PreloadedShaders, true, new GUILayoutOption[0]);
                 EditorGUILayout.Space();
-                GUILayout.Label(string.Format("Currently tracked: {0} shaders {1} total variants", ShaderUtil.GetCurrentShaderVariantCollectionShaderCount(), ShaderUtil.GetCurrentShaderVariantCollectionVariantCount()), new GUILayoutOption[0]);
+                GUILayout.Label($"Currently tracked: {ShaderUtil.GetCurrentShaderVariantCollectionShaderCount()} shaders {ShaderUtil.GetCurrentShaderVariantCollectionVariantCount()} total variants", new GUILayoutOption[0]);
                 EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button(Styles.shaderPreloadSave, EditorStyles.miniButton, new GUILayoutOption[0]))
@@ -552,15 +522,11 @@
                 }
             }
 
-            internal RenderingPath RenderingPathPopup(RenderingPath rp)
-            {
-                return (RenderingPath) EditorGUILayout.IntPopup((int) rp, Styles.renderingPathName, Styles.renderingPathValue, new GUILayoutOption[0]);
-            }
+            internal RenderingPath RenderingPathPopup(RenderingPath rp) => 
+                ((RenderingPath) EditorGUILayout.IntPopup((int) rp, Styles.renderingPathName, Styles.renderingPathValue, new GUILayoutOption[0]));
 
-            internal ShaderQuality ShaderQualityPopup(ShaderQuality sq)
-            {
-                return (ShaderQuality) EditorGUILayout.IntPopup((int) sq, Styles.shaderQualityName, Styles.shaderQualityValue, new GUILayoutOption[0]);
-            }
+            internal ShaderQuality ShaderQualityPopup(ShaderQuality sq) => 
+                ((ShaderQuality) EditorGUILayout.IntPopup((int) sq, Styles.shaderQualityName, Styles.shaderQualityValue, new GUILayoutOption[0]));
 
             internal class Styles
             {

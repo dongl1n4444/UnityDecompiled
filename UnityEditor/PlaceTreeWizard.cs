@@ -19,7 +19,7 @@
             if (this.numberOfTrees > 0xf4240)
             {
                 base.isValid = false;
-                base.errorString = string.Format("Mass placing more than {0} trees is not supported", 0xf4240);
+                base.errorString = $"Mass placing more than {0xf4240} trees is not supported";
                 Debug.LogError(base.errorString);
             }
             else

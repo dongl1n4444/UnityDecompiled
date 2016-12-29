@@ -14,10 +14,8 @@
         {
         }
 
-        public override bool HasPreviewGUI()
-        {
-            return this.activeEditor.HasPreviewGUI();
-        }
+        public override bool HasPreviewGUI() => 
+            this.activeEditor.HasPreviewGUI();
 
         private void OnDestroy()
         {
@@ -62,13 +60,8 @@
             this.activeEditor.OnPreviewSettings();
         }
 
-        public Editor activeEditor
-        {
-            get
-            {
-                return this.m_ActiveEditor;
-            }
-        }
+        public Editor activeEditor =>
+            this.m_ActiveEditor;
     }
 }
 

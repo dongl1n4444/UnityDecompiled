@@ -35,10 +35,8 @@
             return data;
         }
 
-        public static PBXGroupData CreateRelative(string name)
-        {
-            return Create(name, name, PBXSourceTree.Group);
-        }
+        public static PBXGroupData CreateRelative(string name) => 
+            Create(name, name, PBXSourceTree.Group);
 
         public override void UpdateProps()
         {
@@ -78,13 +76,8 @@
             this.tree = FileTypeUtils.ParseSourceTree(base.GetPropertyString("sourceTree"));
         }
 
-        internal override PropertyCommentChecker checker
-        {
-            get
-            {
-                return checkerData;
-            }
-        }
+        internal override PropertyCommentChecker checker =>
+            checkerData;
     }
 }
 

@@ -79,7 +79,7 @@
             {
                 Debug.logger.LogError("Unable to cache IAP catalog", exception);
             }
-            return new CloudCatalogManager(util, cacheFile, Debug.logger, string.Format("{0}/{1}", "https://catalog.iap.cloud.unity3d.com", Application.cloudProjectId), storeName);
+            return new CloudCatalogManager(util, cacheFile, Debug.logger, $"{"https://catalog.iap.cloud.unity3d.com"}/{Application.cloudProjectId}", storeName);
         }
 
         [CompilerGenerated]

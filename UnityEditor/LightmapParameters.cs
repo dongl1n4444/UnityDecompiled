@@ -60,10 +60,8 @@
         [Obsolete("edgeStitching is deprecated. Use stitchEdges instead.")]
         public float edgeStitching
         {
-            get
-            {
-                return (!this.stitchEdges ? 0f : 1f);
-            }
+            get => 
+                (!this.stitchEdges ? 0f : 1f);
             set
             {
                 this.stitchEdges = value != 0f;

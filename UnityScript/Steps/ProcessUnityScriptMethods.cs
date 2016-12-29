@@ -80,10 +80,8 @@
             }
         }
 
-        public override IType GetGeneratorReturnType(InternalMethod generator)
-        {
-            return this.get_TypeSystemServices().IEnumeratorType;
-        }
+        public override IType GetGeneratorReturnType(InternalMethod generator) => 
+            this.get_TypeSystemServices().IEnumeratorType;
 
         public override void Initialize(CompilerContext context)
         {
@@ -91,10 +89,8 @@
             this.set_OptimizeNullComparisons(false);
         }
 
-        public bool IsCompilerGenerated(ReferenceExpression reference)
-        {
-            return reference.get_Name().Contains("$");
-        }
+        public bool IsCompilerGenerated(ReferenceExpression reference) => 
+            reference.get_Name().Contains("$");
 
         public bool IsEmptyCoroutine(Method node)
         {
@@ -129,10 +125,8 @@
             }
         }
 
-        public bool NeedsUpdateableIteration(ForStatement node)
-        {
-            return !this.GetExpressionType(node.get_Iterator()).get_IsArray();
-        }
+        public bool NeedsUpdateableIteration(ForStatement node) => 
+            !this.GetExpressionType(node.get_Iterator()).get_IsArray();
 
         public override void OnForStatement(ForStatement node)
         {
@@ -268,15 +262,11 @@
             this.TransformIteration(node);
         }
 
-        public IField ResolveUnityRuntimeField(string name)
-        {
-            return this.get_NameResolutionService().ResolveField(this.UnityRuntimeServicesType, name);
-        }
+        public IField ResolveUnityRuntimeField(string name) => 
+            this.get_NameResolutionService().ResolveField(this.UnityRuntimeServicesType, name);
 
-        public IMethod ResolveUnityRuntimeMethod(string name)
-        {
-            return this.get_NameResolutionService().ResolveMethod(this.UnityRuntimeServicesType, name);
-        }
+        public IMethod ResolveUnityRuntimeMethod(string name) => 
+            this.get_NameResolutionService().ResolveMethod(this.UnityRuntimeServicesType, name);
 
         public bool ShouldDisableImplicitDowncastWarning()
         {
@@ -306,10 +296,8 @@
             node.get_ParentNode().Replace(node, block);
         }
 
-        public IType UnityScriptLangArray()
-        {
-            return this.get_TypeSystemServices().Map(typeof(Array));
-        }
+        public IType UnityScriptLangArray() => 
+            this.get_TypeSystemServices().Map(typeof(Array));
 
         public void UpdateSettingsForActiveModule()
         {
@@ -427,10 +415,8 @@
 
         public Module ActiveModule
         {
-            get
-            {
-                return this._activeModule;
-            }
+            get => 
+                this._activeModule;
             set
             {
                 this._activeModule = value;
@@ -514,21 +500,11 @@
             }
         }
 
-        public string ImplicitDowncast
-        {
-            get
-            {
-                return "BCW0028";
-            }
-        }
+        public string ImplicitDowncast =>
+            "BCW0028";
 
-        public bool Strict
-        {
-            get
-            {
-                return this.get_Parameters().get_Strict();
-            }
-        }
+        public bool Strict =>
+            this.get_Parameters().get_Strict();
 
         public IType UnityRuntimeServicesType
         {
@@ -549,21 +525,11 @@
             }
         }
 
-        public UnityScriptCompilerParameters UnityScriptParameters
-        {
-            get
-            {
-                return (UnityScriptCompilerParameters) base._context.get_Parameters();
-            }
-        }
+        public UnityScriptCompilerParameters UnityScriptParameters =>
+            ((UnityScriptCompilerParameters) base._context.get_Parameters());
 
-        public UnityScript.TypeSystem.UnityScriptTypeSystem UnityScriptTypeSystem
-        {
-            get
-            {
-                return (UnityScript.TypeSystem.UnityScriptTypeSystem) this.get_TypeSystemServices();
-            }
-        }
+        public UnityScript.TypeSystem.UnityScriptTypeSystem UnityScriptTypeSystem =>
+            ((UnityScript.TypeSystem.UnityScriptTypeSystem) this.get_TypeSystemServices());
 
         [Serializable]
         public class LoopVariableUpdater : DepthFirstVisitor

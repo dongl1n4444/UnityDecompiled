@@ -5,10 +5,8 @@
 
     internal class SpriteEditorTexturePostprocessor : AssetPostprocessor
     {
-        public override int GetPostprocessOrder()
-        {
-            return 1;
-        }
+        public override int GetPostprocessOrder() => 
+            1;
 
         public void OnPostprocessTexture(Texture2D tex)
         {

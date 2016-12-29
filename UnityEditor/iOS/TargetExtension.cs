@@ -90,10 +90,8 @@
             return this.m_preferenceWindowExtension;
         }
 
-        public override IScriptingImplementations CreateScriptingImplementations()
-        {
-            return new iOSScriptingImplementations();
-        }
+        public override IScriptingImplementations CreateScriptingImplementations() => 
+            new iOSScriptingImplementations();
 
         public override ISettingEditorExtension CreateSettingsEditorExtension()
         {
@@ -165,45 +163,20 @@
             DevDeviceList.Update("iOS", list.ToArray());
         }
 
-        public override string[] AssemblyReferencesForEditorCsharpProject
-        {
-            get
-            {
-                return this.assemblyReferencesForUserScripts;
-            }
-        }
+        public override string[] AssemblyReferencesForEditorCsharpProject =>
+            this.assemblyReferencesForUserScripts;
 
-        public override string[] AssemblyReferencesForUserScripts
-        {
-            get
-            {
-                return this.assemblyReferencesForUserScripts;
-            }
-        }
+        public override string[] AssemblyReferencesForUserScripts =>
+            this.assemblyReferencesForUserScripts;
 
-        public override string JamTarget
-        {
-            get
-            {
-                return "iOSEditorExtensions";
-            }
-        }
+        public override string JamTarget =>
+            "iOSEditorExtensions";
 
-        public override string[] NativeLibraries
-        {
-            get
-            {
-                return this.nativeLibraries;
-            }
-        }
+        public override string[] NativeLibraries =>
+            this.nativeLibraries;
 
-        public override string TargetName
-        {
-            get
-            {
-                return "iOS";
-            }
-        }
+        public override string TargetName =>
+            "iOS";
     }
 }
 

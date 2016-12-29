@@ -54,11 +54,11 @@
                 {
                     return typeProvider.Int64TypeReference;
                 }
-                if (Extensions.IsSameType(a, typeProvider.NativeIntTypeReference) || Extensions.IsSameType(reference2, typeProvider.NativeIntTypeReference))
+                if (a.IsSameType(typeProvider.NativeIntTypeReference) || reference2.IsSameType(typeProvider.NativeIntTypeReference))
                 {
                     return typeProvider.NativeIntTypeReference;
                 }
-                if (Extensions.IsSameType(a, typeProvider.Int32TypeReference) && Extensions.IsSameType(reference2, typeProvider.Int32TypeReference))
+                if (a.IsSameType(typeProvider.Int32TypeReference) && reference2.IsSameType(typeProvider.Int32TypeReference))
                 {
                     return typeProvider.Int32TypeReference;
                 }
@@ -72,7 +72,7 @@
             TypeReference reference = null;
             foreach (TypeReference reference2 in types)
             {
-                if ((Extensions.IsValueType(reference2) && !reference2.Resolve().IsEnum) && (_orderedTypes.IndexOf(reference2.MetadataType) > _orderedTypes.IndexOf(item)))
+                if ((reference2.IsValueType() && !reference2.Resolve().IsEnum) && (_orderedTypes.IndexOf(reference2.MetadataType) > _orderedTypes.IndexOf(item)))
                 {
                     item = reference2.MetadataType;
                     reference = reference2;
@@ -81,15 +81,11 @@
             return reference;
         }
 
-        public static TypeReference ResultTypeForAdd(TypeReference leftType, TypeReference rightType, ITypeProviderService typeProvider)
-        {
-            return CorrectLargestTypeFor(leftType, rightType, typeProvider);
-        }
+        public static TypeReference ResultTypeForAdd(TypeReference leftType, TypeReference rightType, ITypeProviderService typeProvider) => 
+            CorrectLargestTypeFor(leftType, rightType, typeProvider);
 
-        public static TypeReference ResultTypeForMul(TypeReference leftType, TypeReference rightType, ITypeProviderService typeProvider)
-        {
-            return CorrectLargestTypeFor(leftType, rightType, typeProvider);
-        }
+        public static TypeReference ResultTypeForMul(TypeReference leftType, TypeReference rightType, ITypeProviderService typeProvider) => 
+            CorrectLargestTypeFor(leftType, rightType, typeProvider);
 
         public static TypeReference ResultTypeForSub(TypeReference leftType, TypeReference rightType, ITypeProviderService typeProvider)
         {

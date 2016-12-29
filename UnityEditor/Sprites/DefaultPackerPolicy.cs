@@ -32,10 +32,8 @@
             return SpritePackingMode.Rectangle;
         }
 
-        public virtual int GetVersion()
-        {
-            return 1;
-        }
+        public virtual int GetVersion() => 
+            1;
 
         protected bool HasPlatformEnabledAlphaSplittingForCompression(string targetName, TextureImporter ti)
         {
@@ -79,7 +77,7 @@
                 {
                     <>f__am$cache1 = new Func<Sprite, bool>(null, (IntPtr) <OnGroupAtlases>m__1);
                 }
-                Sprite[] spriteArray = Enumerable.ToArray<Sprite>(Enumerable.Where<Sprite>(Enumerable.Select<Object, Sprite>(AssetDatabase.LoadAllAssetRepresentationsAtPath(ti.assetPath), <>f__am$cache0), <>f__am$cache1));
+                Sprite[] spriteArray = Enumerable.Where<Sprite>(Enumerable.Select<Object, Sprite>(AssetDatabase.LoadAllAssetRepresentationsAtPath(ti.assetPath), <>f__am$cache0), <>f__am$cache1).ToArray<Sprite>();
                 foreach (Sprite sprite in spriteArray)
                 {
                     Entry item = new Entry {
@@ -135,9 +133,9 @@
                 foreach (IGrouping<AtlasSettings, Entry> grouping2 in source)
                 {
                     string key = grouping.Key;
-                    if (Enumerable.Count<IGrouping<AtlasSettings, Entry>>(source) > 1)
+                    if (source.Count<IGrouping<AtlasSettings, Entry>>() > 1)
                     {
-                        key = key + string.Format(" (Group {0})", num5);
+                        key = key + $" (Group {num5})";
                     }
                     AtlasSettings settings = grouping2.Key;
                     settings.anisoLevel = 1;
@@ -171,29 +169,14 @@
             return ((str.Length != 0) ? str : "(unnamed)");
         }
 
-        protected virtual bool AllowRotationFlipping
-        {
-            get
-            {
-                return false;
-            }
-        }
+        protected virtual bool AllowRotationFlipping =>
+            false;
 
-        protected virtual bool AllowTightWhenTagged
-        {
-            get
-            {
-                return true;
-            }
-        }
+        protected virtual bool AllowTightWhenTagged =>
+            true;
 
-        protected virtual string TagPrefix
-        {
-            get
-            {
-                return "[TIGHT]";
-            }
-        }
+        protected virtual string TagPrefix =>
+            "[TIGHT]";
 
         protected class Entry
         {

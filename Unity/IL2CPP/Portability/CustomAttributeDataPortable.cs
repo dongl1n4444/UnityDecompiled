@@ -6,10 +6,8 @@
 
     public static class CustomAttributeDataPortable
     {
-        public static IList<CustomAttributeData> GetCustomAttributesPortable(MemberInfo target)
-        {
-            return CustomAttributeData.GetCustomAttributes(target);
-        }
+        public static IList<CustomAttributeData> GetCustomAttributesPortable(MemberInfo target) => 
+            CustomAttributeData.GetCustomAttributes(target);
     }
 }
 

@@ -76,10 +76,8 @@
         /// <summary>
         /// <para>Actually creates the RenderTexture.</para>
         /// </summary>
-        public bool Create()
-        {
-            return INTERNAL_CALL_Create(this);
-        }
+        public bool Create() => 
+            INTERNAL_CALL_Create(this);
 
         /// <summary>
         /// <para>Discards the contents of the RenderTexture.</para>
@@ -169,10 +167,8 @@
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern RenderTexture GetTemporary(int width, int height, [UnityEngine.Internal.DefaultValue("0")] int depthBuffer, [UnityEngine.Internal.DefaultValue("RenderTextureFormat.Default")] RenderTextureFormat format, [UnityEngine.Internal.DefaultValue("RenderTextureReadWrite.Default")] RenderTextureReadWrite readWrite, [UnityEngine.Internal.DefaultValue("1")] int antiAliasing);
         [Obsolete("GetTexelOffset always returns zero now, no point in using it.")]
-        public Vector2 GetTexelOffset()
-        {
-            return Vector2.zero;
-        }
+        public Vector2 GetTexelOffset() => 
+            Vector2.zero;
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern bool INTERNAL_CALL_Create(RenderTexture self);
@@ -207,10 +203,8 @@
         /// <summary>
         /// <para>Is the render texture actually created?</para>
         /// </summary>
-        public bool IsCreated()
-        {
-            return INTERNAL_CALL_IsCreated(this);
-        }
+        public bool IsCreated() => 
+            INTERNAL_CALL_IsCreated(this);
 
         /// <summary>
         /// <para>Indicate that there's a RenderTexture restore operation expected.</para>
@@ -303,10 +297,8 @@
         /// </summary>
         public override TextureDimension dimension
         {
-            get
-            {
-                return Internal_GetDimension(this);
-            }
+            get => 
+                Internal_GetDimension(this);
             set
             {
                 Internal_SetDimension(this, value);
@@ -329,10 +321,8 @@
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use RenderTexture.autoGenerateMips instead (UnityUpgradable) -> autoGenerateMips", false)]
         public bool generateMips
         {
-            get
-            {
-                return this.autoGenerateMips;
-            }
+            get => 
+                this.autoGenerateMips;
             set
             {
                 this.autoGenerateMips = value;
@@ -344,10 +334,8 @@
         /// </summary>
         public override int height
         {
-            get
-            {
-                return Internal_GetHeight(this);
-            }
+            get => 
+                Internal_GetHeight(this);
             set
             {
                 Internal_SetHeight(this, value);
@@ -385,10 +373,8 @@
         /// </summary>
         public override int width
         {
-            get
-            {
-                return Internal_GetWidth(this);
-            }
+            get => 
+                Internal_GetWidth(this);
             set
             {
                 Internal_SetWidth(this, value);

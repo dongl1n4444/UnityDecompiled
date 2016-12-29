@@ -177,10 +177,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect)
-        {
-            return BeginScrollView(position, scrollPosition, viewRect, false, false, skin.horizontalScrollbar, skin.verticalScrollbar, skin.scrollView);
-        }
+        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect) => 
+            BeginScrollView(position, scrollPosition, viewRect, false, false, skin.horizontalScrollbar, skin.verticalScrollbar, skin.scrollView);
 
         /// <summary>
         /// <para>Begin a scrolling view inside your GUI.</para>
@@ -195,10 +193,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical)
-        {
-            return BeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, skin.horizontalScrollbar, skin.verticalScrollbar, skin.scrollView);
-        }
+        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical) => 
+            BeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, skin.horizontalScrollbar, skin.verticalScrollbar, skin.scrollView);
 
         /// <summary>
         /// <para>Begin a scrolling view inside your GUI.</para>
@@ -213,10 +209,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar)
-        {
-            return BeginScrollView(position, scrollPosition, viewRect, false, false, horizontalScrollbar, verticalScrollbar, skin.scrollView);
-        }
+        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar) => 
+            BeginScrollView(position, scrollPosition, viewRect, false, false, horizontalScrollbar, verticalScrollbar, skin.scrollView);
 
         /// <summary>
         /// <para>Begin a scrolling view inside your GUI.</para>
@@ -231,10 +225,8 @@
         /// <returns>
         /// <para>The modified scrollPosition. Feed this back into the variable you pass in, as shown in the example.</para>
         /// </returns>
-        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar)
-        {
-            return BeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, skin.scrollView);
-        }
+        public static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar) => 
+            BeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, skin.scrollView);
 
         internal static Vector2 BeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, GUIStyle background)
         {
@@ -468,10 +460,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Rect position, string text)
-        {
-            return Button(position, GUIContent.Temp(text), s_Skin.button);
-        }
+        public static bool Button(Rect position, string text) => 
+            Button(position, GUIContent.Temp(text), s_Skin.button);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -484,10 +474,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Rect position, GUIContent content)
-        {
-            return Button(position, content, s_Skin.button);
-        }
+        public static bool Button(Rect position, GUIContent content) => 
+            Button(position, content, s_Skin.button);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -500,10 +488,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Rect position, Texture image)
-        {
-            return Button(position, GUIContent.Temp(image), s_Skin.button);
-        }
+        public static bool Button(Rect position, Texture image) => 
+            Button(position, GUIContent.Temp(image), s_Skin.button);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -516,10 +502,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Rect position, string text, GUIStyle style)
-        {
-            return Button(position, GUIContent.Temp(text), style);
-        }
+        public static bool Button(Rect position, string text, GUIStyle style) => 
+            Button(position, GUIContent.Temp(text), style);
 
         /// <summary>
         /// <para>Make a single press button. The user clicks them and something happens immediately.</para>
@@ -549,10 +533,8 @@
         /// <returns>
         /// <para>true when the users clicks the button.</para>
         /// </returns>
-        public static bool Button(Rect position, Texture image, GUIStyle style)
-        {
-            return Button(position, GUIContent.Temp(image), style);
-        }
+        public static bool Button(Rect position, Texture image, GUIStyle style) => 
+            Button(position, GUIContent.Temp(image), style);
 
         private static Rect[] CalcMouseRects(Rect position, int count, int xCount, float elemWidth, float elemHeight, GUIStyle style, GUIStyle firstStyle, GUIStyle midStyle, GUIStyle lastStyle, bool addBorders)
         {
@@ -693,15 +675,11 @@
             GUIStyle.CleanupRoots();
         }
 
-        protected static Vector2 DoBeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, GUIStyle background)
-        {
-            return BeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, background);
-        }
+        protected static Vector2 DoBeginScrollView(Rect position, Vector2 scrollPosition, Rect viewRect, bool alwaysShowHorizontal, bool alwaysShowVertical, GUIStyle horizontalScrollbar, GUIStyle verticalScrollbar, GUIStyle background) => 
+            BeginScrollView(position, scrollPosition, viewRect, alwaysShowHorizontal, alwaysShowVertical, horizontalScrollbar, verticalScrollbar, background);
 
-        private static bool DoButton(Rect position, GUIContent content, IntPtr style)
-        {
-            return INTERNAL_CALL_DoButton(ref position, content, style);
-        }
+        private static bool DoButton(Rect position, GUIContent content, IntPtr style) => 
+            INTERNAL_CALL_DoButton(ref position, content, style);
 
         private static int DoButtonGrid(Rect position, int selected, GUIContent[] contents, int xCount, GUIStyle style, GUIStyle firstStyle, GUIStyle midStyle, GUIStyle lastStyle)
         {
@@ -913,10 +891,8 @@
             stateObject.UpdateScrollOffsetIfNeeded(Event.current);
         }
 
-        internal static bool DoToggle(Rect position, int id, bool value, GUIContent content, IntPtr style)
-        {
-            return INTERNAL_CALL_DoToggle(ref position, id, value, content, style);
-        }
+        internal static bool DoToggle(Rect position, int id, bool value, GUIContent content, IntPtr style) => 
+            INTERNAL_CALL_DoToggle(ref position, id, value, content, style);
 
         private static Rect DoWindow(int id, Rect clientRect, WindowFunction func, GUIContent title, GUIStyle style, GUISkin skin, bool forceRectOnLayout)
         {
@@ -1384,10 +1360,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float HorizontalScrollbar(Rect position, float value, float size, float leftValue, float rightValue)
-        {
-            return Scroller(position, value, size, leftValue, rightValue, skin.horizontalScrollbar, skin.horizontalScrollbarThumb, skin.horizontalScrollbarLeftButton, skin.horizontalScrollbarRightButton, true);
-        }
+        public static float HorizontalScrollbar(Rect position, float value, float size, float leftValue, float rightValue) => 
+            Scroller(position, value, size, leftValue, rightValue, skin.horizontalScrollbar, skin.horizontalScrollbarThumb, skin.horizontalScrollbarLeftButton, skin.horizontalScrollbarRightButton, true);
 
         /// <summary>
         /// <para>Make a horizontal scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you want to use scrollViews instead.</para>
@@ -1401,10 +1375,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float HorizontalScrollbar(Rect position, float value, float size, float leftValue, float rightValue, GUIStyle style)
-        {
-            return Scroller(position, value, size, leftValue, rightValue, style, skin.GetStyle(style.name + "thumb"), skin.GetStyle(style.name + "leftbutton"), skin.GetStyle(style.name + "rightbutton"), true);
-        }
+        public static float HorizontalScrollbar(Rect position, float value, float size, float leftValue, float rightValue, GUIStyle style) => 
+            Scroller(position, value, size, leftValue, rightValue, style, skin.GetStyle(style.name + "thumb"), skin.GetStyle(style.name + "leftbutton"), skin.GetStyle(style.name + "rightbutton"), true);
 
         /// <summary>
         /// <para>A horizontal slider the user can drag to change a value between a min and a max.</para>
@@ -1418,10 +1390,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float HorizontalSlider(Rect position, float value, float leftValue, float rightValue)
-        {
-            return Slider(position, value, 0f, leftValue, rightValue, skin.horizontalSlider, skin.horizontalSliderThumb, true, 0);
-        }
+        public static float HorizontalSlider(Rect position, float value, float leftValue, float rightValue) => 
+            Slider(position, value, 0f, leftValue, rightValue, skin.horizontalSlider, skin.horizontalSliderThumb, true, 0);
 
         /// <summary>
         /// <para>A horizontal slider the user can drag to change a value between a min and a max.</para>
@@ -1435,10 +1405,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float HorizontalSlider(Rect position, float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb)
-        {
-            return Slider(position, value, 0f, leftValue, rightValue, slider, thumb, true, 0);
-        }
+        public static float HorizontalSlider(Rect position, float value, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb) => 
+            Slider(position, value, 0f, leftValue, rightValue, slider, thumb, true, 0);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void InitializeGUIClipTexture();
@@ -1604,10 +1572,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(Rect position, string password, char maskChar)
-        {
-            return PasswordField(position, password, maskChar, -1, skin.textField);
-        }
+        public static string PasswordField(Rect position, string password, char maskChar) => 
+            PasswordField(position, password, maskChar, -1, skin.textField);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1620,10 +1586,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(Rect position, string password, char maskChar, int maxLength)
-        {
-            return PasswordField(position, password, maskChar, maxLength, skin.textField);
-        }
+        public static string PasswordField(Rect position, string password, char maskChar, int maxLength) => 
+            PasswordField(position, password, maskChar, maxLength, skin.textField);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1636,10 +1600,8 @@
         /// <returns>
         /// <para>The edited password.</para>
         /// </returns>
-        public static string PasswordField(Rect position, string password, char maskChar, GUIStyle style)
-        {
-            return PasswordField(position, password, maskChar, -1, style);
-        }
+        public static string PasswordField(Rect position, string password, char maskChar, GUIStyle style) => 
+            PasswordField(position, password, maskChar, -1, style);
 
         /// <summary>
         /// <para>Make a text field where the user can enter a password.</para>
@@ -1671,10 +1633,8 @@
             return str;
         }
 
-        internal static string PasswordFieldGetStrToShow(string password, char maskChar)
-        {
-            return (((Event.current.type != EventType.Repaint) && (Event.current.type != EventType.MouseDown)) ? password : "".PadRight(password.Length, maskChar));
-        }
+        internal static string PasswordFieldGetStrToShow(string password, char maskChar) => 
+            (((Event.current.type != EventType.Repaint) && (Event.current.type != EventType.MouseDown)) ? password : "".PadRight(password.Length, maskChar));
 
         /// <summary>
         /// <para>Make a button that is active as long as the user holds it down.</para>
@@ -1687,10 +1647,8 @@
         /// <returns>
         /// <para>True when the users clicks the button.</para>
         /// </returns>
-        public static bool RepeatButton(Rect position, string text)
-        {
-            return DoRepeatButton(position, GUIContent.Temp(text), s_Skin.button, FocusType.Passive);
-        }
+        public static bool RepeatButton(Rect position, string text) => 
+            DoRepeatButton(position, GUIContent.Temp(text), s_Skin.button, FocusType.Passive);
 
         /// <summary>
         /// <para>Make a button that is active as long as the user holds it down.</para>
@@ -1703,10 +1661,8 @@
         /// <returns>
         /// <para>True when the users clicks the button.</para>
         /// </returns>
-        public static bool RepeatButton(Rect position, GUIContent content)
-        {
-            return DoRepeatButton(position, content, s_Skin.button, FocusType.Passive);
-        }
+        public static bool RepeatButton(Rect position, GUIContent content) => 
+            DoRepeatButton(position, content, s_Skin.button, FocusType.Passive);
 
         /// <summary>
         /// <para>Make a button that is active as long as the user holds it down.</para>
@@ -1719,10 +1675,8 @@
         /// <returns>
         /// <para>True when the users clicks the button.</para>
         /// </returns>
-        public static bool RepeatButton(Rect position, Texture image)
-        {
-            return DoRepeatButton(position, GUIContent.Temp(image), s_Skin.button, FocusType.Passive);
-        }
+        public static bool RepeatButton(Rect position, Texture image) => 
+            DoRepeatButton(position, GUIContent.Temp(image), s_Skin.button, FocusType.Passive);
 
         /// <summary>
         /// <para>Make a button that is active as long as the user holds it down.</para>
@@ -1735,10 +1689,8 @@
         /// <returns>
         /// <para>True when the users clicks the button.</para>
         /// </returns>
-        public static bool RepeatButton(Rect position, string text, GUIStyle style)
-        {
-            return DoRepeatButton(position, GUIContent.Temp(text), style, FocusType.Passive);
-        }
+        public static bool RepeatButton(Rect position, string text, GUIStyle style) => 
+            DoRepeatButton(position, GUIContent.Temp(text), style, FocusType.Passive);
 
         /// <summary>
         /// <para>Make a button that is active as long as the user holds it down.</para>
@@ -1751,10 +1703,8 @@
         /// <returns>
         /// <para>True when the users clicks the button.</para>
         /// </returns>
-        public static bool RepeatButton(Rect position, GUIContent content, GUIStyle style)
-        {
-            return DoRepeatButton(position, content, style, FocusType.Passive);
-        }
+        public static bool RepeatButton(Rect position, GUIContent content, GUIStyle style) => 
+            DoRepeatButton(position, content, style, FocusType.Passive);
 
         /// <summary>
         /// <para>Make a button that is active as long as the user holds it down.</para>
@@ -1767,10 +1717,8 @@
         /// <returns>
         /// <para>True when the users clicks the button.</para>
         /// </returns>
-        public static bool RepeatButton(Rect position, Texture image, GUIStyle style)
-        {
-            return DoRepeatButton(position, GUIContent.Temp(image), style, FocusType.Passive);
-        }
+        public static bool RepeatButton(Rect position, Texture image, GUIStyle style) => 
+            DoRepeatButton(position, GUIContent.Temp(image), style, FocusType.Passive);
 
         internal static float Scroller(Rect position, float value, float size, float leftValue, float rightValue, GUIStyle slider, GUIStyle thumb, GUIStyle leftButton, GUIStyle rightButton, bool horiz)
         {
@@ -1856,15 +1804,8 @@
             }
         }
 
-        public static bool ScrollTowards(Rect position, float maxDelta)
-        {
-            ScrollViewState topScrollView = GetTopScrollView();
-            if (topScrollView == null)
-            {
-                return false;
-            }
-            return topScrollView.ScrollTowards(position, maxDelta);
-        }
+        public static bool ScrollTowards(Rect position, float maxDelta) => 
+            GetTopScrollView()?.ScrollTowards(position, maxDelta);
 
         /// <summary>
         /// <para>Make a grid of buttons.</para>
@@ -1880,10 +1821,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(Rect position, int selected, string[] texts, int xCount)
-        {
-            return SelectionGrid(position, selected, GUIContent.Temp(texts), xCount, null);
-        }
+        public static int SelectionGrid(Rect position, int selected, string[] texts, int xCount) => 
+            SelectionGrid(position, selected, GUIContent.Temp(texts), xCount, null);
 
         /// <summary>
         /// <para>Make a grid of buttons.</para>
@@ -1899,10 +1838,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(Rect position, int selected, GUIContent[] content, int xCount)
-        {
-            return SelectionGrid(position, selected, content, xCount, null);
-        }
+        public static int SelectionGrid(Rect position, int selected, GUIContent[] content, int xCount) => 
+            SelectionGrid(position, selected, content, xCount, null);
 
         /// <summary>
         /// <para>Make a grid of buttons.</para>
@@ -1918,10 +1855,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(Rect position, int selected, Texture[] images, int xCount)
-        {
-            return SelectionGrid(position, selected, GUIContent.Temp(images), xCount, null);
-        }
+        public static int SelectionGrid(Rect position, int selected, Texture[] images, int xCount) => 
+            SelectionGrid(position, selected, GUIContent.Temp(images), xCount, null);
 
         /// <summary>
         /// <para>Make a grid of buttons.</para>
@@ -1937,10 +1872,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(Rect position, int selected, string[] texts, int xCount, GUIStyle style)
-        {
-            return SelectionGrid(position, selected, GUIContent.Temp(texts), xCount, style);
-        }
+        public static int SelectionGrid(Rect position, int selected, string[] texts, int xCount, GUIStyle style) => 
+            SelectionGrid(position, selected, GUIContent.Temp(texts), xCount, style);
 
         /// <summary>
         /// <para>Make a grid of buttons.</para>
@@ -1979,10 +1912,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int SelectionGrid(Rect position, int selected, Texture[] images, int xCount, GUIStyle style)
-        {
-            return SelectionGrid(position, selected, GUIContent.Temp(images), xCount, style);
-        }
+        public static int SelectionGrid(Rect position, int selected, Texture[] images, int xCount, GUIStyle style) => 
+            SelectionGrid(position, selected, GUIContent.Temp(images), xCount, style);
 
         /// <summary>
         /// <para>Set the name of the next control.</para>
@@ -2156,10 +2087,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(Rect position, bool value, string text)
-        {
-            return Toggle(position, value, GUIContent.Temp(text), s_Skin.toggle);
-        }
+        public static bool Toggle(Rect position, bool value, string text) => 
+            Toggle(position, value, GUIContent.Temp(text), s_Skin.toggle);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -2173,10 +2102,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(Rect position, bool value, GUIContent content)
-        {
-            return Toggle(position, value, content, s_Skin.toggle);
-        }
+        public static bool Toggle(Rect position, bool value, GUIContent content) => 
+            Toggle(position, value, content, s_Skin.toggle);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -2190,10 +2117,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(Rect position, bool value, Texture image)
-        {
-            return Toggle(position, value, GUIContent.Temp(image), s_Skin.toggle);
-        }
+        public static bool Toggle(Rect position, bool value, Texture image) => 
+            Toggle(position, value, GUIContent.Temp(image), s_Skin.toggle);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -2207,10 +2132,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(Rect position, bool value, string text, GUIStyle style)
-        {
-            return Toggle(position, value, GUIContent.Temp(text), style);
-        }
+        public static bool Toggle(Rect position, bool value, string text, GUIStyle style) => 
+            Toggle(position, value, GUIContent.Temp(text), style);
 
         /// <summary>
         /// <para>Make an on/off toggle button.</para>
@@ -2242,10 +2165,8 @@
         /// <returns>
         /// <para>The new value of the button.</para>
         /// </returns>
-        public static bool Toggle(Rect position, bool value, Texture image, GUIStyle style)
-        {
-            return Toggle(position, value, GUIContent.Temp(image), style);
-        }
+        public static bool Toggle(Rect position, bool value, Texture image, GUIStyle style) => 
+            Toggle(position, value, GUIContent.Temp(image), style);
 
         public static bool Toggle(Rect position, int id, bool value, GUIContent content, GUIStyle style)
         {
@@ -2266,10 +2187,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(Rect position, int selected, string[] texts)
-        {
-            return Toolbar(position, selected, GUIContent.Temp(texts), s_Skin.button);
-        }
+        public static int Toolbar(Rect position, int selected, string[] texts) => 
+            Toolbar(position, selected, GUIContent.Temp(texts), s_Skin.button);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -2284,10 +2203,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(Rect position, int selected, GUIContent[] content)
-        {
-            return Toolbar(position, selected, content, s_Skin.button);
-        }
+        public static int Toolbar(Rect position, int selected, GUIContent[] content) => 
+            Toolbar(position, selected, content, s_Skin.button);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -2302,10 +2219,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(Rect position, int selected, Texture[] images)
-        {
-            return Toolbar(position, selected, GUIContent.Temp(images), s_Skin.button);
-        }
+        public static int Toolbar(Rect position, int selected, Texture[] images) => 
+            Toolbar(position, selected, GUIContent.Temp(images), s_Skin.button);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -2320,10 +2235,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(Rect position, int selected, string[] texts, GUIStyle style)
-        {
-            return Toolbar(position, selected, GUIContent.Temp(texts), style);
-        }
+        public static int Toolbar(Rect position, int selected, string[] texts, GUIStyle style) => 
+            Toolbar(position, selected, GUIContent.Temp(texts), style);
 
         /// <summary>
         /// <para>Make a toolbar.</para>
@@ -2361,10 +2274,8 @@
         /// <returns>
         /// <para>The index of the selected button.</para>
         /// </returns>
-        public static int Toolbar(Rect position, int selected, Texture[] images, GUIStyle style)
-        {
-            return Toolbar(position, selected, GUIContent.Temp(images), style);
-        }
+        public static int Toolbar(Rect position, int selected, Texture[] images, GUIStyle style) => 
+            Toolbar(position, selected, GUIContent.Temp(images), style);
 
         /// <summary>
         /// <para>Remove focus from all windows.</para>
@@ -2383,10 +2294,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float VerticalScrollbar(Rect position, float value, float size, float topValue, float bottomValue)
-        {
-            return Scroller(position, value, size, topValue, bottomValue, skin.verticalScrollbar, skin.verticalScrollbarThumb, skin.verticalScrollbarUpButton, skin.verticalScrollbarDownButton, false);
-        }
+        public static float VerticalScrollbar(Rect position, float value, float size, float topValue, float bottomValue) => 
+            Scroller(position, value, size, topValue, bottomValue, skin.verticalScrollbar, skin.verticalScrollbarThumb, skin.verticalScrollbarUpButton, skin.verticalScrollbarDownButton, false);
 
         /// <summary>
         /// <para>Make a vertical scrollbar. Scrollbars are what you use to scroll through a document. Most likely, you want to use scrollViews instead.</para>
@@ -2400,10 +2309,8 @@
         /// <returns>
         /// <para>The modified value. This can be changed by the user by dragging the scrollbar, or clicking the arrows at the end.</para>
         /// </returns>
-        public static float VerticalScrollbar(Rect position, float value, float size, float topValue, float bottomValue, GUIStyle style)
-        {
-            return Scroller(position, value, size, topValue, bottomValue, style, skin.GetStyle(style.name + "thumb"), skin.GetStyle(style.name + "upbutton"), skin.GetStyle(style.name + "downbutton"), false);
-        }
+        public static float VerticalScrollbar(Rect position, float value, float size, float topValue, float bottomValue, GUIStyle style) => 
+            Scroller(position, value, size, topValue, bottomValue, style, skin.GetStyle(style.name + "thumb"), skin.GetStyle(style.name + "upbutton"), skin.GetStyle(style.name + "downbutton"), false);
 
         /// <summary>
         /// <para>A vertical slider the user can drag to change a value between a min and a max.</para>
@@ -2417,10 +2324,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float VerticalSlider(Rect position, float value, float topValue, float bottomValue)
-        {
-            return Slider(position, value, 0f, topValue, bottomValue, skin.verticalSlider, skin.verticalSliderThumb, false, 0);
-        }
+        public static float VerticalSlider(Rect position, float value, float topValue, float bottomValue) => 
+            Slider(position, value, 0f, topValue, bottomValue, skin.verticalSlider, skin.verticalSliderThumb, false, 0);
 
         /// <summary>
         /// <para>A vertical slider the user can drag to change a value between a min and a max.</para>
@@ -2434,10 +2339,8 @@
         /// <returns>
         /// <para>The value that has been set by the user.</para>
         /// </returns>
-        public static float VerticalSlider(Rect position, float value, float topValue, float bottomValue, GUIStyle slider, GUIStyle thumb)
-        {
-            return Slider(position, value, 0f, topValue, bottomValue, slider, thumb, false, 0);
-        }
+        public static float VerticalSlider(Rect position, float value, float topValue, float bottomValue, GUIStyle slider, GUIStyle thumb) => 
+            Slider(position, value, 0f, topValue, bottomValue, slider, thumb, false, 0);
 
         public static Rect Window(int id, Rect clientRect, WindowFunction func, string text)
         {
@@ -2550,31 +2453,22 @@
         /// </summary>
         public static Matrix4x4 matrix
         {
-            get
-            {
-                return GUIClip.GetMatrix();
-            }
+            get => 
+                GUIClip.GetMatrix();
             set
             {
                 GUIClip.SetMatrix(value);
             }
         }
 
-        protected static string mouseTooltip
-        {
-            get
-            {
-                return Internal_GetMouseTooltip();
-            }
-        }
+        protected static string mouseTooltip =>
+            Internal_GetMouseTooltip();
 
         internal static DateTime nextScrollStepTime
         {
             [CompilerGenerated]
-            get
-            {
-                return <nextScrollStepTime>k__BackingField;
-            }
+            get => 
+                <nextScrollStepTime>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -2585,10 +2479,8 @@
         internal static int scrollTroughSide
         {
             [CompilerGenerated]
-            get
-            {
-                return <scrollTroughSide>k__BackingField;
-            }
+            get => 
+                <scrollTroughSide>k__BackingField;
             [CompilerGenerated]
             set
             {
@@ -2635,10 +2527,8 @@
 
         protected static Rect tooltipRect
         {
-            get
-            {
-                return s_ToolTipRect;
-            }
+            get => 
+                s_ToolTipRect;
             set
             {
                 s_ToolTipRect = value;

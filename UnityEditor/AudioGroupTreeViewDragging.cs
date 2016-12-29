@@ -21,14 +21,14 @@
         public override DragAndDropVisualMode DoDrag(TreeViewItem parentNode, TreeViewItem targetNode, bool perform, TreeViewDragging.DropPosition dragPos)
         {
             AudioMixerTreeViewNode node = parentNode as AudioMixerTreeViewNode;
-            List<AudioMixerGroupController> groupsToBeMoved = Enumerable.ToList<AudioMixerGroupController>(Enumerable.OfType<AudioMixerGroupController>(new List<Object>(DragAndDrop.objectReferences)));
+            List<AudioMixerGroupController> groupsToBeMoved = new List<Object>(DragAndDrop.objectReferences).OfType<AudioMixerGroupController>().ToList<AudioMixerGroupController>();
             if ((node != null) && (groupsToBeMoved.Count > 0))
             {
                 if (<>f__am$cache0 == null)
                 {
                     <>f__am$cache0 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <DoDrag>m__0);
                 }
-                List<int> draggedInstanceIDs = Enumerable.ToList<int>(Enumerable.Select<AudioMixerGroupController, int>(groupsToBeMoved, <>f__am$cache0));
+                List<int> draggedInstanceIDs = Enumerable.Select<AudioMixerGroupController, int>(groupsToBeMoved, <>f__am$cache0).ToList<int>();
                 bool flag = this.ValidDrag(parentNode, draggedInstanceIDs) && !AudioMixerController.WillModificationOfTopologyCauseFeedback(this.m_owner.Controller.GetAllAudioGroupsSlow(), groupsToBeMoved, node.group, null);
                 if (perform && flag)
                 {

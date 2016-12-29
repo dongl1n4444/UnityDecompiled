@@ -20,13 +20,8 @@
 
         public TypeReference Type { get; internal set; }
 
-        public string VariableName
-        {
-            get
-            {
-                return string.Format("G_B{0}_{1}", this.BlockIndex, this.Index);
-            }
-        }
+        public string VariableName =>
+            $"G_B{this.BlockIndex}_{this.Index}";
     }
 }
 

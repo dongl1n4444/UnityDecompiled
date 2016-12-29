@@ -191,13 +191,8 @@
             UsabilityAnalytics.Track("/AssetStore/Login");
         }
 
-        public static bool IsLoggedIn
-        {
-            get
-            {
-                return AssetStoreClient.HasActiveSessionID;
-            }
-        }
+        public static bool IsLoggedIn =>
+            AssetStoreClient.HasActiveSessionID;
 
         [CompilerGenerated]
         private sealed class <Login>c__AnonStorey0

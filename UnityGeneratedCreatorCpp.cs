@@ -19,19 +19,13 @@ internal class UnityGeneratedCreatorCpp : UnityGeneratedCreator
         return strArray;
     }
 
-    protected override string GetDefaultFullScreenCode()
-    {
-        return base.GetDefaultFullScreenCode().Replace(".", "::");
-    }
+    protected override string GetDefaultFullScreenCode() => 
+        base.GetDefaultFullScreenCode().Replace(".", "::");
 
-    protected override string GetInitialOrientationsCode()
-    {
-        return base.GetInitialOrientationsCode().Replace(".", "::");
-    }
+    protected override string GetInitialOrientationsCode() => 
+        base.GetInitialOrientationsCode().Replace(".", "::");
 
-    protected override string IndentCodeLine()
-    {
-        return "\t";
-    }
+    protected override string IndentCodeLine() => 
+        "\t";
 }
 

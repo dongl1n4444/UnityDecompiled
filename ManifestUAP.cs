@@ -31,15 +31,11 @@ internal class ManifestUAP : ManifestWSA
         return new XElement((XName) (this.DefaultNamespace + "Dependencies"), new XElement((XName) (this.DefaultNamespace + "TargetDeviceFamily"), content));
     }
 
-    protected override XElement CreateHumanInterfaceDeviceCapabilityElement()
-    {
-        return this.CreateHumanInterfaceDeviceCapabilityElement(this.DefaultNamespace);
-    }
+    protected override XElement CreateHumanInterfaceDeviceCapabilityElement() => 
+        this.CreateHumanInterfaceDeviceCapabilityElement(this.DefaultNamespace);
 
-    protected override XElement CreateInitialRotationPreferenceElement()
-    {
-        return base.CreateInitialRotationPreferenceElement(this._uapNamespace, this.supportedOrientations);
-    }
+    protected override XElement CreateInitialRotationPreferenceElement() => 
+        base.CreateInitialRotationPreferenceElement(this._uapNamespace, this.supportedOrientations);
 
     protected override XElement CreatePackageElement()
     {
@@ -57,10 +53,8 @@ internal class ManifestUAP : ManifestWSA
         return element;
     }
 
-    protected override XElement CreatePhoneIdentityElement()
-    {
-        return new XElement((XName) (this._mpNamespace + "PhoneIdentity"), new object[] { new XAttribute("PhoneProductId", base.ProductId), new XAttribute("PhonePublisherId", Guid.Empty.ToString("D", CultureInfo.InvariantCulture)) });
-    }
+    protected override XElement CreatePhoneIdentityElement() => 
+        new XElement((XName) (this._mpNamespace + "PhoneIdentity"), new object[] { new XAttribute("PhoneProductId", base.ProductId), new XAttribute("PhonePublisherId", Guid.Empty.ToString("D", CultureInfo.InvariantCulture)) });
 
     protected override XElement CreateVisualElementsElement()
     {
@@ -148,15 +142,11 @@ internal class ManifestUAP : ManifestWSA
         return this.DefaultNamespace;
     }
 
-    protected override XNamespace GetNamespaceForFileTypeAssociationExtension()
-    {
-        return this._uapNamespace;
-    }
+    protected override XNamespace GetNamespaceForFileTypeAssociationExtension() => 
+        this._uapNamespace;
 
-    protected override XNamespace GetNamespaceForProtocolExtension()
-    {
-        return this._uapNamespace;
-    }
+    protected override XNamespace GetNamespaceForProtocolExtension() => 
+        this._uapNamespace;
 
     private XElement GetShowNameOnTilesElement()
     {
@@ -210,20 +200,10 @@ internal class ManifestUAP : ManifestWSA
         return false;
     }
 
-    protected override XNamespace DefaultNamespace
-    {
-        get
-        {
-            return this._defaultNamespace;
-        }
-    }
+    protected override XNamespace DefaultNamespace =>
+        this._defaultNamespace;
 
-    protected override string StoreLogo
-    {
-        get
-        {
-            return base.Images.uwpStoreLogo;
-        }
-    }
+    protected override string StoreLogo =>
+        base.Images.uwpStoreLogo;
 }
 

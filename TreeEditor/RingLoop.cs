@@ -220,9 +220,8 @@
             }
         }
 
-        public RingLoop Clone()
-        {
-            return new RingLoop { 
+        public RingLoop Clone() => 
+            new RingLoop { 
                 radius = this.radius,
                 matrix = this.matrix,
                 segments = this.segments,
@@ -238,7 +237,6 @@
                 surfAngleCos = this.surfAngleCos,
                 surfAngleSin = this.surfAngleSin
             };
-        }
 
         public void Connect(RingLoop other, List<TreeTriangle> tris, int materialIndex, bool flipTris, bool lowres)
         {

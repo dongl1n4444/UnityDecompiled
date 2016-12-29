@@ -52,10 +52,8 @@
         /// </summary>
         public GameObject gameObject
         {
-            get
-            {
-                return this.m_GameObject;
-            }
+            get => 
+                this.m_GameObject;
             set
             {
                 this.m_GameObject = value;
@@ -64,13 +62,8 @@
         /// <summary>
         /// <para>Is there an associated module and a hit GameObject.</para>
         /// </summary>
-        public bool isValid
-        {
-            get
-            {
-                return ((this.module != null) && (this.gameObject != null));
-            }
-        }
+        public bool isValid =>
+            ((this.module != null) && (this.gameObject != null));
         /// <summary>
         /// <para>Reset the result.</para>
         /// </summary>

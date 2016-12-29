@@ -15,25 +15,16 @@
             this.try_range = try_range;
         }
 
-        public int CompareTo(ExceptionHandlerData data)
-        {
-            return (this.try_range.Start.First.Offset - data.try_range.Start.First.Offset);
-        }
+        public int CompareTo(ExceptionHandlerData data) => 
+            (this.try_range.Start.First.Offset - data.try_range.Start.First.Offset);
 
-        public List<CatchHandlerData> Catches
-        {
-            get
-            {
-                return this.catches;
-            }
-        }
+        public List<CatchHandlerData> Catches =>
+            this.catches;
 
         public BlockRange FaultRange
         {
-            get
-            {
-                return this.fault_range;
-            }
+            get => 
+                this.fault_range;
             set
             {
                 this.fault_range = value;
@@ -42,10 +33,8 @@
 
         public BlockRange FinallyRange
         {
-            get
-            {
-                return this.finally_range;
-            }
+            get => 
+                this.finally_range;
             set
             {
                 this.finally_range = value;
@@ -54,10 +43,8 @@
 
         public BlockRange TryRange
         {
-            get
-            {
-                return this.try_range;
-            }
+            get => 
+                this.try_range;
             set
             {
                 this.try_range = value;

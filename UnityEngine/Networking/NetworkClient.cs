@@ -382,14 +382,8 @@
         /// <returns>
         /// <para>Dictionary of packet statistics for the client's connection.</para>
         /// </returns>
-        public Dictionary<short, NetworkConnection.PacketStat> GetConnectionStats()
-        {
-            if (this.m_Connection == null)
-            {
-                return null;
-            }
-            return this.m_Connection.packetStats;
-        }
+        public Dictionary<short, NetworkConnection.PacketStat> GetConnectionStats() => 
+            this.m_Connection?.packetStats;
 
         internal static void GetHostAddressesCallback(IAsyncResult ar)
         {
@@ -420,7 +414,7 @@
                 NetworkClient client2 = (NetworkClient) ar.AsyncState;
                 if (LogFilter.logError)
                 {
-                    Debug.LogError("DNS resolution failed: " + DotNetCompatibility.GetErrorCode(exception));
+                    Debug.LogError("DNS resolution failed: " + exception.GetErrorCode());
                 }
                 if (LogFilter.logDebug)
                 {
@@ -731,10 +725,8 @@
             this.RegisterHandlerSafe(0x11, <>f__mg$cache1);
         }
 
-        internal static bool RemoveClient(NetworkClient client)
-        {
-            return s_Clients.Remove(client);
-        }
+        internal static bool RemoveClient(NetworkClient client) => 
+            s_Clients.Remove(client);
 
         /// <summary>
         /// <para>Resets the statistics return by NetworkClient.GetConnectionStats() to zero values.</para>
@@ -1116,132 +1108,72 @@
         /// <summary>
         /// <para>True if a network client is currently active.</para>
         /// </summary>
-        public static bool active
-        {
-            get
-            {
-                return s_IsActive;
-            }
-        }
+        public static bool active =>
+            s_IsActive;
 
         /// <summary>
         /// <para>A list of all the active network clients in the current process.</para>
         /// </summary>
-        public static List<NetworkClient> allClients
-        {
-            get
-            {
-                return s_Clients;
-            }
-        }
+        public static List<NetworkClient> allClients =>
+            s_Clients;
 
         /// <summary>
         /// <para>The NetworkConnection object this client is using.</para>
         /// </summary>
-        public NetworkConnection connection
-        {
-            get
-            {
-                return this.m_Connection;
-            }
-        }
+        public NetworkConnection connection =>
+            this.m_Connection;
 
         /// <summary>
         /// <para>The registered network message handlers.</para>
         /// </summary>
-        public Dictionary<short, NetworkMessageDelegate> handlers
-        {
-            get
-            {
-                return this.m_MessageHandlers.GetHandlers();
-            }
-        }
+        public Dictionary<short, NetworkMessageDelegate> handlers =>
+            this.m_MessageHandlers.GetHandlers();
 
-        internal int hostId
-        {
-            get
-            {
-                return this.m_ClientId;
-            }
-        }
+        internal int hostId =>
+            this.m_ClientId;
 
         /// <summary>
         /// <para>The host topology that this client is using.</para>
         /// </summary>
-        public HostTopology hostTopology
-        {
-            get
-            {
-                return this.m_HostTopology;
-            }
-        }
+        public HostTopology hostTopology =>
+            this.m_HostTopology;
 
         /// <summary>
         /// <para>This gives the current connection status of the client.</para>
         /// </summary>
-        public bool isConnected
-        {
-            get
-            {
-                return (this.m_AsyncConnect == ConnectState.Connected);
-            }
-        }
+        public bool isConnected =>
+            (this.m_AsyncConnect == ConnectState.Connected);
 
         /// <summary>
         /// <para>The class to use when creating new NetworkConnections.</para>
         /// </summary>
-        public System.Type networkConnectionClass
-        {
-            get
-            {
-                return this.m_NetworkConnectionClass;
-            }
-        }
+        public System.Type networkConnectionClass =>
+            this.m_NetworkConnectionClass;
 
         /// <summary>
         /// <para>The number of QoS channels currently configured for this client.</para>
         /// </summary>
-        public int numChannels
-        {
-            get
-            {
-                return this.m_HostTopology.DefaultConfig.ChannelCount;
-            }
-        }
+        public int numChannels =>
+            this.m_HostTopology.DefaultConfig.ChannelCount;
 
         /// <summary>
         /// <para>This is obsolete. This information is now in the NetworkMigrationManager.</para>
         /// </summary>
         [Obsolete("Moved to NetworkMigrationManager.")]
-        public PeerInfoMessage[] peers
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public PeerInfoMessage[] peers =>
+            null;
 
         /// <summary>
         /// <para>The IP address of the server that this client is connected to.</para>
         /// </summary>
-        public string serverIp
-        {
-            get
-            {
-                return this.m_ServerIp;
-            }
-        }
+        public string serverIp =>
+            this.m_ServerIp;
 
         /// <summary>
         /// <para>The port of the server that this client is connected to.</para>
         /// </summary>
-        public int serverPort
-        {
-            get
-            {
-                return this.m_ServerPort;
-            }
-        }
+        public int serverPort =>
+            this.m_ServerPort;
 
         protected enum ConnectState
         {

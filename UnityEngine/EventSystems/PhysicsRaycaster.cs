@@ -68,13 +68,8 @@
         /// <summary>
         /// <para>Get the depth of the configured camera.</para>
         /// </summary>
-        public virtual int depth
-        {
-            get
-            {
-                return ((this.eventCamera == null) ? 0xffffff : ((int) this.eventCamera.depth));
-            }
-        }
+        public virtual int depth =>
+            ((this.eventCamera == null) ? 0xffffff : ((int) this.eventCamera.depth));
 
         /// <summary>
         /// <para>Get the camera that is used for this module.</para>
@@ -105,10 +100,8 @@
         /// </summary>
         public LayerMask eventMask
         {
-            get
-            {
-                return this.m_EventMask;
-            }
+            get => 
+                this.m_EventMask;
             set
             {
                 this.m_EventMask = value;
@@ -118,13 +111,8 @@
         /// <summary>
         /// <para>Logical and of Camera mask and eventMask.</para>
         /// </summary>
-        public int finalEventMask
-        {
-            get
-            {
-                return ((this.eventCamera == null) ? -1 : (this.eventCamera.cullingMask & this.m_EventMask));
-            }
-        }
+        public int finalEventMask =>
+            ((this.eventCamera == null) ? -1 : (this.eventCamera.cullingMask & this.m_EventMask));
     }
 }
 

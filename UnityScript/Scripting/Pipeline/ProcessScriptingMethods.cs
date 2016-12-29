@@ -17,45 +17,29 @@
             this._evaluationContext = evaluationContext;
         }
 
-        public MemberReferenceExpression GetActiveScriptEntityReference(ActiveScriptEntity scriptEntity)
-        {
-            return this.get_CodeBuilder().CreateMemberReference(this.GetActiveScriptReference(scriptEntity), scriptEntity.Delegate);
-        }
+        public MemberReferenceExpression GetActiveScriptEntityReference(ActiveScriptEntity scriptEntity) => 
+            this.get_CodeBuilder().CreateMemberReference(this.GetActiveScriptReference(scriptEntity), scriptEntity.Delegate);
 
-        public MethodInvocationExpression GetActiveScriptReference(ActiveScriptEntity scriptEntity)
-        {
-            return this.get_CodeBuilder().CreateMethodInvocation(this.get_CodeBuilder().CreateReference(this.GetEvaluationContextField()), this.get_TypeSystemServices().Map(typeof(EvaluationContext).GetMethod("GetActiveScript")), this.get_CodeBuilder().CreateIntegerLiteral(scriptEntity.Script));
-        }
+        public MethodInvocationExpression GetActiveScriptReference(ActiveScriptEntity scriptEntity) => 
+            this.get_CodeBuilder().CreateMethodInvocation(this.get_CodeBuilder().CreateReference(this.GetEvaluationContextField()), this.get_TypeSystemServices().Map(typeof(EvaluationContext).GetMethod("GetActiveScript")), this.get_CodeBuilder().CreateIntegerLiteral(scriptEntity.Script));
 
-        public IField GetEvaluationContextField()
-        {
-            return this.get_NameResolutionService().ResolveField(this.get_CurrentType(), "EvaluationContext");
-        }
+        public IField GetEvaluationContextField() => 
+            this.get_NameResolutionService().ResolveField(this.get_CurrentType(), "EvaluationContext");
 
-        public IEntity GetScriptClassType()
-        {
-            return this.GetEntity(UtilitiesModule.GetScriptClass(this.get_Context()));
-        }
+        public IEntity GetScriptClassType() => 
+            this.GetEntity(UtilitiesModule.GetScriptClass(this.get_Context()));
 
-        public IField GetScriptContainerField()
-        {
-            return this.get_NameResolutionService().ResolveField((IType) this.GetScriptClassType(), "ScriptContainer");
-        }
+        public IField GetScriptContainerField() => 
+            this.get_NameResolutionService().ResolveField((IType) this.GetScriptClassType(), "ScriptContainer");
 
-        public IField GetTargetFieldContext(EvaluationContextEntity entity)
-        {
-            return (!this.IsEvaluationContextMember(entity) ? this.GetScriptContainerField() : this.GetEvaluationContextField());
-        }
+        public IField GetTargetFieldContext(EvaluationContextEntity entity) => 
+            (!this.IsEvaluationContextMember(entity) ? this.GetScriptContainerField() : this.GetEvaluationContextField());
 
-        public override bool HasSideEffect(Expression e)
-        {
-            return true;
-        }
+        public override bool HasSideEffect(Expression e) => 
+            true;
 
-        public bool IsEvaluationContextMember(EvaluationContextEntity entity)
-        {
-            return (entity.Delegate.get_DeclaringType() == this.get_TypeSystemServices().Map(this._evaluationContext.GetType()));
-        }
+        public bool IsEvaluationContextMember(EvaluationContextEntity entity) => 
+            (entity.Delegate.get_DeclaringType() == this.get_TypeSystemServices().Map(this._evaluationContext.GetType()));
 
         public MemberReferenceExpression MapToContextReference(EvaluationContextEntity entity)
         {
@@ -83,10 +67,8 @@
             }
         }
 
-        public bool ValidateContext(EvaluationContextEntity entity)
-        {
-            return (this._evaluationContext.IsStaticContext ? (!entity.Delegate.get_IsStatic() ? this.IsEvaluationContextMember(entity) : true) : true);
-        }
+        public bool ValidateContext(EvaluationContextEntity entity) => 
+            (this._evaluationContext.IsStaticContext ? (!entity.Delegate.get_IsStatic() ? this.IsEvaluationContextMember(entity) : true) : true);
     }
 }
 

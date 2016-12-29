@@ -32,10 +32,8 @@
 
         internal float[] columnWidths
         {
-            get
-            {
-                return this.m_ColumnWidths;
-            }
+            get => 
+                this.m_ColumnWidths;
             set
             {
                 this.m_ColumnWidths = value;
@@ -44,10 +42,8 @@
 
         internal CreateAssetUtility createAssetUtility
         {
-            get
-            {
-                return this.m_CreateAssetUtility;
-            }
+            get => 
+                this.m_CreateAssetUtility;
             set
             {
                 this.m_CreateAssetUtility = value;
@@ -56,10 +52,8 @@
 
         public List<int> expandedIDs
         {
-            get
-            {
-                return this.m_ExpandedIDs;
-            }
+            get => 
+                this.m_ExpandedIDs;
             set
             {
                 this.m_ExpandedIDs = value;
@@ -68,10 +62,8 @@
 
         public int lastClickedID
         {
-            get
-            {
-                return this.m_LastClickedID;
-            }
+            get => 
+                this.m_LastClickedID;
             set
             {
                 this.m_LastClickedID = value;
@@ -80,10 +72,8 @@
 
         internal RenameOverlay renameOverlay
         {
-            get
-            {
-                return this.m_RenameOverlay;
-            }
+            get => 
+                this.m_RenameOverlay;
             set
             {
                 this.m_RenameOverlay = value;
@@ -92,10 +82,8 @@
 
         public string searchString
         {
-            get
-            {
-                return this.m_SearchString;
-            }
+            get => 
+                this.m_SearchString;
             set
             {
                 this.m_SearchString = value;
@@ -104,10 +92,8 @@
 
         public List<int> selectedIDs
         {
-            get
-            {
-                return this.m_SelectedIDs;
-            }
+            get => 
+                this.m_SelectedIDs;
             set
             {
                 this.m_SelectedIDs = value;

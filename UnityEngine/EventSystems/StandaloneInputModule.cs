@@ -59,10 +59,8 @@
             base.ClearSelection();
         }
 
-        protected virtual bool ForceAutoSelect()
-        {
-            return false;
-        }
+        protected virtual bool ForceAutoSelect() => 
+            false;
 
         private Vector2 GetRawMoveVector()
         {
@@ -100,10 +98,8 @@
         /// <returns>
         /// <para>Supported.</para>
         /// </returns>
-        public override bool IsModuleSupported()
-        {
-            return ((this.m_ForceModuleActive || base.input.mousePresent) || base.input.touchSupported);
-        }
+        public override bool IsModuleSupported() => 
+            ((this.m_ForceModuleActive || base.input.mousePresent) || base.input.touchSupported);
 
         /// <summary>
         /// <para>See BaseInputModule.</para>
@@ -480,10 +476,8 @@
         [Obsolete("allowActivationOnMobileDevice has been deprecated. Use forceModuleActive instead (UnityUpgradable) -> forceModuleActive")]
         public bool allowActivationOnMobileDevice
         {
-            get
-            {
-                return this.m_ForceModuleActive;
-            }
+            get => 
+                this.m_ForceModuleActive;
             set
             {
                 this.m_ForceModuleActive = value;
@@ -495,10 +489,8 @@
         /// </summary>
         public string cancelButton
         {
-            get
-            {
-                return this.m_CancelButton;
-            }
+            get => 
+                this.m_CancelButton;
             set
             {
                 this.m_CancelButton = value;
@@ -510,10 +502,8 @@
         /// </summary>
         public bool forceModuleActive
         {
-            get
-            {
-                return this.m_ForceModuleActive;
-            }
+            get => 
+                this.m_ForceModuleActive;
             set
             {
                 this.m_ForceModuleActive = value;
@@ -525,10 +515,8 @@
         /// </summary>
         public string horizontalAxis
         {
-            get
-            {
-                return this.m_HorizontalAxis;
-            }
+            get => 
+                this.m_HorizontalAxis;
             set
             {
                 this.m_HorizontalAxis = value;
@@ -540,10 +528,8 @@
         /// </summary>
         public float inputActionsPerSecond
         {
-            get
-            {
-                return this.m_InputActionsPerSecond;
-            }
+            get => 
+                this.m_InputActionsPerSecond;
             set
             {
                 this.m_InputActionsPerSecond = value;
@@ -551,23 +537,16 @@
         }
 
         [Obsolete("Mode is no longer needed on input module as it handles both mouse and keyboard simultaneously.", false)]
-        public InputMode inputMode
-        {
-            get
-            {
-                return InputMode.Mouse;
-            }
-        }
+        public InputMode inputMode =>
+            InputMode.Mouse;
 
         /// <summary>
         /// <para>Delay in seconds before the input actions per second repeat rate takes effect.</para>
         /// </summary>
         public float repeatDelay
         {
-            get
-            {
-                return this.m_RepeatDelay;
-            }
+            get => 
+                this.m_RepeatDelay;
             set
             {
                 this.m_RepeatDelay = value;
@@ -579,10 +558,8 @@
         /// </summary>
         public string submitButton
         {
-            get
-            {
-                return this.m_SubmitButton;
-            }
+            get => 
+                this.m_SubmitButton;
             set
             {
                 this.m_SubmitButton = value;
@@ -594,10 +571,8 @@
         /// </summary>
         public string verticalAxis
         {
-            get
-            {
-                return this.m_VerticalAxis;
-            }
+            get => 
+                this.m_VerticalAxis;
             set
             {
                 this.m_VerticalAxis = value;

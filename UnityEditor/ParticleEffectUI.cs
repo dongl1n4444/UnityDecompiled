@@ -131,10 +131,8 @@
             ParticleSystemStyles.Get().selectionMarker.Draw(rect, GUIContent.none, false, true, true, false);
         }
 
-        internal static bool GetAllModulesVisible()
-        {
-            return EditorPrefs.GetBool("ParticleSystemShowAllModules", true);
-        }
+        internal static bool GetAllModulesVisible() => 
+            EditorPrefs.GetBool("ParticleSystemShowAllModules", true);
 
         private static void GetDirectParticleSystemChildrenRecursive(Transform transform, List<ParticleSystem> particleSystems)
         {
@@ -162,15 +160,11 @@
             }
         }
 
-        private static Color GetDisabledColor()
-        {
-            return (EditorGUIUtility.isProSkin ? k_DarkSkinDisabledColor : k_LightSkinDisabledColor);
-        }
+        private static Color GetDisabledColor() => 
+            (EditorGUIUtility.isProSkin ? k_DarkSkinDisabledColor : k_LightSkinDisabledColor);
 
-        public static Vector2 GetMinSize()
-        {
-            return (k_MinEmitterAreaSize + k_MinCurveAreaSize);
-        }
+        public static Vector2 GetMinSize() => 
+            (k_MinEmitterAreaSize + k_MinCurveAreaSize);
 
         public string GetNextParticleSystemName()
         {
@@ -209,10 +203,8 @@
             return num;
         }
 
-        public ParticleSystemCurveEditor GetParticleSystemCurveEditor()
-        {
-            return this.m_ParticleSystemCurveEditor;
-        }
+        public ParticleSystemCurveEditor GetParticleSystemCurveEditor() => 
+            this.m_ParticleSystemCurveEditor;
 
         internal GameObject[] GetParticleSystemGameObjects()
         {
@@ -259,10 +251,8 @@
             return list;
         }
 
-        internal ParticleSystem GetRoot()
-        {
-            return ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
-        }
+        internal ParticleSystem GetRoot() => 
+            ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
 
         private List<ParticleSystemUI> GetSelectedParticleSystemUIs()
         {
@@ -270,7 +260,7 @@
             int[] instanceIDs = Selection.instanceIDs;
             foreach (ParticleSystemUI mui in this.m_Emitters)
             {
-                if (Enumerable.Contains<int>(instanceIDs, mui.m_ParticleSystem.gameObject.GetInstanceID()))
+                if (instanceIDs.Contains<int>(mui.m_ParticleSystem.gameObject.GetInstanceID()))
                 {
                     list.Add(mui);
                 }
@@ -419,15 +409,11 @@
             return ((type == OwnerType.ParticleSystemWindow) || ((type == OwnerType.Inspector) && (psUI.m_ParticleSystem == this.m_SelectedParticleSystem)));
         }
 
-        internal bool IsPaused()
-        {
-            return (!this.IsPlaying() && !IsStopped(this.GetRoot()));
-        }
+        internal bool IsPaused() => 
+            (!this.IsPlaying() && !IsStopped(this.GetRoot()));
 
-        internal bool IsPlaying()
-        {
-            return ParticleSystemEditorUtils.editorIsPlaying;
-        }
+        internal bool IsPlaying() => 
+            ParticleSystemEditorUtils.editorIsPlaying;
 
         internal bool IsPlayOnAwake()
         {
@@ -439,15 +425,11 @@
             return false;
         }
 
-        internal bool IsShowOnlySelectedMode()
-        {
-            return this.m_ShowOnlySelectedMode;
-        }
+        internal bool IsShowOnlySelectedMode() => 
+            this.m_ShowOnlySelectedMode;
 
-        internal static bool IsStopped(ParticleSystem root)
-        {
-            return ((!ParticleSystemEditorUtils.editorIsPlaying && !ParticleSystemEditorUtils.editorIsPaused) && !ParticleSystemEditorUtils.editorIsScrubbing);
-        }
+        internal static bool IsStopped(ParticleSystem root) => 
+            ((!ParticleSystemEditorUtils.editorIsPlaying && !ParticleSystemEditorUtils.editorIsPaused) && !ParticleSystemEditorUtils.editorIsScrubbing);
 
         private void MultiParticleSystemGUI(bool verticalLayout)
         {
@@ -712,7 +694,7 @@
                     ParticleSystemRenderer particleSystemRenderer = mui.GetParticleSystemRenderer();
                     if (particleSystemRenderer != null)
                     {
-                        particleSystemRenderer.editorEnabled = Enumerable.Contains<int>(instanceIDs, mui.m_ParticleSystem.gameObject.GetInstanceID());
+                        particleSystemRenderer.editorEnabled = instanceIDs.Contains<int>(mui.m_ParticleSystem.gameObject.GetInstanceID());
                     }
                 }
             }

@@ -52,35 +52,23 @@
             base.m_ToolTip = "Shape of the emitter volume, which controls where particles are emitted and their initial direction.";
         }
 
-        private ShapeTypes ConvertBoxEmitFromToConeType(int emitFrom)
-        {
-            return this.boxShapes[emitFrom];
-        }
+        private ShapeTypes ConvertBoxEmitFromToConeType(int emitFrom) => 
+            this.boxShapes[emitFrom];
 
-        private int ConvertBoxTypeToConeEmitFrom(ShapeTypes shapeType)
-        {
-            return Array.IndexOf<ShapeTypes>(this.boxShapes, shapeType);
-        }
+        private int ConvertBoxTypeToConeEmitFrom(ShapeTypes shapeType) => 
+            Array.IndexOf<ShapeTypes>(this.boxShapes, shapeType);
 
-        private ShapeTypes ConvertConeEmitFromToConeType(int emitFrom)
-        {
-            return this.coneShapes[emitFrom];
-        }
+        private ShapeTypes ConvertConeEmitFromToConeType(int emitFrom) => 
+            this.coneShapes[emitFrom];
 
-        private int ConvertConeTypeToConeEmitFrom(ShapeTypes shapeType)
-        {
-            return Array.IndexOf<ShapeTypes>(this.coneShapes, shapeType);
-        }
+        private int ConvertConeTypeToConeEmitFrom(ShapeTypes shapeType) => 
+            Array.IndexOf<ShapeTypes>(this.coneShapes, shapeType);
 
-        private bool GetUsesShell(ShapeTypes shapeType)
-        {
-            return (Array.IndexOf<ShapeTypes>(this.shellShapes, shapeType) != -1);
-        }
+        private bool GetUsesShell(ShapeTypes shapeType) => 
+            (Array.IndexOf<ShapeTypes>(this.shellShapes, shapeType) != -1);
 
-        public override float GetXAxisScalar()
-        {
-            return base.m_ParticleSystemUI.GetEmitterDuration();
-        }
+        public override float GetXAxisScalar() => 
+            base.m_ParticleSystemUI.GetEmitterDuration();
 
         protected override void Init()
         {
@@ -248,14 +236,18 @@
             EditorGUI.BeginChangeCheck();
             int intValue = this.m_Type.intValue;
             Matrix4x4 transform = new Matrix4x4();
-            float num2 = (intValue != 6) ? 1f : this.m_MeshScale.floatValue;
-            if (system.main.scalingMode == ParticleSystemScalingMode.Hierarchy)
+            float x = (intValue != 6) ? 1f : this.m_MeshScale.floatValue;
+            if (system.main.scalingMode == ParticleSystemScalingMode.Local)
             {
-                transform.SetTRS(system.transform.position, system.transform.rotation, (Vector3) (system.transform.lossyScale * num2));
+                transform.SetTRS(system.transform.position, system.transform.rotation, (Vector3) (system.transform.localScale * x));
+            }
+            else if (system.main.scalingMode == ParticleSystemScalingMode.Hierarchy)
+            {
+                transform = system.transform.localToWorldMatrix * Matrix4x4.Scale(new Vector3(x, x, x));
             }
             else
             {
-                transform.SetTRS(system.transform.position, system.transform.rotation, (Vector3) (system.transform.localScale * num2));
+                transform.SetTRS(system.transform.position, system.transform.rotation, (Vector3) (system.transform.lossyScale * x));
             }
             Handles.matrix = transform;
             switch (intValue)

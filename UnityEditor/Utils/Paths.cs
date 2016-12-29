@@ -5,7 +5,6 @@
     using System.IO;
     using System.Runtime.CompilerServices;
 
-    [Extension]
     internal static class Paths
     {
         public static bool AreEqual(string pathA, string pathB, bool ignoreCase)
@@ -57,8 +56,7 @@
             return strArray[strArray.Length - 1];
         }
 
-        [Extension]
-        public static string NormalizePath(string path)
+        public static string NormalizePath(this string path)
         {
             if (Path.DirectorySeparatorChar == '\\')
             {
@@ -87,10 +85,8 @@
             return list.ToArray();
         }
 
-        public static string UnifyDirectorySeparator(string path)
-        {
-            return path.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
-        }
+        public static string UnifyDirectorySeparator(string path) => 
+            path.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
     }
 }
 

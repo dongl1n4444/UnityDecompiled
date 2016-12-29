@@ -899,10 +899,8 @@
             }
         }
 
-        private bool ThisIsAPrefab()
-        {
-            return (PrefabUtility.GetPrefabType(base.gameObject) == PrefabType.Prefab);
-        }
+        private bool ThisIsAPrefab() => 
+            (PrefabUtility.GetPrefabType(base.gameObject) == PrefabType.Prefab);
 
         private bool ThisIsASceneObjectWithPrefabParent(out GameObject prefab)
         {
@@ -1020,68 +1018,38 @@
         /// <summary>
         /// <para>The client that has authority for this object. This will be null if no client has authority.</para>
         /// </summary>
-        public NetworkConnection clientAuthorityOwner
-        {
-            get
-            {
-                return this.m_ClientAuthorityOwner;
-            }
-        }
+        public NetworkConnection clientAuthorityOwner =>
+            this.m_ClientAuthorityOwner;
 
         /// <summary>
         /// <para>The connection associated with this NetworkIdentity. This is only valid for player objects on the server.</para>
         /// </summary>
-        public NetworkConnection connectionToClient
-        {
-            get
-            {
-                return this.m_ConnectionToClient;
-            }
-        }
+        public NetworkConnection connectionToClient =>
+            this.m_ConnectionToClient;
 
         /// <summary>
         /// <para>The UConnection associated with this NetworkIdentity. This is only valid for player objects on a local client.</para>
         /// </summary>
-        public NetworkConnection connectionToServer
-        {
-            get
-            {
-                return this.m_ConnectionToServer;
-            }
-        }
+        public NetworkConnection connectionToServer =>
+            this.m_ConnectionToServer;
 
         /// <summary>
         /// <para>This returns true if this object is the authoritative version of the object in the distributed network application.</para>
         /// </summary>
-        public bool hasAuthority
-        {
-            get
-            {
-                return this.m_HasAuthority;
-            }
-        }
+        public bool hasAuthority =>
+            this.m_HasAuthority;
 
         /// <summary>
         /// <para>Returns true if running as a client and this object was spawned by a server.</para>
         /// </summary>
-        public bool isClient
-        {
-            get
-            {
-                return this.m_IsClient;
-            }
-        }
+        public bool isClient =>
+            this.m_IsClient;
 
         /// <summary>
         /// <para>This returns true if this object is the one that represents the player on the local machine.</para>
         /// </summary>
-        public bool isLocalPlayer
-        {
-            get
-            {
-                return this.m_IsLocalPlayer;
-            }
-        }
+        public bool isLocalPlayer =>
+            this.m_IsLocalPlayer;
 
         /// <summary>
         /// <para>Returns true if running as a server, which spawned the object.</para>
@@ -1103,10 +1071,8 @@
         /// </summary>
         public bool localPlayerAuthority
         {
-            get
-            {
-                return this.m_LocalPlayerAuthority;
-            }
+            get => 
+                this.m_LocalPlayerAuthority;
             set
             {
                 this.m_LocalPlayerAuthority = value;
@@ -1116,13 +1082,8 @@
         /// <summary>
         /// <para>Unique identifier for this particular object instance, used for tracking objects between networked clients and the server.</para>
         /// </summary>
-        public NetworkInstanceId netId
-        {
-            get
-            {
-                return this.m_NetId;
-            }
-        }
+        public NetworkInstanceId netId =>
+            this.m_NetId;
 
         /// <summary>
         /// <para>The set of network connections (players) that can see this object.</para>
@@ -1142,34 +1103,22 @@
         /// <summary>
         /// <para>The id of the player associated with this GameObject.</para>
         /// </summary>
-        public short playerControllerId
-        {
-            get
-            {
-                return this.m_PlayerId;
-            }
-        }
+        public short playerControllerId =>
+            this.m_PlayerId;
 
         /// <summary>
         /// <para>A unique identifier for NetworkIdentity objects within a scene.</para>
         /// </summary>
-        public NetworkSceneId sceneId
-        {
-            get
-            {
-                return this.m_SceneId;
-            }
-        }
+        public NetworkSceneId sceneId =>
+            this.m_SceneId;
 
         /// <summary>
         /// <para>Flag to make this object only exist when the game is running as a server (or host).</para>
         /// </summary>
         public bool serverOnly
         {
-            get
-            {
-                return this.m_ServerOnly;
-            }
+            get => 
+                this.m_ServerOnly;
             set
             {
                 this.m_ServerOnly = value;
