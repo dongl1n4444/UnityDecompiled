@@ -298,7 +298,7 @@
         {
             if (this.m_Controller != null)
             {
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (System.Action) Delegate.Remove(this.m_Controller.OnAnimatorControllerDirty, new System.Action(this.ControllerDirty));
             }
         }
 
@@ -319,7 +319,7 @@
             if (this.m_Controller != null)
             {
                 this.m_LayerIndex = AnimatorControllerTool.tool.selectedLayerIndex;
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (System.Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new System.Action(this.ControllerDirty));
             }
             if (m_intModes == null)
             {

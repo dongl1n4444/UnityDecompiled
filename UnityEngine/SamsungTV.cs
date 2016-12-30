@@ -2,42 +2,43 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Interface into SamsungTV specific functionality.</para>
     /// </summary>
     public sealed class SamsungTV
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern TouchPadMode GetTouchPadMode();
         /// <summary>
         /// <para>Set the system language that is returned by Application.SystemLanguage.</para>
         /// </summary>
         /// <param name="language"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetSystemLanguage(SystemLanguage language);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool SetTouchPadMode(TouchPadMode value);
 
         /// <summary>
         /// <para>Returns true if there is an air mouse available.</para>
         /// </summary>
-        public static bool airMouseConnected { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool airMouseConnected { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Changes the type of input the gamepad produces.</para>
         /// </summary>
-        public static GamePadMode gamePadMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static GamePadMode gamePadMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Changes the type of input the gesture camera produces.</para>
         /// </summary>
-        public static GestureMode gestureMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static GestureMode gestureMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns true if the camera sees a hand.</para>
         /// </summary>
-        public static bool gestureWorking { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool gestureWorking { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The type of input the remote's touch pad produces.</para>
@@ -79,23 +80,23 @@
         /// </summary>
         public sealed class OpenAPI
         {
-            public static string dUid { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+            public static string dUid { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
             /// <summary>
             /// <para>The server type. Possible values:
             /// Developing, Development, Invalid, Operating.</para>
             /// </summary>
-            public static OpenAPIServerType serverType { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+            public static OpenAPIServerType serverType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
             /// <summary>
             /// <para>Get local time on TV.</para>
             /// </summary>
-            public static string timeOnTV { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+            public static string timeOnTV { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
             /// <summary>
             /// <para>Get UID from TV.</para>
             /// </summary>
-            public static string uid { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+            public static string uid { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
             public enum OpenAPIServerType
             {

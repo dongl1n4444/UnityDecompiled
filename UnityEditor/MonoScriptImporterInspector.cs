@@ -12,8 +12,6 @@
         private SerializedProperty m_Icon;
         private const int m_RowHeight = 0x10;
         private SerializedObject m_TargetObject;
-        private static GUIContent s_HelpIcon;
-        private static GUIContent s_TitleSettingsIcon;
 
         private static bool IsTypeCompatible(Type type)
         {
@@ -61,13 +59,17 @@
                 {
                     EditorGUILayout.HelpBox("No MonoBehaviour scripts in the file, or their names do not match the file name.", MessageType.Info);
                 }
-                Vector2 iconSize = EditorGUIUtility.GetIconSize();
-                EditorGUIUtility.SetIconSize(new Vector2(16f, 16f));
                 List<string> names = new List<string>();
                 List<Object> objects = new List<Object>();
                 bool didModify = false;
-                this.ShowFieldInfo(type, target, names, objects, ref didModify);
-                EditorGUIUtility.SetIconSize(iconSize);
+                using (new EditorGUIUtility.IconSizeScope(new Vector2(16f, 16f)))
+                {
+                    this.ShowFieldInfo(type, target, names, objects, ref didModify);
+                }
+                if (objects.Count != 0)
+                {
+                    EditorGUILayout.HelpBox("Default references will only be applied in edit mode.", MessageType.Info);
+                }
                 if (didModify)
                 {
                     target.SetDefaultReferences(names.ToArray(), objects.ToArray());

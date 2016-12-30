@@ -13,7 +13,7 @@
         private static PrefKey kFPSLeft = new PrefKey("View/FPS Strafe Left", "a");
         private static PrefKey kFPSRight = new PrefKey("View/FPS Strafe Right", "d");
         private static PrefKey kFPSUp = new PrefKey("View/FPS Strafe Up", "e");
-        private static bool s_Dragged = false;
+        private static MotionState s_CurrentState;
         private static float s_FlySpeed = 0f;
         private static TimeHelper s_FPSTiming = new TimeHelper();
         private static Vector3 s_Motion;
@@ -171,6 +171,12 @@
                     }
                     break;
                 }
+                case EventType.Used:
+                    if ((GUIUtility.hotControl != controlID) && (s_CurrentState != MotionState.kInactive))
+                    {
+                        ResetDragState();
+                    }
+                    break;
             }
         }
 
@@ -198,6 +204,7 @@
         {
             if ((Event.current.keyCode == KeyCode.Escape) && (GUIUtility.hotControl == s_ViewToolID))
             {
+                GUIUtility.hotControl = 0;
                 ResetDragState();
             }
             if (Tools.s_LockedViewTool == ViewTool.FPS)
@@ -287,7 +294,7 @@
 
         private static void HandleMouseDown(SceneView view, int id, int button)
         {
-            s_Dragged = false;
+            s_CurrentState = MotionState.kInactive;
             if (Tools.viewToolActive)
             {
                 ViewTool viewTool = Tools.viewTool;
@@ -309,6 +316,7 @@
                     }
                     EditorGUIUtility.SetWantsMouseJumping(1);
                     current.Use();
+                    s_CurrentState = MotionState.kActive;
                     GUIUtility.ExitGUI();
                 }
             }
@@ -316,7 +324,7 @@
 
         private static void HandleMouseDrag(SceneView view, int id)
         {
-            s_Dragged = true;
+            s_CurrentState = MotionState.kDragging;
             if (GUIUtility.hotControl != id)
             {
                 return;
@@ -401,8 +409,8 @@
             if (GUIUtility.hotControl == id)
             {
                 RaycastHit hit;
-                ResetDragState();
-                if (((button == 2) && !s_Dragged) && RaycastWorld(Event.current.mousePosition, out hit))
+                GUIUtility.hotControl = 0;
+                if (((button == 2) && (s_CurrentState != MotionState.kDragging)) && RaycastWorld(Event.current.mousePosition, out hit))
                 {
                     Vector3 vector = view.pivot - ((Vector3) ((view.rotation * Vector3.forward) * view.cameraDistance));
                     float size = view.size;
@@ -412,6 +420,7 @@
                     }
                     view.LookAt(hit.point, view.rotation, size);
                 }
+                ResetDragState();
                 Event.current.Use();
             }
         }
@@ -507,7 +516,7 @@
 
         private static void ResetDragState()
         {
-            GUIUtility.hotControl = 0;
+            s_CurrentState = MotionState.kInactive;
             Tools.s_LockedViewTool = ViewTool.None;
             Tools.s_ButtonDown = -1;
             s_Motion = Vector3.zero;
@@ -521,6 +530,13 @@
         public static void ResetMotion()
         {
             s_Motion = Vector3.zero;
+        }
+
+        private enum MotionState
+        {
+            kInactive,
+            kActive,
+            kDragging
         }
     }
 }

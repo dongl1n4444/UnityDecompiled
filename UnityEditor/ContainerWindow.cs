@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngine.Serialization;
 
     [StructLayout(LayoutKind.Sequential)]
@@ -36,44 +37,44 @@
         private static List<ContainerWindow> s_AllWindows = new List<ContainerWindow>();
         private static Vector2 s_LastDragMousePos;
         private static Rect dragPosition;
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAlpha(float alpha);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetInvisible();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool IsZoomed();
         private void Internal_SetMinMaxSizes(Vector2 minSize, Vector2 maxSize)
         {
             INTERNAL_CALL_Internal_SetMinMaxSizes(this, ref minSize, ref maxSize);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetMinMaxSizes(ContainerWindow self, ref Vector2 minSize, ref Vector2 maxSize);
         private void Internal_Show(Rect r, int showMode, Vector2 minSize, Vector2 maxSize)
         {
             INTERNAL_CALL_Internal_Show(this, ref r, showMode, ref minSize, ref maxSize);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_Show(ContainerWindow self, ref Rect r, int showMode, ref Vector2 minSize, ref Vector2 maxSize);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_BringLiveAfterCreation(bool displayImmediately, bool setFocus);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetFreezeDisplay(bool freeze);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DisplayAllViews();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Minimize();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ToggleMaximize();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void MoveInFrontOf(ContainerWindow other);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void MoveBehindOf(ContainerWindow other);
-        public bool maximized { [MethodImpl(MethodImplOptions.InternalCall)] get; }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        public bool maximized { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InternalClose();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void OnDestroy();
         public Rect position
         {
@@ -88,22 +89,22 @@
                 this.INTERNAL_set_position(ref value);
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_position(out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_position(ref Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetTitle(string title);
         private void SetBackgroundColor(Color color)
         {
             INTERNAL_CALL_SetBackgroundColor(this, ref color);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetBackgroundColor(ContainerWindow self, ref Color color);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void GetOrderedWindowList();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_GetTopleftScreenPosition(out Vector2 pos);
         internal Rect FitWindowRectToScreen(Rect r, bool forceCompletelyVisible, bool useMouseScreen)
         {
@@ -112,7 +113,7 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_FitWindowRectToScreen(ContainerWindow self, ref Rect r, bool forceCompletelyVisible, bool useMouseScreen, out Rect value);
         internal static Rect FitRectToScreen(Rect defaultRect, bool forceCompletelyVisible, bool useMouseScreen)
         {
@@ -121,7 +122,7 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_FitRectToScreen(ref Rect defaultRect, bool forceCompletelyVisible, bool useMouseScreen, out Rect value);
         internal static bool macEditor =>
             (Application.platform == RuntimePlatform.OSXEditor);

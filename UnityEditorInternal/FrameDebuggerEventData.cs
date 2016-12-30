@@ -12,7 +12,6 @@
         public int indexCount;
         public int instanceCount;
         public string shaderName;
-        public Shader shader;
         public int shaderInstanceID;
         public int shaderPassIndex;
         public string shaderKeywords;
@@ -20,6 +19,12 @@
         public Mesh mesh;
         public int meshInstanceID;
         public int meshSubset;
+        public int csInstanceID;
+        public string csName;
+        public string csKernel;
+        public int csThreadGroupsX;
+        public int csThreadGroupsY;
+        public int csThreadGroupsZ;
         public string rtName;
         public int rtWidth;
         public int rtHeight;

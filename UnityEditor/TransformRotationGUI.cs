@@ -42,7 +42,7 @@
             {
                 Transform transform2 = this.targets[i] as Transform;
                 Vector3 vector2 = transform2.GetLocalEulerAngles(transform2.rotationOrder);
-                flag |= ((vector2.x != localEulerAngles.x) || (vector2.y != localEulerAngles.y)) || (vector2.z != localEulerAngles.z);
+                flag |= ((vector2.x != localEulerAngles.x) || (vector2.y != localEulerAngles.y)) || !(vector2.z == localEulerAngles.z);
                 flag2 |= transform2.rotationOrder != transform.rotationOrder;
             }
             Rect totalPosition = EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight * (!EditorGUIUtility.wideMode ? ((float) 2) : ((float) 1)), new GUILayoutOption[0]);

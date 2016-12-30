@@ -13,7 +13,7 @@
     {
         [NonSerialized]
         internal IntPtr m_Ptr;
-        private readonly GUIStyle m_SourceStyle;
+        private readonly object m_SourceStyle;
         /// <summary>
         /// <para>Creates a new rectangle with offsets.</para>
         /// </summary>
@@ -26,7 +26,7 @@
             this.Init();
         }
 
-        internal RectOffset(GUIStyle sourceStyle, IntPtr source)
+        internal RectOffset(object sourceStyle, IntPtr source)
         {
             this.m_SourceStyle = sourceStyle;
             this.m_Ptr = source;
@@ -48,34 +48,34 @@
             this.bottom = bottom;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void Init();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void Cleanup();
         /// <summary>
         /// <para>Left edge size.</para>
         /// </summary>
-        public int left { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int left { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Right edge size.</para>
         /// </summary>
-        public int right { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int right { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Top edge size.</para>
         /// </summary>
-        public int top { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int top { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Bottom edge size.</para>
         /// </summary>
-        public int bottom { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int bottom { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
         /// <summary>
         /// <para>Shortcut for left + right. (Read Only)</para>
         /// </summary>
-        public int horizontal { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int horizontal { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Shortcut for top + bottom. (Read Only)</para>
         /// </summary>
-        public int vertical { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int vertical { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Add the border offsets to a rect.</para>
         /// </summary>
@@ -87,7 +87,7 @@
             return rect2;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Add(RectOffset self, ref Rect rect, out Rect value);
         /// <summary>
         /// <para>Remove the border offsets from a rect.</para>
@@ -100,7 +100,7 @@
             return rect2;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Remove(RectOffset self, ref Rect rect, out Rect value);
         ~RectOffset()
         {

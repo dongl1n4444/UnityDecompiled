@@ -9,7 +9,8 @@
     {
         Internal,
         Gradle,
-        ADT
+        ADT,
+        VisualStudio
     }
 }
 

@@ -34,7 +34,7 @@
         }
 
         public Method ExistingMainMethodOn(TypeDefinition typeDef) => 
-            typeDef.get_Members().OfType<Method>().FirstOrDefault<Method>(new Func<Method, bool>(this, (IntPtr) this.IsMainMethod));
+            typeDef.get_Members().OfType<Method>().FirstOrDefault<Method>(new Func<Method, bool>(this.IsMainMethod));
 
         public ClassDefinition FindOrCreateScriptClass(Module module)
         {
@@ -87,7 +87,7 @@
             if (module.get_Members().get_IsEmpty())
             {
             }
-            if (!module.get_Members().All<TypeMember>(new Func<TypeMember, bool>(this, (IntPtr) this.$ModuleContainsOnlyTypeDefinitions$closure$129)))
+            if (!module.get_Members().All<TypeMember>(new Func<TypeMember, bool>(this.$ModuleContainsOnlyTypeDefinitions$closure$129)))
             {
             }
             bool flag3 = module.get_Globals().get_IsEmpty();

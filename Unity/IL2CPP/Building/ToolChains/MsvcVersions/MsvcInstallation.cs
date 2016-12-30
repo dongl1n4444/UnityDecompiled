@@ -14,14 +14,17 @@
     public abstract class MsvcInstallation
     {
         private static Dictionary<System.Version, MsvcInstallation> _installations = new Dictionary<System.Version, MsvcInstallation>();
+        private readonly bool _use64BitTools;
         [CompilerGenerated]
-        private static Func<System.Version, int> <>f__am$cache0;
+        private static Func<NPath, string> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<System.Version, int> <>f__am$cache1;
         [CompilerGenerated]
         private static Func<System.Version, int> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<System.Version, int> <>f__am$cache3;
+        [CompilerGenerated]
+        private static Func<System.Version, int> <>f__am$cache4;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NPath <SDKDirectory>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,12 +79,27 @@
         {
             this.VisualStudioDirectory = GetVisualStudioInstallationFolder(visualStudioVersion);
             this.Version = visualStudioVersion;
+            this._use64BitTools = CanRun64BitProcess();
         }
 
-        protected MsvcInstallation(System.Version visualStudioVersion, NPath visualStudioDir)
+        protected MsvcInstallation(System.Version visualStudioVersion, NPath visualStudioDir, bool use64BitTools = true)
         {
             this.VisualStudioDirectory = visualStudioDir;
             this.Version = visualStudioVersion;
+            this._use64BitTools = use64BitTools && CanRun64BitProcess();
+        }
+
+        private static bool CanRun64BitProcess()
+        {
+            if (IntPtr.Size != 4)
+            {
+                return true;
+            }
+            using (Process process = Process.GetCurrentProcess())
+            {
+                bool flag2;
+                return (IsWow64Process(process.Handle, out flag2) && flag2);
+            }
         }
 
         public abstract IEnumerable<NPath> GetIncludeDirectories(Unity.IL2CPP.Building.Architecture architecture);
@@ -90,15 +108,15 @@
             <GetLatestInstallationAtLeast>c__AnonStorey0 storey = new <GetLatestInstallationAtLeast>c__AnonStorey0 {
                 version = version
             };
-            if (<>f__am$cache2 == null)
-            {
-                <>f__am$cache2 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstallationAtLeast>m__2);
-            }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstallationAtLeast>m__3);
+                <>f__am$cache3 = v => v.Major;
             }
-            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache2).ThenByDescending<System.Version, int>(<>f__am$cache3).Where<System.Version>(new Func<System.Version, bool>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<System.Version>();
+            if (<>f__am$cache4 == null)
+            {
+                <>f__am$cache4 = v => v.Minor;
+            }
+            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache3).ThenByDescending<System.Version, int>(<>f__am$cache4).Where<System.Version>(new Func<System.Version, bool>(storey.<>m__0)).FirstOrDefault<System.Version>();
             if (version2 == null)
             {
                 throw new Exception($"MSVC Installation version {storey.version.Major}.{storey.version.Minor} or later is not installed on current machine!");
@@ -108,15 +126,15 @@
 
         public static MsvcInstallation GetLatestInstalled()
         {
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstalled>m__0);
-            }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstalled>m__1);
+                <>f__am$cache1 = k => k.Major;
             }
-            System.Version version = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache0).ThenByDescending<System.Version, int>(<>f__am$cache1).FirstOrDefault<System.Version>();
+            if (<>f__am$cache2 == null)
+            {
+                <>f__am$cache2 = k => k.Minor;
+            }
+            System.Version version = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache1).ThenByDescending<System.Version, int>(<>f__am$cache2).FirstOrDefault<System.Version>();
             if (version == null)
             {
                 throw new Exception("No MSVC installations were found on the machine!");
@@ -127,33 +145,86 @@
         public abstract IEnumerable<NPath> GetLibDirectories(Unity.IL2CPP.Building.Architecture architecture, string sdkSubset = null);
         public virtual string GetPathEnvVariable(Unity.IL2CPP.Building.Architecture architecture)
         {
-            NPath path;
-            NPath path2 = null;
-            if ((architecture is ARMv7Architecture) || (architecture is x86Architecture))
+            List<NPath> source = new List<NPath>();
+            if (architecture is x86Architecture)
             {
-                string[] textArray1 = new string[] { "VC", "bin" };
-                path = this.VisualStudioDirectory.Combine(textArray1);
+                if (this._use64BitTools)
+                {
+                    string[] append = new string[] { "VC", "bin", "amd64_x86" };
+                    source.Add(this.VisualStudioDirectory.Combine(append));
+                    string[] textArray2 = new string[] { "VC", "bin", "amd64" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray2));
+                    if (this.SDKDirectory != null)
+                    {
+                        string[] textArray3 = new string[] { "bin" };
+                        string[] textArray4 = new string[] { "x64" };
+                        source.Add(this.SDKDirectory.Combine(textArray3).Combine(textArray4));
+                    }
+                }
+                else
+                {
+                    string[] textArray5 = new string[] { "VC", "bin" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray5));
+                }
                 if (this.SDKDirectory != null)
                 {
-                    string[] textArray2 = new string[] { "bin" };
-                    string[] textArray3 = new string[] { "x86" };
-                    path2 = this.SDKDirectory.Combine(textArray2).Combine(textArray3);
+                    string[] textArray6 = new string[] { "bin" };
+                    string[] textArray7 = new string[] { "x86" };
+                    source.Add(this.SDKDirectory.Combine(textArray6).Combine(textArray7));
                 }
-                return $"{path};{path2}";
             }
-            string[] append = new string[] { "VC", "bin", "amd64" };
-            path = this.VisualStudioDirectory.Combine(append);
-            if (this.SDKDirectory != null)
+            else if (architecture is ARMv7Architecture)
             {
-                string[] textArray5 = new string[] { "bin" };
-                string[] textArray6 = new string[] { "x64" };
-                path2 = this.SDKDirectory.Combine(textArray5).Combine(textArray6);
+                if (this._use64BitTools)
+                {
+                    string[] textArray8 = new string[] { "VC", "bin", "amd64_arm" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray8));
+                    string[] textArray9 = new string[] { "VC", "bin", "amd64" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray9));
+                    if (this.SDKDirectory != null)
+                    {
+                        string[] textArray10 = new string[] { "bin" };
+                        string[] textArray11 = new string[] { "x64" };
+                        source.Add(this.SDKDirectory.Combine(textArray10).Combine(textArray11));
+                    }
+                }
+                else
+                {
+                    string[] textArray12 = new string[] { "VC", "bin", "x86_arm" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray12));
+                    string[] textArray13 = new string[] { "VC", "bin" };
+                    source.Add(this.VisualStudioDirectory.Combine(textArray13));
+                }
+                if (this.SDKDirectory != null)
+                {
+                    string[] textArray14 = new string[] { "bin" };
+                    string[] textArray15 = new string[] { "x86" };
+                    source.Add(this.SDKDirectory.Combine(textArray14).Combine(textArray15));
+                }
             }
-            if (path2 != null)
+            else
             {
-                return $"{path};{path2}";
+                if (!(architecture is x64Architecture))
+                {
+                    throw new NotSupportedException($"'{architecture.Name}' architecture is not supported.");
+                }
+                string[] textArray16 = new string[] { "VC", "bin", "amd64" };
+                source.Add(this.VisualStudioDirectory.Combine(textArray16));
+                if (this.SDKDirectory != null)
+                {
+                    string[] textArray17 = new string[] { "bin" };
+                    string[] textArray18 = new string[] { "x64" };
+                    source.Add(this.SDKDirectory.Combine(textArray17).Combine(textArray18));
+                    string[] textArray19 = new string[] { "bin" };
+                    string[] textArray20 = new string[] { "x86" };
+                    source.Add(this.SDKDirectory.Combine(textArray19).Combine(textArray20));
+                }
             }
-            return path.ToString();
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = p => p.ToString();
+            }
+            return source.Select<NPath, string>(<>f__am$cache0).AggregateWith(";");
         }
 
         public virtual IEnumerable<NPath> GetPlatformMetadataReferences()
@@ -207,20 +278,18 @@
             NPath path = this.VisualStudioDirectory.Combine(append);
             if (architecture is x86Architecture)
             {
-                string[] textArray2 = new string[] { toolName };
-                return path.Combine(textArray2);
+                return (!this._use64BitTools ? path.Combine(new string[] { toolName }) : path.Combine(new string[] { "amd64_x86", toolName }));
             }
             if (architecture is x64Architecture)
             {
-                string[] textArray3 = new string[] { "amd64", toolName };
-                return path.Combine(textArray3);
+                string[] textArray4 = new string[] { "amd64", toolName };
+                return path.Combine(textArray4);
             }
             if (!(architecture is ARMv7Architecture))
             {
                 throw new NotSupportedException("Can't find MSVC tool for " + architecture);
             }
-            string[] textArray4 = new string[] { "x86_arm", toolName };
-            return path.Combine(textArray4);
+            return (!this._use64BitTools ? path.Combine(new string[] { "x86_arm", toolName }) : path.Combine(new string[] { "amd64_arm", toolName }));
         }
 
         public virtual IEnumerable<NPath> GetWindowsMetadataReferences()
@@ -230,6 +299,9 @@
 
         public virtual bool HasMetadataDirectories() => 
             false;
+
+        [DllImport("kernel32.dll", SetLastError=true)]
+        private static extern bool IsWow64Process(IntPtr hProcess, out bool wow64Process);
 
         protected bool HasCppSDK =>
             ((this.SDKDirectory != null) && this.SDKDirectory.Exists(""));

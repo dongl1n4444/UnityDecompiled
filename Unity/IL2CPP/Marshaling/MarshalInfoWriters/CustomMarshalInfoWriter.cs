@@ -47,7 +47,7 @@
             this._marshalCleanupFunctionDeclaration = $"extern "C" void {this.MarshalCleanupFunctionName}({this._marshaledTypeName}& marshaled)";
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <CustomMarshalInfoWriter>m__0);
+                <>f__am$cache0 = new Func<MethodDefinition, bool>(CustomMarshalInfoWriter.<CustomMarshalInfoWriter>m__0);
             }
             this._defaultConstructor = this._type.Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache0);
         }
@@ -94,7 +94,7 @@
             {
                 writer.WriteStatement(Emit.RaiseManagedException($"il2cpp_codegen_get_missing_method_exception("A parameterless constructor is required for type '{typeDefinition.FullName}'.")"));
             }
-            writeMarshalFromNativeCode.Invoke();
+            writeMarshalFromNativeCode();
             if (emitNullCheck)
             {
                 writer.EndBlock(false);
@@ -242,7 +242,7 @@
             writer.WriteLine("{0};", objArray5);
         }
 
-        public override void WriteMarshalFunctionDefinitions(CppCodeWriter writer, IMethodCollector methodCollector)
+        public override void WriteMarshalFunctionDefinitions(CppCodeWriter writer, IInteropDataCollector interopDataCollector)
         {
             for (int i = 0; i < this.Fields.Length; i++)
             {
@@ -257,7 +257,7 @@
             this.WriteMarshalCleanupFunction(writer);
             if (this._marshalType == MarshalType.PInvoke)
             {
-                methodCollector.AddTypeMarshallingFunctions(this._type);
+                interopDataCollector.AddTypeMarshallingFunctions(this._type);
             }
         }
 
@@ -276,7 +276,7 @@
                 {
                     object[] args = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(this._type), metadataAccess.TypeInfoFor(this._type) };
                     storey.writer.WriteLine(storey.destinationVariable.Store("({0})il2cpp_codegen_object_new({1})", args));
-                    Action writeMarshalFromNativeCode = new Action(storey, (IntPtr) this.<>m__0);
+                    Action writeMarshalFromNativeCode = new Action(storey.<>m__0);
                     EmitCallToConstructor(storey.writer, this._type, this._defaultConstructor, storey.variableName, storey.destinationVariable, writeMarshalFromNativeCode, false, metadataAccess);
                 }
                 else
@@ -287,7 +287,7 @@
             }
             else
             {
-                Action action2 = new Action(storey, (IntPtr) this.<>m__1);
+                Action action2 = new Action(storey.<>m__1);
                 EmitCallToConstructor(storey.writer, this._type, this._defaultConstructor, storey.variableName, storey.destinationVariable, action2, true, metadataAccess);
             }
         }

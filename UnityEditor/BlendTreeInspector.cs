@@ -47,10 +47,13 @@
         private SerializedProperty m_BlendType;
         private SerializedProperty m_Childs;
         private readonly int m_ClickDragFloatID = "ClickDragFloatIDHash".GetHashCode();
+        private float m_DragAndDropDelta;
         private SerializedProperty m_MaxThreshold;
         private SerializedProperty m_MinThreshold;
         private SerializedProperty m_Name;
         private SerializedProperty m_NormalizedBlendValues;
+        private float m_OriginMax;
+        private float m_OriginMin;
         private PreviewBlendTree m_PreviewBlendTree;
         private ReorderableList m_ReorderableList;
         private int m_SelectedPoint = -1;
@@ -175,6 +178,7 @@
 
         private void BlendGraph(Rect area)
         {
+            float floatValue;
             area.xMin++;
             area.xMax--;
             int controlID = GUIUtility.GetControlID(this.m_BlendAnimationID, FocusType.Passive);
@@ -198,7 +202,7 @@
             switch (current.GetTypeForControl(controlID))
             {
                 case EventType.MouseDown:
-                {
+                    floatValue = 0f;
                     if (!position.Contains(current.mousePosition))
                     {
                         if (area.Contains(current.mousePosition))
@@ -219,18 +223,16 @@
                                 }
                             }
                             this.m_UseAutomaticThresholds.boolValue = false;
+                            floatValue = this.m_Childs.GetArrayElementAtIndex(this.m_ReorderableList.index).FindPropertyRelative("m_Threshold").floatValue;
                         }
                         break;
                     }
                     current.Use();
                     GUIUtility.hotControl = controlID;
                     this.m_ReorderableList.index = -1;
-                    this.m_ReorderableList.index = -1;
-                    float t = Mathf.InverseLerp(0f, area.width, current.mousePosition.x - 4f);
-                    t = Mathf.Lerp(a, b, t);
-                    SetParameterValue(currentAnimator, this.m_BlendTree, parentBlendTree, blendParameter, t);
+                    floatValue = GetParameterValue(currentAnimator, this.m_BlendTree, blendParameter);
                     break;
-                }
+
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl == controlID)
                     {
@@ -238,55 +240,58 @@
                         GUIUtility.hotControl = 0;
                         this.m_ReorderableList.index = -1;
                     }
-                    break;
+                    return;
+
+                case EventType.MouseMove:
+                case EventType.KeyDown:
+                case EventType.KeyUp:
+                case EventType.ScrollWheel:
+                    return;
 
                 case EventType.MouseDrag:
                     if (GUIUtility.hotControl == controlID)
                     {
                         current.Use();
+                        float num18 = (current.mousePosition.x - area.x) / area.width;
+                        float num19 = Mathf.LerpUnclamped(this.m_OriginMin, this.m_OriginMax, num18) - this.m_DragAndDropDelta;
                         if (this.m_ReorderableList.index == -1)
                         {
-                            float num17 = Mathf.InverseLerp(0f, area.width, current.mousePosition.x - 4f);
-                            num17 = Mathf.Lerp(a, b, num17);
-                            SetParameterValue(currentAnimator, this.m_BlendTree, parentBlendTree, blendParameter, num17);
+                            num19 = Mathf.Clamp(num19, a, b);
+                            SetParameterValue(currentAnimator, this.m_BlendTree, parentBlendTree, blendParameter, num19);
                         }
                         else
                         {
-                            float num18 = Mathf.InverseLerp(0f, area.width, current.mousePosition.x);
-                            num18 = Mathf.Lerp(a, b, num18);
                             SerializedProperty arrayElementAtIndex = this.m_Childs.GetArrayElementAtIndex(this.m_ReorderableList.index);
-                            SerializedProperty property4 = arrayElementAtIndex.FindPropertyRelative("m_Threshold");
-                            SerializedProperty property5 = (this.m_ReorderableList.index > 0) ? this.m_Childs.GetArrayElementAtIndex(this.m_ReorderableList.index - 1) : arrayElementAtIndex;
-                            SerializedProperty property6 = (this.m_ReorderableList.index != (this.m_Childs.arraySize - 1)) ? this.m_Childs.GetArrayElementAtIndex(this.m_ReorderableList.index + 1) : arrayElementAtIndex;
-                            SerializedProperty property7 = property5.FindPropertyRelative("m_Threshold");
-                            SerializedProperty property8 = property6.FindPropertyRelative("m_Threshold");
-                            float num19 = (b - a) / area.width;
-                            float num20 = current.delta.x;
-                            property4.floatValue += num20 * num19;
-                            if ((property4.floatValue < property7.floatValue) && (this.m_ReorderableList.index != 0))
+                            SerializedProperty property6 = arrayElementAtIndex.FindPropertyRelative("m_Threshold");
+                            SerializedProperty property7 = (this.m_ReorderableList.index > 0) ? this.m_Childs.GetArrayElementAtIndex(this.m_ReorderableList.index - 1) : arrayElementAtIndex;
+                            SerializedProperty property8 = (this.m_ReorderableList.index != (this.m_Childs.arraySize - 1)) ? this.m_Childs.GetArrayElementAtIndex(this.m_ReorderableList.index + 1) : arrayElementAtIndex;
+                            SerializedProperty property9 = property7.FindPropertyRelative("m_Threshold");
+                            SerializedProperty property10 = property8.FindPropertyRelative("m_Threshold");
+                            property6.floatValue = num19;
+                            if ((property6.floatValue < property9.floatValue) && (this.m_ReorderableList.index != 0))
                             {
                                 this.m_Childs.MoveArrayElement(this.m_ReorderableList.index, this.m_ReorderableList.index - 1);
                                 this.m_ReorderableList.index--;
                             }
-                            if ((property4.floatValue > property8.floatValue) && (this.m_ReorderableList.index < (this.m_Childs.arraySize - 1)))
+                            if ((property6.floatValue > property10.floatValue) && (this.m_ReorderableList.index < (this.m_Childs.arraySize - 1)))
                             {
                                 this.m_Childs.MoveArrayElement(this.m_ReorderableList.index, this.m_ReorderableList.index + 1);
                                 this.m_ReorderableList.index++;
                             }
-                            float num21 = 3f * ((b - a) / area.width);
-                            if ((property4.floatValue - property7.floatValue) <= num21)
+                            float num20 = 3f * ((b - a) / area.width);
+                            if ((property6.floatValue - property9.floatValue) <= num20)
                             {
-                                property4.floatValue = property7.floatValue;
+                                property6.floatValue = property9.floatValue;
                             }
-                            else if ((property8.floatValue - property4.floatValue) <= num21)
+                            else if ((property10.floatValue - property6.floatValue) <= num20)
                             {
-                                property4.floatValue = property8.floatValue;
+                                property6.floatValue = property10.floatValue;
                             }
                             this.SetMinMaxThresholds();
                         }
-                        break;
+                        return;
                     }
-                    break;
+                    return;
 
                 case EventType.Repaint:
                 {
@@ -294,7 +299,7 @@
                     if (this.m_Childs.arraySize < 2)
                     {
                         GUI.Label(area, EditorGUIUtility.TempContent("Please Add Motion Fields or Blend Trees"), styles.errorStyle);
-                        break;
+                        return;
                     }
                     for (int m = 0; m < values.Length; m++)
                     {
@@ -308,9 +313,16 @@
                     Handles.DrawLine(new Vector3(area.x, area.y + area.height, 0f), new Vector3(area.x + area.width, area.y + area.height, 0f));
                     Handles.color = color;
                     styles.blendPosition.Draw(position, GUIContent.none, false, false, false, false);
-                    break;
+                    return;
                 }
+                default:
+                    return;
             }
+            float t = (current.mousePosition.x - area.x) / area.width;
+            t = Mathf.LerpUnclamped(a, b, t);
+            this.m_DragAndDropDelta = t - floatValue;
+            this.m_OriginMin = a;
+            this.m_OriginMax = b;
         }
 
         private void BlendGraph2D(Rect area)
@@ -1547,26 +1559,33 @@
             num2 = this.ClickDragFloat(rect3, num2, true);
             if (EditorGUI.EndChangeCheck())
             {
+                float a = Mathf.Min(floatValue, num2);
+                float b = Mathf.Max(floatValue, num2);
                 if (this.m_Childs.arraySize >= 2)
                 {
                     SerializedProperty arrayElementAtIndex = this.m_Childs.GetArrayElementAtIndex(0);
                     SerializedProperty property2 = this.m_Childs.GetArrayElementAtIndex(this.m_Childs.arraySize - 1);
                     SerializedProperty property3 = arrayElementAtIndex.FindPropertyRelative("m_Threshold");
                     SerializedProperty property4 = property2.FindPropertyRelative("m_Threshold");
-                    property3.floatValue = Mathf.Min(floatValue, num2);
-                    property4.floatValue = Mathf.Max(floatValue, num2);
-                }
-                if (!this.m_UseAutomaticThresholds.boolValue)
-                {
-                    for (int i = 0; i < this.m_Childs.arraySize; i++)
+                    float num5 = property3.floatValue;
+                    float num6 = property4.floatValue;
+                    property3.floatValue = a;
+                    property4.floatValue = b;
+                    if (!this.m_UseAutomaticThresholds.boolValue)
                     {
-                        SerializedProperty property6 = this.m_Childs.GetArrayElementAtIndex(i).FindPropertyRelative("m_Threshold");
-                        float t = Mathf.InverseLerp(this.m_MinThreshold.floatValue, this.m_MaxThreshold.floatValue, property6.floatValue);
-                        property6.floatValue = Mathf.Lerp(Mathf.Min(floatValue, num2), Mathf.Max(floatValue, num2), t);
+                        int arraySize = this.m_Childs.arraySize;
+                        for (int i = 1; i < (arraySize - 1); i++)
+                        {
+                            SerializedProperty property6 = this.m_Childs.GetArrayElementAtIndex(i).FindPropertyRelative("m_Threshold");
+                            float t = Mathf.InverseLerp(num5, num6, property6.floatValue);
+                            property6.floatValue = Mathf.Lerp(a, b, t);
+                        }
                     }
+                    float parameterValue = Mathf.Clamp(GetParameterValue(currentAnimator, this.m_BlendTree, this.m_BlendTree.blendParameter), a, b);
+                    SetParameterValue(currentAnimator, this.m_BlendTree, parentBlendTree, this.m_BlendTree.blendParameter, parameterValue);
                 }
-                this.m_MinThreshold.floatValue = Mathf.Min(floatValue, num2);
-                this.m_MaxThreshold.floatValue = Mathf.Max(floatValue, num2);
+                this.m_MinThreshold.floatValue = a;
+                this.m_MaxThreshold.floatValue = b;
             }
         }
 
@@ -1640,15 +1659,15 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Vector2, bool>(null, (IntPtr) <ValidatePositions>m__0);
+                    <>f__am$cache0 = e => e != Vector2.zero;
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Vector2, float>(null, (IntPtr) <ValidatePositions>m__1);
+                    <>f__am$cache1 = e => Mathf.Atan2(e.y, e.x);
                 }
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<float, float>(null, (IntPtr) <ValidatePositions>m__2);
+                    <>f__am$cache2 = e => e;
                 }
                 List<float> list = Enumerable.OrderBy<float, float>(Enumerable.Select<Vector2, float>(Enumerable.Where<Vector2>(motionPositions, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToList<float>();
                 float num3 = 0f;
@@ -1749,10 +1768,10 @@
                 this.visWeightColor = EditorGUIUtility.isProSkin ? new Color(0.65f, 0.75f, 1f, 0.65f) : new Color(0.5f, 0.6f, 0.9f, 0.8f);
                 this.visWeightShapeColor = EditorGUIUtility.isProSkin ? new Color(0.4f, 0.65f, 1f, 0.12f) : new Color(0.4f, 0.65f, 1f, 0.15f);
                 this.visWeightLineColor = EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.6f) : new Color(0f, 0f, 0f, 0.3f);
-                this.visPointColor = EditorGUIUtility.isProSkin ? new Color(0.5f, 0.7f, 1f) : new Color(0.5f, 0.7f, 1f);
+                this.visPointColor = new Color(0.5f, 0.7f, 1f);
                 this.visPointEmptyColor = EditorGUIUtility.isProSkin ? new Color(0.6f, 0.6f, 0.6f) : new Color(0.8f, 0.8f, 0.8f);
                 this.visPointOverlayColor = EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.4f) : new Color(0f, 0f, 0f, 0.2f);
-                this.visSamplerColor = EditorGUIUtility.isProSkin ? new Color(1f, 0.4f, 0.4f) : new Color(1f, 0.4f, 0.4f);
+                this.visSamplerColor = new Color(1f, 0.4f, 0.4f);
             }
         }
     }

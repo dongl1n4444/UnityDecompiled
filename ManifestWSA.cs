@@ -384,8 +384,8 @@ internal abstract class ManifestWSA
         internal int $PC;
         internal ManifestWSA $this;
         internal string <contentType>__2;
-        internal XElement <fileTypeElement>__1;
-        internal PlayerSettings.WSASupportedFileType <type>__0;
+        internal XElement <fileTypeElement>__2;
+        internal PlayerSettings.WSASupportedFileType <type>__1;
         internal PlayerSettings.WSASupportedFileType[] types;
 
         [DebuggerHidden]
@@ -415,14 +415,14 @@ internal abstract class ManifestWSA
             }
             if (this.$locvar1 < this.$locvar0.Length)
             {
-                this.<type>__0 = this.$locvar0[this.$locvar1];
-                this.<fileTypeElement>__1 = new XElement((XName) (this.$this.GetNamespaceForFileTypeAssociationExtension() + "FileType"), this.<type>__0.fileType);
-                this.<contentType>__2 = this.<type>__0.contentType;
+                this.<type>__1 = this.$locvar0[this.$locvar1];
+                this.<fileTypeElement>__2 = new XElement((XName) (this.$this.GetNamespaceForFileTypeAssociationExtension() + "FileType"), this.<type>__1.fileType);
+                this.<contentType>__2 = this.<type>__1.contentType;
                 if (!string.IsNullOrEmpty(this.<contentType>__2))
                 {
-                    this.<fileTypeElement>__1.Add(new XAttribute("ContentType", this.<contentType>__2));
+                    this.<fileTypeElement>__2.Add(new XAttribute("ContentType", this.<contentType>__2));
                 }
-                this.$current = this.<fileTypeElement>__1;
+                this.$current = this.<fileTypeElement>__2;
                 if (!this.$disposing)
                 {
                     this.$PC = 1;

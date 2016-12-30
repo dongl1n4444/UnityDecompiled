@@ -183,6 +183,10 @@
         public override int GetHashCode() => 
             (this.x.GetHashCode() ^ (this.y.GetHashCode() << 2));
 
+        /// <summary>
+        /// <para>Returns true if the given vector is exactly equal to this vector.</para>
+        /// </summary>
+        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (!(other is Vector2))
@@ -320,11 +324,8 @@
             return (vector.sqrMagnitude < 9.999999E-11f);
         }
 
-        public static bool operator !=(Vector2 lhs, Vector2 rhs)
-        {
-            Vector2 vector = lhs - rhs;
-            return (vector.sqrMagnitude >= 9.999999E-11f);
-        }
+        public static bool operator !=(Vector2 lhs, Vector2 rhs) => 
+            !(lhs == rhs);
 
         public static implicit operator Vector2(Vector3 v) => 
             new Vector2(v.x, v.y);

@@ -10,8 +10,9 @@
 
     internal class ModelImporterRigEditor : AssetImporterInspector
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <rootIndex>k__BackingField;
+        private static bool importMessageFoldout = false;
         private const float kDeleteWidth = 17f;
         private SerializedProperty m_AnimationCompression;
         private SerializedProperty m_AnimationType;
@@ -26,6 +27,8 @@
         private bool m_IsBiped = false;
         private SerializedProperty m_LegacyGenerateAnimations;
         private SerializedProperty m_OptimizeGameObjects;
+        private SerializedProperty m_RigImportErrors;
+        private SerializedProperty m_RigImportWarnings;
         private GUIContent[] m_RootMotionBoneList;
         private SerializedProperty m_RootMotionBoneName;
         private SerializedProperty m_RootMotionBoneRotation;
@@ -390,6 +393,8 @@
             this.m_CopyAvatar = base.serializedObject.FindProperty("m_CopyAvatar");
             this.m_LegacyGenerateAnimations = base.serializedObject.FindProperty("m_LegacyGenerateAnimations");
             this.m_AnimationCompression = base.serializedObject.FindProperty("m_AnimationCompression");
+            this.m_RigImportErrors = base.serializedObject.FindProperty("m_RigImportErrors");
+            this.m_RigImportWarnings = base.serializedObject.FindProperty("m_RigImportWarnings");
             this.m_ExposeTransformEditor.OnEnable(this.singleImporter.transformPaths, base.serializedObject);
             this.m_CanMultiEditTransformList = this.CanMultiEditTransformList();
             this.CheckIfAvatarCopyIsUpToDate();
@@ -407,6 +412,18 @@
             if (styles == null)
             {
                 styles = new Styles();
+            }
+            string stringValue = this.m_RigImportErrors.stringValue;
+            string message = this.m_RigImportWarnings.stringValue;
+            if (stringValue.Length > 0)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.HelpBox("Error(s) found while importing rig in this animation file. Open \"Import Messages\" foldout below for more details", MessageType.Error);
+            }
+            else if (message.Length > 0)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.HelpBox("Warning(s) found while importing rig in this animation file. Open \"Import Messages\" foldout below for more details", MessageType.Warning);
             }
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.Popup(this.m_AnimationType, styles.AnimationTypeOpt, styles.AnimationType, new GUILayoutOption[0]);
@@ -461,6 +478,22 @@
                     using (new EditorGUI.DisabledScope(!this.m_CanMultiEditTransformList))
                     {
                         this.m_ExposeTransformEditor.OnGUI();
+                    }
+                }
+            }
+            if ((stringValue.Length > 0) || (message.Length > 0))
+            {
+                EditorGUILayout.Space();
+                importMessageFoldout = EditorGUILayout.Foldout(importMessageFoldout, styles.ImportMessages, true);
+                if (importMessageFoldout)
+                {
+                    if (stringValue.Length > 0)
+                    {
+                        EditorGUILayout.HelpBox(stringValue, MessageType.None);
+                    }
+                    else if (message.Length > 0)
+                    {
+                        EditorGUILayout.HelpBox(message, MessageType.None);
                     }
                 }
             }
@@ -592,6 +625,7 @@
             public GUIContent avatarValid = EditorGUIUtility.TextContent("✓");
             public GUIContent configureAvatar = EditorGUIUtility.TextContent("Configure...");
             public GUIStyle helpText = new GUIStyle(EditorStyles.helpBox);
+            public GUIContent ImportMessages = EditorGUIUtility.TextContent("Import Messages");
             public GUIContent RootNode = EditorGUIUtility.TextContent("Root node|Specify the root node used to extract the animation translation.");
             public GUIContent UpdateMuscleDefinitionFromSource = EditorGUIUtility.TextContent("Update|Update the copy of the muscle definition from the source.");
             public GUIContent UpdateReferenceClips = EditorGUIUtility.TextContent("Update reference clips|Click on this button to update all the @convention file referencing this file. Should set all these files to Copy From Other Avatar, set the source Avatar to this one and reimport all these files.");

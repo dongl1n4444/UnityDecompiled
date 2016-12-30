@@ -5,11 +5,13 @@
 
     internal class TargetExtension : DefaultPlatformSupportModule
     {
+        private static TizenBuildWindowExtension s_BuildWindow;
+
         public override IBuildPostprocessor CreateBuildPostprocessor() => 
             new TizenBuildPostprocessor();
 
         public override IBuildWindowExtension CreateBuildWindowExtension() => 
-            null;
+            ((s_BuildWindow != null) ? s_BuildWindow : (s_BuildWindow = new TizenBuildWindowExtension()));
 
         public override IDevice CreateDevice(string id)
         {

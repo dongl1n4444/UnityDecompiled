@@ -26,7 +26,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <DoDrag>m__0);
+                    <>f__am$cache0 = i => i.GetInstanceID();
                 }
                 List<int> draggedInstanceIDs = Enumerable.Select<AudioMixerGroupController, int>(groupsToBeMoved, <>f__am$cache0).ToList<int>();
                 bool flag = this.ValidDrag(parentNode, draggedInstanceIDs) && !AudioMixerController.WillModificationOfTopologyCauseFeedback(this.m_owner.Controller.GetAllAudioGroupsSlow(), groupsToBeMoved, node.group, null);

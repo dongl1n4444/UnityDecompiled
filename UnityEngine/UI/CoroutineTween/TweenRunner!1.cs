@@ -57,8 +57,8 @@
             internal object $current;
             internal bool $disposing;
             internal int $PC;
-            internal float <elapsedTime>__0;
-            internal float <percentage>__1;
+            internal float <elapsedTime>__1;
+            internal float <percentage>__2;
             internal T tweenInfo;
 
             [DebuggerHidden]
@@ -77,12 +77,12 @@
                     case 0:
                         if (this.tweenInfo.ValidTarget())
                         {
-                            this.<elapsedTime>__0 = 0f;
-                            while (this.<elapsedTime>__0 < this.tweenInfo.duration)
+                            this.<elapsedTime>__1 = 0f;
+                            while (this.<elapsedTime>__1 < this.tweenInfo.duration)
                             {
-                                this.<elapsedTime>__0 += !this.tweenInfo.ignoreTimeScale ? Time.deltaTime : Time.unscaledDeltaTime;
-                                this.<percentage>__1 = Mathf.Clamp01(this.<elapsedTime>__0 / this.tweenInfo.duration);
-                                this.tweenInfo.TweenValue(this.<percentage>__1);
+                                this.<elapsedTime>__1 += !this.tweenInfo.ignoreTimeScale ? Time.deltaTime : Time.unscaledDeltaTime;
+                                this.<percentage>__2 = Mathf.Clamp01(this.<elapsedTime>__1 / this.tweenInfo.duration);
+                                this.tweenInfo.TweenValue(this.<percentage>__2);
                                 this.$current = null;
                                 if (!this.$disposing)
                                 {

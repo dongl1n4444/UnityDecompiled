@@ -39,7 +39,7 @@
             EditorGUILayout.PropertyField(this.m_Padding, true, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_Spacing, true, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_ChildAlignment, true, new GUILayoutOption[0]);
-            Rect position = EditorGUI.PrefixLabel(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), -1, new GUIContent("Child Control Size"));
+            Rect position = EditorGUI.PrefixLabel(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), -1, new GUIContent("Control Child Size"));
             position.width = Mathf.Max((float) 50f, (float) ((position.width - 4f) / 3f));
             EditorGUIUtility.labelWidth = 50f;
             this.ToggleLeft(position, this.m_ChildControlWidth, new GUIContent("Width"));

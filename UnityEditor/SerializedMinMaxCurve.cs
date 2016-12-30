@@ -27,31 +27,37 @@
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, "curve", false, false);
+            this.Init(m, displayName, "curve", false, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, bool signedRange)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, "curve", signedRange, false);
+            this.Init(m, displayName, "curve", signedRange, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, name, false, false);
+            this.Init(m, displayName, name, false, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name, bool signedRange)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, name, signedRange, false);
+            this.Init(m, displayName, name, signedRange, false, true);
         }
 
         public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name, bool signedRange, bool useProp0)
         {
             this.m_MaxAllowedScalar = float.PositiveInfinity;
-            this.Init(m, displayName, name, signedRange, useProp0);
+            this.Init(m, displayName, name, signedRange, useProp0, true);
+        }
+
+        public SerializedMinMaxCurve(ModuleUI m, GUIContent displayName, string name, bool signedRange, bool useProp0, bool addCurveIfNeeded)
+        {
+            this.m_MaxAllowedScalar = float.PositiveInfinity;
+            this.Init(m, displayName, name, signedRange, useProp0, addCurveIfNeeded);
         }
 
         private float ClampValueToMaxAllowed(float val)
@@ -118,9 +124,9 @@
         }
 
         public string GetUniqueCurveName() => 
-            SerializedModule.Concat(this.m_Module.GetUniqueModuleName(), this.m_Name);
+            SerializedModule.Concat(this.m_Module.GetUniqueModuleName(this.m_Module.serializedObject.targetObject), this.m_Name);
 
-        private void Init(ModuleUI m, GUIContent displayName, string uniqueName, bool signedRange, bool useProp0)
+        private void Init(ModuleUI m, GUIContent displayName, string uniqueName, bool signedRange, bool useProp0, bool addCurveIfNeeded)
         {
             this.m_Module = m;
             this.m_DisplayName = displayName;
@@ -137,7 +143,7 @@
             this.minCurve = !useProp0 ? m.GetProperty(this.m_Name, "minCurve") : m.GetProperty0(this.m_Name, "minCurve");
             this.minCurveFirstKeyValue = this.minCurve.FindPropertyRelative("m_Curve.Array.data[0].value");
             this.minMaxState = !useProp0 ? m.GetProperty(this.m_Name, "minMaxState") : m.GetProperty0(this.m_Name, "minMaxState");
-            if (((this.state == MinMaxCurveState.k_Curve) || (this.state == MinMaxCurveState.k_TwoCurves)) && this.m_Module.m_ParticleSystemUI.m_ParticleEffectUI.IsParticleSystemUIVisible(this.m_Module.m_ParticleSystemUI))
+            if ((addCurveIfNeeded && ((this.state == MinMaxCurveState.k_Curve) || (this.state == MinMaxCurveState.k_TwoCurves))) && this.m_Module.m_ParticleSystemUI.m_ParticleEffectUI.IsParticleSystemUIVisible(this.m_Module.m_ParticleSystemUI))
             {
                 m.GetParticleSystemCurveEditor().AddCurveDataIfNeeded(this.GetUniqueCurveName(), this.CreateCurveData(Color.black));
             }
@@ -270,7 +276,7 @@
 
         private void SetMinMaxState(MinMaxCurveState newState)
         {
-            if (newState != this.state)
+            if (this.stateHasMultipleDifferentValues || (newState != this.state))
             {
                 MinMaxCurveState oldState = this.state;
                 ParticleSystemCurveEditor particleSystemCurveEditor = this.m_Module.GetParticleSystemCurveEditor();
@@ -417,6 +423,9 @@
                 this.SetMinMaxState(value);
             }
         }
+
+        public bool stateHasMultipleDifferentValues =>
+            this.minMaxState.hasMultipleDifferentValues;
     }
 }
 

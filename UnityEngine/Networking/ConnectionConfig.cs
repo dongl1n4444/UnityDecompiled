@@ -16,6 +16,8 @@
         [SerializeField]
         private uint m_AllCostTimeout;
         [SerializeField]
+        private float m_BandwidthPeakFactor;
+        [SerializeField]
         internal List<ChannelQOS> m_Channels;
         [SerializeField]
         private uint m_ConnectTimeout;
@@ -23,6 +25,8 @@
         private uint m_DisconnectTimeout;
         [SerializeField]
         private ushort m_FragmentSize;
+        [SerializeField]
+        private uint m_InitialBandwidth;
         [SerializeField]
         private bool m_IsAcksLong;
         [SerializeField]
@@ -48,6 +52,10 @@
         [SerializeField]
         private uint m_ResendTimeout;
         [SerializeField]
+        private uint m_SendDelay;
+        [SerializeField]
+        private uint m_UdpSocketReceiveBufferMaxSize;
+        [SerializeField]
         private bool m_UsePlatformSpecificProtocols;
         [SerializeField]
         private ushort m_WebSocketReceiveBufferMaxSize;
@@ -59,7 +67,7 @@
         public ConnectionConfig()
         {
             this.m_Channels = new List<ChannelQOS>();
-            this.m_PacketSize = 0x5dc;
+            this.m_PacketSize = 0x5a0;
             this.m_FragmentSize = 500;
             this.m_ResendTimeout = 0x4b0;
             this.m_DisconnectTimeout = 0x7d0;
@@ -72,12 +80,16 @@
             this.m_OverflowDropThreshold = 5;
             this.m_MaxConnectionAttempt = 10;
             this.m_AckDelay = 0x21;
+            this.m_SendDelay = 10;
             this.m_MaxCombinedReliableMessageSize = 100;
             this.m_MaxCombinedReliableMessageCount = 10;
-            this.m_MaxSentMessageQueueSize = 0x80;
+            this.m_MaxSentMessageQueueSize = 0x200;
             this.m_IsAcksLong = false;
             this.m_UsePlatformSpecificProtocols = false;
+            this.m_InitialBandwidth = 0;
+            this.m_BandwidthPeakFactor = 2f;
             this.m_WebSocketReceiveBufferMaxSize = 0;
+            this.m_UdpSocketReceiveBufferMaxSize = 0;
         }
 
         /// <summary>
@@ -104,12 +116,20 @@
             this.m_OverflowDropThreshold = config.m_OverflowDropThreshold;
             this.m_MaxConnectionAttempt = config.m_MaxConnectionAttempt;
             this.m_AckDelay = config.m_AckDelay;
+            this.m_SendDelay = config.m_SendDelay;
             this.m_MaxCombinedReliableMessageSize = config.MaxCombinedReliableMessageSize;
             this.m_MaxCombinedReliableMessageCount = config.m_MaxCombinedReliableMessageCount;
             this.m_MaxSentMessageQueueSize = config.m_MaxSentMessageQueueSize;
             this.m_IsAcksLong = config.m_IsAcksLong;
             this.m_UsePlatformSpecificProtocols = config.m_UsePlatformSpecificProtocols;
+            this.m_InitialBandwidth = config.m_InitialBandwidth;
+            if (this.m_InitialBandwidth == 0)
+            {
+                this.m_InitialBandwidth = (uint) ((this.m_PacketSize * 0x3e8) / this.m_MinUpdateTimeout);
+            }
+            this.m_BandwidthPeakFactor = config.m_BandwidthPeakFactor;
             this.m_WebSocketReceiveBufferMaxSize = config.m_WebSocketReceiveBufferMaxSize;
+            this.m_UdpSocketReceiveBufferMaxSize = config.m_UdpSocketReceiveBufferMaxSize;
             foreach (ChannelQOS lqos in config.m_Channels)
             {
                 this.m_Channels.Add(new ChannelQOS(lqos));
@@ -117,7 +137,9 @@
         }
 
         /// <summary>
-        /// <para></para>
+        /// <para>Adds a new channel to the configuration and returns the unique id of that channel.
+        /// 
+        /// Channels are logical delimiters of traffic between peers. Every time you send data to a peer, you should use two ids: connection id and channel id. Channels are not only logically separate traffic but could each be configured with a different quality of service (QOS). In the example below, a configuration is created containing two channels with Unreliable and Reliable QOS types. This configuration is then used for sending data.</para>
         /// </summary>
         /// <param name="value">Add new channel to configuration.</param>
         /// <returns>
@@ -177,7 +199,11 @@
         }
 
         /// <summary>
-        /// <para>How long in ms receiver will wait before it will force send acknowledgements back without waiting any payload.</para>
+        /// <para>Defines the duration in milliseconds that the receiver waits for before it sends an acknowledgement back without waiting for any data payload. Default value = 33.
+        /// 
+        /// Network clients that send data to a server may do so using many different quality of service (QOS) modes, some of which (reliable modes) expect the server to send back acknowledgement of receipt of data sent.
+        /// 
+        /// Servers must periodically acknowledge data packets received over channels with reliable QOS modes by sending packets containing acknowledgement data (also known as "acks") back to the client. If the server were to send an acknowledgement immediately after receiving each packet from the client there would be significant overhead (the acknowledgement is a 32 or 64 bit integer, which is very small compared to the whole size of the packet which also contains the IP and the UDP header). AckDelay allows the server some time to accumulate a list of received reliable data packets to acknowledge, and decreases traffic overhead by combining many acknowledgements into a single packet.</para>
         /// </summary>
         public uint AckDelay
         {
@@ -190,7 +216,11 @@
         }
 
         /// <summary>
-        /// <para>Defines timeout in ms after that message with AllCost deliver qos will force resend without acknowledgement waiting.</para>
+        /// <para>Defines the timeout in milliseconds after which messages sent via the AllCost channel will be re-sent without waiting for acknowledgement. Default value = 20 ms. 
+        /// 
+        /// AllCost delivery quality of service (QOS) is a special QOS for delivering game-critical information, such as when the game starts, or when bullets are shot. 
+        /// 
+        /// Due to packets dropping, sometimes reliable messages cannot be delivered and need to be re-sent. Reliable messages will re-sent after RTT+Delta time, (RTT is round trip time) where RTT is a dynamic value and can reach couple of hundred milliseconds. For the AllCost delivery channel this timeout can be user-defined to force game critical information to be re-sent.</para>
         /// </summary>
         public uint AllCostTimeout
         {
@@ -203,13 +233,28 @@
         }
 
         /// <summary>
-        /// <para>Return amount of channels for current configuration.</para>
+        /// <para>Defines, when multiplied internally by InitialBandwidth, the maximum bandwidth that can be used under burst conditions.</para>
+        /// </summary>
+        public float BandwidthPeakFactor
+        {
+            get => 
+                this.m_BandwidthPeakFactor;
+            set
+            {
+                this.m_BandwidthPeakFactor = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>(Read Only) The number of channels in the current configuration.</para>
         /// </summary>
         public int ChannelCount =>
             this.m_Channels.Count;
 
         /// <summary>
-        /// <para>Allow access to channels list.</para>
+        /// <para>The list of channels belonging to the current configuration.
+        /// 
+        /// Note: any ConnectionConfig passed as a parameter to a function in Unity Multiplayer is deep copied (that is, an entirely new copy is made, with no references to the original).</para>
         /// </summary>
         public List<ChannelQOS> Channels =>
             this.m_Channels;
@@ -228,7 +273,15 @@
         }
 
         /// <summary>
-        /// <para>How long (in ms) library will wait before it will consider connection as disconnected.</para>
+        /// <para>Defines the timeout in milliseconds before a connection is considered to have been disconnected. Default value = 2000.
+        /// 
+        /// Unity Multiplayer defines conditions under which a connection is considered as disconnected. Disconnection can happen for the following reasons:
+        /// 
+        /// (1) A disconnection request was received.
+        /// 
+        /// (2) The connection has not received any traffic at all for a time longer than DisconnectTimeout (Note that live connections receive regular keep-alive packets, so in this case "no traffic" means not only no user traffic but also absence of any keep-alive traffic as well).
+        /// 
+        /// (3) Flow control determines that the time between sending packets is longer than DisconnectTimeout. Keep-alive packets are regularly delivered from peers and contain statistical information. This information includes values of packet loss due to network and peer overflow conditions. Setting NetworkDropThreshold and OverflowDropThreshold defines thresholds for flow control which can decrease packet frequency. When the time before sending the next packet is longer than DisconnectTimeout, the connection will be considered as disconnected and a disconnect event is received.</para>
         /// </summary>
         public uint DisconnectTimeout
         {
@@ -241,7 +294,9 @@
         }
 
         /// <summary>
-        /// <para>What should be maximum fragment size (in Bytes) for fragmented messages.</para>
+        /// <para>Defines the fragment size for fragmented messages (for QOS: ReliableFragmented and UnreliableFragmented). Default value = 500.
+        /// 
+        /// Under fragmented quality of service modes, the original message is split into fragments (up to 64) of up to FragmentSize bytes each. The fragment size depends on the frequency and size of reliable messages sent. Each reliable message potentially could be re-sent, so you need to choose a fragment size less than the remaining free space in a UDP packet after retransmitted reliable messages are added to the packet. For example, if Networking.ConnectionConfig.PacketSize is 1440 bytes, and a reliable message's average size is 200 bytes, it would be wise to set this parameter to 900 – 1000 bytes.</para>
         /// </summary>
         public ushort FragmentSize
         {
@@ -254,7 +309,22 @@
         }
 
         /// <summary>
-        /// <para>If it is true, connection will use 64 bit mask to acknowledge received reliable messages.</para>
+        /// <para>Gets or sets the bandwidth in bytes per second that can be used by Unity Multiplayer. No traffic over this limit is allowed. Unity Multiplayer may internally reduce the bandwidth it uses due to flow control. The default value is 1500MB/sec (1,536,000 bytes per second). The default value is intentionally a large number to allow all traffic to pass without delay.</para>
+        /// </summary>
+        public uint InitialBandwidth
+        {
+            get => 
+                this.m_InitialBandwidth;
+            set
+            {
+                this.m_InitialBandwidth = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Determines the size of the buffer used to store reliable messages that are waiting for acknowledgement. If set to false the buffer can hold 32 messages. If set to true, the buffer can hold 64 messages. Default value = false.
+        /// 
+        /// Messages sent on reliable quality of service channels are stored in a special buffer while they wait for acknowledgement from the peer. This buffer can be either 32 positions long or 64 positions long. It is recommended to begin with this value set to false, which defines a buffer up to 32 messages in size. If you receive NoResources errors often when you send reliable messages, change this value to true. This will double the size of the buffer.</para>
         /// </summary>
         public bool IsAcksLong
         {
@@ -267,7 +337,9 @@
         }
 
         /// <summary>
-        /// <para>Maximum amount of small reliable messages which will combine in one "array of messages". Useful if you are going to send a lot of small reliable messages.</para>
+        /// <para>Defines the maximum number of small reliable messages that can be included in one combined message. Default value = 10.
+        /// 
+        /// Since each message sent to a server contains IP information and a UDP header, duplicating this information for every message sent can be inefficient in the case where there are many small messages being sent frequently. Many small reliable messages can be combined into one longer reliable message, saving space in the waiting buffer. Unity Multiplayer will automatically combine up to MaxCombinedReliableMessageCount small messages into one message. To qualify as a small message, the data payload of the message should not be greater than MaxCombinedReliableMessageSize.</para>
         /// </summary>
         public ushort MaxCombinedReliableMessageCount
         {
@@ -280,7 +352,9 @@
         }
 
         /// <summary>
-        /// <para>Maximum size of reliable message which library will consider as small and will try to combine in one "array of messages" message.</para>
+        /// <para>Defines the maximum size in bytes of a reliable message which is considered small enough to include in a combined message. Default value = 100.
+        /// 
+        /// Since each message sent to a server contains IP information and a UDP header, duplicating this information for every message sent can be inefficient in the case where there are many small messages being sent frequently. Many small reliable messages can be combined into one longer reliable message, saving space in the waiting buffer. Unity Multiplayer will automatically combine up to MaxCombinedReliableMessageCount small messages into one message. To qualify as a small message, the data payload of the message should not be greater than MaxCombinedReliableMessageSize.</para>
         /// </summary>
         public ushort MaxCombinedReliableMessageSize
         {
@@ -293,7 +367,7 @@
         }
 
         /// <summary>
-        /// <para>How many attempt library will get before it will consider the connection as disconnected.</para>
+        /// <para>Defines the maximum number of times Unity Multiplayer will attempt to send a connection request without receiving a response before it reports that it cannot establish a connection. Default value = 10.</para>
         /// </summary>
         public byte MaxConnectionAttempt
         {
@@ -306,7 +380,9 @@
         }
 
         /// <summary>
-        /// <para>Defines maximum messages which will wait for sending before user will receive error on Send() call.</para>
+        /// <para>Defines maximum number of messages that can be held in the queue for sending. Default value = 128.
+        /// 
+        /// This buffer serves to smooth spikes in traffic and decreases network jitter. If the queue is full, a NoResources error will result from any calls to Send(). Setting this value greater than around 300 is likely to cause significant delaying of message delivering and can make game unplayable.</para>
         /// </summary>
         public ushort MaxSentMessageQueueSize
         {
@@ -319,7 +395,9 @@
         }
 
         /// <summary>
-        /// <para>Minimal send update timeout (in ms) for connection. this timeout could be increased by library if flow control will required.</para>
+        /// <para>Defines minimum time in milliseconds between sending packets. This duration may be automatically increased if required by flow control. Default value = 10.
+        /// 
+        /// When Send() is called, Unity Multiplayer won’t send the message immediately. Instead, once every SendTimeout milliseconds each connection is checked to see if it has something to send. While initial and minimal send timeouts can be set, these may be increased internally due to network conditions or buffer overflows.</para>
         /// </summary>
         public uint MinUpdateTimeout
         {
@@ -336,7 +414,17 @@
         }
 
         /// <summary>
-        /// <para>How many (in %) packet need to be dropped due network condition before library will throttle send rate.</para>
+        /// <para>Defines the percentage (from 0 to 100) of packets that need to be dropped due to network conditions before the SendUpdate timeout is automatically increased (and send rate is automatically decreased). Default value = 5.
+        /// 
+        /// To avoid receiver overflow, Unity Multiplayer supports flow control. Each ping packet sent between connected peers contains two values:
+        /// 
+        /// (1) Packets lost due to network conditions.
+        /// 
+        /// (2) Packets lost because the receiver does not have free space in its incoming buffers.
+        /// 
+        /// Like OverflowDropThreshold, both values are reported in percent. Use NetworkDropThreshold and OverflowDropThreshold to set thresholds for these values. If a value reported in the ping packet exceeds the corresponding threshold, Unity Multiplayer increases the sending timeout for packets up to a maximum value of DisconnectTimeout. 
+        /// 
+        /// Note: wireless networks usually exhibit 5% or greater packet loss. For wireless networks it is advisable to use a NetworkDropThreshold of 40-50%.</para>
         /// </summary>
         public byte NetworkDropThreshold
         {
@@ -349,7 +437,17 @@
         }
 
         /// <summary>
-        /// <para>How many (in %) packet need to be dropped due lack of internal bufferes before library will throttle send rate.</para>
+        /// <para>Defines the percentage (from 0 to 100) of packets that need to be dropped due to lack of space in internal buffers before the SendUpdate timeout is automatically increased (and send rate is automatically decreased). Default value = 5.
+        /// 
+        /// To avoid receiver overflow, Unity Multiplayer supports flow control. Each ping packet sent between connected peers contains two values:
+        /// 
+        /// (1) Packets lost due to network conditions.
+        /// 
+        /// (2) Packets lost because the receiver does not have free space in its incoming buffers.
+        /// 
+        /// Like NetworkDropThreshold, both values are reported in percent. Use NetworkDropThreshold and OverflowDropThreshold to set thresholds for these values. If a value reported in the ping packet exceeds the corresponding threshold, Unity Multiplayer increases the sending timeout for packets up to a maximum value of DisconnectTimeout. 
+        /// 
+        /// Note: wireless networks usually exhibit 5% or greater packet loss. For wireless networks it is advisable to use a NetworkDropThreshold of 40-50%.</para>
         /// </summary>
         public byte OverflowDropThreshold
         {
@@ -362,7 +460,9 @@
         }
 
         /// <summary>
-        /// <para>What is a maximum packet size (in Bytes) (including payload and all header). Packet can contain multiple messages inside.</para>
+        /// <para>Defines maximum packet size (in bytes) (including payload and all header). Packet can contain multiple messages inside. Default value = 1500.
+        /// 
+        /// Note that this default value is suitable for local testing only. Usually you should change this value; a recommended setting for PC or mobile is 1470. For games consoles this value should probably be less than ~1100. Wrong size definition can cause packet dropping.</para>
         /// </summary>
         public ushort PacketSize
         {
@@ -375,7 +475,9 @@
         }
 
         /// <summary>
-        /// <para>Timeout in ms between control protocol messages.</para>
+        /// <para>Defines the duration in milliseconds between keep-alive packets, also known as pings. Default value = 500.
+        /// 
+        /// The ping frequency should be long enough to accumulate good statistics and short enough to compare with DisconnectTimeout. A good guideline is to have more than 3 pings per disconnect timeout, and more than 5 messages per ping. For example, with a DisconnectTimeout of 2000ms, a PingTimeout of 500ms works well.</para>
         /// </summary>
         public uint PingTimeout
         {
@@ -387,9 +489,6 @@
             }
         }
 
-        /// <summary>
-        /// <para>Timeout in ms for control messages which library will use before it will accumulate statistics.</para>
-        /// </summary>
         public uint ReducedPingTimeout
         {
             get => 
@@ -401,7 +500,9 @@
         }
 
         /// <summary>
-        /// <para>Minimum timeout (in ms) which library will wait before it will resend reliable message.</para>
+        /// <para>Defines the maximum wait time in milliseconds before the "not acknowledged" message is re-sent. Default value = 1200.
+        /// 
+        /// It does not make a lot of sense to wait for acknowledgement forever. This parameter sets an upper time limit at which point reliable messages are re-sent.</para>
         /// </summary>
         public uint ResendTimeout
         {
@@ -410,6 +511,32 @@
             set
             {
                 this.m_ResendTimeout = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Gets or sets the delay in milliseconds after a call to Send() before packets are sent. During this time, new messages may be combined in queued packets. Default value: 10ms.</para>
+        /// </summary>
+        public uint SendDelay
+        {
+            get => 
+                this.m_SendDelay;
+            set
+            {
+                this.m_SendDelay = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>Defines the size in bytes of the receiving buffer for UDP sockets. It is useful to set this parameter equal to the maximum size of a fragmented message. Default value is OS specific (usually 8kb).</para>
+        /// </summary>
+        public uint UdpSocketReceiveBufferMaxSize
+        {
+            get => 
+                this.m_UdpSocketReceiveBufferMaxSize;
+            set
+            {
+                this.m_UdpSocketReceiveBufferMaxSize = value;
             }
         }
 
@@ -431,7 +558,9 @@
         }
 
         /// <summary>
-        /// <para>Defines received buffer size for web socket host; you should set this to the size of the biggest legal frame that you support.  If the frame size is exceeded, there is no error, but the buffer will spill to the user callback when 	full. In case zero 4k buffer will be used. Default value is zero.</para>
+        /// <para>WebSocket only. Defines the buffer size in bytes for received frames on a WebSocket host. If this value is 0 (the default), a 4 kilobyte buffer is used. Any other value results in a buffer of that size, in bytes.
+        /// 
+        /// WebSocket message fragments are called "frames". A WebSocket host has a buffer to store incoming message frames. Therefore this buffer should be set to the largest legal frame size supported. If an incoming frame exceeds the buffer size, no error is reported. However, the buffer will invoke the user callback in order to create space for the overflow.</para>
         /// </summary>
         public ushort WebSocketReceiveBufferMaxSize
         {

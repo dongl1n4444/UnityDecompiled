@@ -31,6 +31,9 @@
         [Obsolete("Texture Compression is now always enabled")]
         CompressTextures = 0,
         ComputeCRC = 0x100000,
+        /// <summary>
+        /// <para>Sets the Player to connect to the Editor.</para>
+        /// </summary>
         ConnectToHost = 0x1000,
         /// <summary>
         /// <para>Start the player with a connection to the profiler in the editor.</para>

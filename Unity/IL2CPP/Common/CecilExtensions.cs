@@ -19,7 +19,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ModuleDefinition, IEnumerable<TypeDefinition>>(null, (IntPtr) <AllDefinedTypes>m__0);
+                <>f__am$cache0 = m => m.AllDefinedTypes();
             }
             return assemblyDefinition.Modules.SelectMany<ModuleDefinition, TypeDefinition>(<>f__am$cache0);
         }
@@ -46,8 +46,8 @@
             internal Collection<TypeDefinition>.Enumerator $locvar0;
             internal IEnumerator<TypeDefinition> $locvar1;
             internal int $PC;
-            internal TypeDefinition <definition>__1;
-            internal TypeDefinition <typeDefinition>__0;
+            internal TypeDefinition <definition>__2;
+            internal TypeDefinition <typeDefinition>__1;
             internal ModuleDefinition moduleDefinition;
 
             [DebuggerHidden]
@@ -110,7 +110,7 @@
                     switch (num)
                     {
                         case 1:
-                            this.$locvar1 = this.<typeDefinition>__0.AllDefinedTypes().GetEnumerator();
+                            this.$locvar1 = this.<typeDefinition>__1.AllDefinedTypes().GetEnumerator();
                             num = 0xfffffffd;
                             goto Label_00A5;
 
@@ -119,8 +119,8 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<typeDefinition>__0 = this.$locvar0.Current;
-                        this.$current = this.<typeDefinition>__0;
+                        this.<typeDefinition>__1 = this.$locvar0.Current;
+                        this.$current = this.<typeDefinition>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -132,8 +132,8 @@
                         {
                             while (this.$locvar1.MoveNext())
                             {
-                                this.<definition>__1 = this.$locvar1.Current;
-                                this.$current = this.<definition>__1;
+                                this.<definition>__2 = this.$locvar1.Current;
+                                this.$current = this.<definition>__2;
                                 if (!this.$disposing)
                                 {
                                     this.$PC = 2;
@@ -203,8 +203,8 @@
             internal Collection<TypeDefinition>.Enumerator $locvar0;
             internal IEnumerator<TypeDefinition> $locvar1;
             internal int $PC;
-            internal TypeDefinition <definition>__1;
-            internal TypeDefinition <nestedType>__0;
+            internal TypeDefinition <definition>__2;
+            internal TypeDefinition <nestedType>__1;
             internal TypeDefinition typeDefinition;
 
             [DebuggerHidden]
@@ -267,7 +267,7 @@
                     switch (num)
                     {
                         case 1:
-                            this.$locvar1 = this.<nestedType>__0.AllDefinedTypes().GetEnumerator();
+                            this.$locvar1 = this.<nestedType>__1.AllDefinedTypes().GetEnumerator();
                             num = 0xfffffffd;
                             goto Label_00A5;
 
@@ -276,8 +276,8 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<nestedType>__0 = this.$locvar0.Current;
-                        this.$current = this.<nestedType>__0;
+                        this.<nestedType>__1 = this.$locvar0.Current;
+                        this.$current = this.<nestedType>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -289,8 +289,8 @@
                         {
                             while (this.$locvar1.MoveNext())
                             {
-                                this.<definition>__1 = this.$locvar1.Current;
-                                this.$current = this.<definition>__1;
+                                this.<definition>__2 = this.$locvar1.Current;
+                                this.$current = this.<definition>__2;
                                 if (!this.$disposing)
                                 {
                                     this.$PC = 2;

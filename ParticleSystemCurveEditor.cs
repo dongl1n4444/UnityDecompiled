@@ -87,7 +87,7 @@ internal class ParticleSystemCurveEditor
         for (int i = 0; i < this.m_AddedCurves.Count; i++)
         {
             CurveData data = this.m_AddedCurves[i];
-            if (data.m_Visible)
+            if ((data.m_Visible && ((data.m_Max == null) || !data.m_Max.hasMultipleDifferentValues)) && ((data.m_Min == null) || !data.m_Min.hasMultipleDifferentValues))
             {
                 int regionId = -1;
                 if (data.IsRegion())
@@ -634,11 +634,11 @@ internal class ParticleSystemCurveEditor
                     {
                         if (data.m_MaxId > 0)
                         {
-                            this.SetCurve(this.m_CurveEditor.GetCurveFromID(data.m_MaxId), doubleCurve.maxCurve);
+                            this.SetCurve(this.m_CurveEditor.GetCurveWrapperFromID(data.m_MaxId), doubleCurve.maxCurve);
                         }
                         if (data.m_MinId > 0)
                         {
-                            this.SetCurve(this.m_CurveEditor.GetCurveFromID(data.m_MinId), doubleCurve.minCurve);
+                            this.SetCurve(this.m_CurveEditor.GetCurveWrapperFromID(data.m_MinId), doubleCurve.minCurve);
                         }
                     }
                     else

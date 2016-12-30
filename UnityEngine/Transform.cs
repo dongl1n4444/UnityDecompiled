@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Position, rotation and scale of an object.</para>
@@ -18,13 +19,13 @@
         /// <summary>
         /// <para>Unparents all children.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DetachChildren();
         /// <summary>
         /// <para>Finds a child by name and returns it.</para>
         /// </summary>
         /// <param name="name">Name of child to be found.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Transform Find(string name);
         public Transform FindChild(string name) => 
             this.Find(name);
@@ -36,9 +37,9 @@
         /// <returns>
         /// <para>Transform child by index.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Transform GetChild(int index);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("use Transform.childCount instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("use Transform.childCount instead.")]
         public extern int GetChildCount();
         public IEnumerator GetEnumerator() => 
             new Enumerator(this);
@@ -53,59 +54,61 @@
         /// <summary>
         /// <para>Gets the sibling index.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int GetSiblingIndex();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetLocalEulerAngles(Transform self, RotationOrder order, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InverseTransformDirection(Transform self, ref Vector3 direction, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InverseTransformPoint(Transform self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InverseTransformVector(Transform self, ref Vector3 vector, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_LookAt(Transform self, ref Vector3 worldPosition, ref Vector3 worldUp);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RotateAround(Transform self, ref Vector3 axis, float angle);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RotateAroundInternal(Transform self, ref Vector3 axis, float angle);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RotateAroundLocal(Transform self, ref Vector3 axis, float angle);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetLocalEulerAngles(Transform self, ref Vector3 euler, RotationOrder order);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetLocalEulerHint(Transform self, ref Vector3 euler);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetPositionAndRotation(Transform self, ref Vector3 position, ref Quaternion rotation);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_TransformDirection(Transform self, ref Vector3 direction, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_TransformPoint(Transform self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_TransformVector(Transform self, ref Vector3 vector, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_localPosition(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_localRotation(out Quaternion value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_localScale(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_localToWorldMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_lossyScale(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_position(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_rotation(out Quaternion value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_worldToLocalMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_localPosition(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_localRotation(ref Quaternion value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_localScale(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_position(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_rotation(ref Quaternion value);
         /// <summary>
         /// <para>Transforms a direction from world space to local space. The opposite of Transform.TransformDirection.</para>
@@ -171,9 +174,9 @@
         /// <para>Is this transform a child of parent?</para>
         /// </summary>
         /// <param name="parent"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool IsChildOf(Transform parent);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool IsNonUniformScaleTransform();
         /// <summary>
         /// <para>Rotates the transform so the forward vector points at target's current position.</para>
@@ -222,6 +225,11 @@
             INTERNAL_CALL_LookAt(this, ref worldPosition, ref worldUp);
         }
 
+        /// <summary>
+        /// <para>Applies a rotation of eulerAngles.z degrees around the z axis, eulerAngles.x degrees around the x axis, and eulerAngles.y degrees around the y axis (in that order).</para>
+        /// </summary>
+        /// <param name="eulerAngles"></param>
+        /// <param name="relativeTo"></param>
         [ExcludeFromDocs]
         public void Rotate(Vector3 eulerAngles)
         {
@@ -229,6 +237,12 @@
             this.Rotate(eulerAngles, self);
         }
 
+        /// <summary>
+        /// <para>Rotates the transform around axis by angle degrees.</para>
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <param name="angle"></param>
+        /// <param name="relativeTo"></param>
         [ExcludeFromDocs]
         public void Rotate(Vector3 axis, float angle)
         {
@@ -239,8 +253,8 @@
         /// <summary>
         /// <para>Applies a rotation of eulerAngles.z degrees around the z axis, eulerAngles.x degrees around the x axis, and eulerAngles.y degrees around the y axis (in that order).</para>
         /// </summary>
-        /// <param name="eulerAngles">Rotation to apply.</param>
-        /// <param name="relativeTo">Rotation is local to object or World.</param>
+        /// <param name="eulerAngles"></param>
+        /// <param name="relativeTo"></param>
         public void Rotate(Vector3 eulerAngles, [DefaultValue("Space.Self")] Space relativeTo)
         {
             Quaternion quaternion = Quaternion.Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
@@ -254,6 +268,13 @@
             }
         }
 
+        /// <summary>
+        /// <para>Applies a rotation of zAngle degrees around the z axis, xAngle degrees around the x axis, and yAngle degrees around the y axis (in that order).</para>
+        /// </summary>
+        /// <param name="xAngle"></param>
+        /// <param name="yAngle"></param>
+        /// <param name="zAngle"></param>
+        /// <param name="relativeTo"></param>
         [ExcludeFromDocs]
         public void Rotate(float xAngle, float yAngle, float zAngle)
         {
@@ -262,11 +283,11 @@
         }
 
         /// <summary>
-        /// <para>Rotates the object around axis by angle degrees.</para>
+        /// <para>Rotates the transform around axis by angle degrees.</para>
         /// </summary>
-        /// <param name="axis">Axis to apply rotation to.</param>
-        /// <param name="angle">Degrees to rotation to apply.</param>
-        /// <param name="relativeTo">Rotation is local to object or World.</param>
+        /// <param name="axis"></param>
+        /// <param name="angle"></param>
+        /// <param name="relativeTo"></param>
         public void Rotate(Vector3 axis, float angle, [DefaultValue("Space.Self")] Space relativeTo)
         {
             if (relativeTo == Space.Self)
@@ -282,10 +303,10 @@
         /// <summary>
         /// <para>Applies a rotation of zAngle degrees around the z axis, xAngle degrees around the x axis, and yAngle degrees around the y axis (in that order).</para>
         /// </summary>
-        /// <param name="xAngle">Degrees to rotate around the X axis.</param>
-        /// <param name="yAngle">Degrees to rotate around the Y axis.</param>
-        /// <param name="zAngle">Degrees to rotate around the Z axis.</param>
-        /// <param name="relativeTo">Rotation is local to object or World.</param>
+        /// <param name="xAngle"></param>
+        /// <param name="yAngle"></param>
+        /// <param name="zAngle"></param>
+        /// <param name="relativeTo"></param>
         public void Rotate(float xAngle, float yAngle, float zAngle, [DefaultValue("Space.Self")] Space relativeTo)
         {
             this.Rotate(new Vector3(xAngle, yAngle, zAngle), relativeTo);
@@ -330,17 +351,17 @@
             INTERNAL_CALL_RotateAroundLocal(this, ref axis, angle);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void SendTransformChangedScale();
         /// <summary>
         /// <para>Move the transform to the start of the local transform list.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAsFirstSibling();
         /// <summary>
         /// <para>Move the transform to the end of the local transform list.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAsLastSibling();
         internal void SetLocalEulerAngles(Vector3 euler, RotationOrder order)
         {
@@ -352,13 +373,6 @@
             INTERNAL_CALL_SetLocalEulerHint(this, ref euler);
         }
 
-        /// <summary>
-        /// <para>Set the parent of the transform.</para>
-        /// </summary>
-        /// <param name="parent">The parent Transform to use.</param>
-        /// <param name="worldPositionStays">If true, the parent-relative position, scale and
-        /// rotation are modified such that the object keeps the same world space position,
-        /// rotation and scale as before.</param>
         public void SetParent(Transform parent)
         {
             this.SetParent(parent, true);
@@ -368,16 +382,24 @@
         /// <para>Set the parent of the transform.</para>
         /// </summary>
         /// <param name="parent">The parent Transform to use.</param>
-        /// <param name="worldPositionStays">If true, the parent-relative position, scale and
-        /// rotation are modified such that the object keeps the same world space position,
-        /// rotation and scale as before.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <param name="worldPositionStays">If true, the parent-relative position, scale and rotation is modified such that the object keeps the same world space position, rotation and scale as before.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetParent(Transform parent, bool worldPositionStays);
+        /// <summary>
+        /// <para>Sets the world space position and rotation of the Transform component.</para>
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
+        public void SetPositionAndRotation(Vector3 position, Quaternion rotation)
+        {
+            INTERNAL_CALL_SetPositionAndRotation(this, ref position, ref rotation);
+        }
+
         /// <summary>
         /// <para>Sets the sibling index.</para>
         /// </summary>
         /// <param name="index">Index to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetSiblingIndex(int index);
         /// <summary>
         /// <para>Transforms direction from local space to world space.</para>
@@ -526,7 +548,7 @@
         /// <summary>
         /// <para>The number of children the Transform has.</para>
         /// </summary>
-        public int childCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int childCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The rotation as Euler angles in degrees.</para>
@@ -557,17 +579,17 @@
         /// <summary>
         /// <para>Has the transform changed since the last time the flag was set to 'false'?</para>
         /// </summary>
-        public bool hasChanged { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool hasChanged { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The transform capacity of the transform's hierarchy data structure.</para>
         /// </summary>
-        public int hierarchyCapacity { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int hierarchyCapacity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The number of transforms in the transform's hierarchy data structure.</para>
         /// </summary>
-        public int hierarchyCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int hierarchyCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The rotation as Euler angles in degrees relative to the parent transform's rotation.</para>
@@ -676,7 +698,7 @@
             }
         }
 
-        internal Transform parentInternal { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal Transform parentInternal { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The position of the transform in world space.</para>
@@ -711,7 +733,7 @@
         /// <summary>
         /// <para>Returns the topmost transform in the hierarchy.</para>
         /// </summary>
-        public Transform root { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public Transform root { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The rotation of the transform in world space stored as a Quaternion.</para>
@@ -730,7 +752,7 @@
             }
         }
 
-        internal RotationOrder rotationOrder { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal RotationOrder rotationOrder { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The green axis of the transform in world space.</para>

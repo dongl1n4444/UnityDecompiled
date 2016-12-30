@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true), BaseTypeRequired(typeof(Attribute))]
     public sealed class BaseTypeRequiredAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Type <BaseType>k__BackingField;
 
         public BaseTypeRequiredAttribute([NotNull] Type baseType)

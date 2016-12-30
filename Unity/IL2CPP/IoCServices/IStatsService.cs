@@ -7,19 +7,40 @@
 
     public interface IStatsService
     {
+        void AddCppFileCacheHits(int count);
+        void AddCppTotalFiles(int count);
         void RecordArrayBoundsCheckEmitted(MethodDefinition methodDefinition);
+        void RecordArrayComCallableWrapper();
+        void RecordComCallableWrapper();
         void RecordDivideByZeroCheckEmitted(MethodDefinition methodDefinition);
+        void RecordForwardedToBaseClassComCallableWrapperMethod();
+        void RecordImplementedComCallableWrapperMethod();
         void RecordMemoryBarrierEmitted(MethodDefinition methodDefinition);
         void RecordMetadataStream(string name, long size);
         void RecordMethod(MethodReference method);
         void RecordNullCheckEmitted(MethodDefinition methodDefinition);
         void RecordStringLiteral(string str);
+        void RecordStrippedComCallableWrapperMethod();
         void RecordTailCall(MethodDefinition methodDefinition);
+        void RecordWindowsRuntimeBoxedType();
+        void RecordWindowsRuntimeTypeWithName();
         void WriteStats(TextWriter writer);
 
         HashSet<string> ArrayBoundsChecksMethods { get; }
 
+        int ArrayComCallableWrappers { get; }
+
+        int ComCallableWrappers { get; }
+
         long ConversionMilliseconds { get; set; }
+
+        int CppCacheHitPercentage { get; }
+
+        int CppFileCacheHits { get; }
+
+        int CppFilesCompiled { get; }
+
+        int CppTotalFiles { get; }
 
         HashSet<string> DivideByZeroChecksMethods { get; }
 
@@ -31,9 +52,13 @@
 
         int FilesWritten { get; set; }
 
+        int ForwardedToBaseClassComCallableWrapperMethods { get; }
+
         int GenericMethods { get; set; }
 
         int GenericTypeMethods { get; set; }
+
+        int ImplementedComCallableWrapperMethods { get; }
 
         HashSet<string> MemoryBarrierMethods { get; }
 
@@ -51,11 +76,17 @@
 
         int StringLiterals { get; set; }
 
+        int StrippedComCallableWrapperMethods { get; }
+
         int TailCallsEncountered { get; }
 
         int TypeHashCollisions { get; set; }
 
         int TypesConverted { get; set; }
+
+        int WindowsRuntimeBoxedTypes { get; }
+
+        int WindowsRuntimeTypesWithNames { get; }
     }
 }
 

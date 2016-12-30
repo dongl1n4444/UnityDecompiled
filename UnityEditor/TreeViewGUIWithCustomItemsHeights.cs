@@ -13,7 +13,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <bottomRowMargin>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <topRowMargin>k__BackingField;
         protected float m_BaseIndent = 2f;
         protected float m_FoldoutWidth = 12f;

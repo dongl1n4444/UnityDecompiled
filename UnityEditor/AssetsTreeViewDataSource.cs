@@ -14,7 +14,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersFirst>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersOnly>k__BackingField;
         private const HierarchyType k_HierarchyType = HierarchyType.Assets;
         private readonly int m_RootInstanceID;
@@ -120,7 +120,7 @@
         }
 
         protected CreateAssetUtility GetCreateAssetUtility() => 
-            base.m_TreeView.state.createAssetUtility;
+            ((TreeViewStateWithAssetUtility) base.m_TreeView.state).createAssetUtility;
 
         public int GetInsertAfterItemIDForNewItem(string newName, TreeViewItem parentItem, bool isCreatingNewFolder, bool foldersFirst)
         {

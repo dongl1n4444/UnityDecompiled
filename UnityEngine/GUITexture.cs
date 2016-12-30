@@ -3,25 +3,26 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A texture image used in a 2D GUI.</para>
     /// </summary>
     public sealed class GUITexture : GUIElement
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_color(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_pixelInset(out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_color(ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_pixelInset(ref Rect value);
 
         /// <summary>
         /// <para>The border defines the number of pixels from the edge that are not affected by scale.</para>
         /// </summary>
-        public RectOffset border { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public RectOffset border { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The color of the GUI texture.</para>
@@ -60,7 +61,7 @@
         /// <summary>
         /// <para>The texture used for drawing.</para>
         /// </summary>
-        public Texture texture { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Texture texture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

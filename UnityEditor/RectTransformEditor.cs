@@ -10,7 +10,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(RectTransform)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(RectTransform))]
     internal class RectTransformEditor : Editor
     {
         [CompilerGenerated]
@@ -127,9 +127,6 @@
         private static bool[] s_ScaleDisabledMask = new bool[3];
         private static Vector2 s_StartDragAnchorMax;
         private static Vector2 s_StartDragAnchorMin;
-        private static Vector2 s_StartMousePos;
-        private static Vector3 s_StartMouseWorldPos;
-        private static Vector3 s_StartPosition;
         private static Styles s_Styles;
         private static GUIContent[] s_XYLabels = new GUIContent[] { new GUIContent("X"), new GUIContent("Y") };
         private static GUIContent[] s_XYZLabels = new GUIContent[] { new GUIContent("X"), new GUIContent("Y"), new GUIContent("Z") };
@@ -182,14 +179,6 @@
             }
             float num = (minmax != 0) ? s_StartDragAnchorMax[axis] : s_StartDragAnchorMin[axis];
             return ((num < -0.001f) || (num > 1.001f));
-        }
-
-        private int AnchorPopup(Rect position, string label, int selected, string[] displayedOptions)
-        {
-            EditorGUIUtility.labelWidth = 12f;
-            int num = EditorGUI.Popup(position, label, selected, displayedOptions);
-            EditorGUIUtility.labelWidth = 0f;
-            return num;
         }
 
         private unsafe void AnchorSceneGUI(RectTransform gui, RectTransform guiParent, Transform parentSpace, bool interactive, int minmaxX, int minmaxY, int id)
@@ -253,7 +242,7 @@
                         float snapDistance = (HandleUtility.GetHandleSize(position) * 0.05f) / guiParent.rect.size[i];
                         snapDistance *= parentSpace.InverseTransformVector((i != null) ? Vector3.up : Vector3.right)[i];
                         num7 = RectTransformSnapping.SnapToGuides(num7, snapDistance, i);
-                        bool enforceExactValue = num7 != num6;
+                        bool enforceExactValue = !(num7 == num6);
                         num6 = num7;
                         if (minmax == 2)
                         {
@@ -546,8 +535,8 @@
         private void DrawSizes(Rect rectInUserSpace, Transform userSpace, Rect rectInParentSpace, Transform parentSpace, RectTransform gui, RectTransform guiParent)
         {
             float size = 0.05f * HandleUtility.GetHandleSize(parentSpace.position);
-            bool flag = gui.anchorMin.x != gui.anchorMax.x;
-            bool flag2 = gui.anchorMin.y != gui.anchorMax.y;
+            bool flag = !(gui.anchorMin.x == gui.anchorMax.x);
+            bool flag2 = !(gui.anchorMin.y == gui.anchorMax.y);
             float[] values = new float[] { this.m_ChangingPosX.faded, this.m_ChangingLeft.faded, this.m_ChangingRight.faded, this.m_ChangingAnchors.faded };
             float alpha = Mathf.Max(values);
             this.DrawAnchorRect(parentSpace, gui, guiParent, 0, alpha);
@@ -583,10 +572,10 @@
                 driven = driven,
                 getter = getter
             };
-            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey, (IntPtr) this.<>m__0))))
+            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)).Distinct<float>().Count<float>() >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 float f = EditorGUI.FloatField(position, label, num);
                 if (EditorGUI.EndChangeCheck())
@@ -606,10 +595,10 @@
                 driven = driven,
                 getter = getter
             };
-            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey, (IntPtr) this.<>m__0))))
+            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)).Distinct<float>().Count<float>() >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 int id = GUIUtility.GetControlID(s_FloatFieldHash, FocusType.Keyboard, position);
                 Rect labelPosition = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
@@ -778,9 +767,6 @@
             }
         }
 
-        private float LerpUnclamped(float a, float b, float t) => 
-            ((a * (1f - t)) + (b * t));
-
         private static Vector2 NormalizedToPointUnclamped(Rect rectangle, Vector2 normalizedRectCoordinates) => 
             new Vector2(Mathf.LerpUnclamped(rectangle.x, rectangle.xMax, normalizedRectCoordinates.x), Mathf.LerpUnclamped(rectangle.y, rectangle.yMax, normalizedRectCoordinates.y));
 
@@ -883,22 +869,22 @@
             EditorGUILayout.Space();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
+                <>f__am$cache0 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.Rotation) != DrivenTransformProperties.None;
             }
             this.m_RotationGUI.RotationField(Enumerable.Any<Object>(base.targets, <>f__am$cache0));
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__1);
+                <>f__am$cache1 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleX) != DrivenTransformProperties.None;
             }
             s_ScaleDisabledMask[0] = Enumerable.Any<Object>(base.targets, <>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__2);
+                <>f__am$cache2 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleY) != DrivenTransformProperties.None;
             }
             s_ScaleDisabledMask[1] = Enumerable.Any<Object>(base.targets, <>f__am$cache2);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__3);
+                <>f__am$cache3 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleZ) != DrivenTransformProperties.None;
             }
             s_ScaleDisabledMask[2] = Enumerable.Any<Object>(base.targets, <>f__am$cache3);
             Vector3FieldWithDisabledMash(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), this.m_LocalScale, styles.transformScaleContent, s_ScaleDisabledMask);
@@ -1288,22 +1274,22 @@
             totalRect.height = EditorGUIUtility.singleLineHeight * 2f;
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__4);
+                <>f__am$cache4 = x => !((x as RectTransform).anchorMin.x == (x as RectTransform).anchorMax.x);
             }
             bool flag = Enumerable.Any<Object>(base.targets, <>f__am$cache4);
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__5);
+                <>f__am$cache5 = x => !((x as RectTransform).anchorMin.y == (x as RectTransform).anchorMax.y);
             }
             bool flag2 = Enumerable.Any<Object>(base.targets, <>f__am$cache5);
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__6);
+                <>f__am$cache6 = x => (x as RectTransform).anchorMin.x == (x as RectTransform).anchorMax.x;
             }
             bool flag3 = Enumerable.Any<Object>(base.targets, <>f__am$cache6);
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__7);
+                <>f__am$cache7 = x => (x as RectTransform).anchorMin.y == (x as RectTransform).anchorMax.y;
             }
             bool flag4 = Enumerable.Any<Object>(base.targets, <>f__am$cache7);
             Rect columnRect = this.GetColumnRect(totalRect, 0);
@@ -1582,13 +1568,9 @@
             public GUIContent anchorMinContent = new GUIContent("Min", "The normalized position in the parent rectangle that the lower left corner is anchored to.");
             public GUIContent anchorsContent = new GUIContent("Anchors");
             public GUIContent blueprintContent = EditorGUIUtility.IconContent("RectTransformBlueprint", "|Blueprint mode. Edit RectTransforms as if they were not rotated and scaled. This enables snapping too.");
-            public GUIStyle lockStyle = EditorStyles.miniButton;
             public GUIStyle measuringLabelStyle = new GUIStyle("PreOverlayLabel");
             public GUIContent pivotContent = new GUIContent("Pivot", "The pivot point specified in normalized values between 0 and 1. The pivot point is the origin of this rectangle. Rotation and scaling is around this point.");
-            public GUIContent positionContent = new GUIContent("Position", "The local position of the rectangle. The position specifies this rectangle's pivot relative to the anchor reference point.");
             public GUIContent rawEditContent = EditorGUIUtility.IconContent("RectTransformRaw", "|Raw edit mode. When enabled, editing pivot and anchor values will not counter-adjust the position and size of the rectangle in order to make it stay in place.");
-            public GUIContent sizeContent = new GUIContent("Size", "The size of the rectangle.");
-            public GUIContent transformPositionZContent = new GUIContent("Pos Z", "Distance to offset the rectangle along the Z axis of the parent. The effect is visible if the Canvas uses a perspective camera, or if a parent RectTransform is rotated along the X or Y axis.");
             public GUIContent transformScaleContent = new GUIContent("Scale", "The local scaling of this Game Object relative to the parent. This scales everything including image borders and text.");
         }
     }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -23,15 +24,23 @@
         {
         }
 
+        protected void ComputeRayAndDistance(PointerEventData eventData, out Ray ray, out float distanceToClipPlane)
+        {
+            ray = this.eventCamera.ScreenPointToRay((Vector3) eventData.position);
+            float z = ray.direction.z;
+            distanceToClipPlane = !Mathf.Approximately(0f, z) ? Mathf.Abs((float) ((this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane) / z)) : float.PositiveInfinity;
+        }
+
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
         {
             if (this.eventCamera != null)
             {
-                Ray r = this.eventCamera.ScreenPointToRay((Vector3) eventData.position);
-                float f = this.eventCamera.farClipPlane - this.eventCamera.nearClipPlane;
+                Ray ray;
+                float num;
+                this.ComputeRayAndDistance(eventData, out ray, out num);
                 if (ReflectionMethodsCache.Singleton.raycast3DAll != null)
                 {
-                    RaycastHit[] array = ReflectionMethodsCache.Singleton.raycast3DAll(r, f, this.finalEventMask);
+                    RaycastHit[] array = ReflectionMethodsCache.Singleton.raycast3DAll(ray, num, this.finalEventMask);
                     if (array.Length > 1)
                     {
                         if (<>f__am$cache0 == null)

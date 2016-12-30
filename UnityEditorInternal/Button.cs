@@ -12,7 +12,7 @@
             switch (current.GetTypeForControl(id))
             {
                 case EventType.MouseDown:
-                    if (HandleUtility.nearestControl == id)
+                    if ((HandleUtility.nearestControl == id) && ((current.button == 0) || (current.button == 2)))
                     {
                         GUIUtility.hotControl = id;
                         current.Use();
@@ -65,7 +65,7 @@
             switch (current.GetTypeForControl(id))
             {
                 case EventType.MouseDown:
-                    if (HandleUtility.nearestControl == id)
+                    if ((HandleUtility.nearestControl == id) && ((current.button == 0) || (current.button == 2)))
                     {
                         GUIUtility.hotControl = id;
                         current.Use();

@@ -14,7 +14,6 @@
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static bool <guiIsExiting>k__BackingField;
         internal static Vector2 s_EditorScreenPointOffset = Vector2.zero;
-        internal static bool s_HasKeyboardFocus = false;
         internal static int s_OriginalID;
         internal static int s_SkinMode;
 
@@ -27,7 +26,6 @@
             guiIsExiting = false;
             if (useGUILayout != 0)
             {
-                GUILayoutUtility.SelectIDList(instanceID, false);
                 GUILayoutUtility.Begin(instanceID);
             }
             GUI.changed = false;
@@ -44,6 +42,10 @@
         internal static void CleanupRoots()
         {
         }
+
+        [RequiredByNativeCode]
+        internal static bool EndContainerGUIFromException(Exception exception) => 
+            ShouldRethrowException(exception);
 
         [RequiredByNativeCode]
         internal static void EndGUI(int layoutType)
@@ -80,12 +82,8 @@
         [RequiredByNativeCode]
         internal static bool EndGUIFromException(Exception exception)
         {
-            if (!ShouldRethrowException(exception))
-            {
-                return false;
-            }
             Internal_ExitGUI();
-            return true;
+            return ShouldRethrowException(exception);
         }
 
         public static void ExitGUI()
@@ -97,7 +95,7 @@
         internal static GUISkin GetBuiltinSkin(int skin) => 
             (Internal_GetBuiltinSkin(skin) as GUISkin);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool GetChanged();
         /// <summary>
         /// <para>Get a unique ID for a control.</para>
@@ -113,7 +111,7 @@
         /// <param name="hint"></param>
         /// <param name="focus"></param>
         /// <param name="position"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetControlID(int hint, FocusType focus);
         /// <summary>
         /// <para>Get a unique ID for a control.</para>
@@ -153,7 +151,7 @@
         internal static GUISkin GetDefaultSkin() => 
             Internal_GetDefaultSkin(s_SkinMode);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetPermanentControlID();
         /// <summary>
         /// <para>Get a state object from a controlID.</para>
@@ -163,8 +161,6 @@
         public static object GetStateObject(System.Type t, int controlID) => 
             GUIStateObjects.GetStateObject(t, controlID);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void GrabMouseControl(int id);
         /// <summary>
         /// <para>Convert a point from GUI position to screen space.</para>
         /// </summary>
@@ -180,27 +176,37 @@
             return guiRect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool HasMouseControl(int id);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void Internal_BeginContainer(int instanceID);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int INTERNAL_CALL_Internal_GetNextControlID2(int hint, FocusType focusType, ref Rect rect);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void Internal_EndContainer();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_ExitGUI();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityEngine.Object Internal_GetBuiltinSkin(int skin);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern GUISkin Internal_GetDefaultSkin(int skinMode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int Internal_GetGUIDepth();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetHotControl();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern int Internal_GetKeyboardControl();
         private static int Internal_GetNextControlID2(int hint, FocusType focusType, Rect rect) => 
             INTERNAL_CALL_Internal_GetNextControlID2(hint, focusType, ref rect);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float Internal_GetPixelsPerPoint();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetHotControl(int value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void Internal_SetKeyboardControl(int value);
+        [RequiredByNativeCode]
+        internal static bool ProcessEvent(int instanceID, IntPtr nativeEventPtr) => 
+            false;
+
         /// <summary>
         /// <para>Get an existing state object from a controlID.</para>
         /// </summary>
@@ -209,8 +215,6 @@
         public static object QueryStateObject(System.Type t, int controlID) => 
             GUIStateObjects.QueryStateObject(t, controlID);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void ReleaseMouseControl();
         /// <summary>
         /// <para>Helper function to rotate the GUI around a point.</para>
         /// </summary>
@@ -253,9 +257,9 @@
             return screenRect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetChanged(bool changed);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetDidGUIWindowsEatLastEvent(bool value);
         [RequiredByNativeCode]
         internal static void SetSkin(int skinMode)
@@ -273,7 +277,7 @@
             return (exception is ExitGUIException);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateUndoName();
 
         internal static bool guiIsExiting
@@ -291,7 +295,7 @@
         /// <summary>
         /// <para>A global property, which is true if a ModalWindow is being displayed, false otherwise.</para>
         /// </summary>
-        public static bool hasModalWindow { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool hasModalWindow { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The controlID of the current hot control.</para>
@@ -309,9 +313,17 @@
         /// <summary>
         /// <para>The controlID of the control that has keyboard focus.</para>
         /// </summary>
-        public static int keyboardControl { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int keyboardControl
+        {
+            get => 
+                Internal_GetKeyboardControl();
+            set
+            {
+                Internal_SetKeyboardControl(value);
+            }
+        }
 
-        internal static bool mouseUsed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static bool mouseUsed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal static float pixelsPerPoint =>
             Internal_GetPixelsPerPoint();
@@ -319,9 +331,9 @@
         /// <summary>
         /// <para>Get access to the system-wide pasteboard.</para>
         /// </summary>
-        public static string systemCopyBuffer { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string systemCopyBuffer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal static bool textFieldInput { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static bool textFieldInput { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

@@ -2,22 +2,14 @@
 {
     using System;
 
-    /// <summary>
-    /// <para>Enum controlling whether a light affects baked lightmaps, dynamic objects or both.</para>
-    /// </summary>
+    [Obsolete("LightmappingMode has been deprecated. Use LightmapBakeType instead (UnityUpgradable) -> LightmapBakeType", true)]
     public enum LightmappingMode
     {
-        /// <summary>
-        /// <para>The light only affects lightmap baking, not dynamic objects.</para>
-        /// </summary>
+        [Obsolete("LightmappingMode.Baked has been deprecated. Use LightmapBakeType.Static instead (UnityUpgradable) -> LightmapBakeType.Static", true)]
         Baked = 2,
-        /// <summary>
-        /// <para>The light affects both lightmap baking and dynamic objects.</para>
-        /// </summary>
+        [Obsolete("LightmappingMode.Mixed has been deprecated. Use LightmapBakeType.Stationary instead (UnityUpgradable) -> LightmapBakeType.Stationary", true)]
         Mixed = 1,
-        /// <summary>
-        /// <para>The light affects only dynamic objects, not direct or indirect baking.</para>
-        /// </summary>
+        [Obsolete("LightmappingMode.Realtime has been deprecated. Use LightmapBakeType.Dynamic instead (UnityUpgradable) -> LightmapBakeType.Dynamic", true)]
         Realtime = 4
     }
 }

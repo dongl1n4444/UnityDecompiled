@@ -1,7 +1,6 @@
 ﻿namespace UnityEditor
 {
     using System;
-    using UnityEditor.Collaboration;
     using UnityEditorInternal;
     using UnityEngine;
 
@@ -35,7 +34,6 @@
             {
                 s_Constants = new Constants();
             }
-            GUILayout.Space(10f);
             if (!InternalEditorUtility.HasTeamLicense())
             {
                 GUILayout.Label(EditorGUIUtility.TempContent("You need to have a Pro or Team license to use the cache server.", EditorGUIUtility.GetHelpIcon(MessageType.Warning)), EditorStyles.helpBox, new GUILayoutOption[0]);
@@ -59,7 +57,7 @@
                     s_PrefsLoaded = true;
                 }
                 EditorGUI.BeginChangeCheck();
-                if (Collab.instance.collabInfo.whitelisted && IsCollabCacheEnabled())
+                if (IsCollabCacheEnabled())
                 {
                     s_CollabCacheEnabled = EditorGUILayout.Toggle("Use Collab Cache", s_CollabCacheEnabled, new GUILayoutOption[0]);
                     using (new EditorGUI.DisabledScope(!s_CollabCacheEnabled))
@@ -70,7 +68,7 @@
                 s_CacheServerMode = (CacheServerMode) EditorGUILayout.EnumPopup("Cache Server Mode", s_CacheServerMode, new GUILayoutOption[0]);
                 if (s_CacheServerMode != CacheServerMode.Remote)
                 {
-                    goto Label_0238;
+                    goto Label_0213;
                 }
                 s_CacheServerIPAddress = EditorGUILayout.DelayedTextField("IP Address", s_CacheServerIPAddress, new GUILayoutOption[0]);
                 if (GUI.changed)
@@ -96,37 +94,37 @@
                 {
                     if (state == ConnectionState.Failure)
                     {
-                        goto Label_0212;
+                        goto Label_01ED;
                     }
                     if (state == ConnectionState.Unknown)
                     {
-                        goto Label_0223;
+                        goto Label_01FE;
                     }
                 }
                 else
                 {
                     EditorGUILayout.HelpBox("Connection successful.", MessageType.Info, false);
                 }
-                goto Label_041C;
-            Label_0212:
+                goto Label_03F7;
+            Label_01ED:
                 EditorGUILayout.HelpBox("Connection failed.", MessageType.Warning, false);
-                goto Label_041C;
-            Label_0223:
+                goto Label_03F7;
+            Label_01FE:
                 GUILayout.Space(44f);
-                goto Label_041C;
-            Label_0238:
+                goto Label_03F7;
+            Label_0213:
                 if (s_CacheServerMode == CacheServerMode.Local)
                 {
                     s_LocalCacheServerSize = EditorGUILayout.IntSlider(Styles.maxCacheSize, s_LocalCacheServerSize, 1, 200, new GUILayoutOption[0]);
                     s_EnableCustomPath = EditorGUILayout.Toggle(Styles.customCacheLocation, s_EnableCustomPath, new GUILayoutOption[0]);
                     if (s_EnableCustomPath)
                     {
-                        GUIStyle popup = EditorStyles.popup;
+                        GUIStyle miniButton = EditorStyles.miniButton;
                         GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                        EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, popup);
-                        Rect position = GUILayoutUtility.GetRect(GUIContent.none, popup);
+                        EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, miniButton);
+                        Rect position = GUILayoutUtility.GetRect(GUIContent.none, miniButton);
                         GUIContent content = !string.IsNullOrEmpty(s_CachePath) ? new GUIContent(s_CachePath) : Styles.browse;
-                        if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, popup))
+                        if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, miniButton))
                         {
                             string folder = s_CachePath;
                             string str2 = EditorUtility.OpenFolderPanel(Styles.browseCacheLocation.text, folder, "");
@@ -163,7 +161,7 @@
                     GUILayout.Label(Styles.cacheFolderLocation.text + ":", new GUILayoutOption[0]);
                     GUILayout.Label(LocalCacheServer.GetCacheLocation(), s_Constants.cacheFolderLocation, new GUILayoutOption[0]);
                 }
-            Label_041C:
+            Label_03F7:
                 if (EditorGUI.EndChangeCheck())
                 {
                     s_HasPendingChanges = true;

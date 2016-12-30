@@ -4,22 +4,23 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Helper utilities for accessing Sprite data.</para>
     /// </summary>
     public sealed class SpriteUtility
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void CreateSpritePolygonAssetAtPath(string pathName, int sides);
         internal static void GenerateOutline(Texture2D texture, Rect rect, float detail, byte alphaTolerance, bool holeDetection, out Vector2[][] paths)
         {
             INTERNAL_CALL_GenerateOutline(texture, ref rect, detail, alphaTolerance, holeDetection, out paths);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void GenerateOutlineFromSprite(Sprite sprite, float detail, byte alphaTolerance, bool holeDetection, out Vector2[][] paths);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern Vector2[] GeneratePolygonOutlineVerticesOfSize(int sides, int width, int height);
         /// <summary>
         /// <para>Returns the generated Sprite mesh indices.</para>
@@ -44,16 +45,16 @@
         /// </summary>
         /// <param name="getAtlasData">If Sprite is packed, it is possible to access data as if it was on the atlas texture.</param>
         /// <param name="sprite"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D GetSpriteTexture(Sprite sprite, bool getAtlasData);
         /// <summary>
         /// <para>Returns the generated Sprite mesh uvs.</para>
         /// </summary>
         /// <param name="sprite">If Sprite is packed, it is possible to access data as if it was on the atlas texture.</param>
         /// <param name="getAtlasData"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Vector2[] GetSpriteUVs(Sprite sprite, bool getAtlasData);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GenerateOutline(Texture2D texture, ref Rect rect, float detail, byte alphaTolerance, bool holeDetection, out Vector2[][] paths);
     }
 }

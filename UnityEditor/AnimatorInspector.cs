@@ -49,7 +49,7 @@
             bool flag2 = false;
             bool flag3 = false;
             Animator target = base.target as Animator;
-            base.serializedObject.UpdateIfDirtyOrScript();
+            base.serializedObject.UpdateIfRequiredOrScript();
             this.UpdateShowOptions();
             EditorGUI.BeginChangeCheck();
             RuntimeAnimatorController controller = EditorGUILayout.ObjectField("Controller", target.runtimeAnimatorController, typeof(RuntimeAnimatorController), false, new GUILayoutOption[0]) as RuntimeAnimatorController;

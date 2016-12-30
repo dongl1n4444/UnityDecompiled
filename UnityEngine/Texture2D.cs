@@ -1,9 +1,11 @@
 ﻿namespace UnityEngine
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for texture handling.</para>
@@ -70,7 +72,7 @@
         /// </summary>
         /// <param name="updateMipmaps">When set to true, mipmap levels are recalculated.</param>
         /// <param name="makeNoLongerReadable">When set to true, system memory copy of a texture is released.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Apply([DefaultValue("true")] bool updateMipmaps, [DefaultValue("false")] bool makeNoLongerReadable);
         /// <summary>
         /// <para>Compress texture into DXT format.</para>
@@ -93,6 +95,15 @@
         public static Texture2D CreateExternalTexture(int width, int height, TextureFormat format, bool mipmap, bool linear, IntPtr nativeTex) => 
             new Texture2D(width, height, format, mipmap, linear, nativeTex);
 
+        [ExcludeFromDocs]
+        public byte[] EncodeToEXR()
+        {
+            EXRFlags none = EXRFlags.None;
+            return this.EncodeToEXR(none);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern byte[] EncodeToEXR([DefaultValue("EXRFlags.None")] EXRFlags flags);
         /// <summary>
         /// <para>Encodes this texture into JPG format.</para>
         /// </summary>
@@ -104,13 +115,42 @@
         /// <para>Encodes this texture into JPG format.</para>
         /// </summary>
         /// <param name="quality">JPG quality to encode with, 1..100 (default 75).</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern byte[] EncodeToJPG(int quality);
         /// <summary>
         /// <para>Encodes this texture into PNG format.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern byte[] EncodeToPNG();
+        public static bool GenerateAtlas(Vector2[] sizes, int padding, int atlasSize, List<Rect> results)
+        {
+            if (sizes == null)
+            {
+                throw new ArgumentException("sizes array can not be null");
+            }
+            if (results == null)
+            {
+                throw new ArgumentException("results list cannot be null");
+            }
+            if (padding < 0)
+            {
+                throw new ArgumentException("padding can not be negative");
+            }
+            if (atlasSize <= 0)
+            {
+                throw new ArgumentException("atlas size must be positive");
+            }
+            results.Clear();
+            if (sizes.Length == 0)
+            {
+                return true;
+            }
+            GenerateAtlasInternal(sizes, padding, atlasSize, results);
+            return (results.Count != 0);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void GenerateAtlasInternal(Vector2[] sizes, int padding, int atlasSize, object resultList);
         /// <summary>
         /// <para>Returns pixel color at coordinates (x, y).</para>
         /// </summary>
@@ -143,12 +183,9 @@
         }
 
         /// <summary>
-        /// <para>Get the pixel colors from the texture.</para>
+        /// <para>Get a block of pixel colors.</para>
         /// </summary>
-        /// <param name="miplevel">The mipmap level to fetch the pixels from. Defaults to zero.</param>
-        /// <returns>
-        /// <para>The array of all pixels in the mipmap level of the texture.</para>
-        /// </returns>
+        /// <param name="miplevel"></param>
         public Color[] GetPixels([DefaultValue("0")] int miplevel)
         {
             int blockWidth = this.width >> miplevel;
@@ -174,16 +211,12 @@
         /// <summary>
         /// <para>Get a block of pixel colors.</para>
         /// </summary>
-        /// <param name="x">The x position of the pixel array to fetch.</param>
-        /// <param name="y">The y position of the pixel array to fetch.</param>
-        /// <param name="blockWidth">The width length of the pixel array to fetch.</param>
-        /// <param name="blockHeight">The height length of the pixel array to fetch.</param>
-        /// <param name="miplevel">The mipmap level to fetch the pixels. Defaults to zero, and is
-        /// optional.</param>
-        /// <returns>
-        /// <para>The array of pixels in the texture that have been selected.</para>
-        /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="blockWidth"></param>
+        /// <param name="blockHeight"></param>
+        /// <param name="miplevel"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color[] GetPixels(int x, int y, int blockWidth, int blockHeight, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public Color32[] GetPixels32()
@@ -196,7 +229,7 @@
         /// <para>Get a block of pixel colors in Color32 format.</para>
         /// </summary>
         /// <param name="miplevel"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color32[] GetPixels32([DefaultValue("0")] int miplevel);
         /// <summary>
         /// <para>Get raw data from a texture.</para>
@@ -204,21 +237,21 @@
         /// <returns>
         /// <para>Raw texture data as a byte array.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern byte[] GetRawTextureData();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Compress(Texture2D self, bool highQuality);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetPixel(Texture2D self, int x, int y, out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetPixelBilinear(Texture2D self, float u, float v, out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ReadPixels(Texture2D self, ref Rect source, int destX, int destY, bool recalculateMipMaps);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetPixel(Texture2D self, int x, int y, ref Color color);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create([Writable] Texture2D mono, int width, int height, TextureFormat format, bool mipmap, bool linear, IntPtr nativeTex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool Internal_ResizeWH(int width, int height);
         [ExcludeFromDocs]
         public bool LoadImage(byte[] data)
@@ -235,7 +268,7 @@
         /// <returns>
         /// <para>Returns true if the data can be loaded, false otherwise.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool LoadImage(byte[] data, [DefaultValue("false")] bool markNonReadable);
         /// <summary>
         /// <para>Fills texture pixels with raw preformatted data.</para>
@@ -257,9 +290,9 @@
             this.LoadRawTextureData_ImplPointer(data, size);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void LoadRawTextureData_ImplArray(byte[] data);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void LoadRawTextureData_ImplPointer(IntPtr data, int size);
         [ExcludeFromDocs]
         public Rect[] PackTextures(Texture2D[] textures, int padding)
@@ -286,7 +319,7 @@
         /// <returns>
         /// <para>An array of rectangles containing the UV coordinates in the atlas for each input texture, or null if packing fails.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Rect[] PackTextures(Texture2D[] textures, int padding, [DefaultValue("2048")] int maximumAtlasSize, [DefaultValue("false")] bool makeNoLongerReadable);
         [ExcludeFromDocs]
         public void ReadPixels(Rect source, int destX, int destY)
@@ -322,11 +355,11 @@
         /// <param name="height"></param>
         /// <param name="format"></param>
         /// <param name="hasMipMap"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool Resize(int width, int height, TextureFormat format, bool hasMipMap);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetAllPixels32(Color32[] colors, int miplevel);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetBlockOfPixels32(int x, int y, int blockWidth, int blockHeight, Color32[] colors, int miplevel);
         /// <summary>
         /// <para>Sets pixel color at coordinates (x,y).</para>
@@ -349,8 +382,8 @@
         /// <summary>
         /// <para>Set a block of pixel colors.</para>
         /// </summary>
-        /// <param name="colors">The array of pixel colours to assign (a 2D image flattened to a 1D array).</param>
-        /// <param name="miplevel">The mip level of the texture to write to.</param>
+        /// <param name="colors"></param>
+        /// <param name="miplevel"></param>
         public void SetPixels(Color[] colors, [DefaultValue("0")] int miplevel)
         {
             int blockWidth = this.width >> miplevel;
@@ -382,7 +415,7 @@
         /// <param name="blockHeight"></param>
         /// <param name="colors"></param>
         /// <param name="miplevel"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPixels(int x, int y, int blockWidth, int blockHeight, Color[] colors, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public void SetPixels32(Color32[] colors)
@@ -426,30 +459,58 @@
         /// <para>Updates Unity texture to use different native texture object.</para>
         /// </summary>
         /// <param name="nativeTex">Native 2D texture object.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UpdateExternalTexture(IntPtr nativeTex);
 
-        public bool alphaIsTransparency { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool alphaIsTransparency { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get a small texture with all black pixels.</para>
         /// </summary>
-        public static Texture2D blackTexture { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Texture2D blackTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The format of the pixel data in the texture (Read Only).</para>
         /// </summary>
-        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>How many mipmap levels are in this texture (Read Only).</para>
         /// </summary>
-        public int mipmapCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int mipmapCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get a small texture with all white pixels.</para>
         /// </summary>
-        public static Texture2D whiteTexture { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Texture2D whiteTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>Flags used to control the encoding to an EXR file.</para>
+        /// </summary>
+        [Flags]
+        public enum EXRFlags
+        {
+            /// <summary>
+            /// <para>This texture will use Wavelet compression. This is best used for grainy images.</para>
+            /// </summary>
+            CompressPIZ = 8,
+            /// <summary>
+            /// <para>The texture will use RLE (Run Length Encoding) EXR compression format (similar to Targa RLE compression).</para>
+            /// </summary>
+            CompressRLE = 4,
+            /// <summary>
+            /// <para>The texture will use the EXR ZIP compression format.</para>
+            /// </summary>
+            CompressZIP = 2,
+            /// <summary>
+            /// <para>No flag. This will result in an uncompressed 16-bit float EXR file.</para>
+            /// </summary>
+            None = 0,
+            /// <summary>
+            /// <para>The texture will be exported as a 32-bit float EXR file (default is 16-bit).</para>
+            /// </summary>
+            OutputAsFloat = 1
+        }
     }
 }
 

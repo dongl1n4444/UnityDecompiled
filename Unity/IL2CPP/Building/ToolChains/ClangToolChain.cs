@@ -26,7 +26,7 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(null, (IntPtr) FlagsToMakeWarningsErrorsFor);
+                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(ClangToolChain.FlagsToMakeWarningsErrorsFor);
                 }
                 this.AdditionalCompilerOptionsForSourceFile = <>f__mg$cache0;
             }
@@ -89,12 +89,12 @@
             <MacDevSDKPath>c__AnonStorey6 storey = new <MacDevSDKPath>c__AnonStorey6 {
                 sdksParentFolder = new NPath("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs")
             };
-            string[] source = new string[] { "MacOSx10.11.sdk", "MacOSx10.10.sdk", "MacOSx10.9.sdk" };
+            string[] source = new string[] { "MacOSX10.12.sdk", "MacOSX10.11.sdk", "MacOSX10.10.sdk", "MacOSX10.9.sdk" };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <MacDevSDKPath>m__0);
+                <>f__am$cache0 = sdk => sdk.DirectoryExists("");
             }
-            return source.Select<string, NPath>(new Func<string, NPath>(storey, (IntPtr) this.<>m__0)).First<NPath>(<>f__am$cache0);
+            return source.Select<string, NPath>(new Func<string, NPath>(storey.<>m__0)).First<NPath>(<>f__am$cache0);
         }
 
         public override CppProgramBuilder.LinkerInvocation MakeLinkerInvocation(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags, CppToolChainContext toolChainContext)
@@ -109,7 +109,7 @@
             {
                 inputs.Add("-dylib");
             }
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.DefaultLinkerFlags)));
             list.AddRange(staticLibraries);
             list.AddRange(dynamicLibraries);
             inputs.AddRange(staticLibraries.InQuotes(SlashMode.Native));
@@ -160,9 +160,9 @@
             internal IEnumerator<string> $locvar2;
             internal int $PC;
             internal ClangToolChain $this;
-            internal string <compilerFlag>__2;
-            internal string <define>__0;
-            internal NPath <includePath>__1;
+            internal string <compilerFlag>__3;
+            internal string <define>__1;
+            internal NPath <includePath>__2;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -246,8 +246,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<define>__0 = this.$locvar0.Current;
-                        this.$current = "-D" + this.<define>__0;
+                        this.<define>__1 = this.$locvar0.Current;
+                        this.$current = "-D" + this.<define>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -273,8 +273,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<includePath>__1 = this.$locvar1.Current;
-                        this.$current = "-I\"" + this.<includePath>__1 + "\"";
+                        this.<includePath>__2 = this.$locvar1.Current;
+                        this.$current = "-I\"" + this.<includePath>__2 + "\"";
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -293,15 +293,15 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlags)).GetEnumerator();
+                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                 num = 0xfffffffd;
             Label_0196:
                 try
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<compilerFlag>__2 = this.$locvar2.Current;
-                        this.$current = this.<compilerFlag>__2;
+                        this.<compilerFlag>__3 = this.$locvar2.Current;
+                        this.$current = this.<compilerFlag>__3;
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -370,7 +370,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal ClangToolChain $this;
-            internal string <p>__0;
+            internal string <p>__1;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -522,15 +522,15 @@
                 {
                     goto Label_02E1;
                 }
-                this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile.Invoke(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
+                this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                 num = 0xfffffffd;
             Label_026A:
                 try
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<p>__0 = this.$locvar0.Current;
-                        this.$current = this.<p>__0;
+                        this.<p>__1 = this.$locvar0.Current;
+                        this.$current = this.<p>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 13;
@@ -742,7 +742,7 @@
                 switch (num)
                 {
                     case 0:
-                        if (!this.sourceFile.Contains("generatedcpp") || this.sourceFile.Contains("pinvoke-targets.cpp"))
+                        if (this.sourceFile.Contains("pinvoke-targets.cpp"))
                         {
                             break;
                         }
@@ -751,7 +751,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_00DF;
+                        goto Label_00ED;
 
                     case 1:
                         this.$current = "-Wno-extern-initializer";
@@ -759,7 +759,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_00DF;
+                        goto Label_00ED;
 
                     case 2:
                         this.$current = "-Wno-trigraphs";
@@ -767,7 +767,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_00DF;
+                        goto Label_00ED;
 
                     case 3:
                         this.$current = "-Wno-tautological-compare";
@@ -775,18 +775,26 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_00DF;
+                        goto Label_00ED;
 
                     case 4:
+                        this.$current = "-Wswitch";
+                        if (!this.$disposing)
+                        {
+                            this.$PC = 5;
+                        }
+                        goto Label_00ED;
+
+                    case 5:
                         break;
 
                     default:
-                        goto Label_00DD;
+                        goto Label_00EB;
                 }
                 this.$PC = -1;
-            Label_00DD:
+            Label_00EB:
                 return false;
-            Label_00DF:
+            Label_00ED:
                 return true;
             }
 

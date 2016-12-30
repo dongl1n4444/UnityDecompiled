@@ -34,9 +34,9 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destroy(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void DestroyThreaded(IntPtr recognizer);
         /// <summary>
         /// <para>Disposes the resources used by phrase recognizer.</para>
@@ -61,9 +61,9 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CreateFromGrammarFile(PhraseRecognizer self, string grammarFilePath, ConfidenceLevel minimumConfidence, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CreateFromKeywords(PhraseRecognizer self, string[] keywords, ConfidenceLevel minimumConfidence, out IntPtr value);
         [RequiredByNativeCode]
         private void InvokePhraseRecognizedEvent(string text, ConfidenceLevel confidence, SemanticMeaning[] semanticMeanings, long phraseStartFileTime, long phraseDurationTicks)
@@ -75,7 +75,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool IsRunning_Internal(IntPtr recognizer);
         [RequiredByNativeCode]
         private static unsafe SemanticMeaning[] MarshalSemanticMeaning(IntPtr keys, IntPtr values, IntPtr valueSizes, int valueCount)
@@ -110,7 +110,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Start_Internal(IntPtr recognizer);
         /// <summary>
         /// <para>Stops the phrase recognizer from listening to phrases.</para>
@@ -123,7 +123,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Stop_Internal(IntPtr recognizer);
 
         /// <summary>

@@ -6,13 +6,14 @@
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Editor-specific script interface for.</para>
     /// </summary>
     public sealed class EditorGraphicsSettings
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool AreTierSettingsAutomatic(BuildTargetGroup target, GraphicsTier tier);
         internal static TierSettings GetCurrentTierSettings() => 
             GetCurrentTierSettingsImpl();
@@ -60,17 +61,17 @@
             return settings;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetCurrentTierSettingsImpl(out TierSettings value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetTierSettingsImpl(BuildTargetGroup target, GraphicsTier tier, out TierSettings value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetTierSettingsImpl(BuildTargetGroup target, GraphicsTier tier, ref TierSettings settings);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void MakeTierSettingsAutomatic(BuildTargetGroup target, GraphicsTier tier, bool automatic);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void OnUpdateTierSettingsImpl(BuildTargetGroup target, bool shouldReloadShaders);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void RegisterUndoForGraphicsSettings();
         /// <summary>
         /// <para>Allows you to set the PlatformShaderSettings for the specified platform and shader hardware tier.</para>
@@ -81,13 +82,12 @@
         [Obsolete("Use SetTierSettings() instead (UnityUpgradable) -> SetTierSettings(*)", false)]
         public static void SetShaderSettingsForPlatform(BuildTargetGroup target, ShaderHardwareTier tier, PlatformShaderSettings settings)
         {
-            TierSettings settings2 = new TierSettings {
-                standardShaderQuality = settings.standardShaderQuality,
-                cascadedShadowMaps = settings.cascadedShadowMaps,
-                reflectionProbeBoxProjection = settings.reflectionProbeBoxProjection,
-                reflectionProbeBlending = settings.reflectionProbeBlending
-            };
-            SetTierSettings(target, (GraphicsTier) tier, settings2);
+            TierSettings tierSettings = GetTierSettings(target, (GraphicsTier) tier);
+            tierSettings.standardShaderQuality = settings.standardShaderQuality;
+            tierSettings.cascadedShadowMaps = settings.cascadedShadowMaps;
+            tierSettings.reflectionProbeBoxProjection = settings.reflectionProbeBoxProjection;
+            tierSettings.reflectionProbeBlending = settings.reflectionProbeBlending;
+            SetTierSettings(target, (GraphicsTier) tier, tierSettings);
         }
 
         public static void SetTierSettings(BuildTargetGroup target, GraphicsTier tier, TierSettings settings)
@@ -97,6 +97,7 @@
                 throw new ArgumentException("TierSettings.renderingPath must be actual rendering path (not UsePlayerSettings)", "settings");
             }
             SetTierSettingsImpl(target, tier, settings);
+            MakeTierSettingsAutomatic(target, tier, false);
             OnUpdateTierSettingsImpl(target, true);
         }
 
@@ -116,6 +117,11 @@
         {
             INTERNAL_CALL_SetTierSettingsImpl(target, tier, ref settings);
         }
+
+        /// <summary>
+        /// <para>Will return an array of Rendering.AlbedoSwatchInfo.</para>
+        /// </summary>
+        public static AlbedoSwatchInfo[] albedoSwatches { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

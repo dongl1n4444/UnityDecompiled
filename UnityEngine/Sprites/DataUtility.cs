@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Helper utilities for accessing Sprite data.</para>
@@ -54,13 +55,13 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetInnerUV(Sprite sprite, out Vector4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetOuterUV(Sprite sprite, out Vector4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetPadding(Sprite sprite, out Vector4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_GetMinSize(Sprite sprite, out Vector2 output);
     }
 }

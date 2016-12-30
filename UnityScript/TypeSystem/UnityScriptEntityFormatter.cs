@@ -16,7 +16,7 @@
             $FormatCallableType$locals$274 s$ = new $FormatCallableType$locals$274 {
                 $signature = type.GetSignature()
             };
-            string str = Builtins.join(new $FormatCallableType$335(this, s$), ", ");
+            string str = Builtins.join(new $FormatCallableType$335(s$, this), ", ");
             string str2 = this.FormatType(s$.$signature.get_ReturnType());
             return new StringBuilder("function(").Append(str).Append("): ").Append(str2).ToString();
         }
@@ -48,30 +48,30 @@
         [Serializable, CompilerGenerated]
         internal sealed class $FormatCallableType$335 : GenericGenerator<string>
         {
-            internal UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$339;
-            internal UnityScriptEntityFormatter $this$338;
+            internal UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$338;
+            internal UnityScriptEntityFormatter $this$339;
 
-            public $FormatCallableType$335(UnityScriptEntityFormatter $this$338, UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$339)
+            public $FormatCallableType$335(UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$338, UnityScriptEntityFormatter $this$339)
             {
-                this.$this$338 = $this$338;
-                this.$$locals$339 = $$locals$339;
+                this.$$locals$338 = $$locals$338;
+                this.$this$339 = $this$339;
             }
 
             public override IEnumerator<string> GetEnumerator() => 
-                new Enumerator(this.$this$338, this.$$locals$339);
+                new Enumerator(this.$$locals$338, this.$this$339);
 
             [Serializable]
             internal class Enumerator : IEnumerator<string>, IDisposable, ICloneable
             {
                 protected string $$current;
                 protected IEnumerator<IParameter> $$enumerator;
-                internal UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$337;
-                internal UnityScriptEntityFormatter $this$336;
+                internal UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$336;
+                internal UnityScriptEntityFormatter $this$337;
 
-                public Enumerator(UnityScriptEntityFormatter $this$336, UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$337)
+                public Enumerator(UnityScriptEntityFormatter.$FormatCallableType$locals$274 $$locals$336, UnityScriptEntityFormatter $this$337)
                 {
-                    this.$this$336 = $this$336;
-                    this.$$locals$337 = $$locals$337;
+                    this.$$locals$336 = $$locals$336;
+                    this.$this$337 = $this$337;
                     this.Reset();
                 }
 
@@ -88,7 +88,7 @@
 
                 public override void Reset()
                 {
-                    this.$$enumerator = this.$$locals$337.$signature.get_Parameters().GetEnumerator();
+                    this.$$enumerator = this.$$locals$336.$signature.get_Parameters().GetEnumerator();
                 }
 
                 public override string Current =>

@@ -38,13 +38,13 @@
         /// <para>Given a layer number, returns the name of the layer as defined in either a Builtin or a User Layer in the.</para>
         /// </summary>
         /// <param name="layer"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string LayerToName(int layer);
         /// <summary>
         /// <para>Given a layer name, returns the layer index as defined by either a Builtin or a User Layer in the.</para>
         /// </summary>
         /// <param name="layerName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int NameToLayer(string layerName);
         /// <summary>
         /// <para>Given a set of layer names as defined by either a Builtin or a User Layer in the, returns the equivalent layer mask for all of them.</para>

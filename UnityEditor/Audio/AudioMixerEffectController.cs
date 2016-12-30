@@ -6,6 +6,7 @@
     using System.Runtime.InteropServices;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     internal sealed class AudioMixerEffectController : Object
     {
@@ -22,12 +23,12 @@
             this.m_DisplayName = null;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool ContainsParameterGUID(GUID guid);
         public bool DisallowsBypass() => 
             (((this.IsSend() || this.IsReceive()) || this.IsDuckVolume()) || this.IsAttenuation());
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetCPUUsage(AudioMixerController controller);
         public string GetDisplayString(Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap)
         {
@@ -40,20 +41,20 @@
             return this.m_DisplayName;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool GetFloatBuffer(AudioMixerController controller, string name, out float[] data, int numsamples);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern GUID GetGUIDForMixLevel();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern GUID GetGUIDForParameter(string parameterName);
         public string GetSendTargetDisplayString(Dictionary<AudioMixerEffectController, AudioMixerGroupController> effectMap) => 
             ((this.sendTarget == null) ? string.Empty : this.sendTarget.GetDisplayString(effectMap));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetValueForMixLevel(AudioMixerController controller, AudioMixerSnapshotController snapshot);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetValueForParameter(AudioMixerController controller, AudioMixerSnapshotController snapshot, string parameterName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateAudioMixerEffectController(AudioMixerEffectController mono, string name);
         public bool IsAttenuation() => 
             (this.effectName == "Attenuation");
@@ -67,22 +68,22 @@
         public bool IsSend() => 
             (this.effectName == "Send");
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void PreallocateGUIDs();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetValueForMixLevel(AudioMixerController controller, AudioMixerSnapshotController snapshot, float value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetValueForParameter(AudioMixerController controller, AudioMixerSnapshotController snapshot, string parameterName, float value);
 
-        public bool bypass { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool bypass { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public GUID effectID { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public GUID effectID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public string effectName { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string effectName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public bool enableWetMix { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool enableWetMix { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        public AudioMixerEffectController sendTarget { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AudioMixerEffectController sendTarget { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

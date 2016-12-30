@@ -5,6 +5,7 @@
     public enum GameViewSizeGroupType
     {
         Android = 3,
+        HMD = 9,
         iOS = 2,
         N3DS = 8,
         [Obsolete("PS3 has been removed in 5.5", false)]

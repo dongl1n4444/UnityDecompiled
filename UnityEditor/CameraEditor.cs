@@ -13,7 +13,7 @@
     using UnityEngine.Rendering;
     using UnityEngine.Scripting;
 
-    [CustomEditor(typeof(Camera)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Camera))]
     internal class CameraEditor : Editor
     {
         [CompilerGenerated]
@@ -22,9 +22,9 @@
         private static readonly int[] kCameraRenderPathValues = new int[] { -1, 1, 3, 0, 2 };
         private static readonly Color kGizmoCamera = new Color(0.9137255f, 0.9137255f, 0.9137255f, 0.5019608f);
         private const float kPreviewNormalizedSize = 0.2f;
-        private const float kPreviewWindowOffset = 10f;
         private static readonly GUIContent[] kTargetEyes = new GUIContent[] { new GUIContent("Both"), new GUIContent("Left"), new GUIContent("Right"), new GUIContent("None (Main Display)") };
         private static readonly int[] kTargetEyeValues = new int[] { 3, 1, 2, 0 };
+        private SerializedProperty m_AllowMSAA;
         private SerializedProperty m_BackgroundColor;
         private SerializedProperty m_ClearFlags;
         private bool m_CommandBuffersShown = true;
@@ -140,15 +140,15 @@
             }
         }
 
-        private void DisplayHDRWarnings()
+        private void DisplayCameraWarnings()
         {
             Camera target = base.target as Camera;
             if (target != null)
             {
-                string[] hDRWarnings = target.GetHDRWarnings();
-                if (hDRWarnings.Length > 0)
+                string[] cameraBufferWarnings = target.GetCameraBufferWarnings();
+                if (cameraBufferWarnings.Length > 0)
                 {
-                    EditorGUILayout.HelpBox(string.Join("\n\n", hDRWarnings), MessageType.Warning, true);
+                    EditorGUILayout.HelpBox(string.Join("\n\n", cameraBufferWarnings), MessageType.Warning, true);
                 }
             }
         }
@@ -284,6 +284,7 @@
             this.m_OcclusionCulling = base.serializedObject.FindProperty("m_OcclusionCulling");
             this.m_TargetTexture = base.serializedObject.FindProperty("m_TargetTexture");
             this.m_HDR = base.serializedObject.FindProperty("m_HDR");
+            this.m_AllowMSAA = base.serializedObject.FindProperty("m_AllowMSAA");
             this.m_StereoConvergence = base.serializedObject.FindProperty("m_StereoConvergence");
             this.m_StereoSeparation = base.serializedObject.FindProperty("m_StereoSeparation");
             this.m_TargetDisplay = base.serializedObject.FindProperty("m_TargetDisplay");
@@ -353,11 +354,9 @@
                 }
             }
             EditorGUILayout.PropertyField(this.m_OcclusionCulling, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_HDR, new GUILayoutOption[0]);
-            if (this.m_HDR.boolValue)
-            {
-                this.DisplayHDRWarnings();
-            }
+            EditorGUILayout.PropertyField(this.m_HDR, EditorGUIUtility.TempContent("Allow HDR"), new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_AllowMSAA, new GUILayoutOption[0]);
+            this.DisplayCameraWarnings();
             if (PlayerSettings.virtualRealitySupported)
             {
                 EditorGUILayout.PropertyField(this.m_StereoSeparation, new GUILayoutOption[0]);

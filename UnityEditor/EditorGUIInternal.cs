@@ -5,6 +5,8 @@
 
     internal sealed class EditorGUIInternal : GUI
     {
+        private static GUIStyle s_MixedToggleStyle = EditorStyles.toggleMixed;
+
         internal static void AssetPopup<T>(SerializedProperty serializedProperty, GUIContent content, string fileExtension) where T: Object, new()
         {
             AssetPopup<T>(serializedProperty, content, fileExtension, "Default");
@@ -34,7 +36,7 @@
             }
             if (EditorGUI.showMixedValue)
             {
-                style = EditorStyles.toggleMixed;
+                style = mixedToggleStyle;
             }
             EventType type = current.type;
             bool flag = (current.type == EventType.MouseDown) && (current.button != 0);
@@ -60,6 +62,16 @@
 
         internal static Rect GetTooltipRect() => 
             GUI.tooltipRect;
+
+        internal static GUIStyle mixedToggleStyle
+        {
+            get => 
+                s_MixedToggleStyle;
+            set
+            {
+                s_MixedToggleStyle = value;
+            }
+        }
     }
 }
 

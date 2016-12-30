@@ -9,9 +9,9 @@
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <id>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Range <range>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private Range <range>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TimeScope <timeScope>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UserScope <userScope>k__BackingField;

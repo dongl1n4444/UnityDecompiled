@@ -2,16 +2,25 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using UnityEditor.AnimatedValues;
     using UnityEngine;
+    using UnityEngine.Events;
 
-    [CustomEditor(typeof(SpriteRenderer)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SpriteRenderer))]
     internal class SpriteRendererEditor : RendererEditorBase
     {
+        private SerializedProperty m_AdaptiveModeThreshold;
         private SerializedProperty m_Color;
+        private SerializedProperty m_DrawMode;
         private SerializedProperty m_FlipX;
         private SerializedProperty m_FlipY;
         private SerializedProperty m_Material;
+        private AnimBool m_ShowAdaptiveThreshold;
+        private AnimBool m_ShowDrawMode;
+        private AnimBool m_ShowTileMode;
+        private SerializedProperty m_Size;
         private SerializedProperty m_Sprite;
+        private SerializedProperty m_SpriteTileMode;
 
         private void CheckForErrors()
         {
@@ -80,6 +89,36 @@
             GUILayout.EndHorizontal();
         }
 
+        private void FloatFieldLabelAbove(GUIContent contentLabel, SerializedProperty sp)
+        {
+            EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
+            Rect totalPosition = GUILayoutUtility.GetRect(contentLabel, EditorStyles.label);
+            GUIContent label = EditorGUI.BeginProperty(totalPosition, contentLabel, sp);
+            int id = GUIUtility.GetControlID(Contents.sizeFieldHash, FocusType.Keyboard, totalPosition);
+            EditorGUI.HandlePrefixLabel(totalPosition, totalPosition, label, id);
+            Rect rect = GUILayoutUtility.GetRect(contentLabel, EditorStyles.textField);
+            EditorGUI.BeginChangeCheck();
+            float num2 = EditorGUI.DoFloatField(EditorGUI.s_RecycledEditor, rect, totalPosition, id, sp.floatValue, EditorGUI.kFloatFieldFormatString, EditorStyles.textField, true);
+            if (EditorGUI.EndChangeCheck())
+            {
+                sp.floatValue = num2;
+            }
+            EditorGUI.EndProperty();
+            EditorGUILayout.EndVertical();
+        }
+
+        private string GetSpriteNotFullRectWarning()
+        {
+            foreach (Object obj2 in base.targets)
+            {
+                if (!(obj2 as SpriteRenderer).shouldSupportTiling)
+                {
+                    return ((base.targets.Length != 1) ? Contents.notFullRectMultiEditWarningLabel.text : Contents.notFullRectWarningLabel.text);
+                }
+            }
+            return null;
+        }
+
         private bool IsMaterialTextureAtlasConflict()
         {
             Material sharedMaterial = (base.target as SpriteRenderer).sharedMaterial;
@@ -103,6 +142,16 @@
             this.m_FlipX = base.serializedObject.FindProperty("m_FlipX");
             this.m_FlipY = base.serializedObject.FindProperty("m_FlipY");
             this.m_Material = base.serializedObject.FindProperty("m_Materials.Array");
+            this.m_DrawMode = base.serializedObject.FindProperty("m_DrawMode");
+            this.m_Size = base.serializedObject.FindProperty("m_Size");
+            this.m_SpriteTileMode = base.serializedObject.FindProperty("m_SpriteTileMode");
+            this.m_AdaptiveModeThreshold = base.serializedObject.FindProperty("m_AdaptiveModeThreshold");
+            this.m_ShowDrawMode = new AnimBool(this.ShouldShowDrawMode());
+            this.m_ShowTileMode = new AnimBool(this.ShouldShowTileMode());
+            this.m_ShowAdaptiveThreshold = new AnimBool(this.ShouldShowAdaptiveThreshold());
+            this.m_ShowDrawMode.valueChanged.AddListener(new UnityAction(this.Repaint));
+            this.m_ShowTileMode.valueChanged.AddListener(new UnityAction(this.Repaint));
+            this.m_ShowAdaptiveThreshold.valueChanged.AddListener(new UnityAction(this.Repaint));
         }
 
         public override void OnInspectorGUI()
@@ -124,10 +173,53 @@
                 this.m_Material.GetArrayElementAtIndex(0).objectReferenceValue = obj3;
             }
             EditorGUI.showMixedValue = false;
+            EditorGUILayout.PropertyField(this.m_DrawMode, Contents.drawModeLabel, new GUILayoutOption[0]);
+            this.m_ShowDrawMode.target = this.ShouldShowDrawMode();
+            if (EditorGUILayout.BeginFadeGroup(this.m_ShowDrawMode.faded))
+            {
+                string spriteNotFullRectWarning = this.GetSpriteNotFullRectWarning();
+                if (spriteNotFullRectWarning != null)
+                {
+                    EditorGUILayout.HelpBox(spriteNotFullRectWarning, MessageType.Warning);
+                }
+                EditorGUI.indentLevel++;
+                EditorGUILayout.BeginHorizontal(new GUILayoutOption[0]);
+                EditorGUILayout.PrefixLabel(Contents.sizeLabel);
+                EditorGUI.showMixedValue = this.m_Size.hasMultipleDifferentValues;
+                this.FloatFieldLabelAbove(Contents.widthLabel, this.m_Size.FindPropertyRelative("x"));
+                this.FloatFieldLabelAbove(Contents.heightLabel, this.m_Size.FindPropertyRelative("y"));
+                EditorGUI.showMixedValue = false;
+                EditorGUILayout.EndHorizontal();
+                this.m_ShowTileMode.target = this.ShouldShowTileMode();
+                if (EditorGUILayout.BeginFadeGroup(this.m_ShowTileMode.faded))
+                {
+                    EditorGUILayout.PropertyField(this.m_SpriteTileMode, Contents.fullTileLabel, new GUILayoutOption[0]);
+                    this.m_ShowAdaptiveThreshold.target = this.ShouldShowAdaptiveThreshold();
+                    if (EditorGUILayout.BeginFadeGroup(this.m_ShowAdaptiveThreshold.faded))
+                    {
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.Slider(this.m_AdaptiveModeThreshold, 0f, 1f, Contents.fullTileThresholdLabel, new GUILayoutOption[0]);
+                        EditorGUI.indentLevel--;
+                    }
+                    EditorGUILayout.EndFadeGroup();
+                }
+                EditorGUILayout.EndFadeGroup();
+                EditorGUI.indentLevel--;
+            }
+            EditorGUILayout.EndFadeGroup();
             base.RenderSortingLayerFields();
             this.CheckForErrors();
             base.serializedObject.ApplyModifiedProperties();
         }
+
+        private bool ShouldShowAdaptiveThreshold() => 
+            ((this.m_SpriteTileMode.intValue == 1) && !this.m_SpriteTileMode.hasMultipleDifferentValues);
+
+        private bool ShouldShowDrawMode() => 
+            ((this.m_DrawMode.intValue != 0) && !this.m_DrawMode.hasMultipleDifferentValues);
+
+        private bool ShouldShowTileMode() => 
+            ((this.m_DrawMode.intValue == 2) && !this.m_DrawMode.hasMultipleDifferentValues);
 
         private static void ShowError(string error)
         {
@@ -143,11 +235,20 @@
         private static class Contents
         {
             public static readonly GUIContent colorLabel = EditorGUIUtility.TextContent("Color|Rendering color for the Sprite graphic");
+            public static readonly GUIContent drawModeLabel = EditorGUIUtility.TextContent("Draw Mode|Specify the draw mode for the sprite");
             public static readonly GUIContent flipLabel = EditorGUIUtility.TextContent("Flip|Sprite flipping");
             public static readonly int flipToggleHash = "FlipToggleHash".GetHashCode();
+            public static readonly GUIContent fullTileLabel = EditorGUIUtility.TextContent("Tile Mode|Specify the 9 slice tiling behaviour");
+            public static readonly GUIContent fullTileThresholdLabel = EditorGUIUtility.TextContent("Stretch Value|This value defines how much the center portion will stretch before it tiles.");
+            public static readonly GUIContent heightLabel = EditorGUIUtility.TextContent("Height|The height dimension value for the sprite");
             public static readonly GUIContent materialLabel = EditorGUIUtility.TextContent("Material|Material to be used by SpriteRenderer");
+            public static readonly GUIContent notFullRectMultiEditWarningLabel = EditorGUIUtility.TextContent("Sprite Tiling might not appear correctly because some of the Sprites used are not generated with Full Rect. To fix this, change the Mesh Type in the Sprite's import setting to Full Rect");
+            public static readonly GUIContent notFullRectWarningLabel = EditorGUIUtility.TextContent("Sprite Tiling might not appear correctly because the Sprite used is not generated with Full Rect. To fix this, change the Mesh Type in the Sprite's import setting to Full Rect");
+            public static readonly int sizeFieldHash = "SpriteRendererSizeField".GetHashCode();
+            public static readonly GUIContent sizeLabel = EditorGUIUtility.TextContent("Size|The rendering dimension for the sprite");
             public static readonly GUIContent spriteLabel = EditorGUIUtility.TextContent("Sprite|The Sprite to render");
             public static readonly Texture2D warningIcon = EditorGUIUtility.LoadIcon("console.warnicon");
+            public static readonly GUIContent widthLabel = EditorGUIUtility.TextContent("Width|The width dimension value for the sprite");
         }
     }
 }

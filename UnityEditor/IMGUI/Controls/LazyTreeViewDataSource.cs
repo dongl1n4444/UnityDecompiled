@@ -35,7 +35,7 @@
                 base.m_NeedRefreshRows = false;
                 if (base.onVisibleRowsChanged != null)
                 {
-                    base.onVisibleRowsChanged.Invoke();
+                    base.onVisibleRowsChanged();
                 }
                 base.m_TreeView.Repaint();
             }

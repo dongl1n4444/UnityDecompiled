@@ -30,7 +30,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(null, (IntPtr) SyncVisualStudioProjectIfItAlreadyExists);
+                <>f__mg$cache0 = new Action(SyncVS.SyncVisualStudioProjectIfItAlreadyExists);
             }
             EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
             try
@@ -165,11 +165,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(null, (IntPtr) <FindBestVisualStudio>m__0);
+                <>f__am$cache0 = kvp => kvp.Key;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<VisualStudioVersion, string>, string>(null, (IntPtr) <FindBestVisualStudio>m__1);
+                <>f__am$cache1 = kvp2 => kvp2.Value;
             }
             return Enumerable.Select<KeyValuePair<VisualStudioVersion, string>, string>(Enumerable.OrderByDescending<KeyValuePair<VisualStudioVersion, string>, VisualStudioVersion>(InstalledVisualStudios, <>f__am$cache0), <>f__am$cache1).FirstOrDefault<string>();
         }

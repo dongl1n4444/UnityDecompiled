@@ -7,7 +7,7 @@
     /// <summary>
     /// <para>Information about what animation clips is played and its weight.</para>
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, Size=1), Obsolete("Use AnimatorClipInfo instead (UnityUpgradable) -> AnimatorClipInfo", true), EditorBrowsable(EditorBrowsableState.Never)]
+    [StructLayout(LayoutKind.Sequential, Size=1), EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use AnimatorClipInfo instead (UnityUpgradable) -> AnimatorClipInfo", true)]
     public struct AnimationInfo
     {
         /// <summary>

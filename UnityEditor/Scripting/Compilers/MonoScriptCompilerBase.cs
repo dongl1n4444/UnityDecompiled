@@ -16,13 +16,11 @@
             this.runUpdater = runUpdater;
         }
 
-        protected string GetProfileDirectory() => 
-            MonoInstallationFinder.GetProfileDirectory(this._island._target, this._island._classlib_profile);
-
         protected ManagedProgram StartCompiler(BuildTarget target, string compiler, List<string> arguments)
         {
             base.AddCustomResponseFileIfPresent(arguments, Path.GetFileNameWithoutExtension(compiler) + ".rsp");
-            return this.StartCompiler(target, compiler, arguments, true, MonoInstallationFinder.GetMonoInstallation());
+            string monodistro = (this._island._api_compatibility_level != ApiCompatibilityLevel.NET_4_6) ? MonoInstallationFinder.GetMonoInstallation() : MonoInstallationFinder.GetMonoBleedingEdgeInstallation();
+            return this.StartCompiler(target, compiler, arguments, true, monodistro);
         }
 
         protected ManagedProgram StartCompiler(BuildTarget target, string compiler, List<string> arguments, bool setMonoEnvironmentVariables, string monodistro)
@@ -32,7 +30,7 @@
             {
                 APIUpdaterHelper.UpdateScripts(responseFile, this._island.GetExtensionOfSourceFiles());
             }
-            ManagedProgram program = new ManagedProgram(monodistro, this._island._classlib_profile, compiler, " @" + responseFile, setMonoEnvironmentVariables, null);
+            ManagedProgram program = new ManagedProgram(monodistro, BuildPipeline.CompatibilityProfileToClassLibFolder(this._island._api_compatibility_level), compiler, " @" + responseFile, setMonoEnvironmentVariables, null);
             program.Start();
             return program;
         }

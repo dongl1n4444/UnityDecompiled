@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Provides access to user input from hands, controllers, and system voice commands.</para>
@@ -70,9 +71,9 @@
             return 0;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetCurrentReading_Internal(InteractionSourceState[] sourceStates);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Initialize(IntPtr internalSourceEventHandler);
         private static void OnSourceEvent(EventType eventType, InteractionSourceState state)
         {
@@ -131,7 +132,7 @@
         /// <summary>
         /// <para>(Read Only) The number of InteractionSourceState snapshots available for reading with InteractionManager.GetCurrentReading.</para>
         /// </summary>
-        public static int numSourceStates { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int numSourceStates { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         private enum EventType
         {

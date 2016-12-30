@@ -42,7 +42,7 @@
                     {
                         for (int k = 0; k < list.Count; k++)
                         {
-                            if (IsAppropriateEditor(list[k], type4, type != type4, j == 1))
+                            if (IsAppropriateEditor(list[k], type4, !(type == type4), j == 1))
                             {
                                 inspectorType = list[k].m_InspectorType;
                                 dictionary.Add(type, inspectorType);
@@ -66,7 +66,7 @@
             {
                 return false;
             }
-            return (parentClass == editor.m_InspectedType);
+            return ((parentClass == editor.m_InspectedType) || (parentClass.IsGenericType && (parentClass.GetGenericTypeDefinition() == editor.m_InspectedType)));
         }
 
         internal static void Rebuild(Assembly assembly)

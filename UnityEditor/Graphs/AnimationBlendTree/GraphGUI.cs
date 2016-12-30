@@ -171,8 +171,9 @@
                     }
                     foreach (UnityEditor.Graphs.AnimationBlendTree.Node node4 in stack)
                     {
-                        this.m_Tool.AddBreadCrumb(node4.motion);
+                        this.m_Tool.AddBreadCrumb(node4.motion, false);
                     }
+                    this.m_Tool.CenterView();
                 }
                 current.Use();
             }
@@ -302,7 +303,8 @@
                 UnityEngine.Color color = GUI.color;
                 GUI.color = !on ? node2.weightColor : UnityEngine.Color.white;
                 GUIStyle style = UnityEditor.Graphs.Styles.GetNodeStyle(node2.style, node2.color, on);
-                Rect screenRect = new Rect(node2.position.x, node2.position.y, 0f, 0f);
+                float x = Mathf.Round(node2.position.x);
+                Rect screenRect = new Rect(x, Mathf.Round(node2.position.y), 0f, 0f);
                 node2.position = GUILayout.Window(node2.GetInstanceID(), screenRect, new GUI.WindowFunction(storey.<>m__0), this.LimitStringWidth(node2.title, 180f, style), style, new GUILayoutOption[0]);
                 GUI.color = color;
             }

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Represent the hash value.</para>
@@ -51,9 +52,9 @@
             return hash;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Parse(string hashString, out Hash128 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string Internal_Hash128ToString(uint d0, uint d1, uint d2, uint d3);
         public override bool Equals(object obj) => 
             ((obj is Hash128) && (this == ((Hash128) obj)));

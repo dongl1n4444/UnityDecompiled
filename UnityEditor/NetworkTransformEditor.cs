@@ -25,6 +25,8 @@
         protected GUIContent m_SyncSpinLabel;
         private NetworkTransform m_SyncTransform;
         private SerializedProperty m_TransformSyncMode;
+        private SerializedProperty m_VelocityThreshold;
+        protected GUIContent m_VelocityThresholdLabel;
 
         public void Init()
         {
@@ -61,6 +63,7 @@
                 }
                 this.m_TransformSyncMode = base.serializedObject.FindProperty("m_TransformSyncMode");
                 this.m_MovementTheshold = base.serializedObject.FindProperty("m_MovementTheshold");
+                this.m_VelocityThreshold = base.serializedObject.FindProperty("m_VelocityThreshold");
                 this.m_SnapThreshold = base.serializedObject.FindProperty("m_SnapThreshold");
                 this.m_InterpolateRotation = base.serializedObject.FindProperty("m_InterpolateRotation");
                 this.m_InterpolateMovement = base.serializedObject.FindProperty("m_InterpolateMovement");
@@ -70,6 +73,7 @@
                 this.m_NetworkSendIntervalLabel = new GUIContent("Network Send Rate (seconds)", "Number of network updates per second");
                 EditorGUI.indentLevel++;
                 this.m_MovementThesholdLabel = new GUIContent("Movement Threshold");
+                this.m_VelocityThresholdLabel = new GUIContent("Velocity Threshold");
                 this.m_SnapThresholdLabel = new GUIContent("Snap Threshold");
                 this.m_InterpolateRotationLabel = new GUIContent("Interpolate Rotation Factor");
                 this.m_InterpolateMovementLabel = new GUIContent("Interpolate Movement Factor");
@@ -131,6 +135,15 @@
             EditorGUILayout.LabelField("Movement:", new GUILayoutOption[0]);
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(this.m_MovementTheshold, this.m_MovementThesholdLabel, new GUILayoutOption[0]);
+            if (this.m_VelocityThreshold.floatValue < 0f)
+            {
+                this.m_VelocityThreshold.floatValue = 0f;
+                EditorUtility.SetDirty(this.m_SyncTransform);
+            }
+            if ((this.m_TransformSyncMode.enumValueIndex == 3) || (this.m_TransformSyncMode.enumValueIndex == 2))
+            {
+                EditorGUILayout.PropertyField(this.m_VelocityThreshold, this.m_VelocityThresholdLabel, new GUILayoutOption[0]);
+            }
             if (this.m_MovementTheshold.floatValue < 0f)
             {
                 this.m_MovementTheshold.floatValue = 0f;

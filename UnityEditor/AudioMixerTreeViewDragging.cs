@@ -35,14 +35,14 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<AudioMixerItem, AudioMixerGroupController>(null, (IntPtr) <DoDrag>m__0);
+                        <>f__am$cache0 = i => i.mixer.masterGroup;
                     }
                     List<AudioMixerGroupController> groupsToBeMoved = Enumerable.Select<AudioMixerItem, AudioMixerGroupController>(draggedItems, <>f__am$cache0).ToList<AudioMixerGroupController>();
                     bool flag = AudioMixerController.WillModificationOfTopologyCauseFeedback(item.mixer.GetAllAudioGroupsSlow(), groupsToBeMoved, item.mixer.masterGroup, null);
                     bool flag2 = this.ValidDrag(parentNode, draggedItems) && !flag;
                     if ((perform && flag2) && (this.m_MixersDroppedOnMixerCallback != null))
                     {
-                        this.m_MixersDroppedOnMixerCallback.Invoke(this.GetAudioMixersFromItems(draggedItems), item.mixer);
+                        this.m_MixersDroppedOnMixerCallback(this.GetAudioMixersFromItems(draggedItems), item.mixer);
                     }
                     return (!flag2 ? DragAndDropVisualMode.Rejected : DragAndDropVisualMode.Move);
                 }
@@ -70,7 +70,7 @@
                     DragAndDrop.AcceptDrag();
                     if (this.m_MixersDroppedOnMixerCallback != null)
                     {
-                        this.m_MixersDroppedOnMixerCallback.Invoke(this.GetAudioMixersFromItems(genericData.m_DraggedItems), null);
+                        this.m_MixersDroppedOnMixerCallback(this.GetAudioMixersFromItems(genericData.m_DraggedItems), null);
                     }
                 }
                 DragAndDrop.visualMode = DragAndDropVisualMode.Move;
@@ -87,7 +87,7 @@
         {
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<AudioMixerItem, AudioMixerController>(null, (IntPtr) <GetAudioMixersFromItems>m__2);
+                <>f__am$cache2 = i => i.mixer;
             }
             return Enumerable.Select<AudioMixerItem, AudioMixerController>(draggedItems, <>f__am$cache2).ToList<AudioMixerController>();
         }
@@ -108,7 +108,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<AudioMixerItem, int>(null, (IntPtr) <ValidDrag>m__1);
+                <>f__am$cache1 = n => n.id;
             }
             List<int> list = Enumerable.Select<AudioMixerItem, int>(draggedItems, <>f__am$cache1).ToList<int>();
             for (TreeViewItem item = parent; item != null; item = item.parent)

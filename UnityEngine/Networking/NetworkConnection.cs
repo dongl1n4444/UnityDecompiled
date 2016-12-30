@@ -643,9 +643,15 @@
         /// <param name="bytes">The data recieved.</param>
         /// <param name="numBytes">The size of the data recieved.</param>
         /// <param name="channelId">The channel that the data was received on.</param>
-        public virtual void TransportRecieve(byte[] bytes, int numBytes, int channelId)
+        public virtual void TransportReceive(byte[] bytes, int numBytes, int channelId)
         {
             this.HandleBytes(bytes, numBytes, channelId);
+        }
+
+        [Obsolete("TransportRecieve has been deprecated. Use TransportReceive instead (UnityUpgradable) -> TransportReceive(*)", false)]
+        public virtual void TransportRecieve(byte[] bytes, int numBytes, int channelId)
+        {
+            this.TransportReceive(bytes, numBytes, channelId);
         }
 
         public virtual bool TransportSend(byte[] bytes, int numBytes, int channelId, out byte error) => 

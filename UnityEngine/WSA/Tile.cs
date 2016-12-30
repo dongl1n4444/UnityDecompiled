@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Represents tile on Windows start screen
@@ -132,7 +133,7 @@
         /// <param name="tileId">An identifier for secondary tile.</param>
         /// <param name="pos">The coordinates for a request to unpin tile.</param>
         /// <param name="area">The area on the screen above which the request to unpin tile will be displayed.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public static extern void DeleteSecondary(string tileId);
         /// <summary>
         /// <para>Show a request to unpin secondary tile from start screen.</para>
@@ -172,9 +173,9 @@
         /// <para>Whether secondary tile is pinned to start screen.</para>
         /// </summary>
         /// <param name="tileId">An identifier for secondary tile.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool Exists(string tileId);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern string[] GetAllSecondaryTiles();
         /// <summary>
         /// <para>Gets all secondary tiles.</para>
@@ -216,19 +217,19 @@
         /// <returns>
         /// <para>String, which is an empty XML document to be filled and used for tile notification.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public static extern string GetTemplate(TileTemplate templ);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern bool HasUserConsent(string tileId);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string INTERNAL_CALL_CreateOrUpdateSecondaryTile(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string INTERNAL_CALL_CreateOrUpdateSecondaryTileArea(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText, ref Rect area);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string INTERNAL_CALL_CreateOrUpdateSecondaryTilePoint(string[] sargs, bool[] bargs, ref Color32 backgroundColor, int foregroundText, ref Vector2 pos);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DeleteSecondaryArea(string tileId, ref Rect area);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DeleteSecondaryPos(string tileId, ref Vector2 pos);
         private static bool[] MakeSecondaryTileBargs(SecondaryTileData data) => 
             new bool[] { data.backgroundColorSet, data.lockScreenDisplayBadgeAndTileText, data.roamingEnabled, data.showNameOnSquare150x150Logo, data.showNameOnSquare310x310Logo, data.showNameOnWide310x150Logo };
@@ -247,7 +248,7 @@
             PeriodicBadgeUpdate(this.m_TileId, uri, interval);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void PeriodicBadgeUpdate(string tileId, string uri, float interval);
         /// <summary>
         /// <para>Starts periodic update of a tile.
@@ -260,7 +261,7 @@
             PeriodicUpdate(this.m_TileId, uri, interval);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void PeriodicUpdate(string tileId, string uri, float interval);
         /// <summary>
         /// <para>Remove badge from tile.</para>
@@ -270,7 +271,7 @@
             RemoveBadge(this.m_TileId);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void RemoveBadge(string tileId);
         /// <summary>
         /// <para>Stops previously started periodic update of a tile.</para>
@@ -280,7 +281,7 @@
             StopPeriodicBadgeUpdate(this.m_TileId);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void StopPeriodicBadgeUpdate(string tileId);
         /// <summary>
         /// <para>Stops previously started periodic update of a tile.</para>
@@ -290,7 +291,7 @@
             StopPeriodicUpdate(this.m_TileId);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void StopPeriodicUpdate(string tileId);
         /// <summary>
         /// <para>Send a notification for tile (update tiles look).</para>
@@ -305,7 +306,7 @@
             Update(this.m_TileId, xml);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void Update(string tileId, string xml);
         /// <summary>
         /// <para>Send a notification for tile (update tiles look).</para>
@@ -329,7 +330,7 @@
             UpdateBadgeImage(this.m_TileId, image);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void UpdateBadgeImage(string tileId, string image);
         /// <summary>
         /// <para>Set or update a badge on a tile to a number.</para>
@@ -340,9 +341,9 @@
             UpdateBadgeNumber(this.m_TileId, number);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void UpdateBadgeNumber(string tileId, float number);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void UpdateImageAndText(string tileId, string medium, string wide, string large, string text);
 
         /// <summary>

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for handling Cubemap arrays.</para>
@@ -55,7 +56,7 @@
         /// </summary>
         /// <param name="updateMipmaps">When set to true, mipmap levels are recalculated.</param>
         /// <param name="makeNoLongerReadable">When set to true, system memory copy of a texture is released.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Apply([DefaultValue("true")] bool updateMipmaps, [DefaultValue("false")] bool makeNoLongerReadable);
         [ExcludeFromDocs]
         public Color[] GetPixels(CubemapFace face, int arrayElement)
@@ -73,7 +74,7 @@
         /// <returns>
         /// <para>Array of pixel colors.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color[] GetPixels(CubemapFace face, int arrayElement, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public Color32[] GetPixels32(CubemapFace face, int arrayElement)
@@ -91,9 +92,9 @@
         /// <returns>
         /// <para>Array of pixel colors in low precision (8 bits/channel) format.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color32[] GetPixels32(CubemapFace face, int arrayElement, [DefaultValue("0")] int miplevel);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create([Writable] CubemapArray mono, int faceSize, int cubemapCount, TextureFormat format, bool mipmap, bool linear);
         [ExcludeFromDocs]
         public void SetPixels(Color[] colors, CubemapFace face, int arrayElement)
@@ -109,7 +110,7 @@
         /// <param name="face">Cubemap face to set pixels for.</param>
         /// <param name="arrayElement">Array element index to set pixels for.</param>
         /// <param name="miplevel">Mipmap level to set pixels for.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPixels(Color[] colors, CubemapFace face, int arrayElement, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public void SetPixels32(Color32[] colors, CubemapFace face, int arrayElement)
@@ -125,18 +126,18 @@
         /// <param name="face">Cubemap face to set pixels for.</param>
         /// <param name="arrayElement">Array element index to set pixels for.</param>
         /// <param name="miplevel">Mipmap level to set pixels for.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPixels32(Color32[] colors, CubemapFace face, int arrayElement, [DefaultValue("0")] int miplevel);
 
         /// <summary>
         /// <para>Number of cubemaps in the array (Read Only).</para>
         /// </summary>
-        public int cubemapCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int cubemapCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Texture format (Read Only).</para>
         /// </summary>
-        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

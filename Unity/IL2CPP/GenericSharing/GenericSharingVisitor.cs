@@ -2,16 +2,16 @@
 {
     using Mono.Cecil;
     using Mono.Cecil.Cil;
+    using Mono.Cecil.Rocks;
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
-    using Unity.Cecil.Visitor;
     using Unity.IL2CPP;
     using Unity.IL2CPP.Common;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
 
-    public class GenericSharingVisitor : Unity.Cecil.Visitor.Visitor
+    public class GenericSharingVisitor
     {
         private List<RuntimeGenericData> _methodList;
         private List<RuntimeGenericData> _typeList;
@@ -116,6 +116,14 @@
             this.AddData(new RuntimeGenericTypeData(RuntimeGenericContextInfo.Type, genericType));
         }
 
+        public void Collect(AssemblyDefinition assembly)
+        {
+            foreach (TypeDefinition definition in assembly.MainModule.GetAllTypes())
+            {
+                this.ProcessType(definition);
+            }
+        }
+
         internal static GenericContextUsage GenericUsageFor(MethodReference method)
         {
             GenericContextUsage usage = GenericUsageFor(method.DeclaringType);
@@ -160,23 +168,14 @@
             return GenericContextUsage.None;
         }
 
-        protected override void Visit(ExceptionHandler exceptionHandler, Unity.Cecil.Visitor.Context context)
-        {
-            if (exceptionHandler.CatchType != null)
-            {
-                this.AddClassUsage(exceptionHandler.CatchType);
-            }
-            base.Visit(exceptionHandler, context);
-        }
-
-        protected override void Visit(Instruction instruction, Unity.Cecil.Visitor.Context context)
+        private void Process(Instruction instruction, MethodDefinition method)
         {
             MethodReference reference12;
             Code code = instruction.OpCode.Code;
             switch (code)
             {
                 case Code.Callvirt:
-                    goto Label_028A;
+                    goto Label_02AC;
 
                 case Code.Ldobj:
                 case Code.Ldfld:
@@ -185,7 +184,7 @@
                 case Code.Stobj:
                 case Code.Ldelema:
                 case Code.Unbox:
-                    goto Label_03CA;
+                    return;
 
                 case Code.Newobj:
                 {
@@ -199,7 +198,7 @@
                         this.AddClassUsage(genericMethod.DeclaringType);
                         this.AddMethodUsage(genericMethod);
                     }
-                    goto Label_03CA;
+                    return;
                 }
                 case Code.Castclass:
                 case Code.Isinst:
@@ -213,13 +212,13 @@
                     FieldReference reference3 = (FieldReference) instruction.Operand;
                     TypeReference declaringType = reference3.DeclaringType;
                     this.AddStaticUsage(declaringType);
-                    goto Label_03CA;
+                    return;
                 }
                 case Code.Newarr:
                 {
                     TypeReference genericType = (TypeReference) instruction.Operand;
                     this.AddArrayUsage(genericType);
-                    goto Label_03CA;
+                    return;
                 }
                 default:
                     switch (code)
@@ -227,7 +226,7 @@
                         case Code.Ldelem_Any:
                         case Code.Stelem_Any:
                         case Code.Initobj:
-                            goto Label_03CA;
+                            return;
 
                         case Code.Unbox_Any:
                         case Code.Constrained:
@@ -253,45 +252,49 @@
                             {
                                 this.AddClassUsage(reference9.DeclaringType);
                             }
-                            goto Label_03CA;
+                            return;
                         }
                         case Code.Ldftn:
                         {
                             MethodReference reference10 = (MethodReference) instruction.Operand;
                             this.AddMethodUsage(reference10);
-                            goto Label_03CA;
+                            return;
                         }
                         case Code.Ldvirtftn:
                         {
                             MethodReference reference11 = (MethodReference) instruction.Operand;
-                            if (reference11.DeclaringType.IsInterface())
+                            if (!reference11.Resolve().IsVirtual)
+                            {
+                                this.AddMethodUsage(reference11);
+                            }
+                            else if (reference11.DeclaringType.IsInterface())
                             {
                                 this.AddClassUsage(reference11.DeclaringType);
                             }
-                            goto Label_03CA;
+                            return;
                         }
                         case Code.Call:
-                            goto Label_028A;
+                            goto Label_02AC;
 
                         case Code.Sizeof:
                         {
                             TypeReference reference6 = (TypeReference) instruction.Operand;
                             this.AddClassUsage(reference6);
-                            goto Label_03CA;
+                            return;
                         }
                         default:
                             if (instruction.Operand is MemberReference)
                             {
                                 throw new NotImplementedException();
                             }
-                            goto Label_03CA;
+                            return;
                     }
                     break;
             }
             TypeReference operand = (TypeReference) instruction.Operand;
             this.AddClassUsage(operand);
-            goto Label_03CA;
-        Label_028A:
+            return;
+        Label_02AC:
             reference12 = (MethodReference) instruction.Operand;
             if (!Naming.IsSpecialArrayMethod(reference12) && (!reference12.DeclaringType.IsSystemArray() || ((reference12.Name != "GetGenericValueImpl") && (reference12.Name != "SetGenericValueImpl"))))
             {
@@ -308,41 +311,41 @@
                     this.AddMethodUsage(reference12);
                 }
             }
-            MethodReference data = (MethodReference) context.Data;
-            if (GenericSharingAnalysis.ShouldTryToCallStaticConstructorBeforeMethodCall(reference12, data))
+            if (GenericSharingAnalysis.ShouldTryToCallStaticConstructorBeforeMethodCall(reference12, method))
             {
                 this.AddStaticUsage(reference12.DeclaringType);
             }
-        Label_03CA:
-            base.Visit(instruction, context);
         }
 
-        protected override void Visit(MethodDefinition methodDefinition, Unity.Cecil.Visitor.Context context)
+        private void ProcessType(TypeDefinition type)
         {
-            List<RuntimeGenericData> list = this._methodList;
-            this._methodList = new List<RuntimeGenericData>();
-            base.Visit(methodDefinition, context);
-            if (this._methodList.Count > 0)
-            {
-                GenericSharingAnalysis.AddMethod(methodDefinition, this._methodList);
-            }
-            this._methodList = list;
-        }
-
-        protected override void Visit(PropertyDefinition propertyDefinition, Unity.Cecil.Visitor.Context context)
-        {
-        }
-
-        protected override void Visit(TypeDefinition typeDefinition, Unity.Cecil.Visitor.Context context)
-        {
-            List<RuntimeGenericData> list = this._typeList;
             this._typeList = new List<RuntimeGenericData>();
-            base.Visit(typeDefinition, context);
+            foreach (MethodDefinition definition in type.Methods)
+            {
+                if (definition.HasBody)
+                {
+                    this._methodList = new List<RuntimeGenericData>();
+                    foreach (ExceptionHandler handler in definition.Body.ExceptionHandlers)
+                    {
+                        if (handler.CatchType != null)
+                        {
+                            this.AddClassUsage(handler.CatchType);
+                        }
+                    }
+                    foreach (Instruction instruction in definition.Body.Instructions)
+                    {
+                        this.Process(instruction, definition);
+                    }
+                    if (this._methodList.Count > 0)
+                    {
+                        GenericSharingAnalysis.AddMethod(definition, this._methodList);
+                    }
+                }
+            }
             if (this._typeList.Count > 0)
             {
-                GenericSharingAnalysis.AddType(typeDefinition, this._typeList);
+                GenericSharingAnalysis.AddType(type, this._typeList);
             }
-            this._typeList = list;
         }
 
         [CompilerGenerated]

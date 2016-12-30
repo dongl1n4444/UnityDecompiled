@@ -92,7 +92,7 @@
             {
                 if ((type.baseClass != null) && !type.isEditorOnly)
                 {
-                    if (type.hasNativeNamespace)
+                    if (!type.hasNativeNamespace)
                     {
                         output.WriteLine("class {0};", type.name);
                     }
@@ -106,12 +106,14 @@
             output.Write("void RegisterAllClasses() \n{\n");
             output.WriteLine("\tvoid RegisterBuiltinTypes();");
             output.WriteLine("\tRegisterBuiltinTypes();");
-            output.WriteLine("\t// Non stripped classes");
+            output.WriteLine("\t// {0} Non stripped classes\n", nativeClassesAndBaseClasses.Count);
+            int num = 1;
             foreach (UnityType type2 in UnityType.GetTypes())
             {
                 if (((type2.baseClass != null) && !type2.isEditorOnly) && nativeClassesAndBaseClasses.Contains(type2))
                 {
-                    output.WriteLine("\tRegisterClass<{0}>();", type2.qualifiedName);
+                    output.WriteLine("\t// {0}. {1}", num++, type2.qualifiedName);
+                    output.WriteLine("\tRegisterClass<{0}>();\n", type2.qualifiedName);
                 }
             }
             output.WriteLine();
@@ -213,7 +215,7 @@
             string exe = Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Tools/InternalCallRegistrationWriter/InternalCallRegistrationWriter.exe");
             string args = $"-assembly="{Path.Combine(stagingAreaDataManaged, "UnityEngine.dll")}" -summary="{str}"";
             Runner.RunManagedProgram(exe, args);
-            CodeStrippingUtils.GenerateDependencies(Path.GetDirectoryName(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, null);
+            CodeStrippingUtils.GenerateDependencies(Path.GetFullPath(stagingAreaDataManaged), str, usedClassRegistry, stripping, out set, out set2, null);
             using (TextWriter writer = new StreamWriter(file))
             {
                 string[] assemblyFileNames = checker.GetAssemblyFileNames();

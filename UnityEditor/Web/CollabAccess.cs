@@ -21,17 +21,9 @@
 
         public override void EnableService(bool enabled)
         {
-            if (!Collab.instance.collabInfo.whitelisted)
-            {
-                base.EnableService(false);
-                Collab.instance.SendNotification();
-            }
-            else
-            {
-                base.EnableService(enabled);
-                Collab.instance.SendNotification();
-                Collab.instance.SetCollabEnabledForCurrentProject(enabled);
-            }
+            base.EnableService(enabled);
+            Collab.instance.SendNotification();
+            Collab.instance.SetCollabEnabledForCurrentProject(enabled);
         }
 
         public override string GetServiceDisplayName() => 
@@ -41,7 +33,7 @@
             "Collab";
 
         public bool IsCollabUIAccessible() => 
-            (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
+            true;
 
         public static CollabAccess Instance =>
             s_instance;

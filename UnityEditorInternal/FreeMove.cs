@@ -77,7 +77,7 @@
                                 num2 = Vector3.Dot(position, hit.normal) - num3;
                             }
                         }
-                        position = Handles.s_InverseMatrix.MultiplyPoint(hit.point + ((Vector3) (hit.normal * num2)));
+                        position = Handles.inverseMatrix.MultiplyPoint(hit.point + ((Vector3) (hit.normal * num2)));
                     }
                     break;
 
@@ -110,8 +110,8 @@
             if (!flag)
             {
                 s_CurrentMousePosition += new Vector2(current.delta.x, -current.delta.y);
-                Vector3 vector4 = Camera.current.WorldToScreenPoint(Handles.s_Matrix.MultiplyPoint(s_StartPosition)) + (s_CurrentMousePosition - s_StartMousePosition);
-                position = Handles.s_InverseMatrix.MultiplyPoint(Camera.current.ScreenToWorldPoint(vector4));
+                Vector3 vector4 = Camera.current.WorldToScreenPoint(Handles.matrix.MultiplyPoint(s_StartPosition)) + (s_CurrentMousePosition - s_StartMousePosition);
+                position = Handles.inverseMatrix.MultiplyPoint(Camera.current.ScreenToWorldPoint(vector4));
                 if ((Camera.current.transform.forward == Vector3.forward) || (Camera.current.transform.forward == -Vector3.forward))
                 {
                     position.z = s_StartPosition.z;
@@ -133,7 +133,7 @@
                     }
                     if (HandleUtility.FindNearestVertex(current.mousePosition, null, out vector5))
                     {
-                        position = Handles.s_InverseMatrix.MultiplyPoint(vector5);
+                        position = Handles.inverseMatrix.MultiplyPoint(vector5);
                     }
                 }
                 if (EditorGUI.actionKey && !current.shift)
@@ -217,7 +217,7 @@
                                 num2 = Vector3.Dot(position, hit.normal) - num3;
                             }
                         }
-                        position = Handles.s_InverseMatrix.MultiplyPoint(hit.point + ((Vector3) (hit.normal * num2)));
+                        position = Handles.inverseMatrix.MultiplyPoint(hit.point + ((Vector3) (hit.normal * num2)));
                     }
                     break;
 
@@ -250,8 +250,8 @@
             if (!flag)
             {
                 s_CurrentMousePosition += new Vector2(current.delta.x, -current.delta.y);
-                Vector3 vector4 = Camera.current.WorldToScreenPoint(Handles.s_Matrix.MultiplyPoint(s_StartPosition)) + (s_CurrentMousePosition - s_StartMousePosition);
-                position = Handles.s_InverseMatrix.MultiplyPoint(Camera.current.ScreenToWorldPoint(vector4));
+                Vector3 vector4 = Camera.current.WorldToScreenPoint(Handles.matrix.MultiplyPoint(s_StartPosition)) + (s_CurrentMousePosition - s_StartMousePosition);
+                position = Handles.inverseMatrix.MultiplyPoint(Camera.current.ScreenToWorldPoint(vector4));
                 if ((Camera.current.transform.forward == Vector3.forward) || (Camera.current.transform.forward == -Vector3.forward))
                 {
                     position.z = s_StartPosition.z;
@@ -273,7 +273,7 @@
                     }
                     if (HandleUtility.FindNearestVertex(current.mousePosition, null, out vector5))
                     {
-                        position = Handles.s_InverseMatrix.MultiplyPoint(vector5);
+                        position = Handles.inverseMatrix.MultiplyPoint(vector5);
                     }
                 }
                 if (EditorGUI.actionKey && !current.shift)

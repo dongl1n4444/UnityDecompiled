@@ -32,9 +32,9 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<IvyModule, PackageInfo>(null, (IntPtr) <GetNewestLocalPackagesOfType>m__0);
+                <>f__am$cache0 = p => p.ToPackageInfo();
             }
-            return Enumerable.Select<IvyModule, PackageInfo>(Enumerable.Where<IvyModule>(Unity.PackageManager.PackageManager.Database.NewestLocalPackages, new Func<IvyModule, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0);
+            return Enumerable.Select<IvyModule, PackageInfo>(Enumerable.Where<IvyModule>(Unity.PackageManager.PackageManager.Database.NewestLocalPackages, new Func<IvyModule, bool>(storey.<>m__0)), <>f__am$cache0);
         }
 
         public void Initialize()

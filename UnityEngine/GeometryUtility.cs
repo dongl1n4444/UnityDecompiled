@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Utility class for common geometric functions.</para>
@@ -16,9 +17,15 @@
         /// <param name="transform"></param>
         public static Bounds CalculateBounds(Vector3[] positions, Matrix4x4 transform)
         {
-            Bounds bounds;
-            INTERNAL_CALL_CalculateBounds(positions, ref transform, out bounds);
-            return bounds;
+            if (positions == null)
+            {
+                throw new ArgumentNullException("positions");
+            }
+            if (positions.Length == 0)
+            {
+                throw new ArgumentException("Zero-sized array is not allowed.", "positions");
+            }
+            return Internal_CalculateBounds(positions, transform);
         }
 
         /// <summary>
@@ -39,11 +46,18 @@
             return planes;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_CalculateBounds(Vector3[] positions, ref Matrix4x4 transform, out Bounds value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static Bounds Internal_CalculateBounds(Vector3[] positions, Matrix4x4 transform)
+        {
+            Bounds bounds;
+            INTERNAL_CALL_Internal_CalculateBounds(positions, ref transform, out bounds);
+            return bounds;
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_Internal_CalculateBounds(Vector3[] positions, ref Matrix4x4 transform, out Bounds value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_ExtractPlanes(Plane[] planes, ref Matrix4x4 worldToProjectionMatrix);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_TestPlanesAABB(Plane[] planes, ref Bounds bounds);
         private static void Internal_ExtractPlanes(Plane[] planes, Matrix4x4 worldToProjectionMatrix)
         {

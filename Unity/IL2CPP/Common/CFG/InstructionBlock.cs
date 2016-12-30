@@ -116,7 +116,7 @@
             internal bool $disposing;
             internal int $PC;
             internal InstructionBlock $this;
-            internal Instruction <instruction>__0;
+            internal Instruction <instruction>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -132,13 +132,13 @@
                 switch (num)
                 {
                     case 0:
-                        this.<instruction>__0 = this.$this.first;
+                        this.<instruction>__1 = this.$this.first;
                         break;
 
                     case 1:
-                        if (this.<instruction>__0 != this.$this.last)
+                        if (this.<instruction>__1 != this.$this.last)
                         {
-                            this.<instruction>__0 = this.<instruction>__0.Next;
+                            this.<instruction>__1 = this.<instruction>__1.Next;
                             break;
                         }
                         goto Label_008E;
@@ -146,7 +146,7 @@
                     default:
                         goto Label_008E;
                 }
-                this.$current = this.<instruction>__0;
+                this.$current = this.<instruction>__1;
                 if (!this.$disposing)
                 {
                     this.$PC = 1;

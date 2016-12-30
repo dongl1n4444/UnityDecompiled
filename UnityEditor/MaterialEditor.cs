@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -17,8 +18,13 @@
     [CustomEditor(typeof(Material)), CanEditMultipleObjects]
     public class MaterialEditor : Editor
     {
+        [CompilerGenerated]
+        private static Converter<Object, Material> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Converter<Object, Material> <>f__am$cache1;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <forceVisible>k__BackingField;
+        private const float kCustomQueuePopupWidth = 115f;
         /// <summary>
         /// <para>Useful for indenting shader properties that need the same indent as mini texture field.</para>
         /// </summary>
@@ -27,7 +33,6 @@
         private const float kQueuePopupWidth = 100f;
         private const float kSpaceBetweenFlexibleAreaAndField = 5f;
         private const float kSpacingUnderTexture = 6f;
-        private const float kWarningMessageHeight = 33f;
         private bool m_CheckSetup;
         private ShaderGUI m_CustomShaderGUI;
         private TextureDimension m_DesiredTexdim;
@@ -48,6 +53,7 @@
         private bool m_TriedCreatingCustomGUI;
         private static int s_ControlHash = "EditorTextField".GetHashCode();
         private static readonly GUIContent[] s_LightIcons = new GUIContent[2];
+        private static readonly List<MaterialEditor> s_MaterialEditors = new List<MaterialEditor>(4);
         private static readonly Mesh[] s_Meshes = new Mesh[5];
         private static readonly GUIContent[] s_MeshIcons = new GUIContent[5];
         private static readonly GUIContent s_OffsetText = new GUIContent("Offset");
@@ -114,6 +120,23 @@
                     GUI.color = AnimationMode.animatedPropertyColor;
                 }
             }
+        }
+
+        private int CalculateClosestQueueIndexToValue(int requestedValue)
+        {
+            int num = 0x7fffffff;
+            int num2 = 1;
+            for (int i = 1; i < Styles.queueValues.Length; i++)
+            {
+                int num4 = Styles.queueValues[i];
+                int num5 = Mathf.Abs((int) (num4 - requestedValue));
+                if (num5 < num)
+                {
+                    num2 = i;
+                    num = num5;
+                }
+            }
+            return num2;
         }
 
         private void CheckSetup()
@@ -309,6 +332,7 @@
                 string oldEditorName = (this.m_Shader == null) ? string.Empty : this.m_Shader.customEditor;
                 this.CreateCustomShaderGUI(target.shader, oldEditorName);
                 this.m_Shader = target.shader;
+                this.OnShaderChanged();
                 InspectorWindow.RepaintAllInspectors();
             }
         }
@@ -398,7 +422,7 @@
                 }
                 if (mesh != null)
                 {
-                    this.m_PreviewUtility.DrawMesh(mesh, Vector3.zero, identity, target, 0, null, this.m_ReflectionProbePicker.Target);
+                    this.m_PreviewUtility.DrawMesh(mesh, Vector3.zero, identity, target, 0, null, this.m_ReflectionProbePicker.Target, false);
                 }
                 bool fog = RenderSettings.fog;
                 Unsupported.SetRenderSettingsUseFogNoDirty(false);
@@ -412,6 +436,46 @@
                 Unsupported.SetRenderSettingsUseFogNoDirty(fog);
                 InternalEditorUtility.RemoveCustomLighting();
             }
+        }
+
+        /// <summary>
+        /// <para>This function will draw the UI for controlling whether emission is enabled or not on a material.</para>
+        /// </summary>
+        /// <returns>
+        /// <para>Returns true if enabled, or false if disabled or mixed due to multi-editing.</para>
+        /// </returns>
+        public bool EmissionEnabledProperty()
+        {
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = o => (Material) o;
+            }
+            Material[] materialArray = Array.ConvertAll<Object, Material>(base.targets, <>f__am$cache0);
+            LightModeUtil util = LightModeUtil.Get();
+            MaterialGlobalIlluminationFlags flags = !util.IsRealtimeGIEnabled() ? (!util.AreBakedLightmapsEnabled() ? MaterialGlobalIlluminationFlags.None : MaterialGlobalIlluminationFlags.BakedEmissive) : MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            bool flag = materialArray[0].globalIlluminationFlags != MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+            bool flag2 = false;
+            for (int i = 1; i < materialArray.Length; i++)
+            {
+                if ((materialArray[i].globalIlluminationFlags != MaterialGlobalIlluminationFlags.EmissiveIsBlack) != flag)
+                {
+                    flag2 = true;
+                    break;
+                }
+            }
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = flag2;
+            flag = EditorGUILayout.Toggle(GUIContent.Temp("Emission"), flag, new GUILayoutOption[0]);
+            EditorGUI.showMixedValue = false;
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (Material material in materialArray)
+                {
+                    material.globalIlluminationFlags = !flag ? MaterialGlobalIlluminationFlags.EmissiveIsBlack : flags;
+                }
+                return flag;
+            }
+            return (!flag2 && flag);
         }
 
         public void EndAnimatedCheck()
@@ -435,6 +499,41 @@
             {
                 this.ShaderProperty(r, property, string.Empty);
             }
+        }
+
+        /// <summary>
+        /// <para>Properly sets up the globalIllumination flag on the given Material depending on the current flag's state and the material's emission property.</para>
+        /// </summary>
+        /// <param name="mat">The material to be fixed up.</param>
+        public static void FixupEmissiveFlag(Material mat)
+        {
+            if (mat == null)
+            {
+                throw new ArgumentNullException("mat");
+            }
+            mat.globalIlluminationFlags = FixupEmissiveFlag(mat.GetColor("_EmissionColor"), mat.globalIlluminationFlags);
+        }
+
+        /// <summary>
+        /// <para>Returns a properly set global illlumination flag based on the passed in flag and the given color.</para>
+        /// </summary>
+        /// <param name="col">Emission color.</param>
+        /// <param name="flags">Current global illumination flag.</param>
+        /// <returns>
+        /// <para>The fixed up flag.</para>
+        /// </returns>
+        public static MaterialGlobalIlluminationFlags FixupEmissiveFlag(Color col, MaterialGlobalIlluminationFlags flags)
+        {
+            if (((flags & MaterialGlobalIlluminationFlags.BakedEmissive) != MaterialGlobalIlluminationFlags.None) && (col.maxColorComponent == 0f))
+            {
+                flags |= MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+                return flags;
+            }
+            if (flags != MaterialGlobalIlluminationFlags.EmissiveIsBlack)
+            {
+                flags &= MaterialGlobalIlluminationFlags.AnyEmissive;
+            }
+            return flags;
         }
 
         [Obsolete("Use FloatProperty with MaterialProperty instead.")]
@@ -1080,6 +1179,41 @@
         }
 
         /// <summary>
+        /// <para>Draws the UI for setting the global illumination flag of a material.</para>
+        /// </summary>
+        /// <param name="indent">Level of indentation for the property.</param>
+        /// <param name="enabled">True if emission is enabled for the material, false otherwise.</param>
+        public void LightmapEmissionFlagsProperty(int indent, bool enabled)
+        {
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = o => (Material) o;
+            }
+            Material[] materialArray = Array.ConvertAll<Object, Material>(base.targets, <>f__am$cache1);
+            MaterialGlobalIlluminationFlags anyEmissive = MaterialGlobalIlluminationFlags.AnyEmissive;
+            MaterialGlobalIlluminationFlags flags2 = materialArray[0].globalIlluminationFlags & anyEmissive;
+            bool flag = false;
+            for (int i = 1; i < materialArray.Length; i++)
+            {
+                flag = flag || ((materialArray[i].globalIlluminationFlags & anyEmissive) != flags2);
+            }
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = flag;
+            EditorGUI.indentLevel += indent;
+            int[] optionValues = new int[] { Styles.lightmapEmissiveValues[0], Styles.lightmapEmissiveValues[1] };
+            GUIContent[] displayedOptions = new GUIContent[] { Styles.lightmapEmissiveStrings[0], Styles.lightmapEmissiveStrings[1] };
+            flags2 = (MaterialGlobalIlluminationFlags) EditorGUILayout.IntPopup(GUIContent.Temp(Styles.lightmapEmissiveLabel, "Controls if the emission is baked or realtime.\n\nBaked only has effect in scenes where baked global illumination is enabled.\n\nRealtime uses realtime global illumination if enabled in the scene. Otherwise the emission won't light up other objects."), (int) flags2, displayedOptions, optionValues, new GUILayoutOption[0]);
+            EditorGUI.indentLevel -= indent;
+            EditorGUI.showMixedValue = false;
+            bool flag2 = EditorGUI.EndChangeCheck();
+            foreach (Material material in materialArray)
+            {
+                material.globalIlluminationFlags = !flag2 ? material.globalIlluminationFlags : flags2;
+                FixupEmissiveFlag(material);
+            }
+        }
+
+        /// <summary>
         /// <para>This function will draw the UI for the lightmap emission property. (None, Realtime, baked)
         /// 
         /// See Also: MaterialLightmapFlags.</para>
@@ -1112,13 +1246,13 @@
             }
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = flag;
-            globalIlluminationInt = (MaterialGlobalIlluminationFlags) EditorGUI.IntPopup(position, Styles.lightmapEmissiveLabel, (int) globalIlluminationInt, Styles.lightmapEmissiveStrings, Styles.lightmapEmissiveValues);
+            globalIlluminationInt = (MaterialGlobalIlluminationFlags) EditorGUI.IntPopup(position, GUIContent.Temp(Styles.lightmapEmissiveLabel), (int) globalIlluminationInt, Styles.lightmapEmissiveStrings, Styles.lightmapEmissiveValues);
             EditorGUI.showMixedValue = false;
             if (EditorGUI.EndChangeCheck())
             {
                 foreach (Material material3 in targets)
                 {
-                    MaterialGlobalIlluminationFlags flags2 = material3.globalIlluminationFlags & ~(MaterialGlobalIlluminationFlags.BakedEmissive | MaterialGlobalIlluminationFlags.RealtimeEmissive);
+                    MaterialGlobalIlluminationFlags flags2 = material3.globalIlluminationFlags & ~MaterialGlobalIlluminationFlags.AnyEmissive;
                     flags2 |= globalIlluminationInt;
                     material3.globalIlluminationFlags = flags2;
                 }
@@ -1142,6 +1276,7 @@
                 this.m_PreviewUtility.Cleanup();
                 this.m_PreviewUtility = null;
             }
+            s_MaterialEditors.Remove(this);
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
         }
 
@@ -1152,6 +1287,7 @@
         {
             this.m_Shader = base.serializedObject.FindProperty("m_Shader").objectReferenceValue as Shader;
             this.CreateCustomShaderGUI(this.m_Shader, "");
+            s_MaterialEditors.Add(this);
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
             this.PropertiesChanged();
             this.m_PropertyBlock = new MaterialPropertyBlock();
@@ -1274,6 +1410,13 @@
                 this.SetShader(shader);
             }
             this.PropertiesChanged();
+        }
+
+        /// <summary>
+        /// <para>A callback that is invoked when a Material's Shader is changed in the Inspector.</para>
+        /// </summary>
+        protected virtual void OnShaderChanged()
+        {
         }
 
         public static Renderer PrepareMaterialPropertiesForAnimationMode(MaterialProperty[] properties, bool isMaterialEditable)
@@ -1413,8 +1556,8 @@
         /// <para>Draw a range slider for a range shader property.</para>
         /// </summary>
         /// <param name="label">Label for the property.</param>
-        /// <param name="prop">The property to edit.</param>
-        /// <param name="position">Position and size of the range slider control.</param>
+        /// <param name="prop"></param>
+        /// <param name="position"></param>
         public float RangeProperty(MaterialProperty prop, string label) => 
             this.RangePropertyInternal(prop, new GUIContent(label));
 
@@ -1422,8 +1565,8 @@
         /// <para>Draw a range slider for a range shader property.</para>
         /// </summary>
         /// <param name="label">Label for the property.</param>
-        /// <param name="prop">The property to edit.</param>
-        /// <param name="position">Position and size of the range slider control.</param>
+        /// <param name="prop"></param>
+        /// <param name="position"></param>
         public float RangeProperty(Rect position, MaterialProperty prop, string label) => 
             this.RangePropertyInternal(position, prop, new GUIContent(label));
 
@@ -1473,33 +1616,57 @@
         /// <param name="r"></param>
         public void RenderQueueField(Rect r)
         {
+            float num3;
             EditorGUI.showMixedValue = this.HasMultipleMixedQueueValues();
+            Material mat = base.targets[0] as Material;
+            int materialRawRenderQueue = ShaderUtil.GetMaterialRawRenderQueue(mat);
+            int renderQueue = mat.renderQueue;
+            GUIContent[] displayedOptions = null;
+            int[] optionValues = null;
+            if (Array.IndexOf<int>(Styles.queueValues, materialRawRenderQueue) < 0)
+            {
+                if (Array.IndexOf(Styles.customQueueNames, materialRawRenderQueue) < 0)
+                {
+                    int index = this.CalculateClosestQueueIndexToValue(materialRawRenderQueue);
+                    string text = Styles.queueNames[index].text;
+                    int num5 = materialRawRenderQueue - Styles.queueValues[index];
+                    string str2 = string.Format((num5 <= 0) ? "{0}{1}" : "{0}+{1}", text, num5);
+                    Styles.customQueueNames[4].text = str2;
+                    Styles.customQueueValues[4] = materialRawRenderQueue;
+                }
+                displayedOptions = Styles.customQueueNames;
+                optionValues = Styles.customQueueValues;
+                num3 = 115f;
+            }
+            else
+            {
+                displayedOptions = Styles.queueNames;
+                optionValues = Styles.queueValues;
+                num3 = 100f;
+            }
             float labelWidth = EditorGUIUtility.labelWidth;
             float fieldWidth = EditorGUIUtility.fieldWidth;
             this.SetDefaultGUIWidths();
-            EditorGUIUtility.labelWidth -= 100f;
+            EditorGUIUtility.labelWidth -= num3;
             Rect position = r;
             position.width -= EditorGUIUtility.fieldWidth + 2f;
             Rect rect2 = r;
             rect2.xMin = rect2.xMax - EditorGUIUtility.fieldWidth;
-            Material mat = base.targets[0] as Material;
-            int materialRawRenderQueue = ShaderUtil.GetMaterialRawRenderQueue(mat);
-            int renderQueue = mat.renderQueue;
-            int selectedValue = (Array.IndexOf<int>(Styles.queueValues, materialRawRenderQueue) >= 0) ? materialRawRenderQueue : Styles.kCustomQueueValue;
-            int num6 = EditorGUI.IntPopup(position, Styles.queueLabel, selectedValue, Styles.queueNames, Styles.queueValues);
-            int num7 = EditorGUI.DelayedIntField(rect2, renderQueue);
-            if ((selectedValue != num6) || (renderQueue != num7))
+            int num8 = materialRawRenderQueue;
+            int num9 = EditorGUI.IntPopup(position, Styles.queueLabel, materialRawRenderQueue, displayedOptions, optionValues);
+            int num10 = EditorGUI.DelayedIntField(rect2, renderQueue);
+            if ((num8 != num9) || (renderQueue != num10))
             {
                 this.RegisterPropertyChangeUndo("Render Queue");
-                int num8 = num7;
-                if ((num6 != selectedValue) && (num6 != Styles.kCustomQueueValue))
+                int num11 = num10;
+                if (num9 != num8)
                 {
-                    num8 = num6;
+                    num11 = num9;
                 }
-                num8 = Mathf.Clamp(num8, -1, 0x1388);
+                num11 = Mathf.Clamp(num11, -1, 0x1388);
                 foreach (Object obj2 in base.targets)
                 {
-                    ((Material) obj2).renderQueue = num8;
+                    ((Material) obj2).renderQueue = num11;
                 }
             }
             EditorGUIUtility.labelWidth = labelWidth;
@@ -1595,12 +1762,9 @@
                 EditorMaterialUtility.ResetDefaultTextures(material, false);
                 ApplyMaterialPropertyDrawers(material);
             }
-            if (flag && (ActiveEditorTracker.sharedTracker != null))
+            if (flag)
             {
-                foreach (InspectorWindow window in InspectorWindow.GetAllInspectorWindows())
-                {
-                    window.tracker.ForceRebuild();
-                }
+                this.UpdateAllOpenMaterialEditors();
             }
         }
 
@@ -2162,11 +2326,16 @@
 
         public virtual void UndoRedoPerformed()
         {
-            if (ActiveEditorTracker.sharedTracker != null)
-            {
-                ActiveEditorTracker.sharedTracker.ForceRebuild();
-            }
+            this.UpdateAllOpenMaterialEditors();
             this.PropertiesChanged();
+        }
+
+        private void UpdateAllOpenMaterialEditors()
+        {
+            foreach (MaterialEditor editor in s_MaterialEditors.ToArray())
+            {
+                editor.DetectShaderChanged();
+            }
         }
 
         [Obsolete("Use VectorProperty with MaterialProperty instead.")]
@@ -2270,10 +2439,13 @@
 
         private static class Styles
         {
-            public static int kCustomQueueValue;
+            public static GUIContent[] customQueueNames;
+            public static int[] customQueueValues;
+            public const int kCustomQueueIndex = 4;
+            public const int kNewShaderQueueValue = -1;
             public static readonly GUIStyle kReflectionProbePickerStyle = "PaneOptions";
             public static string lightmapEmissiveLabel;
-            public static string[] lightmapEmissiveStrings = new string[] { "None", "Realtime", "Baked" };
+            public static GUIContent[] lightmapEmissiveStrings = new GUIContent[] { EditorGUIUtility.TextContent("Realtime"), EditorGUIUtility.TextContent("Baked"), EditorGUIUtility.TextContent("None") };
             public static int[] lightmapEmissiveValues;
             public static string propBlockWarning;
             public static readonly GUIContent queueLabel;
@@ -2283,17 +2455,21 @@
             static Styles()
             {
                 int[] numArray1 = new int[3];
-                numArray1[1] = 1;
-                numArray1[2] = 2;
+                numArray1[0] = 1;
+                numArray1[1] = 2;
                 lightmapEmissiveValues = numArray1;
                 lightmapEmissiveLabel = "Global Illumination";
                 propBlockWarning = EditorGUIUtility.TextContent("MaterialPropertyBlock is used to modify these values").text;
-                kCustomQueueValue = -2;
                 queueLabel = EditorGUIUtility.TextContent("Render Queue");
-                queueNames = new GUIContent[] { EditorGUIUtility.TextContent("From Shader"), EditorGUIUtility.TextContent("Geometry|Queue 2000"), EditorGUIUtility.TextContent("AlphaTest|Queue 2450"), EditorGUIUtility.TextContent("Transparent|Queue 3000"), EditorGUIUtility.TextContent("Custom") };
-                int[] numArray2 = new int[] { -1, 0x7d0, 0x992, 0xbb8, 0 };
-                numArray2[4] = kCustomQueueValue;
-                queueValues = numArray2;
+                queueNames = new GUIContent[] { EditorGUIUtility.TextContent("From Shader"), EditorGUIUtility.TextContent("Geometry|Queue 2000"), EditorGUIUtility.TextContent("AlphaTest|Queue 2450"), EditorGUIUtility.TextContent("Transparent|Queue 3000") };
+                queueValues = new int[] { -1, 0x7d0, 0x992, 0xbb8 };
+                customQueueNames = new GUIContent[] { queueNames[0], queueNames[1], queueNames[2], queueNames[3], EditorGUIUtility.TextContent("") };
+                int[] numArray2 = new int[5];
+                numArray2[0] = queueValues[0];
+                numArray2[1] = queueValues[1];
+                numArray2[2] = queueValues[2];
+                numArray2[3] = queueValues[3];
+                customQueueValues = numArray2;
             }
         }
     }

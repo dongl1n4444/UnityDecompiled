@@ -130,7 +130,7 @@
             source.Add(_vcPaths[architecture.GetType()].ToolsPath.Parent.Combine(textArray5));
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <GetPathEnvVariable>m__0);
+                <>f__am$cache0 = p => p.ToString();
             }
             return source.Select<NPath, string>(<>f__am$cache0).AggregateWith(";");
         }
@@ -189,19 +189,19 @@
                             ISetupPackageReference[] packages = storey.instance2.GetPackages();
                             if (<>f__am$cache1 == null)
                             {
-                                <>f__am$cache1 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__1);
+                                <>f__am$cache1 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetX86";
                             }
-                            source.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache1).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__0)));
+                            source.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache1).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__0)));
                             if (<>f__am$cache2 == null)
                             {
-                                <>f__am$cache2 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__2);
+                                <>f__am$cache2 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetX64";
                             }
-                            list2.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache2).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__1)));
+                            list2.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache2).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__1)));
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__3);
+                                <>f__am$cache3 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetARM";
                             }
-                            list3.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache3).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__2)));
+                            list3.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache3).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__2)));
                         }
                         catch (Exception exception)
                         {
@@ -291,7 +291,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc15Installation $this;
-            internal NPath <includeDirectory>__0;
+            internal NPath <includeDirectory>__1;
             internal Architecture architecture;
 
             [DebuggerHidden]
@@ -320,9 +320,9 @@
                     {
                         string[] append = new string[] { "Include" };
                         string[] textArray2 = new string[] { this.$this._sdkVersion };
-                        this.<includeDirectory>__0 = this.$this.SDKDirectory.Combine(append).Combine(textArray2);
+                        this.<includeDirectory>__1 = this.$this.SDKDirectory.Combine(append).Combine(textArray2);
                         string[] textArray3 = new string[] { "shared" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray3);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray3);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -332,7 +332,7 @@
                     case 2:
                     {
                         string[] textArray4 = new string[] { "um" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray4);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray4);
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -342,7 +342,7 @@
                     case 3:
                     {
                         string[] textArray5 = new string[] { "winrt" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray5);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray5);
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -352,7 +352,7 @@
                     case 4:
                     {
                         string[] textArray6 = new string[] { "ucrt" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray6);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray6);
                         if (!this.$disposing)
                         {
                             this.$PC = 5;
@@ -405,7 +405,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc15Installation $this;
-            internal NPath <libDirectory>__0;
+            internal NPath <libDirectory>__1;
             internal NPath <vcLibPath>__1;
             internal Architecture architecture;
             internal string sdkSubset;
@@ -428,11 +428,11 @@
                         Msvc15Installation.ThrowIfArchitectureNotInstalled(this.architecture);
                         string[] append = new string[] { "Lib" };
                         string[] textArray2 = new string[] { this.$this._sdkVersion };
-                        this.<libDirectory>__0 = this.$this.SDKDirectory.Combine(append).Combine(textArray2);
+                        this.<libDirectory>__1 = this.$this.SDKDirectory.Combine(append).Combine(textArray2);
                         if (this.architecture is x86Architecture)
                         {
                             string[] textArray3 = new string[] { "um", "x86" };
-                            this.$current = this.<libDirectory>__0.Combine(textArray3);
+                            this.$current = this.<libDirectory>__1.Combine(textArray3);
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;
@@ -441,7 +441,7 @@
                         else if (this.architecture is x64Architecture)
                         {
                             string[] textArray6 = new string[] { "um", "x64" };
-                            this.$current = this.<libDirectory>__0.Combine(textArray6);
+                            this.$current = this.<libDirectory>__1.Combine(textArray6);
                             if (!this.$disposing)
                             {
                                 this.$PC = 4;
@@ -454,7 +454,7 @@
                                 throw new NotSupportedException($"Architecture {this.architecture} is not supported by MsvcToolChain!");
                             }
                             string[] textArray9 = new string[] { "um", "arm" };
-                            this.$current = this.<libDirectory>__0.Combine(textArray9);
+                            this.$current = this.<libDirectory>__1.Combine(textArray9);
                             if (!this.$disposing)
                             {
                                 this.$PC = 7;
@@ -465,7 +465,7 @@
                     case 1:
                     {
                         string[] textArray4 = new string[] { "ucrt", "x86" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray4);
+                        this.$current = this.<libDirectory>__1.Combine(textArray4);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -494,7 +494,7 @@
                     case 4:
                     {
                         string[] textArray7 = new string[] { "ucrt", "x64" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray7);
+                        this.$current = this.<libDirectory>__1.Combine(textArray7);
                         if (!this.$disposing)
                         {
                             this.$PC = 5;
@@ -518,7 +518,7 @@
                     case 7:
                     {
                         string[] textArray10 = new string[] { "ucrt", "arm" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray10);
+                        this.$current = this.<libDirectory>__1.Combine(textArray10);
                         if (!this.$disposing)
                         {
                             this.$PC = 8;

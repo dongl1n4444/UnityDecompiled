@@ -40,6 +40,26 @@
         /// <para>Deferred shading G-buffer #3 (typically emission/lighting).</para>
         /// </summary>
         GBuffer3 = 13,
+        /// <summary>
+        /// <para>Deferred shading G-buffer #4 (typically occlusion mask for static lights if any).</para>
+        /// </summary>
+        GBuffer4 = 0x10,
+        /// <summary>
+        /// <para>G-buffer #5 Unused.</para>
+        /// </summary>
+        GBuffer5 = 0x11,
+        /// <summary>
+        /// <para>G-buffer #6 Unused.</para>
+        /// </summary>
+        GBuffer6 = 0x12,
+        /// <summary>
+        /// <para>G-buffer #7 Unused.</para>
+        /// </summary>
+        GBuffer7 = 0x13,
+        /// <summary>
+        /// <para>Motion Vectors generated when the camera has motion vectors enabled.</para>
+        /// </summary>
+        MotionVectors = 15,
         None = 0,
         /// <summary>
         /// <para>Deferred lighting light buffer.</para>

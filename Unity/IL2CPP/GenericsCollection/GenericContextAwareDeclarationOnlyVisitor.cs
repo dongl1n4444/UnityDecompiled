@@ -32,7 +32,14 @@
 
         internal static void ProcessArray(ArrayType inflatedType, InflatedCollectionCollector generics, GenericContext currentContext)
         {
-            generics.Arrays.Add(inflatedType);
+            if (inflatedType.NeedsComCallableWrapper())
+            {
+                GenericContextAwareVisitor.ProcessArray(inflatedType, generics, currentContext);
+            }
+            else
+            {
+                generics.Arrays.Add(inflatedType);
+            }
         }
 
         private void ProcessGenericType(GenericInstanceType inflatedType)
@@ -45,11 +52,18 @@
             bool flag = generics.TypeDeclarations.Add(type);
             if (((mode != CollectionMode.Types) || flag) && ((mode != CollectionMode.MethodsAndTypes) || generics.TypeMethodDeclarations.Add(type)))
             {
-                GenericContext genericContext = new GenericContext(type, contextMethod);
-                type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.Types));
-                foreach (GenericInstanceType type2 in type.GenericArguments.OfType<GenericInstanceType>())
+                if (type.NeedsComCallableWrapper())
                 {
-                    ProcessGenericType(Inflater.InflateType(genericContext, type2), generics, null, mode);
+                    GenericContextAwareVisitor.ProcessGenericType(type, generics, contextMethod);
+                }
+                else
+                {
+                    GenericContext genericContext = new GenericContext(type, contextMethod);
+                    type.ElementType.Resolve().Accept(new GenericContextAwareDeclarationOnlyVisitor(generics, genericContext, CollectionMode.Types));
+                    foreach (GenericInstanceType type2 in type.GenericArguments.OfType<GenericInstanceType>())
+                    {
+                        ProcessGenericType(Inflater.InflateType(genericContext, type2), generics, null, mode);
+                    }
                 }
             }
         }

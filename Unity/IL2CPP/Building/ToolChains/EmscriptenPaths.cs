@@ -201,21 +201,28 @@
         {
             get
             {
+                if (!UnitySourceCode.Available)
+                {
+                    throw new NotSupportedException("Need Unity source to use node");
+                }
+                string[] append = new string[] { "External", "nodejs", "builds" };
+                NPath path = UnitySourceCode.Paths.UnityRoot.Combine(append);
                 if (PlatformUtils.IsWindows())
                 {
-                    string[] append = new string[] { "node/node.exe" };
-                    return WindowsEmscriptenSdkRoot.Combine(append);
+                    string[] textArray2 = new string[] { "win64", "node.exe" };
+                    return path.Combine(textArray2);
                 }
                 if (PlatformUtils.IsOSX())
                 {
-                    string[] textArray2 = new string[] { "node/0.10.18_64bit/bin/node" };
-                    return MacEmscriptenSdkRoot.Combine(textArray2);
+                    string[] textArray3 = new string[] { "osx", "bin", "node" };
+                    return path.Combine(textArray3);
                 }
                 if (!PlatformUtils.IsLinux())
                 {
                     throw new NotSupportedException("Don't know how to get node path on current platform!");
                 }
-                return new NPath(!File.Exists("/usr/bin/node") ? "nodejs" : "node");
+                string[] textArray4 = new string[] { "linux64", "bin", "node" };
+                return path.Combine(textArray4);
             }
         }
 

@@ -4,10 +4,11 @@
     using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     public sealed class AssetStoreToolUtils
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool BuildAssetStoreAssetBundle(Object targetObject, string targetPath);
         public static bool PreviewAssetStoreAssetBundleInInspector(AssetBundle bundle, AssetStoreAsset info)
         {

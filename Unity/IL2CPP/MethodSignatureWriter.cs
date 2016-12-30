@@ -215,8 +215,8 @@
             internal bool $disposing;
             internal Collection<ParameterDefinition>.Enumerator $locvar0;
             internal int $PC;
-            internal ParameterDefinition <parameterDefinition>__1;
-            internal TypeReference <thisType>__0;
+            internal ParameterDefinition <parameterDefinition>__2;
+            internal TypeReference <thisType>__1;
             internal bool forceNoStaticThis;
             internal ParameterFormat format;
             internal bool includeHiddenMethodInfo;
@@ -311,16 +311,16 @@
                 }
                 if (((this.format != ParameterFormat.WithNameNoThis) && (this.format != ParameterFormat.WithTypeNoThis)) && ((this.format != ParameterFormat.WithTypeAndNameNoThis) && this.methodDefinition.HasThis))
                 {
-                    this.<thisType>__0 = this.methodDefinition.DeclaringType;
-                    if (this.<thisType>__0.IsValueType())
+                    this.<thisType>__1 = this.methodDefinition.DeclaringType;
+                    if (this.<thisType>__1.IsValueType())
                     {
-                        this.<thisType>__0 = new PointerType(this.<thisType>__0);
+                        this.<thisType>__1 = new PointerType(this.<thisType>__1);
                     }
-                    else if (this.<thisType>__0.IsSpecialSystemBaseType())
+                    else if (this.<thisType>__1.IsSpecialSystemBaseType())
                     {
-                        this.<thisType>__0 = this.methodDefinition.Module.TypeSystem.Object;
+                        this.<thisType>__1 = this.methodDefinition.Module.TypeSystem.Object;
                     }
-                    this.$current = MethodSignatureWriter.FormatThis(this.format, this.<thisType>__0);
+                    this.$current = MethodSignatureWriter.FormatThis(this.format, this.<thisType>__1);
                     if (!this.$disposing)
                     {
                         this.$PC = 5;
@@ -335,8 +335,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<parameterDefinition>__1 = this.$locvar0.Current;
-                        this.$current = MethodSignatureWriter.ParameterStringFor(this.methodDefinition, this.format, this.<parameterDefinition>__1);
+                        this.<parameterDefinition>__2 = this.$locvar0.Current;
+                        this.$current = MethodSignatureWriter.ParameterStringFor(this.methodDefinition, this.format, this.<parameterDefinition>__2);
                         if (!this.$disposing)
                         {
                             this.$PC = 6;

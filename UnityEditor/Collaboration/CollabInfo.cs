@@ -14,7 +14,6 @@
         private int m_Error;
         private int m_Maintenance;
         private int m_Conflict;
-        private int m_Whitelisted;
         private int m_Refresh;
         private string m_Tip;
         private string m_LastErrorMsg;
@@ -32,8 +31,6 @@
             (this.m_Maintenance != 0);
         public bool conflict =>
             (this.m_Conflict != 0);
-        public bool whitelisted =>
-            (this.m_Whitelisted != 0);
         public bool dirty =>
             SceneManager.GetActiveScene().isDirty;
         public bool refresh =>

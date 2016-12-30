@@ -12,8 +12,14 @@
         public static string GuidForProject(string projectName) => 
             ComputeGuidHashFor(projectName + "salt");
 
-        public static string GuidForSolution(string projectName) => 
-            "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC";
+        public static string GuidForSolution(string projectName, string sourceFileExtension)
+        {
+            if (sourceFileExtension.ToLower() == "cs")
+            {
+                return "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC";
+            }
+            return ComputeGuidHashFor(projectName);
+        }
 
         private static string HashAsGuid(string hash)
         {

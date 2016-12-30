@@ -29,17 +29,17 @@
             }
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<NPath, bool>(null, (IntPtr) IsGeneratedFile);
+                <>f__mg$cache0 = new Func<NPath, bool>(StatisticsGenerator.IsGeneratedFile);
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <CollectGeneratedFileInfo>m__0);
+                <>f__am$cache0 = f => f.ToString();
             }
             List<string> source = outputDirectory.Files(false).Where<NPath>(<>f__mg$cache0).Select<NPath, string>(<>f__am$cache0).ToList<string>();
             source.Sort();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, FileInfo>(null, (IntPtr) <CollectGeneratedFileInfo>m__1);
+                <>f__am$cache1 = f => new FileInfo(f.ToString());
             }
             return source.Select<string, FileInfo>(<>f__am$cache1).ToList<FileInfo>();
         }
@@ -147,6 +147,7 @@
             writer.WriteLine("\tGenericsCollector.Collect: {0}", profilerSnapshot.GetSectionsByLabel("GenericsCollector.Collect").First<TinyProfiler.TimedSection>().Duration);
             writer.WriteLine("\tWriteGenerics: {0}", profilerSnapshot.GetSectionsByLabel("WriteGenerics").First<TinyProfiler.TimedSection>().Duration);
             writer.WriteLine("\tAllAssemblyConversion: {0}", profilerSnapshot.GetSectionsByLabel("AllAssemblyConversion").First<TinyProfiler.TimedSection>().Duration);
+            writer.WriteLine("\tSymbolsCollection: {0}", profilerSnapshot.GetSectionsByLabel("SymbolsCollection").First<TinyProfiler.TimedSection>().Duration);
             writer.WriteLine();
         }
 

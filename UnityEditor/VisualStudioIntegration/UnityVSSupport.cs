@@ -34,7 +34,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Assembly, bool>(null, (IntPtr) <CalculateAboutWindowLabel>m__1);
+                <>f__am$cache1 = a => a.Location == s_UnityVSBridgeToLoad;
             }
             Assembly assembly = Enumerable.FirstOrDefault<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache1);
             if (assembly == null)
@@ -181,7 +181,7 @@
                 vsVersion = VisualStudioVersion.Invalid;
                 return false;
             }
-            KeyValuePair<VisualStudioVersion, string>[] pairArray = Enumerable.Where<KeyValuePair<VisualStudioVersion, string>>(SyncVS.InstalledVisualStudios, new Func<KeyValuePair<VisualStudioVersion, string>, bool>(storey, (IntPtr) this.<>m__0)).ToArray<KeyValuePair<VisualStudioVersion, string>>();
+            KeyValuePair<VisualStudioVersion, string>[] pairArray = Enumerable.Where<KeyValuePair<VisualStudioVersion, string>>(SyncVS.InstalledVisualStudios, new Func<KeyValuePair<VisualStudioVersion, string>, bool>(storey.<>m__0)).ToArray<KeyValuePair<VisualStudioVersion, string>>();
             if (pairArray.Length > 0)
             {
                 vsVersion = pairArray[0].Key;

@@ -11,6 +11,7 @@
         private List<Swatch> m_AlphaSwatches;
         private Gradient m_Gradient;
         private GradientMode m_GradientMode;
+        private bool m_HDR;
         private int m_NumSteps;
         private List<Swatch> m_RGBSwatches;
         [NonSerialized]
@@ -109,45 +110,72 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                Texture2D backgroundTexture = GetBackgroundTexture();
-                if (backgroundTexture != null)
+                if (EditorGUI.showMixedValue)
                 {
                     Color color = GUI.color;
-                    GUI.color = bgColor;
-                    EditorGUIUtility.GetBasicTextureStyle(backgroundTexture).Draw(position, false, false, false, false);
+                    float a = !GUI.enabled ? ((float) 2) : ((float) 1);
+                    GUI.color = new Color(0.82f, 0.82f, 0.82f, a) * bgColor;
+                    GUIStyle whiteTextureStyle = EditorGUIUtility.whiteTextureStyle;
+                    whiteTextureStyle.Draw(position, false, false, false, false);
+                    EditorGUI.BeginHandleMixedValueContentColor();
+                    whiteTextureStyle.Draw(position, EditorGUI.mixedValueContent, false, false, false, false);
+                    EditorGUI.EndHandleMixedValueContentColor();
                     GUI.color = color;
                 }
-                Texture2D tex = null;
-                if (property != null)
-                {
-                    tex = GradientPreviewCache.GetPropertyPreview(property);
-                }
                 else
                 {
-                    tex = GradientPreviewCache.GetGradientPreview(gradient);
-                }
-                if (tex == null)
-                {
-                    Debug.Log("Warning: Could not create preview for gradient");
-                }
-                else
-                {
-                    EditorGUIUtility.GetBasicTextureStyle(tex).Draw(position, false, false, false, false);
+                    float maxColorComponent;
+                    Texture2D backgroundTexture = GetBackgroundTexture();
+                    if (backgroundTexture != null)
+                    {
+                        Color color2 = GUI.color;
+                        GUI.color = bgColor;
+                        EditorGUIUtility.GetBasicTextureStyle(backgroundTexture).Draw(position, false, false, false, false);
+                        GUI.color = color2;
+                    }
+                    Texture2D tex = null;
+                    if (property != null)
+                    {
+                        tex = GradientPreviewCache.GetPropertyPreview(property);
+                        maxColorComponent = GetMaxColorComponent(property.gradientValue);
+                    }
+                    else
+                    {
+                        tex = GradientPreviewCache.GetGradientPreview(gradient);
+                        maxColorComponent = GetMaxColorComponent(gradient);
+                    }
+                    if (tex == null)
+                    {
+                        Debug.Log("Warning: Could not create preview for gradient");
+                    }
+                    else
+                    {
+                        EditorGUIUtility.GetBasicTextureStyle(tex).Draw(position, false, false, false, false);
+                        if (maxColorComponent > 1f)
+                        {
+                            GUI.Label(new Rect(position.x, position.y - 1f, position.width - 3f, position.height + 2f), "HDR", EditorStyles.centeredGreyMiniLabel);
+                        }
+                    }
                 }
             }
         }
 
-        public static void DrawGradientWithBackground(Rect position, Texture2D gradientTexture)
+        public static void DrawGradientWithBackground(Rect position, Gradient gradient)
         {
+            Texture2D gradientPreview = GradientPreviewCache.GetGradientPreview(gradient);
             Rect rect = new Rect(position.x + 1f, position.y + 1f, position.width - 2f, position.height - 2f);
             Texture2D backgroundTexture = GetBackgroundTexture();
             Rect texCoords = new Rect(0f, 0f, rect.width / ((float) backgroundTexture.width), rect.height / ((float) backgroundTexture.height));
             GUI.DrawTextureWithTexCoords(rect, backgroundTexture, texCoords, false);
-            if (gradientTexture != null)
+            if (gradientPreview != null)
             {
-                GUI.DrawTexture(rect, gradientTexture, ScaleMode.StretchToFill, true);
+                GUI.DrawTexture(rect, gradientPreview, ScaleMode.StretchToFill, true);
             }
             GUI.Label(position, GUIContent.none, EditorStyles.colorPickerBox);
+            if (GetMaxColorComponent(gradient) > 1f)
+            {
+                GUI.Label(new Rect(position.x, position.y, position.width - 3f, position.height), "HDR", EditorStyles.centeredGreyMiniLabel);
+            }
         }
 
         private void DrawSwatch(Rect totalPos, Swatch s, bool upwards)
@@ -171,6 +199,17 @@
             return s_BackgroundTexture;
         }
 
+        private static float GetMaxColorComponent(Gradient gradient)
+        {
+            float a = 0f;
+            GradientColorKey[] colorKeys = gradient.colorKeys;
+            for (int i = 0; i < colorKeys.Length; i++)
+            {
+                a = Mathf.Max(a, colorKeys[i].color.maxColorComponent);
+            }
+            return a;
+        }
+
         private float GetTime(float actualTime)
         {
             actualTime = Mathf.Clamp01(actualTime);
@@ -182,10 +221,11 @@
             return actualTime;
         }
 
-        public void Init(Gradient gradient, int numSteps)
+        public void Init(Gradient gradient, int numSteps, bool hdr)
         {
             this.m_Gradient = gradient;
             this.m_NumSteps = numSteps;
+            this.m_HDR = hdr;
             this.BuildArrays();
             if (this.m_RGBSwatches.Count > 0)
             {
@@ -216,7 +256,7 @@
             if (Event.current.type == EventType.Repaint)
             {
                 position.height = num4;
-                DrawGradientWithBackground(position, GradientPreviewCache.GetGradientPreview(this.m_Gradient));
+                DrawGradientWithBackground(position, this.m_Gradient);
             }
             position.y += num4;
             position.height = num2;
@@ -252,7 +292,7 @@
                 else
                 {
                     EditorGUI.BeginChangeCheck();
-                    this.m_SelectedSwatch.m_Value = EditorGUI.ColorField(rect, s_Styles.colorText, this.m_SelectedSwatch.m_Value, true, false);
+                    this.m_SelectedSwatch.m_Value = EditorGUI.ColorField(rect, s_Styles.colorText, this.m_SelectedSwatch.m_Value, true, false, this.m_HDR, ColorPicker.defaultHDRConfig);
                     if (EditorGUI.EndChangeCheck())
                     {
                         this.AssignBack();
@@ -341,7 +381,7 @@
                         if (current.clickCount == 2)
                         {
                             GUIUtility.keyboardControl = controlID;
-                            ColorPicker.Show(GUIView.current, this.m_SelectedSwatch.m_Value, false, false, null);
+                            ColorPicker.Show(GUIView.current, this.m_SelectedSwatch.m_Value, false, this.m_HDR, ColorPicker.defaultHDRConfig);
                             GUIUtility.ExitGUI();
                         }
                     }

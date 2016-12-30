@@ -15,6 +15,7 @@
     public class Editor : ScriptableObject, IPreviewable
     {
         private Object[] m_Targets;
+        private Object m_Context;
         private int m_IsDirty;
         private int m_ReferenceTargetIndex = 0;
         private PropertyHandlerCache m_PropertyHandlerCache = new PropertyHandlerCache();
@@ -29,6 +30,50 @@
         private const float kImageSectionWidth = 44f;
         internal bool canEditMultipleObjects =>
             (base.GetType().GetCustomAttributes(typeof(CanEditMultipleObjects), false).Length > 0);
+        /// <summary>
+        /// <para>Make a custom editor for targetObject or targetObjects with a context object.</para>
+        /// </summary>
+        /// <param name="targetObjects"></param>
+        /// <param name="context"></param>
+        /// <param name="editorType"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern Editor CreateEditorWithContext(Object[] targetObjects, Object context, [DefaultValue("null")] Type editorType);
+        [ExcludeFromDocs]
+        public static Editor CreateEditorWithContext(Object[] targetObjects, Object context)
+        {
+            Type editorType = null;
+            return CreateEditorWithContext(targetObjects, context, editorType);
+        }
+
+        public static void CreateCachedEditorWithContext(Object targetObject, Object context, Type editorType, ref Editor previousEditor)
+        {
+            Object[] targetObjects = new Object[] { targetObject };
+            CreateCachedEditorWithContext(targetObjects, context, editorType, ref previousEditor);
+        }
+
+        public static void CreateCachedEditorWithContext(Object[] targetObjects, Object context, Type editorType, ref Editor previousEditor)
+        {
+            if (((previousEditor == null) || !ArrayUtility.ArrayEquals<Object>(previousEditor.m_Targets, targetObjects)) || (previousEditor.m_Context != context))
+            {
+                if (previousEditor != null)
+                {
+                    Object.DestroyImmediate(previousEditor);
+                }
+                previousEditor = CreateEditorWithContext(targetObjects, context, editorType);
+            }
+        }
+
+        public static void CreateCachedEditor(Object targetObject, Type editorType, ref Editor previousEditor)
+        {
+            Object[] targetObjects = new Object[] { targetObject };
+            CreateCachedEditorWithContext(targetObjects, null, editorType, ref previousEditor);
+        }
+
+        public static void CreateCachedEditor(Object[] targetObjects, Type editorType, ref Editor previousEditor)
+        {
+            CreateCachedEditorWithContext(targetObjects, null, editorType, ref previousEditor);
+        }
+
         /// <summary>
         /// <para>Make a custom editor for targetObject or targetObjects.</para>
         /// </summary>
@@ -53,18 +98,9 @@
         public static Editor CreateEditor(Object targetObject, [DefaultValue("null")] Type editorType)
         {
             Object[] targetObjects = new Object[] { targetObject };
-            return CreateEditor(targetObjects, editorType);
+            return CreateEditorWithContext(targetObjects, null, editorType);
         }
 
-        /// <summary>
-        /// <para>Make a custom editor for targetObject or targetObjects.</para>
-        /// </summary>
-        /// <param name="objects">All objects must be of same exact type.</param>
-        /// <param name="targetObject"></param>
-        /// <param name="editorType"></param>
-        /// <param name="targetObjects"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern Editor CreateEditor(Object[] targetObjects, [DefaultValue("null")] Type editorType);
         /// <summary>
         /// <para>Make a custom editor for targetObject or targetObjects.</para>
         /// </summary>
@@ -79,29 +115,15 @@
             return CreateEditor(targetObjects, editorType);
         }
 
-        public static void CreateCachedEditor(Object targetObject, Type editorType, ref Editor previousEditor)
-        {
-            if (((previousEditor == null) || (previousEditor.m_Targets.Length != 1)) || (previousEditor.m_Targets[0] != targetObject))
-            {
-                if (previousEditor != null)
-                {
-                    Object.DestroyImmediate(previousEditor);
-                }
-                previousEditor = CreateEditor(targetObject, editorType);
-            }
-        }
-
-        public static void CreateCachedEditor(Object[] targetObjects, Type editorType, ref Editor previousEditor)
-        {
-            if ((previousEditor == null) || !ArrayUtility.ArrayEquals<Object>(previousEditor.m_Targets, targetObjects))
-            {
-                if (previousEditor != null)
-                {
-                    Object.DestroyImmediate(previousEditor);
-                }
-                previousEditor = CreateEditor(targetObjects, editorType);
-            }
-        }
+        /// <summary>
+        /// <para>Make a custom editor for targetObject or targetObjects.</para>
+        /// </summary>
+        /// <param name="objects">All objects must be of same exact type.</param>
+        /// <param name="targetObject"></param>
+        /// <param name="editorType"></param>
+        /// <param name="targetObjects"></param>
+        public static Editor CreateEditor(Object[] targetObjects, [DefaultValue("null")] Type editorType) => 
+            CreateEditorWithContext(targetObjects, null, editorType);
 
         /// <summary>
         /// <para>The object being inspected.</para>
@@ -168,7 +190,7 @@
         {
             if (this.m_SerializedObject == null)
             {
-                this.m_SerializedObject = new SerializedObject(this.targets);
+                this.m_SerializedObject = new SerializedObject(this.targets, this.m_Context);
             }
             return this.m_SerializedObject;
         }
@@ -214,7 +236,7 @@
             }
             if (this.m_SerializedObject == null)
             {
-                this.m_SerializedObject = new SerializedObject(this.targets);
+                this.m_SerializedObject = new SerializedObject(this.targets, this.m_Context);
             }
             else
             {
@@ -298,6 +320,11 @@
         internal void InternalSetHidden(bool hidden)
         {
             this.hideInspector = hidden;
+        }
+
+        internal void InternalSetContextObject(Object context)
+        {
+            this.m_Context = context;
         }
 
         internal virtual bool GetOptimizedGUIBlock(bool isDirty, bool isVisible, out OptimizedGUIBlock block, out float height)
@@ -617,7 +644,7 @@
         {
             if (this.m_SerializedObject == null)
             {
-                this.m_SerializedObject = new SerializedObject(this.targets);
+                this.m_SerializedObject = new SerializedObject(this.targets, this.m_Context);
             }
             else
             {

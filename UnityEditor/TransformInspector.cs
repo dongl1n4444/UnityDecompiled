@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(Transform)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Transform))]
     internal class TransformInspector : Editor
     {
         private SerializedProperty m_Position;
@@ -56,7 +56,6 @@
             public string floatingPointWarning = LocalizationDatabase.GetLocalizedString("Due to floating-point precision limitations, it is recommended to bring the world coordinates of the GameObject within a smaller range.");
             public GUIContent positionContent = new GUIContent(LocalizationDatabase.GetLocalizedString("Position"), LocalizationDatabase.GetLocalizedString("The local position of this Game Object relative to the parent."));
             public GUIContent scaleContent = new GUIContent(LocalizationDatabase.GetLocalizedString("Scale"), LocalizationDatabase.GetLocalizedString("The local scaling of this Game Object relative to the parent."));
-            public GUIContent[] subLabels = new GUIContent[] { new GUIContent("X"), new GUIContent("Y") };
         }
     }
 }

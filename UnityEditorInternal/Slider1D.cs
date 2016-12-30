@@ -58,8 +58,8 @@
                         s_CurrentMousePosition += current.delta;
                         float num2 = Handles.SnapValue(HandleUtility.CalcLineTranslation(s_StartMousePosition, s_CurrentMousePosition, s_StartPosition, slideDirection), snap);
                         Vector3 vector = Handles.matrix.MultiplyVector(slideDirection);
-                        Vector3 v = Handles.s_Matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
-                        position = Handles.s_InverseMatrix.MultiplyPoint(v);
+                        Vector3 v = Handles.matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
+                        position = Handles.inverseMatrix.MultiplyPoint(v);
                         GUI.changed = true;
                         current.Use();
                     }
@@ -131,8 +131,8 @@
                         s_CurrentMousePosition += current.delta;
                         float num2 = Handles.SnapValue(HandleUtility.CalcLineTranslation(s_StartMousePosition, s_CurrentMousePosition, s_StartPosition, slideDirection), snap);
                         Vector3 vector = Handles.matrix.MultiplyVector(slideDirection);
-                        Vector3 v = Handles.s_Matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
-                        position = Handles.s_InverseMatrix.MultiplyPoint(v);
+                        Vector3 v = Handles.matrix.MultiplyPoint(s_StartPosition) + ((Vector3) (vector * num2));
+                        position = Handles.inverseMatrix.MultiplyPoint(v);
                         GUI.changed = true;
                         current.Use();
                     }

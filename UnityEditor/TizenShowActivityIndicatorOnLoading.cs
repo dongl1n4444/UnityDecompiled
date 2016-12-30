@@ -8,7 +8,7 @@
     public enum TizenShowActivityIndicatorOnLoading
     {
         /// <summary>
-        /// <para>Sets your game to not show any indicator while loading.</para>
+        /// <para>Sets your game not to show any indicator while loading.</para>
         /// </summary>
         DontShow = -1,
         /// <summary>

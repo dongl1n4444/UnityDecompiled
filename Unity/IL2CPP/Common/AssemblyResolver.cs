@@ -1,11 +1,12 @@
 ﻿namespace Unity.IL2CPP.Common
 {
     using Mono.Cecil;
+    using Mono.Cecil.Cil;
     using NiceIO;
     using System;
     using System.Collections.Generic;
 
-    public sealed class AssemblyResolver : Unity.IL2CPP.Common.IAssemblyResolver, Mono.Cecil.IAssemblyResolver
+    public sealed class AssemblyResolver : Unity.IL2CPP.Common.IAssemblyResolver, IDisposable, Mono.Cecil.IAssemblyResolver
     {
         private readonly Dictionary<string, AssemblyDefinition> _assemblies;
         private readonly AssemblyLoader _assemblyLoader;
@@ -29,12 +30,32 @@
 
         public void CacheAssembly(AssemblyDefinition assembly)
         {
-            if (this._assemblies.ContainsKey(assembly.Name.Name))
+            this.CacheAssembly(assembly.Name.Name, assembly);
+        }
+
+        public void CacheAssembly(string name, AssemblyDefinition assembly)
+        {
+            if (this._assemblies.ContainsKey(name))
             {
-                throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[assembly.Name.Name].MainModule.FullyQualifiedName, assembly.MainModule.FullyQualifiedName));
+                throw new Exception(string.Format("Duplicate assembly found. These modules contain assemblies with same names:{0}\t{1}{0}\t{2}", Environment.NewLine, this._assemblies[name].MainModule.FullyQualifiedName, assembly.MainModule.FullyQualifiedName));
             }
-            this._assemblies.Add(assembly.Name.Name, assembly);
-            this._searchDirectories.Add(assembly.MainModule.FullyQualifiedName.ToNPath().Parent);
+            this._assemblies.Add(name, assembly);
+            if (assembly.MainModule.FullyQualifiedName != null)
+            {
+                this._searchDirectories.Add(assembly.MainModule.FullyQualifiedName.ToNPath().Parent);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (AssemblyDefinition definition in this._assemblies.Values)
+            {
+                ISymbolReader symbolReader = definition.MainModule.SymbolReader;
+                if (symbolReader != null)
+                {
+                    symbolReader.Dispose();
+                }
+            }
         }
 
         public IEnumerable<NPath> GetSearchDirectories() => 

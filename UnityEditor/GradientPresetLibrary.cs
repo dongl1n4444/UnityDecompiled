@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using UnityEditorInternal;
     using UnityEngine;
 
     internal class GradientPresetLibrary : PresetLibrary
@@ -71,7 +70,7 @@
         {
             if (gradient != null)
             {
-                GradientEditor.DrawGradientWithBackground(rect, GradientPreviewCache.GetGradientPreview(gradient));
+                GradientEditor.DrawGradientWithBackground(rect, gradient);
             }
         }
 

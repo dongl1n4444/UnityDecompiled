@@ -199,7 +199,7 @@
             }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Assert.Equals should not be used for Assertions", true)]
+        [Obsolete("Assert.Equals should not be used for Assertions", true), EditorBrowsable(EditorBrowsableState.Never)]
         public static bool Equals(object obj1, object obj2)
         {
             throw new InvalidOperationException("Assert.Equals should not be used for Assertions");
@@ -332,7 +332,7 @@
             }
         }
 
-        [Obsolete("Assert.ReferenceEquals should not be used for Assertions", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Assert.ReferenceEquals should not be used for Assertions", true)]
         public static bool ReferenceEquals(object obj1, object obj2)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions");

@@ -68,7 +68,7 @@
             int length = objArray.Length;
             while (num < length)
             {
-                mapper = $adaptor$__EvaluationContextNamespace_Resolve$callable15$92_13__$EntityMapper$5.Adapt(new __EvaluationContextNamespace_Resolve$callable15$92_13__(new $Resolve$closure$211(objArray, num, this).Invoke));
+                mapper = $adaptor$__EvaluationContextNamespace_Resolve$callable15$92_13__$EntityMapper$5.Adapt(new __EvaluationContextNamespace_Resolve$callable15$92_13__(new $Resolve$closure$211(num, this, objArray).Invoke));
                 type = this._tss.Map(objArray[num].GetType());
                 num++;
             }
@@ -98,19 +98,19 @@
         [Serializable]
         internal class $Resolve$closure$211
         {
-            internal int $$234$277;
-            internal object[] $$235$276;
-            internal EvaluationContextNamespace $this$278;
+            internal int $$234$276;
+            internal object[] $$235$278;
+            internal EvaluationContextNamespace $this$277;
 
-            public $Resolve$closure$211(object[] $$235$276, int $$234$277, EvaluationContextNamespace $this$278)
+            public $Resolve$closure$211(int $$234$276, EvaluationContextNamespace $this$277, object[] $$235$278)
             {
-                this.$$235$276 = $$235$276;
-                this.$$234$277 = $$234$277;
-                this.$this$278 = $this$278;
+                this.$$234$276 = $$234$276;
+                this.$this$277 = $this$277;
+                this.$$235$278 = $$235$278;
             }
 
             public ActiveScriptEntity Invoke(IEntity entity) => 
-                new ActiveScriptEntity(this.$this$278._context.GetActiveScriptId(this.$$235$276[this.$$234$277]), (IMember) entity);
+                new ActiveScriptEntity(this.$this$277._context.GetActiveScriptId(this.$$235$278[this.$$234$276]), (IMember) entity);
         }
 
         [Serializable, CompilerGenerated]

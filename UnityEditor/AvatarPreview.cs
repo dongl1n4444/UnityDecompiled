@@ -355,7 +355,7 @@
             UnityEngine.Animator component = go.GetComponent<UnityEngine.Animator>();
             if (component != null)
             {
-                Avatar avatar = component?.avatar;
+                Avatar avatar = component.avatar;
                 if ((avatar != null) && avatar.isHuman)
                 {
                     return ModelImporterAnimationType.Human;

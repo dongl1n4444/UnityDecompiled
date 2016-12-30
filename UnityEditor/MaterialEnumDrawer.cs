@@ -21,12 +21,12 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <MaterialEnumDrawer>m__0);
+                <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(MaterialEnumDrawer.<MaterialEnumDrawer>m__0);
             }
             Type[] typeArray = Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<Type>();
             try
             {
-                Type enumType = Enumerable.FirstOrDefault<Type>(typeArray, new Func<Type, bool>(storey, (IntPtr) this.<>m__0));
+                Type enumType = Enumerable.FirstOrDefault<Type>(typeArray, new Func<Type, bool>(storey.<>m__0));
                 string[] names = Enum.GetNames(enumType);
                 this.names = new GUIContent[names.Length];
                 for (int i = 0; i < names.Length; i++)

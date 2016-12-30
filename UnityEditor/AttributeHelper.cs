@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
@@ -22,45 +21,6 @@
                 arguments = arguments,
                 $PC = -2
             };
-
-        [RequiredByNativeCode]
-        private static MonoMenuItem[] ExtractContextMenu(Type type)
-        {
-            Dictionary<string, MonoMenuItem> dictionary = new Dictionary<string, MonoMenuItem>();
-            MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            for (int i = 0; i < methods.GetLength(0); i++)
-            {
-                MethodInfo mi = methods[i];
-                object[] customAttributes = mi.GetCustomAttributes(typeof(ContextMenu), false);
-                foreach (ContextMenu menu in customAttributes)
-                {
-                    MonoMenuItem item = !dictionary.ContainsKey(menu.menuItem) ? new MonoMenuItem() : dictionary[menu.menuItem];
-                    if (!ValidateMethodForMenuCommand(mi, true))
-                    {
-                        break;
-                    }
-                    item.menuItem = menu.menuItem;
-                    if (menu.validate)
-                    {
-                        item.validateType = type;
-                        item.validateMethod = mi;
-                        item.validateName = mi.Name;
-                    }
-                    else
-                    {
-                        item.index = i;
-                        item.priority = menu.priority;
-                        item.executeType = type;
-                        item.executeMethod = mi;
-                        item.executeName = mi.Name;
-                    }
-                    dictionary[menu.menuItem] = item;
-                }
-            }
-            MonoMenuItem[] array = dictionary.Values.ToArray<MonoMenuItem>();
-            Array.Sort(array, new CompareMenuIndex());
-            return array;
-        }
 
         [RequiredByNativeCode]
         private static MonoCreateAssetItem[] ExtractCreateAssetMenuItems(Assembly assembly)
@@ -151,74 +111,6 @@
             return list.ToArray();
         }
 
-        [RequiredByNativeCode]
-        private static MonoMenuItem[] ExtractMenuCommands(Assembly assembly, bool modifiedSinceLastReload)
-        {
-            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-            if (modifiedSinceLastReload)
-            {
-                bindingAttr |= BindingFlags.Instance;
-            }
-            bool @bool = EditorPrefs.GetBool("InternalMode", false);
-            Dictionary<string, MonoMenuItem> dictionary = new Dictionary<string, MonoMenuItem>();
-            Type[] typesFromAssembly = AssemblyHelper.GetTypesFromAssembly(assembly);
-            foreach (Type type in typesFromAssembly)
-            {
-                MethodInfo[] methods = type.GetMethods(bindingAttr);
-                for (int i = 0; i < methods.GetLength(0); i++)
-                {
-                    MethodInfo mi = methods[i];
-                    object[] customAttributes = mi.GetCustomAttributes(typeof(MenuItem), false);
-                    if ((customAttributes.Length > 0) && type.IsGenericTypeDefinition)
-                    {
-                        object[] args = new object[] { type.Name, mi.Name };
-                        Debug.LogWarningFormat("Method {0}.{1} cannot be used for menu commands because class {0} is an open generic type.", args);
-                    }
-                    else
-                    {
-                        foreach (MenuItem item in customAttributes)
-                        {
-                            MonoMenuItem item2 = !dictionary.ContainsKey(item.menuItem) ? new MonoMenuItem() : dictionary[item.menuItem];
-                            if (!ValidateMethodForMenuCommand(mi, false))
-                            {
-                                break;
-                            }
-                            if (item.menuItem.StartsWith("internal:", StringComparison.Ordinal))
-                            {
-                                if (!@bool)
-                                {
-                                    continue;
-                                }
-                                item2.menuItem = item.menuItem.Substring(9);
-                            }
-                            else
-                            {
-                                item2.menuItem = item.menuItem;
-                            }
-                            if (item.validate)
-                            {
-                                item2.validateType = type;
-                                item2.validateMethod = mi;
-                                item2.validateName = mi.Name;
-                            }
-                            else
-                            {
-                                item2.index = i;
-                                item2.priority = item.priority;
-                                item2.executeType = type;
-                                item2.executeMethod = mi;
-                                item2.executeName = mi.Name;
-                            }
-                            dictionary[item.menuItem] = item2;
-                        }
-                    }
-                }
-            }
-            MonoMenuItem[] array = dictionary.Values.ToArray<MonoMenuItem>();
-            Array.Sort(array, new CompareMenuIndex());
-            return array;
-        }
-
         internal static bool GameObjectContainsAttribute(GameObject go, Type attributeType)
         {
             foreach (Component component in go.GetComponents(typeof(Component)))
@@ -255,13 +147,6 @@
             return 0;
         }
 
-        [RequiredByNativeCode]
-        internal static string GetHelpURLFromAttribute(Type objectType)
-        {
-            HelpURLAttribute customAttribute = (HelpURLAttribute) Attribute.GetCustomAttribute(objectType, typeof(HelpURLAttribute));
-            return customAttribute?.URL;
-        }
-
         internal static object InvokeMemberIfAvailable(object target, string methodName, object[] args)
         {
             MethodInfo method = target.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
@@ -270,38 +155,6 @@
                 return method.Invoke(target, args);
             }
             return null;
-        }
-
-        private static bool ValidateMethodForMenuCommand(MethodInfo mi, bool contextMenu)
-        {
-            if (contextMenu)
-            {
-                if (mi.IsStatic)
-                {
-                    object[] args = new object[] { mi.DeclaringType.FullName, mi.Name };
-                    Debug.LogWarningFormat("Method {0}.{1} is static and cannot be used for context menu commands.", args);
-                    return false;
-                }
-            }
-            else if (!mi.IsStatic)
-            {
-                object[] objArray2 = new object[] { mi.DeclaringType.FullName, mi.Name };
-                Debug.LogWarningFormat("Method {0}.{1} is not static and cannot be used for menu commands.", objArray2);
-                return false;
-            }
-            if (mi.IsGenericMethod)
-            {
-                object[] objArray3 = new object[] { mi.DeclaringType.FullName, mi.Name };
-                Debug.LogWarningFormat("Method {0}.{1} is generic and cannot be used for menu commands.", objArray3);
-                return false;
-            }
-            if ((mi.GetParameters().Length > 1) || ((mi.GetParameters().Length == 1) && (mi.GetParameters()[0].ParameterType != typeof(MenuCommand))))
-            {
-                object[] objArray4 = new object[] { mi.DeclaringType.FullName, mi.Name };
-                Debug.LogWarningFormat("Method {0}.{1} has invalid parameters. MenuCommand is the only optional supported parameter.", objArray4);
-                return false;
-            }
-            return true;
         }
 
         [CompilerGenerated]
@@ -316,9 +169,9 @@
             internal MethodInfo[] $locvar4;
             internal int $locvar5;
             internal int $PC;
-            internal Assembly <assembly>__0;
-            internal MethodInfo <method>__2;
-            internal Type <type>__1;
+            internal Assembly <assembly>__1;
+            internal MethodInfo <method>__3;
+            internal Type <type>__2;
             internal object[] arguments;
             internal Type attributeType;
 
@@ -340,20 +193,20 @@
                         this.$locvar1 = 0;
                         while (this.$locvar1 < this.$locvar0.Length)
                         {
-                            this.<assembly>__0 = this.$locvar0[this.$locvar1];
-                            this.$locvar2 = this.<assembly>__0.GetTypes();
+                            this.<assembly>__1 = this.$locvar0[this.$locvar1];
+                            this.$locvar2 = this.<assembly>__1.GetTypes();
                             this.$locvar3 = 0;
                             while (this.$locvar3 < this.$locvar2.Length)
                             {
-                                this.<type>__1 = this.$locvar2[this.$locvar3];
-                                this.$locvar4 = this.<type>__1.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+                                this.<type>__2 = this.$locvar2[this.$locvar3];
+                                this.$locvar4 = this.<type>__2.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                                 this.$locvar5 = 0;
                                 while (this.$locvar5 < this.$locvar4.Length)
                                 {
-                                    this.<method>__2 = this.$locvar4[this.$locvar5];
-                                    if (this.<method>__2.GetCustomAttributes(this.attributeType, false).Length > 0)
+                                    this.<method>__3 = this.$locvar4[this.$locvar5];
+                                    if (this.<method>__3.GetCustomAttributes(this.attributeType, false).Length > 0)
                                     {
-                                        this.$current = (T) this.<method>__2.Invoke(null, this.arguments);
+                                        this.$current = (T) this.<method>__3.Invoke(null, this.arguments);
                                         if (!this.$disposing)
                                         {
                                             this.$PC = 1;
@@ -406,20 +259,6 @@
                 this.$current;
         }
 
-        internal class CompareMenuIndex : IComparer
-        {
-            int IComparer.Compare(object xo, object yo)
-            {
-                AttributeHelper.MonoMenuItem item = (AttributeHelper.MonoMenuItem) xo;
-                AttributeHelper.MonoMenuItem item2 = (AttributeHelper.MonoMenuItem) yo;
-                if (item.priority != item2.priority)
-                {
-                    return item.priority.CompareTo(item2.priority);
-                }
-                return item.index.CompareTo(item2.index);
-            }
-        }
-
         [StructLayout(LayoutKind.Sequential)]
         private struct MonoCreateAssetItem
         {
@@ -435,20 +274,6 @@
             public MethodInfo drawGizmo;
             public Type drawnType;
             public int options;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct MonoMenuItem
-        {
-            public string menuItem;
-            public int index;
-            public int priority;
-            public Type executeType;
-            public MethodInfo executeMethod;
-            public string executeName;
-            public Type validateType;
-            public MethodInfo validateMethod;
-            public string validateName;
         }
     }
 }

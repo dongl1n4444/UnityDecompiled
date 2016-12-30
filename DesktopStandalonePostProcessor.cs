@@ -142,7 +142,7 @@ internal abstract class DesktopStandalonePostProcessor
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <CopyStagingAreaIntoDestination>m__2);
+                <>f__am$cache1 = f => true;
             }
             FileUtil.CopyDirectoryFiltered(this.DataFolder, path, true, <>f__am$cache1, true);
         }
@@ -151,7 +151,7 @@ internal abstract class DesktopStandalonePostProcessor
             this.DeleteDestination();
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, bool>(null, (IntPtr) <CopyStagingAreaIntoDestination>m__3);
+                <>f__am$cache2 = f => true;
             }
             FileUtil.CopyDirectoryFiltered(this.StagingArea, this.DestinationFolder, true, <>f__am$cache2, true);
         }
@@ -159,7 +159,7 @@ internal abstract class DesktopStandalonePostProcessor
 
     protected virtual void CopyVariationFolderIntoStagingArea()
     {
-        FileUtil.CopyDirectoryFiltered(this.m_PostProcessArgs.playerPackage + "/Variations/" + this.GetVariationName(), this.StagingArea, true, new Func<string, bool>(this, (IntPtr) this.<CopyVariationFolderIntoStagingArea>m__1), true);
+        FileUtil.CopyDirectoryFiltered(this.m_PostProcessArgs.playerPackage + "/Variations/" + this.GetVariationName(), this.StagingArea, true, (Func<string, bool>) (f => this.CopyFilter(f)), true);
     }
 
     protected void CreateApplicationData()
@@ -202,7 +202,7 @@ internal abstract class DesktopStandalonePostProcessor
                 <>f__am$cache0 = delegate (string s) {
                 };
             }
-            IL2CPPUtils.RunIl2Cpp(stagingAreaData, this.GetPlatformProvider(this.m_PostProcessArgs.target), <>f__am$cache0, this.m_PostProcessArgs.usedClassRegistry, this.Development);
+            IL2CPPUtils.RunIl2Cpp(stagingAreaData, this.GetPlatformProvider(this.m_PostProcessArgs.target), <>f__am$cache0, this.m_PostProcessArgs.usedClassRegistry, false);
             FileUtil.CreateOrCleanDirectory(dir);
             IL2CPPUtils.CopyEmbeddedResourceFiles(stagingAreaData, dir);
             FileUtil.CreateOrCleanDirectory(str4);

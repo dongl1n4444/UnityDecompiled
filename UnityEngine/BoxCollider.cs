@@ -3,19 +3,20 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A box-shaped primitive collider.</para>
     /// </summary>
     public sealed class BoxCollider : Collider
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_center(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_size(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_center(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_size(ref Vector3 value);
 
         /// <summary>

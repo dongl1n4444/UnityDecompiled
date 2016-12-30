@@ -114,7 +114,7 @@
                 this.m_NeedRefreshRows = false;
                 if (this.onVisibleRowsChanged != null)
                 {
-                    this.onVisibleRowsChanged.Invoke();
+                    this.onVisibleRowsChanged();
                 }
                 this.m_TreeView.Repaint();
             }
@@ -150,7 +150,7 @@
         {
             if (this.m_TreeView.expandedStateChanged != null)
             {
-                this.m_TreeView.expandedStateChanged.Invoke();
+                this.m_TreeView.expandedStateChanged();
             }
         }
 
@@ -163,7 +163,7 @@
             this.m_NeedRefreshRows = true;
         }
 
-        public void ReloadData()
+        public virtual void ReloadData()
         {
             this.m_FakeItem = null;
             this.FetchData();
@@ -310,6 +310,9 @@
                 this.m_TreeView.state.expandedIDs = value;
             }
         }
+
+        public bool isInitialized =>
+            ((this.m_RootItem != null) && (this.m_Rows != null));
 
         public TreeViewItem root =>
             this.m_RootItem;

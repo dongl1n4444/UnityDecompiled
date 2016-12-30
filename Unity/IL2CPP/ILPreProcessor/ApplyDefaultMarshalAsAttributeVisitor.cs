@@ -1,19 +1,32 @@
 ﻿namespace Unity.IL2CPP.ILPreProcessor
 {
     using Mono.Cecil;
+    using Mono.Cecil.Rocks;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Unity.Cecil.Visitor;
     using Unity.IL2CPP;
 
-    public sealed class ApplyDefaultMarshalAsAttributeVisitor : Unity.Cecil.Visitor.Visitor
+    public sealed class ApplyDefaultMarshalAsAttributeVisitor
     {
         [CompilerGenerated]
         private static Func<MethodDefinition, MethodReturnType> <>f__am$cache0;
         [CompilerGenerated]
         private static Func<MethodDefinition, IEnumerable<ParameterDefinition>> <>f__am$cache1;
+
+        public void Process(AssemblyDefinition assembly)
+        {
+            foreach (TypeDefinition definition in assembly.MainModule.GetAllTypes())
+            {
+                if (definition.IsWindowsRuntime)
+                {
+                    break;
+                }
+                ProcessFields(definition);
+                ProcessMethods(definition);
+            }
+        }
 
         private static void ProcessBoolean(TypeReference type, IMarshalInfoProvider provider, NativeType nativeType)
         {
@@ -58,7 +71,7 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, MethodReturnType>(null, (IntPtr) <ProcessMethods>m__0);
+                <>f__am$cache0 = m => m.MethodReturnType;
             }
             foreach (MethodReturnType type2 in type.Methods.Select<MethodDefinition, MethodReturnType>(<>f__am$cache0))
             {
@@ -70,9 +83,9 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodDefinition, IEnumerable<ParameterDefinition>>(null, (IntPtr) <ProcessMethods>m__1);
+                <>f__am$cache1 = m => m.Parameters;
             }
-            IEnumerable<ParameterDefinition> enumerable = type.Methods.Where<MethodDefinition>(new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__0)).SelectMany<MethodDefinition, ParameterDefinition>(<>f__am$cache1);
+            IEnumerable<ParameterDefinition> enumerable = type.Methods.Where<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__0)).SelectMany<MethodDefinition, ParameterDefinition>(<>f__am$cache1);
             foreach (ParameterDefinition definition in enumerable)
             {
                 ProcessObject(definition.ParameterType, definition, NativeType.Struct);
@@ -101,15 +114,6 @@
                 {
                     marshalInfo.ElementType = nativeType;
                 }
-            }
-        }
-
-        protected override void Visit(TypeDefinition typeDefinition, Unity.Cecil.Visitor.Context context)
-        {
-            if (!typeDefinition.IsWindowsRuntime)
-            {
-                ProcessFields(typeDefinition);
-                ProcessMethods(typeDefinition);
             }
         }
 

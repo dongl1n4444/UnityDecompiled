@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class to build avatars from user scripts.</para>
@@ -13,7 +14,7 @@
         /// </summary>
         /// <param name="go">Root object of your transform hierarchy.</param>
         /// <param name="rootMotionTransformName">Transform name of the root motion transform. If empty no root motion is defined and you must take care of avatar movement yourself.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Avatar BuildGenericAvatar(GameObject go, string rootMotionTransformName);
         /// <summary>
         /// <para>Create a humanoid avatar.</para>
@@ -35,7 +36,7 @@
         private static Avatar BuildHumanAvatarMono(GameObject go, HumanDescription monoHumanDescription) => 
             INTERNAL_CALL_BuildHumanAvatarMono(go, ref monoHumanDescription);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Avatar INTERNAL_CALL_BuildHumanAvatarMono(GameObject go, ref HumanDescription monoHumanDescription);
     }
 }

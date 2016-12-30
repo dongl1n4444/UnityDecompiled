@@ -51,7 +51,7 @@
             {
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<int, bool>(null, (IntPtr) <get_ArrayDimension>m__2);
+                    <>f__am$cache2 = modifier => modifier > 0;
                 }
                 return this.Modifiers.Count<int>(<>f__am$cache2);
             }
@@ -70,7 +70,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <get_ElementTypeName>m__0);
+                    <>f__am$cache0 = (c, n) => c + "+" + n;
                 }
                 return this.Nested.Aggregate<string, string>(name, <>f__am$cache0);
             }
@@ -85,7 +85,7 @@
             {
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<int, bool>(null, (IntPtr) <get_IsArray>m__3);
+                    <>f__am$cache3 = m => m > 0;
                 }
                 return this.Modifiers.Any<int>(<>f__am$cache3);
             }
@@ -117,7 +117,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<int, bool>(null, (IntPtr) <get_Ranks>m__1);
+                    <>f__am$cache1 = m => m > 0;
                 }
                 return this.Modifiers.Where<int>(<>f__am$cache1).ToArray<int>();
             }

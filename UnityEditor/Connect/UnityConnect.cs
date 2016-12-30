@@ -5,6 +5,7 @@
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Web;
+    using UnityEngine.Scripting;
 
     [InitializeOnLoad]
     internal sealed class UnityConnect
@@ -26,26 +27,26 @@
         {
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void BindProject(string projectGUID, string projectName, string organizationId);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearAccessToken();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearCache();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearErrors();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ComputerDidWakeUp();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ComputerGoesToSleep();
         public bool DisplayDialog(string title, string message, string okBtn, string cancelBtn) => 
             EditorUtility.DisplayDialog(title, message, okBtn, cancelBtn);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetAccessToken();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetAPIVersion();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetConfigurationURL(CloudConfigUrl config);
         public string GetConfigurationUrlByIndex(int index)
         {
@@ -82,34 +83,34 @@
         public string GetCoreConfigurationUrl() => 
             this.GetConfigurationURL(CloudConfigUrl.CloudCore);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetEnvironment();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetOrganizationForeignKey();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetOrganizationId();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetOrganizationName();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetProjectGUID();
         public ProjectInfo GetProjectInfo() => 
             this.projectInfo;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetProjectName();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetUserId();
         public UserInfo GetUserInfo() => 
             this.userInfo;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetUserName();
         public void GoToHub(string page)
         {
             UnityConnectServiceCollection.instance.ShowService("Hub", page, true);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Logout();
         private static void OnProjectStateChanged()
         {
@@ -138,16 +139,16 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void OpenAuthorizedURLInWebBrowser(string url);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RefreshProject();
         public bool SetCOPPACompliance(int compliance) => 
             this.SetCOPPACompliance((COPPACompliance) compliance);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetCOPPACompliance(COPPACompliance compliance);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ShowLogin();
         [MenuItem("Window/Unity Connect/Reset AccessToken", false, 0x3e8, true)]
         public static void TestClearAccessToken()
@@ -167,7 +168,7 @@
             instance.ComputerGoesToSleep();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void UnbindCloudProject();
         public void UnbindProject()
         {
@@ -175,41 +176,41 @@
             UnityConnectServiceCollection.instance.UnbindAllServices();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UnhandledError(string request, int responseCode, string response);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void WorkOffline(bool rememberDecision);
 
-        public bool canBuildWithUPID { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool canBuildWithUPID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public string configuration { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string configuration { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public ConnectInfo connectInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ConnectInfo connectInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public static UnityConnect instance =>
             s_Instance;
 
-        public int lastErrorCode { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int lastErrorCode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public string lastErrorMessage { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string lastErrorMessage { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public bool loggedIn { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool loggedIn { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public bool online { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool online { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool preferencesEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool preferencesEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public ProjectInfo projectInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ProjectInfo projectInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public bool projectValid { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool projectValid { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public bool shouldShowServicesWindow { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool shouldShowServicesWindow { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool skipMissingUPID { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool skipMissingUPID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public UserInfo userInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public UserInfo userInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public bool workingOffline { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool workingOffline { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

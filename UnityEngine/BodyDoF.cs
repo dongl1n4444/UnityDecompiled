@@ -10,6 +10,9 @@
         ChestFrontBack,
         ChestLeftRight,
         ChestRollLeftRight,
+        UpperChestFrontBack,
+        UpperChestLeftRight,
+        UpperChestRollLeftRight,
         LastBodyDoF
     }
 }

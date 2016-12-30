@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -19,7 +20,7 @@
             Internal_Create(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void AddBehaviour(int instanceID);
         /// <summary>
         /// <para>Utility function to add an outgoing transition to the exit of the state's parent state machine.</para>
@@ -165,17 +166,17 @@
             return new List<AnimatorStateTransition>(this.transitions).Find(new Predicate<AnimatorStateTransition>(storey.<>m__0));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern MonoScript GetBehaviourMonoScript(int index);
         [Obsolete("GetMotion() is obsolete. Use motion", true)]
         public Motion GetMotion() => 
             null;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create(AnimatorState mono);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveBehaviour(int index);
         /// <summary>
         /// <para>Utility function to remove a transition from the state.</para>
@@ -207,53 +208,53 @@
         /// <summary>
         /// <para>The Behaviour list assigned to this state.</para>
         /// </summary>
-        public StateMachineBehaviour[] behaviours { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public StateMachineBehaviour[] behaviours { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Offset at which the animation loop starts. Useful for synchronizing looped animations.
         /// Units is normalized time.</para>
         /// </summary>
-        public float cycleOffset { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float cycleOffset { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The animator controller parameter that drives the cycle offset value.</para>
         /// </summary>
-        public string cycleOffsetParameter { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string cycleOffsetParameter { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Define if the cycle offset value is driven by an Animator controller parameter or by the value set in the editor.</para>
         /// </summary>
-        public bool cycleOffsetParameterActive { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool cycleOffsetParameterActive { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should Foot IK be respected for this state.</para>
         /// </summary>
-        public bool iKOnFeet { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool iKOnFeet { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the state be mirrored.</para>
         /// </summary>
-        public bool mirror { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool mirror { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The animator controller parameter that drives the mirror value.</para>
         /// </summary>
-        public string mirrorParameter { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string mirrorParameter { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Define if the mirror value is driven by an Animator controller parameter or by the value set in the editor.</para>
         /// </summary>
-        public bool mirrorParameterActive { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool mirrorParameterActive { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The motion assigned to this state.</para>
         /// </summary>
-        public Motion motion { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Motion motion { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The hashed name of the state.</para>
         /// </summary>
-        public int nameHash { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int nameHash { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal bool pushUndo
         {
@@ -266,27 +267,27 @@
         /// <summary>
         /// <para>The default speed of the motion.</para>
         /// </summary>
-        public float speed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float speed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The animator controller parameter that drives the speed value.</para>
         /// </summary>
-        public string speedParameter { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string speedParameter { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Define if the speed value is driven by an Animator controller parameter or by the value set in the editor.</para>
         /// </summary>
-        public bool speedParameterActive { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool speedParameterActive { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>A tag can be used to identify a state.</para>
         /// </summary>
-        public string tag { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string tag { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The transitions that are going out of the state.</para>
         /// </summary>
-        public AnimatorStateTransition[] transitions { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AnimatorStateTransition[] transitions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("uniqueName does not exist anymore. Consider using .name instead.", true)]
         public string uniqueName =>
@@ -299,7 +300,7 @@
         /// <summary>
         /// <para>Whether or not the AnimatorStates writes back the default values for properties that are not animated by its Motion.</para>
         /// </summary>
-        public bool writeDefaultValues { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool writeDefaultValues { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [CompilerGenerated]
         private sealed class <FindTransition>c__AnonStorey0

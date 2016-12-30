@@ -38,7 +38,6 @@
         private static Func<CustomAttributeNamedArgument, bool> <>f__mg$cache4;
         [CompilerGenerated]
         private static Func<CustomAttributeNamedArgument, bool> <>f__mg$cache5;
-        public static IGenericSharingAnalysisService GenericSharing;
         [Inject]
         public static INamingService Naming;
         [Inject]
@@ -58,9 +57,9 @@
             };
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <CustomAttributeConstructorFormattedArgumentsFor>m__3);
+                <>f__am$cache3 = (buff, s) => buff + ", " + s;
             }
-            return storey.attribute.ConstructorArguments.Select<CustomAttributeArgument, string>(new Func<CustomAttributeArgument, string>(storey, (IntPtr) this.<>m__0)).Aggregate<string, string>("tmp", <>f__am$cache3);
+            return storey.attribute.ConstructorArguments.Select<CustomAttributeArgument, string>(new Func<CustomAttributeArgument, string>(storey.<>m__0)).Aggregate<string, string>("tmp", <>f__am$cache3);
         }
 
         private static void DeclareTempLocals(CppCodeWriter writer, CustomAttribute attribute, IRuntimeMetadataAccess metadataAccess)
@@ -73,7 +72,7 @@
         {
             if (<>f__mg$cache3 == null)
             {
-                <>f__mg$cache3 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) ValueIsArray);
+                <>f__mg$cache3 = new Func<CustomAttributeArgument, bool>(AttributesSupport.ValueIsArray);
             }
             foreach (CustomAttributeArgument argument in attribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__mg$cache3))
             {
@@ -81,7 +80,7 @@
             }
             if (<>f__mg$cache4 == null)
             {
-                <>f__mg$cache4 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueIsArray);
+                <>f__mg$cache4 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueIsArray);
             }
             foreach (CustomAttributeNamedArgument argument2 in attribute.Fields.Where<CustomAttributeNamedArgument>(<>f__mg$cache4))
             {
@@ -90,7 +89,7 @@
             }
             if (<>f__mg$cache5 == null)
             {
-                <>f__mg$cache5 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueIsArray);
+                <>f__mg$cache5 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueIsArray);
             }
             foreach (CustomAttributeNamedArgument argument3 in attribute.Properties.Where<CustomAttributeNamedArgument>(<>f__mg$cache5))
             {
@@ -103,7 +102,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
+                <>f__mg$cache0 = new Func<CustomAttributeArgument, bool>(AttributesSupport.ValueNeedsBoxing);
             }
             foreach (CustomAttributeArgument argument in attribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__mg$cache0))
             {
@@ -112,7 +111,7 @@
             }
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
+                <>f__mg$cache1 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueNeedsBoxing);
             }
             foreach (CustomAttributeNamedArgument argument2 in attribute.Fields.Where<CustomAttributeNamedArgument>(<>f__mg$cache1))
             {
@@ -121,7 +120,7 @@
             }
             if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache2 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
+                <>f__mg$cache2 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueNeedsBoxing);
             }
             foreach (CustomAttributeNamedArgument argument4 in attribute.Properties.Where<CustomAttributeNamedArgument>(<>f__mg$cache2))
             {
@@ -417,7 +416,7 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <WriteAttributes>m__0);
+                <>f__am$cache0 = a => a;
             }
             return MetadataWriter.WriteTable<string>(this._writer, "extern const CustomAttributesCacheGenerator", "g_AttributeGenerators", this._collection.GetEntries(), <>f__am$cache0);
         }
@@ -478,7 +477,7 @@
                     }
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<CustomAttributeNamedArgument, CustomAttributeArgument>(null, (IntPtr) <WriteCustomAttributesCacheGeneratorFor>m__1);
+                        <>f__am$cache1 = f => f.Argument;
                     }
                     foreach (TypeReference reference2 in ExtractTypeReferencesFromCustomAttributeArguments(attribute.Fields.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(<>f__am$cache1)))
                     {
@@ -489,7 +488,7 @@
                     }
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<CustomAttributeNamedArgument, CustomAttributeArgument>(null, (IntPtr) <WriteCustomAttributesCacheGeneratorFor>m__2);
+                        <>f__am$cache2 = p => p.Argument;
                     }
                     foreach (TypeReference reference3 in ExtractTypeReferencesFromCustomAttributeArguments(attribute.Properties.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(<>f__am$cache2)))
                     {
@@ -506,12 +505,12 @@
                             <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey2 = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
                                 property = enumerator4.Current
                             };
-                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
+                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
                             this._writer.AddIncludeForMethodDeclarations(setMethod.DeclaringType);
                         }
                     }
                 }
-                MethodWriter.WriteMethodWithMetadataInitialization(this._writer, $"static void {name}(CustomAttributesCache* cache)", name, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), name);
+                MethodWriter.WriteMethodWithMetadataInitialization(this._writer, $"static void {name}(CustomAttributesCache* cache)", name, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey.<>m__0), name);
             }
         }
 
@@ -593,7 +592,7 @@
                         <WriteMethodBody>c__AnonStorey3 storey = new <WriteMethodBody>c__AnonStorey3 {
                             fieldArgument = enumerator2.Current
                         };
-                        object[] objArray3 = new object[] { Naming.ForFieldSetter(source.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
+                        object[] objArray3 = new object[] { Naming.ForFieldSetter(source.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
                         writer.WriteLine("tmp->{0}({1});", objArray3);
                     }
                 }
@@ -605,7 +604,7 @@
                         <WriteMethodBody>c__AnonStorey4 storey2 = new <WriteMethodBody>c__AnonStorey4 {
                             propertyArgument = enumerator3.Current
                         };
-                        MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
+                        MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
                         object[] objArray4 = new object[] { Naming.ForMethodNameOnly(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
                         writer.WriteLine("{0}(tmp, {1}, {2});", objArray4);
                     }
@@ -668,10 +667,10 @@
             internal IEnumerator<CustomAttributeArgument> $locvar0;
             internal IEnumerator<TypeReference> $locvar1;
             internal int $PC;
-            internal CustomAttributeArgument <argument>__0;
-            internal MetadataType <metadataType>__1;
-            internal TypeReference <val>__2;
-            internal CustomAttributeArgument <value>__3;
+            internal CustomAttributeArgument <argument>__1;
+            internal MetadataType <metadataType>__2;
+            internal TypeReference <val>__3;
+            internal CustomAttributeArgument <value>__4;
             internal IEnumerable<CustomAttributeArgument> arguments;
 
             [DebuggerHidden]
@@ -750,7 +749,7 @@
                             goto Label_0121;
 
                         case 2:
-                            this.$locvar1 = AttributesSupport.ExtractTypeReferencesFromCustomAttributeArguments((IEnumerable<CustomAttributeArgument>) this.<argument>__0.Value).GetEnumerator();
+                            this.$locvar1 = AttributesSupport.ExtractTypeReferencesFromCustomAttributeArguments((IEnumerable<CustomAttributeArgument>) this.<argument>__1.Value).GetEnumerator();
                             num = 0xfffffffd;
                             goto Label_0176;
 
@@ -765,21 +764,21 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<argument>__0 = this.$locvar0.Current;
-                        this.<metadataType>__1 = this.<argument>__0.Type.MetadataType;
-                        if ((this.<argument>__0.Type.MetadataType == MetadataType.Class) && this.<argument>__0.Type.IsEnum())
+                        this.<argument>__1 = this.$locvar0.Current;
+                        this.<metadataType>__2 = this.<argument>__1.Type.MetadataType;
+                        if ((this.<argument>__1.Type.MetadataType == MetadataType.Class) && this.<argument>__1.Type.IsEnum())
                         {
-                            this.<metadataType>__1 = MetadataType.ValueType;
+                            this.<metadataType>__2 = MetadataType.ValueType;
                         }
-                        if (this.<metadataType>__1 != MetadataType.Array)
+                        if (this.<metadataType>__2 != MetadataType.Array)
                         {
-                            if (this.<metadataType>__1 == MetadataType.Object)
+                            if (this.<metadataType>__2 == MetadataType.Object)
                             {
                                 goto Label_01EF;
                             }
                             continue;
                         }
-                        this.$current = (ArrayType) this.<argument>__0.Type;
+                        this.$current = (ArrayType) this.<argument>__1.Type;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -787,7 +786,7 @@
                         flag = true;
                         goto Label_02A9;
                     Label_0121:
-                        this.$current = ((ArrayType) this.<argument>__0.Type).ElementType;
+                        this.$current = ((ArrayType) this.<argument>__1.Type).ElementType;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -799,8 +798,8 @@
                         {
                             while (this.$locvar1.MoveNext())
                             {
-                                this.<val>__2 = this.$locvar1.Current;
-                                this.$current = this.<val>__2;
+                                this.<val>__3 = this.$locvar1.Current;
+                                this.$current = this.<val>__3;
                                 if (!this.$disposing)
                                 {
                                     this.$PC = 3;
@@ -821,10 +820,10 @@
                         }
                         continue;
                     Label_01EF:
-                        this.<value>__3 = (CustomAttributeArgument) this.<argument>__0.Value;
-                        if (this.<value>__3.Type.MetadataType == MetadataType.String)
+                        this.<value>__4 = (CustomAttributeArgument) this.<argument>__1.Value;
+                        if (this.<value>__4.Type.MetadataType == MetadataType.String)
                         {
-                            this.$current = this.<value>__3.Type;
+                            this.$current = this.<value>__4.Type;
                             if (!this.$disposing)
                             {
                                 this.$PC = 4;
@@ -833,7 +832,7 @@
                             goto Label_02A9;
                         }
                     Label_0243:
-                        this.$current = this.<value>__3.Type;
+                        this.$current = this.<value>__4.Type;
                         if (!this.$disposing)
                         {
                             this.$PC = 5;

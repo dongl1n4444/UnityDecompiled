@@ -12,7 +12,7 @@
     {
         public static void ForEach<TSource>(IEnumerable<TSource> source, Action<TSource> action, Func<bool, bool> shouldForceSerialCallback = null, bool loadBalance = true, bool betaTag = false)
         {
-            if ((shouldForceSerialCallback != null) && shouldForceSerialCallback.Invoke(betaTag))
+            if ((shouldForceSerialCallback != null) && shouldForceSerialCallback(betaTag))
             {
                 foreach (TSource local in source)
                 {
@@ -29,7 +29,7 @@
         {
             if (loadBalance)
             {
-                Parallel.ForEach<TSource>(Partitioner.Create<TSource>(source.ToList<TSource>(), true), action);
+                Parallel.ForEach<TSource>((Partitioner<TSource>) Partitioner.Create<TSource>((IList<TSource>) source.ToList<TSource>(), true), action);
             }
             else
             {
@@ -39,7 +39,7 @@
 
         public static IEnumerable<TResult> Select<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> func, Func<bool, bool> shouldForceSerialCallback = null, bool loadBalance = true, bool betaTag = false)
         {
-            if ((shouldForceSerialCallback != null) && shouldForceSerialCallback.Invoke(betaTag))
+            if ((shouldForceSerialCallback != null) && shouldForceSerialCallback(betaTag))
             {
                 return source.Select<TSource, TResult>(func);
             }
@@ -54,7 +54,7 @@
             };
             if (loadBalance)
             {
-                Parallel.ForEach<TSource>(Partitioner.Create<TSource>(source.ToList<TSource>(), true), new Action<TSource>(storey.<>m__0));
+                Parallel.ForEach<TSource>((Partitioner<TSource>) Partitioner.Create<TSource>((IList<TSource>) source.ToList<TSource>(), true), new Action<TSource>(storey.<>m__0));
             }
             else
             {
@@ -71,7 +71,7 @@
 
             internal void <>m__0(TSource item)
             {
-                TResult local = this.func.Invoke(item);
+                TResult local = this.func(item);
                 object results = this.results;
                 lock (results)
                 {
@@ -81,7 +81,7 @@
 
             internal void <>m__1(TSource item)
             {
-                TResult local = this.func.Invoke(item);
+                TResult local = this.func(item);
                 object results = this.results;
                 lock (results)
                 {

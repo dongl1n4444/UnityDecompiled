@@ -11,8 +11,14 @@
         public override string Architecture =>
             "x86";
 
+        public override string GradleProductFlavor =>
+            "x86";
+
         public override AndroidTargetDevice TargetDevice =>
             AndroidTargetDevice.x86;
+
+        public override string VisualStudioPlatform =>
+            "x86";
     }
 }
 

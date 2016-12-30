@@ -6,13 +6,14 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Contains information captured from the web camera.</para>
     /// </summary>
     public sealed class PhotoCaptureFrame : IDisposable
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <dataLength>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <hasLocationData>k__BackingField;
@@ -55,7 +56,7 @@
             byteBuffer.AddRange(collection);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern byte[] CopyRawImageDataIntoBuffer_Internal(IntPtr photoCaptureFrame);
         /// <summary>
         /// <para>Disposes the PhotoCaptureFrame and any resources it uses.</para>
@@ -66,7 +67,7 @@
             GC.SuppressFinalize(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void Dispose_Internal(IntPtr photoCaptureFrame);
         ~PhotoCaptureFrame()
         {
@@ -81,13 +82,13 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern CapturePixelFormat GetCapturePixelFormat(IntPtr photoCaptureFrame);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void GetData_Internal(IntPtr photoCaptureFrame, IntPtr targetBuffer);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern int GetDataLength(IntPtr photoCaptureFrame);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern bool GetHasLocationData(IntPtr photoCaptureFrame);
         [ThreadAndSerializationSafe]
         private static Matrix4x4 GetProjection(IntPtr photoCaptureFrame)
@@ -114,11 +115,11 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetCameraToWorldMatrix(IntPtr photoCaptureFrame, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetProjection(IntPtr photoCaptureFrame, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetUnsafePointerToBuffer(IntPtr photoCaptureFrame, out IntPtr value);
         public bool TryGetCameraToWorldMatrix(out Matrix4x4 cameraToWorldMatrix)
         {
@@ -184,7 +185,7 @@
             UploadImageDataToTexture_Internal(this.m_NativePtr, targetTexture);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void UploadImageDataToTexture_Internal(IntPtr photoCaptureFrame, Texture2D targetTexture);
 
         /// <summary>

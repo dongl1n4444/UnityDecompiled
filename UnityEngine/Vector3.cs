@@ -65,7 +65,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Slerp(ref Vector3 a, ref Vector3 b, float t, out Vector3 value);
         /// <summary>
         /// <para>Spherically interpolates between two vectors.</para>
@@ -80,21 +80,21 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SlerpUnclamped(ref Vector3 a, ref Vector3 b, float t, out Vector3 value);
         private static void Internal_OrthoNormalize2(ref Vector3 a, ref Vector3 b)
         {
             INTERNAL_CALL_Internal_OrthoNormalize2(ref a, ref b);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_OrthoNormalize2(ref Vector3 a, ref Vector3 b);
         private static void Internal_OrthoNormalize3(ref Vector3 a, ref Vector3 b, ref Vector3 c)
         {
             INTERNAL_CALL_Internal_OrthoNormalize3(ref a, ref b, ref c);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_OrthoNormalize3(ref Vector3 a, ref Vector3 b, ref Vector3 c);
         public static void OrthoNormalize(ref Vector3 normal, ref Vector3 tangent)
         {
@@ -120,7 +120,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_RotateTowards(ref Vector3 current, ref Vector3 target, float maxRadiansDelta, float maxMagnitudeDelta, out Vector3 value);
         [Obsolete("Use Vector3.ProjectOnPlane instead.")]
         public static Vector3 Exclude(Vector3 excludeThis, Vector3 fromThat) => 
@@ -282,6 +282,10 @@
         public override int GetHashCode() => 
             ((this.x.GetHashCode() ^ (this.y.GetHashCode() << 2)) ^ (this.z.GetHashCode() >> 2));
 
+        /// <summary>
+        /// <para>Returns true if the given vector is exactly equal to this vector.</para>
+        /// </summary>
+        /// <param name="other"></param>
         public override bool Equals(object other)
         {
             if (!(other is Vector3))
@@ -493,7 +497,7 @@
             (SqrMagnitude(lhs - rhs) < 9.999999E-11f);
 
         public static bool operator !=(Vector3 lhs, Vector3 rhs) => 
-            (SqrMagnitude(lhs - rhs) >= 9.999999E-11f);
+            !(lhs == rhs);
 
         /// <summary>
         /// <para>Returns a nicely formatted string for this vector.</para>

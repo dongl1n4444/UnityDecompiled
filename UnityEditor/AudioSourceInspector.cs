@@ -43,7 +43,6 @@
         private SerializedProperty m_Mute;
         private SerializedProperty m_OutputAudioMixerGroup;
         private SerializedProperty m_Pan2D;
-        private SerializedProperty m_PanLevel;
         private SerializedProperty m_Pitch;
         private SerializedProperty m_PlayOnAwake;
         private SerializedProperty m_Priority;
@@ -335,7 +334,9 @@
         }
 
         private List<AudioCurveWrapper> GetShownAudioCurves() => 
-            Enumerable.Where<AudioCurveWrapper>(this.m_AudioCurves, new Func<AudioCurveWrapper, bool>(this, (IntPtr) this.<GetShownAudioCurves>m__1)).ToList<AudioCurveWrapper>();
+            (from f in this.m_AudioCurves
+                where this.m_CurveEditor.GetCurveWrapperFromID(f.id) != null
+                select f).ToList<AudioCurveWrapper>();
 
         private Vector3 GetSourcePos(Object target)
         {
@@ -520,7 +521,7 @@
             EditorGUILayout.PropertyField(this.m_BypassEffects, new GUILayoutOption[0]);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
+                <>f__am$cache0 = t => (t as AudioSource).outputAudioMixerGroup != null;
             }
             if (Enumerable.Any<Object>(base.targets, <>f__am$cache0))
             {

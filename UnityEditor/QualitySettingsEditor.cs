@@ -181,7 +181,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<QualitySetting, string>(null, (IntPtr) <DoQualityLevelSelection>m__0);
+                    <>f__am$cache0 = x => x.m_Name;
                 }
                 num3 = EditorGUI.Popup(rect7, num3, Enumerable.Select<QualitySetting, string>(qualitySettings, <>f__am$cache0).ToArray<string>(), Styles.kDefaultDropdown);
                 platformDefaultQualitySettings[platform3.name] = num3;
@@ -566,7 +566,6 @@
         private static class Styles
         {
             public static readonly GUIContent kBillboardsFaceCameraPos = EditorGUIUtility.TextContent("Billboards Face Camera Position|Make billboards face towards camera position. Otherwise they face towards camera plane. This makes billboards look nicer when camera rotates but is more expensive to render.");
-            public static readonly GUIStyle kButton = "Button";
             public static readonly GUIStyle kDefaultDropdown = "QualitySettingsDefault";
             public static readonly GUIStyle kDefaultToggle = "OL ToggleWhite";
             public const int kHeaderRowHeight = 20;
@@ -577,7 +576,6 @@
             public const int kMaxToggleWidth = 20;
             public const int kMinToggleWidth = 15;
             public static readonly GUIContent kPlatformTooltip = new GUIContent("", "Allow quality setting on platform");
-            public static readonly GUIStyle kSelected = "PR Label";
             public static readonly GUIContent kSoftParticlesHint = EditorGUIUtility.TextContent("Soft Particles require using Deferred Lighting or making camera render the depth texture.");
             public static readonly GUIStyle kToggle = "OL Toggle";
         }

@@ -33,17 +33,15 @@
         /// <summary>
         /// <para>The Collider for the GameObject struck by the particles.</para>
         /// </summary>
-        [Obsolete("collider property is deprecated. Use colliderComponent instead, which supports Collider and Collider2D components.")]
-        public Collider collider =>
-            InstanceIDToCollider(this.m_ColliderInstanceID);
+        [Obsolete("collider property is deprecated. Use colliderComponent instead, which supports Collider and Collider2D components.", true)]
+        public Component collider =>
+            null;
         /// <summary>
         /// <para>The Collider or Collider2D for the GameObject struck by the particles.</para>
         /// </summary>
         public Component colliderComponent =>
             InstanceIDToColliderComponent(this.m_ColliderInstanceID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern Collider InstanceIDToCollider(int instanceID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Component InstanceIDToColliderComponent(int instanceID);
     }
 }

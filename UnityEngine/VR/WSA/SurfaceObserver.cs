@@ -21,9 +21,9 @@
             this.m_Observer = this.Internal_Create();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destroy(IntPtr observer);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void DestroyThreaded(IntPtr observer);
         /// <summary>
         /// <para>Call Dispose when the SurfaceObserver is no longer needed.  This will ensure that the object is cleaned up appropriately but will not affect any Meshes, components, or objects returned by RequestMeshAsync.</para>
@@ -48,15 +48,15 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_AddToWorkQueue(IntPtr observer, SurfaceDataReadyDelegate onDataReady, int surfaceId, MeshFilter filter, WorldAnchor wa, MeshCollider mc, float trisPerCubicMeter, bool createColliderData);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_Create(SurfaceObserver self, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetVolumeAsAxisAlignedBox(SurfaceObserver self, IntPtr observer, ref Vector3 origin, ref Vector3 extents);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetVolumeAsOrientedBox(SurfaceObserver self, IntPtr observer, ref Vector3 origin, ref Vector3 extents, ref Quaternion orientation);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_SetVolumeAsSphere(SurfaceObserver self, IntPtr observer, ref Vector3 origin, float radiusMeters);
         private IntPtr Internal_Create()
         {
@@ -70,7 +70,7 @@
             INTERNAL_CALL_Internal_SetVolumeAsAxisAlignedBox(this, observer, ref origin, ref extents);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetVolumeAsFrustum(IntPtr observer, Plane[] planes);
         private void Internal_SetVolumeAsOrientedBox(IntPtr observer, Vector3 origin, Vector3 extents, Quaternion orientation)
         {
@@ -82,7 +82,7 @@
             INTERNAL_CALL_Internal_SetVolumeAsSphere(this, observer, ref origin, radiusMeters);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Update(IntPtr observer, SurfaceChangedDelegate onSurfaceChanged);
         [RequiredByNativeCode]
         private static void InvokeSurfaceChangedEvent(SurfaceChangedDelegate onSurfaceChanged, int surfaceId, SurfaceChange changeType, Bounds bounds, long updateTime)

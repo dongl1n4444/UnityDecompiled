@@ -3,12 +3,12 @@
     using System;
 
     /// <summary>
-    /// <para>Enumerator list of different indicator styles used on Handheld.</para>
+    /// <para>Enumerator list of different activity indicators your game can show when loading.</para>
     /// </summary>
     public enum TizenActivityIndicatorStyle
     {
         /// <summary>
-        /// <para>Sets your game to not show any indicator while loading.</para>
+        /// <para>Sets your game not to show any indicator while loading.</para>
         /// </summary>
         DontShow = -1,
         /// <summary>

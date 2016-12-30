@@ -44,7 +44,7 @@
             MenuCallbackObject obj2 = callbackObject as MenuCallbackObject;
             if (obj2.onBeforeExecuteCallback != null)
             {
-                obj2.onBeforeExecuteCallback.Invoke(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
+                obj2.onBeforeExecuteCallback(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
             }
             if (obj2.temporaryContext != null)
             {
@@ -56,7 +56,7 @@
             }
             if (obj2.onAfterExecuteCallback != null)
             {
-                obj2.onAfterExecuteCallback.Invoke(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
+                obj2.onAfterExecuteCallback(obj2.menuItemPath, obj2.temporaryContext, obj2.userData);
             }
         }
 

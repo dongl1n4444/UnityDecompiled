@@ -6,12 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEditor;
 using UnityEditor.Modules;
-using UnityEditor.Scripting.Compilers;
+using UnityEditor.WSA;
 using UnityEngine;
 
 internal class PostProcessStore81 : PostProcessWSA
 {
-    private static string _platformAssemblyPath;
     private static string _referenceAssembliesDirectory;
     [CompilerGenerated]
     private static Func<string, string> <>f__am$cache0;
@@ -102,7 +101,7 @@ internal class PostProcessStore81 : PostProcessWSA
     }
 
     protected override string GetResourceCompilerPath() => 
-        Path.Combine(MicrosoftCSharpCompiler.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
+        Path.Combine(MetroCompilationExtension.GetWindowsKitDirectory(WSASDK.SDK81), @"bin\x86\rc.exe");
 
     protected override string GetSDKNotFoundErrorMessage() => 
         "Make sure Visual Studio 2013 is installed.";
@@ -120,7 +119,7 @@ internal class PostProcessStore81 : PostProcessWSA
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <GetUnityPluginOverwrites>m__0);
+            <>f__am$cache0 = a => Utility.CombinePath("Store81", a);
         }
         return Enumerable.Select<string, string>(base.GetUnityPluginOverwrites(), <>f__am$cache0);
     }

@@ -38,8 +38,8 @@
             internal List<TinyProfiler.TimedSection>.Enumerator $locvar1;
             internal int $PC;
             internal ProfilerSnapshot $this;
-            internal TinyProfiler.ThreadContext <context>__0;
-            internal TinyProfiler.TimedSection <section>__1;
+            internal TinyProfiler.ThreadContext <context>__1;
+            internal TinyProfiler.TimedSection <section>__2;
             internal string label;
 
             [DebuggerHidden]
@@ -99,8 +99,8 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<context>__0 = this.$locvar0.Current;
-                        this.$locvar1 = this.<context>__0.Sections.GetEnumerator();
+                        this.<context>__1 = this.$locvar0.Current;
+                        this.$locvar1 = this.<context>__1.Sections.GetEnumerator();
                         num = 0xfffffffd;
                     Label_007B:
                         try
@@ -112,10 +112,10 @@
                             }
                             while (this.$locvar1.MoveNext())
                             {
-                                this.<section>__1 = this.$locvar1.Current;
-                                if (this.<section>__1.Label == this.label)
+                                this.<section>__2 = this.$locvar1.Current;
+                                if (this.<section>__2.Label == this.label)
                                 {
-                                    this.$current = this.<section>__1;
+                                    this.$current = this.<section>__2;
                                     if (!this.$disposing)
                                     {
                                         this.$PC = 1;

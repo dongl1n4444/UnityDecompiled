@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The material class.</para>
@@ -45,7 +46,7 @@
         /// <para>Copy properties from other material into this material.</para>
         /// </summary>
         /// <param name="mat"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CopyPropertiesFromMaterial(Material mat);
         [Obsolete("Creating materials from shader source string will be removed in the future. Use Shader assets instead.")]
         public static Material Create(string scriptContents) => 
@@ -55,39 +56,35 @@
         /// <para>Unset a shader keyword.</para>
         /// </summary>
         /// <param name="keyword"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DisableKeyword(string keyword);
         /// <summary>
         /// <para>Set a shader keyword that is enabled by this material.</para>
         /// </summary>
         /// <param name="keyword"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void EnableKeyword(string keyword);
         /// <summary>
         /// <para>Returns the index of the pass passName.</para>
         /// </summary>
         /// <param name="passName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int FindPass(string passName);
         /// <summary>
         /// <para>Get a named color value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Color GetColor(int nameID)
-        {
-            Color color;
-            INTERNAL_CALL_GetColor(this, nameID, out color);
-            return color;
-        }
+        /// <param name="name">The name of the property.</param>
+        public Color GetColor(int nameID) => 
+            this.GetColorImpl(nameID);
 
         /// <summary>
         /// <para>Get a named color value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Color GetColor(string propertyName) => 
-            this.GetColor(Shader.PropertyToID(propertyName));
+        /// <param name="name">The name of the property.</param>
+        public Color GetColor(string name) => 
+            this.GetColor(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a named color array.</para>
@@ -119,24 +116,32 @@
             this.GetColorArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Color[] GetColorArrayImpl(int nameID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetColorArrayImplList(int nameID, object list);
+        private Color GetColorImpl(int nameID)
+        {
+            Color color;
+            INTERNAL_CALL_GetColorImpl(this, nameID, out color);
+            return color;
+        }
+
         /// <summary>
         /// <para>Get a named float value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern float GetFloat(int nameID);
+        /// <param name="name">The name of the property.</param>
+        public float GetFloat(int nameID) => 
+            this.GetFloatImpl(nameID);
+
         /// <summary>
         /// <para>Get a named float value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public float GetFloat(string propertyName) => 
-            this.GetFloat(Shader.PropertyToID(propertyName));
+        /// <param name="name">The name of the property.</param>
+        public float GetFloat(string name) => 
+            this.GetFloat(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a named float array.</para>
@@ -168,45 +173,45 @@
             this.GetFloatArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern float[] GetFloatArrayImpl(int nameID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetFloatArrayImplList(int nameID, object list);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern float GetFloatImpl(int nameID);
         /// <summary>
         /// <para>Get a named integer value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+        /// <param name="name">The name of the property.</param>
         public int GetInt(int nameID) => 
-            ((int) this.GetFloat(nameID));
+            this.GetIntImpl(nameID);
 
         /// <summary>
         /// <para>Get a named integer value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public int GetInt(string propertyName) => 
-            ((int) this.GetFloat(propertyName));
+        /// <param name="name">The name of the property.</param>
+        public int GetInt(string name) => 
+            this.GetInt(Shader.PropertyToID(name));
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern int GetIntImpl(int nameID);
+        /// <summary>
+        /// <para>Get a named matrix value from the shader.</para>
+        /// </summary>
+        /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
+        /// <param name="name">The name of the property.</param>
+        public Matrix4x4 GetMatrix(int nameID) => 
+            this.GetMatrixImpl(nameID);
 
         /// <summary>
         /// <para>Get a named matrix value from the shader.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Matrix4x4 GetMatrix(int nameID)
-        {
-            Matrix4x4 matrixx;
-            INTERNAL_CALL_GetMatrix(this, nameID, out matrixx);
-            return matrixx;
-        }
-
-        /// <summary>
-        /// <para>Get a named matrix value from the shader.</para>
-        /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Matrix4x4 GetMatrix(string propertyName) => 
-            this.GetMatrix(Shader.PropertyToID(propertyName));
+        /// <param name="name">The name of the property.</param>
+        public Matrix4x4 GetMatrix(string name) => 
+            this.GetMatrix(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a named matrix array.</para>
@@ -238,15 +243,22 @@
             this.GetMatrixArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Matrix4x4[] GetMatrixArrayImpl(int nameID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetMatrixArrayImplList(int nameID, object list);
+        private Matrix4x4 GetMatrixImpl(int nameID)
+        {
+            Matrix4x4 matrixx;
+            INTERNAL_CALL_GetMatrixImpl(this, nameID, out matrixx);
+            return matrixx;
+        }
+
         /// <summary>
         /// <para>Returns the name of the shader pass at index pass.</para>
         /// </summary>
         /// <param name="pass"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetPassName(int pass);
         /// <summary>
         /// <para>Get the value of material's shader tag.</para>
@@ -267,66 +279,74 @@
         /// <param name="tag"></param>
         /// <param name="searchFallbacks"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetTag(string tag, bool searchFallbacks, [DefaultValue("\"\"")] string defaultValue);
         /// <summary>
         /// <para>Get a named texture.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Texture GetTexture(int nameID);
+        /// <param name="name">The name of the property.</param>
+        public Texture GetTexture(int nameID) => 
+            this.GetTextureImpl(nameID);
+
         /// <summary>
         /// <para>Get a named texture.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Texture GetTexture(string propertyName) => 
-            this.GetTexture(Shader.PropertyToID(propertyName));
+        /// <param name="name">The name of the property.</param>
+        public Texture GetTexture(string name) => 
+            this.GetTexture(Shader.PropertyToID(name));
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern Texture GetTextureImpl(int nameID);
+        public Vector2 GetTextureOffset(int nameID)
+        {
+            Vector4 textureScaleAndOffsetImpl = this.GetTextureScaleAndOffsetImpl(nameID);
+            return new Vector2(textureScaleAndOffsetImpl.z, textureScaleAndOffsetImpl.w);
+        }
 
         /// <summary>
         /// <para>Gets the placement offset of texture propertyName.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
-        public Vector2 GetTextureOffset(string propertyName)
+        /// <param name="name">The name of the property.</param>
+        public Vector2 GetTextureOffset(string name) => 
+            this.GetTextureOffset(Shader.PropertyToID(name));
+
+        public Vector2 GetTextureScale(int nameID)
         {
-            Vector4 vector;
-            Internal_GetTextureScaleAndOffset(this, propertyName, out vector);
-            return new Vector2(vector.z, vector.w);
+            Vector4 textureScaleAndOffsetImpl = this.GetTextureScaleAndOffsetImpl(nameID);
+            return new Vector2(textureScaleAndOffsetImpl.x, textureScaleAndOffsetImpl.y);
         }
 
         /// <summary>
         /// <para>Gets the placement scale of texture propertyName.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
-        public Vector2 GetTextureScale(string propertyName)
+        /// <param name="name">The name of the property.</param>
+        public Vector2 GetTextureScale(string name) => 
+            this.GetTextureScale(Shader.PropertyToID(name));
+
+        private Vector4 GetTextureScaleAndOffsetImpl(int nameID)
         {
             Vector4 vector;
-            Internal_GetTextureScaleAndOffset(this, propertyName, out vector);
-            return new Vector2(vector.x, vector.y);
+            INTERNAL_CALL_GetTextureScaleAndOffsetImpl(this, nameID, out vector);
+            return vector;
         }
 
         /// <summary>
         /// <para>Get a named vector value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Vector4 GetVector(int nameID)
-        {
-            Color color = this.GetColor(nameID);
-            return new Vector4(color.r, color.g, color.b, color.a);
-        }
+        /// <param name="name">The name of the property.</param>
+        public Vector4 GetVector(int nameID) => 
+            this.GetVectorImpl(nameID);
 
         /// <summary>
         /// <para>Get a named vector value.</para>
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
-        public Vector4 GetVector(string propertyName)
-        {
-            Color color = this.GetColor(propertyName);
-            return new Vector4(color.r, color.g, color.b, color.a);
-        }
+        /// <param name="name">The name of the property.</param>
+        public Vector4 GetVector(string name) => 
+            this.GetVector(Shader.PropertyToID(name));
 
         /// <summary>
         /// <para>Get a named vector array.</para>
@@ -358,16 +378,23 @@
             this.GetVectorArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Vector4[] GetVectorArrayImpl(int nameID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetVectorArrayImplList(int nameID, object list);
+        private Vector4 GetVectorImpl(int nameID)
+        {
+            Vector4 vector;
+            INTERNAL_CALL_GetVectorImpl(this, nameID, out vector);
+            return vector;
+        }
+
         /// <summary>
         /// <para>Checks if material's shader has a property of a given name.</para>
         /// </summary>
         /// <param name="propertyName"></param>
         /// <param name="nameID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool HasProperty(int nameID);
         /// <summary>
         /// <para>Checks if material's shader has a property of a given name.</para>
@@ -377,31 +404,35 @@
         public bool HasProperty(string propertyName) => 
             this.HasProperty(Shader.PropertyToID(propertyName));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_GetColor(Material self, int nameID, out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_GetMatrix(Material self, int nameID, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetColor(Material self, int nameID, ref Color color);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetMatrix(Material self, int nameID, ref Matrix4x4 matrix);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetTextureOffset(Material self, string propertyName, ref Vector2 offset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetTextureScale(Material self, string propertyName, ref Vector2 scale);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetColorImpl(Material self, int nameID, out Color value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetMatrixImpl(Material self, int nameID, out Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetTextureScaleAndOffsetImpl(Material self, int nameID, out Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetVectorImpl(Material self, int nameID, out Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetColorImpl(Material self, int nameID, ref Color value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetMatrixImpl(Material self, int nameID, ref Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetTextureOffsetImpl(Material self, int nameID, ref Vector2 offset);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetTextureScaleImpl(Material self, int nameID, ref Vector2 scale);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetVectorImpl(Material self, int nameID, ref Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateWithMaterial([Writable] Material mono, Material source);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateWithShader([Writable] Material mono, Shader shader);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateWithString([Writable] Material mono, string contents);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void Internal_GetTextureScaleAndOffset(Material mat, string name, out Vector4 output);
         /// <summary>
         /// <para>Is the shader keyword enabled on this material?</para>
         /// </summary>
         /// <param name="keyword"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool IsKeywordEnabled(string keyword);
         /// <summary>
         /// <para>Interpolate properties between two materials.</para>
@@ -409,7 +440,7 @@
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <param name="t"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Lerp(Material start, Material end, float t);
         /// <summary>
         /// <para>Set a named ComputeBuffer value.</para>
@@ -433,28 +464,28 @@
             this.SetBuffer(Shader.PropertyToID(name), value);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetBufferImpl(int nameID, ComputeBuffer value);
         /// <summary>
         /// <para>Set a named color value.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_Color".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="color">Color value to set.</param>
-        public void SetColor(int nameID, Color color)
+        /// <param name="name">Property name, e.g. "_Color".</param>
+        /// <param name="value">Color value to set.</param>
+        public void SetColor(int nameID, Color value)
         {
-            INTERNAL_CALL_SetColor(this, nameID, ref color);
+            this.SetColorImpl(nameID, value);
         }
 
         /// <summary>
         /// <para>Set a named color value.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_Color".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="color">Color value to set.</param>
-        public void SetColor(string propertyName, Color color)
+        /// <param name="name">Property name, e.g. "_Color".</param>
+        /// <param name="value">Color value to set.</param>
+        public void SetColor(string name, Color value)
         {
-            this.SetColor(Shader.PropertyToID(propertyName), color);
+            this.SetColor(Shader.PropertyToID(name), value);
         }
 
         public void SetColorArray(int nameID, List<Color> values)
@@ -505,27 +536,35 @@
             this.SetColorArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetColorArrayImpl(int nameID, Color[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetColorArrayImplList(int nameID, object values);
-        /// <summary>
-        /// <para>Set a named float value.</para>
-        /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_Glossiness".</param>
-        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="value">Float value to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetFloat(int nameID, float value);
-        /// <summary>
-        /// <para>Set a named float value.</para>
-        /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_Glossiness".</param>
-        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="value">Float value to set.</param>
-        public void SetFloat(string propertyName, float value)
+        private void SetColorImpl(int nameID, Color value)
         {
-            this.SetFloat(Shader.PropertyToID(propertyName), value);
+            INTERNAL_CALL_SetColorImpl(this, nameID, ref value);
+        }
+
+        /// <summary>
+        /// <para>Set a named float value.</para>
+        /// </summary>
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="value">Float value to set.</param>
+        /// <param name="name">Property name, e.g. "_Glossiness".</param>
+        public void SetFloat(int nameID, float value)
+        {
+            this.SetFloatImpl(nameID, value);
+        }
+
+        /// <summary>
+        /// <para>Set a named float value.</para>
+        /// </summary>
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="value">Float value to set.</param>
+        /// <param name="name">Property name, e.g. "_Glossiness".</param>
+        public void SetFloat(string name, float value)
+        {
+            this.SetFloat(Shader.PropertyToID(name), value);
         }
 
         public void SetFloatArray(int nameID, List<float> values)
@@ -576,52 +615,56 @@
             this.SetFloatArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatArrayImpl(int nameID, float[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatArrayImplList(int nameID, object values);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SetFloatImpl(int nameID, float value);
         /// <summary>
         /// <para>Set a named integer value.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_SrcBlend".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="value">Integer value to set.</param>
+        /// <param name="name">Property name, e.g. "_SrcBlend".</param>
         public void SetInt(int nameID, int value)
         {
-            this.SetFloat(nameID, (float) value);
+            this.SetIntImpl(nameID, value);
         }
 
         /// <summary>
         /// <para>Set a named integer value.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_SrcBlend".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
         /// <param name="value">Integer value to set.</param>
-        public void SetInt(string propertyName, int value)
+        /// <param name="name">Property name, e.g. "_SrcBlend".</param>
+        public void SetInt(string name, int value)
         {
-            this.SetFloat(propertyName, (float) value);
+            this.SetInt(Shader.PropertyToID(name), value);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SetIntImpl(int nameID, int value);
+        /// <summary>
+        /// <para>Set a named matrix for the shader.</para>
+        /// </summary>
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="name">Property name, e.g. "_CubemapRotation".</param>
+        /// <param name="value">Matrix value to set.</param>
+        public void SetMatrix(int nameID, Matrix4x4 value)
+        {
+            this.SetMatrixImpl(nameID, value);
         }
 
         /// <summary>
         /// <para>Set a named matrix for the shader.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_CubemapRotation".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="matrix">Matrix value to set.</param>
-        public void SetMatrix(int nameID, Matrix4x4 matrix)
+        /// <param name="name">Property name, e.g. "_CubemapRotation".</param>
+        /// <param name="value">Matrix value to set.</param>
+        public void SetMatrix(string name, Matrix4x4 value)
         {
-            INTERNAL_CALL_SetMatrix(this, nameID, ref matrix);
-        }
-
-        /// <summary>
-        /// <para>Set a named matrix for the shader.</para>
-        /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_CubemapRotation".</param>
-        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="matrix">Matrix value to set.</param>
-        public void SetMatrix(string propertyName, Matrix4x4 matrix)
-        {
-            this.SetMatrix(Shader.PropertyToID(propertyName), matrix);
+            this.SetMatrix(Shader.PropertyToID(name), value);
         }
 
         public void SetMatrixArray(int nameID, List<Matrix4x4> values)
@@ -672,16 +715,21 @@
             this.SetMatrixArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetMatrixArrayImpl(int nameID, Matrix4x4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetMatrixArrayImplList(int nameID, object values);
+        private void SetMatrixImpl(int nameID, Matrix4x4 value)
+        {
+            INTERNAL_CALL_SetMatrixImpl(this, nameID, ref value);
+        }
+
         /// <summary>
         /// <para>Sets an override tag/value on the material.</para>
         /// </summary>
         /// <param name="tag">Name of the tag to set.</param>
         /// <param name="val">Name of the value to set. Empty string to clear the override flag.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetOverrideTag(string tag, string val);
         /// <summary>
         /// <para>Activate the given pass for rendering.</para>
@@ -690,67 +738,106 @@
         /// <returns>
         /// <para>If false is returned, no rendering should be done.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetPass(int pass);
         /// <summary>
         /// <para>Set a named texture.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_MainTex".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="texture">Texture to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetTexture(int nameID, Texture texture);
+        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="value">Texture to set.</param>
+        public void SetTexture(int nameID, Texture value)
+        {
+            this.SetTextureImpl(nameID, value);
+        }
+
         /// <summary>
         /// <para>Set a named texture.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_MainTex".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="texture">Texture to set.</param>
-        public void SetTexture(string propertyName, Texture texture)
+        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="value">Texture to set.</param>
+        public void SetTexture(string name, Texture value)
         {
-            this.SetTexture(Shader.PropertyToID(propertyName), texture);
+            this.SetTexture(Shader.PropertyToID(name), value);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SetTextureImpl(int nameID, Texture value);
+        /// <summary>
+        /// <para>Sets the placement offset of texture propertyName.</para>
+        /// </summary>
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="value">Texture placement offset.</param>
+        public void SetTextureOffset(int nameID, Vector2 value)
+        {
+            this.SetTextureOffsetImpl(nameID, value);
         }
 
         /// <summary>
         /// <para>Sets the placement offset of texture propertyName.</para>
         /// </summary>
-        /// <param name="propertyName"></param>
-        /// <param name="offset"></param>
-        public void SetTextureOffset(string propertyName, Vector2 offset)
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="value">Texture placement offset.</param>
+        public void SetTextureOffset(string name, Vector2 value)
         {
-            INTERNAL_CALL_SetTextureOffset(this, propertyName, ref offset);
+            this.SetTextureOffset(Shader.PropertyToID(name), value);
+        }
+
+        private void SetTextureOffsetImpl(int nameID, Vector2 offset)
+        {
+            INTERNAL_CALL_SetTextureOffsetImpl(this, nameID, ref offset);
         }
 
         /// <summary>
         /// <para>Sets the placement scale of texture propertyName.</para>
         /// </summary>
-        /// <param name="propertyName"></param>
-        /// <param name="scale"></param>
-        public void SetTextureScale(string propertyName, Vector2 scale)
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="value">Texture placement scale.</param>
+        public void SetTextureScale(int nameID, Vector2 value)
         {
-            INTERNAL_CALL_SetTextureScale(this, propertyName, ref scale);
+            this.SetTextureScaleImpl(nameID, value);
+        }
+
+        /// <summary>
+        /// <para>Sets the placement scale of texture propertyName.</para>
+        /// </summary>
+        /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
+        /// <param name="name">Property name, e.g. "_MainTex".</param>
+        /// <param name="value">Texture placement scale.</param>
+        public void SetTextureScale(string name, Vector2 value)
+        {
+            this.SetTextureScale(Shader.PropertyToID(name), value);
+        }
+
+        private void SetTextureScaleImpl(int nameID, Vector2 scale)
+        {
+            INTERNAL_CALL_SetTextureScaleImpl(this, nameID, ref scale);
         }
 
         /// <summary>
         /// <para>Set a named vector value.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_WaveAndDistance".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="vector">Vector value to set.</param>
-        public void SetVector(int nameID, Vector4 vector)
+        /// <param name="name">Property name, e.g. "_WaveAndDistance".</param>
+        /// <param name="value">Vector value to set.</param>
+        public void SetVector(int nameID, Vector4 value)
         {
-            this.SetColor(nameID, new Color(vector.x, vector.y, vector.z, vector.w));
+            this.SetVectorImpl(nameID, value);
         }
 
         /// <summary>
         /// <para>Set a named vector value.</para>
         /// </summary>
-        /// <param name="propertyName">Property name, e.g. "_WaveAndDistance".</param>
         /// <param name="nameID">Property name ID, use Shader.PropertyToID to get it.</param>
-        /// <param name="vector">Vector value to set.</param>
-        public void SetVector(string propertyName, Vector4 vector)
+        /// <param name="name">Property name, e.g. "_WaveAndDistance".</param>
+        /// <param name="value">Vector value to set.</param>
+        public void SetVector(string name, Vector4 value)
         {
-            this.SetColor(propertyName, new Color(vector.x, vector.y, vector.z, vector.w));
+            this.SetVector(Shader.PropertyToID(name), value);
         }
 
         public void SetVectorArray(int nameID, List<Vector4> values)
@@ -801,10 +888,14 @@
             this.SetVectorArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetVectorArrayImpl(int nameID, Vector4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetVectorArrayImplList(int nameID, object values);
+        private void SetVectorImpl(int nameID, Vector4 value)
+        {
+            INTERNAL_CALL_SetVectorImpl(this, nameID, ref value);
+        }
 
         /// <summary>
         /// <para>The main material's color.</para>
@@ -822,7 +913,7 @@
         /// <summary>
         /// <para>Defines how the material should interact with lightmaps and lightprobes.</para>
         /// </summary>
-        public MaterialGlobalIlluminationFlags globalIlluminationFlags { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public MaterialGlobalIlluminationFlags globalIlluminationFlags { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The material's texture.</para>
@@ -866,22 +957,22 @@
         /// <summary>
         /// <para>How many passes are in this material (Read Only).</para>
         /// </summary>
-        public int passCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int passCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Render queue of this material.</para>
         /// </summary>
-        public int renderQueue { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int renderQueue { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The shader used by the material.</para>
         /// </summary>
-        public Shader shader { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Shader shader { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Additional shader keywords set by this material.</para>
         /// </summary>
-        public string[] shaderKeywords { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string[] shaderKeywords { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

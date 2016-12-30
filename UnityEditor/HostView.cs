@@ -159,7 +159,10 @@
                     EndOffsetArea();
                     EditorGUIUtility.ResetGUIState();
                     base.DoWindowDecorationEnd();
-                    GUI.Box(onGUIPosition, GUIContent.none, style);
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        style.Draw(onGUIPosition, GUIContent.none, 0);
+                    }
                 }
             }
         }
@@ -178,7 +181,7 @@
             this.Invoke("OnDidOpenScene");
         }
 
-        private void OnDisable()
+        public void OnDisable()
         {
             this.DeregisterSelectedPane(false);
         }
@@ -216,7 +219,7 @@
             }
             this.Invoke("OnGUI");
             EditorGUIUtility.ResetGUIState();
-            if ((this.m_ActualView.m_FadeoutTime != 0f) && (Event.current.type == EventType.Repaint))
+            if (((this.m_ActualView != null) && (this.m_ActualView.m_FadeoutTime != 0f)) && (Event.current.type == EventType.Repaint))
             {
                 this.m_ActualView.DrawNotification();
             }
@@ -251,6 +254,10 @@
             this.Invoke("OnSelectionChange");
         }
 
+        protected virtual void OnViewChange(EditorWindow view)
+        {
+        }
+
         public void PopupGenericMenu(EditorWindow view, Rect pos)
         {
             GenericMenu menu = new GenericMenu();
@@ -282,6 +289,7 @@
                 {
                     EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.m_ActualView.CheckForWindowRepaint));
                 }
+                this.OnViewChange(this.m_ActualView);
                 try
                 {
                     this.Invoke("OnBecameVisible");

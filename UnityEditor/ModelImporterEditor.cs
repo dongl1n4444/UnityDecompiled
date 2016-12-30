@@ -2,7 +2,7 @@
 {
     using System;
 
-    [CustomEditor(typeof(ModelImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(ModelImporter))]
     internal class ModelImporterEditor : AssetImporterTabbedEditor
     {
         public override bool HasPreviewGUI() => 

@@ -15,7 +15,6 @@
         private const int kListElementHeight = 0x15;
         private const int kOrderRangeMax = 0x7d00;
         private const int kOrderRangeMin = -32000;
-        private const string kOrderValuesEditorPrefString = "ScriptExecutionOrderShowOrderValues";
         private const int kPreferredSpacing = 100;
         private int[] kRoundingAmounts = new int[] { 0x3e8, 500, 100, 50, 10, 5, 1 };
         private int[] m_AllOrders;
@@ -24,6 +23,7 @@
         private List<MonoScript> m_DefaultTimeScripts;
         private bool m_DirtyOrders = false;
         private MonoScript m_Edited = null;
+        private static readonly List<ScriptExecutionOrderInspector> m_Instances = new List<ScriptExecutionOrderInspector>();
         private Vector2 m_Scroll = Vector2.zero;
         public static Styles m_Styles;
         private static int s_DropFieldHash = "DropField".GetHashCode();
@@ -102,7 +102,9 @@
             }
             GUI.Label(this.GetButtonLabelRect(r), script.GetClass().FullName);
             int executionOrder = this.GetExecutionOrder(script);
-            string s = EditorGUI.DelayedTextFieldInternal(this.GetFieldRect(r), executionOrder.ToString(), "0123456789-", EditorStyles.textField);
+            Rect fieldRect = this.GetFieldRect(r);
+            int id = GUIUtility.GetControlID(script.GetHashCode(), FocusType.Keyboard, fieldRect);
+            string s = EditorGUI.DelayedTextFieldInternal(fieldRect, id, GUIContent.none, executionOrder.ToString(), "0123456789-", EditorStyles.textField);
             int result = executionOrder;
             if (int.TryParse(s, out result) && (result != executionOrder))
             {
@@ -163,6 +165,9 @@
         private Rect GetFieldRect(Rect r) => 
             new Rect(((r.xMax - 50f) - this.GetMinusButtonSize().x) - 10f, r.y + 2f, 50f, r.height - 5f);
 
+        internal static List<ScriptExecutionOrderInspector> GetInstances() => 
+            m_Instances;
+
         private Vector2 GetMinusButtonSize() => 
             m_Styles.removeButton.CalcSize(m_Styles.iconToolbarMinus);
 
@@ -213,6 +218,10 @@
             {
                 this.Apply();
             }
+            if (m_Instances.Contains(this))
+            {
+                m_Instances.Remove(this);
+            }
         }
 
         public void OnEnable()
@@ -224,6 +233,10 @@
             if ((this.m_AllScripts == null) || !this.m_DirtyOrders)
             {
                 this.PopulateScriptArray();
+            }
+            if (!m_Instances.Contains(this))
+            {
+                m_Instances.Add(this);
             }
         }
 
@@ -318,6 +331,20 @@
                     break;
                 }
                 this.SetExecutionOrderAtIndexAccordingToNeighbors(i, pushDirection);
+            }
+        }
+
+        [MenuItem("CONTEXT/MonoManager/Reset")]
+        private static void Reset(MenuCommand cmd)
+        {
+            List<ScriptExecutionOrderInspector> instances = GetInstances();
+            foreach (ScriptExecutionOrderInspector inspector in instances)
+            {
+                for (int i = 0; i < inspector.m_AllOrders.Length; i++)
+                {
+                    inspector.m_AllOrders[i] = 0;
+                }
+                inspector.Apply();
             }
         }
 

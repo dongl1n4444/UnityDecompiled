@@ -24,14 +24,14 @@
 
         public static  event ImportPackageCallback importPackageStarted;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void AddInstanceIDToAssetWithRandomFileId(int instanceIDToAdd, Object assetObject, bool hide);
         /// <summary>
         /// <para>Adds objectToAdd to an existing asset at path.</para>
         /// </summary>
         /// <param name="objectToAdd">Object to add to the existing asset.</param>
         /// <param name="path">Filesystem path to the asset.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void AddObjectToAsset(Object objectToAdd, string path);
         /// <summary>
         /// <para>Adds objectToAdd to an existing asset identified by assetObject.</para>
@@ -43,29 +43,31 @@
             AddObjectToAsset_OBJ_Internal(objectToAdd, assetObject);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void AddObjectToAsset_OBJ_Internal(Object newAsset, Object sameAssetFile);
         /// <summary>
         /// <para>Get the GUID for the asset at path.</para>
         /// </summary>
         /// <param name="path">Filesystem path for the asset.</param>
         /// <returns>
-        /// <para>GUID.</para>
+        /// <para>GUID</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string AssetPathToGUID(string path);
         /// <summary>
         /// <para>Removes all labels attached to an asset.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearLabels(Object obj);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern string[] CollectAllChildren(string guid, string[] collection);
         /// <summary>
         /// <para>Is object an asset?</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool Contains(int instanceID);
         /// <summary>
         /// <para>Is object an asset?</para>
@@ -80,16 +82,16 @@
         /// </summary>
         /// <param name="path">Filesystem path of the source asset.</param>
         /// <param name="newPath">Filesystem path of the new asset to create.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool CopyAsset(string path, string newPath);
         /// <summary>
         /// <para>Creates a new asset at path.</para>
         /// </summary>
         /// <param name="asset">Object to use in creating the asset.</param>
         /// <param name="path">Filesystem path for the new asset.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CreateAsset(Object asset, string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void CreateAssetFromObjects(Object[] assets, string path);
         /// <summary>
         /// <para>Create a new folder.</para>
@@ -99,13 +101,13 @@
         /// <returns>
         /// <para>The GUID of the newly created folder.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string CreateFolder(string parentFolder, string newFolderName);
         /// <summary>
         /// <para>Deletes the asset file at path.</para>
         /// </summary>
         /// <param name="path">Filesystem path of the asset to be deleted.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool DeleteAsset(string path);
         /// <summary>
         /// <para>Exports the assets identified by assetPathNames to a unitypackage file in fileName.</para>
@@ -152,7 +154,7 @@
         /// <param name="fileName"></param>
         /// <param name="flags"></param>
         /// <param name="assetPathName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ExportPackage(string[] assetPathNames, string fileName, [DefaultValue("ExportPackageOptions.Default")] ExportPackageOptions flags);
         /// <summary>
         /// <para>Search the asset database using a search filter string.</para>
@@ -197,7 +199,7 @@
         /// <para>Creates a new unique path for an asset.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GenerateUniqueAssetPath(string path);
         /// <summary>
         /// <para>Return all the AssetBundle names in the asset database.</para>
@@ -205,13 +207,13 @@
         /// <returns>
         /// <para>Array of asset bundle names.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAllAssetBundleNames();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string[] GetAllAssetBundleNamesWithoutVariant();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string[] GetAllAssetBundleVariants();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAllAssetPaths();
         internal static Dictionary<string, float> GetAllLabels()
         {
@@ -234,7 +236,7 @@
         /// <returns>
         /// <para>The names of all AssetBundles that the input depends on.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAssetBundleDependencies(string assetBundleName, bool recursive);
         [Obsolete("Method GetAssetBundleNames has been deprecated. Use GetAllAssetBundleNames instead.")]
         public string[] GetAssetBundleNames() => 
@@ -258,7 +260,7 @@
         /// <para>Returns the path name relative to the project folder where the asset is stored.</para>
         /// </summary>
         /// <param name="assetObject"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetAssetOrScenePath(Object assetObject);
         /// <summary>
         /// <para>Returns the path name relative to the project folder where the asset is stored.</para>
@@ -279,39 +281,39 @@
         /// <returns>
         /// <para>The asset path name, or null, or an empty string if the asset does not exist.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetAssetPath(Object assetObject);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string GetAssetPathFromInstanceID(int instanceID);
         /// <summary>
         /// <para>Gets the path to the asset file associated with a text .meta file.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetAssetPathFromTextMetaFilePath(string path);
         /// <summary>
         /// <para>Get the paths of the assets which have been marked with the given assetBundle name.</para>
         /// </summary>
         /// <param name="assetBundleName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAssetPathsFromAssetBundle(string assetBundleName);
         /// <summary>
         /// <para>Get the asset paths from the given assetBundle name and asset name.</para>
         /// </summary>
         /// <param name="assetBundleName"></param>
         /// <param name="assetName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAssetPathsFromAssetBundleAndAssetName(string assetBundleName, string assetName);
         public static T GetBuiltinExtraResource<T>(string path) where T: Object => 
             ((T) GetBuiltinExtraResource(typeof(T), path));
 
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument), GeneratedByOldBindingsGenerator]
         public static extern Object GetBuiltinExtraResource(Type type, string path);
         /// <summary>
         /// <para>Retrieves an icon for the asset at the given asset path.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture GetCachedIcon(string path);
         /// <summary>
         /// <para>Given a pathName, returns the list of all assets that it depends on.</para>
@@ -354,29 +356,47 @@
         /// <returns>
         /// <para>The paths of all assets that the input depends on.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetDependencies(string[] pathNames, bool recursive);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <summary>
+        /// <para>Returns the name of the AssetBundle that a given asset belongs to.</para>
+        /// </summary>
+        /// <param name="assetPath">The asset's path.</param>
+        /// <returns>
+        /// <para>Returns the name of the AssetBundle that a given asset belongs to. See the method description for more details.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string GetImplicitAssetBundleName(string assetPath);
+        /// <summary>
+        /// <para>Returns the name of the AssetBundle Variant that a given asset belongs to.</para>
+        /// </summary>
+        /// <param name="assetPath">The asset's path.</param>
+        /// <returns>
+        /// <para>Returns the name of the AssetBundle Variant that a given asset belongs to. See the method description for more details.</para>
+        /// </returns>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern string GetImplicitAssetBundleVariantName(string assetPath);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetInstanceIDFromGUID(string guid);
         /// <summary>
         /// <para>Returns all labels attached to a given asset.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetLabels(Object obj);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GetMainAssetInstanceID(string assetPath);
         /// <summary>
         /// <para>Returns the type of the main asset object at assetPath.</para>
         /// </summary>
         /// <param name="assetPath">Filesystem path of the asset to load.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Type GetMainAssetTypeAtPath(string assetPath);
         /// <summary>
         /// <para>Given an absolute path to a directory, this method will return an array of all it's subdirectories.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetSubFolders(string path);
         /// <summary>
         /// <para>Gets the path to the text .meta file associated with an asset.</para>
@@ -396,20 +416,20 @@
         /// <returns>
         /// <para>The path to the .meta text file or empty string if the file does not exist.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetTextMetaFilePathFromAssetPath(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string GetUniquePathNameAtSelectedPath(string fileName);
         /// <summary>
         /// <para>Return all the unused assetBundle names in the asset database.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetUnusedAssetBundleNames();
         /// <summary>
         /// <para>Translate a GUID to its current asset path.</para>
         /// </summary>
         /// <param name="guid"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GUIDToAssetPath(string guid);
         /// <summary>
         /// <para>Import asset at path.</para>
@@ -428,7 +448,7 @@
         /// </summary>
         /// <param name="path"></param>
         /// <param name="options"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ImportAsset(string path, [DefaultValue("ImportAssetOptions.Default")] ImportAssetOptions options);
         /// <summary>
         /// <para>Imports package at packagePath into the current project.</para>
@@ -472,7 +492,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetAssetDependencyHash(string path, out Hash128 value);
         [RequiredByNativeCode]
         private static void Internal_CallImportPackageCancelled(string packageName)
@@ -510,14 +530,14 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_GetAllLabels(out string[] labels, out float[] scores);
         /// <summary>
         /// <para>Is asset a foreign asset?</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsForeignAsset(int instanceID);
         /// <summary>
         /// <para>Is asset a foreign asset?</para>
@@ -532,7 +552,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsMainAsset(int instanceID);
         /// <summary>
         /// <para>Is asset a main asset in the project window?</para>
@@ -546,7 +566,7 @@
         /// <para>Returns true if the main asset object at assetPath is loaded in memory.</para>
         /// </summary>
         /// <param name="assetPath">Filesystem path of the asset to load.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsMainAssetAtPathLoaded(string assetPath);
         public static bool IsMetaFileOpenForEdit(Object assetObject)
         {
@@ -562,7 +582,7 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="instanceID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsNativeAsset(int instanceID);
         /// <summary>
         /// <para>Is asset a native asset?</para>
@@ -612,7 +632,7 @@
         /// </summary>
         /// <param name="obj">The asset Object to query.</param>
         /// <param name="instanceID">Instance ID of the asset Object to query.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsSubAsset(int instanceID);
         /// <summary>
         /// <para>Does the asset form part of another asset?</para>
@@ -626,19 +646,19 @@
         /// <para>Given an absolute path to a folder, returns true if it exists, false otherwise.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsValidFolder(string path);
         /// <summary>
         /// <para>Returns all asset representations at assetPath.</para>
         /// </summary>
         /// <param name="assetPath"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Object[] LoadAllAssetRepresentationsAtPath(string assetPath);
         /// <summary>
         /// <para>Returns an array of all asset objects at assetPath.</para>
         /// </summary>
         /// <param name="assetPath">Filesystem path to the asset.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Object[] LoadAllAssetsAtPath(string assetPath);
         public static T LoadAssetAtPath<T>(string assetPath) where T: Object => 
             ((T) LoadAssetAtPath(assetPath, typeof(T)));
@@ -649,17 +669,17 @@
         /// <param name="assetPath">Path of the asset to load.</param>
         /// <param name="type">Data type of the asset.</param>
         /// <returns>
-        /// <para>The asset matching the parameters.</para>
+        /// <para>The asset matching the parameters</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.TypeReferencedBySecondArgument)]
         public static extern Object LoadAssetAtPath(string assetPath, Type type);
         /// <summary>
         /// <para>Returns the main asset object at assetPath.</para>
         /// </summary>
         /// <param name="assetPath">Filesystem path of the asset to load.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Object LoadMainAssetAtPath(string assetPath);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string[] MatchLabelsPartial(Object obj, string partial);
         /// <summary>
         /// <para>Move an asset file from one folder to another.</para>
@@ -669,13 +689,13 @@
         /// <returns>
         /// <para>An empty string if the asset has been successfully moved, otherwise an error message.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string MoveAsset(string oldPath, string newPath);
         /// <summary>
         /// <para>Moves the asset at path to the trash.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool MoveAssetToTrash(string path);
         /// <summary>
         /// <para>Opens the asset with associated application.</para>
@@ -726,7 +746,7 @@
         /// <param name="instanceID"></param>
         /// <param name="lineNumber"></param>
         /// <param name="target"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool OpenAsset(int instanceID, [DefaultValue("-1")] int lineNumber);
         /// <summary>
         /// <para>Opens the asset with associated application.</para>
@@ -748,7 +768,7 @@
         /// <para>Import any changed assets.</para>
         /// </summary>
         /// <param name="options"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Refresh([DefaultValue("ImportAssetOptions.Default")] ImportAssetOptions options);
         [Obsolete("Please use AssetDatabase.Refresh instead", true)]
         public static void RefreshDelayed()
@@ -765,12 +785,12 @@
         /// </summary>
         /// <param name="assetBundleName">The assetBundle name you want to remove.</param>
         /// <param name="forceRemove">Flag to indicate if you want to remove the assetBundle name even it's in use.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool RemoveAssetBundleName(string assetBundleName, bool forceRemove);
         /// <summary>
         /// <para>Remove all the unused assetBundle names in the asset database.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RemoveUnusedAssetBundleNames();
         /// <summary>
         /// <para>Rename an asset file.</para>
@@ -780,12 +800,12 @@
         /// <returns>
         /// <para>An empty string, if the asset has been successfully renamed, otherwise an error message.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string RenameAsset(string pathName, string newName);
         /// <summary>
         /// <para>Writes all unsaved asset changes to disk.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SaveAssets();
         private static string[] SearchAllAssets(SearchFilter searchFilter)
         {
@@ -831,17 +851,17 @@
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="labels"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetLabels(Object obj, string[] labels);
         /// <summary>
         /// <para>Begin Asset importing. This lets you group several asset imports together into one larger import.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void StartAssetEditing();
         /// <summary>
         /// <para>Stop Asset importing. This lets you group several asset imports together into one larger import.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void StopAssetEditing();
         /// <summary>
         /// <para>Checks if an asset file can be moved from one folder to another. (Without actually moving the file).</para>
@@ -851,16 +871,18 @@
         /// <returns>
         /// <para>An empty string if the asset can be moved, otherwise an error message.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string ValidateMoveAsset(string oldPath, string newPath);
         /// <summary>
         /// <para>Writes the import settings to disk.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool WriteImportSettingsIfDirty(string path);
 
-        internal static bool isLocked { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static string assetFolderGUID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        internal static bool isLocked { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Delegate to be called from AssetDatabase.ImportPackage callbacks. packageName is the name of the package that raised the callback.</para>

@@ -10,6 +10,8 @@
         public const string AndroidPluginsPath = "AndroidPluginsPath";
         public const string AutoRunPlayer = "AutoRunPlayer";
         public const string BuildTarget = "BuildTarget";
+        public const string CardboardMinSdkVersion = "CardboardMinSdkVersion";
+        public const string DaydreamMinSdkVersion = "DaydreamMinSdkVersion";
         public const string DevelopmentPlayer = "DevelopmentPlayer";
         public const string ExportAndroidProject = "ExportAndroidProject";
         public const string FastzipExe = "FastzipExe";
@@ -18,15 +20,16 @@
         public const string InstallPath = "InstallPath";
         public const string ManifestName = "ManifestName";
         public const string PackageName = "PackageName";
-        public const string PlatformApiLevel = "PlatformApiLevel";
         public const string PlayerPackage = "PlayerPackage";
         public const string ProjectType = "ProjectType";
         public const int ProjectType_ADT = 2;
         public const int ProjectType_Gradle = 1;
         public const int ProjectType_Internal = 0;
+        public const int ProjectType_VisualStudio = 3;
         public const string ScriptingBackend = "ScriptingBackend";
         public const string SDKTools = "SDKTools";
         public const string SettingsXml = "SettingsXml";
+        public const string SourceBuild = "SourceBuild";
         public const string StagingArea = "StagingArea";
         public const string StagingAreaData = "StagingAreaData";
         public const string TargetDevice = "TargetDevice";
@@ -35,6 +38,7 @@
         public const string UsedClassRegistry = "UsedClassRegistry";
         public const string UseFastzip = "UseFastzip";
         public const string UseObb = "UseObb";
+        public const string Variation = "Variation";
     }
 }
 

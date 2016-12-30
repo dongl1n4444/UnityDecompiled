@@ -46,11 +46,7 @@
 
         public override string PrepareForBuild(BuildOptions options, BuildTarget target)
         {
-            if (EditorUserBuildSettings.wsaSDK != WSASDK.UWP)
-            {
-                return null;
-            }
-            if (Utility.UseIl2CppScriptingBackend())
+            if ((EditorUserBuildSettings.wsaSDK != WSASDK.UWP) || Utility.UseIl2CppScriptingBackend())
             {
                 return null;
             }

@@ -3,21 +3,22 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A capsule-shaped primitive collider.</para>
     /// </summary>
     public sealed class CapsuleCollider2D : Collider2D
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_size(out Vector2 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_size(ref Vector2 value);
 
         /// <summary>
         /// <para>The direction that the capsule sides can extend.</para>
         /// </summary>
-        public CapsuleDirection2D direction { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public CapsuleDirection2D direction { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The width and height of the capsule area.</para>

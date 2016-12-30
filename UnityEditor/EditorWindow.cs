@@ -5,17 +5,17 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Derive from this class to create an editor window.</para>
     /// </summary>
+    [UsedByNativeCode]
     public class EditorWindow : ScriptableObject
     {
         private const double kWarningFadeoutTime = 1.0;
         private const double kWarningFadeoutWait = 4.0;
         [HideInInspector, SerializeField]
-        private int m_AntiAlias = 0;
-        [SerializeField, HideInInspector]
         private bool m_AutoRepaintOnSceneChange;
         [HideInInspector, SerializeField]
         private int m_DepthBufferBits = 0;
@@ -36,6 +36,7 @@
         internal Rect m_Pos = new Rect(0f, 0f, 320f, 240f);
         [HideInInspector, SerializeField]
         internal GUIContent m_TitleContent;
+        private bool m_WantsMouseEnterLeaveWindow;
         private bool m_WantsMouseMove;
 
         public EditorWindow()
@@ -324,7 +325,7 @@
                     foreach (View view in window.rootView.allChildren)
                     {
                         DockArea area = view as DockArea;
-                        if ((area != null) && Enumerable.Any<EditorWindow>(area.m_Panes, new Func<EditorWindow, bool>(storey, (IntPtr) this.<>m__0)))
+                        if ((area != null) && Enumerable.Any<EditorWindow>(area.m_Panes, new Func<EditorWindow, bool>(storey.<>m__0)))
                         {
                             area.AddTab(pane);
                             return pane;
@@ -497,7 +498,7 @@
             return window;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void MakeModal(ContainerWindow win);
         internal void MakeParentsSettingsMatchMe()
         {
@@ -505,11 +506,11 @@
             {
                 this.m_Parent.SetTitle(base.GetType().FullName);
                 this.m_Parent.autoRepaintOnSceneChange = this.m_AutoRepaintOnSceneChange;
-                bool flag = (this.m_Parent.antiAlias != this.m_AntiAlias) || (this.m_Parent.depthBufferBits != this.m_DepthBufferBits);
-                this.m_Parent.antiAlias = this.m_AntiAlias;
+                bool flag = this.m_Parent.depthBufferBits != this.m_DepthBufferBits;
                 this.m_Parent.depthBufferBits = this.m_DepthBufferBits;
                 this.m_Parent.SetInternalGameViewDimensions(this.m_GameViewRect, this.m_GameViewClippedRect, this.m_GameViewTargetSize);
                 this.m_Parent.wantsMouseMove = this.m_WantsMouseMove;
+                this.m_Parent.wantsMouseEnterLeaveWindow = this.m_WantsMouseEnterLeaveWindow;
                 Vector2 vector = new Vector2((float) (this.m_Parent.borderSize.left + this.m_Parent.borderSize.right), (float) (this.m_Parent.borderSize.top + this.m_Parent.borderSize.bottom));
                 this.m_Parent.SetMinMaxSizes(this.minSize + vector, this.maxSize + vector);
                 if (flag)
@@ -646,7 +647,9 @@
         internal void ShowModal()
         {
             this.ShowWithMode(ShowMode.AuxWindow);
+            SavedGUIState state = SavedGUIState.Create();
             this.MakeModal(this.m_Parent.window);
+            state.ApplyAndForget();
         }
 
         internal bool ShowNextTabIfPossible()
@@ -738,13 +741,13 @@
             }
         }
 
+        [Obsolete("AA is not supported on EditorWindows", false)]
         public int antiAlias
         {
             get => 
-                this.m_AntiAlias;
+                1;
             set
             {
-                this.m_AntiAlias = value;
             }
         }
 
@@ -893,7 +896,7 @@
                     {
                         this.m_Parent.window.position = value;
                     }
-                    else if ((parent == null) || (((parent.parent != null) && (parent.m_Panes.Count == 1)) && (parent.parent.parent == null)))
+                    else if (((parent.parent != null) && (parent.m_Panes.Count == 1)) && (parent.parent.parent == null))
                     {
                         parent.window.position = parent.borderSize.Add(value);
                     }
@@ -949,7 +952,21 @@
         }
 
         /// <summary>
-        /// <para>Does the GUI in this editor window want MouseMove events?</para>
+        /// <para>Checks whether MouseEnterWindow and MouseLeaveWindow events are received in the GUI in this Editor window.</para>
+        /// </summary>
+        public bool wantsMouseEnterLeaveWindow
+        {
+            get => 
+                this.m_WantsMouseEnterLeaveWindow;
+            set
+            {
+                this.m_WantsMouseEnterLeaveWindow = value;
+                this.MakeParentsSettingsMatchMe();
+            }
+        }
+
+        /// <summary>
+        /// <para>Checks whether MouseMove events are received in the GUI in this Editor window.</para>
         /// </summary>
         public bool wantsMouseMove
         {

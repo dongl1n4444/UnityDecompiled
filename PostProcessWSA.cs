@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEditor.Modules;
 using UnityEditor.Scripting.Compilers;
 using UnityEditor.Utils;
+using UnityEditor.WSA;
 using UnityEngine;
 
 internal abstract class PostProcessWSA : PostProcessWinRT
@@ -331,7 +332,7 @@ internal abstract class PostProcessWSA : PostProcessWinRT
     }
 
     protected override string GetPlatformAssemblyPath() => 
-        MicrosoftCSharpCompiler.GetPlatformAssemblyPath(base._sdk);
+        MetroCompilationExtension.GetWindowsWinmdPath(base._sdk);
 
     protected string GetPlayerFilesSourceDirectory(string path)
     {

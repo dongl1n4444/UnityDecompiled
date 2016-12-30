@@ -301,7 +301,7 @@
         public static void DrawRangeOfClip(Rect rect, float startOfClipPixel, float endOfClipPixel)
         {
             Color color = !EditorGUIUtility.isProSkin ? Color.gray.AlphaMultiplied(0.32f) : Color.gray.RGBMultiplied((float) 0.3f).AlphaMultiplied(0.5f);
-            Color color5 = !EditorGUIUtility.isProSkin ? Color.white.RGBMultiplied((float) 0.4f) : Color.white.RGBMultiplied((float) 0.4f);
+            Color color5 = Color.white.RGBMultiplied((float) 0.4f);
             if (startOfClipPixel > rect.xMin)
             {
                 Rect rect2 = new Rect(rect.xMin, rect.yMin, Mathf.Min(startOfClipPixel - rect.xMin, rect.width), rect.height);

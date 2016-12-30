@@ -134,7 +134,7 @@
                 writer.AddCodeGenIncludes();
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<TypeReference[], int>, int>(null, (IntPtr) <WriteUnresolvedStubs>m__0);
+                    <>f__am$cache0 = item => item.Value;
                 }
                 KeyValuePair<TypeReference[], int>[] source = this._signatures.OrderBy<KeyValuePair<TypeReference[], int>, int>(<>f__am$cache0).ToArray<KeyValuePair<TypeReference[], int>>();
                 foreach (KeyValuePair<TypeReference[], int> pair in source)
@@ -150,14 +150,14 @@
                 }
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<KeyValuePair<TypeReference[], int>, string>(null, (IntPtr) MethodNameFor);
+                    <>f__mg$cache0 = new Func<KeyValuePair<TypeReference[], int>, string>(VirtualCallCollector.MethodNameFor);
                 }
                 info.MethodPointersInfo = writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_UnresolvedVirtualMethodPointers", source.Select<KeyValuePair<TypeReference[], int>, string>(<>f__mg$cache0), false);
                 List<Unity.IL2CPP.IoCServices.Range> list = new List<Unity.IL2CPP.IoCServices.Range>();
                 int num2 = 0;
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<KeyValuePair<TypeReference[], int>, TypeReference[]>(null, <WriteUnresolvedStubs>m__1);
+                    <>f__am$cache1 = item => item.Key;
                 }
                 foreach (TypeReference[] referenceArray in source.Select<KeyValuePair<TypeReference[], int>, TypeReference[]>(<>f__am$cache1))
                 {
@@ -168,11 +168,11 @@
                 info.SignatureRangesInfo = list.AsReadOnly();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<KeyValuePair<TypeReference[], int>, IEnumerable<TypeReference>>(null, (IntPtr) <WriteUnresolvedStubs>m__2);
+                    <>f__am$cache2 = item => item.Key;
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<TypeReference, int>(null, (IntPtr) <WriteUnresolvedStubs>m__3);
+                    <>f__am$cache3 = type => TypeCollector.GetIndex(type, 0);
                 }
                 info.SignatureTypesInfo = source.SelectMany<KeyValuePair<TypeReference[], int>, TypeReference>(<>f__am$cache2).Select<TypeReference, int>(<>f__am$cache3).ToArray<int>().AsReadOnlyPortable<int>();
                 return info;
@@ -189,8 +189,8 @@
             internal bool $disposing;
             internal IEnumerator<TypeReference> $locvar0;
             internal int $PC;
-            internal int <i>__0;
-            internal TypeReference <type>__1;
+            internal int <i>__1;
+            internal TypeReference <type>__2;
             internal IEnumerable<TypeReference> inputParams;
 
             [DebuggerHidden]
@@ -232,7 +232,7 @@
                         goto Label_013D;
 
                     case 1:
-                        this.<i>__0 = 1;
+                        this.<i>__1 = 1;
                         this.$locvar0 = this.inputParams.GetEnumerator();
                         num = 0xfffffffd;
                         break;
@@ -251,8 +251,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<type>__1 = this.$locvar0.Current;
-                        this.$current = VirtualCallCollector.FormatParameterName(this.<type>__1, VirtualCallCollector.Naming.ForParameterName(this.<type>__1, this.<i>__0++));
+                        this.<type>__2 = this.$locvar0.Current;
+                        this.$current = VirtualCallCollector.FormatParameterName(this.<type>__2, VirtualCallCollector.Naming.ForParameterName(this.<type>__2, this.<i>__1++));
                         if (!this.$disposing)
                         {
                             this.$PC = 2;

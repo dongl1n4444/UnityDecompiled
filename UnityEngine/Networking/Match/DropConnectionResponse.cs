@@ -11,7 +11,7 @@
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private NetworkID <networkId>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NodeID <nodeId>k__BackingField;
 
         public override void Parse(object obj)

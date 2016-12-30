@@ -18,7 +18,7 @@
                 throw new ArgumentException("When copying multiple files, the destination cannot be a relative path");
             }
             storey.dest.EnsureDirectoryExists("");
-            return self.Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
+            return self.Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).ToArray<NPath>();
         }
 
         public static IEnumerable<NPath> Copy(this IEnumerable<NPath> self, string dest) => 
@@ -38,7 +38,7 @@
             <InQuotes>c__AnonStorey2 storey = new <InQuotes>c__AnonStorey2 {
                 forward = forward
             };
-            return self.Select<NPath, string>(new Func<NPath, string>(storey, (IntPtr) this.<>m__0));
+            return self.Select<NPath, string>(new Func<NPath, string>(storey.<>m__0));
         }
 
         public static IEnumerable<NPath> Move(this IEnumerable<NPath> self, NPath dest)
@@ -51,7 +51,7 @@
                 throw new ArgumentException("When moving multiple files, the destination cannot be a relative path");
             }
             storey.dest.EnsureDirectoryExists("");
-            return self.Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
+            return self.Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).ToArray<NPath>();
         }
 
         public static IEnumerable<NPath> Move(this IEnumerable<NPath> self, string dest) => 

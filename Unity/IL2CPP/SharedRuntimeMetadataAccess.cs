@@ -43,7 +43,7 @@
                 elementType = elementType,
                 $this = this
             };
-            return this.RetreiveType(storey.elementType, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Array);
+            return this.RetreiveType(storey.elementType, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Array);
         }
 
         public string FieldInfo(FieldReference field)
@@ -119,9 +119,9 @@
             };
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<int, string>(null, (IntPtr) <HiddenMethodInfo>m__4);
+                <>f__am$cache4 = index => Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
             }
-            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey, (IntPtr) this.<>m__0), new Func<int, string>(storey, (IntPtr) this.<>m__1), <>f__am$cache4, RuntimeGenericContextInfo.Method);
+            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache4, RuntimeGenericContextInfo.Method);
         }
 
         public string Il2CppTypeFor(TypeReference type)
@@ -130,7 +130,7 @@
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_TYPE", "IL2CPP_RGCTX_TYPE", RuntimeGenericContextInfo.Type);
+            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_TYPE", "IL2CPP_RGCTX_TYPE", RuntimeGenericContextInfo.Type);
         }
 
         public string Method(MethodReference method)
@@ -140,7 +140,7 @@
                 $this = this
             };
             storey.methodReference = this._typeResolver.Resolve(storey.method);
-            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey, (IntPtr) this.<>m__0), new Func<int, string>(storey, (IntPtr) this.<>m__1), new Func<int, string>(storey, (IntPtr) this.<>m__2), RuntimeGenericContextInfo.Method);
+            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), new Func<int, string>(storey.<>m__2), RuntimeGenericContextInfo.Method);
         }
 
         public string MethodInfo(MethodReference method)
@@ -151,24 +151,24 @@
             };
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<int, string>(null, (IntPtr) <MethodInfo>m__3);
+                <>f__am$cache3 = index => Emit.Call("IL2CPP_RGCTX_METHOD_INFO", "method->rgctx_data", index.ToString(CultureInfo.InvariantCulture));
             }
-            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey, (IntPtr) this.<>m__0), new Func<int, string>(storey, (IntPtr) this.<>m__1), <>f__am$cache3, RuntimeGenericContextInfo.Method);
+            return this.RetreiveMethod<string>(storey.method, new Func<string>(storey.<>m__0), new Func<int, string>(storey.<>m__1), <>f__am$cache3, RuntimeGenericContextInfo.Method);
         }
 
         public bool NeedsBoxingForValueTypeThis(MethodReference method)
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<bool>(null, (IntPtr) <NeedsBoxingForValueTypeThis>m__0);
+                <>f__am$cache0 = () => false;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<int, bool>(null, (IntPtr) <NeedsBoxingForValueTypeThis>m__1);
+                <>f__am$cache1 = index => true;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<int, bool>(null, (IntPtr) <NeedsBoxingForValueTypeThis>m__2);
+                <>f__am$cache2 = index => true;
             }
             return this.RetreiveMethod<bool>(method, <>f__am$cache0, <>f__am$cache1, <>f__am$cache2, RuntimeGenericContextInfo.Method);
         }
@@ -179,7 +179,7 @@
                 ctor = ctor,
                 $this = this
             };
-            return this.RetreiveType(storey.ctor.DeclaringType, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Class);
+            return this.RetreiveType(storey.ctor.DeclaringType, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Class);
         }
 
         private T RetreiveMethod<T>(MethodReference method, Func<T> defaultFunc, Func<int, T> retrieveTypeSharedAccess, Func<int, T> retrieveMethodSharedAccess, RuntimeGenericContextInfo info)
@@ -188,7 +188,7 @@
             switch (rGCTXAccess)
             {
                 case RuntimeGenericAccess.None:
-                    return defaultFunc.Invoke();
+                    return defaultFunc();
 
                 case RuntimeGenericAccess.Method:
                 {
@@ -198,7 +198,7 @@
                     {
                         throw new InvalidOperationException(FormatGenericContextErrorMessage(method.FullName));
                     }
-                    return retrieveMethodSharedAccess.Invoke(num);
+                    return retrieveMethodSharedAccess(num);
                 }
             }
             if ((rGCTXAccess != RuntimeGenericAccess.This) && (rGCTXAccess != RuntimeGenericAccess.Type))
@@ -206,12 +206,12 @@
                 throw new ArgumentOutOfRangeException("method");
             }
             GenericSharingData rgctx = GenericSharingAnalysis.RuntimeGenericContextFor(this._methodReference.DeclaringType.Resolve());
-            int num2 = RetrieveMethodIndex(method, info, rgctx);
-            if (num2 == -1)
+            int arg = RetrieveMethodIndex(method, info, rgctx);
+            if (arg == -1)
             {
                 throw new InvalidOperationException(FormatGenericContextErrorMessage(method.FullName));
             }
-            return retrieveTypeSharedAccess.Invoke(num2);
+            return retrieveTypeSharedAccess(arg);
         }
 
         private string RetreiveType(TypeReference type, Func<string> defaultFunc, string typeSharedAccessName, string methodSharedAccessName, RuntimeGenericContextInfo info)
@@ -220,7 +220,7 @@
             switch (rGCTXAccess)
             {
                 case RuntimeGenericAccess.None:
-                    return defaultFunc.Invoke();
+                    return defaultFunc();
 
                 case RuntimeGenericAccess.Method:
                 {
@@ -286,7 +286,7 @@
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_SIZEOF", "IL2CPP_RGCTX_SIZEOF", RuntimeGenericContextInfo.Class);
+            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_SIZEOF", "IL2CPP_RGCTX_SIZEOF", RuntimeGenericContextInfo.Class);
         }
 
         public string StaticData(TypeReference type)
@@ -295,7 +295,7 @@
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Static);
+            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Static);
         }
 
         public string StringLiteral(string literal) => 
@@ -307,7 +307,7 @@
                 type = type,
                 $this = this
             };
-            return this.RetreiveType(storey.type, new Func<string>(storey, (IntPtr) this.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Class);
+            return this.RetreiveType(storey.type, new Func<string>(storey.<>m__0), "IL2CPP_RGCTX_DATA", "IL2CPP_RGCTX_DATA", RuntimeGenericContextInfo.Class);
         }
 
         [CompilerGenerated]

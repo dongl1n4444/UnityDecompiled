@@ -36,7 +36,7 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Inverse(ref Matrix4x4 m, out Matrix4x4 value);
         public static Matrix4x4 Transpose(Matrix4x4 m)
         {
@@ -45,12 +45,12 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Transpose(ref Matrix4x4 m, out Matrix4x4 value);
         internal static bool Invert(Matrix4x4 inMatrix, out Matrix4x4 dest) => 
             INTERNAL_CALL_Invert(ref inMatrix, out dest);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Invert(ref Matrix4x4 inMatrix, out Matrix4x4 dest);
         /// <summary>
         /// <para>The inverse of this matrix (Read Only).</para>
@@ -65,11 +65,11 @@
         /// <summary>
         /// <para>Is this the identity matrix?</para>
         /// </summary>
-        public bool isIdentity { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isIdentity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         public static float Determinant(Matrix4x4 m) => 
             INTERNAL_CALL_Determinant(ref m);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float INTERNAL_CALL_Determinant(ref Matrix4x4 m);
         /// <summary>
         /// <para>The determinant of the matrix.</para>
@@ -100,7 +100,7 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_TRS(ref Vector3 pos, ref Quaternion q, ref Vector3 s, out Matrix4x4 value);
         /// <summary>
         /// <para>Creates an orthogonal projection matrix.</para>
@@ -118,7 +118,7 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Ortho(float left, float right, float bottom, float top, float zNear, float zFar, out Matrix4x4 value);
         /// <summary>
         /// <para>Creates a perspective projection matrix.</para>
@@ -134,7 +134,7 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Perspective(float fov, float aspect, float zNear, float zFar, out Matrix4x4 value);
         public float this[int row, int column]
         {
@@ -425,6 +425,26 @@
                 m21 = 0f,
                 m22 = v.z,
                 m23 = 0f,
+                m30 = 0f,
+                m31 = 0f,
+                m32 = 0f,
+                m33 = 1f
+            };
+
+        public static Matrix4x4 Translate(Vector3 v) => 
+            new Matrix4x4 { 
+                m00 = 1f,
+                m01 = 0f,
+                m02 = 0f,
+                m03 = v.x,
+                m10 = 0f,
+                m11 = 1f,
+                m12 = 0f,
+                m13 = v.y,
+                m20 = 0f,
+                m21 = 0f,
+                m22 = 1f,
+                m23 = v.z,
                 m30 = 0f,
                 m31 = 0f,
                 m32 = 0f,

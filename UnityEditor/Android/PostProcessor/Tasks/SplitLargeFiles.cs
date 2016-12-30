@@ -20,9 +20,7 @@
             string[] components = new string[] { str, "assets", "bin", "Data" };
             this.SplitFiles(Paths.Combine(components), "*.assets", 0x100000);
             string[] textArray2 = new string[] { str, "assets", "bin", "Data" };
-            this.SplitFiles(Paths.Combine(textArray2), "*.resource", 0x100000);
-            string[] textArray3 = new string[] { str, "assets", "bin", "Data" };
-            this.SplitFiles(Paths.Combine(textArray3), "level*", 0x100000);
+            this.SplitFiles(Paths.Combine(textArray2), "level*", 0x100000);
         }
 
         private void SplitFiles(string path, string extension, int threshold)

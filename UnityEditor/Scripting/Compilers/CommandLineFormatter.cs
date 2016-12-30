@@ -55,7 +55,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <GenerateResponseFile>m__0);
+                    <>f__am$cache0 = a => a != null;
                 }
                 foreach (string str2 in Enumerable.Where<string>(arguments, <>f__am$cache0))
                 {

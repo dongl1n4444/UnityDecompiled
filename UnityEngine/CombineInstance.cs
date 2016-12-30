@@ -1,7 +1,6 @@
 ﻿namespace UnityEngine
 {
     using System;
-    using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
 
     /// <summary>
@@ -19,7 +18,7 @@
         public Mesh mesh
         {
             get => 
-                this.InternalGetMesh(this.m_MeshInstanceID);
+                CombineInstanceHelper.GetMesh(this.m_MeshInstanceID);
             set
             {
                 this.m_MeshInstanceID = (value == null) ? 0 : value.GetInstanceID();
@@ -49,8 +48,6 @@
                 this.m_Transform = value;
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern Mesh InternalGetMesh(int instanceID);
     }
 }
 

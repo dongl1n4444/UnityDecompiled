@@ -28,9 +28,6 @@
         public override string[] libraryPaths =>
             new string[0];
 
-        public override bool loadSymbols =>
-            this.m_IsDevelopmentBuild;
-
         public override string nativeLibraryFileName =>
             "libil2cpp.so";
     }

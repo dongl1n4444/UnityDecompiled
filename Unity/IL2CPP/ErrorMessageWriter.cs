@@ -83,7 +83,10 @@
             bool flag = AppendSourceCodeLocation(errorInformation, message);
             if ((!flag && (errorInformation.Type != null)) && (errorInformation.Type.Module != null))
             {
-                message.AppendFormat(" in assembly '{0}'", errorInformation.Type.Module.FullyQualifiedName);
+                if (errorInformation.Type.Module.FullyQualifiedName == null)
+                {
+                }
+                message.AppendFormat(" in assembly '{0}'", errorInformation.Type.Module.Name);
             }
             if (!flag)
             {

@@ -4,19 +4,20 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEditor;
+    using UnityEngine.Scripting;
 
     public sealed class VREditor
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern VRDeviceInfoEditor[] GetAllVRDeviceInfo(BuildTargetGroup targetGroup);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern VRDeviceInfoEditor[] GetAllVRDeviceInfoByTarget(BuildTarget target);
         public static VRDeviceInfoEditor[] GetEnabledVRDeviceInfo(BuildTarget target)
         {
             <GetEnabledVRDeviceInfo>c__AnonStorey1 storey = new <GetEnabledVRDeviceInfo>c__AnonStorey1 {
                 enabledVRDevices = GetVREnabledDevicesOnTarget(target)
             };
-            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfoByTarget(target), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<VRDeviceInfoEditor>();
+            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfoByTarget(target), new Func<VRDeviceInfoEditor, bool>(storey.<>m__0)).ToArray<VRDeviceInfoEditor>();
         }
 
         public static VRDeviceInfoEditor[] GetEnabledVRDeviceInfo(BuildTargetGroup targetGroup)
@@ -24,7 +25,7 @@
             <GetEnabledVRDeviceInfo>c__AnonStorey0 storey = new <GetEnabledVRDeviceInfo>c__AnonStorey0 {
                 enabledVRDevices = GetVREnabledDevicesOnTargetGroup(targetGroup)
             };
-            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfo(targetGroup), new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<VRDeviceInfoEditor>();
+            return Enumerable.Where<VRDeviceInfoEditor>(GetAllVRDeviceInfo(targetGroup), new Func<VRDeviceInfoEditor, bool>(storey.<>m__0)).ToArray<VRDeviceInfoEditor>();
         }
 
         [Obsolete("Use GetVREnabledOnTargetGroup instead.")]
@@ -35,11 +36,11 @@
         public static string[] GetVREnabledDevices(BuildTargetGroup targetGroup) => 
             GetVREnabledDevicesOnTargetGroup(targetGroup);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetVREnabledDevicesOnTarget(BuildTarget target);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetVREnabledDevicesOnTargetGroup(BuildTargetGroup targetGroup);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetVREnabledOnTargetGroup(BuildTargetGroup targetGroup);
         [Obsolete("UseSetVREnabledOnTargetGroup instead.")]
         public static void SetVREnabled(BuildTargetGroup targetGroup, bool value)
@@ -53,9 +54,9 @@
             SetVREnabledDevicesOnTargetGroup(targetGroup, devices);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetVREnabledDevicesOnTargetGroup(BuildTargetGroup targetGroup, string[] devices);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetVREnabledOnTargetGroup(BuildTargetGroup targetGroup, bool value);
 
         [CompilerGenerated]

@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngine.Scripting.APIUpdating;
 
     /// <summary>
@@ -48,7 +49,7 @@
         /// </summary>
         public OffMeshLink offMeshLink =>
             this.GetOffMeshLinkInternal(this.m_InstanceID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern OffMeshLink GetOffMeshLinkInternal(int instanceID);
     }
 }

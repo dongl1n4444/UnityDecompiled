@@ -38,11 +38,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<string, int>, int>(null, (IntPtr) <GetStringLiterals>m__0);
+                <>f__am$cache0 = kvp => kvp.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<string, int>, string>(null, (IntPtr) <GetStringLiterals>m__1);
+                <>f__am$cache1 = kvp => kvp.Key;
             }
             return this._stringLiterals.OrderBy<KeyValuePair<string, int>, int>(<>f__am$cache0).Select<KeyValuePair<string, int>, string>(<>f__am$cache1).ToArray<string>().AsReadOnlyPortable<string>();
         }

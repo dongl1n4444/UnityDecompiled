@@ -540,16 +540,9 @@
             {
                 int indexUnderMouse;
                 bool flag = false;
-                if (Event.current.type != EventType.Layout)
+                if ((Event.current.type != EventType.Layout) && (GUIUtility.keyboardControl == controlID))
                 {
-                    if (GUIUtility.keyboardControl == controlID)
-                    {
-                        flag = true;
-                    }
-                    else
-                    {
-                        selections = new bool[selections.Length];
-                    }
+                    flag = true;
                 }
                 switch (current.GetTypeForControl(controlID))
                 {

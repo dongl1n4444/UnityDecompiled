@@ -951,7 +951,7 @@
                 {
                     Debug.LogWarning("Look Dev switched rendering mode to deferred shading for display.");
                 }
-                if (!Camera.main.hdr)
+                if (!Camera.main.allowHDR)
                 {
                     Debug.LogWarning("Look Dev switched HDR mode on for display.");
                 }
@@ -1127,7 +1127,7 @@
             float shadowIntensity = info.shadowInfo.shadowIntensity;
             float w = info2.shadowInfo.shadowIntensity;
             Color shadowColor = info.shadowInfo.shadowColor;
-            Color color = info2.shadowInfo.shadowColor;
+            Color color2 = info2.shadowInfo.shadowColor;
             Texture texture = previewContext0.m_PreviewResult[0];
             Texture texture2 = previewContext0.m_PreviewResult[1];
             Texture texture3 = previewContext0.m_PreviewResult[2];
@@ -1147,7 +1147,7 @@
             LookDevResources.m_LookDevCompositing.SetTexture("_Tex1Normal", texture4);
             LookDevResources.m_LookDevCompositing.SetTexture("_Tex1WithoutSun", texture5);
             LookDevResources.m_LookDevCompositing.SetTexture("_Tex1Shadows", texture6);
-            LookDevResources.m_LookDevCompositing.SetColor("_ShadowColor1", color);
+            LookDevResources.m_LookDevCompositing.SetColor("_ShadowColor1", color2);
             LookDevResources.m_LookDevCompositing.SetVector("_CompositingParams", vector9);
             LookDevResources.m_LookDevCompositing.SetVector("_CompositingParams2", vector10);
             LookDevResources.m_LookDevCompositing.SetColor("_FirstViewColor", (Color) m_FirstViewGizmoColor);
@@ -1268,7 +1268,7 @@
             utility.m_Camera.renderingPath = RenderingPath.DeferredShading;
             utility.m_Camera.clearFlags = !flag ? CameraClearFlags.Skybox : CameraClearFlags.Color;
             utility.m_Camera.backgroundColor = Color.white;
-            utility.m_Camera.hdr = true;
+            utility.m_Camera.allowHDR = true;
             for (int i = 0; i < 2; i++)
             {
                 utility.m_Light[i].enabled = false;
@@ -1315,10 +1315,10 @@
             SphericalHarmonicsL2 ambientProbe = RenderSettings.ambientProbe;
             float reflectionIntensity = RenderSettings.reflectionIntensity;
             RenderSettings.defaultReflectionMode = DefaultReflectionMode.Custom;
-            Cubemap texture = (cubemapInfo == null) ? null : cubemapInfo.cubemap;
-            LookDevResources.m_SkyboxMaterial.SetTexture("_Tex", texture);
+            Cubemap cubemap2 = (cubemapInfo == null) ? null : cubemapInfo.cubemap;
+            LookDevResources.m_SkyboxMaterial.SetTexture("_Tex", cubemap2);
             LookDevResources.m_SkyboxMaterial.SetFloat("_Exposure", 1f);
-            RenderSettings.customReflection = texture;
+            RenderSettings.customReflection = cubemap2;
             if (((cubemapInfo != null) && !cubemapInfo.alreadyComputed) && !flag)
             {
                 RenderSettings.skybox = LookDevResources.m_SkyboxMaterial;

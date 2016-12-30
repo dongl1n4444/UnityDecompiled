@@ -106,18 +106,16 @@
 
         private void DoEmissionArea(Material material)
         {
-            bool flag = !this.HasValidEmissiveKeyword(material);
-            bool flag2 = this.emissionMap.textureValue != null;
-            this.m_MaterialEditor.TexturePropertyWithHDRColor(Styles.emissionText, this.emissionMap, this.emissionColorForRendering, this.m_ColorPickerHDRConfig, false);
-            float maxColorComponent = this.emissionColorForRendering.colorValue.maxColorComponent;
-            if (((this.emissionMap.textureValue != null) && !flag2) && (maxColorComponent <= 0f))
+            if (this.m_MaterialEditor.EmissionEnabledProperty())
             {
-                this.emissionColorForRendering.colorValue = Color.white;
-            }
-            this.m_MaterialEditor.LightmapEmissionProperty(3);
-            if (flag)
-            {
-                EditorGUILayout.HelpBox(Styles.emissiveWarning.text, MessageType.Warning);
+                bool flag = this.emissionMap.textureValue != null;
+                this.m_MaterialEditor.TexturePropertyWithHDRColor(Styles.emissionText, this.emissionMap, this.emissionColorForRendering, this.m_ColorPickerHDRConfig, false);
+                float maxColorComponent = this.emissionColorForRendering.colorValue.maxColorComponent;
+                if (((this.emissionMap.textureValue != null) && !flag) && (maxColorComponent <= 0f))
+                {
+                    this.emissionColorForRendering.colorValue = Color.white;
+                }
+                this.m_MaterialEditor.LightmapEmissionFlagsProperty(2, true);
             }
         }
 
@@ -204,15 +202,6 @@
             return SmoothnessMapChannel.SpecularMetallicAlpha;
         }
 
-        private bool HasValidEmissiveKeyword(Material material)
-        {
-            if (!material.IsKeywordEnabled("_EMISSION") && ShouldEmissionBeEnabled(material, this.emissionColorForRendering.colorValue))
-            {
-                return false;
-            }
-            return true;
-        }
-
         private static void MaterialChanged(Material material, WorkflowMode workflowMode)
         {
             SetupMaterialWithBlendMode(material, (BlendMode) ((int) material.GetFloat("_Mode")));
@@ -257,21 +246,12 @@
             }
             SetKeyword(material, "_PARALLAXMAP", (bool) material.GetTexture("_ParallaxMap"));
             SetKeyword(material, "_DETAIL_MULX2", (material.GetTexture("_DetailAlbedoMap") != null) || ((bool) material.GetTexture("_DetailNormalMap")));
-            bool state = ShouldEmissionBeEnabled(material, material.GetColor("_EmissionColor"));
+            MaterialEditor.FixupEmissiveFlag(material);
+            bool state = (material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.EmissiveIsBlack) == MaterialGlobalIlluminationFlags.None;
             SetKeyword(material, "_EMISSION", state);
             if (material.HasProperty("_SmoothnessTextureChannel"))
             {
                 SetKeyword(material, "_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A", GetSmoothnessMapChannel(material) == SmoothnessMapChannel.AlbedoAlpha);
-            }
-            MaterialGlobalIlluminationFlags globalIlluminationFlags = material.globalIlluminationFlags;
-            if ((globalIlluminationFlags & (MaterialGlobalIlluminationFlags.BakedEmissive | MaterialGlobalIlluminationFlags.RealtimeEmissive)) != MaterialGlobalIlluminationFlags.None)
-            {
-                globalIlluminationFlags &= ~MaterialGlobalIlluminationFlags.EmissiveIsBlack;
-                if (!state)
-                {
-                    globalIlluminationFlags |= MaterialGlobalIlluminationFlags.EmissiveIsBlack;
-                }
-                material.globalIlluminationFlags = globalIlluminationFlags;
             }
         }
 
@@ -336,8 +316,8 @@
             this.m_MaterialEditor.TexturePropertySingleLine(Styles.normalMapText, this.bumpMap, (this.bumpMap.textureValue == null) ? null : this.bumpScale);
             this.m_MaterialEditor.TexturePropertySingleLine(Styles.heightMapText, this.heightMap, (this.heightMap.textureValue == null) ? null : this.heigtMapScale);
             this.m_MaterialEditor.TexturePropertySingleLine(Styles.occlusionText, this.occlusionMap, (this.occlusionMap.textureValue == null) ? null : this.occlusionStrength);
-            this.DoEmissionArea(material);
             this.m_MaterialEditor.TexturePropertySingleLine(Styles.detailMaskText, this.detailMask);
+            this.DoEmissionArea(material);
             EditorGUI.BeginChangeCheck();
             this.m_MaterialEditor.TextureScaleOffsetProperty(this.albedoMap);
             if (EditorGUI.EndChangeCheck())
@@ -368,12 +348,6 @@
             }
         }
 
-        private static bool ShouldEmissionBeEnabled(Material mat, Color color)
-        {
-            bool flag = (mat.globalIlluminationFlags & MaterialGlobalIlluminationFlags.RealtimeEmissive) > MaterialGlobalIlluminationFlags.None;
-            return ((color.maxColorComponent > 0.0003921569f) || flag);
-        }
-
         public enum BlendMode
         {
             Opaque,
@@ -396,17 +370,14 @@
             public static GUIContent detailAlbedoText = new GUIContent("Detail Albedo x2", "Albedo (RGB) multiplied by 2");
             public static GUIContent detailMaskText = new GUIContent("Detail Mask", "Mask for Secondary Maps (A)");
             public static GUIContent detailNormalMapText = new GUIContent("Normal Map", "Normal Map");
-            public static GUIContent emissionText = new GUIContent("Emission", "Emission (RGB)");
-            public static GUIContent emissiveColorWarning = new GUIContent("Ensure emissive color is non-black for emission to have effect.");
+            public static GUIContent emissionText = new GUIContent("Color", "Emission (RGB)");
             public static GUIContent emissiveWarning = new GUIContent("Emissive value is animated but the material has not been configured to support emissive. Please make sure the material itself has some amount of emissive.");
-            public static string emptyTootip = "";
             public static string forwardText = "Forward Rendering Options";
             public static GUIContent heightMapText = new GUIContent("Height Map", "Height Map (G)");
             public static GUIContent highlightsText = new GUIContent("Specular Highlights", "Specular Highlights");
             public static GUIContent metallicMapText = new GUIContent("Metallic", "Metallic (R) and Smoothness (A)");
             public static GUIContent normalMapText = new GUIContent("Normal Map", "Normal Map");
             public static GUIContent occlusionText = new GUIContent("Occlusion", "Occlusion (G)");
-            public static GUIStyle optionsButton = "PaneOptions";
             public static string primaryMapsText = "Main Maps";
             public static GUIContent reflectionsText = new GUIContent("Reflections", "Glossy Reflections");
             public static string renderingMode = "Rendering Mode";
@@ -416,8 +387,6 @@
             public static GUIContent smoothnessText = new GUIContent("Smoothness", "Smoothness value");
             public static GUIContent specularMapText = new GUIContent("Specular", "Specular (RGB) and Smoothness (A)");
             public static GUIContent uvSetLabel = new GUIContent("UV Set");
-            public static GUIContent[] uvSetOptions = new GUIContent[] { new GUIContent("UV channel 0"), new GUIContent("UV channel 1") };
-            public static string whiteSpaceString = " ";
         }
 
         private enum WorkflowMode

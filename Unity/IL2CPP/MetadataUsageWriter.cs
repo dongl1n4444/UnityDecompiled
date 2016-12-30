@@ -98,19 +98,19 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<string, uint>, uint>(null, (IntPtr) <WriteMetadataUsage>m__0);
+                <>f__am$cache0 = item => item.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<string, uint>, string>(null, (IntPtr) <WriteMetadataUsage>m__1);
+                <>f__am$cache1 = item => Emit.Cast("void**", item.Key);
             }
             base.Writer.WriteArrayInitializer("extern void** const", "g_MetadataUsages", storey.items.OrderBy<KeyValuePair<string, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<string, uint>, string>(<>f__am$cache1), false);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<KeyValuePair<string, MetadataUsage>, string>(null, (IntPtr) <WriteMetadataUsage>m__2);
+                <>f__am$cache2 = item => item.Key;
             }
             KeyValuePair<string, MetadataUsage>[] source = MetadataUsageCollector.GetUsages().OrderBy<KeyValuePair<string, MetadataUsage>, string>(<>f__am$cache2).ToArray<KeyValuePair<string, MetadataUsage>>();
-            usagePairs1.AddRange(source.SelectMany<KeyValuePair<string, MetadataUsage>, KeyValuePair<uint, uint>>(new Func<KeyValuePair<string, MetadataUsage>, IEnumerable<KeyValuePair<uint, uint>>>(storey, (IntPtr) this.<>m__0)));
+            usagePairs1.AddRange(source.SelectMany<KeyValuePair<string, MetadataUsage>, KeyValuePair<uint, uint>>(new Func<KeyValuePair<string, MetadataUsage>, IEnumerable<KeyValuePair<uint, uint>>>(storey.<>m__0)));
             int num = 0;
             uint key = 0;
             List<KeyValuePair<uint, uint>> collection = new List<KeyValuePair<uint, uint>>(source.Length);

@@ -5,6 +5,7 @@
     using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.VR;
 
     [FilePath("GameViewSizes.asset", FilePathAttribute.Location.PreferencesFolder)]
     internal class GameViewSizes : ScriptableSingleton<GameViewSizes>
@@ -15,6 +16,8 @@
         private GameViewSizeGroup m_Android = new GameViewSizeGroup();
         [NonSerialized]
         private int m_ChangeID = 0;
+        [SerializeField]
+        private GameViewSizeGroup m_HMD = new GameViewSizeGroup();
         [SerializeField]
         private GameViewSizeGroup m_iOS = new GameViewSizeGroup();
         [NonSerialized]
@@ -36,6 +39,10 @@
 
         public static GameViewSizeGroupType BuildTargetGroupToGameViewSizeGroup(BuildTargetGroup buildTargetGroup)
         {
+            if (VRSettings.enabled && VRSettings.showDeviceView)
+            {
+                return GameViewSizeGroupType.HMD;
+            }
             switch (buildTargetGroup)
             {
                 case BuildTargetGroup.Standalone:
@@ -173,6 +180,9 @@
 
                 case GameViewSizeGroupType.N3DS:
                     return this.m_N3DS;
+
+                case GameViewSizeGroupType.HMD:
+                    return this.m_HMD;
             }
             Debug.LogError("Unhandled group enum! " + gameViewSizeGroupType);
             return this.m_Standalone;
@@ -226,20 +236,22 @@
             float num3 = size.x * size.y;
             if (num3 > num2)
             {
-                size = (Vector2) (size * (num2 / num3));
+                float num4 = size.x / size.y;
+                size.x = Mathf.Sqrt(num2 * num4);
+                size.y = num4 * size.x;
                 clamped = true;
             }
             float b = 8192f;
-            float num5 = Mathf.Min((float) SystemInfo.maxRenderTextureSize, b);
-            if ((size.x > num5) || (size.y > num5))
+            float num6 = Mathf.Min((float) SystemInfo.maxRenderTextureSize, b);
+            if ((size.x > num6) || (size.y > num6))
             {
                 if (size.x > size.y)
                 {
-                    size = (Vector2) (size * (num5 / size.x));
+                    size = (Vector2) (size * (num6 / size.x));
                 }
                 else
                 {
-                    size = (Vector2) (size * (num5 / size.y));
+                    size = (Vector2) (size * (num6 / size.y));
                 }
                 clamped = true;
             }
@@ -303,6 +315,8 @@
                 this.m_Tizen.AddBuiltinSizes(sizeArray5);
                 GameViewSize[] sizeArray6 = new GameViewSize[] { size, size39, size40 };
                 this.m_N3DS.AddBuiltinSizes(sizeArray6);
+                GameViewSize[] sizeArray7 = new GameViewSize[] { size, this.m_Remote };
+                this.m_HMD.AddBuiltinSizes(sizeArray7);
             }
         }
 
@@ -317,7 +331,7 @@
             RefreshGameViewSizeGroupType();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Action(null, (IntPtr) <OnEnable>m__0);
+                <>f__am$cache0 = () => RefreshGameViewSizeGroupType();
             }
             EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__am$cache0);
         }
@@ -331,18 +345,30 @@
             }
             else if (ScriptableSingleton<GameViewSizes>.instance.IsRemoteScreenSize(groupType, gameViewSizeIndex))
             {
-                if ((InternalEditorUtility.remoteScreenWidth <= 0f) || (InternalEditorUtility.remoteScreenHeight <= 0f))
+                int eyeTextureWidth = 0;
+                int eyeTextureHeight = 0;
+                if (VRSettings.isDeviceActive)
                 {
-                    gameViewSize.sizeType = GameViewSizeType.AspectRatio;
-                    int num = 0;
-                    gameViewSize.height = num;
-                    gameViewSize.width = num;
+                    eyeTextureWidth = VRSettings.eyeTextureWidth;
+                    eyeTextureHeight = VRSettings.eyeTextureHeight;
                 }
                 else
                 {
+                    eyeTextureWidth = (int) InternalEditorUtility.remoteScreenWidth;
+                    eyeTextureHeight = (int) InternalEditorUtility.remoteScreenHeight;
+                }
+                if ((eyeTextureWidth > 0) && (eyeTextureHeight > 0))
+                {
                     gameViewSize.sizeType = GameViewSizeType.FixedResolution;
-                    gameViewSize.width = (int) InternalEditorUtility.remoteScreenWidth;
-                    gameViewSize.height = (int) InternalEditorUtility.remoteScreenHeight;
+                    gameViewSize.width = eyeTextureWidth;
+                    gameViewSize.height = eyeTextureHeight;
+                }
+                else
+                {
+                    gameViewSize.sizeType = GameViewSizeType.AspectRatio;
+                    int num3 = 0;
+                    gameViewSize.height = num3;
+                    gameViewSize.width = num3;
                 }
             }
         }
@@ -378,6 +404,10 @@
             {
                 this.m_LastRemoteScreenSize = new Vector2(InternalEditorUtility.remoteScreenWidth, InternalEditorUtility.remoteScreenHeight);
                 this.RefreshRemoteScreenSize((int) this.m_LastRemoteScreenSize.x, (int) this.m_LastRemoteScreenSize.y);
+            }
+            if ((VRSettings.isDeviceActive && (this.m_Remote.width != VRSettings.eyeTextureWidth)) && (this.m_Remote.height != VRSettings.eyeTextureHeight))
+            {
+                this.RefreshRemoteScreenSize(VRSettings.eyeTextureWidth, VRSettings.eyeTextureHeight);
             }
         }
 

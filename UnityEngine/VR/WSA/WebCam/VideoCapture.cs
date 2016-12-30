@@ -44,9 +44,9 @@
             GC.SuppressFinalize(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Dispose_Internal(IntPtr videoCaptureObj);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private static extern void DisposeThreaded_Internal(IntPtr videoCaptureObj);
         ~VideoCapture()
         {
@@ -67,9 +67,9 @@
         public static IEnumerable<float> GetSupportedFrameRatesForResolution(Resolution resolution) => 
             GetSupportedFrameRatesForResolution_Internal(resolution.width, resolution.height);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float[] GetSupportedFrameRatesForResolution_Internal(int resolutionWidth, int resolutionHeight);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Resolution[] GetSupportedResolutions_Internal();
         /// <summary>
         /// <para>Provides a COM pointer to the native IVideoDeviceController.</para>
@@ -95,9 +95,9 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetUnsafePointerToVideoDeviceController_Internal(IntPtr videoCaptureObj, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Instantiate_Internal(bool showHolograms, OnVideoCaptureResourceCreatedCallback onCreatedCallback, out IntPtr value);
         [RequiredByNativeCode]
         private static void InvokeOnCreatedVideoCaptureResourceDelegate(OnVideoCaptureResourceCreatedCallback callback, IntPtr nativePtr)
@@ -136,7 +136,7 @@
             callback(MakeCaptureResult(hResult));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool IsRecording_Internal(IntPtr videoCaptureObj);
         private static VideoCaptureResult MakeCaptureResult(long hResult)
         {
@@ -184,9 +184,9 @@
             this.StartRecordingVideoToDisk_Internal(this.m_NativePtr, filename, onStartedRecordingVideoCallback);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void StartRecordingVideoToDisk_Internal(IntPtr videoCaptureObj, string filename, OnStartedRecordingVideoCallback onStartedRecordingVideoCallback);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void StartVideoMode_Internal(IntPtr videoCaptureObj, int audioState, OnVideoModeStartedCallback onVideoModeStartedCallback, float hologramOpacity, float frameRate, int cameraResolutionWidth, int cameraResolutionHeight, int pixelFormat);
         public void StartVideoModeAsync(CameraParameters setupParams, AudioState audioState, OnVideoModeStartedCallback onVideoModeStartedCallback)
         {
@@ -222,9 +222,9 @@
             this.StopRecordingVideoToDisk_Internal(this.m_NativePtr, onStoppedRecordingVideoCallback);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void StopRecordingVideoToDisk_Internal(IntPtr videoCaptureObj, OnStoppedRecordingVideoCallback onStoppedRecordingVideoCallback);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void StopVideoMode_Internal(IntPtr videoCaptureObj, OnVideoModeStoppedCallback onVideoModeStoppedCallback);
         public void StopVideoModeAsync(OnVideoModeStoppedCallback onVideoModeStoppedCallback)
         {

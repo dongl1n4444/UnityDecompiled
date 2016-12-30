@@ -50,7 +50,7 @@
                 bool isDevelopmentBuild = context.Get<bool>("DevelopmentPlayer");
                 RuntimeClassRegistry runtimeClassRegistry = context.Get<RuntimeClassRegistry>("UsedClassRegistry");
                 AndroidIl2CppPlatformProvider platformProvider = new AndroidIl2CppPlatformProvider(target, deviceType, isDevelopmentBuild);
-                IL2CPPUtils.RunIl2Cpp(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, isDevelopmentBuild);
+                IL2CPPUtils.RunIl2Cpp(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, false);
                 AndroidTargetDeviceType type2 = null;
                 if (device == AndroidTargetDevice.FAT)
                 {
@@ -60,7 +60,7 @@
                         this.OnProgress(this, "Compiling native assemblies for " + type2.Architecture);
                     }
                     platformProvider = new AndroidIl2CppPlatformProvider(target, type2, isDevelopmentBuild);
-                    IL2CPPUtils.RunCompileAndLink(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, isDevelopmentBuild);
+                    IL2CPPUtils.RunCompileAndLink(tempFolder, stagingAreaData, platformProvider, null, runtimeClassRegistry, false);
                 }
                 this.FinalizeAndCleanup(str, stagingAreaData, tempFolder);
                 this.CopySymbolMap(str, stagingAreaData, deviceType);

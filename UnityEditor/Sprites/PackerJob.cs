@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Current Sprite Packer job definition.</para>
@@ -23,7 +24,7 @@
             this.AddAtlas_Internal(atlasName, ref settings);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void AddAtlas_Internal(string atlasName, ref AtlasSettings settings);
         /// <summary>
         /// <para>Assigns a Sprite to an already registered atlas.</para>
@@ -32,7 +33,7 @@
         /// <param name="sprite"></param>
         /// <param name="packingMode"></param>
         /// <param name="packingRotation"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void AssignToAtlas(string atlasName, Sprite sprite, SpritePackingMode packingMode, SpritePackingRotation packingRotation);
     }
 }

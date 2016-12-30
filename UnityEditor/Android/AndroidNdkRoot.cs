@@ -109,7 +109,7 @@
             {
                 Console.WriteLine("Unable to stat '{0}'", fileName);
             }
-            string componentVersion = AndroidComponentVersion.GetComponentVersion(ndkPath);
+            Version componentVersion = AndroidComponentVersion.GetComponentVersion(ndkPath);
             if (!componentVersion.Equals("0"))
             {
                 message = $"NDK {componentVersion} is incompatible with IL2CPP. IL2CPP requires {AndroidIl2CppNativeCodeBuilder.AndroidNdkVersionString}.";
@@ -132,13 +132,21 @@
             {
                 string str = "http://dl.google.com/android/ndk/";
                 string str2 = $"android-ndk-{"r10e"}";
-                switch (Application.platform)
+                RuntimePlatform platform = Application.platform;
+                if (platform != RuntimePlatform.OSXEditor)
                 {
-                    case RuntimePlatform.WindowsEditor:
+                    if (platform == RuntimePlatform.WindowsEditor)
+                    {
                         return Path.Combine(str, str2 + (!Is64BitWindows() ? "-windows-x86.exe" : "-windows-x86_64.exe"));
-
-                    case RuntimePlatform.OSXEditor:
-                        return Path.Combine(str, str2 + "-darwin-x86_64.bin");
+                    }
+                    if (platform == RuntimePlatform.LinuxEditor)
+                    {
+                        return Path.Combine(str, str2 + "-linux-x86_64.bin");
+                    }
+                }
+                else
+                {
+                    return Path.Combine(str, str2 + "-darwin-x86_64.bin");
                 }
                 return "https://developer.android.com/tools/sdk/ndk/index.html";
             }

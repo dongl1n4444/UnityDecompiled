@@ -37,7 +37,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             EditorGUI.BeginChangeCheck();
             bool flag = ModuleUI.GUIToggle(s_Texts.separateAxes, this.m_SeparateAxes, new GUILayoutOption[0]);

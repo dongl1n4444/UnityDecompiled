@@ -12,6 +12,7 @@
     {
         private static string s_BuildToolsDir;
         private static string s_DataPath;
+        private static string s_EditorToolsDir;
 
         public static string GetShortPathName(string path)
         {
@@ -53,6 +54,12 @@
             s_DataPath = GetShortPathName(Path.GetFullPath(Application.dataPath));
         }
 
+        public static void SetupEditorToolsDir()
+        {
+            string[] components = new string[] { EditorApplication.applicationContentsPath, "Tools" };
+            s_EditorToolsDir = Paths.Combine(components);
+        }
+
         [DllImport("kernel32.dll", EntryPoint="GetShortPathName", CharSet=CharSet.Unicode, SetLastError=true)]
         private static extern int WindowsGetShortPathName([MarshalAs(UnmanagedType.LPWStr)] string lpszLongPath, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpszShortPath, int cchBuffer);
 
@@ -69,7 +76,7 @@
         {
             get
             {
-                string[] components = new string[] { binaryen, "bin", "binaryen-shell" };
+                string[] components = new string[] { binaryen, "bin", "wasm-opt" };
                 string str = Paths.Combine(components);
                 if (IsWindows())
                 {
@@ -109,6 +116,18 @@
                     SetupDataPath();
                 }
                 return s_DataPath;
+            }
+        }
+
+        public static string editorToolsDir
+        {
+            get
+            {
+                if (s_EditorToolsDir == null)
+                {
+                    SetupEditorToolsDir();
+                }
+                return s_EditorToolsDir;
             }
         }
 
@@ -221,18 +240,14 @@
             {
                 if (IsWindows())
                 {
-                    string[] textArray1 = new string[] { emscriptenPlatformSdkDir, "node", "node.exe" };
+                    string[] textArray1 = new string[] { editorToolsDir, "nodejs", "node.exe" };
                     return Paths.Combine(textArray1);
                 }
-                if (IsLinux())
-                {
-                    return (!File.Exists("/usr/bin/nodejs") ? "node" : "nodejs");
-                }
-                if (!IsMac())
+                if (!IsLinux() && !IsMac())
                 {
                     throw new Exception("Unknown platform");
                 }
-                string[] components = new string[] { emscriptenPlatformSdkDir, "node", "0.10.18_64bit", "bin", "node" };
+                string[] components = new string[] { editorToolsDir, "nodejs", "bin", "node" };
                 return Paths.Combine(components);
             }
         }

@@ -4,8 +4,9 @@
     using System.Collections;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
     internal class View : ScriptableObject
     {
         [SerializeField]

@@ -39,7 +39,7 @@
                 }
                 if (this.columnRenderer != null)
                 {
-                    this.columnRenderer.Invoke(i, rect2);
+                    this.columnRenderer(i, rect2);
                 }
                 if (Event.current.type == EventType.Repaint)
                 {

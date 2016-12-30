@@ -139,7 +139,8 @@
                     {
                         this.m_ParticleEffectUI = new ParticleEffectUI(this);
                     }
-                    if (this.m_ParticleEffectUI.InitializeIfNeeded(this.m_Target))
+                    ParticleSystem[] systems = new ParticleSystem[] { this.m_Target };
+                    if (this.m_ParticleEffectUI.InitializeIfNeeded(systems))
                     {
                         base.Repaint();
                     }

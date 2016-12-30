@@ -98,11 +98,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TinyProfiler.ThreadContext, IEnumerable<TinyProfiler.TimedSection>>(null, (IntPtr) <MakeGraph>m__0);
+                <>f__am$cache0 = t => t.Sections;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TinyProfiler.TimedSection, double>(null, (IntPtr) <MakeGraph>m__1);
+                <>f__am$cache1 = s => s.Start + s.Duration;
             }
             double num = threadContexts.SelectMany<TinyProfiler.ThreadContext, TinyProfiler.TimedSection>(<>f__am$cache0).Max<TinyProfiler.TimedSection>(<>f__am$cache1);
             this.millisecondsToPixels = 2000.0 / num;
@@ -112,7 +112,7 @@
             this.YTopOfCurrentThread = 80;
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<TinyProfiler.ThreadContext, bool>(null, (IntPtr) <MakeGraph>m__2);
+                <>f__am$cache2 = t => t.Sections.Any<TinyProfiler.TimedSection>();
             }
             foreach (TinyProfiler.ThreadContext context in threadContexts.Where<TinyProfiler.ThreadContext>(<>f__am$cache2))
             {

@@ -31,8 +31,8 @@
         private DopeSheetControlPointRenderer m_PointRenderer;
         private DopeSheetEditorRectangleTool m_RectangleTool;
         private DopeSheetSelectionRect m_SelectionRect;
-        public int m_SpritePreviewCacheSize;
-        public bool m_SpritePreviewLoading;
+        private int m_SpritePreviewCacheSize;
+        private bool m_SpritePreviewLoading;
         public AnimationWindowState state;
 
         public DopeSheetEditor(EditorWindow owner) : base(false)
@@ -171,8 +171,8 @@
                         {
                             curve = curve2;
                         }
-                        Sprite[] spriteArray = SpriteUtility.GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
-                        if (((curve2.valueType == typeof(Sprite)) && (spriteArray != null)) && (spriteArray.Length > 0))
+                        List<Sprite> list = SpriteUtility.GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
+                        if ((curve2.valueType == typeof(Sprite)) && (list.Count > 0))
                         {
                             curve = curve2;
                             type = typeof(Sprite);
@@ -465,10 +465,9 @@
                 }
             }
             AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
-            this.state.recording = true;
-            this.state.ResampleAnimation();
+            this.state.StartRecording();
             string text = "Add Key";
-            if ((dopeline.isEditable && (list.Count == 0)) && this.state.canRecord)
+            if (dopeline.isEditable && (list.Count == 0))
             {
                 AddKeyToDopelineContext userData = new AddKeyToDopelineContext {
                     dopeline = dopeline,
@@ -481,7 +480,7 @@
                 menu.AddDisabledItem(new GUIContent(text));
             }
             text = (this.state.selectedKeys.Count <= 1) ? "Delete Key" : "Delete Keys";
-            if ((dopeline.isEditable && ((this.state.selectedKeys.Count > 0) || (list.Count > 0))) && this.state.canRecord)
+            if (dopeline.isEditable && ((this.state.selectedKeys.Count > 0) || (list.Count > 0)))
             {
                 menu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(this.DeleteKeys), (this.state.selectedKeys.Count <= 0) ? list : this.state.selectedKeys);
             }
@@ -626,10 +625,6 @@
         {
             AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
             AnimationWindowUtility.AddKeyframes(this.state, dopeline.curves.ToArray<AnimationWindowCurve>(), time);
-            if (!this.state.playing && this.state.syncTimeDuringDrag)
-            {
-                this.state.frame = time.frame;
-            }
             Event.current.Use();
         }
 
@@ -704,10 +699,6 @@
                 if (this.m_IsDragging && !Mathf.Approximately(a, this.m_DragStartTime))
                 {
                     this.state.MoveSelectedKeys(deltaTime, true);
-                    if (((this.state.activeKeyframe != null) && !this.state.playing) && this.state.syncTimeDuringDrag)
-                    {
-                        this.state.frame = this.state.TimeToFrameFloor(this.state.activeKeyframe.time + this.state.activeKeyframe.curve.timeOffset);
-                    }
                     Event.current.Use();
                 }
                 if (typeForControl == EventType.MouseUp)
@@ -786,17 +777,17 @@
                 {
                     this.state.ClearSelections();
                 }
-                float num = this.state.PixelToTime(Event.current.mousePosition.x);
-                float num2 = num;
+                float time = this.state.PixelToTime(Event.current.mousePosition.x);
+                float num2 = time;
                 if (Event.current.shift)
                 {
                     foreach (AnimationWindowKeyframe keyframe2 in dopeline.keys)
                     {
                         if (this.state.KeyIsSelected(keyframe2))
                         {
-                            if (keyframe2.time < num)
+                            if (keyframe2.time < time)
                             {
-                                num = keyframe2.time;
+                                time = keyframe2.time;
                             }
                             if (keyframe2.time > num2)
                             {
@@ -828,7 +819,7 @@
                             {
                                 foreach (AnimationWindowKeyframe keyframe4 in dopeline.keys)
                                 {
-                                    if ((keyframe4 == keyframe3) || ((keyframe4.time > num) && (keyframe4.time < num2)))
+                                    if ((keyframe4 == keyframe3) || ((keyframe4.time > time) && (keyframe4.time < num2)))
                                     {
                                         this.state.SelectKey(keyframe4);
                                     }
@@ -845,10 +836,6 @@
                         }
                         this.state.activeKeyframe = keyframe3;
                         this.m_MousedownOnKeyframe = true;
-                        if (!this.state.playing && this.state.syncTimeDuringDrag)
-                        {
-                            this.state.frame = this.state.TimeToFrameRound(this.state.activeKeyframe.time + this.state.activeKeyframe.curve.timeOffset);
-                        }
                         current.Use();
                     }
                 }
@@ -865,20 +852,12 @@
                 {
                     this.HandleDopelineDoubleclick(dopeline);
                 }
-                if ((current.button == 1) && !this.state.playing)
+                if (((current.button == 1) && !this.state.controlInterface.playing) && !flag4)
                 {
-                    AnimationKeyTime time = AnimationKeyTime.Time(this.state.PixelToTime(Event.current.mousePosition.x, AnimationWindowState.SnapMode.SnapToClipFrame), this.state.frameRate);
-                    if (this.state.syncTimeDuringDrag)
-                    {
-                        this.state.frame = time.frame;
-                    }
-                    if (!flag4)
-                    {
-                        this.state.ClearSelections();
-                        this.m_IsDraggingPlayheadStarted = true;
-                        HandleUtility.Repaint();
-                        current.Use();
-                    }
+                    this.state.ClearSelections();
+                    this.m_IsDraggingPlayheadStarted = true;
+                    HandleUtility.Repaint();
+                    current.Use();
                 }
             }
         }
@@ -1103,29 +1082,8 @@
         public bool isDragging =>
             this.m_IsDragging;
 
-        public Bounds selectionBounds
-        {
-            get
-            {
-                List<AnimationWindowKeyframe> selectedKeys = this.state.selectedKeys;
-                if (selectedKeys.Count > 0)
-                {
-                    AnimationWindowKeyframe keyframe = selectedKeys[0];
-                    float x = keyframe.time + keyframe.curve.timeOffset;
-                    float y = !keyframe.isPPtrCurve ? ((float) keyframe.value) : 0f;
-                    Bounds bounds = new Bounds((Vector3) new Vector2(x, y), (Vector3) Vector2.zero);
-                    for (int i = 1; i < selectedKeys.Count; i++)
-                    {
-                        keyframe = selectedKeys[i];
-                        x = keyframe.time + keyframe.curve.timeOffset;
-                        y = !keyframe.isPPtrCurve ? ((float) keyframe.value) : 0f;
-                        bounds.Encapsulate((Vector3) new Vector2(x, y));
-                    }
-                    return bounds;
-                }
-                return new Bounds((Vector3) Vector2.zero, (Vector3) Vector2.zero);
-            }
-        }
+        public bool spritePreviewLoading =>
+            this.m_SpritePreviewLoading;
 
         [CompilerGenerated]
         private sealed class <DopelineForValueTypeExists>c__AnonStorey0

@@ -9,55 +9,62 @@
     [StructLayout(LayoutKind.Sequential)]
     public struct FrameData
     {
-        internal int m_UpdateId;
-        internal double m_Time;
-        internal double m_LastTime;
-        internal double m_TimeScale;
+        internal ulong m_FrameID;
+        internal double m_DeltaTime;
+        internal float m_Weight;
+        internal float m_EffectiveWeight;
+        internal float m_EffectiveSpeed;
+        internal Flags m_Flags;
         /// <summary>
-        /// <para>Frame update counter. Can be used to know when to initialize your Playable (when updateid is 0).</para>
+        /// <para>The current frame identifier.</para>
         /// </summary>
-        public int updateId =>
-            this.m_UpdateId;
-        /// <summary>
-        /// <para>Current time at the start of the frame.</para>
-        /// </summary>
-        public float time =>
-            ((float) this.m_Time);
-        /// <summary>
-        /// <para>Last frame's start time.</para>
-        /// </summary>
-        public float lastTime =>
-            ((float) this.m_LastTime);
+        public ulong frameId =>
+            this.m_FrameID;
         /// <summary>
         /// <para>Time difference between this frame and the preceding frame.</para>
         /// </summary>
         public float deltaTime =>
-            (((float) this.m_Time) - ((float) this.m_LastTime));
+            ((float) this.m_DeltaTime);
         /// <summary>
-        /// <para>Time speed multiplier. 1 is normal speed, 0 is stopped.</para>
+        /// <para>The weight of the current Playable.</para>
         /// </summary>
-        public float timeScale =>
-            ((float) this.m_TimeScale);
+        public float weight =>
+            this.m_Weight;
         /// <summary>
-        /// <para>Current time at the start of the frame in double precision.</para>
+        /// <para>The accumulated weight of the Playable during the PlayableGraph traversal.</para>
         /// </summary>
-        public double dTime =>
-            this.m_Time;
+        public float effectiveWeight =>
+            this.m_EffectiveWeight;
         /// <summary>
-        /// <para>Time difference between this frame and the preceding frame in double precision.</para>
+        /// <para>The accumulated speed of the Playable during the PlayableGraph traversal.</para>
         /// </summary>
-        public double dLastTime =>
-            this.m_LastTime;
+        public float effectiveSpeed =>
+            this.m_EffectiveSpeed;
         /// <summary>
-        /// <para>Time difference between this frame and the preceding frame in double precision.</para>
+        /// <para>Indicates the type of evaluation that caused PlayableGraph.PrepareFrame to be called.</para>
         /// </summary>
-        public double dDeltaTime =>
-            (this.m_Time - this.m_LastTime);
+        public EvaluationType evaluationType =>
+            (((this.m_Flags & Flags.Evaluate) == 0) ? EvaluationType.Playback : EvaluationType.Evaluate);
         /// <summary>
-        /// <para>Time speed multiplier in double precision.</para>
+        /// <para>Indicates that the local time was explicitly set.</para>
         /// </summary>
-        public double dtimeScale =>
-            this.m_TimeScale;
+        public bool seekOccurred =>
+            ((this.m_Flags & Flags.SeekOccured) != 0);
+        /// <summary>
+        /// <para>Describes the cause for the evaluation of a PlayableGraph.</para>
+        /// </summary>
+        public enum EvaluationType
+        {
+            Evaluate,
+            Playback
+        }
+
+        [Flags]
+        internal enum Flags
+        {
+            Evaluate = 1,
+            SeekOccured = 2
+        }
     }
 }
 

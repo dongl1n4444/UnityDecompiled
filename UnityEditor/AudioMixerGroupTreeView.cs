@@ -30,9 +30,9 @@
             this.m_AudioGroupTree.deselectOnUnhandledMouseDown = false;
             this.m_AudioGroupTree.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_AudioGroupTree.selectionChangedCallback, new Action<int[]>(this.OnTreeSelectionChanged));
             this.m_AudioGroupTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_AudioGroupTree.contextClickItemCallback, new Action<int>(this.OnTreeViewContextClick));
-            this.m_AudioGroupTree.expandedStateChanged = (Action) Delegate.Combine(this.m_AudioGroupTree.expandedStateChanged, new Action(this, (IntPtr) this.SaveExpandedState));
+            this.m_AudioGroupTree.expandedStateChanged = (Action) Delegate.Combine(this.m_AudioGroupTree.expandedStateChanged, new Action(this.SaveExpandedState));
             this.m_TreeViewGUI = new AudioGroupTreeViewGUI(this.m_AudioGroupTree);
-            this.m_TreeViewGUI.NodeWasToggled = (Action<AudioMixerTreeViewNode, bool>) Delegate.Combine(this.m_TreeViewGUI.NodeWasToggled, new Action<AudioMixerTreeViewNode, bool>(this, (IntPtr) this.OnNodeToggled));
+            this.m_TreeViewGUI.NodeWasToggled = (Action<AudioMixerTreeViewNode, bool>) Delegate.Combine(this.m_TreeViewGUI.NodeWasToggled, new Action<AudioMixerTreeViewNode, bool>(this.OnNodeToggled));
             this.m_AudioGroupTreeDataSource = new AudioGroupDataSource(this.m_AudioGroupTree, this.m_Controller);
             this.m_AudioGroupTree.Init(mixerWindow.position, this.m_AudioGroupTreeDataSource, this.m_TreeViewGUI, new AudioGroupTreeViewDragging(this.m_AudioGroupTree, this));
             this.m_AudioGroupTree.ReloadData();
@@ -123,7 +123,7 @@
                 this.ReloadTree();
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <DuplicateGroups>m__0);
+                    <>f__am$cache0 = audioMixerGroup => audioMixerGroup.GetInstanceID();
                 }
                 int[] selectedIDs = Enumerable.Select<AudioMixerGroupController, int>(list, <>f__am$cache0).ToArray<int>();
                 this.m_AudioGroupTree.SetSelection(selectedIDs, false);
@@ -233,7 +233,7 @@
                 List<AudioMixerGroupController> cachedSelection = this.m_Controller.CachedSelection;
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<AudioMixerGroupController, int>(null, (IntPtr) <InitSelection>m__1);
+                    <>f__am$cache1 = x => x.GetInstanceID();
                 }
                 this.m_AudioGroupTree.SetSelection(Enumerable.Select<AudioMixerGroupController, int>(cachedSelection, <>f__am$cache1).ToArray<int>(), revealSelectionAndFrameLastSelected);
             }

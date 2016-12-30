@@ -65,12 +65,12 @@
                 isInitialized = true;
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = (sender, e) => isShowing = true;
+                    <>f__am$cache0 = (EventHandler<StartEventArgs>) ((sender, e) => (isShowing = true));
                 }
                 s_Platform.OnStart += <>f__am$cache0;
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = (sender, e) => isShowing = false;
+                    <>f__am$cache1 = (EventHandler<FinishEventArgs>) ((sender, e) => (isShowing = false));
                 }
                 s_Platform.OnFinish += <>f__am$cache1;
                 MetaData metaData = new MetaData("framework");

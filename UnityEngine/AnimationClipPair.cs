@@ -6,7 +6,7 @@
     /// <summary>
     /// <para>This class defines a pair of clips used by AnimatorOverrideController.</para>
     /// </summary>
-    [Serializable, StructLayout(LayoutKind.Sequential)]
+    [Serializable, StructLayout(LayoutKind.Sequential), Obsolete("This class is not used anymore.  See AnimatorOverrideController.GetOverrides() and AnimatorOverrideController.ApplyOverrides()")]
     public sealed class AnimationClipPair
     {
         /// <summary>

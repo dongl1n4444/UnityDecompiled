@@ -34,7 +34,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <FileHashProvider>m__0);
+                <>f__am$cache0 = new Func<string, string>(FileHashProvider.<FileHashProvider>m__0);
             }
             this._fileExtensions = fileExtensions.Select<string, string>(<>f__am$cache0).ToArray<string>();
         }
@@ -47,26 +47,26 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<NPath, bool>(null, (IntPtr) <HashForAllHeaderFilesReachableByFilesIn>m__3);
+                <>f__am$cache3 = includePath => includePath.DirectoryExists("");
             }
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<NPath, string>(null, (IntPtr) <HashForAllHeaderFilesReachableByFilesIn>m__4);
+                <>f__am$cache4 = p => p.ToString();
             }
-            return string.Concat(cppCompilationInstruction.IncludePaths.Where<NPath>(<>f__am$cache3).OrderBy<NPath, string>(<>f__am$cache4).Select<NPath, string>(new Func<NPath, string>(this, (IntPtr) this.HashOfAllIncludableFilesInDirectory)));
+            return string.Concat(cppCompilationInstruction.IncludePaths.Where<NPath>(<>f__am$cache3).OrderBy<NPath, string>(<>f__am$cache4).Select<NPath, string>(new Func<NPath, string>(this.HashOfAllIncludableFilesInDirectory)));
         }
 
         public string HashForAllIncludableFilesInDirectories(IEnumerable<NPath> directories)
         {
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<NPath, bool>(null, (IntPtr) <HashForAllIncludableFilesInDirectories>m__5);
+                <>f__am$cache5 = d => d.DirectoryExists("");
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<NPath, string>(null, (IntPtr) <HashForAllIncludableFilesInDirectories>m__6);
+                <>f__am$cache6 = p => p.ToString();
             }
-            return string.Concat(directories.Where<NPath>(<>f__am$cache5).OrderBy<NPath, string>(<>f__am$cache6).Select<NPath, string>(new Func<NPath, string>(this, (IntPtr) this.HashOfAllIncludableFilesInDirectory)));
+            return string.Concat(directories.Where<NPath>(<>f__am$cache5).OrderBy<NPath, string>(<>f__am$cache6).Select<NPath, string>(new Func<NPath, string>(this.HashOfAllIncludableFilesInDirectory)));
         }
 
         private string HashOfAllIncludableFilesInDirectory(NPath directory)
@@ -75,7 +75,7 @@
             <HashOfAllIncludableFilesInDirectory>c__AnonStorey0 storey = new <HashOfAllIncludableFilesInDirectory>c__AnonStorey0 {
                 directory = directory
             };
-            if (this._cache.TryGetValue(storey.directory.ToString(), ref str))
+            if (this._cache.TryGetValue(storey.directory.ToString(), out str))
             {
                 return str;
             }
@@ -83,15 +83,15 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<NPath, string>(null, (IntPtr) HashTools.HashOfFile);
+                    <>f__mg$cache0 = new Func<NPath, string>(HashTools.HashOfFile);
                 }
-                string str3 = string.Concat(this._fileExtensions.SelectMany<string, NPath>(new Func<string, IEnumerable<NPath>>(storey, (IntPtr) this.<>m__0)).Select<NPath, string>(<>f__mg$cache0));
+                string addValue = string.Concat(this._fileExtensions.SelectMany<string, NPath>(new Func<string, IEnumerable<NPath>>(storey.<>m__0)).Select<NPath, string>(<>f__mg$cache0));
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <HashOfAllIncludableFilesInDirectory>m__2);
+                    <>f__am$cache2 = (key, value) => value;
                 }
-                this._cache.AddOrUpdate(storey.directory.ToString(), str3, <>f__am$cache2);
-                return str3;
+                this._cache.AddOrUpdate(storey.directory.ToString(), addValue, <>f__am$cache2);
+                return addValue;
             }
         }
 
@@ -101,7 +101,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<NPath, bool>(null, (IntPtr) <Initialize>m__1);
+                    <>f__am$cache1 = includePath => includePath.DirectoryExists("");
                 }
                 foreach (NPath path in instruction.IncludePaths.Where<NPath>(<>f__am$cache1))
                 {
@@ -120,7 +120,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <>m__1);
+                    <>f__am$cache0 = p => p.ToString();
                 }
                 return this.directory.Files(e, true).OrderBy<NPath, string>(<>f__am$cache0);
             }

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using UnityEditor.Collaboration;
     using UnityEditor.Hardware;
     using UnityEditor.VersionControl;
     using UnityEditor.Web;
@@ -20,7 +19,7 @@
         private DevDevice[] remoteDeviceList;
         private PopupElement[] remoteDevicePopupList;
         private PopupElement[] remoteJoystickSourceList = new PopupElement[] { new PopupElement("Remote"), new PopupElement("Local") };
-        private PopupElement[] remoteResolutionList = new PopupElement[] { new PopupElement("Normal"), new PopupElement("Downsize") };
+        private PopupElement[] remoteResolutionList = new PopupElement[] { new PopupElement("Downsize"), new PopupElement("Normal") };
         private string[] semanticMergePopupList = new string[] { "Off", "Premerge", "Ask" };
         private PopupElement[] serializationPopupList = new PopupElement[] { new PopupElement("Mixed"), new PopupElement("Force Binary"), new PopupElement("Force Text") };
         private PopupElement[] spritePackerPaddingPowerPopupList = new PopupElement[] { new PopupElement("1"), new PopupElement("2"), new PopupElement("3") };
@@ -219,7 +218,7 @@
             bool enabled = GUI.enabled;
             this.ShowUnityRemoteGUI(enabled);
             GUILayout.Space(10f);
-            bool flag2 = Collab.instance.GetCollabInfo().whitelisted && CollabAccess.Instance.IsServiceEnabled();
+            bool flag2 = CollabAccess.Instance.IsServiceEnabled();
             using (new EditorGUI.DisabledScope(!flag2))
             {
                 GUI.enabled = !flag2;
@@ -472,7 +471,7 @@
 
         private bool VersionControlSystemHasGUI()
         {
-            if (!(Collab.instance.GetCollabInfo().whitelisted && CollabAccess.Instance.IsServiceEnabled()))
+            if (!CollabAccess.Instance.IsServiceEnabled())
             {
                 ExternalVersionControl externalVersionControl = EditorSettings.externalVersionControl;
                 return ((((externalVersionControl != ExternalVersionControl.Disabled) && (externalVersionControl != ExternalVersionControl.AutoDetect)) && (externalVersionControl != ExternalVersionControl.AssetServer)) && (externalVersionControl != ExternalVersionControl.Generic));

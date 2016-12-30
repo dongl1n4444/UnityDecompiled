@@ -9,7 +9,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <Contract>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <ForceFullStates>k__BackingField;
 
         public ContractAnnotationAttribute([NotNull] string contract) : this(contract, false)

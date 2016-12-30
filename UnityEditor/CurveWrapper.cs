@@ -30,6 +30,9 @@
         public bool animationIsEditable =>
             ((this.m_SelectionBinding == null) || this.m_SelectionBinding.animationIsEditable);
 
+        public Bounds bounds =>
+            this.renderer.GetBounds();
+
         public bool changed
         {
             get => 

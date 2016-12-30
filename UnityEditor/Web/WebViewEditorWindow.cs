@@ -248,6 +248,7 @@
                 }
                 if (Event.current.type == EventType.Repaint)
                 {
+                    this.webView.SetHostView(base.m_Parent);
                     this.webView.SetSizeAndPosition((int) screenRect.x, (int) screenRect.y, (int) screenRect.width, (int) screenRect.height);
                 }
             }

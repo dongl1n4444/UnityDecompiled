@@ -418,9 +418,10 @@
 
         public Bounds GetBounds()
         {
+            this.BuildCurveMesh();
             if (!this.m_Bounds.HasValue)
             {
-                this.m_Bounds = new Bounds?(this.GetBounds(this.rangeStart, this.rangeEnd));
+                this.m_Bounds = new Bounds?(this.m_CurveMesh.bounds);
             }
             return this.m_Bounds.Value;
         }

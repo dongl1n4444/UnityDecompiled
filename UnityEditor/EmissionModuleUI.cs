@@ -22,7 +22,7 @@
             base.m_ToolTip = "Emission of the emitter. This controls the rate at which particles are emitted as well as burst emissions.";
         }
 
-        private void DoBurstGUI(ParticleSystem s)
+        private void DoBurstGUI(InitialModuleUI initial)
         {
             EditorGUILayout.Space();
             Rect controlRect = ModuleUI.GetControlRect(13, new GUILayoutOption[0]);
@@ -43,7 +43,7 @@
             GUI.Label(rect3, "Max", ParticleSystemStyles.Get().label);
             position.y += 12f;
             GUI.Label(position, GUIContent.none, ParticleSystemStyles.Get().line);
-            float duration = s.main.duration;
+            float floatValue = initial.m_LengthInSec.floatValue;
             int num7 = intValue;
             for (int i = 0; i < intValue; i++)
             {
@@ -57,9 +57,9 @@
                 {
                     floatProp.floatValue = 0f;
                 }
-                if (num9 > duration)
+                if (num9 > floatValue)
                 {
-                    floatProp.floatValue = duration;
+                    floatProp.floatValue = floatValue;
                 }
                 int num10 = property2.intValue;
                 int num11 = property3.intValue;
@@ -119,12 +119,12 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             ModuleUI.GUIMinMaxCurve(s_Texts.rateOverTime, this.m_Time, new GUILayoutOption[0]);
             ModuleUI.GUIMinMaxCurve(s_Texts.rateOverDistance, this.m_Distance, new GUILayoutOption[0]);
-            this.DoBurstGUI(s);
-            if ((s.main.simulationSpace != ParticleSystemSimulationSpace.World) && (this.m_Distance.scalar.floatValue > 0f))
+            this.DoBurstGUI(initial);
+            if ((initial.m_SimulationSpace.intValue != 1) && (this.m_Distance.scalar.floatValue > 0f))
             {
                 EditorGUILayout.HelpBox("Distance-based emission only works when using World Space Simulation Space", MessageType.Warning, true);
             }

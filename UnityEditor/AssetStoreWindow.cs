@@ -154,6 +154,7 @@
             }
             if (Event.current.type == EventType.Repaint)
             {
+                this.webView.SetHostView(base.m_Parent);
                 this.webView.SetSizeAndPosition((int) webViewRect.x, (int) webViewRect.y, (int) webViewRect.width, (int) webViewRect.height);
                 if (this.m_CurrentSkin != EditorGUIUtility.skinIndex)
                 {

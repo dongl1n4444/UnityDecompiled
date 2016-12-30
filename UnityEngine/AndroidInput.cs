@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>AndroidInput provides support for off-screen touch input, such as a touchpad.</para>
@@ -24,28 +25,28 @@
             return touch;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetSecondaryTouch(int index, out Touch value);
 
         /// <summary>
         /// <para>Property indicating whether the system provides secondary touch input.</para>
         /// </summary>
-        public static bool secondaryTouchEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool secondaryTouchEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Property indicating the height of the secondary touchpad.</para>
         /// </summary>
-        public static int secondaryTouchHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int secondaryTouchHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Property indicating the width of the secondary touchpad.</para>
         /// </summary>
-        public static int secondaryTouchWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int secondaryTouchWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Number of secondary touches. Guaranteed not to change throughout the frame. (Read Only).</para>
         /// </summary>
-        public static int touchCountSecondary { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int touchCountSecondary { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

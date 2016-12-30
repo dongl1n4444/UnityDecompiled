@@ -20,6 +20,10 @@
         internal static CallbackFunction assetBundleNameChanged;
         internal static CallbackFunction assetLabelsChanged;
         /// <summary>
+        /// <para>Callback raised whenever the user contex-clicks on a property in an Inspector.</para>
+        /// </summary>
+        public static SerializedPropertyCallbackFunction contextualPropertyMenu;
+        /// <summary>
         /// <para>Delegate which is called once after all inspectors update.</para>
         /// </summary>
         public static CallbackFunction delayCall;
@@ -68,7 +72,7 @@
         /// <summary>
         /// <para>Plays system beep sound.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Beep();
         internal static void CallDelayed(CallbackFunction function, float timeFromNow)
         {
@@ -109,17 +113,17 @@
         /// <para>Invokes the menu item in the specified path.</para>
         /// </summary>
         /// <param name="menuItemPath"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool ExecuteMenuItem(string menuItemPath);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool ExecuteMenuItemOnGameObjects(string menuItemPath, GameObject[] objects);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool ExecuteMenuItemWithTemporaryContext(string menuItemPath, Object[] objects);
         /// <summary>
         /// <para>Exit the Unity editor application.</para>
         /// </summary>
         /// <param name="returnValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Exit(int returnValue);
         internal static void Internal_CallAssetBundleNameChanged()
         {
@@ -239,30 +243,30 @@
         /// <para>Load the given level additively in play mode asynchronously</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AsyncOperation LoadLevelAdditiveAsyncInPlayMode(string path);
         /// <summary>
         /// <para>Load the given level additively in play mode.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LoadLevelAdditiveInPlayMode(string path);
         /// <summary>
         /// <para>Load the given level in play mode asynchronously.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AsyncOperation LoadLevelAsyncInPlayMode(string path);
         /// <summary>
         /// <para>Load the given level in play mode.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LoadLevelInPlayMode(string path);
         /// <summary>
         /// <para>Prevents loading of assemblies when it is inconvenient.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void LockReloadAssemblies();
         /// <summary>
         /// <para>Explicitly mark the current opened scene as modified.</para>
@@ -301,7 +305,7 @@
             OpenProjectInternal(projectPath, args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void OpenProjectInternal(string projectPath, string[] args);
         /// <summary>
         /// <para>Opens the scene at path.</para>
@@ -363,7 +367,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void ReportUNetWeaver(string filename, string msg, bool isError);
         internal static void RequestRepaintAllViews()
         {
@@ -376,10 +380,10 @@
         /// <summary>
         /// <para>Saves all serializable assets that have not yet been written to disk (eg. Materials).</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use AssetDatabase.SaveAssets instead (UnityUpgradable) -> AssetDatabase.SaveAssets()", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use AssetDatabase.SaveAssets instead (UnityUpgradable) -> AssetDatabase.SaveAssets()", true), GeneratedByOldBindingsGenerator]
         public static extern void SaveAssets();
         /// <summary>
-        /// <para>Ask the user if they want to save the open scene.</para>
+        /// <para>Ask the user if he wants to save the open scene.</para>
         /// </summary>
         [Obsolete("Use EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo")]
         public static bool SaveCurrentSceneIfUserWantsTo() => 
@@ -425,31 +429,37 @@
         public static bool SaveScene(string path, bool saveAsCopy) => 
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), path, saveAsCopy);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetSceneRepaintDirty();
+        /// <summary>
+        /// <para>Sets the path that Unity should store the current temporary project at, when the project is closed.</para>
+        /// </summary>
+        /// <param name="path">The path that the current temporary project should be relocated to when closing it.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public static extern void SetTemporaryProjectKeepPath(string path);
         /// <summary>
         /// <para>Perform a single frame step.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Step();
         /// <summary>
         /// <para>Must be called after LockReloadAssemblies, to reenable loading of assemblies.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void UnlockReloadAssemblies();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateSceneIfNeeded();
 
         /// <summary>
         /// <para>Path to the Unity editor contents folder. (Read Only)</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public static string applicationContentsPath { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string applicationContentsPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns the path to the Unity editor application. (Read Only)</para>
         /// </summary>
-        public static string applicationPath { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string applicationPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The path of the scene that the user has currently open (Will be an empty string if no scene is currently open). (Read Only)</para>
@@ -474,27 +484,27 @@
         /// <summary>
         /// <para>Is editor currently compiling scripts? (Read Only)</para>
         /// </summary>
-        public static bool isCompiling { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isCompiling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is editor currently paused?</para>
         /// </summary>
-        public static bool isPaused { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool isPaused { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is editor currently in play mode?</para>
         /// </summary>
-        public static bool isPlaying { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool isPlaying { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is editor either currently in play mode, or about to switch to it? (Read Only)</para>
         /// </summary>
-        public static bool isPlayingOrWillChangePlaymode { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isPlayingOrWillChangePlaymode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is editor currently connected to Unity Remote 4 client app.</para>
         /// </summary>
-        public static bool isRemoteConnected { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isRemoteConnected { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is true if the currently open scene in the editor contains unsaved modifications.</para>
@@ -504,23 +514,28 @@
             SceneManager.GetActiveScene().isDirty;
 
         /// <summary>
-        /// <para>This property is true if the Editor is currently refreshing the AssetDatabase. During this time, the editor checks to see if any files have changed, whether they need to be reimported, and reimports them. (Read Only)</para>
+        /// <para>Returns true if the current project was created as a temporary project.</para>
         /// </summary>
-        public static bool isUpdating { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isTemporaryProject { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        /// <summary>
+        /// <para>Is editor currently updating? (Read Only)</para>
+        /// </summary>
+        public static bool isUpdating { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        internal static Object renderSettings { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         internal static bool supportsHiDPI =>
             (Application.platform == RuntimePlatform.OSXEditor);
 
-        internal static Object tagManager { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static Object tagManager { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The time since the editor was started. (Read Only)</para>
         /// </summary>
-        public static double timeSinceStartup { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static double timeSinceStartup { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static string userJavascriptPackagesPath { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static string userJavascriptPackagesPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Delegate to be called from EditorApplication callbacks.</para>
@@ -540,6 +555,13 @@
         /// <param name="guid"></param>
         /// <param name="selectionRect"></param>
         public delegate void ProjectWindowItemCallback(string guid, Rect selectionRect);
+
+        /// <summary>
+        /// <para>Delegate to be called from EditorApplication contextual inspector callbacks.</para>
+        /// </summary>
+        /// <param name="menu">The contextual menu which is about to be shown to the user.</param>
+        /// <param name="property">The property for which the contextual menu is shown.</param>
+        public delegate void SerializedPropertyCallbackFunction(GenericMenu menu, SerializedProperty property);
     }
 }
 

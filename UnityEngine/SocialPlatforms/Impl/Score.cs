@@ -9,7 +9,7 @@
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <leaderboardID>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private long <value>k__BackingField;
         private DateTime m_Date;
         private string m_FormattedValue;

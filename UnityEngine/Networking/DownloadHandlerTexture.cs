@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A DownloadHandler subclass specialized for downloading images for use as Texture objects.</para>
@@ -42,9 +43,9 @@
         /// </summary>
         public Texture2D texture =>
             this.InternalGetTexture();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Texture2D InternalGetTexture();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern byte[] InternalGetData();
         /// <summary>
         /// <para>Returns the downloaded Texture, or null.</para>

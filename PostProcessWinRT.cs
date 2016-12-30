@@ -129,6 +129,11 @@ internal abstract class PostProcessWinRT
         }
     }
 
+    protected virtual void CopyFrameworkAssemblies()
+    {
+        throw new NotSupportedException();
+    }
+
     public virtual void CopyImages()
     {
     }
@@ -148,7 +153,7 @@ internal abstract class PostProcessWinRT
         {
             string playerFilesSourceDirectory = this.GetPlayerFilesSourceDirectory();
             string playerFilesTargetDirectory = this.GetPlayerFilesTargetDirectory();
-            IEnumerable<string> enumerable = Enumerable.Where<string>(Directory.GetFiles(playerFilesSourceDirectory, "*", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            IEnumerable<string> enumerable = Enumerable.Where<string>(Directory.GetFiles(playerFilesSourceDirectory, "*", SearchOption.AllDirectories), new Func<string, bool>(storey.<>m__0));
             foreach (string str3 in enumerable)
             {
                 string path = str3.Substring(playerFilesSourceDirectory.Length + 1);
@@ -182,7 +187,7 @@ internal abstract class PostProcessWinRT
             if (!string.IsNullOrEmpty(fileName))
             {
                 storey.pluginName = Path.GetFileNameWithoutExtension(fileName);
-                if (!Enumerable.Any<string>(this.GetCompatibleBuiltinPlugins(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (!Enumerable.Any<string>(this.GetCompatibleBuiltinPlugins(), new Func<string, bool>(storey.<>m__0)))
                 {
                     DeletePlugin(Path.Combine(this.StagingAreaDataManaged, fileName));
                     incompatiblePlugins.Add(storey.pluginName);
@@ -200,7 +205,7 @@ internal abstract class PostProcessWinRT
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(importer2.assetPath);
                 string assetPath = importer2.assetPath;
                 string str6 = MetroPluginImporterExtension.CalculateFinalPluginPath(buildTargetName, importer2, this._sdk);
-                if (string.IsNullOrEmpty(str6) || !Enumerable.Any<string>(strArray, new Func<string, bool>(storey2, (IntPtr) this.<>m__0)))
+                if (string.IsNullOrEmpty(str6) || !Enumerable.Any<string>(strArray, new Func<string, bool>(storey2.<>m__0)))
                 {
                     incompatiblePlugins.Add(fileNameWithoutExtension);
                 }
@@ -283,7 +288,7 @@ internal abstract class PostProcessWinRT
                 <CreateManagedRegistryTxtFile>c__AnonStorey8 storey = new <CreateManagedRegistryTxtFile>c__AnonStorey8 {
                     library = enumerator.Current
                 };
-                if ((!storey.library.Native && !storey.library.WinMd) && !Enumerable.Any<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if ((!storey.library.Native && !storey.library.WinMd) && !Enumerable.Any<string>(strArray, new Func<string, bool>(storey.<>m__0)))
                 {
                     if (builder.Length != 0)
                     {
@@ -501,11 +506,11 @@ internal abstract class PostProcessWinRT
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<Library, bool>(null, (IntPtr) <MakeWinmdAssembliesString>m__0);
+            <>f__am$cache0 = l => l.WinMd;
         }
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<Library, string>(null, (IntPtr) <MakeWinmdAssembliesString>m__1);
+            <>f__am$cache1 = l => l.Name;
         }
         return JoinStrings(Enumerable.Select<Library, string>(Enumerable.Where<Library>(this.Libraries, <>f__am$cache0), <>f__am$cache1));
     }
@@ -569,6 +574,9 @@ internal abstract class PostProcessWinRT
         }
         else
         {
+            this.CopyFrameworkAssemblies();
+            this.ShowStep("Patching assemblies", Step.RunReferenceRewriter);
+            this.RunReferenceRewriter();
             this.RunIL2CPP();
         }
         this.CreateTestCertificate();
@@ -639,12 +647,13 @@ internal abstract class PostProcessWinRT
         string str2 = JoinStrings(this.GetReferenceAssembliesDirectories());
         string platformAssemblyPath = this.GetPlatformAssemblyPath();
         string str4 = JoinStrings(this.GetAdditionalReferenceAssembliesDirectories());
-        string str5 = Utility.CombinePath(this.StagingArea, "WinRTLegacy.dll");
+        string str5 = !this.UseIL2CPP() ? Utility.CombinePath(this.StagingArea, "WinRTLegacy.dll") : string.Empty;
         string str6 = this.MakeWinmdAssembliesString();
         string alternativeReferenceRewritterMappings = this.GetAlternativeReferenceRewritterMappings();
         string ignoredReferenceRewriterTypes = this.GetIgnoredReferenceRewriterTypes();
         IEnumerable<string> assembliesIgnoredByReferenceRewriter = this.GetAssembliesIgnoredByReferenceRewriter();
         IEnumerable<string> ignoreOutputAssembliesForReferenceRewriter = this.GetIgnoreOutputAssembliesForReferenceRewriter();
+        string str9 = !this.UseIL2CPP() ? this.StagingArea : this.StagingAreaDataManaged;
         using (IEnumerator<Library> enumerator = this.Libraries.GetEnumerator())
         {
             while (enumerator.MoveNext())
@@ -652,14 +661,18 @@ internal abstract class PostProcessWinRT
                 <RunReferenceRewriter>c__AnonStorey6 storey = new <RunReferenceRewriter>c__AnonStorey6 {
                     library = enumerator.Current
                 };
-                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredByReferenceRewriter, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredByReferenceRewriter, new Func<string, bool>(storey.<>m__0)))
                 {
-                    foreach (string str9 in storey.library.Archs)
+                    foreach (string str10 in storey.library.Archs)
                     {
                         <RunReferenceRewriter>c__AnonStorey7 storey2 = new <RunReferenceRewriter>c__AnonStorey7();
-                        string archReferencePath = storey.library.GetArchReferencePath(str9);
-                        archReferencePath = Path.Combine(this.StagingArea, archReferencePath);
-                        string arguments = $"--target="{archReferencePath}" --additionalreferences={str4} --platform="{platformAssemblyPath}" --support="{str5}" --supportpartialns=Unity.Partial --system=System --dbg=pdb";
+                        string archReferencePath = storey.library.GetArchReferencePath(str10);
+                        archReferencePath = Path.Combine(str9, archReferencePath);
+                        string arguments = $"--target="{archReferencePath}" --additionalreferences={str4} --platform="{platformAssemblyPath}" --dbg=pdb";
+                        if (!string.IsNullOrEmpty(str5))
+                        {
+                            arguments = arguments + $" --support="{str5}" --supportpartialns=Unity.Partial --system=System";
+                        }
                         if (!string.IsNullOrEmpty(str2))
                         {
                             arguments = arguments + " --framework=" + str2;
@@ -689,7 +702,7 @@ internal abstract class PostProcessWinRT
                         {
                             this.RunAssemblyConverterNoMetadata(archReferencePath);
                         }
-                        else if (!Enumerable.Any<string>(ignoreOutputAssembliesForReferenceRewriter, new Func<string, bool>(storey2, (IntPtr) this.<>m__0)))
+                        else if (!Enumerable.Any<string>(ignoreOutputAssembliesForReferenceRewriter, new Func<string, bool>(storey2.<>m__0)))
                         {
                             char[] separator = new char[] { '\r', '\n' };
                             string[] strArray = storey2.output.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -698,9 +711,9 @@ internal abstract class PostProcessWinRT
                                 UnityEngine.Debug.LogError($"Reference Rewriter found some errors while running with command {arguments}.
 {storey2.output}");
                             }
-                            foreach (string str12 in strArray)
+                            foreach (string str13 in strArray)
                             {
-                                UnityEngine.Debug.LogError($"Reference rewriter: {str12}");
+                                UnityEngine.Debug.LogError($"Reference rewriter: {str13}");
                             }
                         }
                     }
@@ -725,7 +738,7 @@ internal abstract class PostProcessWinRT
                 <RunSerializationWeaver>c__AnonStorey5 storey = new <RunSerializationWeaver>c__AnonStorey5 {
                     library = enumerator.Current
                 };
-                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredBySerializationWeaver, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredBySerializationWeaver, new Func<string, bool>(storey.<>m__0)))
                 {
                     foreach (string str5 in storey.library.Archs)
                     {
@@ -827,7 +840,7 @@ internal abstract class PostProcessWinRT
                 <>f__ref$9 = this,
                 f = f
             };
-            return Enumerable.Any<string>(this.extensions, new Func<string, bool>(ya, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(this.extensions, new Func<string, bool>(ya.<>m__0));
         }
 
         private sealed class <CopyPlayerFiles>c__AnonStoreyA
@@ -876,10 +889,10 @@ internal abstract class PostProcessWinRT
         internal IEnumerator<string> $locvar1;
         internal int $PC;
         internal PostProcessWinRT $this;
-        internal string <arch>__1;
+        internal string <arch>__2;
         internal string <directory>__3;
-        internal Library <library>__0;
-        internal string <path>__2;
+        internal Library <library>__1;
+        internal string <path>__3;
 
         [DebuggerHidden]
         public void Dispose()
@@ -949,17 +962,17 @@ internal abstract class PostProcessWinRT
                 }
                 while (this.$locvar0.MoveNext())
                 {
-                    this.<library>__0 = this.$locvar0.Current;
-                    this.$locvar1 = this.<library>__0.Archs.GetEnumerator();
+                    this.<library>__1 = this.$locvar0.Current;
+                    this.$locvar1 = this.<library>__1.Archs.GetEnumerator();
                     num = 0xfffffffd;
                 Label_00A4:
                     try
                     {
                         while (this.$locvar1.MoveNext())
                         {
-                            this.<arch>__1 = this.$locvar1.Current;
-                            this.<path>__2 = this.<library>__0.GetArchReferencePath(this.<arch>__1);
-                            this.<directory>__3 = Path.GetDirectoryName(this.<path>__2);
+                            this.<arch>__2 = this.$locvar1.Current;
+                            this.<path>__3 = this.<library>__1.GetArchReferencePath(this.<arch>__2);
+                            this.<directory>__3 = Path.GetDirectoryName(this.<path>__3);
                             if (!string.IsNullOrEmpty(this.<directory>__3))
                             {
                                 this.$current = Utility.CombinePath(this.$this.m_ManagedAssemblyLocation, this.<directory>__3);
@@ -1083,7 +1096,7 @@ internal abstract class PostProcessWinRT
         internal bool $disposing;
         internal int $PC;
         internal PostProcessWinRT $this;
-        internal string <path>__0;
+        internal string <path>__1;
 
         [DebuggerHidden]
         public void Dispose()
@@ -1099,12 +1112,12 @@ internal abstract class PostProcessWinRT
             switch (num)
             {
                 case 0:
-                    this.<path>__0 = this.$this.GetReferenceAssembliesDirectory();
-                    if (string.IsNullOrEmpty(this.<path>__0))
+                    this.<path>__1 = this.$this.GetReferenceAssembliesDirectory();
+                    if (string.IsNullOrEmpty(this.<path>__1))
                     {
                         break;
                     }
-                    this.$current = this.<path>__0;
+                    this.$current = this.<path>__1;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;

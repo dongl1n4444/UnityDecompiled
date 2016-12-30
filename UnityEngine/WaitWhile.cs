@@ -15,7 +15,7 @@
         }
 
         public override bool keepWaiting =>
-            this.m_Predicate.Invoke();
+            this.m_Predicate();
     }
 }
 

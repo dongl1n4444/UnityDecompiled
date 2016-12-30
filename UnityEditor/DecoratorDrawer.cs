@@ -21,8 +21,7 @@
             16f;
 
         /// <summary>
-        /// <para>Override this method to make your own GUI for the decorator.
-        /// See DecoratorDrawer for an example of how to use this.</para>
+        /// <para>Override this method to make your own GUI for the decorator.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the decorator GUI.</param>
         public virtual void OnGUI(Rect position)

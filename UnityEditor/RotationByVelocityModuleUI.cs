@@ -25,18 +25,18 @@
                 {
                     s_Texts = new Texts();
                 }
-                this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "x", ModuleUI.kUseSignedRange);
-                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", ModuleUI.kUseSignedRange);
+                this.m_SeparateAxes = base.GetProperty("separateAxes");
+                this.m_Range = base.GetProperty("range");
+                this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "x", ModuleUI.kUseSignedRange, false, this.m_SeparateAxes.boolValue);
+                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", ModuleUI.kUseSignedRange, false, this.m_SeparateAxes.boolValue);
                 this.m_Z = new SerializedMinMaxCurve(this, s_Texts.z, "curve", ModuleUI.kUseSignedRange);
                 this.m_X.m_RemapValue = 57.29578f;
                 this.m_Y.m_RemapValue = 57.29578f;
                 this.m_Z.m_RemapValue = 57.29578f;
-                this.m_SeparateAxes = base.GetProperty("separateAxes");
-                this.m_Range = base.GetProperty("range");
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {

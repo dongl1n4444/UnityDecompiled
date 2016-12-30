@@ -30,6 +30,7 @@
             AndroidXmlDocument document = new AndroidXmlDocument(Path.Combine(this._stagingArea, "assets/bin/Data/settings.xml"));
             document.PatchStringRes("integer", "splash_mode", num.ToString());
             document.PatchStringRes("bool", "useObb", flag.ToString());
+            document.PatchStringRes("bool", "showSplash", !PlayerSettings.virtualRealitySupported.ToString());
             context.Set<AndroidXmlDocument>("SettingsXml", document);
             document.Save();
         }

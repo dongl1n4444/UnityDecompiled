@@ -6,6 +6,7 @@
     using UnityEditor;
     using UnityEditor.Connect;
     using UnityEditor.SceneManagement;
+    using UnityEngine.Scripting;
 
     [InitializeOnLoad]
     internal sealed class EditorProjectAccess
@@ -50,7 +51,7 @@
         public string GetOrganizationID() => 
             UnityConnect.instance.projectInfo.organizationId;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetProjectEditorVersion();
         public string GetProjectGUID() => 
             UnityConnect.instance.projectInfo.projectGUID;
@@ -71,7 +72,7 @@
         public string GetProjectPath() => 
             Directory.GetCurrentDirectory();
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetRESTServiceURI();
         public string GetUserAccessToken() => 
             UnityConnect.instance.GetAccessToken();

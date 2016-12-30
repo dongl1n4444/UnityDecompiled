@@ -18,7 +18,7 @@
             <ConvertIncludesToFullPaths>c__AnonStorey0 storey = new <ConvertIncludesToFullPaths>c__AnonStorey0 {
                 workingDirectory = Directory.GetCurrentDirectory()
             };
-            return Enumerable.Select<string, string>(relativeIncludePaths, new Func<string, string>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Select<string, string>(relativeIncludePaths, new Func<string, string>(storey.<>m__0));
         }
 
         public virtual string ConvertOutputFileToFullPath(string outputFileRelativePath) => 

@@ -62,7 +62,7 @@
         }
 
         /// <summary>
-        /// <para>UnityEvent that is triggered when the button is pressed.</para>
+        /// <para>UnityEvent to be fired when the buttons is pressed.</para>
         /// </summary>
         public ButtonClickedEvent onClick
         {
@@ -82,7 +82,7 @@
             internal int $PC;
             internal Button $this;
             internal float <elapsedTime>__1;
-            internal float <fadeTime>__0;
+            internal float <fadeTime>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -98,7 +98,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.<fadeTime>__0 = this.$this.colors.fadeDuration;
+                        this.<fadeTime>__1 = this.$this.colors.fadeDuration;
                         this.<elapsedTime>__1 = 0f;
                         break;
 
@@ -108,7 +108,7 @@
                     default:
                         goto Label_00A9;
                 }
-                if (this.<elapsedTime>__1 < this.<fadeTime>__0)
+                if (this.<elapsedTime>__1 < this.<fadeTime>__1)
                 {
                     this.<elapsedTime>__1 += Time.unscaledDeltaTime;
                     this.$current = null;

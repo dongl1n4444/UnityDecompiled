@@ -70,6 +70,21 @@
         {
         }
 
+        internal static void AdjustBounds(ref Bounds viewBounds, ref Vector2 contentPivot, ref Vector3 contentSize, ref Vector3 contentPos)
+        {
+            Vector3 vector = viewBounds.size - contentSize;
+            if (vector.x > 0f)
+            {
+                contentPos.x -= vector.x * (contentPivot.x - 0.5f);
+                contentSize.x = viewBounds.size.x;
+            }
+            if (vector.y > 0f)
+            {
+                contentPos.y -= vector.y * (contentPivot.y - 0.5f);
+                contentSize.y = viewBounds.size.y;
+            }
+        }
+
         /// <summary>
         /// <para>Called by the layout system.</para>
         /// </summary>
@@ -163,21 +178,6 @@
             Bounds bounds = new Bounds(rhs, Vector3.zero);
             bounds.Encapsulate(vector2);
             return bounds;
-        }
-
-        internal static void InternalUpdateBounds(ref Bounds viewBounds, ref Vector2 contentPivot, ref Vector3 contentSize, ref Vector3 contentPos)
-        {
-            Vector3 vector = viewBounds.size - contentSize;
-            if (vector.x > 0f)
-            {
-                contentPos.x -= vector.x * (contentPivot.x - 0.5f);
-                contentSize.x = viewBounds.size.x;
-            }
-            if (vector.y > 0f)
-            {
-                contentPos.y -= vector.y * (contentPivot.y - 0.5f);
-                contentSize.y = viewBounds.size.y;
-            }
         }
 
         /// <summary>
@@ -529,7 +529,12 @@
             this.m_ContentBounds = this.GetBounds();
         }
 
-        private void SetNormalizedPosition(float value, int axis)
+        /// <summary>
+        /// <para>Set the horizontal or vertical scroll position as a value between 0 and 1, with 0 being at the left or at the bottom.</para>
+        /// </summary>
+        /// <param name="value">The position to set, between 0 and 1.</param>
+        /// <param name="axis">The axis to set: 0 for horizontal, 1 for vertical.</param>
+        protected virtual void SetNormalizedPosition(float value, int axis)
         {
             this.EnsureLayoutHasRebuilt();
             this.UpdateBounds();
@@ -574,9 +579,40 @@
                 Vector3 size = this.m_ContentBounds.size;
                 Vector3 center = this.m_ContentBounds.center;
                 Vector2 pivot = this.m_Content.pivot;
-                InternalUpdateBounds(ref this.m_ViewBounds, ref pivot, ref size, ref center);
+                AdjustBounds(ref this.m_ViewBounds, ref pivot, ref size, ref center);
                 this.m_ContentBounds.size = size;
                 this.m_ContentBounds.center = center;
+                if (this.movementType == MovementType.Clamped)
+                {
+                    Vector3 zero = Vector3.zero;
+                    if (this.m_ViewBounds.max.x > this.m_ContentBounds.max.x)
+                    {
+                        zero.x = Math.Min((float) (this.m_ViewBounds.min.x - this.m_ContentBounds.min.x), (float) (this.m_ViewBounds.max.x - this.m_ContentBounds.max.x));
+                    }
+                    else if (this.m_ViewBounds.min.x < this.m_ContentBounds.min.x)
+                    {
+                        zero.x = Math.Max((float) (this.m_ViewBounds.min.x - this.m_ContentBounds.min.x), (float) (this.m_ViewBounds.max.x - this.m_ContentBounds.max.x));
+                    }
+                    if (this.m_ViewBounds.min.y < this.m_ContentBounds.min.y)
+                    {
+                        zero.y = Math.Max((float) (this.m_ViewBounds.min.y - this.m_ContentBounds.min.y), (float) (this.m_ViewBounds.max.y - this.m_ContentBounds.max.y));
+                    }
+                    else if (this.m_ViewBounds.max.y > this.m_ContentBounds.max.y)
+                    {
+                        zero.y = Math.Min((float) (this.m_ViewBounds.min.y - this.m_ContentBounds.min.y), (float) (this.m_ViewBounds.max.y - this.m_ContentBounds.max.y));
+                    }
+                    if (zero != Vector3.zero)
+                    {
+                        this.m_Content.Translate(zero);
+                        this.m_ContentBounds = this.GetBounds();
+                        size = this.m_ContentBounds.size;
+                        center = this.m_ContentBounds.center;
+                        pivot = this.m_Content.pivot;
+                        AdjustBounds(ref this.m_ViewBounds, ref pivot, ref size, ref center);
+                        this.m_ContentBounds.size = size;
+                        this.m_ContentBounds.center = center;
+                    }
+                }
             }
         }
 
@@ -614,7 +650,7 @@
         }
 
         /// <summary>
-        /// <para>Helper function to update the previous data fields on a ScrollRect.</para>
+        /// <para>Helper function to update the previous data fields on a ScrollRect. Call this before you change data in the ScrollRect.</para>
         /// </summary>
         protected void UpdatePrevData()
         {

@@ -9,7 +9,8 @@
     {
         Default,
         Perspective,
-        Orthographic
+        Orthographic,
+        CustomAxis
     }
 }
 

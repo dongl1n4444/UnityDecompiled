@@ -8,10 +8,15 @@
         internal bool didFocus = false;
         private const string kLastIP = "ProfilerLastIP";
         private const string kTextFieldId = "IPWindow";
-        internal string m_IPString = GetLastIPString();
+        internal string m_IPString;
 
         public static string GetLastIPString() => 
             EditorPrefs.GetString("ProfilerLastIP", "");
+
+        private void OnEnable()
+        {
+            this.m_IPString = GetLastIPString();
+        }
 
         private void OnGUI()
         {

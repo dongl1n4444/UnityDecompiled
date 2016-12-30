@@ -55,7 +55,7 @@
             this.m_ClientGUIView = GUIView.current;
             if (delay > 0f)
             {
-                this.m_DelayedCallback = new DelayedCallback(new Action(this, (IntPtr) this.BeginRenameInternalCallback), (double) delay);
+                this.m_DelayedCallback = new DelayedCallback(new Action(this.BeginRenameInternalCallback), (double) delay);
             }
             else
             {

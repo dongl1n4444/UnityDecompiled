@@ -45,7 +45,7 @@
         /// <param name="screenRect"></param>
         public static void BeginArea(Rect screenRect, GUIContent content)
         {
-            BeginArea(screenRect, GUIContent.none, GUIStyle.none);
+            BeginArea(screenRect, content, GUIStyle.none);
         }
 
         /// <summary>

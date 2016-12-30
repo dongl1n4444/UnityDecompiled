@@ -364,7 +364,7 @@
             }
         }
 
-        private void DrawLabelDragger(ChartType type, Rect r, ChartData cdata)
+        protected virtual void DrawLabelDragger(ChartType type, Rect r, ChartData cdata)
         {
             Vector2 mousePosition = Event.current.mousePosition;
             if (type == ChartType.StackedFill)
@@ -391,9 +391,9 @@
             {
                 for (int i = 0; i < cdata.charts.Length; i++)
                 {
-                    Rect rect2 = new Rect(r.x, (r.y + 20f) + (i * 11), 170f, 11f);
                     GUI.backgroundColor = cdata.charts[i].color;
-                    GUI.Label(rect2, cdata.charts[i].name, ms_Styles.paneSubLabel);
+                    string name = cdata.charts[i].name;
+                    DrawSubLabel(r, i, name);
                 }
             }
             GUI.backgroundColor = Color.white;
@@ -496,19 +496,36 @@
 
         private void DrawSelectedFrame(int selectedFrame, ChartData cdata, Rect r)
         {
-            if ((Event.current.type == EventType.Repaint) && ((cdata.firstSelectableFrame != -1) && ((selectedFrame - cdata.firstSelectableFrame) >= 0)))
+            if ((cdata.firstSelectableFrame != -1) && ((selectedFrame - cdata.firstSelectableFrame) >= 0))
             {
-                float numberOfFrames = cdata.NumberOfFrames;
-                selectedFrame -= cdata.firstFrame;
-                HandleUtility.ApplyWireMaterial();
-                GL.Begin(7);
-                GL.Color(new Color(1f, 1f, 1f, 0.6f));
-                GL.Vertex3(r.x + ((r.width / numberOfFrames) * selectedFrame), r.y + 1f, 0f);
-                GL.Vertex3((r.x + ((r.width / numberOfFrames) * selectedFrame)) + (r.width / numberOfFrames), r.y + 1f, 0f);
-                GL.Color(new Color(1f, 1f, 1f, 0.7f));
-                GL.Vertex3((r.x + ((r.width / numberOfFrames) * selectedFrame)) + (r.width / numberOfFrames), r.yMax, 0f);
-                GL.Vertex3(r.x + ((r.width / numberOfFrames) * selectedFrame), r.yMax, 0f);
-                GL.End();
+                DrawVerticalLine(selectedFrame, cdata, r, ms_Styles.selectedFrameColor1, ms_Styles.selectedFrameColor2, 1f);
+            }
+        }
+
+        protected static void DrawSubLabel(Rect r, int i, string name)
+        {
+            Rect position = new Rect(r.x, (r.y + 20f) + (i * 11), 170f, 11f);
+            GUI.Label(position, name, ms_Styles.paneSubLabel);
+        }
+
+        internal static void DrawVerticalLine(int frame, ChartData cdata, Rect r, Color color1, Color color2, float widthFactor)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                frame -= cdata.firstFrame;
+                if (frame >= 0)
+                {
+                    float numberOfFrames = cdata.NumberOfFrames;
+                    HandleUtility.ApplyWireMaterial();
+                    GL.Begin(7);
+                    GL.Color(color1);
+                    GL.Vertex3(r.x + ((r.width / numberOfFrames) * frame), r.y + 1f, 0f);
+                    GL.Vertex3((r.x + ((r.width / numberOfFrames) * frame)) + (r.width / numberOfFrames), r.y + 1f, 0f);
+                    GL.Color(color2);
+                    GL.Vertex3((r.x + ((r.width / numberOfFrames) * frame)) + (r.width / numberOfFrames), r.yMax, 0f);
+                    GL.Vertex3(r.x + ((r.width / numberOfFrames) * frame), r.yMax, 0f);
+                    GL.End();
+                }
             }
         }
 
@@ -517,6 +534,9 @@
             GUIContent content = new GUIContent(text);
             return ms_Styles.whiteLabel.CalcSize(content).y;
         }
+
+        protected static Rect GetToggleRect(Rect r, int idx) => 
+            new Rect((r.x + 10f) + 40f, (r.y + 20f) + (idx * 11), 9f, 9f);
 
         private int HandleFrameSelectionEvents(int selectedFrame, int chartControlID, Rect chartFrame, ChartData cdata, int len)
         {
@@ -573,7 +593,7 @@
             return selectedFrame;
         }
 
-        private void LabelDraggerDrag(int chartControlID, ChartType chartType, ChartData cdata, Rect r, bool active)
+        protected internal virtual void LabelDraggerDrag(int chartControlID, ChartType chartType, ChartData cdata, Rect r, bool active)
         {
             if ((chartType != ChartType.Line) && active)
             {
@@ -593,35 +613,31 @@
                             this.m_DragItemIndex = -1;
                             current.Use();
                         }
-                        int num = 0;
+                        int idx = 0;
                         int index = cdata.charts.Length - 1;
                         while (index >= 0)
                         {
-                            if (((current.type == EventType.MouseUp) && (this.m_MouseDownIndex != -1)) || (current.type == EventType.MouseDown))
+                            if ((((current.type == EventType.MouseUp) && (this.m_MouseDownIndex != -1)) || (current.type == EventType.MouseDown)) && GetToggleRect(r, idx).Contains(current.mousePosition))
                             {
-                                Rect rect = new Rect((r.x + 10f) + 40f, (r.y + 20f) + (num * 11), 9f, 9f);
-                                if (rect.Contains(current.mousePosition))
+                                this.m_DragItemIndex = -1;
+                                if ((current.type == EventType.MouseUp) && (this.m_MouseDownIndex == index))
                                 {
-                                    this.m_DragItemIndex = -1;
-                                    if ((current.type == EventType.MouseUp) && (this.m_MouseDownIndex == index))
+                                    this.m_MouseDownIndex = -1;
+                                    cdata.charts[cdata.chartOrder[index]].enabled = !cdata.charts[cdata.chartOrder[index]].enabled;
+                                    if (chartType == ChartType.StackedFill)
                                     {
-                                        this.m_MouseDownIndex = -1;
-                                        cdata.charts[cdata.chartOrder[index]].enabled = !cdata.charts[cdata.chartOrder[index]].enabled;
-                                        if (chartType == ChartType.StackedFill)
-                                        {
-                                            this.SaveChartsSettingsEnabled(cdata);
-                                        }
+                                        this.SaveChartsSettingsEnabled(cdata);
                                     }
-                                    else
-                                    {
-                                        this.m_MouseDownIndex = index;
-                                    }
-                                    current.Use();
                                 }
+                                else
+                                {
+                                    this.m_MouseDownIndex = index;
+                                }
+                                current.Use();
                             }
                             if (current.type == EventType.MouseDown)
                             {
-                                Rect rect2 = new Rect(r.x, (r.y + 20f) + (num * 11), 170f, 11f);
+                                Rect rect2 = new Rect(r.x, (r.y + 20f) + (idx * 11), 170f, 11f);
                                 if (rect2.Contains(current.mousePosition))
                                 {
                                     this.m_MouseDownIndex = -1;
@@ -638,7 +654,7 @@
                             else if (((this.m_DragItemIndex != -1) && (typeForControl == EventType.MouseDrag)) && (index != this.m_DragItemIndex))
                             {
                                 float y = current.mousePosition.y;
-                                float num4 = (r.y + 20f) + (num * 11);
+                                float num4 = (r.y + 20f) + (idx * 11);
                                 if ((y >= num4) && (y < (num4 + 11f)))
                                 {
                                     int num5 = cdata.chartOrder[index];
@@ -649,7 +665,7 @@
                                 }
                             }
                             index--;
-                            num++;
+                            idx++;
                         }
                         if ((typeForControl == EventType.MouseDrag) && (this.m_DragItemIndex != -1))
                         {
@@ -775,6 +791,8 @@
             public GUIStyle paneSubLabel = "ProfilerPaneSubLabel";
             public GUIContent performanceWarning = new GUIContent("", EditorGUIUtility.LoadIcon("console.warnicon.sml"), "Collecting GPU Profiler data might have overhead. Close graph if you don't need its data");
             public GUIStyle rightPane = "ProfilerRightPane";
+            public Color selectedFrameColor1 = new Color(1f, 1f, 1f, 0.6f);
+            public Color selectedFrameColor2 = new Color(1f, 1f, 1f, 0.7f);
             public GUIStyle selectedLabel = "ProfilerSelectedLabel";
             public GUIStyle whiteLabel = "ProfilerBadge";
         }

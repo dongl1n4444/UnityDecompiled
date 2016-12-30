@@ -206,13 +206,13 @@
         public static string GetSignature<ReturnType>(object[] args) => 
             _AndroidJNIHelper.GetSignature<ReturnType>(args);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CreateJavaProxy(AndroidJavaProxy proxy, out IntPtr value);
 
         /// <summary>
         /// <para>Set debug to true to log calls through the AndroidJNIHelper.</para>
         /// </summary>
-        public static bool debug { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool debug { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

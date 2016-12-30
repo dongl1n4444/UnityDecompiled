@@ -1,9 +1,11 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using UnityEngine;
 
-    [CustomEditor(typeof(ParticleSystem))]
+    [CustomEditor(typeof(ParticleSystem)), CanEditMultipleObjects]
     internal class ParticleSystemInspector : Editor, ParticleEffectUIOwner
     {
         private GUIContent closeWindowText = new GUIContent("Close Editor");
@@ -22,15 +24,21 @@
             this.m_ParticleEffectUI = null;
         }
 
+        public override void DrawPreview(Rect previewArea)
+        {
+            Object[] targets = new Object[] { base.targets[0] };
+            ObjectPreview.DrawPreview(this, previewArea, targets);
+        }
+
         public override GUIContent GetPreviewTitle() => 
             this.m_PreviewTitle;
 
         public override bool HasPreviewGUI() => 
-            (this.ShouldShowInspector() && (Selection.objects.Length == 1));
+            this.ShouldShowInspector();
 
         private void HierarchyOrProjectWindowWasChanged()
         {
-            if (this.ShouldShowInspector())
+            if ((base.target != null) && this.ShouldShowInspector())
             {
                 this.Init(true);
             }
@@ -38,17 +46,17 @@
 
         private void Init(bool forceInit)
         {
-            ParticleSystem target = base.target as ParticleSystem;
-            if (target != null)
+            IEnumerable<ParticleSystem> source = base.targets.OfType<ParticleSystem>();
+            if ((source != null) && source.Any<ParticleSystem>())
             {
                 if (this.m_ParticleEffectUI == null)
                 {
                     this.m_ParticleEffectUI = new ParticleEffectUI(this);
-                    this.m_ParticleEffectUI.InitializeIfNeeded(target);
+                    this.m_ParticleEffectUI.InitializeIfNeeded(source);
                 }
                 else if (forceInit)
                 {
-                    this.m_ParticleEffectUI.InitializeIfNeeded(target);
+                    this.m_ParticleEffectUI.InitializeIfNeeded(source);
                 }
             }
         }
@@ -138,55 +146,58 @@
         {
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayout.FlexibleSpace();
-            bool selectedInParticleSystemWindow = this.selectedInParticleSystemWindow;
-            GameObject gameObject = (base.target as ParticleSystem).gameObject;
-            GUIContent hideWindowText = null;
-            ParticleSystemWindow instance = ParticleSystemWindow.GetInstance();
-            if (((instance != null) && instance.IsVisible()) && selectedInParticleSystemWindow)
+            if ((this.m_ParticleEffectUI == null) || !this.m_ParticleEffectUI.multiEdit)
             {
-                if (instance.GetNumTabs() > 1)
-                {
-                    hideWindowText = this.hideWindowText;
-                }
-                else
-                {
-                    hideWindowText = this.closeWindowText;
-                }
-            }
-            else
-            {
-                hideWindowText = this.showWindowText;
-            }
-            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(110f) };
-            if (GUILayout.Button(hideWindowText, EditorStyles.miniButton, options))
-            {
+                bool selectedInParticleSystemWindow = this.selectedInParticleSystemWindow;
+                GameObject gameObject = (base.target as ParticleSystem).gameObject;
+                GUIContent hideWindowText = null;
+                ParticleSystemWindow instance = ParticleSystemWindow.GetInstance();
                 if (((instance != null) && instance.IsVisible()) && selectedInParticleSystemWindow)
                 {
-                    if (!instance.ShowNextTabIfPossible())
+                    if (instance.GetNumTabs() > 1)
                     {
-                        instance.Close();
-                    }
-                }
-                else
-                {
-                    if (!selectedInParticleSystemWindow)
-                    {
-                        ParticleSystemEditorUtils.lockedParticleSystem = null;
-                        Selection.activeGameObject = gameObject;
-                    }
-                    if (instance != null)
-                    {
-                        if (!selectedInParticleSystemWindow)
-                        {
-                            instance.Clear();
-                        }
-                        instance.Focus();
+                        hideWindowText = this.hideWindowText;
                     }
                     else
                     {
-                        this.Clear();
-                        ParticleSystemWindow.CreateWindow();
-                        GUIUtility.ExitGUI();
+                        hideWindowText = this.closeWindowText;
+                    }
+                }
+                else
+                {
+                    hideWindowText = this.showWindowText;
+                }
+                GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(110f) };
+                if (GUILayout.Button(hideWindowText, EditorStyles.miniButton, options))
+                {
+                    if (((instance != null) && instance.IsVisible()) && selectedInParticleSystemWindow)
+                    {
+                        if (!instance.ShowNextTabIfPossible())
+                        {
+                            instance.Close();
+                        }
+                    }
+                    else
+                    {
+                        if (!selectedInParticleSystemWindow)
+                        {
+                            ParticleSystemEditorUtils.lockedParticleSystem = null;
+                            Selection.activeGameObject = gameObject;
+                        }
+                        if (instance != null)
+                        {
+                            if (!selectedInParticleSystemWindow)
+                            {
+                                instance.Clear();
+                            }
+                            instance.Focus();
+                        }
+                        else
+                        {
+                            this.Clear();
+                            ParticleSystemWindow.CreateWindow();
+                            GUIUtility.ExitGUI();
+                        }
                     }
                 }
             }

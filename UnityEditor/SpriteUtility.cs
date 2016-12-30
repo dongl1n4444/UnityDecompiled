@@ -106,7 +106,50 @@
             GameObject obj2 = new GameObject(GameObjectUtility.GetUniqueNameForSibling(null, name));
             obj2.AddComponent<SpriteRenderer>().sprite = frame;
             obj2.transform.position = position;
+            obj2.hideFlags = HideFlags.HideInHierarchy;
             return obj2;
+        }
+
+        private static void CreateSceneDragObjects(List<Sprite> sprites)
+        {
+            if (s_SceneDragObjects == null)
+            {
+                s_SceneDragObjects = new List<Object>();
+            }
+            if (s_DragType == DragType.CreateMultiple)
+            {
+                foreach (Sprite sprite in sprites)
+                {
+                    s_SceneDragObjects.Add(CreateDragGO(sprite, Vector3.zero));
+                }
+            }
+            else
+            {
+                s_SceneDragObjects.Add(CreateDragGO(sprites[0], Vector3.zero));
+            }
+        }
+
+        public static Texture2D CreateTemporaryDuplicate(Texture2D original, int width, int height)
+        {
+            if (!ShaderUtil.hardwareSupportsRectRenderTexture || (original == null))
+            {
+                return null;
+            }
+            RenderTexture active = RenderTexture.active;
+            bool flag = !TextureUtil.GetLinearSampled(original);
+            RenderTexture dest = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.Default, !flag ? RenderTextureReadWrite.Linear : RenderTextureReadWrite.sRGB);
+            GL.sRGBWrite = flag && (QualitySettings.activeColorSpace == ColorSpace.Linear);
+            Graphics.Blit(original, dest);
+            GL.sRGBWrite = false;
+            RenderTexture.active = dest;
+            bool flag2 = (width >= SystemInfo.maxTextureSize) || (height >= SystemInfo.maxTextureSize);
+            Texture2D textured2 = new Texture2D(width, height, TextureFormat.RGBA32, (original.mipmapCount > 1) || flag2);
+            textured2.ReadPixels(new Rect(0f, 0f, (float) width, (float) height), 0, 0);
+            textured2.Apply();
+            RenderTexture.ReleaseTemporary(dest);
+            EditorGUIUtility.SetRenderTextureNoViewport(active);
+            textured2.alphaIsTransparency = original.alphaIsTransparency;
+            return textured2;
         }
 
         public static GameObject DropSpriteToSceneToCreateGO(Sprite sprite, Vector3 position)
@@ -116,6 +159,18 @@
             obj2.transform.position = position;
             Selection.activeObject = obj2;
             return obj2;
+        }
+
+        public static bool ExistingAssets(Object[] objects)
+        {
+            foreach (Object obj2 in objects)
+            {
+                if (AssetDatabase.Contains(obj2))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void ForcedImportFor(string newPath)
@@ -154,7 +209,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Object, bool>(null, (IntPtr) <GenerateDefaultSprite>m__1);
+                    <>f__am$cache1 = t => t is Sprite;
                 }
                 obj2 = Enumerable.First<Object>(AssetDatabase.LoadAllAssetsAtPath(assetPath), <>f__am$cache1);
             }
@@ -165,38 +220,28 @@
             return (obj2 as Sprite);
         }
 
-        public static Sprite[] GetSpriteFromPathsOrObjects(Object[] objects, string[] paths, EventType currentEventType)
+        public static List<Sprite> GetSpriteFromPathsOrObjects(Object[] objects, string[] paths, EventType currentEventType)
         {
-            List<Sprite> list = new List<Sprite>();
-            bool flag = false;
+            List<Sprite> result = new List<Sprite>();
             foreach (Object obj2 in objects)
             {
                 if (AssetDatabase.Contains(obj2))
                 {
                     if (obj2 is Sprite)
                     {
-                        list.Add(obj2 as Sprite);
+                        result.Add(obj2 as Sprite);
                     }
                     else if (obj2 is Texture2D)
                     {
-                        list.AddRange(TextureToSprites(obj2 as Texture2D));
+                        result.AddRange(TextureToSprites(obj2 as Texture2D));
                     }
-                    flag = true;
                 }
             }
-            if (list.Count > 0)
+            if (!ExistingAssets(objects) && (currentEventType == EventType.DragPerform))
             {
-                return list.ToArray();
+                HandleExternalDrag(paths, true, ref result);
             }
-            if (!flag)
-            {
-                Sprite sprite = HandleExternalDrag(paths, currentEventType == EventType.DragPerform);
-                if (sprite != null)
-                {
-                    return new Sprite[] { sprite };
-                }
-            }
-            return null;
+            return result;
         }
 
         public static Sprite[] GetSpritesFromDraggedObjects()
@@ -216,36 +261,45 @@
             return list.ToArray();
         }
 
-        private static Sprite HandleExternalDrag(string[] paths, bool perform)
+        private static void HandleExternalDrag(string[] paths, bool perform, ref List<Sprite> result)
         {
-            if (paths.Length == 0)
+            foreach (string str in paths)
             {
-                return null;
+                if (ValidPathForTextureAsset(str))
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    if (perform)
+                    {
+                        string to = AssetDatabase.GenerateUniqueAssetPath(Path.Combine("Assets", FileUtil.GetLastPathNameComponent(str)));
+                        if (to.Length > 0)
+                        {
+                            FileUtil.CopyFileOrDirectory(str, to);
+                            ForcedImportFor(to);
+                            Sprite item = GenerateDefaultSprite(AssetDatabase.LoadMainAssetAtPath(to) as Texture2D);
+                            if (item != null)
+                            {
+                                result.Add(item);
+                            }
+                        }
+                    }
+                }
             }
-            string path = paths[0];
-            if (!ValidPathForTextureAsset(path))
+        }
+
+        private static void IgnoreForRaycasts(List<Object> objects)
+        {
+            List<Transform> list = new List<Transform>();
+            foreach (GameObject obj2 in objects)
             {
-                return null;
+                list.AddRange(obj2.GetComponentsInChildren<Transform>());
             }
-            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-            if (!perform)
-            {
-                return null;
-            }
-            string to = AssetDatabase.GenerateUniqueAssetPath(Path.Combine("Assets", FileUtil.GetLastPathNameComponent(path)));
-            if (to.Length <= 0)
-            {
-                return null;
-            }
-            FileUtil.CopyFileOrDirectory(path, to);
-            ForcedImportFor(to);
-            return GenerateDefaultSprite(AssetDatabase.LoadMainAssetAtPath(to) as Texture2D);
+            HandleUtility.ignoreRaySnapObjects = list.ToArray();
         }
 
         public static void OnSceneDrag(SceneView sceneView)
         {
             Event current = Event.current;
-            if (((current.type == EventType.DragUpdated) || (current.type == EventType.DragPerform)) || (current.type == EventType.DragExited))
+            if ((EditorSettings.defaultBehaviorMode == EditorBehaviorMode.Mode2D) && (((current.type == EventType.DragUpdated) || (current.type == EventType.DragPerform)) || (current.type == EventType.DragExited)))
             {
                 if (!sceneView.in2DMode)
                 {
@@ -262,88 +316,101 @@
                     DragType type2 = !current.alt ? DragType.SpriteAnimation : DragType.CreateMultiple;
                     if ((s_DragType != type2) || (s_SceneDragObjects == null))
                     {
-                        Sprite[] spriteArray = GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
-                        if ((spriteArray == null) || (spriteArray.Length == 0))
+                        if (!ExistingAssets(DragAndDrop.objectReferences) && PathsAreValidTextures(DragAndDrop.paths))
                         {
-                            return;
-                        }
-                        Sprite sprite = spriteArray[0];
-                        if (sprite == null)
-                        {
-                            return;
-                        }
-                        if (s_DragType != DragType.NotInitialized)
-                        {
-                            CleanUp(true);
-                        }
-                        s_DragType = type2;
-                        s_SceneDragObjects = new List<Object>();
-                        if (s_DragType == DragType.CreateMultiple)
-                        {
-                            foreach (Sprite sprite2 in spriteArray)
-                            {
-                                s_SceneDragObjects.Add(CreateDragGO(sprite2, Vector3.zero));
-                            }
+                            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                            s_SceneDragObjects = new List<Object>();
+                            s_DragType = type2;
                         }
                         else
                         {
-                            s_SceneDragObjects.Add(CreateDragGO(spriteArray[0], Vector3.zero));
-                        }
-                        List<Transform> list = new List<Transform>();
-                        foreach (GameObject obj3 in s_SceneDragObjects)
-                        {
-                            list.AddRange(obj3.GetComponentsInChildren<Transform>());
-                            obj3.hideFlags = HideFlags.HideInHierarchy;
-                        }
-                        HandleUtility.ignoreRaySnapObjects = list.ToArray();
-                    }
-                    Vector3 zero = Vector3.zero;
-                    zero = HandleUtility.GUIPointToWorldRay(current.mousePosition).GetPoint(10f);
-                    if (sceneView.in2DMode)
-                    {
-                        zero.z = 0f;
-                    }
-                    else
-                    {
-                        DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                        object obj4 = HandleUtility.RaySnap(HandleUtility.GUIPointToWorldRay(current.mousePosition));
-                        if (obj4 != null)
-                        {
-                            RaycastHit hit = (RaycastHit) obj4;
-                            zero = hit.point;
+                            List<Sprite> sprites = GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
+                            if (sprites.Count == 0)
+                            {
+                                return;
+                            }
+                            if (s_DragType != DragType.NotInitialized)
+                            {
+                                CleanUp(true);
+                            }
+                            s_DragType = type2;
+                            CreateSceneDragObjects(sprites);
+                            IgnoreForRaycasts(s_SceneDragObjects);
                         }
                     }
-                    foreach (GameObject obj5 in s_SceneDragObjects)
-                    {
-                        obj5.transform.position = zero;
-                    }
+                    PositionSceneDragObjects(s_SceneDragObjects, sceneView, current.mousePosition);
                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
                     current.Use();
                 }
                 else if (type == EventType.DragPerform)
                 {
-                    Sprite[] frames = GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
-                    if ((frames != null) && (s_SceneDragObjects != null))
+                    List<Sprite> list2 = GetSpriteFromPathsOrObjects(DragAndDrop.objectReferences, DragAndDrop.paths, Event.current.type);
+                    if ((list2.Count > 0) && (s_SceneDragObjects != null))
                     {
+                        if (s_SceneDragObjects.Count == 0)
+                        {
+                            CreateSceneDragObjects(list2);
+                            PositionSceneDragObjects(s_SceneDragObjects, sceneView, current.mousePosition);
+                        }
                         if (s_DragType == DragType.SpriteAnimation)
                         {
-                            AddAnimationToGO((GameObject) s_SceneDragObjects[0], frames);
+                            AddAnimationToGO((GameObject) s_SceneDragObjects[0], list2.ToArray());
                         }
-                        foreach (GameObject obj6 in s_SceneDragObjects)
+                        foreach (GameObject obj3 in s_SceneDragObjects)
                         {
-                            Undo.RegisterCreatedObjectUndo(obj6, "Create Sprite");
-                            obj6.hideFlags = HideFlags.None;
+                            Undo.RegisterCreatedObjectUndo(obj3, "Create Sprite");
+                            obj3.hideFlags = HideFlags.None;
                         }
                         Selection.objects = s_SceneDragObjects.ToArray();
                         CleanUp(false);
                         current.Use();
                     }
                 }
-                else if ((type == EventType.DragExited) && ((s_SceneDragObjects != null) && (s_SceneDragObjects != null)))
+                else if ((type == EventType.DragExited) && (s_SceneDragObjects != null))
                 {
                     CleanUp(true);
                     current.Use();
                 }
+            }
+        }
+
+        private static bool PathsAreValidTextures(string[] paths)
+        {
+            if ((paths == null) || (paths.Length == 0))
+            {
+                return false;
+            }
+            foreach (string str in paths)
+            {
+                if (!ValidPathForTextureAsset(str))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static void PositionSceneDragObjects(List<Object> objects, SceneView sceneView, Vector2 mousePosition)
+        {
+            Vector3 zero = Vector3.zero;
+            zero = HandleUtility.GUIPointToWorldRay(mousePosition).GetPoint(10f);
+            if (sceneView.in2DMode)
+            {
+                zero.z = 0f;
+            }
+            else
+            {
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                object obj2 = HandleUtility.RaySnap(HandleUtility.GUIPointToWorldRay(mousePosition));
+                if (obj2 != null)
+                {
+                    RaycastHit hit = (RaycastHit) obj2;
+                    zero = hit.point;
+                }
+            }
+            foreach (GameObject obj3 in objects)
+            {
+                obj3.transform.position = zero;
             }
         }
 
@@ -369,15 +436,15 @@
 
         public static Sprite TextureToSprite(Texture2D tex)
         {
-            Sprite[] spriteArray = TextureToSprites(tex);
-            if (spriteArray.Length > 0)
+            List<Sprite> list = TextureToSprites(tex);
+            if (list.Count > 0)
             {
-                return spriteArray[0];
+                return list[0];
             }
             return null;
         }
 
-        public static Sprite[] TextureToSprites(Texture2D tex)
+        public static List<Sprite> TextureToSprites(Texture2D tex)
         {
             Object[] objArray = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(tex));
             List<Sprite> list = new List<Sprite>();
@@ -388,11 +455,15 @@
                     list.Add(objArray[i] as Sprite);
                 }
             }
-            if (list.Count > 0)
+            if (list.Count <= 0)
             {
-                return list.ToArray();
+                Sprite item = GenerateDefaultSprite(tex);
+                if (item != null)
+                {
+                    list.Add(item);
+                }
             }
-            return new Sprite[] { GenerateDefaultSprite(tex) };
+            return list;
         }
 
         private static bool ValidPathForTextureAsset(string path)

@@ -20,6 +20,7 @@
         string ForArrayType(ArrayType type);
         string ForAssembly(AssemblyDefinition assembly);
         string ForAssemblyScope(AssemblyDefinition assembly, string symbol);
+        string ForComCallableWrapperClass(TypeReference type);
         string ForComInterfaceReturnParameterName();
         string ForComTypeInterfaceFieldGetter(TypeReference interfaceType);
         string ForComTypeInterfaceFieldName(TypeReference interfaceType);
@@ -75,7 +76,7 @@
         string ForTypeNameOnly(TypeReference type);
         string ForVariable(TypeReference variableType);
         string ForVariableName(VariableReference variable);
-        string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType);
+        string ForWindowsRuntimeAdapterClass(TypeReference type);
         string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType);
         string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod);
         int GetFieldIndex(FieldReference field, bool includeBase = false);

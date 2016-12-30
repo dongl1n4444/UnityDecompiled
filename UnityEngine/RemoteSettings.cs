@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool GetBool(string key, [DefaultValue("false")] bool defaultValue);
         /// <summary>
         /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
@@ -59,7 +59,7 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float GetFloat(string key, [DefaultValue("0.0F")] float defaultValue);
         /// <summary>
         /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
@@ -78,7 +78,7 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetInt(string key, [DefaultValue("0")] int defaultValue);
         /// <summary>
         /// <para>Returns the value corresponding to key in the remote settings if it exists.</para>
@@ -97,13 +97,13 @@
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetString(string key, [DefaultValue("\"\"")] string defaultValue);
         /// <summary>
         /// <para>Returns true if key exists in the remote settings.</para>
         /// </summary>
         /// <param name="key"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool HasKey(string key);
 
         /// <summary>

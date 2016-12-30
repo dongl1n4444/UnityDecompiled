@@ -8,9 +8,9 @@
 
     internal class SetMatchAttributesRequest : Request
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private bool <isListed>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private bool <isListed>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private NetworkID <networkId>k__BackingField;
 
         public override bool IsValid() => 

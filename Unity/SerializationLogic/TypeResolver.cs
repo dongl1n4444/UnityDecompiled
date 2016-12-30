@@ -119,7 +119,12 @@
             GenericParameter genericParameter = typeReference as GenericParameter;
             if (genericParameter != null)
             {
-                return this.Resolve(this.ResolveGenericParameter(genericParameter));
+                TypeReference reference = this.ResolveGenericParameter(genericParameter);
+                if (genericParameter == reference)
+                {
+                    return reference;
+                }
+                return this.Resolve(reference);
             }
             ArrayType type = typeReference as ArrayType;
             if (type != null)
@@ -140,9 +145,9 @@
             if (type4 != null)
             {
                 GenericInstanceType type5 = new GenericInstanceType(this.Resolve(type4.ElementType));
-                foreach (TypeReference reference2 in type4.GenericArguments)
+                foreach (TypeReference reference3 in type4.GenericArguments)
                 {
-                    type5.GenericArguments.Add(this.Resolve(reference2));
+                    type5.GenericArguments.Add(this.Resolve(reference3));
                 }
                 return type5;
             }
@@ -191,7 +196,19 @@
             string fullName = owner.FullName;
             if (!this._context.ContainsKey(fullName))
             {
-                return ((genericParameter.Type != GenericParameterType.Type) ? this._methodDefinitionContext.GenericArguments[genericParameter.Position] : this._typeDefinitionContext.GenericArguments[genericParameter.Position]);
+                if (genericParameter.Type == GenericParameterType.Type)
+                {
+                    if (this._typeDefinitionContext != null)
+                    {
+                        return this._typeDefinitionContext.GenericArguments[genericParameter.Position];
+                    }
+                    return genericParameter;
+                }
+                if (this._methodDefinitionContext != null)
+                {
+                    return this._methodDefinitionContext.GenericArguments[genericParameter.Position];
+                }
+                return genericParameter;
             }
             return this.GenericArgumentAt(fullName, genericParameter.Position);
         }

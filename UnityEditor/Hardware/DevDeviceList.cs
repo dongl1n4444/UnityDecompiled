@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using UnityEngine.Scripting;
 
     public sealed class DevDeviceList
     {
@@ -23,7 +24,7 @@
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern DevDevice[] GetDevices();
         public static void OnChanged()
         {
@@ -39,7 +40,7 @@
             OnChanged();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void UpdateInternal(string target, DevDevice[] devices);
 
         public delegate void OnChangedHandler();

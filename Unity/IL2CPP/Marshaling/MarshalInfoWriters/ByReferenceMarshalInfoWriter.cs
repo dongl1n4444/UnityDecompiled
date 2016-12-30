@@ -23,7 +23,7 @@
             this._elementTypeMarshalInfoWriter = MarshalDataCollector.MarshalInfoWriterFor(type.ElementType, marshalType, marshalInfo, false, true, false, null);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MarshaledType, MarshaledType>(null, (IntPtr) <ByReferenceMarshalInfoWriter>m__0);
+                <>f__am$cache0 = new Func<MarshaledType, MarshaledType>(ByReferenceMarshalInfoWriter.<ByReferenceMarshalInfoWriter>m__0);
             }
             this._marshaledTypes = this._elementTypeMarshalInfoWriter.MarshaledTypes.Select<MarshaledType, MarshaledType>(<>f__am$cache0).ToArray<MarshaledType>();
         }

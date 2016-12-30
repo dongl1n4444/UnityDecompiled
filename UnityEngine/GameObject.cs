@@ -7,6 +7,7 @@
     using System.Security;
     using UnityEngine.Internal;
     using UnityEngine.SceneManagement;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -15,10 +16,8 @@
     public sealed class GameObject : UnityEngine.Object
     {
         /// <summary>
-        /// <para>Creates a new game object, named name.</para>
+        /// <para>Creates a new game object.</para>
         /// </summary>
-        /// <param name="name">The name that the GameObject is created with.</param>
-        /// <param name="components">A list of Components to add to the GameObject on creation.</param>
         public GameObject()
         {
             Internal_CreateGameObject(this, null);
@@ -27,18 +26,17 @@
         /// <summary>
         /// <para>Creates a new game object, named name.</para>
         /// </summary>
-        /// <param name="name">The name that the GameObject is created with.</param>
-        /// <param name="components">A list of Components to add to the GameObject on creation.</param>
+        /// <param name="name"></param>
         public GameObject(string name)
         {
             Internal_CreateGameObject(this, name);
         }
 
         /// <summary>
-        /// <para>Creates a new game object, named name.</para>
+        /// <para>Creates a game object and attaches the specified components.</para>
         /// </summary>
-        /// <param name="name">The name that the GameObject is created with.</param>
-        /// <param name="components">A list of Components to add to the GameObject on creation.</param>
+        /// <param name="name"></param>
+        /// <param name="components"></param>
         public GameObject(string name, params System.Type[] components)
         {
             Internal_CreateGameObject(this, name);
@@ -69,7 +67,7 @@
         public Component AddComponent(System.Type componentType) => 
             this.Internal_AddComponentWithType(componentType);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern Component AddComponentInternal(string className);
         /// <summary>
         /// <para>Calls the method named methodName on every MonoBehaviour in this game object or any of its children.</para>
@@ -114,33 +112,33 @@
         /// <param name="methodName"></param>
         /// <param name="parameter"></param>
         /// <param name="options"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void BroadcastMessage(string methodName, [DefaultValue("null")] object parameter, [DefaultValue("SendMessageOptions.RequireReceiver")] SendMessageOptions options);
         /// <summary>
         /// <para>Is this game object tagged with tag ?</para>
         /// </summary>
         /// <param name="tag">The tag to compare.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool CompareTag(string tag);
         /// <summary>
         /// <para>Creates a game object with a primitive mesh renderer and appropriate collider.</para>
         /// </summary>
         /// <param name="type">The type of primitive object to create.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern GameObject CreatePrimitive(PrimitiveType type);
         /// <summary>
-        /// <para>Finds a GameObject by name and returns it.</para>
+        /// <para>Finds a game object by name and returns it.</para>
         /// </summary>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern GameObject Find(string name);
         /// <summary>
         /// <para>Returns a list of active GameObjects tagged tag. Returns empty array if no GameObject was found.</para>
         /// </summary>
         /// <param name="tag">The name of the tag to search GameObjects for.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern GameObject[] FindGameObjectsWithTag(string tag);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern GameObject FindGameObjectWithTag(string tag);
         /// <summary>
         /// <para>Returns one active GameObject tagged tag. Returns null if no GameObject was found.</para>
@@ -168,11 +166,11 @@
         /// <para>Returns the component of Type type if the game object has one attached, null if it doesn't.</para>
         /// </summary>
         /// <param name="type">The type of Component to retrieve.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument), GeneratedByOldBindingsGenerator]
         public extern Component GetComponent(System.Type type);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern Component GetComponentByName(string type);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void GetComponentFastPath(System.Type type, IntPtr oneFurtherThanResultValue);
         [ExcludeFromDocs]
         public T GetComponentInChildren<T>()
@@ -188,7 +186,6 @@
         /// <para>Returns the component of Type type in the GameObject or any of its children using depth first search.</para>
         /// </summary>
         /// <param name="type">The type of Component to retrieve.</param>
-        /// <param name="includeInactive"></param>
         /// <returns>
         /// <para>A component of the matching type, if found.</para>
         /// </returns>
@@ -196,15 +193,7 @@
         public Component GetComponentInChildren(System.Type type) => 
             this.GetComponentInChildren(type, false);
 
-        /// <summary>
-        /// <para>Returns the component of Type type in the GameObject or any of its children using depth first search.</para>
-        /// </summary>
-        /// <param name="type">The type of Component to retrieve.</param>
-        /// <param name="includeInactive"></param>
-        /// <returns>
-        /// <para>A component of the matching type, if found.</para>
-        /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument), GeneratedByOldBindingsGenerator]
         public extern Component GetComponentInChildren(System.Type type, bool includeInactive);
         public T GetComponentInParent<T>() => 
             ((T) this.GetComponentInParent(typeof(T)));
@@ -213,7 +202,7 @@
         /// <para>Returns the component of Type type in the GameObject or any of its parents.</para>
         /// </summary>
         /// <param name="type">Type of component to find.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, TypeInferenceRule(TypeInferenceRules.TypeReferencedByFirstArgument)]
         public extern Component GetComponentInParent(System.Type type);
         public T[] GetComponents<T>() => 
             ((T[]) this.GetComponentsInternal(typeof(T), true, false, true, false, null));
@@ -297,13 +286,13 @@
         public Component[] GetComponentsInParent(System.Type type, [DefaultValue("false")] bool includeInactive) => 
             ((Component[]) this.GetComponentsInternal(type, false, true, includeInactive, true, null));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Array GetComponentsInternal(System.Type type, bool useSearchTypeAsArrayReturnType, bool recursive, bool includeInactive, bool reverse, object resultList);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Component Internal_AddComponentWithType(System.Type componentType);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateGameObject([Writable] GameObject mono, string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_scene(out Scene value);
         [Obsolete("gameObject.PlayAnimation is not supported anymore. Use animation.Play()", true)]
         public void PlayAnimation(UnityEngine.Object animation)
@@ -360,7 +349,7 @@
         /// <param name="methodName">The name of the method to call.</param>
         /// <param name="value">An optional parameter value to pass to the called method.</param>
         /// <param name="options">Should an error be raised if the method doesn't exist on the target object?</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SendMessage(string methodName, [DefaultValue("null")] object value, [DefaultValue("SendMessageOptions.RequireReceiver")] SendMessageOptions options);
         /// <summary>
         /// <para>Calls the method named methodName on every MonoBehaviour in this game object and on every ancestor of the behaviour.</para>
@@ -405,15 +394,15 @@
         /// <param name="methodName">The name of the method to call.</param>
         /// <param name="value">An optional parameter value to pass to the called method.</param>
         /// <param name="options">Should an error be raised if the method doesn't exist on the target object?</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SendMessageUpwards(string methodName, [DefaultValue("null")] object value, [DefaultValue("SendMessageOptions.RequireReceiver")] SendMessageOptions options);
         /// <summary>
         /// <para>Activates/Deactivates the GameObject.</para>
         /// </summary>
         /// <param name="value">Activate or deactivation the  object.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetActive(bool value);
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("gameObject.SetActiveRecursively() is obsolete. Use GameObject.SetActive(), which is now inherited by children.")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("gameObject.SetActiveRecursively() is obsolete. Use GameObject.SetActive(), which is now inherited by children."), GeneratedByOldBindingsGenerator]
         public extern void SetActiveRecursively(bool state);
         [Obsolete("gameObject.StopAnimation is not supported anymore. Use animation.Stop()", true)]
         public void StopAnimation()
@@ -422,20 +411,20 @@
         }
 
         [Obsolete("GameObject.active is obsolete. Use GameObject.SetActive(), GameObject.activeSelf or GameObject.activeInHierarchy.")]
-        public bool active { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool active { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is the GameObject active in the scene?</para>
         /// </summary>
-        public bool activeInHierarchy { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool activeInHierarchy { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The local active state of this GameObject. (Read Only)</para>
         /// </summary>
-        public bool activeSelf { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool activeSelf { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>The Animation attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The Animation attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property animation has been deprecated. Use GetComponent<Animation>() instead. (UnityUpgradable)", true)]
         public Component animation
@@ -447,7 +436,7 @@
         }
 
         /// <summary>
-        /// <para>The AudioSource attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The AudioSource attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property audio has been deprecated. Use GetComponent<AudioSource>() instead. (UnityUpgradable)", true)]
         public Component audio
@@ -459,7 +448,7 @@
         }
 
         /// <summary>
-        /// <para>The Camera attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The Camera attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property camera has been deprecated. Use GetComponent<Camera>() instead. (UnityUpgradable)", true)]
         public Component camera
@@ -471,7 +460,7 @@
         }
 
         /// <summary>
-        /// <para>The Collider attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The Collider attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property collider has been deprecated. Use GetComponent<Collider>() instead. (UnityUpgradable)", true)]
         public Component collider
@@ -495,7 +484,7 @@
         }
 
         /// <summary>
-        /// <para>The ConstantForce attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The ConstantForce attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property constantForce has been deprecated. Use GetComponent<ConstantForce>() instead. (UnityUpgradable)", true)]
         public Component constantForce
@@ -519,7 +508,7 @@
         }
 
         /// <summary>
-        /// <para>The GUIText attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The GUIText attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property guiText has been deprecated. Use GetComponent<GUIText>() instead. (UnityUpgradable)", true)]
         public Component guiText
@@ -531,7 +520,7 @@
         }
 
         /// <summary>
-        /// <para>The GUITexture attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The GUITexture attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property guiTexture has been deprecated. Use GetComponent<GUITexture>() instead. (UnityUpgradable)", true)]
         public Component guiTexture
@@ -543,7 +532,7 @@
         }
 
         /// <summary>
-        /// <para>The HingeJoint attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The HingeJoint attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property hingeJoint has been deprecated. Use GetComponent<HingeJoint>() instead. (UnityUpgradable)", true)]
         public Component hingeJoint
@@ -557,17 +546,17 @@
         /// <summary>
         /// <para>Editor only API that specifies if a game object is static.</para>
         /// </summary>
-        public bool isStatic { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool isStatic { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        internal bool isStaticBatchable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal bool isStaticBatchable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The layer the game object is in. A layer is in the range [0...31].</para>
         /// </summary>
-        public int layer { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int layer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The Light attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The Light attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property light has been deprecated. Use GetComponent<Light>() instead. (UnityUpgradable)", true)]
         public Component light
@@ -579,7 +568,7 @@
         }
 
         /// <summary>
-        /// <para>The NetworkView attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The NetworkView attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property networkView has been deprecated. Use GetComponent<NetworkView>() instead. (UnityUpgradable)", true)]
         public Component networkView
@@ -591,7 +580,7 @@
         }
 
         /// <summary>
-        /// <para>The ParticleEmitter attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The ParticleEmitter attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property particleEmitter has been deprecated. Use GetComponent<ParticleEmitter>() instead. (UnityUpgradable)", true)]
         public Component particleEmitter
@@ -603,7 +592,7 @@
         }
 
         /// <summary>
-        /// <para>The ParticleSystem attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The ParticleSystem attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property particleSystem has been deprecated. Use GetComponent<ParticleSystem>() instead. (UnityUpgradable)", true)]
         public Component particleSystem
@@ -615,7 +604,7 @@
         }
 
         /// <summary>
-        /// <para>The Renderer attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The Renderer attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property renderer has been deprecated. Use GetComponent<Renderer>() instead. (UnityUpgradable)", true)]
         public Component renderer
@@ -627,7 +616,7 @@
         }
 
         /// <summary>
-        /// <para>The Rigidbody attached to this GameObject (Read Only). (Null if there is none attached).</para>
+        /// <para>The Rigidbody attached to this GameObject (Read Only). (null if there is none attached).</para>
         /// </summary>
         [Obsolete("Property rigidbody has been deprecated. Use GetComponent<Rigidbody>() instead. (UnityUpgradable)", true)]
         public Component rigidbody
@@ -666,12 +655,12 @@
         /// <summary>
         /// <para>The tag of this game object.</para>
         /// </summary>
-        public string tag { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string tag { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The Transform attached to this GameObject.</para>
+        /// <para>The Transform attached to this GameObject. (null if there is none attached).</para>
         /// </summary>
-        public Transform transform { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public Transform transform { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

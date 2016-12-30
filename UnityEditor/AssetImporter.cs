@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Base class from which asset importers for specific asset types derive.</para>
@@ -13,9 +14,9 @@
         /// <para>Retrieves the asset importer for the asset at path.</para>
         /// </summary>
         /// <param name="path"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AssetImporter GetAtPath(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int LocalFileIDToClassID(long fileId);
         /// <summary>
         /// <para>Save asset importer settings if asset importer is dirty.</para>
@@ -30,30 +31,30 @@
         /// </summary>
         /// <param name="assetBundleName">AssetBundle name.</param>
         /// <param name="assetBundleVariant">AssetBundle variant.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAssetBundleNameAndVariant(string assetBundleName, string assetBundleVariant);
 
         /// <summary>
         /// <para>Get or set the AssetBundle name.</para>
         /// </summary>
-        public string assetBundleName { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string assetBundleName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get or set the AssetBundle variant.</para>
         /// </summary>
-        public string assetBundleVariant { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string assetBundleVariant { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The path name of the asset for this importer. (Read Only)</para>
         /// </summary>
-        public string assetPath { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string assetPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public ulong assetTimeStamp { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public ulong assetTimeStamp { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get or set any user data.</para>
         /// </summary>
-        public string userData { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string userData { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

@@ -7,6 +7,8 @@
     internal class AudioProfilerGroupTreeViewState : TreeViewState
     {
         [SerializeField]
+        public float[] columnWidths;
+        [SerializeField]
         public int prevSelectedColumn = 5;
         [SerializeField]
         public int selectedColumn = 3;

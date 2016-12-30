@@ -76,7 +76,7 @@
         private static Dictionary<NetworkSceneId, NetworkIdentity> s_SpawnableObjects;
 
         /// <summary>
-        /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
+        /// <para>This adds a player object for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer will be called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
         /// </summary>
         /// <param name="readyConn">The connection to become ready for this client.</param>
         /// <param name="playerControllerId">The local player ID number.</param>
@@ -88,7 +88,7 @@
             AddPlayer(null, playerControllerId);
 
         /// <summary>
-        /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
+        /// <para>This adds a player object for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer will be called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
         /// </summary>
         /// <param name="readyConn">The connection to become ready for this client.</param>
         /// <param name="playerControllerId">The local player ID number.</param>
@@ -100,7 +100,7 @@
             AddPlayer(readyConn, playerControllerId, null);
 
         /// <summary>
-        /// <para>This adds a player GameObject for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer is called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
+        /// <para>This adds a player object for this client. This causes an AddPlayer message to be sent to the server, and NetworkManager.OnServerAddPlayer will be called. If an extra message was passed to AddPlayer, then OnServerAddPlayer will be called with a NetworkReader that contains the contents of the message.</para>
         /// </summary>
         /// <param name="readyConn">The connection to become ready for this client.</param>
         /// <param name="playerControllerId">The local player ID number.</param>
@@ -163,7 +163,7 @@
             {
                 Debug.Log(string.Concat(new object[] { "ClientScene::AddPlayer() for ID ", playerControllerId, " called with connection [", s_ReadyConnection, "]" }));
             }
-            if (s_ReconnectId == -1)
+            if (!hasMigrationPending())
             {
                 AddPlayerMessage msg = new AddPlayerMessage {
                     playerControllerId = playerControllerId
@@ -179,43 +179,7 @@
             }
             else
             {
-                if (LogFilter.logDebug)
-                {
-                    Debug.Log("ClientScene::AddPlayer reconnect " + s_ReconnectId);
-                }
-                if (s_Peers == null)
-                {
-                    SetReconnectId(-1, null);
-                    if (LogFilter.logError)
-                    {
-                        Debug.LogError("ClientScene::AddPlayer: reconnecting, but no peers.");
-                    }
-                    return false;
-                }
-                for (int i = 0; i < s_Peers.Length; i++)
-                {
-                    PeerInfoMessage message2 = s_Peers[i];
-                    if ((message2.playerIds != null) && (message2.connectionId == s_ReconnectId))
-                    {
-                        for (int j = 0; j < message2.playerIds.Length; j++)
-                        {
-                            ReconnectMessage message3 = new ReconnectMessage {
-                                oldConnectionId = s_ReconnectId,
-                                netId = message2.playerIds[j].netId,
-                                playerControllerId = message2.playerIds[j].playerControllerId
-                            };
-                            if (extraMessage != null)
-                            {
-                                NetworkWriter writer2 = new NetworkWriter();
-                                extraMessage.Serialize(writer2);
-                                message3.msgData = writer2.ToArray();
-                                message3.msgSize = writer2.Position;
-                            }
-                            s_ReadyConnection.Send(0x2f, message3);
-                        }
-                    }
-                }
-                SetReconnectId(-1, null);
+                return SendReconnectMessage(extraMessage);
             }
             return true;
         }
@@ -367,6 +331,9 @@
             }
         }
 
+        private static bool hasMigrationPending() => 
+            (s_ReconnectId != -1);
+
         internal static void InternalAddPlayer(NetworkIdentity view, short playerControllerId)
         {
             if (LogFilter.logDebug)
@@ -476,7 +443,7 @@
                     }
                 }
                 s_NetworkScene.RemoveLocalObject(s_ObjectDestroyMessage.netId);
-                identity.Reset();
+                identity.MarkForReset();
             }
             else if (LogFilter.logDebug)
             {
@@ -526,6 +493,7 @@
                         }
                         else
                         {
+                            component.Reset();
                             ApplySpawnPayload(component, s_ObjectSpawnMessage.position, s_ObjectSpawnMessage.payload, s_ObjectSpawnMessage.netId, newGameObject);
                         }
                     }
@@ -554,6 +522,7 @@
                                 }
                                 else
                                 {
+                                    component.Reset();
                                     component.SetDynamicAssetId(s_ObjectSpawnMessage.assetId);
                                     ApplySpawnPayload(component, s_ObjectSpawnMessage.position, s_ObjectSpawnMessage.payload, s_ObjectSpawnMessage.netId, obj4);
                                 }
@@ -561,7 +530,7 @@
                         }
                         else if (LogFilter.logError)
                         {
-                            Debug.LogError(string.Concat(new object[] { "Failed to spawn server object, assetId=", s_ObjectSpawnMessage.assetId, " netId=", s_ObjectSpawnMessage.netId }));
+                            Debug.LogError(string.Concat(new object[] { "Failed to spawn server object, did you forget to add it to the NetworkManager? assetId=", s_ObjectSpawnMessage.assetId, " netId=", s_ObjectSpawnMessage.netId }));
                         }
                     }
                 }
@@ -829,7 +798,7 @@
         }
 
         /// <summary>
-        /// <para>This is an advanced spawning function that registers a custom assetId with the UNET spawning system.</para>
+        /// <para>This is an advanced spawning funciotn that registers a custom assetId with the UNET spawning system.</para>
         /// </summary>
         /// <param name="assetId">Custom assetId string.</param>
         /// <param name="spawnHandler">A method to use as a custom spawnhandler on clients.</param>
@@ -945,7 +914,7 @@
         }
 
         /// <summary>
-        /// <para>Removes the specified player ID from the game.</para>
+        /// <para>Remove the specified player ID from the game.</para>
         /// </summary>
         /// <param name="playerControllerId">The local playerControllerId number to be removed.</param>
         /// <returns>
@@ -974,6 +943,59 @@
                 Debug.LogError("Failed to find player ID " + playerControllerId);
             }
             return false;
+        }
+
+        /// <summary>
+        /// <para>Send a reconnect message to the new host, used during host migration.</para>
+        /// </summary>
+        /// <param name="extraMessage">Any extra data to send.</param>
+        /// <returns>
+        /// <para>Returns true if the send succeeded.</para>
+        /// </returns>
+        public static bool SendReconnectMessage(MessageBase extraMessage)
+        {
+            if (!hasMigrationPending())
+            {
+                return false;
+            }
+            if (LogFilter.logDebug)
+            {
+                Debug.Log("ClientScene::AddPlayer reconnect " + s_ReconnectId);
+            }
+            if (s_Peers == null)
+            {
+                SetReconnectId(-1, null);
+                if (LogFilter.logError)
+                {
+                    Debug.LogError("ClientScene::AddPlayer: reconnecting, but no peers.");
+                }
+                return false;
+            }
+            for (int i = 0; i < s_Peers.Length; i++)
+            {
+                PeerInfoMessage message = s_Peers[i];
+                if ((message.playerIds != null) && (message.connectionId == s_ReconnectId))
+                {
+                    for (int j = 0; j < message.playerIds.Length; j++)
+                    {
+                        ReconnectMessage msg = new ReconnectMessage {
+                            oldConnectionId = s_ReconnectId,
+                            netId = message.playerIds[j].netId,
+                            playerControllerId = message.playerIds[j].playerControllerId
+                        };
+                        if (extraMessage != null)
+                        {
+                            NetworkWriter writer = new NetworkWriter();
+                            extraMessage.Serialize(writer);
+                            msg.msgData = writer.ToArray();
+                            msg.msgSize = writer.Position;
+                        }
+                        s_ReadyConnection.Send(0x2f, msg);
+                    }
+                }
+            }
+            SetReconnectId(-1, null);
+            return true;
         }
 
         public static void SetLocalObject(NetworkInstanceId netId, GameObject obj)

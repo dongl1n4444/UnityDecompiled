@@ -2,7 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-    using UnityEditor.Animations;
+    using UnityEngine;
 
     internal class AvatarMaskUtility
     {
@@ -76,25 +76,6 @@
             return array;
         }
 
-        public static void UpdateTransformMask(AvatarMask mask, string[] refTransformsPath, string[] humanTransforms)
-        {
-            <UpdateTransformMask>c__AnonStorey0 storey = new <UpdateTransformMask>c__AnonStorey0 {
-                refTransformsPath = refTransformsPath
-            };
-            mask.transformCount = storey.refTransformsPath.Length;
-            <UpdateTransformMask>c__AnonStorey1 storey2 = new <UpdateTransformMask>c__AnonStorey1 {
-                <>f__ref$0 = storey,
-                i = 0
-            };
-            while (storey2.i < storey.refTransformsPath.Length)
-            {
-                mask.SetTransformPath(storey2.i, storey.refTransformsPath[storey2.i]);
-                bool flag = (humanTransforms != null) ? (ArrayUtility.FindIndex<string>(humanTransforms, new Predicate<string>(storey2.<>m__0)) != -1) : true;
-                mask.SetTransformActive(storey2.i, flag);
-                storey2.i++;
-            }
-        }
-
         public static void UpdateTransformMask(SerializedProperty transformMask, string[] refTransformsPath, string[] humanTransforms)
         {
             <UpdateTransformMask>c__AnonStorey2 storey = new <UpdateTransformMask>c__AnonStorey2 {
@@ -115,6 +96,25 @@
                 storey2.i++;
             }
             ModelImporter.UpdateTransformMask(mask, transformMask);
+        }
+
+        public static void UpdateTransformMask(AvatarMask mask, string[] refTransformsPath, string[] humanTransforms)
+        {
+            <UpdateTransformMask>c__AnonStorey0 storey = new <UpdateTransformMask>c__AnonStorey0 {
+                refTransformsPath = refTransformsPath
+            };
+            mask.transformCount = storey.refTransformsPath.Length;
+            <UpdateTransformMask>c__AnonStorey1 storey2 = new <UpdateTransformMask>c__AnonStorey1 {
+                <>f__ref$0 = storey,
+                i = 0
+            };
+            while (storey2.i < storey.refTransformsPath.Length)
+            {
+                mask.SetTransformPath(storey2.i, storey.refTransformsPath[storey2.i]);
+                bool flag = (humanTransforms != null) ? (ArrayUtility.FindIndex<string>(humanTransforms, new Predicate<string>(storey2.<>m__0)) != -1) : true;
+                mask.SetTransformActive(storey2.i, flag);
+                storey2.i++;
+            }
         }
 
         [CompilerGenerated]

@@ -35,7 +35,7 @@ internal class AssemblyValidation
     {
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<object, Type>(null, (IntPtr) <ConstructorFor>m__1);
+            <>f__am$cache1 = o => o.GetType();
         }
         Type[] types = Enumerable.Select<object, Type>(options, <>f__am$cache1).ToArray<Type>();
         return type.GetConstructor(types);
@@ -70,9 +70,9 @@ internal class AssemblyValidation
         };
         if (<>f__am$cache2 == null)
         {
-            <>f__am$cache2 = new Func<AssemblyValidationRule, int>(null, (IntPtr) <PriorityFor>m__2);
+            <>f__am$cache2 = attr => attr.Priority;
         }
-        return Enumerable.Select<AssemblyValidationRule, int>(Enumerable.Where<AssemblyValidationRule>(ValidationRuleAttributesFor(type), new Func<AssemblyValidationRule, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2).FirstOrDefault<int>();
+        return Enumerable.Select<AssemblyValidationRule, int>(Enumerable.Where<AssemblyValidationRule>(ValidationRuleAttributesFor(type), new Func<AssemblyValidationRule, bool>(storey.<>m__0)), <>f__am$cache2).FirstOrDefault<int>();
     }
 
     internal static void RegisterValidationRule(Type type)
@@ -136,9 +136,9 @@ internal class AssemblyValidation
         };
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<IValidationRule, bool>(null, (IntPtr) <ValidationRulesFor>m__0);
+            <>f__am$cache0 = v => v != null;
         }
-        return Enumerable.Where<IValidationRule>(Enumerable.Select<Type, IValidationRule>(ValidationRuleTypesFor(platform), new Func<Type, IValidationRule>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0);
+        return Enumerable.Where<IValidationRule>(Enumerable.Select<Type, IValidationRule>(ValidationRuleTypesFor(platform), new Func<Type, IValidationRule>(storey.<>m__0)), <>f__am$cache0);
     }
 
     [DebuggerHidden]
@@ -156,7 +156,7 @@ internal class AssemblyValidation
             Assembly assembly = typeof(AssemblyValidation).Assembly;
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<Type, bool>(null, (IntPtr) IsValidationRule);
+                <>f__mg$cache0 = new Func<Type, bool>(AssemblyValidation.IsValidationRule);
             }
             foreach (Type type in Enumerable.Where<Type>(assembly.GetTypes(), <>f__mg$cache0))
             {
@@ -199,7 +199,7 @@ internal class AssemblyValidation
         internal bool $disposing;
         internal List<Type>.Enumerator $locvar0;
         internal int $PC;
-        internal Type <validationType>__0;
+        internal Type <validationType>__1;
         internal RuntimePlatform platform;
 
         [DebuggerHidden]
@@ -248,8 +248,8 @@ internal class AssemblyValidation
             {
                 while (this.$locvar0.MoveNext())
                 {
-                    this.<validationType>__0 = this.$locvar0.Current;
-                    this.$current = this.<validationType>__0;
+                    this.<validationType>__1 = this.$locvar0.Current;
+                    this.$current = this.<validationType>__1;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;

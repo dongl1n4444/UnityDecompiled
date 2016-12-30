@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for handling 3D Textures, Use this to create.</para>
@@ -42,7 +43,7 @@
         /// </summary>
         /// <param name="updateMipmaps">When set to true, mipmap levels are recalculated.</param>
         /// <param name="makeNoLongerReadable">When set to true, system memory copy of a texture is released.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Apply([DefaultValue("true")] bool updateMipmaps, [DefaultValue("false")] bool makeNoLongerReadable);
         [ExcludeFromDocs]
         public Color[] GetPixels()
@@ -55,7 +56,7 @@
         /// <para>Returns an array of pixel colors representing one mip level of the 3D texture.</para>
         /// </summary>
         /// <param name="miplevel"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color[] GetPixels([DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public Color32[] GetPixels32()
@@ -68,9 +69,9 @@
         /// <para>Returns an array of pixel colors representing one mip level of the 3D texture.</para>
         /// </summary>
         /// <param name="miplevel"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color32[] GetPixels32([DefaultValue("0")] int miplevel);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create([Writable] Texture3D mono, int width, int height, int depth, TextureFormat format, bool mipmap);
         [ExcludeFromDocs]
         public void SetPixels(Color[] colors)
@@ -84,7 +85,7 @@
         /// </summary>
         /// <param name="colors">The colors to set the pixels to.</param>
         /// <param name="miplevel">The mipmap level to be affected by the new colors.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPixels(Color[] colors, [DefaultValue("0")] int miplevel);
         [ExcludeFromDocs]
         public void SetPixels32(Color32[] colors)
@@ -98,18 +99,18 @@
         /// </summary>
         /// <param name="colors">The colors to set the pixels to.</param>
         /// <param name="miplevel">The mipmap level to be affected by the new colors.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPixels32(Color32[] colors, [DefaultValue("0")] int miplevel);
 
         /// <summary>
         /// <para>The depth of the texture (Read Only).</para>
         /// </summary>
-        public int depth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int depth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The format of the pixel data in the texture (Read Only).</para>
         /// </summary>
-        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public TextureFormat format { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

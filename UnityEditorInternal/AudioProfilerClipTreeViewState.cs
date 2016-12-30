@@ -7,6 +7,8 @@
     internal class AudioProfilerClipTreeViewState : TreeViewState
     {
         [SerializeField]
+        public float[] columnWidths;
+        [SerializeField]
         public int prevSelectedColumn = 1;
         [SerializeField]
         public int selectedColumn = 2;

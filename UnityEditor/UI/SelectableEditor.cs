@@ -110,7 +110,7 @@
             if (sel != null)
             {
                 storey.transform = sel.transform;
-                bool flag = Enumerable.Any<Transform>(Selection.transforms, new Func<Transform, bool>(storey, (IntPtr) this.<>m__0));
+                bool flag = Enumerable.Any<Transform>(Selection.transforms, new Func<Transform, bool>(storey.<>m__0));
                 Handles.color = new Color(1f, 0.9f, 0.1f, !flag ? 0.4f : 1f);
                 DrawNavigationArrow(-Vector2.right, sel, sel.FindSelectableOnLeft());
                 DrawNavigationArrow(Vector2.right, sel, sel.FindSelectableOnRight());
@@ -178,7 +178,7 @@
             ((Selectable.Transition) transition.enumValueIndex);
 
         private bool IsDerivedSelectableEditor() => 
-            (base.GetType() != typeof(SelectableEditor));
+            !(base.GetType() == typeof(SelectableEditor));
 
         /// <summary>
         /// <para>See MonoBehaviour.OnDisable.</para>

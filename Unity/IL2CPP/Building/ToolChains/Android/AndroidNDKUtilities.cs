@@ -15,7 +15,7 @@
         private TargetArchitectureSettings _architectureSettings;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NPath <AndroidNdkRootDir>k__BackingField;
-        private const string AndroidAPI = "android-9";
+        private const string AndroidAPI = "android-16";
         private const string GccVersion = "4.9";
         private const string GnuStlVersion = "4.9";
         private const string Toolchain = "llvm-3.6";
@@ -112,7 +112,7 @@
             {
                 if (PlatformUtils.IsWindows())
                 {
-                    return (!Environment.get_Is64BitOperatingSystem() ? "windows" : "windows-x86_64");
+                    return (!Environment.Is64BitOperatingSystem ? "windows" : "windows-x86_64");
                 }
                 if (PlatformUtils.IsLinux())
                 {
@@ -141,7 +141,7 @@
         {
             get
             {
-                string[] append = new string[] { "platforms", "android-9", "arch-" + this._architectureSettings.Arch };
+                string[] append = new string[] { "platforms", "android-16", "arch-" + this._architectureSettings.Arch };
                 return this.AndroidNdkRootDir.Combine(append);
             }
         }
@@ -241,7 +241,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal AndroidNDKUtilities $this;
-            internal string <flag>__0;
+            internal string <flag>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -288,8 +288,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<flag>__0 = this.$locvar0.Current;
-                        this.$current = this.<flag>__0;
+                        this.<flag>__1 = this.$locvar0.Current;
+                        this.$current = this.<flag>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -348,7 +348,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal AndroidNDKUtilities $this;
-            internal string <flag>__0;
+            internal string <flag>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -395,8 +395,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<flag>__0 = this.$locvar0.Current;
-                        this.$current = this.<flag>__0;
+                        this.<flag>__1 = this.$locvar0.Current;
+                        this.$current = this.<flag>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

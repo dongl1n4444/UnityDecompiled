@@ -38,24 +38,24 @@
         /// <summary>
         /// <para>Attempts to restart the phrase recognition system.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Restart();
         /// <summary>
         /// <para>Shuts phrase recognition system down.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Shutdown();
 
         /// <summary>
         /// <para>Returns whether speech recognition is supported on the machine that the application is running on.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public static bool isSupported { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isSupported { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns the current status of the phrase recognition system.</para>
         /// </summary>
-        public static SpeechSystemStatus Status { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static SpeechSystemStatus Status { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Delegate for OnError event.</para>

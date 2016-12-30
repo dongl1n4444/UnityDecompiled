@@ -21,16 +21,17 @@
         [Inject]
         public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
-        private static bool AreFieldsBlittable(TypeDefinition typeDef, NativeType? nativeType, MarshalType marshalType)
+        private static bool AreFieldsBlittable(TypeDefinition typeDef, NativeType? nativeType, MarshalType marshalType, bool useUnicodeCharset)
         {
             <AreFieldsBlittable>c__AnonStorey0 storey = new <AreFieldsBlittable>c__AnonStorey0 {
-                marshalType = marshalType
+                marshalType = marshalType,
+                useUnicodeCharset = useUnicodeCharset
             };
             if (typeDef.IsPrimitive)
             {
-                return IsPrimitiveBlittable(typeDef, nativeType, storey.marshalType);
+                return IsPrimitiveBlittable(typeDef, nativeType, storey.marshalType, storey.useUnicodeCharset);
             }
-            return typeDef.Fields.All<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            return typeDef.Fields.All<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0));
         }
 
         public static IEnumerable<DefaultMarshalInfoWriter> GetFieldMarshalInfoWriters(TypeDefinition type, MarshalType marshalType)
@@ -39,7 +40,7 @@
                 marshalType = marshalType,
                 type = type
             };
-            return GetMarshaledFields(storey.type, storey.marshalType).Select<FieldDefinition, DefaultMarshalInfoWriter>(new Func<FieldDefinition, DefaultMarshalInfoWriter>(storey, (IntPtr) this.<>m__0));
+            return GetMarshaledFields(storey.type, storey.marshalType).Select<FieldDefinition, DefaultMarshalInfoWriter>(new Func<FieldDefinition, DefaultMarshalInfoWriter>(storey.<>m__0));
         }
 
         private static NativeType? GetFieldNativeType(FieldDefinition field)
@@ -59,14 +60,15 @@
             };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeDefinition, IEnumerable<FieldDefinition>>(null, (IntPtr) <GetMarshaledFields>m__1);
+                <>f__am$cache1 = t => NonStaticFieldsOf(t);
             }
-            return storey.type.GetTypeHierarchy().Where<TypeDefinition>(new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0)).SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache1);
+            return storey.type.GetTypeHierarchy().Where<TypeDefinition>(new Func<TypeDefinition, bool>(storey.<>m__0)).SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache1);
         }
 
-        public static MarshalType[] GetMarshalTypesForMarshaledType(TypeDefinition type)
+        public static MarshalType[] GetMarshalTypesForMarshaledType(TypeReference type)
         {
-            if ((type.IsWindowsRuntime || (WindowsRuntimeProjections.ProjectToWindowsRuntime(type) != type)) && ((type.MetadataType == MetadataType.ValueType) || type.IsDelegate()))
+            TypeReference reference = WindowsRuntimeProjections.ProjectToWindowsRuntime(type);
+            if ((type.Resolve().IsWindowsRuntime || (reference != type)) && ((type.MetadataType == MetadataType.ValueType) || reference.IsWindowsRuntimeDelegate()))
             {
                 return new MarshalType[] { MarshalType.PInvoke };
             }
@@ -75,20 +77,21 @@
             return typeArray1;
         }
 
-        internal static bool IsBlittable(TypeDefinition type, NativeType? nativeType, MarshalType marshalType)
+        internal static bool IsBlittable(TypeDefinition type, NativeType? nativeType, MarshalType marshalType, bool useUnicodeCharset)
         {
+            useUnicodeCharset |= (type.Attributes & (TypeAttributes.AnsiClass | TypeAttributes.UnicodeClass)) != TypeAttributes.AnsiClass;
             if (type.HasGenericParameters)
             {
                 return false;
             }
             if (type.IsEnum)
             {
-                return IsPrimitiveBlittable(type.GetUnderlyingEnumType().Resolve(), nativeType, marshalType);
+                return IsPrimitiveBlittable(type.GetUnderlyingEnumType().Resolve(), nativeType, marshalType, useUnicodeCharset);
             }
-            return ((type.IsSequentialLayout || type.IsExplicitLayout) && AreFieldsBlittable(type, nativeType, marshalType));
+            return ((type.IsSequentialLayout || type.IsExplicitLayout) && AreFieldsBlittable(type, nativeType, marshalType, useUnicodeCharset));
         }
 
-        internal static bool IsBlittable(TypeReference type, NativeType? nativeType, MarshalType marshalType)
+        internal static bool IsBlittable(TypeReference type, NativeType? nativeType, MarshalType marshalType, bool useUnicodeCharset)
         {
             if (type.IsGenericInstance)
             {
@@ -102,14 +105,22 @@
             {
                 return false;
             }
-            return IsBlittable(type.Resolve(), nativeType, marshalType);
+            return IsBlittable(type.Resolve(), nativeType, marshalType, useUnicodeCharset);
         }
 
-        private static bool IsPrimitiveBlittable(TypeDefinition type, NativeType? nativeType, MarshalType marshalType)
+        private static bool IsPrimitiveBlittable(TypeDefinition type, NativeType? nativeType, MarshalType marshalType, bool useUnicodeCharset)
         {
             if (!nativeType.HasValue)
             {
-                return ((marshalType == MarshalType.WindowsRuntime) || ((type.MetadataType != MetadataType.Boolean) && (type.MetadataType != MetadataType.Char)));
+                if (marshalType == MarshalType.WindowsRuntime)
+                {
+                    return true;
+                }
+                if (type.MetadataType == MetadataType.Char)
+                {
+                    return useUnicodeCharset;
+                }
+                return (type.MetadataType != MetadataType.Boolean);
             }
             switch (type.MetadataType)
             {
@@ -183,7 +194,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <NonStaticFieldsOf>m__0);
+                <>f__am$cache0 = field => !field.IsStatic;
             }
             return typeDefinition.Fields.Where<FieldDefinition>(<>f__am$cache0);
         }
@@ -198,9 +209,10 @@
         private sealed class <AreFieldsBlittable>c__AnonStorey0
         {
             internal MarshalType marshalType;
+            internal bool useUnicodeCharset;
 
             internal bool <>m__0(FieldDefinition field) => 
-                (field.IsStatic || (field.FieldType.IsValueType() && MarshalingUtils.IsBlittable(field.FieldType, MarshalingUtils.GetFieldNativeType(field), this.marshalType)));
+                (field.IsStatic || (field.FieldType.IsValueType() && MarshalingUtils.IsBlittable(field.FieldType, MarshalingUtils.GetFieldNativeType(field), this.marshalType, this.useUnicodeCharset)));
         }
 
         [CompilerGenerated]

@@ -27,10 +27,10 @@
 
         public abstract bool CanBuildInCurrentEnvironment();
         protected IEnumerable<string> ChooseCompilerFlags(CppCompilationInstruction cppCompilationInstruction, Func<CppCompilationInstruction, IEnumerable<string>> defaultCompilerFlags) => 
-            defaultCompilerFlags.Invoke(cppCompilationInstruction).Concat<string>(cppCompilationInstruction.CompilerFlags);
+            defaultCompilerFlags(cppCompilationInstruction).Concat<string>(cppCompilationInstruction.CompilerFlags);
 
         protected IEnumerable<string> ChooseLinkerFlags(IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, NPath outputFile, IEnumerable<string> specifiedLinkerFlags, Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>> defaultLinkerFlags) => 
-            defaultLinkerFlags.Invoke(staticLibraries, dynamicLibraries, outputFile).Concat<string>(specifiedLinkerFlags);
+            defaultLinkerFlags(staticLibraries, dynamicLibraries, outputFile).Concat<string>(specifiedLinkerFlags);
 
         public abstract NPath CompilerExecutableFor(NPath sourceFile);
         public abstract IEnumerable<string> CompilerFlagsFor(CppCompilationInstruction cppCompilationInstruction);

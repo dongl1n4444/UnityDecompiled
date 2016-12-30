@@ -82,21 +82,21 @@ internal class PreviewGUI
         }
         bool flag = false;
         bool flag2 = false;
-        if (flag2 || (rect3.width > rect.width))
+        if (rect3.width > rect.width)
         {
             flag2 = true;
         }
-        if (flag || (rect3.height > rect.height))
+        if (rect3.height > rect.height)
         {
             flag = true;
         }
         int controlID = GUIUtility.GetControlID(sliderHash, FocusType.Passive);
         if (flag2)
         {
-            GUIStyle sliderStyle = "PreHorizontalScrollbar";
-            GUIStyle thumbStyle = "PreHorizontalScrollbarThumb";
+            GUIStyle slider = "PreHorizontalScrollbar";
+            GUIStyle thumb = "PreHorizontalScrollbarThumb";
             float num2 = (rect3.width - rect.width) * 0.5f;
-            vector.x = GUI.Slider(new Rect(rect2.x, rect2.yMax - sliderStyle.fixedHeight, rect.width - (!flag ? 0f : sliderStyle.fixedHeight), sliderStyle.fixedHeight), vector.x, rect.width + num2, -num2, rect3.width, sliderStyle, thumbStyle, true, controlID);
+            vector.x = GUI.Slider(new Rect(rect2.x, rect2.yMax - slider.fixedHeight, rect.width - (!flag ? 0f : slider.fixedHeight), slider.fixedHeight), vector.x, rect.width + num2, -num2, rect3.width, slider, thumb, true, controlID);
         }
         else
         {

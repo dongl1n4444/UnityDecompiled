@@ -110,8 +110,8 @@
             internal bool $disposing;
             internal int $PC;
             internal CompilerMessage <compilerErrorFor>__2;
-            internal GendarmeRuleData <grd>__1;
-            internal int <i>__0;
+            internal GendarmeRuleData <grd>__2;
+            internal int <i>__1;
             internal string[] standardOutput;
 
             [DebuggerHidden]
@@ -128,25 +128,25 @@
                 switch (num)
                 {
                     case 0:
-                        this.<i>__0 = 0;
+                        this.<i>__1 = 0;
                         goto Label_00BA;
 
                     case 1:
-                        this.<i>__0 = this.<grd>__1.LastIndex + 1;
+                        this.<i>__1 = this.<grd>__2.LastIndex + 1;
                         break;
 
                     default:
                         goto Label_00D4;
                 }
             Label_00AC:
-                this.<i>__0++;
+                this.<i>__1++;
             Label_00BA:
-                if (this.<i>__0 < this.standardOutput.Length)
+                if (this.<i>__1 < this.standardOutput.Length)
                 {
-                    if (this.standardOutput[this.<i>__0].StartsWith("Problem:"))
+                    if (this.standardOutput[this.<i>__1].StartsWith("Problem:"))
                     {
-                        this.<grd>__1 = GendarmeOutputParser.GetGendarmeRuleDataFor(this.standardOutput, this.<i>__0);
-                        this.<compilerErrorFor>__2 = GendarmeOutputParser.CompilerErrorFor(this.<grd>__1);
+                        this.<grd>__2 = GendarmeOutputParser.GetGendarmeRuleDataFor(this.standardOutput, this.<i>__1);
+                        this.<compilerErrorFor>__2 = GendarmeOutputParser.CompilerErrorFor(this.<grd>__2);
                         this.$current = this.<compilerErrorFor>__2;
                         if (!this.$disposing)
                         {

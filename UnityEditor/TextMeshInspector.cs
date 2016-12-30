@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(TextMesh)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(TextMesh))]
     internal class TextMeshInspector : Editor
     {
         private SerializedProperty m_Font;

@@ -50,7 +50,7 @@
             ActivateDisplayImpl(this.nativeDisplay, width, height, refreshRate);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void ActivateDisplayImpl(IntPtr nativeDisplay, int width, int height, int refreshRate);
         [RequiredByNativeCode]
         private static void FireDisplaysUpdated()
@@ -61,11 +61,13 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern bool GetActiveImp(IntPtr nativeDisplay);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetRenderingBuffersImpl(IntPtr nativeDisplay, out RenderBuffer color, out RenderBuffer depth);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetRenderingExtImpl(IntPtr nativeDisplay, out int w, out int h);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetSystemExtImpl(IntPtr nativeDisplay, out int w, out int h);
         [Obsolete("MultiDisplayLicense has been deprecated.", false)]
         public static bool MultiDisplayLicense() => 
@@ -99,7 +101,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int RelativeMouseAtImpl(int x, int y, out int rx, out int ry);
         /// <summary>
         /// <para>Set rendering size and position on screen (Windows only).</para>
@@ -113,7 +115,7 @@
             SetParamsImpl(this.nativeDisplay, width, height, x, y);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetParamsImpl(IntPtr nativeDisplay, int width, int height, int x, int y);
         /// <summary>
         /// <para>Sets rendering resolution for the display.</para>
@@ -125,8 +127,14 @@
             SetRenderingResolutionImpl(this.nativeDisplay, w, h);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SetRenderingResolutionImpl(IntPtr nativeDisplay, int w, int h);
+
+        /// <summary>
+        /// <para>Gets the state of the display and returns true if the display is active and false if otherwise.</para>
+        /// </summary>
+        public bool active =>
+            GetActiveImp(this.nativeDisplay);
 
         /// <summary>
         /// <para>Color RenderBuffer.</para>

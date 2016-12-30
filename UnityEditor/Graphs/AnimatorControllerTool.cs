@@ -17,7 +17,7 @@
         public UnityEditor.Graphs.AnimationBlendTree.Graph blendTreeGraph;
         [SerializeField]
         public UnityEditor.Graphs.AnimationBlendTree.GraphGUI blendTreeGraphGUI;
-        public static Action graphDirtyCallback;
+        public static System.Action graphDirtyCallback;
         private const float kBottombarHeight = 18f;
         [SerializeField]
         private AnimatorController m_AnimatorController;
@@ -37,6 +37,8 @@
         [SerializeField]
         private bool m_SerializedLocked = false;
         protected SplitterState m_VerticalSplitter;
+        [SerializeField]
+        private AnimatorViewPositionCache m_ViewPositions = new AnimatorViewPositionCache();
         private static Styles s_Styles;
         private const int sLayerTab = 0;
         private const int sParameterTab = 1;
@@ -46,11 +48,17 @@
         public UnityEditor.Graphs.AnimationStateMachine.GraphGUI stateMachineGraphGUI;
         public static AnimatorControllerTool tool;
 
-        public void AddBreadCrumb(UnityEngine.Object target)
+        public void AddBreadCrumb(UnityEngine.Object target, bool updateViewPosition)
         {
+            if (updateViewPosition)
+            {
+                this.StoreCurrentViewPosition();
+            }
             this.m_BreadCrumbs.Add(new BreadCrumbElement(target));
-            this.stateMachineGraphGUI.CenterGraph();
-            this.blendTreeGraphGUI.CenterGraph();
+            if (updateViewPosition)
+            {
+                this.CenterOnStoredPosition(target);
+            }
         }
 
         public virtual void AddItemsToMenu(GenericMenu menu)
@@ -104,7 +112,33 @@
             this.m_BreadCrumbs.Clear();
             foreach (AnimatorStateMachine machine in hierarchy)
             {
-                this.AddBreadCrumb(machine);
+                this.AddBreadCrumb(machine, false);
+            }
+            this.CenterView();
+        }
+
+        private void CenterOnStoredPosition(UnityEngine.Object target)
+        {
+            Vector2 viewPosition = this.m_ViewPositions.GetViewPosition(target);
+            if (this.stateMachineGraphGUI != null)
+            {
+                this.stateMachineGraphGUI.CenterGraph(viewPosition);
+            }
+            if (this.blendTreeGraphGUI != null)
+            {
+                this.blendTreeGraphGUI.CenterGraph(viewPosition);
+            }
+        }
+
+        public void CenterView()
+        {
+            if (this.m_BreadCrumbs.Count > 0)
+            {
+                this.CenterOnStoredPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target);
+            }
+            else
+            {
+                this.CenterOnStoredPosition(null);
             }
         }
 
@@ -122,7 +156,7 @@
             if (Selection.activeGameObject != null)
             {
                 Animator component = Selection.activeGameObject.GetComponent<Animator>();
-                if ((component != null) && !AnimatorController.FindAnimatorControllerPlayable(component, this.animatorController).IsValid())
+                if ((component != null) && (AnimatorController.FindAnimatorControllerPlayable(component, this.animatorController) == null))
                 {
                     AnimatorController effectiveAnimatorController = AnimatorController.GetEffectiveAnimatorController(component);
                     if (effectiveAnimatorController != null)
@@ -269,23 +303,23 @@
             <GoToBreadCrumbTarget>c__AnonStorey0 storey = new <GoToBreadCrumbTarget>c__AnonStorey0 {
                 target = target
             };
+            this.StoreCurrentViewPosition();
             int num = this.m_BreadCrumbs.FindIndex(new Predicate<BreadCrumbElement>(storey.<>m__0));
             while (this.m_BreadCrumbs.Count > (num + 1))
             {
                 this.m_BreadCrumbs.RemoveAt(num + 1);
             }
-            this.stateMachineGraphGUI.CenterGraph();
-            this.blendTreeGraphGUI.CenterGraph();
+            this.CenterOnStoredPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target);
             this.UpdateStateMachineSelection();
         }
 
         private void GoToParentBreadcrumb()
         {
+            this.StoreCurrentViewPosition();
             if (this.m_BreadCrumbs.Count > 1)
             {
                 this.m_BreadCrumbs.RemoveAt(this.m_BreadCrumbs.Count - 1);
-                this.stateMachineGraphGUI.CenterGraph();
-                this.blendTreeGraphGUI.CenterGraph();
+                this.CenterOnStoredPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target);
                 this.UpdateStateMachineSelection();
             }
         }
@@ -496,15 +530,16 @@
                 BlendTreeInspector.parentBlendTree = null;
                 if (this.m_BreadCrumbs.Count > 0)
                 {
+                    UnityEngine.Object target = this.m_BreadCrumbs.Last<BreadCrumbElement>().target;
                     if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorStateMachine)
                     {
                         this.StateMachineView(screenRect);
                     }
                     if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is AnimatorState)
                     {
-                        AnimatorState target = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorState;
+                        AnimatorState state = this.m_BreadCrumbs.Last<BreadCrumbElement>().target as AnimatorState;
                         this.BlendTreeView(screenRect);
-                        BlendTreeInspector.parentBlendTree = tool.animatorController.GetStateEffectiveMotion(target, tool.selectedLayerIndex) as BlendTree;
+                        BlendTreeInspector.parentBlendTree = tool.animatorController.GetStateEffectiveMotion(state, tool.selectedLayerIndex) as BlendTree;
                     }
                     if (this.m_BreadCrumbs.Last<BreadCrumbElement>().target is BlendTree)
                     {
@@ -576,7 +611,7 @@
             this.stateMachineGraph.RebuildGraph();
             if (graphDirtyCallback != null)
             {
-                graphDirtyCallback.Invoke();
+                graphDirtyCallback();
             }
         }
 
@@ -597,7 +632,7 @@
                     {
                         return;
                     }
-                    this.AddBreadCrumb(target);
+                    this.AddBreadCrumb(target, false);
                     this.stateMachineGraphGUI.ClearSelection();
                     this.blendTreeGraphGUI.ClearSelection();
                 }
@@ -644,6 +679,14 @@
                 this.stateMachineGraphGUI.OnGraphGUI();
             }
             this.stateMachineGraphGUI.EndGraphGUI();
+        }
+
+        private void StoreCurrentViewPosition()
+        {
+            if ((this.m_BreadCrumbs.Count > 0) && (this.activeGraphGUI != null))
+            {
+                this.m_ViewPositions.SetViewPosition(this.m_BreadCrumbs.Last<BreadCrumbElement>().target, this.activeGraphGUI.scrollPosition);
+            }
         }
 
         public void UndoRedoPerformed()
@@ -737,7 +780,7 @@
                         {
                             this.m_PreviewAnimator = null;
                         }
-                        else if (!AnimatorController.FindAnimatorControllerPlayable(this.m_PreviewAnimator, this.m_AnimatorController).IsValid())
+                        else if (AnimatorController.FindAnimatorControllerPlayable(this.m_PreviewAnimator, this.m_AnimatorController) == null)
                         {
                             this.m_PreviewAnimator = null;
                         }
@@ -829,8 +872,62 @@
         }
 
         [Serializable]
+        private class AnimatorViewPositionCache : ISerializationCallbackReceiver
+        {
+            [SerializeField]
+            private List<UnityEngine.Object> m_KeySerializationHelper = new List<UnityEngine.Object>();
+            [SerializeField]
+            private List<Vector2> m_ValueSerializationHelper = new List<Vector2>();
+            private Dictionary<UnityEngine.Object, Vector2> m_ViewPositions = new Dictionary<UnityEngine.Object, Vector2>();
+
+            public Vector2 GetViewPosition(UnityEngine.Object target)
+            {
+                Vector2 vector;
+                if (!this.m_ViewPositions.TryGetValue(target, out vector))
+                {
+                    this.m_ViewPositions.Add(target, vector);
+                }
+                return vector;
+            }
+
+            public void OnAfterDeserialize()
+            {
+                this.m_ViewPositions = new Dictionary<UnityEngine.Object, Vector2>();
+                for (int i = 0; i != Math.Min(this.m_KeySerializationHelper.Count, this.m_ValueSerializationHelper.Count); i++)
+                {
+                    this.m_ViewPositions.Add(this.m_KeySerializationHelper[i], this.m_ValueSerializationHelper[i]);
+                }
+            }
+
+            public void OnBeforeSerialize()
+            {
+                this.m_KeySerializationHelper.Clear();
+                this.m_ValueSerializationHelper.Clear();
+                foreach (KeyValuePair<UnityEngine.Object, Vector2> pair in this.m_ViewPositions)
+                {
+                    this.m_KeySerializationHelper.Add(pair.Key);
+                    this.m_ValueSerializationHelper.Add(pair.Value);
+                }
+            }
+
+            public void SetViewPosition(UnityEngine.Object target, Vector2 position)
+            {
+                if (!this.m_ViewPositions.ContainsKey(target))
+                {
+                    this.m_ViewPositions.Add(target, position);
+                }
+                else
+                {
+                    this.m_ViewPositions[target] = position;
+                }
+            }
+        }
+
+        [Serializable]
         private class BreadCrumbElement
         {
+            [SerializeField]
+            private Vector2 m_ScrollPosition;
             [SerializeField]
             private UnityEngine.Object m_Target;
 
@@ -841,6 +938,16 @@
 
             public string name =>
                 ((this.m_Target == null) ? "" : this.m_Target.name);
+
+            public Vector2 scrollPosition
+            {
+                get => 
+                    this.m_ScrollPosition;
+                set
+                {
+                    this.m_ScrollPosition = value;
+                }
+            }
 
             public UnityEngine.Object target =>
                 this.m_Target;

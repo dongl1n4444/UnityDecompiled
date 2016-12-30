@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for handling the connection between Editor and Player.
@@ -15,13 +16,13 @@
         /// </summary>
         /// <param name="remoteFilePath">File Path.</param>
         /// <param name="data">File contents.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SendFile(string remoteFilePath, byte[] data);
 
         /// <summary>
         /// <para>Returns true when Editor is connected to the player. When called in Editor, this function will always returns false.</para>
         /// </summary>
-        public static bool connected { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool connected { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

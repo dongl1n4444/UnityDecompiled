@@ -4,13 +4,14 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Stores light probes for the scene.</para>
     /// </summary>
     public sealed class LightProbes : UnityEngine.Object
     {
-        [Obsolete("GetInterpolatedLightProbe has been deprecated. Please use the static GetInterpolatedProbe instead.", true)]
+        [Obsolete("Use GetInterpolatedProbe instead.", true)]
         public void GetInterpolatedLightProbe(Vector3 position, Renderer renderer, float[] coefficients)
         {
         }
@@ -20,20 +21,20 @@
             INTERNAL_CALL_GetInterpolatedProbe(ref position, renderer, out probe);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetInterpolatedProbe(ref Vector3 position, Renderer renderer, out SphericalHarmonicsL2 probe);
 
         /// <summary>
         /// <para>Coefficients of baked light probes.</para>
         /// </summary>
-        public SphericalHarmonicsL2[] bakedProbes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public SphericalHarmonicsL2[] bakedProbes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The number of cells space is divided into (Read Only).</para>
         /// </summary>
-        public int cellCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int cellCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        [Obsolete("coefficients property has been deprecated. Please use bakedProbes instead.", true)]
+        [Obsolete("Use bakedProbes instead.", true)]
         public float[] coefficients
         {
             get => 
@@ -46,12 +47,12 @@
         /// <summary>
         /// <para>The number of light probes (Read Only).</para>
         /// </summary>
-        public int count { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int count { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Positions of the baked light probes (Read Only).</para>
         /// </summary>
-        public Vector3[] positions { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public Vector3[] positions { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

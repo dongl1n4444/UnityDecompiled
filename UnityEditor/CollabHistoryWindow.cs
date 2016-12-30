@@ -2,7 +2,6 @@
 {
     using System;
     using UnityEditor.Collaboration;
-    using UnityEditor.Connect;
     using UnityEditor.Web;
     using UnityEngine;
 
@@ -29,7 +28,7 @@
 
         public void OnCollabStateChanged(CollabInfo info)
         {
-            if (Collab.instance.WasWhitelistedRequestSent() && (!info.whitelisted || !CollabAccess.Instance.IsServiceEnabled()))
+            if (!CollabAccess.Instance.IsServiceEnabled())
             {
                 CloseHistoryWindows();
             }
@@ -72,7 +71,7 @@
 
         [MenuItem("Window/Collab History", true)]
         public static bool ValidateShowHistoryWindow() => 
-            ((UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted) && CollabAccess.Instance.IsServiceEnabled());
+            CollabAccess.Instance.IsServiceEnabled();
     }
 }
 

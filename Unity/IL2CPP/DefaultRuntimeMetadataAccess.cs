@@ -67,8 +67,9 @@
 
         public string Method(MethodReference genericMethod)
         {
-            this._methodUsage.AddMethod(genericMethod);
-            return Naming.ForMethod(this._typeResolver.Resolve(genericMethod));
+            MethodReference method = this._typeResolver.Resolve(genericMethod);
+            this._methodUsage.AddMethod(method);
+            return Naming.ForMethod(method);
         }
 
         public string MethodInfo(MethodReference method)

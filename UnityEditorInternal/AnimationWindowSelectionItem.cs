@@ -177,7 +177,7 @@
             (this.rootGameObject != null);
 
         public virtual bool canRecord =>
-            (this.rootGameObject != null);
+            ((this.rootGameObject != null) && !this.objectIsOptimized);
 
         public virtual bool canSyncSceneSelection =>
             true;
@@ -267,6 +267,15 @@
             }
         }
 
+        public virtual bool objectIsOptimized
+        {
+            get
+            {
+                Animator animationPlayer = this.animationPlayer as Animator;
+                return (animationPlayer?.isOptimizable && !animationPlayer.hasTransformHierarchy);
+            }
+        }
+
         public virtual bool objectIsPrefab
         {
             get
@@ -301,6 +310,9 @@
                 this.m_ScriptableObject = value;
             }
         }
+
+        public virtual Object sourceObject =>
+            ((this.gameObject == null) ? ((Object) this.scriptableObject) : ((Object) this.gameObject));
 
         public virtual float timeOffset
         {

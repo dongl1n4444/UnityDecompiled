@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Object representing a group in the mixer.</para>
@@ -13,7 +14,7 @@
         {
         }
 
-        public AudioMixer audioMixer { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public AudioMixer audioMixer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

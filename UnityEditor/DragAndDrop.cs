@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Editor drag &amp; drop operations.</para>
@@ -15,7 +16,7 @@
         /// <summary>
         /// <para>Accept a drag operation.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void AcceptDrag();
         /// <summary>
         /// <para>Get data associated with current drag and drop operation.</para>
@@ -69,7 +70,7 @@
             PrepareStartDrag_Internal();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void PrepareStartDrag_Internal();
         /// <summary>
         /// <para>Set data associated with current drag and drop operation.</para>
@@ -101,28 +102,28 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void StartDrag_Internal(string title);
 
         /// <summary>
         /// <para>Get or set ID of currently active drag and drop control.</para>
         /// </summary>
-        public static int activeControlID { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int activeControlID { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>References to Object|objects being dragged.</para>
         /// </summary>
-        public static Object[] objectReferences { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static Object[] objectReferences { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The file names being dragged.</para>
         /// </summary>
-        public static string[] paths { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static string[] paths { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The visual indication of the drag.</para>
         /// </summary>
-        public static DragAndDropVisualMode visualMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static DragAndDropVisualMode visualMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

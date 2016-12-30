@@ -22,10 +22,11 @@ internal class MetroIl2CppVisualStudioSolutionCreator
     [CompilerGenerated]
     private static Func<string, bool> <>f__am$cache4;
     private const string AdditionalDefines = "WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT";
-    private static readonly string[] BaseDefines = new string[] { 
+    private static readonly string[] BaseDefines20 = new string[] { 
         "WINAPI_FAMILY=WINAPI_FAMILY_APP", "_CRT_SECURE_NO_WARNINGS", "_WINSOCK_DEPRECATED_NO_WARNINGS", "WIN32", "WINDOWS", "_UNICODE", "UNICODE", "ALL_INTERIOR_POINTERS=1", "GC_GCJ_SUPPORT=1", "JAVA_FINALIZATION=1", "NO_EXECUTE_PERMISSION=1", "GC_NO_THREADS_DISCOVERY=1", "IGNORE_DYNAMIC_LOADING=1", "GC_DONT_REGISTER_MAIN_STATIC_DATA=1", "GC_VERSION_MAJOR=7", "GC_VERSION_MINOR=4",
         "GC_VERSION_MICRO=0", "GC_THREADS=1", "USE_MMAP=1", "USE_MUNMAP=1"
     };
+    private static readonly string[] BaseDefines46;
     private readonly IEnumerable<string> CppPlugins;
     private readonly HashSet<string> DontOverwriteFiles = new HashSet<string>(MetroVisualStudioSolutionHelper.GetDontOverwriteFilesCpp(), StringComparer.InvariantCultureIgnoreCase);
     private readonly string Il2CppOutputProjectDirectory;
@@ -35,6 +36,12 @@ internal class MetroIl2CppVisualStudioSolutionCreator
     private readonly string ProjectName;
     private readonly string StagingArea;
     private readonly string UserProjectDirectory;
+
+    static MetroIl2CppVisualStudioSolutionCreator()
+    {
+        string[] second = new string[] { "NET_4_0=1" };
+        BaseDefines46 = BaseDefines20.Concat<string>(second).ToArray<string>();
+    }
 
     private MetroIl2CppVisualStudioSolutionCreator(string installPath, string projectName, string stagingArea, bool installInBuildsFolder, IEnumerable<string> cppPlugins, LibraryCollection libraryCollection)
     {
@@ -134,7 +141,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
             }
         }
         storey.ignoredExtensions = new string[] { ".pdb" };
-        return Enumerable.Select<string, string>(Enumerable.Where<string>(list, new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1));
+        return Enumerable.Select<string, string>(Enumerable.Where<string>(list, new Func<string, bool>(storey.<>m__0)), new Func<string, string>(storey.<>m__1));
     }
 
     private static string MakeFilterItems(IEnumerable<string> files, string UserProjectDirectory, string pathPrefix = "")
@@ -263,7 +270,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
     private void MoveFilesFromStagingArea()
     {
         Utility.MoveDirectory(Path.Combine(this.StagingArea, "Il2CppOutputProject"), this.Il2CppOutputProjectDirectory, null);
-        Utility.MoveDirectory(this.StagingArea, this.UserProjectDirectory, new Func<string, bool>(this, (IntPtr) this.ShouldOverwriteFile));
+        Utility.MoveDirectory(this.StagingArea, this.UserProjectDirectory, new Func<string, bool>(this.ShouldOverwriteFile));
     }
 
     private void ReshapeStagingArea()
@@ -291,33 +298,41 @@ internal class MetroIl2CppVisualStudioSolutionCreator
 
     private void WriteIl2CppOutputProject()
     {
-        string path = Path.Combine(this.Il2CppOutputProjectDirectory, "Il2CppOutputProject.vcxproj");
-        string[] strArray = new string[] { ".c", ".cpp", ".h" };
+        string str = Path.Combine(this.Il2CppOutputProjectDirectory, "Il2CppOutputProject.vcxproj");
+        string[] textArray1 = new string[] { ".c", ".cpp" };
+        IEnumerable<string> first = from extension in textArray1 select Directory.GetFiles(Path.Combine(this.Il2CppOutputProjectDirectory, "il2cppOutput"), "*" + extension, SearchOption.AllDirectories);
+        string[] textArray2 = new string[] { ".c", ".cpp", ".h" };
+        IEnumerable<string> second = from extension in textArray2 select Directory.GetFiles(Path.Combine(this.Il2CppOutputProjectDirectory, "IL2CPP"), "*" + extension, SearchOption.AllDirectories);
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <WriteIl2CppOutputProject>m__1);
+            <>f__am$cache0 = path => !path.Contains(@"IL2CPP\MapFileParser");
         }
-        IEnumerable<string> files = Enumerable.Where<string>(Enumerable.SelectMany<string, string>(strArray, new Func<string, IEnumerable<string>>(this, (IntPtr) this.<WriteIl2CppOutputProject>m__0)), <>f__am$cache0);
+        IEnumerable<string> files = Enumerable.Where<string>(first.Concat<string>(second), <>f__am$cache0);
         string str2 = MakeProjectItems(files, this.Il2CppOutputProjectDirectory, "");
         string str3 = MakeFilterItems(files, this.Il2CppOutputProjectDirectory, "");
         char[] separator = new char[] { ';' };
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <WriteIl2CppOutputProject>m__2);
+            <>f__am$cache1 = d => "--additional-defines=" + d;
         }
         if (<>f__am$cache2 == null)
         {
-            <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <WriteIl2CppOutputProject>m__3);
+            <>f__am$cache2 = (x, y) => x + " " + y;
         }
         string str4 = Enumerable.Aggregate<string>(Enumerable.Select<string, string>("WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT".Split(separator), <>f__am$cache1), <>f__am$cache2);
+        string format = MetroIl2CppTemplates.GetIl2CppOutputProjectTemplate(MetroVisualStudioSolutionHelper.GetUWPSDKVersion());
+        ApiCompatibilityLevel apiCompatibilityLevel = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA);
+        string str7 = IL2CPPUtils.ApiCompatibilityLevelToDotNetProfileArgument(PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.WSA));
+        string[] strArray = (apiCompatibilityLevel != ApiCompatibilityLevel.NET_4_6) ? BaseDefines20 : BaseDefines46;
         if (<>f__am$cache3 == null)
         {
-            <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <WriteIl2CppOutputProject>m__4);
+            <>f__am$cache3 = (x, y) => x + ";" + y;
         }
-        string contents = string.Format(MetroIl2CppTemplates.GetIl2CppOutputProjectTemplate(MetroVisualStudioSolutionHelper.GetUWPSDKVersion()), str2, Enumerable.Aggregate<string>(BaseDefines, <>f__am$cache3) + ";WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT", str4);
-        File.WriteAllText(path, contents, Encoding.UTF8);
-        string str7 = string.Format(MetroIl2CppTemplates.GetFiltersTemplate(), str3);
-        File.WriteAllText(path + ".filters", str7, Encoding.UTF8);
+        string str8 = Enumerable.Aggregate<string>(strArray, <>f__am$cache3) + ";WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT";
+        string contents = string.Format(format, new object[] { str2, str8, str4, str7 });
+        File.WriteAllText(str, contents, Encoding.UTF8);
+        string str10 = string.Format(MetroIl2CppTemplates.GetFiltersTemplate(), str3);
+        File.WriteAllText(str + ".filters", str10, Encoding.UTF8);
     }
 
     private void WriteSolutionFile()
@@ -366,7 +381,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
             string str3 = MakeProjectItems(projectFiles, this.UserProjectDirectory, "");
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, bool>(null, (IntPtr) <WriteUserProject>m__5);
+                <>f__am$cache4 = f => string.Equals(Path.GetExtension(f), ".pfx", StringComparison.InvariantCultureIgnoreCase);
             }
             string filePath = Enumerable.FirstOrDefault<string>(projectFiles, <>f__am$cache4);
             if (filePath == null)
@@ -404,7 +419,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
                 <>f__ref$0 = this,
                 path = path
             };
-            return !Enumerable.Any<string>(this.ignoredExtensions, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return !Enumerable.Any<string>(this.ignoredExtensions, new Func<string, bool>(storey.<>m__0));
         }
 
         internal string <>m__1(string path) => 

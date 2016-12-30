@@ -123,8 +123,8 @@
                         {
                             return;
                         }
-                        D local = this.data[index];
-                        T local2 = this.action.Invoke(local);
+                        D arg = this.data[index];
+                        T local2 = this.action(arg);
                         object results = this.results;
                         lock (results)
                         {

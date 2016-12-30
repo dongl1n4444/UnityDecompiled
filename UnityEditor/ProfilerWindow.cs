@@ -43,6 +43,7 @@
         private ProfilerHierarchyGUI m_CPUDetailHierarchyGUI;
         private ProfilerHierarchyGUI m_CPUHierarchyGUI;
         private ProfilerTimelineGUI m_CPUTimelineGUI;
+        [SerializeField]
         private ProfilerArea m_CurrentArea;
         private int m_CurrentFrame;
         [SerializeField]
@@ -77,6 +78,7 @@
         private bool m_TimelineViewDetail;
         private SplitterState m_VertSplit;
         private SplitterState m_ViewSplit;
+        [SerializeField]
         private ProfilerViewType m_ViewType;
         private static Styles ms_Styles;
         private bool[] msgFoldouts;

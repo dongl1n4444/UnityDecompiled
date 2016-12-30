@@ -27,14 +27,8 @@
             }
         }
 
-        public bool canEnable
-        {
-            get
-            {
-                bool flag = AnimationMode.InAnimationMode();
-                return (!flag || (this.m_Recording && flag));
-            }
-        }
+        public bool canEnable =>
+            (!AnimationMode.InAnimationMode() || this.m_Recording);
 
         public bool enable
         {

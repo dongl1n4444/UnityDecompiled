@@ -12,7 +12,7 @@
         /// </summary>
         Albedo = 14,
         /// <summary>
-        /// <para>Display alpha channel of the rendering.</para>
+        /// <para>The camera is set to display the alpha channel of the rendering.</para>
         /// </summary>
         AlphaChannel = 5,
         /// <summary>
@@ -56,11 +56,15 @@
         /// </summary>
         Irradiance = 0x10,
         /// <summary>
+        /// <para>The camera is set to show in red static lights that fall back to 'static' because more than four light volumes are overlapping.</para>
+        /// </summary>
+        LightOverlap = 0x18,
+        /// <summary>
         /// <para>Draw lit clusters.</para>
         /// </summary>
         LitClustering = 20,
         /// <summary>
-        /// <para>Display texture resolution, with red tint indicating too high resolution, and blue tint indicating texture sizes that could be higher.</para>
+        /// <para>The camera is set to display the texture resolution, with a red tint indicating resolution that is too high, and a blue tint indicating texture sizes that could be higher.</para>
         /// </summary>
         Mipmaps = 7,
         /// <summary>
@@ -68,17 +72,21 @@
         /// </summary>
         Normal = -1,
         /// <summary>
-        /// <para>Display scene overdraw, with brighter colors indicating more overdraw.</para>
+        /// <para>The camera is set to display Scene overdraw, with brighter colors indicating more overdraw.</para>
         /// </summary>
         Overdraw = 6,
         /// <summary>
-        /// <para>Draw color-coded render paths.</para>
+        /// <para>The camera is set to draw color coded render paths.</para>
         /// </summary>
         RenderPaths = 4,
         /// <summary>
-        /// <para>Draw directional light shadowmap cascades.</para>
+        /// <para>The camera is set to draw directional light shadow map cascades.</para>
         /// </summary>
         ShadowCascades = 3,
+        /// <summary>
+        /// <para>The camera is set to display colored ShadowMasks, coloring light gizmo with the same color.</para>
+        /// </summary>
+        ShadowMasks = 0x17,
         /// <summary>
         /// <para>Draw objects with different color for each GI system.</para>
         /// </summary>
@@ -91,6 +99,14 @@
         /// <para>Draw the camera where all objects have a wireframe overlay. and no background clearing.</para>
         /// </summary>
         TexturedWire = 2,
+        /// <summary>
+        /// <para>The camera is set to draw a physically based, albedo validated rendering.</para>
+        /// </summary>
+        ValidateAlbedo = 0x15,
+        /// <summary>
+        /// <para>The camera is set to draw a physically based, metal or specular validated rendering.</para>
+        /// </summary>
+        ValidateMetalSpecular = 0x16,
         /// <summary>
         /// <para>Draw the camera in wireframe and no background clearing.</para>
         /// </summary>

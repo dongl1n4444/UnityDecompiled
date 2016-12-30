@@ -93,6 +93,36 @@
             GL.PopMatrix();
         }
 
+        public static void FourIntFields(Vector2 rectSize, GUIContent label, GUIContent labelX, GUIContent labelY, GUIContent labelZ, GUIContent labelW, ref int x, ref int y, ref int z, ref int w)
+        {
+            Rect rect = GUILayoutUtility.GetRect(rectSize.x, rectSize.y);
+            Rect position = rect;
+            position.width = EditorGUIUtility.labelWidth;
+            position.height = 16f;
+            GUI.Label(position, label);
+            Rect rect3 = rect;
+            rect3.width -= EditorGUIUtility.labelWidth;
+            rect3.height = 16f;
+            rect3.x += EditorGUIUtility.labelWidth;
+            rect3.width /= 2f;
+            rect3.width -= 2f;
+            float labelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 13f;
+            GUI.SetNextControlName("FourIntFields_x");
+            x = EditorGUI.IntField(rect3, labelX, x);
+            rect3.x += rect3.width + 5f;
+            GUI.SetNextControlName("FourIntFields_y");
+            y = EditorGUI.IntField(rect3, labelY, y);
+            rect3.y += 16f;
+            rect3.x -= rect3.width + 5f;
+            GUI.SetNextControlName("FourIntFields_z");
+            z = EditorGUI.IntField(rect3, labelZ, z);
+            rect3.x += rect3.width + 5f;
+            GUI.SetNextControlName("FourIntFields_w");
+            w = EditorGUI.IntField(rect3, labelW, w);
+            EditorGUIUtility.labelWidth = labelWidth;
+        }
+
         public static Vector2 GetPivotValue(SpriteAlignment alignment, Vector2 customOffset)
         {
             switch (alignment)

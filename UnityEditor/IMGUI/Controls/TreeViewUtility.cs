@@ -7,29 +7,6 @@
 
     internal static class TreeViewUtility
     {
-        public static void BuildRowsUsingExpandedState(IList<TreeViewItem> rows, TreeViewItem root, TreeView treeView)
-        {
-            if (treeView == null)
-            {
-                throw new ArgumentNullException("treeView", "treeView is null");
-            }
-            if (root == null)
-            {
-                throw new ArgumentNullException("root", "root is null");
-            }
-            if (rows == null)
-            {
-                throw new ArgumentNullException("rows", "rows is null");
-            }
-            if (root.hasChildren)
-            {
-                foreach (TreeViewItem item in root.children)
-                {
-                    GetExpandedRowsRecursive(treeView, item, rows);
-                }
-            }
-        }
-
         internal static void DebugPrintToEditorLogRecursive(TreeViewItem item)
         {
             if (item != null)
@@ -53,7 +30,7 @@
             <FindItemInList>c__AnonStorey1<T> storey = new <FindItemInList>c__AnonStorey1<T> {
                 id = id
             };
-            return Enumerable.FirstOrDefault<T>(treeViewItems, new Func<T, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<T>(treeViewItems, new Func<T, bool>(storey.<>m__0));
         }
 
         private static TreeViewItem FindItemRecursive(int id, TreeViewItem item)
@@ -85,19 +62,7 @@
             <FindItemsInList>c__AnonStorey0 storey = new <FindItemsInList>c__AnonStorey0 {
                 itemIDs = itemIDs
             };
-            return Enumerable.Where<TreeViewItem>(treeViewItems, new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)).ToList<TreeViewItem>();
-        }
-
-        private static void GetExpandedRowsRecursive(TreeView treeView, TreeViewItem item, IList<TreeViewItem> expandedRows)
-        {
-            expandedRows.Add(item);
-            if (item.hasChildren && treeView.IsExpanded(item.id))
-            {
-                foreach (TreeViewItem item2 in item.children)
-                {
-                    GetExpandedRowsRecursive(treeView, item2, expandedRows);
-                }
-            }
+            return Enumerable.Where<TreeViewItem>(treeViewItems, new Func<TreeViewItem, bool>(storey.<>m__0)).ToList<TreeViewItem>();
         }
 
         internal static HashSet<int> GetParentsAboveItem(TreeViewItem fromItem)
@@ -221,7 +186,32 @@
             }
         }
 
-        public static void SetParentAndChildrenForItems(IList<TreeViewItem> rows, TreeViewItem root)
+        internal static void SetDepthValuesForItems(TreeViewItem root)
+        {
+            if (root == null)
+            {
+                throw new ArgumentNullException("root", "The root is null");
+            }
+            Stack<TreeViewItem> stack = new Stack<TreeViewItem>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                TreeViewItem item = stack.Pop();
+                if (item.children != null)
+                {
+                    foreach (TreeViewItem item2 in item.children)
+                    {
+                        if (item2 != null)
+                        {
+                            item2.depth = item.depth + 1;
+                            stack.Push(item2);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal static void SetParentAndChildrenForItems(IList<TreeViewItem> rows, TreeViewItem root)
         {
             SetChildParentReferences(rows, root);
         }

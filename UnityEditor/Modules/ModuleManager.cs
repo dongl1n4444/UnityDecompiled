@@ -51,7 +51,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(null, (IntPtr) OnActiveBuildTargetChanged);
+                <>f__mg$cache0 = new Action(ModuleManager.OnActiveBuildTargetChanged);
             }
             EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
         }
@@ -142,8 +142,8 @@
             return null;
         }
 
-        internal static IBuildPostprocessor GetBuildPostProcessor(BuildTarget target) => 
-            GetBuildPostProcessor(GetTargetStringFromBuildTarget(target));
+        internal static IBuildPostprocessor GetBuildPostProcessor(BuildTargetGroup targetGroup, BuildTarget target) => 
+            GetBuildPostProcessor(GetTargetStringFrom(targetGroup, target));
 
         internal static IBuildWindowExtension GetBuildWindowExtension(string target)
         {
@@ -302,9 +302,16 @@
             {
                 throw new ArgumentException("targetGroup must be valid");
             }
-            if (targetGroup == BuildTargetGroup.Standalone)
+            if (targetGroup != BuildTargetGroup.Facebook)
             {
-                return GetTargetStringFromBuildTarget(target);
+                if (targetGroup == BuildTargetGroup.Standalone)
+                {
+                    return GetTargetStringFromBuildTarget(target);
+                }
+            }
+            else
+            {
+                return "Facebook";
             }
             return GetTargetStringFromBuildTargetGroup(targetGroup);
         }
@@ -360,6 +367,9 @@
                 case BuildTarget.tvOS:
                     return "tvOS";
 
+                case BuildTarget.Switch:
+                    return "Switch";
+
                 case BuildTarget.iOS:
                     return "iOS";
             }
@@ -407,6 +417,12 @@
                 case BuildTargetGroup.tvOS:
                     return "tvOS";
 
+                case BuildTargetGroup.Facebook:
+                    return "Facebook";
+
+                case BuildTargetGroup.Switch:
+                    return "Switch";
+
                 case BuildTargetGroup.iPhone:
                     return "iOS";
 
@@ -448,12 +464,13 @@
 
         internal static bool HaveLicenseForBuildTarget(string targetString)
         {
-            BuildTarget standaloneWindows = BuildTarget.StandaloneWindows;
-            if (!TryParseBuildTarget(targetString, out standaloneWindows))
+            BuildTargetGroup group;
+            BuildTarget target;
+            if (!TryParseBuildTarget(targetString, out group, out target))
             {
                 return false;
             }
-            return BuildPipeline.LicenseCheck(standaloneWindows);
+            return BuildPipeline.LicenseCheck(target);
         }
 
         internal static void Initialize()
@@ -476,11 +493,11 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <InitializePackageManager>m__4);
+                <>f__am$cache4 = x => x.Value.type == PackageFileType.Dll;
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<KeyValuePair<string, PackageFileData>, string>(null, (IntPtr) <InitializePackageManager>m__5);
+                <>f__am$cache5 = x => x.Key;
             }
             string str = Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(package.files, <>f__am$cache4), <>f__am$cache5).FirstOrDefault<string>();
             if ((str == null) || !File.Exists(Path.Combine(package.basePath, str)))
@@ -516,14 +533,15 @@
             s_PackageManager.Initialize();
             foreach (PackageInfo info2 in s_PackageManager.playbackEngines)
             {
-                BuildTarget standaloneWindows = BuildTarget.StandaloneWindows;
-                if (TryParseBuildTarget(info2.name, out standaloneWindows))
+                BuildTargetGroup group;
+                BuildTarget target;
+                if (TryParseBuildTarget(info2.name, out group, out target))
                 {
-                    object[] arg = new object[] { standaloneWindows, info2.version, info2.unityVersion, info2.basePath };
-                    Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
+                    object[] arg = new object[] { target, info2.version, info2.unityVersion, info2.basePath, group };
+                    Console.WriteLine("Setting {4}:{0} v{1} for Unity v{2} to {3}", arg);
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <InitializePackageManager>m__6);
+                        <>f__am$cache6 = f => f.Value.type == PackageFileType.Dll;
                     }
                     foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info2.files, <>f__am$cache6))
                     {
@@ -537,7 +555,7 @@
                             InternalEditorUtility.SetupCustomDll(Path.GetFileName(location), location);
                         }
                     }
-                    BuildPipeline.SetPlaybackEngineDirectory(standaloneWindows, BuildOptions.CompressTextures, info2.basePath);
+                    BuildPipeline.SetPlaybackEngineDirectory(target, BuildOptions.CompressTextures, info2.basePath);
                     InternalEditorUtility.SetPlatformPath(info2.basePath);
                     s_PackageManager.LoadPackage(info2);
                 }
@@ -599,7 +617,7 @@
                 Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <LoadUnityExtensions>m__0);
+                    <>f__am$cache0 = f => f.Value.type == PackageFileType.Dll;
                 }
                 foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info.files, <>f__am$cache0))
                 {
@@ -652,7 +670,7 @@
             {
                 throw new ArgumentNullException("processAssembly");
             }
-            return Enumerable.Aggregate<Assembly, List<T>>(AppDomain.CurrentDomain.GetAssemblies(), new List<T>(), new Func<List<T>, Assembly, List<T>>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Aggregate<Assembly, List<T>>(AppDomain.CurrentDomain.GetAssemblies(), new List<T>(), new Func<List<T>, Assembly, List<T>>(storey.<>m__0));
         }
 
         private static void RegisterPackageManager()
@@ -663,7 +681,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Assembly, bool>(null, (IntPtr) <RegisterPackageManager>m__1);
+                    <>f__am$cache1 = a => null != a.GetType("Unity.PackageManager.PackageManager");
                 }
                 Assembly assembly = Enumerable.FirstOrDefault<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache1);
                 if ((assembly != null) && InitializePackageManager(assembly, null))
@@ -677,11 +695,11 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Assembly, bool>(null, (IntPtr) <RegisterPackageManager>m__2);
+                <>f__am$cache2 = a => a.GetName().Name == "Unity.Locator";
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Assembly, Type>(null, (IntPtr) <RegisterPackageManager>m__3);
+                <>f__am$cache3 = a => a.GetType("Unity.PackageManager.Locator");
             }
             Type type = Enumerable.Select<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<Type>();
             try
@@ -738,7 +756,7 @@
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 if (<>f__mg$cache1 == null)
                 {
-                    <>f__mg$cache1 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(null, (IntPtr) RegisterPlatformSupportModulesFromAssembly);
+                    <>f__mg$cache1 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(ModuleManager.RegisterPlatformSupportModulesFromAssembly);
                 }
                 s_PlatformModules = RegisterModulesFromLoadedAssemblies<IPlatformSupportModule>(<>f__mg$cache1).ToList<IPlatformSupportModule>();
                 stopwatch.Stop();
@@ -763,18 +781,29 @@
         internal static void ShutdownPlatformSupportModules()
         {
             DeactivateActivePlatformModule();
-            foreach (IPlatformSupportModule module in s_PlatformModules)
+            foreach (IPlatformSupportModule module in platformSupportModules)
             {
                 module.OnUnload();
             }
         }
 
-        private static bool TryParseBuildTarget(string targetString, out BuildTarget target)
+        private static bool TryParseBuildTarget(string targetString, out BuildTargetGroup buildTargetGroup, out BuildTarget target)
         {
+            buildTargetGroup = BuildTargetGroup.Standalone;
             target = BuildTarget.StandaloneWindows;
             try
             {
-                target = (BuildTarget) Enum.Parse(typeof(BuildTarget), targetString);
+                BuildTargetGroup facebook = BuildTargetGroup.Facebook;
+                if (targetString == facebook.ToString())
+                {
+                    buildTargetGroup = BuildTargetGroup.Facebook;
+                    target = BuildTarget.StandaloneWindows;
+                }
+                else
+                {
+                    target = (BuildTarget) Enum.Parse(typeof(BuildTarget), targetString);
+                    buildTargetGroup = BuildPipeline.GetBuildTargetGroup(target);
+                }
                 return true;
             }
             catch
@@ -809,10 +838,9 @@
         {
             get
             {
-                Initialize();
                 if (s_PlatformModules == null)
                 {
-                    RegisterPlatformSupportModules();
+                    return new List<IPlatformSupportModule>();
                 }
                 return s_PlatformModules;
             }
@@ -827,7 +855,7 @@
             {
                 try
                 {
-                    IEnumerable<T> source = this.processAssembly.Invoke(assembly);
+                    IEnumerable<T> source = this.processAssembly(assembly);
                     if ((source != null) && source.Any<T>())
                     {
                         list.AddRange(source);

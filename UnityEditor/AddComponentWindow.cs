@@ -92,7 +92,7 @@
             storey.level++;
             if (storey.level != this.m_Stack.Count)
             {
-                Element element3 = Enumerable.FirstOrDefault<Element>(this.GetChildren(this.activeTree, parent), new Func<Element, bool>(storey, (IntPtr) this.<>m__0));
+                Element element3 = Enumerable.FirstOrDefault<Element>(this.GetChildren(this.activeTree, parent), new Func<Element, bool>(storey.<>m__0));
                 if ((element3 != null) && (element3 is GroupElement))
                 {
                     parent = element3 as GroupElement;
@@ -642,12 +642,10 @@
             public bool isLegacy;
             private GUIContent m_LegacyContentCache;
             public string menuPath;
-            public string typeName;
 
             public ComponentElement(int level, string name, string menuPath, string commandString)
             {
                 base.level = level;
-                this.typeName = name.Replace(" ", "");
                 this.menuPath = menuPath;
                 this.isLegacy = menuPath.Contains("Legacy");
                 if (commandString.StartsWith("SCRIPT"))
@@ -755,7 +753,7 @@
                 <ClassExists>c__AnonStorey0 storey = new <ClassExists>c__AnonStorey0 {
                     className = className
                 };
-                return Enumerable.Any<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), new Func<Assembly, bool>(storey, (IntPtr) this.<>m__0));
+                return Enumerable.Any<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), new Func<Assembly, bool>(storey.<>m__0));
             }
 
             private bool ClassNameIsInvalid() => 
@@ -904,7 +902,6 @@
             public GUIStyle groupButton;
             public GUIStyle header = new GUIStyle(EditorStyles.inspectorBig);
             public GUIStyle leftArrow = "AC LeftArrow";
-            public GUIStyle previewBackground = "PopupCurveSwatchBackground";
             public GUIStyle previewHeader = new GUIStyle(EditorStyles.label);
             public GUIStyle previewText = new GUIStyle(EditorStyles.wordWrappedLabel);
             public GUIStyle rightArrow = "AC RightArrow";

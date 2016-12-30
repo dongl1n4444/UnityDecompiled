@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The TerrainData class stores heightmaps, detail mesh positions, tree instances, and terrain texture alpha maps.</para>
@@ -23,25 +24,24 @@
             this.Internal_Create(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void AddTree(out TreeInstance tree);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void AddUser(GameObject user);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern int GetAdjustedSize(int size);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, RequiredByNativeCode]
+        internal extern float GetAlphamapResolutionInternal();
         /// <summary>
         /// <para>Returns the alpha map at a position x, y given a width and height.</para>
         /// </summary>
-        /// <param name="x">The x offset to read from.</param>
-        /// <param name="y">The y offset to read from.</param>
-        /// <param name="width">The width of the alpha map area to read.</param>
-        /// <param name="height">The height of the alpha map area to read.</param>
-        /// <returns>
-        /// <para>A 3D array of floats, where the 3rd dimension represents the mixing weight of each splatmap at each x,y coordinate.</para>
-        /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float[,,] GetAlphamaps(int x, int y, int width, int height);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Texture2D GetAlphamapTexture(int index);
         /// <summary>
         /// <para>Returns a 2D array of the detail object density in the specific location.</para>
@@ -51,14 +51,14 @@
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="layer"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int[,] GetDetailLayer(int xBase, int yBase, int width, int height, int layer);
         /// <summary>
         /// <para>Gets the height at a certain point x,y.</para>
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetHeight(int x, int y);
         /// <summary>
         /// <para>Get an array of heightmap samples.</para>
@@ -67,14 +67,14 @@
         /// <param name="yBase">First y index of heightmap samples to retrieve.</param>
         /// <param name="width">Number of samples to retrieve along the heightmap's x axis.</param>
         /// <param name="height">Number of samples to retrieve along the heightmap's y axis.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float[,] GetHeights(int xBase, int yBase, int width, int height);
         /// <summary>
         /// <para>Gets an interpolated height at a point x,y.</para>
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetInterpolatedHeight(float x, float y);
         /// <summary>
         /// <para>Get an interpolated normal at a given location.</para>
@@ -93,7 +93,7 @@
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetSteepness(float x, float y);
         /// <summary>
         /// <para>Returns an array of all supported detail layer indices in the area.</para>
@@ -102,7 +102,7 @@
         /// <param name="yBase"></param>
         /// <param name="totalWidth"></param>
         /// <param name="totalHeight"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int[] GetSupportedLayers(int xBase, int yBase, int totalWidth, int totalHeight);
         /// <summary>
         /// <para>Get the tree instance at the specified index. It is used as a faster version of treeInstances[index] as this function doesn't create the entire tree instances array.</para>
@@ -115,77 +115,77 @@
             return instance;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool HasUser(GameObject user);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetInterpolatedNormal(TerrainData self, float x, float y, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetTreeInstance(TerrainData self, int index, out TreeInstance value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int INTERNAL_CALL_RemoveTrees(TerrainData self, ref Vector2 position, float radius, int prototypeIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetTreeInstance(TerrainData self, int index, ref TreeInstance instance);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void Internal_Create([Writable] TerrainData terrainData);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_bounds(out Bounds value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_heightmapScale(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_size(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_wavingGrassTint(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumAlphamapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumBaseMapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumDetailPatchCount();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumDetailResolutionPerPatch();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMaximumResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMinimumAlphamapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMinimumBaseMapResolution();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int Internal_GetMinimumDetailResolutionPerPatch();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_size(ref Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_wavingGrassTint(ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetAlphamaps(int x, int y, int width, int height, float[,,] map);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetDetailLayer(int xBase, int yBase, int totalWidth, int totalHeight, int detailIndex, int[,] data);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetDetailResolution(int patchCount, int resolutionPerPatch);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetHeights(int xBase, int yBase, int width, int height, float[,] heights);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_SetHeightsDelayLOD(int xBase, int yBase, int width, int height, float[,] heights);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool NeedUpgradeScaledTreePrototypes();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RecalculateBasemapIfDirty();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RecalculateTreePositions();
         /// <summary>
         /// <para>Reloads all the values of the available prototypes (ie, detail mesh assets) in the TerrainData Object.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RefreshPrototypes();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveDetailPrototype(int index);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveTreePrototype(int index);
         internal int RemoveTrees(Vector2 position, float radius, int prototypeIndex) => 
             INTERNAL_CALL_RemoveTrees(this, ref position, radius, prototypeIndex);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveUser(GameObject user);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void ResetDirtyDetails();
         public void SetAlphamaps(int x, int y, float[,,] map)
         {
@@ -197,7 +197,7 @@
             this.Internal_SetAlphamaps(x, y, map.GetLength(1), map.GetLength(0), map);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void SetBasemapDirty(bool dirty);
         public void SetDetailLayer(int xBase, int yBase, int layer, int[,] details)
         {
@@ -275,7 +275,7 @@
             INTERNAL_CALL_SetTreeInstance(this, index, ref instance);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void UpgradeScaledTreePrototype();
 
         /// <summary>
@@ -287,7 +287,7 @@
         /// <summary>
         /// <para>Number of alpha map layers.</para>
         /// </summary>
-        public int alphamapLayers { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int alphamapLayers { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Resolution of the alpha map.</para>
@@ -308,7 +308,7 @@
             }
         }
 
-        private int alphamapTextureCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        private int alphamapTextureCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Alpha map textures used by the Terrain. Used by Terrain Inspector for undo.</para>
@@ -367,29 +367,29 @@
         /// <summary>
         /// <para>Detail height of the TerrainData.</para>
         /// </summary>
-        public int detailHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int detailHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Contains the detail texture/meshes that the terrain has.</para>
         /// </summary>
-        public DetailPrototype[] detailPrototypes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public DetailPrototype[] detailPrototypes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Detail Resolution of the TerrainData.</para>
         /// </summary>
-        public int detailResolution { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int detailResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal int detailResolutionPerPatch { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal int detailResolutionPerPatch { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Detail width of the TerrainData.</para>
         /// </summary>
-        public int detailWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int detailWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Height of the terrain in samples (Read Only).</para>
         /// </summary>
-        public int heightmapHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int heightmapHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Resolution of the heightmap.</para>
@@ -426,13 +426,13 @@
         /// <summary>
         /// <para>Width of the terrain in samples (Read Only).</para>
         /// </summary>
-        public int heightmapWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int heightmapWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        private int Internal_alphamapResolution { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        private int Internal_alphamapResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        private int Internal_baseMapResolution { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        private int Internal_baseMapResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        private int Internal_heightmapResolution { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        private int Internal_heightmapResolution { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The total size in world units of the terrain.</para>
@@ -454,42 +454,42 @@
         /// <summary>
         /// <para>Splat texture used by the terrain.</para>
         /// </summary>
-        public SplatPrototype[] splatPrototypes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public SplatPrototype[] splatPrototypes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The thickness of the terrain used for collision detection.</para>
         /// </summary>
-        public float thickness { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float thickness { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns the number of tree instances.</para>
         /// </summary>
-        public int treeInstanceCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int treeInstanceCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Contains the current trees placed in the terrain.</para>
         /// </summary>
-        public TreeInstance[] treeInstances { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public TreeInstance[] treeInstances { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The list of tree prototypes this are the ones available in the inspector.</para>
         /// </summary>
-        public TreePrototype[] treePrototypes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public TreePrototype[] treePrototypes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Amount of waving grass in the terrain.</para>
         /// </summary>
-        public float wavingGrassAmount { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float wavingGrassAmount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Speed of the waving grass.</para>
         /// </summary>
-        public float wavingGrassSpeed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float wavingGrassSpeed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Strength of the waving grass in the terrain.</para>
         /// </summary>
-        public float wavingGrassStrength { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float wavingGrassStrength { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Color of the waving grass that the terrain has.</para>

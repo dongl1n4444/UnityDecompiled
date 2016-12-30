@@ -15,12 +15,12 @@
                 if (!SpriteEditorWindow.s_Instance.m_IgnoreNextPostprocessEvent)
                 {
                     SpriteEditorWindow.s_Instance.m_ResetOnNextRepaint = true;
-                    SpriteEditorWindow.s_Instance.Repaint();
                 }
                 else
                 {
                     SpriteEditorWindow.s_Instance.m_IgnoreNextPostprocessEvent = false;
                 }
+                SpriteEditorWindow.s_Instance.Repaint();
             }
         }
     }

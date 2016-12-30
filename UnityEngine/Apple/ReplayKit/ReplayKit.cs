@@ -3,9 +3,10 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>ReplayKit is only available on certain iPhone, iPad and iPod Touch devices running iOS 9.0 or later.</para>
+    /// <para>ReplayKit is only available on iPhoneiPadiPod Touch running iOS 9.0 or later.</para>
     /// </summary>
     public static class ReplayKit
     {
@@ -15,12 +16,12 @@
         /// <returns>
         /// <para>A boolean value of True if the recording was discarded successfully or False if an error occurred.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool Discard();
         /// <summary>
         /// <para>Hide the camera preview view.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void HideCameraPreview();
         /// <summary>
         /// <para>Preview the current recording</para>
@@ -28,14 +29,14 @@
         /// <returns>
         /// <para>A boolean value of True if the video preview window opened successfully or False if an error occurred.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool Preview();
         /// <summary>
         /// <para>Shows camera preview at coordinates posX and posY.</para>
         /// </summary>
         /// <param name="posX"></param>
         /// <param name="posY"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool ShowCameraPreviewAt(float posX, float posY);
         [ExcludeFromDocs]
         public static void StartBroadcasting(BroadcastStatusCallback callback)
@@ -52,7 +53,7 @@
             StartBroadcasting(callback, enableMicrophone, enableCamera);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void StartBroadcasting(BroadcastStatusCallback callback, [DefaultValue("false")] bool enableMicrophone, [DefaultValue("false")] bool enableCamera);
         [ExcludeFromDocs]
         public static bool StartRecording()
@@ -77,13 +78,13 @@
         /// <returns>
         /// <para>A boolean value of True if recording started successfully or False if an error occurred.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool StartRecording([DefaultValue("false")] bool enableMicrophone, [DefaultValue("false")] bool enableCamera);
         /// <summary>
         /// <para>Stops current broadcast. 
         /// Will terminate currently on-going broadcast. If no broadcast is in progress, does nothing.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void StopBroadcasting();
         /// <summary>
         /// <para>Stop the current recording.</para>
@@ -91,54 +92,54 @@
         /// <returns>
         /// <para>A boolean value of True if recording stopped successfully or False if an error occurred.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool StopRecording();
 
         /// <summary>
         /// <para>A boolean that indicates whether the ReplayKit API is available (where True means available). (Read Only)</para>
         /// </summary>
-        public static bool APIAvailable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool APIAvailable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>A Boolean that indicates whether ReplayKit broadcasting API is available (true means available) (Read Only).
         /// Check the value of this property before making ReplayKit broadcasting API calls. On iOS versions prior to iOS 10, this property will have a value of false.</para>
         /// </summary>
-        public static bool broadcastingAPIAvailable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool broadcastingAPIAvailable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>A string property that contains an URL used to redirect the user to an on-going or completed broadcast (Read Only).</para>
         /// </summary>
-        public static string broadcastURL { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string broadcastURL { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Camera enabled status, true, if camera enabled, false otherwise.</para>
         /// </summary>
-        public static bool cameraEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool cameraEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Boolean property that indicates whether a broadcast is currently in progress (Read Only).</para>
         /// </summary>
-        public static bool isBroadcasting { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isBroadcasting { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>A boolean that indicates whether ReplayKit is making a recording (where True means a recording is in progress). (Read Only)</para>
         /// </summary>
-        public static bool isRecording { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isRecording { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>A string value of the last error incurred by the ReplayKit: Either 'Failed to get Screen Recorder' or 'No recording available'. (Read Only)</para>
         /// </summary>
-        public static string lastError { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string lastError { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Microphone enabled status, true, if microhone enabled, false otherwise.</para>
         /// </summary>
-        public static bool microphoneEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool microphoneEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>A boolean value that indicates that a new recording is available for preview (where True means available). (Read Only)</para>
         /// </summary>
-        public static bool recordingAvailable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool recordingAvailable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Function called at the completion of broadcast startup.</para>

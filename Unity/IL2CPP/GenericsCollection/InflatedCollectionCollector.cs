@@ -15,6 +15,7 @@
         public readonly InflatedCollectionForTypeDeclarations TypeDeclarations = new InflatedCollectionForTypeDeclarations(Il2CppTypeCollector);
         public readonly InflatedCollection<GenericInstanceType> TypeMethodDeclarations = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
         public readonly InflatedCollection<GenericInstanceType> Types = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
+        public readonly InflatedCollection<GenericInstanceType> WindowsRuntimeCCWs = new InflatedCollection<GenericInstanceType>(new TypeReferenceEqualityComparer());
 
         public ReadOnlyInflatedCollectionCollector AsReadOnly() => 
             new ReadOnlyInflatedCollectionCollector(this);

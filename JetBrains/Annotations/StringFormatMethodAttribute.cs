@@ -7,7 +7,7 @@
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple=false, Inherited=true)]
     public sealed class StringFormatMethodAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <FormatParameterName>k__BackingField;
 
         public StringFormatMethodAttribute(string formatParameterName)

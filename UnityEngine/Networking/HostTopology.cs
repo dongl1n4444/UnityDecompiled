@@ -28,8 +28,8 @@
             this.m_DefConfig = null;
             this.m_MaxDefConnections = 0;
             this.m_SpecialConnections = new List<ConnectionConfig>();
-            this.m_ReceivedMessagePoolSize = 0x80;
-            this.m_SentMessagePoolSize = 0x80;
+            this.m_ReceivedMessagePoolSize = 0x400;
+            this.m_SentMessagePoolSize = 0x400;
             this.m_MessagePoolSizeGrowthFactor = 0.75f;
         }
 
@@ -43,8 +43,8 @@
             this.m_DefConfig = null;
             this.m_MaxDefConnections = 0;
             this.m_SpecialConnections = new List<ConnectionConfig>();
-            this.m_ReceivedMessagePoolSize = 0x80;
-            this.m_SentMessagePoolSize = 0x80;
+            this.m_ReceivedMessagePoolSize = 0x400;
+            this.m_SentMessagePoolSize = 0x400;
             this.m_MessagePoolSizeGrowthFactor = 0.75f;
             if (defaultConfig == null)
             {
@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="config">Connection config for special connection.</param>
         /// <returns>
-        /// <para>Id of this connection. You should use this id when you call Networking.NetworkTransport.Connect.</para>
+        /// <para>Id of this connection, user should use this id when he calls Networking.NetworkTransport.Connect.</para>
         /// </returns>
         public int AddSpecialConnectionConfig(ConnectionConfig config)
         {
@@ -104,9 +104,6 @@
         public int MaxDefaultConnections =>
             this.m_MaxDefConnections;
 
-        /// <summary>
-        /// <para>Library keep and reuse internal pools of messages. By default they have size 128. If this value is not enough pools will be automatically increased. This value defines how they will increase. Default value is 0.75, so if original pool size was 128, the new pool size will be 128 * 1.75 = 224.</para>
-        /// </summary>
         public float MessagePoolSizeGrowthFactor
         {
             get => 
@@ -122,7 +119,7 @@
         }
 
         /// <summary>
-        /// <para>What is the size of received messages pool (default 128 bytes).</para>
+        /// <para>Defines the maximum number of messages that each host can hold in its pool of received messages. The default size is 128.</para>
         /// </summary>
         public ushort ReceivedMessagePoolSize
         {
@@ -135,7 +132,7 @@
         }
 
         /// <summary>
-        /// <para>Defines size of sent message pool (default value 128).</para>
+        /// <para>Defines the maximum number of messages that each host can hold in its pool of messages waiting to be sent. The default size is 128.</para>
         /// </summary>
         public ushort SentMessagePoolSize
         {

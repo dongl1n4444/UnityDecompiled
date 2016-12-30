@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
     using UnityEngine.Scripting.APIUpdating;
 
     /// <summary>
@@ -17,9 +18,9 @@
         /// <summary>
         /// <para>NavMeshPath constructor.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern NavMeshPath();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void DestroyNavMeshPath();
         ~NavMeshPath()
         {
@@ -34,11 +35,11 @@
         /// <returns>
         /// <para>The number of corners along the path - including start and end points.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int GetCornersNonAlloc(Vector3[] results);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Vector3[] CalculateCornersInternal();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void ClearCornersInternal();
         /// <summary>
         /// <para>Erase all corner points from path.</para>
@@ -71,7 +72,7 @@
         /// <summary>
         /// <para>Status of the path. (Read Only)</para>
         /// </summary>
-        public NavMeshPathStatus status { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public NavMeshPathStatus status { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

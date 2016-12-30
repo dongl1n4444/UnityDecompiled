@@ -22,7 +22,7 @@
             if (property.propertyType == SerializedPropertyType.String)
             {
                 label = EditorGUI.BeginProperty(position, label, property);
-                Rect labelPosition = position;
+                Rect labelPosition = EditorGUI.IndentedRect(position);
                 labelPosition.height = 16f;
                 position.yMin += labelPosition.height;
                 EditorGUI.HandlePrefixLabel(position, labelPosition, label);

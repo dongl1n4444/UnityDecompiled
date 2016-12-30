@@ -1,49 +1,59 @@
 ﻿namespace UnityEngine.Experimental.Director
 {
     using System;
-    using System.Collections.Generic;
+    using System.Runtime.InteropServices;
     using UnityEngine;
 
-    internal class AnimationPlayableUtilities
+    /// <summary>
+    /// <para>Implements high-level utility methods to simplify use of the Playable API with Animations.</para>
+    /// </summary>
+    public class AnimationPlayableUtilities
     {
-        internal static int AddInputValidated(AnimationPlayable target, Playable input, System.Type typeofTarget) => 
-            target.AddInput(input);
-
-        internal static bool RemoveAllInputsValidated(AnimationPlayable target, System.Type typeofTarget) => 
-            target.RemoveAllInputs();
-
-        internal static bool RemoveInputValidated(AnimationPlayable target, int index, System.Type typeofTarget) => 
-            target.RemoveInput(index);
-
-        internal static bool RemoveInputValidated(AnimationPlayable target, Playable playable, System.Type typeofTarget) => 
-            target.RemoveInput(playable);
-
-        internal static bool SetInputs(AnimationMixerPlayable playable, AnimationClip[] clips)
+        /// <summary>
+        /// <para>Plays the Playable on  the given Animator.</para>
+        /// </summary>
+        /// <param name="animator">Target Animator.</param>
+        /// <param name="playable">The Playable that will be played.</param>
+        /// <param name="graph">The Graph that owns the Playable.</param>
+        public static void Play(Animator animator, PlayableHandle playable, PlayableGraph graph)
         {
-            if (clips == null)
-            {
-                throw new NullReferenceException("Parameter clips was null. You need to pass in a valid array of clips.");
-            }
-            Playables.BeginIgnoreAllocationTracker();
-            Playable[] sources = new Playable[clips.Length];
-            for (int i = 0; i < clips.Length; i++)
-            {
-                sources[i] = (Playable) AnimationClipPlayable.Create(clips[i]);
-                Playable target = sources[i];
-                Playables.SetPlayableDeleteOnDisconnect(ref target, true);
-            }
-            Playables.EndIgnoreAllocationTracker();
-            return SetInputsValidated((AnimationPlayable) playable, sources, typeof(AnimationMixerPlayable));
+            graph.CreateAnimationOutput("AnimationClip", animator).sourcePlayable = playable;
+            graph.SyncUpdateAndTimeMode(animator);
+            graph.Play();
         }
 
-        internal static bool SetInputsValidated(AnimationPlayable target, IEnumerable<Playable> sources, System.Type typeofTarget) => 
-            target.SetInputs(sources);
+        public static PlayableHandle PlayAnimatorController(Animator animator, RuntimeAnimatorController controller, out PlayableGraph graph)
+        {
+            graph = PlayableGraph.CreateGraph();
+            AnimationPlayableOutput output = graph.CreateAnimationOutput("AnimatorControllerPlayable", animator);
+            PlayableHandle handle = graph.CreateAnimatorControllerPlayable(controller);
+            output.sourcePlayable = handle;
+            graph.SyncUpdateAndTimeMode(animator);
+            graph.Play();
+            return handle;
+        }
 
-        internal static bool SetInputValidated(AnimationPlayable target, Playable source, int index, System.Type typeofTarget) => 
-            target.SetInput(source, index);
+        public static PlayableHandle PlayClip(Animator animator, AnimationClip clip, out PlayableGraph graph)
+        {
+            graph = PlayableGraph.CreateGraph();
+            AnimationPlayableOutput output = graph.CreateAnimationOutput("AnimationClip", animator);
+            PlayableHandle handle = graph.CreateAnimationClipPlayable(clip);
+            output.sourcePlayable = handle;
+            graph.SyncUpdateAndTimeMode(animator);
+            graph.Play();
+            return handle;
+        }
 
-        public static AnimationPlayable Null =>
-            new AnimationPlayable { handle={ m_Version=10 } };
+        public static PlayableHandle PlayMixer(Animator animator, int inputCount, out PlayableGraph graph)
+        {
+            graph = PlayableGraph.CreateGraph();
+            AnimationPlayableOutput output = graph.CreateAnimationOutput("Mixer", animator);
+            PlayableHandle handle = graph.CreateAnimationMixerPlayable(inputCount);
+            output.sourcePlayable = handle;
+            graph.SyncUpdateAndTimeMode(animator);
+            graph.Play();
+            return handle;
+        }
     }
 }
 

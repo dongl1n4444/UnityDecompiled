@@ -36,20 +36,20 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<TreeViewItem, bool>(null, (IntPtr) <DoDrag>m__0);
+                        <>f__am$cache0 = x => x is FooTreeViewItem;
                     }
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<TreeViewItem, BackendData.Foo>(null, (IntPtr) <DoDrag>m__1);
+                        <>f__am$cache1 = x => ((FooTreeViewItem) x).foo;
                     }
                     List<BackendData.Foo> draggedItems = Enumerable.Select<TreeViewItem, BackendData.Foo>(Enumerable.Where<TreeViewItem>(genericData.m_DraggedItems, <>f__am$cache0), <>f__am$cache1).ToList<BackendData.Foo>();
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<TreeViewItem, bool>(null, (IntPtr) <DoDrag>m__2);
+                        <>f__am$cache2 = x => x is FooTreeViewItem;
                     }
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<TreeViewItem, int>(null, (IntPtr) <DoDrag>m__3);
+                        <>f__am$cache3 = x => ((FooTreeViewItem) x).id;
                     }
                     int[] selectedIDs = Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(genericData.m_DraggedItems, <>f__am$cache2), <>f__am$cache3).ToArray<int>();
                     int insertionIndex = TreeViewDragging.GetInsertionIndex(parentItem, targetItem, dropPos);

@@ -452,7 +452,7 @@
             TypeDefinition definition = type.Resolve();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <IsZeroSizeValueType>m__0);
+                <>f__am$cache0 = f => f.IsStatic;
             }
             if (definition.Fields.All<FieldDefinition>(<>f__am$cache0))
             {
@@ -460,15 +460,15 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <IsZeroSizeValueType>m__1);
+                <>f__am$cache1 = f => !f.IsStatic;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<FieldDefinition, TypeReference>(null, (IntPtr) <IsZeroSizeValueType>m__2);
+                <>f__am$cache2 = f => f.FieldType;
             }
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<TypeReference, bool>(null, (IntPtr) IsZeroSizeValueType);
+                <>f__mg$cache0 = new Func<TypeReference, bool>(CppCodeWriter.IsZeroSizeValueType);
             }
             return definition.Fields.Where<FieldDefinition>(<>f__am$cache1).Select<FieldDefinition, TypeReference>(<>f__am$cache2).All<TypeReference>(<>f__mg$cache0);
         }
@@ -505,7 +505,7 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<object, string>(null, (IntPtr) <WriteArrayInitializer>m__3);
+                <>f__am$cache3 = v => v.ToString();
             }
             this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache3));
         }
@@ -592,7 +592,7 @@
             <WriteIfNotEmpty>c__AnonStorey0 storey = new <WriteIfNotEmpty>c__AnonStorey0 {
                 writeContent = writeContent
             };
-            this.WriteIfNotEmpty<object>(writePrefixIfNotEmpty, new Func<CppCodeWriter, object>(storey, (IntPtr) this.<>m__0), writePostfixIfNotEmpty);
+            this.WriteIfNotEmpty<object>(writePrefixIfNotEmpty, new Func<CppCodeWriter, object>(storey.<>m__0), writePostfixIfNotEmpty);
         }
 
         public T WriteIfNotEmpty<T>(Action<CppCodeWriter> writePrefixIfNotEmpty, Func<CppCodeWriter, T> writeContent, Action<CppCodeWriter> writePostfixIfNotEmpty)
@@ -605,7 +605,7 @@
                     writer.Indent(base.IndentationLevel);
                     writePrefixIfNotEmpty(writer);
                     writer2.Indent(writer.IndentationLevel);
-                    T local = writeContent.Invoke(writer2);
+                    T local = writeContent(writer2);
                     writer2.Dedent(writer.IndentationLevel);
                     writer.Dedent(base.IndentationLevel);
                     writer2.Writer.Flush();
@@ -660,7 +660,7 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<object, string>(null, (IntPtr) <WriteNullTerminatedArrayInitializer>m__4);
+                <>f__am$cache4 = v => v.ToString();
             }
             string[] second = new string[] { "NULL" };
             this.WriteFieldInitializer(values.Select<object, string>(<>f__am$cache4).Concat<string>(second));

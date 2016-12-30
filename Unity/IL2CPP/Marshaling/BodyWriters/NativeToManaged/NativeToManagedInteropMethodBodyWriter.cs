@@ -23,11 +23,12 @@
                 thisArgument
             };
             argumentArray.AddRange(localVariableNames);
-            if (MethodSignatureWriter.NeedsHiddenMethodInfo(this._managedMethod, MethodCallType.Normal, false))
+            MethodCallType callType = !this._managedMethod.DeclaringType.IsInterface() ? MethodCallType.Normal : MethodCallType.Virtual;
+            if (MethodSignatureWriter.NeedsHiddenMethodInfo(this._managedMethod, callType, false))
             {
                 argumentArray.Add(metadataAccess.HiddenMethodInfo(this._managedMethod));
             }
-            return ("::" + MethodBodyWriter.GetMethodCallExpression(this._managedMethod, this._managedMethod, this._managedMethod, base._typeResolver, MethodCallType.Normal, metadataAccess, new VTableBuilder(), argumentArray, false, null));
+            return MethodBodyWriter.GetMethodCallExpression(this._managedMethod, this._managedMethod, this._managedMethod, base._typeResolver, callType, metadataAccess, new VTableBuilder(), argumentArray, false, null);
         }
 
         protected override void WriteMethodPrologue(CppCodeWriter writer, IRuntimeMetadataAccess metadataAccess)
@@ -38,10 +39,10 @@
 
         protected sealed override void WriteReturnStatement(CppCodeWriter writer, string unmarshaledReturnValueVariableName, IRuntimeMetadataAccess metadataAccess)
         {
-            MarshaledType[] marshaledTypes = base.MarshalInfoWriterFor(this.GetMethodReturnType()).MarshaledTypes;
+            MarshaledType[] marshaledTypes = base.MarshalInfoWriterFor(base.GetMethodReturnType()).MarshaledTypes;
             for (int i = 0; i < (marshaledTypes.Length - 1); i++)
             {
-                object[] args = new object[] { InteropMethodBodyWriter.Naming.ForComInterfaceReturnParameterName(), unmarshaledReturnValueVariableName, marshaledTypes[i].VariableName };
+                object[] args = new object[] { InteropMethodInfo.Naming.ForComInterfaceReturnParameterName(), unmarshaledReturnValueVariableName, marshaledTypes[i].VariableName };
                 writer.WriteLine("*{0}{2} = {1}{2};", args);
             }
             this.WriteReturnStatementEpilogue(writer, unmarshaledReturnValueVariableName);

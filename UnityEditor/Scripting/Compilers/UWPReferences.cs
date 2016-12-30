@@ -147,8 +147,8 @@
             version = new Version(10, 0, 0x2800);
             try
             {
-                folder = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "InstallationFolder", folder);
-                string str2 = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", version.ToString());
+                folder = RegistryUtil.GetRegistryStringValue(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "InstallationFolder", folder, RegistryView._32);
+                string str2 = RegistryUtil.GetRegistryStringValue(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", version.ToString(), RegistryView._32);
                 version = new Version(str2);
             }
             catch
@@ -158,7 +158,7 @@
 
         private sealed class UWPExtension
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private string <Name>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string[] <References>k__BackingField;

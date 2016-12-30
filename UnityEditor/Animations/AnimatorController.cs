@@ -9,6 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Experimental.Director;
+    using UnityEngine.Scripting;
     using UnityEngineInternal;
 
     /// <summary>
@@ -125,7 +126,7 @@
             this.AddParameter(paramater);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void AddStateEffectiveBehaviour(AnimatorState state, int layerIndex, int instanceID);
         public static AnimationClip AllocateAnimatorClip(string name)
         {
@@ -134,9 +135,9 @@
             return clip;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool CanAddStateMachineBehaviours();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern Object[] CollectObjectsUsingParameter(string parameterName);
         internal static T[] ConvertStateMachineBehaviour<T>(ScriptableObject[] rawObjects) where T: StateMachineBehaviour
         {
@@ -224,17 +225,24 @@
         /// <returns>
         /// <para>Returns instance id of created object, returns 0 if something is not valid.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int CreateStateMachineBehaviour(MonoScript script);
         internal static AnimatorControllerPlayable FindAnimatorControllerPlayable(Animator animator, AnimatorController controller)
         {
-            AnimatorControllerPlayable ret = new AnimatorControllerPlayable();
+            PlayableHandle ret = new PlayableHandle();
             FindAnimatorControllerPlayableInternal(ref ret, animator, controller);
-            return ret;
+            if (!ret.IsValid())
+            {
+                return null;
+            }
+            return ret.GetObject<AnimatorControllerPlayable>();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void FindAnimatorControllerPlayableInternal(ref AnimatorControllerPlayable ret, Animator animator, AnimatorController controller);
+        internal static void FindAnimatorControllerPlayableInternal(ref PlayableHandle ret, Animator animator, AnimatorController controller)
+        {
+            INTERNAL_CALL_FindAnimatorControllerPlayableInternal(ref ret, animator, controller);
+        }
+
         internal AnimatorStateMachine FindEffectiveRootStateMachine(int layerIndex)
         {
             AnimatorControllerLayer layer = this.layers[layerIndex];
@@ -255,12 +263,12 @@
         public static StateMachineBehaviourContext[] FindStateMachineBehaviourContext(StateMachineBehaviour behaviour) => 
             Internal_FindStateMachineBehaviourContext(behaviour);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern MonoScript GetBehaviourMonoScript(AnimatorState state, int layerIndex, int behaviourIndex);
         public T[] GetBehaviours<T>() where T: StateMachineBehaviour => 
             ConvertStateMachineBehaviour<T>(this.GetBehaviours(typeof(T)));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern ScriptableObject[] GetBehaviours(Type type);
         internal string GetDefaultBlendTreeParameter()
         {
@@ -275,7 +283,7 @@
             return "Blend";
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern AnimatorController GetEffectiveAnimatorController(Animator animator);
         /// <summary>
         /// <para>Gets the effective state machine behaviour list for the AnimatorState. Behaviours are either stored in the AnimatorStateMachine or in the AnimatorLayer's ovverrides. Use this function to get Behaviour list that is effectively used.</para>
@@ -307,35 +315,37 @@
             return this.layers[layerIndex].GetOverrideMotion(state);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern int IndexOfParameter(string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern ScriptableObject Internal_AddStateMachineBehaviourWithType(Type stateMachineBehaviourType, AnimatorState state, int layerIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_FindAnimatorControllerPlayableInternal(ref PlayableHandle ret, Animator animator, AnimatorController controller);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create(AnimatorController mono);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern StateMachineBehaviourContext[] Internal_FindStateMachineBehaviourContext(ScriptableObject scriptableObject);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern StateMachineBehaviour[] Internal_GetEffectiveBehaviours(AnimatorState state, int layerIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void Internal_SetEffectiveBehaviours(AnimatorState state, int layerIndex, StateMachineBehaviour[] behaviours);
         /// <summary>
         /// <para>Creates a unique name for the layers.</para>
         /// </summary>
         /// <param name="name">The desired name of the AnimatorLayer.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string MakeUniqueLayerName(string name);
         /// <summary>
         /// <para>Creates a unique name for the parameter.</para>
         /// </summary>
         /// <param name="name">The desired name of the AnimatorParameter.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string MakeUniqueParameterName(string name);
         internal static void OnInvalidateAnimatorController(AnimatorController controller)
         {
             if (controller.OnAnimatorControllerDirty != null)
             {
-                controller.OnAnimatorControllerDirty.Invoke();
+                controller.OnAnimatorControllerDirty();
             }
         }
 
@@ -396,11 +406,11 @@
             this.parameters = parameters;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RemoveStateEffectiveBehaviour(AnimatorState state, int layerIndex, int behaviourIndex);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void RenameParameter(string prevName, string newName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetAnimatorController(Animator behavior, AnimatorController controller);
         public void SetStateEffectiveBehaviours(AnimatorState state, int layerIndex, StateMachineBehaviour[] behaviours)
         {
@@ -449,7 +459,7 @@
             }
         }
 
-        internal bool isAssetBundled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal bool isAssetBundled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("layerCount is obsolete. Use layers.Length instead.", true)]
         private int layerCount =>
@@ -458,7 +468,7 @@
         /// <summary>
         /// <para>The layers in the controller.</para>
         /// </summary>
-        public AnimatorControllerLayer[] layers { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AnimatorControllerLayer[] layers { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("parameterCount is obsolete. Use parameters.Length instead.", true)]
         private int parameterCount =>
@@ -467,7 +477,7 @@
         /// <summary>
         /// <para>Parameters are used to communicate between scripting and the controller. They are used to drive transitions and blendtrees for example.</para>
         /// </summary>
-        public AnimatorControllerParameter[] parameters { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public AnimatorControllerParameter[] parameters { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         internal bool pushUndo
         {

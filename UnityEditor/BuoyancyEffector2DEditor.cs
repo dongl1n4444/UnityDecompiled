@@ -8,7 +8,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(BuoyancyEffector2D), true), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(BuoyancyEffector2D), true)]
     internal class BuoyancyEffector2DEditor : Effector2DEditor
     {
         [CompilerGenerated]
@@ -80,7 +80,7 @@
                 float x = negativeInfinity;
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Collider2D, bool>(null, (IntPtr) <OnSceneGUI>m__0);
+                    <>f__am$cache0 = c => c.enabled && c.usedByEffector;
                 }
                 foreach (Collider2D colliderd in Enumerable.Where<Collider2D>(target.gameObject.GetComponents<Collider2D>(), <>f__am$cache0))
                 {

@@ -22,19 +22,19 @@
         private bool <allowBuiltinResources>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowDeselection>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowDragging>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowFindNextShortcut>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <allowFocusRendering>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <allowFocusRendering>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowMultiSelect>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowRenaming>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <allowUserRenderingHook>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <allowUserRenderingHook>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <foldersFirst>k__BackingField;
         private const float k_ListModeVersionControlOverlayPadding = 14f;
         private const double kDelayQueryAfterScroll = 0.0;
@@ -168,7 +168,7 @@
                         Vector2 vector = this.m_Ping.m_PingStyle.CalcSize(content);
                         this.m_Ping.m_ContentRect.width = (vector.x + num2) + 16f;
                         this.m_Ping.m_ContentRect.height = vector.y;
-                        this.m_LeftPaddingForPinging = !storey.hierarchyProperty.isMainRepresentation ? 0x1c : 0x10;
+                        this.m_LeftPaddingForPinging = !storey.hierarchyProperty.isMainRepresentation ? 0x1c : 13;
                         storey2.res = this.m_LocalAssets.LookupByInstanceID(instanceID);
                         this.m_Ping.m_ContentDraw = new Action<Rect>(storey2.<>m__0);
                     }
@@ -594,7 +594,7 @@
             {
                 if (this.m_KeyboardInputCallback != null)
                 {
-                    this.m_KeyboardInputCallback.Invoke();
+                    this.m_KeyboardInputCallback();
                 }
                 if (Event.current.type == EventType.KeyDown)
                 {
@@ -1006,7 +1006,7 @@
                     }
                     if (this.m_GotKeyboardFocus != null)
                     {
-                        this.m_GotKeyboardFocus.Invoke();
+                        this.m_GotKeyboardFocus();
                     }
                 }
             }
@@ -1178,7 +1178,7 @@
         {
             if (this.m_RepaintWantedCallback != null)
             {
-                this.m_RepaintWantedCallback.Invoke();
+                this.m_RepaintWantedCallback();
             }
         }
 
@@ -1542,7 +1542,7 @@
                     this.$this.Repaint();
                     if (this.$this.assetStoreSearchEnded != null)
                     {
-                        this.$this.assetStoreSearchEnded.Invoke();
+                        this.$this.assetStoreSearchEnded();
                     }
                 }
                 else
@@ -1600,7 +1600,7 @@
                     this.$this.Repaint();
                     if (this.$this.assetStoreSearchEnded != null)
                     {
-                        this.$this.assetStoreSearchEnded.Invoke();
+                        this.$this.assetStoreSearchEnded();
                     }
                 }
             }
@@ -2148,7 +2148,7 @@
         private class LocalGroup : ObjectListArea.Group
         {
             private const float k_IconWidth = 16f;
-            public const int k_ListModeLeftPadding = 0x10;
+            public const int k_ListModeLeftPadding = 13;
             public const int k_ListModeLeftPaddingForSubAssets = 0x1c;
             public const int k_ListModeVersionControlOverlayPadding = 14;
             private const float k_SpaceBetweenIconAndText = 2f;
@@ -2297,7 +2297,7 @@
                     float num = 0f;
                     if (base.m_Owner.drawLocalAssetHeader != null)
                     {
-                        num = base.m_Owner.drawLocalAssetHeader.Invoke(rect) + 10f;
+                        num = base.m_Owner.drawLocalAssetHeader(rect) + 10f;
                     }
                     rect.x += num;
                     rect.width -= num;
@@ -2325,7 +2325,7 @@
                 {
                     Rect drawRect = rect;
                     drawRect.width = num + 16f;
-                    if (CollabAccess.Instance.IsServiceEnabled() && Collab.instance.GetCollabInfo().whitelisted)
+                    if (CollabAccess.Instance.IsServiceEnabled())
                     {
                         CollabProjectHook.OnProjectWindowItemIconOverlay(filterItem.guid, drawRect);
                     }
@@ -2632,7 +2632,7 @@
                         }
                         if ((filterItem != null) && filterItem.isMainRepresentation)
                         {
-                            if (CollabAccess.Instance.IsServiceEnabled() && Collab.instance.GetCollabInfo().whitelisted)
+                            if (CollabAccess.Instance.IsServiceEnabled())
                             {
                                 CollabProjectHook.OnProjectWindowItemIconOverlay(filterItem.guid, position);
                             }
@@ -3097,18 +3097,18 @@
                 }
                 else
                 {
-                    string classString = type.ToString().Substring(type.Namespace.ToString().Length + 1);
-                    int classID = BaseObjectTools.StringToClassID(classString);
-                    if (classID < 0)
+                    string name = type.ToString().Substring(type.Namespace.ToString().Length + 1);
+                    UnityType type2 = UnityType.FindTypeByName(name);
+                    if (type2 == null)
                     {
-                        Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: class '" + classString + "' not found");
+                        Debug.LogWarning("ObjectSelector::InitBuiltinAssetType: class '" + name + "' not found");
                     }
                     else
                     {
-                        BuiltinResource[] builtinResourceList = EditorGUIUtility.GetBuiltinResourceList(classID);
+                        BuiltinResource[] builtinResourceList = EditorGUIUtility.GetBuiltinResourceList(type2.persistentTypeID);
                         if (builtinResourceList != null)
                         {
-                            this.m_BuiltinResourceMap.Add(classString, builtinResourceList);
+                            this.m_BuiltinResourceMap.Add(name, builtinResourceList);
                         }
                     }
                 }
@@ -3278,22 +3278,25 @@
                         List<int> list2 = new List<int>();
                         foreach (string str in searchFilter.classNames)
                         {
-                            int item = BaseObjectTools.StringToClassIDCaseInsensitive(str);
-                            if (item >= 0)
+                            UnityType type = UnityType.FindTypeByNameCaseInsensitive(str);
+                            if (type != null)
                             {
-                                list2.Add(item);
+                                list2.Add(type.persistentTypeID);
                             }
                         }
                         if (list2.Count > 0)
                         {
                             foreach (KeyValuePair<string, BuiltinResource[]> pair in this.m_BuiltinResourceMap)
                             {
-                                int classID = BaseObjectTools.StringToClassID(pair.Key);
-                                foreach (int num4 in list2)
+                                UnityType type2 = UnityType.FindTypeByName(pair.Key);
+                                if (type2 != null)
                                 {
-                                    if (BaseObjectTools.IsDerivedFromClassID(classID, num4))
+                                    foreach (int num2 in list2)
                                     {
-                                        list.AddRange(pair.Value);
+                                        if (type2.IsDerivedFrom(UnityType.FindTypeByPersistentTypeID(num2)))
+                                        {
+                                            list.AddRange(pair.Value);
+                                        }
                                     }
                                 }
                             }

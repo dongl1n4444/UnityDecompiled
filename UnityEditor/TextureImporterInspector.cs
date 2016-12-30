@@ -11,7 +11,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(TextureImporter))]
+    [CustomEditor(typeof(TextureImporter)), CanEditMultipleObjects]
     internal class TextureImporterInspector : AssetImporterInspector
     {
         internal static readonly TextureImporterFormat[] kFormatsWithCompressionSettings = new TextureImporterFormat[] { TextureImporterFormat.DXT1Crunched };
@@ -111,17 +111,20 @@
             foreach (AssetImporter importer in base.targets)
             {
                 Texture tex = AssetDatabase.LoadMainAssetAtPath(importer.assetPath) as Texture;
-                if (this.m_Aniso.intValue != -1)
+                if (tex != null)
                 {
-                    TextureUtil.SetAnisoLevelNoDirty(tex, this.m_Aniso.intValue);
-                }
-                if (this.m_FilterMode.intValue != -1)
-                {
-                    TextureUtil.SetFilterModeNoDirty(tex, (FilterMode) this.m_FilterMode.intValue);
-                }
-                if (this.m_WrapMode.intValue != -1)
-                {
-                    TextureUtil.SetWrapModeNoDirty(tex, (TextureWrapMode) this.m_WrapMode.intValue);
+                    if (this.m_Aniso.intValue != -1)
+                    {
+                        TextureUtil.SetAnisoLevelNoDirty(tex, this.m_Aniso.intValue);
+                    }
+                    if (this.m_FilterMode.intValue != -1)
+                    {
+                        TextureUtil.SetFilterModeNoDirty(tex, (FilterMode) this.m_FilterMode.intValue);
+                    }
+                    if (this.m_WrapMode.intValue != -1)
+                    {
+                        TextureUtil.SetWrapModeNoDirty(tex, (TextureWrapMode) this.m_WrapMode.intValue);
+                    }
                 }
             }
             SceneView.RepaintAll();
@@ -609,7 +612,7 @@
             EditorGUI.showMixedValue = this.m_TextureType.hasMultipleDifferentValues;
             int index = EditorGUILayout.IntPopup(s_Styles.textureTypeTitle, this.m_TextureType.intValue, s_Styles.textureTypeOptions, s_Styles.textureTypeValues, new GUILayoutOption[0]);
             EditorGUI.showMixedValue = false;
-            if (EditorGUI.EndChangeCheck())
+            if (EditorGUI.EndChangeCheck() && (this.m_TextureType.intValue != index))
             {
                 this.m_TextureType.intValue = index;
                 TextureImporterSettings serializedPropertySettings = this.GetSerializedPropertySettings();
@@ -698,7 +701,10 @@
                     list.Add(texture);
                 }
             }
-            Selection.objects = list.ToArray(typeof(Object)) as Object[];
+            if (list.Count > 0)
+            {
+                Selection.objects = list.ToArray(typeof(Object)) as Object[];
+            }
         }
 
         private void SetCookieMode(CookieMode cm)

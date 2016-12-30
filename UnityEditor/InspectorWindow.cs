@@ -22,12 +22,27 @@
         private static Func<Object, bool> <>f__am$cache1;
         [CompilerGenerated]
         private static Func<Object, GameObject> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<Object, bool> <>f__am$cache3;
+        [CompilerGenerated]
+        private static Converter<Object, Component> <>f__am$cache4;
+        [CompilerGenerated]
+        private static Converter<Object, Component> <>f__am$cache5;
+        [CompilerGenerated]
+        private static Converter<Object, Component> <>f__am$cache6;
+        [CompilerGenerated]
+        private static Converter<Object, Component> <>f__am$cache7;
         private const long delayRepaintWhilePlayingAnimation = 150L;
         private const float kBottomToolbarHeight = 17f;
+        private const string kEditorDraggingApplicableDragString = "InspectorEditorDraggingApplicable";
         internal const int kInspectorPaddingLeft = 14;
         internal const int kInspectorPaddingRight = 4;
         private static readonly List<InspectorWindow> m_AllInspectors = new List<InspectorWindow>();
         private AssetBundleNameGUI m_AssetBundleNameGUI = new AssetBundleNameGUI();
+        private int m_EditorDraggingLastIndex = -1;
+        private float m_EditorDraggingLastMarkerY = 0f;
+        private bool m_EditorDraggingTargetAbove;
+        private int m_EditorDraggingTargetIndex = -1;
         public InspectorMode m_InspectorMode = InspectorMode.Normal;
         private bool m_InvalidateGUIBlockCache = true;
         private bool m_IsOpenForEdit = false;
@@ -73,7 +88,7 @@
                 {
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<Object, GameObject>(null, (IntPtr) <AddComponentButton>m__2);
+                        <>f__am$cache2 = o => (GameObject) o;
                     }
                     if (AddComponentWindow.Show(position, Enumerable.Select<Object, GameObject>(firstNonImportInspectorEditor.targets, <>f__am$cache2).ToArray<GameObject>()))
                     {
@@ -146,6 +161,7 @@
                     Event.current.Use();
                 }
             }
+            this.HandleEditorDragging(rect);
         }
 
         protected virtual void CreatePreviewables()
@@ -177,7 +193,7 @@
             else
             {
                 storey.sharedTracker = ActiveEditorTracker.sharedTracker;
-                bool flag = Enumerable.Any<InspectorWindow>(m_AllInspectors, new Func<InspectorWindow, bool>(storey, (IntPtr) this.<>m__0));
+                bool flag = Enumerable.Any<InspectorWindow>(m_AllInspectors, new Func<InspectorWindow, bool>(storey.<>m__0));
                 this.m_Tracker = !flag ? ActiveEditorTracker.sharedTracker : new ActiveEditorTracker();
                 this.m_Tracker.inspectorMode = this.m_InspectorMode;
                 this.m_Tracker.RebuildIfNecessary();
@@ -247,7 +263,7 @@
                     editor.isInspectorDirty = false;
                 }
                 ScriptAttributeUtility.propertyHandlerCache = editor.propertyHandlerCache;
-                bool flag2 = ((AssetDatabase.IsMainAsset(target) || AssetDatabase.IsSubAsset(target)) || (editorIndex == 0)) || (target is Material);
+                bool flag2 = this.EditorHasLargeHeader(editorIndex);
                 if (flag2)
                 {
                     string message = string.Empty;
@@ -281,6 +297,7 @@
                         flag4 = true;
                     }
                 }
+                Rect dragRect = new Rect();
                 if (!flag2)
                 {
                     using (new EditorGUI.DisabledScope(!editor.IsEnabled()))
@@ -300,6 +317,7 @@
                             }
                         }
                     }
+                    dragRect = GUILayoutUtility.GetLastRect();
                 }
                 if (flag4 && isInspectorExpanded)
                 {
@@ -365,6 +383,7 @@
                             }
                         }
                     }
+                    this.HandleEditorDragging(editorIndex, dragRect, componentRect);
                     if (GUILayoutUtility.current.topLevel != topLevel)
                     {
                         if (!GUILayoutUtility.current.layoutGroups.Contains(topLevel))
@@ -468,7 +487,7 @@
             bool flag2 = inspectedAssets.Length > 0;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <DrawPreviewAndLabels>m__0);
+                <>f__am$cache0 = a => !(a is MonoScript) && AssetDatabase.IsMainAsset(a);
             }
             bool flag3 = Enumerable.Any<Object>(inspectedAssets, <>f__am$cache0);
             if (flag || flag2)
@@ -549,8 +568,8 @@
                 }
                 else
                 {
-                    float a = ((rect3.xMax - lastRect.xMin) - 3f) - 20f;
-                    float width = Mathf.Min(a, styles.preToolbar2.CalcSize(preTitle).x);
+                    float num3 = ((rect3.xMax - lastRect.xMin) - 3f) - 20f;
+                    float width = Mathf.Min(num3, styles.preToolbar2.CalcSize(preTitle).x);
                     Rect rect5 = new Rect(lastRect.x, lastRect.y, width, lastRect.height);
                     rect3.xMin = rect5.xMax + 3f;
                     GUI.Label(rect5, preTitle, styles.preToolbar2);
@@ -597,7 +616,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<Object, bool>(null, (IntPtr) <DrawPreviewAndLabels>m__1);
+                            <>f__am$cache1 = a => EditorUtility.IsPersistent(a) && !Editor.IsAppropriateFileOpenForEdit(a);
                         }
                         using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(inspectedAssets, <>f__am$cache1)))
                         {
@@ -762,6 +781,25 @@
             }
         }
 
+        private bool EditorHasLargeHeader(int editorIndex)
+        {
+            Object target = this.m_Tracker.activeEditors[editorIndex].target;
+            return (((AssetDatabase.IsMainAsset(target) || AssetDatabase.IsSubAsset(target)) || (editorIndex == 0)) || (target is Material));
+        }
+
+        private static bool EventHasCopyModifierPressed(Event evt)
+        {
+            switch (Application.platform)
+            {
+                case RuntimePlatform.WindowsEditor:
+                    return evt.control;
+
+                case RuntimePlatform.OSXEditor:
+                    return evt.alt;
+            }
+            return evt.control;
+        }
+
         private void FlipLocked()
         {
             this.isLocked = !this.isLocked;
@@ -879,7 +917,7 @@
         private Object[] GetInspectedAssets()
         {
             Editor firstNonImportInspectorEditor = this.GetFirstNonImportInspectorEditor(this.tracker.activeEditors);
-            if ((firstNonImportInspectorEditor != null) && ((firstNonImportInspectorEditor != null) && (firstNonImportInspectorEditor.targets.Length == 1)))
+            if ((firstNonImportInspectorEditor != null) && (firstNonImportInspectorEditor.targets.Length == 1))
             {
                 string assetPath = AssetDatabase.GetAssetPath(firstNonImportInspectorEditor.target);
                 if (assetPath.ToLower().StartsWith("assets") && !Directory.Exists(assetPath))
@@ -956,6 +994,157 @@
             }
         }
 
+        private void HandleEditorDragging(Rect bottomRect)
+        {
+            this.HandleEditorDragging(this.m_EditorDraggingLastIndex, bottomRect, this.m_EditorDraggingLastMarkerY, true);
+        }
+
+        private void HandleEditorDragging(int editorIndex, Rect dragRect, Rect contentRect)
+        {
+            if (dragRect.height != 0f)
+            {
+                if (contentRect.height == 0f)
+                {
+                    contentRect = dragRect;
+                }
+                float num = 8f;
+                Rect targetRect = new Rect(contentRect.x, contentRect.yMax - (num - 2f), contentRect.width, (num * 2f) + 1f);
+                float yMax = contentRect.yMax;
+                this.m_EditorDraggingLastIndex = editorIndex;
+                this.m_EditorDraggingLastMarkerY = yMax;
+                this.HandleEditorDragging(editorIndex, targetRect, yMax, false);
+            }
+        }
+
+        private void HandleEditorDragging(int editorIndex, Rect targetRect, float markerY, bool bottomTarget)
+        {
+            Event current = Event.current;
+            EventType type = current.type;
+            switch (type)
+            {
+                case EventType.Repaint:
+                    if ((this.m_EditorDraggingTargetIndex != -1) && targetRect.Contains(current.mousePosition))
+                    {
+                        Rect rect = new Rect(targetRect.x, markerY, targetRect.width, 3f);
+                        if (!this.m_EditorDraggingTargetAbove)
+                        {
+                            rect.y += 2f;
+                        }
+                        EditorGUI.DrawRect(rect, styles.dragInsertMarkerColor);
+                    }
+                    return;
+
+                case EventType.DragUpdated:
+                {
+                    if (!targetRect.Contains(current.mousePosition))
+                    {
+                        this.m_EditorDraggingTargetIndex = -1;
+                        return;
+                    }
+                    bool? genericData = DragAndDrop.GetGenericData("InspectorEditorDraggingApplicable") as bool?;
+                    if (!genericData.HasValue)
+                    {
+                        Object[] objectReferences = DragAndDrop.objectReferences;
+                        if (objectReferences.Length > 0)
+                        {
+                        }
+                        genericData = new bool?((<>f__am$cache3 == null) && Enumerable.All<Object>(objectReferences, <>f__am$cache3));
+                        DragAndDrop.SetGenericData("InspectorEditorDraggingApplicable", genericData);
+                    }
+                    if (genericData.Value)
+                    {
+                        Editor[] activeEditors = this.m_Tracker.activeEditors;
+                        Object[] objArray2 = DragAndDrop.objectReferences;
+                        if (bottomTarget)
+                        {
+                            this.m_EditorDraggingTargetAbove = false;
+                            this.m_EditorDraggingTargetIndex = this.m_EditorDraggingLastIndex;
+                        }
+                        else
+                        {
+                            this.m_EditorDraggingTargetAbove = current.mousePosition.y < (targetRect.y + (targetRect.height / 2f));
+                            this.m_EditorDraggingTargetIndex = editorIndex;
+                            if (this.m_EditorDraggingTargetAbove)
+                            {
+                                this.m_EditorDraggingTargetIndex++;
+                                while ((this.m_EditorDraggingTargetIndex < activeEditors.Length) && this.ShouldCullEditor(activeEditors, this.m_EditorDraggingTargetIndex))
+                                {
+                                    this.m_EditorDraggingTargetIndex++;
+                                }
+                                if (this.m_EditorDraggingTargetIndex == activeEditors.Length)
+                                {
+                                    this.m_EditorDraggingTargetIndex = -1;
+                                    return;
+                                }
+                            }
+                        }
+                        if (this.m_EditorDraggingTargetAbove && this.EditorHasLargeHeader(this.m_EditorDraggingTargetIndex))
+                        {
+                            this.m_EditorDraggingTargetIndex--;
+                            while ((this.m_EditorDraggingTargetIndex >= 0) && this.ShouldCullEditor(activeEditors, this.m_EditorDraggingTargetIndex))
+                            {
+                                this.m_EditorDraggingTargetIndex--;
+                            }
+                            if (this.m_EditorDraggingTargetIndex == -1)
+                            {
+                                return;
+                            }
+                            this.m_EditorDraggingTargetAbove = false;
+                        }
+                        if (<>f__am$cache4 == null)
+                        {
+                            <>f__am$cache4 = o => o as Component;
+                        }
+                        Component[] sourceComponents = Array.ConvertAll<Object, Component>(DragAndDrop.objectReferences, <>f__am$cache4).ToArray<Component>();
+                        if (<>f__am$cache5 == null)
+                        {
+                            <>f__am$cache5 = o => o as Component;
+                        }
+                        Component[] targetComponents = Array.ConvertAll<Object, Component>(activeEditors[this.m_EditorDraggingTargetIndex].targets, <>f__am$cache5).ToArray<Component>();
+                        if (this.MoveOrCopyComponents(sourceComponents, targetComponents, EventHasCopyModifierPressed(current), true))
+                        {
+                            DragAndDrop.visualMode = !EventHasCopyModifierPressed(current) ? DragAndDropVisualMode.Move : DragAndDropVisualMode.Copy;
+                        }
+                        else
+                        {
+                            DragAndDrop.visualMode = DragAndDropVisualMode.None;
+                            this.m_EditorDraggingTargetIndex = -1;
+                        }
+                        current.Use();
+                    }
+                    return;
+                }
+                case EventType.DragPerform:
+                    if (this.m_EditorDraggingTargetIndex != -1)
+                    {
+                        Editor[] editorArray2 = this.m_Tracker.activeEditors;
+                        if (<>f__am$cache6 == null)
+                        {
+                            <>f__am$cache6 = o => o as Component;
+                        }
+                        Component[] componentArray3 = Array.ConvertAll<Object, Component>(DragAndDrop.objectReferences, <>f__am$cache6).ToArray<Component>();
+                        if (<>f__am$cache7 == null)
+                        {
+                            <>f__am$cache7 = o => o as Component;
+                        }
+                        Component[] componentArray4 = Array.ConvertAll<Object, Component>(editorArray2[this.m_EditorDraggingTargetIndex].targets, <>f__am$cache7).ToArray<Component>();
+                        if ((componentArray3.Length != 0) && (componentArray4.Length != 0))
+                        {
+                            this.MoveOrCopyComponents(componentArray3, componentArray4, EventHasCopyModifierPressed(current), false);
+                            this.m_EditorDraggingTargetIndex = -1;
+                            DragAndDrop.AcceptDrag();
+                            current.Use();
+                            GUIUtility.ExitGUI();
+                        }
+                    }
+                    return;
+            }
+            if (type == EventType.DragExited)
+            {
+                this.m_EditorDraggingTargetIndex = -1;
+            }
+        }
+
         private void HandleLastInteractedEditor(Rect componentRect, Editor editor)
         {
             if (((editor != this.m_LastInteractedEditor) && (Event.current.type == EventType.MouseDown)) && componentRect.Contains(Event.current.mousePosition))
@@ -980,6 +1169,23 @@
                 }
                 Event.current.Use();
             }
+        }
+
+        private bool MoveOrCopyComponents(Component[] sourceComponents, Component[] targetComponents, bool copy, bool validateOnly)
+        {
+            if (copy)
+            {
+                return false;
+            }
+            if ((sourceComponents.Length == 1) && (targetComponents.Length == 1))
+            {
+                if (sourceComponents[0].gameObject != targetComponents[0].gameObject)
+                {
+                    return false;
+                }
+                return ComponentUtility.MoveComponentRelativeToComponent(sourceComponents[0], targetComponents[0], this.m_EditorDraggingTargetAbove, validateOnly);
+            }
+            return ComponentUtility.MoveComponentsRelativeToComponents(sourceComponents, targetComponents, this.m_EditorDraggingTargetAbove, validateOnly);
         }
 
         private void OnDestroy()
@@ -1279,6 +1485,7 @@
             public GUIStyle addComponentButtonStyle = "AC Button";
             public readonly GUIContent addComponentLabel = EditorGUIUtility.TextContent("Add Component");
             public readonly GUIStyle dragHandle = "RL DragHandle";
+            public Color dragInsertMarkerColor = ((Color) new Color32(0x33, 0x57, 0xd9, 0xff));
             public readonly GUIContent labelTitle = EditorGUIUtility.TextContent("Asset Labels");
             public readonly GUIStyle lockButton = "IN LockButton";
             public GUIStyle lockedHeaderButton = "preButton";

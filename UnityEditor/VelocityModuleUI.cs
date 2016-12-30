@@ -31,7 +31,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {

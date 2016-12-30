@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A general-purpose DownloadHandler implementation which stores received data in a native byte buffer.</para>
@@ -36,9 +37,9 @@
         protected override string GetText() => 
             this.InternalGetText();
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern byte[] InternalGetData();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern string InternalGetText();
         /// <summary>
         /// <para>Returns a copy of the native-memory buffer interpreted as a UTF8 string.</para>

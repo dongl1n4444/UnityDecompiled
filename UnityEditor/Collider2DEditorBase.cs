@@ -4,20 +4,34 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEditor.AnimatedValues;
+    using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Events;
 
-    internal class Collider2DEditorBase : ColliderEditorBase
+    [CanEditMultipleObjects]
+    internal abstract class Collider2DEditorBase : ColliderEditorBase
     {
         [CompilerGenerated]
-        private static Func<Object, Rigidbody2D> <>f__am$cache0;
+        private static Func<Object, bool> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<Object, Rigidbody2D> <>f__am$cache1;
+        protected SerializedProperty m_AutoTiling;
+        private static ContactPoint2D[] m_Contacts = new ContactPoint2D[100];
+        private Vector2 m_ContactScrollPosition;
         private SerializedProperty m_Density;
         private SerializedProperty m_IsTrigger;
         private SerializedProperty m_Material;
         private SerializedProperty m_Offset;
+        private readonly AnimBool m_ShowCompositeRedundants = new AnimBool();
+        private readonly AnimBool m_ShowContacts = new AnimBool();
         private readonly AnimBool m_ShowDensity = new AnimBool();
         private readonly AnimBool m_ShowInfo = new AnimBool();
+        private SerializedProperty m_UsedByComposite;
         private SerializedProperty m_UsedByEffector;
+
+        protected Collider2DEditorBase()
+        {
+        }
 
         protected void BeginColliderInspector()
         {
@@ -27,6 +41,12 @@
                 base.InspectorEditButtonGUI();
             }
         }
+
+        protected bool CanEditCollider() => 
+            (Enumerable.FirstOrDefault<Object>(base.targets, delegate (Object x) {
+                SpriteRenderer component = (x as Component).GetComponent<SpriteRenderer>();
+                return ((component != null) && (component.drawMode != SpriteDrawMode.Simple)) && this.m_AutoTiling.boolValue;
+            }) == 0);
 
         protected void CheckColliderErrorState()
         {
@@ -51,13 +71,31 @@
         {
             this.ShowColliderInfoProperties();
             this.CheckColliderErrorState();
+            if (base.targets.Length == 1)
+            {
+                Collider2D target = base.target as Collider2D;
+                if ((target.isActiveAndEnabled && (target.composite == null)) && this.m_UsedByComposite.boolValue)
+                {
+                    EditorGUILayout.HelpBox("This collider will not function with a composite until there is a CompositeCollider2D on the GameObject that the attached Rigidbody2D is on.", MessageType.Warning);
+                }
+            }
             Effector2DEditor.CheckEffectorWarnings(base.target as Collider2D);
+        }
+
+        private static void FixedEndFadeGroup(float value)
+        {
+            if ((value != 0f) && (value != 1f))
+            {
+                EditorGUILayout.EndFadeGroup();
+            }
         }
 
         public override void OnDisable()
         {
             this.m_ShowDensity.valueChanged.RemoveListener(new UnityAction(this.Repaint));
             this.m_ShowInfo.valueChanged.RemoveListener(new UnityAction(this.Repaint));
+            this.m_ShowContacts.valueChanged.RemoveListener(new UnityAction(this.Repaint));
+            this.m_ShowCompositeRedundants.valueChanged.RemoveListener(new UnityAction(this.Repaint));
             base.OnDisable();
         }
 
@@ -68,10 +106,16 @@
             this.m_ShowDensity.value = this.ShouldShowDensity();
             this.m_ShowDensity.valueChanged.AddListener(new UnityAction(this.Repaint));
             this.m_ShowInfo.valueChanged.AddListener(new UnityAction(this.Repaint));
+            this.m_ShowContacts.valueChanged.AddListener(new UnityAction(this.Repaint));
+            this.m_ContactScrollPosition = Vector2.zero;
             this.m_Material = base.serializedObject.FindProperty("m_Material");
             this.m_IsTrigger = base.serializedObject.FindProperty("m_IsTrigger");
             this.m_UsedByEffector = base.serializedObject.FindProperty("m_UsedByEffector");
+            this.m_UsedByComposite = base.serializedObject.FindProperty("m_UsedByComposite");
             this.m_Offset = base.serializedObject.FindProperty("m_Offset");
+            this.m_AutoTiling = base.serializedObject.FindProperty("m_AutoTiling");
+            this.m_ShowCompositeRedundants.value = !this.m_UsedByComposite.boolValue;
+            this.m_ShowCompositeRedundants.valueChanged.AddListener(new UnityAction(this.Repaint));
         }
 
         internal override void OnForceReloadInspector()
@@ -79,33 +123,48 @@
             base.OnForceReloadInspector();
             if (base.editingCollider)
             {
-                base.ForceQuitEditMode();
+                EditMode.QuitEditMode();
             }
         }
 
         public override void OnInspectorGUI()
         {
-            base.serializedObject.Update();
-            this.m_ShowDensity.target = this.ShouldShowDensity();
-            if (EditorGUILayout.BeginFadeGroup(this.m_ShowDensity.faded))
+            this.m_ShowCompositeRedundants.target = !this.m_UsedByComposite.boolValue;
+            if (EditorGUILayout.BeginFadeGroup(this.m_ShowCompositeRedundants.faded))
             {
-                EditorGUILayout.PropertyField(this.m_Density, new GUILayoutOption[0]);
+                this.m_ShowDensity.target = this.ShouldShowDensity();
+                if (EditorGUILayout.BeginFadeGroup(this.m_ShowDensity.faded))
+                {
+                    EditorGUILayout.PropertyField(this.m_Density, new GUILayoutOption[0]);
+                }
+                FixedEndFadeGroup(this.m_ShowDensity.faded);
+                EditorGUILayout.PropertyField(this.m_Material, new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_IsTrigger, new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_UsedByEffector, new GUILayoutOption[0]);
             }
-            EditorGUILayout.EndFadeGroup();
-            base.serializedObject.ApplyModifiedProperties();
-            EditorGUILayout.PropertyField(this.m_Material, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_IsTrigger, new GUILayoutOption[0]);
-            EditorGUILayout.PropertyField(this.m_UsedByEffector, new GUILayoutOption[0]);
+            FixedEndFadeGroup(this.m_ShowCompositeRedundants.faded);
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = x => !(x as Collider2D).compositeCapable;
+            }
+            if (Enumerable.Where<Object>(base.targets, <>f__am$cache0).Count<Object>() == 0)
+            {
+                EditorGUILayout.PropertyField(this.m_UsedByComposite, new GUILayoutOption[0]);
+            }
+            if (this.m_AutoTiling != null)
+            {
+                EditorGUILayout.PropertyField(this.m_AutoTiling, Styles.s_AutoTilingLabel, new GUILayoutOption[0]);
+            }
             EditorGUILayout.PropertyField(this.m_Offset, new GUILayoutOption[0]);
         }
 
         private bool ShouldShowDensity()
         {
-            if (<>f__am$cache0 == null)
+            if (<>f__am$cache1 == null)
             {
-                <>f__am$cache0 = new Func<Object, Rigidbody2D>(null, (IntPtr) <ShouldShowDensity>m__0);
+                <>f__am$cache1 = x => (x as Collider2D).attachedRigidbody;
             }
-            if (Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache0).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
+            if (Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache1).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
             {
                 return false;
             }
@@ -120,17 +179,18 @@
             {
                 if (base.targets.Length == 1)
                 {
-                    Collider2D colliderd = base.targets[0] as Collider2D;
+                    Collider2D collider = base.targets[0] as Collider2D;
                     EditorGUI.BeginDisabledGroup(true);
-                    EditorGUILayout.ObjectField("Attached Body", colliderd.attachedRigidbody, typeof(Rigidbody2D), false, new GUILayoutOption[0]);
-                    EditorGUILayout.FloatField("Friction", colliderd.friction, new GUILayoutOption[0]);
-                    EditorGUILayout.FloatField("Bounciness", colliderd.bounciness, new GUILayoutOption[0]);
-                    EditorGUILayout.FloatField("Shape Count", (float) colliderd.shapeCount, new GUILayoutOption[0]);
-                    if (colliderd.isActiveAndEnabled)
+                    EditorGUILayout.ObjectField("Attached Body", collider.attachedRigidbody, typeof(Rigidbody2D), false, new GUILayoutOption[0]);
+                    EditorGUILayout.FloatField("Friction", collider.friction, new GUILayoutOption[0]);
+                    EditorGUILayout.FloatField("Bounciness", collider.bounciness, new GUILayoutOption[0]);
+                    EditorGUILayout.FloatField("Shape Count", (float) collider.shapeCount, new GUILayoutOption[0]);
+                    if (collider.isActiveAndEnabled)
                     {
-                        EditorGUILayout.BoundsField("Bounds", colliderd.bounds, new GUILayoutOption[0]);
+                        EditorGUILayout.BoundsField("Bounds", collider.bounds, new GUILayoutOption[0]);
                     }
                     EditorGUI.EndDisabledGroup();
+                    this.ShowContacts(collider);
                     base.Repaint();
                 }
                 else
@@ -139,6 +199,52 @@
                 }
             }
             EditorGUILayout.EndFadeGroup();
+        }
+
+        private void ShowContacts(Collider2D collider)
+        {
+            EditorGUI.indentLevel++;
+            this.m_ShowContacts.target = EditorGUILayout.Foldout(this.m_ShowContacts.target, "Contacts");
+            if (EditorGUILayout.BeginFadeGroup(this.m_ShowContacts.faded))
+            {
+                int contacts = collider.GetContacts(m_Contacts);
+                if (contacts > 0)
+                {
+                    GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Height(180f) };
+                    this.m_ContactScrollPosition = EditorGUILayout.BeginScrollView(this.m_ContactScrollPosition, options);
+                    EditorGUI.BeginDisabledGroup(true);
+                    for (int i = 0; i < contacts; i++)
+                    {
+                        ContactPoint2D pointd = m_Contacts[i];
+                        EditorGUILayout.HelpBox($"Contact#{i}", MessageType.None);
+                        EditorGUI.indentLevel++;
+                        EditorGUILayout.Vector2Field("Point", pointd.point, new GUILayoutOption[0]);
+                        EditorGUILayout.Vector2Field("Normal", pointd.normal, new GUILayoutOption[0]);
+                        EditorGUILayout.Vector2Field("Relative Velocity", pointd.relativeVelocity, new GUILayoutOption[0]);
+                        EditorGUILayout.FloatField("Normal Impulse", pointd.normalImpulse, new GUILayoutOption[0]);
+                        EditorGUILayout.FloatField("Tangent Impulse", pointd.tangentImpulse, new GUILayoutOption[0]);
+                        EditorGUILayout.ObjectField("Collider", pointd.collider, typeof(Collider2D), false, new GUILayoutOption[0]);
+                        EditorGUILayout.ObjectField("Rigidbody", pointd.rigidbody, typeof(Rigidbody2D), false, new GUILayoutOption[0]);
+                        EditorGUILayout.ObjectField("OtherRigidbody", pointd.otherRigidbody, typeof(Rigidbody2D), false, new GUILayoutOption[0]);
+                        EditorGUI.indentLevel--;
+                        EditorGUILayout.Space();
+                    }
+                    EditorGUI.EndDisabledGroup();
+                    EditorGUILayout.EndScrollView();
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox("No Contacts", MessageType.Info);
+                }
+            }
+            FixedEndFadeGroup(this.m_ShowContacts.faded);
+            EditorGUI.indentLevel--;
+        }
+
+        protected class Styles
+        {
+            public static readonly GUIContent s_AutoTilingLabel = EditorGUIUtility.TextContent("Auto Tiling | When enabled, the collider's shape will update automaticaly based on the SpriteRenderer's tiling properties");
+            public static readonly GUIContent s_ColliderEditDisableHelp = EditorGUIUtility.TextContent("Collider cannot be edited because it is driven by SpriteRenderer's tiling properties.");
         }
     }
 }

@@ -154,7 +154,7 @@
             {
                 this.Disconnect();
             }
-            PerceptionSimulation.Initialize();
+            UnityEditor.HolographicEmulation.HolographicEmulation.Initialize();
             this.LoadCurrentRoom();
         }
 
@@ -173,7 +173,7 @@
 
         private void LoadCurrentRoom()
         {
-            PerceptionSimulation.LoadRoom((EditorApplication.applicationContentsPath + "/UnityExtensions/Unity/VR/HolographicSimulation/Rooms/") + s_RoomStrings[this.m_RoomIndex].text + ".xef");
+            UnityEditor.HolographicEmulation.HolographicEmulation.LoadRoom((EditorApplication.applicationContentsPath + "/UnityExtensions/Unity/VR/HolographicSimulation/Rooms/") + s_RoomStrings[this.m_RoomIndex].text + ".xef");
         }
 
         private void OnDisable()
@@ -225,7 +225,7 @@
                         this.m_Hand = (GestureHand) EditorGUILayout.Popup(s_HandText, (int) this.m_Hand, s_HandStrings, new GUILayoutOption[0]);
                         if (EditorGUI.EndChangeCheck())
                         {
-                            PerceptionSimulation.SetGestureHand(this.m_Hand);
+                            UnityEditor.HolographicEmulation.HolographicEmulation.SetGestureHand(this.m_Hand);
                         }
                         break;
                 }
@@ -238,7 +238,7 @@
             this.m_InPlayMode = EditorApplication.isPlayingOrWillChangePlaymode;
             if (this.m_InPlayMode && !inPlayMode)
             {
-                PerceptionSimulation.SetEmulationMode(this.m_Mode);
+                UnityEditor.HolographicEmulation.HolographicEmulation.SetEmulationMode(this.m_Mode);
                 switch (this.m_Mode)
                 {
                     case EmulationMode.Simulated:
@@ -251,7 +251,7 @@
                 switch (this.m_Mode)
                 {
                     case EmulationMode.Simulated:
-                        PerceptionSimulation.Shutdown();
+                        UnityEditor.HolographicEmulation.HolographicEmulation.Shutdown();
                         break;
                 }
             }
@@ -275,7 +275,7 @@
             switch (this.m_Mode)
             {
                 case EmulationMode.Simulated:
-                    PerceptionSimulation.SetGestureHand(this.m_Hand);
+                    UnityEditor.HolographicEmulation.HolographicEmulation.SetGestureHand(this.m_Hand);
                     break;
 
                 case EmulationMode.RemoteDevice:

@@ -16,7 +16,7 @@
         {
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void ReleaseCoroutine();
         ~Coroutine()
         {

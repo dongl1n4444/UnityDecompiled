@@ -2,8 +2,6 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-    using UnityEditor.Collaboration;
-    using UnityEditor.Connect;
     using UnityEditor.Web;
     using UnityEngine;
 
@@ -97,6 +95,7 @@
                 s_CollabToolbarWindow.initialOpenUrl = "file:///" + EditorApplication.userJavascriptPackagesPath + "unityeditor-collab-toolbar/dist/index.html";
                 s_CollabToolbarWindow.Init();
                 s_CollabToolbarWindow.ShowAsDropDown(buttonRect, windowSize);
+                s_CollabToolbarWindow.OnFocus();
                 return true;
             }
             return false;
@@ -108,7 +107,7 @@
 
         [MenuItem("Window/Collab Toolbar", true)]
         public static bool ValidateShowToolbarWindow() => 
-            (UnityConnect.instance.userInfo.whitelisted && Collab.instance.collabInfo.whitelisted);
+            true;
 
         internal override WebView webView
         {

@@ -9,6 +9,10 @@
 
     internal class Initializer : IPostProcessorTask
     {
+        private const int kCardboardMinSdkVersion = 0x13;
+        private const int kDaydreamMinSdkVersion = 0x18;
+        private const int kOculusGearVRMinSdk = 0x13;
+
         public event ProgressHandler OnProgress;
 
         public void Execute(PostProcessorContext context)
@@ -26,6 +30,8 @@
             bool useAPKExpansionFiles = PlayerSettings.Android.useAPKExpansionFiles;
             context.Set<bool>("UseObb", useAPKExpansionFiles);
             context.Set<int>("GearVRMinSdkVersion", 0x13);
+            context.Set<int>("CardboardMinSdkVersion", 0x13);
+            context.Set<int>("DaydreamMinSdkVersion", 0x18);
             string path = Path.Combine(BuildPipeline.GetBuildToolsDirectory(target), "fastzip");
             if (!File.Exists(path))
             {

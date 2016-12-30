@@ -27,7 +27,7 @@
             Clear_Internal(this.m_NativePtr);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Clear_Internal(IntPtr context);
         /// <summary>
         /// <para>Deletes a persisted WorldAnchor from the store.</para>
@@ -45,9 +45,9 @@
             return Delete_Internal(this.m_NativePtr, id);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Delete_Internal(IntPtr context, string id);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destruct_Internal(IntPtr context);
         /// <summary>
         /// <para>Gets all of the identifiers of the currently persisted WorldAnchors.</para>
@@ -82,9 +82,9 @@
             return 0;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetAllIds_Internal(IntPtr context, string[] ids);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int GetAnchorCount_Internal(IntPtr context);
         public static void GetAsync(GetAsyncDelegate onCompleted)
         {
@@ -98,7 +98,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetAsync_Internal(GetAsyncDelegate onCompleted);
         [RequiredByNativeCode]
         private static void InvokeGetAsyncDelegate(GetAsyncDelegate handler, IntPtr nativePtr)
@@ -142,7 +142,7 @@
             return null;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Load_Internal(IntPtr context, string id, WorldAnchor anchor);
         /// <summary>
         /// <para>Saves the provided WorldAnchor with the provided identifier. If the identifier is already in use, the method will return false.</para>
@@ -165,7 +165,7 @@
             return Save_Internal(this.m_NativePtr, id, anchor);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Save_Internal(IntPtr context, string id, WorldAnchor anchor);
 
         /// <summary>

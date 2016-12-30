@@ -363,7 +363,7 @@
             private void DoIconAndText(TreeViewItem item, Rect contentRect, bool selected, bool focused)
             {
                 EditorGUIUtility.SetIconSize(new Vector2(base.k_IconWidth, base.k_IconWidth));
-                GUIStyle lineStyle = TreeViewGUI.s_Styles.lineStyle;
+                GUIStyle lineStyle = TreeViewGUI.Styles.lineStyle;
                 lineStyle.padding.left = 0;
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -440,7 +440,7 @@
                 bool flag = Event.current.type == EventType.Repaint;
                 if (selected && flag)
                 {
-                    TreeViewGUI.s_Styles.selectionStyle.Draw(rowRect, false, false, true, focused);
+                    TreeViewGUI.Styles.selectionStyle.Draw(rowRect, false, false, true, focused);
                 }
                 bool flag2 = item != null;
                 bool flag3 = (item == null) || item.isFolder;
@@ -531,7 +531,7 @@
 
         private class PackageImportTreeViewItem : TreeViewItem
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private ImportPackageItem <item>k__BackingField;
             private PackageImportTreeView.EnabledState m_EnableState;
 

@@ -146,7 +146,8 @@
             Lightmapping = 200,
             NavMesh = 300,
             OcclusionCulling = 100,
-            ParticleEffect = 400
+            ParticleEffect = 400,
+            PhysicsDebug = 350
         }
 
         private class OverlayWindow : IComparable<SceneViewOverlay.OverlayWindow>

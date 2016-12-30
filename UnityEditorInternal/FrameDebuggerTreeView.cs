@@ -153,7 +153,7 @@
                 bool flag = (this.m_FrameEvents == null) || (this.m_FrameEvents.Length < 1);
                 this.m_FrameEvents = frameEvents;
                 base.m_NeedRefreshRows = true;
-                base.ReloadData();
+                this.ReloadData();
                 if (flag)
                 {
                     this.SetExpandedWithChildren(base.m_RootItem, true);

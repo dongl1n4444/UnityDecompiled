@@ -44,8 +44,8 @@
 
         public override void ShowPlatformBuildOptions()
         {
-            int iOSBuildConfigType = (int) EditorUserBuildSettings.iOSBuildConfigType;
-            EditorUserBuildSettings.iOSBuildConfigType = (iOSBuildType) PlayerSettingsEditor.BuildEnumPopup<iOSBuildType>(EditorGUIUtility.TextContent("Run in Xcode as"), iOSBuildConfigType, kOptionsOrder, kOptionDescriptions);
+            iOSBuildType iOSBuildConfigType = EditorUserBuildSettings.iOSBuildConfigType;
+            EditorUserBuildSettings.iOSBuildConfigType = PlayerSettingsEditor.BuildEnumPopup<iOSBuildType>(EditorGUIUtility.TextContent("Run in Xcode as"), iOSBuildConfigType, kOptionsOrder, kOptionDescriptions);
         }
     }
 }

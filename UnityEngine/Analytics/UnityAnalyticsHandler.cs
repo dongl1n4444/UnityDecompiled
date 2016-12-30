@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     [StructLayout(LayoutKind.Sequential)]
     internal sealed class UnityAnalyticsHandler : IDisposable
@@ -15,9 +16,9 @@
             this.InternalCreate();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreate();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal extern void InternalDestroy();
         ~UnityAnalyticsHandler()
         {
@@ -30,15 +31,15 @@
             GC.SuppressFinalize(this);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AnalyticsResult FlushEvents();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AnalyticsResult SetUserId(string userId);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AnalyticsResult SetUserGender(Gender gender);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AnalyticsResult SetUserBirthYear(int birthYear);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern AnalyticsResult Transaction(string productId, double amount, string currency);
         public AnalyticsResult Transaction(string productId, double amount, string currency, string receiptPurchaseData, string signature) => 
             this.Transaction(productId, amount, currency, receiptPurchaseData, signature, false);
@@ -56,7 +57,7 @@
             return this.InternalTransaction(productId, amount, currency, receiptPurchaseData, signature, usingIAPService);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern AnalyticsResult InternalTransaction(string productId, double amount, string currency, string receiptPurchaseData, string signature, bool usingIAPService);
         public AnalyticsResult CustomEvent(string customEventName) => 
             this.SendCustomEventName(customEventName);
@@ -64,9 +65,9 @@
         public AnalyticsResult CustomEvent(CustomEventData eventData) => 
             this.SendCustomEvent(eventData);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern AnalyticsResult SendCustomEventName(string customEventName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern AnalyticsResult SendCustomEvent(CustomEventData eventData);
     }
 }

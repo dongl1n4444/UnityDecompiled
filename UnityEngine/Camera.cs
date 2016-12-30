@@ -11,7 +11,7 @@
     /// <summary>
     /// <para>A Camera is a device through which the player views the world.</para>
     /// </summary>
-    [UsedByNativeCode]
+    [RequireComponent(typeof(Transform)), UsedByNativeCode]
     public sealed class Camera : Behaviour
     {
         /// <summary>
@@ -32,7 +32,7 @@
         /// </summary>
         /// <param name="evt">When to execute the command buffer during rendering.</param>
         /// <param name="buffer">The buffer to execute.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void AddCommandBuffer(CameraEvent evt, CommandBuffer buffer);
         public void CalculateFrustumCorners(Rect viewport, float z, MonoOrStereoscopicEye eye, Vector3[] outCorners)
         {
@@ -70,7 +70,7 @@
         /// <para>Makes this camera's settings match other camera.</para>
         /// </summary>
         /// <param name="other"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CopyFrom(Camera other);
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Camera.DoClear has been deprecated (UnityUpgradable).", true)]
         public void DoClear()
@@ -108,8 +108,10 @@
         /// <para>Fills an array of Camera with the current cameras in the scene, without allocating a new array.</para>
         /// </summary>
         /// <param name="cameras">An array to be filled up with cameras currently in the scene.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetAllCameras(Camera[] cameras);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal extern string[] GetCameraBufferWarnings();
         /// <summary>
         /// <para>Get command buffers to be executed at a specified place.</para>
         /// </summary>
@@ -117,19 +119,17 @@
         /// <returns>
         /// <para>Array of command buffers.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern CommandBuffer[] GetCommandBuffers(CameraEvent evt);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern string[] GetHDRWarnings();
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true)]
+        [Obsolete("Property GetScreenHeight() has been deprecated. Use Screen.height instead (UnityUpgradable) -> Screen.height", true), EditorBrowsable(EditorBrowsableState.Never)]
         public float GetScreenHeight() => 
             0f;
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true)]
+        [Obsolete("Property GetScreenWidth() has been deprecated. Use Screen.width instead (UnityUpgradable) -> Screen.width", true), EditorBrowsable(EditorBrowsableState.Never)]
         public float GetScreenWidth() => 
             0f;
 
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetStereoProjectionMatrices is deprecated. Use GetStereoProjectionMatrix(StereoscopicEye eye) instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("GetStereoProjectionMatrices is deprecated. Use GetStereoProjectionMatrix(StereoscopicEye eye) instead.")]
         public extern Matrix4x4[] GetStereoProjectionMatrices();
         public Matrix4x4 GetStereoProjectionMatrix(StereoscopicEye eye)
         {
@@ -138,7 +138,7 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetStereoViewMatrices is deprecated. Use GetStereoViewMatrix(StereoscopicEye eye) instead.")]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("GetStereoViewMatrices is deprecated. Use GetStereoViewMatrix(StereoscopicEye eye) instead.")]
         public extern Matrix4x4[] GetStereoViewMatrices();
         public Matrix4x4 GetStereoViewMatrix(StereoscopicEye eye)
         {
@@ -147,91 +147,95 @@
             return matrixx;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CalculateFrustumCornersInternal(Camera self, ref Rect viewport, float z, MonoOrStereoscopicEye eye, Vector3[] outCorners);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_CalculateObliqueMatrix(Camera self, ref Vector4 clipPlane, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetStereoProjectionMatrix(Camera self, StereoscopicEye eye, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetStereoViewMatrix(Camera self, StereoscopicEye eye, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern GameObject INTERNAL_CALL_RaycastTry(Camera self, ref Ray ray, float distance, int layerMask, QueryTriggerInteraction queryTriggerInteraction);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern GameObject INTERNAL_CALL_RaycastTry(Camera self, ref Ray ray, float distance, int layerMask);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern GameObject INTERNAL_CALL_RaycastTry2D(Camera self, ref Ray ray, float distance, int layerMask);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetAspect(Camera self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetCullingMatrix(Camera self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetFieldOfView(Camera self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetProjectionMatrix(Camera self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetReplacementShader(Camera self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ResetWorldToCameraMatrix(Camera self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ScreenPointToRay(Camera self, ref Vector3 position, out Ray value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ScreenToViewportPoint(Camera self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ScreenToWorldPoint(Camera self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetStereoProjectionMatrices(Camera self, ref Matrix4x4 leftMatrix, ref Matrix4x4 rightMatrix);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetStereoProjectionMatrix(Camera self, StereoscopicEye eye, ref Matrix4x4 matrix);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetStereoViewMatrices(Camera self, ref Matrix4x4 leftMatrix, ref Matrix4x4 rightMatrix);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetStereoViewMatrix(Camera self, StereoscopicEye eye, ref Matrix4x4 matrix);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ViewportPointToRay(Camera self, ref Vector3 position, out Ray value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ViewportToScreenPoint(Camera self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ViewportToWorldPoint(Camera self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_WorldToScreenPoint(Camera self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_WorldToViewportPoint(Camera self, ref Vector3 position, out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_backgroundColor(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_cameraToWorldMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_cullingMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_nonJitteredProjectionMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_pixelRect(out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_projectionMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_rect(out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void INTERNAL_get_transparencySortAxis(out Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_velocity(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_worldToCameraMatrix(out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool Internal_RenderToCubemapRT(RenderTexture cubemap, int faceMask);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool Internal_RenderToCubemapTexture(Cubemap cubemap, int faceMask);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_backgroundColor(ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_cullingMatrix(ref Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_nonJitteredProjectionMatrix(ref Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_pixelRect(ref Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_projectionMatrix(ref Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_rect(ref Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void INTERNAL_set_transparencySortAxis(ref Vector3 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_worldToCameraMatrix(ref Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool IsFiltered(GameObject go);
         internal void OnlyUsedForTesting1()
         {
@@ -241,15 +245,8 @@
         {
         }
 
-        [ExcludeFromDocs]
-        internal GameObject RaycastTry(Ray ray, float distance, int layerMask)
-        {
-            QueryTriggerInteraction useGlobal = QueryTriggerInteraction.UseGlobal;
-            return INTERNAL_CALL_RaycastTry(this, ref ray, distance, layerMask, useGlobal);
-        }
-
-        internal GameObject RaycastTry(Ray ray, float distance, int layerMask, [UnityEngine.Internal.DefaultValue("QueryTriggerInteraction.UseGlobal")] QueryTriggerInteraction queryTriggerInteraction) => 
-            INTERNAL_CALL_RaycastTry(this, ref ray, distance, layerMask, queryTriggerInteraction);
+        internal GameObject RaycastTry(Ray ray, float distance, int layerMask) => 
+            INTERNAL_CALL_RaycastTry(this, ref ray, distance, layerMask);
 
         internal GameObject RaycastTry2D(Ray ray, float distance, int layerMask) => 
             INTERNAL_CALL_RaycastTry2D(this, ref ray, distance, layerMask);
@@ -257,27 +254,27 @@
         /// <summary>
         /// <para>Remove all command buffers set on this camera.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RemoveAllCommandBuffers();
         /// <summary>
         /// <para>Remove command buffer from execution at a specified place.</para>
         /// </summary>
         /// <param name="evt">When to execute the command buffer during rendering.</param>
         /// <param name="buffer">The buffer to execute.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RemoveCommandBuffer(CameraEvent evt, CommandBuffer buffer);
         /// <summary>
         /// <para>Remove command buffers from execution at a specified place.</para>
         /// </summary>
         /// <param name="evt">When to execute the command buffer during rendering.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RemoveCommandBuffers(CameraEvent evt);
         /// <summary>
         /// <para>Render the camera manually.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Render();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RenderDontRestore();
         [ExcludeFromDocs]
         public bool RenderToCubemap(Cubemap cubemap)
@@ -320,7 +317,7 @@
         /// </summary>
         /// <param name="shader"></param>
         /// <param name="replacementTag"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RenderWithShader(Shader shader, string replacementTag);
         /// <summary>
         /// <para>Revert the aspect ratio to the screen's aspect ratio.</para>
@@ -363,15 +360,20 @@
         }
 
         /// <summary>
-        /// <para>Use the default projection matrix for both stereo eye. Only work in 3D flat panel display.</para>
+        /// <para>Reset the camera to using the Unity computed projection matrices for all stereoscopic eyes.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ResetStereoProjectionMatrices();
         /// <summary>
-        /// <para>Use the default view matrix for both stereo eye. Only work in 3D flat panel display.</para>
+        /// <para>Reset the camera to using the Unity computed view matrices for all stereoscopic eyes.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ResetStereoViewMatrices();
+        /// <summary>
+        /// <para>Resets this Camera's transparency sort settings to the default. Default transparency settings are taken from GraphicsSettings instead of directly from this Camera.</para>
+        /// </summary>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void ResetTransparencySortSettings();
         /// <summary>
         /// <para>Make the rendering position reflect the camera's position in the scene.</para>
         /// </summary>
@@ -418,7 +420,7 @@
         /// </summary>
         /// <param name="shader"></param>
         /// <param name="replacementTag"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetReplacementShader(Shader shader, string replacementTag);
         /// <summary>
         /// <para>Set custom projection matrices for both eyes.</para>
@@ -472,11 +474,11 @@
             this.SetTargetBuffersMRTImpl(colorBuffer, out depthBuffer);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetTargetBuffersImpl(out RenderBuffer color, out RenderBuffer depth);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetTargetBuffersMRTImpl(RenderBuffer[] color, out RenderBuffer depth);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetupCurrent(Camera cur);
         /// <summary>
         /// <para>Returns a ray going from camera through a viewport point.</para>
@@ -503,10 +505,7 @@
         /// <summary>
         /// <para>Transforms position from viewport space into world space.</para>
         /// </summary>
-        /// <param name="position">The 3d vector in Viewport space.</param>
-        /// <returns>
-        /// <para>The 3d vector in World space.</para>
-        /// </returns>
+        /// <param name="position"></param>
         public Vector3 ViewportToWorldPoint(Vector3 position)
         {
             Vector3 vector;
@@ -537,24 +536,41 @@
         }
 
         /// <summary>
-        /// <para>The rendering path that is currently being used (Read Only).</para>
+        /// <para>Gets or sets the temporary RenderTexture target for this Camera.</para>
         /// </summary>
-        public RenderingPath actualRenderingPath { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public RenderTexture activeTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>The rendering path that is currently being used (Read Only).
+        /// 
+        /// The actual rendering path might be different from the user-specified renderingPath if the underlying gpu/platform does not support the requested one, or some other situation caused a fallback (for example, deferred rendering is not supported with orthographic projection cameras).</para>
+        /// </summary>
+        public RenderingPath actualRenderingPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns all enabled cameras in the scene.</para>
         /// </summary>
-        public static Camera[] allCameras { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Camera[] allCameras { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The number of cameras in the current scene.</para>
         /// </summary>
-        public static int allCamerasCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static int allCamerasCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
+
+        /// <summary>
+        /// <para>High dynamic range rendering.</para>
+        /// </summary>
+        public bool allowHDR { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>MSAA rendering.</para>
+        /// </summary>
+        public bool allowMSAA { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The aspect ratio (width divided by height).</para>
         /// </summary>
-        public float aspect { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float aspect { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The color with which the screen will be cleared.</para>
@@ -589,27 +605,27 @@
         /// <summary>
         /// <para>Identifies what kind of camera this is.</para>
         /// </summary>
-        public CameraType cameraType { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public CameraType cameraType { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How the camera clears the background.</para>
         /// </summary>
-        public CameraClearFlags clearFlags { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public CameraClearFlags clearFlags { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the camera clear the stencil buffer after the deferred light pass?</para>
         /// </summary>
-        public bool clearStencilAfterLightingPass { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool clearStencilAfterLightingPass { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Number of command buffers set up on this camera (Read Only).</para>
         /// </summary>
-        public int commandBufferCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int commandBufferCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>This is used to render parts of the scene selectively.</para>
         /// </summary>
-        public int cullingMask { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int cullingMask { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Sets a custom matrix for the camera to use for all culling queries.</para>
@@ -631,22 +647,22 @@
         /// <summary>
         /// <para>The camera we are currently rendering with, for low-level render control only (Read Only).</para>
         /// </summary>
-        public static Camera current { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Camera current { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Camera's depth in the camera rendering order.</para>
         /// </summary>
-        public float depth { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float depth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How and if camera generates a depth texture.</para>
         /// </summary>
-        public DepthTextureMode depthTextureMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public DepthTextureMode depthTextureMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Mask to select which layers can trigger events on the camera.</para>
         /// </summary>
-        public int eventMask { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int eventMask { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("use Camera.farClipPlane instead.")]
         public float far
@@ -662,12 +678,17 @@
         /// <summary>
         /// <para>The far clipping plane distance.</para>
         /// </summary>
-        public float farClipPlane { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float farClipPlane { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The field of view of the camera in degrees.</para>
         /// </summary>
-        public float fieldOfView { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float fieldOfView { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>Should camera rendering be forced into a RenderTexture.</para>
+        /// </summary>
+        public bool forceIntoRenderTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         [Obsolete("use Camera.fieldOfView instead.")]
         public float fov
@@ -683,9 +704,10 @@
         /// <summary>
         /// <para>High dynamic range rendering.</para>
         /// </summary>
-        public bool hdr { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        [Obsolete("use Camera.allowHDR instead.")]
+        public bool hdr { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true)]
+        [Obsolete("Property isOrthoGraphic has been deprecated. Use orthographic (UnityUpgradable) -> orthographic", true), EditorBrowsable(EditorBrowsableState.Never)]
         public bool isOrthoGraphic
         {
             get => 
@@ -698,17 +720,17 @@
         /// <summary>
         /// <para>Per-layer culling distances.</para>
         /// </summary>
-        public float[] layerCullDistances { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float[] layerCullDistances { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How to perform per-layer culling for a Camera.</para>
         /// </summary>
-        public bool layerCullSpherical { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool layerCullSpherical { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The first enabled camera tagged "MainCamera" (Read Only).</para>
         /// </summary>
-        public static Camera main { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Camera main { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property mainCamera has been deprecated. Use Camera.main instead (UnityUpgradable) -> main", true)]
         public static Camera mainCamera =>
@@ -728,7 +750,7 @@
         /// <summary>
         /// <para>The near clipping plane distance.</para>
         /// </summary>
-        public float nearClipPlane { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float nearClipPlane { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get or set the raw projection matrix with no camera offset (no jittering).</para>
@@ -750,22 +772,22 @@
         /// <summary>
         /// <para>Opaque object sorting mode.</para>
         /// </summary>
-        public OpaqueSortMode opaqueSortMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public OpaqueSortMode opaqueSortMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is the camera orthographic (true) or perspective (false)?</para>
         /// </summary>
-        public bool orthographic { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool orthographic { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Camera's half-size when in orthographic mode.</para>
         /// </summary>
-        public float orthographicSize { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float orthographicSize { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How tall is the camera in pixels (Read Only).</para>
         /// </summary>
-        public int pixelHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int pixelHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Where on the screen is the camera rendered in pixel coordinates.</para>
@@ -787,9 +809,9 @@
         /// <summary>
         /// <para>How wide is the camera in pixels (Read Only).</para>
         /// </summary>
-        public int pixelWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int pixelWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static int PreviewCullingLayer { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static int PreviewCullingLayer { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Set a custom projection matrix.</para>
@@ -826,9 +848,13 @@
         }
 
         /// <summary>
-        /// <para>The rendering path that should be used, if possible.</para>
+        /// <para>The rendering path that should be used, if possible.
+        /// 
+        /// In some situations, it may not be possible to use the rendering path specified, in which case the renderer will automatically use a different path. For example, if the underlying gpu/platform does not support the requested one, or some other situation caused a fallback (for example, deferred rendering is not supported with orthographic projection cameras).
+        /// 
+        /// For this reason, we also provide the read-only property actualRenderingPath which allows you to discover which path is actually being used.</para>
         /// </summary>
-        public RenderingPath renderingPath { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public RenderingPath renderingPath { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns the eye that is currently rendering.
@@ -838,57 +864,76 @@
         /// 
         /// If called outside of a rendering callback and stereo is enabled, it will return the default eye which is Camera.MonoOrStereoscopicEye.Left.</para>
         /// </summary>
-        public MonoOrStereoscopicEye stereoActiveEye { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public MonoOrStereoscopicEye stereoActiveEye { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Distance to a point where virtual eyes converge.</para>
         /// </summary>
-        public float stereoConvergence { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float stereoConvergence { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Stereoscopic rendering.</para>
         /// </summary>
-        public bool stereoEnabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool stereoEnabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Render only once and use resulting image for both eyes.</para>
         /// </summary>
-        public bool stereoMirrorMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool stereoMirrorMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Distance between the virtual eyes.</para>
         /// </summary>
-        public float stereoSeparation { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float stereoSeparation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>Defines which eye of a VR display the Camera renders into.</para>
+        /// <para>When Virtual Reality is enabled, the stereoTargetEye value determines which eyes of the Head Mounted Display (HMD) this camera renders to. The default is to render both eyes.
+        /// 
+        /// The values passed to stereoTargetEye are found in the StereoTargetEyeMask enum. Every camera will render to the Main Game Window by default. If you do not want to see the content from this camera in the Main Game Window, use a camera with a higher depth value than this camera, or set the Camera's showDeviceView value to false.</para>
         /// </summary>
-        public StereoTargetEyeMask stereoTargetEye { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public StereoTargetEyeMask stereoTargetEye { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the target display for this Camera.</para>
         /// </summary>
-        public int targetDisplay { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int targetDisplay { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Destination render texture.</para>
         /// </summary>
-        public RenderTexture targetTexture { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public RenderTexture targetTexture { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
+
+        /// <summary>
+        /// <para>An axis that describes the direction along which the distances of objects are measured for the purpose of sorting.</para>
+        /// </summary>
+        public Vector3 transparencySortAxis
+        {
+            get
+            {
+                Vector3 vector;
+                this.INTERNAL_get_transparencySortAxis(out vector);
+                return vector;
+            }
+            set
+            {
+                this.INTERNAL_set_transparencySortAxis(ref value);
+            }
+        }
 
         /// <summary>
         /// <para>Transparent object sorting mode.</para>
         /// </summary>
-        public TransparencySortMode transparencySortMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public TransparencySortMode transparencySortMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Should the jittered matrix be used for transparency rendering?</para>
         /// </summary>
-        public bool useJitteredProjectionMatrixForTransparentRendering { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool useJitteredProjectionMatrixForTransparentRendering { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Whether or not the Camera will use occlusion culling during rendering.</para>
         /// </summary>
-        public bool useOcclusionCulling { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool useOcclusionCulling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Get the world-space speed of the camera (Read Only).</para>

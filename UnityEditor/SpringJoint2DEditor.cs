@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(SpringJoint2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SpringJoint2D))]
     internal class SpringJoint2DEditor : AnchoredJoint2DEditor
     {
         public void OnSceneGUI()

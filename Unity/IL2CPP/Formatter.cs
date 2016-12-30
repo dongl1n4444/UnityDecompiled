@@ -74,7 +74,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, byte, string>(null, (IntPtr) <Stringify>m__1);
+                <>f__am$cache1 = (buff, s) => buff + @"\x" + s.ToString("X");
             }
             return Quote(hash.Aggregate<byte, string>("", <>f__am$cache1));
         }

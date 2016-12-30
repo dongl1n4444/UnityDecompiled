@@ -2,168 +2,95 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
     using UnityEngine;
     using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Playable that plays an AnimationClip. Can be used as an input to an AnimationPlayable.</para>
     /// </summary>
-    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
-    public struct AnimationClipPlayable
+    [RequiredByNativeCode]
+    public sealed class AnimationClipPlayable : AnimationPlayable
     {
-        internal AnimationPlayable handle;
-        internal Playable node =>
-            this.handle.node;
-        /// <summary>
-        /// <para>Creates an AnimationClipPlayable.</para>
-        /// </summary>
-        /// <param name="clip"></param>
-        public static AnimationClipPlayable Create(AnimationClip clip)
+        private static AnimationClip GetAnimationClip(ref PlayableHandle handle) => 
+            INTERNAL_CALL_GetAnimationClip(ref handle);
+
+        private static bool GetApplyFootIK(ref PlayableHandle handle) => 
+            INTERNAL_CALL_GetApplyFootIK(ref handle);
+
+        private static bool GetRemoveStartOffset(ref PlayableHandle handle) => 
+            INTERNAL_CALL_GetRemoveStartOffset(ref handle);
+
+        private static float GetSpeed(ref PlayableHandle handle) => 
+            INTERNAL_CALL_GetSpeed(ref handle);
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern AnimationClip INTERNAL_CALL_GetAnimationClip(ref PlayableHandle handle);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern bool INTERNAL_CALL_GetApplyFootIK(ref PlayableHandle handle);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern bool INTERNAL_CALL_GetRemoveStartOffset(ref PlayableHandle handle);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern float INTERNAL_CALL_GetSpeed(ref PlayableHandle handle);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetApplyFootIK(ref PlayableHandle handle, bool value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetRemoveStartOffset(ref PlayableHandle handle, bool value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetSpeed(ref PlayableHandle handle, float value);
+        private static void SetApplyFootIK(ref PlayableHandle handle, bool value)
         {
-            AnimationClipPlayable that = new AnimationClipPlayable();
-            InternalCreate(clip, ref that);
-            return that;
+            INTERNAL_CALL_SetApplyFootIK(ref handle, value);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void InternalCreate(AnimationClip clip, ref AnimationClipPlayable that);
-        /// <summary>
-        /// <para>Call this method to release the resources associated to this Playable.</para>
-        /// </summary>
-        public void Destroy()
+        private static void SetRemoveStartOffset(ref PlayableHandle handle, bool value)
         {
-            this.node.Destroy();
+            INTERNAL_CALL_SetRemoveStartOffset(ref handle, value);
         }
 
-        public static bool operator ==(AnimationClipPlayable x, Playable y) => 
-            Playables.Equals((Playable) x, y);
-
-        public static bool operator !=(AnimationClipPlayable x, Playable y) => 
-            !Playables.Equals((Playable) x, y);
-
-        public override unsafe bool Equals(object p) => 
-            Playables.Equals(*((Playable*) this), p);
-
-        public override int GetHashCode() => 
-            this.node.GetHashCode();
-
-        public static implicit operator Playable(AnimationClipPlayable b) => 
-            b.node;
-
-        public static implicit operator AnimationPlayable(AnimationClipPlayable b) => 
-            b.handle;
-
-        /// <summary>
-        /// <para>Returns true if the Playable is valid. A playable can be invalid if it was disposed. This is different from a Null playable.</para>
-        /// </summary>
-        public unsafe bool IsValid() => 
-            Playables.IsValid(*((Playable*) this));
-
-        /// <summary>
-        /// <para>Current Experimental.Director.PlayState of this playable. This indicates whether the Playable is currently playing or paused.</para>
-        /// </summary>
-        public PlayState state
+        private static void SetSpeed(ref PlayableHandle handle, float value)
         {
-            get => 
-                Playables.GetPlayStateValidated(*((Playable*) this), base.GetType());
-            set
-            {
-                Playables.SetPlayStateValidated(*((Playable*) this), value, base.GetType());
-            }
+            INTERNAL_CALL_SetSpeed(ref handle, value);
         }
-        /// <summary>
-        /// <para>Current time in seconds.</para>
-        /// </summary>
-        public double time
-        {
-            get => 
-                Playables.GetTimeValidated(*((Playable*) this), base.GetType());
-            set
-            {
-                Playables.SetTimeValidated(*((Playable*) this), value, base.GetType());
-            }
-        }
-        /// <summary>
-        /// <para>Duration in seconds.</para>
-        /// </summary>
-        public double duration
-        {
-            get => 
-                Playables.GetDurationValidated(*((Playable*) this), base.GetType());
-            set
-            {
-                Playables.SetDurationValidated(*((Playable*) this), value, base.GetType());
-            }
-        }
-        /// <summary>
-        /// <para>The count of ouputs on the Playable.  Currently only 1 output is supported.</para>
-        /// </summary>
-        public int outputCount =>
-            Playables.GetOutputCountValidated(*((Playable*) this), base.GetType());
-        /// <summary>
-        /// <para>Returns the Playable connected at the specified output index.</para>
-        /// </summary>
-        /// <param name="outputPort">Index of the output.</param>
-        /// <returns>
-        /// <para>Playable connected at the output index specified, or null if the index is valid but is not connected to anything. This happens if there was once a Playable connected at the index, but was disconnected.</para>
-        /// </returns>
-        public unsafe Playable GetOutput(int outputPort) => 
-            Playables.GetOutputValidated(*((Playable*) this), outputPort, base.GetType());
 
-        public T CastTo<T>() where T: struct => 
-            this.handle.CastTo<T>();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern AnimationClip GetAnimationClip(ref AnimationClipPlayable that);
-        /// <summary>
-        /// <para>AnimationClip played by this playable.</para>
-        /// </summary>
-        public AnimationClip clip =>
-            GetAnimationClip(ref this);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern float GetSpeed(ref AnimationClipPlayable that);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void SetSpeed(ref AnimationClipPlayable that, float value);
-        /// <summary>
-        /// <para>The speed at which the AnimationClip is played.</para>
-        /// </summary>
-        public float speed
-        {
-            get => 
-                GetSpeed(ref this);
-            set
-            {
-                SetSpeed(ref this, value);
-            }
-        }
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool GetApplyFootIK(ref AnimationClipPlayable that);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void SetApplyFootIK(ref AnimationClipPlayable that, bool value);
         /// <summary>
         /// <para>Applies Humanoid FootIK solver.</para>
         /// </summary>
         public bool applyFootIK
         {
             get => 
-                GetApplyFootIK(ref this);
+                GetApplyFootIK(ref this.handle);
             set
             {
-                SetApplyFootIK(ref this, value);
+                SetApplyFootIK(ref this.handle, value);
             }
         }
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern bool GetRemoveStartOffset(ref AnimationClipPlayable that);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void SetRemoveStartOffset(ref AnimationClipPlayable that, bool value);
+
+        /// <summary>
+        /// <para>AnimationClip played by this Playable.</para>
+        /// </summary>
+        public AnimationClip clip =>
+            GetAnimationClip(ref this.handle);
+
         internal bool removeStartOffset
         {
             get => 
-                GetRemoveStartOffset(ref this);
+                GetRemoveStartOffset(ref this.handle);
             set
             {
-                SetRemoveStartOffset(ref this, value);
+                SetRemoveStartOffset(ref this.handle, value);
+            }
+        }
+
+        /// <summary>
+        /// <para>The speed at which the AnimationClip is played.</para>
+        /// </summary>
+        public float speed
+        {
+            get => 
+                GetSpeed(ref this.handle);
+            set
+            {
+                SetSpeed(ref this.handle, value);
             }
         }
     }

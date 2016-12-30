@@ -100,7 +100,7 @@
             SearchFilter searchFilter = new SearchFilter();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <FilterSelected>m__0);
+                <>f__am$cache0 = name => !string.IsNullOrEmpty(name);
             }
             searchFilter.assetBundleNames = Enumerable.Where<string>(assetBundleNames, <>f__am$cache0).ToArray<string>();
             if (ProjectBrowser.s_LastInteractedProjectBrowser != null)

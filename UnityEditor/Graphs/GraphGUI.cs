@@ -30,6 +30,8 @@
         private const int kNodePositionYMax = 250;
         private static readonly GUIContent kTempContent = new GUIContent();
         protected bool m_CenterGraph;
+        protected bool m_CenterGraphOnPosition;
+        protected Vector2 m_CenterGraphPosition;
         protected Vector2? m_contextMenuMouseDownPosition;
         private Vector2 m_DragNodeDistance;
         private Vector2 m_DragStartPoint;
@@ -100,6 +102,13 @@
         public void CenterGraph()
         {
             this.m_CenterGraph = true;
+        }
+
+        public void CenterGraph(Vector2 center)
+        {
+            this.CenterGraph();
+            this.m_CenterGraphPosition = center;
+            this.m_CenterGraphOnPosition = true;
         }
 
         public virtual void ClearSelection()
@@ -568,7 +577,7 @@
                                     {
                                         if (current.type == EventType.ExecuteCommand)
                                         {
-                                            this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__0)).ToList<UnityEditor.Graphs.Edge>());
+                                            this.DeleteNodesAndEdges(this.selection, (from i in this.edgeGUI.edgeSelection select this.m_Graph.edges[i]).ToList<UnityEditor.Graphs.Edge>());
                                         }
                                         current.Use();
                                         break;
@@ -577,7 +586,7 @@
 
                                 case 1:
                                     this.CopyNodesToPasteboard();
-                                    this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__1)).ToList<UnityEditor.Graphs.Edge>());
+                                    this.DeleteNodesAndEdges(this.selection, (from i in this.edgeGUI.edgeSelection select this.m_Graph.edges[i]).ToList<UnityEditor.Graphs.Edge>());
                                     current.Use();
                                     break;
 
@@ -865,7 +874,15 @@
             this.m_LastGraphExtents = this.graph.graphExtents;
             if (this.m_CenterGraph && (Event.current.type == EventType.Layout))
             {
-                this.m_ScrollPosition = new Vector2((this.graph.graphExtents.width / 2f) - (this.m_Host.position.width / 2f), (this.graph.graphExtents.height / 2f) - (this.m_Host.position.height / 2f));
+                if (this.m_CenterGraphOnPosition)
+                {
+                    this.m_ScrollPosition = this.m_CenterGraphPosition;
+                    this.m_CenterGraphOnPosition = false;
+                }
+                else
+                {
+                    this.m_ScrollPosition = new Vector2((this.graph.graphExtents.width / 2f) - (this.m_Host.position.width / 2f), (this.graph.graphExtents.height / 2f) - (this.m_Host.position.height / 2f));
+                }
                 this.m_CenterGraph = false;
             }
         }
@@ -928,6 +945,9 @@
                 return kGridMinorColorLight;
             }
         }
+
+        public Vector2 scrollPosition =>
+            this.m_ScrollPosition;
 
         [CompilerGenerated]
         private sealed class <OnGraphGUI>c__AnonStorey0

@@ -37,7 +37,7 @@
                     }
                     else
                     {
-                        identity.Reset();
+                        identity.MarkForReset();
                         identity.gameObject.SetActive(false);
                     }
                 }

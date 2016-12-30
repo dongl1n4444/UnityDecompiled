@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class containing methods to ease debugging while developing a game.</para>
@@ -14,7 +15,7 @@
         internal static ILogger s_Logger = new Logger(new DebugLogHandler());
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -29,7 +30,7 @@
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -53,7 +54,7 @@
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -68,7 +69,7 @@
         }
 
         /// <summary>
-        /// <para>Assert a condition and logs an error message to the Unity console on failure.</para>
+        /// <para>Assert a condition and logs a formatted error message to the Unity console on failure.</para>
         /// </summary>
         /// <param name="condition">Condition you expect to be true.</param>
         /// <param name="context">Object to which the message applies.</param>
@@ -135,14 +136,14 @@
         /// <summary>
         /// <para>Pauses the editor.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void Break();
         /// <summary>
         /// <para>Clears errors from the developer console.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearDeveloperConsole();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DebugBreak();
         /// <summary>
         /// <para>Draws a line between specified start and end points.</para>
@@ -266,9 +267,9 @@
             DrawLine(start, start + dir, color, duration, depthTest);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void GetDiagnosticSwitches(List<DiagnosticSwitch> results);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_DrawLine(ref Vector3 start, ref Vector3 end, ref Color color, float duration, bool depthTest);
         /// <summary>
         /// <para>Logs message to the Unity Console.</para>
@@ -420,7 +421,7 @@
             logger.LogFormat(LogType.Log, context, format, args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void LogPlayerBuildError(string message, string file, int line, int column);
         /// <summary>
         /// <para>A variant of Debug.Log that logs a warning message to the console.</para>
@@ -464,20 +465,20 @@
             logger.LogFormat(LogType.Warning, context, format, args);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void OpenConsoleFile();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetDiagnosticSwitch(string name, object value, bool setPersistent);
 
         /// <summary>
-        /// <para>Reports whether the development console is visible. The development console cannot be made to appear using:</para>
+        /// <para>Opens or closes developer console.</para>
         /// </summary>
-        public static bool developerConsoleVisible { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool developerConsoleVisible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>In the Build Settings dialog there is a check box called "Development Build".</para>
         /// </summary>
-        public static bool isDebugBuild { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isDebugBuild { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get default debug logger.</para>

@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using System.Text;
+    using Unity.IL2CPP.GenericsCollection;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
@@ -13,11 +14,13 @@
 
     public class ComInterfaceWriter
     {
-        private readonly CppCodeWriter _writer;
+        private readonly SourceCodeWriter _writer;
         [Inject]
         public static INamingService Naming;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
-        public ComInterfaceWriter(CppCodeWriter writer)
+        public ComInterfaceWriter(SourceCodeWriter writer)
         {
             this._writer = writer;
         }
@@ -50,7 +53,7 @@
             return elements.AggregateWithComma();
         }
 
-        public static string GetSignature(MethodReference method, MethodReference interfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, string typeName = null)
+        public static string GetSignature(MethodReference method, MethodReference interfaceMethod, Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver, string typeName = null, bool isImplementation = true)
         {
             StringBuilder builder = new StringBuilder();
             MarshalType marshalType = !interfaceMethod.DeclaringType.Resolve().IsWindowsRuntime ? MarshalType.COM : MarshalType.WindowsRuntime;
@@ -68,10 +71,14 @@
             builder.Append('(');
             builder.Append(BuildMethodParameterList(method, interfaceMethod, typeResolver, marshalType, true));
             builder.Append(')');
+            if (string.IsNullOrEmpty(typeName) && isImplementation)
+            {
+                builder.Append(" IL2CPP_OVERRIDE");
+            }
             return builder.ToString();
         }
 
-        public void WriteComInterfaceFor(TypeReference type)
+        public void WriteComInterfaceFor(TypeReference type, ReadOnlyInflatedCollectionCollector genericsCollectionCollector, IInteropDataCollector interopDataCollector)
         {
             this._writer.WriteCommentedLine(type.FullName);
             this.WriteForwardDeclarations(type);
@@ -81,12 +88,33 @@
             using (new BlockWriter(this._writer, true))
             {
                 this._writer.WriteStatement("static const Il2CppGuid IID");
+                interopDataCollector.AddGuid(type);
                 Unity.IL2CPP.ILPreProcessor.TypeResolver typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
                 foreach (MethodDefinition definition in type.Resolve().Methods)
                 {
                     MethodReference method = typeResolver.Resolve(definition);
-                    this._writer.Write(GetSignature(method, method, typeResolver, null));
+                    this._writer.Write(GetSignature(method, method, typeResolver, null, false));
                     this._writer.WriteLine(" = 0;");
+                }
+            }
+            if (type.IsGenericInstance)
+            {
+                GenericInstanceType item = (GenericInstanceType) type;
+                if (genericsCollectionCollector.WindowsRuntimeCCWs.Contains(item))
+                {
+                    WindowsRuntimeProjectedCCWWriter cCWWriter = WindowsRuntimeProjections.GetCCWWriter(item.Resolve(), true);
+                    if (cCWWriter != null)
+                    {
+                        cCWWriter(item, this._writer);
+                    }
+                }
+            }
+            else
+            {
+                WindowsRuntimeProjectedCCWWriter writer3 = WindowsRuntimeProjections.GetCCWWriter(type.Resolve(), true);
+                if (writer3 != null)
+                {
+                    writer3(type, this._writer);
                 }
             }
         }

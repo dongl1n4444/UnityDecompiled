@@ -6,6 +6,7 @@
 
     internal class XCBuildConfigurationData : PBXObjectData
     {
+        public string baseConfigurationReference;
         protected SortedDictionary<string, BuildConfigEntryData> entries = new SortedDictionary<string, BuildConfigEntryData>();
 
         public void AddProperty(string name, string value)
@@ -78,6 +79,7 @@
 
         public override void UpdateProps()
         {
+            base.SetPropertyString("baseConfigurationReference", this.baseConfigurationReference);
             PBXElementDict dict = base.m_Properties.CreateDict("buildSettings");
             foreach (KeyValuePair<string, BuildConfigEntryData> pair in this.entries)
             {
@@ -101,6 +103,7 @@
 
         public override void UpdateVars()
         {
+            this.baseConfigurationReference = base.GetPropertyString("baseConfigurationReference");
             this.entries = new SortedDictionary<string, BuildConfigEntryData>();
             if (base.m_Properties.Contains("buildSettings"))
             {

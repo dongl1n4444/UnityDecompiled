@@ -31,7 +31,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<DefaultMarshalInfoWriter, int>(null, (IntPtr) <get_NativeSizeWithoutPointers>m__0);
+                    <>f__am$cache0 = f => f.NativeSizeWithoutPointers;
                 }
                 return MarshalingUtils.GetFieldMarshalInfoWriters(this._type, this._marshalType).Select<DefaultMarshalInfoWriter, int>(<>f__am$cache0).Sum();
             }

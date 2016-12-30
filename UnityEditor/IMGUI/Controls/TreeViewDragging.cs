@@ -184,9 +184,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TreeViewItem, int>(null, (IntPtr) <GetCurrentExpanded>m__1);
+                <>f__am$cache0 = item => item.id;
             }
-            return Enumerable.Select<TreeViewItem, int>(Enumerable.Where<TreeViewItem>(this.m_TreeView.data.GetRows(), new Func<TreeViewItem, bool>(this, (IntPtr) this.<GetCurrentExpanded>m__0)), <>f__am$cache0).ToList<int>();
+            return Enumerable.Select<TreeViewItem, int>(from item in this.m_TreeView.data.GetRows()
+                where this.m_TreeView.data.IsExpanded(item)
+                select item, <>f__am$cache0).ToList<int>();
         }
 
         public int GetDropTargetControlID() => 

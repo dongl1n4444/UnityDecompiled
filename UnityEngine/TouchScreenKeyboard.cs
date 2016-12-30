@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Interface into the native iPhone, Android, Windows Phone and Windows Store Apps on-screen keyboards - it is not available on other platforms.</para>
@@ -25,14 +26,14 @@
             this.TouchScreenKeyboard_InternalConstructorHelper(ref arguments, text, textPlaceholder);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void Destroy();
         ~TouchScreenKeyboard()
         {
             this.Destroy();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_area(out Rect value);
         /// <summary>
         /// <para>Opens the native keyboard provided by OS on the screen.</para>
@@ -164,13 +165,13 @@
         public static TouchScreenKeyboard Open(string text, [DefaultValue("TouchScreenKeyboardType.Default")] TouchScreenKeyboardType keyboardType, [DefaultValue("true")] bool autocorrection, [DefaultValue("false")] bool multiline, [DefaultValue("false")] bool secure, [DefaultValue("false")] bool alert, [DefaultValue("\"\"")] string textPlaceholder) => 
             new TouchScreenKeyboard(text, keyboardType, autocorrection, multiline, secure, alert, textPlaceholder);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void TouchScreenKeyboard_InternalConstructorHelper(ref TouchScreenKeyboard_InternalConstructorHelperArguments arguments, string text, string textPlaceholder);
 
         /// <summary>
         /// <para>Is the keyboard visible or sliding into the position on the screen?</para>
         /// </summary>
-        public bool active { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool active { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns portion of the screen which is covered by the keyboard.</para>
@@ -188,12 +189,12 @@
         /// <summary>
         /// <para>Specifies if input process was finished. (Read Only)</para>
         /// </summary>
-        public bool done { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool done { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Will text input field above the keyboard be hidden when the keyboard is on screen?</para>
         /// </summary>
-        public static bool hideInput { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static bool hideInput { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Is touch screen keyboard supported.</para>
@@ -230,22 +231,22 @@
         /// <summary>
         /// <para>Specified on which display the software keyboard will appear.</para>
         /// </summary>
-        public int targetDisplay { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int targetDisplay { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns the text displayed by the input field of the keyboard.</para>
         /// </summary>
-        public string text { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string text { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns true whenever any keyboard is completely visible on the screen.</para>
         /// </summary>
-        public static bool visible { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool visible { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Specifies if input process was canceled. (Read Only)</para>
         /// </summary>
-        public bool wasCanceled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool wasCanceled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

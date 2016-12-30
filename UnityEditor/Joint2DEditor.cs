@@ -4,7 +4,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(Joint2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Joint2D))]
     internal class Joint2DEditor : Editor
     {
         [CompilerGenerated]

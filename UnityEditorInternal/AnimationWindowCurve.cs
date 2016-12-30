@@ -12,6 +12,7 @@
         [CompilerGenerated]
         private static Comparison<AnimationWindowKeyframe> <>f__am$cache0;
         private EditorCurveBinding m_Binding;
+        private int m_BindingHashCode;
         private AnimationClip m_Clip;
         public List<AnimationWindowKeyframe> m_Keyframes;
         private AnimationWindowSelectionItem m_SelectionBinding;
@@ -22,6 +23,7 @@
         {
             binding = RotationCurveInterpolation.RemapAnimationBindingForRotationCurves(binding, clip);
             this.m_Binding = binding;
+            this.m_BindingHashCode = binding.GetHashCode();
             this.m_ValueType = valueType;
             this.m_Clip = clip;
             this.LoadKeyframes(clip);
@@ -161,10 +163,13 @@
             return this.m_Keyframes[keyframeIndex];
         }
 
+        public int GetBindingHashCode() => 
+            this.m_BindingHashCode;
+
         public override int GetHashCode()
         {
             int num = (this.clip != null) ? this.clip.GetInstanceID() : 0;
-            return (((this.selectionID * 0x16a95) ^ (num * 0x4c93)) ^ this.binding.GetHashCode());
+            return (((this.selectionID * 0x16a95) ^ (num * 0x4c93)) ^ this.GetBindingHashCode());
         }
 
         public int GetKeyframeIndex(AnimationKeyTime time)

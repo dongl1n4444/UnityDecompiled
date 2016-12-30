@@ -3,9 +3,8 @@
     using System;
 
     /// <summary>
-    /// <para>Tangent space generation options for ModelImporter.</para>
+    /// <para>Animation generation options for ModelImporter.</para>
     /// </summary>
-    [Obsolete("Use ModelImporterNormals or ModelImporterTangents instead")]
     public enum ModelImporterTangentSpaceMode
     {
         /// <summary>

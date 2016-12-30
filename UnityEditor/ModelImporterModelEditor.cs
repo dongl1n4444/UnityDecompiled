@@ -28,6 +28,8 @@
         private SerializedProperty m_SplitTangentsAcrossSeams;
         private SerializedProperty m_SwapUVChannels;
         private SerializedProperty m_TangentImportMode;
+        private SerializedProperty m_UseFileScale;
+        private SerializedProperty m_WeldVertices;
         private static Styles styles;
 
         internal override void Apply()
@@ -63,13 +65,20 @@
             {
                 EditorGUILayout.PropertyField(this.m_GlobalScale, styles.ScaleFactor, new GUILayoutOption[0]);
             }
-            EditorGUILayout.PropertyField(this.m_FileScale, styles.FileScaleFactor, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_UseFileScale, styles.UseFileScale, new GUILayoutOption[0]);
+            if (this.m_UseFileScale.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(this.m_FileScale, styles.FileScaleFactor, new GUILayoutOption[0]);
+                EditorGUI.indentLevel--;
+            }
             EditorGUILayout.Popup(this.m_MeshCompression, styles.MeshCompressionOpt, styles.MeshCompressionLabel, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_IsReadable, styles.IsReadable, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_OptimizeMeshForGPU, styles.OptimizeMeshForGPU, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_ImportBlendShapes, styles.ImportBlendShapes, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_AddColliders, styles.GenerateColliders, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_KeepQuads, styles.KeepQuads, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_WeldVertices, styles.WeldVertices, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_SwapUVChannels, styles.SwapUVChannels, new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_GenerateSecondaryUV, styles.GenerateSecondaryUV, new GUILayoutOption[0]);
             if (this.m_GenerateSecondaryUV.boolValue)
@@ -162,6 +171,7 @@
             this.m_MaterialName = base.serializedObject.FindProperty("m_MaterialName");
             this.m_MaterialSearch = base.serializedObject.FindProperty("m_MaterialSearch");
             this.m_GlobalScale = base.serializedObject.FindProperty("m_GlobalScale");
+            this.m_UseFileScale = base.serializedObject.FindProperty("m_UseFileScale");
             this.m_FileScale = base.serializedObject.FindProperty("m_FileScale");
             this.m_MeshCompression = base.serializedObject.FindProperty("m_MeshCompression");
             this.m_ImportBlendShapes = base.serializedObject.FindProperty("m_ImportBlendShapes");
@@ -178,6 +188,7 @@
             this.m_OptimizeMeshForGPU = base.serializedObject.FindProperty("optimizeMeshForGPU");
             this.m_IsReadable = base.serializedObject.FindProperty("m_IsReadable");
             this.m_KeepQuads = base.serializedObject.FindProperty("keepQuads");
+            this.m_WeldVertices = base.serializedObject.FindProperty("weldVertices");
             this.UpdateShowAllMaterialNameOptions();
         }
 
@@ -231,7 +242,7 @@
 
         private class Styles
         {
-            public GUIContent FileScaleFactor = EditorGUIUtility.TextContent("File Scale|Model scale defined in the source file. If available.");
+            public GUIContent FileScaleFactor = EditorGUIUtility.TextContent("File Scale|Scale defined by source file, or 1 if Use File Scale is disabled. Click Apply to update.");
             public GUIContent GenerateColliders = EditorGUIUtility.TextContent("Generate Colliders|Should Unity generate mesh colliders for all meshes.");
             public GUIContent GenerateSecondaryUV = EditorGUIUtility.TextContent("Generate Lightmap UVs|Generate lightmap UVs into UV2.");
             public GUIContent GenerateSecondaryUVAdvanced = EditorGUIUtility.TextContent("Advanced");
@@ -283,7 +294,9 @@
             public GUIContent TangentSpaceOptionNone = EditorGUIUtility.TextContent("None");
             public GUIContent TangentSpaceOptionNoneNoNormals = EditorGUIUtility.TextContent("None - (Normals required)");
             public GUIContent TangentSpaceTangentLabel = EditorGUIUtility.TextContent("Tangents");
+            public GUIContent UseFileScale = EditorGUIUtility.TextContent("Use File Scale|Use File Scale when importing.");
             public GUIContent UseFileUnits = EditorGUIUtility.TextContent("Use File Units|Detect file units and import as 1FileUnit=1UnityUnit, otherwise it will import as 1cm=1UnityUnit. See ModelImporter.useFileUnits for more details.");
+            public GUIContent WeldVertices = EditorGUIUtility.TextContent("Weld Vertices|Combine vertices that share the same position in space.");
 
             public Styles()
             {

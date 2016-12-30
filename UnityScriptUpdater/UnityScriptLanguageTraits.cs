@@ -7,6 +7,8 @@
 
     public class UnityScriptLanguageTraits : BooBasedLanguageTraits
     {
+        internal static BooBasedLanguageTraits Instance = new UnityScriptLanguageTraits();
+
         public override string ArrayTypeReferenceTypeName(ArrayTypeReference arrayReference) => 
             arrayReference.get_ElementType().ToString();
 

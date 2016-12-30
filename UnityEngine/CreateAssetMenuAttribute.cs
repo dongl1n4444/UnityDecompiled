@@ -10,9 +10,9 @@
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
     public sealed class CreateAssetMenuAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string <fileName>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private string <fileName>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <menuName>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <order>k__BackingField;

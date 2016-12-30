@@ -54,20 +54,6 @@
             this.m_Pos += count;
         }
 
-        public void ReadChars(char[] buffer, uint count)
-        {
-            if ((this.m_Pos + count) > this.m_Buffer.Length)
-            {
-                object[] objArray1 = new object[] { "NetworkReader:ReadChars out of range: (", count, ") ", this.ToString() };
-                throw new IndexOutOfRangeException(string.Concat(objArray1));
-            }
-            for (ushort i = 0; i < count; i = (ushort) (i + 1))
-            {
-                buffer[i] = (char) this.m_Buffer[this.m_Pos + i];
-            }
-            this.m_Pos += count;
-        }
-
         public void Replace(byte[] buffer)
         {
             this.m_Buffer = buffer;
@@ -163,10 +149,10 @@
         {
             if ((this.m_Pos + count) >= this.m_Buffer.Length)
             {
-                int num = (int) (this.m_Buffer.Length * 1.5f);
+                int num = (int) Math.Ceiling((double) (this.m_Buffer.Length * 1.5f));
                 while ((this.m_Pos + count) >= num)
                 {
-                    num = (int) (num * 1.5f);
+                    num = (int) Math.Ceiling((double) (num * 1.5f));
                     if (num > 0x8000000)
                     {
                         Debug.LogWarning("NetworkBuffer size is " + num + " bytes!");

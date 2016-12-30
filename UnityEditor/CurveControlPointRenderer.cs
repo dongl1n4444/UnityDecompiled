@@ -5,18 +5,10 @@
 
     internal class CurveControlPointRenderer
     {
-        private ControlPointRenderer m_SelectedPointOverlayRenderer;
-        private ControlPointRenderer m_SelectedPointRenderer;
-        private ControlPointRenderer m_SemiSelectedPointOverlayRenderer;
-        private ControlPointRenderer m_UnselectedPointRenderer;
-
-        public CurveControlPointRenderer(CurveEditor.Styles style)
-        {
-            this.m_UnselectedPointRenderer = new ControlPointRenderer(style.pointIcon);
-            this.m_SelectedPointRenderer = new ControlPointRenderer(style.pointIconSelected);
-            this.m_SelectedPointOverlayRenderer = new ControlPointRenderer(style.pointIconSelectedOverlay);
-            this.m_SemiSelectedPointOverlayRenderer = new ControlPointRenderer(style.pointIconSemiSelectedOverlay);
-        }
+        private ControlPointRenderer m_SelectedPointOverlayRenderer = new ControlPointRenderer(CurveEditor.Styles.pointIconSelectedOverlay);
+        private ControlPointRenderer m_SelectedPointRenderer = new ControlPointRenderer(CurveEditor.Styles.pointIconSelected);
+        private ControlPointRenderer m_SemiSelectedPointOverlayRenderer = new ControlPointRenderer(CurveEditor.Styles.pointIconSemiSelectedOverlay);
+        private ControlPointRenderer m_UnselectedPointRenderer = new ControlPointRenderer(CurveEditor.Styles.pointIcon);
 
         public void AddPoint(Rect rect, Color color)
         {

@@ -43,9 +43,6 @@
         protected bool CompilationHadFailure() => 
             (this.process.ExitCode != 0);
 
-        protected bool CompilingForWSA() => 
-            (this._island._target == BuildTarget.WSAPlayer);
-
         protected abstract CompilerOutputParserBase CreateOutputParser();
         public virtual void Dispose()
         {
@@ -103,6 +100,13 @@
 
         protected string[] GetErrorOutput() => 
             this.process.GetErrorOutput();
+
+        protected string GetMonoProfileLibDirectory()
+        {
+            string profile = BuildPipeline.CompatibilityProfileToClassLibFolder(this._island._api_compatibility_level);
+            string monoInstallation = (this._island._api_compatibility_level != ApiCompatibilityLevel.NET_4_6) ? "Mono" : "MonoBleedingEdge";
+            return MonoInstallationFinder.GetProfileDirectory(profile, monoInstallation);
+        }
 
         protected string[] GetStandardOutput() => 
             this.process.GetStandardOutput();

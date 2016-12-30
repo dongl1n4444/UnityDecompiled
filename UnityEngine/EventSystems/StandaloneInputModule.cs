@@ -258,11 +258,11 @@
         }
 
         /// <summary>
-        /// <para>How should the touch press be processed.</para>
+        /// <para>This method is called by Unity whenever a touch event is processed. Override this method with a custom implementation to process touch events yourself.</para>
         /// </summary>
-        /// <param name="pointerEvent">The data to be passed to the final object.</param>
-        /// <param name="pressed">If the touch was pressed this frame.</param>
-        /// <param name="released">If the touch was released this frame.</param>
+        /// <param name="pointerEvent">Event data relating to the touch event, such as position and ID to be passed to the touch event destination object.</param>
+        /// <param name="pressed">This is true for the first frame of a touch event, and false thereafter. This can therefore be used to determine the instant a touch event occurred.</param>
+        /// <param name="released">This is true only for the last frame of a touch event.</param>
         protected void ProcessTouchPress(PointerEventData pointerEvent, bool pressed, bool released)
         {
             GameObject gameObject = pointerEvent.pointerCurrentRaycast.gameObject;

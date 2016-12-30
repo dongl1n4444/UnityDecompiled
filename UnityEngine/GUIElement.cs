@@ -4,10 +4,12 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Base class for images &amp; text strings displayed in a GUI.</para>
     /// </summary>
+    [RequireComponent(typeof(Transform))]
     public class GUIElement : Behaviour
     {
         [ExcludeFromDocs]
@@ -50,9 +52,9 @@
         public bool HitTest(Vector3 screenPosition, [DefaultValue("null")] Camera camera) => 
             INTERNAL_CALL_HitTest(this, ref screenPosition, camera);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetScreenRect(GUIElement self, Camera camera, out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_HitTest(GUIElement self, ref Vector3 screenPosition, Camera camera);
     }
 }

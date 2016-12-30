@@ -5,14 +5,13 @@
     using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioClip))]
+    [CustomEditor(typeof(AudioClip)), CanEditMultipleObjects]
     internal class AudioClipInspector : Editor
     {
         private static bool m_bAutoPlay;
-        private static bool m_bLoop = false;
+        private static bool m_bLoop;
         private static bool m_bPlayFirst;
-        private GUIView m_GUI;
-        private AudioClip m_PlayingClip = null;
+        private AudioClip m_PlayingClip;
         private Vector2 m_Position = Vector2.zero;
         private PreviewRenderUtility m_PreviewUtility;
         private static Rect m_wantedRect;

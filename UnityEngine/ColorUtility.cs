@@ -3,13 +3,14 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A collection of common color functions.</para>
     /// </summary>
     public sealed class ColorUtility
     {
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool DoTryParseHtmlColor(string htmlString, out Color32 color);
         /// <summary>
         /// <para>Returns the color as a hexadecimal string in the format "RRGGBB".</para>

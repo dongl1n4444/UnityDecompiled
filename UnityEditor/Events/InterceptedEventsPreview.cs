@@ -35,12 +35,12 @@
             InitializeEvetnsInterfaceCacheIfNeeded();
             List<ComponentInterceptedEvents> list = new List<ComponentInterceptedEvents>();
             MonoBehaviour[] components = gameObject.GetComponents<MonoBehaviour>();
-            int index = 0;
+            int num = 0;
             int length = components.Length;
-            while (index < length)
+            while (num < length)
             {
                 ComponentInterceptedEvents events = null;
-                MonoBehaviour behaviour = components[index];
+                MonoBehaviour behaviour = components[num];
                 if (behaviour != null)
                 {
                     System.Type key = behaviour.GetType();
@@ -69,7 +69,7 @@
                             };
                             if (<>f__am$cache0 == null)
                             {
-                                <>f__am$cache0 = new Func<int, string>(null, (IntPtr) <GetEventsInfo>m__0);
+                                <>f__am$cache0 = index => s_PossibleEvents[index].text;
                             }
                             events.interceptedEvents = Enumerable.OrderBy<int, string>(list2, <>f__am$cache0).ToArray<int>();
                         }
@@ -84,7 +84,7 @@
                         list.Add(events);
                     }
                 }
-                index++;
+                num++;
             }
             return list;
         }
@@ -212,12 +212,12 @@
             internal System.Type $current;
             internal bool $disposing;
             internal int $PC;
-            internal Assembly[] <assemblies>__0;
-            internal Assembly <assembly>__2;
-            internal int <i>__1;
-            internal int <j>__4;
-            internal System.Type <type>__5;
-            internal System.Type[] <types>__3;
+            internal Assembly[] <assemblies>__1;
+            internal Assembly <assembly>__3;
+            internal int <i>__2;
+            internal int <j>__5;
+            internal System.Type <type>__6;
+            internal System.Type[] <types>__4;
 
             [DebuggerHidden]
             public void Dispose()
@@ -233,28 +233,28 @@
                 switch (num)
                 {
                     case 0:
-                        this.<assemblies>__0 = AppDomain.CurrentDomain.GetAssemblies();
-                        this.<i>__1 = 0;
-                        while (this.<i>__1 < this.<assemblies>__0.Length)
+                        this.<assemblies>__1 = AppDomain.CurrentDomain.GetAssemblies();
+                        this.<i>__2 = 0;
+                        while (this.<i>__2 < this.<assemblies>__1.Length)
                         {
-                            this.<assembly>__2 = this.<assemblies>__0[this.<i>__1];
-                            if (this.<assembly>__2 != null)
+                            this.<assembly>__3 = this.<assemblies>__1[this.<i>__2];
+                            if (this.<assembly>__3 != null)
                             {
                                 try
                                 {
-                                    this.<types>__3 = this.<assembly>__2.GetTypes();
+                                    this.<types>__4 = this.<assembly>__3.GetTypes();
                                 }
                                 catch (ReflectionTypeLoadException exception)
                                 {
-                                    this.<types>__3 = exception.Types;
+                                    this.<types>__4 = exception.Types;
                                 }
-                                this.<j>__4 = 0;
-                                while (this.<j>__4 < this.<types>__3.Length)
+                                this.<j>__5 = 0;
+                                while (this.<j>__5 < this.<types>__4.Length)
                                 {
-                                    this.<type>__5 = this.<types>__3[this.<j>__4];
-                                    if (this.<type>__5 != null)
+                                    this.<type>__6 = this.<types>__4[this.<j>__5];
+                                    if (this.<type>__6 != null)
                                     {
-                                        this.$current = this.<type>__5;
+                                        this.$current = this.<type>__6;
                                         if (!this.$disposing)
                                         {
                                             this.$PC = 1;
@@ -262,10 +262,10 @@
                                         return true;
                                     }
                                 Label_00DF:
-                                    this.<j>__4++;
+                                    this.<j>__5++;
                                 }
                             }
-                            this.<i>__1++;
+                            this.<i>__2++;
                         }
                         this.$PC = -1;
                         break;

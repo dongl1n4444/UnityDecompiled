@@ -17,6 +17,7 @@
             }
             else
             {
+                float num10;
                 base.m_ChildMinHeight = base.m_ChildMaxHeight = 0f;
                 int topBorder = 0;
                 int bottomBorder = 0;
@@ -52,11 +53,9 @@
                     topBorder = this.m_LineInfo[0].topBorder;
                     bottomBorder = this.m_LineInfo[this.m_LineInfo.Length - 1].bottomBorder;
                 }
-                float num9 = 0f;
-                float num10 = 0f;
                 this.margin.top = topBorder;
                 this.margin.bottom = bottomBorder;
-                num9 = num10 = 0f;
+                float num9 = num10 = 0f;
                 base.minHeight = Mathf.Max(base.minHeight, (base.m_ChildMinHeight + num9) + num10);
                 if (base.maxHeight == 0f)
                 {
@@ -73,7 +72,7 @@
 
         public override void CalcWidth()
         {
-            bool flag = base.minWidth != 0f;
+            bool flag = !(base.minWidth == 0f);
             base.CalcWidth();
             if (!base.isVertical && !flag)
             {

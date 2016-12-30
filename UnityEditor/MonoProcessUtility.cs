@@ -3,57 +3,26 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using UnityEditor.Utils;
     using UnityEngine;
 
     internal class MonoProcessUtility
     {
-        public static string GetMonoExec(BuildTarget buildTarget)
+        public static Process PrepareMonoProcess(string workDir)
         {
-            string monoBinDirectory = BuildPipeline.GetMonoBinDirectory(buildTarget);
-            if (Application.platform == RuntimePlatform.WindowsEditor)
-            {
-                return Path.Combine(monoBinDirectory, "mono.exe");
-            }
-            return Path.Combine(monoBinDirectory, "mono");
-        }
-
-        private static BuildTarget GetMonoExecTarget(BuildTarget buildTarget)
-        {
-            BuildTarget target = buildTarget;
-            switch (buildTarget)
-            {
-                case BuildTarget.PSP2:
-                case BuildTarget.PS4:
-                case BuildTarget.XboxOne:
-                case BuildTarget.WiiU:
-                    return BuildTarget.StandaloneWindows64;
-
-                case BuildTarget.PSM:
-                case BuildTarget.SamsungTV:
-                case BuildTarget.N3DS:
-                    return target;
-            }
-            return target;
-        }
-
-        public static string GetMonoPath(BuildTarget buildTarget) => 
-            (BuildPipeline.GetMonoLibDirectory(buildTarget) + Path.PathSeparator + ".");
-
-        public static Process PrepareMonoProcess(BuildTarget target, string workDir)
-        {
-            BuildTarget monoExecTarget = GetMonoExecTarget(target);
-            return new Process { StartInfo = { 
-                FileName = GetMonoExec(monoExecTarget),
-                EnvironmentVariables = { 
-                    ["_WAPI_PROCESS_HANDLE_OFFSET"] = "5",
-                    ["MONO_PATH"] = GetMonoPath(monoExecTarget)
-                },
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true,
-                WorkingDirectory = workDir
-            } };
+            Process process = new Process();
+            string str = (Application.platform != RuntimePlatform.WindowsEditor) ? "mono" : "mono.exe";
+            string[] components = new string[] { MonoInstallationFinder.GetMonoInstallation(), "bin", str };
+            process.StartInfo.FileName = Paths.Combine(components);
+            process.StartInfo.EnvironmentVariables["_WAPI_PROCESS_HANDLE_OFFSET"] = "5";
+            string profile = BuildPipeline.CompatibilityProfileToClassLibFolder(ApiCompatibilityLevel.NET_2_0);
+            process.StartInfo.EnvironmentVariables["MONO_PATH"] = MonoInstallationFinder.GetProfileDirectory(profile);
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WorkingDirectory = workDir;
+            return process;
         }
 
         public static string ProcessToString(Process process)

@@ -87,8 +87,10 @@
         /// <returns>
         /// <para>The navmesh layer for the GameObject specified.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetNavMeshArea instead.")]
-        public static extern int GetNavMeshLayer(GameObject go);
+        [Obsolete("GetNavMeshArea instead.")]
+        public static int GetNavMeshLayer(GameObject go) => 
+            GetNavMeshArea(go);
+
         /// <summary>
         /// <para>Get the navmesh layer from the layer name.</para>
         /// </summary>
@@ -96,8 +98,10 @@
         /// <returns>
         /// <para>The layer number of the navmesh layer name specified.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("GetNavMeshAreaFromName instead.")]
-        public static extern int GetNavMeshLayerFromName(string name);
+        [Obsolete("GetNavMeshAreaFromName instead.")]
+        public static int GetNavMeshLayerFromName(string name) => 
+            GetNavMeshAreaFromName(name);
+
         /// <summary>
         /// <para>Get all the navmesh layer names.</para>
         /// </summary>
@@ -131,7 +135,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<GameObject, bool>(null, (IntPtr) <HasChildren>m__0);
+                <>f__am$cache0 = go => go.transform.childCount > 0;
             }
             return Enumerable.Any<GameObject>(gameObjects, <>f__am$cache0);
         }
@@ -164,8 +168,12 @@
         /// </summary>
         /// <param name="go">The GameObject on which to set the navmesh layer.</param>
         /// <param name="areaIndex">The layer number you want to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("SetNavMeshArea instead.")]
-        public static extern void SetNavMeshLayer(GameObject go, int areaIndex);
+        [Obsolete("SetNavMeshArea instead.")]
+        public static void SetNavMeshLayer(GameObject go, int areaIndex)
+        {
+            SetNavMeshArea(go, areaIndex);
+        }
+
         /// <summary>
         /// <para>Sets the parent and gives the child the same layer and position.</para>
         /// </summary>

@@ -4,10 +4,13 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
     internal class ParticleEffectUI
     {
+        [CompilerGenerated]
+        private static Func<ParticleSystem, bool> <>f__am$cache0;
         private static readonly Color k_DarkSkinDisabledColor = new Color(0.66f, 0.66f, 0.66f, 0.95f);
         private static readonly Color k_LightSkinDisabledColor = new Color(0.84f, 0.84f, 0.84f, 0.95f);
         private static readonly Vector2 k_MinCurveAreaSize = new Vector2(100f, 100f);
@@ -25,7 +28,7 @@
         private int m_IsDraggingTimeHotControlID = -1;
         public ParticleEffectUIOwner m_Owner;
         private ParticleSystemCurveEditor m_ParticleSystemCurveEditor;
-        private ParticleSystem m_SelectedParticleSystem;
+        private List<ParticleSystem> m_SelectedParticleSystems;
         public static bool m_ShowBounds = false;
         private bool m_ShowOnlySelectedMode;
         public static bool m_ShowWireframe = false;
@@ -65,7 +68,12 @@
 
         public void Clear()
         {
-            ParticleSystem root = this.GetRoot();
+            this.Clear(true);
+        }
+
+        public void Clear(bool clearPlanes)
+        {
+            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0]);
             if (this.ShouldManagePlaybackState(root) && (root != null))
             {
                 PlayState playing;
@@ -85,7 +93,10 @@
                 SessionState.SetVector3("SimulationState" + instanceID, new Vector3((float) instanceID, (float) playing, ParticleSystemEditorUtils.editorPlaybackTime));
             }
             this.m_ParticleSystemCurveEditor.OnDisable();
-            ParticleEffectUtils.ClearPlanes();
+            if (clearPlanes)
+            {
+                ParticleEffectUtils.ClearPlanes();
+            }
             Tools.s_Hidden = false;
             if (root != null)
             {
@@ -99,16 +110,16 @@
         public GameObject CreateParticleSystem(ParticleSystem parentOfNewParticleSystem, SubModuleUI.SubEmitterType defaultType)
         {
             Type[] components = new Type[] { typeof(ParticleSystem) };
-            GameObject obj2 = new GameObject(this.GetNextParticleSystemName(), components);
-            if (obj2 != null)
+            GameObject objectToUndo = new GameObject(this.GetNextParticleSystemName(), components);
+            if (objectToUndo != null)
             {
                 if (parentOfNewParticleSystem != null)
                 {
-                    obj2.transform.parent = parentOfNewParticleSystem.transform;
+                    objectToUndo.transform.parent = parentOfNewParticleSystem.transform;
                 }
-                obj2.transform.localPosition = Vector3.zero;
-                obj2.transform.localRotation = Quaternion.identity;
-                ParticleSystem component = obj2.GetComponent<ParticleSystem>();
+                objectToUndo.transform.localPosition = Vector3.zero;
+                objectToUndo.transform.localRotation = Quaternion.identity;
+                ParticleSystem component = objectToUndo.GetComponent<ParticleSystem>();
                 if (defaultType != SubModuleUI.SubEmitterType.None)
                 {
                     component.SetupDefaultType((int) defaultType);
@@ -116,8 +127,9 @@
                 SessionState.SetFloat("CurrentEmitterAreaScroll", this.m_EmitterAreaScrollPos.x);
                 Material[] materialArray1 = new Material[2];
                 materialArray1[0] = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Particle.mat");
-                obj2.GetComponent<ParticleSystemRenderer>().materials = materialArray1;
-                return obj2;
+                objectToUndo.GetComponent<ParticleSystemRenderer>().materials = materialArray1;
+                Undo.RegisterCreatedObjectUndo(objectToUndo, "Create ParticleSystem");
+                return objectToUndo;
             }
             return null;
         }
@@ -168,14 +180,16 @@
 
         public string GetNextParticleSystemName()
         {
-            string str = "";
+            <GetNextParticleSystemName>c__AnonStorey0 storey = new <GetNextParticleSystemName>c__AnonStorey0 {
+                nextName = ""
+            };
             for (int i = 2; i < 50; i++)
             {
-                str = "Particle System " + i;
+                storey.nextName = "Particle System " + i;
                 bool flag = false;
                 foreach (ParticleSystemUI mui in this.m_Emitters)
                 {
-                    if (mui.m_ParticleSystem.name == str)
+                    if (Enumerable.FirstOrDefault<ParticleSystem>(mui.m_ParticleSystems, new Func<ParticleSystem, bool>(storey.<>m__0)) != null)
                     {
                         flag = true;
                         break;
@@ -183,38 +197,14 @@
                 }
                 if (!flag)
                 {
-                    return str;
+                    return storey.nextName;
                 }
             }
             return "Particle System";
         }
 
-        internal int GetNumEnabledRenderers()
-        {
-            int num = 0;
-            foreach (ParticleSystemUI mui in this.m_Emitters)
-            {
-                ModuleUI particleSystemRendererModuleUI = mui.GetParticleSystemRendererModuleUI();
-                if ((particleSystemRendererModuleUI != null) && particleSystemRendererModuleUI.enabled)
-                {
-                    num++;
-                }
-            }
-            return num;
-        }
-
         public ParticleSystemCurveEditor GetParticleSystemCurveEditor() => 
             this.m_ParticleSystemCurveEditor;
-
-        internal GameObject[] GetParticleSystemGameObjects()
-        {
-            List<GameObject> list = new List<GameObject>();
-            for (int i = 0; i < this.m_Emitters.Length; i++)
-            {
-                list.Add(this.m_Emitters[i].m_ParticleSystem.gameObject);
-            }
-            return list.ToArray();
-        }
 
         internal static ParticleSystem[] GetParticleSystems(ParticleSystem root)
         {
@@ -225,42 +215,13 @@
             return particleSystems.ToArray();
         }
 
-        public ParticleSystemUI GetParticleSystemUIForParticleSystem(ParticleSystem shuriken)
-        {
-            foreach (ParticleSystemUI mui in this.m_Emitters)
-            {
-                if (mui.m_ParticleSystem == shuriken)
-                {
-                    return mui;
-                }
-            }
-            return null;
-        }
-
-        public List<ParticleSystemUI> GetParticleSystemUIList(List<ParticleSystem> shurikens)
-        {
-            List<ParticleSystemUI> list = new List<ParticleSystemUI>();
-            foreach (ParticleSystem system in shurikens)
-            {
-                ParticleSystemUI particleSystemUIForParticleSystem = this.GetParticleSystemUIForParticleSystem(system);
-                if (particleSystemUIForParticleSystem != null)
-                {
-                    list.Add(particleSystemUIForParticleSystem);
-                }
-            }
-            return list;
-        }
-
-        internal ParticleSystem GetRoot() => 
-            ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
-
         private List<ParticleSystemUI> GetSelectedParticleSystemUIs()
         {
             List<ParticleSystemUI> list = new List<ParticleSystemUI>();
             int[] instanceIDs = Selection.instanceIDs;
             foreach (ParticleSystemUI mui in this.m_Emitters)
             {
-                if (instanceIDs.Contains<int>(mui.m_ParticleSystem.gameObject.GetInstanceID()))
+                if (instanceIDs.Contains<int>(mui.m_ParticleSystems[0].gameObject.GetInstanceID()))
                 {
                     list.Add(mui);
                 }
@@ -268,7 +229,7 @@
             return list;
         }
 
-        private void HandleKeyboardShortcuts(ParticleSystem root)
+        private void HandleKeyboardShortcuts()
         {
             Event current = Event.current;
             if (current.type == EventType.KeyDown)
@@ -310,10 +271,14 @@
                     float editorSimulationSpeed = ParticleSystemEditorUtils.editorSimulationSpeed;
                     float num3 = ((!current.shift ? 1f : 3f) * this.m_TimeHelper.deltaTime) * ((num <= 0) ? -3f : 3f);
                     ParticleSystemEditorUtils.editorPlaybackTime = Mathf.Max((float) 0f, (float) (ParticleSystemEditorUtils.editorPlaybackTime + (num3 * editorSimulationSpeed)));
-                    if (root.isStopped)
+                    foreach (ParticleSystem system in this.m_SelectedParticleSystems)
                     {
-                        root.Play();
-                        root.Pause();
+                        ParticleSystem root = ParticleSystemEditorUtils.GetRoot(system);
+                        if (root.isStopped)
+                        {
+                            root.Play();
+                            root.Pause();
+                        }
                     }
                     ParticleSystemEditorUtils.PerformCompleteResimulation();
                     current.Use();
@@ -325,16 +290,76 @@
             }
         }
 
-        private void InitAllEmitters(ParticleSystem[] shurikens)
+        public bool InitializeIfNeeded(IEnumerable<ParticleSystem> systems)
         {
-            int length = shurikens.Length;
-            if (length != 0)
+            bool flag = false;
+            ParticleSystem[] source = systems.ToArray<ParticleSystem>();
+            bool flag2 = source.Count<ParticleSystem>() > 1;
+            bool flag3 = false;
+            ParticleSystem root = null;
+            foreach (ParticleSystem system2 in source)
             {
-                this.m_Emitters = new ParticleSystemUI[length];
-                for (int i = 0; i < length; i++)
+                ParticleSystem[] particleSystems;
+                if (!flag2)
                 {
-                    this.m_Emitters[i] = new ParticleSystemUI();
-                    this.m_Emitters[i].Init(this, shurikens[i]);
+                    ParticleSystem system3 = ParticleSystemEditorUtils.GetRoot(system2);
+                    if (system3 == null)
+                    {
+                        continue;
+                    }
+                    particleSystems = GetParticleSystems(system3);
+                    if ((((this.m_SelectedParticleSystems != null) && (this.m_SelectedParticleSystems.Count > 0)) && (system3 == ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0]))) && (((this.m_ParticleSystemCurveEditor != null) && (this.m_Emitters != null)) && (particleSystems.Length == this.m_Emitters.Length)))
+                    {
+                        this.m_SelectedParticleSystems = new List<ParticleSystem>();
+                        this.m_SelectedParticleSystems.Add(system2);
+                        continue;
+                    }
+                    root = system3;
+                }
+                else
+                {
+                    particleSystems = new ParticleSystem[] { system2 };
+                    root = system2;
+                }
+                if (this.m_ParticleSystemCurveEditor != null)
+                {
+                    this.Clear(false);
+                }
+                flag3 = true;
+                if (!flag)
+                {
+                    this.m_SelectedParticleSystems = new List<ParticleSystem>();
+                    flag = true;
+                }
+                this.m_SelectedParticleSystems.Add(system2);
+                if (!flag2)
+                {
+                    this.m_ParticleSystemCurveEditor = new ParticleSystemCurveEditor();
+                    this.m_ParticleSystemCurveEditor.Init();
+                    int length = particleSystems.Length;
+                    if (length > 0)
+                    {
+                        this.m_Emitters = new ParticleSystemUI[length];
+                        for (int i = 0; i < length; i++)
+                        {
+                            this.m_Emitters[i] = new ParticleSystemUI();
+                            ParticleSystem[] systemArray4 = new ParticleSystem[] { particleSystems[i] };
+                            this.m_Emitters[i].Init(this, systemArray4);
+                        }
+                    }
+                }
+            }
+            if (flag3)
+            {
+                if (flag2)
+                {
+                    this.m_ParticleSystemCurveEditor = new ParticleSystemCurveEditor();
+                    this.m_ParticleSystemCurveEditor.Init();
+                    if (this.m_SelectedParticleSystems.Count > 0)
+                    {
+                        this.m_Emitters = new ParticleSystemUI[] { new ParticleSystemUI() };
+                        this.m_Emitters[0].Init(this, this.m_SelectedParticleSystems.ToArray());
+                    }
                 }
                 foreach (ParticleSystemUI mui in this.m_Emitters)
                 {
@@ -350,45 +375,15 @@
                 {
                     this.SetAllModulesVisible(true);
                 }
-            }
-        }
-
-        public bool InitializeIfNeeded(ParticleSystem shuriken)
-        {
-            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(shuriken);
-            if (root == null)
-            {
-                return false;
-            }
-            ParticleSystem[] particleSystems = GetParticleSystems(root);
-            if ((root == this.GetRoot()) && (((this.m_ParticleSystemCurveEditor != null) && (this.m_Emitters != null)) && (particleSystems.Length == this.m_Emitters.Length)))
-            {
-                this.m_SelectedParticleSystem = shuriken;
-                if (this.IsShowOnlySelectedMode())
+                ParticleSystemEditorUtils.PerformCompleteResimulation();
+                this.m_EmitterAreaWidth = EditorPrefs.GetFloat("ParticleSystemEmitterAreaWidth", k_MinEmitterAreaSize.x);
+                this.m_CurveEditorAreaHeight = EditorPrefs.GetFloat("ParticleSystemCurveEditorAreaHeight", k_MinCurveAreaSize.y);
+                this.m_ShowOnlySelectedMode = (this.m_Owner is ParticleSystemWindow) && SessionState.GetBool("ShowSelected" + root.GetInstanceID(), false);
+                this.m_EmitterAreaScrollPos.x = SessionState.GetFloat("CurrentEmitterAreaScroll", 0f);
+                if (!this.ShouldManagePlaybackState(root))
                 {
-                    this.RefreshShowOnlySelected();
+                    return flag3;
                 }
-                return false;
-            }
-            if (this.m_ParticleSystemCurveEditor != null)
-            {
-                this.Clear();
-            }
-            this.m_SelectedParticleSystem = shuriken;
-            ParticleSystemEditorUtils.PerformCompleteResimulation();
-            this.m_ParticleSystemCurveEditor = new ParticleSystemCurveEditor();
-            this.m_ParticleSystemCurveEditor.Init();
-            this.m_EmitterAreaWidth = EditorPrefs.GetFloat("ParticleSystemEmitterAreaWidth", k_MinEmitterAreaSize.x);
-            this.m_CurveEditorAreaHeight = EditorPrefs.GetFloat("ParticleSystemCurveEditorAreaHeight", k_MinCurveAreaSize.y);
-            this.InitAllEmitters(particleSystems);
-            this.m_ShowOnlySelectedMode = (this.m_Owner is ParticleSystemWindow) && SessionState.GetBool("ShowSelected" + root.GetInstanceID(), false);
-            if (this.IsShowOnlySelectedMode())
-            {
-                this.RefreshShowOnlySelected();
-            }
-            this.m_EmitterAreaScrollPos.x = SessionState.GetFloat("CurrentEmitterAreaScroll", 0f);
-            if (this.ShouldManagePlaybackState(root))
-            {
                 Vector3 vector3 = SessionState.GetVector3("SimulationState" + root.GetInstanceID(), Vector3.zero);
                 if (root.GetInstanceID() == ((int) vector3.x))
                 {
@@ -400,30 +395,61 @@
                 }
                 this.Play();
             }
-            return true;
+            return flag3;
+        }
+
+        private void InspectorParticleSystemGUI()
+        {
+            GUILayout.BeginVertical(ParticleSystemStyles.Get().effectBgStyle, new GUILayoutOption[0]);
+            <InspectorParticleSystemGUI>c__AnonStorey2 storey = new <InspectorParticleSystemGUI>c__AnonStorey2 {
+                selectedSystem = (this.m_SelectedParticleSystems.Count <= 0) ? null : this.m_SelectedParticleSystems[0]
+            };
+            if (storey.selectedSystem != null)
+            {
+                ParticleSystemUI mui = Enumerable.FirstOrDefault<ParticleSystemUI>(this.m_Emitters, new Func<ParticleSystemUI, bool>(storey.<>m__0));
+                if (mui != null)
+                {
+                    float width = GUIClip.visibleRect.width - 18f;
+                    mui.OnGUI(width, false);
+                }
+            }
+            GUILayout.EndVertical();
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            GUILayout.FlexibleSpace();
+            ParticleSystemEditorUtils.editorResimulation = GUILayout.Toggle(ParticleSystemEditorUtils.editorResimulation, s_Texts.resimulation, EditorStyles.toggle, new GUILayoutOption[0]);
+            m_ShowWireframe = GUILayout.Toggle(m_ShowWireframe, texts.wireframe, EditorStyles.toggle, new GUILayoutOption[0]);
+            m_ShowBounds = GUILayout.Toggle(m_ShowBounds, texts.bounds, EditorStyles.toggle, new GUILayoutOption[0]);
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            this.HandleKeyboardShortcuts();
         }
 
         public bool IsParticleSystemUIVisible(ParticleSystemUI psUI)
         {
             OwnerType type = !(this.m_Owner is ParticleSystemInspector) ? OwnerType.ParticleSystemWindow : OwnerType.Inspector;
-            return ((type == OwnerType.ParticleSystemWindow) || ((type == OwnerType.Inspector) && (psUI.m_ParticleSystem == this.m_SelectedParticleSystem)));
-        }
-
-        internal bool IsPaused() => 
-            (!this.IsPlaying() && !IsStopped(this.GetRoot()));
-
-        internal bool IsPlaying() => 
-            ParticleSystemEditorUtils.editorIsPlaying;
-
-        internal bool IsPlayOnAwake()
-        {
-            if (this.m_Emitters.Length > 0)
+            if (type == OwnerType.ParticleSystemWindow)
             {
-                InitialModuleUI eui = this.m_Emitters[0].m_Modules[0] as InitialModuleUI;
-                return eui.m_PlayOnAwake.boolValue;
+                return true;
+            }
+            ParticleSystem[] particleSystems = psUI.m_ParticleSystems;
+            for (int i = 0; i < particleSystems.Length; i++)
+            {
+                <IsParticleSystemUIVisible>c__AnonStorey1 storey = new <IsParticleSystemUIVisible>c__AnonStorey1 {
+                    ps = particleSystems[i]
+                };
+                if (Enumerable.FirstOrDefault<ParticleSystem>(this.m_SelectedParticleSystems, new Func<ParticleSystem, bool>(storey.<>m__0)) != null)
+                {
+                    return true;
+                }
             }
             return false;
         }
+
+        internal bool IsPaused() => 
+            (!this.IsPlaying() && !IsStopped(ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0])));
+
+        internal bool IsPlaying() => 
+            ParticleSystemEditorUtils.editorIsPlaying;
 
         internal bool IsShowOnlySelectedMode() => 
             this.m_ShowOnlySelectedMode;
@@ -433,7 +459,6 @@
 
         private void MultiParticleSystemGUI(bool verticalLayout)
         {
-            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
             GUILayout.BeginVertical(ParticleSystemStyles.Get().effectBgStyle, new GUILayoutOption[0]);
             this.m_EmitterAreaScrollPos = EditorGUILayout.BeginScrollView(this.m_EmitterAreaScrollPos, new GUILayoutOption[0]);
             Rect position = EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
@@ -466,7 +491,7 @@
                 {
                     this.DrawSelectionMarker(rect);
                 }
-                this.m_Emitters[i].OnGUI(root, ModuleUI.k_CompactFixedModuleWidth, true);
+                this.m_Emitters[i].OnGUI(ModuleUI.k_CompactFixedModuleWidth, true);
                 EditorGUILayout.EndVertical();
                 GUI.color = color;
             }
@@ -474,7 +499,7 @@
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(20f) };
             if (GUILayout.Button(s_Texts.addParticleSystem, "OL Plus", options))
             {
-                this.CreateParticleSystem(root, SubModuleUI.SubEmitterType.None);
+                this.CreateParticleSystem(ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0]), SubModuleUI.SubEmitterType.None);
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -484,7 +509,7 @@
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndScrollView();
             GUILayout.EndVertical();
-            this.HandleKeyboardShortcuts(root);
+            this.HandleKeyboardShortcuts();
         }
 
         public void OnGUI()
@@ -516,7 +541,7 @@
                 }
                 else if (type == OwnerType.Inspector)
                 {
-                    this.SingleParticleSystemGUI();
+                    this.InspectorParticleSystemGUI();
                 }
                 else
                 {
@@ -536,7 +561,7 @@
 
         public void OnSceneViewGUI()
         {
-            ParticleSystem root = this.GetRoot();
+            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystems[0]);
             if ((root != null) && root.gameObject.activeInHierarchy)
             {
                 SceneViewOverlay.Window(ParticleSystemInspector.playBackTitle, new SceneViewOverlay.WindowFunction(this.SceneViewGUICallback), 400, SceneViewOverlay.WindowDisplayOption.OneWindowPerTitle);
@@ -545,10 +570,18 @@
 
         internal void Pause()
         {
-            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
-            if (root != null)
+            bool flag = false;
+            foreach (ParticleSystem system in this.m_SelectedParticleSystems)
             {
-                root.Pause();
+                ParticleSystem root = ParticleSystemEditorUtils.GetRoot(system);
+                if (root != null)
+                {
+                    root.Pause();
+                    flag = true;
+                }
+            }
+            if (flag)
+            {
                 ParticleSystemEditorUtils.editorIsScrubbing = true;
                 this.m_Owner.Repaint();
             }
@@ -556,21 +589,25 @@
 
         internal void Play()
         {
-            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
-            if (root != null)
+            bool flag = false;
+            foreach (ParticleSystem system in this.m_SelectedParticleSystems)
             {
-                root.Play();
+                ParticleSystem root = ParticleSystemEditorUtils.GetRoot(system);
+                if (root != null)
+                {
+                    root.Play();
+                    flag = true;
+                }
+            }
+            if (flag)
+            {
                 ParticleSystemEditorUtils.editorIsScrubbing = false;
                 this.m_Owner.Repaint();
             }
         }
 
-        internal void PlayBackTimeGUI(ParticleSystem root)
+        internal void PlayBackTimeGUI()
         {
-            if (root == null)
-            {
-                root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
-            }
             EventType type = Event.current.type;
             int hotControl = GUIUtility.hotControl;
             string kFloatFieldFormatString = EditorGUI.kFloatFieldFormatString;
@@ -589,10 +626,14 @@
                     a = editorPlaybackTime + (num5 * (0.05f * editorSimulationSpeed));
                 }
                 ParticleSystemEditorUtils.editorPlaybackTime = Mathf.Max(a, 0f);
-                if (root.isStopped)
+                foreach (ParticleSystem system in this.m_SelectedParticleSystems)
                 {
-                    root.Play();
-                    root.Pause();
+                    ParticleSystem root = ParticleSystemEditorUtils.GetRoot(system);
+                    if (root.isStopped)
+                    {
+                        root.Play();
+                        root.Pause();
+                    }
                 }
                 ParticleSystemEditorUtils.PerformCompleteResimulation();
             }
@@ -606,11 +647,26 @@
                 this.m_IsDraggingTimeHotControlID = -1;
                 ParticleSystemEditorUtils.editorIsScrubbing = false;
             }
-            EditorGUILayout.FloatField(s_Texts.particleCount, (float) this.m_SelectedParticleSystem.particleCount, new GUILayoutOption[0]);
-            int count = 0;
-            if (this.m_SelectedParticleSystem.CountSubEmitterParticles(ref count))
+            float num6 = 0f;
+            foreach (ParticleSystem system3 in this.m_SelectedParticleSystems)
             {
-                EditorGUILayout.FloatField(s_Texts.subEmitterParticleCount, (float) count, new GUILayoutOption[0]);
+                num6 += system3.particleCount;
+            }
+            EditorGUILayout.FloatField(s_Texts.particleCount, num6, new GUILayoutOption[0]);
+            bool flag = false;
+            int num7 = 0;
+            foreach (ParticleSystem system4 in this.m_SelectedParticleSystems)
+            {
+                int count = 0;
+                if (system4.CountSubEmitterParticles(ref count))
+                {
+                    flag = true;
+                    num7 += count;
+                }
+            }
+            if (flag)
+            {
+                EditorGUILayout.FloatField(s_Texts.subEmitterParticleCount, (float) num7, new GUILayoutOption[0]);
             }
         }
 
@@ -630,7 +686,6 @@
             {
                 s_Texts = new Texts();
             }
-            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
             if (Event.current.type == EventType.Layout)
             {
                 this.m_TimeHelper.Update();
@@ -659,7 +714,7 @@
                 EditorGUI.kFloatFieldFormatString = s_Texts.secondsFloatFieldFormatString;
                 ParticleSystemEditorUtils.editorSimulationSpeed = Mathf.Clamp(EditorGUILayout.FloatField(s_Texts.previewSpeed, ParticleSystemEditorUtils.editorSimulationSpeed, new GUILayoutOption[0]), 0f, 10f);
                 EditorGUI.kFloatFieldFormatString = kFloatFieldFormatString;
-                this.PlayBackTimeGUI(root);
+                this.PlayBackTimeGUI();
             }
             else
             {
@@ -675,40 +730,13 @@
                 }
                 GUILayout.EndHorizontal();
             }
-            this.HandleKeyboardShortcuts(root);
+            this.HandleKeyboardShortcuts();
         }
 
         public void Refresh()
         {
             this.UpdateProperties();
             this.m_ParticleSystemCurveEditor.Refresh();
-        }
-
-        internal void RefreshShowOnlySelected()
-        {
-            if (this.IsShowOnlySelectedMode())
-            {
-                int[] instanceIDs = Selection.instanceIDs;
-                foreach (ParticleSystemUI mui in this.m_Emitters)
-                {
-                    ParticleSystemRenderer particleSystemRenderer = mui.GetParticleSystemRenderer();
-                    if (particleSystemRenderer != null)
-                    {
-                        particleSystemRenderer.editorEnabled = instanceIDs.Contains<int>(mui.m_ParticleSystem.gameObject.GetInstanceID());
-                    }
-                }
-            }
-            else
-            {
-                foreach (ParticleSystemUI mui2 in this.m_Emitters)
-                {
-                    ParticleSystemRenderer renderer2 = mui2.GetParticleSystemRenderer();
-                    if (renderer2 != null)
-                    {
-                        renderer2.editorEnabled = true;
-                    }
-                }
-            }
         }
 
         private Rect ResizeHandling(bool verticalLayout)
@@ -772,9 +800,16 @@
                         else
                         {
                             bool flag = true;
-                            if ((eui is RendererModuleUI) && (mui.GetParticleSystemRenderer() != null))
+                            if (eui is RendererModuleUI)
                             {
-                                flag = false;
+                                if (<>f__am$cache0 == null)
+                                {
+                                    <>f__am$cache0 = o => o.GetComponent<ParticleSystemRenderer>() == null;
+                                }
+                                if (Enumerable.FirstOrDefault<ParticleSystem>(mui.m_ParticleSystems, <>f__am$cache0) == null)
+                                {
+                                    flag = false;
+                                }
                             }
                             if (flag && !eui.enabled)
                             {
@@ -789,7 +824,6 @@
         internal void SetShowOnlySelectedMode(bool enable)
         {
             this.m_ShowOnlySelectedMode = enable;
-            this.RefreshShowOnlySelected();
         }
 
         private bool ShouldManagePlaybackState(ParticleSystem root)
@@ -802,27 +836,6 @@
             return (!EditorApplication.isPlaying && activeInHierarchy);
         }
 
-        private void SingleParticleSystemGUI()
-        {
-            ParticleSystem root = ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem);
-            GUILayout.BeginVertical(ParticleSystemStyles.Get().effectBgStyle, new GUILayoutOption[0]);
-            ParticleSystemUI particleSystemUIForParticleSystem = this.GetParticleSystemUIForParticleSystem(this.m_SelectedParticleSystem);
-            if (particleSystemUIForParticleSystem != null)
-            {
-                float width = GUIClip.visibleRect.width - 18f;
-                particleSystemUIForParticleSystem.OnGUI(root, width, false);
-            }
-            GUILayout.EndVertical();
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            GUILayout.FlexibleSpace();
-            ParticleSystemEditorUtils.editorResimulation = GUILayout.Toggle(ParticleSystemEditorUtils.editorResimulation, s_Texts.resimulation, EditorStyles.toggle, new GUILayoutOption[0]);
-            m_ShowWireframe = GUILayout.Toggle(m_ShowWireframe, texts.wireframe, EditorStyles.toggle, new GUILayoutOption[0]);
-            m_ShowBounds = GUILayout.Toggle(m_ShowBounds, texts.bounds, EditorStyles.toggle, new GUILayoutOption[0]);
-            GUILayout.EndHorizontal();
-            GUILayout.FlexibleSpace();
-            this.HandleKeyboardShortcuts(root);
-        }
-
         internal void Stop()
         {
             ParticleSystemEditorUtils.editorIsScrubbing = false;
@@ -833,6 +846,7 @@
 
         internal void UndoRedoPerformed()
         {
+            this.Refresh();
             foreach (ParticleSystemUI mui in this.m_Emitters)
             {
                 foreach (ModuleUI eui in mui.m_Modules)
@@ -854,21 +868,6 @@
             }
         }
 
-        public bool ValidateParticleSystemProperty(SerializedProperty shurikenProperty)
-        {
-            if (shurikenProperty != null)
-            {
-                ParticleSystem objectReferenceValue = shurikenProperty.objectReferenceValue as ParticleSystem;
-                if ((objectReferenceValue != null) && (this.GetParticleSystemUIForParticleSystem(objectReferenceValue) == null))
-                {
-                    EditorUtility.DisplayDialog("ParticleSystem Warning", "The SubEmitter module cannot reference a ParticleSystem that is not a child of the root ParticleSystem.\n\nThe ParticleSystem '" + objectReferenceValue.name + "' must be a child of the ParticleSystem '" + ParticleSystemEditorUtils.GetRoot(this.m_SelectedParticleSystem).name + "'.", "Ok");
-                    shurikenProperty.objectReferenceValue = null;
-                    return false;
-                }
-            }
-            return true;
-        }
-
         private void WindowCurveEditorGUI(bool verticalLayout)
         {
             Rect rect;
@@ -886,6 +885,9 @@
             this.m_ParticleSystemCurveEditor.OnGUI(rect);
         }
 
+        public bool multiEdit =>
+            ((this.m_SelectedParticleSystems != null) && (this.m_SelectedParticleSystems.Count > 1));
+
         internal static Texts texts
         {
             get
@@ -896,6 +898,33 @@
                 }
                 return s_Texts;
             }
+        }
+
+        [CompilerGenerated]
+        private sealed class <GetNextParticleSystemName>c__AnonStorey0
+        {
+            internal string nextName;
+
+            internal bool <>m__0(ParticleSystem o) => 
+                (o.name == this.nextName);
+        }
+
+        [CompilerGenerated]
+        private sealed class <InspectorParticleSystemGUI>c__AnonStorey2
+        {
+            internal ParticleSystem selectedSystem;
+
+            internal bool <>m__0(ParticleSystemUI o) => 
+                (o.m_ParticleSystems[0] == this.selectedSystem);
+        }
+
+        [CompilerGenerated]
+        private sealed class <IsParticleSystemUIVisible>c__AnonStorey1
+        {
+            internal ParticleSystem ps;
+
+            internal bool <>m__0(ParticleSystem o) => 
+                (o == this.ps);
         }
 
         private enum OwnerType

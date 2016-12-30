@@ -12,6 +12,7 @@
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>These work pretty much like the normal GUI functions - and also have matching implementations in EditorGUILayout.</para>
@@ -73,6 +74,7 @@
         internal const float kSliderMinW = 60f;
         internal const float kSpacing = 5f;
         internal const float kSpacingSubLabel = 2f;
+        internal static EditorGUIUtility.SkinnedColor kSplitLineSkinnedColor = new EditorGUIUtility.SkinnedColor(new Color(0.6f, 0.6f, 0.6f, 1.333f), new Color(0.12f, 0.12f, 0.12f, 1.333f));
         internal const float kStructHeaderLineHeight = 16f;
         internal const int kVerticalSpacingMultiField = 0;
         internal const int kWindowToolbarHeight = 0x11;
@@ -877,7 +879,7 @@
                         {
                             property.longValue = num;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Boolean:
                     {
@@ -887,7 +889,7 @@
                         {
                             property.boolValue = flag3;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Float:
                     {
@@ -897,7 +899,7 @@
                         {
                             property.doubleValue = num2;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.String:
                     {
@@ -907,7 +909,7 @@
                         {
                             property.stringValue = str;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Color:
                     {
@@ -917,35 +919,35 @@
                         {
                             property.colorValue = color;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.ObjectReference:
                         ObjectFieldInternal(position, property, null, label, EditorStyles.objectField);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.LayerMask:
                         LayerMaskField(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Enum:
                         Popup(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Vector2:
                         Vector2Field(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Vector3:
                         Vector3Field(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Vector4:
                         Vector4Field(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Rect:
                         RectField(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.ArraySize:
                     {
@@ -955,7 +957,7 @@
                         {
                             property.intValue = num3;
                         }
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Character:
                     {
@@ -978,28 +980,28 @@
                     {
                         int id = GUIUtility.GetControlID(s_CurveHash, FocusType.Keyboard, position);
                         DoCurveField(PrefixLabel(position, id, label), id, null, kCurveColor, new Rect(), property);
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                     case SerializedPropertyType.Bounds:
                         BoundsField(position, property, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
 
                     case SerializedPropertyType.Gradient:
                     {
                         int num5 = GUIUtility.GetControlID(s_CurveHash, FocusType.Keyboard, position);
-                        DoGradientField(PrefixLabel(position, num5, label), num5, null, property);
-                        goto Label_04CB;
+                        DoGradientField(PrefixLabel(position, num5, label), num5, null, property, false);
+                        goto Label_04CC;
                     }
                     default:
                     {
                         int num6 = GUIUtility.GetControlID(s_GenericField, FocusType.Keyboard, position);
                         PrefixLabel(position, num6, label);
-                        goto Label_04CB;
+                        goto Label_04CC;
                     }
                 }
                 GUI.changed |= changed;
             }
-        Label_04CB:
+        Label_04CC:
             EndProperty();
             return foldout;
         }
@@ -1345,13 +1347,6 @@
             return DelayedTextField(position, label, text, textField);
         }
 
-        [ExcludeFromDocs]
-        public static string DelayedTextField(Rect position, int controlId, GUIContent label, string text)
-        {
-            GUIStyle textField = EditorStyles.textField;
-            return DelayedTextField(position, controlId, label, text, textField);
-        }
-
         /// <summary>
         /// <para>Make a delayed text field.</para>
         /// </summary>
@@ -1364,6 +1359,13 @@
         /// </returns>
         public static string DelayedTextField(Rect position, string label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
             DelayedTextField(position, EditorGUIUtility.TempContent(label), text, style);
+
+        [ExcludeFromDocs]
+        public static string DelayedTextField(Rect position, GUIContent label, int controlId, string text)
+        {
+            GUIStyle textField = EditorStyles.textField;
+            return DelayedTextField(position, label, controlId, text, textField);
+        }
 
         /// <summary>
         /// <para>Make a delayed text field.</para>
@@ -1381,7 +1383,7 @@
             return DelayedTextFieldInternal(position, id, label, text, null, style);
         }
 
-        public static string DelayedTextField(Rect position, int controlId, GUIContent label, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
+        public static string DelayedTextField(Rect position, GUIContent label, int controlId, string text, [DefaultValue("EditorStyles.textField")] GUIStyle style) => 
             DelayedTextFieldInternal(position, controlId, label, text, null, style);
 
         internal static string DelayedTextFieldDropDown(Rect position, string text, string[] dropDownElement) => 
@@ -1908,7 +1910,7 @@
             int controlID = GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position);
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <DoEnumMaskField>m__4);
+                <>f__am$cache4 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache4).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(PrefixLabel(position, controlID, label), controlID, Convert.ToInt32(enumValue), flagNames, style, out changedFlags, out changedToValue);
@@ -1926,7 +1928,7 @@
             return MathUtils.ClampToFloat(doubleVal);
         }
 
-        internal static Gradient DoGradientField(Rect position, int id, Gradient value, SerializedProperty property)
+        internal static Gradient DoGradientField(Rect position, int id, Gradient value, SerializedProperty property, bool hdr)
         {
             Event current = Event.current;
             EventType typeForControl = current.GetTypeForControl(id);
@@ -1937,7 +1939,7 @@
                     {
                         Event.current.Use();
                         Gradient newGradient = (property == null) ? value : property.gradientValue;
-                        GradientPicker.Show(newGradient);
+                        GradientPicker.Show(newGradient, hdr);
                         GUIUtility.ExitGUI();
                     }
                     return value;
@@ -1991,7 +1993,7 @@
                                     s_GradientID = id;
                                     GUIUtility.keyboardControl = id;
                                     Gradient gradient = (property == null) ? value : property.gradientValue;
-                                    GradientPicker.Show(gradient);
+                                    GradientPicker.Show(gradient, hdr);
                                     GUIUtility.ExitGUI();
                                     return value;
                                 }
@@ -2348,7 +2350,7 @@
             ObjectFieldVisualType iconAndText = ObjectFieldVisualType.IconAndText;
             if ((flag && (position.height <= 18f)) && (position.width <= 32f))
             {
-                iconAndText = ObjectFieldVisualType.MiniPreivew;
+                iconAndText = ObjectFieldVisualType.MiniPreview;
             }
             else if (flag && (position.height > 16f))
             {
@@ -2442,7 +2444,7 @@
                             DrawObjectFieldLargeThumb(position, id, obj, content);
                             break;
 
-                        case ObjectFieldVisualType.MiniPreivew:
+                        case ObjectFieldVisualType.MiniPreview:
                             DrawObjectFieldMiniThumb(position, id, obj, content);
                             break;
 
@@ -2524,7 +2526,7 @@
                                 rect = new Rect(position.xMax - 36f, position.yMax - 14f, 36f, 14f);
                                 goto Label_02DA;
 
-                            case ObjectFieldVisualType.MiniPreivew:
+                            case ObjectFieldVisualType.MiniPreview:
                                 rect = new Rect(position.xMax - 15f, position.y, 15f, position.height);
                                 goto Label_02DA;
                         }
@@ -2532,7 +2534,7 @@
                     }
                     break;
             }
-            goto Label_06B6;
+            goto Label_0649;
         Label_02DA:
             EditorGUIUtility.editingTextField = false;
             if (rect.Contains(Event.current.mousePosition))
@@ -2548,44 +2550,33 @@
             }
             else
             {
-                Object gameObject = (property == null) ? obj : property.objectReferenceValue;
-                Component component = gameObject as Component;
+                Object targetObject = (property == null) ? obj : property.objectReferenceValue;
+                Component component = targetObject as Component;
                 if (component != null)
                 {
-                    gameObject = component.gameObject;
+                    targetObject = component.gameObject;
                 }
                 if (showMixedValue)
                 {
-                    gameObject = null;
+                    targetObject = null;
                 }
                 if (Event.current.clickCount == 1)
                 {
                     GUIUtility.keyboardControl = id;
-                    if (gameObject != null)
-                    {
-                        bool flag2 = current.shift || current.control;
-                        if (!flag2)
-                        {
-                            EditorGUIUtility.PingObject(gameObject);
-                        }
-                        if (flag2 && (gameObject is Texture))
-                        {
-                            PopupWindowWithoutFocus.Show(new RectOffset(6, 3, 0, 3).Add(position), new ObjectPreviewPopup(gameObject), new PopupLocationHelper.PopupLocation[] { PopupLocationHelper.PopupLocation.Left });
-                        }
-                    }
+                    PingObjectOrShowPreviewOnClick(targetObject, position);
                     current.Use();
                 }
                 else if (Event.current.clickCount == 2)
                 {
-                    if (gameObject != null)
+                    if (targetObject != null)
                     {
-                        AssetDatabase.OpenAsset(gameObject);
+                        AssetDatabase.OpenAsset(targetObject);
                         GUIUtility.ExitGUI();
                     }
                     current.Use();
                 }
             }
-        Label_06B6:
+        Label_0649:
             EditorGUIUtility.SetIconSize(iconSize);
             return obj;
         }
@@ -2620,7 +2611,7 @@
                 case EventType.MouseDown:
                     if (interactionRect.Contains(current.mousePosition))
                     {
-                        if ((current.button != 1) || (targetObjs[0] == null))
+                        if ((current.button != 1) || !IsValidForContextMenu(targetObjs[0]))
                         {
                             if ((current.button == 0) && ((Application.platform != RuntimePlatform.OSXEditor) || !current.control))
                             {
@@ -2725,7 +2716,7 @@
                     break;
 
                 default:
-                    if ((typeForControl == EventType.ContextClick) && (interactionRect.Contains(current.mousePosition) && (targetObjs[0] != null)))
+                    if ((typeForControl == EventType.ContextClick) && (interactionRect.Contains(current.mousePosition) && IsValidForContextMenu(targetObjs[0])))
                     {
                         EditorUtility.DisplayObjectContextMenu(new Rect(current.mousePosition.x, current.mousePosition.y, 0f, 0f), targetObjs, 0);
                         current.Use();
@@ -2865,6 +2856,14 @@
                 }
                 menu.AddItem(EditorGUIUtility.TextContent("Print Property Path"), false, <>f__am$cache0, property2);
             }
+            if (EditorApplication.contextualPropertyMenu != null)
+            {
+                if (menu.GetItemCount() > 0)
+                {
+                    menu.AddSeparator("");
+                }
+                EditorApplication.contextualPropertyMenu(menu, property);
+            }
             Event.current.Use();
             if (menu.GetItemCount() != 0)
             {
@@ -2899,8 +2898,13 @@
         private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString) => 
             DoSlider(position, dragZonePosition, id, value, left, right, formatString, 1f);
 
-        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power)
+        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power) => 
+            DoSlider(position, dragZonePosition, id, value, left, right, formatString, power, GUI.skin.horizontalSlider, GUI.skin.horizontalSliderThumb, null);
+
+        private static float DoSlider(Rect position, Rect dragZonePosition, int id, float value, float left, float right, string formatString, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground)
         {
+            left = Mathf.Clamp(left, float.MinValue, float.MaxValue);
+            right = Mathf.Clamp(right, float.MinValue, float.MaxValue);
             float width = position.width;
             if (width >= (65f + EditorGUIUtility.fieldWidth))
             {
@@ -2920,17 +2924,22 @@
                     value = PowPreserveSign(value, 1f / power);
                 }
                 Rect rect = new Rect(position.x, position.y, num2, position.height);
-                value = GUI.Slider(rect, value, 0f, start, end, GUI.skin.horizontalSlider, !showMixedValue ? GUI.skin.horizontalSliderThumb : "SliderMixed", true, num3);
+                if ((sliderBackground != null) && (Event.current.type == EventType.Repaint))
+                {
+                    Graphics.DrawTexture(sliderStyle.overflow.Add(rect), sliderBackground, new Rect(0.5f / ((float) sliderBackground.width), 0.5f / ((float) sliderBackground.height), 1f - (1f / ((float) sliderBackground.width)), 1f - (1f / ((float) sliderBackground.height))), 0, 0, 0, 0, Color.grey);
+                }
+                value = GUI.Slider(rect, value, 0f, start, end, sliderStyle, !showMixedValue ? thumbStyle : "SliderMixed", true, num3);
                 if (power != 1f)
                 {
                     value = PowPreserveSign(value, power);
+                    value = Mathf.Clamp(value, Mathf.Min(left, right), Mathf.Max(left, right));
                 }
                 if (EditorGUIUtility.sliderLabels.HasLabels())
                 {
                     Color color = GUI.color;
                     GUI.color *= new Color(1f, 1f, 1f, 0.5f);
-                    Rect rect2 = new Rect(rect.x, rect.y + 10f, rect.width, rect.height);
-                    DoTwoLabels(rect2, EditorGUIUtility.sliderLabels.leftLabel, EditorGUIUtility.sliderLabels.rightLabel, EditorStyles.miniLabel);
+                    Rect rect3 = new Rect(rect.x, rect.y + 10f, rect.width, rect.height);
+                    DoTwoLabels(rect3, EditorGUIUtility.sliderLabels.leftLabel, EditorGUIUtility.sliderLabels.rightLabel, EditorStyles.miniLabel);
                     GUI.color = color;
                     EditorGUIUtility.sliderLabels.SetLabels(null, null);
                 }
@@ -3618,6 +3627,11 @@
             return position;
         }
 
+        internal static void DrawDelimiterLine(Rect rect)
+        {
+            DrawRect(rect, kSplitLineSkinnedColor.color);
+        }
+
         internal static void DrawLabelShadow(Rect position, GUIContent content, GUIStyle style, float shadowOpa)
         {
             Color color = GUI.color;
@@ -3730,6 +3744,20 @@
                 {
                     GUI.Label(rect, GUIContent.Temp(string.Empty, "Ctrl + Click to show preview"));
                 }
+            }
+        }
+
+        internal static void DrawOutline(Rect rect, float size, Color color)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color color2 = GUI.color;
+                GUI.color *= color;
+                GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.x, rect.yMax - size, rect.width, size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.x, rect.y + 1f, size, rect.height - (2f * size)), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.xMax - size, rect.y + 1f, size, rect.height - (2f * size)), EditorGUIUtility.whiteTexture);
+                GUI.color = color2;
             }
         }
 
@@ -4188,7 +4216,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__3);
+                <>f__am$cache3 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache3).ToArray<string>();
             int num = MaskFieldGUI.DoMaskField(IndentedRect(position), GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position), Convert.ToInt32(enumValue), flagNames, style);
@@ -4207,7 +4235,7 @@
             position.xMax = rect.x;
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__2);
+                <>f__am$cache2 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache2).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(rect, id, Convert.ToInt32(enumValue), flagNames, style);
@@ -4387,7 +4415,7 @@
             int index = Array.IndexOf<Enum>(array, selected);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <EnumPopupInternal>m__1);
+                <>f__am$cache1 = x => ObjectNames.NicifyVariableName(x);
             }
             index = Popup(position, label, index, EditorGUIUtility.TempContent(Enumerable.Select<string, string>(names, <>f__am$cache1).ToArray<string>()), style);
             if ((index < 0) || (index >= names.Length))
@@ -4726,7 +4754,7 @@
             return foldout;
         }
 
-        internal static bool FoldoutTitlebar(Rect position, GUIContent label, bool foldout)
+        internal static bool FoldoutTitlebar(Rect position, GUIContent label, bool foldout, bool skipIconSpacing)
         {
             int controlID = GUIUtility.GetControlID(s_TitlebarHash, FocusType.Keyboard, position);
             if (Event.current.type == EventType.Repaint)
@@ -4734,7 +4762,7 @@
                 GUIStyle inspectorTitlebar = EditorStyles.inspectorTitlebar;
                 GUIStyle inspectorTitlebarText = EditorStyles.inspectorTitlebarText;
                 GUIStyle style3 = EditorStyles.foldout;
-                Rect rect = new Rect(((position.x + inspectorTitlebar.padding.left) + 2f) + 16f, position.y + inspectorTitlebar.padding.top, 200f, 16f);
+                Rect rect = new Rect(((position.x + inspectorTitlebar.padding.left) + 2f) + (!skipIconSpacing ? ((float) 0x10) : ((float) 0)), position.y + inspectorTitlebar.padding.top, 200f, 16f);
                 inspectorTitlebar.Draw(position, GUIContent.none, controlID, foldout);
                 style3.Draw(GetInspectorTitleBarObjectFoldoutRenderRect(position), GUIContent.none, controlID, foldout);
                 position = inspectorTitlebar.padding.Remove(position);
@@ -4785,7 +4813,6 @@
                     case TextureUsageMode.LightmapDoubleLDR:
                         return lightmapDoubleLDRMaterial;
 
-                    case TextureUsageMode.NormalmapPlain:
                     case TextureUsageMode.NormalmapDXT5nm:
                         return normalmapMaterial;
                 }
@@ -4872,17 +4899,11 @@
             return GetPropertyHeight(property.propertyType, label);
         }
 
-        internal static Gradient GradientField(Rect position, SerializedProperty gradient)
-        {
-            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(position, id, null, gradient);
-        }
+        internal static Gradient GradientField(Rect position, SerializedProperty gradient) => 
+            GradientField(position, gradient, false);
 
-        internal static Gradient GradientField(Rect position, Gradient gradient)
-        {
-            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(position, id, gradient, null);
-        }
+        internal static Gradient GradientField(Rect position, Gradient gradient) => 
+            GradientField(position, gradient, false);
 
         internal static Gradient GradientField(string label, Rect position, SerializedProperty property) => 
             GradientField(EditorGUIUtility.TempContent(label), position, property);
@@ -4893,13 +4914,25 @@
         internal static Gradient GradientField(GUIContent label, Rect position, SerializedProperty property)
         {
             int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(PrefixLabel(position, id, label), id, null, property);
+            return DoGradientField(PrefixLabel(position, id, label), id, null, property, false);
         }
 
         internal static Gradient GradientField(GUIContent label, Rect position, Gradient gradient)
         {
             int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
-            return DoGradientField(PrefixLabel(position, id, label), id, gradient, null);
+            return DoGradientField(PrefixLabel(position, id, label), id, gradient, null, false);
+        }
+
+        internal static Gradient GradientField(Rect position, SerializedProperty gradient, bool hdr)
+        {
+            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
+            return DoGradientField(position, id, null, gradient, hdr);
+        }
+
+        internal static Gradient GradientField(Rect position, Gradient gradient, bool hdr)
+        {
+            int id = GUIUtility.GetControlID(s_GradientHash, FocusType.Keyboard, position);
+            return DoGradientField(position, id, gradient, null, hdr);
         }
 
         /// <summary>
@@ -5016,8 +5049,14 @@
             return property.hasVisibleChildren;
         }
 
-        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight) => 
-            Resizer.Resize(position, height, minHeight, maxHeight, false);
+        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight)
+        {
+            bool flag;
+            return Resizer.Resize(position, height, minHeight, maxHeight, false, out flag);
+        }
+
+        internal static float HeightResizer(Rect position, float height, float minHeight, float maxHeight, out bool hasControl) => 
+            Resizer.Resize(position, height, minHeight, maxHeight, false, out hasControl);
 
         /// <summary>
         /// <para>Make a help box with a message to the user.</para>
@@ -5565,8 +5604,19 @@ This warning only shows up in development builds.";
             return Mathf.RoundToInt(DoSlider(PrefixLabel(position, id, label), EditorGUIUtility.DragZoneRect(position), id, (float) value, (float) leftValue, (float) rightValue, kIntFieldFormatString));
         }
 
+        [RequiredByNativeCode]
         internal static bool IsEditingTextField() => 
             RecycledTextEditor.s_ActuallyEditing;
+
+        private static bool IsValidForContextMenu(Object target)
+        {
+            if (target == null)
+            {
+                return false;
+            }
+            bool flag2 = target == null;
+            return ((flag2 && ((target is MonoBehaviour) || (target is ScriptableObject))) || !flag2);
+        }
 
         internal static Event KeyEventField(Rect position, Event evt) => 
             DoKeyEventField(position, evt, GUI.skin.textField);
@@ -5880,7 +5930,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5900,7 +5950,7 @@ This warning only shows up in development builds.";
             LongFieldInternal(position, value, style);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5917,7 +5967,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5934,7 +5984,7 @@ This warning only shows up in development builds.";
         }
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -5947,7 +5997,7 @@ This warning only shows up in development builds.";
             LongField(position, EditorGUIUtility.TempContent(label), value, style);
 
         /// <summary>
-        /// <para>Make a text field for entering long integers.</para>
+        /// <para>Make a text field for entering integers.</para>
         /// </summary>
         /// <param name="position">Rectangle on the screen to use for the long field.</param>
         /// <param name="label">Optional label to display in front of the long field.</param>
@@ -6634,6 +6684,22 @@ This warning only shows up in development builds.";
             return DoTextField(s_RecycledEditor, id, PrefixLabel(position, id, label), password, style, null, out flag, false, false, true);
         }
 
+        internal static void PingObjectOrShowPreviewOnClick(Object targetObject, Rect position)
+        {
+            if (targetObject != null)
+            {
+                Event current = Event.current;
+                if (!(current.shift || current.control))
+                {
+                    EditorGUIUtility.PingObject(targetObject);
+                }
+                else if (targetObject is Texture)
+                {
+                    PopupWindowWithoutFocus.Show(new RectOffset(6, 3, 0, 3).Add(position), new ObjectPreviewPopup(targetObject), new PopupLocationHelper.PopupLocation[] { PopupLocationHelper.PopupLocation.Left });
+                }
+            }
+        }
+
         /// <summary>
         /// <para>Make a generic popup selection field.</para>
         /// </summary>
@@ -7053,6 +7119,7 @@ This warning only shows up in development builds.";
                 return text;
             }
             int id = GUIUtility.GetControlID(s_TextAreaHash, FocusType.Keyboard, position);
+            position = IndentedRect(position);
             float height = style.CalcHeight(GUIContent.Temp(text), position.width);
             Rect rect = new Rect(0f, 0f, position.width, height);
             Vector2 contentOffset = style.contentOffset;
@@ -7084,7 +7151,7 @@ This warning only shows up in development builds.";
                 }
             }
             EventType type = Event.current.type;
-            string str2 = DoTextField(s_RecycledEditor, id, IndentedRect(position), text, style, null, out flag, false, true, false);
+            string str2 = DoTextField(s_RecycledEditor, id, position, text, style, null, out flag, false, true, false);
             if (type != Event.current.type)
             {
                 scrollPosition = s_RecycledEditor.scrollOffset;
@@ -7354,6 +7421,26 @@ This warning only shows up in development builds.";
         /// </returns>
         public static float Slider(Rect position, GUIContent label, float value, float leftValue, float rightValue) => 
             PowerSlider(position, label, value, leftValue, rightValue, 1f);
+
+        internal static float SliderWithTexture(Rect position, GUIContent label, float sliderValue, float leftValue, float rightValue, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground)
+        {
+            int id = GUIUtility.GetControlID(s_SliderHash, FocusType.Keyboard, position);
+            Rect rect = PrefixLabel(position, id, label);
+            Rect dragZonePosition = !LabelHasContent(label) ? new Rect() : EditorGUIUtility.DragZoneRect(position);
+            return DoSlider(rect, dragZonePosition, id, sliderValue, leftValue, rightValue, kFloatFieldFormatString, power, sliderStyle, thumbStyle, sliderBackground);
+        }
+
+        internal static void SliderWithTexture(Rect position, GUIContent label, SerializedProperty property, float leftValue, float rightValue, float power, GUIStyle sliderStyle, GUIStyle thumbStyle, Texture2D sliderBackground)
+        {
+            label = BeginProperty(position, label, property);
+            BeginChangeCheck();
+            float num = SliderWithTexture(position, label, property.floatValue, leftValue, rightValue, power, sliderStyle, thumbStyle, sliderBackground);
+            if (EndChangeCheck())
+            {
+                property.floatValue = num;
+            }
+            EndProperty();
+        }
 
         internal static void SortingLayerField(Rect position, GUIContent label, SerializedProperty layerID, GUIStyle style, GUIStyle labelStyle)
         {
@@ -8016,7 +8103,12 @@ This warning only shows up in development builds.";
                         }
                         return references[0];
                     }
-                    if ((((property.type == "PPtr<Sprite>") || (property.type == "PPtr<$Sprite>")) || (property.type == "vector")) && (flag2 && flag))
+                    string type = property.type;
+                    if (property.type == "vector")
+                    {
+                        type = property.arrayElementType;
+                    }
+                    if (((type == "PPtr<Sprite>") || (type == "PPtr<$Sprite>")) && (flag2 && flag))
                     {
                         return SpriteUtility.TextureToSprite(references[0] as Texture2D);
                     }
@@ -8201,8 +8293,14 @@ This warning only shows up in development builds.";
             return value;
         }
 
-        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth) => 
-            Resizer.Resize(position, width, minWidth, maxWidth, true);
+        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth)
+        {
+            bool flag;
+            return Resizer.Resize(position, width, minWidth, maxWidth, true, out flag);
+        }
+
+        internal static float WidthResizer(Rect position, float width, float minWidth, float maxWidth, out bool hasControl) => 
+            Resizer.Resize(position, width, minWidth, maxWidth, true, out hasControl);
 
         /// <summary>
         /// <para>Is the platform-dependent "action" modifier key held down? (Read Only)</para>
@@ -8465,7 +8563,7 @@ This warning only shows up in development builds.";
 
         internal sealed class GUIContents
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private static GUIContent <helpIcon>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private static GUIContent <titleSettingsIcon>k__BackingField;
@@ -8817,7 +8915,7 @@ This warning only shows up in development builds.";
         {
             IconAndText,
             LargePreview,
-            MiniPreivew
+            MiniPreview
         }
 
         internal sealed class PopupCallbackInfo
@@ -8966,7 +9064,7 @@ This warning only shows up in development builds.";
             private static Vector2 s_MouseDeltaReaderStartPos;
             private static float s_StartSize;
 
-            internal static float Resize(Rect position, float size, float minSize, float maxSize, bool horizontal)
+            internal static float Resize(Rect position, float size, float minSize, float maxSize, bool horizontal, out bool hasControl)
             {
                 int controlID = GUIUtility.GetControlID(EditorGUI.s_MouseDeltaReaderHash, FocusType.Passive, position);
                 Event current = Event.current;
@@ -8981,7 +9079,7 @@ This warning only shows up in development builds.";
                             s_StartSize = size;
                             current.Use();
                         }
-                        return size;
+                        break;
 
                     case EventType.MouseUp:
                         if ((GUIUtility.hotControl == controlID) && (current.button == 0))
@@ -8989,37 +9087,32 @@ This warning only shows up in development builds.";
                             GUIUtility.hotControl = 0;
                             current.Use();
                         }
-                        return size;
-
-                    case EventType.MouseMove:
-                    case EventType.KeyDown:
-                    case EventType.KeyUp:
-                    case EventType.ScrollWheel:
-                        return size;
+                        break;
 
                     case EventType.MouseDrag:
-                    {
-                        if (GUIUtility.hotControl != controlID)
+                        if (GUIUtility.hotControl == controlID)
                         {
-                            return size;
+                            current.Use();
+                            Vector2 vector = GUIClip.Unclip(current.mousePosition);
+                            float num2 = !horizontal ? (vector - s_MouseDeltaReaderStartPos).y : (vector - s_MouseDeltaReaderStartPos).x;
+                            float num3 = s_StartSize + num2;
+                            if ((num3 < minSize) || (num3 > maxSize))
+                            {
+                                size = Mathf.Clamp(num3, minSize, maxSize);
+                                break;
+                            }
+                            size = num3;
                         }
-                        current.Use();
-                        Vector2 vector = GUIClip.Unclip(current.mousePosition);
-                        float num2 = !horizontal ? (vector - s_MouseDeltaReaderStartPos).y : (vector - s_MouseDeltaReaderStartPos).x;
-                        float num3 = s_StartSize + num2;
-                        if ((num3 < minSize) || (num3 > maxSize))
-                        {
-                            return size;
-                        }
-                        return num3;
-                    }
+                        break;
+
                     case EventType.Repaint:
                     {
                         MouseCursor mouse = !horizontal ? MouseCursor.SplitResizeUpDown : MouseCursor.SplitResizeLeftRight;
                         EditorGUIUtility.AddCursorRect(position, mouse, controlID);
-                        return size;
+                        break;
                     }
                 }
+                hasControl = GUIUtility.hotControl == controlID;
                 return size;
             }
         }

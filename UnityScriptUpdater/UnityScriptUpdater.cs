@@ -40,6 +40,9 @@
             throw new Exception("MonoBehaviour not found");
         }
 
+        protected override BooBasedLanguageTraits GetLanguageTraits() => 
+            UnityScriptLanguageTraits.Instance;
+
         protected override FixParsedSourceLocations NewParsedSourceLocationFixer(IAPIUpdaterListener listener, Dictionary<string, SourceFile> sources) => 
             new FixParsedSourceLocations(this.TabSize, sources, listener);
 
@@ -70,7 +73,7 @@
             UnityScriptCompilerParameters parameters = base._compiler.get_Parameters();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = () => new CustomTypeInferenceRuleProvider("UnityEngineInternal.TypeInferenceRuleAttribute");
+                <>f__am$cache0 = (ObjectFactory) (() => new CustomTypeInferenceRuleProvider("UnityEngineInternal.TypeInferenceRuleAttribute"));
             }
             parameters.AddToEnvironment(typeof(TypeInferenceRuleProvider), <>f__am$cache0);
             parameters.ScriptMainMethod = "MyMain";

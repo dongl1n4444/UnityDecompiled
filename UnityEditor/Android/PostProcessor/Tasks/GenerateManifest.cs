@@ -12,6 +12,7 @@
     using UnityEditor.Android;
     using UnityEditor.Android.PostProcessor;
     using UnityEditor.Utils;
+    using UnityEditorInternal.VR;
     using UnityEngine;
     using UnityEngine.Networking;
     using UnityEngine.Rendering;
@@ -28,6 +29,58 @@
         };
 
         public event ProgressHandler OnProgress;
+
+        private void AddVRRelatedManifestEntries(PostProcessorContext context, AndroidManifest manifestXML, HashSet<string> activities)
+        {
+            if (PlayerSettings.virtualRealitySupported)
+            {
+                string[] vREnabledDevicesOnTargetGroup = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
+                bool shouldCheckVersion = vREnabledDevicesOnTargetGroup.Contains<string>("Oculus");
+                bool flag2 = vREnabledDevicesOnTargetGroup.Contains<string>("cardboard");
+                bool flag3 = vREnabledDevicesOnTargetGroup.Contains<string>("daydream");
+                bool flag4 = flag3 && !flag2;
+                this.CheckMinimumSdkVersion(flag2, "Cardboard", context.Get<int>("CardboardMinSdkVersion"));
+                this.CheckMinimumSdkVersion(flag4, "Daydream", context.Get<int>("DaydreamMinSdkVersion"));
+                this.CheckMinimumSdkVersion(shouldCheckVersion, "Oculus", context.Get<int>("GearVRMinSdkVersion"));
+                if (flag2 || flag3)
+                {
+                    manifestXML.OverrideTheme("@style/VrActivityTheme");
+                }
+                if (flag2)
+                {
+                    manifestXML.AddIntentFilterCategory("com.google.intent.category.CARDBOARD");
+                }
+                if (flag3)
+                {
+                    manifestXML.AddUsesFeature("android.hardware.vr.high_performance", flag4);
+                    manifestXML.AddIntentFilterCategory("com.google.intent.category.DAYDREAM");
+                    manifestXML.AddResourceToLaunchActivity("com.google.android.vr.icon", "@drawable/vr_icon_front");
+                    manifestXML.AddResourceToLaunchActivity("com.google.android.vr.icon_background", "@drawable/vr_icon_back");
+                    foreach (string str in activities)
+                    {
+                        manifestXML.EnableVrMode(str);
+                        manifestXML.SetResizableActivity(str, false);
+                    }
+                }
+                if (flag2 || flag3)
+                {
+                    manifestXML.AddApplicationMetaDataAttribute("unityplayer.SkipPermissionsDialog", "true");
+                }
+                if (flag2)
+                {
+                    manifestXML.AddUsesPermission("android.permission.READ_EXTERNAL_STORAGE");
+                }
+            }
+        }
+
+        private void CheckMinimumSdkVersion(bool shouldCheckVersion, string vrName, int minSdkRequired)
+        {
+            int minSdkVersion = (int) PlayerSettings.Android.minSdkVersion;
+            if (shouldCheckVersion && (minSdkVersion < minSdkRequired))
+            {
+                Debug.LogWarning($"{vrName} requires Minimum API Level of {minSdkRequired}");
+            }
+        }
 
         private string CopyMainManifest(PostProcessorContext context, string target)
         {
@@ -296,16 +349,20 @@
             {
                 manifestXML.AddUsesFeature("android.hardware.opengles.aep", true);
             }
+            if (graphicsAPIs.Contains<GraphicsDeviceType>(GraphicsDeviceType.Vulkan))
+            {
+                manifestXML.AddUsesFeature("android.hardware.vulkan", graphicsAPIs.Length == 1);
+            }
             if (EditorUserBuildSettings.androidBuildSubtarget != MobileTextureSubtarget.Generic)
             {
                 this.CreateSupportsTextureElem(manifestXML, EditorUserBuildSettings.androidBuildSubtarget);
             }
-            HashSet<string> set = new HashSet<string>(this.GetActivitiesWithMetadata(manifestXML, "unityplayer.UnityActivity", "true"));
+            HashSet<string> activities = new HashSet<string>(this.GetActivitiesWithMetadata(manifestXML, "unityplayer.UnityActivity", "true"));
             string[] other = new string[] { "com.unity3d.player.UnityPlayerNativeActivity", "com.unity3d.player.UnityPlayerActivity", "com.unity3d.player.UnityPlayerProxyActivity" };
-            set.UnionWith(other);
+            activities.UnionWith(other);
             string orientationAttr = this.GetOrientationAttr();
             bool flag = false;
-            foreach (string str5 in set)
+            foreach (string str5 in activities)
             {
                 flag = manifestXML.SetOrientation(str5, orientationAttr) || flag;
                 flag = manifestXML.SetLaunchMode(str5, "singleTask") || flag;
@@ -334,15 +391,7 @@
                     manifestXML.AddUsesFeature("android.hardware.gamepad", true);
                     break;
             }
-            if (PlayerSettings.virtualRealitySupported)
-            {
-                manifestXML.OverrideTheme("@android:style/Theme.Black.NoTitleBar.Fullscreen");
-                int num2 = context.Get<int>("GearVRMinSdkVersion");
-                if (PlayerSettings.Android.minSdkVersion < num2)
-                {
-                    Debug.LogWarning("GearVR requires Minimum API Level of 19");
-                }
-            }
+            this.AddVRRelatedManifestEntries(context, manifestXML, activities);
             AssemblyReferenceChecker checker = new AssemblyReferenceChecker();
             bool collectMethods = true;
             bool ignoreSystemDlls = true;
@@ -444,7 +493,7 @@
                 string message = "Please set the Bundle Identifier in the Player Settings.";
                 message = (message + " The value must follow the convention 'com.YourCompanyName.YourProductName'") + " and can contain alphanumeric characters and underscore." + "\nEach segment must not start with a numeric character or underscore.";
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
-                CancelPostProcess.AbortBuild("Bundle Identifier has not been set up correctly", message);
+                CancelPostProcess.AbortBuild("Bundle Identifier has not been set up correctly", message, null);
             }
             if (!this.IsValidJavaPackageName(packageName))
             {

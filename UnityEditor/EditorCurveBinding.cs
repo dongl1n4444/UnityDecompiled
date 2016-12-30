@@ -45,11 +45,8 @@
         public static bool operator !=(EditorCurveBinding lhs, EditorCurveBinding rhs) => 
             !(lhs == rhs);
 
-        public override int GetHashCode()
-        {
-            object[] objArray1 = new object[] { this.path, ':', this.type.Name, ':', this.propertyName };
-            return string.Concat(objArray1).GetHashCode();
-        }
+        public override int GetHashCode() => 
+            $"{this.path}:{this.type.Name}:{this.propertyName}".GetHashCode();
 
         public override bool Equals(object other)
         {

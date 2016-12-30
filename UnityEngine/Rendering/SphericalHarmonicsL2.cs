@@ -53,7 +53,7 @@
             INTERNAL_CALL_ClearInternal(ref sh);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_ClearInternal(ref SphericalHarmonicsL2 sh);
         /// <summary>
         /// <para>Add ambient lighting to probe data.</para>
@@ -69,7 +69,7 @@
             INTERNAL_CALL_AddAmbientLightInternal(ref color, ref sh);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_AddAmbientLightInternal(ref Color color, ref SphericalHarmonicsL2 sh);
         /// <summary>
         /// <para>Add directional light to probe data.</para>
@@ -88,8 +88,15 @@
             INTERNAL_CALL_AddDirectionalLightInternal(ref direction, ref color, ref sh);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_AddDirectionalLightInternal(ref Vector3 direction, ref Color color, ref SphericalHarmonicsL2 sh);
+        /// <summary>
+        /// <para>Evaluates the Spherical Harmonics for each of the given directions. The result from the first direction is written into the first element of results, the result from the second direction is written into the second element of results, and so on. The array size of directions and results must match and directions must be normalized.</para>
+        /// </summary>
+        /// <param name="directions">Normalized directions for which the spherical harmonics are to be evaluated.</param>
+        /// <param name="results">Output array for the evaluated values of the corresponding directions.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void Evaluate(Vector3[] directions, Color[] results);
         public float this[int rgb, int coefficient]
         {
             get

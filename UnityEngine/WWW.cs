@@ -108,7 +108,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void DestroyWWW(bool cancel);
         /// <summary>
         /// <para>Disposes of an existing WWW object.</para>
@@ -118,7 +118,7 @@
             this.DestroyWWW(true);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool enforceWebSecurityRestrictions();
         /// <summary>
         /// <para>Escapes characters in a string to ensure they are URL-friendly.</para>
@@ -175,83 +175,10 @@
             return strArray2;
         }
 
-        /// <summary>
-        /// <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
-        /// </summary>
-        /// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip
-        /// the .audioClip property defaults to 3D.</param>
-        /// <param name="stream">Sets whether the clip should be completely downloaded before it's ready to play (false) or the stream can be played even if only part of the clip is downloaded (true).
-        /// The latter will disable seeking on the clip (with .time and/or .timeSamples).</param>
-        /// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-        /// <returns>
-        /// <para>The returned AudioClip.</para>
-        /// </returns>
-        public AudioClip GetAudioClip(bool threeD) => 
-            this.GetAudioClip(threeD, false);
-
-        /// <summary>
-        /// <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
-        /// </summary>
-        /// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip
-        /// the .audioClip property defaults to 3D.</param>
-        /// <param name="stream">Sets whether the clip should be completely downloaded before it's ready to play (false) or the stream can be played even if only part of the clip is downloaded (true).
-        /// The latter will disable seeking on the clip (with .time and/or .timeSamples).</param>
-        /// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-        /// <returns>
-        /// <para>The returned AudioClip.</para>
-        /// </returns>
-        public AudioClip GetAudioClip(bool threeD, bool stream) => 
-            this.GetAudioClip(threeD, stream, AudioType.UNKNOWN);
-
-        /// <summary>
-        /// <para>Returns an AudioClip generated from the downloaded data (Read Only).</para>
-        /// </summary>
-        /// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip
-        /// the .audioClip property defaults to 3D.</param>
-        /// <param name="stream">Sets whether the clip should be completely downloaded before it's ready to play (false) or the stream can be played even if only part of the clip is downloaded (true).
-        /// The latter will disable seeking on the clip (with .time and/or .timeSamples).</param>
-        /// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-        /// <returns>
-        /// <para>The returned AudioClip.</para>
-        /// </returns>
-        public AudioClip GetAudioClip(bool threeD, bool stream, AudioType audioType) => 
-            this.GetAudioClipInternal(threeD, stream, false, audioType);
-
-        /// <summary>
-        /// <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
-        /// </summary>
-        /// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip.</param>
-        /// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-        /// <returns>
-        /// <para>The returned AudioClip.</para>
-        /// </returns>
-        public AudioClip GetAudioClipCompressed() => 
-            this.GetAudioClipCompressed(true);
-
-        /// <summary>
-        /// <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
-        /// </summary>
-        /// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip.</param>
-        /// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-        /// <returns>
-        /// <para>The returned AudioClip.</para>
-        /// </returns>
-        public AudioClip GetAudioClipCompressed(bool threeD) => 
-            this.GetAudioClipCompressed(threeD, AudioType.UNKNOWN);
-
-        /// <summary>
-        /// <para>Returns an AudioClip generated from the downloaded data that is compressed in memory (Read Only).</para>
-        /// </summary>
-        /// <param name="threeD">Use this to specify whether the clip should be a 2D or 3D clip.</param>
-        /// <param name="audioType">The AudioType of the content your downloading. If this is not set Unity will try to determine the type from URL.</param>
-        /// <returns>
-        /// <para>The returned AudioClip.</para>
-        /// </returns>
-        public AudioClip GetAudioClipCompressed(bool threeD, AudioType audioType) => 
-            this.GetAudioClipInternal(threeD, false, true, audioType);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern AudioClip GetAudioClipInternal(bool threeD, bool stream, bool compressed, AudioType audioType);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal extern UnityEngine.Object GetAudioClipInternal(bool threeD, bool stream, bool compressed, AudioType audioType);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal extern UnityEngine.Object GetMovieTextureInternal();
         private Encoding GetTextEncoder()
         {
             string str = null;
@@ -284,17 +211,17 @@
             return Encoding.UTF8;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Texture2D GetTexture(bool markNonReadable);
         [Obsolete("All blocking WWW functions have been deprecated, please use one of the asynchronous functions instead.", true)]
         public static Texture2D GetTextureFromURL(string url) => 
             new WWW(url).texture;
 
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("All blocking WWW functions have been deprecated, please use one of the asynchronous functions instead.", true)]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("All blocking WWW functions have been deprecated, please use one of the asynchronous functions instead.", true), GeneratedByOldBindingsGenerator]
         public static extern string GetURL(string url);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void InitWWW(string url, byte[] postData, string[] iHeaders);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_WWW(WWW self, string url, ref Hash128 hash, uint crc);
         /// <summary>
         /// <para>Loads an AssetBundle with the specified version number from the cache. If the AssetBundle is not currently cached, it will automatically be downloaded and stored in the cache for future retrieval from local storage.</para>
@@ -341,7 +268,7 @@
         /// <para>Replaces the contents of an existing Texture2D with an image from the downloaded data.</para>
         /// </summary>
         /// <param name="tex">An existing texture object to be overwritten with the image data.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void LoadImageIntoTexture(Texture2D tex);
         /// <summary>
         /// <para>Loads the new web player data file.</para>
@@ -422,23 +349,24 @@
         /// <summary>
         /// <para>Streams an AssetBundle that can contain any kind of asset from the project folder.</para>
         /// </summary>
-        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public AssetBundle assetBundle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns a AudioClip generated from the downloaded data (Read Only).</para>
         /// </summary>
-        public AudioClip audioClip =>
-            this.GetAudioClip(true);
+        [Obsolete("Obsolete msg (UnityUpgradable) -> * UnityEngine.WWWAudioExtensions.GetAudioClip(UnityEngine.WWW)", true)]
+        public UnityEngine.Object audioClip =>
+            null;
 
         /// <summary>
         /// <para>Returns the contents of the fetched web page as a byte array (Read Only).</para>
         /// </summary>
-        public byte[] bytes { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public byte[] bytes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The number of bytes downloaded by this WWW query (read only).</para>
         /// </summary>
-        public int bytesDownloaded { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int bytesDownloaded { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         [Obsolete("Please use WWW.text instead")]
         public string data =>
@@ -450,29 +378,31 @@
         /// <summary>
         /// <para>Returns an error message if there was an error during the download (Read Only).</para>
         /// </summary>
-        public string error { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string error { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is the download already finished? (Read Only)</para>
         /// </summary>
-        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns a MovieTexture generated from the downloaded data (Read Only).</para>
         /// </summary>
-        public MovieTexture movie { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        [Obsolete("Obsolete msg (UnityUpgradable) -> * UnityEngine.WWWAudioExtensions.GetMovieTexture(UnityEngine.WWW)", true)]
+        public UnityEngine.Object movie =>
+            null;
 
         /// <summary>
         /// <para>Load an Ogg Vorbis file into the audio clip.</para>
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property WWW.oggVorbis has been deprecated. Use WWW.audioClip instead (UnityUpgradable).", true)]
-        public AudioClip oggVorbis =>
+        [Obsolete("Obsolete msg (UnityUpgradable) -> * UnityEngine.WWWAudioExtensions.GetAudioClip(UnityEngine.WWW)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        public UnityEngine.Object oggVorbis =>
             null;
 
         /// <summary>
         /// <para>How far has the download progressed (Read Only).</para>
         /// </summary>
-        public float progress { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float progress { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Dictionary of headers returned by the request.</para>
@@ -489,9 +419,9 @@
             }
         }
 
-        private string responseHeadersString { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        private string responseHeadersString { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public int size { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int size { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns the contents of the fetched web page as a string (Read Only).</para>
@@ -524,17 +454,17 @@
         /// <summary>
         /// <para>Priority of AssetBundle decompression thread.</para>
         /// </summary>
-        public ThreadPriority threadPriority { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public ThreadPriority threadPriority { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>How far has the upload progressed (Read Only).</para>
         /// </summary>
-        public float uploadProgress { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public float uploadProgress { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The URL of this WWW request (Read Only).</para>
         /// </summary>
-        public string url { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string url { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

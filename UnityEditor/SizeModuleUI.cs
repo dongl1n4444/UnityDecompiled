@@ -24,17 +24,17 @@
                 {
                     s_Texts = new Texts();
                 }
+                this.m_SeparateAxes = base.GetProperty("separateAxes");
                 this.m_X = new SerializedMinMaxCurve(this, s_Texts.x, "curve");
-                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y");
-                this.m_Z = new SerializedMinMaxCurve(this, s_Texts.z, "z");
+                this.m_Y = new SerializedMinMaxCurve(this, s_Texts.y, "y", false, false, this.m_SeparateAxes.boolValue);
+                this.m_Z = new SerializedMinMaxCurve(this, s_Texts.z, "z", false, false, this.m_SeparateAxes.boolValue);
                 this.m_X.m_AllowConstant = false;
                 this.m_Y.m_AllowConstant = false;
                 this.m_Z.m_AllowConstant = false;
-                this.m_SeparateAxes = base.GetProperty("separateAxes");
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {

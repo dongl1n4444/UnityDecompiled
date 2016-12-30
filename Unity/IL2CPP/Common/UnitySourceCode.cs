@@ -21,7 +21,7 @@
                 }
                 else
                 {
-                    _unityRoot = CommonPaths.Il2CppRoot?.ParentContaining("build.pl");
+                    _unityRoot = CommonPaths.Il2CppRoot?.Parent.ParentContaining("build.pl");
                 }
             }
 

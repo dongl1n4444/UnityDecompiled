@@ -1,7 +1,6 @@
 ﻿namespace UnityEditor
 {
     using System;
-    using UnityEditorInternal;
 
     internal class AInfo : IComparable, IEquatable<AInfo>
     {
@@ -21,7 +20,7 @@
             this.m_Flags = flags;
             if (this.m_ScriptClass == "")
             {
-                this.m_DisplayText = BaseObjectTools.ClassIDToString(this.m_ClassID);
+                this.m_DisplayText = UnityType.FindTypeByPersistentTypeID(this.m_ClassID).name;
             }
             else
             {

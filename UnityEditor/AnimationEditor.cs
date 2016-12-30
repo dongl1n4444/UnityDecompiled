@@ -3,27 +3,19 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Animation))]
+    [CustomEditor(typeof(Animation)), CanEditMultipleObjects]
     internal class AnimationEditor : Editor
     {
-        private BoxEditor m_BoxEditor = new BoxEditor(false, s_BoxHash);
         private int m_PrePreviewAnimationArraySize = -1;
-        private static int s_BoxHash = "AnimationBoundsEditorHash".GetHashCode();
 
         internal override void OnAssetStoreInspectorGUI()
         {
             this.OnInspectorGUI();
         }
 
-        public void OnDisable()
-        {
-            this.m_BoxEditor.OnDisable();
-        }
-
         public void OnEnable()
         {
             this.m_PrePreviewAnimationArraySize = -1;
-            this.m_BoxEditor.OnEnable();
         }
 
         public override void OnInspectorGUI()

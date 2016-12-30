@@ -21,7 +21,6 @@
         [CompilerGenerated]
         private static Func<string, IEnumerable<string>> <>f__mg$cache0;
         private Func<string, IEnumerable<string>> AdditionalCompilerOptionsForSourceFile;
-        private const string OptimizationFlags = "-Os";
 
         public AndroidToolChain(Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors, NPath toolchainPath) : base(architecture, buildConfiguration)
         {
@@ -30,7 +29,7 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(null, (IntPtr) FlagsToMakeWarningsErrorsFor);
+                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(AndroidToolChain.FlagsToMakeWarningsErrorsFor);
                 }
                 this.AdditionalCompilerOptionsForSourceFile = <>f__mg$cache0;
             }
@@ -94,7 +93,7 @@
                 "-o",
                 outputFile.InQuotes()
             };
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.DefaultLinkerFlags)));
             inputs.AddRange(staticLibraries.InQuotes(SlashMode.Native));
             foreach (NPath path in dynamicLibraries)
             {
@@ -174,10 +173,10 @@
             internal IEnumerator<string> $locvar3;
             internal int $PC;
             internal AndroidToolChain $this;
-            internal string <compilerFlag>__3;
-            internal string <define>__0;
-            internal NPath <includePath>__1;
+            internal string <compilerFlag>__4;
+            internal string <define>__1;
             internal NPath <includePath>__2;
+            internal NPath <includePath>__3;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -277,8 +276,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<define>__0 = this.$locvar0.Current;
-                        this.$current = "-D" + this.<define>__0;
+                        this.<define>__1 = this.$locvar0.Current;
+                        this.$current = "-D" + this.<define>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -304,8 +303,8 @@
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<includePath>__1 = this.$locvar1.Current;
-                        this.$current = "-I" + this.<includePath>__1.InQuotes();
+                        this.<includePath>__2 = this.$locvar1.Current;
+                        this.$current = "-I" + this.<includePath>__2.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -331,8 +330,8 @@
                 {
                     while (this.$locvar2.MoveNext())
                     {
-                        this.<includePath>__2 = this.$locvar2.Current;
-                        this.$current = "-I" + this.<includePath>__2.InQuotes();
+                        this.<includePath>__3 = this.$locvar2.Current;
+                        this.$current = "-I" + this.<includePath>__3.InQuotes();
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -351,15 +350,15 @@
                         this.$locvar2.Dispose();
                     }
                 }
-                this.$locvar3 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlags)).GetEnumerator();
+                this.$locvar3 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                 num = 0xfffffffd;
             Label_023C:
                 try
                 {
                     while (this.$locvar3.MoveNext())
                     {
-                        this.<compilerFlag>__3 = this.$locvar3.Current;
-                        this.$current = this.<compilerFlag>__3;
+                        this.<compilerFlag>__4 = this.$locvar3.Current;
+                        this.$current = this.<compilerFlag>__4;
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -429,8 +428,8 @@
             internal IEnumerator<string> $locvar1;
             internal int $PC;
             internal AndroidToolChain $this;
-            internal string <flag>__0;
             internal string <flag>__1;
+            internal string <flag>__2;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -482,7 +481,7 @@
                         {
                             this.$PC = 1;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 1:
                         this.$current = "-g";
@@ -490,7 +489,7 @@
                         {
                             this.$PC = 2;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 2:
                         this.$current = "-DNDEBUG";
@@ -498,7 +497,7 @@
                         {
                             this.$PC = 3;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 3:
                         this.$current = "-funwind-tables";
@@ -506,7 +505,7 @@
                         {
                             this.$PC = 4;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 4:
                         this.$current = "-fno-limit-debug-info";
@@ -514,7 +513,7 @@
                         {
                             this.$PC = 5;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 5:
                         this.$current = "-fPIC";
@@ -522,7 +521,7 @@
                         {
                             this.$PC = 6;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 6:
                         this.$current = "-fdata-sections";
@@ -530,7 +529,7 @@
                         {
                             this.$PC = 7;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 7:
                         this.$current = "-ffunction-sections";
@@ -538,7 +537,7 @@
                         {
                             this.$PC = 8;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 8:
                         this.$current = "-Wa,--noexecstack";
@@ -546,7 +545,7 @@
                         {
                             this.$PC = 9;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 9:
                         this.$current = "-fno-rtti";
@@ -554,7 +553,7 @@
                         {
                             this.$PC = 10;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 10:
                     {
@@ -568,7 +567,7 @@
                         {
                             this.$PC = 11;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
                     }
                     case 11:
                         break;
@@ -579,7 +578,7 @@
                         {
                             this.$PC = 13;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 13:
                         this.$current = "-fvisibility-inlines-hidden";
@@ -587,7 +586,7 @@
                         {
                             this.$PC = 14;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 14:
                         this.$current = "-fno-strict-overflow";
@@ -595,15 +594,15 @@
                         {
                             this.$PC = 15;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 15:
-                        this.$current = "-Os";
+                        this.$current = (this.$this.BuildConfiguration != BuildConfiguration.Debug) ? "-Os" : "-O0";
                         if (!this.$disposing)
                         {
                             this.$PC = 0x10;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 0x10:
                         this.$current = "--sysroot " + this.$this._androidNDK.SysRoot.InQuotes();
@@ -611,7 +610,7 @@
                         {
                             this.$PC = 0x11;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 0x11:
                         this.$current = "-gcc-toolchain " + this.$this._androidNDK.GccToolchain.InQuotes();
@@ -619,7 +618,7 @@
                         {
                             this.$PC = 0x12;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 0x12:
                         this.$current = "-target " + this.$this._androidNDK.Platform;
@@ -627,41 +626,41 @@
                         {
                             this.$PC = 0x13;
                         }
-                        goto Label_048D;
+                        goto Label_04A7;
 
                     case 0x13:
                         this.$locvar0 = this.$this._androidNDK.ArchitectureCompilerFlags.GetEnumerator();
                         num = 0xfffffffd;
-                        goto Label_0357;
+                        goto Label_0371;
 
                     case 20:
-                        goto Label_0357;
+                        goto Label_0371;
 
                     case 0x15:
-                        goto Label_040D;
+                        goto Label_0427;
 
                     default:
-                        goto Label_048B;
+                        goto Label_04A5;
                 }
                 this.$current = "-fno-strict-aliasing";
                 if (!this.$disposing)
                 {
                     this.$PC = 12;
                 }
-                goto Label_048D;
-            Label_0357:
+                goto Label_04A7;
+            Label_0371:
                 try
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<flag>__0 = this.$locvar0.Current;
-                        this.$current = this.<flag>__0;
+                        this.<flag>__1 = this.$locvar0.Current;
+                        this.$current = this.<flag>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 20;
                         }
                         flag = true;
-                        goto Label_048D;
+                        goto Label_04A7;
                     }
                 }
                 finally
@@ -676,23 +675,23 @@
                 }
                 if (this.$this.AdditionalCompilerOptionsForSourceFile == null)
                 {
-                    goto Label_0484;
+                    goto Label_049E;
                 }
-                this.$locvar1 = this.$this.AdditionalCompilerOptionsForSourceFile.Invoke(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
+                this.$locvar1 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                 num = 0xfffffffd;
-            Label_040D:
+            Label_0427:
                 try
                 {
                     while (this.$locvar1.MoveNext())
                     {
-                        this.<flag>__1 = this.$locvar1.Current;
-                        this.$current = this.<flag>__1;
+                        this.<flag>__2 = this.$locvar1.Current;
+                        this.$current = this.<flag>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 0x15;
                         }
                         flag = true;
-                        goto Label_048D;
+                        goto Label_04A7;
                     }
                 }
                 finally
@@ -705,11 +704,11 @@
                         this.$locvar1.Dispose();
                     }
                 }
-            Label_0484:
+            Label_049E:
                 this.$PC = -1;
-            Label_048B:
+            Label_04A5:
                 return false;
-            Label_048D:
+            Label_04A7:
                 return true;
             }
 
@@ -751,7 +750,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal AndroidToolChain $this;
-            internal string <flag>__0;
+            internal string <flag>__1;
             internal NPath outputFile;
 
             [DebuggerHidden]
@@ -895,8 +894,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<flag>__0 = this.$locvar0.Current;
-                        this.$current = this.<flag>__0;
+                        this.<flag>__1 = this.$locvar0.Current;
+                        this.$current = this.<flag>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 13;

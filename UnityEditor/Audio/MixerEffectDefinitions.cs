@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     internal sealed class MixerEffectDefinitions
     {
         private static readonly List<MixerEffectDefinition> s_MixerEffectDefinitions = new List<MixerEffectDefinition>();
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void AddDefinitionRuntime(string name, MixerParameterDefinition[] parameters);
         public static void ClearDefinitions()
         {
@@ -16,9 +17,9 @@
             ClearDefinitionsRuntime();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void ClearDefinitionsRuntime();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool EffectCanBeSidechainTarget(AudioMixerEffectController effect);
         public static bool EffectExists(string name)
         {
@@ -32,9 +33,9 @@
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string[] GetAudioEffectNames();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern MixerParameterDefinition[] GetAudioEffectParameterDesc(string effectName);
         public static string[] GetEffectList()
         {

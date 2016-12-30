@@ -60,11 +60,11 @@
             {
                 return DesktopPluginCPUArchitecture.AnyCPU;
             }
-            if (x86 && !x64)
+            if (x86)
             {
                 return DesktopPluginCPUArchitecture.x86;
             }
-            if (!x86 && x64)
+            if (x64)
             {
                 return DesktopPluginCPUArchitecture.x86_64;
             }

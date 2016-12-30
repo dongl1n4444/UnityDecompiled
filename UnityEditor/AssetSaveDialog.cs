@@ -42,10 +42,6 @@
             return new GUIContent(path, cachedIcon);
         }
 
-        private void HandleKeyboard()
-        {
-        }
-
         private void IgnoreSelectedAssets()
         {
             List<string> list = new List<string>();
@@ -72,7 +68,6 @@
                 base.minSize = new Vector2(500f, 300f);
                 base.position = new Rect(base.position.x, base.position.y, base.minSize.x, base.minSize.y);
             }
-            this.HandleKeyboard();
             GUILayout.Space(10f);
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayout.Space(10f);

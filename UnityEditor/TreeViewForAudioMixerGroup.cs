@@ -22,7 +22,7 @@
             TreeViewController treeView = new TreeViewController(data.editorWindow, data.state);
             GroupTreeViewGUI gui = new GroupTreeViewGUI(treeView);
             TreeViewDataSourceForMixers mixers = new TreeViewDataSourceForMixers(treeView, objectFromInstanceID);
-            mixers.onVisibleRowsChanged = (Action) Delegate.Combine(mixers.onVisibleRowsChanged, new Action(gui, (IntPtr) this.CalculateRowRects));
+            mixers.onVisibleRowsChanged = (Action) Delegate.Combine(mixers.onVisibleRowsChanged, new Action(gui.CalculateRowRects));
             treeView.deselectOnUnhandledMouseDown = false;
             treeView.Init(data.treeViewRect, mixers, gui, null);
             data.objectTreeForSelector.SetTreeView(treeView);
@@ -185,7 +185,7 @@
                     bool flag2 = item.id == TreeViewForAudioMixerGroup.kNoneItemID;
                     if (flag && !flag2)
                     {
-                        AudioMixerController controller = (item.userData as AudioMixerGroupController).controller;
+                        AudioMixerController controller = ((TreeViewForAudioMixerGroup.MixerTreeViewItem) item).group.controller;
                         GUI.Label(new Rect(rowRect.x + 2f, rowRect.y - 18f, rowRect.width, 18f), GUIContent.Temp(controller.name), EditorStyles.boldLabel);
                     }
                 }
@@ -200,9 +200,22 @@
             }
         }
 
+        private class MixerTreeViewItem : TreeViewItem
+        {
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private AudioMixerGroupController <group>k__BackingField;
+
+            public MixerTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, AudioMixerGroupController groupController) : base(id, depth, parent, displayName)
+            {
+                this.group = groupController;
+            }
+
+            public AudioMixerGroupController group { get; set; }
+        }
+
         private class TreeViewDataSourceForMixers : TreeViewDataSource
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private AudioMixerController <ignoreThisController>k__BackingField;
 
             public TreeViewDataSourceForMixers(TreeViewController treeView, AudioMixerController ignoreController) : base(treeView)
@@ -218,8 +231,7 @@
                 item.children = new List<TreeViewItem>(group.children.Length);
                 for (int i = 0; i < group.children.Length; i++)
                 {
-                    item.children.Add(new TreeViewItem(group.children[i].GetInstanceID(), item.depth + 1, item, group.children[i].name));
-                    item.children[i].userData = group.children[i];
+                    item.children.Add(new TreeViewForAudioMixerGroup.MixerTreeViewItem(group.children[i].GetInstanceID(), item.depth + 1, item, group.children[i].name, group.children[i]));
                     this.AddChildrenRecursive(group.children[i], item.children[i]);
                 }
             }
@@ -227,9 +239,7 @@
             private TreeViewItem BuildSubTree(AudioMixerController controller)
             {
                 AudioMixerGroupController masterGroup = controller.masterGroup;
-                TreeViewItem item = new TreeViewItem(masterGroup.GetInstanceID(), 0, base.m_RootItem, masterGroup.name) {
-                    userData = masterGroup
-                };
+                TreeViewForAudioMixerGroup.MixerTreeViewItem item = new TreeViewForAudioMixerGroup.MixerTreeViewItem(masterGroup.GetInstanceID(), 0, base.m_RootItem, masterGroup.name, masterGroup);
                 this.AddChildrenRecursive(masterGroup, item);
                 return item;
             }

@@ -11,13 +11,6 @@
     {
         private Vector2 m_Origin;
         private Vector2 m_Direction;
-        /// <summary>
-        /// <para>Creates a 2D ray starting at origin along direction.</para>
-        /// </summary>
-        /// <param name="Vector2">origin</param>
-        /// <param name="Vector2">direction</param>
-        /// <param name="origin"></param>
-        /// <param name="direction"></param>
         public Ray2D(Vector2 origin, Vector2 direction)
         {
             this.m_Origin = origin;

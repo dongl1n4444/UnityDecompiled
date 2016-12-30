@@ -1022,7 +1022,8 @@
                         break;
 
                     case Code.Endfilter:
-                        throw new NotImplementedException();
+                        this.PopEntry();
+                        break;
 
                     case Code.Unaligned:
                         throw new NotImplementedException();
@@ -1206,17 +1207,18 @@
 
         private void SetupCatchBlockIfNeeded(Instruction instruction)
         {
-            <SetupCatchBlockIfNeeded>c__AnonStorey0 storey = new <SetupCatchBlockIfNeeded>c__AnonStorey0 {
-                instruction = instruction
-            };
             MethodBody body = this._methodDefinition.Body;
             if (body.HasExceptionHandlers)
             {
-                foreach (ExceptionHandler handler in body.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (ExceptionHandler handler in body.ExceptionHandlers)
                 {
-                    if (handler.HandlerType == ExceptionHandlerType.Catch)
+                    if ((handler.HandlerType == ExceptionHandlerType.Catch) && (handler.HandlerStart.Offset == instruction.Offset))
                     {
                         this.PushStackEntry(this._typeResolver.Resolve(handler.CatchType));
+                    }
+                    else if ((handler.HandlerType == ExceptionHandlerType.Filter) && ((handler.FilterStart.Offset == instruction.Offset) || (handler.HandlerStart.Offset == instruction.Offset)))
+                    {
+                        this.PushStackEntry(TypeProvider.SystemException);
                     }
                 }
             }
@@ -1300,15 +1302,6 @@
 
         private TypeReference UIntPtrTypeReference =>
             TypeProvider.UIntPtrTypeReference;
-
-        [CompilerGenerated]
-        private sealed class <SetupCatchBlockIfNeeded>c__AnonStorey0
-        {
-            internal Instruction instruction;
-
-            internal bool <>m__0(ExceptionHandler h) => 
-                (h.HandlerStart.Offset == this.instruction.Offset);
-        }
     }
 }
 

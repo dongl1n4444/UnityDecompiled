@@ -37,7 +37,7 @@
             if (this.m_TreeView == null)
             {
                 this.m_Backend = backend;
-                if (this.m_TreeViewState.columnWidths == null)
+                if ((this.m_TreeViewState.columnWidths == null) || (this.m_TreeViewState.columnWidths.Length == 0))
                 {
                     int num = AudioProfilerClipInfoHelper.GetLastColumnIndex() + 1;
                     this.m_TreeViewState.columnWidths = new float[num];
@@ -101,9 +101,9 @@
 
         internal class AudioProfilerClipViewColumnHeader
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private float[] <columnWidths>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            private float[] <columnWidths>k__BackingField;
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private float <dragWidth>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <minColumnWidth>k__BackingField;
@@ -186,7 +186,7 @@
             {
                 if (Event.current.type == EventType.Repaint)
                 {
-                    GUIStyle style = !useBoldFont ? TreeViewGUI.s_Styles.lineStyle : TreeViewGUI.s_Styles.lineBoldStyle;
+                    GUIStyle style = !useBoldFont ? TreeViewGUI.Styles.lineStyle : TreeViewGUI.Styles.lineBoldStyle;
                     style.alignment = TextAnchor.MiddleLeft;
                     style.padding.left = 0;
                     int num = 2;
@@ -215,7 +215,7 @@
             }
 
             private float[] columnWidths =>
-                base.m_TreeView.state.columnWidths;
+                ((AudioProfilerClipTreeViewState) base.m_TreeView.state).columnWidths;
         }
 
         internal class AudioProfilerDataSource : TreeViewDataSource

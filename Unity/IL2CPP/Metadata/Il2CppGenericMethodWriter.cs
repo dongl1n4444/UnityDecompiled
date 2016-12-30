@@ -36,9 +36,9 @@
             base.Writer.AddCodeGenIncludes();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<MethodReference, uint>, uint>(null, (IntPtr) <WriteIl2CppGenericMethodDefinitions>m__0);
+                <>f__am$cache0 = item => item.Value;
             }
-            return MetadataWriter.WriteTable<KeyValuePair<MethodReference, uint>>(base.Writer, "extern const Il2CppMethodSpec", "g_Il2CppMethodSpecTable", Il2CppGenericMethodCollector.Items.OrderBy<KeyValuePair<MethodReference, uint>, uint>(<>f__am$cache0).ToArray<KeyValuePair<MethodReference, uint>>(), new Func<KeyValuePair<MethodReference, uint>, int, string>(storey, (IntPtr) this.<>m__0));
+            return MetadataWriter.WriteTable<KeyValuePair<MethodReference, uint>>(base.Writer, "extern const Il2CppMethodSpec", "g_Il2CppMethodSpecTable", Il2CppGenericMethodCollector.Items.OrderBy<KeyValuePair<MethodReference, uint>, uint>(<>f__am$cache0).ToArray<KeyValuePair<MethodReference, uint>>(), new Func<KeyValuePair<MethodReference, uint>, int, string>(storey.<>m__0));
         }
 
         [CompilerGenerated]

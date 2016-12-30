@@ -25,7 +25,7 @@
             this.assemblyReferencesForUserScripts = new string[] { Path.Combine(EditorApplication.applicationContentsPath, "Managed/Mono.Cecil.dll") };
             storey.playerPackage = BuildPipeline.GetPlaybackEngineDirectory(BuildTarget.WSAPlayer, BuildOptions.CompressTextures);
             string[] strArray = new string[] { @"Managed\Store81\UnityEngine.dll", @"Managed\Phone\UnityEngine.dll", @"Managed\UAP\UnityEngine.dll" };
-            this.hasDotNetPlayers = Enumerable.Any<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            this.hasDotNetPlayers = Enumerable.Any<string>(strArray, new Func<string, bool>(storey.<>m__0));
             this.hasIl2CppPlayers = File.Exists(Path.Combine(storey.playerPackage, @"Managed\il2cpp\UnityEngine.dll"));
         }
 

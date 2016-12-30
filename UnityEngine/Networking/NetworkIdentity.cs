@@ -35,6 +35,7 @@
         private HashSet<int> m_ObserverConnections;
         private List<NetworkConnection> m_Observers;
         private short m_PlayerId = -1;
+        private bool m_Reset = false;
         [SerializeField]
         private NetworkSceneId m_SceneId;
         [SerializeField]
@@ -407,6 +408,11 @@
                     }
                 }
             }
+        }
+
+        internal void MarkForReset()
+        {
+            this.m_Reset = true;
         }
 
         internal bool OnCheckObserver(NetworkConnection conn)
@@ -783,17 +789,21 @@
 
         internal void Reset()
         {
-            this.m_IsServer = false;
-            this.m_IsClient = false;
-            this.m_HasAuthority = false;
-            this.m_NetId = NetworkInstanceId.Zero;
-            this.m_IsLocalPlayer = false;
-            this.m_ConnectionToServer = null;
-            this.m_ConnectionToClient = null;
-            this.m_PlayerId = -1;
-            this.m_NetworkBehaviours = null;
-            this.ClearObservers();
-            this.m_ClientAuthorityOwner = null;
+            if (this.m_Reset)
+            {
+                this.m_Reset = false;
+                this.m_IsServer = false;
+                this.m_IsClient = false;
+                this.m_HasAuthority = false;
+                this.m_NetId = NetworkInstanceId.Zero;
+                this.m_IsLocalPlayer = false;
+                this.m_ConnectionToServer = null;
+                this.m_ConnectionToClient = null;
+                this.m_PlayerId = -1;
+                this.m_NetworkBehaviours = null;
+                this.ClearObservers();
+                this.m_ClientAuthorityOwner = null;
+            }
         }
 
         internal void SetClientOwner(NetworkConnection conn)
@@ -1101,7 +1111,7 @@
         }
 
         /// <summary>
-        /// <para>The id of the player associated with this GameObject.</para>
+        /// <para>The id of the player associated with this object.</para>
         /// </summary>
         public short playerControllerId =>
             this.m_PlayerId;

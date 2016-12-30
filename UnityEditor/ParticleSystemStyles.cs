@@ -6,6 +6,7 @@
     internal class ParticleSystemStyles
     {
         public GUIStyle checkmark = FindStyle("ShurikenCheckMark");
+        public GUIStyle checkmarkMixed = FindStyle("ShurikenCheckMarkMixed");
         public GUIStyle effectBgStyle = FindStyle("ShurikenEffectBg");
         public GUIStyle emitterHeaderStyle = FindStyle("ShurikenEmitterTitle");
         public GUIStyle label = FindStyle("ShurikenLabel");
@@ -22,6 +23,7 @@
         private static ParticleSystemStyles s_ParticleSystemStyles;
         public GUIStyle selectionMarker = FindStyle("IN ThumbnailShadow");
         public GUIStyle toggle = FindStyle("ShurikenToggle");
+        public GUIStyle toggleMixed = FindStyle("ShurikenToggleMixed");
         public GUIStyle toolbarButtonLeftAlignText = new GUIStyle(FindStyle("ToolbarButton"));
         public Texture2D warningIcon;
 

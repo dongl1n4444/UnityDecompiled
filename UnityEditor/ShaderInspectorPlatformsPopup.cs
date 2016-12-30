@@ -175,7 +175,7 @@
             {
                 if (s_CurrentPlatformMask < 0)
                 {
-                    s_CurrentPlatformMask = EditorPrefs.GetInt("ShaderInspectorPlatformMask", 0x7ffff);
+                    s_CurrentPlatformMask = EditorPrefs.GetInt("ShaderInspectorPlatformMask", 0xfffff);
                 }
                 return s_CurrentPlatformMask;
             }

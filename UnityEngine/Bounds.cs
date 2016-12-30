@@ -14,10 +14,10 @@
         private Vector3 m_Center;
         private Vector3 m_Extents;
         /// <summary>
-        /// <para>Creates a new Bounds.</para>
+        /// <para>Creates new Bounds with a given center and total size. Bound extents will be half the given size.</para>
         /// </summary>
-        /// <param name="center">The location of the origin of the Bounds.</param>
-        /// <param name="size">The dimensions of the Bounds.</param>
+        /// <param name="center"></param>
+        /// <param name="size"></param>
         public Bounds(Vector3 center, Vector3 size)
         {
             this.m_Center = center;
@@ -28,7 +28,7 @@
         private static bool Internal_Contains(Bounds m, Vector3 point) => 
             INTERNAL_CALL_Internal_Contains(ref m, ref point);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Internal_Contains(ref Bounds m, ref Vector3 point);
         /// <summary>
         /// <para>Is point contained in the bounding box?</para>
@@ -40,7 +40,7 @@
         private static float Internal_SqrDistance(Bounds m, Vector3 point) => 
             INTERNAL_CALL_Internal_SqrDistance(ref m, ref point);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern float INTERNAL_CALL_Internal_SqrDistance(ref Bounds m, ref Vector3 point);
         /// <summary>
         /// <para>The smallest squared distance between the point and this bounding box.</para>
@@ -52,7 +52,7 @@
         private static bool Internal_IntersectRay(ref Ray ray, ref Bounds bounds, out float distance) => 
             INTERNAL_CALL_Internal_IntersectRay(ref ray, ref bounds, out distance);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool INTERNAL_CALL_Internal_IntersectRay(ref Ray ray, ref Bounds bounds, out float distance);
         /// <summary>
         /// <para>Does ray intersect this bounding box?</para>
@@ -74,7 +74,7 @@
             return vector;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_GetClosestPoint(ref Bounds bounds, ref Vector3 point, out Vector3 value);
         /// <summary>
         /// <para>The closest point on the bounding box.</para>

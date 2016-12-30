@@ -388,7 +388,7 @@ internal static class MetroVisualStudioSolutionHelper
 
     public static string GetUWPSDKVersion()
     {
-        string str = RegistryUtil.GetRegistryStringValue32(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", null);
+        string str = RegistryUtil.GetRegistryStringValue(@"SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0", "ProductVersion", null, RegistryView._32);
         str = !string.IsNullOrEmpty(str) ? str : "10.0.10240";
         Version version = new Version(str);
         if (version.Build == -1)
@@ -422,7 +422,7 @@ internal static class MetroVisualStudioSolutionHelper
             }
             if (ShouldNotOverwrite(storey.relFileName, dontOverwriteFiles))
             {
-                if (Enumerable.Any<string>(overwriteControl.DoOverwrite.Keys, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (Enumerable.Any<string>(overwriteControl.DoOverwrite.Keys, new Func<string, bool>(storey.<>m__0)))
                 {
                     string str2;
                     if (overwriteControl.Hashes.TryGetValue(storey.relFileName, out str2) && CalculateMD5ForFile(src).Equals(str2))
@@ -590,12 +590,12 @@ internal static class MetroVisualStudioSolutionHelper
         <ShouldNotOverwrite>c__AnonStorey0 storey = new <ShouldNotOverwrite>c__AnonStorey0 {
             fileName = fileName
         };
-        if (Enumerable.Any<string>(dontOverwriteFiles, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+        if (Enumerable.Any<string>(dontOverwriteFiles, new Func<string, bool>(storey.<>m__0)))
         {
             return true;
         }
         storey.fileName = Path.ChangeExtension(storey.fileName, null);
-        return Enumerable.Any<string>(dontOverwriteFiles, new Func<string, bool>(storey, (IntPtr) this.<>m__1));
+        return Enumerable.Any<string>(dontOverwriteFiles, new Func<string, bool>(storey.<>m__1));
     }
 
     public static void WriteOverwriteProtectedFileControl(string targetDirectory, string projectDir, IEnumerable<string> dontOverwriteFile, OverwriteFilesInfo overwriteControl)

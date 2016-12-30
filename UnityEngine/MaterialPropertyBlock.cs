@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A block of material values to apply.</para>
@@ -80,9 +81,9 @@
         /// <summary>
         /// <para>Clear material property values.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Clear();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal extern void DestroyBlock();
         ~MaterialPropertyBlock()
         {
@@ -94,8 +95,9 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern float GetFloat(int nameID);
+        public float GetFloat(int nameID) => 
+            this.GetFloatImpl(nameID);
+
         /// <summary>
         /// <para>Get a float from the property block.</para>
         /// </summary>
@@ -109,8 +111,9 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern float[] GetFloatArray(int nameID);
+        public float[] GetFloatArray(int nameID) => 
+            this.GetFloatArrayImpl(nameID);
+
         /// <summary>
         /// <para>Get a float array from the property block.</para>
         /// </summary>
@@ -133,19 +136,19 @@
             this.GetFloatArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern float[] GetFloatArrayImpl(int nameID);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetFloatArrayImplList(int nameID, object list);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern float GetFloatImpl(int nameID);
         /// <summary>
         /// <para>Get a matrix from the property block.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Matrix4x4 GetMatrix(int nameID)
-        {
-            Matrix4x4 matrixx;
-            INTERNAL_CALL_GetMatrix(this, nameID, out matrixx);
-            return matrixx;
-        }
+        public Matrix4x4 GetMatrix(int nameID) => 
+            this.GetMatrixImpl(nameID);
 
         /// <summary>
         /// <para>Get a matrix from the property block.</para>
@@ -160,8 +163,9 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Matrix4x4[] GetMatrixArray(int nameID);
+        public Matrix4x4[] GetMatrixArray(int nameID) => 
+            this.GetMatrixArrayImpl(nameID);
+
         /// <summary>
         /// <para>Get a matrix array from the property block.</para>
         /// </summary>
@@ -184,15 +188,25 @@
             this.GetMatrixArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern Matrix4x4[] GetMatrixArrayImpl(int nameID);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetMatrixArrayImplList(int nameID, object list);
+        private Matrix4x4 GetMatrixImpl(int nameID)
+        {
+            Matrix4x4 matrixx;
+            INTERNAL_CALL_GetMatrixImpl(this, nameID, out matrixx);
+            return matrixx;
+        }
+
         /// <summary>
         /// <para>Get a texture from the property block.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Texture GetTexture(int nameID);
+        public Texture GetTexture(int nameID) => 
+            this.GetTextureImpl(nameID);
+
         /// <summary>
         /// <para>Get a texture from the property block.</para>
         /// </summary>
@@ -201,17 +215,15 @@
         public Texture GetTexture(string name) => 
             this.GetTexture(Shader.PropertyToID(name));
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern Texture GetTextureImpl(int nameID);
         /// <summary>
         /// <para>Get a vector from the property block.</para>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        public Vector4 GetVector(int nameID)
-        {
-            Vector4 vector;
-            INTERNAL_CALL_GetVector(this, nameID, out vector);
-            return vector;
-        }
+        public Vector4 GetVector(int nameID) => 
+            this.GetVectorImpl(nameID);
 
         /// <summary>
         /// <para>Get a vector from the property block.</para>
@@ -226,8 +238,9 @@
         /// </summary>
         /// <param name="name"></param>
         /// <param name="nameID"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern Vector4[] GetVectorArray(int nameID);
+        public Vector4[] GetVectorArray(int nameID) => 
+            this.GetVectorArrayImpl(nameID);
+
         /// <summary>
         /// <para>Get a vector array from the property block.</para>
         /// </summary>
@@ -250,28 +263,40 @@
             this.GetVectorArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern Vector4[] GetVectorArrayImpl(int nameID);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetVectorArrayImplList(int nameID, object list);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        private Vector4 GetVectorImpl(int nameID)
+        {
+            Vector4 vector;
+            INTERNAL_CALL_GetVectorImpl(this, nameID, out vector);
+            return vector;
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InitBlock();
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_GetMatrix(MaterialPropertyBlock self, int nameID, out Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_GetVector(MaterialPropertyBlock self, int nameID, out Vector4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetColor(MaterialPropertyBlock self, int nameID, ref Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetMatrix(MaterialPropertyBlock self, int nameID, ref Matrix4x4 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void INTERNAL_CALL_SetVector(MaterialPropertyBlock self, int nameID, ref Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetMatrixImpl(MaterialPropertyBlock self, int nameID, out Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_GetVectorImpl(MaterialPropertyBlock self, int nameID, out Vector4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetColorImpl(MaterialPropertyBlock self, int nameID, ref Color value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetMatrixImpl(MaterialPropertyBlock self, int nameID, ref Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetVectorImpl(MaterialPropertyBlock self, int nameID, ref Vector4 value);
         /// <summary>
         /// <para>Set a ComputeBuffer property.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
         /// <param name="value">The ComputeBuffer to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetBuffer(int nameID, ComputeBuffer value);
+        public void SetBuffer(int nameID, ComputeBuffer value)
+        {
+            this.SetBufferImpl(nameID, value);
+        }
+
         /// <summary>
         /// <para>Set a ComputeBuffer property.</para>
         /// </summary>
@@ -283,6 +308,8 @@
             this.SetBuffer(Shader.PropertyToID(name), value);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SetBufferImpl(int nameID, ComputeBuffer value);
         /// <summary>
         /// <para>Set a color property.</para>
         /// </summary>
@@ -291,7 +318,7 @@
         /// <param name="value">The Color value to set.</param>
         public void SetColor(int nameID, Color value)
         {
-            INTERNAL_CALL_SetColor(this, nameID, ref value);
+            this.SetColorImpl(nameID, value);
         }
 
         /// <summary>
@@ -305,14 +332,22 @@
             this.SetColor(Shader.PropertyToID(name), value);
         }
 
+        private void SetColorImpl(int nameID, Color value)
+        {
+            INTERNAL_CALL_SetColorImpl(this, nameID, ref value);
+        }
+
         /// <summary>
         /// <para>Set a float property.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
         /// <param name="value">The float value to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetFloat(int nameID, float value);
+        public void SetFloat(int nameID, float value)
+        {
+            this.SetFloatImpl(nameID, value);
+        }
+
         /// <summary>
         /// <para>Set a float property.</para>
         /// </summary>
@@ -372,10 +407,12 @@
             this.SetFloatArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatArrayImpl(int nameID, float[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetFloatArrayImplList(int nameID, object list);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SetFloatImpl(int nameID, float value);
         /// <summary>
         /// <para>Set a matrix property.</para>
         /// </summary>
@@ -384,7 +421,7 @@
         /// <param name="value">The matrix value to set.</param>
         public void SetMatrix(int nameID, Matrix4x4 value)
         {
-            INTERNAL_CALL_SetMatrix(this, nameID, ref value);
+            this.SetMatrixImpl(nameID, value);
         }
 
         /// <summary>
@@ -446,18 +483,30 @@
             this.SetMatrixArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetMatrixArrayImpl(int nameID, Matrix4x4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetMatrixArrayImplList(int nameID, object list);
+        private void SetMatrixImpl(int nameID, Matrix4x4 value)
+        {
+            INTERNAL_CALL_SetMatrixImpl(this, nameID, ref value);
+        }
+
         /// <summary>
         /// <para>Set a texture property.</para>
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="nameID">The name ID of the property retrieved by Shader.PropertyToID.</param>
         /// <param name="value">The Texture to set.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void SetTexture(int nameID, Texture value);
+        public void SetTexture(int nameID, Texture value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+            this.SetTextureImpl(nameID, value);
+        }
+
         /// <summary>
         /// <para>Set a texture property.</para>
         /// </summary>
@@ -469,6 +518,8 @@
             this.SetTexture(Shader.PropertyToID(name), value);
         }
 
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private extern void SetTextureImpl(int nameID, Texture value);
         /// <summary>
         /// <para>Set a vector property.</para>
         /// </summary>
@@ -477,7 +528,7 @@
         /// <param name="value">The Vector4 value to set.</param>
         public void SetVector(int nameID, Vector4 value)
         {
-            INTERNAL_CALL_SetVector(this, nameID, ref value);
+            this.SetVectorImpl(nameID, value);
         }
 
         /// <summary>
@@ -539,15 +590,19 @@
             this.SetVectorArray(Shader.PropertyToID(name), values);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetVectorArrayImpl(int nameID, Vector4[] values);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetVectorArrayImplList(int nameID, object list);
+        private void SetVectorImpl(int nameID, Vector4 value)
+        {
+            INTERNAL_CALL_SetVectorImpl(this, nameID, ref value);
+        }
 
         /// <summary>
         /// <para>Is the material property block empty? (Read Only)</para>
         /// </summary>
-        public bool isEmpty { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isEmpty { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

@@ -27,7 +27,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -37,15 +37,18 @@
             ModuleUI.GUIMinMaxCurve(s_Texts.velocity, this.m_Curve, new GUILayoutOption[0]);
             if (this.m_Curve.scalar.floatValue != 0f)
             {
-                Rigidbody componentInParent = s.GetComponentInParent<Rigidbody>();
-                Rigidbody2D rigidbodyd = s.GetComponentInParent<Rigidbody2D>();
-                if ((componentInParent != null) && !componentInParent.isKinematic)
+                foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
                 {
-                    EditorGUILayout.HelpBox("Velocity is being driven by RigidBody(" + componentInParent.name + ")", MessageType.Info, true);
-                }
-                else if ((rigidbodyd != null) && (rigidbodyd.bodyType == RigidbodyType2D.Dynamic))
-                {
-                    EditorGUILayout.HelpBox("Velocity is being driven by RigidBody2D(" + componentInParent.name + ")", MessageType.Info, true);
+                    Rigidbody componentInParent = system.GetComponentInParent<Rigidbody>();
+                    Rigidbody2D rigidbodyd = system.GetComponentInParent<Rigidbody2D>();
+                    if ((componentInParent != null) && !componentInParent.isKinematic)
+                    {
+                        EditorGUILayout.HelpBox("Velocity is being driven by RigidBody(" + componentInParent.name + ")", MessageType.Info, true);
+                    }
+                    else if ((rigidbodyd != null) && (rigidbodyd.bodyType == RigidbodyType2D.Dynamic))
+                    {
+                        EditorGUILayout.HelpBox("Velocity is being driven by RigidBody2D(" + componentInParent.name + ")", MessageType.Info, true);
+                    }
                 }
             }
         }

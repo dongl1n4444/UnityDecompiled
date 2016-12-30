@@ -13,11 +13,11 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UnityType <baseClass>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UnityTypeFlags <flags>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <name>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <nativeNamespace>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <persistentTypeID>k__BackingField;
@@ -69,7 +69,7 @@
             <FindTypeByNameCaseInsensitive>c__AnonStorey0 storey = new <FindTypeByNameCaseInsensitive>c__AnonStorey0 {
                 name = name
             };
-            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey.<>m__0));
         }
 
         public static UnityType FindTypeByPersistentTypeID(int id)
@@ -82,7 +82,7 @@
         public static ReadOnlyCollection<UnityType> GetTypes() => 
             ms_typesReadOnly;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern UnityTypeTransport[] Internal_GetAllTypes();
         public bool IsDerivedFrom(UnityType baseClass) => 
             ((this.runtimeTypeIndex - baseClass.runtimeTypeIndex) < baseClass.descendantCount);

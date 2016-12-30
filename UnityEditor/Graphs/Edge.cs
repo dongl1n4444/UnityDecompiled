@@ -35,7 +35,7 @@
             <FindSlotByName>c__AnonStorey0 storey = new <FindSlotByName>c__AnonStorey0 {
                 name = name
             };
-            return Enumerable.FirstOrDefault<Slot>(slots, new Func<Slot, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<Slot>(slots, new Func<Slot, bool>(storey.<>m__0));
         }
 
         internal bool NodesNotNull()

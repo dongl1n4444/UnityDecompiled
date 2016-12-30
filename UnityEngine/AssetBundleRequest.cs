@@ -13,11 +13,11 @@
         /// <summary>
         /// <para>Asset object being loaded (Read Only).</para>
         /// </summary>
-        public Object asset { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public Object asset { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Asset objects with sub assets being loaded. (Read Only)</para>
         /// </summary>
-        public Object[] allAssets { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public Object[] allAssets { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

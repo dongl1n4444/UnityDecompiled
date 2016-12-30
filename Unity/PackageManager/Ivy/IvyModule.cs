@@ -60,7 +60,7 @@
             module.Artifacts.Add(item);
             if (storey.package.files != null)
             {
-                module.Artifacts.AddRange(Enumerable.Select<string, IvyArtifact>(storey.package.files.Keys, new Func<string, IvyArtifact>(storey, (IntPtr) this.<>m__0)));
+                module.Artifacts.AddRange(Enumerable.Select<string, IvyArtifact>(storey.package.files.Keys, new Func<string, IvyArtifact>(storey.<>m__0)));
             }
             return module;
         }
@@ -70,7 +70,7 @@
             <GetArtifact>c__AnonStorey2 storey = new <GetArtifact>c__AnonStorey2 {
                 filename = filename
             };
-            return Enumerable.FirstOrDefault<IvyArtifact>(this.Artifacts, new Func<IvyArtifact, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<IvyArtifact>(this.Artifacts, new Func<IvyArtifact, bool>(storey.<>m__0));
         }
 
         public IvyArtifact GetArtifact(ArtifactType type)
@@ -78,7 +78,7 @@
             <GetArtifact>c__AnonStorey1 storey = new <GetArtifact>c__AnonStorey1 {
                 type = type
             };
-            return Enumerable.FirstOrDefault<IvyArtifact>(this.Artifacts, new Func<IvyArtifact, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<IvyArtifact>(this.Artifacts, new Func<IvyArtifact, bool>(storey.<>m__0));
         }
 
         public override int GetHashCode()
@@ -96,7 +96,7 @@
             <GetRepository>c__AnonStorey3 storey = new <GetRepository>c__AnonStorey3 {
                 name = name
             };
-            return Enumerable.FirstOrDefault<IvyRepository>(this.Info.repositories, new Func<IvyRepository, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<IvyRepository>(this.Info.repositories, new Func<IvyRepository, bool>(storey.<>m__0));
         }
 
         public static bool operator ==(IvyModule a, object z)
@@ -129,11 +129,16 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<IvyArtifact, string>(null, (IntPtr) <ToPackageInfo>m__0);
+                <>f__am$cache0 = p => p.Filename;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<IvyArtifact, PackageFileData>(null, (IntPtr) <ToPackageInfo>m__1);
+                <>f__am$cache1 = delegate (IvyArtifact e) {
+                    if (e.Guid == null)
+                    {
+                    }
+                    return new PackageFileData((PackageFileType) e.Type, (e.Url == null) ? "" : e.Url.ToString(), "");
+                };
             }
             info2.files = Enumerable.ToDictionary<IvyArtifact, string, PackageFileData>(this.Artifacts, <>f__am$cache0, <>f__am$cache1);
             PackageInfo info = info2;

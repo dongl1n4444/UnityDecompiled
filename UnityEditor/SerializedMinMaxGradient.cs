@@ -67,6 +67,9 @@
                 this.SetMinMaxState(value);
             }
         }
+
+        public bool stateHasMultipleDifferentValues =>
+            this.m_MinMaxState.hasMultipleDifferentValues;
     }
 }
 

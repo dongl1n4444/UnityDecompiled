@@ -1026,7 +1026,7 @@
                     {
                         NetworkDetailStats.IncrementStat(NetworkDetailStats.NetworkDirection.Incoming, 0x1d, "msg", 1);
                         this.m_MsgReader.SeekZero();
-                        this.m_Connection.TransportRecieve(this.m_MsgBuffer, num3, num2);
+                        this.m_Connection.TransportReceive(this.m_MsgBuffer, num3, num2);
                         break;
                     }
                     this.GenerateDataError(num4);

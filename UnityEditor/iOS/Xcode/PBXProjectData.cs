@@ -640,7 +640,7 @@
             List<string> list = null;
             foreach (KeyValuePair<string, T> pair in section.GetEntries())
             {
-                if (checker.Invoke(pair.Value))
+                if (checker(pair.Value))
                 {
                     if (list == null)
                     {
@@ -679,10 +679,10 @@
                 allGuids = allGuids
             };
             bool flag = false;
-            flag |= RemoveObjectsFromSection<PBXBuildFileData>(this.buildFiles, storey.allGuids, new Func<PBXBuildFileData, bool>(storey, (IntPtr) this.<>m__0));
+            flag |= RemoveObjectsFromSection<PBXBuildFileData>(this.buildFiles, storey.allGuids, new Func<PBXBuildFileData, bool>(storey.<>m__0));
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<PBXGroupData, bool>(null, (IntPtr) <RepairStructureImpl>m__0);
+                <>f__am$cache0 = o => o.children == null;
             }
             flag |= RemoveObjectsFromSection<PBXGroupData>(this.groups, storey.allGuids, <>f__am$cache0);
             foreach (PBXGroupData data in this.groups.GetObjects())
@@ -691,7 +691,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<PBXSourcesBuildPhaseData, bool>(null, (IntPtr) <RepairStructureImpl>m__1);
+                <>f__am$cache1 = o => o.files == null;
             }
             flag |= RemoveObjectsFromSection<PBXSourcesBuildPhaseData>(this.sources, storey.allGuids, <>f__am$cache1);
             foreach (PBXSourcesBuildPhaseData data2 in this.sources.GetObjects())
@@ -700,7 +700,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<PBXFrameworksBuildPhaseData, bool>(null, (IntPtr) <RepairStructureImpl>m__2);
+                <>f__am$cache2 = o => o.files == null;
             }
             flag |= RemoveObjectsFromSection<PBXFrameworksBuildPhaseData>(this.frameworks, storey.allGuids, <>f__am$cache2);
             foreach (PBXFrameworksBuildPhaseData data3 in this.frameworks.GetObjects())
@@ -709,7 +709,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<PBXResourcesBuildPhaseData, bool>(null, (IntPtr) <RepairStructureImpl>m__3);
+                <>f__am$cache3 = o => o.files == null;
             }
             flag |= RemoveObjectsFromSection<PBXResourcesBuildPhaseData>(this.resources, storey.allGuids, <>f__am$cache3);
             foreach (PBXResourcesBuildPhaseData data4 in this.resources.GetObjects())
@@ -718,7 +718,7 @@
             }
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<PBXCopyFilesBuildPhaseData, bool>(null, (IntPtr) <RepairStructureImpl>m__4);
+                <>f__am$cache4 = o => o.files == null;
             }
             flag |= RemoveObjectsFromSection<PBXCopyFilesBuildPhaseData>(this.copyFiles, storey.allGuids, <>f__am$cache4);
             foreach (PBXCopyFilesBuildPhaseData data5 in this.copyFiles.GetObjects())
@@ -727,7 +727,7 @@
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<PBXShellScriptBuildPhaseData, bool>(null, (IntPtr) <RepairStructureImpl>m__5);
+                <>f__am$cache5 = o => o.files == null;
             }
             flag |= RemoveObjectsFromSection<PBXShellScriptBuildPhaseData>(this.shellScripts, storey.allGuids, <>f__am$cache5);
             foreach (PBXShellScriptBuildPhaseData data6 in this.shellScripts.GetObjects())
@@ -736,7 +736,7 @@
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<PBXNativeTargetData, bool>(null, (IntPtr) <RepairStructureImpl>m__6);
+                <>f__am$cache6 = o => o.phases == null;
             }
             flag |= RemoveObjectsFromSection<PBXNativeTargetData>(this.nativeTargets, storey.allGuids, <>f__am$cache6);
             foreach (PBXNativeTargetData data7 in this.nativeTargets.GetObjects())
@@ -745,7 +745,7 @@
             }
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<PBXVariantGroupData, bool>(null, (IntPtr) <RepairStructureImpl>m__7);
+                <>f__am$cache7 = o => o.children == null;
             }
             flag |= RemoveObjectsFromSection<PBXVariantGroupData>(this.variantGroups, storey.allGuids, <>f__am$cache7);
             foreach (PBXVariantGroupData data8 in this.variantGroups.GetObjects())
@@ -754,7 +754,7 @@
             }
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<XCConfigurationListData, bool>(null, (IntPtr) <RepairStructureImpl>m__8);
+                <>f__am$cache8 = o => o.buildConfigs == null;
             }
             flag |= RemoveObjectsFromSection<XCConfigurationListData>(this.configs, storey.allGuids, <>f__am$cache8);
             foreach (XCConfigurationListData data9 in this.configs.GetObjects())

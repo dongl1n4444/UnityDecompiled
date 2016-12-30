@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// <para>Vertex tangent generation options for ModelImporter.</para>
+    /// <para>This is legacy.</para>
     /// </summary>
     public enum ModelImporterTangents
     {

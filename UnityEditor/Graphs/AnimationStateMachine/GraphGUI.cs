@@ -387,7 +387,7 @@
             if (this.tool.liveLink)
             {
                 AnimatorControllerPlayable controller = AnimatorController.FindAnimatorControllerPlayable(this.tool.previewAnimator, this.tool.animatorController);
-                if (controller.node.IsValid())
+                if (controller != null)
                 {
                     AnimatorStateInfo currentAnimatorStateInfo = controller.GetCurrentAnimatorStateInfo(AnimatorControllerTool.tool.selectedLayerIndex);
                     AnimatorStateInfo nextAnimatorStateInfo = controller.GetNextAnimatorStateInfo(AnimatorControllerTool.tool.selectedLayerIndex);
@@ -554,37 +554,44 @@
                 {
                     UnityEditor.Graphs.AnimationStateMachine.Node item = null;
                     AnimatorState state = obj2 as AnimatorState;
-                    AnimatorStateMachine stateMachine = obj2 as AnimatorStateMachine;
-                    AnimatorTransitionBase base2 = obj2 as AnimatorTransitionBase;
                     if (state != null)
                     {
                         item = this.stateMachineGraph.FindNode(state);
                     }
-                    else if (stateMachine != null)
+                    else
                     {
-                        item = this.stateMachineGraph.FindNode(stateMachine);
-                    }
-                    else if (base2 != null)
-                    {
-                        foreach (UnityEditor.Graphs.Edge edge in base.m_Graph.edges)
+                        AnimatorStateMachine stateMachine = obj2 as AnimatorStateMachine;
+                        if (stateMachine != null)
                         {
-                            EdgeInfo edgeInfo = this.stateMachineGraph.GetEdgeInfo(edge);
-                            foreach (TransitionEditionContext context in edgeInfo.transitions)
+                            item = this.stateMachineGraph.FindNode(stateMachine);
+                        }
+                        else
+                        {
+                            AnimatorTransitionBase base2 = obj2 as AnimatorTransitionBase;
+                            AnimatorDefaultTransition transition = obj2 as AnimatorDefaultTransition;
+                            if ((base2 != null) || (transition != null))
                             {
-                                if (context.transition == base2)
+                                foreach (UnityEditor.Graphs.Edge edge in base.m_Graph.edges)
                                 {
-                                    int index = base.m_Graph.edges.IndexOf(edge);
-                                    if (!this.edgeGUI.edgeSelection.Contains(index))
+                                    EdgeInfo edgeInfo = this.stateMachineGraph.GetEdgeInfo(edge);
+                                    foreach (TransitionEditionContext context in edgeInfo.transitions)
                                     {
-                                        this.edgeGUI.edgeSelection.Add(index);
+                                        if (((base2 != null) && (context.transition == base2)) || ((transition != null) && (context.transition == null)))
+                                        {
+                                            int index = base.m_Graph.edges.IndexOf(edge);
+                                            if (!this.edgeGUI.edgeSelection.Contains(index))
+                                            {
+                                                this.edgeGUI.edgeSelection.Add(index);
+                                            }
+                                        }
                                     }
                                 }
                             }
+                            else
+                            {
+                                item = obj2 as UnityEditor.Graphs.AnimationStateMachine.Node;
+                            }
                         }
-                    }
-                    else
-                    {
-                        item = obj2 as UnityEditor.Graphs.AnimationStateMachine.Node;
                     }
                     if (item != null)
                     {

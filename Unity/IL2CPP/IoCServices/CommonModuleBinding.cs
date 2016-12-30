@@ -4,7 +4,6 @@
     using Unity.IL2CPP;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.Metadata;
-    using Unity.IL2CPP.StackAnalysis;
     using Unity.IL2CPP.StringLiterals;
 
     public static class CommonModuleBinding
@@ -19,6 +18,7 @@
             container.BindSingleton<IVirtualCallCollectorService, VirtualCallCollector>();
             container.BindSingleton<IAssemblyDependencies, AssemblyDependenciesComponent>();
             container.BindSingleton<IGuidProvider, GuidProviderComponent>();
+            container.BindSingleton<ISourceAnnotationWriter, SourceAnnotationWriterComponent>();
             Type[] serviceTypes = new Type[] { typeof(ITypeProviderInitializerService), typeof(ITypeProviderService) };
             container.BindMultiSingleton(serviceTypes, typeof(TypeProviderComponent));
             Type[] typeArray2 = new Type[] { typeof(IRuntimeInvokerCollectorAdderService), typeof(IRuntimeInvokerCollectorReaderService), typeof(IRuntimeInvokerCollectorWriterService) };

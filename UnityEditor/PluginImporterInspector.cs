@@ -9,7 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(PluginImporter)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(PluginImporter))]
     internal class PluginImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -18,6 +18,8 @@
         private static GetComptability <>f__am$cache1;
         [CompilerGenerated]
         private static GetComptability <>f__am$cache2;
+        [CompilerGenerated]
+        private static GetComptability <>f__am$cache3;
         private Compatibility m_CompatibleWithAnyPlatform;
         private Compatibility m_CompatibleWithEditor;
         private Compatibility[] m_CompatibleWithPlatform = new Compatibility[GetPlatformGroupArraySize()];
@@ -310,13 +312,18 @@
                 <>f__am$cache0 = imp => imp.GetCompatibleWithAnyPlatform();
             }
             this.ResetCompatability(ref this.m_CompatibleWithAnyPlatform, <>f__am$cache0);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = imp => imp.GetCompatibleWithEditor();
+            }
+            this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache1);
             if (this.m_CompatibleWithAnyPlatform < Compatibility.Compatible)
             {
-                if (<>f__am$cache1 == null)
+                if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache1 = imp => imp.GetCompatibleWithEditor();
+                    <>f__am$cache2 = imp => imp.GetCompatibleWithEditor("", "");
                 }
-                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache1);
+                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache2);
                 using (List<BuildTarget>.Enumerator enumerator = GetValidBuildTargets().GetEnumerator())
                 {
                     while (enumerator.MoveNext())
@@ -330,11 +337,11 @@
             }
             else
             {
-                if (<>f__am$cache2 == null)
+                if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache2 = imp => !imp.GetExcludeEditorFromAnyPlatform();
+                    <>f__am$cache3 = imp => !imp.GetExcludeEditorFromAnyPlatform();
                 }
-                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache2);
+                this.ResetCompatability(ref this.m_CompatibleWithEditor, <>f__am$cache3);
                 using (List<BuildTarget>.Enumerator enumerator2 = GetValidBuildTargets().GetEnumerator())
                 {
                     while (enumerator2.MoveNext())

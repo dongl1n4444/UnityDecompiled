@@ -22,11 +22,11 @@
         private SerializedProperty m_MaxKillSpeed;
         private SerializedProperty m_MinKillSpeed;
         private SerializedProperty[] m_Planes;
-        private PlaneVizType m_PlaneVisualizationType;
+        private static PlaneVizType m_PlaneVisualizationType = PlaneVizType.Solid;
         private string[] m_PlaneVizTypeNames;
         private SerializedProperty m_Quality;
         private SerializedProperty m_RadiusScale;
-        private float m_ScaleGrid;
+        private static float m_ScaleGrid = 1f;
         private SerializedProperty[] m_ShownPlanes;
         private SerializedProperty m_Type;
         private SerializedProperty m_VoxelSize;
@@ -38,8 +38,6 @@
         {
             this.m_PlaneVizTypeNames = new string[] { "Grid", "Solid" };
             this.m_Planes = new SerializedProperty[6];
-            this.m_PlaneVisualizationType = PlaneVizType.Solid;
-            this.m_ScaleGrid = 1f;
             base.m_ToolTip = "Allows you to specify multiple collision planes that the particle can collide with.";
         }
 
@@ -59,40 +57,47 @@
 
         private void DoListOfPlanesGUI()
         {
-            EditorGUI.BeginChangeCheck();
-            int index = base.GUIListOfFloatObjectToggleFields(s_Texts.planes, this.m_ShownPlanes, null, s_Texts.createPlane, true, new GUILayoutOption[0]);
-            bool flag = EditorGUI.EndChangeCheck();
-            if (index >= 0)
+            if (!this.IsListOfPlanesValid())
             {
-                GameObject obj2 = CreateEmptyGameObject("Plane Transform " + (index + 1), base.m_ParticleSystemUI.m_ParticleSystem);
-                obj2.transform.localPosition = new Vector3(0f, 0f, (float) (10 + index));
-                obj2.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
-                this.m_ShownPlanes[index].objectReferenceValue = obj2;
-                flag = true;
+                EditorGUILayout.HelpBox("Plane list editing is only available when all selected systems contain the same number of planes", MessageType.Info, true);
             }
-            Rect position = GUILayoutUtility.GetRect((float) 0f, (float) 16f);
-            position.x = (position.xMax - 24f) - 5f;
-            position.width = 12f;
-            if ((this.m_ShownPlanes.Length > 1) && ModuleUI.MinusButton(position))
+            else
             {
-                this.m_ShownPlanes[this.m_ShownPlanes.Length - 1].objectReferenceValue = null;
-                List<SerializedProperty> list = new List<SerializedProperty>(this.m_ShownPlanes);
-                list.RemoveAt(list.Count - 1);
-                this.m_ShownPlanes = list.ToArray();
-            }
-            if (this.m_ShownPlanes.Length < 6)
-            {
-                position.x += 17f;
-                if (ModuleUI.PlusButton(position))
+                EditorGUI.BeginChangeCheck();
+                int index = base.GUIListOfFloatObjectToggleFields(s_Texts.planes, this.m_ShownPlanes, null, s_Texts.createPlane, !base.m_ParticleSystemUI.multiEdit, new GUILayoutOption[0]);
+                bool flag = EditorGUI.EndChangeCheck();
+                if ((index >= 0) && !base.m_ParticleSystemUI.multiEdit)
                 {
-                    List<SerializedProperty> list2 = new List<SerializedProperty>(this.m_ShownPlanes);
-                    list2.Add(this.m_Planes[list2.Count]);
-                    this.m_ShownPlanes = list2.ToArray();
+                    GameObject obj2 = CreateEmptyGameObject("Plane Transform " + (index + 1), base.m_ParticleSystemUI.m_ParticleSystems[0]);
+                    obj2.transform.localPosition = new Vector3(0f, 0f, (float) (10 + index));
+                    obj2.transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+                    this.m_ShownPlanes[index].objectReferenceValue = obj2;
+                    flag = true;
                 }
-            }
-            if (flag)
-            {
-                this.SyncVisualization();
+                Rect position = GUILayoutUtility.GetRect((float) 0f, (float) 16f);
+                position.x = (position.xMax - 24f) - 5f;
+                position.width = 12f;
+                if ((this.m_ShownPlanes.Length > 1) && ModuleUI.MinusButton(position))
+                {
+                    this.m_ShownPlanes[this.m_ShownPlanes.Length - 1].objectReferenceValue = null;
+                    List<SerializedProperty> list = new List<SerializedProperty>(this.m_ShownPlanes);
+                    list.RemoveAt(list.Count - 1);
+                    this.m_ShownPlanes = list.ToArray();
+                }
+                if ((this.m_ShownPlanes.Length < 6) && !base.m_ParticleSystemUI.multiEdit)
+                {
+                    position.x += 17f;
+                    if (ModuleUI.PlusButton(position))
+                    {
+                        List<SerializedProperty> list2 = new List<SerializedProperty>(this.m_ShownPlanes);
+                        list2.Add(this.m_Planes[list2.Count]);
+                        this.m_ShownPlanes = list2.ToArray();
+                    }
+                }
+                if (flag)
+                {
+                    this.SyncVisualization();
+                }
             }
         }
 
@@ -106,7 +111,7 @@
                     GL.Begin(1);
                     float num = 10f;
                     int num2 = 11;
-                    num *= this.m_ScaleGrid;
+                    num *= m_ScaleGrid;
                     num2 = (int) num;
                     num2 = Mathf.Clamp(num2, 10, 40);
                     if ((num2 % 2) == 0)
@@ -175,8 +180,8 @@
                 this.m_MinKillSpeed = base.GetProperty("minKillSpeed");
                 this.m_MaxKillSpeed = base.GetProperty("maxKillSpeed");
                 this.m_RadiusScale = base.GetProperty("radiusScale");
-                this.m_PlaneVisualizationType = (PlaneVizType) EditorPrefs.GetInt("PlaneColisionVizType", 1);
-                this.m_ScaleGrid = EditorPrefs.GetFloat("ScalePlaneColision", 1f);
+                m_PlaneVisualizationType = (PlaneVizType) EditorPrefs.GetInt("PlaneColisionVizType", 1);
+                m_ScaleGrid = EditorPrefs.GetFloat("ScalePlaneColision", 1f);
                 s_VisualizeBounds = EditorPrefs.GetBool("VisualizeBounds", false);
                 this.m_CollidesWith = base.GetProperty("collidesWith");
                 this.m_CollidesWithDynamic = base.GetProperty("collidesWithDynamic");
@@ -190,7 +195,31 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        private bool IsListOfPlanesValid()
+        {
+            if (base.m_ParticleSystemUI.multiEdit)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    int num2 = -1;
+                    foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
+                    {
+                        int num4 = (system.collision.GetPlane(i) == null) ? 0 : 1;
+                        if (num2 == -1)
+                        {
+                            num2 = num4;
+                        }
+                        else if (num4 != num2)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -205,11 +234,11 @@
             {
                 this.DoListOfPlanesGUI();
                 EditorGUI.BeginChangeCheck();
-                this.m_PlaneVisualizationType = (PlaneVizType) ModuleUI.GUIPopup(s_Texts.visualization, (int) this.m_PlaneVisualizationType, this.m_PlaneVizTypeNames, new GUILayoutOption[0]);
+                m_PlaneVisualizationType = (PlaneVizType) ModuleUI.GUIPopup(s_Texts.visualization, (int) m_PlaneVisualizationType, this.m_PlaneVizTypeNames, new GUILayoutOption[0]);
                 if (EditorGUI.EndChangeCheck() || flag)
                 {
-                    EditorPrefs.SetInt("PlaneColisionVizType", (int) this.m_PlaneVisualizationType);
-                    if (this.m_PlaneVisualizationType == PlaneVizType.Solid)
+                    EditorPrefs.SetInt("PlaneColisionVizType", (int) m_PlaneVisualizationType);
+                    if (m_PlaneVisualizationType == PlaneVizType.Solid)
                     {
                         this.SyncVisualization();
                     }
@@ -219,11 +248,11 @@
                     }
                 }
                 EditorGUI.BeginChangeCheck();
-                this.m_ScaleGrid = ModuleUI.GUIFloat(s_Texts.scalePlane, this.m_ScaleGrid, "f2", new GUILayoutOption[0]);
+                m_ScaleGrid = ModuleUI.GUIFloat(s_Texts.scalePlane, m_ScaleGrid, "f2", new GUILayoutOption[0]);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    this.m_ScaleGrid = Mathf.Max(0f, this.m_ScaleGrid);
-                    EditorPrefs.SetFloat("ScalePlaneColision", this.m_ScaleGrid);
+                    m_ScaleGrid = Mathf.Max(0f, m_ScaleGrid);
+                    EditorPrefs.SetFloat("ScalePlaneColision", m_ScaleGrid);
                     this.SyncVisualization();
                 }
             }
@@ -278,119 +307,136 @@
             this.SyncVisualization();
         }
 
-        public override void OnSceneGUI(ParticleSystem s, InitialModuleUI initial)
+        public override void OnSceneGUI()
         {
-            Event current = Event.current;
-            EventType rawType = current.type;
-            if ((current.type == EventType.Ignore) && (current.rawType == EventType.MouseUp))
+            this.RenderCollisionBounds();
+            if (this.IsListOfPlanesValid())
             {
-                rawType = current.rawType;
-            }
-            Color color = Handles.color;
-            Color color2 = new Color(1f, 1f, 1f, 0.5f);
-            Handles.color = color2;
-            if (this.m_Type.intValue == 0)
-            {
-                for (int i = 0; i < this.m_ShownPlanes.Length; i++)
+                Event current = Event.current;
+                EventType rawType = current.type;
+                if ((current.type == EventType.Ignore) && (current.rawType == EventType.MouseUp))
                 {
-                    Object objectReferenceValue = this.m_ShownPlanes[i].objectReferenceValue;
-                    if (objectReferenceValue != null)
+                    rawType = current.rawType;
+                }
+                Color color = Handles.color;
+                Color color2 = new Color(1f, 1f, 1f, 0.5f);
+                Handles.color = color2;
+                if (this.m_Type.intValue == 0)
+                {
+                    for (int i = 0; i < this.m_ShownPlanes.Length; i++)
                     {
-                        Transform objB = objectReferenceValue as Transform;
-                        if (objB != null)
+                        Object objectReferenceValue = this.m_ShownPlanes[i].objectReferenceValue;
+                        if (objectReferenceValue != null)
                         {
-                            Vector3 position = objB.position;
-                            Quaternion rotation = objB.rotation;
-                            Vector3 vector2 = (Vector3) (rotation * Vector3.right);
-                            Vector3 normal = (Vector3) (rotation * Vector3.up);
-                            Vector3 vector4 = (Vector3) (rotation * Vector3.forward);
-                            if (object.ReferenceEquals(s_SelectedTransform, objB))
+                            Transform objB = objectReferenceValue as Transform;
+                            if (objB != null)
                             {
-                                Tools.s_Hidden = true;
-                                EditorGUI.BeginChangeCheck();
-                                if (Tools.current == Tool.Move)
+                                Vector3 position = objB.position;
+                                Quaternion rotation = objB.rotation;
+                                Vector3 vector2 = (Vector3) (rotation * Vector3.right);
+                                Vector3 normal = (Vector3) (rotation * Vector3.up);
+                                Vector3 vector4 = (Vector3) (rotation * Vector3.forward);
+                                if (object.ReferenceEquals(s_SelectedTransform, objB))
                                 {
-                                    objB.position = Handles.PositionHandle(position, rotation);
-                                }
-                                else if (Tools.current == Tool.Rotate)
-                                {
-                                    objB.rotation = Handles.RotationHandle(rotation, position);
-                                }
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    if (this.m_PlaneVisualizationType == PlaneVizType.Solid)
+                                    Tools.s_Hidden = true;
+                                    EditorGUI.BeginChangeCheck();
+                                    if (Tools.current == Tool.Move)
                                     {
-                                        GameObject plane = ParticleEffectUtils.GetPlane(i);
-                                        plane.transform.position = position;
-                                        plane.transform.rotation = rotation;
-                                        plane.transform.localScale = new Vector3(this.m_ScaleGrid, this.m_ScaleGrid, this.m_ScaleGrid);
+                                        objB.position = Handles.PositionHandle(position, rotation);
                                     }
-                                    ParticleSystemEditorUtils.PerformCompleteResimulation();
+                                    else if (Tools.current == Tool.Rotate)
+                                    {
+                                        objB.rotation = Handles.RotationHandle(rotation, position);
+                                    }
+                                    if (EditorGUI.EndChangeCheck())
+                                    {
+                                        if (m_PlaneVisualizationType == PlaneVizType.Solid)
+                                        {
+                                            GameObject plane = ParticleEffectUtils.GetPlane(i);
+                                            plane.transform.position = position;
+                                            plane.transform.rotation = rotation;
+                                            plane.transform.localScale = new Vector3(m_ScaleGrid, m_ScaleGrid, m_ScaleGrid);
+                                        }
+                                        ParticleSystemEditorUtils.PerformCompleteResimulation();
+                                    }
+                                }
+                                else
+                                {
+                                    int keyboardControl = GUIUtility.keyboardControl;
+                                    float size = HandleUtility.GetHandleSize(position) * 0.06f;
+                                    if (<>f__mg$cache0 == null)
+                                    {
+                                        <>f__mg$cache0 = new Handles.CapFunction(Handles.RectangleHandleCap);
+                                    }
+                                    Handles.FreeMoveHandle(position, Quaternion.identity, size, Vector3.zero, <>f__mg$cache0);
+                                    if (((rawType == EventType.MouseDown) && (current.type == EventType.Used)) && (keyboardControl != GUIUtility.keyboardControl))
+                                    {
+                                        s_SelectedTransform = objB;
+                                        rawType = EventType.Used;
+                                    }
+                                }
+                                if (m_PlaneVisualizationType == PlaneVizType.Grid)
+                                {
+                                    Color color3 = (Color) (Handles.s_ColliderHandleColor * 0.9f);
+                                    if (!base.enabled)
+                                    {
+                                        color3 = new Color(0.7f, 0.7f, 0.7f, 0.7f);
+                                    }
+                                    this.DrawGrid(position, vector2, vector4, normal, color3, i);
+                                }
+                                else
+                                {
+                                    this.DrawSolidPlane(position, rotation, i);
                                 }
                             }
                             else
                             {
-                                int keyboardControl = GUIUtility.keyboardControl;
-                                float size = HandleUtility.GetHandleSize(position) * 0.06f;
-                                if (<>f__mg$cache0 == null)
-                                {
-                                    <>f__mg$cache0 = new Handles.CapFunction(Handles.RectangleHandleCap);
-                                }
-                                Handles.FreeMoveHandle(position, Quaternion.identity, size, Vector3.zero, <>f__mg$cache0);
-                                if (((rawType == EventType.MouseDown) && (current.type == EventType.Used)) && (keyboardControl != GUIUtility.keyboardControl))
-                                {
-                                    s_SelectedTransform = objB;
-                                    rawType = EventType.Used;
-                                }
+                                Debug.LogError("Not a transform: " + objectReferenceValue.GetType());
                             }
-                            if (this.m_PlaneVisualizationType == PlaneVizType.Grid)
-                            {
-                                Color color3 = (Color) (Handles.s_ColliderHandleColor * 0.9f);
-                                if (!base.enabled)
-                                {
-                                    color3 = new Color(0.7f, 0.7f, 0.7f, 0.7f);
-                                }
-                                this.DrawGrid(position, vector2, vector4, normal, color3, i);
-                            }
-                            else
-                            {
-                                this.DrawSolidPlane(position, rotation, i);
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogError("Not a transform: " + objectReferenceValue.GetType());
                         }
                     }
                 }
+                Handles.color = color;
             }
-            Handles.color = color;
         }
 
-        [DrawGizmo(GizmoType.Active)]
-        private static void RenderCollisionBounds(ParticleSystem system, GizmoType gizmoType)
+        private void RenderCollisionBounds()
         {
-            if (system.collision.enabled && s_VisualizeBounds)
+            if (s_VisualizeBounds)
             {
-                ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
-                int num = system.GetParticles(particles);
-                Color color = Gizmos.color;
-                Gizmos.color = Color.green;
-                Matrix4x4 identity = Matrix4x4.identity;
-                if (system.main.simulationSpace == ParticleSystemSimulationSpace.Local)
+                Color color = Handles.color;
+                Handles.color = Color.green;
+                Matrix4x4 matrix = Handles.matrix;
+                Vector3[] dest = new Vector3[20];
+                Vector3[] vectorArray2 = new Vector3[20];
+                Vector3[] vectorArray3 = new Vector3[20];
+                Handles.SetDiscSectionPoints(dest, Vector3.zero, Vector3.forward, Vector3.right, 360f, 1f);
+                Handles.SetDiscSectionPoints(vectorArray2, Vector3.zero, Vector3.up, -Vector3.right, 360f, 1f);
+                Handles.SetDiscSectionPoints(vectorArray3, Vector3.zero, Vector3.right, Vector3.up, 360f, 1f);
+                Vector3[] array = new Vector3[(dest.Length + vectorArray2.Length) + vectorArray3.Length];
+                dest.CopyTo(array, 0);
+                vectorArray2.CopyTo(array, 20);
+                vectorArray3.CopyTo(array, 40);
+                foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
                 {
-                    identity = system.GetLocalToWorldMatrix();
+                    ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
+                    int num2 = system.GetParticles(particles);
+                    Matrix4x4 identity = Matrix4x4.identity;
+                    if (system.main.simulationSpace == ParticleSystemSimulationSpace.Local)
+                    {
+                        identity = system.GetLocalToWorldMatrix();
+                    }
+                    for (int i = 0; i < num2; i++)
+                    {
+                        ParticleSystem.Particle particle = particles[i];
+                        Vector3 vector = particle.GetCurrentSize3D(system);
+                        float x = (Math.Max(vector.x, Math.Max(vector.y, vector.z)) * 0.5f) * system.collision.radiusScale;
+                        Handles.matrix = identity * Matrix4x4.TRS(particle.position, Quaternion.identity, new Vector3(x, x, x));
+                        Handles.DrawPolyLine(array);
+                    }
                 }
-                Matrix4x4 matrix = Gizmos.matrix;
-                Gizmos.matrix = identity;
-                for (int i = 0; i < num; i++)
-                {
-                    ParticleSystem.Particle particle = particles[i];
-                    Vector3 vector = particle.GetCurrentSize3D(system);
-                    Gizmos.DrawWireSphere(particle.position, (Math.Max(vector.x, Math.Max(vector.y, vector.z)) * 0.5f) * system.collision.radiusScale);
-                }
-                Gizmos.color = color;
-                Gizmos.matrix = matrix;
+                Handles.color = color;
+                Handles.matrix = matrix;
             }
         }
 
@@ -411,7 +457,7 @@
 
         private void SyncVisualization()
         {
-            if (base.enabled && (this.m_PlaneVisualizationType == PlaneVizType.Solid))
+            if ((base.enabled && this.IsListOfPlanesValid()) && (m_PlaneVisualizationType == PlaneVizType.Solid))
             {
                 for (int i = 0; i < this.m_ShownPlanes.Length; i++)
                 {
@@ -432,7 +478,7 @@
                             GameObject plane = ParticleEffectUtils.GetPlane(i);
                             plane.transform.position = transform.position;
                             plane.transform.rotation = transform.rotation;
-                            plane.transform.localScale = new Vector3(this.m_ScaleGrid, this.m_ScaleGrid, this.m_ScaleGrid);
+                            plane.transform.localScale = new Vector3(m_ScaleGrid, m_ScaleGrid, m_ScaleGrid);
                             Transform transform1 = plane.transform;
                             transform1.position += (Vector3) (transform.up.normalized * 0.002f);
                         }

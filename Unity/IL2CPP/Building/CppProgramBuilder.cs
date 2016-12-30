@@ -7,11 +7,13 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Text;
     using Unity.IL2CPP;
     using Unity.IL2CPP.Building.BuildDescriptions;
     using Unity.IL2CPP.Building.Hashing;
     using Unity.IL2CPP.Building.Platforms;
+    using Unity.IL2CPP.Building.Statistics;
     using Unity.IL2CPP.Building.ToolChains;
     using Unity.IL2CPP.Common;
     using Unity.TinyProfiling;
@@ -32,17 +34,19 @@
         [CompilerGenerated]
         private static Func<CppCompilationInstruction, long> <>f__am$cache2;
         [CompilerGenerated]
-        private static Func<CompilationResult, bool> <>f__am$cache3;
+        private static Func<IntermediateObjectFileCompilationData, ProvideObjectResult> <>f__am$cache3;
         [CompilerGenerated]
-        private static Func<CompilationResult, TimeSpan> <>f__am$cache4;
+        private static Func<CompilationResult, bool> <>f__am$cache4;
         [CompilerGenerated]
-        private static Func<ProvideObjectResult, NPath> <>f__am$cache5;
+        private static Func<CompilationResult, TimeSpan> <>f__am$cache5;
         [CompilerGenerated]
-        private static Func<NPath, bool> <>f__am$cache6;
+        private static Func<ProvideObjectResult, NPath> <>f__am$cache6;
         [CompilerGenerated]
-        private static Func<NPath, string> <>f__am$cache7;
+        private static Func<NPath, bool> <>f__am$cache7;
         [CompilerGenerated]
-        private static Func<string, string, string> <>f__am$cache8;
+        private static Func<NPath, string> <>f__am$cache8;
+        [CompilerGenerated]
+        private static Func<string, string, string> <>f__am$cache9;
 
         public CppProgramBuilder(CppToolChain cppToolChain, ProgramBuildDescription programBuildDescription, bool verbose, bool forceRebuild)
         {
@@ -61,6 +65,13 @@
 
         public NPath Build()
         {
+            IBuildStatistics statistics;
+            return this.Build(out statistics);
+        }
+
+        public NPath Build(out IBuildStatistics statistics)
+        {
+            CppProgramBuildStatistics statisticsCollector = new CppProgramBuildStatistics();
             object[] arg = new object[] { this._programBuildDescription.OutputFile.FileName, this._cppToolChain.GetType().Name, Environment.NewLine, this._programBuildDescription.OutputFile.Parent, this._workingDirectory };
             Console.WriteLine("Building {0} with {1}.{2}\tOutput directory: {3}{2}\tCache directory: {4}", arg);
             if (!this.CanBuildInCurrentEnvironment())
@@ -91,7 +102,7 @@
                 }
                 using (TinyProfiler.Section("BuildAllCppFiles", ""))
                 {
-                    enumerable = this.BuildAllCppFiles(instructionArray);
+                    enumerable = this.BuildAllCppFiles(instructionArray, statisticsCollector);
                 }
                 using (TinyProfiler.Section("OnBeforeLink Build", ""))
                 {
@@ -114,10 +125,11 @@
                     this.CleanWorkingDirectory(enumerable);
                 }
             }
+            statistics = statisticsCollector;
             return this._programBuildDescription.OutputFile;
         }
 
-        private IEnumerable<NPath> BuildAllCppFiles(IEnumerable<CppCompilationInstruction> sourceFilesToCompile)
+        private IEnumerable<NPath> BuildAllCppFiles(IEnumerable<CppCompilationInstruction> sourceFilesToCompile, IBuildStatisticsCollector statisticsCollector)
         {
             using (TinyProfiler.Section("Compile", ""))
             {
@@ -125,39 +137,99 @@
                 stopwatch.Start();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<CppCompilationInstruction, long>(null, (IntPtr) <BuildAllCppFiles>m__2);
+                    <>f__am$cache2 = f => new FileInfo(f.SourceFile.ToString()).Length;
                 }
-                IEnumerable<ProvideObjectResult> source = ParallelFor.RunWithResult<CppCompilationInstruction, ProvideObjectResult>(sourceFilesToCompile.OrderByDescending<CppCompilationInstruction, long>(<>f__am$cache2).ToArray<CppCompilationInstruction>(), new Func<CppCompilationInstruction, ProvideObjectResult>(this, (IntPtr) this.ProvideObjectFile));
-                IEnumerable<CompilationResult> enumerable2 = source.OfType<CompilationResult>();
+                CppCompilationInstruction[] instructionArray = sourceFilesToCompile.OrderByDescending<CppCompilationInstruction, long>(<>f__am$cache2).ToArray<CppCompilationInstruction>();
+                statisticsCollector.IncrementTotalFileCountBy(instructionArray.Length);
+                List<IntermediateObjectFileCompilationData> list = ParallelFor.RunWithResult<CppCompilationInstruction, IntermediateObjectFileCompilationData>(instructionArray, new Func<CppCompilationInstruction, IntermediateObjectFileCompilationData>(this.BuildIntermediateObjectFileData)).ToList<IntermediateObjectFileCompilationData>();
+                List<IntermediateObjectFileCompilationData> source = new List<IntermediateObjectFileCompilationData>();
+                List<IntermediateObjectFileCompilationData> list3 = new List<IntermediateObjectFileCompilationData>();
+                foreach (IntermediateObjectFileCompilationData data in list)
+                {
+                    if (this.IsCached(data))
+                    {
+                        source.Add(data);
+                    }
+                    else
+                    {
+                        list3.Add(data);
+                    }
+                }
+                statisticsCollector.IncrementCacheHitCountBy(source.Count);
+                List<ProvideObjectResult> list4 = new List<ProvideObjectResult>();
+                List<CompilationResult> list5 = new List<CompilationResult>();
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<CompilationResult, bool>(null, (IntPtr) <BuildAllCppFiles>m__3);
+                    <>f__am$cache3 = d => new ProvideObjectResult { ObjectFile = d.ObjectFile };
                 }
-                CompilationResult result = enumerable2.FirstOrDefault<CompilationResult>(<>f__am$cache3);
-                if (result != null)
+                list4.AddRange(source.Select<IntermediateObjectFileCompilationData, ProvideObjectResult>(<>f__am$cache3));
+                if (list3.Count > 0)
                 {
-                    throw new BuilderFailedException(result.InterestingOutput + Environment.NewLine + "Invocation was: " + result.Invocation.Summary());
+                    List<ProvideObjectResult> collection = ParallelFor.RunWithResult<IntermediateObjectFileCompilationData, ProvideObjectResult>(list3.ToArray(), new Func<IntermediateObjectFileCompilationData, ProvideObjectResult>(this.ProvideObjectFile)).ToList<ProvideObjectResult>();
+                    list4.AddRange(collection);
+                    list5.AddRange(collection.OfType<CompilationResult>());
+                    if (<>f__am$cache4 == null)
+                    {
+                        <>f__am$cache4 = cr => !cr.Success;
+                    }
+                    CompilationResult result = list5.FirstOrDefault<CompilationResult>(<>f__am$cache4);
+                    if (result != null)
+                    {
+                        throw new BuilderFailedException(result.InterestingOutput + Environment.NewLine + "Invocation was: " + result.Invocation.Summary());
+                    }
                 }
-                Console.WriteLine(string.Concat(new object[] { "ObjectFiles: ", source.Count<ProvideObjectResult>(), " of which compiled: ", enumerable2.Count<CompilationResult>() }));
-                if (<>f__am$cache4 == null)
+                Console.WriteLine(string.Concat(new object[] { "ObjectFiles: ", list4.Count<ProvideObjectResult>(), " of which compiled: ", list5.Count }));
+                if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache4 = new Func<CompilationResult, TimeSpan>(null, (IntPtr) <BuildAllCppFiles>m__4);
+                    <>f__am$cache5 = cr => cr.Duration;
                 }
-                foreach (CompilationResult result2 in enumerable2.OrderByDescending<CompilationResult, TimeSpan>(<>f__am$cache4).Take<CompilationResult>(10))
+                foreach (CompilationResult result2 in list5.OrderByDescending<CompilationResult, TimeSpan>(<>f__am$cache5).Take<CompilationResult>(10))
                 {
                     Console.WriteLine("\tTime Compile: {0} milliseconds {1}", result2.Duration.TotalMilliseconds, result2.Invocation.SourceFile.FileName);
                 }
                 Console.WriteLine("Total compilation time: {0} milliseconds.", stopwatch.ElapsedMilliseconds);
-                if (<>f__am$cache5 == null)
+                if (<>f__am$cache6 == null)
                 {
-                    <>f__am$cache5 = new Func<ProvideObjectResult, NPath>(null, (IntPtr) <BuildAllCppFiles>m__5);
+                    <>f__am$cache6 = c => c.ObjectFile;
                 }
-                return source.Select<ProvideObjectResult, NPath>(<>f__am$cache5).ToArray<NPath>();
+                return list4.Select<ProvideObjectResult, NPath>(<>f__am$cache6).ToArray<NPath>();
             }
         }
 
         private BuilderFailedException BuilderFailedExceptionForFailedLinkerExecution(LinkerResult result, Shell.ExecuteArgs executableInvocation) => 
             new BuilderFailedException(string.Format("{0} {1}{2}{2}{3}", new object[] { executableInvocation.Executable, executableInvocation.Arguments, Environment.NewLine, result.InterestingOutput }));
+
+        private IntermediateObjectFileCompilationData BuildIntermediateObjectFileData(CppCompilationInstruction cppCompilationInstruction)
+        {
+            string str;
+            NPath path;
+            CompilationInvocation invocation = new CompilationInvocation {
+                CompilerExecutable = this._cppToolChain.CompilerExecutableFor(cppCompilationInstruction.SourceFile),
+                SourceFile = cppCompilationInstruction.SourceFile,
+                Arguments = this._cppToolChain.CompilerFlagsFor(cppCompilationInstruction),
+                EnvVars = this._cppToolChain.EnvVars()
+            };
+            using (TinyProfiler.Section("HashCompilerInvocation", cppCompilationInstruction.SourceFile.FileName))
+            {
+                str = invocation.Hash(this._headerHashProvider.HashForAllHeaderFilesReachableByFilesIn(cppCompilationInstruction));
+            }
+            NPath cacheDirectory = cppCompilationInstruction.CacheDirectory;
+            if (cacheDirectory != null)
+            {
+                path = cacheDirectory;
+            }
+            else
+            {
+                path = this._globalObjectCacheDirectory;
+            }
+            string[] append = new string[] { str };
+            NPath path2 = path.Combine(append).ChangeExtension(this._cppToolChain.ObjectExtension());
+            return new IntermediateObjectFileCompilationData { 
+                CppCompilationInstruction = cppCompilationInstruction,
+                CompilationInvocation = invocation,
+                ObjectFile = path2
+            };
+        }
 
         public bool CanBuildInCurrentEnvironment() => 
             this._cppToolChain.CanBuildInCurrentEnvironment();
@@ -169,28 +241,37 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, NPath>(null, (IntPtr) <CleanWorkingDirectory>m__0);
+                <>f__am$cache0 = file => file.Parent;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <CleanWorkingDirectory>m__1);
+                <>f__am$cache1 = d => d.Files(false);
             }
-            NPath[] pathArray = storey.compiledObjectFiles.Select<NPath, NPath>(<>f__am$cache0).Distinct<NPath>().SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
+            IEnumerable<NPath> source = storey.compiledObjectFiles.Select<NPath, NPath>(<>f__am$cache0).Distinct<NPath>().SelectMany<NPath, NPath>(<>f__am$cache1);
+            NPath[] pathArray = source.Where<NPath>(new Func<NPath, bool>(storey.<>m__0)).ToArray<NPath>();
             foreach (NPath path in pathArray)
             {
-                try
-                {
-                    path.Delete(DeleteMode.Normal);
-                }
-                catch (IOException)
-                {
-                }
+                File.SetLastAccessTimeUtc(path.ToString(), DateTime.UtcNow);
             }
-            if (this._programBuildDescription.GlobalCacheDirectory == null)
+            if (!BuildingTestRunnerHelper.SkipCleaningCacheAfterCppBuild)
             {
-                this._workingDirectory.Delete(DeleteMode.Soft);
+                NPath[] pathArray3 = source.Where<NPath>(new Func<NPath, bool>(storey.<>m__1)).ToArray<NPath>();
+                foreach (NPath path2 in pathArray3)
+                {
+                    try
+                    {
+                        path2.Delete(DeleteMode.Normal);
+                    }
+                    catch (IOException)
+                    {
+                    }
+                }
+                if (this._programBuildDescription.GlobalCacheDirectory == null)
+                {
+                    this._workingDirectory.Delete(DeleteMode.Soft);
+                }
+                Console.WriteLine("Cleaned up {0} object files.", pathArray3.Length);
             }
-            Console.WriteLine("Cleaned up {0} object files.", pathArray.Length);
         }
 
         public static CppToolChain CppToolChainFor(RuntimePlatform platform, Unity.IL2CPP.Building.Architecture architecture, BuildConfiguration buildConfiguration, bool treatWarningsAsErrors) => 
@@ -205,35 +286,35 @@
         private NPath FindStaticLibrary(NPath staticLib)
         {
             NPath path;
-            <FindStaticLibrary>c__AnonStorey4 storey = new <FindStaticLibrary>c__AnonStorey4 {
+            <FindStaticLibrary>c__AnonStorey5 storey = new <FindStaticLibrary>c__AnonStorey5 {
                 staticLib = staticLib
             };
             try
             {
-                if (<>f__am$cache6 == null)
+                if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache6 = new Func<NPath, bool>(null, (IntPtr) <FindStaticLibrary>m__6);
+                    <>f__am$cache7 = p => p.FileExists("");
                 }
-                path = this._cppToolChain.ToolChainLibraryPaths().Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).Single<NPath>(<>f__am$cache6);
+                path = this._cppToolChain.ToolChainLibraryPaths().Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).Single<NPath>(<>f__am$cache7);
             }
             catch
             {
-                if (<>f__am$cache7 == null)
-                {
-                    <>f__am$cache7 = new Func<NPath, string>(null, (IntPtr) <FindStaticLibrary>m__7);
-                }
                 if (<>f__am$cache8 == null)
                 {
-                    <>f__am$cache8 = new Func<string, string, string>(null, (IntPtr) <FindStaticLibrary>m__8);
+                    <>f__am$cache8 = p => p.ToString();
                 }
-                throw new Exception($"Could not locate the exact path of {storey.staticLib} inside these directories:{Environment.NewLine}	{this._cppToolChain.ToolChainLibraryPaths().Select<NPath, string>(<>f__am$cache7).Aggregate<string>(<>f__am$cache8)}");
+                if (<>f__am$cache9 == null)
+                {
+                    <>f__am$cache9 = (x, y) => $"{x}{Environment.NewLine}	{y}";
+                }
+                throw new Exception($"Could not locate the exact path of {storey.staticLib} inside these directories:{Environment.NewLine}	{this._cppToolChain.ToolChainLibraryPaths().Select<NPath, string>(<>f__am$cache8).Aggregate<string>(<>f__am$cache9)}");
             }
             return path;
         }
 
         private string HashLinkerInvocation(LinkerInvocation linkerInvocation, IEnumerable<NPath> objectFiles)
         {
-            <HashLinkerInvocation>c__AnonStorey2 storey = new <HashLinkerInvocation>c__AnonStorey2 {
+            <HashLinkerInvocation>c__AnonStorey3 storey = new <HashLinkerInvocation>c__AnonStorey3 {
                 objectFiles = objectFiles
             };
             using (TinyProfiler.Section("hash linker invocation", ""))
@@ -248,13 +329,16 @@
                 {
                     builder.Append(path.FileName);
                 }
-                foreach (NPath path2 in linkerInvocation.FilesInfluencingOutcome.Where<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (NPath path2 in linkerInvocation.FilesInfluencingOutcome.Where<NPath>(new Func<NPath, bool>(storey.<>m__0)))
                 {
                     builder.Append(HashTools.HashOfFile(!path2.IsRelative ? path2 : this.FindStaticLibrary(path2)));
                 }
                 return HashTools.HashOf(builder.ToString());
             }
         }
+
+        private bool IsCached(IntermediateObjectFileCompilationData data) => 
+            (((data.CppCompilationInstruction.CacheDirectory != null) && !this._forceRebuild) && data.ObjectFile.FileExists(""));
 
         private void OnBeforeLink(IEnumerable<NPath> objectFiles, CppToolChainContext toolChainContext)
         {
@@ -313,49 +397,22 @@
             }
         }
 
-        private ProvideObjectResult ProvideObjectFile(CppCompilationInstruction cppCompilationInstruction)
+        private ProvideObjectResult ProvideObjectFile(IntermediateObjectFileCompilationData data)
         {
-            string str;
-            NPath path;
-            Shell.ExecuteResult result3;
-            CompilationInvocation invocation = new CompilationInvocation {
-                CompilerExecutable = this._cppToolChain.CompilerExecutableFor(cppCompilationInstruction.SourceFile),
-                SourceFile = cppCompilationInstruction.SourceFile,
-                Arguments = this._cppToolChain.CompilerFlagsFor(cppCompilationInstruction),
-                EnvVars = this._cppToolChain.EnvVars()
-            };
-            using (TinyProfiler.Section("HashCompilerInvocation", cppCompilationInstruction.SourceFile.FileName))
+            Shell.ExecuteResult result;
+            data.CompilationInvocation.Arguments = data.CompilationInvocation.Arguments.Concat<string>(this._cppToolChain.OutputArgumentFor(data.ObjectFile));
+            using (TinyProfiler.Section("Compile", data.CppCompilationInstruction.SourceFile.FileName))
             {
-                str = invocation.Hash(this._headerHashProvider.HashForAllHeaderFilesReachableByFilesIn(cppCompilationInstruction));
+                result = data.CompilationInvocation.Execute();
             }
-            NPath cacheDirectory = cppCompilationInstruction.CacheDirectory;
-            if (cacheDirectory != null)
+            CompilationResult result2 = this._cppToolChain.ShellResultToCompilationResult(result);
+            result2.Invocation = data.CompilationInvocation;
+            result2.ObjectFile = data.ObjectFile;
+            if ((result2.Success && this._verbose) && !string.IsNullOrWhiteSpace(result.StdOut))
             {
-                path = cacheDirectory;
+                Console.WriteLine(result.StdOut.Trim());
             }
-            else
-            {
-                path = this._globalObjectCacheDirectory;
-            }
-            string[] append = new string[] { str };
-            NPath objectFile = path.Combine(append).ChangeExtension(this._cppToolChain.ObjectExtension());
-            if (((cppCompilationInstruction.CacheDirectory != null) && !this._forceRebuild) && objectFile.FileExists(""))
-            {
-                return new ProvideObjectResult { ObjectFile = objectFile };
-            }
-            invocation.Arguments = invocation.Arguments.Concat<string>(this._cppToolChain.OutputArgumentFor(objectFile));
-            using (TinyProfiler.Section("Compile", cppCompilationInstruction.SourceFile.FileName))
-            {
-                result3 = invocation.Execute();
-            }
-            CompilationResult result4 = this._cppToolChain.ShellResultToCompilationResult(result3);
-            result4.Invocation = invocation;
-            result4.ObjectFile = objectFile;
-            if ((result4.Success && this._verbose) && !string.IsNullOrWhiteSpace(result3.StdOut))
-            {
-                Console.WriteLine(result3.StdOut.Trim());
-            }
-            return result4;
+            return result2;
         }
 
         [CompilerGenerated]
@@ -369,7 +426,16 @@
                     <>f__ref$0 = this,
                     objectFile = objectFile
                 };
-                return !this.compiledObjectFiles.Any<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
+                return this.compiledObjectFiles.Any<NPath>(new Func<NPath, bool>(storey.<>m__0));
+            }
+
+            internal bool <>m__1(NPath objectFile)
+            {
+                <CleanWorkingDirectory>c__AnonStorey2 storey = new <CleanWorkingDirectory>c__AnonStorey2 {
+                    <>f__ref$0 = this,
+                    objectFile = objectFile
+                };
+                return !this.compiledObjectFiles.Any<NPath>(new Func<NPath, bool>(storey.<>m__0));
             }
 
             private sealed class <CleanWorkingDirectory>c__AnonStorey1
@@ -380,10 +446,19 @@
                 internal bool <>m__0(NPath compiledObjectFile) => 
                     string.Equals(this.objectFile.FileNameWithoutExtension, compiledObjectFile.FileNameWithoutExtension, StringComparison.OrdinalIgnoreCase);
             }
+
+            private sealed class <CleanWorkingDirectory>c__AnonStorey2
+            {
+                internal CppProgramBuilder.<CleanWorkingDirectory>c__AnonStorey0 <>f__ref$0;
+                internal NPath objectFile;
+
+                internal bool <>m__0(NPath compiledObjectFile) => 
+                    string.Equals(this.objectFile.FileNameWithoutExtension, compiledObjectFile.FileNameWithoutExtension, StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         [CompilerGenerated]
-        private sealed class <FindStaticLibrary>c__AnonStorey4
+        private sealed class <FindStaticLibrary>c__AnonStorey5
         {
             internal NPath staticLib;
 
@@ -395,22 +470,22 @@
         }
 
         [CompilerGenerated]
-        private sealed class <HashLinkerInvocation>c__AnonStorey2
+        private sealed class <HashLinkerInvocation>c__AnonStorey3
         {
             internal IEnumerable<NPath> objectFiles;
 
             internal bool <>m__0(NPath file)
             {
-                <HashLinkerInvocation>c__AnonStorey3 storey = new <HashLinkerInvocation>c__AnonStorey3 {
-                    <>f__ref$2 = this,
+                <HashLinkerInvocation>c__AnonStorey4 storey = new <HashLinkerInvocation>c__AnonStorey4 {
+                    <>f__ref$3 = this,
                     file = file
                 };
-                return !this.objectFiles.Any<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.objectFiles.Any<NPath>(new Func<NPath, bool>(storey.<>m__0));
             }
 
-            private sealed class <HashLinkerInvocation>c__AnonStorey3
+            private sealed class <HashLinkerInvocation>c__AnonStorey4
             {
-                internal CppProgramBuilder.<HashLinkerInvocation>c__AnonStorey2 <>f__ref$2;
+                internal CppProgramBuilder.<HashLinkerInvocation>c__AnonStorey3 <>f__ref$3;
                 internal NPath file;
 
                 internal bool <>m__0(NPath o) => 

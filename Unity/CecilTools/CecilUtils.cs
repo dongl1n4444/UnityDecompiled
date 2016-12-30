@@ -21,11 +21,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TypeDefinition, IEnumerable<InterfaceImplementation>>(null, (IntPtr) <AllInterfacesImplementedBy>m__0);
+                <>f__am$cache0 = t => t.Interfaces;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<InterfaceImplementation, TypeDefinition>(null, (IntPtr) <AllInterfacesImplementedBy>m__1);
+                <>f__am$cache1 = i => i.InterfaceType.CheckedResolve();
             }
             return Enumerable.Select<InterfaceImplementation, TypeDefinition>(Enumerable.SelectMany<TypeDefinition, InterfaceImplementation>(TypeAndBaseTypesOf(typeDefinition), <>f__am$cache0), <>f__am$cache1).Distinct<TypeDefinition>();
         }
@@ -52,7 +52,7 @@
             <FindInTypeExplicitImplementationFor>c__AnonStorey1 storey = new <FindInTypeExplicitImplementationFor>c__AnonStorey1 {
                 interfaceMethod = interfaceMethod
             };
-            return Enumerable.SingleOrDefault<MethodDefinition>(typeDefinition.Methods, new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.SingleOrDefault<MethodDefinition>(typeDefinition.Methods, new Func<MethodDefinition, bool>(storey.<>m__0));
         }
 
         public static bool IsGenericDictionary(TypeReference type)
@@ -81,7 +81,7 @@
             internal MethodDefinition interfaceMethod;
 
             internal bool <>m__0(MethodDefinition m) => 
-                Enumerable.Any<MethodReference>(m.Overrides, new Func<MethodReference, bool>(this, (IntPtr) this.<>m__1));
+                Enumerable.Any<MethodReference>(m.Overrides, (Func<MethodReference, bool>) (o => o.CheckedResolve().SameAs(this.interfaceMethod)));
 
             internal bool <>m__1(MethodReference o) => 
                 o.CheckedResolve().SameAs(this.interfaceMethod);
@@ -94,7 +94,7 @@
             internal bool $disposing;
             internal int $PC;
             internal TypeReference <$>typeReference;
-            internal TypeDefinition <typeDefinition>__0;
+            internal TypeDefinition <typeDefinition>__1;
             internal TypeReference typeReference;
 
             [DebuggerHidden]
@@ -114,7 +114,7 @@
                         break;
 
                     case 1:
-                        this.typeReference = this.<typeDefinition>__0.BaseType;
+                        this.typeReference = this.<typeDefinition>__1.BaseType;
                         break;
 
                     default:
@@ -122,8 +122,8 @@
                 }
                 if (this.typeReference != null)
                 {
-                    this.<typeDefinition>__0 = this.typeReference.CheckedResolve();
-                    this.$current = this.<typeDefinition>__0;
+                    this.<typeDefinition>__1 = this.typeReference.CheckedResolve();
+                    this.$current = this.<typeDefinition>__1;
                     if (!this.$disposing)
                     {
                         this.$PC = 1;

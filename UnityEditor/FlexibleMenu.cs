@@ -258,7 +258,7 @@
             this.selectedIndex = index;
             if ((this.m_ItemClickedCallback != null) && (index >= 0))
             {
-                this.m_ItemClickedCallback.Invoke(index, this.m_ItemProvider.GetItem(index));
+                this.m_ItemClickedCallback(index, this.m_ItemProvider.GetItem(index));
             }
         }
 

@@ -68,7 +68,12 @@
             target.name = "Unity IAP";
             target.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
             AsyncUtil util = target.AddComponent<AsyncUtil>();
-            string path = Path.Combine(Path.Combine(Application.persistentDataPath, "Unity"), Path.Combine(Application.cloudProjectId, "IAP"));
+            string persistentDataPath = Application.persistentDataPath;
+            if (string.IsNullOrEmpty(persistentDataPath))
+            {
+                persistentDataPath = Application.temporaryCachePath;
+            }
+            string path = Path.Combine(Path.Combine(persistentDataPath, "Unity"), Path.Combine(Application.cloudProjectId, "IAP"));
             string cacheFile = null;
             try
             {

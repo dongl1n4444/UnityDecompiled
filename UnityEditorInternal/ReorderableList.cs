@@ -292,6 +292,7 @@
                     {
                         if (this.m_NonDragTargetIndices[j] != -1)
                         {
+                            r.height = this.GetElementHeight(j);
                             if (this.elementHeightCallback == null)
                             {
                                 r.y = listRect.y + this.GetElementYOffset(j, this.m_ActiveElement);
@@ -369,6 +370,7 @@
                     {
                         bool selected = k == this.m_ActiveElement;
                         bool focused = (k == this.m_ActiveElement) && this.HasKeyboardControl();
+                        r.height = this.GetElementHeight(k);
                         r.y = listRect.y + this.GetElementYOffset(k);
                         if (this.drawElementBackgroundCallback == null)
                         {

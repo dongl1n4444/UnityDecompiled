@@ -9,6 +9,7 @@
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     internal sealed class PlayerSettingsSplashScreenEditor
     {
@@ -120,8 +121,8 @@
                     {
                         this.AddUnityLogoToLogosList();
                     }
-                    this.m_ShowLogoControlsAnimator.target = this.m_ShowUnitySplashLogo.boolValue;
                 }
+                this.m_ShowLogoControlsAnimator.target = this.m_ShowUnitySplashLogo.boolValue;
             }
             if (EditorGUILayout.BeginFadeGroup(this.m_ShowLogoControlsAnimator.faded))
             {
@@ -252,11 +253,11 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetSplashScreenActualBackgroundColor(out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Texture2D INTERNAL_CALL_GetSplashScreenActualBackgroundImage(ref Rect windowRect);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetSplashScreenActualUVs(ref Rect windowRect, out Rect value);
         private static void ObjectReferencePropertyField<T>(SerializedProperty property, GUIContent label) where T: Object
         {
@@ -380,7 +381,7 @@
             return (targetGroup == BuildTargetGroup.Standalone);
         }
 
-        public static bool licenseAllowsDisabling { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool licenseAllowsDisabling { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         private class Texts
         {
@@ -396,7 +397,7 @@
             public GUIContent logosTitle = EditorGUIUtility.TextContent("Logos*");
             public GUIContent logoZoom = EditorGUIUtility.TextContent("Logo Zoom");
             public GUIContent overlayOpacity = EditorGUIUtility.TextContent("Overlay Opacity|Overlay strength applied to improve logo visibility.");
-            public GUIContent previewSplash = EditorGUIUtility.TextContent("Preview");
+            public GUIContent previewSplash = EditorGUIUtility.TextContent("Preview|Preview the splash screen in the game view.");
             public GUIContent showLogo = EditorGUIUtility.TextContent("Show Unity Logo");
             public GUIContent showSplash = EditorGUIUtility.TextContent("Show Splash Screen");
             public GUIContent splashStyle = EditorGUIUtility.TextContent("Splash Style");

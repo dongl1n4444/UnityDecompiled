@@ -4,6 +4,7 @@
     using System.IO;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Helper class for constructing displayable names for objects.</para>
@@ -14,19 +15,19 @@
         /// <para>Class name of an object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetClassName(Object obj);
         /// <summary>
         /// <para>Drag and drop title for an object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetDragAndDropTitle(Object obj);
         /// <summary>
         /// <para>Inspector title for an object.</para>
         /// </summary>
         /// <param name="obj"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetInspectorTitle(Object obj);
         [Obsolete("Please use GetInspectorTitle instead")]
         public static string GetPropertyEditorTitle(Object obj) => 
@@ -68,7 +69,7 @@
         /// <returns>
         /// <para>A name not found in the list of pre-existing names.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetUniqueName(string[] existingNames, string name);
         [Obsolete("Please use NicifyVariableName instead")]
         public static string MangleVariableName(string name) => 
@@ -78,16 +79,16 @@
         /// <para>Make a displayable name for a variable.</para>
         /// </summary>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string NicifyVariableName(string name);
         /// <summary>
         /// <para>Sets the name of an Object.</para>
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetNameSmart(Object obj, string name);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetNameSmartWithInstanceID(int instanceID, string name);
     }
 }

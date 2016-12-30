@@ -204,12 +204,12 @@
             return didNotMove;
         }
 
-        private static void OnWillSaveAssets(string[] assets, out string[] assetsThatShouldBeSaved, out string[] assetsThatShouldBeReverted, int explicitlySaveScene)
+        private static void OnWillSaveAssets(string[] assets, out string[] assetsThatShouldBeSaved, out string[] assetsThatShouldBeReverted, int explicitlySaveAsset)
         {
             assetsThatShouldBeReverted = new string[0];
             assetsThatShouldBeSaved = assets;
             bool flag = ((assets.Length > 0) && EditorPrefs.GetBool("VerifySavingAssets", false)) && InternalEditorUtility.isHumanControllingUs;
-            if (((explicitlySaveScene != 0) && (assets.Length == 1)) && assets[0].EndsWith(".unity"))
+            if (((explicitlySaveAsset != 0) && (assets.Length == 1)) && (assets[0].EndsWith(".unity") || assets[0].EndsWith(".prefab")))
             {
                 flag = false;
             }

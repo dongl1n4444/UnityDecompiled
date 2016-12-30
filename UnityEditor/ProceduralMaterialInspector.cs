@@ -5,7 +5,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(ProceduralMaterial)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(ProceduralMaterial))]
     internal class ProceduralMaterialInspector : MaterialEditor
     {
         private static string[] kMaxLoadBehaviorStrings = new string[] { "Do nothing", "Do nothing and cache", "Build on level load", "Build on level load and cache", "Bake and keep Substance", "Bake and discard Substance" };
@@ -17,13 +17,11 @@
         private bool m_AllowTextureSizeModification = false;
         private static Dictionary<ProceduralMaterial, float> m_GeneratingSince = new Dictionary<ProceduralMaterial, float>();
         private static SubstanceImporter m_Importer = null;
-        private string m_LastGroup;
         private static ProceduralMaterial m_Material = null;
         private bool m_MightHaveModified = false;
         protected List<ProceduralPlatformSetting> m_PlatformSettings;
         private bool m_ReimportOnDisable = true;
         private Vector2 m_ScrollPos = new Vector2();
-        private static Shader m_ShaderPMaterial = null;
         private bool m_ShowHSLInputs = true;
         private bool m_ShowTexturesSection = false;
         private Styles m_Styles;
@@ -42,6 +40,11 @@
             base.Awake();
             this.m_ShowTexturesSection = EditorPrefs.GetBool("ProceduralShowTextures", false);
             this.m_ReimportOnDisable = true;
+            if (m_UndoWasPerformed)
+            {
+                m_UndoWasPerformed = false;
+                this.OnShaderChanged();
+            }
             m_UndoWasPerformed = false;
         }
 
@@ -72,7 +75,6 @@
             if (m_Material != target)
             {
                 m_Material = target;
-                m_ShaderPMaterial = target.shader;
             }
             this.ProceduralProperties();
             GUILayout.Space(15f);
@@ -665,25 +667,12 @@
                     if (m_Material != target)
                     {
                         m_Material = target;
-                        m_ShaderPMaterial = target.shader;
                     }
                     if (base.isVisible && (target.shader != null))
                     {
-                        if (m_ShaderPMaterial != target.shader)
-                        {
-                            m_ShaderPMaterial = target.shader;
-                            foreach (ProceduralMaterial material2 in base.targets)
-                            {
-                                (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material2)) as SubstanceImporter).OnShaderModified(material2);
-                            }
-                        }
                         if (base.PropertiesGUI())
                         {
-                            m_ShaderPMaterial = target.shader;
-                            foreach (ProceduralMaterial material3 in base.targets)
-                            {
-                                (AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material3)) as SubstanceImporter).OnShaderModified(material3);
-                            }
+                            this.OnShaderChanged();
                             base.PropertiesChanged();
                         }
                         GUILayout.Space(5f);
@@ -701,6 +690,18 @@
             if (ShowIsGenerating(base.target as ProceduralMaterial) && (r.width > 50f))
             {
                 EditorGUI.DropShadowLabel(new Rect(r.x, r.y, r.width, 20f), "Generating...");
+            }
+        }
+
+        protected override void OnShaderChanged()
+        {
+            foreach (ProceduralMaterial material in base.targets)
+            {
+                SubstanceImporter atPath = AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(material)) as SubstanceImporter;
+                if ((atPath != null) && (material != null))
+                {
+                    atPath.OnShaderModified(material);
+                }
             }
         }
 
@@ -1074,28 +1075,14 @@
             }
         }
 
-        private Object TextureValidator(Object[] references, Type objType, SerializedProperty property)
-        {
-            foreach (Object obj2 in references)
-            {
-                Texture texture = obj2 as Texture;
-                if (texture != null)
-                {
-                    return texture;
-                }
-            }
-            return null;
-        }
-
         public override void UndoRedoPerformed()
         {
             m_UndoWasPerformed = true;
-            base.UndoRedoPerformed();
             if (m_Material != null)
             {
                 m_Material.RebuildTextures();
             }
-            base.Repaint();
+            base.UndoRedoPerformed();
         }
 
         [Serializable]

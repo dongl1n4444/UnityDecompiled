@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
 
@@ -48,8 +49,6 @@
         private EditorWindow m_OwnerWindow;
         [NonSerialized]
         private Rect m_Position;
-        [NonSerialized]
-        private float m_PreviousUpdateTime;
         [SerializeField]
         private AnimationWindowState m_State;
         [NonSerialized]
@@ -104,11 +103,6 @@
                 this.m_CurveEditor.rect = position;
                 this.m_CurveEditor.SetTickMarkerRanges();
             }
-            if (this.m_TriggerFraming && (Event.current.type == EventType.Repaint))
-            {
-                this.m_CurveEditor.FrameClip(true, true);
-                this.m_TriggerFraming = false;
-            }
             Rect rect = new Rect(position.xMin, position.yMin, position.width - 15f, position.height - 15f);
             this.m_CurveEditor.vSlider = this.m_State.showCurveEditor;
             this.m_CurveEditor.hSlider = this.m_State.showCurveEditor;
@@ -142,11 +136,6 @@
             }
             if (!this.m_State.showCurveEditor)
             {
-                if (this.triggerFraming && (Event.current.type == EventType.Repaint))
-                {
-                    this.m_DopeSheet.FrameClip();
-                    this.triggerFraming = false;
-                }
                 Rect rect2 = new Rect(position.xMin, position.yMin, position.width - 15f, position.height - 15f);
                 Rect rect3 = new Rect(rect2.xMin, rect2.yMin, rect2.width, 16f);
                 this.m_DopeSheet.BeginViewGUI();
@@ -162,6 +151,10 @@
                 float height = this.m_Hierarchy.GetTotalRect().height;
                 float bottomValue = Mathf.Max(height, this.m_Hierarchy.GetContentSize().y);
                 this.m_State.hierarchyState.scrollPos.y = GUI.VerticalScrollbar(rect4, this.m_State.hierarchyState.scrollPos.y, height, 0f, bottomValue);
+                if (this.m_DopeSheet.spritePreviewLoading)
+                {
+                    this.Repaint();
+                }
             }
         }
 
@@ -224,32 +217,32 @@
                 bool flag = false;
                 if (kAnimationPrevKeyframe.activated)
                 {
-                    this.MoveToPreviousKeyframe();
+                    this.controlInterface.GoToPreviousKeyframe();
                     flag = true;
                 }
                 if (kAnimationNextKeyframe.activated)
                 {
-                    this.MoveToNextKeyframe();
+                    this.controlInterface.GoToNextKeyframe();
                     flag = true;
                 }
                 if (kAnimationNextFrame.activated)
                 {
-                    this.m_State.frame++;
+                    this.controlInterface.GoToNextFrame();
                     flag = true;
                 }
                 if (kAnimationPrevFrame.activated)
                 {
-                    this.m_State.frame--;
+                    this.controlInterface.GoToPreviousFrame();
                     flag = true;
                 }
                 if (kAnimationFirstKey.activated)
                 {
-                    this.MoveToFirstKeyframe();
+                    this.controlInterface.GoToFirstKeyframe();
                     flag = true;
                 }
                 if (kAnimationLastKey.activated)
                 {
-                    this.MoveToLastKeyframe();
+                    this.controlInterface.GoToLastKeyframe();
                     flag = true;
                 }
                 if (flag)
@@ -259,14 +252,14 @@
                 }
                 if (kAnimationPlayToggle.activated)
                 {
-                    this.m_State.playing = !this.m_State.playing;
-                    this.m_PreviousUpdateTime = Time.realtimeSinceStartup;
-                    Event.current.Use();
-                }
-                if (kAnimationPlayToggle.activated)
-                {
-                    this.m_State.playing = !this.m_State.playing;
-                    this.m_PreviousUpdateTime = Time.realtimeSinceStartup;
+                    if (this.controlInterface.playing)
+                    {
+                        this.controlInterface.StopPlayback();
+                    }
+                    else
+                    {
+                        this.controlInterface.StartPlayback();
+                    }
                     Event.current.Use();
                 }
                 if (kAnimationRecordKeyframe.activated)
@@ -373,11 +366,25 @@
                 this.m_CurveEditor.invSnap = newFrameRate;
                 this.m_CurveEditor.hTicks.SetTickModulosForFrameRate(newFrameRate);
             });
+            this.m_State.onStartLiveEdit = (Action) Delegate.Combine(this.m_State.onStartLiveEdit, new Action(this.OnStartLiveEdit));
+            this.m_State.onEndLiveEdit = (Action) Delegate.Combine(this.m_State.onEndLiveEdit, new Action(this.OnEndLiveEdit));
+            AnimationWindowSelection selection = this.m_State.selection;
+            selection.onSelectionChanged = (Action) Delegate.Combine(selection.onSelectionChanged, new Action(this.OnSelectionChanged));
         }
 
         private void InitializeOverlay()
         {
             this.m_Overlay = new AnimEditorOverlay();
+        }
+
+        private void LinkOptionsOnGUI()
+        {
+            if (this.m_State.linkedWithSequencer && !GUILayout.Toggle(true, AnimationWindowStyles.sequencerLinkContent, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+            {
+                this.m_State.linkedWithSequencer = false;
+                this.m_State.selection.Clear();
+                GUIUtility.ExitGUI();
+            }
         }
 
         private void MainContentOnGUI(Rect contentLayoutRect)
@@ -394,44 +401,25 @@
                 {
                     this.SetupWizardOnGUI(contentLayoutRect);
                 }
-                else if (this.m_State.showCurveEditor)
-                {
-                    this.CurveEditorOnGUI(contentLayoutRect);
-                }
                 else
                 {
-                    this.DopeSheetOnGUI(contentLayoutRect);
+                    if (this.triggerFraming && (Event.current.type == EventType.Repaint))
+                    {
+                        this.m_DopeSheet.FrameClip();
+                        this.m_CurveEditor.FrameClip(true, true);
+                        this.triggerFraming = false;
+                    }
+                    if (this.m_State.showCurveEditor)
+                    {
+                        this.CurveEditorOnGUI(contentLayoutRect);
+                    }
+                    else
+                    {
+                        this.DopeSheetOnGUI(contentLayoutRect);
+                    }
                 }
                 this.HandleCopyPaste();
             }
-        }
-
-        private void MoveToFirstKeyframe()
-        {
-            if (this.m_State.activeAnimationClip != null)
-            {
-                this.m_State.currentTime = this.m_State.activeAnimationClip.startTime;
-            }
-        }
-
-        private void MoveToLastKeyframe()
-        {
-            if (this.m_State.activeAnimationClip != null)
-            {
-                this.m_State.currentTime = this.m_State.activeAnimationClip.stopTime;
-            }
-        }
-
-        private void MoveToNextKeyframe()
-        {
-            float time = AnimationWindowUtility.GetNextKeyframeTime(((!this.m_State.showCurveEditor || (this.m_State.activeCurves.Count <= 0)) ? this.m_State.allCurves : this.m_State.activeCurves).ToArray(), this.m_State.currentTime, this.m_State.clipFrameRate);
-            this.m_State.currentTime = this.m_State.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToClipFrame);
-        }
-
-        private void MoveToPreviousKeyframe()
-        {
-            float time = AnimationWindowUtility.GetPreviousKeyframeTime(((!this.m_State.showCurveEditor || (this.m_State.activeCurves.Count <= 0)) ? this.m_State.allCurves : this.m_State.activeCurves).ToArray(), this.m_State.currentTime, this.m_State.clipFrameRate);
-            this.m_State.currentTime = this.m_State.SnapToFrame(time, AnimationWindowState.SnapMode.SnapToClipFrame);
         }
 
         public void OnAnimEditorGUI(EditorWindow parent, Rect position)
@@ -444,6 +432,10 @@
                 this.Initialize();
             }
             this.m_State.OnGUI();
+            if (this.m_State.disabled && this.controlInterface.recording)
+            {
+                this.m_State.StopRecording();
+            }
             this.SynchronizeLayout();
             using (new EditorGUI.DisabledScope(this.m_State.disabled || this.m_State.animatorIsOptimized))
             {
@@ -455,6 +447,7 @@
                 this.PlayControlsOnGUI();
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal(EditorStyles.toolbarButton, new GUILayoutOption[0]);
+                this.LinkOptionsOnGUI();
                 this.ClipSelectionDropDownOnGUI();
                 GUILayout.FlexibleSpace();
                 this.FrameRateInputFieldOnGUI();
@@ -479,9 +472,8 @@
                 GUILayout.EndHorizontal();
                 this.OverlayOnGUI(contentLayoutRect);
                 this.RenderEventTooltip();
+                this.HandleHotKeys();
             }
-            this.HandleHotKeys();
-            this.PostLayoutChanges();
         }
 
         public void OnDestroy()
@@ -505,10 +497,6 @@
             {
                 this.m_DopeSheet.OnDisable();
             }
-            AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Remove(selection.onSelectionChanged, new Action(this, (IntPtr) this.OnSelectionChanged));
-            this.m_State.onStartLiveEdit = (Action) Delegate.Remove(this.m_State.onStartLiveEdit, new Action(this, (IntPtr) this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Remove(this.m_State.onEndLiveEdit, new Action(this, (IntPtr) this.OnEndLiveEdit));
             this.m_State.OnDisable();
         }
 
@@ -534,15 +522,13 @@
             this.m_ClipPopup.state = this.m_State;
             this.m_Overlay.state = this.m_State;
             this.m_CurveEditor.curvesUpdated = (CurveEditor.CallbackFunction) Delegate.Combine(this.m_CurveEditor.curvesUpdated, new CurveEditor.CallbackFunction(this.SaveChangedCurvesFromCurveEditor));
-            AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Combine(selection.onSelectionChanged, new Action(this, (IntPtr) this.OnSelectionChanged));
-            this.m_State.onStartLiveEdit = (Action) Delegate.Combine(this.m_State.onStartLiveEdit, new Action(this, (IntPtr) this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Combine(this.m_State.onEndLiveEdit, new Action(this, (IntPtr) this.OnEndLiveEdit));
+            this.m_CurveEditor.OnEnable();
         }
 
         public void OnEndLiveEdit()
         {
             this.UpdateSelectedKeysToCurveEditor();
+            this.controlInterface.ResampleAnimation();
         }
 
         public void OnLostFocus()
@@ -572,7 +558,6 @@
             {
                 Rect position = new Rect(this.hierarchyWidth - 1f, 0f, this.contentWidth - 15f, this.m_Position.height - 15f);
                 GUI.BeginGroup(position);
-                EditorGUI.BeginChangeCheck();
                 this.m_Overlay.HandleEvents();
                 GUI.EndGroup();
             }
@@ -595,21 +580,12 @@
 
         private void PlaybackUpdate()
         {
-            if (this.m_State.disabled && this.m_State.playing)
+            if (this.m_State.disabled && this.controlInterface.playing)
             {
-                this.m_State.playing = false;
+                this.controlInterface.StopPlayback();
             }
-            if (this.m_State.playing)
+            if (this.controlInterface.PlaybackUpdate())
             {
-                float num = Time.realtimeSinceStartup - this.m_PreviousUpdateTime;
-                this.m_PreviousUpdateTime = Time.realtimeSinceStartup;
-                this.m_State.currentTime += num;
-                if (this.m_State.currentTime > this.m_State.maxTime)
-                {
-                    this.m_State.currentTime = this.m_State.minTime;
-                }
-                this.m_State.currentTime = Mathf.Clamp(this.m_State.currentTime, this.m_State.minTime, this.m_State.maxTime);
-                this.m_State.ResampleAnimation();
                 this.Repaint();
             }
         }
@@ -617,86 +593,75 @@
         private void PlayButtonOnGUI()
         {
             EditorGUI.BeginChangeCheck();
-            this.m_State.playing = GUILayout.Toggle(this.m_State.playing, AnimationWindowStyles.playContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
+            bool flag = GUILayout.Toggle(this.controlInterface.playing, AnimationWindowStyles.playContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
             {
+                if (flag)
+                {
+                    this.controlInterface.StartPlayback();
+                }
+                else
+                {
+                    this.controlInterface.StopPlayback();
+                }
                 EditorGUI.EndEditingActiveTextField();
-                this.m_PreviousUpdateTime = Time.realtimeSinceStartup;
             }
         }
 
         private void PlayControlsOnGUI()
         {
-            using (new EditorGUI.DisabledScope(!this.m_State.canRecord))
+            using (new EditorGUI.DisabledScope(!this.controlInterface.canRecord))
             {
                 this.RecordButtonOnGUI();
             }
             if (GUILayout.Button(AnimationWindowStyles.firstKeyContent, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
-                this.MoveToFirstKeyframe();
+                this.controlInterface.GoToFirstKeyframe();
                 EditorGUI.EndEditingActiveTextField();
             }
             if (GUILayout.Button(AnimationWindowStyles.prevKeyContent, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
-                this.MoveToPreviousKeyframe();
+                this.controlInterface.GoToPreviousKeyframe();
                 EditorGUI.EndEditingActiveTextField();
             }
-            using (new EditorGUI.DisabledScope(!this.m_State.canRecord))
+            using (new EditorGUI.DisabledScope(!this.controlInterface.canPlay))
             {
                 this.PlayButtonOnGUI();
             }
             if (GUILayout.Button(AnimationWindowStyles.nextKeyContent, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
-                this.MoveToNextKeyframe();
+                this.controlInterface.GoToNextKeyframe();
                 EditorGUI.EndEditingActiveTextField();
             }
             if (GUILayout.Button(AnimationWindowStyles.lastKeyContent, EditorStyles.toolbarButton, new GUILayoutOption[0]))
             {
-                this.MoveToLastKeyframe();
+                this.controlInterface.GoToLastKeyframe();
                 EditorGUI.EndEditingActiveTextField();
             }
             GUILayout.FlexibleSpace();
             EditorGUI.BeginChangeCheck();
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(35f) };
-            int num = EditorGUILayout.IntField(this.m_State.frame, EditorStyles.toolbarTextField, options);
+            int frame = EditorGUILayout.IntField(this.m_State.currentFrame, EditorStyles.toolbarTextField, options);
             if (EditorGUI.EndChangeCheck())
             {
-                this.m_State.frame = num;
-            }
-        }
-
-        private void PostLayoutChanges()
-        {
-            if (this.policy != null)
-            {
-                if (GUIUtility.hotControl == this.m_HorizontalSplitter.ID)
-                {
-                    this.policy.OnGeometryChange(this.m_HorizontalSplitter.realSizes);
-                }
-                if (!this.m_State.disabled)
-                {
-                    float time = 0f;
-                    if (this.policy.SynchronizeCurrentTime(ref time) && (time != this.m_State.currentTime))
-                    {
-                        this.policy.OnCurrentTimeChange(this.m_State.currentTime);
-                    }
-                    float horizontalScale = 1f;
-                    float horizontalTranslation = 0f;
-                    if (this.policy.SynchronizeZoomableArea(ref horizontalScale, ref horizontalTranslation) && (!Mathf.Approximately(horizontalScale, this.m_State.timeArea.m_Scale.x) || !Mathf.Approximately(horizontalTranslation, this.m_State.timeArea.m_Translation.x)))
-                    {
-                        this.policy.OnZoomableAreaChange(this.m_State.timeArea.m_Scale.x, this.m_State.timeArea.m_Translation.x);
-                    }
-                }
+                this.controlInterface.GoToFrame(frame);
             }
         }
 
         private void RecordButtonOnGUI()
         {
             EditorGUI.BeginChangeCheck();
-            this.m_State.recording = GUILayout.Toggle(this.m_State.recording, AnimationWindowStyles.recordContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
-            if (EditorGUI.EndChangeCheck() && this.m_State.recording)
+            bool flag = GUILayout.Toggle(this.controlInterface.recording, AnimationWindowStyles.recordContent, EditorStyles.toolbarButton, new GUILayoutOption[0]);
+            if (EditorGUI.EndChangeCheck())
             {
-                this.m_State.ResampleAnimation();
+                if (flag)
+                {
+                    this.m_State.StartRecording();
+                }
+                else
+                {
+                    this.m_State.StopRecording();
+                }
             }
         }
 
@@ -715,7 +680,7 @@
         {
             if ((!this.m_State.showCurveEditor || this.m_CurveEditor.hasSelection) && (this.m_State.showCurveEditor || (this.m_State.selectedKeys.Count != 0)))
             {
-                Bounds bounds = !this.m_State.showCurveEditor ? this.m_DopeSheet.selectionBounds : this.m_CurveEditor.selectionBounds;
+                Bounds bounds = !this.m_State.showCurveEditor ? this.m_State.selectionBounds : this.m_CurveEditor.selectionBounds;
                 float startPixel = this.m_State.TimeToPixel(bounds.min.x) + rect.xMin;
                 float endPixel = this.m_State.TimeToPixel(bounds.max.x) + rect.xMin;
                 if ((endPixel - startPixel) < 14f)
@@ -739,42 +704,46 @@
         private void SaveChangedCurvesFromCurveEditor()
         {
             this.m_State.SaveKeySelection("Edit Curve");
-            HashSet<AnimationClip> set = new HashSet<AnimationClip>();
-            List<CurveWrapper> list = new List<CurveWrapper>();
+            Dictionary<AnimationClip, ChangedCurvesPerClip> dictionary = new Dictionary<AnimationClip, ChangedCurvesPerClip>();
+            ChangedCurvesPerClip clip = new ChangedCurvesPerClip();
             for (int i = 0; i < this.m_CurveEditor.animationCurves.Length; i++)
             {
-                CurveWrapper item = this.m_CurveEditor.animationCurves[i];
-                if (item.changed)
+                CurveWrapper wrapper = this.m_CurveEditor.animationCurves[i];
+                if (wrapper.changed)
                 {
-                    if (!item.animationIsEditable)
+                    if (!wrapper.animationIsEditable)
                     {
                         Debug.LogError("Curve is not editable and shouldn't be saved.");
                     }
-                    if (item.animationClip != null)
+                    if (wrapper.animationClip != null)
                     {
-                        list.Add(item);
-                        set.Add(item.animationClip);
+                        if (dictionary.TryGetValue(wrapper.animationClip, out clip))
+                        {
+                            clip.bindings.Add(wrapper.binding);
+                            clip.curves.Add(wrapper.curve);
+                        }
+                        else
+                        {
+                            clip.bindings = new List<EditorCurveBinding>();
+                            clip.curves = new List<AnimationCurve>();
+                            clip.bindings.Add(wrapper.binding);
+                            clip.curves.Add(wrapper.curve);
+                            dictionary.Add(wrapper.animationClip, clip);
+                        }
                     }
-                    item.changed = false;
+                    wrapper.changed = false;
                 }
             }
-            if (set.Count > 0)
+            if (dictionary.Count > 0)
             {
-                foreach (AnimationClip clip in set)
+                foreach (KeyValuePair<AnimationClip, ChangedCurvesPerClip> pair in dictionary)
                 {
-                    Undo.RegisterCompleteObjectUndo(clip, "Edit Curve");
+                    Undo.RegisterCompleteObjectUndo(pair.Key, "Edit Curve");
+                    EditorCurveBinding[] bindings = pair.Value.bindings.ToArray();
+                    AnimationUtility.SetEditorCurves(pair.Key, bindings, pair.Value.curves.ToArray());
                 }
+                this.m_State.StartRecording();
             }
-            if (list.Count > 0)
-            {
-                for (int j = 0; j < list.Count; j++)
-                {
-                    CurveWrapper wrapper2 = list[j];
-                    AnimationUtility.SetEditorCurve(wrapper2.animationClip, wrapper2.binding, wrapper2.curve);
-                }
-                this.m_State.ResampleAnimation();
-            }
-            this.UpdateSelectedKeysFromCurveEditor();
         }
 
         private void SaveCurveEditorKeySelection()
@@ -804,9 +773,6 @@
                 {
                     Component closestAnimationPlayerComponentInParents = AnimationWindowUtility.GetClosestAnimationPlayerComponentInParents(this.m_State.activeGameObject.transform);
                     this.m_State.selection.UpdateClip(this.m_State.selectedItem, AnimationUtility.GetAnimationClips(closestAnimationPlayerComponentInParents.gameObject)[0]);
-                    this.m_State.recording = true;
-                    this.m_State.currentTime = 0f;
-                    this.m_State.ResampleAnimation();
                     GUIUtility.ExitGUI();
                 }
             }
@@ -841,7 +807,6 @@
             this.UpdateSelectedKeysToCurveEditor();
             AnimationWindowUtility.SyncTimeArea(this.m_DopeSheet, this.m_CurveEditor);
             this.m_State.timeArea = this.m_CurveEditor;
-            this.m_CurveEditor.FrameSelected(false, true);
         }
 
         internal void SwitchToDopeSheetEditor()
@@ -855,27 +820,13 @@
         private void SynchronizeLayout()
         {
             this.m_HorizontalSplitter.realSizes[1] = (int) Mathf.Min(this.m_Position.width - this.m_HorizontalSplitter.realSizes[0], (float) this.m_HorizontalSplitter.realSizes[1]);
-            if (this.policy != null)
+            if ((this.selectedItem != null) && (this.selectedItem.animationClip != null))
             {
-                this.policy.SynchronizeGeometry(ref this.m_HorizontalSplitter.realSizes, ref this.m_HorizontalSplitter.minSizes);
-                float frameRate = 0f;
-                if (this.policy.SynchronizeFrameRate(ref frameRate))
-                {
-                    this.m_State.frameRate = frameRate;
-                }
-                float time = 0f;
-                if (this.policy.SynchronizeCurrentTime(ref time))
-                {
-                    this.m_State.currentTime = time;
-                }
-                float horizontalScale = 1f;
-                float horizontalTranslation = 0f;
-                if (this.policy.SynchronizeZoomableArea(ref horizontalScale, ref horizontalTranslation) && (this.m_State.timeArea != null))
-                {
-                    this.m_State.timeArea.m_Scale = new Vector2(horizontalScale, this.m_State.timeArea.m_Scale.y);
-                    this.m_State.timeArea.m_Translation = new Vector2(horizontalTranslation, this.m_State.timeArea.m_Translation.y);
-                    this.m_State.timeArea.EnforceScaleAndRange();
-                }
+                this.m_State.frameRate = this.selectedItem.animationClip.frameRate;
+            }
+            else
+            {
+                this.m_State.frameRate = 60f;
             }
         }
 
@@ -923,7 +874,7 @@
 
         internal void UpdateCurveEditorData()
         {
-            this.m_CurveEditor.animationCurves = this.m_State.activeCurveWrappers.ToArray();
+            this.m_CurveEditor.animationCurves = this.m_State.activeCurveWrappers;
         }
 
         private void UpdateSelectedKeysFromCurveEditor()
@@ -943,6 +894,7 @@
         {
             this.UpdateCurveEditorData();
             this.m_CurveEditor.ClearSelection();
+            this.m_CurveEditor.BeginRangeSelection();
             foreach (AnimationWindowKeyframe keyframe in this.m_State.selectedKeys)
             {
                 CurveSelection curveSelection = AnimationWindowUtility.AnimationWindowKeyframeToCurveSelection(keyframe, this.m_CurveEditor);
@@ -951,10 +903,14 @@
                     this.m_CurveEditor.AddSelection(curveSelection);
                 }
             }
+            this.m_CurveEditor.EndRangeSelection();
         }
 
         private float contentWidth =>
             ((float) this.m_HorizontalSplitter.realSizes[1]);
+
+        public IAnimationWindowControl controlInterface =>
+            this.state.controlInterface;
 
         internal CurveEditor curveEditor =>
             this.m_CurveEditor;
@@ -965,23 +921,13 @@
         private float hierarchyWidth =>
             ((float) this.m_HorizontalSplitter.realSizes[0]);
 
-        public bool locked
+        public IAnimationWindowControl overrideControlInterface
         {
             get => 
-                this.m_State.locked;
+                this.state.overrideControlInterface;
             set
             {
-                this.m_State.locked = value;
-            }
-        }
-
-        public AnimationWindowPolicy policy
-        {
-            get => 
-                this.m_State.policy;
-            set
-            {
-                this.m_State.policy = value;
+                this.state.overrideControlInterface = value;
             }
         }
 
@@ -1007,11 +953,18 @@
         private bool triggerFraming
         {
             get => 
-                (((this.policy == null) || this.policy.triggerFramingOnSelection) && this.m_TriggerFraming);
+                this.m_TriggerFraming;
             set
             {
                 this.m_TriggerFraming = value;
             }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ChangedCurvesPerClip
+        {
+            public List<EditorCurveBinding> bindings;
+            public List<AnimationCurve> curves;
         }
     }
 }

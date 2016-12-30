@@ -11,7 +11,7 @@
     {
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <fileExtensionWithoutDot>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private SaveType <saveType>k__BackingField;
 
         public ScriptableObjectSaveLoadHelper(string fileExtensionWithoutDot, SaveType saveType)
@@ -71,7 +71,7 @@
         }
 
         public override string ToString() => 
-            string.Format("{0}, {1}, {2}", this.fileExtensionWithoutDot, this.saveType);
+            $"{this.fileExtensionWithoutDot}, {this.saveType}";
 
         public string fileExtensionWithoutDot { get; private set; }
 

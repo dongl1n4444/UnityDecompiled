@@ -7,10 +7,13 @@
     using UnityEditor;
     using UnityEditor.Android;
     using UnityEditor.Android.PostProcessor;
+    using UnityEditor.Utils;
+    using UnityEditorInternal.VR;
     using UnityEngine;
 
     internal class BuildResources : IPostProcessorTask
     {
+        private string _playerPackage;
         private string _stagingArea;
 
         public event ProgressHandler OnProgress;
@@ -60,12 +63,16 @@
         public void Execute(PostProcessorContext context)
         {
             this._stagingArea = context.Get<string>("StagingArea");
+            this._playerPackage = context.Get<string>("PlayerPackage");
             if (this.OnProgress != null)
             {
                 this.OnProgress(this, "Updating resources with player settings");
             }
             this.ReplaceIconResources();
-            if (!context.Get<bool>("ExportAndroidProject"))
+            this.ReplaceVRIconResources();
+            bool flag = context.Get<bool>("ExportAndroidProject");
+            bool flag2 = context.Get<int>("ProjectType") == 1;
+            if (!flag && !flag2)
             {
                 if (this.OnProgress != null)
                 {
@@ -77,7 +84,7 @@
 
         private void ReplaceIconResources()
         {
-            string[] array = new string[] { "res.drawable-ldpi.app_icon.png", "res/drawable-ldpi/app_icon.png", "res.drawable-mdpi.app_icon.png", "res/drawable-mdpi/app_icon.png", "res.drawable-hdpi.app_icon.png", "res/drawable-hdpi/app_icon.png", "res.drawable-xhdpi.app_icon.png", "res/drawable-xhdpi/app_icon.png", "res.drawable-xxhdpi.app_icon.png", "res/drawable-xxhdpi/app_icon.png", "res.drawable-xxxhdpi.app_icon.png", "res/drawable-xxxhdpi/app_icon.png", "res.drawable-xhdpi.app_banner.png", "res/drawable-xhdpi/app_banner.png", "app_splash.png", "assets/bin/Data/splash.png" };
+            string[] array = new string[] { "res.drawable-ldpi.app_icon.png", "res/drawable-ldpi/app_icon.png", "res.drawable-mdpi.app_icon.png", "res/drawable-mdpi/app_icon.png", "res.drawable-hdpi.app_icon.png", "res/drawable-hdpi/app_icon.png", "res.drawable-xhdpi.app_icon.png", "res/drawable-xhdpi/app_icon.png", "res.drawable-xxhdpi.app_icon.png", "res/drawable-xxhdpi/app_icon.png", "res.drawable-xxxhdpi.app_icon.png", "res/drawable-xxxhdpi/app_icon.png", "res.drawable-xhdpi.app_banner.png", "res/drawable-xhdpi/app_banner.png", "app_splash.png", "res/drawable/unity_static_splash.png" };
             if (!PlayerSettings.advancedLicense)
             {
                 Array.Resize<string>(ref array, array.Length - 2);
@@ -97,6 +104,47 @@
                     FileUtil.MoveFileOrDirectory(path, str3);
                 }
             }
+        }
+
+        private void ReplaceVRIconResource(string iconName)
+        {
+            string[] strArray = new string[] { "res.drawable-nodpi.", "res/drawable-nodpi/" };
+            string[] vREnabledDevicesOnTargetGroup = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
+            if (PlayerSettings.virtualRealitySupported && (Array.IndexOf<string>(vREnabledDevicesOnTargetGroup, "daydream") >= 0))
+            {
+                if (!File.Exists(Path.Combine(this._stagingArea, strArray[0] + iconName)))
+                {
+                    string[] components = new string[] { this._playerPackage, Path.Combine("Apk/vr", iconName) };
+                    string from = Paths.Combine(components);
+                    string path = Path.Combine(this._stagingArea, Path.Combine(strArray[1], iconName));
+                    string directoryName = Path.GetDirectoryName(path);
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+                    FileUtil.CopyFileOrDirectory(from, path);
+                }
+                else
+                {
+                    for (int i = 0; i < strArray.Length; i += 2)
+                    {
+                        string str5 = Path.Combine(this._stagingArea, strArray[i] + iconName);
+                        string str6 = Path.Combine(this._stagingArea, Path.Combine(strArray[i + 1], iconName));
+                        if (File.Exists(str5))
+                        {
+                            FileUtil.DeleteFileOrDirectory(str6);
+                            Directory.CreateDirectory(Path.GetDirectoryName(str6));
+                            FileUtil.MoveFileOrDirectory(str5, str6);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ReplaceVRIconResources()
+        {
+            this.ReplaceVRIconResource("vr_icon_front.png");
+            this.ReplaceVRIconResource("vr_icon_back.png");
         }
 
         public string Name =>

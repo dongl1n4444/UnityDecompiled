@@ -19,24 +19,22 @@
         {
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreateBuffer();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreateScript();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreateTexture(bool readable);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void InternalCreateAssetBundle(string url, uint crc);
         internal void InternalCreateAssetBundle(string url, Hash128 hash, uint crc)
         {
             INTERNAL_CALL_InternalCreateAssetBundle(this, url, ref hash, crc);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InternalCreateAssetBundle(DownloadHandler self, string url, ref Hash128 hash, uint crc);
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern void InternalCreateAudioClip(string url, AudioType audioType);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InternalDestroy();
         ~DownloadHandler()
         {
@@ -55,7 +53,7 @@
         /// <summary>
         /// <para>Returns true if this DownloadHandler has been informed by its parent UnityWebRequest that all data has been received, and this DownloadHandler has completed any necessary post-download processing. (Read Only)</para>
         /// </summary>
-        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isDone { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
         /// <summary>
         /// <para>Returns the raw bytes downloaded from the remote server, or null. (Read Only)</para>
         /// </summary>

@@ -7,9 +7,9 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple=false, Inherited=true)]
     public sealed class UsedImplicitlyAttribute : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private ImplicitUseTargetFlags <TargetFlags>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ImplicitUseTargetFlags <TargetFlags>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ImplicitUseKindFlags <UseKindFlags>k__BackingField;
 
         public UsedImplicitlyAttribute() : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)

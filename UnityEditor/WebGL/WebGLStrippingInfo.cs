@@ -55,7 +55,7 @@
             if (flag2)
             {
                 int num2;
-                storey.functionSizes = GetFunctionSizesFromWast("Temp/StagingArea/Data/Native/build.wast", out num2, storey.minificationMap);
+                storey.functionSizes = GetFunctionSizesFromWast("Temp/StagingArea/Data/linkresult_wasm/build.wast", out num2, storey.minificationMap);
                 base.totalSize = (int) new FileInfo(this.builtCodePath).Length;
                 float num3 = ((float) base.totalSize) / ((float) num2);
                 foreach (string str6 in storey.functionSizes.Keys.ToList<string>())
@@ -80,7 +80,7 @@
                     <>f__am$cache4 = delegate (string functionCode) {
                     };
                 }
-                CodeAnalysisUtils.ExtractFunctionsFromJS(code, new Action<string, string>(storey2, (IntPtr) this.<>m__0), <>f__am$cache4);
+                CodeAnalysisUtils.ExtractFunctionsFromJS(code, new Action<string, string>(storey2.<>m__0), <>f__am$cache4);
             }
             foreach (KeyValuePair<string, int> pair in storey.functionSizes)
             {
@@ -166,7 +166,7 @@
             ProcessStartInfo info2 = new ProcessStartInfo(EmscriptenPaths.nmExecutable);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <GetDirectorySymbolArtifacts>m__0);
+                <>f__am$cache0 = (current, additionalFile) => current + " \"" + additionalFile + "\"";
             }
             info2.Arguments = "-n " + Enumerable.Aggregate<string, string>(strArray, "", <>f__am$cache0);
             info2.UseShellExecute = false;
@@ -183,11 +183,11 @@
             <GetDirectorySymbolArtifactsFromGeneratedCode>c__AnonStorey0 storey = new <GetDirectorySymbolArtifactsFromGeneratedCode>c__AnonStorey0 {
                 firstSubdirectory = LeafDirectoryFor(directory)
             };
-            IEnumerable<string> enumerable = Enumerable.Select<string, string>(Directory.GetFiles(directory), new Func<string, string>(storey, (IntPtr) this.<>m__0));
+            IEnumerable<string> enumerable = Enumerable.Select<string, string>(Directory.GetFiles(directory), new Func<string, string>(storey.<>m__0));
             ProcessStartInfo info2 = new ProcessStartInfo(EmscriptenPaths.nmExecutable);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <GetDirectorySymbolArtifactsFromGeneratedCode>m__1);
+                <>f__am$cache1 = (current, additionalFile) => current + " \"" + additionalFile + "\"";
             }
             info2.Arguments = "-n " + Enumerable.Aggregate<string, string>(enumerable, "", <>f__am$cache1);
             info2.UseShellExecute = false;
@@ -218,7 +218,7 @@
                 char[] separator = new char[] { ':' };
                 string[] strArray3 = str.Split(separator);
                 string key = strArray3[0].Trim(new char[] { ' ', '$', '_', '\0' });
-                if ((minificationMap != null) && minificationMap.ContainsKey(key))
+                if (minificationMap.ContainsKey(key))
                 {
                     key = minificationMap[key].Trim(new char[] { ' ', '$', '_', '\0' });
                 }
@@ -357,7 +357,7 @@
             {
                 Dictionary<string, int> dictionary;
                 string str;
-                if ((this.<>f__ref$1.minificationMap != null) && this.<>f__ref$1.minificationMap.ContainsKey(name))
+                if (this.<>f__ref$1.minificationMap.ContainsKey(name))
                 {
                     name = this.<>f__ref$1.minificationMap[name];
                 }

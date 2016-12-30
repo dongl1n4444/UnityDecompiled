@@ -295,7 +295,7 @@
             (this.m_IsDragging || this.m_DopeSheetEditor.isDragging);
 
         private Bounds selectionBounds =>
-            this.m_DopeSheetEditor.selectionBounds;
+            this.m_State.selectionBounds;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct ToolLayout

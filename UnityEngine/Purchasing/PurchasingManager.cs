@@ -67,7 +67,7 @@
             }
             else if (this.m_AdditionalProductsCallback != null)
             {
-                this.m_AdditionalProductsCallback.Invoke();
+                this.m_AdditionalProductsCallback();
             }
         }
 
@@ -97,7 +97,7 @@
             this.m_AdditionalProductsFailCallback = failCallback;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ProductDefinition, Product>(null, (IntPtr) <FetchAdditionalProducts>m__0);
+                <>f__am$cache0 = x => new Product(x, new ProductMetadata());
             }
             this.products.AddProducts(Enumerable.Select<ProductDefinition, Product>(products, <>f__am$cache0));
             this.m_Store.RetrieveProducts(new ReadOnlyCollection<ProductDefinition>(products.ToList<ProductDefinition>()));
@@ -125,7 +125,7 @@
             this.m_Store.Initialize(this);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<ProductDefinition, Product>(null, (IntPtr) <Initialize>m__1);
+                <>f__am$cache1 = x => new Product(x, new ProductMetadata());
             }
             Product[] productArray = Enumerable.Select<ProductDefinition, Product>(products, <>f__am$cache1).ToArray<Product>();
             this.products = new ProductCollection(productArray);
@@ -253,6 +253,7 @@
             {
                 this.m_Logger.Log("Already recorded transaction " + product.transactionID);
                 this.m_Store.FinishTransaction(product.definition, product.transactionID);
+                this.m_Listener.OnPurchaseFailed(product, PurchaseFailureReason.DuplicateTransaction);
             }
             else
             {

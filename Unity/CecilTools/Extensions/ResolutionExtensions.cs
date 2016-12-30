@@ -15,7 +15,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodReference, MethodDefinition>(null, (IntPtr) <CheckedResolve>m__1);
+                <>f__am$cache1 = reference => reference.Resolve();
             }
             return Resolve<MethodReference, MethodDefinition>(method, <>f__am$cache1);
         }
@@ -24,7 +24,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TypeReference, TypeDefinition>(null, (IntPtr) <CheckedResolve>m__0);
+                <>f__am$cache0 = reference => reference.Resolve();
             }
             return Resolve<TypeReference, TypeDefinition>(type, <>f__am$cache0);
         }
@@ -35,7 +35,7 @@
             {
                 throw new ResolutionException(reference);
             }
-            TDefinition local = resolve.Invoke(reference);
+            TDefinition local = resolve(reference);
             if (local == null)
             {
                 throw new ResolutionException(reference);

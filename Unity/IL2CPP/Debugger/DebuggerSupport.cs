@@ -9,7 +9,6 @@
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Unity.Cecil.Visitor;
     using Unity.IL2CPP;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
@@ -39,7 +38,7 @@
         {
             if (DebuggerOptions.Enabled)
             {
-                assembly.Accept(this._documentsCollector);
+                this._documentsCollector.Process(assembly);
             }
         }
 
@@ -64,14 +63,14 @@
         private IEnumerable<string> DocumentsFor(MethodDefinition methodDefinition)
         {
             CollectSourceDocumentsVisitor visitor = new CollectSourceDocumentsVisitor();
-            methodDefinition.Accept(visitor);
+            visitor.Process(methodDefinition);
             return visitor.Documents;
         }
 
         private static IEnumerable<string> DocumentsFor(TypeDefinition typeDefinition)
         {
             CollectSourceDocumentsVisitor visitor = new CollectSourceDocumentsVisitor();
-            typeDefinition.Accept(visitor);
+            visitor.Process(typeDefinition);
             return visitor.Documents;
         }
 
@@ -213,7 +212,7 @@
                 values[3] = 0;
                 writer.WriteArrayInitializer(values);
             }
-            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(storey.methodReference), methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey, (IntPtr) this.<>m__0)), true);
+            writer.WriteArrayInitializer("const Il2CppDebugLocalsInfo*", Naming.ForDebugLocalInfo(storey.methodReference), methodDefinition.Body.Variables.Select<VariableDefinition, string>(new Func<VariableDefinition, string>(storey.<>m__0)), true);
         }
 
         public void WriteDebugMetadataIncludes(CppCodeWriter writer)
@@ -300,7 +299,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<KeyValuePair<string, TypeReference>, string>(null, (IntPtr) <WriteLocalsAddressArray>m__1);
+                    <>f__am$cache1 = v => "&" + v.Key;
                 }
                 writer.WriteArrayInitializer("void*", "__dbg_locals", localvars.Select<KeyValuePair<string, TypeReference>, string>(<>f__am$cache1), true);
             }
@@ -314,7 +313,7 @@
             object[] args = new object[] { Naming.ForDebugMethodInfoOffsetTable(methodReference) };
             storey.writer.WriteLine("const int32_t {0}[] = ", args);
             storey.writer.BeginBlock();
-            methodDefinition.Accept(new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
+            new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey.<>m__0)).Process(methodDefinition);
             storey.writer.WriteLine("-1, -1");
             storey.writer.EndBlock(true);
         }
@@ -325,7 +324,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<ParameterDefinition, string>(null, (IntPtr) <WriteParamsAddressArray>m__0);
+                    <>f__am$cache0 = p => "&" + Naming.ForParameterName(p);
                 }
                 writer.WriteArrayInitializer("void*", "__dbg_params", methodDefinition.Parameters.Select<ParameterDefinition, string>(<>f__am$cache0), true);
             }
@@ -343,12 +342,12 @@
                 sequencePoints = sequencePoints,
                 methodDefinition = methodDefinition
             };
-            storey.methodDefinition.Accept(new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey, (IntPtr) this.<>m__0)));
+            new SequencePointsMappingVisitor(new Action<Instruction, SequencePoint>(storey.<>m__0)).Process(storey.methodDefinition);
             if (storey.sequencePoints.Count != 0)
             {
                 object[] args = new object[] { variableName };
                 writer.WriteLine("static SequencePointRecord {0}[] = ", args);
-                writer.WriteArrayInitializer(storey.sequencePoints.Select<SequencePointInfo, string>(new Func<SequencePointInfo, string>(storey, (IntPtr) this.<>m__1)).ToArray<string>());
+                writer.WriteArrayInitializer(storey.sequencePoints.Select<SequencePointInfo, string>(new Func<SequencePointInfo, string>(storey.<>m__1)).ToArray<string>());
             }
         }
 

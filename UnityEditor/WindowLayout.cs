@@ -449,7 +449,7 @@
             list.Remove(win);
             list.Insert(0, splitview);
             list.Insert(1, win);
-            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(Object)) as Object[], path, false);
+            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(Object)) as Object[], path, true);
         }
 
         public static void SaveWindowLayout(string path)
@@ -480,7 +480,7 @@
                     list.Add(window2);
                 }
             }
-            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(Object)) as Object[], path, false);
+            InternalEditorUtility.SaveToSerializedFileAndForget(list.ToArray(typeof(Object)) as Object[], path, true);
         }
 
         internal static EditorWindow ShowAppropriateViewOnEnterExitPlaymode(bool entering)
@@ -696,7 +696,7 @@
             internal Object[] $locvar0;
             internal int $locvar1;
             internal int $PC;
-            internal Object <obj>__0;
+            internal Object <obj>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -727,10 +727,10 @@
             Label_00A4:
                 if (this.$locvar1 < this.$locvar0.Length)
                 {
-                    this.<obj>__0 = this.$locvar0[this.$locvar1];
-                    if (this.<obj>__0 is T)
+                    this.<obj>__1 = this.$locvar0[this.$locvar1];
+                    if (this.<obj>__1 is T)
                     {
-                        this.$current = this.<obj>__0 as T;
+                        this.$current = this.<obj>__1 as T;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

@@ -14,6 +14,7 @@
     public class GenericContextFreeVisitor : Unity.Cecil.Visitor.Visitor
     {
         private readonly InflatedCollectionCollector _generics;
+        private readonly IInteropDataCollector _interopDataCollector;
         [CompilerGenerated]
         private static Func<TypeReference, bool> <>f__am$cache0;
         [Inject]
@@ -21,18 +22,23 @@
         [Inject]
         public static IIl2CppGenericMethodCollectorWriterService Il2CppGenericMethodCollector;
         [Inject]
+        public static IStatsService Stats;
+        [Inject]
         public static ITypeProviderService TypeProvider;
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
-        public GenericContextFreeVisitor(InflatedCollectionCollector generics)
+        public GenericContextFreeVisitor(InflatedCollectionCollector generics, IInteropDataCollector interopDataCollector)
         {
             this._generics = generics;
+            this._interopDataCollector = interopDataCollector;
         }
 
         private static bool IsFullyInflated(GenericInstanceMethod genericInstanceMethod)
         {
             if ((genericInstanceMethod != null) && (<>f__am$cache0 == null))
             {
-                <>f__am$cache0 = new Func<TypeReference, bool>(null, (IntPtr) <IsFullyInflated>m__0);
+                <>f__am$cache0 = t => t.ContainsGenericParameters();
             }
             return (!genericInstanceMethod.GenericArguments.Any<TypeReference>(<>f__am$cache0) && !genericInstanceMethod.DeclaringType.ContainsGenericParameters());
         }
@@ -94,6 +100,29 @@
             GenericContextAwareVisitor.ProcessGenericType(inflatedType, this._generics, null);
         }
 
+        private void ProcessIReferenceIfNeeded(TypeDefinition typeDefinition)
+        {
+            if (typeDefinition.CanBoxToWindowsRuntime())
+            {
+                string fullName;
+                GenericInstanceType inflatedType = new GenericInstanceType(TypeProvider.IReferenceType) {
+                    GenericArguments = { typeDefinition }
+                };
+                this.ProcessGenericType(inflatedType);
+                string windowsRuntimePrimitiveName = typeDefinition.GetWindowsRuntimePrimitiveName();
+                if (windowsRuntimePrimitiveName != null)
+                {
+                    fullName = windowsRuntimePrimitiveName;
+                }
+                else
+                {
+                    fullName = WindowsRuntimeProjections.ProjectToWindowsRuntime(typeDefinition).FullName;
+                }
+                this._interopDataCollector.AddWindowsRuntimeTypeWithName(inflatedType, $"Windows.Foundation.IReference`1<{fullName}>");
+                Stats.RecordWindowsRuntimeBoxedType();
+            }
+        }
+
         private static bool TypeHasFullySharableGenericParameters(TypeDefinition typeDefinition) => 
             (typeDefinition.HasGenericParameters && GenericSharingAnalysis.AreFullySharableGenericParameters(typeDefinition.GenericParameters));
 
@@ -149,7 +178,7 @@
             {
                 GenericContextAwareVisitor.ProcessGenericMethod((GenericInstanceMethod) GenericSharingAnalysis.GetFullySharedMethod(methodDefinition), this._generics);
             }
-            if (((methodDefinition.HasGenericParameters || methodDefinition.DeclaringType.HasGenericParameters) && (!methodDefinition.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.GenericParameters))) && (!methodDefinition.DeclaringType.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.DeclaringType.GenericParameters)))
+            if (((methodDefinition.HasGenericParameters || methodDefinition.DeclaringType.HasGenericParameters) && (!methodDefinition.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.GenericParameters))) && (!methodDefinition.IsStripped() && (!methodDefinition.DeclaringType.HasGenericParameters || GenericSharingAnalysis.AreFullySharableGenericParameters(methodDefinition.DeclaringType.GenericParameters))))
             {
                 Il2CppGenericMethodCollector.Add(GenericSharingAnalysis.GetFullySharedMethod(methodDefinition));
             }
@@ -200,6 +229,7 @@
             {
                 this.ProcessGenericType(GenericSharingAnalysis.GetFullySharedType(typeDefinition));
             }
+            this.ProcessIReferenceIfNeeded(typeDefinition);
             base.Visit(typeDefinition, context);
         }
 

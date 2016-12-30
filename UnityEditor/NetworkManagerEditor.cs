@@ -527,7 +527,7 @@
             if (this.m_PlayerPrefabProperty.isExpanded)
             {
                 EditorGUI.indentLevel++;
-                if (this.m_NetworkManager.GetType() != typeof(NetworkLobbyManager))
+                if (!typeof(NetworkLobbyManager).IsAssignableFrom(this.m_NetworkManager.GetType()))
                 {
                     EditorGUILayout.PropertyField(this.m_PlayerPrefabProperty, new GUILayoutOption[0]);
                 }

@@ -6,6 +6,7 @@
     using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Use this class to highlight elements in the editor for use in in-editor tutorials and similar.</para>
@@ -18,7 +19,7 @@
         private static EditorApplication.CallbackFunction <>f__mg$cache1;
         [CompilerGenerated]
         private static EditorApplication.CallbackFunction <>f__mg$cache2;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <active>k__BackingField;
         private const int kExpansionMovementSize = 5;
         private const float kPopupDuration = 0.33f;
@@ -26,6 +27,7 @@
         private static float s_HighlightElapsedTime = 0f;
         private static GUIStyle s_HighlightStyle;
         private static float s_LastTime = 0f;
+        private static bool s_RecursionLock = false;
         private static Rect s_RepaintRegion;
         private static HighlightSearchMode s_SearchMode;
         private static GUIView s_View;
@@ -52,7 +54,7 @@
                     Vector2 scale = (Vector2) ((Vector2.one + vector) * num2);
                     Matrix4x4 matrix = GUI.matrix;
                     Color color = GUI.color;
-                    GUI.color = new Color(1f, 1f, 1f, 0.8f - (0.3f * num));
+                    GUI.color = new Color(1f, 1f, 1f, Mathf.Clamp01((0.8f * num2) - (0.3f * num)));
                     GUIUtility.ScaleAroundPivot(scale, rect.center);
                     highlightStyle.Draw(rect, false, false, false, false);
                     GUI.color = color;
@@ -89,37 +91,52 @@
         /// </returns>
         public static bool Highlight(string windowTitle, string text, HighlightSearchMode mode)
         {
+            bool flag = false;
+            if (s_RecursionLock || searching)
+            {
+                Debug.LogWarning("Highlighter recursion detected.  You are calling Highlighter.Highlight() with too much abandon.  Avoid highlighting during layout and repaint events.");
+                return flag;
+            }
+            if ((Event.current != null) && (Event.current.type == EventType.Layout))
+            {
+                Debug.LogWarning("You are calling Highlighter.Highlight() inorrectly.  Avoid highlighting during layout and repaint events.");
+                return flag;
+            }
+            s_RecursionLock = true;
             Stop();
-            active = true;
             if (!SetWindow(windowTitle))
             {
                 Debug.LogWarning("Window " + windowTitle + " not found.");
-                return false;
             }
-            activeText = text;
-            s_SearchMode = mode;
-            s_LastTime = Time.realtimeSinceStartup;
-            bool flag2 = Search();
-            if (flag2)
+            else if (mode != HighlightSearchMode.None)
             {
-                if (<>f__mg$cache0 == null)
+                active = true;
+                activeText = text;
+                s_SearchMode = mode;
+                s_LastTime = Time.realtimeSinceStartup;
+                flag = Search();
+                if (flag)
                 {
-                    <>f__mg$cache0 = new EditorApplication.CallbackFunction(Highlighter.Update);
+                    if (<>f__mg$cache0 == null)
+                    {
+                        <>f__mg$cache0 = new EditorApplication.CallbackFunction(Highlighter.Update);
+                    }
+                    EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, <>f__mg$cache0);
+                    if (<>f__mg$cache1 == null)
+                    {
+                        <>f__mg$cache1 = new EditorApplication.CallbackFunction(Highlighter.Update);
+                    }
+                    EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, <>f__mg$cache1);
                 }
-                EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.update, <>f__mg$cache0);
-                if (<>f__mg$cache1 == null)
+                else
                 {
-                    <>f__mg$cache1 = new EditorApplication.CallbackFunction(Highlighter.Update);
+                    Debug.LogWarning("Item " + text + " not found in window " + windowTitle + ".");
+                    Stop();
                 }
-                EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, <>f__mg$cache1);
+                InternalEditorUtility.RepaintAllViews();
             }
-            else
-            {
-                Debug.LogWarning("Item " + text + " not found in window " + windowTitle + ".");
-                Stop();
-            }
-            InternalEditorUtility.RepaintAllViews();
-            return flag2;
+            s_RecursionLock = false;
+            return flag;
         }
 
         /// <summary>
@@ -135,11 +152,11 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Handle(ref Rect position, string text);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_internal_get_activeRect(out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_internal_set_activeRect(ref Rect value);
         internal static Rect internal_get_activeRect()
         {
@@ -148,18 +165,18 @@
             return rect;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern string internal_get_activeText();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool internal_get_activeVisible();
         internal static void internal_set_activeRect(Rect value)
         {
             INTERNAL_CALL_internal_set_activeRect(ref value);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void internal_set_activeText(string value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void internal_set_activeVisible(bool value);
         private static bool Search()
         {
@@ -169,7 +186,7 @@
             {
                 return true;
             }
-            searchMode = HighlightSearchMode.None;
+            s_SearchMode = HighlightSearchMode.None;
             Stop();
             return false;
         }
@@ -227,33 +244,33 @@
             else
             {
                 Search();
-            }
-            if (activeVisible)
-            {
-                s_HighlightElapsedTime += Time.realtimeSinceStartup - s_LastTime;
-            }
-            s_LastTime = Time.realtimeSinceStartup;
-            Rect rect = Highlighter.activeRect;
-            if (activeRect.width > 0f)
-            {
-                rect.xMin = Mathf.Min(rect.xMin, activeRect.xMin);
-                rect.xMax = Mathf.Max(rect.xMax, activeRect.xMax);
-                rect.yMin = Mathf.Min(rect.yMin, activeRect.yMin);
-                rect.yMax = Mathf.Max(rect.yMax, activeRect.yMax);
-            }
-            rect = highlightStyle.padding.Add(rect);
-            rect = highlightStyle.overflow.Add(rect);
-            rect = new RectOffset(7, 7, 7, 7).Add(rect);
-            if (s_HighlightElapsedTime < 0.43f)
-            {
-                rect = new RectOffset(((int) rect.width) / 2, ((int) rect.width) / 2, ((int) rect.height) / 2, ((int) rect.height) / 2).Add(rect);
-            }
-            s_RepaintRegion = rect;
-            foreach (GUIView view in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
-            {
-                if (view.window == s_View.window)
+                if (activeVisible)
                 {
-                    view.SendEvent(EditorGUIUtility.CommandEvent("HandleControlHighlight"));
+                    s_HighlightElapsedTime += Time.realtimeSinceStartup - s_LastTime;
+                }
+                s_LastTime = Time.realtimeSinceStartup;
+                Rect rect = Highlighter.activeRect;
+                if (activeRect.width > 0f)
+                {
+                    rect.xMin = Mathf.Min(rect.xMin, activeRect.xMin);
+                    rect.xMax = Mathf.Max(rect.xMax, activeRect.xMax);
+                    rect.yMin = Mathf.Min(rect.yMin, activeRect.yMin);
+                    rect.yMax = Mathf.Max(rect.yMax, activeRect.yMax);
+                }
+                rect = highlightStyle.padding.Add(rect);
+                rect = highlightStyle.overflow.Add(rect);
+                rect = new RectOffset(7, 7, 7, 7).Add(rect);
+                if (s_HighlightElapsedTime < 0.43f)
+                {
+                    rect = new RectOffset(((int) rect.width) / 2, ((int) rect.width) / 2, ((int) rect.height) / 2, ((int) rect.height) / 2).Add(rect);
+                }
+                s_RepaintRegion = rect;
+                foreach (GUIView view in Resources.FindObjectsOfTypeAll(typeof(GUIView)))
+                {
+                    if (view.window == s_View.window)
+                    {
+                        view.SendEvent(EditorGUIUtility.CommandEvent("HandleControlHighlight"));
+                    }
                 }
             }
         }
@@ -324,9 +341,9 @@
             }
         }
 
-        internal static bool searching { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static bool searching { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static HighlightSearchMode searchMode { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        internal static HighlightSearchMode searchMode { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
     }
 }
 

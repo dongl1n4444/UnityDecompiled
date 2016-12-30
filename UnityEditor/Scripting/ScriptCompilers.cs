@@ -67,7 +67,10 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<SupportedLanguage, SupportedLanguageStruct>(null, (IntPtr) <GetSupportedLanguageStructs>m__0);
+                <>f__am$cache0 = lang => new SupportedLanguageStruct { 
+                    extension = lang.GetExtensionICanCompile(),
+                    languageName = lang.GetLanguageName()
+                };
             }
             return Enumerable.Select<SupportedLanguage, SupportedLanguageStruct>(_supportedLanguages, <>f__am$cache0).ToArray<SupportedLanguageStruct>();
         }

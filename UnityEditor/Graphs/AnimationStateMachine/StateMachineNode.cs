@@ -92,7 +92,7 @@
                 }
                 else
                 {
-                    base.graphGUI.tool.AddBreadCrumb(this.stateMachine);
+                    base.graphGUI.tool.AddBreadCrumb(this.stateMachine, true);
                 }
                 Event.current.Use();
             }

@@ -743,7 +743,7 @@
             if (this.m_ColorLibraryEditor == null)
             {
                 ScriptableObjectSaveLoadHelper<ColorPresetLibrary> helper = new ScriptableObjectSaveLoadHelper<ColorPresetLibrary>("colors", SaveType.Text);
-                this.m_ColorLibraryEditor = new PresetLibraryEditor<ColorPresetLibrary>(helper, this.m_ColorLibraryEditorState, new Action<int, object>(this, (IntPtr) this.PresetClickedCallback));
+                this.m_ColorLibraryEditor = new PresetLibraryEditor<ColorPresetLibrary>(helper, this.m_ColorLibraryEditorState, new Action<int, object>(this.PresetClickedCallback));
                 this.m_ColorLibraryEditor.previewAspect = 1f;
                 this.m_ColorLibraryEditor.minMaxPreviewHeight = new Vector2(14f, 14f);
                 this.m_ColorLibraryEditor.settingsMenuRightMargin = 2f;

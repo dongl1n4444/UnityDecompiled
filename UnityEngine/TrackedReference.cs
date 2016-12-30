@@ -2,8 +2,9 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
     public class TrackedReference
     {
         internal IntPtr m_Ptr;

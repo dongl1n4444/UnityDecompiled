@@ -63,7 +63,7 @@
                             num6 = 0L;
                             num3 = (num3 >= 0f) ? ((num5 * num4) + ((1f - num5) * num3)) : num4;
                             num7 = Math.Max(1L, (long) (((float) (totalSize - num2)) / (num3 / ((float) progressUpdateRate))));
-                            if (!progress.Invoke(num2, num7))
+                            if (!progress(num2, num7))
                             {
                                 break;
                             }

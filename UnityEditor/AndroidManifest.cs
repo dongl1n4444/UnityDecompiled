@@ -22,6 +22,14 @@
             this.ApplicationElement = (XmlElement) this.GetElementsByTagName("application")[0];
         }
 
+        public void AddApplicationMetaDataAttribute(string name, string value)
+        {
+            List<XmlAttribute> attributes = new List<XmlAttribute> {
+                this.CreateAndroidAttribute("value", value)
+            };
+            this.AppendApplicationAndroidNameTag("meta-data", name, attributes);
+        }
+
         public void AddGLESVersion(string glEsVersion)
         {
             XmlElement element = base.AppendElement(base.DocumentElement, "uses-feature", "android:glEsVersion");
@@ -31,14 +39,30 @@
             }
         }
 
-        public bool AddLeanbackLauncherActivity()
+        public bool AddIntentFilterCategory(string category)
         {
             XmlNode node = base.SelectSingleNode("/manifest/application/activity/intent-filter[category/@android:name='android.intent.category.LAUNCHER']", base.nsMgr);
             if (node == null)
             {
                 return false;
             }
-            node.AppendChild(base.CreateElement("category")).Attributes.Append(this.CreateAndroidAttribute("name", "android.intent.category.LEANBACK_LAUNCHER"));
+            node.AppendChild(base.CreateElement("category")).Attributes.Append(this.CreateAndroidAttribute("name", category));
+            return true;
+        }
+
+        public bool AddLeanbackLauncherActivity() => 
+            this.AddIntentFilterCategory("android.intent.category.LEANBACK_LAUNCHER");
+
+        public bool AddResourceToLaunchActivity(string name, string resource)
+        {
+            XmlNode node = base.SelectSingleNode("/manifest/application/activity[intent-filter/category/@android:name='android.intent.category.LAUNCHER']", base.nsMgr);
+            if (node == null)
+            {
+                return false;
+            }
+            XmlNode node2 = node.AppendChild(base.CreateElement("meta-data"));
+            node2.Attributes.Append(this.CreateAndroidAttribute("name", name));
+            node2.Attributes.Append(this.CreateAndroidAttribute("resource", resource));
             return true;
         }
 
@@ -99,26 +123,32 @@
             }
         }
 
-        private XmlElement AppendTopAndroidNameTag(string tag, string value) => 
-            this.AppendTopAndroidNameTag(tag, value, null);
-
-        private XmlElement AppendTopAndroidNameTag(string tag, string value, List<XmlAttribute> attributes)
+        private XmlElement AppendAndroidNameTag(XmlElement element, string tag, string value, List<XmlAttribute> attributes)
         {
-            XmlElement element = base.AppendElement(base.DocumentElement, tag, "android:name", value);
-            if (element != null)
+            XmlElement element2 = base.AppendElement(element, tag, "android:name", value);
+            if (element2 != null)
             {
-                element.Attributes.Append(this.CreateAndroidAttribute("name", value));
+                element2.Attributes.Append(this.CreateAndroidAttribute("name", value));
                 if (attributes == null)
                 {
-                    return element;
+                    return element2;
                 }
                 foreach (XmlAttribute attribute in attributes)
                 {
-                    element.Attributes.Append(attribute);
+                    element2.Attributes.Append(attribute);
                 }
             }
-            return element;
+            return element2;
         }
+
+        private XmlElement AppendApplicationAndroidNameTag(string tag, string value, List<XmlAttribute> attributes) => 
+            this.AppendAndroidNameTag(this.ApplicationElement, tag, value, attributes);
+
+        private XmlElement AppendTopAndroidNameTag(string tag, string value) => 
+            this.AppendTopAndroidNameTag(tag, value, null);
+
+        private XmlElement AppendTopAndroidNameTag(string tag, string value, List<XmlAttribute> attributes) => 
+            this.AppendAndroidNameTag(base.DocumentElement, tag, value, attributes);
 
         private XmlAttribute CreateAndroidAttribute(string key, string value)
         {
@@ -126,6 +156,9 @@
             attribute.Value = value;
             return attribute;
         }
+
+        public bool EnableVrMode(string activity) => 
+            this.SetActivityAndroidAttribute(activity, "enableVrMode", "@string/gvr_vr_mode_component");
 
         public XmlElement GetActivity(string name) => 
             ((XmlElement) base.SelectSingleNode($"/manifest/application/activity[@android:name='{name}']", base.nsMgr));
@@ -199,6 +232,9 @@
 
         public bool SetOrientation(string activity, string orientation) => 
             this.SetActivityAndroidAttribute(activity, "screenOrientation", orientation);
+
+        public bool SetResizableActivity(string activity, bool value) => 
+            this.SetActivityAndroidAttribute(activity, "resizeableActivity", !value ? "false" : "true");
 
         public void SetVersion(string versionName, int versionCode)
         {

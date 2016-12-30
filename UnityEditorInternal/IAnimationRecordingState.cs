@@ -13,7 +13,9 @@
 
         GameObject activeRootGameObject { get; }
 
-        int frame { get; }
+        bool addZeroFrame { get; }
+
+        int currentFrame { get; }
     }
 }
 

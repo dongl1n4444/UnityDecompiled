@@ -319,10 +319,6 @@
         public virtual bool IsInteractable() => 
             (this.m_GroupsAllowInteraction && this.m_Interactable);
 
-        /// <summary>
-        /// <para>Whether the current selectable is being pressed.</para>
-        /// </summary>
-        /// <param name="eventData"></param>
         protected bool IsPressed()
         {
             if (!this.IsActive())
@@ -332,10 +328,6 @@
             return (this.isPointerInside && this.isPointerDown);
         }
 
-        /// <summary>
-        /// <para>Whether the current selectable is being pressed.</para>
-        /// </summary>
-        /// <param name="eventData"></param>
         [Obsolete("Is Pressed no longer requires eventData", false)]
         protected bool IsPressed(BaseEventData eventData) => 
             this.IsPressed();

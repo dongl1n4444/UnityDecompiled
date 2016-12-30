@@ -31,7 +31,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ResourceRecord, int>(null, (IntPtr) <GetSumOfAllRecordSizes>m__0);
+                <>f__am$cache0 = resourceRecord => resourceRecord.GetRecordSize();
             }
             return resourceRecords.Sum<ResourceRecord>(<>f__am$cache0);
         }

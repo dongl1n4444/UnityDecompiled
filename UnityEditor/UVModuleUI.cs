@@ -47,7 +47,7 @@
             }
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -78,8 +78,20 @@
             ModuleUI.GUIMinMaxCurve(s_Texts.frameOverTime, this.m_FrameOverTime, new GUILayoutOption[0]);
             ModuleUI.GUIMinMaxCurve(s_Texts.startFrame, this.m_StartFrame, new GUILayoutOption[0]);
             ModuleUI.GUIFloat(s_Texts.cycles, this.m_Cycles, new GUILayoutOption[0]);
-            ParticleSystemRenderer component = base.m_ParticleSystemUI.m_ParticleSystem.GetComponent<ParticleSystemRenderer>();
-            using (new EditorGUI.DisabledScope((component != null) && (component.renderMode == ParticleSystemRenderMode.Mesh)))
+            bool disabled = false;
+            foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
+            {
+                if (system.trails.enabled)
+                {
+                    ParticleSystemRenderer component = system.GetComponent<ParticleSystemRenderer>();
+                    if ((component != null) && (component.renderMode == ParticleSystemRenderMode.Mesh))
+                    {
+                        disabled = true;
+                        break;
+                    }
+                }
+            }
+            using (new EditorGUI.DisabledScope(disabled))
             {
                 ModuleUI.GUIFloat(s_Texts.flipU, this.m_FlipU, new GUILayoutOption[0]);
                 ModuleUI.GUIFloat(s_Texts.flipV, this.m_FlipV, new GUILayoutOption[0]);

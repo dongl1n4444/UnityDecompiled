@@ -29,6 +29,7 @@
         private SerializedProperty m_AgentHeight;
         private SerializedProperty m_AgentRadius;
         private SerializedProperty m_Agents;
+        private ReorderableList m_AgentsList = null;
         private SerializedProperty m_AgentSlope;
         private SerializedProperty m_Areas;
         private ReorderableList m_AreasList = null;
@@ -45,13 +46,51 @@
         private Vector2 m_ScrollPos = Vector2.zero;
         private int m_SelectedNavMeshAgentCount = 0;
         private int m_SelectedNavMeshObstacleCount = 0;
+        private SerializedProperty m_SettingNames;
         private SerializedObject m_SettingsObject;
         private static NavMeshEditorWindow s_NavMeshEditorWindow;
         private static Styles s_Styles;
 
+        private void AddAgent(ReorderableList list)
+        {
+            NavMesh.CreateSettings();
+            list.index = NavMesh.GetSettingsCount() - 1;
+        }
+
         public virtual void AddItemsToMenu(GenericMenu menu)
         {
-            menu.AddItem(new GUIContent("Reset Bake Settings"), false, new GenericMenu.MenuFunction(this.ResetBakeSettings));
+            menu.AddItem(new GUIContent("Reset Legacy Bake Settings"), false, new GenericMenu.MenuFunction(this.ResetBakeSettings));
+        }
+
+        private void AgentSettings()
+        {
+            if (this.m_Agents == null)
+            {
+                this.InitAgents();
+            }
+            this.m_NavMeshProjectSettingsObject.Update();
+            if (this.m_AgentsList.index < 0)
+            {
+                this.m_AgentsList.index = 0;
+            }
+            this.m_AgentsList.DoLayoutList();
+            if ((this.m_AgentsList.index >= 0) && (this.m_AgentsList.index < this.m_Agents.arraySize))
+            {
+                SerializedProperty arrayElementAtIndex = this.m_SettingNames.GetArrayElementAtIndex(this.m_AgentsList.index);
+                SerializedProperty property2 = this.m_Agents.GetArrayElementAtIndex(this.m_AgentsList.index);
+                SerializedProperty property = property2.FindPropertyRelative("agentRadius");
+                SerializedProperty property4 = property2.FindPropertyRelative("agentHeight");
+                SerializedProperty property5 = property2.FindPropertyRelative("agentClimb");
+                SerializedProperty property6 = property2.FindPropertyRelative("agentSlope");
+                NavMeshEditorHelpers.DrawAgentDiagram(EditorGUILayout.GetControlRect(false, 120f, new GUILayoutOption[0]), property.floatValue, property4.floatValue, property5.floatValue, property6.floatValue);
+                EditorGUILayout.PropertyField(arrayElementAtIndex, EditorGUIUtility.TempContent("Name"), new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(property, EditorGUIUtility.TempContent("Radius"), new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(property4, EditorGUIUtility.TempContent("Height"), new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(property5, EditorGUIUtility.TempContent("Step Height"), new GUILayoutOption[0]);
+                EditorGUILayout.Slider(property6, 0f, 60f, EditorGUIUtility.TempContent("Max Slope"), new GUILayoutOption[0]);
+            }
+            EditorGUILayout.Space();
+            this.m_NavMeshProjectSettingsObject.ApplyModifiedProperties();
         }
 
         private void AreaSettings()
@@ -241,6 +280,30 @@
             }
         }
 
+        private void DrawAgentListElement(Rect rect, int index, bool selected, bool focused)
+        {
+            SerializedProperty arrayElementAtIndex = this.m_Agents.GetArrayElementAtIndex(index);
+            if (arrayElementAtIndex != null)
+            {
+                SerializedProperty property2 = arrayElementAtIndex.FindPropertyRelative("agentTypeID");
+                if (property2 != null)
+                {
+                    rect.height -= 2f;
+                    bool disabled = property2.intValue == 0;
+                    using (new EditorGUI.DisabledScope(disabled))
+                    {
+                        string settingsNameFromID = NavMesh.GetSettingsNameFromID(property2.intValue);
+                        GUI.Label(rect, EditorGUIUtility.TempContent(settingsNameFromID));
+                    }
+                }
+            }
+        }
+
+        private void DrawAgentListHeader(Rect rect)
+        {
+            GUI.Label(rect, EditorGUIUtility.TempContent("Agent Types"));
+        }
+
         private void DrawAreaListElement(Rect rect, int index, bool selected, bool focused)
         {
             SerializedProperty arrayElementAtIndex = this.m_Areas.GetArrayElementAtIndex(index);
@@ -391,6 +454,24 @@
             return list;
         }
 
+        private void InitAgents()
+        {
+            if (this.m_Agents == null)
+            {
+                this.m_Agents = this.m_NavMeshProjectSettingsObject.FindProperty("m_Settings");
+                this.m_SettingNames = this.m_NavMeshProjectSettingsObject.FindProperty("m_SettingNames");
+            }
+            if (this.m_AgentsList == null)
+            {
+                this.m_AgentsList = new ReorderableList(this.m_NavMeshProjectSettingsObject, this.m_Agents, false, false, true, true);
+                this.m_AgentsList.drawElementCallback = new ReorderableList.ElementCallbackDelegate(this.DrawAgentListElement);
+                this.m_AgentsList.drawHeaderCallback = new ReorderableList.HeaderCallbackDelegate(this.DrawAgentListHeader);
+                this.m_AgentsList.onAddCallback = new ReorderableList.AddCallbackDelegate(this.AddAgent);
+                this.m_AgentsList.onRemoveCallback = new ReorderableList.RemoveCallbackDelegate(this.RemoveAgent);
+                this.m_AgentsList.elementHeight = EditorGUIUtility.singleLineHeight + 2f;
+            }
+        }
+
         private void InitAreas()
         {
             if (this.m_Areas == null)
@@ -466,6 +547,7 @@
 
         private static void ObjectSettings(Object[] components, GameObject[] gos)
         {
+            EditorGUILayout.HelpBox("Legacy Feature - Applies only to statically baked per-scene NavMesh", MessageType.Warning);
             EditorGUILayout.MultiSelectionObjectTitleBar(components);
             SerializedObject obj2 = new SerializedObject(gos);
             using (new EditorGUI.DisabledScope(!SceneModeUtility.StaticFlagField("Navigation Static", obj2.FindProperty("m_StaticEditorFlags"), 8)))
@@ -551,20 +633,23 @@
             this.m_ScrollPos = EditorGUILayout.BeginScrollView(this.m_ScrollPos, new GUILayoutOption[0]);
             switch (this.m_Mode)
             {
-                case Mode.ObjectSettings:
-                    ObjectSettings();
+                case Mode.AgentSettings:
+                    this.AgentSettings();
+                    break;
+
+                case Mode.AreaSettings:
+                    this.AreaSettings();
                     break;
 
                 case Mode.SceneBakeSettings:
                     this.SceneBakeSettings();
                     break;
 
-                case Mode.AreaSettings:
-                    this.AreaSettings();
+                case Mode.ObjectSettings:
+                    ObjectSettings();
                     break;
             }
             EditorGUILayout.EndScrollView();
-            BakeButtons();
         }
 
         private void OnInspectorUpdate()
@@ -624,6 +709,51 @@
             }
         }
 
+        public static void OpenAgentSettings(int agentTypeID)
+        {
+            SetupWindow();
+            if (s_NavMeshEditorWindow != null)
+            {
+                s_NavMeshEditorWindow.m_Mode = Mode.AgentSettings;
+                s_NavMeshEditorWindow.InitProjectSettings();
+                s_NavMeshEditorWindow.InitAgents();
+                s_NavMeshEditorWindow.m_AgentsList.index = -1;
+                for (int i = 0; i < s_NavMeshEditorWindow.m_Agents.arraySize; i++)
+                {
+                    if (s_NavMeshEditorWindow.m_Agents.GetArrayElementAtIndex(i).FindPropertyRelative("agentTypeID").intValue == agentTypeID)
+                    {
+                        s_NavMeshEditorWindow.m_AgentsList.index = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        public static void OpenAreaSettings()
+        {
+            SetupWindow();
+            if (s_NavMeshEditorWindow != null)
+            {
+                s_NavMeshEditorWindow.m_Mode = Mode.AreaSettings;
+                s_NavMeshEditorWindow.InitProjectSettings();
+                s_NavMeshEditorWindow.InitAgents();
+            }
+        }
+
+        private void RemoveAgent(ReorderableList list)
+        {
+            SerializedProperty arrayElementAtIndex = this.m_Agents.GetArrayElementAtIndex(list.index);
+            if (arrayElementAtIndex != null)
+            {
+                SerializedProperty property2 = arrayElementAtIndex.FindPropertyRelative("agentTypeID");
+                if ((property2 != null) && (property2.intValue != 0))
+                {
+                    this.m_SettingNames.DeleteArrayElementAtIndex(list.index);
+                    ReorderableList.defaultBehaviours.DoRemoveButton(list);
+                }
+            }
+        }
+
         private static void RepaintSceneAndGameViews()
         {
             SceneView.RepaintAll();
@@ -640,6 +770,7 @@
 
         private void SceneBakeSettings()
         {
+            EditorGUILayout.HelpBox("Legacy Feature - Applies only to statically baked per-scene NavMesh", MessageType.Warning);
             if ((this.m_SettingsObject == null) || (this.m_SettingsObject.targetObject == null))
             {
                 this.InitSceneBakeSettings();
@@ -740,7 +871,7 @@
                         }
                         if (num15 < 1f)
                         {
-                            EditorGUILayout.HelpBox("The number of voxels per agent radius is too small. The agent may not avoid walls and ledges properly. Consider using voxel size of at least " + ((this.m_AgentRadius.floatValue / 2f)).ToString("0.000") + " (2 voxels per agent radius).", MessageType.Warning);
+                            EditorGUILayout.HelpBox("The number of voxels per agent radius is too small. The agent may not avoid walls and ledges properly. Consider using a voxel size less than " + ((this.m_AgentRadius.floatValue / 2f)).ToString("0.000") + " (2 voxels per agent radius).", MessageType.Warning);
                         }
                         else if (num15 > 8f)
                         {
@@ -768,13 +899,14 @@
                 EditorGUI.indentLevel--;
             }
             this.m_SettingsObject.ApplyModifiedProperties();
+            BakeButtons();
         }
 
         private static bool SelectionHasChildren()
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<GameObject, bool>(null, (IntPtr) <SelectionHasChildren>m__0);
+                <>f__am$cache0 = obj => obj.transform.childCount > 0;
             }
             return Enumerable.Any<GameObject>(Selection.gameObjects, <>f__am$cache0);
         }
@@ -809,9 +941,10 @@
 
         private enum Mode
         {
-            ObjectSettings,
+            AgentSettings,
+            AreaSettings,
             SceneBakeSettings,
-            AreaSettings
+            ObjectSettings
         }
 
         private class Styles
@@ -829,7 +962,7 @@
             public readonly GUIContent m_CostLabel = new GUIContent("Cost");
             public readonly GUIContent m_ManualCellSizeContent = EditorGUIUtility.TextContent("Manual Voxel Size|Enable to set voxel size manually.");
             public readonly GUIContent m_MinRegionAreaContent = EditorGUIUtility.TextContent("Min Region Area|Minimum area that a navmesh region can be.");
-            public readonly GUIContent[] m_ModeToggles = new GUIContent[] { EditorGUIUtility.TextContent("Object|Bake settings for the currently selected object."), EditorGUIUtility.TextContent("Bake|Navmesh bake settings."), EditorGUIUtility.TextContent("Areas|Navmesh area settings.") };
+            public readonly GUIContent[] m_ModeToggles = new GUIContent[] { EditorGUIUtility.TextContent("Agents|Navmesh agent settings."), EditorGUIUtility.TextContent("Areas|Navmesh area settings."), EditorGUIUtility.TextContent("Bake|Navmesh bake settings."), EditorGUIUtility.TextContent("Object|Bake settings for the currently selected object.") };
             public readonly GUIContent m_NameLabel = new GUIContent("Name");
             public readonly GUIContent m_OffmeshHeader = new GUIContent("Generated Off Mesh Links");
         }

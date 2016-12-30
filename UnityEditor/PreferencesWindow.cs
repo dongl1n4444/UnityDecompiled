@@ -8,7 +8,6 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Text;
-    using UnityEditor.Collaboration;
     using UnityEditor.Connect;
     using UnityEditor.Modules;
     using UnityEditor.VisualStudioIntegration;
@@ -62,8 +61,8 @@
         private bool m_VerifySavingAssets;
         private List<IPreferenceWindowExtension> prefWinExtensions;
         private SortedDictionary<string, List<KeyValuePair<string, PrefColor>>> s_CachedColors = null;
-        private static Vector2 s_ColorScrollPos = Vector2.zero;
         private static int s_KeysControlHash = "KeysControlHash".GetHashCode();
+        private static Vector2 s_ScrollPosition = Vector2.zero;
 
         private void AddCustomSections()
         {
@@ -109,7 +108,7 @@
                     data.str.str = str;
                     if (data.onChanged != null)
                     {
-                        data.onChanged.Invoke();
+                        data.onChanged();
                     }
                 }
             }
@@ -118,7 +117,7 @@
                 data.str.str = data.paths[selected];
                 if (data.onChanged != null)
                 {
-                    data.onChanged.Invoke();
+                    data.onChanged();
                 }
             }
             this.WritePreferences();
@@ -307,10 +306,11 @@
             GUILayout.Space(10f);
             GUILayout.BeginVertical(new GUILayoutOption[0]);
             GUILayout.Label(this.selectedSection.content, constants.sectionHeader, new GUILayoutOption[0]);
-            this.selectedSection.guiFunc();
-            GUILayout.Space(5f);
-            GUILayout.EndVertical();
             GUILayout.Space(10f);
+            s_ScrollPosition = EditorGUILayout.BeginScrollView(s_ScrollPosition, new GUILayoutOption[0]);
+            this.selectedSection.guiFunc();
+            EditorGUILayout.EndScrollView();
+            GUILayout.EndVertical();
             GUILayout.EndHorizontal();
         }
 
@@ -457,8 +457,6 @@
                 this.s_CachedColors = this.OrderPrefs<PrefColor>(Settings.Prefs<PrefColor>());
             }
             bool flag = false;
-            s_ColorScrollPos = EditorGUILayout.BeginScrollView(s_ColorScrollPos, new GUILayoutOption[0]);
-            GUILayout.Space(10f);
             PrefColor color = null;
             foreach (KeyValuePair<string, List<KeyValuePair<string, PrefColor>>> pair in this.s_CachedColors)
             {
@@ -479,7 +477,6 @@
                     Settings.Set<PrefColor>(color.Name, color);
                 }
             }
-            EditorGUILayout.EndScrollView();
             GUILayout.Space(5f);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(120f) };
             if (GUILayout.Button("Use Defaults", options))
@@ -495,8 +492,7 @@
 
         private void ShowExternalApplications()
         {
-            GUILayout.Space(10f);
-            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this, (IntPtr) this.OnScriptEditorChanged));
+            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this.OnScriptEditorChanged));
             if (!this.IsSelectedScriptEditorSpecial())
             {
                 string scriptEditorArgs = this.m_ScriptEditorArgs;
@@ -552,8 +548,7 @@
 
         private void ShowGeneral()
         {
-            GUILayout.Space(10f);
-            bool disabled = Collab.instance.GetCollabInfo().whitelisted && CollabAccess.Instance.IsServiceEnabled();
+            bool disabled = CollabAccess.Instance.IsServiceEnabled();
             using (new EditorGUI.DisabledScope(disabled))
             {
                 if (disabled)
@@ -665,12 +660,12 @@
                 this.m_GICacheSettings.m_EnableCustomPath = EditorGUILayout.Toggle(Styles.customCacheLocation, this.m_GICacheSettings.m_EnableCustomPath, new GUILayoutOption[0]);
                 if (this.m_GICacheSettings.m_EnableCustomPath)
                 {
-                    GUIStyle popup = EditorStyles.popup;
+                    GUIStyle miniButton = EditorStyles.miniButton;
                     GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, popup);
-                    Rect position = GUILayoutUtility.GetRect(GUIContent.none, popup);
+                    EditorGUILayout.PrefixLabel(Styles.cacheFolderLocation, miniButton);
+                    Rect position = GUILayoutUtility.GetRect(GUIContent.none, miniButton);
                     GUIContent content = !string.IsNullOrEmpty(this.m_GICacheSettings.m_CachePath) ? new GUIContent(this.m_GICacheSettings.m_CachePath) : Styles.browse;
-                    if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, popup))
+                    if (EditorGUI.ButtonMouseDown(position, content, FocusType.Passive, miniButton))
                     {
                         string cachePath = this.m_GICacheSettings.m_CachePath;
                         string str2 = EditorUtility.OpenFolderPanel(Styles.browseGICacheLocation.text, cachePath, "");
@@ -712,7 +707,6 @@
         private void ShowKeys()
         {
             int controlID = GUIUtility.GetControlID(s_KeysControlHash, FocusType.Keyboard);
-            GUILayout.Space(10f);
             GUILayout.BeginHorizontal(new GUILayoutOption[0]);
             GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(185f) };
             GUILayout.BeginVertical(options);

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for generating random data.</para>
@@ -101,25 +102,25 @@
             return color;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetRandomUnitCircle(out Vector2 output);
         /// <summary>
         /// <para>Initializes the random number generator state with a seed.</para>
         /// </summary>
         /// <param name="seed">Seed used to initialize the random number generator.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void InitState(int seed);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_insideUnitSphere(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_onUnitSphere(out Vector3 value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_rotation(out Quaternion value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_rotationUniform(out Quaternion value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_get_state(out State value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_set_state(ref State value);
         [Obsolete("Use Random.Range instead")]
         public static int RandomRange(int min, int max) => 
@@ -129,7 +130,7 @@
         public static float RandomRange(float min, float max) => 
             Range(min, max);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern int RandomRangeInt(int min, int max);
         /// <summary>
         /// <para>Returns a random integer number between min [inclusive] and max [exclusive] (Read Only).</para>
@@ -144,7 +145,7 @@
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern float Range(float min, float max);
 
         /// <summary>
@@ -213,7 +214,7 @@
         }
 
         [Obsolete("Deprecated. Use InitState() function or Random.state property instead.")]
-        public static int seed { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public static int seed { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Gets/Sets the full internal state of the random number generator.</para>
@@ -235,7 +236,7 @@
         /// <summary>
         /// <para>Returns a random number between 0.0 [inclusive] and 1.0 [inclusive] (Read Only).</para>
         /// </summary>
-        public static float value { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static float value { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Serializable structure used to hold the full internal state of the random number generator. See Also: Random.state.</para>

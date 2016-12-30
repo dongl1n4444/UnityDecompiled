@@ -13,10 +13,18 @@
     {
         [CompilerGenerated]
         private static Func<Assembly, IEnumerable<Type>> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Assembly[] <loadedAssemblies>k__BackingField;
         internal static List<RuntimeInitializeClassInfo> m_RuntimeInitializeClassInfoList;
         internal static int m_TotalNumRuntimeInitializeMethods;
+
+        internal static void FindClassesThatImplementAnyInterface(List<Type> results, params Type[] interfaces)
+        {
+            <FindClassesThatImplementAnyInterface>c__AnonStorey1 storey = new <FindClassesThatImplementAnyInterface>c__AnonStorey1 {
+                interfaces = interfaces
+            };
+            results.AddRange(Enumerable.Where<Type>(loadedTypes, new Func<Type, bool>(storey.<>m__0)));
+        }
 
         [RequiredByNativeCode]
         private static RuntimeInitializeClassInfo[] GetRuntimeInitializeClassInfos() => 
@@ -147,7 +155,7 @@
             <SubclassesOf>c__AnonStorey0 storey = new <SubclassesOf>c__AnonStorey0 {
                 parent = parent
             };
-            return Enumerable.Where<Type>(loadedTypes, new Func<Type, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Where<Type>(loadedTypes, new Func<Type, bool>(storey.<>m__0));
         }
 
         internal static Assembly[] loadedAssemblies
@@ -168,9 +176,33 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <get_loadedTypes>m__0);
+                    <>f__am$cache0 = assembly => AssemblyHelper.GetTypesFromAssembly(assembly);
                 }
                 return Enumerable.SelectMany<Assembly, Type>(loadedAssemblies, <>f__am$cache0);
+            }
+        }
+
+        [CompilerGenerated]
+        private sealed class <FindClassesThatImplementAnyInterface>c__AnonStorey1
+        {
+            internal Type[] interfaces;
+
+            internal bool <>m__0(Type x)
+            {
+                <FindClassesThatImplementAnyInterface>c__AnonStorey2 storey = new <FindClassesThatImplementAnyInterface>c__AnonStorey2 {
+                    <>f__ref$1 = this,
+                    x = x
+                };
+                return Enumerable.Any<Type>(this.interfaces, new Func<Type, bool>(storey.<>m__0));
+            }
+
+            private sealed class <FindClassesThatImplementAnyInterface>c__AnonStorey2
+            {
+                internal EditorAssemblies.<FindClassesThatImplementAnyInterface>c__AnonStorey1 <>f__ref$1;
+                internal Type x;
+
+                internal bool <>m__0(Type i) => 
+                    (i.IsAssignableFrom(this.x) && !(i == this.x));
             }
         }
 

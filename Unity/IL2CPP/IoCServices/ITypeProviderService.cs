@@ -4,6 +4,8 @@
 
     public interface ITypeProviderService
     {
+        TypeReference BindableIteratorToEnumeratorAdapterTypeReference { get; }
+
         TypeReference BoolTypeReference { get; }
 
         TypeReference ByteTypeReference { get; }
@@ -16,6 +18,12 @@
 
         TypeReference IActivationFactoryTypeReference { get; }
 
+        TypeReference IBindableIterableTypeReference { get; }
+
+        TypeReference IBindableIteratorTypeReference { get; }
+
+        TypeReference IIterableTypeReference { get; }
+
         TypeReference Il2CppComDelegateTypeReference { get; }
 
         TypeReference Il2CppComObjectTypeReference { get; }
@@ -27,6 +35,12 @@
         TypeReference Int64TypeReference { get; }
 
         TypeReference IntPtrTypeReference { get; }
+
+        TypeReference IPropertyValueType { get; }
+
+        TypeReference IReferenceType { get; }
+
+        TypeDefinition IStringableType { get; }
 
         TypeReference NativeIntTypeReference { get; }
 
@@ -67,6 +81,8 @@
         TypeDefinition SystemUInt16 { get; }
 
         TypeDefinition SystemUIntPtr { get; }
+
+        TypeDefinition SystemVoid { get; }
 
         TypeReference UInt16TypeReference { get; }
 

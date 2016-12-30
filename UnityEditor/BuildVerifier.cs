@@ -21,20 +21,20 @@
             while (iterator.MoveNext())
             {
                 string attribute = iterator.Current.GetAttribute("name", "");
-                if ((attribute == null) || (attribute.Length < 1))
+                if (string.IsNullOrEmpty(attribute))
                 {
                     throw new ApplicationException($"Failed to load {uri}, <assembly> name attribute is empty");
                 }
-                string key = iterator.Current.GetAttribute("platform", "");
-                if ((key == null) || (key.Length < 1))
+                string str3 = iterator.Current.GetAttribute("platform", "");
+                if (string.IsNullOrEmpty(str3))
                 {
-                    key = "*";
+                    str3 = "*";
                 }
-                if (!this.m_UnsupportedAssemblies.ContainsKey(key))
+                if (!this.m_UnsupportedAssemblies.ContainsKey(str3))
                 {
-                    this.m_UnsupportedAssemblies.Add(key, new HashSet<string>());
+                    this.m_UnsupportedAssemblies.Add(str3, new HashSet<string>());
                 }
-                this.m_UnsupportedAssemblies[key].Add(attribute);
+                this.m_UnsupportedAssemblies[str3].Add(attribute);
             }
         }
 

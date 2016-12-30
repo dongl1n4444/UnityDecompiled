@@ -91,7 +91,7 @@
             {
                 if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache7 = new Func<IvyModule, bool>(null, (IntPtr) <BuildPackageText>m__8);
+                    <>f__am$cache7 = v => null != v.BasePath;
                 }
                 IvyModule module = Enumerable.FirstOrDefault<IvyModule>(allVersions, <>f__am$cache7);
                 if (null != module)
@@ -103,7 +103,7 @@
             {
                 builder.AppendFormat(" {0}", storey.loadedVersion);
             }
-            if ((null == storey.loadedVersion) || Enumerable.Any<IvyModule>(allVersions, new Func<IvyModule, bool>(storey, (IntPtr) this.<>m__0)))
+            if ((null == storey.loadedVersion) || Enumerable.Any<IvyModule>(allVersions, new Func<IvyModule, bool>(storey.<>m__0)))
             {
                 builder.AppendFormat(" (Update available)", new object[0]);
             }
@@ -116,15 +116,24 @@
             this.RefreshLocalPackages();
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<IvyModule, PackageInfo>(null, (IntPtr) <CachePackageManagerState>m__2);
+                <>f__am$cache2 = p => p.ToPackageInfo().Refresh();
             }
             this.availablePackages = Enumerable.Select<IvyModule, PackageInfo>(Unity.PackageManager.PackageManager.Database.NewOrUpdatedPackages, <>f__am$cache2);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Installer, InstallerState>(null, (IntPtr) <CachePackageManagerState>m__3);
+                <>f__am$cache3 = i => new InstallerState { 
+                    installer = i,
+                    module = i.Package,
+                    progress = i.Progress,
+                    message = i.ProgressMessage,
+                    successful = i.IsSuccessful,
+                    running = i.IsRunning
+                };
             }
             this.installerStates = Enumerable.Select<Installer, InstallerState>(Unity.PackageManager.PackageManager.Instance.Installers.Values, <>f__am$cache3);
-            foreach (PackageInfo info in Enumerable.Where<PackageInfo>(this.allListedPackages, new Func<PackageInfo, bool>(this, (IntPtr) this.<CachePackageManagerState>m__4)))
+            foreach (PackageInfo info in from p in this.allListedPackages
+                where !this.faders.ContainsKey(p.packageName)
+                select p)
             {
                 this.faders[info.packageName] = this.FaderForPackage(info);
             }
@@ -135,7 +144,7 @@
             <CancelPackage>c__AnonStorey2 storey = new <CancelPackage>c__AnonStorey2 {
                 module = module
             };
-            InstallerState state = Enumerable.FirstOrDefault<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey, (IntPtr) this.<>m__0));
+            InstallerState state = Enumerable.FirstOrDefault<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey.<>m__0));
             if (state != null)
             {
                 Debug.Log($"Cancelling installation of {state.module.Name}");
@@ -149,7 +158,7 @@
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<IvyModule, PackageVersion>(null, (IntPtr) <DoPackageElement>m__9);
+                <>f__am$cache8 = p => p.Version;
             }
             IEnumerable<IvyModule> allVersions = Enumerable.OrderByDescending<IvyModule, PackageVersion>(Unity.PackageManager.PackageManager.Database.AllVersionsOfPackage(package.packageName), <>f__am$cache8);
             GUIContent content = new GUIContent(BuildPackageText(package, allVersions));
@@ -177,7 +186,7 @@
                         GUILayout.Space((float) num2);
                         GUILayout.Label(content2, new GUILayoutOption[0]);
                         GUILayout.FlexibleSpace();
-                        InstallerState state = Enumerable.FirstOrDefault<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey, (IntPtr) this.<>m__0));
+                        InstallerState state = Enumerable.FirstOrDefault<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey.<>m__0));
                         if (state != null)
                         {
                             if (!state.running && !state.successful)
@@ -301,7 +310,7 @@
             <InstallPackage>c__AnonStorey1 storey = new <InstallPackage>c__AnonStorey1 {
                 module = module
             };
-            if (!Enumerable.Any<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey, (IntPtr) this.<>m__0)))
+            if (!Enumerable.Any<InstallerState>(this.installerStates, new Func<InstallerState, bool>(storey.<>m__0)))
             {
                 Unity.PackageManager.PackageManager.Instance.SetupPackageInstall(storey.module).Run();
             }
@@ -352,7 +361,7 @@
                         <OnGUI>c__AnonStorey0 storey = new <OnGUI>c__AnonStorey0 {
                             packageType = (PackageType) current
                         };
-                        IEnumerable<PackageInfo> source = Enumerable.Where<PackageInfo>(this.allListedPackages, new Func<PackageInfo, bool>(storey, (IntPtr) this.<>m__0));
+                        IEnumerable<PackageInfo> source = Enumerable.Where<PackageInfo>(this.allListedPackages, new Func<PackageInfo, bool>(storey.<>m__0));
                         if (source.Any<PackageInfo>())
                         {
                             if (packageTypeContents.ContainsKey(storey.packageType))
@@ -385,7 +394,7 @@
         {
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<IvyModule, PackageInfo>(null, (IntPtr) <RefreshLocalPackages>m__7);
+                <>f__am$cache6 = m => m.ToPackageInfo();
             }
             this.localPackages = Enumerable.Select<IvyModule, PackageInfo>(Unity.PackageManager.PackageManager.Database.NewestLocalPackages, <>f__am$cache6);
         }
@@ -400,7 +409,7 @@
             bool flag = this.SelectedPackage == null;
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<PackageInfo, PackageType>(null, (IntPtr) <SelectNext>m__5);
+                <>f__am$cache4 = p => p.type;
             }
             IEnumerable<PackageInfo> source = Enumerable.OrderBy<PackageInfo, PackageType>(this.allListedPackages, <>f__am$cache4);
             foreach (PackageInfo info in source)
@@ -423,7 +432,7 @@
             PackageInfo info = null;
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<PackageInfo, PackageType>(null, (IntPtr) <SelectPrev>m__6);
+                <>f__am$cache5 = p => p.type;
             }
             IEnumerable<PackageInfo> enumerable = Enumerable.OrderBy<PackageInfo, PackageType>(this.allListedPackages, <>f__am$cache5);
             foreach (PackageInfo info2 in enumerable)
@@ -462,7 +471,7 @@
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<PackageInfo, bool>(null, (IntPtr) <get_availablePackages>m__1);
+                    <>f__am$cache1 = p => p.type != PackageType.PackageManager;
                 }
                 return Enumerable.Where<PackageInfo>(this.m_AvailablePackages, <>f__am$cache1);
             }
@@ -484,7 +493,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<PackageInfo, bool>(null, (IntPtr) <get_localPackages>m__0);
+                    <>f__am$cache0 = p => p.type != PackageType.PackageManager;
                 }
                 return Enumerable.Where<PackageInfo>(this.m_LocalPackages, <>f__am$cache0);
             }

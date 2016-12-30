@@ -1,8 +1,10 @@
 ﻿namespace UnityEditor.Scripting
 {
+    using ICSharpCode.NRefactory;
     using Mono.Cecil;
     using mscorlib;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -35,7 +37,9 @@
         [CompilerGenerated]
         private static Func<Assembly, IEnumerable<Type>> <>f__am$cache5;
         [CompilerGenerated]
-        private static Func<CustomAttribute, bool> <>f__am$cache6;
+        private static Func<Type, bool> <>f__am$cache6;
+        [CompilerGenerated]
+        private static Func<CustomAttribute, bool> <>f__am$cache7;
 
         private static string APIVersionArgument() => 
             (" --api-version " + Application.unityVersion + " ");
@@ -54,11 +58,11 @@
             {
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <ConfigurationProviderAssembliesPathArgument>m__2);
+                    <>f__am$cache2 = f => f.Value.type == PackageFileType.Dll;
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<KeyValuePair<string, PackageFileData>, string>(null, (IntPtr) <ConfigurationProviderAssembliesPathArgument>m__3);
+                    <>f__am$cache3 = pi => pi.Key;
                 }
                 foreach (string str in Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(info.files, <>f__am$cache2), <>f__am$cache3))
                 {
@@ -101,31 +105,101 @@
             return false;
         }
 
+        private static Type FindExactTypeMatchingMovedType(string simpleOrQualifiedName)
+        {
+            <FindExactTypeMatchingMovedType>c__AnonStorey3 storey = new <FindExactTypeMatchingMovedType>c__AnonStorey3();
+            Match match = Regex.Match(simpleOrQualifiedName, @"^(?:(?<namespace>.*)(?=\.)\.)?(?<typename>[a-zA-Z_0-9]+)$");
+            if (!match.Success)
+            {
+                return null;
+            }
+            storey.typename = match.Groups["typename"].Value;
+            storey.namespaceName = match.Groups["namespace"].Value;
+            return FindTypeInLoadedAssemblies(new Func<Type, bool>(storey.<>m__0));
+        }
+
         private static Type FindTypeInLoadedAssemblies(Func<Type, bool> predicate)
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<Assembly, bool>(null, (IntPtr) <FindTypeInLoadedAssemblies>m__4);
+                <>f__am$cache4 = assembly => !IsIgnoredAssembly(assembly.GetName());
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <FindTypeInLoadedAssemblies>m__5);
+                <>f__am$cache5 = a => GetValidTypesIn(a);
             }
             return Enumerable.FirstOrDefault<Type>(Enumerable.SelectMany<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache4), <>f__am$cache5), predicate);
         }
 
+        private static Type FindTypeMatchingMovedTypeBasedOnNamespaceFromError(IEnumerable<string> lines)
+        {
+            string valueFromNormalizedMessage = GetValueFromNormalizedMessage(lines, "Line=");
+            int line = (valueFromNormalizedMessage == null) ? -1 : int.Parse(valueFromNormalizedMessage);
+            valueFromNormalizedMessage = GetValueFromNormalizedMessage(lines, "Column=");
+            int column = (valueFromNormalizedMessage == null) ? -1 : int.Parse(valueFromNormalizedMessage);
+            string path = GetValueFromNormalizedMessage(lines, "Script=");
+            if (((line == -1) || (column == -1)) || (path == null))
+            {
+                return null;
+            }
+            using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                IParser parser = ParserFactory.CreateParser(SupportedLanguage.CSharp, new StreamReader(stream));
+                parser.Lexer.EvaluateConditionalCompilation = false;
+                parser.Parse();
+                string simpleOrQualifiedName = InvalidTypeOrNamespaceErrorTypeMapper.IsTypeMovedToNamespaceError(parser.CompilationUnit, line, column);
+                if (simpleOrQualifiedName == null)
+                {
+                    return null;
+                }
+                return FindExactTypeMatchingMovedType(simpleOrQualifiedName);
+            }
+        }
+
         private static string GetUnityEditorManagedPath() => 
             Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), "Managed");
+
+        private static IEnumerable<Type> GetValidTypesIn(Assembly a)
+        {
+            Type[] types;
+            try
+            {
+                types = a.GetTypes();
+            }
+            catch (ReflectionTypeLoadException exception)
+            {
+                types = exception.Types;
+            }
+            if (<>f__am$cache6 == null)
+            {
+                <>f__am$cache6 = t => t != null;
+            }
+            return Enumerable.Where<Type>(types, <>f__am$cache6);
+        }
+
+        private static string GetValueFromNormalizedMessage(IEnumerable<string> lines, string marker)
+        {
+            <GetValueFromNormalizedMessage>c__AnonStorey4 storey = new <GetValueFromNormalizedMessage>c__AnonStorey4 {
+                marker = marker
+            };
+            string str = null;
+            string str2 = Enumerable.FirstOrDefault<string>(lines, new Func<string, bool>(storey.<>m__0));
+            if (str2 != null)
+            {
+                str = str2.Substring(storey.marker.Length).Trim();
+            }
+            return str;
+        }
 
         private static bool IsError(int exitCode) => 
             ((exitCode & 0x80) != 0);
 
         private static bool IsIgnoredAssembly(AssemblyName assemblyName)
         {
-            <IsIgnoredAssembly>c__AnonStorey2 storey = new <IsIgnoredAssembly>c__AnonStorey2 {
+            <IsIgnoredAssembly>c__AnonStorey1 storey = new <IsIgnoredAssembly>c__AnonStorey1 {
                 name = assemblyName.Name
             };
-            return Enumerable.Any<string>(_ignoredAssemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(_ignoredAssemblies, new Func<string, bool>(storey.<>m__0));
         }
 
         public static bool IsReferenceToMissingObsoleteMember(string namespaceName, string className)
@@ -137,39 +211,43 @@
             };
             try
             {
-                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey, (IntPtr) this.<>m__0)) != null;
+                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey.<>m__0)) != null;
             }
             catch (ReflectionTypeLoadException exception)
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, Exception, string>(null, (IntPtr) <IsReferenceToMissingObsoleteMember>m__0);
+                    <>f__am$cache0 = (acc, curr) => acc + "\r\n\t" + curr.Message;
                 }
                 throw new Exception(exception.Message + Enumerable.Aggregate<Exception, string>(exception.LoaderExceptions, "", <>f__am$cache0));
             }
             return flag;
         }
 
-        public static bool IsReferenceToTypeWithChangedNamespace(string simpleOrQualifiedName)
+        public static bool IsReferenceToTypeWithChangedNamespace(string normalizedErrorMessage)
         {
             bool flag;
             try
             {
-                <IsReferenceToTypeWithChangedNamespace>c__AnonStorey1 storey = new <IsReferenceToTypeWithChangedNamespace>c__AnonStorey1();
-                Match match = Regex.Match(simpleOrQualifiedName, @"^(?:(?<namespace>.*)(?=\.)\.)?(?<typename>[a-zA-Z_0-9]+)$");
-                if (!match.Success)
+                Type type;
+                char[] separator = new char[] { '\n' };
+                string[] lines = normalizedErrorMessage.Split(separator);
+                Type type1 = FindExactTypeMatchingMovedType(GetValueFromNormalizedMessage(lines, "EntityName="));
+                if (type1 != null)
                 {
-                    return false;
+                    type = type1;
                 }
-                storey.typename = match.Groups["typename"].Value;
-                storey.namespaceName = match.Groups["namespace"].Value;
-                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey, (IntPtr) this.<>m__0)) != null;
+                else
+                {
+                    type = FindTypeMatchingMovedTypeBasedOnNamespaceFromError(lines);
+                }
+                flag = type != null;
             }
             catch (ReflectionTypeLoadException exception)
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, Exception, string>(null, (IntPtr) <IsReferenceToTypeWithChangedNamespace>m__1);
+                    <>f__am$cache1 = (acc, curr) => acc + "\r\n\t" + curr.Message;
                 }
                 throw new Exception(exception.Message + Enumerable.Aggregate<Exception, string>(exception.LoaderExceptions, "", <>f__am$cache1));
             }
@@ -190,7 +268,7 @@
             {
                 ReflectorVariable0 = false;
             }
-            return (ReflectorVariable0 ? !((<>f__am$cache6 == null) && Enumerable.Any<CustomAttribute>(assembly.CustomAttributes, <>f__am$cache6)) : true);
+            return (ReflectorVariable0 ? !((<>f__am$cache7 == null) && Enumerable.Any<CustomAttribute>(assembly.CustomAttributes, <>f__am$cache7)) : true);
         }
 
         private static bool IsUpdateable(Type type)
@@ -285,20 +363,39 @@
 
         private static bool TargetsWindowsSpecificFramework(CustomAttribute targetFrameworkAttr)
         {
-            <TargetsWindowsSpecificFramework>c__AnonStorey3 storey = new <TargetsWindowsSpecificFramework>c__AnonStorey3();
+            <TargetsWindowsSpecificFramework>c__AnonStorey2 storey = new <TargetsWindowsSpecificFramework>c__AnonStorey2();
             if (!targetFrameworkAttr.AttributeType.FullName.Contains("System.Runtime.Versioning.TargetFrameworkAttribute"))
             {
                 return false;
             }
             storey.regex = new Regex(@"\.NETCore|\.NETPortable");
-            return Enumerable.Any<CustomAttributeArgument>(targetFrameworkAttr.ConstructorArguments, new Func<CustomAttributeArgument, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<CustomAttributeArgument>(targetFrameworkAttr.ConstructorArguments, new Func<CustomAttributeArgument, bool>(storey.<>m__0));
         }
 
         private static string TimeStampArgument() => 
             (" --timestamp " + DateTime.Now.Ticks + " ");
 
         [CompilerGenerated]
-        private sealed class <IsIgnoredAssembly>c__AnonStorey2
+        private sealed class <FindExactTypeMatchingMovedType>c__AnonStorey3
+        {
+            internal string namespaceName;
+            internal string typename;
+
+            internal bool <>m__0(Type t) => 
+                ((t.Name == this.typename) && APIUpdaterHelper.NamespaceHasChanged(t, this.namespaceName));
+        }
+
+        [CompilerGenerated]
+        private sealed class <GetValueFromNormalizedMessage>c__AnonStorey4
+        {
+            internal string marker;
+
+            internal bool <>m__0(string l) => 
+                l.StartsWith(this.marker);
+        }
+
+        [CompilerGenerated]
+        private sealed class <IsIgnoredAssembly>c__AnonStorey1
         {
             internal string name;
 
@@ -317,17 +414,7 @@
         }
 
         [CompilerGenerated]
-        private sealed class <IsReferenceToTypeWithChangedNamespace>c__AnonStorey1
-        {
-            internal string namespaceName;
-            internal string typename;
-
-            internal bool <>m__0(Type t) => 
-                ((t.Name == this.typename) && APIUpdaterHelper.NamespaceHasChanged(t, this.namespaceName));
-        }
-
-        [CompilerGenerated]
-        private sealed class <TargetsWindowsSpecificFramework>c__AnonStorey3
+        private sealed class <TargetsWindowsSpecificFramework>c__AnonStorey2
         {
             internal Regex regex;
 

@@ -40,8 +40,8 @@
         private static bool s_DidPerformInit = false;
         private static BoneMappingItem[] s_LeftMappingDataHand = new BoneMappingItem[] { new BoneMappingItem(-2, -1, 1, 2, 0f, Side.None, new string[0]), new BoneMappingItem(-1, 0x18, 1, 3, 0f, new Vector3(2f, 0f, 1f), Side.None, kThumbKeywords), new BoneMappingItem(-1, 0x1b, 1, 3, 0f, new Vector3(4f, 0f, 1f), Side.None, kIndexFingerKeywords), new BoneMappingItem(-1, 30, 1, 3, 0f, new Vector3(4f, 0f, 0f), Side.None, kMiddleFingerKeywords), new BoneMappingItem(-1, 0x21, 1, 3, 0f, new Vector3(4f, 0f, -1f), Side.None, kRingFingerKeywords), new BoneMappingItem(-1, 0x24, 1, 3, 0f, new Vector3(4f, 0f, -2f), Side.None, kLittleFingerKeywords), new BoneMappingItem(0x18, 0x19, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x1b, 0x1c, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(30, 0x1f, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x21, 0x22, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x24, 0x25, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x19, 0x1a, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x1c, 0x1d, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x1f, 0x20, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x22, 0x23, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x25, 0x26, 1, 1, 0f, Side.None, false, true, new string[0]) };
         private static BoneMappingItem[] s_MappingDataBody = new BoneMappingItem[] { 
-            new BoneMappingItem(-1, 0, 1, 3, 0f, Side.None, new string[0]), new BoneMappingItem(0, 2, 1, 2, 0f, Vector3.right, Side.Right, kUpperLegKeywords), new BoneMappingItem(2, 4, 1, 2, 3f, -Vector3.up, Side.Right, kLowerLegKeywords), new BoneMappingItem(4, 6, 1, 2, 1f, -Vector3.up, Side.Right, kFootKeywords), new BoneMappingItem(6, 20, 1, 2, 0.5f, Vector3.forward, Side.Right, true, true, kToeKeywords), new BoneMappingItem(0, 7, 1, 3, 0f, Vector3.up, Side.None, new string[0]), new BoneMappingItem(7, 8, 0, 3, 1.4f, Vector3.up, Side.None, true, false, new string[0]), new BoneMappingItem(8, 12, 1, 3, 0f, Vector3.right, Side.Right, true, false, kShoulderKeywords), new BoneMappingItem(12, 14, 0, 2, 0.5f, Vector3.right, Side.Right, kUpperArmKeywords), new BoneMappingItem(14, 0x10, 1, 2, 2f, Vector3.right, Side.Right, kLowerArmKeywords), new BoneMappingItem(0x10, 0x12, 1, 2, 1f, Vector3.right, Side.Right, kHandKeywords), new BoneMappingItem(8, 9, 1, 3, 1.8f, Vector3.up, Side.None, true, false, kNeckKeywords), new BoneMappingItem(9, 10, 0, 2, 0.3f, Vector3.up, Side.None, kHeadKeywords), new BoneMappingItem(10, 0x17, 1, 2, 0f, Vector3.forward, Side.None, true, false, kJawKeywords), new BoneMappingItem(10, 0x16, 1, 2, 0f, new Vector3(1f, 1f, 1f), Side.Right, true, false, kEyeKeywords), new BoneMappingItem(0x12, -2, 1, 2, 0f, new Vector3(1f, -1f, 2f), Side.Right, true, false, kThumbKeywords),
-            new BoneMappingItem(0x12, -3, 1, 2, 0f, new Vector3(3f, 0f, 1f), Side.Right, true, false, kIndexFingerKeywords)
+            new BoneMappingItem(-1, 0, 1, 3, 0f, Side.None, new string[0]), new BoneMappingItem(0, 2, 1, 2, 0f, Vector3.right, Side.Right, kUpperLegKeywords), new BoneMappingItem(2, 4, 1, 2, 3f, -Vector3.up, Side.Right, kLowerLegKeywords), new BoneMappingItem(4, 6, 1, 2, 1f, -Vector3.up, Side.Right, kFootKeywords), new BoneMappingItem(6, 20, 1, 2, 0.5f, Vector3.forward, Side.Right, true, true, kToeKeywords), new BoneMappingItem(0, 7, 1, 3, 0f, Vector3.up, Side.None, new string[0]), new BoneMappingItem(7, 8, 0, 3, 1.4f, Vector3.up, Side.None, true, false, new string[0]), new BoneMappingItem(8, 0x36, 0, 3, 1.4f, Vector3.up, Side.None, true, false, new string[0]), new BoneMappingItem(0x36, 12, 1, 3, 0f, Vector3.right, Side.Right, true, false, kShoulderKeywords), new BoneMappingItem(12, 14, 0, 2, 0.5f, Vector3.right, Side.Right, kUpperArmKeywords), new BoneMappingItem(14, 0x10, 1, 2, 2f, Vector3.right, Side.Right, kLowerArmKeywords), new BoneMappingItem(0x10, 0x12, 1, 2, 1f, Vector3.right, Side.Right, kHandKeywords), new BoneMappingItem(0x36, 9, 1, 3, 1.8f, Vector3.up, Side.None, true, false, kNeckKeywords), new BoneMappingItem(9, 10, 0, 2, 0.3f, Vector3.up, Side.None, kHeadKeywords), new BoneMappingItem(10, 0x17, 1, 2, 0f, Vector3.forward, Side.None, true, false, kJawKeywords), new BoneMappingItem(10, 0x16, 1, 2, 0f, new Vector3(1f, 1f, 1f), Side.Right, true, false, kEyeKeywords),
+            new BoneMappingItem(0x12, -2, 1, 2, 0f, new Vector3(1f, -1f, 2f), Side.Right, true, false, kThumbKeywords), new BoneMappingItem(0x12, -3, 1, 2, 0f, new Vector3(3f, 0f, 1f), Side.Right, true, false, kIndexFingerKeywords)
         };
         private static BoneMappingItem[] s_RightMappingDataHand = new BoneMappingItem[] { new BoneMappingItem(-2, -1, 1, 2, 0f, Side.None, new string[0]), new BoneMappingItem(-1, 0x27, 1, 3, 0f, new Vector3(2f, 0f, 1f), Side.None, kThumbKeywords), new BoneMappingItem(-1, 0x2a, 1, 3, 0f, new Vector3(4f, 0f, 1f), Side.None, kIndexFingerKeywords), new BoneMappingItem(-1, 0x2d, 1, 3, 0f, new Vector3(4f, 0f, 0f), Side.None, kMiddleFingerKeywords), new BoneMappingItem(-1, 0x30, 1, 3, 0f, new Vector3(4f, 0f, -1f), Side.None, kRingFingerKeywords), new BoneMappingItem(-1, 0x33, 1, 3, 0f, new Vector3(4f, 0f, -2f), Side.None, kLittleFingerKeywords), new BoneMappingItem(0x27, 40, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x2a, 0x2b, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x2d, 0x2e, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x30, 0x31, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x33, 0x34, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(40, 0x29, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x2b, 0x2c, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x2e, 0x2f, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x31, 50, 1, 1, 0f, Side.None, false, true, new string[0]), new BoneMappingItem(0x34, 0x35, 1, 1, 0f, Side.None, false, true, new string[0]) };
 
@@ -392,18 +392,6 @@
             return list;
         }
 
-        private BoneMappingItem GetBoneMappingItem(int bone)
-        {
-            foreach (BoneMappingItem item in this.m_MappingData)
-            {
-                if (item.bone == bone)
-                {
-                    return item;
-                }
-            }
-            return new BoneMappingItem();
-        }
-
         private int GetBoneSideMatchPoints(BoneMatch match)
         {
             string name = match.bone.name;
@@ -429,12 +417,12 @@
             {
                 return rightIndex;
             }
-            if (rightIndex < 0x36)
+            if (rightIndex < 0x37)
             {
                 string str = Enum.GetName(typeof(HumanBodyBones), rightIndex).Replace("Right", "Left");
                 return (int) ((HumanBodyBones) Enum.Parse(typeof(HumanBodyBones), str));
             }
-            return ((rightIndex + 0x18) - 0x27);
+            return -1;
         }
 
         private int GetMatchKey(BoneMatch parentMatch, Transform t, BoneMappingItem goalItem)
@@ -560,6 +548,11 @@
                     }
                     mapping[0] = parent;
                 }
+            }
+            if (!mapping.ContainsKey(8) && mapping.ContainsKey(0x36))
+            {
+                mapping.Add(8, mapping[0x36]);
+                mapping.Remove(0x36);
             }
             int num = 3;
             Quaternion orientation = this.m_Orientation;

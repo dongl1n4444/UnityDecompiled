@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using UnityEditorInternal;
     using UnityEngine;
 
     internal class AssetPopupBackend
@@ -72,7 +71,8 @@
             GenericMenu menu = new GenericMenu();
             int num = (storey.serializedProperty.objectReferenceValue == null) ? 0 : storey.serializedProperty.objectReferenceValue.GetInstanceID();
             bool flag = false;
-            int classID = BaseObjectTools.StringToClassID(storey.typeName);
+            UnityType type = UnityType.FindTypeByName(storey.typeName);
+            int classID = (type == null) ? 0 : type.persistentTypeID;
             BuiltinResource[] builtinResourceList = null;
             if (classID > 0)
             {
@@ -91,7 +91,7 @@
                         }
                         object[] userData = new object[] { storey2.resource.m_InstanceID, storey.serializedProperty };
                         menu.AddItem(new GUIContent(storey2.resource.m_Name), storey2.resource.m_InstanceID == num, <>f__mg$cache0, userData);
-                        builtinResourceList = Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2, (IntPtr) this.<>m__0)).ToArray<BuiltinResource>();
+                        builtinResourceList = Enumerable.Where<BuiltinResource>(builtinResourceList, new Func<BuiltinResource, bool>(storey2.<>m__0)).ToArray<BuiltinResource>();
                         flag = true;
                         break;
                     }

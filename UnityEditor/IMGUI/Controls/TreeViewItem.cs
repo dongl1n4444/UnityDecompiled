@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    internal class TreeViewItem : IComparable<TreeViewItem>
+    /// <summary>
+    /// <para>The TreeViewItem is used to build the tree representation of a tree data structure.</para>
+    /// </summary>
+    public class TreeViewItem : IComparable<TreeViewItem>
     {
         private List<TreeViewItem> m_Children;
         private int m_Depth;
@@ -12,14 +15,30 @@
         private Texture2D m_Icon;
         private int m_ID;
         private TreeViewItem m_Parent;
-        private object m_UserData;
 
+        public TreeViewItem()
+        {
+            this.m_Children = null;
+        }
+
+        /// <summary>
+        /// <para>TreeViewItem constructor.</para>
+        /// </summary>
+        /// <param name="id">Unique ID to identify this TreeViewItem with among all TreeViewItems of the TreeView. See Also id.</param>
+        /// <param name="depth">Depth of this TreeViewItem. See Also depth.</param>
+        /// <param name="displayName">Rendered name of this TreeViewItem. See Also displayName.</param>
         public TreeViewItem(int id)
         {
             this.m_Children = null;
             this.m_ID = id;
         }
 
+        /// <summary>
+        /// <para>TreeViewItem constructor.</para>
+        /// </summary>
+        /// <param name="id">Unique ID to identify this TreeViewItem with among all TreeViewItems of the TreeView. See Also id.</param>
+        /// <param name="depth">Depth of this TreeViewItem. See Also depth.</param>
+        /// <param name="displayName">Rendered name of this TreeViewItem. See Also displayName.</param>
         public TreeViewItem(int id, int depth)
         {
             this.m_Children = null;
@@ -27,6 +46,12 @@
             this.m_Depth = depth;
         }
 
+        /// <summary>
+        /// <para>TreeViewItem constructor.</para>
+        /// </summary>
+        /// <param name="id">Unique ID to identify this TreeViewItem with among all TreeViewItems of the TreeView. See Also id.</param>
+        /// <param name="depth">Depth of this TreeViewItem. See Also depth.</param>
+        /// <param name="displayName">Rendered name of this TreeViewItem. See Also displayName.</param>
         public TreeViewItem(int id, int depth, string displayName)
         {
             this.m_Children = null;
@@ -44,7 +69,11 @@
             this.m_DisplayName = displayName;
         }
 
-        internal void AddChild(TreeViewItem child)
+        /// <summary>
+        /// <para>Helper method that adds the child TreeViewItem to the children list and sets the parent property on the child.</para>
+        /// </summary>
+        /// <param name="child">TreeViewItem to be added to the children list.</param>
+        public void AddChild(TreeViewItem child)
         {
             if (this.m_Children == null)
             {
@@ -63,6 +92,9 @@
         public override string ToString() => 
             $"Item: '{this.displayName}' ({this.id}), has {(!this.hasChildren ? 0 : this.children.Count)} children, depth {this.depth}, parent id {((this.parent == null) ? -1 : this.parent.id)}";
 
+        /// <summary>
+        /// <para>The list of child items of this TreeViewItem.</para>
+        /// </summary>
         public virtual List<TreeViewItem> children
         {
             get => 
@@ -73,6 +105,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>The depth refers to how many ancestors this item has, and corresponds to the number of horizontal ‘indents’ this item has.</para>
+        /// </summary>
         public virtual int depth
         {
             get => 
@@ -83,6 +118,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Name shown for this item when rendered.</para>
+        /// </summary>
         public virtual string displayName
         {
             get => 
@@ -93,9 +131,15 @@
             }
         }
 
+        /// <summary>
+        /// <para>Returns true if children has any items.</para>
+        /// </summary>
         public virtual bool hasChildren =>
             ((this.m_Children != null) && (this.m_Children.Count > 0));
 
+        /// <summary>
+        /// <para>If set, this icon will be rendered to the left of the displayName. The icon is rendered at 16x16 points by default.</para>
+        /// </summary>
         public virtual Texture2D icon
         {
             get => 
@@ -106,6 +150,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>Unique ID for an item.</para>
+        /// </summary>
         public virtual int id
         {
             get => 
@@ -116,6 +163,9 @@
             }
         }
 
+        /// <summary>
+        /// <para>The parent of this TreeViewItem. If it is null then it is considered the root of the TreeViewItem tree.</para>
+        /// </summary>
         public virtual TreeViewItem parent
         {
             get => 
@@ -123,16 +173,6 @@
             set
             {
                 this.m_Parent = value;
-            }
-        }
-
-        internal virtual object userData
-        {
-            get => 
-                this.m_UserData;
-            set
-            {
-                this.m_UserData = value;
             }
         }
     }

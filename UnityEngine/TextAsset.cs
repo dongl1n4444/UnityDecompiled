@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Text file assets.</para>
@@ -14,12 +15,12 @@
         /// <summary>
         /// <para>The raw bytes of the text asset. (Read Only)</para>
         /// </summary>
-        public byte[] bytes { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public byte[] bytes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The text contents of the .txt file as a string. (Read Only)</para>
         /// </summary>
-        public string text { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string text { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

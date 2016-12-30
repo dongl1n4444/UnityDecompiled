@@ -26,18 +26,28 @@
                 AnimatorController runtimeAnimatorController = this.m_AnimSync.animator.runtimeAnimatorController as AnimatorController;
                 if (runtimeAnimatorController != null)
                 {
+                    bool flag = false;
                     EditorGUI.indentLevel++;
                     int index = 0;
                     foreach (AnimatorControllerParameter parameter in runtimeAnimatorController.parameters)
                     {
-                        bool parameterAutoSend = this.m_AnimSync.GetParameterAutoSend(index);
-                        bool flag2 = EditorGUILayout.Toggle(parameter.name, parameterAutoSend, new GUILayoutOption[0]);
-                        if (flag2 != parameterAutoSend)
+                        if (index >= 0x20)
                         {
-                            this.m_AnimSync.SetParameterAutoSend(index, flag2);
+                            flag = true;
+                            break;
+                        }
+                        bool parameterAutoSend = this.m_AnimSync.GetParameterAutoSend(index);
+                        bool flag3 = EditorGUILayout.Toggle(parameter.name, parameterAutoSend, new GUILayoutOption[0]);
+                        if (flag3 != parameterAutoSend)
+                        {
+                            this.m_AnimSync.SetParameterAutoSend(index, flag3);
                             EditorUtility.SetDirty(base.target);
                         }
                         index++;
+                    }
+                    if (flag)
+                    {
+                        EditorGUILayout.HelpBox("NetworkAnimator can only select between the first 32 parameters in a mecanim controller", MessageType.Warning);
                     }
                     EditorGUI.indentLevel--;
                 }

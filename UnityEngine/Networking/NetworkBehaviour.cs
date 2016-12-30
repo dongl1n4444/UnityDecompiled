@@ -542,7 +542,19 @@
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected void SetSyncVar<T>(T value, ref T fieldValue, uint dirtyBit)
         {
-            if (!value.Equals((T) fieldValue))
+            bool flag = false;
+            if (value == null)
+            {
+                if (((T) fieldValue) != null)
+                {
+                    flag = true;
+                }
+            }
+            else
+            {
+                flag = !value.Equals((T) fieldValue);
+            }
+            if (flag)
             {
                 if (LogFilter.logDev)
                 {
@@ -655,7 +667,7 @@
             this.myView.netId;
 
         /// <summary>
-        /// <para>The id of the player associated with the behaviour.</para>
+        /// <para>The id of the player associated with thei behaviour.</para>
         /// </summary>
         public short playerControllerId =>
             this.myView.playerControllerId;

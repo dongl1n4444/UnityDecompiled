@@ -4,13 +4,12 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(CharacterController)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(CharacterController))]
     internal class CharacterControllerEditor : Editor
     {
         [CompilerGenerated]
         private static Handles.CapFunction <>f__mg$cache0;
         private SerializedProperty m_Center;
-        private SerializedProperty m_Direction;
         private int m_HandleControlID;
         private SerializedProperty m_Height;
         private SerializedProperty m_MinMoveDistance;

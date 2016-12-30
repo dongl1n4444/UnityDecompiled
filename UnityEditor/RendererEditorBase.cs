@@ -41,8 +41,7 @@
         protected void RenderSortingLayerFields()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.SortingLayerField(Styles.m_SortingLayerStyle, this.m_SortingLayerID, EditorStyles.popup, EditorStyles.label);
-            EditorGUILayout.PropertyField(this.m_SortingOrder, Styles.m_SortingOrderStyle, new GUILayoutOption[0]);
+            SortingLayerEditorUtility.RenderSortingLayerFields(this.m_SortingOrder, this.m_SortingLayerID);
         }
 
         internal class Probes
@@ -82,30 +81,30 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <m_ReflectionProbeUsageNames>m__0);
+                    <>f__am$cache0 = new Func<string, string>(RendererEditorBase.Probes.<m_ReflectionProbeUsageNames>m__0);
                 }
                 this.m_ReflectionProbeUsageNames = Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache0).ToArray<string>();
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <m_LightProbeUsageNames>m__1);
+                    <>f__am$cache1 = new Func<string, string>(RendererEditorBase.Probes.<m_LightProbeUsageNames>m__1);
                 }
                 this.m_LightProbeUsageNames = Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache1).ToArray<string>();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <m_ReflectionProbeUsageOptions>m__2);
+                    <>f__am$cache2 = new Func<string, string>(RendererEditorBase.Probes.<m_ReflectionProbeUsageOptions>m__2);
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<string, GUIContent>(null, (IntPtr) <m_ReflectionProbeUsageOptions>m__3);
+                    <>f__am$cache3 = new Func<string, GUIContent>(RendererEditorBase.Probes.<m_ReflectionProbeUsageOptions>m__3);
                 }
                 this.m_ReflectionProbeUsageOptions = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(ReflectionProbeUsage)), <>f__am$cache2).ToArray<string>(), <>f__am$cache3).ToArray<GUIContent>();
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <m_LightProbeBlendModeOptions>m__4);
+                    <>f__am$cache4 = new Func<string, string>(RendererEditorBase.Probes.<m_LightProbeBlendModeOptions>m__4);
                 }
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<string, GUIContent>(null, (IntPtr) <m_LightProbeBlendModeOptions>m__5);
+                    <>f__am$cache5 = new Func<string, GUIContent>(RendererEditorBase.Probes.<m_LightProbeBlendModeOptions>m__5);
                 }
                 this.m_LightProbeBlendModeOptions = Enumerable.Select<string, GUIContent>(Enumerable.Select<string, string>(Enum.GetNames(typeof(LightProbeUsage)), <>f__am$cache4).ToArray<string>(), <>f__am$cache5).ToArray<GUIContent>();
                 this.m_BlendInfo = new List<ReflectionProbeBlendInfo>();
@@ -321,12 +320,6 @@
                     }
                 }
             }
-        }
-
-        private static class Styles
-        {
-            public static GUIContent m_SortingLayerStyle = EditorGUIUtility.TextContent("Sorting Layer|Name of the Renderer's sorting layer");
-            public static GUIContent m_SortingOrderStyle = EditorGUIUtility.TextContent("Order in Layer|Renderer's order within a sorting layer");
         }
     }
 }

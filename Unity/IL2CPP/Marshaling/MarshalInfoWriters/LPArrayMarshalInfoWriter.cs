@@ -25,7 +25,7 @@
             writer.WriteLine("if ({0} != {1})", args);
             using (new BlockWriter(writer, false))
             {
-                base.WriteCleanupLoop(writer, storey.variableName, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+                base.WriteCleanupLoop(writer, storey.variableName, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
                 object[] objArray2 = new object[] { storey.variableName };
                 writer.WriteLine("il2cpp_codegen_marshal_free({0});", objArray2);
                 object[] objArray3 = new object[] { storey.variableName, DefaultMarshalInfoWriter.Naming.Null };
@@ -44,7 +44,7 @@
             writer.WriteLine("if ({0} != {1})", args);
             using (new BlockWriter(writer, false))
             {
-                base.WriteMarshalFromNativeLoop(writer, storey.variableName, storey.destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+                base.WriteMarshalFromNativeLoop(writer, storey.variableName, storey.destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
             }
         }
 
@@ -64,7 +64,7 @@
                 {
                     base.AllocateAndStoreManagedArray(storey.writer, storey.destinationVariable, metadataAccess, base.MarshaledArraySizeFor(variableName, methodParameters));
                 }
-                base.WriteMarshalFromNativeLoop(storey.writer, variableName, storey.destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+                base.WriteMarshalFromNativeLoop(storey.writer, variableName, storey.destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
             }
         }
 
@@ -78,7 +78,7 @@
                     arraySizeVariable = base.WriteArraySizeFromManagedArray(writer, sourceVariable, destinationVariable)
                 };
                 base.AllocateAndStoreNativeArray(writer, destinationVariable, storey.arraySizeVariable);
-                base.WriteMarshalToNativeLoop(writer, sourceVariable, destinationVariable, managedVariableName, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+                base.WriteMarshalToNativeLoop(writer, sourceVariable, destinationVariable, managedVariableName, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
             }
             writer.WriteLine("else");
             using (new BlockWriter(writer, false))

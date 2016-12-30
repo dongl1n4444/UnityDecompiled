@@ -29,7 +29,7 @@
         private const float kPropertyValueWidth = 0.5f;
         private const float kResizerWidth = 5f;
         private const float kScrollbarWidth = 16f;
-        private ShowAdditionalInfo m_AdditionalInfo = ShowAdditionalInfo.Preview;
+        private ShowAdditionalInfo m_AdditionalInfo = ShowAdditionalInfo.ShaderProperties;
         private GUIContent[] m_AdditionalInfoGuiContents;
         private AttachProfilerUI m_AttachProfilerUI;
         [NonSerialized]
@@ -67,7 +67,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, GUIContent>(null, (IntPtr) <m_AdditionalInfoGuiContents>m__0);
+                <>f__am$cache0 = new Func<string, GUIContent>(FrameDebuggerWindow.<m_AdditionalInfoGuiContents>m__0);
             }
             this.m_AdditionalInfoGuiContents = Enumerable.Select<string, GUIContent>(Enum.GetNames(typeof(ShowAdditionalInfo)), <>f__am$cache0).ToArray<GUIContent>();
             this.m_AttachProfilerUI = new AttachProfilerUI();
@@ -157,42 +157,73 @@
                 {
                     GUILayout.Label("Receiving frame event data...", new GUILayoutOption[0]);
                 }
-                else if (frameEventData && ((data.vertexCount > 0) || (data.indexCount > 0)))
+                else if (frameEventData)
                 {
-                    Shader shader = data.shader;
-                    int shaderPassIndex = data.shaderPassIndex;
-                    GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    object[] objArray1 = new object[] { "Shader: ", data.shaderName, " pass #", shaderPassIndex };
-                    GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
-                    if (GUILayout.Button(string.Concat(objArray1), GUI.skin.label, options))
+                    if ((data.vertexCount > 0) || (data.indexCount > 0))
                     {
-                        EditorGUIUtility.PingObject(shader);
-                        Event.current.Use();
+                        this.DrawEventDrawCallInfo(data);
                     }
-                    GUILayout.Label(data.shaderKeywords, EditorStyles.miniLabel, new GUILayoutOption[0]);
-                    GUILayout.EndHorizontal();
-                    this.DrawStates(data);
-                    GUILayout.Space(15f);
-                    this.m_AdditionalInfo = (ShowAdditionalInfo) GUILayout.Toolbar((int) this.m_AdditionalInfo, this.m_AdditionalInfoGuiContents, new GUILayoutOption[0]);
-                    switch (this.m_AdditionalInfo)
+                    else if (event2.type == FrameEventType.ComputeDispatch)
                     {
-                        case ShowAdditionalInfo.Preview:
-                            if (frameEventData && !this.DrawEventMesh(data))
-                            {
-                                GUILayout.Label("Vertices: " + data.vertexCount, new GUILayoutOption[0]);
-                                GUILayout.Label("Indices: " + data.indexCount, new GUILayoutOption[0]);
-                            }
-                            break;
-
-                        case ShowAdditionalInfo.ShaderProperties:
-                            if (frameEventData)
-                            {
-                                this.DrawShaderProperties(data.shaderProperties);
-                            }
-                            break;
+                        this.DrawEventComputeDispatchInfo(data);
                     }
                 }
                 GUILayout.EndArea();
+            }
+        }
+
+        private void DrawEventComputeDispatchInfo(FrameDebuggerEventData curEventData)
+        {
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
+            if (GUILayout.Button("Compute Shader: " + curEventData.csName + " kernel " + curEventData.csName, GUI.skin.label, options))
+            {
+                EditorGUIUtility.PingObject(curEventData.csInstanceID);
+                Event.current.Use();
+            }
+            if (((curEventData.csThreadGroupsX != 0) || (curEventData.csThreadGroupsY != 0)) || (curEventData.csThreadGroupsZ != 0))
+            {
+                GUILayout.Label($"Thread groups: {curEventData.csThreadGroupsX}x{curEventData.csThreadGroupsY}x{curEventData.csThreadGroupsZ}", new GUILayoutOption[0]);
+            }
+            else
+            {
+                GUILayout.Label("Thread groups: indirect dispatch", new GUILayoutOption[0]);
+            }
+        }
+
+        private void DrawEventDrawCallInfo(FrameDebuggerEventData curEventData)
+        {
+            int shaderPassIndex = curEventData.shaderPassIndex;
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            object[] objArray1 = new object[] { "Shader: ", curEventData.shaderName, " pass #", shaderPassIndex };
+            string text = string.Concat(objArray1);
+            GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
+            if (GUILayout.Button(new GUIContent(text, "Click to select shader"), GUI.skin.label, options))
+            {
+                EditorGUIUtility.PingObject(curEventData.shaderInstanceID);
+                Event.current.Use();
+            }
+            GUILayoutOption[] optionArray2 = new GUILayoutOption[] { GUILayout.ExpandWidth(false) };
+            if (GUILayout.Button(new GUIContent(curEventData.shaderKeywords, "Click to copy to clipboard."), GUI.skin.label, optionArray2))
+            {
+                EditorGUIUtility.systemCopyBuffer = text + Environment.NewLine + curEventData.shaderKeywords;
+            }
+            GUILayout.EndHorizontal();
+            this.DrawStates(curEventData);
+            GUILayout.Space(15f);
+            this.m_AdditionalInfo = (ShowAdditionalInfo) GUILayout.Toolbar((int) this.m_AdditionalInfo, this.m_AdditionalInfoGuiContents, new GUILayoutOption[0]);
+            switch (this.m_AdditionalInfo)
+            {
+                case ShowAdditionalInfo.Preview:
+                    if (!this.DrawEventMesh(curEventData))
+                    {
+                        GUILayout.Label("Vertices: " + curEventData.vertexCount, new GUILayoutOption[0]);
+                        GUILayout.Label("Indices: " + curEventData.indexCount, new GUILayoutOption[0]);
+                    }
+                    break;
+
+                case ShowAdditionalInfo.ShaderProperties:
+                    this.DrawShaderProperties(curEventData.shaderProperties);
+                    break;
             }
         }
 
@@ -415,6 +446,18 @@
                 foreach (ShaderMatrixInfo info4 in props.matrices)
                 {
                     this.OnGUIShaderPropMatrix(rect, rect2, rect3, info4);
+                    rect.y += rect.height;
+                    rect2.y += rect2.height;
+                    rect3.y += rect3.height;
+                }
+            }
+            if (props.buffers.Count<ShaderBufferInfo>() > 0)
+            {
+                GUILayout.Label("Buffers", EditorStyles.boldLabel, new GUILayoutOption[0]);
+                this.GetPropertyFieldRects(props.buffers.Count<ShaderBufferInfo>(), 16f, out rect, out rect2, out rect3);
+                foreach (ShaderBufferInfo info5 in props.buffers)
+                {
+                    this.OnGUIShaderPropBuffer(rect, rect2, rect3, info5);
                     rect.y += rect.height;
                     rect2.y += rect2.height;
                     rect3.y += rect3.height;
@@ -675,6 +718,12 @@
             }
         }
 
+        private void OnGUIShaderPropBuffer(Rect nameRect, Rect flagsRect, Rect valueRect, ShaderBufferInfo t)
+        {
+            GUI.Label(nameRect, t.name, EditorStyles.miniLabel);
+            this.DrawShaderPropertyFlags(flagsRect, t.flags);
+        }
+
         private void OnGUIShaderPropFloat(Rect nameRect, Rect flagsRect, Rect valueRect, ShaderFloatInfo t)
         {
             GUI.Label(nameRect, t.name, EditorStyles.miniLabel);
@@ -696,22 +745,32 @@
         {
             GUI.Label(nameRect, t.name, EditorStyles.miniLabel);
             this.DrawShaderPropertyFlags(flagsRect, t.flags);
-            if (Event.current.type == EventType.Repaint)
+            Event current = Event.current;
+            Rect position = valueRect;
+            position.width = position.height;
+            if ((t.value != null) && position.Contains(current.mousePosition))
             {
-                Rect position = valueRect;
-                position.width = position.height;
+                GUI.Label(position, GUIContent.Temp(string.Empty, "Ctrl + Click to show preview"));
+            }
+            if (current.type == EventType.Repaint)
+            {
                 Rect rect2 = valueRect;
                 rect2.xMin += position.width;
                 if (t.value != null)
                 {
-                    EditorGUI.DrawPreviewTexture(position, t.value);
+                    Texture miniThumbnail = t.value;
+                    if (miniThumbnail.dimension != TextureDimension.Tex2D)
+                    {
+                        miniThumbnail = AssetPreview.GetMiniThumbnail(miniThumbnail);
+                    }
+                    EditorGUI.DrawPreviewTexture(position, miniThumbnail);
                 }
                 GUI.Label(rect2, (t.value == null) ? t.textureName : t.value.name);
             }
-            else if ((Event.current.type == EventType.MouseDown) && valueRect.Contains(Event.current.mousePosition))
+            else if ((current.type == EventType.MouseDown) && valueRect.Contains(current.mousePosition))
             {
-                EditorGUIUtility.PingObject(t.value);
-                Event.current.Use();
+                EditorGUI.PingObjectOrShowPreviewOnClick(t.value, valueRect);
+                current.Use();
             }
         }
 

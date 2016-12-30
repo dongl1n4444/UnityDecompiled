@@ -24,11 +24,11 @@
             bool flag = base.m_TreeView.state.expandedIDs.Count == 0;
             base.m_RootItem = new TreeViewItem(0x3c34eb12, depth, null, "InvisibleRoot");
             this.SetExpanded(base.m_RootItem.id, true);
-            List<AudioMixerController> list = this.m_GetAllControllersCallback.Invoke();
+            List<AudioMixerController> list = this.m_GetAllControllersCallback();
             base.m_NeedRefreshRows = true;
             if (list.Count > 0)
             {
-                List<AudioMixerItem> items = Enumerable.Select<AudioMixerController, AudioMixerItem>(list, new Func<AudioMixerController, AudioMixerItem>(this, (IntPtr) this.<FetchData>m__0)).ToList<AudioMixerItem>();
+                List<AudioMixerItem> items = (from mixer in list select new AudioMixerItem(mixer.GetInstanceID(), 0, base.m_RootItem, mixer.name, mixer, GetInfoText(mixer))).ToList<AudioMixerItem>();
                 foreach (AudioMixerItem item in items)
                 {
                     this.SetChildParentOfMixerItem(item, items);

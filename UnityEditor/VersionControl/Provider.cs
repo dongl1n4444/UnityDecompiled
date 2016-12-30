@@ -5,6 +5,7 @@
     using System.Runtime.InteropServices;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>This class provides acces to the version control API.</para>
@@ -102,7 +103,7 @@
         /// <summary>
         /// <para>Get a list of pending changesets owned by the current user.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Task ChangeSets();
         /// <summary>
         /// <para>Retrieves the list of assets belonging to a changeset.</para>
@@ -223,7 +224,7 @@
         /// <summary>
         /// <para>This will invalidate the cached state information for all assets.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearCache();
         /// <summary>
         /// <para>This will statt a task for deleting an asset or assets both from disk and from version control system.</para>
@@ -284,29 +285,29 @@
         public static bool DiffIsValid(AssetList assets) => 
             Internal_DiffIsValid(assets.ToArray());
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern int GenerateID();
         /// <summary>
         /// <para>Returns the configuration fields for the currently active version control plugin.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern ConfigField[] GetActiveConfigFields();
         /// <summary>
         /// <para>Gets the currently user selected verson control plugin.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Plugin GetActivePlugin();
         /// <summary>
         /// <para>Returns version control information about an asset.</para>
         /// </summary>
         /// <param name="guid">GUID of asset.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Asset GetAssetByGUID(string guid);
         /// <summary>
         /// <para>Returns version control information about an asset.</para>
         /// </summary>
         /// <param name="unityPath">Path to asset.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Asset GetAssetByPath(string unityPath);
         /// <summary>
         /// <para>Return version control information about the currently selected assets.</para>
@@ -370,7 +371,7 @@
         /// <summary>
         /// <para>Start a task for quering the version control server for incoming changes.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Task Incoming();
         /// <summary>
         /// <para>Given an incoming changeset this will start a task to query the version control server for which assets are part of the changeset.</para>
@@ -391,91 +392,91 @@
         public static Task IncomingChangeSetAssets(ChangeSet changeset) => 
             Internal_IncomingChangeSetAssets(changeset);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Add(Asset[] assets, bool recursive);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_AddIsValid(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Asset Internal_CacheStatus(string assetPath);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetAtlasRectForState(int state, out Rect value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_ChangeSetDescription(ChangeSet changeset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_ChangeSetMove(Asset[] assets, ChangeSet target);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_ChangeSetStatus(ChangeSet changeset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Checkout(Asset[] assets, CheckoutMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_CheckoutIsValid(Asset[] assets, CheckoutMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_CheckoutStrings(string[] assets, CheckoutMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Delete(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_DeleteAtProjectPath(string assetProjectPath);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_DeleteChangeSets(ChangeSet[] changesets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_DeleteChangeSetsIsValid(ChangeSet[] changes);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_DiffHead(Asset[] assets, bool includingMetaFiles);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_DiffIsValid(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Asset[] Internal_GetAssetArrayFromSelection();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_GetLatest(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_GetLatestIsValid(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_IncomingChangeSetAssets(ChangeSet changeset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Lock(Asset[] assets, bool locked);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_LockIsValid(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Merge(Asset[] assets, MergeMethod method);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_MoveAsStrings(string from, string to);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_PromptAndCheckoutIfNeeded(string[] assets, string promptIfCheckoutIsNeeded);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Resolve(Asset[] assets, ResolveMethod resolveMethod);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_ResolveIsValid(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Revert(Asset[] assets, RevertMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_RevertChangeSets(ChangeSet[] changesets, RevertMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_RevertIsValid(Asset[] assets, RevertMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_SetFileMode(Asset[] assets, FileMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_SetFileModeStrings(string[] assets, FileMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Status(Asset[] assets, bool recursively);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_StatusAbsolutePath(string assetPath);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_StatusStrings(string[] assetsProjectPaths, bool recursively);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Task Internal_Submit(ChangeSet changeset, Asset[] assets, string description, bool saveOnly);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_SubmitIsValid(ChangeSet changeset, Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern bool Internal_UnlockIsValid(Asset[] assets);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void InvalidateCache();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern bool IsCustomCommandEnabled(string name);
         /// <summary>
         /// <para>Returns true if an asset can be edited.</para>
         /// </summary>
         /// <param name="asset">Asset to test.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsOpenForEdit(Asset asset);
         /// <summary>
         /// <para>Attempt to lock an asset for exclusive editing.</para>
@@ -726,48 +727,48 @@
         /// <summary>
         /// <para>Start a task that sends the version control settings to the version control system.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Task UpdateSettings();
 
         /// <summary>
         /// <para>Gets the currently executing task.</para>
         /// </summary>
-        public static Task activeTask { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static Task activeTask { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static CustomCommand[] customCommands { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static CustomCommand[] customCommands { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns true if the version control provider is enabled and a valid Unity Pro License was found.</para>
         /// </summary>
-        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool hasChangelistSupport { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool hasChangelistSupport { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool hasCheckoutSupport { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool hasCheckoutSupport { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns true if a version control plugin has been selected and configured correctly.</para>
         /// </summary>
-        public static bool isActive { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isActive { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        public static bool isVersioningFolders { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool isVersioningFolders { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns the reason for the version control provider being offline (if it is offline).</para>
         /// </summary>
-        public static string offlineReason { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string offlineReason { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns the OnlineState of the version control provider.</para>
         /// </summary>
-        public static OnlineState onlineState { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static OnlineState onlineState { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
-        internal static Texture2D overlayAtlas { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal static Texture2D overlayAtlas { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>This is true if a network connection is required by the currently selected version control plugin to perform any action.</para>
         /// </summary>
-        public static bool requiresNetwork { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool requiresNetwork { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

@@ -102,7 +102,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Vector3, Vector2>(null, (IntPtr) <CalculateScreenRect>m__0);
+                <>f__am$cache0 = p => HandleUtility.WorldToGUIPoint(p);
             }
             List<Vector2> list = Enumerable.Select<Vector3, Vector2>(points, <>f__am$cache0).ToList<Vector2>();
             Vector2 vector = new Vector2(float.MaxValue, float.MaxValue);
@@ -209,20 +209,20 @@
                             bool flag3 = false;
                             if (<>f__am$cache6 == null)
                             {
-                                <>f__am$cache6 = new Func<LODGroupGUI.LODInfo, bool>(null, (IntPtr) <DrawLODLevelSlider>m__9);
+                                <>f__am$cache6 = lod => lod.ScreenPercent > 0.5f;
                             }
                             if (<>f__am$cache7 == null)
                             {
-                                <>f__am$cache7 = new Func<LODGroupGUI.LODInfo, int>(null, (IntPtr) <DrawLODLevelSlider>m__A);
+                                <>f__am$cache7 = x => x.LODLevel;
                             }
                             IOrderedEnumerable<LODGroupGUI.LODInfo> collection = Enumerable.OrderByDescending<LODGroupGUI.LODInfo, int>(Enumerable.Where<LODGroupGUI.LODInfo>(lods, <>f__am$cache6), <>f__am$cache7);
                             if (<>f__am$cache8 == null)
                             {
-                                <>f__am$cache8 = new Func<LODGroupGUI.LODInfo, bool>(null, (IntPtr) <DrawLODLevelSlider>m__B);
+                                <>f__am$cache8 = lod => lod.ScreenPercent <= 0.5f;
                             }
                             if (<>f__am$cache9 == null)
                             {
-                                <>f__am$cache9 = new Func<LODGroupGUI.LODInfo, int>(null, (IntPtr) <DrawLODLevelSlider>m__C);
+                                <>f__am$cache9 = x => x.LODLevel;
                             }
                             IOrderedEnumerable<LODGroupGUI.LODInfo> enumerable2 = Enumerable.OrderBy<LODGroupGUI.LODInfo, int>(Enumerable.Where<LODGroupGUI.LODInfo>(lods, <>f__am$cache8), <>f__am$cache9);
                             List<LODGroupGUI.LODInfo> list = new List<LODGroupGUI.LODInfo>();
@@ -344,11 +344,11 @@
                             {
                                 if (<>f__am$cacheA == null)
                                 {
-                                    <>f__am$cacheA = new Func<Object, bool>(null, (IntPtr) <DrawLODLevelSlider>m__D);
+                                    <>f__am$cacheA = go => go is GameObject;
                                 }
                                 if (<>f__am$cacheB == null)
                                 {
-                                    <>f__am$cacheB = new Func<Object, GameObject>(null, (IntPtr) <DrawLODLevelSlider>m__E);
+                                    <>f__am$cacheB = go => go as GameObject;
                                 }
                                 IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<Object, GameObject>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cacheA), <>f__am$cacheB);
                                 IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
@@ -582,8 +582,12 @@
             {
                 return new List<Renderer>();
             }
-            IEnumerable<GameObject> first = Enumerable.Where<GameObject>(selectedGameObjects, new Func<GameObject, bool>(this, (IntPtr) this.<GetRenderers>m__5));
-            IEnumerable<GameObject> source = Enumerable.Where<GameObject>(selectedGameObjects, new Func<GameObject, bool>(this, (IntPtr) this.<GetRenderers>m__6));
+            IEnumerable<GameObject> first = from go in selectedGameObjects
+                where go.transform.IsChildOf(this.m_LODGroup.transform)
+                select go;
+            IEnumerable<GameObject> source = from go in selectedGameObjects
+                where !go.transform.IsChildOf(this.m_LODGroup.transform)
+                select go;
             List<GameObject> second = new List<GameObject>();
             if ((source.Count<GameObject>() > 0) && EditorUtility.DisplayDialog("Reparent GameObjects", "Some objects are not children of the LODGroup GameObject. Do you want to reparent them and add them to the LODGroup?", "Yes, Reparent", "No, Use Only Existing Children"))
             {
@@ -622,11 +626,11 @@
             }
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<Object, bool>(null, (IntPtr) <GetRenderers>m__7);
+                <>f__am$cache4 = go => go is Renderer;
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<Object, Renderer>(null, (IntPtr) <GetRenderers>m__8);
+                <>f__am$cache5 = go => go as Renderer;
             }
             IEnumerable<Renderer> collection = Enumerable.Select<Object, Renderer>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache4), <>f__am$cache5);
             list2.AddRange(collection);
@@ -650,7 +654,7 @@
                 case EventType.DragPerform:
                 {
                     bool flag = false;
-                    if (drawArea.Contains(storey.evt.mousePosition) && Enumerable.All<Rect>(alreadyDrawn, new Func<Rect, bool>(storey, (IntPtr) this.<>m__0)))
+                    if (drawArea.Contains(storey.evt.mousePosition) && Enumerable.All<Rect>(alreadyDrawn, new Func<Rect, bool>(storey.<>m__0)))
                     {
                         flag = true;
                     }
@@ -663,11 +667,11 @@
                             {
                                 if (<>f__am$cache2 == null)
                                 {
-                                    <>f__am$cache2 = new Func<Object, bool>(null, (IntPtr) <HandleAddRenderer>m__3);
+                                    <>f__am$cache2 = go => go is GameObject;
                                 }
                                 if (<>f__am$cache3 == null)
                                 {
-                                    <>f__am$cache3 = new Func<Object, GameObject>(null, (IntPtr) <HandleAddRenderer>m__4);
+                                    <>f__am$cache3 = go => go as GameObject;
                                 }
                                 IEnumerable<GameObject> selectedGameObjects = Enumerable.Select<Object, GameObject>(Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache2), <>f__am$cache3);
                                 IEnumerable<Renderer> renderers = this.GetRenderers(selectedGameObjects, true);
@@ -789,12 +793,12 @@
             if ((this.m_NumberOfLODs > 0) && (this.activeLOD >= 0))
             {
                 SerializedProperty property = base.serializedObject.FindProperty($"m_LODs.Array.data[{this.activeLOD}].renderers");
-                for (int i = property.arraySize - 1; i >= 0; i--)
+                for (int j = property.arraySize - 1; j >= 0; j--)
                 {
-                    Renderer objectReferenceValue = property.GetArrayElementAtIndex(i).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
+                    Renderer objectReferenceValue = property.GetArrayElementAtIndex(j).FindPropertyRelative("renderer").objectReferenceValue as Renderer;
                     if (objectReferenceValue == null)
                     {
-                        property.DeleteArrayElementAtIndex(i);
+                        property.DeleteArrayElementAtIndex(j);
                     }
                 }
             }
@@ -803,9 +807,9 @@
             Rect area = GUILayoutUtility.GetRect((float) 0f, (float) 30f, options);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<int, string>(null, (IntPtr) <OnInspectorGUI>m__1);
+                <>f__am$cache1 = i => $"LOD {i}";
             }
-            List<LODGroupGUI.LODInfo> lods = LODGroupGUI.CreateLODInfos(this.m_NumberOfLODs, area, <>f__am$cache1, new Func<int, float>(this, (IntPtr) this.<OnInspectorGUI>m__2));
+            List<LODGroupGUI.LODInfo> lods = LODGroupGUI.CreateLODInfos(this.m_NumberOfLODs, area, <>f__am$cache1, i => base.serializedObject.FindProperty($"m_LODs.Array.data[{i}].screenRelativeHeight").floatValue);
             this.DrawLODLevelSlider(area, lods);
             GUILayout.Space(16f);
             if (QualitySettings.lodBias != 1f)
@@ -853,11 +857,11 @@
                 {
                     GUI.enabled = false;
                 }
-                if ((importer != null) && GUILayout.Button(!flag3 ? LODGroupGUI.Styles.m_UploadToImporterDisabled : LODGroupGUI.Styles.m_UploadToImporter, new GUILayoutOption[0]))
+                if (GUILayout.Button(!flag3 ? LODGroupGUI.Styles.m_UploadToImporterDisabled : LODGroupGUI.Styles.m_UploadToImporter, new GUILayoutOption[0]))
                 {
-                    for (int j = 0; j < property3.arraySize; j++)
+                    for (int k = 0; k < property3.arraySize; k++)
                     {
-                        property3.GetArrayElementAtIndex(j).floatValue = lods[j].RawScreenPercent;
+                        property3.GetArrayElementAtIndex(k).floatValue = lods[k].RawScreenPercent;
                     }
                     obj2.ApplyModifiedProperties();
                     AssetDatabase.ImportAsset(importer.assetPath);

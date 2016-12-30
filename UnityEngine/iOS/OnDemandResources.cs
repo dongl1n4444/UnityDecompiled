@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>On Demand Resources API.</para>
@@ -18,13 +19,13 @@
         public static OnDemandResourcesRequest PreloadAsync(string[] tags) => 
             PreloadAsyncInternal(tags);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern OnDemandResourcesRequest PreloadAsyncInternal(string[] tags);
 
         /// <summary>
         /// <para>Indicates whether player was built with "Use On Demand Resources" player setting enabled.</para>
         /// </summary>
-        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool enabled { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

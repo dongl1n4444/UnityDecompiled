@@ -1,21 +1,47 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using UnityEditor.IMGUI.Controls;
     using UnityEngine;
 
-    [CustomEditor(typeof(SphereCollider)), CanEditMultipleObjects]
-    internal class SphereColliderEditor : Collider3DEditorBase
+    [CanEditMultipleObjects, CustomEditor(typeof(SphereCollider))]
+    internal class SphereColliderEditor : PrimitiveCollider3DEditor
     {
+        private readonly SphereBoundsHandle m_BoundsHandle = new SphereBoundsHandle(s_HandleControlIDHint);
         private SerializedProperty m_Center;
-        private int m_HandleControlID;
         private SerializedProperty m_Radius;
+        private static readonly int s_HandleControlIDHint = typeof(SphereColliderEditor).Name.GetHashCode();
+
+        protected override void CopyColliderPropertiesToHandle()
+        {
+            SphereCollider target = (SphereCollider) base.target;
+            this.m_BoundsHandle.center = base.TransformColliderCenterToHandleSpace(target.transform, target.center);
+            this.m_BoundsHandle.radius = target.radius * this.GetRadiusScaleFactor();
+        }
+
+        protected override void CopyHandlePropertiesToCollider()
+        {
+            SphereCollider target = (SphereCollider) base.target;
+            target.center = base.TransformHandleCenterToColliderSpace(target.transform, this.m_BoundsHandle.center);
+            target.radius = this.m_BoundsHandle.radius / this.GetRadiusScaleFactor();
+        }
+
+        private float GetRadiusScaleFactor()
+        {
+            float a = 0f;
+            Vector3 lossyScale = ((SphereCollider) base.target).transform.lossyScale;
+            for (int i = 0; i < 3; i++)
+            {
+                a = Mathf.Max(a, Mathf.Abs(lossyScale[i]));
+            }
+            return a;
+        }
 
         public override void OnEnable()
         {
             base.OnEnable();
             this.m_Center = base.serializedObject.FindProperty("m_Center");
             this.m_Radius = base.serializedObject.FindProperty("m_Radius");
-            this.m_HandleControlID = -1;
         }
 
         public override void OnInspectorGUI()
@@ -29,47 +55,8 @@
             base.serializedObject.ApplyModifiedProperties();
         }
 
-        public void OnSceneGUI()
-        {
-            bool flag = GUIUtility.hotControl == this.m_HandleControlID;
-            SphereCollider target = (SphereCollider) base.target;
-            Color color = Handles.color;
-            if (target.enabled)
-            {
-                Handles.color = Handles.s_ColliderHandleColor;
-            }
-            else
-            {
-                Handles.color = Handles.s_ColliderHandleColorDisabled;
-            }
-            bool enabled = GUI.enabled;
-            if (!base.editingCollider && !flag)
-            {
-                GUI.enabled = false;
-                Handles.color = new Color(0f, 0f, 0f, 0.001f);
-            }
-            Vector3 lossyScale = target.transform.lossyScale;
-            float a = Mathf.Abs(lossyScale.x);
-            float introduced12 = Mathf.Max(a, Mathf.Abs(lossyScale.y));
-            float num = Mathf.Max(introduced12, Mathf.Abs(lossyScale.z));
-            float f = num * target.radius;
-            f = Mathf.Max(Mathf.Abs(f), 1E-05f);
-            Vector3 position = target.transform.TransformPoint(target.center);
-            Quaternion rotation = target.transform.rotation;
-            int hotControl = GUIUtility.hotControl;
-            float num4 = Handles.RadiusHandle(rotation, position, f, true);
-            if (GUI.changed)
-            {
-                Undo.RecordObject(target, "Adjust Radius");
-                target.radius = (num4 * 1f) / num;
-            }
-            if ((hotControl != GUIUtility.hotControl) && (GUIUtility.hotControl != 0))
-            {
-                this.m_HandleControlID = GUIUtility.hotControl;
-            }
-            Handles.color = color;
-            GUI.enabled = enabled;
-        }
+        protected override PrimitiveBoundsHandle boundsHandle =>
+            this.m_BoundsHandle;
     }
 }
 

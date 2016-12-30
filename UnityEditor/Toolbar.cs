@@ -46,8 +46,8 @@
             this.UpdateCollabToolbarState();
             bool requestShowCollabToolbar = Toolbar.requestShowCollabToolbar;
             Toolbar.requestShowCollabToolbar = false;
-            bool flag3 = Collab.instance.collabInfo.whitelisted && !EditorApplication.isPlaying;
-            using (new EditorGUI.DisabledScope(!flag3))
+            bool flag2 = !EditorApplication.isPlaying;
+            using (new EditorGUI.DisabledScope(!flag2))
             {
                 bool animate = this.m_CollabToolbarState == CollabToolbarState.InProgress;
                 EditorGUIUtility.SetIconSize(new Vector2(12f, 12f));
@@ -215,9 +215,9 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<float>(null, (IntPtr) <OnEnable>m__0);
+                    <>f__am$cache0 = () => ((float) EditorApplication.timeSinceStartup) * 500f;
                 }
-                this.m_CollabButton = new ButtonWithAnimatedIconRotation(<>f__am$cache0, new Action(this, (IntPtr) this.Repaint), 20f, true);
+                this.m_CollabButton = new ButtonWithAnimatedIconRotation(<>f__am$cache0, new Action(this.Repaint), 20f, true);
             }
         }
 
@@ -274,12 +274,9 @@
             {
                 UnityConnectServiceCollection.instance.ShowService("Hub", true);
             }
-            if (UnityConnect.instance.userInfo.whitelisted)
-            {
-                this.ReserveWidthLeft(width, ref pos);
-                this.ReserveWidthLeft(78f, ref pos);
-                this.DoCollabDropDown(this.GetThinArea(pos));
-            }
+            this.ReserveWidthLeft(width, ref pos);
+            this.ReserveWidthLeft(78f, ref pos);
+            this.DoCollabDropDown(this.GetThinArea(pos));
             EditorGUI.ShowRepaints();
             Highlighter.ControlHighlightGUI(this);
         }
@@ -407,60 +404,57 @@
 
         public void UpdateCollabToolbarState()
         {
-            if (Collab.instance.GetCollabInfo().whitelisted)
+            CollabToolbarState upToDate = CollabToolbarState.UpToDate;
+            bool flag = UnityConnect.instance.connectInfo.online && UnityConnect.instance.connectInfo.loggedIn;
+            this.m_DynamicTooltip = "";
+            if (flag)
             {
-                CollabToolbarState upToDate = CollabToolbarState.UpToDate;
-                bool flag = UnityConnect.instance.connectInfo.online && UnityConnect.instance.connectInfo.loggedIn;
-                this.m_DynamicTooltip = "";
-                if (flag)
+                Collab instance = Collab.instance;
+                bool flag2 = instance.JobRunning(0);
+                CollabInfo collabInfo = instance.collabInfo;
+                if (!collabInfo.ready)
                 {
-                    Collab instance = Collab.instance;
-                    bool flag2 = instance.JobRunning(0);
-                    CollabInfo collabInfo = instance.collabInfo;
-                    if (!collabInfo.ready)
-                    {
-                        upToDate = CollabToolbarState.InProgress;
-                    }
-                    else if (collabInfo.error)
-                    {
-                        upToDate = CollabToolbarState.OperationError;
-                        this.m_DynamicTooltip = "Last operation failed. " + collabInfo.lastErrorMsg;
-                    }
-                    else if (flag2)
-                    {
-                        upToDate = CollabToolbarState.InProgress;
-                    }
-                    else
-                    {
-                        bool flag3 = CollabAccess.Instance.IsServiceEnabled();
-                        if (!UnityConnect.instance.projectInfo.projectBound || !flag3)
-                        {
-                            upToDate = CollabToolbarState.NeedToEnableCollab;
-                        }
-                        else if (collabInfo.update)
-                        {
-                            upToDate = CollabToolbarState.ServerHasChanges;
-                        }
-                        else if (collabInfo.conflict)
-                        {
-                            upToDate = CollabToolbarState.Conflict;
-                        }
-                        else if (collabInfo.publish)
-                        {
-                            upToDate = CollabToolbarState.FilesToPush;
-                        }
-                    }
+                    upToDate = CollabToolbarState.InProgress;
+                }
+                else if (collabInfo.error)
+                {
+                    upToDate = CollabToolbarState.OperationError;
+                    this.m_DynamicTooltip = "Last operation failed. " + collabInfo.lastErrorMsg;
+                }
+                else if (flag2)
+                {
+                    upToDate = CollabToolbarState.InProgress;
                 }
                 else
                 {
-                    upToDate = CollabToolbarState.Offline;
+                    bool flag3 = CollabAccess.Instance.IsServiceEnabled();
+                    if (!UnityConnect.instance.projectInfo.projectBound || !flag3)
+                    {
+                        upToDate = CollabToolbarState.NeedToEnableCollab;
+                    }
+                    else if (collabInfo.update)
+                    {
+                        upToDate = CollabToolbarState.ServerHasChanges;
+                    }
+                    else if (collabInfo.conflict)
+                    {
+                        upToDate = CollabToolbarState.Conflict;
+                    }
+                    else if (collabInfo.publish)
+                    {
+                        upToDate = CollabToolbarState.FilesToPush;
+                    }
                 }
-                if ((upToDate != this.m_CollabToolbarState) || (CollabToolbarWindow.s_ToolbarIsVisible == m_ShowCollabTooltip))
-                {
-                    this.m_CollabToolbarState = upToDate;
-                    m_ShowCollabTooltip = !CollabToolbarWindow.s_ToolbarIsVisible;
-                    RepaintToolbar();
-                }
+            }
+            else
+            {
+                upToDate = CollabToolbarState.Offline;
+            }
+            if ((upToDate != this.m_CollabToolbarState) || (CollabToolbarWindow.s_ToolbarIsVisible == m_ShowCollabTooltip))
+            {
+                this.m_CollabToolbarState = upToDate;
+                m_ShowCollabTooltip = !CollabToolbarWindow.s_ToolbarIsVisible;
+                RepaintToolbar();
             }
         }
 

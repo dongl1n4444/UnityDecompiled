@@ -27,7 +27,7 @@
             <AddSearchDirectory>c__AnonStorey0 storey = new <AddSearchDirectory>c__AnonStorey0 {
                 path = path
             };
-            if (!Enumerable.Any<string>(this._searchPaths, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+            if (!Enumerable.Any<string>(this._searchPaths, new Func<string, bool>(storey.<>m__0)))
             {
                 this._searchPaths.Add(storey.path);
             }

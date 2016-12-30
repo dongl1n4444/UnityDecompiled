@@ -15,7 +15,7 @@
         private string <ProjectLockFile>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string[] <ResolvedReferences>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <TargetMoniker>k__BackingField;
 
         public NuGetPackageResolver()

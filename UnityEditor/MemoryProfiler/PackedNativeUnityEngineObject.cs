@@ -17,7 +17,7 @@
         [SerializeField]
         internal int m_Size;
         [SerializeField]
-        internal int m_ClassId;
+        internal int m_NativeTypeArrayIndex;
         [SerializeField]
         internal HideFlags m_HideFlags;
         [SerializeField]
@@ -54,11 +54,14 @@
         /// </summary>
         public int size =>
             this.m_Size;
-        /// <summary>
-        /// <para>ClassId of this C++ object.  Use this classId to index into PackedMemorySnapshot.nativeTypes.</para>
-        /// </summary>
+        [Obsolete("PackedNativeUnityEngineObject.classId is obsolete. Use PackedNativeUnityEngineObject.nativeTypeArrayIndex instead (UnityUpgradable) -> nativeTypeArrayIndex")]
         public int classId =>
-            this.m_ClassId;
+            this.m_NativeTypeArrayIndex;
+        /// <summary>
+        /// <para>The index used to obtain the native C++ type description from the PackedMemorySnapshot.nativeTypes array.</para>
+        /// </summary>
+        public int nativeTypeArrayIndex =>
+            this.m_NativeTypeArrayIndex;
         /// <summary>
         /// <para>The hideFlags this native object has.</para>
         /// </summary>

@@ -24,6 +24,10 @@
         /// </summary>
         ARGB4444 = 5,
         /// <summary>
+        /// <para>Four color render texture format, 16 bits per channel, fixed point, unsigned normalized.</para>
+        /// </summary>
+        ARGB64 = 10,
+        /// <summary>
         /// <para>Color render texture format, 32 bit floating point per channel.</para>
         /// </summary>
         ARGBFloat = 11,
@@ -59,6 +63,10 @@
         /// <para>Scalar (R) render texture format, 32 bit floating point.</para>
         /// </summary>
         RFloat = 14,
+        /// <summary>
+        /// <para>Two color (RG) render texture format, 16 bits per channel, fixed point, unsigned normalized.</para>
+        /// </summary>
+        RG32 = 0x17,
         /// <summary>
         /// <para>Color render texture format. R and G channels are 11 bit floating point, B channel is 10 bit floating point.</para>
         /// </summary>

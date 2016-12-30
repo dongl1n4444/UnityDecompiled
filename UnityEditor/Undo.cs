@@ -5,6 +5,7 @@
     using System.Runtime.CompilerServices;
     using UnityEngine;
     using UnityEngine.SceneManagement;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Lets you register undo operations on specific objects you are about to perform changes on.</para>
@@ -32,7 +33,7 @@
         /// <returns>
         /// <para>The newly added component.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Component AddComponent(GameObject gameObject, Type type);
         [Obsolete("Use Undo.RecordObject instead")]
         public static void ClearSnapshotTarget()
@@ -43,13 +44,13 @@
         /// <para>Removes all Undo operation for the identifier object registered using Undo.RegisterCompleteObjectUndo from the undo stack.</para>
         /// </summary>
         /// <param name="identifier"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ClearUndo(Object identifier);
         /// <summary>
         /// <para>Collapses all undo operation up to group index together into one step.</para>
         /// </summary>
         /// <param name="groupIndex"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CollapseUndoOperations(int groupIndex);
         [Obsolete("Use Undo.RecordObject instead")]
         public static void CreateSnapshot()
@@ -60,17 +61,17 @@
         /// <para>Destroys the object and records an undo operation so that it can be recreated.</para>
         /// </summary>
         /// <param name="objectToUndo">The object that will be destroyed.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void DestroyObjectImmediate(Object objectToUndo);
         /// <summary>
         /// <para>Ensure objects recorded using RecordObject or ::ref:RecordObjects are registered as an undoable action. In most cases there is no reason to invoke FlushUndoRecordObjects since it's automatically done right after mouse-up and certain other events that conventionally marks the end of an action.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void FlushUndoRecordObjects();
         /// <summary>
         /// <para>Unity automatically groups undo operations by the current group index.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern int GetCurrentGroup();
         /// <summary>
         /// <para>Get the name that will be shown in the UI for the current undo group.</para>
@@ -78,21 +79,21 @@
         /// <returns>
         /// <para>Name of the current group or an empty string if the current group is empty.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern string GetCurrentGroupName();
         internal static void GetRecords(List<string> undoRecords, List<string> redoRecords)
         {
             GetRecordsInternal(undoRecords, redoRecords);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void GetRecordsInternal(object undoRecords, object redoRecords);
         /// <summary>
         /// <para>Unity automatically groups undo operations by the current group index.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void IncrementCurrentGroup();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_MoveGameObjectToScene(GameObject go, ref Scene scene, string name);
         private static void Internal_CallUndoRedoPerformed()
         {
@@ -134,26 +135,26 @@
         /// <summary>
         /// <para>Perform an Redo operation.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void PerformRedo();
         /// <summary>
         /// <para>Perform an Undo operation.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void PerformUndo();
         /// <summary>
         /// <para>Records any changes done on the object after the RecordObject function.</para>
         /// </summary>
         /// <param name="objectToUndo">The reference to the object that you will be modifying.</param>
         /// <param name="name">The title of the action to appear in the undo history (i.e. visible in the undo menu).</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RecordObject(Object objectToUndo, string name);
         /// <summary>
         /// <para>Records multiple undoable objects in a single call. This is the same as calling Undo.RecordObject multiple times.</para>
         /// </summary>
         /// <param name="objectsToUndo"></param>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RecordObjects(Object[] objectsToUndo, string name);
         /// <summary>
         /// <para>Stores a copy of the object states on the undo stack.</para>
@@ -179,14 +180,14 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void RegisterCompleteObjectUndoMultiple(Object identifier, Object[] objectsToUndo, string name, int namePriority);
         /// <summary>
         /// <para>Register an undo operations for a newly created object.</para>
         /// </summary>
         /// <param name="objectToUndo">The object that was created.</param>
         /// <param name="name">The name of the action to undo. Think "Undo ...." in the main menu.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RegisterCreatedObjectUndo(Object objectToUndo, string name);
         /// <summary>
         /// <para>This overload is deprecated. Use Undo.RegisterFullObjectHierarchyUndo(Object, string) instead.</para>
@@ -203,7 +204,7 @@
         /// </summary>
         /// <param name="objectToUndo">The object used to determine a hierarchy of objects whose state changes need to be undone.</param>
         /// <param name="name">The name of the undo operation.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RegisterFullObjectHierarchyUndo(Object objectToUndo, string name);
         [Obsolete("Use DestroyObjectImmediate, RegisterCreatedObjectUndo or RegisterUndo instead.")]
         public static void RegisterSceneUndo(string name)
@@ -236,18 +237,18 @@
         /// <para>Performs all undo operations up to the group index without storing a redo operation in the process.</para>
         /// </summary>
         /// <param name="group"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RevertAllDownToGroup(int group);
         /// <summary>
         /// <para>Performs the last undo operation but does not record a redo operation.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RevertAllInCurrentGroup();
         /// <summary>
         /// <para>Set the name of the current undo group.</para>
         /// </summary>
         /// <param name="name">New name of the current undo group.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetCurrentGroupName(string name);
         [Obsolete("Use Undo.RecordObject instead")]
         public static void SetSnapshotTarget(Object objectToUndo, string name)
@@ -265,7 +266,7 @@
         /// <param name="transform"></param>
         /// <param name="newParent"></param>
         /// <param name="name"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void SetTransformParent(Transform transform, Transform newParent, string name);
 
         public delegate UndoPropertyModification[] PostprocessModifications(UndoPropertyModification[] modifications);

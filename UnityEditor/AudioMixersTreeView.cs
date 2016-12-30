@@ -30,7 +30,7 @@
             this.m_TreeView.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TreeView.contextClickItemCallback, new Action<int>(this.OnTreeViewContextClick));
             AudioMixersTreeViewGUI gui = new AudioMixersTreeViewGUI(this.m_TreeView);
             AudioMixersDataSource data = new AudioMixersDataSource(this.m_TreeView, getAllControllersCallback);
-            AudioMixerTreeViewDragging dragging = new AudioMixerTreeViewDragging(this.m_TreeView, new Action<List<AudioMixerController>, AudioMixerController>(this, (IntPtr) this.OnMixersDroppedOnMixerCallback));
+            AudioMixerTreeViewDragging dragging = new AudioMixerTreeViewDragging(this.m_TreeView, new Action<List<AudioMixerController>, AudioMixerController>(this.OnMixersDroppedOnMixerCallback));
             this.m_TreeView.Init(mixerWindow.position, data, gui, dragging);
             this.m_TreeView.ReloadData();
         }
@@ -117,7 +117,7 @@
                     this.ReloadTree();
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<AudioMixerController, int>(null, (IntPtr) <HandleObjectSelectorResult>m__1);
+                        <>f__am$cache1 = i => i.GetInstanceID();
                     }
                     int[] selectedIDs = Enumerable.Select<AudioMixerController, int>(this.m_DraggedMixers, <>f__am$cache1).ToArray<int>();
                     this.m_TreeView.SetSelection(selectedIDs, true);
@@ -171,7 +171,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<AudioMixerController, int>(null, (IntPtr) <OnMixersDroppedOnMixerCallback>m__0);
+                <>f__am$cache0 = i => i.GetInstanceID();
             }
             int[] selectedIDs = Enumerable.Select<AudioMixerController, int>(draggedMixers, <>f__am$cache0).ToArray<int>();
             this.m_TreeView.SetSelection(selectedIDs, true);

@@ -5,22 +5,25 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(AnimationWindowEvent))]
+    [CanEditMultipleObjects, CustomEditor(typeof(AnimationWindowEvent))]
     internal class AnimationWindowEventInspector : Editor
     {
         [CompilerGenerated]
-        private static Func<ParameterInfo, Type> <>f__am$cache0;
+        private static Func<Object, AnimationWindowEvent> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<ParameterInfo, Type> <>f__am$cache1;
         private const string kNoneSelected = "(No Function Selected)";
         private const string kNotSupportedPostFix = " (Function Not Supported)";
 
-        public static List<AnimationWindowEventMethod> CollectSupportedMethods(AnimationWindowEvent awevt)
+        public static List<AnimationWindowEventMethod> CollectSupportedMethods(GameObject gameObject)
         {
             List<AnimationWindowEventMethod> list = new List<AnimationWindowEventMethod>();
-            if (awevt.root != null)
+            if (gameObject != null)
             {
-                MonoBehaviour[] components = awevt.root.GetComponents<MonoBehaviour>();
+                MonoBehaviour[] components = gameObject.GetComponents<MonoBehaviour>();
                 HashSet<string> set = new HashSet<string>();
                 foreach (MonoBehaviour behaviour in components)
                 {
@@ -83,33 +86,84 @@
             return list;
         }
 
-        private static void DoEditRegularParameters(AnimationEvent evt, Type selectedParameter)
+        private static void DoEditRegularParameters(AnimationEvent[] events, Type selectedParameter)
         {
+            <DoEditRegularParameters>c__AnonStorey2 storey = new <DoEditRegularParameters>c__AnonStorey2 {
+                firstEvent = events[0]
+            };
             if ((selectedParameter == typeof(AnimationEvent)) || (selectedParameter == typeof(float)))
             {
-                evt.floatParameter = EditorGUILayout.FloatField("Float", evt.floatParameter, new GUILayoutOption[0]);
+                bool flag = Array.TrueForAll<AnimationEvent>(events, new Predicate<AnimationEvent>(storey.<>m__0));
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = !flag;
+                float num = EditorGUILayout.FloatField("Float", storey.firstEvent.floatParameter, new GUILayoutOption[0]);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    foreach (AnimationEvent event2 in events)
+                    {
+                        event2.floatParameter = num;
+                    }
+                }
             }
-            if (selectedParameter.IsEnum)
+            if (((selectedParameter == typeof(AnimationEvent)) || (selectedParameter == typeof(int))) || selectedParameter.IsEnum)
             {
-                evt.intParameter = EnumPopup("Enum", selectedParameter, evt.intParameter);
-            }
-            else if ((selectedParameter == typeof(AnimationEvent)) || (selectedParameter == typeof(int)))
-            {
-                evt.intParameter = EditorGUILayout.IntField("Int", evt.intParameter, new GUILayoutOption[0]);
+                bool flag2 = Array.TrueForAll<AnimationEvent>(events, new Predicate<AnimationEvent>(storey.<>m__1));
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = !flag2;
+                int num3 = 0;
+                if (selectedParameter.IsEnum)
+                {
+                    num3 = EnumPopup("Enum", selectedParameter, storey.firstEvent.intParameter);
+                }
+                else
+                {
+                    num3 = EditorGUILayout.IntField("Int", storey.firstEvent.intParameter, new GUILayoutOption[0]);
+                }
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    foreach (AnimationEvent event3 in events)
+                    {
+                        event3.intParameter = num3;
+                    }
+                }
             }
             if ((selectedParameter == typeof(AnimationEvent)) || (selectedParameter == typeof(string)))
             {
-                evt.stringParameter = EditorGUILayout.TextField("String", evt.stringParameter, new GUILayoutOption[0]);
+                bool flag3 = Array.TrueForAll<AnimationEvent>(events, new Predicate<AnimationEvent>(storey.<>m__2));
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = !flag3;
+                string str = EditorGUILayout.TextField("String", storey.firstEvent.stringParameter, new GUILayoutOption[0]);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    foreach (AnimationEvent event4 in events)
+                    {
+                        event4.stringParameter = str;
+                    }
+                }
             }
             if (((selectedParameter == typeof(AnimationEvent)) || selectedParameter.IsSubclassOf(typeof(Object))) || (selectedParameter == typeof(Object)))
             {
+                bool flag4 = Array.TrueForAll<AnimationEvent>(events, new Predicate<AnimationEvent>(storey.<>m__3));
+                EditorGUI.BeginChangeCheck();
                 Type objType = typeof(Object);
                 if (selectedParameter != typeof(AnimationEvent))
                 {
                     objType = selectedParameter;
                 }
+                EditorGUI.showMixedValue = !flag4;
                 bool allowSceneObjects = false;
-                evt.objectReferenceParameter = EditorGUILayout.ObjectField(ObjectNames.NicifyVariableName(objType.Name), evt.objectReferenceParameter, objType, allowSceneObjects, new GUILayoutOption[0]);
+                Object obj2 = EditorGUILayout.ObjectField(ObjectNames.NicifyVariableName(objType.Name), storey.firstEvent.objectReferenceParameter, objType, allowSceneObjects, new GUILayoutOption[0]);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    foreach (AnimationEvent event5 in events)
+                    {
+                        event5.objectReferenceParameter = obj2;
+                    }
+                }
             }
         }
 
@@ -159,11 +213,11 @@
                             }
                             if (method != null)
                             {
-                                if (<>f__am$cache0 == null)
+                                if (<>f__am$cache1 == null)
                                 {
-                                    <>f__am$cache0 = new Func<ParameterInfo, Type>(null, (IntPtr) <FormatEvent>m__0);
+                                    <>f__am$cache1 = p => p.ParameterType;
                                 }
-                                IEnumerable<Type> paramTypes = Enumerable.Select<ParameterInfo, Type>(method.GetParameters(), <>f__am$cache0);
+                                IEnumerable<Type> paramTypes = Enumerable.Select<ParameterInfo, Type>(method.GetParameters(), <>f__am$cache1);
                                 return (evt.functionName + FormatEventArguments(paramTypes, evt));
                             }
                         }
@@ -212,6 +266,39 @@
             return " (Function Not Supported)";
         }
 
+        private static AnimationWindowEventData GetData(AnimationWindowEvent[] awEvents)
+        {
+            AnimationWindowEventData data = new AnimationWindowEventData();
+            if (awEvents.Length != 0)
+            {
+                AnimationWindowEvent event2 = awEvents[0];
+                data.root = event2.root;
+                data.clip = event2.clip;
+                data.clipInfo = event2.clipInfo;
+                if (data.clip != null)
+                {
+                    data.events = AnimationUtility.GetAnimationEvents(data.clip);
+                }
+                else if (data.clipInfo != null)
+                {
+                    data.events = data.clipInfo.GetEvents();
+                }
+                if (data.events != null)
+                {
+                    List<AnimationEvent> list = new List<AnimationEvent>();
+                    foreach (AnimationWindowEvent event3 in awEvents)
+                    {
+                        if ((event3.eventIndex >= 0) && (event3.eventIndex < data.events.Length))
+                        {
+                            list.Add(data.events[event3.eventIndex]);
+                        }
+                    }
+                    data.selectedEvents = list.ToArray();
+                }
+            }
+            return data;
+        }
+
         private static bool IsSupportedMethodName(string name)
         {
             if (((name == "Main") || (name == "Start")) || ((name == "Awake") || (name == "Update")))
@@ -223,33 +310,33 @@
 
         public static void OnDisabledAnimationEvent()
         {
-            AnimationEvent evt = new AnimationEvent();
+            AnimationEvent event2 = new AnimationEvent();
             using (new EditorGUI.DisabledScope(true))
             {
-                evt.functionName = EditorGUILayout.TextField(new GUIContent("Function"), evt.functionName, new GUILayoutOption[0]);
-                DoEditRegularParameters(evt, typeof(AnimationEvent));
+                event2.functionName = EditorGUILayout.TextField(new GUIContent("Function"), event2.functionName, new GUILayoutOption[0]);
+                AnimationEvent[] events = new AnimationEvent[] { event2 };
+                DoEditRegularParameters(events, typeof(AnimationEvent));
             }
         }
 
-        public static void OnEditAnimationEvent(AnimationWindowEvent awevt)
+        public static void OnEditAnimationEvent(AnimationWindowEvent awe)
         {
-            <OnEditAnimationEvent>c__AnonStorey0 storey = new <OnEditAnimationEvent>c__AnonStorey0();
-            AnimationEvent[] events = null;
-            if (awevt.clip != null)
+            AnimationWindowEvent[] awEvents = new AnimationWindowEvent[] { awe };
+            OnEditAnimationEvents(awEvents);
+        }
+
+        public static void OnEditAnimationEvents(AnimationWindowEvent[] awEvents)
+        {
+            <OnEditAnimationEvents>c__AnonStorey0 storey = new <OnEditAnimationEvents>c__AnonStorey0();
+            AnimationWindowEventData data = GetData(awEvents);
+            if (((data.events != null) && (data.selectedEvents != null)) && (data.selectedEvents.Length != 0))
             {
-                events = AnimationUtility.GetAnimationEvents(awevt.clip);
-            }
-            else if (awevt.clipInfo != null)
-            {
-                events = awevt.clipInfo.GetEvents();
-            }
-            if (((events != null) && (awevt.eventIndex >= 0)) && (awevt.eventIndex < events.Length))
-            {
-                storey.evt = events[awevt.eventIndex];
+                storey.firstEvent = data.selectedEvents[0];
+                bool flag = Array.TrueForAll<AnimationEvent>(data.selectedEvents, new Predicate<AnimationEvent>(storey.<>m__0));
                 GUI.changed = false;
-                if (awevt.root != null)
+                if (data.root != null)
                 {
-                    List<AnimationWindowEventMethod> list = CollectSupportedMethods(awevt);
+                    List<AnimationWindowEventMethod> list = CollectSupportedMethods(data.root);
                     List<string> list2 = new List<string>(list.Count);
                     for (int i = 0; i < list.Count; i++)
                     {
@@ -273,36 +360,41 @@
                         list2.Add(method.name + str);
                     }
                     int count = list.Count;
-                    int selectedIndex = list.FindIndex(new Predicate<AnimationWindowEventMethod>(storey.<>m__0));
+                    int selectedIndex = list.FindIndex(new Predicate<AnimationWindowEventMethod>(storey.<>m__1));
                     if (selectedIndex == -1)
                     {
                         selectedIndex = list.Count;
                         AnimationWindowEventMethod item = new AnimationWindowEventMethod {
-                            name = storey.evt.functionName,
+                            name = storey.firstEvent.functionName,
                             parameterType = null
                         };
                         list.Add(item);
-                        if (string.IsNullOrEmpty(storey.evt.functionName))
+                        if (string.IsNullOrEmpty(storey.firstEvent.functionName))
                         {
                             list2.Add("(No Function Selected)");
                         }
                         else
                         {
-                            list2.Add(storey.evt.functionName + " (Function Not Supported)");
+                            list2.Add(storey.firstEvent.functionName + " (Function Not Supported)");
                         }
                     }
                     EditorGUIUtility.labelWidth = 130f;
-                    int num4 = selectedIndex;
+                    EditorGUI.showMixedValue = !flag;
+                    int num4 = !flag ? -1 : selectedIndex;
                     selectedIndex = EditorGUILayout.Popup("Function: ", selectedIndex, list2.ToArray(), new GUILayoutOption[0]);
                     if (((num4 != selectedIndex) && (selectedIndex != -1)) && (selectedIndex != count))
                     {
-                        AnimationWindowEventMethod method3 = list[selectedIndex];
-                        storey.evt.functionName = method3.name;
-                        storey.evt.stringParameter = string.Empty;
+                        foreach (AnimationEvent event2 in data.selectedEvents)
+                        {
+                            AnimationWindowEventMethod method3 = list[selectedIndex];
+                            event2.functionName = method3.name;
+                            event2.stringParameter = string.Empty;
+                        }
                     }
+                    EditorGUI.showMixedValue = false;
                     AnimationWindowEventMethod method4 = list[selectedIndex];
                     Type parameterType = method4.parameterType;
-                    if (parameterType != null)
+                    if (flag && (parameterType != null))
                     {
                         EditorGUILayout.Space();
                         if (parameterType == typeof(AnimationEvent))
@@ -313,32 +405,99 @@
                         {
                             EditorGUILayout.PrefixLabel("Parameters");
                         }
-                        DoEditRegularParameters(storey.evt, parameterType);
+                        DoEditRegularParameters(data.selectedEvents, parameterType);
                     }
                 }
                 else
                 {
-                    storey.evt.functionName = EditorGUILayout.TextField(new GUIContent("Function"), storey.evt.functionName, new GUILayoutOption[0]);
-                    DoEditRegularParameters(storey.evt, typeof(AnimationEvent));
+                    EditorGUI.showMixedValue = !flag;
+                    string text = !flag ? "" : storey.firstEvent.functionName;
+                    string str3 = EditorGUILayout.TextField(new GUIContent("Function"), text, new GUILayoutOption[0]);
+                    if (str3 != text)
+                    {
+                        foreach (AnimationEvent event3 in data.selectedEvents)
+                        {
+                            event3.functionName = str3;
+                            event3.stringParameter = string.Empty;
+                        }
+                    }
+                    EditorGUI.showMixedValue = false;
+                    if (flag)
+                    {
+                        DoEditRegularParameters(data.selectedEvents, typeof(AnimationEvent));
+                    }
+                    else
+                    {
+                        using (new EditorGUI.DisabledScope(true))
+                        {
+                            AnimationEvent event4 = new AnimationEvent();
+                            AnimationEvent[] events = new AnimationEvent[] { event4 };
+                            DoEditRegularParameters(events, typeof(AnimationEvent));
+                        }
+                    }
                 }
                 if (GUI.changed)
                 {
-                    if (awevt.clip != null)
-                    {
-                        Undo.RegisterCompleteObjectUndo(awevt.clip, "Animation Event Change");
-                        AnimationUtility.SetAnimationEvents(awevt.clip, events);
-                    }
-                    else if (awevt.clipInfo != null)
-                    {
-                        awevt.clipInfo.SetEvent(awevt.eventIndex, storey.evt);
-                    }
+                    SetData(awEvents, data);
                 }
             }
         }
 
+        protected override void OnHeaderGUI()
+        {
+            string header = (base.targets.Length != 1) ? (base.targets.Length + " Animation Events") : "Animation Event";
+            Editor.DrawHeaderGUI(this, header);
+        }
+
         public override void OnInspectorGUI()
         {
-            OnEditAnimationEvent(base.target as AnimationWindowEvent);
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = o => o as AnimationWindowEvent;
+            }
+            OnEditAnimationEvents(Enumerable.Select<Object, AnimationWindowEvent>(base.targets, <>f__am$cache0).ToArray<AnimationWindowEvent>());
+        }
+
+        [MenuItem("CONTEXT/AnimationWindowEvent/Reset")]
+        private static void ResetValues(MenuCommand command)
+        {
+            AnimationWindowEvent context = command.context as AnimationWindowEvent;
+            AnimationWindowEvent[] awEvents = new AnimationWindowEvent[] { context };
+            AnimationWindowEventData data = GetData(awEvents);
+            if (((data.events != null) && (data.selectedEvents != null)) && (data.selectedEvents.Length != 0))
+            {
+                foreach (AnimationEvent event3 in data.selectedEvents)
+                {
+                    event3.functionName = "";
+                    event3.stringParameter = string.Empty;
+                    event3.floatParameter = 0f;
+                    event3.intParameter = 0;
+                    event3.objectReferenceParameter = null;
+                }
+                SetData(awEvents, data);
+            }
+        }
+
+        private static void SetData(AnimationWindowEvent[] awEvents, AnimationWindowEventData data)
+        {
+            if (data.events != null)
+            {
+                if (data.clip != null)
+                {
+                    Undo.RegisterCompleteObjectUndo(data.clip, "Animation Event Change");
+                    AnimationUtility.SetAnimationEvents(data.clip, data.events);
+                }
+                else if (data.clipInfo != null)
+                {
+                    foreach (AnimationWindowEvent event2 in awEvents)
+                    {
+                        if ((event2.eventIndex >= 0) && (event2.eventIndex < data.events.Length))
+                        {
+                            data.clipInfo.SetEvent(event2.eventIndex, data.events[event2.eventIndex]);
+                        }
+                    }
+                }
+            }
         }
 
         [CompilerGenerated]
@@ -351,12 +510,43 @@
         }
 
         [CompilerGenerated]
-        private sealed class <OnEditAnimationEvent>c__AnonStorey0
+        private sealed class <DoEditRegularParameters>c__AnonStorey2
         {
-            internal AnimationEvent evt;
+            internal AnimationEvent firstEvent;
 
-            internal bool <>m__0(AnimationWindowEventMethod method) => 
-                (method.name == this.evt.functionName);
+            internal bool <>m__0(AnimationEvent evt) => 
+                (evt.floatParameter == this.firstEvent.floatParameter);
+
+            internal bool <>m__1(AnimationEvent evt) => 
+                (evt.intParameter == this.firstEvent.intParameter);
+
+            internal bool <>m__2(AnimationEvent evt) => 
+                (evt.stringParameter == this.firstEvent.stringParameter);
+
+            internal bool <>m__3(AnimationEvent evt) => 
+                (evt.objectReferenceParameter == this.firstEvent.objectReferenceParameter);
+        }
+
+        [CompilerGenerated]
+        private sealed class <OnEditAnimationEvents>c__AnonStorey0
+        {
+            internal AnimationEvent firstEvent;
+
+            internal bool <>m__0(AnimationEvent evt) => 
+                (evt.functionName == this.firstEvent.functionName);
+
+            internal bool <>m__1(AnimationWindowEventMethod method) => 
+                (method.name == this.firstEvent.functionName);
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct AnimationWindowEventData
+        {
+            public GameObject root;
+            public AnimationClip clip;
+            public AnimationClipInfoProperties clipInfo;
+            public AnimationEvent[] events;
+            public AnimationEvent[] selectedEvents;
         }
     }
 }

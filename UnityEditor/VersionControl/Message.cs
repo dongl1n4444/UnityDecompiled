@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Messages from the version control system.</para>
@@ -15,7 +16,7 @@
         {
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
         ~Message()
         {
@@ -39,18 +40,17 @@
         /// <para>The message text.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public string message { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string message { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The severity of the message.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public Severity severity { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public Severity severity { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Severity of a version control message.</para>
         /// </summary>
-        [Flags]
         public enum Severity
         {
             Data,

@@ -45,7 +45,7 @@
             internal string[] $locvar0;
             internal int $locvar1;
             internal int $PC;
-            internal string <color>__0;
+            internal string <color>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -67,8 +67,8 @@
                             this.$locvar1 = 0;
                             while (this.$locvar1 < this.$locvar0.Length)
                             {
-                                this.<color>__0 = this.$locvar0[this.$locvar1];
-                                this.$current = this.<color>__0;
+                                this.<color>__1 = this.$locvar0[this.$locvar1];
+                                this.$current = this.<color>__1;
                                 if (!this.$disposing)
                                 {
                                     this.$PC = 1;

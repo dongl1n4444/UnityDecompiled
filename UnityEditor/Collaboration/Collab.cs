@@ -8,9 +8,12 @@
     using System.Threading;
     using UnityEditor;
     using UnityEditor.Connect;
+    using UnityEditor.SceneManagement;
     using UnityEditor.Web;
     using UnityEditorInternal;
     using UnityEngine;
+    using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     [InitializeOnLoad]
     internal sealed class Collab : AssetPostprocessor
@@ -36,7 +39,9 @@
             JSProxyMgr.GetInstance().AddGlobalObject("unity/collab", s_Instance);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
+        public extern bool AnyJobRunning();
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CancelJob(int jobID);
         public void CancelJobWithoutException(int jobId)
         {
@@ -50,29 +55,34 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static void CannotPublishDialog(string infoMessage)
+        {
+            CollabCannotPublishDialog.ShowCollabWindow(infoMessage);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool ClearConflictResolved(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool ClearConflictsResolved(string[] paths);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearErrors();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Disconnect();
         public CollabStates GetAssetState(string guid) => 
             ((CollabStates) this.GetAssetStateInternal(guid));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern long GetAssetStateInternal(string guid);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Change[] GetChangesToPublish();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Change[] GetCollabConflicts();
         public CollabInfo GetCollabInfo() => 
             this.collabInfo;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern CollabStateID GetCollabState();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern ProgressInfo GetJobProgress(int jobID);
         public static string GetProjectClientType()
         {
@@ -80,29 +90,29 @@
             return (!string.IsNullOrEmpty(configValue) ? configValue : clientType[0]);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         public extern string GetProjectPath();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Revision[] GetRevisions();
         public CollabStates GetSelectedAssetState() => 
             ((CollabStates) this.GetSelectedAssetStateInternal());
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern long GetSelectedAssetStateInternal();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern SoftLock[] GetSoftLocks(string assetGuid);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void GoBackToRevision(string revisionID, bool updateToRevision);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern bool IsConnected();
         public static bool IsDiffToolsAvailable() => 
             (InternalEditorUtility.GetAvailableDiffTools().Length > 0);
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern bool JobRunning(int a_jobID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void LaunchConflictExternalMerge(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void OnPostprocessAssetbundleNameChanged(string assetPath, string previousAssetBundleName, string newAssetBundleName);
         private static void OnStateChanged()
         {
@@ -127,34 +137,53 @@
             instance.SendNotification();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern void Publish(string comment);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [ExcludeFromDocs]
+        public void Publish(string comment)
+        {
+            bool useSelectedAssets = false;
+            this.Publish(comment, useSelectedAssets);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern void Publish(string comment, [DefaultValue("false")] bool useSelectedAssets);
+        private static void PublishDialog(string changelist)
+        {
+            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+            {
+                CollabPublishDialog dialog = CollabPublishDialog.ShowCollabWindow(changelist);
+                if (dialog.Options.DoPublish)
+                {
+                    instance.Publish(dialog.Options.Comments, true);
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ResyncSnapshot();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ResyncToRevision(string revisionID);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RevertFile(string path, bool forceOverwrite);
         public void SaveAssets()
         {
             AssetDatabase.SaveAssets();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SendNotification();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetCollabEnabledForCurrentProject(bool enabled);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetConflictResolvedMine(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetConflictResolvedTheirs(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetConflictsResolvedMine(string[] paths);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern bool SetConflictsResolvedTheirs(string[] paths);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ShowConflictDifferences(string path);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ShowDifferences(string path);
         public static void SwitchToDefaultMode()
         {
@@ -185,7 +214,7 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Update(string revisionID, bool updateToRevision);
         public void UpdateEditorSelectionCache()
         {
@@ -203,10 +232,7 @@
             this.currentProjectBrowserSelection = list.ToArray();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern bool WasWhitelistedRequestSent();
-
-        public CollabInfo collabInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public CollabInfo collabInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public static Collab instance =>
             s_Instance;
@@ -234,11 +260,11 @@
             kCollabDeletedLocal = 0x40L,
             kCollabDeletedRemote = 0x80L,
             kCollabFolderMetaFile = 0x200000L,
+            kCollabIgnored = 8L,
             kCollabInvalidState = 0x400000L,
             kCollabLocal = 1L,
             kCollabMerged = 0x80000L,
             kCollabMetaFile = 0x8000L,
-            kCollabMissing = 8L,
             kCollabMovedLocal = 0x800L,
             kCollabMovedRemote = 0x1000L,
             kCollabNone = 0L,

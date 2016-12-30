@@ -39,7 +39,7 @@
             s_DrawerTypeForType = new Dictionary<Type, DrawerKeySet>();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <BuildDrawerTypeForTypeDictionary>m__0);
+                <>f__am$cache0 = x => AssemblyHelper.GetTypesFromAssembly(x);
             }
             Type[] typeArray = Enumerable.SelectMany<Assembly, Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0).ToArray<Type>();
             foreach (Type type in EditorAssemblies.SubclassesOf(typeof(GUIDrawer)))
@@ -57,7 +57,7 @@
                     s_DrawerTypeForType[storey.editor.m_Type] = set;
                     if (storey.editor.m_UseForChildren)
                     {
-                        IEnumerable<Type> enumerable = Enumerable.Where<Type>(typeArray, new Func<Type, bool>(storey, (IntPtr) this.<>m__0));
+                        IEnumerable<Type> enumerable = Enumerable.Where<Type>(typeArray, new Func<Type, bool>(storey.<>m__0));
                         foreach (Type type2 in enumerable)
                         {
                             if (s_DrawerTypeForType.ContainsKey(type2))
@@ -125,11 +125,11 @@
                 {
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<object, PropertyAttribute>(null, (IntPtr) <GetFieldAttributes>m__1);
+                        <>f__am$cache1 = e => e as PropertyAttribute;
                     }
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<PropertyAttribute, int>(null, (IntPtr) <GetFieldAttributes>m__2);
+                        <>f__am$cache2 = e => -e.order;
                     }
                     return new List<PropertyAttribute>(Enumerable.OrderBy<PropertyAttribute, int>(Enumerable.Select<object, PropertyAttribute>(customAttributes, <>f__am$cache1), <>f__am$cache2));
                 }

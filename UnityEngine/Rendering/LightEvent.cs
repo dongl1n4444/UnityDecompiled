@@ -10,7 +10,9 @@
         BeforeShadowMap,
         AfterShadowMap,
         BeforeScreenspaceMask,
-        AfterScreenspaceMask
+        AfterScreenspaceMask,
+        BeforeShadowMapPass,
+        AfterShadowMapPass
     }
 }
 

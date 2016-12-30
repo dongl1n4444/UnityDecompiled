@@ -12,7 +12,33 @@
     internal class MonoAssemblyStripping
     {
         [CompilerGenerated]
-        private static Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>> <>f__am$cache0;
+        private static Func<string, AssemblyNameReference> <>f__am$cache0;
+        [CompilerGenerated]
+        private static Func<AssemblyDefinition, bool> <>f__am$cache1;
+        [CompilerGenerated]
+        private static Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<AssemblyDefinition, bool> <>f__am$cache3;
+
+        public static IEnumerable<AssemblyDefinition> CollectAllAssemblies(string librariesFolder, RuntimeClassRegistry usedClasses)
+        {
+            <CollectAllAssemblies>c__AnonStorey0 storey = new <CollectAllAssemblies>c__AnonStorey0 {
+                usedClasses = usedClasses,
+                resolver = new DefaultAssemblyResolver()
+            };
+            storey.resolver.RemoveSearchDirectory(".");
+            storey.resolver.RemoveSearchDirectory("bin");
+            storey.resolver.AddSearchDirectory(librariesFolder);
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = file => AssemblyNameReference.Parse(Path.GetFileNameWithoutExtension(file));
+            }
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = a => a != null;
+            }
+            return CollectAssembliesRecursive(Enumerable.Where<AssemblyDefinition>(Enumerable.Select<AssemblyNameReference, AssemblyDefinition>(Enumerable.Select<string, AssemblyNameReference>(Enumerable.Where<string>(storey.usedClasses.GetUserAssemblies(), new Func<string, bool>(storey.<>m__0)), <>f__am$cache0), new Func<AssemblyNameReference, AssemblyDefinition>(storey.<>m__1)), <>f__am$cache1));
+        }
 
         private static HashSet<AssemblyDefinition> CollectAssembliesRecursive(IEnumerable<AssemblyDefinition> assemblies)
         {
@@ -21,11 +47,11 @@
             while (source.Count > count)
             {
                 count = source.Count;
-                if (<>f__am$cache0 == null)
+                if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache0 = new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(null, (IntPtr) <CollectAssembliesRecursive>m__0);
+                    <>f__am$cache2 = a => ResolveAssemblyReferences(a);
                 }
-                source.UnionWith(Enumerable.SelectMany<AssemblyDefinition, AssemblyDefinition>(source.ToArray<AssemblyDefinition>(), <>f__am$cache0));
+                source.UnionWith(Enumerable.SelectMany<AssemblyDefinition, AssemblyDefinition>(source.ToArray<AssemblyDefinition>(), <>f__am$cache2));
             }
             return source;
         }
@@ -146,21 +172,16 @@
 
         public static string GenerateLinkXmlToPreserveDerivedTypes(string stagingArea, string librariesFolder, RuntimeClassRegistry usedClasses)
         {
-            <GenerateLinkXmlToPreserveDerivedTypes>c__AnonStorey0 storey = new <GenerateLinkXmlToPreserveDerivedTypes>c__AnonStorey0 {
-                usedClasses = usedClasses
-            };
             string fullPath = Path.GetFullPath(Path.Combine(stagingArea, "preserved_derived_types.xml"));
-            storey.resolver = new DefaultAssemblyResolver();
-            storey.resolver.AddSearchDirectory(librariesFolder);
             using (TextWriter writer = new StreamWriter(fullPath))
             {
                 writer.WriteLine("<linker>");
-                foreach (AssemblyDefinition definition in CollectAssembliesRecursive(Enumerable.Select<string, AssemblyDefinition>(Enumerable.Where<string>(storey.usedClasses.GetUserAssemblies(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, AssemblyDefinition>(storey, (IntPtr) this.<>m__1))))
+                foreach (AssemblyDefinition definition in CollectAllAssemblies(librariesFolder, usedClasses))
                 {
                     if (definition.Name.Name != "UnityEngine")
                     {
                         HashSet<TypeDefinition> typesToPreserve = new HashSet<TypeDefinition>();
-                        CollectBlackListTypes(typesToPreserve, definition.MainModule.Types, storey.usedClasses.GetAllManagedBaseClassesAsString());
+                        CollectBlackListTypes(typesToPreserve, definition.MainModule.Types, usedClasses.GetAllManagedBaseClassesAsString());
                         if (typesToPreserve.Count != 0)
                         {
                             writer.WriteLine("<assembly fullname=\"{0}\">", definition.Name.Name);
@@ -182,7 +203,7 @@
             string str2 = Path.Combine(BuildPipeline.GetBuildToolsDirectory(buildTarget), "mono-cil-strip.exe");
             foreach (string str3 in fileNames)
             {
-                Process process = MonoProcessUtility.PrepareMonoProcess(buildTarget, managedLibrariesDirectory);
+                Process process = MonoProcessUtility.PrepareMonoProcess(managedLibrariesDirectory);
                 string str4 = str3 + ".out";
                 process.StartInfo.Arguments = "\"" + str2 + "\"";
                 ProcessStartInfo startInfo = process.StartInfo;
@@ -197,7 +218,7 @@
 
         public static void MonoLink(BuildTarget buildTarget, string managedLibrariesDirectory, string[] input, string[] allAssemblies, RuntimeClassRegistry usedClasses)
         {
-            Process process = MonoProcessUtility.PrepareMonoProcess(buildTarget, managedLibrariesDirectory);
+            Process process = MonoProcessUtility.PrepareMonoProcess(managedLibrariesDirectory);
             string buildToolsDirectory = BuildPipeline.GetBuildToolsDirectory(buildTarget);
             string str2 = null;
             string path = Path.Combine(MonoInstallationFinder.GetFrameWorksFolder(), StripperExe());
@@ -270,20 +291,46 @@
             FileUtil.CopyFileOrDirectory(src, dst);
         }
 
+        public static AssemblyDefinition ResolveAssemblyReference(IAssemblyResolver resolver, AssemblyNameReference assemblyName)
+        {
+            try
+            {
+                ReaderParameters parameters = new ReaderParameters {
+                    AssemblyResolver = resolver,
+                    ApplyWindowsRuntimeProjections = true
+                };
+                return resolver.Resolve(assemblyName, parameters);
+            }
+            catch (AssemblyResolutionException exception)
+            {
+                if (!exception.AssemblyReference.IsWindowsRuntime)
+                {
+                    throw;
+                }
+                return null;
+            }
+        }
+
+        public static IEnumerable<AssemblyDefinition> ResolveAssemblyReferences(AssemblyDefinition assembly) => 
+            ResolveAssemblyReferences(assembly.MainModule.AssemblyResolver, assembly.MainModule.AssemblyReferences);
+
+        public static IEnumerable<AssemblyDefinition> ResolveAssemblyReferences(IAssemblyResolver resolver, IEnumerable<AssemblyNameReference> assemblyReferences)
+        {
+            <ResolveAssemblyReferences>c__AnonStorey1 storey = new <ResolveAssemblyReferences>c__AnonStorey1 {
+                resolver = resolver
+            };
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = a => a != null;
+            }
+            return Enumerable.Where<AssemblyDefinition>(Enumerable.Select<AssemblyNameReference, AssemblyDefinition>(assemblyReferences, new Func<AssemblyNameReference, AssemblyDefinition>(storey.<>m__0)), <>f__am$cache3);
+        }
+
         private static string StripperExe() => 
             "Tools/UnusedBytecodeStripper.exe";
 
         [CompilerGenerated]
-        private sealed class <CollectAssembliesRecursive>c__AnonStorey1
-        {
-            internal AssemblyDefinition assembly;
-
-            internal AssemblyDefinition <>m__0(AssemblyNameReference a) => 
-                this.assembly.MainModule.AssemblyResolver.Resolve(a);
-        }
-
-        [CompilerGenerated]
-        private sealed class <GenerateLinkXmlToPreserveDerivedTypes>c__AnonStorey0
+        private sealed class <CollectAllAssemblies>c__AnonStorey0
         {
             internal DefaultAssemblyResolver resolver;
             internal RuntimeClassRegistry usedClasses;
@@ -291,13 +338,17 @@
             internal bool <>m__0(string s) => 
                 this.usedClasses.IsDLLUsed(s);
 
-            internal AssemblyDefinition <>m__1(string file)
-            {
-                ReaderParameters parameters = new ReaderParameters {
-                    AssemblyResolver = this.resolver
-                };
-                return this.resolver.Resolve(Path.GetFileNameWithoutExtension(file), parameters);
-            }
+            internal AssemblyDefinition <>m__1(AssemblyNameReference dll) => 
+                MonoAssemblyStripping.ResolveAssemblyReference(this.resolver, dll);
+        }
+
+        [CompilerGenerated]
+        private sealed class <ResolveAssemblyReferences>c__AnonStorey1
+        {
+            internal IAssemblyResolver resolver;
+
+            internal AssemblyDefinition <>m__0(AssemblyNameReference reference) => 
+                MonoAssemblyStripping.ResolveAssemblyReference(this.resolver, reference);
         }
 
         private class AssemblyDefinitionComparer : IEqualityComparer<AssemblyDefinition>

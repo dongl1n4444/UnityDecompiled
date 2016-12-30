@@ -21,7 +21,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(null, (IntPtr) ResetHashes);
+                <>f__mg$cache0 = new Action(SceneViewPicking.ResetHashes);
             }
             Selection.selectionChanged = (Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
         }
@@ -126,8 +126,8 @@
             internal GameObject $current;
             internal bool $disposing;
             internal int $PC;
-            internal List<GameObject> <allOverlapping>__0;
-            internal GameObject <go>__1;
+            internal List<GameObject> <allOverlapping>__1;
+            internal GameObject <go>__2;
             internal Vector2 position;
 
             [DebuggerHidden]
@@ -144,29 +144,29 @@
                 switch (num)
                 {
                     case 0:
-                        this.<allOverlapping>__0 = new List<GameObject>();
+                        this.<allOverlapping>__1 = new List<GameObject>();
                         break;
 
                     case 1:
-                        this.<allOverlapping>__0.Add(this.<go>__1);
+                        this.<allOverlapping>__1.Add(this.<go>__2);
                         break;
 
                     default:
                         goto Label_00F1;
                 }
-                this.<go>__1 = HandleUtility.PickGameObject(this.position, false, this.<allOverlapping>__0.ToArray());
-                if (this.<go>__1 != null)
+                this.<go>__2 = HandleUtility.PickGameObject(this.position, false, this.<allOverlapping>__1.ToArray());
+                if (this.<go>__2 != null)
                 {
-                    if ((this.<allOverlapping>__0.Count <= 0) || (this.<go>__1 != this.<allOverlapping>__0.Last<GameObject>()))
+                    if ((this.<allOverlapping>__1.Count <= 0) || (this.<go>__2 != this.<allOverlapping>__1.Last<GameObject>()))
                     {
-                        this.$current = this.<go>__1;
+                        this.$current = this.<go>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
                         }
                         return true;
                     }
-                    Debug.LogError("GetAllOverlapping failed, could not ignore game object '" + this.<go>__1.name + "' when picking");
+                    Debug.LogError("GetAllOverlapping failed, could not ignore game object '" + this.<go>__2.name + "' when picking");
                 }
                 this.$PC = -1;
             Label_00F1:

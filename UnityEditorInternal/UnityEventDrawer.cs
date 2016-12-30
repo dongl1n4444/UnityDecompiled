@@ -63,7 +63,6 @@
         private SerializedProperty m_Prop;
         private ReorderableList m_ReorderableList;
         private Dictionary<string, State> m_States = new Dictionary<string, State>();
-        private Styles m_Styles;
         private string m_Text;
 
         private void AddEventListener(ReorderableList list)
@@ -138,11 +137,11 @@
         {
             if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheB = new Func<ValidMethodMap, int>(null, (IntPtr) <AddMethodsToMenu>m__B);
+                <>f__am$cacheB = e => !e.methodInfo.Name.StartsWith("set_") ? 1 : 0;
             }
             if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheC = new Func<ValidMethodMap, string>(null, (IntPtr) <AddMethodsToMenu>m__C);
+                <>f__am$cacheC = e => e.methodInfo.Name;
             }
             IEnumerable<ValidMethodMap> enumerable = Enumerable.ThenBy<ValidMethodMap, string>(Enumerable.OrderBy<ValidMethodMap, int>(methods, <>f__am$cacheB), <>f__am$cacheC);
             foreach (ValidMethodMap map in enumerable)
@@ -170,7 +169,7 @@
                 menu.AddSeparator("");
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<ParameterInfo, Type>(null, (IntPtr) <BuildPopupList>m__4);
+                    <>f__am$cache4 = x => x.ParameterType;
                 }
                 Type[] delegateArgumentsTypes = Enumerable.Select<ParameterInfo, Type>(dummyEvent.GetType().GetMethod("Invoke").GetParameters(), <>f__am$cache4).ToArray<Type>();
                 GeneratePopUpForType(menu, gameObject, false, listener, delegateArgumentsTypes);
@@ -179,23 +178,23 @@
                     Component[] components = (gameObject as GameObject).GetComponents<Component>();
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<Component, bool>(null, (IntPtr) <BuildPopupList>m__5);
+                        <>f__am$cache5 = c => c != null;
                     }
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<Component, string>(null, (IntPtr) <BuildPopupList>m__6);
+                        <>f__am$cache6 = c => c.GetType().Name;
                     }
                     if (<>f__am$cache7 == null)
                     {
-                        <>f__am$cache7 = new Func<string, string>(null, (IntPtr) <BuildPopupList>m__7);
+                        <>f__am$cache7 = x => x;
                     }
                     if (<>f__am$cache8 == null)
                     {
-                        <>f__am$cache8 = new Func<IGrouping<string, string>, bool>(null, (IntPtr) <BuildPopupList>m__8);
+                        <>f__am$cache8 = g => g.Count<string>() > 1;
                     }
                     if (<>f__am$cache9 == null)
                     {
-                        <>f__am$cache9 = new Func<IGrouping<string, string>, string>(null, (IntPtr) <BuildPopupList>m__9);
+                        <>f__am$cache9 = g => g.Key;
                     }
                     List<string> list = Enumerable.Select<IGrouping<string, string>, string>(Enumerable.Where<IGrouping<string, string>>(Enumerable.GroupBy<string, string>(Enumerable.Select<Component, string>(Enumerable.Where<Component>(components, <>f__am$cache5), <>f__am$cache6), <>f__am$cache7), <>f__am$cache8), <>f__am$cache9).ToList<string>();
                     foreach (Component component in components)
@@ -218,17 +217,17 @@
                 Type type = target.GetType();
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<MethodInfo, bool>(null, (IntPtr) <CalculateMethodMap>m__1);
+                    <>f__am$cache1 = x => !x.IsSpecialName;
                 }
                 List<MethodInfo> list2 = Enumerable.Where<MethodInfo>(type.GetMethods(), <>f__am$cache1).ToList<MethodInfo>();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<PropertyInfo, bool>(null, (IntPtr) <CalculateMethodMap>m__2);
+                    <>f__am$cache2 = x => (x.GetCustomAttributes(typeof(ObsoleteAttribute), true).Length == 0) && (x.GetSetMethod() != null);
                 }
                 IEnumerable<PropertyInfo> enumerable2 = Enumerable.Where<PropertyInfo>(type.GetProperties().AsEnumerable<PropertyInfo>(), <>f__am$cache2);
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<PropertyInfo, MethodInfo>(null, (IntPtr) <CalculateMethodMap>m__3);
+                    <>f__am$cache3 = x => x.GetSetMethod();
                 }
                 list2.AddRange(Enumerable.Select<PropertyInfo, MethodInfo>(enumerable2, <>f__am$cache3));
                 foreach (MethodInfo info in list2)
@@ -426,7 +425,7 @@
                 {
                     if (<>f__am$cacheA == null)
                     {
-                        <>f__am$cacheA = new Func<Type, string>(null, (IntPtr) <GeneratePopUpForType>m__A);
+                        <>f__am$cacheA = e => GetTypeName(e);
                     }
                     menu.AddDisabledItem(new GUIContent(targetName + "/Dynamic " + string.Join(", ", Enumerable.Select<Type, string>(delegateArgumentsTypes, <>f__am$cacheA).ToArray<string>())));
                     AddMethodsToMenu(menu, listener, methods, targetName);
@@ -476,7 +475,7 @@
             builder.Append(" (");
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ParameterInfo, Type>(null, (IntPtr) <GetEventParams>m__0);
+                <>f__am$cache0 = x => x.ParameterType;
             }
             Type[] typeArray = Enumerable.Select<ParameterInfo, Type>(info.GetParameters(), <>f__am$cache0).ToArray<Type>();
             for (int i = 0; i < typeArray.Length; i++)
@@ -610,19 +609,12 @@
             if ((this.m_ListenersArray != null) && this.m_ListenersArray.isArray)
             {
                 this.m_DummyEvent = GetDummyEvent(this.m_Prop);
-                if (this.m_DummyEvent != null)
+                if ((this.m_DummyEvent != null) && (this.m_ReorderableList != null))
                 {
-                    if (this.m_Styles == null)
-                    {
-                        this.m_Styles = new Styles();
-                    }
-                    if (this.m_ReorderableList != null)
-                    {
-                        int indentLevel = EditorGUI.indentLevel;
-                        EditorGUI.indentLevel = 0;
-                        this.m_ReorderableList.DoList(position);
-                        EditorGUI.indentLevel = indentLevel;
-                    }
+                    int indentLevel = EditorGUI.indentLevel;
+                    EditorGUI.indentLevel = 0;
+                    this.m_ReorderableList.DoList(position);
+                    EditorGUI.indentLevel = indentLevel;
                 }
             }
         }
@@ -666,13 +658,6 @@
         {
             public int lastSelectedIndex;
             internal ReorderableList m_ReorderableList;
-        }
-
-        private class Styles
-        {
-            public readonly GUIStyle genericFieldStyle = EditorStyles.label;
-            public readonly GUIContent iconToolbarMinus = EditorGUIUtility.IconContent("Toolbar Minus");
-            public readonly GUIStyle removeButton = "InvisibleButton";
         }
 
         [StructLayout(LayoutKind.Sequential)]

@@ -29,7 +29,7 @@
                     if (str != null)
                     {
                         string str2 = code.Substring(startIndex, index - startIndex);
-                        processFunction.Invoke(str, str2);
+                        processFunction(str, str2);
                     }
                     else
                     {
@@ -50,19 +50,17 @@
 
         public static Dictionary<string, string> ReadMinificationMap(string mapPath)
         {
-            if (!File.Exists(mapPath))
+            Dictionary<string, string> dictionary = new Dictionary<string, string>();
+            if (File.Exists(mapPath))
             {
-                return null;
+                foreach (string str in File.ReadAllLines(mapPath))
+                {
+                    char[] separator = new char[] { ':' };
+                    string[] strArray2 = str.Split(separator);
+                    dictionary[strArray2[0]] = strArray2[1];
+                }
             }
-            string[] strArray = File.ReadAllLines(mapPath);
-            Dictionary<string, string> dictionary2 = new Dictionary<string, string>();
-            foreach (string str in strArray)
-            {
-                char[] separator = new char[] { ':' };
-                string[] strArray3 = str.Split(separator);
-                dictionary2[strArray3[0]] = strArray3[1];
-            }
-            return dictionary2;
+            return dictionary;
         }
 
         private static string ReplaceDuplicates(string codeIn, Dictionary<string, string> minificationMap)
@@ -73,7 +71,7 @@
                 hashFuncs = new Dictionary<string, List<string>>(),
                 functionReplacement = new Dictionary<string, string>()
             };
-            ExtractFunctionsFromJS(codeIn, new Action<string, string>(storey, (IntPtr) this.<>m__0), new Action<string>(storey.<>m__1));
+            ExtractFunctionsFromJS(codeIn, new Action<string, string>(storey.<>m__0), new Action<string>(storey.<>m__1));
             string str = storey.patchedCode.ToString();
             storey.patchedCode = new StringBuilder();
             string key = "";
@@ -112,16 +110,22 @@
             return str;
         }
 
-        public static Dictionary<string, string> ReplaceDuplicates(string builtCodePath, int interations)
+        public static void ReplaceDuplicates(string asmPath, string symbolsPath, string symbolsStrippedPath, int interations)
         {
-            Dictionary<string, string> minificationMap = ReadMinificationMap(builtCodePath.Substring(0, builtCodePath.Length - 7) + ".js.symbols");
-            string codeIn = File.ReadAllText(builtCodePath);
+            Dictionary<string, string> minificationMap = ReadMinificationMap(symbolsPath);
+            string codeIn = File.ReadAllText(asmPath);
             for (int i = 0; i < interations; i++)
             {
                 codeIn = ReplaceDuplicates(codeIn, minificationMap);
             }
-            File.WriteAllText(builtCodePath, codeIn);
-            return minificationMap;
+            File.WriteAllText(asmPath, codeIn);
+            using (StreamWriter writer = new StreamWriter(symbolsStrippedPath))
+            {
+                foreach (KeyValuePair<string, string> pair in minificationMap)
+                {
+                    writer.Write(pair.Key + ":" + pair.Value + "\n");
+                }
+            }
         }
 
         [CompilerGenerated]
@@ -144,11 +148,8 @@
                 else
                 {
                     this.functionReplacement[name] = this.hashFuncs[key][0];
-                    if (this.minificationMap != null)
-                    {
-                        this.minificationMap.Remove(name);
-                        this.minificationMap.Remove(this.hashFuncs[key][0]);
-                    }
+                    this.minificationMap.Remove(name);
+                    this.minificationMap.Remove(this.hashFuncs[key][0]);
                 }
                 this.hashFuncs[key].Add(name);
             }

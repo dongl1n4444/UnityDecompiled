@@ -21,9 +21,11 @@
         [CompilerGenerated]
         private static Func<string, bool> <>f__am$cache0;
         [CompilerGenerated]
-        private static Func<Match, string> <>f__am$cache1;
+        private static Func<FieldInfo, bool> <>f__am$cache1;
         [CompilerGenerated]
-        private static Func<string, string, string> <>f__am$cache2;
+        private static Func<Match, string> <>f__am$cache2;
+        [CompilerGenerated]
+        private static Func<string, string, string> <>f__am$cache3;
         [CompilerGenerated]
         private static Func<Type, bool> <>f__mg$cache0;
         public const int HelpOutputColumnPadding = 50;
@@ -112,8 +114,8 @@
 
         private void ExtendOptionSet(OptionSet optionSet, Type type)
         {
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-            foreach (FieldInfo info in fields)
+            IEnumerable<FieldInfo> optionFields = GetOptionFields(type);
+            foreach (FieldInfo info in optionFields)
             {
                 ProgramOptionsAttribute options = (ProgramOptionsAttribute) type.GetCustomAttributesPortable(typeof(ProgramOptionsAttribute), false).First<object>();
                 foreach (string str in this.OptionNamesFor(options, info))
@@ -123,6 +125,17 @@
             }
         }
 
+        private static IEnumerable<FieldInfo> GetOptionFields(Type optionType)
+        {
+            FieldInfo[] fields = optionType.GetFields(BindingFlags.Public | BindingFlags.Static);
+            if (<>f__am$cache1 == null)
+            {
+                <>f__am$cache1 = field => field.GetCustomAttributes(typeof(OptionAttribute), false).Any<object>();
+            }
+            IEnumerable<FieldInfo> second = optionType.GetFields(BindingFlags.NonPublic | BindingFlags.Static).Where<FieldInfo>(<>f__am$cache1);
+            return fields.Concat<FieldInfo>(second);
+        }
+
         internal static bool HasProgramOptionsAttribute(Type type) => 
             type.GetCustomAttributesPortable(typeof(ProgramOptionsAttribute), false).Any<object>();
 
@@ -130,7 +143,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <HelpRequested>m__0);
+                <>f__am$cache0 = v => ((v == "--h") || (v == "--help")) || (v == "-help");
             }
             return (commandLine.Count<string>(<>f__am$cache0) > 0);
         }
@@ -151,7 +164,7 @@
                 {
                     if (<>f__mg$cache0 == null)
                     {
-                        <>f__mg$cache0 = new Func<Type, bool>(null, (IntPtr) HasProgramOptionsAttribute);
+                        <>f__mg$cache0 = new Func<Type, bool>(OptionsParser.HasProgramOptionsAttribute);
                     }
                     list.AddRange(assembly2.GetTypesPortable().Where<Type>(<>f__mg$cache0));
                     if (includeReferencedAssemblies)
@@ -181,15 +194,15 @@
 
         private static string NormalizeName(string name)
         {
-            if (<>f__am$cache1 == null)
-            {
-                <>f__am$cache1 = new Func<Match, string>(null, (IntPtr) <NormalizeName>m__1);
-            }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <NormalizeName>m__2);
+                <>f__am$cache2 = m => m.Value.ToLower();
             }
-            return NameBuilder.Matches(name).Cast<Match>().Select<Match, string>(<>f__am$cache1).Aggregate<string>(<>f__am$cache2);
+            if (<>f__am$cache3 == null)
+            {
+                <>f__am$cache3 = (buff, s) => buff + "-" + s;
+            }
+            return NameBuilder.Matches(name).Cast<Match>().Select<Match, string>(<>f__am$cache2).Aggregate<string>(<>f__am$cache3);
         }
 
         [DebuggerHidden]
@@ -208,7 +221,7 @@
             Dictionary<string, HelpInformation> dictionary = new Dictionary<string, HelpInformation>();
             foreach (Type type in types)
             {
-                foreach (FieldInfo info in type.GetFields(BindingFlags.Public | BindingFlags.Static))
+                foreach (FieldInfo info in GetOptionFields(type))
                 {
                     object[] customAttributes = info.GetCustomAttributes(typeof(HelpDetailsAttribute), false);
                     if (customAttributes.Length > 1)
@@ -264,7 +277,7 @@
             };
             if (storey.type.IsEnumPortable())
             {
-                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey, (IntPtr) this.<>m__0));
+                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey.<>m__0));
             }
             object obj3 = Convert.ChangeType(storey.value, storey.type, CultureInfo.InvariantCulture);
             if (obj3 == null)
@@ -408,7 +421,7 @@
             internal string $current;
             internal bool $disposing;
             internal int $PC;
-            internal string <name>__0;
+            internal string <name>__1;
             internal FieldInfo field;
             internal ProgramOptionsAttribute options;
 
@@ -426,14 +439,14 @@
                 switch (num)
                 {
                     case 0:
-                        this.<name>__0 = OptionsParser.NormalizeName(this.field.Name);
+                        this.<name>__1 = OptionsParser.NormalizeName(this.field.Name);
                         if (this.field.FieldType != typeof(bool))
                         {
-                            this.<name>__0 = this.<name>__0 + "=";
+                            this.<name>__1 = this.<name>__1 + "=";
                         }
                         if (this.options.Group != null)
                         {
-                            this.$current = this.options.Group + "." + this.<name>__0;
+                            this.$current = this.options.Group + "." + this.<name>__1;
                             if (!this.$disposing)
                             {
                                 this.$PC = 3;
@@ -441,7 +454,7 @@
                         }
                         else
                         {
-                            this.$current = this.<name>__0;
+                            this.$current = this.<name>__1;
                             if (!this.$disposing)
                             {
                                 this.$PC = 1;
@@ -450,7 +463,7 @@
                         goto Label_0129;
 
                     case 1:
-                        this.$current = OptionsParser.NormalizeName(this.field.DeclaringType.Name) + "." + this.<name>__0;
+                        this.$current = OptionsParser.NormalizeName(this.field.DeclaringType.Name) + "." + this.<name>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 2;

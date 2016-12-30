@@ -63,9 +63,9 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Destroy(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private static extern void DestroyThreaded(IntPtr recognizer);
         /// <summary>
         /// <para>Disposes the resources used by gesture recognizer.</para>
@@ -105,9 +105,9 @@
             return GestureSettings.None;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_Create(GestureRecognizer self, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_CancelGestures(IntPtr recognizer);
         private IntPtr Internal_Create()
         {
@@ -116,15 +116,15 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern int Internal_GetRecognizableGestures(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern bool Internal_IsCapturingGestures(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern int Internal_SetRecognizableGestures(IntPtr recognizer, int newMaskValue);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_StartCapturingGestures(IntPtr recognizer);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void Internal_StopCapturingGestures(IntPtr recognizer);
         [RequiredByNativeCode]
         private void InvokeErrorEvent(string error, int hresult)

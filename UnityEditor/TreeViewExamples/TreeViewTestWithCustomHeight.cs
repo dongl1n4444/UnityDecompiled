@@ -18,7 +18,7 @@
             TestGUICustomItemHeights gui = new TestGUICustomItemHeights(this.m_TreeView);
             TestDragging dragging = new TestDragging(this.m_TreeView, this.m_BackendData);
             TestDataSource data = new TestDataSource(this.m_TreeView, this.m_BackendData);
-            data.onVisibleRowsChanged = (Action) Delegate.Combine(data.onVisibleRowsChanged, new Action(gui, (IntPtr) this.CalculateRowRects));
+            data.onVisibleRowsChanged = (Action) Delegate.Combine(data.onVisibleRowsChanged, new Action(gui.CalculateRowRects));
             this.m_TreeView.Init(rect, data, gui, dragging);
             data.SetExpanded(data.root, true);
         }

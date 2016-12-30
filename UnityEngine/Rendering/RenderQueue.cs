@@ -20,6 +20,10 @@
         /// </summary>
         Geometry = 0x7d0,
         /// <summary>
+        /// <para>Last render queue that is considered "opaque".</para>
+        /// </summary>
+        GeometryLast = 0x9c4,
+        /// <summary>
         /// <para>This render queue is meant for overlay effects.</para>
         /// </summary>
         Overlay = 0xfa0,

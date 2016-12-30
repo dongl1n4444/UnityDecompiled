@@ -35,7 +35,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<XText, string>(null, (IntPtr) <GetText>m__0);
+                <>f__am$cache0 = x => x.Value;
             }
             return string.Join("", Enumerable.Select<XText, string>(xml.Nodes().OfType<XText>(), <>f__am$cache0).ToArray<string>());
         }

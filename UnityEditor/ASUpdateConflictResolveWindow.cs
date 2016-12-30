@@ -132,7 +132,7 @@
         {
             for (int i = 0; i < this.downloadConflicts.Length; i++)
             {
-                if (this.selectedLV1Items[i] && (!AssetServer.AssetIsBinaryByGUID(this.downloadConflicts[i]) && !AssetServer.IsItemDeleted(this.downloadConflicts[i])))
+                if (this.selectedLV1Items[i] && !AssetServer.IsItemDeleted(this.downloadConflicts[i]))
                 {
                     return true;
                 }
@@ -581,7 +581,7 @@
                 if (this.selectedLV1Items[i])
                 {
                     string guid = this.downloadConflicts[i];
-                    if ((res == DownloadResolution.Merge) && (AssetServer.AssetIsBinaryByGUID(guid) || AssetServer.IsItemDeleted(guid)))
+                    if ((res == DownloadResolution.Merge) && AssetServer.IsItemDeleted(guid))
                     {
                         flag = true;
                     }

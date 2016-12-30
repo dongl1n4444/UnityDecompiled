@@ -11,7 +11,7 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
     public class RuntimeInitializeOnLoadMethodAttribute : PreserveAttribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RuntimeInitializeLoadType <loadType>k__BackingField;
 
         /// <summary>

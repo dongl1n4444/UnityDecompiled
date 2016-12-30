@@ -89,7 +89,7 @@
                 GUILayout.BeginHorizontal(new GUILayoutOption[0]);
                 EditorGUI.showMixedValue = useValue < 0f;
                 EditorGUI.BeginChangeCheck();
-                useValue = !EditorGUILayout.Toggle(GUIContent.none, useValue != 0f, new GUILayoutOption[0]) ? ((float) 0) : ((float) 1);
+                useValue = !EditorGUILayout.Toggle(GUIContent.none, !(useValue == 0f), new GUILayoutOption[0]) ? ((float) 0) : ((float) 1);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (useValue > 0f)
@@ -104,7 +104,7 @@
                 }
                 GUILayout.Space(-152f);
                 EditorGUI.showMixedValue = false;
-                using (new EditorGUI.DisabledScope(useValue != 1f))
+                using (new EditorGUI.DisabledScope(!(useValue == 1f)))
                 {
                     float num = value;
                     EditorGUI.showMixedValue = value < 0f;

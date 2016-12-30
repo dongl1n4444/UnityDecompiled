@@ -12,7 +12,7 @@
 
     internal class Msvc10Installation : MsvcInstallation
     {
-        public Msvc10Installation(NPath visualStudioDir) : base(new Version(10, 0), visualStudioDir)
+        public Msvc10Installation(NPath visualStudioDir) : base(new Version(10, 0), visualStudioDir, false)
         {
             base.SDKDirectory = WindowsSDKs.GetWindows7SDKDirectory();
         }

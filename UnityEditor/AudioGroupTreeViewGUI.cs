@@ -58,7 +58,7 @@
                     Rect rect3 = new Rect(2f, rowRect.y, rowRect.height, rowRect.height);
                     if ((((current.type == EventType.MouseUp) && (current.button == 0)) && rect3.Contains(current.mousePosition)) && (this.NodeWasToggled != null))
                     {
-                        this.NodeWasToggled.Invoke(audioNode, !visible);
+                        this.NodeWasToggled(audioNode, !visible);
                     }
                     if ((current.type == EventType.ContextClick) && position.Contains(current.mousePosition))
                     {
@@ -131,7 +131,7 @@
 
             internal void <>m__0()
             {
-                this.$this.NodeWasToggled.Invoke(this.audioNode, !this.visible);
+                this.$this.NodeWasToggled(this.audioNode, !this.visible);
             }
         }
     }

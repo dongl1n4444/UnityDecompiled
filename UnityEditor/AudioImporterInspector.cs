@@ -10,7 +10,7 @@
     using System.Threading;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioImporter))]
+    [CustomEditor(typeof(AudioImporter)), CanEditMultipleObjects]
     internal class AudioImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -167,7 +167,7 @@
                     status.multiSampleRateSetting |= defaultSampleSettings.sampleRateSetting != settings2.sampleRateSetting;
                     status.multiSampleRateOverride |= defaultSampleSettings.sampleRateOverride != settings2.sampleRateOverride;
                     status.multiCompressionFormat |= defaultSampleSettings.compressionFormat != settings2.compressionFormat;
-                    status.multiQuality |= defaultSampleSettings.quality != settings2.quality;
+                    status.multiQuality |= !(defaultSampleSettings.quality == settings2.quality);
                     status.multiConversionMode |= defaultSampleSettings.conversionMode != settings2.conversionMode;
                 }
             }
@@ -300,7 +300,7 @@
 
         public override void OnInspectorGUI()
         {
-            base.serializedObject.UpdateIfDirtyOrScript();
+            base.serializedObject.UpdateIfRequiredOrScript();
             bool selectionContainsTrackerFile = false;
             foreach (AudioImporter importer in this.GetAllAudioImporterTargets())
             {
@@ -311,10 +311,10 @@
                     case "s3m":
                     case "xm":
                         selectionContainsTrackerFile = true;
-                        goto Label_00A6;
+                        goto Label_00A7;
                 }
             }
-        Label_00A6:
+        Label_00A7:
             this.OnAudioImporterGUI(selectionContainsTrackerFile);
             int bytes = 0;
             int num2 = 0;
@@ -416,7 +416,7 @@
             }
         }
 
-        private bool ResetSettingsFromBackend()
+        private void ResetSettingsFromBackend()
         {
             if (this.GetAllAudioImporterTargets().Any<AudioImporter>())
             {
@@ -448,7 +448,6 @@
                     }
                 }
             }
-            return true;
         }
 
         internal override void ResetValues()
@@ -554,8 +553,8 @@
             internal int $locvar1;
             internal int $PC;
             internal AudioImporterInspector $this;
-            internal AudioImporter <audioImporter>__1;
-            internal Object <importer>__0;
+            internal AudioImporter <audioImporter>__2;
+            internal Object <importer>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -586,11 +585,11 @@
             Label_00A5:
                 if (this.$locvar1 < this.$locvar0.Length)
                 {
-                    this.<importer>__0 = this.$locvar0[this.$locvar1];
-                    this.<audioImporter>__1 = this.<importer>__0 as AudioImporter;
-                    if (this.<audioImporter>__1 != null)
+                    this.<importer>__1 = this.$locvar0[this.$locvar1];
+                    this.<audioImporter>__2 = this.<importer>__1 as AudioImporter;
+                    if (this.<audioImporter>__2 != null)
                     {
-                        this.$current = this.<audioImporter>__1;
+                        this.$current = this.<audioImporter>__2;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

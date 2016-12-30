@@ -57,9 +57,14 @@
             writer.WriteLine("# include <malloc.h>");
             writer.WriteLine("#endif");
             writer.WriteLine();
-            foreach (string str in base.Includes.Where<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (string str in base.Includes.Where<string>(new Func<string, bool>(storey.<>m__0)))
             {
                 writer.WriteLine("#include {0}", str);
+            }
+            writer.WriteLine();
+            foreach (string str2 in base.Includes.Where<string>(new Func<string, bool>(storey.<>m__1)))
+            {
+                writer.WriteLine("#include {0}", str2);
             }
             writer.WriteLine();
             foreach (TypeReference reference in base.ForwardDeclarations)
@@ -70,14 +75,9 @@
                 }
                 writer.WriteLine("struct {0};", CppCodeWriter.Naming.ForType(reference));
             }
-            foreach (string str2 in base.RawForwardDeclarations)
+            foreach (string str3 in base.RawForwardDeclarations)
             {
-                writer.WriteLine(str2 + ';');
-            }
-            writer.WriteLine();
-            foreach (string str3 in base.Includes.Where<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__1)))
-            {
-                writer.WriteLine("#include {0}", str3);
+                writer.WriteLine(str3 + ';');
             }
             writer.WriteLine();
             foreach (GenericInstanceMethod method in base.GenericInstanceMethods)

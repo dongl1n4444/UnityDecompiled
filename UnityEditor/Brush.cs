@@ -27,7 +27,6 @@
             Material material = EditorGUIUtility.LoadRequired("SceneView/TerrainBrushMaterial.mat") as Material;
             material.SetTexture("_CutoutTex", (Texture2D) EditorGUIUtility.Load(EditorResourcesUtility.brushesPath + "brush_cutout.png"));
             this.m_BrushProjector.material = material;
-            this.m_BrushProjector.enabled = false;
         }
 
         public void Dispose()
@@ -53,6 +52,10 @@
 
         public bool Load(Texture2D brushTex, int size)
         {
+            if ((this.m_BrushProjector != null) && (this.m_Preview != null))
+            {
+                this.m_BrushProjector.material.mainTexture = this.m_Preview;
+            }
             if (((this.m_Brush == brushTex) && (size == this.m_Size)) && (this.m_Strength != null))
             {
                 return true;

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Stores settings of a TextureImporter.</para>
@@ -119,16 +120,16 @@
         /// <para>Copy parameters into another TextureImporterSettings object.</para>
         /// </summary>
         /// <param name="target">TextureImporterSettings object to copy settings to.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CopyTo(TextureImporterSettings target);
         /// <summary>
         /// <para>Test texture importer settings for equality.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool Equal(TextureImporterSettings a, TextureImporterSettings b);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_ApplyTextureType(TextureImporterSettings s, TextureImporterType type);
 
         /// <summary>

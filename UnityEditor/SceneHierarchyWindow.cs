@@ -81,7 +81,7 @@
                     {
                         replacementMenuString = str.Substring(11);
                     }
-                    MenuUtils.ExtractMenuItemWithPath(str, menu, replacementMenuString, temporaryContext, targetSceneHandle, new Action<string, Object[], int>(this, (IntPtr) this.BeforeCreateGameObjectMenuItemWasExecuted), new Action<string, Object[], int>(this, (IntPtr) this.AfterCreateGameObjectMenuItemWasExecuted));
+                    MenuUtils.ExtractMenuItemWithPath(str, menu, replacementMenuString, temporaryContext, targetSceneHandle, new Action<string, Object[], int>(this.BeforeCreateGameObjectMenuItemWasExecuted), new Action<string, Object[], int>(this.AfterCreateGameObjectMenuItemWasExecuted));
                 }
             }
         }
@@ -209,7 +209,7 @@
             menu.AddSeparator("");
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Transform, GameObject>(null, (IntPtr) <CreateGameObjectContextClick>m__0);
+                <>f__am$cache0 = t => t.gameObject;
             }
             this.AddCreateGameObjectItemsToMenu(menu, Enumerable.Select<Transform, GameObject>(Selection.transforms, <>f__am$cache0).ToArray<GameObject>(), false, false, 0);
             menu.ShowAsContext();
@@ -351,7 +351,7 @@
                     menu.AddSeparator("");
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<Transform, GameObject>(null, (IntPtr) <CreateMultiSceneHeaderContextClick>m__1);
+                        <>f__am$cache1 = t => t.gameObject;
                     }
                     this.AddCreateGameObjectItemsToMenu(menu, Enumerable.Select<Transform, GameObject>(Selection.transforms, <>f__am$cache1).ToArray<GameObject>(), false, true, sceneByHandle.handle);
                 }
@@ -387,7 +387,7 @@
             Scene[] modifiedScenes = this.GetModifiedScenes(selectedScenes);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Scene, bool>(null, (IntPtr) <DiscardChangesInSelectedScenes>m__3);
+                <>f__am$cache3 = scene => !string.IsNullOrEmpty(scene.path);
             }
             Scene[] sceneArray2 = Enumerable.Where<Scene>(modifiedScenes, <>f__am$cache3).ToArray<Scene>();
             if (this.UserAllowedDiscardingChanges(sceneArray2))
@@ -626,11 +626,11 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<int, Scene>(null, (IntPtr) <GetModifiedScenes>m__4);
+                <>f__am$cache4 = handle => EditorSceneManager.GetSceneByHandle(handle);
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<Scene, bool>(null, (IntPtr) <GetModifiedScenes>m__5);
+                <>f__am$cache5 = scene => scene.isDirty;
             }
             return Enumerable.Where<Scene>(Enumerable.Select<int, Scene>(handles, <>f__am$cache4), <>f__am$cache5).ToArray<Scene>();
         }
@@ -688,10 +688,10 @@
             this.m_TreeView = new TreeViewController(this, this.m_TreeViewState);
             this.m_TreeView.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_TreeView.itemDoubleClickedCallback, new Action<int>(this.TreeViewItemDoubleClicked));
             this.m_TreeView.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_TreeView.selectionChangedCallback, new Action<int[]>(this.TreeViewSelectionChanged));
-            this.m_TreeView.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_TreeView.onGUIRowCallback, new Action<int, Rect>(this, (IntPtr) this.OnGUIAssetCallback));
-            this.m_TreeView.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_TreeView.dragEndedCallback, new Action<int[], bool>(this, (IntPtr) this.OnDragEndedCallback));
+            this.m_TreeView.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_TreeView.onGUIRowCallback, new Action<int, Rect>(this.OnGUIAssetCallback));
+            this.m_TreeView.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_TreeView.dragEndedCallback, new Action<int[], bool>(this.OnDragEndedCallback));
             this.m_TreeView.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TreeView.contextClickItemCallback, new Action<int>(this.ItemContextClick));
-            this.m_TreeView.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new Action(this, (IntPtr) this.ContextClickOutsideItems));
+            this.m_TreeView.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new Action(this.ContextClickOutsideItems));
             this.m_TreeView.deselectOnUnhandledMouseDown = true;
             bool showRoot = false;
             bool rootItemIsCollapsable = false;
@@ -699,7 +699,7 @@
             GameObjectsTreeViewDragging dragging = new GameObjectsTreeViewDragging(this.m_TreeView);
             GameObjectTreeViewGUI gui = new GameObjectTreeViewGUI(this.m_TreeView, false);
             this.m_TreeView.Init(this.treeViewRect, data, gui, dragging);
-            data.searchMode = (int) base.m_SearchMode;
+            data.searchMode = (int) base.searchMode;
             data.searchString = base.m_SearchFilter;
             this.m_AllowAlphaNumericalSort = EditorPrefs.GetBool("AllowAlphaNumericHierarchy", false) || InternalEditorUtility.inBatchMode;
             this.SetUpSortMethodLists();
@@ -770,8 +770,8 @@
             EditorApplication.editorApplicationQuit = (UnityAction) Delegate.Remove(EditorApplication.editorApplicationQuit, new UnityAction(this.OnQuit));
             EditorApplication.searchChanged = (EditorApplication.CallbackFunction) Delegate.Remove(EditorApplication.searchChanged, new EditorApplication.CallbackFunction(this.SearchChanged));
             EditorApplication.projectWasLoaded = (UnityAction) Delegate.Remove(EditorApplication.projectWasLoaded, new UnityAction(this.OnProjectWasLoaded));
-            EditorSceneManager.sceneWasCreated = (UnityAction<Scene, NewSceneMode>) Delegate.Remove(EditorSceneManager.sceneWasCreated, new UnityAction<Scene, NewSceneMode>(this.OnSceneWasCreated));
-            EditorSceneManager.sceneWasOpened = (UnityAction<Scene, OpenSceneMode>) Delegate.Remove(EditorSceneManager.sceneWasOpened, new UnityAction<Scene, OpenSceneMode>(this.OnSceneWasOpened));
+            EditorSceneManager.newSceneCreated -= new EditorSceneManager.NewSceneCreatedCallback(this.OnSceneCreated);
+            EditorSceneManager.sceneOpened -= new EditorSceneManager.SceneOpenedCallback(this.OnSceneOpened);
             s_SceneHierarchyWindow.Remove(this);
         }
 
@@ -796,8 +796,8 @@
             EditorApplication.editorApplicationQuit = (UnityAction) Delegate.Combine(EditorApplication.editorApplicationQuit, new UnityAction(this.OnQuit));
             EditorApplication.searchChanged = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.searchChanged, new EditorApplication.CallbackFunction(this.SearchChanged));
             EditorApplication.projectWasLoaded = (UnityAction) Delegate.Combine(EditorApplication.projectWasLoaded, new UnityAction(this.OnProjectWasLoaded));
-            EditorSceneManager.sceneWasCreated = (UnityAction<Scene, NewSceneMode>) Delegate.Combine(EditorSceneManager.sceneWasCreated, new UnityAction<Scene, NewSceneMode>(this.OnSceneWasCreated));
-            EditorSceneManager.sceneWasOpened = (UnityAction<Scene, OpenSceneMode>) Delegate.Combine(EditorSceneManager.sceneWasOpened, new UnityAction<Scene, OpenSceneMode>(this.OnSceneWasOpened));
+            EditorSceneManager.newSceneCreated += new EditorSceneManager.NewSceneCreatedCallback(this.OnSceneCreated);
+            EditorSceneManager.sceneOpened += new EditorSceneManager.SceneOpenedCallback(this.OnSceneOpened);
             s_LastInteractedHierarchy = this;
         }
 
@@ -867,12 +867,12 @@
             this.m_ExpandedScenes = this.GetExpandedSceneNames().ToList<string>();
         }
 
-        private void OnSceneWasCreated(Scene scene, NewSceneMode mode)
+        private void OnSceneCreated(Scene scene, NewSceneSetup setup, NewSceneMode mode)
         {
             this.ExpandTreeViewItem(scene.handle, true);
         }
 
-        private void OnSceneWasOpened(Scene scene, OpenSceneMode mode)
+        private void OnSceneOpened(Scene scene, OpenSceneMode mode)
         {
             this.ExpandTreeViewItem(scene.handle, true);
         }
@@ -1183,7 +1183,7 @@
             string format = LocalizationDatabase.GetLocalizedString("Are you sure you want to discard the changes in the following scenes:\n\n   {0}\n\nYour changes will be lost.");
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Scene, string>(null, (IntPtr) <UserAllowedDiscardingChanges>m__2);
+                <>f__am$cache2 = scene => scene.name;
             }
             string str3 = string.Join("\n   ", Enumerable.Select<Scene, string>(modifiedScenes, <>f__am$cache2).ToArray<string>());
             format = string.Format(format, str3);

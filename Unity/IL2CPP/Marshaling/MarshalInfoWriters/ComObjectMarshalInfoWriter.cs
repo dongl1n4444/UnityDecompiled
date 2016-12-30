@@ -4,6 +4,8 @@
     using System;
     using System.Collections.Generic;
     using Unity.IL2CPP;
+    using Unity.IL2CPP.IoC;
+    using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Marshaling;
 
     internal sealed class ComObjectMarshalInfoWriter : MarshalableMarshalInfoWriter
@@ -15,16 +17,21 @@
         private readonly string _managedTypeName;
         private readonly bool _marshalAsInspectable;
         private readonly MarshaledType[] _marshaledTypes;
+        private readonly MarshalType _marshalType;
+        private readonly TypeReference _windowsRuntimeType;
         public const NativeType kNativeTypeIInspectable = (NativeType.CustomMarshaler | NativeType.Boolean);
+        [Inject]
+        public static IWindowsRuntimeProjections WindowsRuntimeProjections;
 
         public ComObjectMarshalInfoWriter(TypeReference type, MarshalType marshalType, MarshalInfo marshalInfo) : base(type)
         {
             this._marshalAsInspectable = (marshalType == MarshalType.WindowsRuntime) || ((marshalInfo != null) && (marshalInfo.NativeType == (NativeType.CustomMarshaler | NativeType.Boolean)));
-            TypeDefinition definition = type.Resolve();
+            this._windowsRuntimeType = WindowsRuntimeProjections.ProjectToWindowsRuntime(type);
+            TypeDefinition definition = this._windowsRuntimeType.Resolve();
             this._isSealed = definition.IsSealed;
             this._isClass = ((marshalType == MarshalType.WindowsRuntime) && !definition.IsInterface()) && !type.IsSystemObject();
-            this._defaultInterface = !this._isClass ? type : definition.ExtractDefaultInterface();
-            this._managedTypeName = !this._isClass ? DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(DefaultMarshalInfoWriter.TypeProvider.SystemObject) : DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(type);
+            this._defaultInterface = !this._isClass ? this._windowsRuntimeType : definition.ExtractDefaultInterface();
+            this._managedTypeName = !this._isClass ? DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(DefaultMarshalInfoWriter.TypeProvider.SystemObject) : DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(this._windowsRuntimeType);
             if (type.IsSystemObject())
             {
                 this._interfaceTypeName = !this._marshalAsInspectable ? "Il2CppIUnknown" : "Il2CppIInspectable";
@@ -34,11 +41,17 @@
                 this._interfaceTypeName = DefaultMarshalInfoWriter.Naming.ForTypeNameOnly(this._defaultInterface);
             }
             this._marshaledTypes = new MarshaledType[] { new MarshaledType(this._interfaceTypeName + '*', this._interfaceTypeName + '*') };
+            this._marshalType = marshalType;
         }
 
         public override void WriteIncludesForFieldDeclaration(CppCodeWriter writer)
         {
             this.WriteMarshaledTypeForwardDeclaration(writer);
+        }
+
+        public override void WriteIncludesForMarshaling(CppCodeWriter writer)
+        {
+            writer.AddIncludeForTypeDefinition(this._windowsRuntimeType);
         }
 
         public sealed override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName)
@@ -82,7 +95,7 @@
                 {
                     object[] objArray4 = new object[] { DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable(), DefaultMarshalInfoWriter.Naming.ForVariable(DefaultMarshalInfoWriter.TypeProvider.Il2CppComObjectTypeReference), sourceVariable.Load(), DefaultMarshalInfoWriter.Naming.ForIl2CppComObjectIdentityField(), this._interfaceTypeName, destinationVariable };
                     writer.WriteLine("il2cpp_hresult_t {0} = (({1}){2})->{3}->QueryInterface({4}::IID, reinterpret_cast<void**>(&{5}));", objArray4);
-                    writer.WriteStatement(Emit.Call("il2cpp_codegen_com_raise_exception_if_failed", DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable()));
+                    writer.WriteStatement(Emit.Call("il2cpp_codegen_com_raise_exception_if_failed", DefaultMarshalInfoWriter.Naming.ForInteropHResultVariable(), (this._marshalType != MarshalType.COM) ? "false" : "true"));
                 }
             }
             writer.WriteLine("else");

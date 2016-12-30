@@ -31,7 +31,7 @@
 
         public GameObjectTreeViewDataSource(TreeViewController treeView, int rootInstanceID, bool showRoot, bool rootItemIsCollapsable) : base(treeView)
         {
-            this.kGameObjectClassID = BaseObjectTools.StringToClassID("GameObject");
+            this.kGameObjectClassID = UnityType.FindTypeByName("GameObject").persistentTypeID;
             this.m_SearchString = "";
             this.m_SearchMode = 0;
             this.m_LastFetchTime = 0.0;
@@ -68,6 +68,11 @@
         {
             this.SetupChildParentReferencesIfNeeded();
             return base.CanBeParent(item);
+        }
+
+        private void ClearSearchFilter()
+        {
+            this.CreateHierarchyProperty().SetSearchFilter("", 0);
         }
 
         private HierarchyProperty CreateHierarchyProperty()
@@ -366,7 +371,6 @@
         private void InitTreeViewItem(GameObjectTreeViewItem item, int itemID, Scene scene, bool isSceneHeader, int colorCode, Object pptrObject, bool hasChildren, int depth)
         {
             item.children = null;
-            item.userData = null;
             item.id = itemID;
             item.depth = depth;
             item.parent = null;
@@ -415,9 +419,9 @@
         {
             base.OnInitialize();
             GameObjectTreeViewGUI gui = (GameObjectTreeViewGUI) base.m_TreeView.gui;
-            gui.scrollHeightChanged += new Action(this, (IntPtr) this.EnsureFullyInitialized);
-            gui.scrollPositionChanged += new Action(this, (IntPtr) this.EnsureFullyInitialized);
-            gui.mouseAndKeyboardInput += new Action(this, (IntPtr) this.EnsureFullyInitialized);
+            gui.scrollHeightChanged += new Action(this.EnsureFullyInitialized);
+            gui.scrollPositionChanged += new Action(this.EnsureFullyInitialized);
+            gui.mouseAndKeyboardInput += new Action(this.EnsureFullyInitialized);
         }
 
         private static void Resize(List<TreeViewItem> list, int count)
@@ -489,6 +493,10 @@
                 this.m_SearchString;
             set
             {
+                if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(this.m_SearchString))
+                {
+                    this.ClearSearchFilter();
+                }
                 this.m_SearchString = value;
             }
         }

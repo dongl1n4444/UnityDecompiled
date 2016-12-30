@@ -166,7 +166,7 @@
                 this.CopyTransitionForPreview(this.m_RefTransition, ref this.m_Transition);
                 this.DisableIKOnFeetIfNeeded();
                 AnimatorController.SetAnimatorController(this.m_AvatarPreview.Animator, this.m_Controller);
-                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this, (IntPtr) this.ControllerDirty));
+                this.m_Controller.OnAnimatorControllerDirty = (Action) Delegate.Combine(this.m_Controller.OnAnimatorControllerDirty, new Action(this.ControllerDirty));
             }
         }
 

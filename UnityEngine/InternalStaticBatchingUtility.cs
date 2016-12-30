@@ -54,7 +54,7 @@
                             Material[] sharedMaterials = context.sharedMaterials;
                             if (<>f__am$cache0 == null)
                             {
-                                <>f__am$cache0 = new Func<Material, bool>(null, (IntPtr) <CombineGameObjects>m__0);
+                                <>f__am$cache0 = m => ((m != null) && (m.shader != null)) && (m.shader.disableBatching != DisableBatchingType.False);
                             }
                             if (!Enumerable.Any<Material>(sharedMaterials, <>f__am$cache0))
                             {
@@ -142,8 +142,8 @@
                 {
                     meshName = meshName + " " + (batchIndex + 1);
                 }
-                Mesh combinedMesh = StaticBatchingUtility.InternalCombineVertices(list.ToArray(), meshName);
-                StaticBatchingUtility.InternalCombineIndices(list2.ToArray(), combinedMesh);
+                Mesh combinedMesh = StaticBatchingHelper.InternalCombineVertices(list.ToArray(), meshName);
+                StaticBatchingHelper.InternalCombineIndices(list2.ToArray(), combinedMesh);
                 int firstSubMesh = 0;
                 foreach (MeshSubsetCombineUtility.MeshContainer container2 in meshes)
                 {

@@ -4,12 +4,15 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Rendering;
+    using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Custom 3D GUI controls and drawing in the Scene view.</para>
+    /// <para>Custom 3D GUI controls and drawing in the scene view.</para>
     /// </summary>
     public sealed class Handles
     {
@@ -42,7 +45,6 @@
         internal static PrefColor s_CenterColor = new PrefColor("Scene/Center Axis", 0.8f, 0.8f, 0.8f, 0.93f);
         internal static Color s_ColliderHandleColor = ((Color) (new Color(145f, 244f, 139f, 210f) / 255f));
         internal static Color s_ColliderHandleColorDisabled = ((Color) (new Color(84f, 200f, 77f, 140f) / 255f));
-        private static Color s_Color;
         internal static Mesh s_ConeMesh;
         internal static Mesh s_CubeMesh;
         internal static Mesh s_CylinderMesh;
@@ -50,9 +52,6 @@
         internal static int s_FreeMoveHandleHash = "FreeMoveHandleHash".GetHashCode();
         private static bool s_FreeMoveMode = false;
         internal static int s_FreeRotateHandleHash = "FreeRotateHandleHash".GetHashCode();
-        internal static Matrix4x4 s_InverseMatrix = Matrix4x4.identity;
-        private static bool s_Lighting = true;
-        internal static Matrix4x4 s_Matrix = Matrix4x4.identity;
         private static Vector3 s_PlanarHandlesOctant = Vector3.one;
         internal static Mesh s_QuadMesh;
         internal static int s_RadiusHandleHash = "RadiusHandleHash".GetHashCode();
@@ -78,13 +77,6 @@
         internal static Color staticColor = new Color(0.5f, 0.5f, 0.5f, 0f);
         private static Vector3[] verts = new Vector3[] { Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero };
 
-        /// <summary>
-        /// <para>Draw an arrow like those used by the move tool.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
         public static void ArrowCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -144,24 +136,24 @@
             GUILayout.BeginArea(position);
         }
 
-        private static bool BeginLineDrawing(Matrix4x4 matrix, bool dottedLines)
+        private static bool BeginLineDrawing(Matrix4x4 matrix, bool dottedLines, int mode)
         {
             if (Event.current.type != EventType.Repaint)
             {
                 return false;
             }
-            Color c = s_Color * lineTransparency;
+            Color c = color * lineTransparency;
             if (dottedLines)
             {
-                HandleUtility.ApplyDottedWireMaterial();
+                HandleUtility.ApplyDottedWireMaterial(zTest);
             }
             else
             {
-                HandleUtility.ApplyWireMaterial();
+                HandleUtility.ApplyWireMaterial(zTest);
             }
             GL.PushMatrix();
             GL.MultMatrix(matrix);
-            GL.Begin(1);
+            GL.Begin(mode);
             GL.Color(c);
             return true;
         }
@@ -178,13 +170,6 @@
         internal static bool Button(int controlID, Vector3 position, Quaternion direction, float size, float pickSize, DrawCapFunction capFunc) => 
             UnityEditorInternal.Button.Do(controlID, position, direction, size, pickSize, capFunc);
 
-        /// <summary>
-        /// <para>Draw a camera-facing Circle. Pass this into handle functions.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position for the start of the handle.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
         public static void CircleCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -248,13 +233,8 @@
             }
         }
 
-        /// <summary>
-        /// <para>Draw a Cone. Pass this into handle functions.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        internal static extern void ClearHandles();
         public static void ConeCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -292,13 +272,6 @@
             }
         }
 
-        /// <summary>
-        /// <para>Draw a cube. Pass this into handle functions.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
         public static void CubeCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -330,13 +303,6 @@
             }
         }
 
-        /// <summary>
-        /// <para>Draw a Cylinder. Pass this into handle functions.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
         public static void CylinderCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -369,12 +335,13 @@
         }
 
         /// <summary>
-        /// <para>Make a 3D disc that can be dragged with the mouse.</para>
+        /// <para>Make a 3D disc that can be dragged with the mouse.
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
         /// </summary>
         /// <param name="rotation">The rotation of the disc.</param>
         /// <param name="position">The center of the disc.</param>
         /// <param name="axis">The axis to rotate around.</param>
-        /// <param name="size">The size of the disc in world space.</param>
+        /// <param name="size">The size of the disc in world space See Also:HandleUtility.GetHandleSize.</param>
         /// <param name="cutoffPlane">If true, only the front-facing half of the circle is draw / draggable. This is useful when you have many overlapping rotation axes (like in the default rotate tool) to avoid clutter.</param>
         /// <param name="snap">The grid size to snap to.</param>
         /// <returns>
@@ -632,8 +599,8 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                HandleUtility.ApplyWireMaterial();
-                Color defaultColor = new Color(1f, 1f, 1f, alpha) * s_Color;
+                HandleUtility.ApplyWireMaterial(zTest);
+                Color defaultColor = new Color(1f, 1f, 1f, alpha) * color;
                 Internal_DrawAAConvexPolygon(points, defaultColor, actualNumberOfPoints, matrix);
             }
         }
@@ -642,7 +609,7 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                HandleUtility.ApplyWireMaterial();
+                HandleUtility.ApplyWireMaterial(zTest);
                 Color defaultColor = new Color(1f, 1f, 1f, alpha);
                 if (colors != null)
                 {
@@ -653,7 +620,7 @@
                 }
                 else
                 {
-                    defaultColor *= s_Color;
+                    defaultColor *= color;
                 }
                 Internal_DrawAAPolyLine(colors, points, defaultColor, actualNumberOfPoints, lineTex, width, matrix);
             }
@@ -1101,13 +1068,6 @@
             return radius;
         }
 
-        /// <summary>
-        /// <para>Draw a camera-facing dot. Pass this into handle functions.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
         public static void DotCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -1115,8 +1075,8 @@
                 position = matrix.MultiplyPoint(position);
                 Vector3 vector = (Vector3) (Camera.current.transform.right * size);
                 Vector3 vector2 = (Vector3) (Camera.current.transform.up * size);
-                Color c = s_Color * new Color(1f, 1f, 1f, 0.99f);
-                HandleUtility.ApplyWireMaterial();
+                Color c = color * new Color(1f, 1f, 1f, 0.99f);
+                HandleUtility.ApplyWireMaterial(zTest);
                 GL.Begin(7);
                 GL.Color(c);
                 GL.Vertex((position + vector) + vector2);
@@ -1144,7 +1104,7 @@
                     position = matrix.MultiplyPoint(position);
                     Vector3 vector = (Vector3) (Camera.current.transform.right * size);
                     Vector3 vector2 = (Vector3) (Camera.current.transform.up * size);
-                    Color c = s_Color * new Color(1f, 1f, 1f, 0.99f);
+                    Color c = color * new Color(1f, 1f, 1f, 0.99f);
                     HandleUtility.ApplyWireMaterial();
                     GL.Begin(7);
                     GL.Color(c);
@@ -1174,7 +1134,7 @@
         /// <para>Draw anti-aliased line specified with point array and width.</para>
         /// </summary>
         /// <param name="lineTex">The AA texture used for rendering. To get an anti-aliased effect use a texture that is 1x2 pixels with one transparent white pixel and one opaque white pixel.</param>
-        /// <param name="width">The width of the line.</param>
+        /// <param name="width">The width of the line. Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         /// <param name="points">List of points to build the line from.</param>
         /// <param name="actualNumberOfPoints"></param>
         public static void DrawAAPolyLine(params Vector3[] points)
@@ -1191,7 +1151,7 @@
         /// <para>Draw anti-aliased line specified with point array and width.</para>
         /// </summary>
         /// <param name="lineTex">The AA texture used for rendering. To get an anti-aliased effect use a texture that is 1x2 pixels with one transparent white pixel and one opaque white pixel.</param>
-        /// <param name="width">The width of the line.</param>
+        /// <param name="width">The width of the line. Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         /// <param name="points">List of points to build the line from.</param>
         /// <param name="actualNumberOfPoints"></param>
         public static void DrawAAPolyLine(float width, params Vector3[] points)
@@ -1203,7 +1163,7 @@
         /// <para>Draw anti-aliased line specified with point array and width.</para>
         /// </summary>
         /// <param name="lineTex">The AA texture used for rendering. To get an anti-aliased effect use a texture that is 1x2 pixels with one transparent white pixel and one opaque white pixel.</param>
-        /// <param name="width">The width of the line.</param>
+        /// <param name="width">The width of the line. Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         /// <param name="points">List of points to build the line from.</param>
         /// <param name="actualNumberOfPoints"></param>
         public static void DrawAAPolyLine(Texture2D lineTex, params Vector3[] points)
@@ -1220,7 +1180,7 @@
         /// <para>Draw anti-aliased line specified with point array and width.</para>
         /// </summary>
         /// <param name="lineTex">The AA texture used for rendering. To get an anti-aliased effect use a texture that is 1x2 pixels with one transparent white pixel and one opaque white pixel.</param>
-        /// <param name="width">The width of the line.</param>
+        /// <param name="width">The width of the line. Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         /// <param name="points">List of points to build the line from.</param>
         /// <param name="actualNumberOfPoints"></param>
         public static void DrawAAPolyLine(float width, int actualNumberOfPoints, params Vector3[] points)
@@ -1232,7 +1192,7 @@
         /// <para>Draw anti-aliased line specified with point array and width.</para>
         /// </summary>
         /// <param name="lineTex">The AA texture used for rendering. To get an anti-aliased effect use a texture that is 1x2 pixels with one transparent white pixel and one opaque white pixel.</param>
-        /// <param name="width">The width of the line.</param>
+        /// <param name="width">The width of the line. Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         /// <param name="points">List of points to build the line from.</param>
         /// <param name="actualNumberOfPoints"></param>
         public static void DrawAAPolyLine(Texture2D lineTex, float width, params Vector3[] points)
@@ -1247,7 +1207,7 @@
         }
 
         /// <summary>
-        /// <para>Draw textured bezier line through start and end points with the given tangents.</para>
+        /// <para>Draw textured bezier line through start and end points with the given tangents.  To get an anti-aliased effect use a texture that is 1x2 pixels with one transparent white pixel and one opaque white pixel.  The bezier curve will be swept using this texture.</para>
         /// </summary>
         /// <param name="startPosition">The start point of the bezier line.</param>
         /// <param name="endPosition">The end point of the bezier line.</param>
@@ -1260,7 +1220,7 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                HandleUtility.ApplyWireMaterial();
+                HandleUtility.ApplyWireMaterial(zTest);
                 Internal_DrawBezier(startPosition, endPosition, startTangent, endTangent, color, texture, width, matrix);
             }
         }
@@ -1272,7 +1232,7 @@
                 Vector3[] vectorArray = GetBoneVertices(endPoint, basePoint, size);
                 HandleUtility.ApplyWireMaterial();
                 GL.Begin(4);
-                GL.Color(s_Color);
+                GL.Color(color);
                 for (int i = 0; i < 3; i++)
                 {
                     GL.Vertex(vectorArray[i * 6]);
@@ -1284,7 +1244,7 @@
                 }
                 GL.End();
                 GL.Begin(1);
-                GL.Color((s_Color * new Color(1f, 1f, 1f, 0f)) + new Color(0f, 0f, 0f, 1f));
+                GL.Color((color * new Color(1f, 1f, 1f, 0f)) + new Color(0f, 0f, 0f, 1f));
                 for (int j = 0; j < 3; j++)
                 {
                     GL.Vertex(vectorArray[j * 6]);
@@ -1326,42 +1286,52 @@
             DrawCameraImpl(position, camera, drawMode, true, gridParam, true);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void DrawCameraFade(Camera camera, float fade);
         internal static void DrawCameraImpl(Rect position, Camera camera, DrawCameraMode drawMode, bool drawGrid, DrawGridParameters gridParam, bool finish)
         {
             if (Event.current.type == EventType.Repaint)
             {
-                if (camera.targetTexture == null)
+                Rect pixelRect = camera.pixelRect;
+                Rect rect = camera.rect;
+                try
                 {
-                    Rect rect = EditorGUIUtility.PointsToPixels(GUIClip.Unclip(position));
-                    camera.pixelRect = new Rect(rect.xMin, Screen.height - rect.yMax, rect.width, rect.height);
-                }
-                else
-                {
-                    camera.rect = new Rect(0f, 0f, 1f, 1f);
-                }
-                if (drawMode == DrawCameraMode.Normal)
-                {
-                    RenderTexture targetTexture = camera.targetTexture;
-                    camera.targetTexture = RenderTexture.active;
-                    camera.Render();
-                    camera.targetTexture = targetTexture;
-                }
-                else
-                {
-                    if (drawGrid)
+                    if (camera.targetTexture == null)
                     {
-                        Internal_DrawCameraWithGrid(camera, (int) drawMode, ref gridParam);
+                        Rect rect3 = EditorGUIUtility.PointsToPixels(GUIClip.Unclip(position));
+                        camera.pixelRect = new Rect(rect3.xMin, Screen.height - rect3.yMax, rect3.width, rect3.height);
                     }
                     else
                     {
-                        Internal_DrawCamera(camera, (int) drawMode);
+                        camera.rect = new Rect(0f, 0f, 1f, 1f);
                     }
-                    if (finish)
+                    if (drawMode == DrawCameraMode.Normal)
                     {
-                        Internal_FinishDrawingCamera(camera);
+                        RenderTexture targetTexture = camera.targetTexture;
+                        camera.targetTexture = RenderTexture.active;
+                        camera.Render();
+                        camera.targetTexture = targetTexture;
                     }
+                    else
+                    {
+                        if (drawGrid)
+                        {
+                            Internal_DrawCameraWithGrid(camera, (int) drawMode, ref gridParam);
+                        }
+                        else
+                        {
+                            Internal_DrawCamera(camera, (int) drawMode);
+                        }
+                        if (finish)
+                        {
+                            Internal_FinishDrawingCamera(camera);
+                        }
+                    }
+                }
+                finally
+                {
+                    camera.pixelRect = pixelRect;
+                    camera.rect = rect;
                 }
             }
             else
@@ -1409,7 +1379,7 @@
         /// <param name="screenSpaceSize">The size in pixels for the lengths of the line segments and the gaps between them.</param>
         public static void DrawDottedLine(Vector3 p1, Vector3 p2, float screenSpaceSize)
         {
-            if (BeginLineDrawing(matrix, true))
+            if (BeginLineDrawing(matrix, true, 1))
             {
                 float x = screenSpaceSize * EditorGUIUtility.pixelsPerPoint;
                 GL.MultiTexCoord(1, p1);
@@ -1429,7 +1399,7 @@
         /// <param name="screenSpaceSize">The size in pixels for the lengths of the line segments and the gaps between them.</param>
         public static void DrawDottedLines(Vector3[] lineSegments, float screenSpaceSize)
         {
-            if (BeginLineDrawing(matrix, true))
+            if (BeginLineDrawing(matrix, true, 1))
             {
                 float x = screenSpaceSize * EditorGUIUtility.pixelsPerPoint;
                 for (int i = 0; i < lineSegments.Length; i += 2)
@@ -1455,7 +1425,7 @@
         /// <param name="screenSpaceSize">The size in pixels for the lengths of the line segments and the gaps between them.</param>
         public static void DrawDottedLines(Vector3[] points, int[] segmentIndices, float screenSpaceSize)
         {
-            if (BeginLineDrawing(matrix, true))
+            if (BeginLineDrawing(matrix, true, 1))
             {
                 float x = screenSpaceSize * EditorGUIUtility.pixelsPerPoint;
                 for (int i = 0; i < segmentIndices.Length; i += 2)
@@ -1480,7 +1450,7 @@
         /// <param name="p2"></param>
         public static void DrawLine(Vector3 p1, Vector3 p2)
         {
-            if (BeginLineDrawing(matrix, false))
+            if (BeginLineDrawing(matrix, false, 1))
             {
                 GL.Vertex(p1);
                 GL.Vertex(p2);
@@ -1494,7 +1464,7 @@
         /// <param name="lineSegments">A list of pairs of points that represent the start and end of line segments.</param>
         public static void DrawLines(Vector3[] lineSegments)
         {
-            if (BeginLineDrawing(matrix, false))
+            if (BeginLineDrawing(matrix, false, 1))
             {
                 for (int i = 0; i < lineSegments.Length; i += 2)
                 {
@@ -1514,7 +1484,7 @@
         /// <param name="segmentIndices">A list of pairs of indices to the start and end points of the line segments.</param>
         public static void DrawLines(Vector3[] points, int[] segmentIndices)
         {
-            if (BeginLineDrawing(matrix, false))
+            if (BeginLineDrawing(matrix, false, 1))
             {
                 for (int i = 0; i < segmentIndices.Length; i += 2)
                 {
@@ -1533,12 +1503,11 @@
         /// <param name="points"></param>
         public static void DrawPolyLine(params Vector3[] points)
         {
-            if (BeginLineDrawing(matrix, false))
+            if (BeginLineDrawing(matrix, false, 2))
             {
-                for (int i = 1; i < points.Length; i++)
+                for (int i = 0; i < points.Length; i++)
                 {
                     GL.Vertex(points[i]);
-                    GL.Vertex(points[i - 1]);
                 }
                 EndLineDrawing();
             }
@@ -1583,16 +1552,18 @@
         /// <param name="normal">The normal of the circle.</param>
         /// <param name="from">The direction of the point on the circumference, relative to the center, where the sector begins.</param>
         /// <param name="angle">The angle of the sector, in degrees.</param>
-        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="radius">The radius of the circle
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void DrawSolidArc(Vector3 center, Vector3 normal, Vector3 from, float angle, float radius)
         {
             if (Event.current.type == EventType.Repaint)
             {
                 Vector3[] dest = new Vector3[60];
-                SetDiscSectionPoints(dest, 60, center, normal, from, angle, radius);
+                SetDiscSectionPoints(dest, center, normal, from, angle, radius);
                 Shader.SetGlobalColor("_HandleColor", color * new Color(1f, 1f, 1f, 0.5f));
                 Shader.SetGlobalFloat("_HandleSize", 1f);
-                HandleUtility.ApplyWireMaterial();
+                HandleUtility.ApplyWireMaterial(zTest);
                 GL.PushMatrix();
                 GL.MultMatrix(matrix);
                 GL.Begin(4);
@@ -1616,7 +1587,9 @@
         /// </summary>
         /// <param name="center">The center of the dics.</param>
         /// <param name="normal">The normal of the disc.</param>
-        /// <param name="radius">The radius of the disc.</param>
+        /// <param name="radius">The radius of the dics
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void DrawSolidDisc(Vector3 center, Vector3 normal, float radius)
         {
             Vector3 from = Vector3.Cross(normal, Vector3.up);
@@ -1643,7 +1616,7 @@
         {
             if (Event.current.type == EventType.Repaint)
             {
-                HandleUtility.ApplyWireMaterial();
+                HandleUtility.ApplyWireMaterial(zTest);
                 GL.PushMatrix();
                 GL.MultMatrix(matrix);
                 if (faceColor.a > 0f)
@@ -1712,19 +1685,21 @@
         /// <param name="normal">The normal of the circle.</param>
         /// <param name="from">The direction of the point on the circle circumference, relative to the center, where the arc begins.</param>
         /// <param name="angle">The angle of the arc, in degrees.</param>
-        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="radius">The radius of the circle
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void DrawWireArc(Vector3 center, Vector3 normal, Vector3 from, float angle, float radius)
         {
             Vector3[] dest = new Vector3[60];
-            SetDiscSectionPoints(dest, 60, center, normal, from, angle, radius);
+            SetDiscSectionPoints(dest, center, normal, from, angle, radius);
             DrawPolyLine(dest);
         }
 
         /// <summary>
         /// <para>Draw a wireframe box with center and size.</para>
         /// </summary>
-        /// <param name="center">Position of the cube.</param>
-        /// <param name="size">Size of the cube.</param>
+        /// <param name="center"></param>
+        /// <param name="size"></param>
         public static void DrawWireCube(Vector3 center, Vector3 size)
         {
             Vector3 vector = (Vector3) (size * 0.5f);
@@ -1740,7 +1715,9 @@
         /// </summary>
         /// <param name="center">The center of the dics.</param>
         /// <param name="normal">The normal of the disc.</param>
-        /// <param name="radius">The radius of the disc.</param>
+        /// <param name="radius">The radius of the dics
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void DrawWireDisc(Vector3 center, Vector3 normal, float radius)
         {
             Vector3 from = Vector3.Cross(normal, Vector3.up);
@@ -1751,13 +1728,13 @@
             DrawWireArc(center, normal, from, 360f, radius);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void EmitGUIGeometryForCamera(Camera source, Camera dest);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void EnableCameraFlares(Camera cam, bool flares);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void EnableCameraFx(Camera cam, bool fx);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void EnableCameraSkybox(Camera cam, bool skybox);
         /// <summary>
         /// <para>End a 2D GUI block and get back to the 3D handle GUI.</para>
@@ -1788,7 +1765,9 @@
         /// </summary>
         /// <param name="rotation">Orientation of the handle.</param>
         /// <param name="position">Center of the handle in 3D space.</param>
-        /// <param name="size">The size of the handle.</param>
+        /// <param name="size">The size of the handle.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         /// <returns>
         /// <para>The new rotation value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
@@ -1826,7 +1805,7 @@
             return vectorArray;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern FilterMode GetCameraFilterMode(Camera camera);
         internal static Rect GetCameraRect(Rect position)
         {
@@ -1835,11 +1814,8 @@
         }
 
         /// <summary>
-        /// <para>Get the width and height of the main Game view.</para>
+        /// <para>Get the width and height of the main game view.</para>
         /// </summary>
-        /// <returns>
-        /// <para>The size of the Game view.</para>
-        /// </returns>
         public static Vector2 GetMainGameViewSize() => 
             GameView.GetMainGameViewTargetSize();
 
@@ -1920,17 +1896,19 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_DrawAAConvexPolygon(Vector3[] points, ref Color defaultColor, int actualNumberOfPoints, ref Matrix4x4 toWorld);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_DrawAAPolyLine(Color[] colors, Vector3[] points, ref Color defaultColor, int actualNumberOfPoints, Texture2D texture, float width, ref Matrix4x4 toWorld);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Internal_DrawBezier(ref Vector3 startPosition, ref Vector3 endPosition, ref Vector3 startTangent, ref Vector3 endTangent, ref Color color, Texture2D texture, float width, ref Matrix4x4 toWorld);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Vector3[] INTERNAL_CALL_Internal_MakeBezierPoints(ref Vector3 startPosition, ref Vector3 endPosition, ref Vector3 startTangent, ref Vector3 endTangent, int division);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_CALL_SetDiscSectionPoints(Vector3[] dest, ref Vector3 center, ref Vector3 normal, ref Vector3 from, float angle, float radius);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetSceneViewColors(ref Color wire, ref Color wireOverlay, ref Color selectedOutline, ref Color selectedWire);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_ClearCamera(Camera cam);
         private static void Internal_DrawAAConvexPolygon(Vector3[] points, Color defaultColor, int actualNumberOfPoints, Matrix4x4 toWorld)
         {
@@ -1947,18 +1925,28 @@
             INTERNAL_CALL_Internal_DrawBezier(ref startPosition, ref endPosition, ref startTangent, ref endTangent, ref color, texture, width, ref toWorld);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_DrawCamera(Camera cam, int renderMode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_DrawCameraWithGrid(Camera cam, int renderMode, ref DrawGridParameters gridParam);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_FinishDrawingCamera(Camera cam);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_get_color(out Color value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_get_inverseMatrix(out Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_get_matrix(out Matrix4x4 value);
         private static Vector3[] Internal_MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division) => 
             INTERNAL_CALL_Internal_MakeBezierPoints(ref startPosition, ref endPosition, ref startTangent, ref endTangent, division);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_set_color(ref Color value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        private static extern void INTERNAL_set_matrix(ref Matrix4x4 value);
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void Internal_SetCurrentCamera(Camera cam);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_SetupCamera(Camera cam);
         /// <summary>
         /// <para>Make a text label positioned in 3D space.</para>
@@ -1967,7 +1955,9 @@
         /// <param name="text">Text to display on the label.</param>
         /// <param name="image">Texture to display on the label.</param>
         /// <param name="content">Text, image and tooltip for this label.</param>
-        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.</param>
+        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void Label(Vector3 position, string text)
         {
             Label(position, EditorGUIUtility.TempContent(text), GUI.skin.label);
@@ -1980,7 +1970,9 @@
         /// <param name="text">Text to display on the label.</param>
         /// <param name="image">Texture to display on the label.</param>
         /// <param name="content">Text, image and tooltip for this label.</param>
-        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.</param>
+        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void Label(Vector3 position, GUIContent content)
         {
             Label(position, content, GUI.skin.label);
@@ -1993,7 +1985,9 @@
         /// <param name="text">Text to display on the label.</param>
         /// <param name="image">Texture to display on the label.</param>
         /// <param name="content">Text, image and tooltip for this label.</param>
-        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.</param>
+        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void Label(Vector3 position, Texture image)
         {
             Label(position, EditorGUIUtility.TempContent(image), GUI.skin.label);
@@ -2006,7 +2000,9 @@
         /// <param name="text">Text to display on the label.</param>
         /// <param name="image">Texture to display on the label.</param>
         /// <param name="content">Text, image and tooltip for this label.</param>
-        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.</param>
+        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void Label(Vector3 position, string text, GUIStyle style)
         {
             Label(position, EditorGUIUtility.TempContent(text), style);
@@ -2019,7 +2015,9 @@
         /// <param name="text">Text to display on the label.</param>
         /// <param name="image">Texture to display on the label.</param>
         /// <param name="content">Text, image and tooltip for this label.</param>
-        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.</param>
+        /// <param name="style">The style to use. If left out, the label style from the current GUISkin is used.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</param>
         public static void Label(Vector3 position, GUIContent content, GUIStyle style)
         {
             BeginGUI();
@@ -2030,16 +2028,19 @@
         /// <summary>
         /// <para>Retuns an array of points to representing the bezier curve. See Handles.DrawBezier.</para>
         /// </summary>
-        /// <param name="startPosition">The location where the Bezier starts.</param>
-        /// <param name="endPosition">The location where the Bezier ends</param>
-        /// <param name="startTangent">The direction the Bezier will start in.</param>
-        /// <param name="endTangent">The direction the Bezier will end in.</param>
+        /// <param name="startPosition"></param>
+        /// <param name="endPosition"></param>
+        /// <param name="startTangent"></param>
+        /// <param name="endTangent"></param>
         /// <param name="division"></param>
-        /// <returns>
-        /// <para>The array of the Bezier points.</para>
-        /// </returns>
-        public static Vector3[] MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division) => 
-            Internal_MakeBezierPoints(startPosition, endPosition, startTangent, endTangent, division);
+        public static Vector3[] MakeBezierPoints(Vector3 startPosition, Vector3 endPosition, Vector3 startTangent, Vector3 endTangent, int division)
+        {
+            if (division < 1)
+            {
+                throw new ArgumentOutOfRangeException("division", "Must be greater than zero");
+            }
+            return Internal_MakeBezierPoints(startPosition, endPosition, startTangent, endTangent, division);
+        }
 
         /// <summary>
         /// <para>Make a 3D Scene view position handle.</para>
@@ -2047,8 +2048,9 @@
         /// <param name="position">Center of the handle in 3D space.</param>
         /// <param name="rotation">Orientation of the handle in 3D space.</param>
         /// <returns>
-        /// <para>The new value modified by the user's interaction with the handle. If the
-        /// user has not moved the handle, it returns the same value that you passed into the function.</para>
+        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
         /// </returns>
         public static Vector3 PositionHandle(Vector3 position, Quaternion rotation) => 
             DoPositionHandle(position, rotation);
@@ -2061,7 +2063,9 @@
         /// <param name="radius">Radius to modify.</param>
         /// <param name="handlesOnly">Whether to omit the circular outline of the radius and only draw the point handles.</param>
         /// <returns>
-        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
+        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
         /// </returns>
         public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius) => 
             DoRadiusHandle(rotation, position, radius, false);
@@ -2074,7 +2078,9 @@
         /// <param name="radius">Radius to modify.</param>
         /// <param name="handlesOnly">Whether to omit the circular outline of the radius and only draw the point handles.</param>
         /// <returns>
-        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
+        /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
         /// </returns>
         public static float RadiusHandle(Quaternion rotation, Vector3 position, float radius, bool handlesOnly) => 
             DoRadiusHandle(rotation, position, radius, handlesOnly);
@@ -2153,14 +2159,15 @@
         /// <param name="rotation">Orientation of the handle.</param>
         /// <param name="position">Center of the handle in 3D space.</param>
         /// <returns>
-        /// <para>The new rotation value modified by the user's interaction with the handle.
-        /// If the user has not moved the handle, it returns the same value that you passed into the function.</para>
+        /// <para>The new rotation value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
         public static Quaternion RotationHandle(Quaternion rotation, Vector3 position) => 
             DoRotationHandle(rotation, position);
 
         /// <summary>
-        /// <para>Make a Scene view scale handle.</para>
+        /// <para>Make a Scene view scale handle.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
         /// </summary>
         /// <param name="scale">Scale to modify.</param>
         /// <param name="position">The position of the handle.</param>
@@ -2173,7 +2180,9 @@
             DoScaleHandle(scale, position, rotation, size);
 
         /// <summary>
-        /// <para>Make a directional scale slider.</para>
+        /// <para>Make a directional scale slider.
+        /// 
+        /// Note: Use HandleUtility.GetHandleSize where you might want to have constant screen-sized handles.</para>
         /// </summary>
         /// <param name="scale">The value the user can modify.</param>
         /// <param name="position">The position of the handle.</param>
@@ -2193,13 +2202,6 @@
         public static float ScaleValueHandle(float value, Vector3 position, Quaternion rotation, float size, DrawCapFunction capFunc, float snap) => 
             SliderScale.DoCenter(GUIUtility.GetControlID(s_ScaleValueHandleHash, FocusType.Keyboard), value, position, rotation, size, capFunc, snap);
 
-        /// <summary>
-        /// <para>Draw a camera facing selection frame.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The world-space position of the handle's start point.</param>
-        /// <param name="rotation">The rotation of the handle.</param>
-        /// <param name="size">The size of the handle in world-space units.</param>
         public static void SelectionFrame(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -2221,8 +2223,7 @@
         /// <summary>
         /// <para>Set the current camera so all Handles and Gizmos are draw with its settings.</para>
         /// </summary>
-        /// <param name="camera">The camera to draw.</param>
-        /// <param name="rect">The 2D size of the camera.</param>
+        /// <param name="camera"></param>
         /// <param name="position"></param>
         public static void SetCamera(Camera camera)
         {
@@ -2239,8 +2240,7 @@
         /// <summary>
         /// <para>Set the current camera so all Handles and Gizmos are draw with its settings.</para>
         /// </summary>
-        /// <param name="camera">The camera to draw.</param>
-        /// <param name="rect">The 2D size of the camera.</param>
+        /// <param name="camera"></param>
         /// <param name="position"></param>
         public static void SetCamera(Rect position, Camera camera)
         {
@@ -2257,20 +2257,13 @@
             }
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetCameraFilterMode(Camera camera, FilterMode mode);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal static extern void SetCameraOnlyDrawMesh(Camera cam);
-        internal static void SetDiscSectionPoints(Vector3[] dest, int count, Vector3 center, Vector3 normal, Vector3 from, float angle, float radius)
+        internal static void SetDiscSectionPoints(Vector3[] dest, Vector3 center, Vector3 normal, Vector3 from, float angle, float radius)
         {
-            from.Normalize();
-            Quaternion quaternion = Quaternion.AngleAxis(angle / ((float) (count - 1)), normal);
-            Vector3 vector = (Vector3) (from * radius);
-            for (int i = 0; i < count; i++)
-            {
-                dest[i] = center + vector;
-                vector = (Vector3) (quaternion * vector);
-            }
+            INTERNAL_CALL_SetDiscSectionPoints(dest, ref center, ref normal, ref from, angle, radius);
         }
 
         internal static void SetSceneViewColors(Color wire, Color wireOverlay, Color selectedOutline, Color selectedWire)
@@ -2288,6 +2281,7 @@
             if ((!Tools.s_Hidden && EditorApplication.isPlaying) && GameObjectUtility.ContainsStatic(Selection.gameObjects))
             {
                 color = Color.white;
+                zTest = CompareFunction.Always;
                 GUIStyle style = "SC ViewAxisLabel";
                 style.alignment = TextAnchor.MiddleLeft;
                 style.fixedWidth = 0f;
@@ -2325,8 +2319,8 @@
         /// <param name="position">The position of the current point.</param>
         /// <param name="direction">The direction of the sliding.</param>
         /// <param name="size">3D size the size of the handle.</param>
-        /// <param name="drawFunc">The function to call for doing the actual drawing - by default, it's Handles.ArrowCap, but any function that has the same signature can be used.</param>
-        /// <param name="snap">The snap value (see SnapValue).</param>
+        /// <param name="snap">The snap value (see Handles.SnapValue).</param>
+        /// <param name="capFunction">The function to call for doing the actual drawing - by default, it's Handles.ArrowHAndleCap, but any function that has the same signature can be used.</param>
         /// <returns>
         /// <para>The new value modified by the user's interaction with the handle. If the user has not moved the handle, it will return the same value as you passed into the function.</para>
         /// </returns>
@@ -2428,8 +2422,8 @@
         /// <summary>
         /// <para>Rounds the value val to the closest multiple of snap (snap can only be positive).</para>
         /// </summary>
-        /// <param name="val">The argument to be modified and its value returned.</param>
-        /// <param name="snap">The destination amount.</param>
+        /// <param name="val"></param>
+        /// <param name="snap"></param>
         /// <returns>
         /// <para>The rounded value, if snap is positive, and val otherwise.</para>
         /// </returns>
@@ -2442,13 +2436,6 @@
             return val;
         }
 
-        /// <summary>
-        /// <para>Draw a Sphere. Pass this into handle functions.</para>
-        /// </summary>
-        /// <param name="controlID">The control ID for the handle.</param>
-        /// <param name="position">The 3D location for the sphere.</param>
-        /// <param name="rotation">The rotation of the sphere around the object connected to.</param>
-        /// <param name="size">The size of the sphere.</param>
         public static void SphereCap(int controlID, Vector3 position, Quaternion rotation, float size)
         {
             if (Event.current.type == EventType.Repaint)
@@ -2484,10 +2471,11 @@
         {
             Shader.SetGlobalColor("_HandleColor", realHandleColor);
             Shader.SetGlobalFloat("_HandleSize", size);
-            Matrix4x4 mat = matrix * Matrix4x4.TRS(position, rotation, Vector3.one);
-            Shader.SetGlobalMatrix("_ObjectToWorld", mat);
+            Matrix4x4 matrixx = matrix * Matrix4x4.TRS(position, rotation, Vector3.one);
+            Shader.SetGlobalMatrix("_ObjectToWorld", matrixx);
+            HandleUtility.handleMaterial.SetInt("_HandleZTest", (int) zTest);
             HandleUtility.handleMaterial.SetPass(0);
-            return mat;
+            return matrixx;
         }
 
         /// <summary>
@@ -2497,15 +2485,19 @@
             ((Color) s_CenterColor);
 
         /// <summary>
-        /// <para>Look up or set the Color of the handles.</para>
+        /// <para>Colors of the handles.</para>
         /// </summary>
         public static Color color
         {
-            get => 
-                s_Color;
+            get
+            {
+                Color color;
+                INTERNAL_get_color(out color);
+                return color;
+            }
             set
             {
-                s_Color = value;
+                INTERNAL_set_color(ref value);
             }
         }
 
@@ -2528,41 +2520,43 @@
         /// <summary>
         /// <para>The inverse of the matrix for all handle operations.</para>
         /// </summary>
-        public static Matrix4x4 inverseMatrix =>
-            s_InverseMatrix;
+        public static Matrix4x4 inverseMatrix
+        {
+            get
+            {
+                Matrix4x4 matrixx;
+                INTERNAL_get_inverseMatrix(out matrixx);
+                return matrixx;
+            }
+        }
 
         /// <summary>
         /// <para>Are handles lit?</para>
         /// </summary>
-        public static bool lighting
-        {
-            get => 
-                s_Lighting;
-            set
-            {
-                s_Lighting = value;
-            }
-        }
+        public static bool lighting { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Matrix for all handle operations.</para>
         /// </summary>
         public static Matrix4x4 matrix
         {
-            get => 
-                s_Matrix;
+            get
+            {
+                Matrix4x4 matrixx;
+                INTERNAL_get_matrix(out matrixx);
+                return matrixx;
+            }
             set
             {
-                s_Matrix = value;
-                s_InverseMatrix = value.inverse;
+                INTERNAL_set_matrix(ref value);
             }
         }
 
         internal static Color realHandleColor =>
-            ((s_Color * new Color(1f, 1f, 1f, 0.5f)) + (!s_Lighting ? new Color(0f, 0f, 0f, 0f) : new Color(0f, 0f, 0f, 0.5f)));
+            ((color * new Color(1f, 1f, 1f, 0.5f)) + (!lighting ? new Color(0f, 0f, 0f, 0f) : new Color(0f, 0f, 0f, 0.5f)));
 
         /// <summary>
-        /// <para>Soft color to use for for less interactive UI, or handles that are used rarely (or not at all).</para>
+        /// <para>Soft color to use for for general things.</para>
         /// </summary>
         public static Color secondaryColor =>
             ((Color) s_SecondaryColor);
@@ -2574,7 +2568,7 @@
             ((Color) s_SelectedColor);
 
         /// <summary>
-        /// <para>Color to use for handles that manipulate the X coordinate of something.</para>
+        /// <para>Color to use for handles that manipulates the X coordinate of something.</para>
         /// </summary>
         public static Color xAxisColor =>
             ((Color) s_XAxisColor);
@@ -2590,6 +2584,11 @@
         /// </summary>
         public static Color zAxisColor =>
             ((Color) s_ZAxisColor);
+
+        /// <summary>
+        /// <para>zTest of the handles.</para>
+        /// </summary>
+        public static CompareFunction zTest { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The function to use for drawing the handle e.g. Handles.RectangleCap.</para>
@@ -2615,6 +2614,38 @@
             Off,
             ShowFiltered,
             ShowRest
+        }
+
+        /// <summary>
+        /// <para>Disposable helper struct for automatically setting and reverting Handles.matrix.</para>
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MatrixScope : IDisposable
+        {
+            private bool m_Disposed;
+            private Matrix4x4 m_OldMatrix;
+            /// <summary>
+            /// <para>Create a new MatrixScope and set Handles.matrix to the specified value.</para>
+            /// </summary>
+            /// <param name="matrix">The matrix to use for displaying Handles inside the scope block.</param>
+            public MatrixScope(Matrix4x4 matrix)
+            {
+                this.m_Disposed = false;
+                this.m_OldMatrix = Handles.matrix;
+                Handles.matrix = matrix;
+            }
+
+            /// <summary>
+            /// <para>Automatically reverts Handles.matrix to its value prior to entering the scope, when the scope is exited. You do not need to call this manually.</para>
+            /// </summary>
+            public void Dispose()
+            {
+                if (!this.m_Disposed)
+                {
+                    this.m_Disposed = true;
+                    Handles.matrix = this.m_OldMatrix;
+                }
+            }
         }
 
         private enum PlaneHandle

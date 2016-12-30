@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Threading;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Provides essential methods related to Window Store application.</para>
@@ -14,13 +15,13 @@
 
         public static  event WindowSizeChanged windowSizeChanged;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string GetAdvertisingIdentifier();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern string GetAppArguments();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         internal static extern bool InternalTryInvokeOnAppThread(AppCallbackItem item, bool waitUntilDone);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         internal static extern bool InternalTryInvokeOnUIThread(AppCallbackItem item, bool waitUntilDone);
         /// <summary>
         /// <para>Executes callback item on application thread.</para>
@@ -61,12 +62,12 @@
         /// <summary>
         /// <para>Returns true if you're running on application thread.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool RunningOnAppThread();
         /// <summary>
         /// <para>Returns true if you're running on UI thread.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern bool RunningOnUIThread();
         /// <summary>
         /// <para>[OBSOLETE] Tries to execute callback item on application thread.</para>

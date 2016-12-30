@@ -55,6 +55,8 @@
         private Vector3 m_TargetSyncVelocity;
         [SerializeField]
         private TransformSyncMode m_TransformSyncMode = TransformSyncMode.SyncNone;
+        [SerializeField]
+        private float m_VelocityThreshold = 0.0001f;
 
         private void Awake()
         {
@@ -68,6 +70,23 @@
             {
                 this.m_LocalTransformWriter = new NetworkWriter();
             }
+        }
+
+        private bool CheckVelocityChanged()
+        {
+            TransformSyncMode transformSyncMode = this.transformSyncMode;
+            if (transformSyncMode != TransformSyncMode.SyncRigidbody2D)
+            {
+                if (transformSyncMode != TransformSyncMode.SyncRigidbody3D)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return (((this.m_RigidBody2D != null) && (this.m_VelocityThreshold > 0f)) && (Mathf.Abs((float) (this.m_RigidBody2D.velocity.sqrMagnitude - this.m_PrevVelocity)) >= this.m_VelocityThreshold));
+            }
+            return (((this.m_RigidBody3D != null) && (this.m_VelocityThreshold > 0f)) && (Mathf.Abs((float) (this.m_RigidBody3D.velocity.sqrMagnitude - this.m_PrevVelocity)) >= this.m_VelocityThreshold));
         }
 
         private void FixedUpdate()
@@ -108,7 +127,7 @@
             if (((base.syncVarDirtyBits == 0) && NetworkServer.active) && (base.isServer && (this.GetNetworkSendInterval() != 0f)))
             {
                 Vector3 vector = base.transform.position - this.m_PrevPosition;
-                if ((vector.magnitude >= this.movementTheshold) || (Quaternion.Angle(this.m_PrevRotation, base.transform.rotation) >= this.movementTheshold))
+                if (((vector.magnitude >= this.movementTheshold) || (Quaternion.Angle(this.m_PrevRotation, base.transform.rotation) >= this.movementTheshold)) || this.CheckVelocityChanged())
                 {
                     base.SetDirtyBit(1);
                 }
@@ -393,6 +412,10 @@
             if (this.m_MovementTheshold < 0f)
             {
                 this.m_MovementTheshold = 0f;
+            }
+            if (this.m_VelocityThreshold < 0f)
+            {
+                this.m_VelocityThreshold = 0f;
             }
             if (this.m_SnapThreshold < 0f)
             {
@@ -1325,6 +1348,19 @@
             set
             {
                 this.m_TransformSyncMode = value;
+            }
+        }
+
+        /// <summary>
+        /// <para>The minimum velocity difference that will be synchronized over the network.</para>
+        /// </summary>
+        public float velocityThreshold
+        {
+            get => 
+                this.m_VelocityThreshold;
+            set
+            {
+                this.m_VelocityThreshold = value;
             }
         }
 

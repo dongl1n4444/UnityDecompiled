@@ -5,23 +5,30 @@
 
     internal class CollabTesting
     {
-        private static readonly Queue<Action> m_Actions = new Queue<Action>();
+        private static IEnumerator<bool> _enumerator = null;
+        private static Action<bool> _runAfter = null;
 
-        public static void AddAction(Action action)
+        public static void End(bool success)
         {
-            m_Actions.Enqueue(action);
-        }
-
-        public static void DropAll()
-        {
-            m_Actions.Clear();
+            _runAfter(success);
+            _enumerator = null;
         }
 
         public static void Execute()
         {
-            if (m_Actions.Count != 0)
+            if ((_enumerator != null) && !Collab.instance.AnyJobRunning())
             {
-                m_Actions.Dequeue().Invoke();
+                try
+                {
+                    if (!_enumerator.MoveNext())
+                    {
+                        End(true);
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
 
@@ -30,8 +37,21 @@
             Execute();
         }
 
-        public static int ActionsCount =>
-            m_Actions.Count;
+        public static Action<bool> AfterRun
+        {
+            set
+            {
+                _runAfter = value;
+            }
+        }
+
+        public static Func<IEnumerable<bool>> Tick
+        {
+            set
+            {
+                _enumerator = value().GetEnumerator();
+            }
+        }
     }
 }
 

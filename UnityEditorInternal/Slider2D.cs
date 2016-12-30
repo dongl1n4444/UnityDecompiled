@@ -31,7 +31,7 @@
                             return vector2;
                         }
                         bool success = true;
-                        Vector3 vector3 = Handles.s_InverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref success));
+                        Vector3 vector3 = Handles.inverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref success));
                         if (success)
                         {
                             int num = id;
@@ -68,7 +68,7 @@
                     {
                         s_CurrentMousePosition += current.delta;
                         bool flag2 = true;
-                        Vector3 point = Handles.s_InverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref flag2));
+                        Vector3 point = Handles.inverseMatrix.MultiplyPoint(GetMousePosition(handleDir, handlePos, ref flag2));
                         if (flag2)
                         {
                             vector2.x = HandleUtility.PointOnLineParameter(point, s_StartPosition, slideDir1);
@@ -147,7 +147,7 @@
                         GUIUtility.hotControl = num2;
                         s_CurrentMousePosition = current.mousePosition;
                         s_StartPosition = handlePos;
-                        Vector3 lhs = Handles.s_InverseMatrix.MultiplyPoint(ray.GetPoint(enter)) - handlePos;
+                        Vector3 lhs = Handles.inverseMatrix.MultiplyPoint(ray.GetPoint(enter)) - handlePos;
                         s_StartPlaneOffset.x = Vector3.Dot(lhs, slideDir1);
                         s_StartPlaneOffset.y = Vector3.Dot(lhs, slideDir2);
                         current.Use();
@@ -182,7 +182,7 @@
                         float num3 = 0f;
                         if (plane2.Raycast(ray2, out num3))
                         {
-                            Vector3 point = Handles.s_InverseMatrix.MultiplyPoint(ray2.GetPoint(num3));
+                            Vector3 point = Handles.inverseMatrix.MultiplyPoint(ray2.GetPoint(num3));
                             vector.x = HandleUtility.PointOnLineParameter(point, s_StartPosition, slideDir1);
                             vector.y = HandleUtility.PointOnLineParameter(point, s_StartPosition, slideDir2);
                             vector -= s_StartPlaneOffset;

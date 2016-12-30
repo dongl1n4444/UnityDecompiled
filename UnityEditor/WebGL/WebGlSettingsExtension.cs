@@ -10,11 +10,13 @@
         private SerializedProperty m_DefaultScreenHeightWeb;
         private SerializedProperty m_DefaultScreenWidthWeb;
         private SerializedProperty m_RunInBackground;
+        private SerializedProperty m_UseWasm;
         private SerializedProperty m_WebGLCompressionFormat;
         private SerializedProperty m_WebGLDataCaching;
         private SerializedProperty m_WebGLDebugSymbols;
         private SerializedProperty m_WebGLExceptionSupport;
         private SerializedProperty m_WebGLMemorySize;
+        private SerializedProperty m_WebGLNameFilesAsHashes;
         private SerializedProperty m_WebGLTemplate;
         private WebGLTemplateManager m_WebGLTemplateManager = new WebGLTemplateManager();
 
@@ -32,12 +34,14 @@
             this.m_WebGLMemorySize = settingsEditor.FindPropertyAssert("webGLMemorySize");
             this.m_WebGLExceptionSupport = settingsEditor.FindPropertyAssert("webGLExceptionSupport");
             this.m_WebGLCompressionFormat = settingsEditor.FindPropertyAssert("webGLCompressionFormat");
+            this.m_WebGLNameFilesAsHashes = settingsEditor.FindPropertyAssert("webGLNameFilesAsHashes");
             this.m_WebGLDataCaching = settingsEditor.FindPropertyAssert("webGLDataCaching");
             this.m_WebGLDebugSymbols = settingsEditor.FindPropertyAssert("webGLDebugSymbols");
             this.m_WebGLTemplate = settingsEditor.FindPropertyAssert("webGLTemplate");
             this.m_DefaultScreenWidthWeb = settingsEditor.FindPropertyAssert("defaultScreenWidthWeb");
             this.m_DefaultScreenHeightWeb = settingsEditor.FindPropertyAssert("defaultScreenHeightWeb");
             this.m_RunInBackground = settingsEditor.FindPropertyAssert("runInBackground");
+            this.m_UseWasm = settingsEditor.FindPropertyAssert("webGLUseWasm");
         }
 
         public override void PublishSectionGUI(float h, float kLabelFloatMinW, float kLabelFloatMaxW)
@@ -54,8 +58,14 @@
             {
                 EditorGUILayout.HelpBox("Full exception support adds a lot of code to do sanity checks, which costs a lot of performance and browser memory. Only use this for debugging, and make sure to test in a 64-bit browser.", MessageType.Warning);
             }
+            EditorGUILayout.PropertyField(this.m_WebGLNameFilesAsHashes, EditorGUIUtility.TextContent("Name Files As Hashes|Use MD5 hash of the uncompressed file contents as a filename for each file in the build."), new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_WebGLDataCaching, EditorGUIUtility.TextContent("Data caching|Automatically cache downloaded assets locally on users machine to skip long downloads in subsequent runs."), new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_WebGLDebugSymbols, EditorGUIUtility.TextContent("Debug Symbols|Preserve debug symbols and perform demangling of the stack trace when an error occurs. For release builds all the debug information is stored in a separate file which is downloaded from the server on demand when an error occurs. Development builds always have demangling support embedded in the main module and therefore are not affected by this option."), new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_UseWasm, EditorGUIUtility.TextContent("WebAssembly (Experimental)|Create WebAssembly build files for testing in browsers with experimental WebAssembly support."), new GUILayoutOption[0]);
+            if (PlayerSettings.WebGL.useWasm)
+            {
+                EditorGUILayout.HelpBox("WebAssembly is an experimental feature, and not enabled in any currently shipping browsers by default. This functionality is provided for testing purposes only.", MessageType.Warning);
+            }
         }
 
         public override void ResolutionSectionGUI(float h, float midWidth, float maxWidth)

@@ -11,7 +11,8 @@
         Directionality,
         Baked,
         BakedDirectional,
-        InputWorkspace
+        InputWorkspace,
+        BakedShadowMask
     }
 }
 

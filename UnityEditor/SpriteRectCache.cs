@@ -3,10 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using UnityEditor.U2D.Interface;
     using UnityEngine;
 
     [Serializable]
-    internal class SpriteRectCache : ScriptableObject
+    internal class SpriteRectCache : ScriptableObject, ISpriteRectCache, IUndoableObject
     {
         [SerializeField]
         public List<SpriteRect> m_Rects;
@@ -50,14 +51,8 @@
             }
         }
 
-        public SpriteRect RectAt(int i)
-        {
-            if (i >= this.Count)
-            {
-                return null;
-            }
-            return this.m_Rects[i];
-        }
+        public SpriteRect RectAt(int i) => 
+            (((i < this.Count) && (i >= 0)) ? this.m_Rects[i] : null);
 
         public void RemoveRect(SpriteRect r)
         {
@@ -67,17 +62,8 @@
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                if (this.m_Rects != null)
-                {
-                    return this.m_Rects.Count;
-                }
-                return 0;
-            }
-        }
+        public int Count =>
+            ((this.m_Rects == null) ? 0 : this.m_Rects.Count);
 
         [CompilerGenerated]
         private sealed class <GetIndex>c__AnonStorey0

@@ -8,7 +8,7 @@
 
     internal class LazyTestDataSource : LazyTreeViewDataSource
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <itemCounter>k__BackingField;
         private BackendData m_Backend;
 

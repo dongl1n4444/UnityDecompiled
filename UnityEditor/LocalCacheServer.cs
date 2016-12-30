@@ -66,7 +66,7 @@
             string[] textArray4 = new string[] { EditorApplication.applicationContentsPath, "Tools", "CacheServer", "main.js" };
             string str2 = Paths.Combine(textArray4);
             ProcessStartInfo info2 = new ProcessStartInfo(fileName);
-            object[] objArray1 = new object[] { str2, " --port ", _port, " --path ", this.path, " --nolegacy --monitor-parent-process ", Process.GetCurrentProcess().Id, " --silent --size ", _size };
+            object[] objArray1 = new object[] { "\"", str2, "\" --port ", _port, " --path ", this.path, " --nolegacy --monitor-parent-process ", Process.GetCurrentProcess().Id, " --silent --size ", _size };
             info2.Arguments = string.Concat(objArray1);
             info2.UseShellExecute = false;
             info2.CreateNoWindow = true;

@@ -7,6 +7,7 @@
     using System.Reflection;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     internal class AssetPostprocessingInternal
     {
@@ -23,9 +24,9 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodInfo, bool>(null, (IntPtr) <AllPostProcessorMethodsNamed>m__0);
+                <>f__am$cache0 = method => method != null;
             }
-            return Enumerable.Where<MethodInfo>(Enumerable.Select<Type, MethodInfo>(EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)), new Func<Type, MethodInfo>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0);
+            return Enumerable.Where<MethodInfo>(Enumerable.Select<Type, MethodInfo>(EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)), new Func<Type, MethodInfo>(storey.<>m__0)), <>f__am$cache0);
         }
 
         internal static void CallOnGeneratedCSProjectFiles()
@@ -37,6 +38,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void CleanupPostprocessors()
         {
             if (m_PostprocessStack != null)
@@ -50,6 +52,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static uint[] GetAudioProcessorVersions()
         {
             List<uint> list = new List<uint>();
@@ -92,6 +95,7 @@
             return m_PostprocessorClasses;
         }
 
+        [RequiredByNativeCode]
         private static uint[] GetMeshProcessorVersions()
         {
             List<uint> list = new List<uint>();
@@ -122,6 +126,7 @@
             return list.ToArray();
         }
 
+        [RequiredByNativeCode]
         private static uint[] GetTextureProcessorVersions()
         {
             List<uint> list = new List<uint>();
@@ -151,6 +156,7 @@
             return list.ToArray();
         }
 
+        [RequiredByNativeCode]
         private static void InitPostprocessors(string pathName)
         {
             m_ImportProcessors = new ArrayList();
@@ -216,6 +222,7 @@
             return flag;
         }
 
+        [RequiredByNativeCode]
         private static void PostprocessAllAssets(string[] importedAssets, string[] addedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPathAssets)
         {
             object[] parameters = new object[] { importedAssets, deletedAssets, movedAssets, movedFromPathAssets };
@@ -230,6 +237,7 @@
             SyncVS.PostprocessSyncProject(importedAssets, addedAssets, deletedAssets, movedAssets, movedFromPathAssets);
         }
 
+        [RequiredByNativeCode]
         private static void PostprocessAssetbundleNameChanged(string assetPAth, string prevoiusAssetBundleName, string newAssetBundleName)
         {
             object[] args = new object[] { assetPAth, prevoiusAssetBundleName, newAssetBundleName };
@@ -240,6 +248,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PostprocessAudio(AudioClip tex, string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -262,6 +271,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PostprocessGameObjectWithUserProperties(GameObject go, string[] prop_names, object[] prop_values)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -328,6 +338,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PostprocessSprites(Texture2D tex, string pathName, Sprite[] sprites)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -350,6 +361,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PostprocessTexture(Texture2D tex, string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -372,6 +384,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PreprocessAnimation(string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -393,6 +406,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PreprocessAssembly(string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -415,6 +429,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PreprocessAudio(string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -436,6 +451,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PreprocessMesh(string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -457,6 +473,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PreprocessSpeedTree(string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -478,6 +495,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static void PreprocessTexture(string pathName)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -499,6 +517,7 @@
             }
         }
 
+        [RequiredByNativeCode]
         private static Material ProcessMeshAssignMaterial(Renderer renderer, Material material)
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();
@@ -526,6 +545,7 @@
             return null;
         }
 
+        [RequiredByNativeCode]
         private static bool ProcessMeshHasAssignMaterial()
         {
             IEnumerator enumerator = m_ImportProcessors.GetEnumerator();

@@ -18,7 +18,7 @@
         {
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void Destroy();
         ~RemoteNotification()
         {
@@ -28,27 +28,27 @@
         /// <summary>
         /// <para>The message displayed in the notification alert. (Read Only)</para>
         /// </summary>
-        public string alertBody { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string alertBody { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The number to display as the application's icon badge. (Read Only)</para>
         /// </summary>
-        public int applicationIconBadgeNumber { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int applicationIconBadgeNumber { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>A boolean value that controls whether the alert action is visible or not. (Read Only)</para>
         /// </summary>
-        public bool hasAction { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool hasAction { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The name of the sound file to play when an alert is displayed. (Read Only)</para>
         /// </summary>
-        public string soundName { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string soundName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>A dictionary for passing custom information to the notified application. (Read Only)</para>
         /// </summary>
-        public IDictionary userInfo { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public IDictionary userInfo { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

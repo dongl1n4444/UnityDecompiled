@@ -4,6 +4,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>WebCam Textures are textures onto which the live video input is rendered.</para>
@@ -107,7 +108,7 @@
         /// <param name="y"></param>
         /// <param name="blockWidth"></param>
         /// <param name="blockHeight"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color[] GetPixels(int x, int y, int blockWidth, int blockHeight);
         [ExcludeFromDocs]
         public Color32[] GetPixels32()
@@ -120,22 +121,22 @@
         /// <para>Returns the pixels data in raw format.</para>
         /// </summary>
         /// <param name="colors">Optional array to receive pixel data.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Color32[] GetPixels32([DefaultValue("null")] Color32[] colors);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetPixel(WebCamTexture self, int x, int y, out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Pause(WebCamTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Play(WebCamTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_Stop(WebCamTexture self);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_CreateWebCamTexture([Writable] WebCamTexture self, string scriptingDevice, int requestedWidth, int requestedHeight, int maxFramerate);
         /// <summary>
         /// <para>Marks WebCamTexture as unreadable (no GetPixel* functions will be available (iOS only)).</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("since Unity 5.0 iOS WebCamTexture always goes through CVTextureCache and is read to memory on-demand")]
+        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("since Unity 5.0 iOS WebCamTexture always goes through CVTextureCache and is read to memory on-demand"), GeneratedByOldBindingsGenerator]
         public extern void MarkNonReadable();
         /// <summary>
         /// <para>Pauses the camera.</para>
@@ -164,53 +165,53 @@
         /// <summary>
         /// <para>Set this to specify the name of the device to use.</para>
         /// </summary>
-        public string deviceName { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public string deviceName { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Return a list of available devices.</para>
         /// </summary>
-        public static WebCamDevice[] devices { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static WebCamDevice[] devices { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Did the video buffer update this frame?</para>
         /// </summary>
-        public bool didUpdateThisFrame { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool didUpdateThisFrame { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns if the camera is currently playing.</para>
         /// </summary>
-        public bool isPlaying { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isPlaying { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns if the WebCamTexture is non-readable. (iOS only).</para>
         /// </summary>
         [Obsolete("since Unity 5.0 iOS WebCamTexture always goes through CVTextureCache and is read to memory on-demand")]
-        public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Set the requested frame rate of the camera device (in frames per second).</para>
         /// </summary>
-        public float requestedFPS { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public float requestedFPS { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the requested height of the camera device.</para>
         /// </summary>
-        public int requestedHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int requestedHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Set the requested width of the camera device.</para>
         /// </summary>
-        public int requestedWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int requestedWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns an clockwise angle (in degrees), which can be used to rotate a polygon so camera contents are shown in correct orientation.</para>
         /// </summary>
-        public int videoRotationAngle { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int videoRotationAngle { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns if the texture image is vertically flipped.</para>
         /// </summary>
-        public bool videoVerticallyMirrored { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool videoVerticallyMirrored { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

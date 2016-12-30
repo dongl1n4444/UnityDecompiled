@@ -183,7 +183,7 @@
 
         private void WriteMainInvoker(CppCodeWriter writer)
         {
-            MethodWriter.WriteMethodWithMetadataInitialization(writer, "int MainInvoker(int argc, const Il2CppNativeChar* const* argv)", "MainInvoker", new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteMainInvoker>m__0), "MainInvoker");
+            MethodWriter.WriteMethodWithMetadataInitialization(writer, "int MainInvoker(int argc, const Il2CppNativeChar* const* argv)", "MainInvoker", (bodyWriter, metadataUsage, methodUsage) => this.WriteMainInvokerBody(bodyWriter, MethodWriter.GetDefaultRuntimeMetadataAccess(null, metadataUsage, methodUsage)), "MainInvoker");
             writer.WriteLine();
         }
 

@@ -2,11 +2,12 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Representation of a plane in 3D space.</para>
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential), UsedByNativeCode]
     public struct Plane
     {
         private Vector3 m_Normal;

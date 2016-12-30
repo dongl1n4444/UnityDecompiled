@@ -27,8 +27,6 @@
 
         string[] libraryPaths { get; }
 
-        bool loadSymbols { get; }
-
         string moduleStrippingInformationFolder { get; }
 
         string nativeLibraryFileName { get; }

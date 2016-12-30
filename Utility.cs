@@ -83,10 +83,10 @@ internal static class Utility
             string[] strArray = new string[] { @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft\VisualStudio\SxS\VC7", @"HKEY_CURRENT_USER\SOFTWARE\Wow6432Node\Microsoft\Microsoft\VisualStudio\SxS\VC7", @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft\VisualStudio\SxS\VC7", @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Microsoft\VisualStudio\SxS\VC7" };
             foreach (string str in strArray)
             {
-                string str2 = RegistryUtil.GetRegistryStringValue32(str, "FrameworkDir32", null);
+                string str2 = RegistryUtil.GetRegistryStringValue(str, "FrameworkDir32", null, RegistryView._32);
                 if (!string.IsNullOrEmpty(str2))
                 {
-                    string str3 = RegistryUtil.GetRegistryStringValue32(str, "FrameworkVer32", null);
+                    string str3 = RegistryUtil.GetRegistryStringValue(str, "FrameworkVer32", null, RegistryView._32);
                     if (!string.IsNullOrEmpty(str3))
                     {
                         frameworkPath = Path.Combine(str2, str3);
@@ -402,7 +402,7 @@ internal static class Utility
                     int capacity = 0x400;
                     StringBuilder lpExeName = new StringBuilder(capacity);
                     QueryFullProcessImageName(hProcess, 0, lpExeName, ref capacity);
-                    if (shouldKill.Invoke(lpExeName.ToString()))
+                    if (shouldKill(lpExeName.ToString()))
                     {
                         TerminateProcess(hProcess, 0);
                     }
@@ -423,7 +423,7 @@ internal static class Utility
             string path = Path.Combine(destination, Path.GetFileName(str));
             if (File.Exists(path))
             {
-                if ((shouldOverwriteFile != null) && !shouldOverwriteFile.Invoke(path))
+                if ((shouldOverwriteFile != null) && !shouldOverwriteFile(path))
                 {
                     continue;
                 }

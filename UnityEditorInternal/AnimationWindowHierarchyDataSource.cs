@@ -10,7 +10,7 @@
 
     internal class AnimationWindowHierarchyDataSource : TreeViewDataSource
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <showAll>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private AnimationWindowState <state>k__BackingField;

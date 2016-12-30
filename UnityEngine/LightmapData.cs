@@ -13,9 +13,8 @@
     {
         internal Texture2D m_Light;
         internal Texture2D m_Dir;
-        /// <summary>
-        /// <para>Lightmap storing the full incoming light.</para>
-        /// </summary>
+        internal Texture2D m_ShadowMask;
+        [Obsolete("Use lightmapColor property (UnityUpgradable) -> lightmapColor")]
         public Texture2D lightmapLight
         {
             get => 
@@ -26,7 +25,19 @@
             }
         }
         /// <summary>
-        /// <para>Lightmap storing only the indirect incoming light.</para>
+        /// <para>Lightmap storing color of incoming light.</para>
+        /// </summary>
+        public Texture2D lightmapColor
+        {
+            get => 
+                this.m_Light;
+            set
+            {
+                this.m_Light = value;
+            }
+        }
+        /// <summary>
+        /// <para>Lightmap storing dominant direction of incoming light.</para>
         /// </summary>
         public Texture2D lightmapDir
         {
@@ -37,7 +48,19 @@
                 this.m_Dir = value;
             }
         }
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmap has been deprecated. Use LightmapData.lightmapLight instead (UnityUpgradable) -> lightmapLight", true)]
+        /// <summary>
+        /// <para>Texture storing occlusion mask per light (ShadowMask, up to four lights).</para>
+        /// </summary>
+        public Texture2D shadowMask
+        {
+            get => 
+                this.m_ShadowMask;
+            set
+            {
+                this.m_ShadowMask = value;
+            }
+        }
+        [Obsolete("Property LightmapData.lightmap has been deprecated. Use LightmapData.lightmapColor instead (UnityUpgradable) -> lightmapColor", true), EditorBrowsable(EditorBrowsableState.Never)]
         public Texture2D lightmap
         {
             get => 
@@ -46,7 +69,7 @@
             {
             }
         }
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmapFar has been deprecated. Use LightmapData.lightmapLight instead (UnityUpgradable) -> lightmapLight", true)]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Property LightmapData.lightmapFar has been deprecated. Use LightmapData.lightmapColor instead (UnityUpgradable) -> lightmapColor", true)]
         public Texture2D lightmapFar
         {
             get => 

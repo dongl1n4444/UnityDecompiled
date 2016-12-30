@@ -102,14 +102,14 @@
                 this.m_TargetTexture.name = "GameView RT";
                 this.m_TargetTexture.filterMode = FilterMode.Point;
                 this.m_TargetTexture.hideFlags = HideFlags.HideAndDontSave;
+                EditorGUIUtility.SetGUITextureBlitColorspaceSettings(EditorGUIUtility.GUITextureBlitColorspaceMaterial);
             }
-            int num = Mathf.Max(1, QualitySettings.antiAliasing);
-            if (((this.m_TargetTexture.width != width) || (this.m_TargetTexture.height != height)) || (this.m_TargetTexture.antiAliasing != num))
+            if ((this.m_TargetTexture.width != width) || (this.m_TargetTexture.height != height))
             {
                 this.m_TargetTexture.Release();
                 this.m_TargetTexture.width = width;
                 this.m_TargetTexture.height = height;
-                this.m_TargetTexture.antiAliasing = num;
+                this.m_TargetTexture.antiAliasing = 1;
                 flag = true;
                 if (this.m_TargetClamped)
                 {
@@ -424,7 +424,7 @@
                         GUIUtility.s_EditorScreenPointOffset = vector3;
                         GUI.BeginGroup(this.m_ZoomArea.drawRect);
                         GL.sRGBWrite = this.m_CurrentColorSpace == ColorSpace.Linear;
-                        GUI.DrawTexture(this.deviceFlippedTargetInView, this.m_TargetTexture, ScaleMode.StretchToFill, false);
+                        Graphics.DrawTexture(this.deviceFlippedTargetInView, this.m_TargetTexture, new Rect(0f, 0f, 1f, 1f), 0, 0, 0, 0, GUI.color, EditorGUIUtility.GUITextureBlitColorspaceMaterial);
                         GL.sRGBWrite = false;
                         GUI.EndGroup();
                     }
@@ -630,7 +630,7 @@ No cameras rendering";
         {
             get
             {
-                if (SystemInfo.usesOpenGLTextureCoords)
+                if (!SystemInfo.graphicsUVStartsAtTop)
                 {
                     return this.targetInView;
                 }
@@ -751,9 +751,9 @@ No cameras rendering";
             public static GUIContent maximizeOnPlayContent = EditorGUIUtility.TextContent("Maximize On Play");
             public static GUIContent muteContent = EditorGUIUtility.TextContent("Mute Audio");
             public static GUIContent noCameraWarningContextMenuContent = EditorGUIUtility.TextContent("Warn if No Cameras Rendering");
-            public static GUIContent renderdocContent = EditorGUIUtility.IconContent("renderdoc", "Capture|Capture the current view and open in RenderDoc");
+            public static GUIContent renderdocContent = EditorGUIUtility.IconContent("renderdoc", "Capture|Capture the current view and open in RenderDoc.");
             public static GUIContent statsContent = EditorGUIUtility.TextContent("Stats");
-            public static GUIContent zoomSliderContent = EditorGUIUtility.TextContent("Scale|Size of the game view on the screen");
+            public static GUIContent zoomSliderContent = EditorGUIUtility.TextContent("Scale|Size of the game view on the screen.");
         }
     }
 }

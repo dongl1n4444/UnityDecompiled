@@ -9,7 +9,7 @@
 
     internal class MatchDirectConnectInfo : ResponseBase
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private HostPriority <hostPriority>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private NodeID <nodeId>k__BackingField;

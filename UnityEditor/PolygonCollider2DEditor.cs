@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEditor.Sprites;
+    using UnityEditorInternal;
     using UnityEngine;
 
     [CustomEditor(typeof(PolygonCollider2D)), CanEditMultipleObjects]
@@ -15,7 +16,6 @@
         private static Func<Object, PolygonCollider2D> <>f__am$cache1;
         private SerializedProperty m_Points;
         private readonly PolygonEditorUtility m_PolyUtility = new PolygonEditorUtility();
-        private bool m_ShowColliderInfo;
 
         private void HandleDragAndDrop(Rect targetRect)
         {
@@ -23,7 +23,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <HandleDragAndDrop>m__0);
+                    <>f__am$cache0 = obj => (obj is Sprite) || (obj is Texture2D);
                 }
                 foreach (Object obj2 in Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache0))
                 {
@@ -33,7 +33,7 @@
                         Sprite sprite = !(obj2 is Sprite) ? SpriteUtility.TextureToSprite(obj2 as Texture2D) : (obj2 as Sprite);
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<Object, PolygonCollider2D>(null, (IntPtr) <HandleDragAndDrop>m__1);
+                            <>f__am$cache1 = target => target as PolygonCollider2D;
                         }
                         foreach (PolygonCollider2D colliderd in Enumerable.Select<Object, PolygonCollider2D>(base.targets, <>f__am$cache1))
                         {
@@ -71,13 +71,25 @@
         {
             base.OnEnable();
             this.m_Points = base.serializedObject.FindProperty("m_Points");
+            base.m_AutoTiling = base.serializedObject.FindProperty("m_AutoTiling");
             this.m_Points.isExpanded = false;
         }
 
         public override void OnInspectorGUI()
         {
             EditorGUILayout.BeginVertical(new GUILayoutOption[0]);
-            base.BeginColliderInspector();
+            if (!base.CanEditCollider())
+            {
+                EditorGUILayout.HelpBox(Collider2DEditorBase.Styles.s_ColliderEditDisableHelp.text, MessageType.Info);
+                if (base.editingCollider)
+                {
+                    EditMode.QuitEditMode();
+                }
+            }
+            else
+            {
+                base.BeginColliderInspector();
+            }
             base.OnInspectorGUI();
             if (base.targets.Length == 1)
             {

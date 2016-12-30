@@ -9,6 +9,7 @@
     using UnityEditor;
     using UnityEngine;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Sprite Packer helpers.</para>
@@ -36,9 +37,9 @@
         /// <para>Returns all alpha atlas textures generated for the specified atlas.</para>
         /// </summary>
         /// <param name="atlasName">Name of the atlas.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D[] GetAlphaTexturesForAtlas(string atlasName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void GetAtlasDataForSprite(Sprite sprite, out string atlasName, out Texture2D atlasTexture);
         internal static string GetSelectedPolicyId()
         {
@@ -52,7 +53,7 @@
         /// <para>Returns all atlas textures generated for the specified atlas.</para>
         /// </summary>
         /// <param name="atlasName">Atlas name.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern Texture2D[] GetTexturesForAtlas(string atlasName);
         [ExcludeFromDocs]
         public static void RebuildAtlasCacheIfNeeded(BuildTarget target)
@@ -69,7 +70,7 @@
             RebuildAtlasCacheIfNeeded(target, displayProgressBar, normal);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void RebuildAtlasCacheIfNeeded(BuildTarget target, [DefaultValue("false")] bool displayProgressBar, [DefaultValue("Execution.Normal")] Execution execution);
         private static void RegenerateList()
         {
@@ -97,7 +98,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Type, string>(null, (IntPtr) <RegenerateList>m__0);
+                    <>f__am$cache0 = t => t.Name;
                 }
                 m_policies = Enumerable.Select<Type, string>(list, <>f__am$cache0).ToArray<string>();
                 m_policyTypeCache = new Dictionary<string, Type>();
@@ -150,7 +151,7 @@
         /// <summary>
         /// <para>Array of Sprite atlas names found in the current atlas cache.</para>
         /// </summary>
-        public static string[] atlasNames { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string[] atlasNames { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Available Sprite Packer policies for this project.</para>

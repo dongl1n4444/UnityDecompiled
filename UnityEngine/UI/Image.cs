@@ -509,19 +509,29 @@
             }
         }
 
-        private unsafe Vector4 GetAdjustedBorders(Vector4 border, Rect rect)
+        private unsafe Vector4 GetAdjustedBorders(Vector4 border, Rect adjustedRect)
         {
+            Rect rect = base.rectTransform.rect;
             for (int i = 0; i <= 1; i++)
             {
-                float num2 = border[i] + border[i + 2];
-                if ((rect.size[i] < num2) && (num2 != 0f))
+                float num2;
+                ref Vector4 vectorRef;
+                if (rect.size[i] != 0f)
                 {
-                    ref Vector4 vectorRef;
+                    int num3;
                     int num4;
-                    int num5;
-                    float num3 = rect.size[i] / num2;
-                    (vectorRef = (Vector4) &border)[num4 = i] = vectorRef[num4] * num3;
-                    (vectorRef = (Vector4) &border)[num5 = i + 2] = vectorRef[num5] * num3;
+                    num2 = adjustedRect.size[i] / rect.size[i];
+                    (vectorRef = (Vector4) &border)[num3 = i] = vectorRef[num3] * num2;
+                    (vectorRef = (Vector4) &border)[num4 = i + 2] = vectorRef[num4] * num2;
+                }
+                float num5 = border[i] + border[i + 2];
+                if ((adjustedRect.size[i] < num5) && (num5 != 0f))
+                {
+                    int num6;
+                    int num7;
+                    num2 = adjustedRect.size[i] / num5;
+                    (vectorRef = (Vector4) &border)[num6 = i] = vectorRef[num6] * num2;
+                    (vectorRef = (Vector4) &border)[num7 = i + 2] = vectorRef[num7] * num2;
                 }
             }
             return border;
@@ -1129,7 +1139,7 @@
         }
 
         /// <summary>
-        /// <para>How to display the image.</para>
+        /// <para>How the Image is draw.</para>
         /// </summary>
         public Type type
         {

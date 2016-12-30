@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Wrapper around a changeset description and ID.</para>
@@ -35,33 +36,33 @@
             this.InternalCreateFromStringString(description, revision);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public extern void Dispose();
         ~ChangeSet()
         {
             this.Dispose();
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         private extern void InternalCopyConstruct(ChangeSet other);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void InternalCreate();
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void InternalCreateFromString(string description);
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, ThreadAndSerializationSafe]
         private extern void InternalCreateFromStringString(string description, string changeSetID);
 
         /// <summary>
         /// <para>Description of a changeset.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public string description { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string description { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Version control specific ID of a changeset.</para>
         /// </summary>
         [ThreadAndSerializationSafe]
-        public string id { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public string id { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

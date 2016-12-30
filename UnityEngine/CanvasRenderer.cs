@@ -22,19 +22,19 @@
         /// <summary>
         /// <para>Remove all cached vertices.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Clear();
         public static void CreateUIVertexStream(List<UIVertex> verts, List<Vector3> positions, List<Color32> colors, List<Vector2> uv0S, List<Vector2> uv1S, List<Vector3> normals, List<Vector4> tangents, List<int> indicies)
         {
             CreateUIVertexStreamInternal(verts, positions, colors, uv0S, uv1S, normals, tangents, indicies);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void CreateUIVertexStreamInternal(object verts, object positions, object colors, object uv0S, object uv1S, object normals, object tangents, object indicies);
         /// <summary>
         /// <para>Disables rectangle clipping for this CanvasRenderer.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void DisableRectClipping();
         /// <summary>
         /// <para>Enables rect clipping on the CanvasRendered. Geometry outside of the specified rect will be clipped (not rendered).</para>
@@ -48,7 +48,7 @@
         /// <summary>
         /// <para>Get the current alpha of the renderer.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetAlpha();
         /// <summary>
         /// <para>Get the current color of the renderer.</para>
@@ -77,19 +77,19 @@
         /// <returns>
         /// <para>Result.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Material GetMaterial(int index);
         /// <summary>
         /// <para>Gets the current Material assigned to the CanvasRenderer. Used internally for masking.</para>
         /// </summary>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern Material GetPopMaterial(int index);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_EnableRectClipping(CanvasRenderer self, ref Rect rect);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetColor(CanvasRenderer self, out Color value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_SetColor(CanvasRenderer self, ref Color color);
         [RequiredByNativeCode]
         private static void RequestRefresh()
@@ -104,13 +104,13 @@
         /// <para>Set the alpha of the renderer. Will be multiplied with the UIVertex alpha and the Canvas alpha.</para>
         /// </summary>
         /// <param name="alpha">Alpha.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAlpha(float alpha);
         /// <summary>
         /// <para>The Alpha Texture that will be passed to the Shader under the _AlphaTex property.</para>
         /// </summary>
         /// <param name="texture">The Texture to be passed.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetAlphaTexture(Texture texture);
         /// <summary>
         /// <para>Set the color of the renderer. Will be multiplied with the UIVertex color and the Canvas color.</para>
@@ -128,7 +128,7 @@
         /// <param name="material">Material for rendering.</param>
         /// <param name="texture">Material texture overide.</param>
         /// <param name="index">Material index.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetMaterial(Material material, int index);
         /// <summary>
         /// <para>Set the material for the canvas renderer. If a texture is specified then it will be used as the 'MainTex' instead of the material's 'MainTex'.
@@ -148,20 +148,20 @@
         /// <para>Sets the Mesh used by this renderer.</para>
         /// </summary>
         /// <param name="mesh"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetMesh(Mesh mesh);
         /// <summary>
         /// <para>Set the material for the canvas renderer. Used internally for masking.</para>
         /// </summary>
         /// <param name="material"></param>
         /// <param name="index"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetPopMaterial(Material material, int index);
         /// <summary>
         /// <para>Sets the texture used by this renderer's material.</para>
         /// </summary>
         /// <param name="texture"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetTexture(Texture texture);
         [Obsolete("UI System now uses meshes. Generate a mesh and use 'SetMesh' instead")]
         public void SetVertices(List<UIVertex> vertices)
@@ -214,7 +214,7 @@
             UnityEngine.Object.DestroyImmediate(mesh);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SplitIndiciesStreamsInternal(object verts, object indicies);
         public static void SplitUIVertexStreams(List<UIVertex> verts, List<Vector3> positions, List<Color32> colors, List<Vector2> uv0S, List<Vector2> uv1S, List<Vector3> normals, List<Vector4> tangents, List<int> indicies)
         {
@@ -222,55 +222,55 @@
             SplitIndiciesStreamsInternal(verts, indicies);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void SplitUIVertexStreamsInternal(object verts, object positions, object colors, object uv0S, object uv1S, object normals, object tangents);
 
         /// <summary>
         /// <para>Depth of the renderer relative to the root canvas.</para>
         /// </summary>
-        public int absoluteDepth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int absoluteDepth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Indicates whether geometry emitted by this renderer is ignored.</para>
         /// </summary>
-        public bool cull { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool cull { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>True if any change has occured that would invalidate the positions of generated geometry.</para>
         /// </summary>
-        public bool hasMoved { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool hasMoved { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Enable 'render stack' pop draw call.</para>
         /// </summary>
-        public bool hasPopInstruction { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool hasPopInstruction { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>True if rect clipping has been enabled on this renderer.
         /// See Also: CanvasRenderer.EnableRectClipping, CanvasRenderer.DisableRectClipping.</para>
         /// </summary>
-        public bool hasRectClipping { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool hasRectClipping { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Is the UIRenderer a mask component.</para>
         /// </summary>
         [Obsolete("isMask is no longer supported. See EnableClipping for vertex clipping configuration")]
-        public bool isMask { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public bool isMask { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The number of materials usable by this renderer.</para>
         /// </summary>
-        public int materialCount { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int materialCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The number of materials usable by this renderer. Used internally for masking.</para>
         /// </summary>
-        public int popMaterialCount { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int popMaterialCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Depth of the renderer realative to the parent canvas.</para>
         /// </summary>
-        public int relativeDepth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int relativeDepth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         public delegate void OnRequestRebuild();
     }

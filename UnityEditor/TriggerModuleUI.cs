@@ -40,10 +40,30 @@
 
         private void DoListOfCollisionShapesGUI()
         {
-            int index = base.GUIListOfFloatObjectToggleFields(s_Texts.collisionShapes, this.m_ShownCollisionShapes, null, s_Texts.createCollisionShape, true, new GUILayoutOption[0]);
-            if (index >= 0)
+            if (base.m_ParticleSystemUI.multiEdit)
             {
-                GameObject obj2 = CreateDefaultCollider("Collider " + (index + 1), base.m_ParticleSystemUI.m_ParticleSystem);
+                for (int i = 0; i < 6; i++)
+                {
+                    int num2 = -1;
+                    foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
+                    {
+                        int num4 = (system.trigger.GetCollider(i) == null) ? 0 : 1;
+                        if (num2 == -1)
+                        {
+                            num2 = num4;
+                        }
+                        else if (num4 != num2)
+                        {
+                            EditorGUILayout.HelpBox("Collider list editing is only available when all selected systems contain the same number of colliders", MessageType.Info, true);
+                            return;
+                        }
+                    }
+                }
+            }
+            int index = base.GUIListOfFloatObjectToggleFields(s_Texts.collisionShapes, this.m_ShownCollisionShapes, null, s_Texts.createCollisionShape, !base.m_ParticleSystemUI.multiEdit, new GUILayoutOption[0]);
+            if ((index >= 0) && !base.m_ParticleSystemUI.multiEdit)
+            {
+                GameObject obj2 = CreateDefaultCollider("Collider " + (index + 1), base.m_ParticleSystemUI.m_ParticleSystems[0]);
                 obj2.transform.localPosition = new Vector3(0f, 0f, (float) (10 + index));
                 this.m_ShownCollisionShapes[index].objectReferenceValue = obj2;
             }
@@ -93,7 +113,7 @@
             s_VisualizeBounds = EditorPrefs.GetBool("VisualizeTriggerBounds", false);
         }
 
-        public override void OnInspectorGUI(ParticleSystem s)
+        public override void OnInspectorGUI(InitialModuleUI initial)
         {
             if (s_Texts == null)
             {
@@ -113,30 +133,43 @@
             }
         }
 
-        [DrawGizmo(GizmoType.Active)]
-        private static void RenderCollisionBounds(ParticleSystem system, GizmoType gizmoType)
+        public override void OnSceneGUI()
         {
-            if (system.trigger.enabled && s_VisualizeBounds)
+            if (s_VisualizeBounds)
             {
-                ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
-                int num = system.GetParticles(particles);
-                Color color = Gizmos.color;
-                Gizmos.color = Color.green;
-                Matrix4x4 identity = Matrix4x4.identity;
-                if (system.main.simulationSpace == ParticleSystemSimulationSpace.Local)
+                Color color = Handles.color;
+                Handles.color = Color.green;
+                Matrix4x4 matrix = Handles.matrix;
+                Vector3[] dest = new Vector3[20];
+                Vector3[] vectorArray2 = new Vector3[20];
+                Vector3[] vectorArray3 = new Vector3[20];
+                Handles.SetDiscSectionPoints(dest, Vector3.zero, Vector3.forward, Vector3.right, 360f, 1f);
+                Handles.SetDiscSectionPoints(vectorArray2, Vector3.zero, Vector3.up, -Vector3.right, 360f, 1f);
+                Handles.SetDiscSectionPoints(vectorArray3, Vector3.zero, Vector3.right, Vector3.up, 360f, 1f);
+                Vector3[] array = new Vector3[(dest.Length + vectorArray2.Length) + vectorArray3.Length];
+                dest.CopyTo(array, 0);
+                vectorArray2.CopyTo(array, 20);
+                vectorArray3.CopyTo(array, 40);
+                foreach (ParticleSystem system in base.m_ParticleSystemUI.m_ParticleSystems)
                 {
-                    identity = system.GetLocalToWorldMatrix();
+                    ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
+                    int num2 = system.GetParticles(particles);
+                    Matrix4x4 identity = Matrix4x4.identity;
+                    if (system.main.simulationSpace == ParticleSystemSimulationSpace.Local)
+                    {
+                        identity = system.GetLocalToWorldMatrix();
+                    }
+                    for (int i = 0; i < num2; i++)
+                    {
+                        ParticleSystem.Particle particle = particles[i];
+                        Vector3 vector = particle.GetCurrentSize3D(system);
+                        float x = (Math.Max(vector.x, Math.Max(vector.y, vector.z)) * 0.5f) * system.trigger.radiusScale;
+                        Handles.matrix = identity * Matrix4x4.TRS(particle.position, Quaternion.identity, new Vector3(x, x, x));
+                        Handles.DrawPolyLine(array);
+                    }
                 }
-                Matrix4x4 matrix = Gizmos.matrix;
-                Gizmos.matrix = identity;
-                for (int i = 0; i < num; i++)
-                {
-                    ParticleSystem.Particle particle = particles[i];
-                    Vector3 vector = particle.GetCurrentSize3D(system);
-                    Gizmos.DrawWireSphere(particle.position, (Math.Max(vector.x, Math.Max(vector.y, vector.z)) * 0.5f) * system.trigger.radiusScale);
-                }
-                Gizmos.color = color;
-                Gizmos.matrix = matrix;
+                Handles.color = color;
+                Handles.matrix = matrix;
             }
         }
 

@@ -59,7 +59,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<TypeReference, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache0 = new Func<TypeReference, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache3 == null)
             {
@@ -68,7 +68,7 @@
             this._typeHashCache = new HashCodeCache<TypeReference>(<>f__mg$cache0, <>f__am$cache3, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<MethodReference, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache1 = new Func<MethodReference, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache4 == null)
             {
@@ -77,7 +77,7 @@
             this._methodHashCache = new HashCodeCache<MethodReference>(<>f__mg$cache1, <>f__am$cache4, new Unity.IL2CPP.Common.MethodReferenceComparer());
             if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache2 = new Func<string, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache2 = new Func<string, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache5 == null)
             {
@@ -208,6 +208,9 @@
         public string ForAssemblyScope(AssemblyDefinition assembly, string symbol) => 
             $"{this.ForAssembly(assembly)}_{symbol}";
 
+        public string ForComCallableWrapperClass(TypeReference type) => 
+            (this.ForTypeNameOnly(type) + "_ComCallableWrapper");
+
         public string ForComInterfaceReturnParameterName() => 
             "comReturnValue";
 
@@ -218,7 +221,7 @@
             this.ForInteropInterfaceVariable(interfaceType);
 
         public string ForCreateComCallableWrapperFunction(TypeReference type) => 
-            (this.ForTypeNameOnly(type) + "_create_ccw");
+            ("CreateComCallableWrapperFor_" + this.ForTypeNameOnly(type));
 
         public string ForCreateStringMethod(MethodReference method)
         {
@@ -228,7 +231,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <ForCreateStringMethod>m__2);
+                <>f__am$cache2 = meth => meth.Name == "CreateString";
             }
             foreach (MethodDefinition definition in method.DeclaringType.Resolve().Methods.Where<MethodDefinition>(<>f__am$cache2))
             {
@@ -462,13 +465,13 @@
                 $this = this
             };
             string str = this.Clean(this.EscapeKeywords(storey.property.Name));
-            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey, (IntPtr) this.<>m__0)) > 1)
+            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey.<>m__0)) > 1)
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <ForPropertyInfo>m__1);
+                    <>f__am$cache1 = (buff, s) => buff + "_" + s;
                 }
-                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey, (IntPtr) this.<>m__1)).Aggregate<string>(<>f__am$cache1);
+                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey.<>m__1)).Aggregate<string>(<>f__am$cache1);
             }
             return this.TypeMember(declaringType, str + "_PropertyInfo");
         }
@@ -660,7 +663,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <ForVariable>m__0);
+                    <>f__am$cache0 = f => f.Name == "value__";
                 }
                 FieldDefinition definition2 = definition.Fields.Single<FieldDefinition>(<>f__am$cache0);
                 return this.ForVariable(definition2.FieldType);
@@ -693,11 +696,11 @@
         public string ForVariableName(VariableReference variable) => 
             ("V_" + variable.Index);
 
-        public string ForWindowsRuntimeDelegateComCallableWrapperClass(TypeReference delegateType) => 
-            (this.ForTypeNameOnly(delegateType) + "_ComCallableWrapper");
+        public string ForWindowsRuntimeAdapterClass(TypeReference type) => 
+            (this.ForTypeNameOnly(type) + "_Adapter");
 
         public string ForWindowsRuntimeDelegateComCallableWrapperInterface(TypeReference delegateType) => 
-            ("I" + this.ForWindowsRuntimeDelegateComCallableWrapperClass(delegateType));
+            ("I" + this.ForComCallableWrapperClass(delegateType));
 
         public string ForWindowsRuntimeDelegateNativeInvokerMethod(MethodReference invokeMethod) => 
             (this.ForMethod(invokeMethod) + "_NativeInvoker");
@@ -757,7 +760,7 @@
                     int num;
                     if (<>f__switch$map2 == null)
                     {
-                        Dictionary<string, int> dictionary = new Dictionary<string, int>(13) {
+                        Dictionary<string, int> dictionary = new Dictionary<string, int>(14) {
                             { 
                                 "System.Array",
                                 0
@@ -809,6 +812,10 @@
                             { 
                                 "System.Reflection.MonoEvent",
                                 12
+                            },
+                            { 
+                                "System.Guid",
+                                13
                             }
                         };
                         <>f__switch$map2 = dictionary;
@@ -855,6 +862,9 @@
 
                             case 12:
                                 return "MonoEvent_t";
+
+                            case 13:
+                                return "Guid_t";
                         }
                     }
                 }

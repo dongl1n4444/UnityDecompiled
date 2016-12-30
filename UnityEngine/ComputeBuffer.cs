@@ -4,9 +4,10 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Security;
+    using UnityEngine.Scripting;
 
     /// <summary>
-    /// <para>Data buffer to hold data for compute shaders.</para>
+    /// <para>GPU data buffer, mostly for use with compute shaders.</para>
     /// </summary>
     public sealed class ComputeBuffer : IDisposable
     {
@@ -17,7 +18,7 @@
         /// </summary>
         /// <param name="count">Number of elements in the buffer.</param>
         /// <param name="stride">Size of one element in the buffer. Has to match size of buffer type in the shader. See for cross-platform compatibility information.</param>
-        /// <param name="type">Type of the buffer, default is ComputeBufferType.Default.</param>
+        /// <param name="type">Type of the buffer, default is ComputeBufferType.Default (structured buffer).</param>
         public ComputeBuffer(int count, int stride) : this(count, stride, ComputeBufferType.Default)
         {
         }
@@ -27,7 +28,7 @@
         /// </summary>
         /// <param name="count">Number of elements in the buffer.</param>
         /// <param name="stride">Size of one element in the buffer. Has to match size of buffer type in the shader. See for cross-platform compatibility information.</param>
-        /// <param name="type">Type of the buffer, default is ComputeBufferType.Default.</param>
+        /// <param name="type">Type of the buffer, default is ComputeBufferType.Default (structured buffer).</param>
         public ComputeBuffer(int count, int stride, ComputeBufferType type)
         {
             if (count <= 0)
@@ -48,9 +49,9 @@
         /// <param name="src">Append/consume buffer to copy the counter from.</param>
         /// <param name="dst">A buffer to copy the counter to.</param>
         /// <param name="dstOffset">Target byte offset in dst.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void CopyCount(ComputeBuffer src, ComputeBuffer dst, int dstOffset);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void DestroyBuffer(ComputeBuffer buf);
         public void Dispose()
         {
@@ -99,13 +100,13 @@
             return ptr;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void InitBuffer(ComputeBuffer buf, int count, int stride, ComputeBufferType type);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativeBufferPtr(ComputeBuffer self, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall), SecurityCritical]
+        [MethodImpl(MethodImplOptions.InternalCall), SecurityCritical, GeneratedByOldBindingsGenerator]
         private extern void InternalGetData(Array data, int elemSize);
-        [MethodImpl(MethodImplOptions.InternalCall), SecurityCritical]
+        [MethodImpl(MethodImplOptions.InternalCall), SecurityCritical, GeneratedByOldBindingsGenerator]
         private extern void InternalSetData(Array data, int elemSize);
         /// <summary>
         /// <para>Release a Compute Buffer.</para>
@@ -119,7 +120,7 @@
         /// <para>Sets counter value of append/consume buffer.</para>
         /// </summary>
         /// <param name="counterValue">Value of the append/consume counter.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void SetCounterValue(uint counterValue);
         /// <summary>
         /// <para>Set the buffer with values from an array.</para>
@@ -134,12 +135,12 @@
         /// <summary>
         /// <para>Number of elements in the buffer (Read Only).</para>
         /// </summary>
-        public int count { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int count { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Size of one element in the buffer (Read Only).</para>
         /// </summary>
-        public int stride { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int stride { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

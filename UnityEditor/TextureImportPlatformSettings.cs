@@ -58,7 +58,7 @@
             this.m_PlatformSettings.overridden = false;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, TextureImporter>(null, (IntPtr) <TextureImportPlatformSettings>m__0);
+                <>f__am$cache0 = new Func<Object, TextureImporter>(TextureImportPlatformSettings.<TextureImportPlatformSettings>m__0);
             }
             this.m_Importers = Enumerable.Select<Object, TextureImporter>(inspector.targets, <>f__am$cache0).ToArray<TextureImporter>();
             for (int i = 0; i < this.importers.Length; i++)

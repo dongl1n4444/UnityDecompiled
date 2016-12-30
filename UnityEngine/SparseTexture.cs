@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Class for handling Sparse Textures.</para>
@@ -34,7 +35,7 @@
             Internal_Create(this, width, height, format, mipCount, linear);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create([Writable] SparseTexture mono, int width, int height, TextureFormat format, int mipCount, bool linear);
         /// <summary>
         /// <para>Unload sparse texture tile.</para>
@@ -42,7 +43,7 @@
         /// <param name="tileX">Tile X coordinate.</param>
         /// <param name="tileY">Tile Y coordinate.</param>
         /// <param name="miplevel">Mipmap level of the texture.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UnloadTile(int tileX, int tileY, int miplevel);
         /// <summary>
         /// <para>Update sparse texture tile with color values.</para>
@@ -51,7 +52,7 @@
         /// <param name="tileY">Tile Y coordinate.</param>
         /// <param name="miplevel">Mipmap level of the texture.</param>
         /// <param name="data">Tile color data.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UpdateTile(int tileX, int tileY, int miplevel, Color32[] data);
         /// <summary>
         /// <para>Update sparse texture tile with raw pixel values.</para>
@@ -60,23 +61,23 @@
         /// <param name="tileY">Tile Y coordinate.</param>
         /// <param name="miplevel">Mipmap level of the texture.</param>
         /// <param name="data">Tile raw pixel data.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UpdateTileRaw(int tileX, int tileY, int miplevel, byte[] data);
 
         /// <summary>
         /// <para>Is the sparse texture actually created? (Read Only)</para>
         /// </summary>
-        public bool isCreated { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isCreated { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get sparse texture tile height (Read Only).</para>
         /// </summary>
-        public int tileHeight { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int tileHeight { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Get sparse texture tile width (Read Only).</para>
         /// </summary>
-        public int tileWidth { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int tileWidth { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

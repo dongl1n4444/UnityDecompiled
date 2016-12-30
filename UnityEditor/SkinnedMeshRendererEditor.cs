@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEditor.IMGUI.Controls;
+    using UnityEditorInternal;
     using UnityEngine;
 
     [CanEditMultipleObjects, CustomEditor(typeof(SkinnedMeshRenderer))]
@@ -9,14 +11,14 @@
     {
         private SerializedProperty m_AABB;
         private SerializedProperty m_BlendShapeWeights;
-        private BoxEditor m_BoxEditor = new BoxEditor(false, s_BoxHash);
+        private BoxBoundsHandle m_BoundsHandle = new BoxBoundsHandle(s_HandleControlIDHint);
         private SerializedProperty m_CastShadows;
         private SerializedProperty m_DirtyAABB;
         private string[] m_ExcludedProperties;
         private SerializedProperty m_Materials;
         private SerializedProperty m_MotionVectors;
         private SerializedProperty m_ReceiveShadows;
-        private static int s_BoxHash = "SkinnedMeshRendererEditor".GetHashCode();
+        private static int s_HandleControlIDHint = typeof(SkinnedMeshRendererEditor).Name.GetHashCode();
 
         public void OnBlendShapeUI()
         {
@@ -57,11 +59,6 @@
             }
         }
 
-        public void OnDisable()
-        {
-            this.m_BoxEditor.OnDisable();
-        }
-
         public override void OnEnable()
         {
             base.OnEnable();
@@ -72,8 +69,7 @@
             this.m_BlendShapeWeights = base.serializedObject.FindProperty("m_BlendShapeWeights");
             this.m_AABB = base.serializedObject.FindProperty("m_AABB");
             this.m_DirtyAABB = base.serializedObject.FindProperty("m_DirtyAABB");
-            this.m_BoxEditor.OnEnable();
-            this.m_BoxEditor.SetAlwaysDisplayHandles(true);
+            this.m_BoundsHandle.SetColor(Handles.s_BoundingBoxHandleColor);
             base.InitializeProbeFields();
             List<string> list = new List<string>();
             string[] collection = new string[] { "m_CastShadows", "m_ReceiveShadows", "m_MotionVectors", "m_Materials", "m_BlendShapeWeights", "m_AABB" };
@@ -92,6 +88,7 @@
             EditorGUILayout.PropertyField(this.m_Materials, true, new GUILayoutOption[0]);
             base.RenderProbeFields();
             Editor.DrawPropertiesExcluding(base.serializedObject, this.m_ExcludedProperties);
+            EditMode.DoEditModeInspectorModeButton(EditMode.SceneViewEditMode.Collider, "Edit Bounds", PrimitiveBoundsHandle.editModeButton, (base.target as SkinnedMeshRenderer).bounds, this);
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(this.m_AABB, new GUIContent("Bounds"), new GUILayoutOption[0]);
             if (EditorGUI.EndChangeCheck())
@@ -113,13 +110,19 @@
             }
             else
             {
-                Bounds localBounds = target.localBounds;
-                Vector3 vector3 = localBounds.center;
-                Vector3 vector4 = localBounds.size;
-                if (this.m_BoxEditor.OnSceneGUI(target.actualRootBone, Handles.s_BoundingBoxHandleColor, false, ref vector3, ref vector4))
+                using (new Handles.MatrixScope(target.actualRootBone.localToWorldMatrix))
                 {
-                    Undo.RecordObject(target, "Resize Bounds");
-                    target.localBounds = new Bounds(vector3, vector4);
+                    Bounds localBounds = target.localBounds;
+                    this.m_BoundsHandle.center = localBounds.center;
+                    this.m_BoundsHandle.size = localBounds.size;
+                    this.m_BoundsHandle.handleColor = ((EditMode.editMode != EditMode.SceneViewEditMode.Collider) || !EditMode.IsOwner(this)) ? Color.clear : this.m_BoundsHandle.wireframeColor;
+                    EditorGUI.BeginChangeCheck();
+                    this.m_BoundsHandle.DrawHandle();
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Undo.RecordObject(target, "Resize Bounds");
+                        target.localBounds = new Bounds(this.m_BoundsHandle.center, this.m_BoundsHandle.size);
+                    }
                 }
             }
         }

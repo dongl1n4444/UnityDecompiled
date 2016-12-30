@@ -3,20 +3,21 @@
     using System;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.U2D.Interface;
 
     internal class SpriteEditorMenu : EditorWindow
     {
+        private ITexture2D m_PreviewTexture;
+        private ITexture2D m_SelectedTexture;
+        private SpriteFrameModule m_SpriteFrameModule;
         private static long s_LastClosedTime;
-        private static int s_Selected;
         private static SpriteEditorMenuSetting s_Setting;
-        public static SpriteEditorWindow s_SpriteEditor;
-        public static SpriteEditorMenu s_SpriteEditorMenu;
         private static Styles s_Styles;
 
         private void DetemineGridCellSizeWithCellCount()
         {
-            int num = (s_SpriteEditor.previewTexture == null) ? 0x1000 : s_SpriteEditor.previewTexture.width;
-            int num2 = (s_SpriteEditor.previewTexture == null) ? 0x1000 : s_SpriteEditor.previewTexture.height;
+            int num = (this.m_PreviewTexture == null) ? 0x1000 : this.m_PreviewTexture.width;
+            int num2 = (this.m_PreviewTexture == null) ? 0x1000 : this.m_PreviewTexture.height;
             s_Setting.gridSpriteSize.x = ((num - s_Setting.gridSpriteOffset.x) - (s_Setting.gridSpritePadding.x * s_Setting.gridCellCount.x)) / s_Setting.gridCellCount.x;
             s_Setting.gridSpriteSize.y = ((num2 - s_Setting.gridSpriteOffset.y) - (s_Setting.gridSpritePadding.y * s_Setting.gridCellCount.y)) / s_Setting.gridCellCount.y;
             s_Setting.gridSpriteSize.x = Mathf.Clamp(s_Setting.gridSpriteSize.x, 1f, (float) num);
@@ -26,10 +27,10 @@
         private void DoAnalytics()
         {
             UsabilityAnalytics.Event("Sprite Editor", "Slice", "Type", (int) s_Setting.slicingType);
-            if (s_SpriteEditor.originalTexture != null)
+            if (this.m_SelectedTexture != null)
             {
-                UsabilityAnalytics.Event("Sprite Editor", "Slice", "Texture Width", s_SpriteEditor.originalTexture.width);
-                UsabilityAnalytics.Event("Sprite Editor", "Slice", "Texture Height", s_SpriteEditor.originalTexture.height);
+                UsabilityAnalytics.Event("Sprite Editor", "Slice", "Texture Width", this.m_SelectedTexture.width);
+                UsabilityAnalytics.Event("Sprite Editor", "Slice", "Texture Height", this.m_SelectedTexture.height);
             }
             if (s_Setting.slicingType == SpriteEditorMenuSetting.SlicingType.Automatic)
             {
@@ -48,7 +49,7 @@
 
         private void DoAutomaticSlicing()
         {
-            s_SpriteEditor.DoAutomaticSlicing(4, s_Setting.spriteAlignment, s_Setting.pivot, (SpriteEditorWindow.AutoSlicingMethod) s_Setting.autoSlicingMethod);
+            this.m_SpriteFrameModule.DoAutomaticSlicing(4, s_Setting.spriteAlignment, s_Setting.pivot, (SpriteFrameModule.AutoSlicingMethod) s_Setting.autoSlicingMethod);
         }
 
         private void DoGridSlicing()
@@ -57,7 +58,7 @@
             {
                 this.DetemineGridCellSizeWithCellCount();
             }
-            s_SpriteEditor.DoGridSlicing(s_Setting.gridSpriteSize, s_Setting.gridSpriteOffset, s_Setting.gridSpritePadding, s_Setting.spriteAlignment, s_Setting.pivot);
+            this.m_SpriteFrameModule.DoGridSlicing(s_Setting.gridSpriteSize, s_Setting.gridSpriteOffset, s_Setting.gridSpritePadding, s_Setting.spriteAlignment, s_Setting.pivot);
         }
 
         private void DoPivotGUI()
@@ -100,12 +101,15 @@
             }
         }
 
-        private void Init(Rect buttonRect)
+        private void Init(Rect buttonRect, SpriteFrameModule sf, ITexture2D previewTexture, ITexture2D selectedTexture)
         {
             if (s_Setting == null)
             {
                 s_Setting = ScriptableObject.CreateInstance<SpriteEditorMenuSetting>();
             }
+            this.m_SpriteFrameModule = sf;
+            this.m_PreviewTexture = previewTexture;
+            this.m_SelectedTexture = selectedTexture;
             buttonRect = GUIUtility.GUIToScreenRect(buttonRect);
             float y = 145f;
             Vector2 windowSize = new Vector2(300f, y);
@@ -116,7 +120,7 @@
         private void OnAutomaticGUI()
         {
             float pixels = 38f;
-            if ((s_SpriteEditor.originalTexture != null) && TextureUtil.IsCompressedTextureFormat(s_SpriteEditor.originalTexture.format))
+            if ((this.m_SelectedTexture != null) && TextureUtil.IsCompressedTextureFormat(this.m_SelectedTexture.format))
             {
                 EditorGUILayout.LabelField(s_Styles.automaticSlicingHintLabel, s_Styles.notice, new GUILayoutOption[0]);
                 pixels -= 31f;
@@ -137,13 +141,12 @@
         {
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback) Delegate.Remove(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(this.UndoRedoPerformed));
             s_LastClosedTime = DateTime.Now.Ticks / 0x2710L;
-            s_SpriteEditorMenu = null;
         }
 
         private void OnGridGUI()
         {
-            int max = (s_SpriteEditor.previewTexture == null) ? 0x1000 : s_SpriteEditor.previewTexture.width;
-            int num2 = (s_SpriteEditor.previewTexture == null) ? 0x1000 : s_SpriteEditor.previewTexture.height;
+            int max = (this.m_PreviewTexture == null) ? 0x1000 : this.m_PreviewTexture.width;
+            int num2 = (this.m_PreviewTexture == null) ? 0x1000 : this.m_PreviewTexture.height;
             if (s_Setting.slicingType == SpriteEditorMenuSetting.SlicingType.GridByCellCount)
             {
                 int num3 = (int) s_Setting.gridCellCount.x;
@@ -229,7 +232,7 @@
             GUILayout.EndHorizontal();
         }
 
-        internal static bool ShowAtPosition(Rect buttonRect)
+        internal static bool ShowAtPosition(Rect buttonRect, SpriteFrameModule sf, ITexture2D previewTexture, ITexture2D selectedTexture)
         {
             long num = DateTime.Now.Ticks / 0x2710L;
             if (num >= (s_LastClosedTime + 50L))
@@ -238,11 +241,7 @@
                 {
                     Event.current.Use();
                 }
-                if (s_SpriteEditorMenu == null)
-                {
-                    s_SpriteEditorMenu = ScriptableObject.CreateInstance<SpriteEditorMenu>();
-                }
-                s_SpriteEditorMenu.Init(buttonRect);
+                ScriptableObject.CreateInstance<SpriteEditorMenu>().Init(buttonRect, sf, previewTexture, selectedTexture);
                 return true;
             }
             return false;
@@ -290,7 +289,7 @@
             public readonly GUIContent rowLabel = EditorGUIUtility.TextContent("R");
             public readonly GUIContent sliceButtonLabel = EditorGUIUtility.TextContent("Slice");
             public readonly GUIContent[] slicingMethodOptions = new GUIContent[] { EditorGUIUtility.TextContent("Delete Existing|Delete all existing sprite assets before the slicing operation"), EditorGUIUtility.TextContent("Smart|Try to match existing sprite rects to sliced rects from the slicing operation"), EditorGUIUtility.TextContent("Safe|Keep existing sprite rects intact") };
-            public readonly GUIContent[] spriteAlignmentOptions = new GUIContent[] { EditorGUIUtility.TextContent("Center"), EditorGUIUtility.TextContent("Top Left"), EditorGUIUtility.TextContent("Top"), EditorGUIUtility.TextContent("Top Right"), EditorGUIUtility.TextContent("Left"), EditorGUIUtility.TextContent("Right"), EditorGUIUtility.TextContent("sBottom Left"), EditorGUIUtility.TextContent("Bottom"), EditorGUIUtility.TextContent("Bottom Right"), EditorGUIUtility.TextContent("Custom") };
+            public readonly GUIContent[] spriteAlignmentOptions = new GUIContent[] { EditorGUIUtility.TextContent("Center"), EditorGUIUtility.TextContent("Top Left"), EditorGUIUtility.TextContent("Top"), EditorGUIUtility.TextContent("Top Right"), EditorGUIUtility.TextContent("Left"), EditorGUIUtility.TextContent("Right"), EditorGUIUtility.TextContent("Bottom Left"), EditorGUIUtility.TextContent("Bottom"), EditorGUIUtility.TextContent("Bottom Right"), EditorGUIUtility.TextContent("Custom") };
             public readonly GUIContent typeLabel = EditorGUIUtility.TextContent("Type");
             public readonly GUIContent xLabel = EditorGUIUtility.TextContent("X");
             public readonly GUIContent yLabel = EditorGUIUtility.TextContent("Y");

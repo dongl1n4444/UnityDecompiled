@@ -1,5 +1,6 @@
 ﻿namespace Unity.IL2CPP.Building.Platforms
 {
+    using NiceIO;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -42,6 +43,12 @@
             return TryFor(runtimePlatform, out support);
         }
 
+        public static NPath ChooseExtension(RuntimePlatform runtimePlatform, NPath outputPath)
+        {
+            CppToolChain chain = For(runtimePlatform).MakeCppToolChain(Unity.IL2CPP.Building.Architecture.OfCurrentProcess, BuildConfiguration.Debug, true);
+            return outputPath.ChangeExtension(chain.ExecutableExtension());
+        }
+
         public static PlatformSupport For(RuntimePlatform runtimePlatform)
         {
             PlatformSupport support;
@@ -68,7 +75,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Type, bool>(null, (IntPtr) <TryFor>m__0);
+                <>f__am$cache0 = t => (typeof(PlatformSupport).IsAssignableFrom(t) && !t.IsAbstractPortable()) && !t.IsGenericTypePortable();
             }
             IEnumerable<Type> enumerable = AllTypes().Where<Type>(<>f__am$cache0);
             foreach (Type type in enumerable)

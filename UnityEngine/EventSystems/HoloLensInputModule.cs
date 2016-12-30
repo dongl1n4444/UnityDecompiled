@@ -7,7 +7,7 @@
     /// <summary>
     /// <para>A BaseInputModule designed for HoloLens input.</para>
     /// </summary>
-    [AddComponentMenu("Event/HoloLens Input Module")]
+    [RequireComponent(typeof(HoloLensInput)), AddComponentMenu("Event/HoloLens Input Module")]
     public class HoloLensInputModule : StandaloneInputModule
     {
         private bool m_HasBeenActivated = false;

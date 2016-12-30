@@ -5,7 +5,7 @@
     /// <summary>
     /// <para>The ConfigurableJoint attempts to attain position / velocity targets based on this flag.</para>
     /// </summary>
-    [Obsolete("JointDriveMode is no longer supported"), Flags]
+    [Flags, Obsolete("JointDriveMode is no longer supported")]
     public enum JointDriveMode
     {
         /// <summary>

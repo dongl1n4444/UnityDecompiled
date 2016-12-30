@@ -23,7 +23,7 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(null, (IntPtr) MsvcToolChain.FlagsToMakeWarningsErrorsFor);
+                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(MsvcToolChain.FlagsToMakeWarningsErrorsFor);
                 }
                 base.AdditionalCompilerOptionsForSourceFile = <>f__mg$cache0;
             }
@@ -92,7 +92,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal MsvcWinRtToolChain $this;
-            internal string <arg>__0;
+            internal string <arg>__1;
             internal IEnumerable<NPath> dynamicLibraries;
             internal NPath outputFile;
             internal IEnumerable<NPath> staticLibraries;
@@ -181,8 +181,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<arg>__0 = this.$locvar0.Current;
-                        this.$current = this.<arg>__0;
+                        this.<arg>__1 = this.$locvar0.Current;
+                        this.$current = this.<arg>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -255,7 +255,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal MsvcWinRtToolChain $this;
-            internal string <f>__0;
+            internal string <f>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -314,8 +314,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<f>__0 = this.$locvar0.Current;
-                        this.$current = this.<f>__0;
+                        this.<f>__1 = this.$locvar0.Current;
+                        this.$current = this.<f>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -381,7 +381,7 @@
             internal IEnumerator<NPath> $locvar0;
             internal int $PC;
             internal MsvcWinRtToolChain $this;
-            internal NPath <includePath>__0;
+            internal NPath <includePath>__1;
             internal NPath <unityIl2CppWinRT>__1;
 
             [DebuggerHidden]
@@ -432,8 +432,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<includePath>__0 = this.$locvar0.Current;
-                        this.$current = this.<includePath>__0;
+                        this.<includePath>__1 = this.$locvar0.Current;
+                        this.$current = this.<includePath>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;
@@ -506,7 +506,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal MsvcWinRtToolChain $this;
-            internal string <staticLib>__0;
+            internal string <staticLib>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -565,8 +565,8 @@
                 {
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<staticLib>__0 = this.$locvar0.Current;
-                        this.$current = this.<staticLib>__0;
+                        this.<staticLib>__1 = this.$locvar0.Current;
+                        this.$current = this.<staticLib>__1;
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

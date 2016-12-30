@@ -20,8 +20,9 @@
             *(s_BonePositions[num, 4]) = new Vector2(-0.21f, -0.4f);
             *(s_BonePositions[num, 5]) = new Vector2(0.23f, -0.8f);
             *(s_BonePositions[num, 6]) = new Vector2(-0.23f, -0.8f);
-            *(s_BonePositions[num, 7]) = new Vector2(0f, 0.25f);
-            *(s_BonePositions[num, 8]) = new Vector2(0f, 0.43f);
+            *(s_BonePositions[num, 7]) = new Vector2(0f, 0.2f);
+            *(s_BonePositions[num, 8]) = new Vector2(0f, 0.35f);
+            *(s_BonePositions[num, 0x36]) = new Vector2(0f, 0.5f);
             *(s_BonePositions[num, 9]) = new Vector2(0f, 0.66f);
             *(s_BonePositions[num, 10]) = new Vector2(0f, 0.76f);
             *(s_BonePositions[num, 11]) = new Vector2(0.14f, 0.6f);
@@ -106,7 +107,7 @@
                 vector = rect.center + vector;
                 int num = 0x13;
                 Rect rect2 = new Rect(vector.x - (num * 0.5f), vector.y - (num * 0.5f), (float) num, (float) num);
-                bone.BoneDotGUI(rect2, i, true, true, serializedObject, editor);
+                bone.BoneDotGUI(rect2, rect2, i, true, true, true, serializedObject, editor);
             }
         }
 
@@ -189,7 +190,6 @@
         private class Styles
         {
             public GUIContent[,] BodyPart;
-            public GUILayoutOption ButtonSize;
             public GUIContent[] Silhouettes = new GUIContent[] { EditorGUIUtility.IconContent("AvatarInspector/BodySilhouette"), EditorGUIUtility.IconContent("AvatarInspector/HeadZoomSilhouette"), EditorGUIUtility.IconContent("AvatarInspector/LeftHandZoomSilhouette"), EditorGUIUtility.IconContent("AvatarInspector/RightHandZoomSilhouette") };
 
             public Styles()
@@ -207,7 +207,6 @@
                 contentArray2[2, 4] = EditorGUIUtility.IconContent("AvatarInspector/LeftHandZoom");
                 contentArray2[3, 6] = EditorGUIUtility.IconContent("AvatarInspector/RightHandZoom");
                 this.BodyPart = contentArray2;
-                this.ButtonSize = GUILayout.MaxWidth(120f);
             }
         }
     }

@@ -63,7 +63,7 @@
             internal IEnumerator<string> $locvar0;
             internal int $PC;
             internal TizenToolChain $this;
-            internal string <flag>__0;
+            internal string <flag>__1;
             internal CppCompilationInstruction cppCompilationInstruction;
 
             [DebuggerHidden]
@@ -140,10 +140,10 @@
                     }
                     while (this.$locvar0.MoveNext())
                     {
-                        this.<flag>__0 = this.$locvar0.Current;
-                        if (!this.<flag>__0.Equals("-m32") && !this.<flag>__0.Equals("-m64"))
+                        this.<flag>__1 = this.$locvar0.Current;
+                        if (!this.<flag>__1.Equals("-m32") && !this.<flag>__1.Equals("-m64"))
                         {
-                            this.$current = this.<flag>__0;
+                            this.$current = this.<flag>__1;
                             if (!this.$disposing)
                             {
                                 this.$PC = 4;

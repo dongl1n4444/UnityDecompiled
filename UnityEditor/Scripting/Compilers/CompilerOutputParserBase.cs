@@ -42,30 +42,32 @@
         protected virtual NormalizedCompilerStatus NormalizedStatusFor(Match match) => 
             new NormalizedCompilerStatus();
 
-        protected static NormalizedCompilerStatus NormalizeMemberNotFoundError(string errorMsg, Regex messageParser)
+        protected static NormalizedCompilerStatus NormalizeMemberNotFoundError(Match outputMatch, Regex messageParser)
         {
             NormalizedCompilerStatus status;
             status.code = NormalizedCompilerStatusCode.MemberNotFound;
-            Match match = messageParser.Match(errorMsg);
+            Match match = messageParser.Match(outputMatch.Groups["message"].Value);
             status.details = match.Groups["type_name"].Value + "%" + match.Groups["member_name"].Value;
             return status;
         }
 
-        protected static NormalizedCompilerStatus NormalizeSimpleUnknownTypeOfNamespaceError(string errorMsg, Regex messageParser)
+        protected static NormalizedCompilerStatus NormalizeSimpleUnknownTypeOfNamespaceError(Match outputMatch, Regex messageParser)
         {
             NormalizedCompilerStatus status;
             status.code = NormalizedCompilerStatusCode.UnknownTypeOrNamespace;
-            Match match = messageParser.Match(errorMsg);
-            status.details = match.Groups["type_name"].Value;
+            Match match = messageParser.Match(outputMatch.Groups["message"].Value);
+            string[] textArray1 = new string[] { "EntityName=", match.Groups["type_name"].Value, "\nScript=", outputMatch.Groups["filename"].Value, "\nLine=", outputMatch.Groups["line"].Value, "\nColumn=", outputMatch.Groups["column"].Value };
+            status.details = string.Concat(textArray1);
             return status;
         }
 
-        protected static NormalizedCompilerStatus NormalizeUnknownTypeMemberOfNamespaceError(string errorMsg, Regex messageParser)
+        protected static NormalizedCompilerStatus NormalizeUnknownTypeMemberOfNamespaceError(Match outputMatch, Regex messageParser)
         {
             NormalizedCompilerStatus status;
             status.code = NormalizedCompilerStatusCode.UnknownTypeOrNamespace;
-            Match match = messageParser.Match(errorMsg);
-            status.details = match.Groups["namespace"].Value + "." + match.Groups["type_name"].Value;
+            Match match = messageParser.Match(outputMatch.Groups["message"].Value);
+            string[] textArray1 = new string[] { "EntityName=", match.Groups["namespace"].Value, ".", match.Groups["type_name"].Value, "\nScript=", outputMatch.Groups["filename"].Value, "\nLine=", outputMatch.Groups["line"].Value, "\nColumn=", outputMatch.Groups["column"].Value };
+            status.details = string.Concat(textArray1);
             return status;
         }
 
@@ -108,7 +110,7 @@
             return list;
         }
 
-        protected static NormalizedCompilerStatus TryNormalizeCompilerStatus(Match match, string idToCheck, Regex messageParser, Func<string, Regex, NormalizedCompilerStatus> normalizer)
+        protected static NormalizedCompilerStatus TryNormalizeCompilerStatus(Match match, string idToCheck, Regex messageParser, Func<Match, Regex, NormalizedCompilerStatus> normalizer)
         {
             string str = match.Groups["id"].Value;
             NormalizedCompilerStatus status = new NormalizedCompilerStatus();
@@ -116,7 +118,7 @@
             {
                 return status;
             }
-            return normalizer.Invoke(match.Groups["message"].Value, messageParser);
+            return normalizer(match, messageParser);
         }
     }
 }

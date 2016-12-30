@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using UnityEngine;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>The Holographic Settings contain functions which effect the performance and presentation of Holograms on Windows Holographic platforms.</para>
@@ -13,13 +14,13 @@
         /// <para>Option to allow developers to achieve higher framerate at the cost of high latency.  By default this option is off.</para>
         /// </summary>
         /// <param name="activated">True to enable or false to disable Low Latent Frame Presentation.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void ActivateLatentFramePresentation(bool activated);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InternalSetFocusPointForFrame(ref Vector3 position);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InternalSetFocusPointForFrameWithNormal(ref Vector3 position, ref Vector3 normal);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_InternalSetFocusPointForFrameWithNormalVelocity(ref Vector3 position, ref Vector3 normal, ref Vector3 velocity);
         private static void InternalSetFocusPointForFrame(Vector3 position)
         {
@@ -72,7 +73,7 @@
         /// <summary>
         /// <para>Returns true if Holographic rendering is currently running with Latent Frame Presentation.  Default value is false.</para>
         /// </summary>
-        public static bool IsLatentFramePresentation { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static bool IsLatentFramePresentation { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

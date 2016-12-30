@@ -46,7 +46,7 @@
                 Shared = true
             };
             storey.task1 = task;
-            Task task2 = new Task(null, new Func<Task, bool>(storey, (IntPtr) this.<>m__0), null);
+            Task task2 = new Task(null, new Func<Task, bool>(storey.<>m__0), null);
             base.HookupChildTask(storey.task1);
             base.HookupChildTask(task2, "Verifier Task");
             return true;
@@ -90,7 +90,7 @@
                     }
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<IvyModule, bool>(null, (IntPtr) <>m__1);
+                        <>f__am$cache0 = module => (module.Info.Type != PackageType.PlaybackEngine) || ModuleManager.HaveLicenseForBuildTarget(module.Info.Module);
                     }
                     this.$this.Packages = Enumerable.Where<IvyModule>(((ModuleRepository) verifier.Result).Modules, <>f__am$cache0).ToList<IvyModule>();
                     this.$this.CacheResult();

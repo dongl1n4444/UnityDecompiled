@@ -9,8 +9,5 @@ internal class WinRTIl2CppPlatformProvider : BaseIl2CppPlatformProvider
 
     public override bool enableStackTraces =>
         false;
-
-    public override bool loadSymbols =>
-        true;
 }
 

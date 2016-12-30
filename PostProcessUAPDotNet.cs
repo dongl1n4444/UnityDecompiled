@@ -17,6 +17,8 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     private static Func<string, string> <>f__am$cache1;
     [CompilerGenerated]
     private static Func<string, string> <>f__am$cache2;
+    [CompilerGenerated]
+    private static Func<string, string> <>f__am$cache3;
 
     public PostProcessUAPDotNet(BuildPostProcessArgs args, string stagingArea = null) : base(args, stagingArea)
     {
@@ -36,15 +38,28 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         FileUtil.CopyDirectoryRecursive(templateDirectorySource, templateDirectoryTarget);
     }
 
+    protected override IEnumerable<string> GetAdditionalReferenceAssembliesDirectories()
+    {
+        if (<>f__am$cache2 == null)
+        {
+            <>f__am$cache2 = m => Path.GetDirectoryName(m);
+        }
+        List<string> collection = new List<string>(Enumerable.Select<string, string>(PostProcessUAP.UWPReferences, <>f__am$cache2));
+        List<string> list2 = new List<string>();
+        list2.AddRange(base.GetAdditionalReferenceAssembliesDirectories());
+        list2.AddRange(collection);
+        return list2;
+    }
+
     protected override string GetAlternativeReferenceRewritterMappings()
     {
         string[] textArray1 = new string[] { "System.Xml.Serialization", "System.Collections,System.Collections.NonGeneric", "System.Reflection,System.Reflection.TypeExtensions", "System.IO,System.IO.FileSystem", "System.Net,System.Net.Primitives", "System.Net.Sockets,System.Net.Primitives", "System.Xml,System.Xml.XmlDocument" };
         string str = string.Join(";", textArray1);
-        if (<>f__am$cache2 == null)
+        if (<>f__am$cache3 == null)
         {
-            <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <GetAlternativeReferenceRewritterMappings>m__2);
+            <>f__am$cache3 = r => Path.GetFileName(r);
         }
-        foreach (string str2 in Enumerable.Select<string, string>(PostProcessUAP.UWPReferences, <>f__am$cache2))
+        foreach (string str2 in Enumerable.Select<string, string>(PostProcessUAP.UWPReferences, <>f__am$cache3))
         {
             str = str + ";<winmd>," + str2;
         }
@@ -58,7 +73,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <GetLangAssemblies>m__0);
+            <>f__am$cache0 = a => Utility.CombinePath("UAP", a);
         }
         return Enumerable.Select<string, string>(base.GetLangAssemblies(), <>f__am$cache0);
     }
@@ -85,7 +100,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     {
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <GetUnityPluginOverwrites>m__1);
+            <>f__am$cache1 = a => Utility.CombinePath("UAP", a);
         }
         return Enumerable.Select<string, string>(base.GetUnityPluginOverwrites(), <>f__am$cache1);
     }

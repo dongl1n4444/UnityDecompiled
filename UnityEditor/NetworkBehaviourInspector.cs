@@ -67,12 +67,25 @@
             EditorGUI.BeginChangeCheck();
             base.serializedObject.Update();
             SerializedProperty iterator = base.serializedObject.GetIterator();
-            for (bool flag = true; iterator.NextVisible(flag); flag = false)
+            bool enterChildren = true;
+            while (iterator.NextVisible(enterChildren))
             {
                 bool flag2 = this.m_SyncVarNames.Contains(iterator.name);
                 if (iterator.propertyType == SerializedPropertyType.ObjectReference)
                 {
+                    if (iterator.name == "m_Script")
+                    {
+                        if (this.hideScriptField)
+                        {
+                            continue;
+                        }
+                        EditorGUI.BeginDisabledGroup(true);
+                    }
                     EditorGUILayout.PropertyField(iterator, true, new GUILayoutOption[0]);
+                    if (iterator.name == "m_Script")
+                    {
+                        EditorGUI.EndDisabledGroup();
+                    }
                 }
                 else
                 {
@@ -85,6 +98,7 @@
                     }
                     EditorGUILayout.EndHorizontal();
                 }
+                enterChildren = false;
             }
             base.serializedObject.ApplyModifiedProperties();
             EditorGUI.EndChangeCheck();
@@ -126,6 +140,9 @@
                 }
             }
         }
+
+        internal virtual bool hideScriptField =>
+            false;
     }
 }
 

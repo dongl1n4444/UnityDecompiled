@@ -8,7 +8,7 @@
 
     internal class AddCurvesPopup : EditorWindow
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static AnimationWindowSelection <selection>k__BackingField;
         private const float k_WindowPadding = 3f;
         private static OnNewCurveAdded NewCurveAddedCallback;

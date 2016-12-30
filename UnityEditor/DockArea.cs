@@ -59,7 +59,7 @@
             {
                 menu.AddDisabledItem(EditorGUIUtility.TextContent("Maximize"));
             }
-            if ((base.window.showMode != ShowMode.MainWindow) || (this.GetMainWindowPaneCount() > 1))
+            if ((base.window.showMode != ShowMode.MainWindow) || this.AllowTabAction())
             {
                 menu.AddItem(EditorGUIUtility.TextContent("Close Tab"), false, new GenericMenu.MenuFunction2(this.Close), view);
             }
@@ -106,6 +106,32 @@
         {
             EditorWindow pane = (EditorWindow) ScriptableObject.CreateInstance((Type) userData);
             this.AddTab(pane);
+        }
+
+        private bool AllowTabAction()
+        {
+            int num = 0;
+            if (<>f__am$cache0 == null)
+            {
+                <>f__am$cache0 = e => e.showMode == ShowMode.MainWindow;
+            }
+            ContainerWindow window = Enumerable.First<ContainerWindow>(ContainerWindow.windows, <>f__am$cache0);
+            if (window != null)
+            {
+                foreach (View view in window.rootView.allChildren)
+                {
+                    DockArea area = view as DockArea;
+                    if (area != null)
+                    {
+                        num += area.m_Panes.Count;
+                        if (num > 1)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         private static void CheckDragWindowExists()
@@ -201,7 +227,7 @@
                             }
                         }
                     }
-                    goto Label_0744;
+                    goto Label_0741;
 
                 case EventType.MouseUp:
                     if (GUIUtility.hotControl == controlID)
@@ -242,7 +268,7 @@
                         GUIUtility.hotControl = 0;
                         current.Use();
                     }
-                    goto Label_0744;
+                    goto Label_0741;
 
                 case EventType.MouseDrag:
                     if (GUIUtility.hotControl == controlID)
@@ -250,7 +276,7 @@
                         Vector2 vector3 = current.mousePosition - s_StartDragPosition;
                         current.Use();
                         Rect screenPosition = base.screenPosition;
-                        bool flag = (base.window.showMode != ShowMode.MainWindow) || (this.GetMainWindowPaneCount() > 1);
+                        bool flag = (base.window.showMode != ShowMode.MainWindow) || this.AllowTabAction();
                         if (((s_DragMode == 0) && (vector3.sqrMagnitude > 99f)) && flag)
                         {
                             s_DragMode = 1;
@@ -322,7 +348,7 @@
                             }
                         }
                     }
-                    goto Label_0744;
+                    goto Label_0741;
 
                 case EventType.Repaint:
                 {
@@ -354,7 +380,7 @@
                             }
                         }
                     }
-                    goto Label_0744;
+                    goto Label_0741;
                 }
             }
             if ((typeForControl == EventType.ContextClick) && (pos.Contains(current.mousePosition) && (GUIUtility.hotControl == 0)))
@@ -365,7 +391,7 @@
                     base.PopupGenericMenu(this.m_Panes[num5], new Rect(current.mousePosition.x, current.mousePosition.y, 0f, 0f));
                 }
             }
-        Label_0744:
+        Label_0741:
             this.selected = Mathf.Clamp(this.selected, 0, this.m_Panes.Count - 1);
         }
 
@@ -401,28 +427,6 @@
                 }
             }
             return base.m_BorderSize;
-        }
-
-        private int GetMainWindowPaneCount()
-        {
-            int num = 0;
-            if (<>f__am$cache0 == null)
-            {
-                <>f__am$cache0 = new Func<ContainerWindow, bool>(null, (IntPtr) <GetMainWindowPaneCount>m__0);
-            }
-            ContainerWindow window = Enumerable.First<ContainerWindow>(ContainerWindow.windows, <>f__am$cache0);
-            if (window != null)
-            {
-                foreach (View view in window.rootView.allChildren)
-                {
-                    DockArea area = view as DockArea;
-                    if (area != null)
-                    {
-                        num += area.m_Panes.Count;
-                    }
-                }
-            }
-            return num;
         }
 
         private int GetTabAtMousePos(Vector2 mousePos, Rect position) => 

@@ -106,7 +106,7 @@
             this.Save(saveAsText);
             if (this.m_SavedFiltersChanged != null)
             {
-                this.m_SavedFiltersChanged.Invoke();
+                this.m_SavedFiltersChanged();
             }
         }
 

@@ -7,7 +7,7 @@
 
     internal class CallbackController
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <active>k__BackingField;
         private readonly Action m_Callback;
         private readonly float m_CallbacksPerSecond;
@@ -40,7 +40,7 @@
                 this.m_NextCallback = timeSinceStartup + (1f / this.m_CallbacksPerSecond);
                 if (this.m_Callback != null)
                 {
-                    this.m_Callback.Invoke();
+                    this.m_Callback();
                 }
             }
         }

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>Use this class to record to an AudioClip using a connected microphone.</para>
@@ -13,21 +14,21 @@
         /// <para>Stops recording.</para>
         /// </summary>
         /// <param name="deviceName">The name of the device.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void End(string deviceName);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern void GetDeviceCaps(string deviceName, out int minFreq, out int maxFreq);
         /// <summary>
         /// <para>Get the position in samples of the recording.</para>
         /// </summary>
         /// <param name="deviceName">The name of the device.</param>
-        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe]
+        [MethodImpl(MethodImplOptions.InternalCall), ThreadAndSerializationSafe, GeneratedByOldBindingsGenerator]
         public static extern int GetPosition(string deviceName);
         /// <summary>
         /// <para>Query if a device is currently recording.</para>
         /// </summary>
         /// <param name="deviceName">The name of the device.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern bool IsRecording(string deviceName);
         /// <summary>
         /// <para>Start Recording with device.</para>
@@ -39,13 +40,13 @@
         /// <returns>
         /// <para>The function returns null if the recording fails to start.</para>
         /// </returns>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public static extern AudioClip Start(string deviceName, bool loop, int lengthSec, int frequency);
 
         /// <summary>
         /// <para>A list of available microphone devices, identified by name.</para>
         /// </summary>
-        public static string[] devices { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public static string[] devices { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
     }
 }
 

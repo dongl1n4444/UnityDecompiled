@@ -232,7 +232,7 @@
                 };
                 object[] objArray2 = new object[] { DefaultMarshalInfoWriter.Naming.ForVariable(this._arrayType), storey.metadataAccess.TypeInfoFor(this._arrayType), storey2.arraySize };
                 writer.WriteLine(value2.Store("reinterpret_cast<{0}>(SZArrayNew({1}, {2}));", objArray2));
-                this.WriteLoop(writer, new Func<CppCodeWriter, string>(storey2, (IntPtr) this.<>m__0), new Action<CppCodeWriter>(storey2.<>m__1));
+                this.WriteLoop(writer, new Func<CppCodeWriter, string>(storey2.<>m__0), new Action<CppCodeWriter>(storey2.<>m__1));
             }
             return storey.emptyVariableName;
         }
@@ -283,7 +283,7 @@
                 writer.WriteLine("if ({0} != {1})", args);
                 using (new BlockWriter(writer, false))
                 {
-                    this.WriteMarshalToNativeLoop(writer, sourceVariable, storey.destinationVariable, managedVariableName, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+                    this.WriteMarshalToNativeLoop(writer, sourceVariable, storey.destinationVariable, managedVariableName, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
                 }
                 writer.WriteLine("else");
                 using (new BlockWriter(writer, false))
@@ -337,7 +337,7 @@
 
             internal void <>m__0(CppCodeWriter bodyWriter)
             {
-                object[] args = new object[] { this.writeLoopCountVariable.Invoke(bodyWriter) };
+                object[] args = new object[] { this.writeLoopCountVariable(bodyWriter) };
                 bodyWriter.WriteLine("for (int32_t i = 0; i < {0}; i++)", args);
                 bodyWriter.BeginBlock();
             }

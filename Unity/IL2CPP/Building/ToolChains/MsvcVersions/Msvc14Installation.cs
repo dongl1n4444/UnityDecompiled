@@ -15,7 +15,7 @@
         private readonly NPath _netfxsdkDir;
         private readonly string _sdkVersion;
 
-        public Msvc14Installation(NPath visualStudioDir) : base(new Version(14, 0), visualStudioDir)
+        public Msvc14Installation(NPath visualStudioDir) : base(new Version(14, 0), visualStudioDir, true)
         {
             base.SDKDirectory = WindowsSDKs.GetWindows10SDKDirectory(out this._sdkVersion);
             this._netfxsdkDir = WindowsSDKs.GetDotNetFrameworkSDKDirectory();
@@ -70,7 +70,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc14Installation $this;
-            internal NPath <includeDirectory>__0;
+            internal NPath <includeDirectory>__1;
 
             [DebuggerHidden]
             public void Dispose()
@@ -99,9 +99,9 @@
                     {
                         string[] textArray2 = new string[] { "Include" };
                         string[] textArray3 = new string[] { this.$this._sdkVersion };
-                        this.<includeDirectory>__0 = this.$this.SDKDirectory.Combine(textArray2).Combine(textArray3);
+                        this.<includeDirectory>__1 = this.$this.SDKDirectory.Combine(textArray2).Combine(textArray3);
                         string[] textArray4 = new string[] { "shared" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray4);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray4);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -111,7 +111,7 @@
                     case 2:
                     {
                         string[] textArray5 = new string[] { "um" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray5);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray5);
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -121,7 +121,7 @@
                     case 3:
                     {
                         string[] textArray6 = new string[] { "winrt" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray6);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray6);
                         if (!this.$disposing)
                         {
                             this.$PC = 4;
@@ -131,7 +131,7 @@
                     case 4:
                     {
                         string[] textArray7 = new string[] { "ucrt" };
-                        this.$current = this.<includeDirectory>__0.Combine(textArray7);
+                        this.$current = this.<includeDirectory>__1.Combine(textArray7);
                         if (!this.$disposing)
                         {
                             this.$PC = 5;
@@ -181,7 +181,7 @@
             internal bool $disposing;
             internal int $PC;
             internal Msvc14Installation $this;
-            internal NPath <libDirectory>__0;
+            internal NPath <libDirectory>__1;
             internal NPath <vcLibPath>__1;
             internal Architecture architecture;
             internal string sdkSubset;
@@ -203,7 +203,7 @@
                     {
                         string[] append = new string[] { "Lib" };
                         string[] textArray2 = new string[] { this.$this._sdkVersion };
-                        this.<libDirectory>__0 = this.$this.SDKDirectory.Combine(append).Combine(textArray2);
+                        this.<libDirectory>__1 = this.$this.SDKDirectory.Combine(append).Combine(textArray2);
                         string[] textArray3 = new string[] { "VC", "lib" };
                         this.<vcLibPath>__1 = this.$this.VisualStudioDirectory.Combine(textArray3);
                         if (this.sdkSubset != null)
@@ -246,7 +246,7 @@
                     case 1:
                     {
                         string[] textArray5 = new string[] { "um", "x86" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray5);
+                        this.$current = this.<libDirectory>__1.Combine(textArray5);
                         if (!this.$disposing)
                         {
                             this.$PC = 2;
@@ -256,7 +256,7 @@
                     case 2:
                     {
                         string[] textArray6 = new string[] { "ucrt", "x86" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray6);
+                        this.$current = this.<libDirectory>__1.Combine(textArray6);
                         if (!this.$disposing)
                         {
                             this.$PC = 3;
@@ -285,7 +285,7 @@
                     case 5:
                     {
                         string[] textArray9 = new string[] { "um", "x64" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray9);
+                        this.$current = this.<libDirectory>__1.Combine(textArray9);
                         if (!this.$disposing)
                         {
                             this.$PC = 6;
@@ -295,7 +295,7 @@
                     case 6:
                     {
                         string[] textArray10 = new string[] { "ucrt", "x64" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray10);
+                        this.$current = this.<libDirectory>__1.Combine(textArray10);
                         if (!this.$disposing)
                         {
                             this.$PC = 7;
@@ -319,7 +319,7 @@
                     case 9:
                     {
                         string[] textArray13 = new string[] { "um", "arm" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray13);
+                        this.$current = this.<libDirectory>__1.Combine(textArray13);
                         if (!this.$disposing)
                         {
                             this.$PC = 10;
@@ -329,7 +329,7 @@
                     case 10:
                     {
                         string[] textArray14 = new string[] { "ucrt", "arm" };
-                        this.$current = this.<libDirectory>__0.Combine(textArray14);
+                        this.$current = this.<libDirectory>__1.Combine(textArray14);
                         if (!this.$disposing)
                         {
                             this.$PC = 11;

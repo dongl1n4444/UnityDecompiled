@@ -233,6 +233,23 @@
             this.AddBuildFileImpl(targetGuid, fileGuid, weak, null);
         }
 
+        internal void AppendShellScriptBuildPhase(IEnumerable<string> targetGuids, string name, string shellPath, string shellScript)
+        {
+            PBXShellScriptBuildPhaseData data = PBXShellScriptBuildPhaseData.Create(name, shellPath, shellScript);
+            this.shellScripts.AddEntry(data);
+            foreach (string str in targetGuids)
+            {
+                this.nativeTargets[str].phases.AddGUID(data.guid);
+            }
+        }
+
+        internal void AppendShellScriptBuildPhase(string targetGuid, string name, string shellPath, string shellScript)
+        {
+            PBXShellScriptBuildPhaseData data = PBXShellScriptBuildPhaseData.Create(name, shellPath, shellScript);
+            this.shellScripts.AddEntry(data);
+            this.nativeTargets[targetGuid].phases.AddGUID(data.guid);
+        }
+
         public string BuildConfigByName(string targetGuid, string name)
         {
             PBXNativeTargetData data = this.nativeTargets[targetGuid];
@@ -722,6 +739,11 @@
             }
         }
 
+        internal void SetBaseReferenceForConfig(string configGuid, string baseReference)
+        {
+            this.buildConfigs[configGuid].baseConfigurationReference = baseReference;
+        }
+
         public void SetBuildProperty(IEnumerable<string> targetGuids, string name, string value)
         {
             foreach (string str in targetGuids)
@@ -878,6 +900,19 @@
                 dict4.SetString(key, value);
             }
             this.project.project.UpdateVars();
+        }
+
+        internal string ShellScriptByName(string targetGuid, string name)
+        {
+            foreach (string str in (IEnumerable<string>) this.nativeTargets[targetGuid].phases)
+            {
+                PBXShellScriptBuildPhaseData data = this.shellScripts[str];
+                if ((data != null) && (data.name == name))
+                {
+                    return data.guid;
+                }
+            }
+            return null;
         }
 
         public string TargetGuidByName(string name)

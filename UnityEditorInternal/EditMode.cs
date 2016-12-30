@@ -32,7 +32,7 @@
             toolBeforeEnteringEditMode = (Tool) SessionState.GetInt("EditModePrevTool", (int) toolBeforeEnteringEditMode);
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(null, (IntPtr) OnSelectionChange);
+                <>f__mg$cache0 = new Action(EditMode.OnSelectionChange);
             }
             Selection.selectionChanged = (Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
             if (s_Debug)

@@ -9,7 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(GameObject)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(GameObject))]
     internal class GameObjectInspector : Editor
     {
         public static GameObject dragObject;
@@ -832,8 +832,6 @@
 
         private class Styles
         {
-            public GUIContent dataTemplateIcon = EditorGUIUtility.IconContent("PrefabNormal Icon");
-            public GUIContent dropDownIcon = EditorGUIUtility.IconContent("Icon Dropdown");
             public GUIContent goIcon = EditorGUIUtility.IconContent("GameObject Icon");
             public GUIContent[] goTypeLabel;
             public GUIContent goTypeLabelMultiple = new GUIContent("Multiple");
@@ -842,11 +840,9 @@
             public float layerFieldWidth = EditorStyles.boldLabel.CalcSize(EditorGUIUtility.TempContent("Layer")).x;
             public GUIStyle layerPopup = new GUIStyle(EditorStyles.popup);
             public GUIContent modelIcon = EditorGUIUtility.IconContent("PrefabModel Icon");
-            public float navLayerFieldWidth = EditorStyles.boldLabel.CalcSize(EditorGUIUtility.TempContent("Nav Layer")).x;
             public GUIContent prefabIcon = EditorGUIUtility.IconContent("PrefabNormal Icon");
             public GUIContent staticContent = EditorGUIUtility.TextContent("Static");
             public GUIStyle staticDropdown = "StaticDropdown";
-            public float staticFieldToggleWidth = (EditorStyles.toggle.CalcSize(EditorGUIUtility.TempContent("Static")).x + 6f);
             public float tagFieldWidth = EditorStyles.boldLabel.CalcSize(EditorGUIUtility.TempContent("Tag")).x;
             public GUIContent typelessIcon = EditorGUIUtility.IconContent("Prefab Icon");
 

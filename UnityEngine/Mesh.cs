@@ -6,6 +6,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using UnityEngine.Internal;
+    using UnityEngine.Scripting;
 
     /// <summary>
     /// <para>A class that allows creating or modifying meshes from scripts.</para>
@@ -13,7 +14,7 @@
     public sealed class Mesh : UnityEngine.Object
     {
         /// <summary>
-        /// <para>Creates an empty Mesh.</para>
+        /// <para>Creates an empty mesh.</para>
         /// </summary>
         public Mesh()
         {
@@ -28,7 +29,7 @@
         /// <param name="deltaVertices">Delta vertices for the frame being added.</param>
         /// <param name="deltaNormals">Delta normals for the frame being added.</param>
         /// <param name="deltaTangents">Delta tangents for the frame being added.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void AddBlendShapeFrame(string shapeName, float frameWeight, Vector3[] deltaVertices, Vector3[] deltaNormals, Vector3[] deltaTangents);
         private bool CheckCanAccessSubmesh(int submesh, bool errorAboutTriangles)
         {
@@ -69,12 +70,12 @@
         /// <para>Clears all vertex data and all triangle indices.</para>
         /// </summary>
         /// <param name="keepVertexLayout"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void Clear([UnityEngine.Internal.DefaultValue("true")] bool keepVertexLayout);
         /// <summary>
         /// <para>Clears all blend shapes from Mesh.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void ClearBlendShapes();
         [ExcludeFromDocs]
         public void CombineMeshes(CombineInstance[] combine)
@@ -92,12 +93,12 @@
         }
 
         /// <summary>
-        /// <para>Combines several Meshes into this Mesh.</para>
+        /// <para>Combines several meshes into this mesh.</para>
         /// </summary>
-        /// <param name="combine">Descriptions of the Meshes to combine.</param>
-        /// <param name="mergeSubMeshes">Defines whether Meshes should be combined into a single sub-Mesh.</param>
-        /// <param name="useMatrices">Defines whether the transforms supplied in the CombineInstance array should be used or ignored.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <param name="combine">Descriptions of the meshes to combine.</param>
+        /// <param name="mergeSubMeshes">Should all meshes be combined into a single submesh?</param>
+        /// <param name="useMatrices">Should the transforms supplied in the CombineInstance array be used or ignored?</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void CombineMeshes(CombineInstance[] combine, [UnityEngine.Internal.DefaultValue("true")] bool mergeSubMeshes, [UnityEngine.Internal.DefaultValue("true")] bool useMatrices);
         internal static int DefaultDimensionForChannel(InternalShaderChannel channel)
         {
@@ -116,7 +117,7 @@
             return 4;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern Array ExtractArrayFromList(object list);
         private T[] GetAllocArrayFromChannel<T>(InternalShaderChannel channel) => 
             this.GetAllocArrayFromChannel<T>(channel, InternalVertexChannelType.Float, DefaultDimensionForChannel(channel));
@@ -137,15 +138,15 @@
             return new T[0];
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern Array GetAllocArrayFromChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void GetArrayFromChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim, Array values);
         /// <summary>
         /// <para>Returns the frame count for a blend shape.</para>
         /// </summary>
         /// <param name="shapeIndex">The shape index to get frame count from.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int GetBlendShapeFrameCount(int shapeIndex);
         /// <summary>
         /// <para>Retreives deltaVertices, deltaNormals and deltaTangents of a blend shape frame.</para>
@@ -155,38 +156,50 @@
         /// <param name="deltaVertices">Delta vertices output array for the frame being retreived.</param>
         /// <param name="deltaNormals">Delta normals output array for the frame being retreived.</param>
         /// <param name="deltaTangents">Delta tangents output array for the frame being retreived.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void GetBlendShapeFrameVertices(int shapeIndex, int frameIndex, Vector3[] deltaVertices, Vector3[] deltaNormals, Vector3[] deltaTangents);
         /// <summary>
         /// <para>Returns the weight of a blend shape frame.</para>
         /// </summary>
         /// <param name="shapeIndex">The shape index of the frame.</param>
         /// <param name="frameIndex">The frame index to get the weight from.</param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern float GetBlendShapeFrameWeight(int shapeIndex, int frameIndex);
         /// <summary>
         /// <para>Returns index of BlendShape by given name.</para>
         /// </summary>
         /// <param name="blendShapeName"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern int GetBlendShapeIndex(string blendShapeName);
         /// <summary>
         /// <para>Returns name of BlendShape by given index.</para>
         /// </summary>
         /// <param name="shapeIndex"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern string GetBlendShapeName(int shapeIndex);
         /// <summary>
-        /// <para>Returns the index buffer for the sub-Mesh.</para>
+        /// <para>Gets the index count of the given submesh.</para>
+        /// </summary>
+        /// <param name="submesh"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern uint GetIndexCount(int submesh);
+        /// <summary>
+        /// <para>Gets the starting index location within the Mesh's index buffer, for the given submesh.</para>
+        /// </summary>
+        /// <param name="submesh"></param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
+        public extern uint GetIndexStart(int submesh);
+        /// <summary>
+        /// <para>Returns the index buffer for the submesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
         public int[] GetIndices(int submesh) => 
             (!this.CheckCanAccessSubmeshIndices(submesh) ? new int[0] : this.GetIndicesImpl(submesh));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern int[] GetIndicesImpl(int submesh);
         /// <summary>
-        /// <para>Retrieves a native (underlying graphics API) pointer to the index buffer.</para>
+        /// <para>Retrieve a native (underlying graphics API) pointer to the index buffer.</para>
         /// </summary>
         /// <returns>
         /// <para>Pointer to the underlying graphics API index buffer.</para>
@@ -199,9 +212,9 @@
         }
 
         /// <summary>
-        /// <para>Retrieves a native (underlying graphics API) pointer to the vertex buffer.</para>
+        /// <para>Retrieve a native (underlying graphics API) pointer to the vertex buffer.</para>
         /// </summary>
-        /// <param name="bufferIndex">Which vertex buffer to get (some Meshes might have more than one). See vertexBufferCount.</param>
+        /// <param name="bufferIndex">Which vertex buffer to get (some meshes might have more than one). See vertexBufferCount.</param>
         /// <returns>
         /// <para>Pointer to the underlying graphics API vertex buffer.</para>
         /// </returns>
@@ -213,19 +226,19 @@
         }
 
         /// <summary>
-        /// <para>Gets the topology of a sub-Mesh.</para>
+        /// <para>Gets the topology of a submesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern MeshTopology GetTopology(int submesh);
         /// <summary>
-        /// <para>Returns the triangle list for the sub-Mesh.</para>
+        /// <para>Returns the triangle list for the submesh.</para>
         /// </summary>
         /// <param name="submesh"></param>
         public int[] GetTriangles(int submesh) => 
             (!this.CheckCanAccessSubmeshTriangles(submesh) ? new int[0] : this.GetTrianglesImpl(submesh));
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern int[] GetTrianglesImpl(int submesh);
         internal InternalShaderChannel GetUVChannel(int uvIndex)
         {
@@ -284,47 +297,47 @@
             this.GetArrayFromChannelImpl(uVChannel, InternalVertexChannelType.Float, dim, ExtractArrayFromList(uvs));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern bool HasChannel(InternalShaderChannel channel);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativeIndexBufferPtr(Mesh self, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void INTERNAL_CALL_GetNativeVertexBufferPtr(Mesh self, int bufferIndex, out IntPtr value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void Internal_Create([Writable] Mesh mono);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_get_bounds(out Bounds value);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void INTERNAL_set_bounds(ref Bounds value);
         /// <summary>
-        /// <para>Optimize mesh for frequent updates.</para>
+        /// <para>Optimize the mesh for frequent updates.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void MarkDynamic();
         /// <summary>
-        /// <para>Optimizes the Mesh for display.</para>
+        /// <para>Optimizes the mesh for display.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("This method is no longer supported (UnityUpgradable)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator, Obsolete("This method is no longer supported (UnityUpgradable)", true), EditorBrowsable(EditorBrowsableState.Never)]
         public extern void Optimize();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void PrintErrorBadSubmeshIndexIndices();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void PrintErrorBadSubmeshIndexTriangles();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void PrintErrorCantAccessMesh(InternalShaderChannel channel);
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         internal extern void PrintErrorCantAccessMeshForIndices();
         /// <summary>
-        /// <para>Recalculate the bounding volume of the Mesh from the vertices.</para>
+        /// <para>Recalculate the bounding volume of the mesh from the vertices.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RecalculateBounds();
         /// <summary>
-        /// <para>Recalculates the normals of the Mesh from the triangles and vertices.</para>
+        /// <para>Recalculates the normals of the mesh from the triangles and vertices.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void RecalculateNormals();
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private static extern void ResizeList(object list, int size);
         private int SafeLength(Array values) => 
             ((values == null) ? 0 : values.Length);
@@ -342,7 +355,7 @@
             this.SetSizedArrayForChannel(channel, format, dim, values, this.SafeLength(values));
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetArrayForChannelImpl(InternalShaderChannel channel, InternalVertexChannelType format, int dim, Array values, int arraySize);
         public void SetColors(List<Color> inColors)
         {
@@ -355,12 +368,13 @@
         }
 
         /// <summary>
-        /// <para>Sets the index buffer for the sub-Mesh.</para>
+        /// <para>Sets the index buffer for the submesh.</para>
         /// </summary>
-        /// <param name="indices"></param>
-        /// <param name="topology"></param>
-        /// <param name="submesh"></param>
-        /// <param name="calculateBounds"></param>
+        /// <param name="indices">The array of indices that define the Mesh.</param>
+        /// <param name="topology">The topology of the Mesh, e.g: Triangles, Lines, Quads, Points, etc. See MeshTopology.</param>
+        /// <param name="submesh">The submesh to modify.</param>
+        /// <param name="calculateBounds">Calculate the bounding box of the Mesh after setting the indices. This is done by default.
+        /// Use false when you want to use the existing bounding box and reduce the CPU cost of setting the indices.</param>
         [ExcludeFromDocs]
         public void SetIndices(int[] indices, MeshTopology topology, int submesh)
         {
@@ -383,7 +397,7 @@
             this.SetIndicesImpl(submesh, topology, indices, arraySize, calculateBounds);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetIndicesImpl(int submesh, MeshTopology topology, Array indices, int arraySize, [UnityEngine.Internal.DefaultValue("true")] bool calculateBounds);
         private void SetListForChannel<T>(InternalShaderChannel channel, List<T> values)
         {
@@ -425,11 +439,12 @@
         }
 
         /// <summary>
-        /// <para>Sets the triangle list for the sub-Mesh.</para>
+        /// <para>Sets the triangle list for the submesh.</para>
         /// </summary>
-        /// <param name="triangles"></param>
-        /// <param name="submesh"></param>
-        /// <param name="calculateBounds"></param>
+        /// <param name="triangles">The list of indices that define the triangles.</param>
+        /// <param name="submesh">The submesh to modify.</param>
+        /// <param name="calculateBounds">Calculate the bounding box of the Mesh after setting the triangles. This is done by default.
+        /// Use false when you want to use the existing bounding box and reduce the CPU cost of setting the triangles.</param>
         [ExcludeFromDocs]
         public void SetTriangles(int[] triangles, int submesh)
         {
@@ -460,7 +475,7 @@
             this.SetTrianglesImpl(submesh, triangles, arraySize, calculateBounds);
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         private extern void SetTrianglesImpl(int submesh, Array triangles, int arraySize, [UnityEngine.Internal.DefaultValue("true")] bool calculateBounds);
         public void SetUVs(int channel, List<Vector2> uvs)
         {
@@ -495,27 +510,26 @@
         }
 
         /// <summary>
-        /// <para>Upload previously done Mesh modifications to the graphics API.</para>
+        /// <para>Upload previously done mesh modifications to the graphics API.</para>
         /// </summary>
-        /// <param name="markNoLongerReadable">Frees up system memory copy of mesh data when set to true.</param>
-        /// <param name="markNoLogerReadable"></param>
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        /// <param name="markNoLogerReadable">Frees up system memory copy of mesh data when set to true.</param>
+        [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator]
         public extern void UploadMeshData(bool markNoLogerReadable);
 
         /// <summary>
         /// <para>The bind poses. The bind pose at each index refers to the bone with the same index.</para>
         /// </summary>
-        public Matrix4x4[] bindposes { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public Matrix4x4[] bindposes { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>Returns BlendShape count on this mesh.</para>
         /// </summary>
-        public int blendShapeCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int blendShapeCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>The bone weights of each vertex.</para>
         /// </summary>
-        public BoneWeight[] boneWeights { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public BoneWeight[] boneWeights { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
         /// <para>The bounding volume of the mesh.</para>
@@ -534,10 +548,10 @@
             }
         }
 
-        internal bool canAccess { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        internal bool canAccess { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>Vertex colors of the Mesh.</para>
+        /// <para>Vertex colors of the mesh.</para>
         /// </summary>
         public Color[] colors
         {
@@ -550,7 +564,7 @@
         }
 
         /// <summary>
-        /// <para>Vertex colors of the Mesh.</para>
+        /// <para>Vertex colors of the mesh.</para>
         /// </summary>
         public Color32[] colors32
         {
@@ -565,10 +579,10 @@
         /// <summary>
         /// <para>Returns state of the Read/Write Enabled checkbox when model was imported.</para>
         /// </summary>
-        public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public bool isReadable { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>The normals of the Mesh.</para>
+        /// <para>The normals of the mesh.</para>
         /// </summary>
         public Vector3[] normals
         {
@@ -581,12 +595,12 @@
         }
 
         /// <summary>
-        /// <para>The number of sub-Meshes. Every Material has a separate triangle list.</para>
+        /// <para>The number of submeshes. Every material has a separate triangle list.</para>
         /// </summary>
-        public int subMeshCount { [MethodImpl(MethodImplOptions.InternalCall)] get; [MethodImpl(MethodImplOptions.InternalCall)] set; }
+        public int subMeshCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] set; }
 
         /// <summary>
-        /// <para>The tangents of the Mesh.</para>
+        /// <para>The tangents of the mesh.</para>
         /// </summary>
         public Vector4[] tangents
         {
@@ -599,7 +613,7 @@
         }
 
         /// <summary>
-        /// <para>An array containing all triangles in the Mesh.</para>
+        /// <para>An array containing all triangles in the mesh.</para>
         /// </summary>
         public int[] triangles
         {
@@ -626,7 +640,7 @@
         }
 
         /// <summary>
-        /// <para>The base texture coordinates of the Mesh.</para>
+        /// <para>The base texture coordinates of the mesh.</para>
         /// </summary>
         public Vector2[] uv
         {
@@ -688,14 +702,14 @@
         }
 
         /// <summary>
-        /// <para>Get the number of vertex buffers present in the Mesh. (Read Only)</para>
+        /// <para>Get the number of vertex buffers present in the mesh. (Read Only)</para>
         /// </summary>
-        public int vertexBufferCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int vertexBufferCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
-        /// <para>Returns the number of vertices in the Mesh (Read Only).</para>
+        /// <para>Returns the number of vertices in the mesh (Read Only).</para>
         /// </summary>
-        public int vertexCount { [MethodImpl(MethodImplOptions.InternalCall)] get; }
+        public int vertexCount { [MethodImpl(MethodImplOptions.InternalCall), GeneratedByOldBindingsGenerator] get; }
 
         /// <summary>
         /// <para>Returns a copy of the vertex positions or assigns a new vertex positions array.</para>

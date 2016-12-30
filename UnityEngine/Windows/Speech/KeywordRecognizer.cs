@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class KeywordRecognizer : PhraseRecognizer
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private IEnumerable<string> <Keywords>k__BackingField;
 
         /// <summary>

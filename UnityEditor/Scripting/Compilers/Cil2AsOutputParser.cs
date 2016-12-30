@@ -32,7 +32,7 @@
             internal int $locvar1;
             internal int $PC;
             internal StringBuilder <currentErrorBuffer>__1;
-            internal bool <parsingError>__0;
+            internal bool <parsingError>__1;
             internal string <str>__2;
             internal string[] errorOutput;
 
@@ -50,7 +50,7 @@
                 switch (num)
                 {
                     case 0:
-                        this.<parsingError>__0 = false;
+                        this.<parsingError>__1 = false;
                         this.<currentErrorBuffer>__1 = new StringBuilder();
                         this.$locvar0 = this.errorOutput;
                         this.$locvar1 = 0;
@@ -68,7 +68,7 @@
                 }
             Label_00B9:
                 this.<currentErrorBuffer>__1.AppendLine(this.<str>__2.Substring("ERROR: ".Length));
-                this.<parsingError>__0 = true;
+                this.<parsingError>__1 = true;
             Label_0106:
                 this.$locvar1++;
             Label_0115:
@@ -77,13 +77,13 @@
                     this.<str>__2 = this.$locvar0[this.$locvar1];
                     if (!this.<str>__2.StartsWith("ERROR: "))
                     {
-                        if (this.<parsingError>__0)
+                        if (this.<parsingError>__1)
                         {
                             this.<currentErrorBuffer>__1.AppendLine(this.<str>__2);
                         }
                         goto Label_0106;
                     }
-                    if (!this.<parsingError>__0)
+                    if (!this.<parsingError>__1)
                     {
                         goto Label_00B9;
                     }
@@ -94,7 +94,7 @@
                     }
                     goto Label_0161;
                 }
-                if (this.<parsingError>__0)
+                if (this.<parsingError>__1)
                 {
                     this.$current = Cil2AsOutputParser.CompilerErrorFor(this.<currentErrorBuffer>__1);
                     if (!this.$disposing)

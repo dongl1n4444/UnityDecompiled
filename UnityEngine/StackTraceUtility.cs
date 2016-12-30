@@ -72,7 +72,7 @@
             return builder.ToString();
         }
 
-        [RequiredByNativeCode, SecuritySafeCritical]
+        [SecuritySafeCritical, RequiredByNativeCode]
         public static string ExtractStackTrace()
         {
             StackTrace stackTrace = new StackTrace(1, true);

@@ -379,7 +379,7 @@
             {
                 UnityEngine.Object.Destroy(uv.gameObject);
             }
-            uv.Reset();
+            uv.MarkForReset();
         }
 
         /// <summary>
@@ -607,6 +607,7 @@
                 }
                 return false;
             }
+            identity.Reset();
             if (!CheckPlayerControllerIdForConnection(conn, playerControllerId))
             {
                 return false;
@@ -916,7 +917,7 @@
         private void OnData(NetworkConnection conn, int receivedSize, int channelId)
         {
             NetworkDetailStats.IncrementStat(NetworkDetailStats.NetworkDirection.Incoming, 0x1d, "msg", 1);
-            conn.TransportRecieve(this.m_SimpleServerSimple.messageBuffer, receivedSize, channelId);
+            conn.TransportReceive(this.m_SimpleServerSimple.messageBuffer, receivedSize, channelId);
         }
 
         private void OnDisconnected(NetworkConnection conn)
@@ -1186,7 +1187,7 @@
         /// <summary>
         /// <para>This sends an array of bytes to a specific player.</para>
         /// </summary>
-        /// <param name="player">The player to send the bytes to.</param>
+        /// <param name="player">The player to send he bytes to.</param>
         /// <param name="buffer">Array of bytes to send.</param>
         /// <param name="numBytes">Size of array.</param>
         /// <param name="channelId">Transport layer channel id to send bytes on.</param>
@@ -1736,6 +1737,7 @@
                 }
                 else
                 {
+                    identity.Reset();
                     identity.OnStartServer(false);
                     if (LogFilter.logDebug)
                     {
@@ -1820,6 +1822,11 @@
         /// </returns>
         public static bool SpawnWithClientAuthority(GameObject obj, NetworkConnection conn)
         {
+            if (!conn.isReady)
+            {
+                Debug.LogError("SpawnWithClientAuthority NetworkConnection is not ready!");
+                return false;
+            }
             Spawn(obj);
             NetworkIdentity component = obj.GetComponent<NetworkIdentity>();
             if ((component == null) || !component.isServer)

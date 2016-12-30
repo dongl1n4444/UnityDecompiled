@@ -63,6 +63,7 @@
         protected static void LoadOverlays()
         {
             s_Overlays.Clear();
+            s_Overlays.Add(Collab.CollabStates.kCollabIgnored, TextureUtility.LoadTextureFromApplicationContents("ignored.png"));
             s_Overlays.Add(Collab.CollabStates.kCollabConflicted, TextureUtility.LoadTextureFromApplicationContents("conflict.png"));
             s_Overlays.Add(Collab.CollabStates.kCollabNone | Collab.CollabStates.kCollabPendingMerge, TextureUtility.LoadTextureFromApplicationContents("conflict.png"));
             s_Overlays.Add(Collab.CollabStates.kCollabChanges, TextureUtility.LoadTextureFromApplicationContents("changes.png"));

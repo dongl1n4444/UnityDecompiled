@@ -52,9 +52,17 @@
             {
                 writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/display</privilege>");
             }
-            if (((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || (checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType(typeof(UnityWebRequest).FullName)))
+            if (((checker.HasReferenceToType("UnityEngine.Networking") || checker.HasReferenceToType("System.Net.Sockets")) || (checker.HasReferenceToType("UnityEngine.Network") || checker.HasReferenceToType("UnityEngine.RPC"))) || ((checker.HasReferenceToType("UnityEngine.WWW") || checker.HasReferenceToType("UnityEngine.Video")) || checker.HasReferenceToType(typeof(UnityWebRequest).FullName)))
             {
                 writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/internet</privilege>");
+            }
+            if (checker.HasReferenceToType("UnityEngine.Video"))
+            {
+                writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/mediastorage</privilege>");
+            }
+            if (checker.HasReferenceToType("UnityEngine.Video"))
+            {
+                writer.WriteLine("\t\t<privilege>http://tizen.org/privilege/externalstorage</privilege>");
             }
             TizenUtilities.WriteCapabilitiesToManifest(writer);
             writer.WriteLine("\t</privileges>");
@@ -73,7 +81,7 @@
             writer.WriteLine("<configuration name=\"build\">");
             writer.WriteLine("<app>");
             writer.WriteLine("<option superClass=\"sbi.gnu.cpp.compiler.option\">");
-            writer.WriteLine("<listOptionValue value=\"mobile-" + str + "-device.core_gcc46.armel.core.app\"/>");
+            writer.WriteLine("<listOptionValue value=\"mobile-" + str + "-device.core_gcc49.armel.core.app\"/>");
             writer.WriteLine("</option>");
             writer.WriteLine("</app>");
             writer.WriteLine("</configuration>");
@@ -240,6 +248,13 @@
                 Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
                 TizenUtilities.ShowErrDlgAndThrow("Bundle Identifier has not been set up correctly", message);
             }
+            if (PlayerSettings.Tizen.deploymentTargetType < 0)
+            {
+                string str4 = "Please select a Tizen deployment target.";
+                str4 = str4 + " Press the Discover button in the Publishing section of Player Settings." + " Then select a type of target to get a list of available targets to select.";
+                Selection.activeObject = Unsupported.GetSerializedAssetInterfaceSingleton("PlayerSettings");
+                TizenUtilities.ShowErrDlgAndThrow("Tizen Deployment Target has not been selected.", str4);
+            }
             TizenUtilities.PrepareToolPaths();
             TizenUtilities.ValidateSigningProfile(stagingArea);
             if (flag)
@@ -251,18 +266,18 @@
             Directory.CreateDirectory(Path.Combine(stagingArea, "setting"));
             string path = Path.Combine(stagingArea, "shared");
             Directory.CreateDirectory(path);
-            string str8 = Path.Combine(path, "res");
-            Directory.CreateDirectory(str8);
-            string destDirName = Path.Combine(str8, "data");
-            string dst = Path.Combine(str8, "app_icon.png");
+            string str9 = Path.Combine(path, "res");
+            Directory.CreateDirectory(str9);
+            string destDirName = Path.Combine(str9, "data");
+            string dst = Path.Combine(str9, "app_icon.png");
             FileUtil.MoveFileIfExists(Path.Combine(stagingArea, "app_icon.png"), dst);
             if (!PlayerSettings.SplashScreen.show)
             {
-                string str11 = Path.Combine(str8, "app_splash.png");
-                FileUtil.MoveFileIfExists(Path.Combine(stagingArea, "app_splash.png"), str11);
-                if (!File.Exists(str11))
+                string str12 = Path.Combine(str9, "app_splash.png");
+                FileUtil.MoveFileIfExists(Path.Combine(stagingArea, "app_splash.png"), str12);
+                if (!File.Exists(str12))
                 {
-                    FileUtil.CopyFileOrDirectory(playerPackage + "/assets/splash.png", str11);
+                    FileUtil.CopyFileOrDirectory(playerPackage + "/assets/splash.png", str12);
                 }
             }
             Directory.CreateDirectory(Path.Combine(path, "trusted"));
@@ -275,12 +290,12 @@
             Directory.CreateDirectory(Path.Combine(destDirName, "Managed/mono/2.0"));
             FileUtil.CopyFileOrDirectory(playerPackage + "/Data/Resources/unity default resources", destDirName + "/unity default resources");
             Directory.CreateDirectory(Path.Combine(stagingArea, "data"));
-            string str14 = Path.Combine(stagingArea, "lib");
-            Directory.CreateDirectory(str14);
+            string str15 = Path.Combine(stagingArea, "lib");
+            Directory.CreateDirectory(str15);
             foreach (PluginImporter importer in PluginImporter.GetImporters(target))
             {
                 string fileName = Path.GetFileName(importer.assetPath);
-                FileUtil.UnityFileCopy(importer.assetPath, Path.Combine(str14, fileName));
+                FileUtil.UnityFileCopy(importer.assetPath, Path.Combine(str15, fileName));
             }
             if (Directory.Exists("Assets/StreamingAssets"))
             {
@@ -290,8 +305,8 @@
             bool collectMethods = true;
             bool ignoreSystemDlls = true;
             string[] components = new string[] { destDirName, "Managed" };
-            string str16 = Paths.Combine(components);
-            checker.CollectReferences(str16, collectMethods, 0f, ignoreSystemDlls);
+            string str17 = Paths.Combine(components);
+            checker.CollectReferences(str17, collectMethods, 0f, ignoreSystemDlls);
             string bundleIdentifier = PlayerSettings.bundleIdentifier;
             CreateManifest(Path.Combine(stagingArea, "tizen-manifest.xml"), companyName, productName, normalizedProductName, bundleIdentifier, checker);
             CreateProject(stagingArea);

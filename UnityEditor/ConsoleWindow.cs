@@ -304,7 +304,7 @@
                 GUIUtility.keyboardControl = 0;
             }
             int count = LogEntries.GetCount();
-            if ((this.m_ListView.totalRows != count) && (this.m_ListView.scrollPos.y >= ((this.m_ListView.rowHeight * this.m_ListView.totalRows) - this.ms_LVHeight)))
+            if (((this.m_ListView.totalRows != count) && (this.m_ListView.totalRows > 0)) && (this.m_ListView.scrollPos.y >= ((this.m_ListView.rowHeight * this.m_ListView.totalRows) - this.ms_LVHeight)))
             {
                 this.m_ListView.scrollPos.y = (count * 0x20) - this.ms_LVHeight;
             }

@@ -5,22 +5,22 @@
     internal enum DoF
     {
         BodyDoFStart = 0,
-        HeadDoFStart = 6,
-        LastDoF = 0x5c,
-        LeftArmDoFStart = 0x22,
-        LeftIndexDoFStart = 0x38,
-        LeftLegDoFStart = 0x12,
-        LeftLittleDoFStart = 0x44,
-        LeftMiddleDoFStart = 60,
-        LeftRingDoFStart = 0x40,
-        LeftThumbDoFStart = 0x34,
-        RightArmDoFStart = 0x2b,
-        RightIndexDoFStart = 0x4c,
-        RightLegDoFStart = 0x1a,
-        RightLittleDoFStart = 0x58,
-        RightMiddleDoFStart = 80,
-        RightRingDoFStart = 0x54,
-        RightThumbDoFStart = 0x48
+        HeadDoFStart = 9,
+        LastDoF = 0x5f,
+        LeftArmDoFStart = 0x25,
+        LeftIndexDoFStart = 0x3b,
+        LeftLegDoFStart = 0x15,
+        LeftLittleDoFStart = 0x47,
+        LeftMiddleDoFStart = 0x3f,
+        LeftRingDoFStart = 0x43,
+        LeftThumbDoFStart = 0x37,
+        RightArmDoFStart = 0x2e,
+        RightIndexDoFStart = 0x4f,
+        RightLegDoFStart = 0x1d,
+        RightLittleDoFStart = 0x5b,
+        RightMiddleDoFStart = 0x53,
+        RightRingDoFStart = 0x57,
+        RightThumbDoFStart = 0x4b
     }
 }
 
