@@ -379,7 +379,7 @@
             {
                 UnityEngine.Object.Destroy(uv.gameObject);
             }
-            uv.Reset();
+            uv.MarkForReset();
         }
 
         /// <summary>
@@ -607,6 +607,7 @@
                 }
                 return false;
             }
+            identity.Reset();
             if (!CheckPlayerControllerIdForConnection(conn, playerControllerId))
             {
                 return false;
@@ -1736,6 +1737,7 @@
                 }
                 else
                 {
+                    identity.Reset();
                     identity.OnStartServer(false);
                     if (LogFilter.logDebug)
                     {

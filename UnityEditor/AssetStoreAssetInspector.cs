@@ -9,7 +9,7 @@
     [CustomEditor(typeof(AssetStoreAssetInspector))]
     internal class AssetStoreAssetInspector : Editor
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static bool <OfflineNoticeEnabled>k__BackingField;
         private int lastAssetID;
         internal static PaymentAvailability m_PaymentAvailability;

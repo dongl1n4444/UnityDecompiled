@@ -181,7 +181,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<QualitySetting, string>(null, (IntPtr) <DoQualityLevelSelection>m__0);
+                    <>f__am$cache0 = x => x.m_Name;
                 }
                 num3 = EditorGUI.Popup(rect7, num3, Enumerable.Select<QualitySetting, string>(qualitySettings, <>f__am$cache0).ToArray<string>(), Styles.kDefaultDropdown);
                 platformDefaultQualitySettings[platform3.name] = num3;

@@ -79,7 +79,7 @@
                     {
                         Rect rect3 = rect;
                         rect3.width = base.k_IconWidth + base.iconTotalPadding;
-                        base.iconOverlayGUI.Invoke(item, rect3);
+                        base.iconOverlayGUI(item, rect3);
                     }
                 }
             }

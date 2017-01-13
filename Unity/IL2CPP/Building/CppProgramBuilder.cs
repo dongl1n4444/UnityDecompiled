@@ -125,13 +125,13 @@
                 stopwatch.Start();
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<CppCompilationInstruction, long>(null, (IntPtr) <BuildAllCppFiles>m__2);
+                    <>f__am$cache2 = f => new FileInfo(f.SourceFile.ToString()).Length;
                 }
-                IEnumerable<ProvideObjectResult> source = ParallelFor.RunWithResult<CppCompilationInstruction, ProvideObjectResult>(sourceFilesToCompile.OrderByDescending<CppCompilationInstruction, long>(<>f__am$cache2).ToArray<CppCompilationInstruction>(), new Func<CppCompilationInstruction, ProvideObjectResult>(this, (IntPtr) this.ProvideObjectFile));
+                IEnumerable<ProvideObjectResult> source = ParallelFor.RunWithResult<CppCompilationInstruction, ProvideObjectResult>(sourceFilesToCompile.OrderByDescending<CppCompilationInstruction, long>(<>f__am$cache2).ToArray<CppCompilationInstruction>(), new Func<CppCompilationInstruction, ProvideObjectResult>(this.ProvideObjectFile));
                 IEnumerable<CompilationResult> enumerable2 = source.OfType<CompilationResult>();
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<CompilationResult, bool>(null, (IntPtr) <BuildAllCppFiles>m__3);
+                    <>f__am$cache3 = cr => !cr.Success;
                 }
                 CompilationResult result = enumerable2.FirstOrDefault<CompilationResult>(<>f__am$cache3);
                 if (result != null)
@@ -141,7 +141,7 @@
                 Console.WriteLine(string.Concat(new object[] { "ObjectFiles: ", source.Count<ProvideObjectResult>(), " of which compiled: ", enumerable2.Count<CompilationResult>() }));
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<CompilationResult, TimeSpan>(null, (IntPtr) <BuildAllCppFiles>m__4);
+                    <>f__am$cache4 = cr => cr.Duration;
                 }
                 foreach (CompilationResult result2 in enumerable2.OrderByDescending<CompilationResult, TimeSpan>(<>f__am$cache4).Take<CompilationResult>(10))
                 {
@@ -150,7 +150,7 @@
                 Console.WriteLine("Total compilation time: {0} milliseconds.", stopwatch.ElapsedMilliseconds);
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<ProvideObjectResult, NPath>(null, (IntPtr) <BuildAllCppFiles>m__5);
+                    <>f__am$cache5 = c => c.ObjectFile;
                 }
                 return source.Select<ProvideObjectResult, NPath>(<>f__am$cache5).ToArray<NPath>();
             }
@@ -169,13 +169,13 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, NPath>(null, (IntPtr) <CleanWorkingDirectory>m__0);
+                <>f__am$cache0 = file => file.Parent;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <CleanWorkingDirectory>m__1);
+                <>f__am$cache1 = d => d.Files(false);
             }
-            NPath[] pathArray = storey.compiledObjectFiles.Select<NPath, NPath>(<>f__am$cache0).Distinct<NPath>().SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
+            NPath[] pathArray = storey.compiledObjectFiles.Select<NPath, NPath>(<>f__am$cache0).Distinct<NPath>().SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(storey.<>m__0)).ToArray<NPath>();
             foreach (NPath path in pathArray)
             {
                 try
@@ -212,19 +212,19 @@
             {
                 if (<>f__am$cache6 == null)
                 {
-                    <>f__am$cache6 = new Func<NPath, bool>(null, (IntPtr) <FindStaticLibrary>m__6);
+                    <>f__am$cache6 = p => p.FileExists("");
                 }
-                path = this._cppToolChain.ToolChainLibraryPaths().Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).Single<NPath>(<>f__am$cache6);
+                path = this._cppToolChain.ToolChainLibraryPaths().Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).Single<NPath>(<>f__am$cache6);
             }
             catch
             {
                 if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache7 = new Func<NPath, string>(null, (IntPtr) <FindStaticLibrary>m__7);
+                    <>f__am$cache7 = p => p.ToString();
                 }
                 if (<>f__am$cache8 == null)
                 {
-                    <>f__am$cache8 = new Func<string, string, string>(null, (IntPtr) <FindStaticLibrary>m__8);
+                    <>f__am$cache8 = (x, y) => $"{x}{Environment.NewLine}	{y}";
                 }
                 throw new Exception($"Could not locate the exact path of {storey.staticLib} inside these directories:{Environment.NewLine}	{this._cppToolChain.ToolChainLibraryPaths().Select<NPath, string>(<>f__am$cache7).Aggregate<string>(<>f__am$cache8)}");
             }
@@ -248,7 +248,7 @@
                 {
                     builder.Append(path.FileName);
                 }
-                foreach (NPath path2 in linkerInvocation.FilesInfluencingOutcome.Where<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (NPath path2 in linkerInvocation.FilesInfluencingOutcome.Where<NPath>(new Func<NPath, bool>(storey.<>m__0)))
                 {
                     builder.Append(HashTools.HashOfFile(!path2.IsRelative ? path2 : this.FindStaticLibrary(path2)));
                 }
@@ -369,7 +369,7 @@
                     <>f__ref$0 = this,
                     objectFile = objectFile
                 };
-                return !this.compiledObjectFiles.Any<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.compiledObjectFiles.Any<NPath>(new Func<NPath, bool>(storey.<>m__0));
             }
 
             private sealed class <CleanWorkingDirectory>c__AnonStorey1
@@ -405,7 +405,7 @@
                     <>f__ref$2 = this,
                     file = file
                 };
-                return !this.objectFiles.Any<NPath>(new Func<NPath, bool>(storey, (IntPtr) this.<>m__0));
+                return !this.objectFiles.Any<NPath>(new Func<NPath, bool>(storey.<>m__0));
             }
 
             private sealed class <HashLinkerInvocation>c__AnonStorey3

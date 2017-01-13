@@ -10,7 +10,7 @@
 
     internal class ModelImporterRigEditor : AssetImporterInspector
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <rootIndex>k__BackingField;
         private const float kDeleteWidth = 17f;
         private SerializedProperty m_AnimationCompression;

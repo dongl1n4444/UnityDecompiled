@@ -85,7 +85,7 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <CecilElementTypeNameFor>m__0);
+                <>f__am$cache0 = (c, n) => c + "/" + n;
             }
             return typeNameInfo.Nested.Aggregate<string, string>(name, <>f__am$cache0);
         }
@@ -100,11 +100,11 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <GetTypeByName>m__1);
+                    <>f__am$cache1 = t => t != null;
                 }
-                return this._usedAssemblies.Select<AssemblyDefinition, TypeDefinition>(new Func<AssemblyDefinition, TypeDefinition>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<TypeDefinition>(<>f__am$cache1);
+                return this._usedAssemblies.Select<AssemblyDefinition, TypeDefinition>(new Func<AssemblyDefinition, TypeDefinition>(storey.<>m__0)).FirstOrDefault<TypeDefinition>(<>f__am$cache1);
             }
-            AssemblyDefinition definition = this._usedAssemblies.FirstOrDefault<AssemblyDefinition>(new Func<AssemblyDefinition, bool>(storey, (IntPtr) this.<>m__1));
+            AssemblyDefinition definition = this._usedAssemblies.FirstOrDefault<AssemblyDefinition>(new Func<AssemblyDefinition, bool>(storey.<>m__1));
             return definition?.MainModule.GetType(storey.name);
         }
         [CompilerGenerated]

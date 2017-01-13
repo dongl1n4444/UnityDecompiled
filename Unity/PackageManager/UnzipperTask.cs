@@ -65,7 +65,7 @@
                             storey2.targetFile = new FileInfo(path);
                             using (FileStream stream3 = storey2.targetFile.OpenWrite())
                             {
-                                Utils.Copy(inputStream, stream3, 0x1000, storey2.targetFile.Length, new Func<long, long, bool>(storey2, (IntPtr) this.<>m__0), 100);
+                                Utils.Copy(inputStream, stream3, 0x1000, storey2.targetFile.Length, new Func<long, long, bool>(storey2.<>m__0), 100);
                             }
                             storey2.targetFile.LastWriteTime = current.get_DateTime();
                             num++;

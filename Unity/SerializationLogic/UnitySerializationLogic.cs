@@ -74,7 +74,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <FieldAttributes>m__0);
+                <>f__am$cache0 = _ => _.AttributeType;
             }
             return Enumerable.Select<CustomAttribute, TypeReference>(field.CustomAttributes, <>f__am$cache0);
         }
@@ -84,7 +84,7 @@
             <HasFieldsThatCanContainUnityEngineObjectReferences>c__AnonStorey1 storey = new <HasFieldsThatCanContainUnityEngineObjectReferences>c__AnonStorey1 {
                 definition = definition
             };
-            return Enumerable.Any<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(Enumerable.Where<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(AllFieldsFor(storey.definition, typeResolver), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey, (IntPtr) this.<>m__0)), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey, (IntPtr) this.<>m__1));
+            return Enumerable.Any<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(Enumerable.Where<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>>(AllFieldsFor(storey.definition, typeResolver), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey.<>m__0)), new Func<KeyValuePair<FieldDefinition, Unity.SerializationLogic.TypeResolver>, bool>(storey.<>m__1));
         }
 
         public static bool HasSerializeFieldAttribute(FieldDefinition field)
@@ -209,7 +209,7 @@
             {
                 if (((!UnityEngineTypePredicates.IsMonoBehaviour(typeDeclaration) && !UnityEngineTypePredicates.IsScriptableObject(typeDeclaration)) && (typeDeclaration.CheckedResolve().IsSerializable && !typeDeclaration.CheckedResolve().IsAbstract)) && (<>f__am$cache1 == null))
                 {
-                    <>f__am$cache1 = new Func<CustomAttribute, bool>(null, (IntPtr) <ShouldImplementIDeserializable>m__1);
+                    <>f__am$cache1 = a => a.AttributeType.FullName.Contains("System.Runtime.CompilerServices.CompilerGenerated");
                 }
                 return (!Enumerable.Any<CustomAttribute>(typeDeclaration.CheckedResolve().CustomAttributes, <>f__am$cache1) || UnityEngineTypePredicates.ShouldHaveHadSerializableAttribute(typeDeclaration));
             }

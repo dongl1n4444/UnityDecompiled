@@ -116,7 +116,7 @@
             {
                 return status;
             }
-            return normalizer.Invoke(match.Groups["message"].Value, messageParser);
+            return normalizer(match.Groups["message"].Value, messageParser);
         }
     }
 }

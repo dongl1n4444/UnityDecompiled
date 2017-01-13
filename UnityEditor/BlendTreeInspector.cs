@@ -1640,15 +1640,15 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Vector2, bool>(null, (IntPtr) <ValidatePositions>m__0);
+                    <>f__am$cache0 = e => e != Vector2.zero;
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Vector2, float>(null, (IntPtr) <ValidatePositions>m__1);
+                    <>f__am$cache1 = e => Mathf.Atan2(e.y, e.x);
                 }
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<float, float>(null, (IntPtr) <ValidatePositions>m__2);
+                    <>f__am$cache2 = e => e;
                 }
                 List<float> list = Enumerable.OrderBy<float, float>(Enumerable.Select<Vector2, float>(Enumerable.Where<Vector2>(motionPositions, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToList<float>();
                 float num3 = 0f;

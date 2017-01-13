@@ -112,7 +112,7 @@
             {
                 if (PlatformUtils.IsWindows())
                 {
-                    return (!Environment.get_Is64BitOperatingSystem() ? "windows" : "windows-x86_64");
+                    return (!Environment.Is64BitOperatingSystem ? "windows" : "windows-x86_64");
                 }
                 if (PlatformUtils.IsLinux())
                 {

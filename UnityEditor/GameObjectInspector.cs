@@ -9,7 +9,7 @@
     using UnityEditorInternal;
     using UnityEngine;
 
-    [CustomEditor(typeof(GameObject)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(GameObject))]
     internal class GameObjectInspector : Editor
     {
         public static GameObject dragObject;

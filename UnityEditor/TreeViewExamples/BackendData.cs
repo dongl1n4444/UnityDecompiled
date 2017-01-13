@@ -9,7 +9,7 @@
 
     internal class BackendData
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <IDCounter>k__BackingField;
         private const int k_MaxChildren = 15;
         private const int k_MaxDepth = 12;
@@ -163,7 +163,7 @@
             {
                 if (insertionIndex > 0)
                 {
-                    insertionIndex -= Enumerable.Count<Foo>(parentItem.children.GetRange(0, insertionIndex), new Func<Foo, bool>(draggedItems, (IntPtr) this.Contains));
+                    insertionIndex -= Enumerable.Count<Foo>(parentItem.children.GetRange(0, insertionIndex), new Func<Foo, bool>(draggedItems.Contains));
                 }
                 foreach (Foo foo in draggedItems)
                 {
@@ -191,13 +191,13 @@
 
         public class Foo
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private List<BackendData.Foo> <children>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <depth>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-            private int <id>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            private int <id>k__BackingField;
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private string <name>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private BackendData.Foo <parent>k__BackingField;

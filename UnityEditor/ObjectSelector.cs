@@ -179,7 +179,7 @@
                 this.m_ListArea.allowMultiSelect = false;
                 this.m_ListArea.allowRenaming = false;
                 this.m_ListArea.allowBuiltinResources = true;
-                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this, (IntPtr) this.Repaint));
+                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this.Repaint));
                 this.m_ListArea.itemSelectedCallback = (Action<bool>) Delegate.Combine(this.m_ListArea.itemSelectedCallback, new Action<bool>(this.ListAreaItemSelectedCallback));
                 this.m_ListArea.gridSize = this.m_StartGridSize.value;
                 this.FilterSettingsChanged();

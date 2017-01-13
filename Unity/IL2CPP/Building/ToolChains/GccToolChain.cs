@@ -267,7 +267,7 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlagsFor)).GetEnumerator();
+                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlagsFor)).GetEnumerator();
                 num = 0xfffffffd;
             Label_0196:
                 try

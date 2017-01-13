@@ -66,7 +66,7 @@
         {
             base.LoadStateInstance(this.SerializedStateWriterInterface);
             this.EmitCString(fieldName);
-            emitSequenceLength.Invoke();
+            emitSequenceLength();
             base.Callvirt(this.SerializedStateWriterInterface, "BeginSequenceGroup");
         }
 

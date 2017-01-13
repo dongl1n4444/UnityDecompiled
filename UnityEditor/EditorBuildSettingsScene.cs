@@ -73,11 +73,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<EditorBuildSettingsScene, bool>(null, (IntPtr) <GetActiveSceneList>m__0);
+                <>f__am$cache0 = scene => scene.enabled;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<EditorBuildSettingsScene, string>(null, (IntPtr) <GetActiveSceneList>m__1);
+                <>f__am$cache1 = scene => scene.path;
             }
             return Enumerable.Select<EditorBuildSettingsScene, string>(Enumerable.Where<EditorBuildSettingsScene>(scenes, <>f__am$cache0), <>f__am$cache1).ToArray<string>();
         }

@@ -30,7 +30,7 @@
             {
                 return IsPrimitiveBlittable(typeDef, nativeType, storey.marshalType);
             }
-            return typeDef.Fields.All<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            return typeDef.Fields.All<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0));
         }
 
         public static IEnumerable<DefaultMarshalInfoWriter> GetFieldMarshalInfoWriters(TypeDefinition type, MarshalType marshalType)
@@ -39,7 +39,7 @@
                 marshalType = marshalType,
                 type = type
             };
-            return GetMarshaledFields(storey.type, storey.marshalType).Select<FieldDefinition, DefaultMarshalInfoWriter>(new Func<FieldDefinition, DefaultMarshalInfoWriter>(storey, (IntPtr) this.<>m__0));
+            return GetMarshaledFields(storey.type, storey.marshalType).Select<FieldDefinition, DefaultMarshalInfoWriter>(new Func<FieldDefinition, DefaultMarshalInfoWriter>(storey.<>m__0));
         }
 
         private static NativeType? GetFieldNativeType(FieldDefinition field)
@@ -59,9 +59,9 @@
             };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeDefinition, IEnumerable<FieldDefinition>>(null, (IntPtr) <GetMarshaledFields>m__1);
+                <>f__am$cache1 = t => NonStaticFieldsOf(t);
             }
-            return storey.type.GetTypeHierarchy().Where<TypeDefinition>(new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0)).SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache1);
+            return storey.type.GetTypeHierarchy().Where<TypeDefinition>(new Func<TypeDefinition, bool>(storey.<>m__0)).SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache1);
         }
 
         public static MarshalType[] GetMarshalTypesForMarshaledType(TypeDefinition type)
@@ -183,7 +183,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <NonStaticFieldsOf>m__0);
+                <>f__am$cache0 = field => !field.IsStatic;
             }
             return typeDefinition.Fields.Where<FieldDefinition>(<>f__am$cache0);
         }

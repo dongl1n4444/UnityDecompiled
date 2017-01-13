@@ -86,7 +86,7 @@
             return ((platform != null) ? platform.name : string.Empty);
         }
 
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static bool GetPropertyBool(string name)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -134,7 +134,7 @@
             return true;
         }
 
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static bool GetPropertyOptionalInt(string name, ref int value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -148,7 +148,7 @@
             return true;
         }
 
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static bool GetPropertyOptionalString(string name, ref string value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -162,7 +162,7 @@
             return true;
         }
 
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static string GetPropertyString(string name)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -267,7 +267,7 @@
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetIncrementalIl2CppBuild(BuildTargetGroup targetGroup, bool enabled);
-        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
         public static void SetPropertyBool(string name, bool value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;
@@ -309,7 +309,7 @@
         /// <param name="target">BuildTarget for which the property should apply (use default value BuildTargetGroup.Unknown to apply to all targets).</param>
         [MethodImpl(MethodImplOptions.InternalCall), Obsolete("Use explicit API instead.")]
         public static extern void SetPropertyInt(string name, int value, [DefaultValue("BuildTargetGroup.Unknown")] BuildTargetGroup target);
-        [ExcludeFromDocs, Obsolete("Use explicit API instead.")]
+        [Obsolete("Use explicit API instead."), ExcludeFromDocs]
         public static void SetPropertyString(string name, string value)
         {
             BuildTargetGroup unknown = BuildTargetGroup.Unknown;

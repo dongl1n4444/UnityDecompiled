@@ -408,7 +408,7 @@
 
         private class PackageExportTreeViewItem : TreeViewItem
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private ExportPackageItem <item>k__BackingField;
             private PackageExportTreeView.EnabledState m_EnabledState;
 

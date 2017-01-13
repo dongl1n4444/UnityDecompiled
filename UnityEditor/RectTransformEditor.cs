@@ -253,7 +253,7 @@
                         float snapDistance = (HandleUtility.GetHandleSize(position) * 0.05f) / guiParent.rect.size[i];
                         snapDistance *= parentSpace.InverseTransformVector((i != null) ? Vector3.up : Vector3.right)[i];
                         num7 = RectTransformSnapping.SnapToGuides(num7, snapDistance, i);
-                        bool enforceExactValue = num7 != num6;
+                        bool enforceExactValue = !(num7 == num6);
                         num6 = num7;
                         if (minmax == 2)
                         {
@@ -546,8 +546,8 @@
         private void DrawSizes(Rect rectInUserSpace, Transform userSpace, Rect rectInParentSpace, Transform parentSpace, RectTransform gui, RectTransform guiParent)
         {
             float size = 0.05f * HandleUtility.GetHandleSize(parentSpace.position);
-            bool flag = gui.anchorMin.x != gui.anchorMax.x;
-            bool flag2 = gui.anchorMin.y != gui.anchorMax.y;
+            bool flag = !(gui.anchorMin.x == gui.anchorMax.x);
+            bool flag2 = !(gui.anchorMin.y == gui.anchorMax.y);
             float[] values = new float[] { this.m_ChangingPosX.faded, this.m_ChangingLeft.faded, this.m_ChangingRight.faded, this.m_ChangingAnchors.faded };
             float alpha = Mathf.Max(values);
             this.DrawAnchorRect(parentSpace, gui, guiParent, 0, alpha);
@@ -583,10 +583,10 @@
                 driven = driven,
                 getter = getter
             };
-            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey, (IntPtr) this.<>m__0))))
+            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)).Distinct<float>().Count<float>() >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 float f = EditorGUI.FloatField(position, label, num);
                 if (EditorGUI.EndChangeCheck())
@@ -606,10 +606,10 @@
                 driven = driven,
                 getter = getter
             };
-            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey, (IntPtr) this.<>m__0))))
+            using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(base.targets, new Func<Object, bool>(storey.<>m__0))))
             {
                 float num = storey.getter(base.target as RectTransform);
-                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey, (IntPtr) this.<>m__1)).Distinct<float>().Count<float>() >= 2;
+                EditorGUI.showMixedValue = Enumerable.Select<Object, float>(base.targets, new Func<Object, float>(storey.<>m__1)).Distinct<float>().Count<float>() >= 2;
                 EditorGUI.BeginChangeCheck();
                 int id = GUIUtility.GetControlID(s_FloatFieldHash, FocusType.Keyboard, position);
                 Rect labelPosition = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
@@ -883,22 +883,22 @@
             EditorGUILayout.Space();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
+                <>f__am$cache0 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.Rotation) != DrivenTransformProperties.None;
             }
             this.m_RotationGUI.RotationField(Enumerable.Any<Object>(base.targets, <>f__am$cache0));
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__1);
+                <>f__am$cache1 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleX) != DrivenTransformProperties.None;
             }
             s_ScaleDisabledMask[0] = Enumerable.Any<Object>(base.targets, <>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__2);
+                <>f__am$cache2 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleY) != DrivenTransformProperties.None;
             }
             s_ScaleDisabledMask[1] = Enumerable.Any<Object>(base.targets, <>f__am$cache2);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Object, bool>(null, (IntPtr) <OnInspectorGUI>m__3);
+                <>f__am$cache3 = x => ((x as RectTransform).drivenProperties & DrivenTransformProperties.ScaleZ) != DrivenTransformProperties.None;
             }
             s_ScaleDisabledMask[2] = Enumerable.Any<Object>(base.targets, <>f__am$cache3);
             Vector3FieldWithDisabledMash(EditorGUILayout.GetControlRect(new GUILayoutOption[0]), this.m_LocalScale, styles.transformScaleContent, s_ScaleDisabledMask);
@@ -1288,22 +1288,22 @@
             totalRect.height = EditorGUIUtility.singleLineHeight * 2f;
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__4);
+                <>f__am$cache4 = x => !((x as RectTransform).anchorMin.x == (x as RectTransform).anchorMax.x);
             }
             bool flag = Enumerable.Any<Object>(base.targets, <>f__am$cache4);
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__5);
+                <>f__am$cache5 = x => !((x as RectTransform).anchorMin.y == (x as RectTransform).anchorMax.y);
             }
             bool flag2 = Enumerable.Any<Object>(base.targets, <>f__am$cache5);
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__6);
+                <>f__am$cache6 = x => (x as RectTransform).anchorMin.x == (x as RectTransform).anchorMax.x;
             }
             bool flag3 = Enumerable.Any<Object>(base.targets, <>f__am$cache6);
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<Object, bool>(null, (IntPtr) <SmartPositionAndSizeFields>m__7);
+                <>f__am$cache7 = x => (x as RectTransform).anchorMin.y == (x as RectTransform).anchorMax.y;
             }
             bool flag4 = Enumerable.Any<Object>(base.targets, <>f__am$cache7);
             Rect columnRect = this.GetColumnRect(totalRect, 0);

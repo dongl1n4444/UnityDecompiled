@@ -223,7 +223,7 @@
                         {
                             storey.scenePath = this.lv.fileNames[num];
                         }
-                        if (!Enumerable.Any<EditorBuildSettingsScene>(list, new Func<EditorBuildSettingsScene, bool>(storey, (IntPtr) this.<>m__0)))
+                        if (!Enumerable.Any<EditorBuildSettingsScene>(list, new Func<EditorBuildSettingsScene, bool>(storey.<>m__0)))
                         {
                             EditorBuildSettingsScene item = new EditorBuildSettingsScene {
                                 path = storey.scenePath,
@@ -300,7 +300,7 @@
                 <AddOpenScenes>c__AnonStorey1 storey = new <AddOpenScenes>c__AnonStorey1 {
                     scene = SceneManager.GetSceneAt(i)
                 };
-                if (((storey.scene.path.Length != 0) || EditorSceneManager.SaveScene(storey.scene, "", false)) && !Enumerable.Any<EditorBuildSettingsScene>(list, new Func<EditorBuildSettingsScene, bool>(storey, (IntPtr) this.<>m__0)))
+                if (((storey.scene.path.Length != 0) || EditorSceneManager.SaveScene(storey.scene, "", false)) && !Enumerable.Any<EditorBuildSettingsScene>(list, new Func<EditorBuildSettingsScene, bool>(storey.<>m__0)))
                 {
                     EditorBuildSettingsScene item = new EditorBuildSettingsScene {
                         path = storey.scene.path,

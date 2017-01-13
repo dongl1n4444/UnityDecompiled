@@ -215,9 +215,9 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<float>(null, (IntPtr) <OnEnable>m__0);
+                    <>f__am$cache0 = () => ((float) EditorApplication.timeSinceStartup) * 500f;
                 }
-                this.m_CollabButton = new ButtonWithAnimatedIconRotation(<>f__am$cache0, new Action(this, (IntPtr) this.Repaint), 20f, true);
+                this.m_CollabButton = new ButtonWithAnimatedIconRotation(<>f__am$cache0, new Action(this.Repaint), 20f, true);
             }
         }
 

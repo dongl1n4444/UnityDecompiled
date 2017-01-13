@@ -217,7 +217,7 @@
             this.m_LiveEditSnapshot = null;
             if (this.onEndLiveEdit != null)
             {
-                this.onEndLiveEdit.Invoke();
+                this.onEndLiveEdit();
             }
         }
 
@@ -289,7 +289,7 @@
             <GetAggregateKeys>c__AnonStorey4 storey = new <GetAggregateKeys>c__AnonStorey4 {
                 hierarchyNode = hierarchyNode
             };
-            DopeLine line = Enumerable.FirstOrDefault<DopeLine>(this.dopelines, new Func<DopeLine, bool>(storey, (IntPtr) this.<>m__0));
+            DopeLine line = Enumerable.FirstOrDefault<DopeLine>(this.dopelines, new Func<DopeLine, bool>(storey.<>m__0));
             return line?.keys;
         }
 
@@ -845,7 +845,7 @@
         {
             if (this.onStartLiveEdit != null)
             {
-                this.onStartLiveEdit.Invoke();
+                this.onStartLiveEdit();
             }
             this.m_LiveEditSnapshot = new List<LiveEditCurve>();
             this.SaveKeySelection("Edit Curve");

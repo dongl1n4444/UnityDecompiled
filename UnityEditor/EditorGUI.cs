@@ -1908,7 +1908,7 @@
             int controlID = GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position);
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <DoEnumMaskField>m__4);
+                <>f__am$cache4 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache4).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(PrefixLabel(position, controlID, label), controlID, Convert.ToInt32(enumValue), flagNames, style, out changedFlags, out changedToValue);
@@ -4188,7 +4188,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__3);
+                <>f__am$cache3 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache3).ToArray<string>();
             int num = MaskFieldGUI.DoMaskField(IndentedRect(position), GUIUtility.GetControlID(s_MaskField, FocusType.Keyboard, position), Convert.ToInt32(enumValue), flagNames, style);
@@ -4207,7 +4207,7 @@
             position.xMax = rect.x;
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <EnumMaskFieldInternal>m__2);
+                <>f__am$cache2 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] flagNames = Enumerable.Select<string, string>(Enum.GetNames(enumValue.GetType()), <>f__am$cache2).ToArray<string>();
             int num2 = MaskFieldGUI.DoMaskField(rect, id, Convert.ToInt32(enumValue), flagNames, style);
@@ -4387,7 +4387,7 @@
             int index = Array.IndexOf<Enum>(array, selected);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <EnumPopupInternal>m__1);
+                <>f__am$cache1 = x => ObjectNames.NicifyVariableName(x);
             }
             index = Popup(position, label, index, EditorGUIUtility.TempContent(Enumerable.Select<string, string>(names, <>f__am$cache1).ToArray<string>()), style);
             if ((index < 0) || (index >= names.Length))
@@ -8465,7 +8465,7 @@ This warning only shows up in development builds.";
 
         internal sealed class GUIContents
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private static GUIContent <helpIcon>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private static GUIContent <titleSettingsIcon>k__BackingField;

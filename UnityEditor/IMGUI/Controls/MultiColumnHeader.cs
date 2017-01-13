@@ -232,7 +232,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<MultiColumnHeaderState.Column, float>(null, (IntPtr) <ResizeColumnsWidthsProportionally>m__0);
+                    <>f__am$cache0 = x => x.width;
                 }
                 float num3 = Enumerable.Sum<MultiColumnHeaderState.Column>(list, <>f__am$cache0);
                 foreach (MultiColumnHeaderState.Column column2 in list)

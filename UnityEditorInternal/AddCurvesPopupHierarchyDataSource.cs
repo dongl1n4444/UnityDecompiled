@@ -83,7 +83,7 @@
                     bool flag2 = false;
                     if (!flag)
                     {
-                        flag2 = animatableBindings[i + 1].type != item.type;
+                        flag2 = !(animatableBindings[i + 1].type == item.type);
                     }
                     if (AnimationWindowUtility.IsCurveCreated(selectionItem.animationClip, item))
                     {
@@ -121,7 +121,7 @@
             <AddScriptableObjectToHierarchy>c__AnonStorey0 storey = new <AddScriptableObjectToHierarchy>c__AnonStorey0 {
                 selectionItem = selectionItem
             };
-            EditorCurveBinding[] curveBindings = Enumerable.Where<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Func<EditorCurveBinding, bool>(storey, (IntPtr) this.<>m__0)).ToArray<EditorCurveBinding>();
+            EditorCurveBinding[] curveBindings = Enumerable.Where<EditorCurveBinding>(AnimationUtility.GetScriptableObjectAnimatableBindings(scriptableObject), new Func<EditorCurveBinding, bool>(storey.<>m__0)).ToArray<EditorCurveBinding>();
             TreeViewItem item = null;
             if (curveBindings.Length > 0)
             {

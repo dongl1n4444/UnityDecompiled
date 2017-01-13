@@ -110,7 +110,7 @@
                         {
                             return false;
                         }
-                        flag = Utils.Copy(stream, stream2, 0x2000, storey.respSize, new Func<long, long, bool>(storey, (IntPtr) this.<>m__0), 100);
+                        flag = Utils.Copy(stream, stream2, 0x2000, storey.respSize, new Func<long, long, bool>(storey.<>m__0), 100);
                     }
                 }
             }

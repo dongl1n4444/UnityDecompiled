@@ -2,7 +2,7 @@
 {
     using System;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SketchUpImporter))]
+    [CustomEditor(typeof(SketchUpImporter)), CanEditMultipleObjects]
     internal class SketchUpImporterEditor : ModelImporterEditor
     {
         internal override void OnEnable()

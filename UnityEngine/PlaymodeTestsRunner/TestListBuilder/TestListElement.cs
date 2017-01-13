@@ -48,7 +48,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TestListElement, IEnumerable<TestListElement>>(null, (IntPtr) <GetFlattenedHierarchy>m__0);
+                <>f__am$cache0 = e => e.GetFlattenedHierarchy();
             }
             return Enumerable.SelectMany<TestListElement, TestListElement>(this.children, <>f__am$cache0);
         }

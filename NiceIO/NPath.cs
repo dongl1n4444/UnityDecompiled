@@ -48,7 +48,7 @@
             this._isRelative = (this._driveLetter == null) && IsRelativeFromSplitString(split);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <NPath>m__0);
+                <>f__am$cache0 = new Func<string, bool>(NPath.<NPath>m__0);
             }
             this._elements = this.ParseSplitStringIntoElements(split.Where<string>(<>f__am$cache0).ToArray<string>());
         }
@@ -83,7 +83,7 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<NPath, bool>(null, (IntPtr) <Combine>m__4);
+                <>f__am$cache4 = p => p.IsRelative;
             }
             if (!append.All<NPath>(<>f__am$cache4))
             {
@@ -91,7 +91,7 @@
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<NPath, IEnumerable<string>>(null, (IntPtr) <Combine>m__5);
+                <>f__am$cache5 = p => p._elements;
             }
             return new NPath(this.ParseSplitStringIntoElements(this._elements.Concat<string>(append.SelectMany<NPath, string>(<>f__am$cache5))), this._isRelative, this._driveLetter);
         }
@@ -100,7 +100,7 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, NPath>(null, (IntPtr) <Combine>m__3);
+                <>f__am$cache3 = a => new NPath(a);
             }
             return this.Combine(append.Select<string, NPath>(<>f__am$cache3).ToArray<NPath>());
         }
@@ -115,7 +115,7 @@
         {
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<NPath, bool>(null, (IntPtr) <Copy>m__8);
+                <>f__am$cache8 = p => true;
             }
             return this.Copy(dest, <>f__am$cache8);
         }
@@ -151,9 +151,9 @@
             storey.destination.EnsureDirectoryExists("");
             if ((fileFilter == null) && (<>f__mg$cache0 == null))
             {
-                <>f__mg$cache0 = new Func<NPath, bool>(null, (IntPtr) AlwaysTrue);
+                <>f__mg$cache0 = new Func<NPath, bool>(NPath.AlwaysTrue);
             }
-            return this.Files(recurse).Where<NPath>(<>f__mg$cache0).Select<NPath, NPath>(new Func<NPath, NPath>(storey, (IntPtr) this.<>m__0)).ToArray<NPath>();
+            return this.Files(recurse).Where<NPath>(<>f__mg$cache0).Select<NPath, NPath>(new Func<NPath, NPath>(storey.<>m__0)).ToArray<NPath>();
         }
 
         private NPath CopyWithDeterminedDestination(NPath absoluteDestination, Func<NPath, bool> fileFilter)
@@ -164,7 +164,7 @@
             }
             if (this.FileExists(""))
             {
-                if (!fileFilter.Invoke(absoluteDestination))
+                if (!fileFilter(absoluteDestination))
                 {
                     return null;
                 }
@@ -274,7 +274,7 @@
         {
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<string, NPath>(null, (IntPtr) <Directories>m__7);
+                <>f__am$cache7 = s => new NPath(s);
             }
             return Directory.GetDirectories(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories).Select<string, NPath>(<>f__am$cache7);
         }
@@ -370,7 +370,7 @@
         {
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<string, NPath>(null, (IntPtr) <Files>m__6);
+                <>f__am$cache6 = s => new NPath(s);
             }
             return Directory.GetFiles(this.ToString(), filter, !recurse ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories).Select<string, NPath>(<>f__am$cache6);
         }
@@ -378,16 +378,16 @@
         public NPath FirstParentMatching(Func<NPath, bool> predicate)
         {
             this.ThrowIfRelative();
-            NPath parent = this;
-            while (!predicate.Invoke(parent))
+            NPath arg = this;
+            while (!predicate(arg))
             {
-                if (parent.IsEmpty())
+                if (arg.IsEmpty())
                 {
                     return null;
                 }
-                parent = parent.Parent;
+                arg = arg.Parent;
             }
-            return parent;
+            return arg;
         }
 
         public override int GetHashCode()
@@ -410,7 +410,7 @@
             <HasExtension>c__AnonStorey0 storey = new <HasExtension>c__AnonStorey0 {
                 extensionWithDotLower = this.ExtensionWithDot.ToLower()
             };
-            return extensions.Any<string>(new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return extensions.Any<string>(new Func<string, bool>(storey.<>m__0));
         }
 
         private static bool HasNonDotDotLastElement(List<string> stack) => 
@@ -570,7 +570,7 @@
             List<string> stack = new List<string>();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <ParseSplitStringIntoElements>m__1);
+                <>f__am$cache1 = input => input.Length != 0;
             }
             foreach (string str in inputs.Where<string>(<>f__am$cache1))
             {

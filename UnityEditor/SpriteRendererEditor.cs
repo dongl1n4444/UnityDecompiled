@@ -4,7 +4,7 @@
     using System.Runtime.InteropServices;
     using UnityEngine;
 
-    [CustomEditor(typeof(SpriteRenderer)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(SpriteRenderer))]
     internal class SpriteRendererEditor : RendererEditorBase
     {
         private SerializedProperty m_Color;

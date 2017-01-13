@@ -33,7 +33,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<GenericParameter, bool>(null, (IntPtr) <AreFullySharableGenericParameters>m__0);
+                <>f__am$cache0 = gp => !gp.HasNotNullableValueTypeConstraint;
             }
             return genericParameters.All<GenericParameter>(<>f__am$cache0);
         }

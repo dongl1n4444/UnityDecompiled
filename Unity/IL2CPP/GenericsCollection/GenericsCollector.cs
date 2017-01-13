@@ -24,7 +24,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<AssemblyDefinition, InflatedCollectionCollector>(null, (IntPtr) CollectPerAssembly);
+                <>f__mg$cache0 = new Func<AssemblyDefinition, InflatedCollectionCollector>(GenericsCollector.CollectPerAssembly);
             }
             return MergeCollections(ParallelHelper.Select<AssemblyDefinition, InflatedCollectionCollector>(assemblies, <>f__mg$cache0, true, false));
         }

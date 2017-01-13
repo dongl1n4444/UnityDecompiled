@@ -88,7 +88,7 @@
 
         internal class AudioProfilerClipTreeViewItem : TreeViewItem
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private AudioProfilerClipInfoWrapper <info>k__BackingField;
 
             public AudioProfilerClipTreeViewItem(int id, int depth, TreeViewItem parent, string displayName, AudioProfilerClipInfoWrapper info) : base(id, depth, parent, displayName)
@@ -101,11 +101,11 @@
 
         internal class AudioProfilerClipViewColumnHeader
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float[] <columnWidths>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private float <dragWidth>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private float <minColumnWidth>k__BackingField;
             private string[] headers = new string[] { "Asset", "Load State", "Internal Load State", "Age", "Disposed", "Num Voices" };
             private AudioProfilerClipViewBackend m_Backend;

@@ -47,7 +47,7 @@
             }
             EditorGUIUtility.LockContextWidth();
             GUI.BeginGroup(group.rect);
-            return (value != 0f);
+            return !(value == 0f);
         }
 
         /// <summary>
@@ -4342,7 +4342,7 @@
         /// </summary>
         public class HorizontalScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Rect <rect>k__BackingField;
 
             /// <summary>
@@ -4387,9 +4387,9 @@
 
         internal class HorizontalScrollViewScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <handleScrollWheel>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Vector2 <scrollPosition>k__BackingField;
 
             public HorizontalScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options)
@@ -4421,7 +4421,7 @@
         {
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <handleScrollWheel>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Vector2 <scrollPosition>k__BackingField;
 
             /// <summary>
@@ -4536,7 +4536,7 @@
         /// </summary>
         public class ToggleGroupScope : GUI.Scope
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <enabled>k__BackingField;
 
             /// <summary>
@@ -4622,7 +4622,7 @@
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private bool <handleScrollWheel>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Vector2 <scrollPosition>k__BackingField;
 
             public VerticalScrollViewScope(Vector2 scrollPosition, params GUILayoutOption[] options)

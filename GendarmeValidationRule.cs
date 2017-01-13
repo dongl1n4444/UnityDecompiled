@@ -31,7 +31,7 @@ internal abstract class GendarmeValidationRule : IValidationRule
         list.AddRange(options.UserAssemblies);
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <BuildGendarmeCommandLineArguments>m__0);
+            <>f__am$cache0 = (agg, i) => agg + " " + i;
         }
         return Enumerable.Aggregate<string>(list, <>f__am$cache0);
     }

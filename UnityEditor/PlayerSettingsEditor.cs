@@ -348,7 +348,7 @@
                 prop.stringValue = (projectRelativePath == string.Empty) ? path : projectRelativePath;
                 if (onSelect != null)
                 {
-                    onSelect.Invoke();
+                    onSelect();
                 }
                 prop.serializedObject.ApplyModifiedProperties();
                 GUIUtility.ExitGUI();
@@ -393,12 +393,12 @@
                 if (this.BeginSettingsBox(3, EditorGUIUtility.TextContent("Debugging and crash reporting")))
                 {
                     GUILayout.Label(EditorGUIUtility.TextContent("Debugging"), EditorStyles.boldLabel, new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_EnableInternalProfiler, EditorGUIUtility.TextContent("Enable Internal Profiler"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_EnableInternalProfiler, EditorGUIUtility.TextContent("Enable Internal Profiler*"), new GUILayoutOption[0]);
                     EditorGUILayout.Space();
                     GUILayout.Label(EditorGUIUtility.TextContent("Crash Reporting"), EditorStyles.boldLabel, new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_ActionOnDotNetUnhandledException, EditorGUIUtility.TextContent("On .Net UnhandledException"), new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_LogObjCUncaughtExceptions, EditorGUIUtility.TextContent("Log Obj-C Uncaught Exceptions"), new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_EnableCrashReportAPI, EditorGUIUtility.TextContent("Enable CrashReport API"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_ActionOnDotNetUnhandledException, EditorGUIUtility.TextContent("On .Net UnhandledException*"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_LogObjCUncaughtExceptions, EditorGUIUtility.TextContent("Log Obj-C Uncaught Exceptions*"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_EnableCrashReportAPI, EditorGUIUtility.TextContent("Enable CrashReport API*"), new GUILayoutOption[0]);
                     EditorGUILayout.Space();
                 }
                 this.EndSettingsBox();
@@ -941,7 +941,7 @@
                 }
                 if ((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS))
                 {
-                    EditorGUILayout.PropertyField(this.m_useOnDemandResources, EditorGUIUtility.TextContent("Use on demand resources"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_useOnDemandResources, EditorGUIUtility.TextContent("Use on demand resources*"), new GUILayoutOption[0]);
                     if (this.m_useOnDemandResources.boolValue && (this.ParseIosVersion(this.m_IPhoneTargetOSVersion.stringValue).Major < 9))
                     {
                         this.m_IPhoneTargetOSVersion.stringValue = "9.0";
@@ -949,13 +949,13 @@
                 }
                 if (((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || (targetGroup == BuildTargetGroup.WSA))
                 {
-                    EditorGUILayout.PropertyField(this.m_AccelerometerFrequency, EditorGUIUtility.TextContent("Accelerometer Frequency"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_AccelerometerFrequency, EditorGUIUtility.TextContent("Accelerometer Frequency*"), new GUILayoutOption[0]);
                 }
                 if ((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS))
                 {
-                    EditorGUILayout.PropertyField(this.m_CameraUsageDescription, EditorGUIUtility.TextContent("Camera Usage Description"), new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_LocationUsageDescription, EditorGUIUtility.TextContent("Location Usage Description"), new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_MicrophoneUsageDescription, EditorGUIUtility.TextContent("Microphone Usage Description"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_CameraUsageDescription, EditorGUIUtility.TextContent("Camera Usage Description*"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_LocationUsageDescription, EditorGUIUtility.TextContent("Location Usage Description*"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_MicrophoneUsageDescription, EditorGUIUtility.TextContent("Microphone Usage Description*"), new GUILayoutOption[0]);
                 }
                 if (((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || (targetGroup == BuildTargetGroup.Android))
                 {
@@ -967,15 +967,15 @@
                     {
                         EditorGUILayout.PropertyField(this.m_PrepareIOSForRecording, EditorGUIUtility.TextContent("Prepare iOS for Recording"), new GUILayoutOption[0]);
                     }
-                    EditorGUILayout.PropertyField(this.m_UIRequiresPersistentWiFi, EditorGUIUtility.TextContent("Requires Persistent WiFi"), new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_IOSAllowHTTPDownload, EditorGUIUtility.TextContent("Allow downloads over HTTP (nonsecure)"), new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_IOSURLSchemes, EditorGUIUtility.TextContent("Supported URL schemes"), true, new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_UIRequiresPersistentWiFi, EditorGUIUtility.TextContent("Requires Persistent WiFi*"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_IOSAllowHTTPDownload, EditorGUIUtility.TextContent("Allow downloads over HTTP (nonsecure)*"), new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(this.m_IOSURLSchemes, EditorGUIUtility.TextContent("Supported URL schemes*"), true, new GUILayoutOption[0]);
                 }
             }
             using (new EditorGUI.DisabledScope(!Application.HasProLicense()))
             {
                 bool flag3 = !this.m_SubmitAnalytics.boolValue;
-                bool flag4 = EditorGUILayout.Toggle(EditorGUIUtility.TextContent("Disable HW Statistics|Disables HW Statistics (Pro Only)"), flag3, new GUILayoutOption[0]);
+                bool flag4 = EditorGUILayout.Toggle(EditorGUIUtility.TextContent("Disable HW Statistics*|Disables HW Statistics (Pro Only)"), flag3, new GUILayoutOption[0]);
                 if (flag3 != flag4)
                 {
                     this.m_SubmitAnalytics.boolValue = !flag4;
@@ -989,7 +989,7 @@
             {
                 settingsExtension.ConfigurationSectionGUI();
             }
-            EditorGUILayout.LabelField(EditorGUIUtility.TextContent("Scripting Define Symbols"), new GUILayoutOption[0]);
+            EditorGUILayout.LabelField(EditorGUIUtility.TextContent("Scripting Define Symbols*"), new GUILayoutOption[0]);
             EditorGUI.BeginChangeCheck();
             string defines = EditorGUILayout.DelayedTextField(PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup), EditorStyles.textField, new GUILayoutOption[0]);
             this.scriptingDefinesControlID = EditorGUIUtility.s_LastControlID;
@@ -1121,18 +1121,18 @@
             else
             {
                 EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(this.m_ApiCompatibilityLevel, new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_ApiCompatibilityLevel, EditorGUIUtility.TextContent("API Compatibility level*"), new GUILayoutOption[0]);
                 if (EditorGUI.EndChangeCheck())
                 {
                     PlayerSettings.SetApiCompatibilityInternal(this.m_ApiCompatibilityLevel.intValue);
                 }
             }
-            EditorGUILayout.PropertyField(this.m_BakeCollisionMeshes, EditorGUIUtility.TextContent("Prebake Collision Meshes|Bake collision data into the meshes on build time"), new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_BakeCollisionMeshes, EditorGUIUtility.TextContent("Prebake Collision Meshes*|Bake collision data into the meshes on build time"), new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_PreloadShaders, EditorGUIUtility.TextContent("Preload Shaders"), new GUILayoutOption[0]);
             EditorGUILayout.PropertyField(this.m_PreloadedAssets, EditorGUIUtility.TextContent("Preloaded Assets|Assets to load at start up in the player"), true, new GUILayoutOption[0]);
             if (((((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || ((targetGroup == BuildTargetGroup.XboxOne) || (targetGroup == BuildTargetGroup.WiiU))) || (targetGroup == BuildTargetGroup.PS4)) || (targetGroup == BuildTargetGroup.PSP2))
             {
-                EditorGUILayout.PropertyField(this.m_AotOptions, EditorGUIUtility.TextContent("AOT Compilation Options"), new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_AotOptions, EditorGUIUtility.TextContent("AOT Compilation Options*"), new GUILayoutOption[0]);
             }
             if ((((((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS)) || ((targetGroup == BuildTargetGroup.Android) || (targetGroup == BuildTargetGroup.Tizen))) || (((targetGroup == BuildTargetGroup.WebGL) || (targetGroup == BuildTargetGroup.WiiU)) || ((targetGroup == BuildTargetGroup.PSP2) || (targetGroup == BuildTargetGroup.PS4)))) || (targetGroup == BuildTargetGroup.XboxOne)) || (targetGroup == BuildTargetGroup.WSA))
             {
@@ -1148,7 +1148,7 @@
             }
             if ((targetGroup == BuildTargetGroup.iPhone) || (targetGroup == BuildTargetGroup.tvOS))
             {
-                EditorGUILayout.PropertyField(this.m_IPhoneScriptCallOptimization, EditorGUIUtility.TextContent("Script Call Optimization"), new GUILayoutOption[0]);
+                EditorGUILayout.PropertyField(this.m_IPhoneScriptCallOptimization, EditorGUIUtility.TextContent("Script Call Optimization*"), new GUILayoutOption[0]);
             }
             if (targetGroup == BuildTargetGroup.Android)
             {
@@ -1314,7 +1314,7 @@
                     ShaderUtil.RecreateSkinnedMeshResources();
                 }
             }
-            EditorGUILayout.PropertyField(this.m_GraphicsJobs, EditorGUIUtility.TextContent("Graphics Jobs (Experimental)"), new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_GraphicsJobs, EditorGUIUtility.TextContent("Graphics Jobs (Experimental)*"), new GUILayoutOption[0]);
             if (this.m_VRSettings.TargetGroupSupportsVirtualReality(targetGroup))
             {
                 this.m_VRSettings.DevicesGUI(targetGroup);
@@ -1708,7 +1708,7 @@
             public static readonly GUIContent[] kStereoRenderingMethodsAll = new GUIContent[] { new GUIContent("Multi pass (Slow)"), new GUIContent("Single Pass (Fast)"), new GUIContent("Single Pass Instanced (Fastest)") };
             public static readonly GUIContent require31 = EditorGUIUtility.TextContent("Require ES3.1");
             public static readonly GUIContent requireAEP = EditorGUIUtility.TextContent("Require ES3.1+AEP");
-            public static readonly GUIContent vertexChannelCompressionMask = EditorGUIUtility.TextContent("Vertex Compression|Select which vertex channels should be compressed. Compression can save memory and bandwidth but precision will be lower.");
+            public static readonly GUIContent vertexChannelCompressionMask = EditorGUIUtility.TextContent("Vertex Compression*|Select which vertex channels should be compressed. Compression can save memory and bandwidth but precision will be lower.");
 
             static Styles()
             {

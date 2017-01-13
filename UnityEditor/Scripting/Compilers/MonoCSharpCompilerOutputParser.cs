@@ -31,7 +31,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<string, Regex, NormalizedCompilerStatus>(null, (IntPtr) CompilerOutputParserBase.NormalizeMemberNotFoundError);
+                <>f__mg$cache0 = new Func<string, Regex, NormalizedCompilerStatus>(CompilerOutputParserBase.NormalizeMemberNotFoundError);
             }
             NormalizedCompilerStatus status = CompilerOutputParserBase.TryNormalizeCompilerStatus(match, "CS0117", sMissingMember, <>f__mg$cache0);
             if (status.code != NormalizedCompilerStatusCode.NotNormalized)
@@ -40,7 +40,7 @@
             }
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<string, Regex, NormalizedCompilerStatus>(null, (IntPtr) CompilerOutputParserBase.NormalizeSimpleUnknownTypeOfNamespaceError);
+                <>f__mg$cache1 = new Func<string, Regex, NormalizedCompilerStatus>(CompilerOutputParserBase.NormalizeSimpleUnknownTypeOfNamespaceError);
             }
             status = CompilerOutputParserBase.TryNormalizeCompilerStatus(match, "CS0246", sUnknownTypeOrNamespace, <>f__mg$cache1);
             if (status.code != NormalizedCompilerStatusCode.NotNormalized)
@@ -49,7 +49,7 @@
             }
             if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache2 = new Func<string, Regex, NormalizedCompilerStatus>(null, (IntPtr) CompilerOutputParserBase.NormalizeUnknownTypeMemberOfNamespaceError);
+                <>f__mg$cache2 = new Func<string, Regex, NormalizedCompilerStatus>(CompilerOutputParserBase.NormalizeUnknownTypeMemberOfNamespaceError);
             }
             return CompilerOutputParserBase.TryNormalizeCompilerStatus(match, "CS0234", sMissingType, <>f__mg$cache2);
         }

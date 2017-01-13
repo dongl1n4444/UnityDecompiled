@@ -142,7 +142,7 @@
                 FileUtil.CreateOrCleanDirectory(dir);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__0);
+                    <>f__am$cache0 = f => f.EndsWith("-resources.dat");
                 }
                 FileUtil.CopyDirectoryFiltered(path, dir, true, <>f__am$cache0, true);
             }
@@ -153,7 +153,7 @@
                 FileUtil.CreateOrCleanDirectory(str4);
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__1);
+                    <>f__am$cache1 = f => f.EndsWith("-metadata.dat");
                 }
                 FileUtil.CopyDirectoryFiltered(str3, str4, true, <>f__am$cache1, true);
             }
@@ -161,12 +161,12 @@
             string target = this.StagingAreaContents + "/Data/Managed";
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__2);
+                <>f__am$cache2 = f => f.EndsWith("SymbolMap");
             }
             FileUtil.CopyDirectoryFiltered(source, target, true, <>f__am$cache2, true);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, bool>(null, (IntPtr) <RenameFilesInStagingArea>m__3);
+                <>f__am$cache3 = f => true;
             }
             FileUtil.CopyDirectoryFiltered(base.StagingArea + "/Data", this.StagingAreaContents + "/Resources/Data", true, <>f__am$cache3, true);
             FileUtil.DeleteFileOrDirectory(base.StagingArea + "/Data");

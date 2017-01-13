@@ -35,11 +35,11 @@
             WriteIncludesFor(this._writer, generics);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<string, int>, int>(null, (IntPtr) <Write>m__0);
+                <>f__am$cache0 = value => value.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<string, int>, string>(null, (IntPtr) <Write>m__1);
+                <>f__am$cache1 = m => string.Concat(new object[] { m.Key, "/* ", m.Value, "*/" });
             }
             string[] values = methodTables.MethodPointers.OrderBy<KeyValuePair<string, int>, int>(<>f__am$cache0).Select<KeyValuePair<string, int>, string>(<>f__am$cache1).ToArray<string>();
             this._writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_Il2CppGenericMethodPointers", values, false);
@@ -51,7 +51,7 @@
             HashSet<string> set = new HashSet<string>();
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodReference, bool>(null, (IntPtr) <WriteIncludesFor>m__2);
+                <>f__am$cache2 = m => !m.HasGenericParameters && !m.ContainsGenericParameters();
             }
             foreach (MethodReference reference in GenericMethodsCollection.Items.Keys.Where<MethodReference>(<>f__am$cache2))
             {

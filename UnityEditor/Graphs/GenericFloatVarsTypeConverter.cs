@@ -72,7 +72,7 @@
                 target = target,
                 $this = this
             };
-            return Enumerable.Select<string, float>(this.m_VarNames, new Func<string, float>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Select<string, float>(this.m_VarNames, new Func<string, float>(storey.<>m__0));
         }
 
         private float GetVariableValue(string varName, object target)
@@ -102,7 +102,7 @@
             {
                 return false;
             }
-            return Enumerable.All<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.All<string>(strArray, new Func<string, bool>(storey.<>m__0));
         }
 
         [CompilerGenerated]

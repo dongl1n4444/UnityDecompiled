@@ -78,7 +78,7 @@
             <GetCompatiblePlugins>c__AnonStorey0 storey = new <GetCompatiblePlugins>c__AnonStorey0 {
                 buildTargetName = buildTargetName
             };
-            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(PluginImporter.GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<PluginImporter>();
+            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(PluginImporter.GetAllImporters(), new Func<PluginImporter, bool>(storey.<>m__0)).ToArray<PluginImporter>();
             Dictionary<string, List<PluginImporter>> dictionary = new Dictionary<string, List<PluginImporter>>();
             foreach (PluginImporter importer in importerArray)
             {
@@ -155,17 +155,17 @@
 
         internal class Property
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private object <defaultValue>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <key>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private GUIContent <name>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private string <platformName>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private Type <type>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private object <value>k__BackingField;
 
             internal Property(string name, string key, object defaultValue, string platformName) : this(new GUIContent(name), key, defaultValue, platformName)

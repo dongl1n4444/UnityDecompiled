@@ -161,7 +161,7 @@
         {
             NPath[] foldersToGlob = new NPath[] { LibIL2CPPDir };
             string[] append = new string[] { "extra/gc.c" };
-            return SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<LibIL2CPPCompileInstructions>m__0));
+            return (from sourceFile in SourceFilesIn(foldersToGlob).Append<NPath>(BoehmDir.Combine(append)) select this.CppCompilationInstructionFor(sourceFile, this._libil2cppCacheDirectory));
         }
 
         public override void OnBeforeLink(NPath workingDirectory, IEnumerable<NPath> objectFiles, CppToolChainContext toolChainContext, bool forceRebuild, bool verbose)
@@ -190,11 +190,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <SourceFilesIn>m__1);
+                <>f__am$cache0 = d => d.Files("*.c*", true);
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<NPath, bool>(null, (IntPtr) <SourceFilesIn>m__2);
+                <>f__am$cache1 = f => f.HasExtension(new string[] { "c", "cpp" });
             }
             return foldersToGlob.SelectMany<NPath, NPath>(<>f__am$cache0).Where<NPath>(<>f__am$cache1);
         }
@@ -355,7 +355,7 @@
                     case 0:
                     {
                         NPath[] foldersToGlob = new NPath[] { this.$this._sourceDirectory };
-                        this.$locvar0 = IL2CPPOutputBuildDescription.SourceFilesIn(foldersToGlob).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<>m__0)).GetEnumerator();
+                        this.$locvar0 = IL2CPPOutputBuildDescription.SourceFilesIn(foldersToGlob).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this.<>m__0)).GetEnumerator();
                         num = 0xfffffffd;
                         break;
                     }
@@ -904,9 +904,12 @@
                     string[] append = new string[] { "MapFileParser" };
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <get_CppCompileInstructions>m__0);
+                        <>f__am$cache0 = c => !c.Elements.Contains<string>("Tests");
                     }
-                    return CommonPaths.Il2CppRoot.Combine(append).Files("*.cpp", true).Where<NPath>(<>f__am$cache0).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__1));
+                    return (from f in CommonPaths.Il2CppRoot.Combine(append).Files("*.cpp", true).Where<NPath>(<>f__am$cache0) select new CppCompilationInstruction { 
+                        SourceFile = f,
+                        CacheDirectory = this._cacheDirectory
+                    });
                 }
             }
 

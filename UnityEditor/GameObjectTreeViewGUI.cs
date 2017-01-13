@@ -65,7 +65,7 @@
                 bool flag2 = (current.type == EventType.KeyDown) || (current.type == EventType.KeyUp);
                 if ((flag && base.m_TreeView.GetTotalRect().Contains(current.mousePosition)) || flag2)
                 {
-                    this.mouseAndKeyboardInput.Invoke();
+                    this.mouseAndKeyboardInput();
                 }
             }
         }
@@ -75,7 +75,7 @@
             float y = base.m_TreeView.state.scrollPos.y;
             if ((this.scrollPositionChanged != null) && !Mathf.Approximately(y, this.m_PrevScollPos))
             {
-                this.scrollPositionChanged.Invoke();
+                this.scrollPositionChanged();
             }
             this.m_PrevScollPos = y;
         }
@@ -85,7 +85,7 @@
             float height = base.m_TreeView.GetTotalRect().height;
             if ((this.scrollHeightChanged != null) && !Mathf.Approximately(height, this.m_PrevTotalHeight))
             {
-                this.scrollHeightChanged.Invoke();
+                this.scrollHeightChanged();
             }
             this.m_PrevTotalHeight = height;
         }
@@ -153,7 +153,7 @@
                         {
                             rowRect.y = y;
                         }
-                        GameObjectTreeViewItem item2 = Enumerable.FirstOrDefault<GameObjectTreeViewItem>(((GameObjectTreeViewDataSource) base.m_TreeView.data).sceneHeaderItems, new Func<GameObjectTreeViewItem, bool>(storey, (IntPtr) this.<>m__0));
+                        GameObjectTreeViewItem item2 = Enumerable.FirstOrDefault<GameObjectTreeViewItem>(((GameObjectTreeViewDataSource) base.m_TreeView.data).sceneHeaderItems, new Func<GameObjectTreeViewItem, bool>(storey.<>m__0));
                         if (item2 != null)
                         {
                             bool selected = base.m_TreeView.IsItemDragSelectedOrSelected(item2);

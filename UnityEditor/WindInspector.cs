@@ -5,7 +5,7 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    [CustomEditor(typeof(WindZone)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(WindZone))]
     internal class WindInspector : Editor
     {
         private SerializedProperty m_Mode;

@@ -10,7 +10,7 @@
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
     public sealed class HelpURLAttribute : Attribute
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <URL>k__BackingField;
 
         /// <summary>

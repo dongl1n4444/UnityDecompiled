@@ -92,13 +92,13 @@
             };
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstallationAtLeast>m__2);
+                <>f__am$cache2 = v => v.Major;
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstallationAtLeast>m__3);
+                <>f__am$cache3 = v => v.Minor;
             }
-            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache2).ThenByDescending<System.Version, int>(<>f__am$cache3).Where<System.Version>(new Func<System.Version, bool>(storey, (IntPtr) this.<>m__0)).FirstOrDefault<System.Version>();
+            System.Version version2 = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache2).ThenByDescending<System.Version, int>(<>f__am$cache3).Where<System.Version>(new Func<System.Version, bool>(storey.<>m__0)).FirstOrDefault<System.Version>();
             if (version2 == null)
             {
                 throw new Exception($"MSVC Installation version {storey.version.Major}.{storey.version.Minor} or later is not installed on current machine!");
@@ -110,11 +110,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstalled>m__0);
+                <>f__am$cache0 = k => k.Major;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<System.Version, int>(null, (IntPtr) <GetLatestInstalled>m__1);
+                <>f__am$cache1 = k => k.Minor;
             }
             System.Version version = _installations.Keys.OrderByDescending<System.Version, int>(<>f__am$cache0).ThenByDescending<System.Version, int>(<>f__am$cache1).FirstOrDefault<System.Version>();
             if (version == null)

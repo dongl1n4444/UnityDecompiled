@@ -43,7 +43,7 @@
                     string str = "";
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<TestResult, string>(null, (IntPtr) <Draw>m__0);
+                        <>f__am$cache0 = result => string.Concat(new object[] { result.name, " ", result.resultType, "\n", result.messages });
                     }
                     GUILayout.TextArea(str + "<b><size=18>Code-based tests</size></b>\n" + string.Join("\n", Enumerable.Select<TestResult, string>(this.m_FailedTestCollection, <>f__am$cache0).ToArray<string>()), Styles.FailedMessagesStyle, new GUILayoutOption[0]);
                     GUILayout.EndScrollView();

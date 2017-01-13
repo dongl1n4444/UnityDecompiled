@@ -35,11 +35,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<char, int, string>(null, (IntPtr) <CamelCaseToSnakeCase>m__0);
+                <>f__am$cache0 = (a, b) => (!char.IsUpper(a) || (b <= 0)) ? char.ToLower(a).ToString() : ("_" + char.ToLower(a));
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <CamelCaseToSnakeCase>m__1);
+                <>f__am$cache1 = (a, b) => a + b;
             }
             return Enumerable.Aggregate<string>(Enumerable.Select<char, string>(s, <>f__am$cache0), <>f__am$cache1);
         }
@@ -162,7 +162,7 @@
                 {
                     this.delayInSeconds = Math.Max(5, this.delayInSeconds * 2);
                     this.delayInSeconds = Math.Min(300, this.delayInSeconds);
-                    this.$this.m_AsyncUtil.Schedule(new Action(this, (IntPtr) this.<>m__2), this.delayInSeconds);
+                    this.$this.m_AsyncUtil.Schedule(() => this.$this.FetchProducts(this.callback, this.delayInSeconds), this.delayInSeconds);
                 }
             }
 

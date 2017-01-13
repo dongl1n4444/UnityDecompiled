@@ -46,7 +46,7 @@
             this._methodBody = methodDefinition.Body;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ExceptionHandler, bool>(null, (IntPtr) <ExceptionSupport>m__0);
+                <>f__am$cache0 = new Func<ExceptionHandler, bool>(ExceptionSupport.<ExceptionSupport>m__0);
             }
             if (this._methodBody.ExceptionHandlers.Any<ExceptionHandler>(<>f__am$cache0))
             {
@@ -78,26 +78,26 @@
             {
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__2);
+                    <>f__am$cache2 = h => h.TryStart.Offset;
                 }
                 storey.tryStart = handlers.Min<ExceptionHandler>(<>f__am$cache2);
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__3);
+                    <>f__am$cache3 = eh => eh.TryEnd.Offset;
                 }
-                storey.tryEnd = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).Max<ExceptionHandler>(<>f__am$cache3);
+                storey.tryEnd = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)).Max<ExceptionHandler>(<>f__am$cache3);
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<ExceptionHandler, int>(null, (IntPtr) <BuildTryCatchScopeRecursive>m__4);
+                    <>f__am$cache4 = h => h.TryStart.Offset;
                 }
-                List<ExceptionHandler> second = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1)).OrderBy<ExceptionHandler, int>(<>f__am$cache4).ToList<ExceptionHandler>();
-                HashSet<ExceptionHandler> source = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2)));
+                List<ExceptionHandler> second = handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__1)).OrderBy<ExceptionHandler, int>(<>f__am$cache4).ToList<ExceptionHandler>();
+                HashSet<ExceptionHandler> source = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__2)));
                 int num = 0;
                 while ((num < instructions.Count) && (instructions[num].Offset < storey.tryEnd))
                 {
                     num++;
                 }
-                TryCatchInfo local1 = this._infos[instructions.Single<Instruction>(new Func<Instruction, bool>(storey, (IntPtr) this.<>m__3))];
+                TryCatchInfo local1 = this._infos[instructions.Single<Instruction>(new Func<Instruction, bool>(storey.<>m__3))];
                 local1.TryStart++;
                 TryCatchInfo local2 = this._infos[instructions[num]];
                 local2.TryEnd++;
@@ -124,7 +124,7 @@
                         {
                             num3++;
                         }
-                        HashSet<ExceptionHandler> set2 = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey3, (IntPtr) this.<>m__0)));
+                        HashSet<ExceptionHandler> set2 = new HashSet<ExceptionHandler>(handlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey3.<>m__0)));
                         if (storey2.h.HandlerType == ExceptionHandlerType.Catch)
                         {
                             TryCatchInfo local3 = this._infos[instructions[num2]];
@@ -160,7 +160,7 @@
                 start = start,
                 end = end
             };
-            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExceptionHandler>();
+            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)).ToArray<ExceptionHandler>();
         }
 
         private void CollectTryCatchInfos(MethodBody body)
@@ -181,9 +181,9 @@
             };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<ExceptionHandler, int>(null, (IntPtr) <EnclosingFinallyHandlerForRange>m__1);
+                <>f__am$cache1 = h => h.TryStart.Offset;
             }
-            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)).OrderByDescending<ExceptionHandler, int>(<>f__am$cache1).FirstOrDefault<ExceptionHandler>();
+            return this._methodBody.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)).OrderByDescending<ExceptionHandler, int>(<>f__am$cache1).FirstOrDefault<ExceptionHandler>();
         }
 
         [DebuggerHidden]
@@ -460,9 +460,21 @@
                 };
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<ExceptionSupport.Node, ExceptionSupport.Node>(null, (IntPtr) <GetTargetFinallyAndFaultNodesForJump>m__1);
+                    <>f__am$cache1 = delegate (ExceptionSupport.Node n) {
+                        ExceptionSupport.Node faultNode;
+                        ExceptionSupport.Node finallyNode = n.FinallyNode;
+                        if (finallyNode != null)
+                        {
+                            faultNode = finallyNode;
+                        }
+                        else
+                        {
+                            faultNode = n.FaultNode;
+                        }
+                        return faultNode;
+                    };
                 }
-                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache1);
+                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache1);
             }
 
             internal IEnumerable<ExceptionSupport.Node> GetTargetFinallyNodesForJump(int from, int to)
@@ -473,9 +485,9 @@
                 };
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<ExceptionSupport.Node, ExceptionSupport.Node>(null, (IntPtr) <GetTargetFinallyNodesForJump>m__0);
+                    <>f__am$cache0 = n => n.FinallyNode;
                 }
-                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey, (IntPtr) this.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache0);
+                return this.Root.Walk(new Func<ExceptionSupport.Node, bool>(storey.<>m__0)).Reverse<ExceptionSupport.Node>().Select<ExceptionSupport.Node, ExceptionSupport.Node>(<>f__am$cache0);
             }
 
             private static bool IsTargetFaultNodeForJump(ExceptionSupport.Node node, int from, int to)
@@ -903,7 +915,7 @@
                     if (this.<queue>__0.Count > 0)
                     {
                         this.<current>__1 = this.<queue>__0.Dequeue();
-                        if (this.filter.Invoke(this.<current>__1))
+                        if (this.filter(this.<current>__1))
                         {
                             this.$current = this.<current>__1;
                             if (!this.$disposing)

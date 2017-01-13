@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CustomEditor(typeof(CapsuleCollider2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(CapsuleCollider2D))]
     internal class CapsuleCollider2DEditor : Collider2DEditorBase
     {
         private static readonly int k_CapsuleHash = "CapsuleCollider2DEditor".GetHashCode();

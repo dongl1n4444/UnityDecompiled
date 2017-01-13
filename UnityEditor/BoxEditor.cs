@@ -232,11 +232,11 @@
                 {
                     if (<>f__mg$cache1 == null)
                     {
-                        <>f__mg$cache1 = new Func<Vector3, float>(null, (IntPtr) DefaultMidpointGetSizeFunc);
+                        <>f__mg$cache1 = new Func<Vector3, float>(BoxEditor.DefaultMidpointGetSizeFunc);
                     }
                     getHandleSizeMethod = <>f__mg$cache1;
                 }
-                localPos = Slider1D.Do(controlID, localPos, normalized, getHandleSizeMethod.Invoke(localPos), drawMethodForHandles, SnapSettings.scale);
+                localPos = Slider1D.Do(controlID, localPos, normalized, getHandleSizeMethod(localPos), drawMethodForHandles, SnapSettings.scale);
             }
             Handles.color = color;
             return localPos;

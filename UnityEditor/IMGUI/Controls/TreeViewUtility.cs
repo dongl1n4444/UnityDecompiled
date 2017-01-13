@@ -53,7 +53,7 @@
             <FindItemInList>c__AnonStorey1<T> storey = new <FindItemInList>c__AnonStorey1<T> {
                 id = id
             };
-            return Enumerable.FirstOrDefault<T>(treeViewItems, new Func<T, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<T>(treeViewItems, new Func<T, bool>(storey.<>m__0));
         }
 
         private static TreeViewItem FindItemRecursive(int id, TreeViewItem item)
@@ -85,7 +85,7 @@
             <FindItemsInList>c__AnonStorey0 storey = new <FindItemsInList>c__AnonStorey0 {
                 itemIDs = itemIDs
             };
-            return Enumerable.Where<TreeViewItem>(treeViewItems, new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)).ToList<TreeViewItem>();
+            return Enumerable.Where<TreeViewItem>(treeViewItems, new Func<TreeViewItem, bool>(storey.<>m__0)).ToList<TreeViewItem>();
         }
 
         private static void GetExpandedRowsRecursive(TreeView treeView, TreeViewItem item, IList<TreeViewItem> expandedRows)

@@ -107,7 +107,7 @@ internal class PostProcessPhone81 : PostProcessWSA
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <GetUnityPluginOverwrites>m__0);
+            <>f__am$cache0 = a => Utility.CombinePath("Phone", a);
         }
         return Enumerable.Select<string, string>(base.GetUnityPluginOverwrites(), <>f__am$cache0);
     }

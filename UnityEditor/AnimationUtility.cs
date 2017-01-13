@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="clip"></param>
         /// <param name="includeCurveData"></param>
-        [Obsolete("GetAllCurves is deprecated. Use GetCurveBindings and GetObjectReferenceCurveBindings instead."), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("GetAllCurves is deprecated. Use GetCurveBindings and GetObjectReferenceCurveBindings instead.")]
         public static AnimationClipCurveData[] GetAllCurves(AnimationClip clip)
         {
             bool includeCurveData = true;

@@ -10,7 +10,7 @@
         private UnityEditor.RestService.HttpStatusCode <HttpStatusCode>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <RestErrorDescription>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <RestErrorString>k__BackingField;
 
         public RestRequestException()

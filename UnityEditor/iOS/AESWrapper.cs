@@ -10,7 +10,7 @@
         public static string DecryptString(byte[] cypher, string secret, string salt)
         {
             string str;
-            using (Aes aes = new AesManaged())
+            using (Aes aes = (Aes) new AesManaged())
             {
                 aes.Key = new Rfc2898DeriveBytes(secret, Encoding.UTF8.GetBytes(salt)).GetBytes(0x10);
                 using (MemoryStream stream = new MemoryStream(cypher))
@@ -34,7 +34,7 @@
         public static byte[] EncryptString(string text, string secret, string salt)
         {
             byte[] buffer;
-            using (Aes aes = new AesManaged())
+            using (Aes aes = (Aes) new AesManaged())
             {
                 aes.Key = new Rfc2898DeriveBytes(secret, Encoding.UTF8.GetBytes(salt)).GetBytes(0x10);
                 aes.GenerateIV();

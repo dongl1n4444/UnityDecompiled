@@ -104,20 +104,20 @@
                         GUIUtility.hotControl = controlID;
                         if (<>f__am$cache6 == null)
                         {
-                            <>f__am$cache6 = new Func<LODGroupGUI.LODInfo, bool>(null, (IntPtr) <DrawLODLevelSlider>m__6);
+                            <>f__am$cache6 = lod => lod.ScreenPercent > 0.5f;
                         }
                         if (<>f__am$cache7 == null)
                         {
-                            <>f__am$cache7 = new Func<LODGroupGUI.LODInfo, int>(null, (IntPtr) <DrawLODLevelSlider>m__7);
+                            <>f__am$cache7 = x => x.LODLevel;
                         }
                         IOrderedEnumerable<LODGroupGUI.LODInfo> collection = Enumerable.OrderByDescending<LODGroupGUI.LODInfo, int>(Enumerable.Where<LODGroupGUI.LODInfo>(lods, <>f__am$cache6), <>f__am$cache7);
                         if (<>f__am$cache8 == null)
                         {
-                            <>f__am$cache8 = new Func<LODGroupGUI.LODInfo, bool>(null, (IntPtr) <DrawLODLevelSlider>m__8);
+                            <>f__am$cache8 = lod => lod.ScreenPercent <= 0.5f;
                         }
                         if (<>f__am$cache9 == null)
                         {
-                            <>f__am$cache9 = new Func<LODGroupGUI.LODInfo, int>(null, (IntPtr) <DrawLODLevelSlider>m__9);
+                            <>f__am$cache9 = x => x.LODLevel;
                         }
                         IOrderedEnumerable<LODGroupGUI.LODInfo> enumerable2 = Enumerable.OrderBy<LODGroupGUI.LODInfo, int>(Enumerable.Where<LODGroupGUI.LODInfo>(lods, <>f__am$cache8), <>f__am$cache9);
                         List<LODGroupGUI.LODInfo> list = new List<LODGroupGUI.LODInfo>();
@@ -168,12 +168,12 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<SpeedTreeImporter, string>(null, (IntPtr) <GenerateMaterials>m__1);
+                <>f__am$cache1 = im => im.materialFolderPath;
             }
             string[] searchInFolders = Enumerable.Select<SpeedTreeImporter, string>(this.importers, <>f__am$cache1).ToArray<string>();
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <GenerateMaterials>m__2);
+                <>f__am$cache2 = guid => AssetDatabase.GUIDToAssetPath(guid);
             }
             string[] assets = Enumerable.Select<string, string>(AssetDatabase.FindAssets("t:Material", searchInFolders), <>f__am$cache2).ToArray<string>();
             bool flag = true;
@@ -197,7 +197,7 @@
                 $this = this,
                 lodCount = this.m_LODSettings.arraySize
             };
-            return LODGroupGUI.CreateLODInfos(storey.lodCount, area, new Func<int, string>(storey, (IntPtr) this.<>m__0), new Func<int, float>(storey, (IntPtr) this.<>m__1));
+            return LODGroupGUI.CreateLODInfos(storey.lodCount, area, new Func<int, string>(storey.<>m__0), new Func<int, float>(storey.<>m__1));
         }
 
         public bool HasSameLODConfig()
@@ -311,7 +311,7 @@
                     EditorGUILayout.PropertyField(this.m_LODSettings.GetArrayElementAtIndex(this.m_SelectedLODRange).FindPropertyRelative("enableHue"), Styles.EnableHue, new GUILayoutOption[0]);
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<SpeedTreeImporter, int>(null, (IntPtr) <ShowLODGUI>m__3);
+                        <>f__am$cache3 = im => im.bestWindQuality;
                     }
                     int num = Enumerable.Min<SpeedTreeImporter>(this.importers, <>f__am$cache3);
                     if (num > 0)
@@ -322,7 +322,7 @@
                         }
                         if (<>f__am$cache4 == null)
                         {
-                            <>f__am$cache4 = new Func<string, GUIContent>(null, (IntPtr) <ShowLODGUI>m__4);
+                            <>f__am$cache4 = s => new GUIContent(s);
                         }
                         EditorGUILayout.Popup(this.m_LODSettings.GetArrayElementAtIndex(this.m_SelectedLODRange).FindPropertyRelative("windQuality"), Enumerable.Select<string, GUIContent>(SpeedTreeImporter.windQualityNames.Take<string>(num + 1), <>f__am$cache4).ToArray<GUIContent>(), Styles.WindQuality, new GUILayoutOption[0]);
                     }
@@ -342,7 +342,7 @@
                         {
                             if (<>f__am$cache5 == null)
                             {
-                                <>f__am$cache5 = new Func<float, string>(null, (IntPtr) <ShowLODGUI>m__5);
+                                <>f__am$cache5 = height => $"{height * 100f:0}%";
                             }
                             string text = $"{Path.GetFileNameWithoutExtension(importer.assetPath)}: {string.Join(" | ", Enumerable.Select<float, string>(importer.LODHeights, <>f__am$cache5).ToArray<string>())}";
                             menu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(this.OnResetLODMenuClick), importer);
@@ -388,7 +388,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<SpeedTreeImporter, bool>(null, (IntPtr) <get_upgradeMaterials>m__0);
+                    <>f__am$cache0 = i => i.materialsShouldBeRegenerated;
                 }
                 return Enumerable.Any<SpeedTreeImporter>(this.importers, <>f__am$cache0);
             }

@@ -160,7 +160,7 @@
             <GetRowsFromIDs>c__AnonStorey0 storey = new <GetRowsFromIDs>c__AnonStorey0 {
                 ids = ids
             };
-            return Enumerable.Where<TreeViewItem>(this.GetRows(), new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0)).ToList<TreeViewItem>();
+            return Enumerable.Where<TreeViewItem>(this.GetRows(), new Func<TreeViewItem, bool>(storey.<>m__0)).ToList<TreeViewItem>();
         }
 
         public IList<int> GetSelection() => 
@@ -187,8 +187,8 @@
             this.m_TreeView.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_TreeView.selectionChangedCallback, new Action<int[]>(this.SelectionChanged));
             this.m_TreeView.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_TreeView.itemDoubleClickedCallback, new Action<int>(this.DoubleClickedItem));
             this.m_TreeView.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_TreeView.contextClickItemCallback, new Action<int>(this.ContextClickedItem));
-            this.m_TreeView.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new Action(this, (IntPtr) this.ContextClicked));
-            this.m_TreeView.expandedStateChanged = (Action) Delegate.Combine(this.m_TreeView.expandedStateChanged, new Action(this, (IntPtr) this.ExpandedStateChanged));
+            this.m_TreeView.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_TreeView.contextClickOutsideItemsCallback, new Action(this.ContextClicked));
+            this.m_TreeView.expandedStateChanged = (Action) Delegate.Combine(this.m_TreeView.expandedStateChanged, new Action(this.ExpandedStateChanged));
             this.m_TreeViewKeyControlID = GUIUtility.GetPermanentControlID();
         }
 
@@ -517,7 +517,7 @@
                 MethodInfo method = type.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
                 if (method != null)
                 {
-                    return (method.GetBaseDefinition().DeclaringType != method.DeclaringType);
+                    return !(method.GetBaseDefinition().DeclaringType == method.DeclaringType);
                 }
                 Debug.LogError("IsOverridden: method name not found: " + methodName + " (check spelling against method declaration)");
                 return false;

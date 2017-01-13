@@ -126,7 +126,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<ExportPackageItem, bool>(null, (IntPtr) <GetAssetItemsForExport>m__0);
+                    <>f__am$cache0 = asset => InternalEditorUtility.IsScriptOrAssembly(asset.assetPath);
                 }
                 if (Enumerable.Any<ExportPackageItem>(itemArray, <>f__am$cache0))
                 {
@@ -135,7 +135,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<ExportPackageItem, bool>(null, (IntPtr) <GetAssetItemsForExport>m__1);
+                <>f__am$cache1 = val => val.assetPath != "Assets";
             }
             return Enumerable.Where<ExportPackageItem>(itemArray, <>f__am$cache1).ToArray<ExportPackageItem>();
         }

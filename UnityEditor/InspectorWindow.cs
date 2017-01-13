@@ -73,7 +73,7 @@
                 {
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<Object, GameObject>(null, (IntPtr) <AddComponentButton>m__2);
+                        <>f__am$cache2 = o => (GameObject) o;
                     }
                     if (AddComponentWindow.Show(position, Enumerable.Select<Object, GameObject>(firstNonImportInspectorEditor.targets, <>f__am$cache2).ToArray<GameObject>()))
                     {
@@ -177,7 +177,7 @@
             else
             {
                 storey.sharedTracker = ActiveEditorTracker.sharedTracker;
-                bool flag = Enumerable.Any<InspectorWindow>(m_AllInspectors, new Func<InspectorWindow, bool>(storey, (IntPtr) this.<>m__0));
+                bool flag = Enumerable.Any<InspectorWindow>(m_AllInspectors, new Func<InspectorWindow, bool>(storey.<>m__0));
                 this.m_Tracker = !flag ? ActiveEditorTracker.sharedTracker : new ActiveEditorTracker();
                 this.m_Tracker.inspectorMode = this.m_InspectorMode;
                 this.m_Tracker.RebuildIfNecessary();
@@ -468,7 +468,7 @@
             bool flag2 = inspectedAssets.Length > 0;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <DrawPreviewAndLabels>m__0);
+                <>f__am$cache0 = a => !(a is MonoScript) && AssetDatabase.IsMainAsset(a);
             }
             bool flag3 = Enumerable.Any<Object>(inspectedAssets, <>f__am$cache0);
             if (flag || flag2)
@@ -549,8 +549,8 @@
                 }
                 else
                 {
-                    float a = ((rect3.xMax - lastRect.xMin) - 3f) - 20f;
-                    float width = Mathf.Min(a, styles.preToolbar2.CalcSize(preTitle).x);
+                    float num3 = ((rect3.xMax - lastRect.xMin) - 3f) - 20f;
+                    float width = Mathf.Min(num3, styles.preToolbar2.CalcSize(preTitle).x);
                     Rect rect5 = new Rect(lastRect.x, lastRect.y, width, lastRect.height);
                     rect3.xMin = rect5.xMax + 3f;
                     GUI.Label(rect5, preTitle, styles.preToolbar2);
@@ -597,7 +597,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<Object, bool>(null, (IntPtr) <DrawPreviewAndLabels>m__1);
+                            <>f__am$cache1 = a => EditorUtility.IsPersistent(a) && !Editor.IsAppropriateFileOpenForEdit(a);
                         }
                         using (new EditorGUI.DisabledScope(Enumerable.Any<Object>(inspectedAssets, <>f__am$cache1)))
                         {

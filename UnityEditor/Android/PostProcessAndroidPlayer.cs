@@ -9,6 +9,18 @@
     {
         private static PostProcessorContext _context;
 
+        internal static void Launch(BuildTarget target, string installPath)
+        {
+            if (target != BuildTarget.Android)
+            {
+                CancelPostProcess.AbortBuild("Build failure", "Internal error: Target platform mismatch");
+            }
+            PostProcessRunner runner = new PostProcessRunner();
+            _context.Set<string>("InstallPath", installPath);
+            runner.AddNextTask(new PublishPackage());
+            runner.RunAllTasks(_context);
+        }
+
         internal static void PostProcess(BuildTarget target, string stagingAreaData, string stagingArea, string playerPackage, string installPath, string companyName, string productName, BuildOptions options, RuntimeClassRegistry usedClassRegistry)
         {
             if (target != BuildTarget.Android)
@@ -59,14 +71,11 @@
             }
             runner.AddNextTask(new AddAndroidLibraries());
             runner.AddNextTask(new GenerateManifest());
-            if (!flag3)
+            runner.AddNextTask(new BuildResources());
+            if (!flag3 && !flag2)
             {
-                runner.AddNextTask(new BuildResources());
-                if (!flag2)
-                {
-                    runner.AddNextTask(new CheckLibrariesConflict());
-                    runner.AddNextTask(new RunDex());
-                }
+                runner.AddNextTask(new CheckLibrariesConflict());
+                runner.AddNextTask(new RunDex());
             }
             runner.AddNextTask(new RunIl2Cpp());
             runner.AddNextTask(new StreamingAssets());
@@ -86,7 +95,7 @@
                 {
                     runner.AddNextTask(new BuildAPK());
                 }
-                runner.AddNextTask(new PublishPackage());
+                runner.AddNextTask(new MoveFinalPackage());
             }
             runner.RunAllTasks(_context);
         }

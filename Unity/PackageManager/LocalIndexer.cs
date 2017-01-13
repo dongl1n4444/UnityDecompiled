@@ -51,7 +51,7 @@
                 List<IvyModule> list = new List<IvyModule>();
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Assembly, bool>(null, (IntPtr) <LocalIndexer>m__0);
+                    <>f__am$cache0 = new Func<Assembly, bool>(LocalIndexer.<LocalIndexer>m__0);
                 }
                 foreach (Assembly assembly in Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0))
                 {
@@ -95,9 +95,9 @@
             {
                 return false;
             }
-            storey.task1 = new Task(null, new Func<Task, bool>(storey, (IntPtr) this.<>m__0), null);
+            storey.task1 = new Task(null, new Func<Task, bool>(storey.<>m__0), null);
             storey.task1.Name = "Locator Task";
-            Task task = new Task(null, new Func<Task, bool>(storey, (IntPtr) this.<>m__1), null) {
+            Task task = new Task(null, new Func<Task, bool>(storey.<>m__1), null) {
                 Name = "Package List Task"
             };
             base.HookupChildTask(storey.task1);
@@ -117,7 +117,7 @@
                     <>f__ref$1 = this,
                     scanDone = new ManualResetEvent(false)
                 };
-                Locator.Scan(Path.Combine(Settings.editorInstallPath, "PackageManager"), Settings.unityVersionPath, new Func<bool>(storey, (IntPtr) this.<>m__0), new Action(storey, (IntPtr) this.<>m__1));
+                Locator.Scan(Path.Combine(Settings.editorInstallPath, "PackageManager"), Settings.unityVersionPath, new Func<bool>(storey.<>m__0), new Action(storey.<>m__1));
                 while (!storey.scanDone.WaitOne(10))
                 {
                     this.$this.UpdateProgress(0f);

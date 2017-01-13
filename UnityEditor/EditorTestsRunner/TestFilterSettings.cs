@@ -46,7 +46,7 @@
             {
                 return new string[0];
             }
-            return Enumerable.Where<string>(this.availableCategories, new Func<string, int, bool>(this, (IntPtr) this.<GetSelectedCategories>m__0)).ToArray<string>();
+            return Enumerable.Where<string>(this.availableCategories, (Func<string, int, bool>) ((c, i) => ((this.selectedCategory & (((int) 1) << i)) != 0))).ToArray<string>();
         }
 
         public void OnGUI()

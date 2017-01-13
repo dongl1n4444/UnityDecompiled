@@ -390,7 +390,7 @@
                 {
                     Rect rect3 = rect;
                     rect3.width = this.k_IconWidth + this.iconTotalPadding;
-                    this.iconOverlayGUI.Invoke(item, rect3);
+                    this.iconOverlayGUI(item, rect3);
                 }
             }
         }

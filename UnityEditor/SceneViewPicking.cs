@@ -21,7 +21,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(null, (IntPtr) ResetHashes);
+                <>f__mg$cache0 = new Action(SceneViewPicking.ResetHashes);
             }
             Selection.selectionChanged = (Action) Delegate.Combine(Selection.selectionChanged, <>f__mg$cache0);
         }

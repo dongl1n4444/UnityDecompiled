@@ -19,7 +19,7 @@
         private static Func<ChangedCurve, int> <>f__am$cache2;
         [CompilerGenerated]
         private static Func<string, string> <>f__am$cache3;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <editingPoints>k__BackingField;
         public CallbackFunction curvesUpdated;
         private string focusedPointField;
@@ -1247,21 +1247,21 @@
                 vector.y = Mathf.Clamp(vector.y, rect.yMin, rect.yMax - 36f);
                 EditorGUI.BeginChangeCheck();
                 GUI.SetNextControlName("pointTimeField");
-                float x = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, new Func<CurveSelection, float>(this, (IntPtr) this.<EditSelectedPoints>m__8), new Func<Rect, int, float, float>(this, (IntPtr) this.<EditSelectedPoints>m__9), "time");
+                float num = this.PointFieldForSelection(new Rect(vector.x, vector.y, 80f, 18f), 1, x => this.GetKeyframeFromSelection(x).time, (r, id, time) => base.TimeField(r, id, time, this.invSnap, this.timeFormat), "time");
                 if (EditorGUI.EndChangeCheck())
                 {
                     this.timeWasEdited = true;
                 }
                 EditorGUI.BeginChangeCheck();
                 GUI.SetNextControlName("pointValueField");
-                float y = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, new Func<CurveSelection, float>(this, (IntPtr) this.<EditSelectedPoints>m__A), new Func<Rect, int, float, float>(this, (IntPtr) this.<EditSelectedPoints>m__B), "value");
+                float y = this.PointFieldForSelection(new Rect(vector.x, vector.y + 18f, 80f, 18f), 2, x => this.GetKeyframeFromSelection(x).value, (r, id, value) => base.ValueField(r, id, value), "value");
                 if (EditorGUI.EndChangeCheck())
                 {
                     this.valueWasEdited = true;
                 }
                 if (this.timeWasEdited || this.valueWasEdited)
                 {
-                    this.SetSelectedKeyPositions(new Vector2(x, y), this.timeWasEdited, this.valueWasEdited);
+                    this.SetSelectedKeyPositions(new Vector2(num, y), this.timeWasEdited, this.valueWasEdited);
                 }
                 if (flag)
                 {
@@ -2179,9 +2179,9 @@
                 $this = this
             };
             float num = 0f;
-            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(ya, (IntPtr) this.<>m__0)))
+            if (Enumerable.All<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(ya.<>m__0)))
             {
-                num = ya.memberGetter.Invoke(this.selectedCurves[0]);
+                num = ya.memberGetter(this.selectedCurves[0]);
             }
             else
             {
@@ -2195,7 +2195,7 @@
             Color color = GUI.color;
             GUI.color = Color.white;
             GUI.Label(position, label, style);
-            float num3 = memberSetter.Invoke(rect, num2, num);
+            float num3 = memberSetter(rect, num2, num);
             GUI.color = color;
             EditorGUI.showMixedValue = false;
             return num3;
@@ -2458,7 +2458,7 @@
                                         };
                                         while (storey4.keyIndex <= a)
                                         {
-                                            if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey4, (IntPtr) this.<>m__0)))
+                                            if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey4.<>m__0)))
                                             {
                                                 CurveSelection curveSelection = new CurveSelection(storey3.selectedPoint.curveID, storey4.keyIndex);
                                                 this.AddSelection(curveSelection);
@@ -2522,7 +2522,7 @@
                             };
                             while (storey2.keyIndex < curveFromSelection.keys.Length)
                             {
-                                if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey2, (IntPtr) this.<>m__0)))
+                                if (!Enumerable.Any<CurveSelection>(this.selectedCurves, new Func<CurveSelection, bool>(storey2.<>m__0)))
                                 {
                                     CurveSelection selection = new CurveSelection(storey.selectedPoint.curveID, storey2.keyIndex);
                                     this.AddSelection(selection);
@@ -2720,10 +2720,10 @@
 
         private void StartEditingSelectedPoints()
         {
-            float num = Enumerable.Min<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__4));
-            float num2 = Enumerable.Max<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__5));
-            float num3 = Enumerable.Min<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__6));
-            float num4 = Enumerable.Max<CurveSelection>(this.selectedCurves, new Func<CurveSelection, float>(this, (IntPtr) this.<StartEditingSelectedPoints>m__7));
+            float num = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
+            float num2 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).time));
+            float num3 = Enumerable.Min<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
+            float num4 = Enumerable.Max<CurveSelection>(this.selectedCurves, (Func<CurveSelection, float>) (x => this.GetKeyframeFromSelection(x).value));
             Vector2 fieldPosition = (Vector2) (new Vector2(num + num2, num3 + num4) * 0.5f);
             this.StartEditingSelectedPoints(fieldPosition);
         }
@@ -2752,7 +2752,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<CurveWrapper, int>(null, (IntPtr) <SyncDrawOrder>m__0);
+                    <>f__am$cache0 = cw => cw.id;
                 }
                 this.m_DrawOrder = Enumerable.Select<CurveWrapper, int>(this.m_AnimationCurves, <>f__am$cache0).ToList<int>();
             }
@@ -2795,7 +2795,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<CurveWrapper, int>(null, (IntPtr) <SyncDrawOrder>m__1);
+                            <>f__am$cache1 = cw => cw.id;
                         }
                         this.m_DrawOrder = Enumerable.Select<CurveWrapper, int>(this.m_AnimationCurves, <>f__am$cache1).ToList<int>();
                     }
@@ -2939,7 +2939,7 @@
         {
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<ChangedCurve, int>(null, (IntPtr) <UpdateCurves>m__2);
+                <>f__am$cache2 = curve => curve.curveId;
             }
             this.UpdateCurves(new List<int>(Enumerable.Select<ChangedCurve, int>(changedCurves, <>f__am$cache2)), undoText);
         }
@@ -3076,7 +3076,7 @@
             Enum[] array = Enum.GetValues(typeof(WrapModeFixedCurve)).Cast<Enum>().ToArray<Enum>();
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <WrapModeIconPopup>m__C);
+                <>f__am$cache3 = x => ObjectNames.NicifyVariableName(x);
             }
             string[] texts = Enumerable.Select<string, string>(Enum.GetNames(typeof(WrapModeFixedCurve)), <>f__am$cache3).ToArray<string>();
             int index = Array.IndexOf<Enum>(array, curve);
@@ -3280,7 +3280,7 @@
             internal Func<CurveSelection, float> memberGetter;
 
             internal bool <>m__0(CurveSelection x) => 
-                (this.memberGetter.Invoke(x) == this.memberGetter.Invoke(this.$this.selectedCurves[0]));
+                (this.memberGetter(x) == this.memberGetter(this.$this.selectedCurves[0]));
         }
 
         [CompilerGenerated]

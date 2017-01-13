@@ -64,7 +64,7 @@
                 (!this.stitchEdges ? 0f : 1f);
             set
             {
-                this.stitchEdges = value != 0f;
+                this.stitchEdges = !(value == 0f);
             }
         }
 

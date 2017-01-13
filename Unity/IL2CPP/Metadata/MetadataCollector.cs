@@ -203,7 +203,7 @@
                     this._genericParameterConstraintsStart.Add(genericParameter, this._genericParameterConstraints.Count);
                     if (<>f__am$cache1D == null)
                     {
-                        <>f__am$cache1D = new Func<TypeReference, int, int>(null, (IntPtr) <AddGenericParameters>m__26);
+                        <>f__am$cache1D = (a, b) => Il2CppTypeCollector.GetOrCreateIndex(a, b);
                     }
                     this._genericParameterConstraints.AddRange(genericParameter.Constraints.Select<TypeReference, int>(<>f__am$cache1D));
                 }
@@ -228,7 +228,7 @@
                         this._rgctxEntriesStart.Add(method, this._rgctxEntries.Count);
                         if (<>f__mg$cache1 == null)
                         {
-                            <>f__mg$cache1 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(null, (IntPtr) CreateRGCTXEntry);
+                            <>f__mg$cache1 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(MetadataCollector.CreateRGCTXEntry);
                         }
                         this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, KeyValuePair<int, uint>>(<>f__mg$cache1));
                     }
@@ -267,7 +267,7 @@
                 else
                 {
                     this._firstReferencedAssemblyIndexCache.Add(definition, new Tuple<int, int>(this._referencedAssemblyTable.Count, source.Count));
-                    this._referencedAssemblyTable.AddRange(source.Distinct<AssemblyDefinition>().Select<AssemblyDefinition, int>(new Func<AssemblyDefinition, int>(this, (IntPtr) this.GetAssemblyIndex)));
+                    this._referencedAssemblyTable.AddRange(source.Distinct<AssemblyDefinition>().Select<AssemblyDefinition, int>(new Func<AssemblyDefinition, int>(this.GetAssemblyIndex)));
                 }
             }
         }
@@ -298,7 +298,7 @@
                 }
                 if (<>f__am$cache1B == null)
                 {
-                    <>f__am$cache1B = new Func<MethodDefinition, bool>(null, (IntPtr) <AddTypeInfos>m__24);
+                    <>f__am$cache1B = m => !m.IsStripped();
                 }
                 this.AddMethods(type.Methods.Where<MethodDefinition>(<>f__am$cache1B));
                 this.AddFields(type.Fields, MarshalType.PInvoke);
@@ -312,14 +312,14 @@
                 {
                     this.AddTypeInfos(type.NestedTypes);
                     this._nestedTypesStart.Add(type, this._nestedTypes.Count);
-                    this._nestedTypes.AddRange(type.NestedTypes.Select<TypeDefinition, int>(new Func<TypeDefinition, int>(this, (IntPtr) this.GetTypeInfoIndex)));
+                    this._nestedTypes.AddRange(type.NestedTypes.Select<TypeDefinition, int>(new Func<TypeDefinition, int>(this.GetTypeInfoIndex)));
                 }
                 if (type.HasInterfaces)
                 {
                     this._interfacesStart.Add(type, this._interfaces.Count);
                     if (<>f__am$cache1C == null)
                     {
-                        <>f__am$cache1C = new Func<InterfaceImplementation, int, int>(null, (IntPtr) <AddTypeInfos>m__25);
+                        <>f__am$cache1C = (a, b) => Il2CppTypeCollector.GetOrCreateIndex(a.InterfaceType, b);
                     }
                     this._interfaces.AddRange(type.Interfaces.Select<InterfaceImplementation, int>(<>f__am$cache1C));
                 }
@@ -334,7 +334,7 @@
                         this._rgctxEntriesStart.Add(type, this._rgctxEntries.Count);
                         if (<>f__mg$cache0 == null)
                         {
-                            <>f__mg$cache0 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(null, (IntPtr) CreateRGCTXEntry);
+                            <>f__mg$cache0 = new Func<RuntimeGenericData, KeyValuePair<int, uint>>(MetadataCollector.CreateRGCTXEntry);
                         }
                         this._rgctxEntries.AddRange(source.Select<RuntimeGenericData, KeyValuePair<int, uint>>(<>f__mg$cache0));
                     }
@@ -394,11 +394,11 @@
                 {
                     VTable table = new VTableBuilder().VTableFor(definition, null);
                     this._vtableMethodsStart.Add(definition, this._vtableMethods.Count);
-                    this._vtableMethods.AddRange(table.Slots.Select<MethodReference, uint>(new Func<MethodReference, uint>(this, (IntPtr) this.<AddVTables>m__3)));
+                    this._vtableMethods.AddRange(from m in table.Slots select MethodReferenceCollector.GetOrCreateIndex(m, this));
                     this._interfaceOffsetsStart.Add(definition, this._interfaceOffsets.Count);
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<KeyValuePair<TypeReference, int>, KeyValuePair<int, int>>(null, (IntPtr) <AddVTables>m__4);
+                        <>f__am$cache0 = pair => new KeyValuePair<int, int>(Il2CppTypeCollector.GetOrCreateIndex(pair.Key, 0), pair.Value);
                     }
                     this._interfaceOffsets.AddRange(table.InterfaceOffsets.Select<KeyValuePair<TypeReference, int>, KeyValuePair<int, int>>(<>f__am$cache0));
                 }
@@ -452,11 +452,11 @@
         {
             if (<>f__am$cache17 == null)
             {
-                <>f__am$cache17 = new Func<KeyValuePair<AssemblyDefinition, int>, int>(null, (IntPtr) <GetAssemblies>m__20);
+                <>f__am$cache17 = v => v.Value;
             }
             if (<>f__am$cache18 == null)
             {
-                <>f__am$cache18 = new Func<KeyValuePair<AssemblyDefinition, int>, AssemblyDefinition>(null, (IntPtr) <GetAssemblies>m__21);
+                <>f__am$cache18 = v => v.Key;
             }
             return this._assemblies.OrderBy<KeyValuePair<AssemblyDefinition, int>, int>(<>f__am$cache17).Select<KeyValuePair<AssemblyDefinition, int>, AssemblyDefinition>(<>f__am$cache18).ToArray<AssemblyDefinition>().AsReadOnlyPortable<AssemblyDefinition>();
         }
@@ -474,11 +474,11 @@
         {
             if (<>f__am$cacheF == null)
             {
-                <>f__am$cacheF = new Func<KeyValuePair<EventDefinition, int>, int>(null, (IntPtr) <GetEvents>m__18);
+                <>f__am$cacheF = v => v.Value;
             }
             if (<>f__am$cache10 == null)
             {
-                <>f__am$cache10 = new Func<KeyValuePair<EventDefinition, int>, EventDefinition>(null, (IntPtr) <GetEvents>m__19);
+                <>f__am$cache10 = v => v.Key;
             }
             return this._events.OrderBy<KeyValuePair<EventDefinition, int>, int>(<>f__am$cacheF).Select<KeyValuePair<EventDefinition, int>, EventDefinition>(<>f__am$cache10).ToArray<EventDefinition>().AsReadOnlyPortable<EventDefinition>();
         }
@@ -487,11 +487,11 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<KeyValuePair<FieldDefaultValue, int>, int>(null, (IntPtr) <GetFieldDefaultValues>m__C);
+                <>f__am$cache3 = v => v.Value;
             }
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<KeyValuePair<FieldDefaultValue, int>, FieldDefaultValue>(null, (IntPtr) <GetFieldDefaultValues>m__D);
+                <>f__am$cache4 = v => v.Key;
             }
             return this._fieldDefaultValues.OrderBy<KeyValuePair<FieldDefaultValue, int>, int>(<>f__am$cache3).Select<KeyValuePair<FieldDefaultValue, int>, FieldDefaultValue>(<>f__am$cache4).ToArray<FieldDefaultValue>().AsReadOnlyPortable<FieldDefaultValue>();
         }
@@ -506,11 +506,11 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<FieldDefinition, int>, int>(null, (IntPtr) <GetFields>m__A);
+                <>f__am$cache1 = v => v.Value;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<KeyValuePair<FieldDefinition, int>, FieldDefinition>(null, (IntPtr) <GetFields>m__B);
+                <>f__am$cache2 = v => v.Key;
             }
             return this._fields.OrderBy<KeyValuePair<FieldDefinition, int>, int>(<>f__am$cache1).Select<KeyValuePair<FieldDefinition, int>, FieldDefinition>(<>f__am$cache2).ToArray<FieldDefinition>().AsReadOnlyPortable<FieldDefinition>();
         }
@@ -518,8 +518,8 @@
         public int GetFirstIndexInReferencedAssemblyTableForAssembly(AssemblyDefinition assembly, out int length)
         {
             Tuple<int, int> tuple = this._firstReferencedAssemblyIndexCache[assembly];
-            length = tuple.get_Item2();
-            return tuple.get_Item1();
+            length = tuple.Item2;
+            return tuple.Item1;
         }
 
         public int GetGenericContainerIndex(IGenericParameterProvider container)
@@ -536,11 +536,11 @@
         {
             if (<>f__am$cache11 == null)
             {
-                <>f__am$cache11 = new Func<KeyValuePair<IGenericParameterProvider, int>, int>(null, (IntPtr) <GetGenericContainers>m__1A);
+                <>f__am$cache11 = v => v.Value;
             }
             if (<>f__am$cache12 == null)
             {
-                <>f__am$cache12 = new Func<KeyValuePair<IGenericParameterProvider, int>, IGenericParameterProvider>(null, (IntPtr) <GetGenericContainers>m__1B);
+                <>f__am$cache12 = v => v.Key;
             }
             return this._genericContainers.OrderBy<KeyValuePair<IGenericParameterProvider, int>, int>(<>f__am$cache11).Select<KeyValuePair<IGenericParameterProvider, int>, IGenericParameterProvider>(<>f__am$cache12).ToArray<IGenericParameterProvider>().AsReadOnlyPortable<IGenericParameterProvider>();
         }
@@ -558,11 +558,11 @@
         {
             if (<>f__am$cache13 == null)
             {
-                <>f__am$cache13 = new Func<KeyValuePair<GenericParameter, int>, int>(null, (IntPtr) <GetGenericParameters>m__1C);
+                <>f__am$cache13 = v => v.Value;
             }
             if (<>f__am$cache14 == null)
             {
-                <>f__am$cache14 = new Func<KeyValuePair<GenericParameter, int>, GenericParameter>(null, (IntPtr) <GetGenericParameters>m__1D);
+                <>f__am$cache14 = v => v.Key;
             }
             return this._genericParameters.OrderBy<KeyValuePair<GenericParameter, int>, int>(<>f__am$cache13).Select<KeyValuePair<GenericParameter, int>, GenericParameter>(<>f__am$cache14).ToArray<GenericParameter>().AsReadOnlyPortable<GenericParameter>();
         }
@@ -596,11 +596,11 @@
         {
             if (<>f__am$cache9 == null)
             {
-                <>f__am$cache9 = new Func<KeyValuePair<MethodDefinition, int>, int>(null, (IntPtr) <GetMethods>m__12);
+                <>f__am$cache9 = v => v.Value;
             }
             if (<>f__am$cacheA == null)
             {
-                <>f__am$cacheA = new Func<KeyValuePair<MethodDefinition, int>, MethodDefinition>(null, (IntPtr) <GetMethods>m__13);
+                <>f__am$cacheA = v => v.Key;
             }
             return this._methods.OrderBy<KeyValuePair<MethodDefinition, int>, int>(<>f__am$cache9).Select<KeyValuePair<MethodDefinition, int>, MethodDefinition>(<>f__am$cacheA).ToArray<MethodDefinition>().AsReadOnlyPortable<MethodDefinition>();
         }
@@ -612,11 +612,11 @@
         {
             if (<>f__am$cache15 == null)
             {
-                <>f__am$cache15 = new Func<KeyValuePair<ModuleDefinition, int>, int>(null, (IntPtr) <GetModules>m__1E);
+                <>f__am$cache15 = v => v.Value;
             }
             if (<>f__am$cache16 == null)
             {
-                <>f__am$cache16 = new Func<KeyValuePair<ModuleDefinition, int>, ModuleDefinition>(null, (IntPtr) <GetModules>m__1F);
+                <>f__am$cache16 = v => v.Key;
             }
             return this._modules.OrderBy<KeyValuePair<ModuleDefinition, int>, int>(<>f__am$cache15).Select<KeyValuePair<ModuleDefinition, int>, ModuleDefinition>(<>f__am$cache16).ToArray<ModuleDefinition>().AsReadOnlyPortable<ModuleDefinition>();
         }
@@ -631,11 +631,11 @@
         {
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<KeyValuePair<ParameterDefaultValue, int>, int>(null, (IntPtr) <GetParameterDefaultValues>m__E);
+                <>f__am$cache5 = v => v.Value;
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<KeyValuePair<ParameterDefaultValue, int>, ParameterDefaultValue>(null, (IntPtr) <GetParameterDefaultValues>m__F);
+                <>f__am$cache6 = v => v.Key;
             }
             return this._parameterDefaultValues.OrderBy<KeyValuePair<ParameterDefaultValue, int>, int>(<>f__am$cache5).Select<KeyValuePair<ParameterDefaultValue, int>, ParameterDefaultValue>(<>f__am$cache6).ToArray<ParameterDefaultValue>().AsReadOnlyPortable<ParameterDefaultValue>();
         }
@@ -647,11 +647,11 @@
         {
             if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheB = new Func<KeyValuePair<ParameterDefinition, int>, int>(null, (IntPtr) <GetParameters>m__14);
+                <>f__am$cacheB = v => v.Value;
             }
             if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheC = new Func<KeyValuePair<ParameterDefinition, int>, ParameterDefinition>(null, (IntPtr) <GetParameters>m__15);
+                <>f__am$cacheC = v => v.Key;
             }
             return this._parameters.OrderBy<KeyValuePair<ParameterDefinition, int>, int>(<>f__am$cacheB).Select<KeyValuePair<ParameterDefinition, int>, ParameterDefinition>(<>f__am$cacheC).ToArray<ParameterDefinition>().AsReadOnlyPortable<ParameterDefinition>();
         }
@@ -660,11 +660,11 @@
         {
             if (<>f__am$cacheD == null)
             {
-                <>f__am$cacheD = new Func<KeyValuePair<PropertyDefinition, int>, int>(null, (IntPtr) <GetProperties>m__16);
+                <>f__am$cacheD = v => v.Value;
             }
             if (<>f__am$cacheE == null)
             {
-                <>f__am$cacheE = new Func<KeyValuePair<PropertyDefinition, int>, PropertyDefinition>(null, (IntPtr) <GetProperties>m__17);
+                <>f__am$cacheE = v => v.Key;
             }
             return this._properties.OrderBy<KeyValuePair<PropertyDefinition, int>, int>(<>f__am$cacheD).Select<KeyValuePair<PropertyDefinition, int>, PropertyDefinition>(<>f__am$cacheE).ToArray<PropertyDefinition>().AsReadOnlyPortable<PropertyDefinition>();
         }
@@ -711,11 +711,11 @@
         {
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<KeyValuePair<TypeDefinition, int>, int>(null, (IntPtr) <GetTypeInfos>m__10);
+                <>f__am$cache7 = v => v.Value;
             }
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetTypeInfos>m__11);
+                <>f__am$cache8 = v => v.Key;
             }
             return this._typeInfos.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache7).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache8).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
@@ -724,11 +724,11 @@
         {
             if (<>f__am$cache19 == null)
             {
-                <>f__am$cache19 = new Func<KeyValuePair<TypeDefinition, int>, int>(null, (IntPtr) <GetTypesWithGuids>m__22);
+                <>f__am$cache19 = kv => kv.Value;
             }
             if (<>f__am$cache1A == null)
             {
-                <>f__am$cache1A = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetTypesWithGuids>m__23);
+                <>f__am$cache1A = kv => kv.Key;
             }
             return this._guids.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache19).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache1A).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }

@@ -159,17 +159,17 @@
                             MethodDefinition[] definitionArray1 = new MethodDefinition[3];
                             if (<>f__am$cache2 == null)
                             {
-                                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__2);
+                                <>f__am$cache2 = m => m.Name == "Invoke";
                             }
                             definitionArray1[0] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache2);
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__3);
+                                <>f__am$cache3 = m => m.Name == "BeginInvoke";
                             }
                             definitionArray1[1] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache3);
                             if (<>f__am$cache4 == null)
                             {
-                                <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__4);
+                                <>f__am$cache4 = m => m.Name == "EndInvoke";
                             }
                             definitionArray1[2] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache4);
                             definitionArray = definitionArray1;
@@ -179,7 +179,7 @@
                             MethodDefinition[] definitionArray3 = new MethodDefinition[1];
                             if (<>f__am$cache5 == null)
                             {
-                                <>f__am$cache5 = new Func<MethodDefinition, bool>(null, (IntPtr) <CollectIncludes>m__5);
+                                <>f__am$cache5 = m => m.Name == "Invoke";
                             }
                             definitionArray3[0] = typeDefinition.Methods.Single<MethodDefinition>(<>f__am$cache5);
                             definitionArray = definitionArray3;
@@ -292,7 +292,7 @@
             };
             List<FieldWriteInstruction> list = new List<FieldWriteInstruction>();
             Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
-            foreach (FieldDefinition definition in typeDefinition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (FieldDefinition definition in typeDefinition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0)))
             {
                 string str;
                 FieldReference reference;
@@ -693,7 +693,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteTypeDefinitionFor>m__0);
+                    <>f__am$cache0 = f => f.IsNormalStatic();
                 }
                 if (typeDefinition.Fields.Any<FieldDefinition>(<>f__am$cache0) || typeDefinition.StoresNonFieldsInStaticFields())
                 {
@@ -706,7 +706,7 @@
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteTypeDefinitionFor>m__1);
+                    <>f__am$cache1 = f => f.IsThreadStatic();
                 }
                 if (typeDefinition.Fields.Any<FieldDefinition>(<>f__am$cache1))
                 {

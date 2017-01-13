@@ -34,7 +34,7 @@
             this.module = module;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <CStringStore>m__0);
+                <>f__am$cache0 = new Func<TypeDefinition, bool>(CStringStore.<CStringStore>m__0);
             }
             TypeReference baseType = module.ImportReference(module.TypeSystem.Object.Resolve().Module.Types.First<TypeDefinition>(<>f__am$cache0));
             this.fieldNamesStorageType = new TypeDefinition("UnityEngine.Internal", "$FieldNamesStorage", TypeAttributes.Abstract | TypeAttributes.Sealed, module.TypeSystem.Object);
@@ -99,23 +99,23 @@
             this.fieldNamesStorageType.Fields.Add(item);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__1);
+                <>f__am$cache1 = t => t.FullName == "System.Runtime.CompilerServices.RuntimeHelpers";
             }
             TypeDefinition definition2 = this.module.TypeSystem.Object.Resolve().Module.Types.First<TypeDefinition>(<>f__am$cache1);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__2);
+                <>f__am$cache2 = m => (((m.Name == "InitializeArray") && (m.Parameters.Count == 2)) && (m.Parameters[0].ParameterType.FullName == "System.Array")) && (m.Parameters[1].ParameterType.FullName == "System.RuntimeFieldHandle");
             }
             MethodReference method = this.module.ImportReference(definition2.Methods.Single<MethodDefinition>(<>f__am$cache2));
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<TypeDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__3);
+                <>f__am$cache3 = t => t.FullName == "<Module>";
             }
             TypeDefinition definition3 = this.module.Types.First<TypeDefinition>(<>f__am$cache3);
             bool flag = true;
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <SaveCStringStore>m__4);
+                <>f__am$cache4 = m => ((m.Name == ".cctor") && (((ushort) (m.Attributes & (MethodAttributes.CompilerControlled | MethodAttributes.Static))) != 0)) && (((ushort) (m.Attributes & (MethodAttributes.CompilerControlled | MethodAttributes.RTSpecialName))) != 0);
             }
             MethodDefinition definition4 = definition3.Methods.FirstOrDefault<MethodDefinition>(<>f__am$cache4);
             if (definition4 == null)

@@ -135,12 +135,12 @@
                 this.<testListUtil>__0 = new TestListUtil(false);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<TestListElement, TestExecutorBase>(null, (IntPtr) <>m__0);
+                    <>f__am$cache0 = new Func<TestListElement, TestExecutorBase>(PlaymodeTestsController.<Run>c__Iterator1.<>m__0);
                 }
                 this.<tests>__1 = Enumerable.Select<TestListElement, TestExecutorBase>(this.<testListUtil>__0.GetPlaymodeTests(this.$this.settings.filter).GetFlattenedHierarchy(), <>f__am$cache0);
                 if (this.$this.settings.filter != null)
                 {
-                    this.<tests>__1 = Enumerable.Where<TestExecutorBase>(this.<tests>__1, new Func<TestExecutorBase, bool>(this, (IntPtr) this.<>m__1)).ToList<TestExecutorBase>();
+                    this.<tests>__1 = Enumerable.Where<TestExecutorBase>(this.<tests>__1, new Func<TestExecutorBase, bool>(this.<>m__1)).ToList<TestExecutorBase>();
                 }
                 this.$locvar0 = this.<tests>__1.GetEnumerator();
                 num = 0xfffffffd;

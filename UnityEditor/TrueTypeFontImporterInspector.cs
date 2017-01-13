@@ -148,7 +148,7 @@
                             {
                                 if (<>f__am$cache0 == null)
                                 {
-                                    <>f__am$cache0 = new Func<char, bool>(null, (IntPtr) <OnInspectorGUI>m__0);
+                                    <>f__am$cache0 = c => (c != '\n') && (c != '\r');
                                 }
                                 this.m_CustomCharacters.stringValue = new string(Enumerable.Where<char>(source.Distinct<char>(), <>f__am$cache0).ToArray<char>());
                             }

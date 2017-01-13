@@ -50,7 +50,7 @@
             <GetTestMethodList>c__AnonStorey1 storey = new <GetTestMethodList>c__AnonStorey1 {
                 testPlatform = testPlatform
             };
-            return Enumerable.Where<MethodInfo>(type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance), new Func<MethodInfo, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Where<MethodInfo>(type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance), new Func<MethodInfo, bool>(storey.<>m__0));
         }
 
         private TestListElement GetTests(TestPlatform testPlatform)
@@ -64,9 +64,9 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <GetTypesFromAsseblies>m__0);
+                <>f__am$cache0 = a => a.GetTypes();
             }
-            return Enumerable.Where<Type>(Enumerable.SelectMany<Assembly, Type>(assemblies, <>f__am$cache0), new Func<Type, bool>(this, (IntPtr) this.IsTypeATestForPlatform));
+            return Enumerable.Where<Type>(Enumerable.SelectMany<Assembly, Type>(assemblies, <>f__am$cache0), new Func<Type, bool>(this.IsTypeATestForPlatform));
         }
 
         [DebuggerHidden]
@@ -85,7 +85,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodInfo, bool>(null, (IntPtr) <IsTypeATestForPlatform>m__1);
+                <>f__am$cache1 = m => m.GetCustomAttributes(typeof(TestAttribute), true).Any<object>();
             }
             return Enumerable.Any<MethodInfo>(type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance), <>f__am$cache1);
         }

@@ -67,7 +67,7 @@
             {
                 if (base.NeedsDepthCheck(typeReference))
                 {
-                    base.EmitWithDepthCheck<FieldReference, TypeReference>(new Action<FieldReference, TypeReference>(this, (IntPtr) this.EmitInlineDeserializationFor), fieldDef, typeReference);
+                    base.EmitWithDepthCheck<FieldReference, TypeReference>(new Action<FieldReference, TypeReference>(this.EmitInlineDeserializationFor), fieldDef, typeReference);
                 }
                 else
                 {
@@ -76,7 +76,7 @@
             }
             else
             {
-                base.EmitWithDepthCheck<FieldReference, TypeReference>(new Action<FieldReference, TypeReference>(this, (IntPtr) this.EmitDeserializationLoopFor), fieldDef, typeReference);
+                base.EmitWithDepthCheck<FieldReference, TypeReference>(new Action<FieldReference, TypeReference>(this.EmitDeserializationLoopFor), fieldDef, typeReference);
             }
         }
 
@@ -90,13 +90,13 @@
                 this.CountVar.EmitLoad();
                 this.EmitNewCollectionOf(typeRef);
                 base.EmitStoreField(fieldDef);
-                base.EmitLoopOnFieldElements(fieldDef, _ => this.CountVar.EmitLoad(), new Action<FieldReference, TypeReference>(this, (IntPtr) this.EmitDeserializeOfItem));
+                base.EmitLoopOnFieldElements(fieldDef, _ => this.CountVar.EmitLoad(), new Action<FieldReference, TypeReference>(this.EmitDeserializeOfItem));
             }
             else
             {
                 this.EmitNewCollectionOf(typeRef);
                 base.EmitStoreField(fieldDef);
-                base.EmitLoopOnFieldElements(fieldDef, new Action<FieldReference, TypeReference>(this, (IntPtr) this.EmitDeserializeOfItem));
+                base.EmitLoopOnFieldElements(fieldDef, new Action<FieldReference, TypeReference>(this.EmitDeserializeOfItem));
             }
             this.FinishReadingSequence();
         }

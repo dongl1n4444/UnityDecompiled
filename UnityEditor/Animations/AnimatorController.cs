@@ -335,7 +335,7 @@
         {
             if (controller.OnAnimatorControllerDirty != null)
             {
-                controller.OnAnimatorControllerDirty.Invoke();
+                controller.OnAnimatorControllerDirty();
             }
         }
 

@@ -43,7 +43,7 @@
         {
             if (activeBuildTargetChanged != null)
             {
-                activeBuildTargetChanged.Invoke();
+                activeBuildTargetChanged();
             }
         }
 

@@ -59,14 +59,14 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__0);
+                <>f__am$cache0 = f => f.Name == "handle";
             }
             FieldDefinition field = this._typeDefinition.Fields.SingleOrDefault<FieldDefinition>(<>f__am$cache0);
             if ((field == null) && (CodeGenOptions.Dotnetprofile == DotNetProfile.Net45))
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__1);
+                    <>f__am$cache1 = f => f.Name == "m_handle";
                 }
                 field = this._typeDefinition.Fields.SingleOrDefault<FieldDefinition>(<>f__am$cache1);
             }
@@ -80,7 +80,7 @@
             args[2] = DefaultMarshalInfoWriter.Naming.ForFieldGetter(field);
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__2);
+                <>f__am$cache2 = f => f.Name == DefaultMarshalInfoWriter.Naming.IntPtrValueField;
             }
             args[3] = DefaultMarshalInfoWriter.Naming.ForFieldGetter(DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache2));
             writer.WriteLine("{0} = {1}.{2}().{3}();", args);

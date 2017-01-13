@@ -16,7 +16,7 @@
         private int <dataLength>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <hasLocationData>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private CapturePixelFormat <pixelFormat>k__BackingField;
         private IntPtr m_NativePtr;
 

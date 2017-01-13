@@ -62,8 +62,8 @@
                 fieldDef = fieldDef,
                 $this = this
             };
-            this.WriteSequenceLength(storey.fieldDef.Name, new Action(storey, (IntPtr) this.<>m__0));
-            base.EmitLoopOnFieldElements(storey.fieldDef, new Action<FieldReference, TypeReference>(this, (IntPtr) this.EmitSerializeItem));
+            this.WriteSequenceLength(storey.fieldDef.Name, new Action(storey.<>m__0));
+            base.EmitLoopOnFieldElements(storey.fieldDef, new Action<FieldReference, TypeReference>(this.EmitSerializeItem));
             this.FinishWritingSequence();
         }
 
@@ -218,7 +218,7 @@
 
         private void EmitWriteEmptyCollection(FieldReference fieldDef)
         {
-            this.WriteSequenceLength(fieldDef.Name, new Action(this, (IntPtr) this.<EmitWriteEmptyCollection>m__0));
+            this.WriteSequenceLength(fieldDef.Name, () => base.Ldc_I4(0));
             this.FinishWritingSequence();
         }
 

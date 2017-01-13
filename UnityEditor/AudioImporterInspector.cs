@@ -10,7 +10,7 @@
     using System.Threading;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(AudioImporter))]
+    [CustomEditor(typeof(AudioImporter)), CanEditMultipleObjects]
     internal class AudioImporterInspector : AssetImporterInspector
     {
         [CompilerGenerated]
@@ -167,7 +167,7 @@
                     status.multiSampleRateSetting |= defaultSampleSettings.sampleRateSetting != settings2.sampleRateSetting;
                     status.multiSampleRateOverride |= defaultSampleSettings.sampleRateOverride != settings2.sampleRateOverride;
                     status.multiCompressionFormat |= defaultSampleSettings.compressionFormat != settings2.compressionFormat;
-                    status.multiQuality |= defaultSampleSettings.quality != settings2.quality;
+                    status.multiQuality |= !(defaultSampleSettings.quality == settings2.quality);
                     status.multiConversionMode |= defaultSampleSettings.conversionMode != settings2.conversionMode;
                 }
             }

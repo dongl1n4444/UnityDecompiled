@@ -58,9 +58,9 @@
             };
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <CustomAttributeConstructorFormattedArgumentsFor>m__3);
+                <>f__am$cache3 = (buff, s) => buff + ", " + s;
             }
-            return storey.attribute.ConstructorArguments.Select<CustomAttributeArgument, string>(new Func<CustomAttributeArgument, string>(storey, (IntPtr) this.<>m__0)).Aggregate<string, string>("tmp", <>f__am$cache3);
+            return storey.attribute.ConstructorArguments.Select<CustomAttributeArgument, string>(new Func<CustomAttributeArgument, string>(storey.<>m__0)).Aggregate<string, string>("tmp", <>f__am$cache3);
         }
 
         private static void DeclareTempLocals(CppCodeWriter writer, CustomAttribute attribute, IRuntimeMetadataAccess metadataAccess)
@@ -73,7 +73,7 @@
         {
             if (<>f__mg$cache3 == null)
             {
-                <>f__mg$cache3 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) ValueIsArray);
+                <>f__mg$cache3 = new Func<CustomAttributeArgument, bool>(AttributesSupport.ValueIsArray);
             }
             foreach (CustomAttributeArgument argument in attribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__mg$cache3))
             {
@@ -81,7 +81,7 @@
             }
             if (<>f__mg$cache4 == null)
             {
-                <>f__mg$cache4 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueIsArray);
+                <>f__mg$cache4 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueIsArray);
             }
             foreach (CustomAttributeNamedArgument argument2 in attribute.Fields.Where<CustomAttributeNamedArgument>(<>f__mg$cache4))
             {
@@ -90,7 +90,7 @@
             }
             if (<>f__mg$cache5 == null)
             {
-                <>f__mg$cache5 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueIsArray);
+                <>f__mg$cache5 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueIsArray);
             }
             foreach (CustomAttributeNamedArgument argument3 in attribute.Properties.Where<CustomAttributeNamedArgument>(<>f__mg$cache5))
             {
@@ -103,7 +103,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
+                <>f__mg$cache0 = new Func<CustomAttributeArgument, bool>(AttributesSupport.ValueNeedsBoxing);
             }
             foreach (CustomAttributeArgument argument in attribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__mg$cache0))
             {
@@ -112,7 +112,7 @@
             }
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
+                <>f__mg$cache1 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueNeedsBoxing);
             }
             foreach (CustomAttributeNamedArgument argument2 in attribute.Fields.Where<CustomAttributeNamedArgument>(<>f__mg$cache1))
             {
@@ -121,7 +121,7 @@
             }
             if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache2 = new Func<CustomAttributeNamedArgument, bool>(null, (IntPtr) ValueNeedsBoxing);
+                <>f__mg$cache2 = new Func<CustomAttributeNamedArgument, bool>(AttributesSupport.ValueNeedsBoxing);
             }
             foreach (CustomAttributeNamedArgument argument4 in attribute.Properties.Where<CustomAttributeNamedArgument>(<>f__mg$cache2))
             {
@@ -417,7 +417,7 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <WriteAttributes>m__0);
+                <>f__am$cache0 = a => a;
             }
             return MetadataWriter.WriteTable<string>(this._writer, "extern const CustomAttributesCacheGenerator", "g_AttributeGenerators", this._collection.GetEntries(), <>f__am$cache0);
         }
@@ -478,7 +478,7 @@
                     }
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<CustomAttributeNamedArgument, CustomAttributeArgument>(null, (IntPtr) <WriteCustomAttributesCacheGeneratorFor>m__1);
+                        <>f__am$cache1 = f => f.Argument;
                     }
                     foreach (TypeReference reference2 in ExtractTypeReferencesFromCustomAttributeArguments(attribute.Fields.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(<>f__am$cache1)))
                     {
@@ -489,7 +489,7 @@
                     }
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<CustomAttributeNamedArgument, CustomAttributeArgument>(null, (IntPtr) <WriteCustomAttributesCacheGeneratorFor>m__2);
+                        <>f__am$cache2 = p => p.Argument;
                     }
                     foreach (TypeReference reference3 in ExtractTypeReferencesFromCustomAttributeArguments(attribute.Properties.Select<CustomAttributeNamedArgument, CustomAttributeArgument>(<>f__am$cache2)))
                     {
@@ -506,12 +506,12 @@
                             <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 storey2 = new <WriteCustomAttributesCacheGeneratorFor>c__AnonStorey1 {
                                 property = enumerator4.Current
                             };
-                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
+                            MethodDefinition setMethod = source.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
                             this._writer.AddIncludeForMethodDeclarations(setMethod.DeclaringType);
                         }
                     }
                 }
-                MethodWriter.WriteMethodWithMetadataInitialization(this._writer, $"static void {name}(CustomAttributesCache* cache)", name, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), name);
+                MethodWriter.WriteMethodWithMetadataInitialization(this._writer, $"static void {name}(CustomAttributesCache* cache)", name, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey.<>m__0), name);
             }
         }
 
@@ -593,7 +593,7 @@
                         <WriteMethodBody>c__AnonStorey3 storey = new <WriteMethodBody>c__AnonStorey3 {
                             fieldArgument = enumerator2.Current
                         };
-                        object[] objArray3 = new object[] { Naming.ForFieldSetter(source.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
+                        object[] objArray3 = new object[] { Naming.ForFieldSetter(source.First<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0))), FormatAttributeValue(storey.fieldArgument.Argument, TempName(storey.fieldArgument), metadataAccess) };
                         writer.WriteLine("tmp->{0}({1});", objArray3);
                     }
                 }
@@ -605,7 +605,7 @@
                         <WriteMethodBody>c__AnonStorey4 storey2 = new <WriteMethodBody>c__AnonStorey4 {
                             propertyArgument = enumerator3.Current
                         };
-                        MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2, (IntPtr) this.<>m__0)).SetMethod;
+                        MethodDefinition setMethod = list2.First<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey2.<>m__0)).SetMethod;
                         object[] objArray4 = new object[] { Naming.ForMethodNameOnly(setMethod), FormatAttributeValue(storey2.propertyArgument.Argument, TempName(storey2.propertyArgument), metadataAccess), metadataAccess.HiddenMethodInfo(setMethod) };
                         writer.WriteLine("{0}(tmp, {1}, {2});", objArray4);
                     }

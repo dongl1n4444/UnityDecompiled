@@ -27,7 +27,7 @@
 
         private void EmitInlinedRemapPPtrsInvocationForCollection(FieldReference fieldDef)
         {
-            base.EmitLoopOnFieldElements(fieldDef, new Action<FieldReference, TypeReference>(this, (IntPtr) this.EmitRemapPPtrsInvocationLoopBody));
+            base.EmitLoopOnFieldElements(fieldDef, new Action<FieldReference, TypeReference>(this.EmitRemapPPtrsInvocationLoopBody));
         }
 
         protected override void EmitInstructionsFor(FieldReference field)
@@ -68,7 +68,7 @@
             TypeReference typeDeclaration = base.TypeOf(field);
             if (UnitySerializationLogic.ShouldImplementIDeserializable(typeDeclaration) && !MethodEmitterBase.IsUnityEngineObject(typeDeclaration))
             {
-                base.EmitWithDepthCheck<FieldReference, Action<FieldReference>>(new Action<FieldReference, Action<FieldReference>>(this, (IntPtr) this.EmitRemappingForIDeserializable), field, fieldLoader);
+                base.EmitWithDepthCheck<FieldReference, Action<FieldReference>>(new Action<FieldReference, Action<FieldReference>>(this.EmitRemappingForIDeserializable), field, fieldLoader);
             }
             else
             {

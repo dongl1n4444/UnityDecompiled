@@ -40,16 +40,16 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<int, int>(null, (IntPtr) <DeleteSelection>m__0);
+                <>f__am$cache0 = x => x;
             }
             IOrderedEnumerable<int> enumerable = Enumerable.OrderByDescending<int, int>(this.m_SelectedPoints, <>f__am$cache0);
             foreach (int num in enumerable)
             {
                 this.m_ShapeEditor.RemovePointAt(num);
             }
-            if (this.m_ShapeEditor.activePoint >= this.m_ShapeEditor.GetPointsCount.Invoke())
+            if (this.m_ShapeEditor.activePoint >= this.m_ShapeEditor.GetPointsCount())
             {
-                this.m_ShapeEditor.activePoint = this.m_ShapeEditor.GetPointsCount.Invoke() - 1;
+                this.m_ShapeEditor.activePoint = this.m_ShapeEditor.GetPointsCount() - 1;
             }
             this.m_SelectedPoints.Clear();
         }
@@ -63,7 +63,7 @@
             {
                 foreach (int num in this.m_SelectedPoints)
                 {
-                    this.m_ShapeEditor.SetPointPosition.Invoke(num, this.m_ShapeEditor.GetPointPosition.Invoke(num) + delta);
+                    this.m_ShapeEditor.SetPointPosition(num, this.m_ShapeEditor.GetPointPosition(num) + delta);
                 }
             }
         }
@@ -96,7 +96,7 @@
                     {
                         this.m_SelectedPoints.Clear();
                         this.m_ShapeEditor.activePoint = -1;
-                        this.m_ShapeEditor.Repaint.Invoke();
+                        this.m_ShapeEditor.Repaint();
                         current.Use();
                         goto Label_025C;
                     }
@@ -174,15 +174,15 @@
                 this.m_ShapeEditor.activePoint = -1;
                 type = ShapeEditor.SelectionType.Additive;
             }
-            for (int i = 0; i < this.m_ShapeEditor.GetPointsCount.Invoke(); i++)
+            for (int i = 0; i < this.m_ShapeEditor.GetPointsCount(); i++)
             {
-                Vector2 point = this.m_ShapeEditor.LocalToScreen.Invoke(this.m_ShapeEditor.GetPointPosition.Invoke(i));
+                Vector2 point = this.m_ShapeEditor.LocalToScreen(this.m_ShapeEditor.GetPointPosition(i));
                 if (rect.Contains(point))
                 {
                     this.SelectPoint(i, type);
                 }
             }
-            this.m_ShapeEditor.Repaint.Invoke();
+            this.m_ShapeEditor.Repaint();
         }
 
         public void SelectPoint(int i, ShapeEditor.SelectionType type)
@@ -209,7 +209,7 @@
                     this.m_ShapeEditor.activePoint = i;
                     break;
             }
-            this.m_ShapeEditor.Repaint.Invoke();
+            this.m_ShapeEditor.Repaint();
         }
 
         IEnumerator IEnumerable.GetEnumerator() => 

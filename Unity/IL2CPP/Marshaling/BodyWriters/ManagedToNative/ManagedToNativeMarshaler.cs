@@ -108,7 +108,7 @@
                     bodyWriter.WriteLine();
                 };
             }
-            return writer.WriteIfNotEmpty<string>(new Action<CppCodeWriter>(storey.<>m__0), new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__1), <>f__am$cache0);
+            return writer.WriteIfNotEmpty<string>(new Action<CppCodeWriter>(storey.<>m__0), new Func<CppCodeWriter, string>(storey.<>m__1), <>f__am$cache0);
         }
 
         public override string WriteMarshalInputParameter(CppCodeWriter writer, MarshaledParameter parameter, IList<MarshaledParameter> parameters, IRuntimeMetadataAccess metadataAccess)
@@ -124,7 +124,7 @@
                     bodyWriter.WriteLine();
                 };
             }
-            return writer.WriteIfNotEmpty<string>(new Action<CppCodeWriter>(storey.<>m__0), new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__1), <>f__am$cache1);
+            return writer.WriteIfNotEmpty<string>(new Action<CppCodeWriter>(storey.<>m__0), new Func<CppCodeWriter, string>(storey.<>m__1), <>f__am$cache1);
         }
 
         public override void WriteMarshalOutputParameter(CppCodeWriter writer, string valueName, MarshaledParameter parameter, IList<MarshaledParameter> parameters, IRuntimeMetadataAccess metadataAccess)
@@ -166,7 +166,7 @@
                     bodyWriter.WriteLine();
                 };
             }
-            return writer.WriteIfNotEmpty<string>(<>f__am$cache3, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0), <>f__am$cache4);
+            return writer.WriteIfNotEmpty<string>(<>f__am$cache3, new Func<CppCodeWriter, string>(storey.<>m__0), <>f__am$cache4);
         }
 
         [CompilerGenerated]

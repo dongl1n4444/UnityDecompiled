@@ -33,10 +33,10 @@
             storey.enabledDevices = VREditor.GetVREnabledDevicesOnTargetGroup(target).ToList<string>();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<VRDeviceInfoEditor, string>(null, (IntPtr) <AddVRDeviceElement>m__0);
+                <>f__am$cache0 = d => d.deviceNameUI;
             }
             string[] options = Enumerable.Select<VRDeviceInfoEditor, string>(editorArray, <>f__am$cache0).ToArray<string>();
-            bool[] enabled = Enumerable.Select<VRDeviceInfoEditor, bool>(editorArray, new Func<VRDeviceInfoEditor, bool>(storey, (IntPtr) this.<>m__0)).ToArray<bool>();
+            bool[] enabled = Enumerable.Select<VRDeviceInfoEditor, bool>(editorArray, new Func<VRDeviceInfoEditor, bool>(storey.<>m__0)).ToArray<bool>();
             EditorUtility.DisplayCustomMenu(rect, options, enabled, null, new EditorUtility.SelectMenuItemFunction(this.AddVRDeviceMenuSelected), target);
         }
 
@@ -223,7 +223,7 @@
                     <>f__ref$0 = this,
                     d = d
                 };
-                return !Enumerable.Any<string>(this.enabledDevices, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+                return !Enumerable.Any<string>(this.enabledDevices, new Func<string, bool>(storey.<>m__0));
             }
 
             private sealed class <AddVRDeviceElement>c__AnonStorey1

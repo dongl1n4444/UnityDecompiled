@@ -77,7 +77,7 @@
 
         [CompilerGenerated]
         private static List<T> <Chunk`1>m__A<T>(IGrouping<int, ChunkItem<T>> g) => 
-            g.Select<ChunkItem<T>, T>(new Func<ChunkItem<T>, T>(null, <Chunk`1>m__10<T>)).ToList<T>();
+            (from x in g select x.Value).ToList<T>();
 
         private static void AddInterfacesRecursive(TypeReference type, HashSet<TypeReference> interfaces)
         {
@@ -100,7 +100,7 @@
             <Chunk>c__AnonStorey3<T> storey = new <Chunk>c__AnonStorey3<T> {
                 size = size
             };
-            return foo.Select<T, ChunkItem<T>>(new Func<T, int, ChunkItem<T>>(null, (IntPtr) <Chunk`1>m__9<T>)).GroupBy<ChunkItem<T>, int>(new Func<ChunkItem<T>, int>(storey, (IntPtr) this.<>m__0)).Select<IGrouping<int, ChunkItem<T>>, List<T>>(new Func<IGrouping<int, ChunkItem<T>>, List<T>>(null, (IntPtr) <Chunk`1>m__A<T>)).ToList<List<T>>();
+            return foo.Select<T, ChunkItem<T>>(new Func<T, int, ChunkItem<T>>(Extensions.<Chunk`1>m__9<T>)).GroupBy<ChunkItem<T>, int>(new Func<ChunkItem<T>, int>(storey.<>m__0)).Select<IGrouping<int, ChunkItem<T>>, List<T>>(new Func<IGrouping<int, ChunkItem<T>>, List<T>>(Extensions.<Chunk`1>m__A<T>)).ToList<List<T>>();
         }
 
         public static bool ContainsGenericParameters(this MethodReference method)
@@ -164,7 +164,7 @@
             {
                 if (<>f__mg$cache1 == null)
                 {
-                    <>f__mg$cache1 = new Func<TypeReference, bool>(null, (IntPtr) ContainsGenericParameters);
+                    <>f__mg$cache1 = new Func<TypeReference, bool>(Extensions.ContainsGenericParameters);
                 }
                 return type7.GenericArguments.Any<TypeReference>(<>f__mg$cache1);
             }
@@ -232,7 +232,14 @@
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <GetActivationFactoryTypes>m__6);
+                <>f__am$cache6 = delegate (CustomAttribute attribute) {
+                    CustomAttributeArgument argument = attribute.ConstructorArguments[0];
+                    if (argument.Type.IsSystemType())
+                    {
+                        return (TypeReference) argument.Value;
+                    }
+                    return TypeProvider.IActivationFactoryTypeReference;
+                };
             }
             return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ActivatableAttribute", <>f__am$cache6);
         }
@@ -287,7 +294,7 @@
             }
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <GetComposableFactoryTypes>m__7);
+                <>f__am$cache7 = attribute => (TypeReference) attribute.ConstructorArguments[0].Value;
             }
             return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.ComposableAttribute", <>f__am$cache7);
         }
@@ -296,7 +303,10 @@
         {
             if (<>f__am$cacheD == null)
             {
-                <>f__am$cacheD = new Func<CustomAttribute, bool>(null, (IntPtr) <GetConstructibleCustomAttributes>m__F);
+                <>f__am$cacheD = delegate (CustomAttribute ca) {
+                    TypeDefinition definition = ca.AttributeType.Resolve();
+                    return (definition != null) && !definition.IsWindowsRuntime;
+                };
             }
             return customAttributeProvider.CustomAttributes.Where<CustomAttribute>(<>f__am$cacheD);
         }
@@ -315,7 +325,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetMethods>m__1);
+                <>f__am$cache1 = m => true;
             }
             return type.GetMethods(<>f__am$cache1);
         }
@@ -364,9 +374,9 @@
             }
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<TypeReference, IEnumerable<MethodReference>>(null, (IntPtr) <GetOverridenInterfaceMethod>m__8);
+                <>f__am$cache8 = iface => iface.GetMethods();
             }
-            return candidateInterfaces.SelectMany<TypeReference, MethodReference>(<>f__am$cache8).FirstOrDefault<MethodReference>(new Func<MethodReference, bool>(storey, (IntPtr) this.<>m__0));
+            return candidateInterfaces.SelectMany<TypeReference, MethodReference>(<>f__am$cache8).FirstOrDefault<MethodReference>(new Func<MethodReference, bool>(storey.<>m__0));
         }
 
         public static IEnumerable<TypeReference> GetStaticFactoryTypes(this TypeReference type)
@@ -378,7 +388,7 @@
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<CustomAttribute, TypeReference>(null, (IntPtr) <GetStaticFactoryTypes>m__5);
+                <>f__am$cache5 = attribute => (TypeReference) attribute.ConstructorArguments[0].Value;
             }
             return definition.GetTypesFromSpecificAttribute("Windows.Foundation.Metadata.StaticAttribute", <>f__am$cache5);
         }
@@ -396,7 +406,7 @@
             <GetTypesFromSpecificAttribute>c__AnonStorey1 storey = new <GetTypesFromSpecificAttribute>c__AnonStorey1 {
                 attributeName = attributeName
             };
-            return type.CustomAttributes.Where<CustomAttribute>(new Func<CustomAttribute, bool>(storey, (IntPtr) this.<>m__0)).Select<CustomAttribute, TypeReference>(customAttributeSelector);
+            return type.CustomAttributes.Where<CustomAttribute>(new Func<CustomAttribute, bool>(storey.<>m__0)).Select<CustomAttribute, TypeReference>(customAttributeSelector);
         }
 
         public static TypeReference GetUnderlyingEnumType(this TypeReference type)
@@ -412,7 +422,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <GetUnderlyingEnumType>m__2);
+                <>f__am$cache2 = f => !f.IsStatic && (f.Name == "value__");
             }
             return definition.Fields.Single<FieldDefinition>(<>f__am$cache2).FieldType;
         }
@@ -421,7 +431,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetVirtualMethods>m__0);
+                <>f__am$cache0 = m => m.IsVirtual && !m.IsStatic;
             }
             return type.GetMethods(<>f__am$cache0);
         }
@@ -435,7 +445,7 @@
             }
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<CustomAttribute, bool>(null, (IntPtr) <HasActivationFactories>m__4);
+                <>f__am$cache4 = ca => ((ca.AttributeType.FullName == "Windows.Foundation.Metadata.ActivatableAttribute") || (ca.AttributeType.FullName == "Windows.Foundation.Metadata.StaticAttribute")) || (ca.AttributeType.FullName == "Windows.Foundation.Metadata.ComposableAttribute");
             }
             return definition.CustomAttributes.Any<CustomAttribute>(<>f__am$cache4);
         }
@@ -477,7 +487,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <HasStaticFields>m__3);
+                <>f__am$cache3 = f => f.IsStatic;
             }
             return typeReference.Resolve().Fields.Any<FieldDefinition>(<>f__am$cache3);
         }
@@ -673,7 +683,7 @@
             }
             if (<>f__am$cache9 == null)
             {
-                <>f__am$cache9 = new Func<CustomAttribute, bool>(null, (IntPtr) <IsNormalStatic>m__B);
+                <>f__am$cache9 = ca => ca.AttributeType.Name != "ThreadStaticAttribute";
             }
             return definition.CustomAttributes.All<CustomAttribute>(<>f__am$cache9);
         }
@@ -915,7 +925,7 @@
         {
             if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheC = new Func<AssemblyDefinition, string>(null, (IntPtr) <References>m__E);
+                <>f__am$cacheC = eachAssemblyReference => eachAssemblyReference.Name.Name;
             }
             return AssemblyDependencies.GetReferencedAssembliesFor(assemblyDoingTheReferencing).Select<AssemblyDefinition, string>(<>f__am$cacheC).Contains<string>(assemblyBeingReference.Name.Name);
         }

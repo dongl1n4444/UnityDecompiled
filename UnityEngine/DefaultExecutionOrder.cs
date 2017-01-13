@@ -8,7 +8,7 @@
     [AttributeUsage(AttributeTargets.Class), UsedByNativeCode]
     public class DefaultExecutionOrder : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <order>k__BackingField;
 
         public DefaultExecutionOrder(int order)

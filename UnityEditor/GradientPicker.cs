@@ -8,7 +8,7 @@
 
     internal class GradientPicker : EditorWindow
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <gradientChanged>k__BackingField;
         private const int k_DefaultNumSteps = 0;
         private GUIView m_DelegateView;
@@ -53,7 +53,7 @@
             if (this.m_GradientLibraryEditor == null)
             {
                 ScriptableObjectSaveLoadHelper<GradientPresetLibrary> helper = new ScriptableObjectSaveLoadHelper<GradientPresetLibrary>("gradients", SaveType.Text);
-                this.m_GradientLibraryEditor = new PresetLibraryEditor<GradientPresetLibrary>(helper, this.m_GradientLibraryEditorState, new Action<int, object>(this, (IntPtr) this.PresetClickedCallback));
+                this.m_GradientLibraryEditor = new PresetLibraryEditor<GradientPresetLibrary>(helper, this.m_GradientLibraryEditorState, new Action<int, object>(this.PresetClickedCallback));
                 this.m_GradientLibraryEditor.showHeader = true;
                 this.m_GradientLibraryEditor.minMaxPreviewHeight = new Vector2(14f, 14f);
             }

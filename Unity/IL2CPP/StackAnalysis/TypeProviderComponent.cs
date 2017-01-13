@@ -35,7 +35,7 @@
             this._mscorlib = mscorlib;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <Initialize>m__0);
+                <>f__am$cache0 = t => t.FullName == "System.ValueType";
             }
             TypeDefinition baseType = mscorlib.MainModule.Types.Single<TypeDefinition>(<>f__am$cache0);
             this._nativeIntType = new TypeDefinition(string.Empty, "intptr_t", TypeAttributes.AnsiClass, baseType);

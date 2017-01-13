@@ -76,34 +76,34 @@
                     ILayoutElement source = null;
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<ILayoutElement, float>(null, (IntPtr) <OnPreviewGUI>m__0);
+                        <>f__am$cache0 = e => e.minWidth;
                     }
                     this.ShowProp(ref position, ref rect2, ref rect3, "Min Width", LayoutUtility.GetLayoutProperty(transform, <>f__am$cache0, 0f, out source).ToString(), source);
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<ILayoutElement, float>(null, (IntPtr) <OnPreviewGUI>m__1);
+                        <>f__am$cache1 = e => e.minHeight;
                     }
                     this.ShowProp(ref position, ref rect2, ref rect3, "Min Height", LayoutUtility.GetLayoutProperty(transform, <>f__am$cache1, 0f, out source).ToString(), source);
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<ILayoutElement, float>(null, (IntPtr) <OnPreviewGUI>m__2);
+                        <>f__am$cache2 = e => e.preferredWidth;
                     }
                     this.ShowProp(ref position, ref rect2, ref rect3, "Preferred Width", LayoutUtility.GetLayoutProperty(transform, <>f__am$cache2, 0f, out source).ToString(), source);
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<ILayoutElement, float>(null, (IntPtr) <OnPreviewGUI>m__3);
+                        <>f__am$cache3 = e => e.preferredHeight;
                     }
                     this.ShowProp(ref position, ref rect2, ref rect3, "Preferred Height", LayoutUtility.GetLayoutProperty(transform, <>f__am$cache3, 0f, out source).ToString(), source);
                     float num5 = 0f;
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<ILayoutElement, float>(null, (IntPtr) <OnPreviewGUI>m__4);
+                        <>f__am$cache4 = e => e.flexibleWidth;
                     }
                     num5 = LayoutUtility.GetLayoutProperty(transform, <>f__am$cache4, 0f, out source);
                     this.ShowProp(ref position, ref rect2, ref rect3, "Flexible Width", (num5 <= 0f) ? "disabled" : ("enabled (" + num5.ToString() + ")"), source);
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<ILayoutElement, float>(null, (IntPtr) <OnPreviewGUI>m__5);
+                        <>f__am$cache5 = e => e.flexibleHeight;
                     }
                     num5 = LayoutUtility.GetLayoutProperty(transform, <>f__am$cache5, 0f, out source);
                     this.ShowProp(ref position, ref rect2, ref rect3, "Flexible Height", (num5 <= 0f) ? "disabled" : ("enabled (" + num5.ToString() + ")"), source);

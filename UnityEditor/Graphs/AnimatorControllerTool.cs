@@ -17,7 +17,7 @@
         public UnityEditor.Graphs.AnimationBlendTree.Graph blendTreeGraph;
         [SerializeField]
         public UnityEditor.Graphs.AnimationBlendTree.GraphGUI blendTreeGraphGUI;
-        public static Action graphDirtyCallback;
+        public static System.Action graphDirtyCallback;
         private const float kBottombarHeight = 18f;
         [SerializeField]
         private AnimatorController m_AnimatorController;
@@ -576,7 +576,7 @@
             this.stateMachineGraph.RebuildGraph();
             if (graphDirtyCallback != null)
             {
-                graphDirtyCallback.Invoke();
+                graphDirtyCallback();
             }
         }
 

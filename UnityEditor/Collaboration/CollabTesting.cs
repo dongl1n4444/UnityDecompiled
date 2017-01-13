@@ -21,7 +21,7 @@
         {
             if (m_Actions.Count != 0)
             {
-                m_Actions.Dequeue().Invoke();
+                m_Actions.Dequeue()();
             }
         }
 

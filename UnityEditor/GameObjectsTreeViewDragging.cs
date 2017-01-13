@@ -127,7 +127,7 @@
                     {
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<Scene, int>(null, (IntPtr) <DoDragScenes>m__0);
+                            <>f__am$cache0 = x => x.handle;
                         }
                         Selection.instanceIDs = Enumerable.Select<Scene, int>(source, <>f__am$cache0).ToArray<int>();
                         base.m_TreeView.Frame(source.Last<Scene>().handle, true, false);

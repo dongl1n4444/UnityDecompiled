@@ -18,21 +18,21 @@
     {
         [CompilerGenerated]
         private static Predicate<AssetStoreGroup> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowBuiltinResources>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowDeselection>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowDragging>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowFindNextShortcut>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowFocusRendering>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <allowMultiSelect>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowRenaming>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <allowUserRenderingHook>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <foldersFirst>k__BackingField;
@@ -594,7 +594,7 @@
             {
                 if (this.m_KeyboardInputCallback != null)
                 {
-                    this.m_KeyboardInputCallback.Invoke();
+                    this.m_KeyboardInputCallback();
                 }
                 if (Event.current.type == EventType.KeyDown)
                 {
@@ -1006,7 +1006,7 @@
                     }
                     if (this.m_GotKeyboardFocus != null)
                     {
-                        this.m_GotKeyboardFocus.Invoke();
+                        this.m_GotKeyboardFocus();
                     }
                 }
             }
@@ -1178,7 +1178,7 @@
         {
             if (this.m_RepaintWantedCallback != null)
             {
-                this.m_RepaintWantedCallback.Invoke();
+                this.m_RepaintWantedCallback();
             }
         }
 
@@ -1542,7 +1542,7 @@
                     this.$this.Repaint();
                     if (this.$this.assetStoreSearchEnded != null)
                     {
-                        this.$this.assetStoreSearchEnded.Invoke();
+                        this.$this.assetStoreSearchEnded();
                     }
                 }
                 else
@@ -1600,7 +1600,7 @@
                     this.$this.Repaint();
                     if (this.$this.assetStoreSearchEnded != null)
                     {
-                        this.$this.assetStoreSearchEnded.Invoke();
+                        this.$this.assetStoreSearchEnded();
                     }
                 }
             }
@@ -1626,7 +1626,7 @@
 
         private class AssetStoreGroup : ObjectListArea.Group
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <NeedsRepaint>k__BackingField;
             public const int kDefaultRowsShown = 3;
             public const int kDefaultRowsShownListMode = 10;
@@ -2297,7 +2297,7 @@
                     float num = 0f;
                     if (base.m_Owner.drawLocalAssetHeader != null)
                     {
-                        num = base.m_Owner.drawLocalAssetHeader.Invoke(rect) + 10f;
+                        num = base.m_Owner.drawLocalAssetHeader(rect) + 10f;
                     }
                     rect.x += num;
                     rect.width -= num;

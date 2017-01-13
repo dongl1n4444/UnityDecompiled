@@ -13,7 +13,7 @@
         private bool <alwaysAddFirstItemToSearchResult>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <rootIsCollapsable>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <showRootItem>k__BackingField;
         protected TreeViewItem m_FakeItem;
         protected bool m_NeedRefreshRows = true;
@@ -114,7 +114,7 @@
                 this.m_NeedRefreshRows = false;
                 if (this.onVisibleRowsChanged != null)
                 {
-                    this.onVisibleRowsChanged.Invoke();
+                    this.onVisibleRowsChanged();
                 }
                 this.m_TreeView.Repaint();
             }
@@ -150,7 +150,7 @@
         {
             if (this.m_TreeView.expandedStateChanged != null)
             {
-                this.m_TreeView.expandedStateChanged.Invoke();
+                this.m_TreeView.expandedStateChanged();
             }
         }
 

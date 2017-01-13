@@ -227,7 +227,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<IvyModule, bool>(null, (IntPtr) <PackageUpdatesAvailable>m__3);
+                <>f__am$cache2 = p => p.Info.Type == PackageType.PackageManager;
             }
             IvyModule package = Enumerable.FirstOrDefault<IvyModule>(packages, <>f__am$cache2);
             if (package != null)

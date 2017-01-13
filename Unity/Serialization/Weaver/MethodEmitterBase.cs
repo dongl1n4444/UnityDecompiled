@@ -184,7 +184,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Mono.Cecil.MethodDefinition, bool>(null, (IntPtr) <DefaultConstructorFor>m__2);
+                <>f__am$cache2 = x => (x.Name == ".ctor") && !x.HasParameters;
             }
             if (definition.Methods.SingleOrDefault<Mono.Cecil.MethodDefinition>(<>f__am$cache2) == null)
             {
@@ -290,7 +290,7 @@
             this.EmitItemsLoopInitializer();
             this.Br_S(endLbl);
             this.MarkLabel(ifNotNullLbl);
-            loopBody.Invoke(fieldDef, CecilUtils.ElementTypeOfCollection(this.TypeOf(fieldDef)));
+            loopBody(fieldDef, CecilUtils.ElementTypeOfCollection(this.TypeOf(fieldDef)));
             this.EmitIncrementItemIndex();
             this.MarkLabel(endLbl);
             this.EmitItemsLoopCondition(fieldDef, maxValueGen);
@@ -320,7 +320,7 @@
             {
                 TypeReference reference2 = storey.baseTypes.Pop();
                 TypeDefinition definition = reference2.Resolve();
-                foreach (FieldDefinition definition2 in definition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.ShouldProcess)).Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (FieldDefinition definition2 in definition.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(this.ShouldProcess)).Where<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0)))
                 {
                     this.EmitInstructionsFor(this.ResolveGenericFieldReference(definition2));
                     if (!definition2.IsPublic && !definition2.IsFamily)
@@ -386,7 +386,7 @@
             this.Ldarg_1();
             this.Ldc_I4(7);
             this.Bgt(endLbl);
-            action.Invoke();
+            action();
             this.MarkLabel(endLbl);
         }
 
@@ -396,7 +396,7 @@
                 action = action,
                 arg = arg
             };
-            this.EmitWithDepthCheck(new Action(storey, (IntPtr) this.<>m__0));
+            this.EmitWithDepthCheck(new Action(storey.<>m__0));
         }
 
         protected void EmitWithDepthCheck<TArg1, TArg2>(Action<TArg1, TArg2> action, TArg1 arg1, TArg2 arg2)
@@ -406,7 +406,7 @@
                 arg1 = arg1,
                 arg2 = arg2
             };
-            this.EmitWithDepthCheck(new Action(storey, (IntPtr) this.<>m__0));
+            this.EmitWithDepthCheck(new Action(storey.<>m__0));
         }
 
         protected void EmitWithNotNullCheckOnField(FieldReference fieldDef, Action<FieldReference> ifNotNull)
@@ -446,9 +446,9 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <FilteredFields>m__0);
+                <>f__am$cache0 = f => (UnitySerializationLogic.IsSupportedCollection(f.FieldType) || !f.FieldType.IsGenericInstance) || UnitySerializationLogic.ShouldImplementIDeserializable(f.FieldType.Resolve());
             }
-            return this.TypeDef.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.ShouldProcess)).Where<FieldDefinition>(<>f__am$cache0);
+            return this.TypeDef.Fields.Where<FieldDefinition>(new Func<FieldDefinition, bool>(this.ShouldProcess)).Where<FieldDefinition>(<>f__am$cache0);
         }
 
         private static Mono.Cecil.MethodDefinition FindMethodReference(TypeDefinition typeDefinition, string name)
@@ -456,16 +456,16 @@
             <FindMethodReference>c__AnonStorey5 storey = new <FindMethodReference>c__AnonStorey5 {
                 name = name
             };
-            Mono.Cecil.MethodDefinition definition = typeDefinition.Methods.FirstOrDefault<Mono.Cecil.MethodDefinition>(new Func<Mono.Cecil.MethodDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            Mono.Cecil.MethodDefinition definition = typeDefinition.Methods.FirstOrDefault<Mono.Cecil.MethodDefinition>(new Func<Mono.Cecil.MethodDefinition, bool>(storey.<>m__0));
             if (definition != null)
             {
                 return definition;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Mono.Cecil.MethodDefinition, bool>(null, (IntPtr) <FindMethodReference>m__1);
+                <>f__am$cache1 = m => m.HasOverrides;
             }
-            return typeDefinition.Methods.Where<Mono.Cecil.MethodDefinition>(<>f__am$cache1).FirstOrDefault<Mono.Cecil.MethodDefinition>(new Func<Mono.Cecil.MethodDefinition, bool>(storey, (IntPtr) this.<>m__1));
+            return typeDefinition.Methods.Where<Mono.Cecil.MethodDefinition>(<>f__am$cache1).FirstOrDefault<Mono.Cecil.MethodDefinition>(new Func<Mono.Cecil.MethodDefinition, bool>(storey.<>m__1));
         }
 
         protected MethodReference GetItemMethodRefFor(TypeReference typeReference)
@@ -483,7 +483,7 @@
             <IfTypeImplementsInterface>c__AnonStorey3 storey = new <IfTypeImplementsInterface>c__AnonStorey3 {
                 interfaceName = interfaceName
             };
-            return (InterfacesOf(this._typeDef).FirstOrDefault<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)) != null);
+            return (InterfacesOf(this._typeDef).FirstOrDefault<TypeReference>(new Func<TypeReference, bool>(storey.<>m__0)) != null);
         }
 
         protected FieldReference Import(FieldInfo fieldInfo) => 
@@ -509,7 +509,7 @@
             <InvokeMethodIfTypeImplementsInterface>c__AnonStorey4 storey = new <InvokeMethodIfTypeImplementsInterface>c__AnonStorey4 {
                 interfaceName = interfaceName
             };
-            TypeReference type = InterfacesOf(this._typeDef).FirstOrDefault<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0));
+            TypeReference type = InterfacesOf(this._typeDef).FirstOrDefault<TypeReference>(new Func<TypeReference, bool>(storey.<>m__0));
             if (type != null)
             {
                 if (this._typeDef.IsValueType)
@@ -534,7 +534,7 @@
             <IsHiddenByParentClass>c__AnonStorey2 storey = new <IsHiddenByParentClass>c__AnonStorey2 {
                 fieldDefinition = fieldDefinition
             };
-            return (processingType.Fields.Any<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0)) || parentTypes.Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__1)));
+            return (processingType.Fields.Any<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0)) || parentTypes.Any<TypeReference>(new Func<TypeReference, bool>(storey.<>m__1)));
         }
 
         protected void Isinst(TypeReference typeReference)
@@ -892,7 +892,7 @@
         {
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<AssemblyNameReference, bool>(null, (IntPtr) <UnityEngineScope>m__3);
+                <>f__am$cache3 = m => m.Name == "UnityEngine";
             }
             return this.Module.AssemblyReferences.First<AssemblyNameReference>(<>f__am$cache3);
         }
@@ -981,7 +981,7 @@
 
             internal void <>m__0()
             {
-                this.action.Invoke(this.arg1, this.arg2);
+                this.action(this.arg1, this.arg2);
             }
         }
 
@@ -994,7 +994,7 @@
                 (m.Name == this.name);
 
             internal bool <>m__1(MethodDefinition m) => 
-                m.Overrides.Any<MethodReference>(new Func<MethodReference, bool>(this, (IntPtr) this.<>m__2));
+                m.Overrides.Any<MethodReference>(o => (o.Name == this.name));
 
             internal bool <>m__2(MethodReference o) => 
                 (o.Name == this.name);
@@ -1137,7 +1137,7 @@
                 (f.Name == this.fieldDefinition.Name);
 
             internal bool <>m__1(TypeReference t) => 
-                t.Resolve().Fields.Any<FieldDefinition>(new Func<FieldDefinition, bool>(this, (IntPtr) this.<>m__2));
+                t.Resolve().Fields.Any<FieldDefinition>(f => (f.Name == this.fieldDefinition.Name));
 
             internal bool <>m__2(FieldDefinition f) => 
                 (f.Name == this.fieldDefinition.Name);

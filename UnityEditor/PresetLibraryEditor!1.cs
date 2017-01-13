@@ -11,19 +11,19 @@
 
     internal class PresetLibraryEditor<T> where T: PresetLibrary
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <alwaysShowScrollAreaHorizontalLines>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <contentHeight>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private float <gridWidth>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RectOffset <marginsForGrid>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private RectOffset <marginsForList>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private float <settingsMenuRightMargin>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private float <settingsMenuRightMargin>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <showHeader>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <useOnePixelOverlappedGrid>k__BackingField;
@@ -111,7 +111,7 @@
             this.SaveCurrentLib();
             if (this.presetsWasReordered != null)
             {
-                this.presetsWasReordered.Invoke();
+                this.presetsWasReordered();
             }
             this.Repaint();
             this.OnLayoutChanged();
@@ -168,7 +168,7 @@
                     this.SaveCurrentLib();
                     if (this.presetsWasReordered != null)
                     {
-                        this.presetsWasReordered.Invoke();
+                        this.presetsWasReordered();
                     }
                     this.OnLayoutChanged();
                 }
@@ -417,7 +417,7 @@
                                         GUIUtility.hotControl = controlID;
                                         if (current.clickCount == 1)
                                         {
-                                            this.m_ItemClickedCallback.Invoke(current.clickCount, lib.GetPreset(j));
+                                            this.m_ItemClickedCallback(current.clickCount, lib.GetPreset(j));
                                             current.Use();
                                         }
                                     }
@@ -573,7 +573,7 @@
                     this.SaveCurrentLib();
                     if (this.presetsWasReordered != null)
                     {
-                        this.presetsWasReordered.Invoke();
+                        this.presetsWasReordered();
                     }
                 }
             }
@@ -625,7 +625,7 @@
                     this.SaveCurrentLib();
                     if (this.presetsWasReordered != null)
                     {
-                        this.presetsWasReordered.Invoke();
+                        this.presetsWasReordered();
                     }
                 }
             }
@@ -724,7 +724,7 @@
             if (this.wantsToCreateLibrary)
             {
                 this.wantsToCreateLibrary = false;
-                PopupWindow.Show(position, new PopupWindowContentForNewLibrary(new Func<string, PresetFileLocation, string>(this, (IntPtr) this.CreateNewLibraryCallback)));
+                PopupWindow.Show(position, new PopupWindowContentForNewLibrary(new Func<string, PresetFileLocation, string>(this.CreateNewLibraryCallback)));
                 GUIUtility.ExitGUI();
             }
             GUI.EndGroup();
@@ -845,11 +845,11 @@
 
         private class DragState
         {
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private int <draggingIndex>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <dragUponIndex>k__BackingField;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private Rect <dragUponRect>k__BackingField;
             [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private bool <insertAfterIndex>k__BackingField;

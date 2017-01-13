@@ -44,16 +44,16 @@
                 SymbolReaderProvider = new MdbReaderProvider(),
                 ReadingMode = ReadingMode.Immediate
             };
-            TypeDefinition baseType = Enumerable.Single<TypeDefinition>(CollectTypeDefinitions(AssemblyDefinition.ReadAssembly(storey.type.Assembly.Location, parameters).MainModule.Types), new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            TypeDefinition baseType = Enumerable.Single<TypeDefinition>(CollectTypeDefinitions(AssemblyDefinition.ReadAssembly(storey.type.Assembly.Location, parameters).MainModule.Types), new Func<TypeDefinition, bool>(storey.<>m__0));
             MethodDefinition definition3 = null;
             while ((baseType != null) && (baseType.BaseType != null))
             {
                 Collection<MethodDefinition> methods = baseType.Methods;
                 if (storey.m != null)
                 {
-                    if (Enumerable.Any<MethodDefinition>(methods, new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__1)))
+                    if (Enumerable.Any<MethodDefinition>(methods, new Func<MethodDefinition, bool>(storey.<>m__1)))
                     {
-                        definition3 = Enumerable.First<MethodDefinition>(baseType.Methods, new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__2));
+                        definition3 = Enumerable.First<MethodDefinition>(baseType.Methods, new Func<MethodDefinition, bool>(storey.<>m__2));
                         break;
                     }
                 }
@@ -61,7 +61,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetSequencePointOfTest>m__0);
+                        <>f__am$cache0 = x => x.HasBody;
                     }
                     foreach (MethodDefinition definition4 in Enumerable.Where<MethodDefinition>(baseType.Methods, <>f__am$cache0))
                     {
@@ -81,7 +81,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Instruction, bool>(null, (IntPtr) <GetSequencePointOfTest>m__1);
+                    <>f__am$cache1 = i => i.SequencePoint != null;
                 }
                 return Enumerable.First<Instruction>(definition3.Body.Instructions, <>f__am$cache1).SequencePoint;
             }

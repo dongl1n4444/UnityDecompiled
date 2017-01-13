@@ -43,7 +43,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <ConvertPlayerDlltoCpp>m__1);
+                    <>f__am$cache1 = s => Path.Combine(Directory.GetCurrentDirectory(), s);
                 }
                 string[] strArray = Enumerable.Select<string, string>(Directory.GetFiles("Assets", "il2cpp_extra_types.txt", SearchOption.AllDirectories), <>f__am$cache1).ToArray<string>();
                 List<string> arguments = new List<string> { "--convert-to-cpp" };
@@ -103,7 +103,7 @@
                 List<string> list2 = new List<string>(userAssemblies);
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <ConvertPlayerDlltoCpp>m__2);
+                    <>f__am$cache2 = arg => "--assembly=\"" + Path.GetFullPath(arg) + "\"";
                 }
                 arguments.AddRange(Enumerable.Select<string, string>(list2, <>f__am$cache2));
                 arguments.Add($"--generatedcppdir="{Path.GetFullPath(outputDirectory)}"");
@@ -126,7 +126,7 @@
                 isUsed = isUsed,
                 managedDir = managedDir
             };
-            return Enumerable.Select<string, string>(Enumerable.Where<string>(assemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1));
+            return Enumerable.Select<string, string>(Enumerable.Where<string>(assemblies, new Func<string, bool>(storey.<>m__0)), new Func<string, string>(storey.<>m__1));
         }
 
         public string GetCppOutputDirectoryInStagingArea() => 
@@ -215,7 +215,7 @@
             string exe = this.GetIl2CppExe();
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <RunIl2CppWithArguments>m__3);
+                <>f__am$cache3 = (current, arg) => current + arg + " ";
             }
             string args = Enumerable.Aggregate<string, string>(arguments, string.Empty, <>f__am$cache3);
             Console.WriteLine("Invoking il2cpp with arguments: " + args);

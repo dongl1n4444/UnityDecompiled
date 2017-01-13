@@ -16,7 +16,7 @@
         private static Func<PackageInfo, bool> <>f__am$cache0;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <libraryFolder>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private BuildTarget <target>k__BackingField;
 
         public BaseIl2CppPlatformProvider(BuildTarget target, string libraryFolder)
@@ -35,7 +35,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<PackageInfo, bool>(null, (IntPtr) <FindIl2CppPackage>m__0);
+                <>f__am$cache0 = e => e.name == "IL2CPP";
             }
             return Enumerable.FirstOrDefault<PackageInfo>(ModuleManager.packageManager.unityExtensions, <>f__am$cache0);
         }

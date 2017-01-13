@@ -17,7 +17,7 @@
     {
         [CompilerGenerated]
         private static StateChangedDelegate <>f__mg$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <projectBrowserSingleMetaSelectionPath>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <projectBrowserSingleSelectionPath>k__BackingField;

@@ -156,7 +156,7 @@
                     MixerGroupView item = new MixerGroupView();
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<AudioMixerGroupController, GUID>(null, (IntPtr) <RecreateListControl>m__0);
+                        <>f__am$cache0 = gr => gr.groupID;
                     }
                     item.guids = Enumerable.Select<AudioMixerGroupController, GUID>(this.m_Controller.GetAllAudioGroupsSlow(), <>f__am$cache0).ToArray<GUID>();
                     item.name = "View";
@@ -176,9 +176,9 @@
                 }
                 this.m_ReorderableListWithRenameAndScrollView = new ReorderableListWithRenameAndScrollView(list, this.m_State);
                 this.m_ReorderableListWithRenameAndScrollView.onSelectionChanged = (Action<int>) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onSelectionChanged, new Action<int>(this.SelectionChanged));
-                this.m_ReorderableListWithRenameAndScrollView.onNameChangedAtIndex = (Action<int, string>) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onNameChangedAtIndex, new Action<int, string>(this, (IntPtr) this.NameChanged));
+                this.m_ReorderableListWithRenameAndScrollView.onNameChangedAtIndex = (Action<int, string>) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onNameChangedAtIndex, new Action<int, string>(this.NameChanged));
                 this.m_ReorderableListWithRenameAndScrollView.onDeleteItemAtIndex = (Action<int>) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onDeleteItemAtIndex, new Action<int>(this.Delete));
-                this.m_ReorderableListWithRenameAndScrollView.onGetNameAtIndex = (Func<int, string>) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onGetNameAtIndex, new Func<int, string>(this, (IntPtr) this.GetNameOfElement));
+                this.m_ReorderableListWithRenameAndScrollView.onGetNameAtIndex = (Func<int, string>) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onGetNameAtIndex, new Func<int, string>(this.GetNameOfElement));
                 this.m_ReorderableListWithRenameAndScrollView.onCustomDrawElement = (ReorderableList.ElementCallbackDelegate) Delegate.Combine(this.m_ReorderableListWithRenameAndScrollView.onCustomDrawElement, new ReorderableList.ElementCallbackDelegate(this.CustomDrawElement));
             }
         }

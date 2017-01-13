@@ -46,7 +46,7 @@
             TypeDefinition interfaceType = mainModule.GetType("System.Collections.Generic.ICollection`1");
             TypeDefinition definition4 = mainModule.GetType("System.Collections.Generic.IList`1");
             TypeDefinition definition5 = mainModule.GetType("System.Collections.Generic.IEnumerable`1");
-            return Enumerable.Empty<MethodReference>().Concat<MethodReference>(GetArrayInterfaceMethods(type, interfaceType, "InternalArray__ICollection_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__0))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition4, "InternalArray__").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__1))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition5, "InternalArray__IEnumerable_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey, (IntPtr) this.<>m__2)));
+            return Enumerable.Empty<MethodReference>().Concat<MethodReference>(GetArrayInterfaceMethods(type, interfaceType, "InternalArray__ICollection_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__0))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition4, "InternalArray__").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__1))).Concat<MethodReference>(GetArrayInterfaceMethods(type, definition5, "InternalArray__IEnumerable_").Select<MethodDefinition, MethodReference>(new Func<MethodDefinition, MethodReference>(storey.<>m__2)));
         }
 
         private static bool IsGenericInstanceWithMoreThanOneGenericArgument(TypeReference type)
@@ -147,7 +147,7 @@
                         this.$locvar2.<>f__ref$0 = this;
                         this.$locvar2.<>f__ref$2 = this.$locvar1;
                         this.$locvar2.methodName = this.<method>__0.Name;
-                        this.<arrayMethod>__2 = this.arrayType.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this.$locvar2, (IntPtr) this.<>m__0));
+                        this.<arrayMethod>__2 = this.arrayType.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this.$locvar2.<>m__0));
                         if (this.<arrayMethod>__2 != null)
                         {
                             this.$current = this.<arrayMethod>__2;

@@ -415,9 +415,9 @@
         {
             base.OnInitialize();
             GameObjectTreeViewGUI gui = (GameObjectTreeViewGUI) base.m_TreeView.gui;
-            gui.scrollHeightChanged += new Action(this, (IntPtr) this.EnsureFullyInitialized);
-            gui.scrollPositionChanged += new Action(this, (IntPtr) this.EnsureFullyInitialized);
-            gui.mouseAndKeyboardInput += new Action(this, (IntPtr) this.EnsureFullyInitialized);
+            gui.scrollHeightChanged += new Action(this.EnsureFullyInitialized);
+            gui.scrollPositionChanged += new Action(this.EnsureFullyInitialized);
+            gui.mouseAndKeyboardInput += new Action(this.EnsureFullyInitialized);
         }
 
         private static void Resize(List<TreeViewItem> list, int count)

@@ -396,7 +396,7 @@
             public GUIContent logosTitle = EditorGUIUtility.TextContent("Logos*");
             public GUIContent logoZoom = EditorGUIUtility.TextContent("Logo Zoom");
             public GUIContent overlayOpacity = EditorGUIUtility.TextContent("Overlay Opacity|Overlay strength applied to improve logo visibility.");
-            public GUIContent previewSplash = EditorGUIUtility.TextContent("Preview");
+            public GUIContent previewSplash = EditorGUIUtility.TextContent("Preview|Preview the splash screen in the game view.");
             public GUIContent showLogo = EditorGUIUtility.TextContent("Show Unity Logo");
             public GUIContent showSplash = EditorGUIUtility.TextContent("Show Splash Screen");
             public GUIContent splashStyle = EditorGUIUtility.TextContent("Splash Style");

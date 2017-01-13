@@ -65,7 +65,7 @@
 
         public bool IsVisible(FilteringOptions options)
         {
-            if (((options.categories != null) && (options.categories.Length > 0)) && !Enumerable.Any<string>(options.categories, new Func<string, bool>(this, (IntPtr) this.<IsVisible>m__0)))
+            if (((options.categories != null) && (options.categories.Length > 0)) && !Enumerable.Any<string>(options.categories, (Func<string, bool>) (c => this.test.categories.Contains<string>(c))))
             {
                 return false;
             }

@@ -48,9 +48,9 @@
                 };
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<AssemblyName, bool>(null, (IntPtr) <GetAssembliesWithTests>m__1);
+                    <>f__am$cache1 = a => a.Name != "nunit.framework";
                 }
-                if (!Enumerable.All<AssemblyName>(storey.assembly.GetReferencedAssemblies(), <>f__am$cache1) && (storey.assembly.Location.Replace('\\', '/').StartsWith(Application.dataPath) || Enumerable.Any<string>(s_WhitelistedAssemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0))))
+                if (!Enumerable.All<AssemblyName>(storey.assembly.GetReferencedAssemblies(), <>f__am$cache1) && (storey.assembly.Location.Replace('\\', '/').StartsWith(Application.dataPath) || Enumerable.Any<string>(s_WhitelistedAssemblies, new Func<string, bool>(storey.<>m__0))))
                 {
                     list.Add(storey.assembly);
                 }
@@ -127,7 +127,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<Assembly, string>(null, (IntPtr) <get_testSuite>m__0);
+                        <>f__am$cache0 = a => a.Location;
                     }
                     List<string> assemblyList = Enumerable.Select<Assembly, string>(GetAssembliesWithTests(), <>f__am$cache0).ToList<string>();
                     TestSuite suite = this.PrepareTestSuite(assemblyList);

@@ -202,10 +202,10 @@ internal class ApplicationLauncherImpl
                 throw new Exception($"Invalid configuration flags: 0x{num:X}");
         }
         storey.configurationToLookFor = !this.configuration.Equals("Release", StringComparison.InvariantCultureIgnoreCase) ? ("_" + this.configuration) : "";
-        string str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appx", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+        string str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appx", SearchOption.AllDirectories), new Func<string, bool>(storey.<>m__0));
         if (string.IsNullOrEmpty(str3))
         {
-            str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appxbundle", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__1));
+            str3 = Enumerable.FirstOrDefault<string>(Directory.GetFiles(str, "*.appxbundle", SearchOption.AllDirectories), new Func<string, bool>(storey.<>m__1));
         }
         return str3;
     }
@@ -276,7 +276,10 @@ internal class ApplicationLauncherImpl
     {
         if (((this.platform == "x86") || (this.platform == "x64")) || (this.platform == "Win32"))
         {
-            Utility.KillProcesses(new Func<string, bool>(this, (IntPtr) this.<KillRunningAppInstances>m__0));
+            Utility.KillProcesses(delegate (string exePath) {
+                string fileName = Path.GetFileName(exePath);
+                return (fileName.Contains(this.packageName) || fileName.Equals("Template.exe", StringComparison.InvariantCultureIgnoreCase)) && exePath.Contains(this.installPath);
+            });
         }
     }
 

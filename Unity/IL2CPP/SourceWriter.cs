@@ -62,7 +62,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <Write>m__0);
+                    <>f__am$cache0 = t => !t.HasGenericParameters && (!t.IsInterface || t.IsComOrWindowsRuntimeInterface());
                 }
                 TypeDefinition[] definitionArray = typeList.Where<TypeDefinition>(<>f__am$cache0).ToArray<TypeDefinition>();
                 using (TinyProfiler.Section("Types", "Declarations"))
@@ -78,7 +78,7 @@
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <Write>m__1);
+                            <>f__am$cache1 = m => !m.HasGenericParameters;
                         }
                         this.WriteMethodDeclarationsFor(this._outputDir, <>f__am$cache1, definition2);
                     }
@@ -114,7 +114,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<KeyValuePair<MethodReference, uint>, MethodReference>(null, (IntPtr) <WriteCollectedMetadata>m__3);
+                <>f__am$cache3 = item => item.Key;
             }
             MethodTables methodPointerTables = MethodTables.CollectMethodTables(Il2CppGenericMethodCollector.Items.Select<KeyValuePair<MethodReference, uint>, MethodReference>(<>f__am$cache3));
             UnresolvedVirtualsTablesInfo virtualCallTables = VirtualCallCollector.WriteUnresolvedStubs(outputDir);
@@ -195,7 +195,7 @@
             NullMethodCollector methodCollector = new NullMethodCollector();
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<GenericInstanceMethod, string>(null, (IntPtr) <WriteGenericMethods>m__4);
+                <>f__am$cache4 = mr => mr.FullName;
             }
             IOrderedEnumerable<GenericInstanceMethod> foo = genericsCollectionCollector.Methods.OrderBy<GenericInstanceMethod, string>(<>f__am$cache4);
             foreach (List<GenericInstanceMethod> list in foo.Chunk<GenericInstanceMethod>(0x3e8))
@@ -219,16 +219,16 @@
                 $this = this
             };
             List<Action> source = new List<Action> {
-                new Action(storey, (IntPtr) this.<>m__0),
-                new Action(storey, (IntPtr) this.<>m__1),
-                new Action(storey, (IntPtr) this.<>m__2),
-                new Action(storey, (IntPtr) this.<>m__3),
-                new Action(storey, (IntPtr) this.<>m__4),
-                new Action(this, (IntPtr) this.WriteGeneratedCodeGen)
+                new Action(storey.<>m__0),
+                new Action(storey.<>m__1),
+                new Action(storey.<>m__2),
+                new Action(storey.<>m__3),
+                new Action(storey.<>m__4),
+                new Action(this.WriteGeneratedCodeGen)
             };
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = s => s.Invoke();
+                <>f__am$cache2 = s => s();
             }
             ParallelHelper.ForEach<Action>(source, <>f__am$cache2, true, false);
         }
@@ -264,7 +264,7 @@
             int num = 0;
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<TypeReference, string>(null, (IntPtr) <WriteMethodSourceFiles>m__5);
+                <>f__am$cache5 = tr => tr.FullName;
             }
             IOrderedEnumerable<TypeReference> foo = typeList.OrderBy<TypeReference, string>(<>f__am$cache5);
             foreach (List<TypeReference> list in foo.Chunk<TypeReference>(100))
@@ -351,13 +351,13 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<GenericInstanceType, bool>(null, (IntPtr) <>m__5);
+                        <>f__am$cache0 = t => !t.IsInterface() || t.IsComOrWindowsRuntimeInterface();
                     }
                     foreach (GenericInstanceType type in this.genericsCollectionCollector.TypeMethodDeclarations.Where<GenericInstanceType>(<>f__am$cache0))
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<MethodDefinition, bool>(null, (IntPtr) <>m__6);
+                            <>f__am$cache1 = m => !m.HasGenericParameters;
                         }
                         this.$this.WriteMethodDeclarationsFor(this.$this._outputDir, <>f__am$cache1, type);
                     }
@@ -370,7 +370,7 @@
                 {
                     if (SourceWriter.<>f__mg$cache0 == null)
                     {
-                        SourceWriter.<>f__mg$cache0 = new Func<ArrayType, ModuleDefinition>(null, (IntPtr) ArrayUtilities.ModuleDefinitionForElementTypeOf);
+                        SourceWriter.<>f__mg$cache0 = new Func<ArrayType, ModuleDefinition>(ArrayUtilities.ModuleDefinitionForElementTypeOf);
                     }
                     foreach (IGrouping<ModuleDefinition, ArrayType> grouping in this.genericsCollectionCollector.Arrays.GroupBy<ArrayType, ModuleDefinition>(SourceWriter.<>f__mg$cache0))
                     {

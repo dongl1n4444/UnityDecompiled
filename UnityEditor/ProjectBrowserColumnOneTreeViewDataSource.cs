@@ -14,7 +14,7 @@
         {
             base.showRootItem = false;
             base.rootIsCollapsable = false;
-            SavedSearchFilters.AddChangeListener(new Action(this, (IntPtr) this.ReloadData));
+            SavedSearchFilters.AddChangeListener(new Action(this.ReloadData));
         }
 
         public override bool CanBeMultiSelected(TreeViewItem item) => 

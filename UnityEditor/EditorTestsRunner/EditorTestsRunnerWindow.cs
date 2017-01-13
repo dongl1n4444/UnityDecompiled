@@ -188,14 +188,14 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<EditorTestResult, bool>(null, (IntPtr) <OnGUI>m__0);
+                        <>f__am$cache0 = result => result.isFailure || result.isError;
                     }
                     IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_ResultList, <>f__am$cache0);
                     if (source.Any<EditorTestResult>())
                     {
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<EditorTestResult, TestName>(null, <OnGUI>m__1);
+                            <>f__am$cache1 = l => l.test.testMethod.get_TestName();
                         }
                         this.RunTests(Enumerable.Select<EditorTestResult, TestName>(source, <>f__am$cache1).ToArray<TestName>());
                         GUIUtility.ExitGUI();

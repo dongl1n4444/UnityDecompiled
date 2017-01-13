@@ -96,7 +96,7 @@
             };
             List<PluginImporter> list = new List<PluginImporter>();
             Dictionary<string, PluginImporter> dictionary = new Dictionary<string, PluginImporter>();
-            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<PluginImporter>();
+            PluginImporter[] importerArray = Enumerable.Where<PluginImporter>(GetAllImporters(), new Func<PluginImporter, bool>(storey.<>m__0)).ToArray<PluginImporter>();
             IPluginImporterExtension pluginImporterExtension = ModuleManager.GetPluginImporterExtension(storey.platformName);
             if (pluginImporterExtension == null)
             {

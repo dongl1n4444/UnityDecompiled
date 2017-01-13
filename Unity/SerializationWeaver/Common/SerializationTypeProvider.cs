@@ -20,7 +20,7 @@
             <GetTypeNamed>c__AnonStorey0 storey = new <GetTypeNamed>c__AnonStorey0 {
                 typeName = typeName
             };
-            return this.Types.First<TypeDefinition>(new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            return this.Types.First<TypeDefinition>(new Func<TypeDefinition, bool>(storey.<>m__0));
         }
 
         public TypeDefinition PPtrRemapperInterface =>

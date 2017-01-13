@@ -32,7 +32,7 @@
         {
             if ((genericInstanceMethod != null) && (<>f__am$cache0 == null))
             {
-                <>f__am$cache0 = new Func<TypeReference, bool>(null, (IntPtr) <IsFullyInflated>m__0);
+                <>f__am$cache0 = t => t.ContainsGenericParameters();
             }
             return (!genericInstanceMethod.GenericArguments.Any<TypeReference>(<>f__am$cache0) && !genericInstanceMethod.DeclaringType.ContainsGenericParameters());
         }

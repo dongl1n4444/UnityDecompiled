@@ -174,7 +174,7 @@
             return null;
         }
 
-        [Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true), ExcludeFromDocs]
+        [ExcludeFromDocs, Obsolete("BuildAssetBundles signature has changed. Please specify the targetPlatform parameter", true)]
         public static AssetBundleManifest BuildAssetBundles(string outputPath, AssetBundleBuild[] builds)
         {
             BuildAssetBundleOptions none = BuildAssetBundleOptions.None;

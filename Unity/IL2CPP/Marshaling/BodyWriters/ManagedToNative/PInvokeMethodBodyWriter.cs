@@ -52,7 +52,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MarshaledType, string>(null, (IntPtr) <FormatParametersForTypedef>m__0);
+                <>f__am$cache0 = parameterType => parameterType.DecoratedName;
             }
             return base._marshaledParameterTypes.Select<MarshaledType, string>(<>f__am$cache0).AggregateWithComma();
         }
@@ -125,7 +125,7 @@
                 return false;
             }
             string name = this._pinvokeInfo.Module.Name;
-            return ((name == "__Internal") || (_internalizedMethods.TryGetValue(name, out strArray) && strArray.Any<string>(new Func<string, bool>(this, (IntPtr) this.<ShouldInternalizeMethod>m__1))));
+            return ((name == "__Internal") || (_internalizedMethods.TryGetValue(name, out strArray) && strArray.Any<string>(a => (a == this._methodDefinition.Name))));
         }
 
         private bool UseUnicodeCharSetForPInvokeInWindowsCallResolution() => 

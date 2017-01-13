@@ -25,13 +25,13 @@
         public void EmitLoad()
         {
             this.IsUsed = true;
-            this._loadGenerator.Invoke();
+            this._loadGenerator();
         }
 
         public void EmitStore()
         {
             this.IsUsed = true;
-            this._storeGenerator.Invoke();
+            this._storeGenerator();
         }
 
         public int Index =>

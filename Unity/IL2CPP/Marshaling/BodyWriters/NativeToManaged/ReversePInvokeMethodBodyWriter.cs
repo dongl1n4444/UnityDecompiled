@@ -47,11 +47,11 @@
             {
                 if (<>f__am$cache5 == null)
                 {
-                    <>f__am$cache5 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) <GetCallingConvention>m__6);
+                    <>f__am$cache5 = argument => argument.Type.Name == "Type";
                 }
                 if (<>f__am$cache6 == null)
                 {
-                    <>f__am$cache6 = new Func<CustomAttributeArgument, object>(null, (IntPtr) <GetCallingConvention>m__7);
+                    <>f__am$cache6 = argument => argument.Value;
                 }
                 TypeReference reference = pInvokeCallbackAttribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__am$cache5).Select<CustomAttributeArgument, object>(<>f__am$cache6).FirstOrDefault<object>() as TypeReference;
                 if (reference == null)
@@ -65,7 +65,7 @@
                 }
                 if (<>f__am$cache7 == null)
                 {
-                    <>f__am$cache7 = new Func<CustomAttribute, bool>(null, (IntPtr) <GetCallingConvention>m__8);
+                    <>f__am$cache7 = attribute => attribute.AttributeType.FullName == "System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute";
                 }
                 CustomAttribute attribute2 = definition.CustomAttributes.FirstOrDefault<CustomAttribute>(<>f__am$cache7);
                 if ((attribute2 == null) || !attribute2.HasConstructorArguments)
@@ -99,11 +99,11 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<CustomAttributeArgument, bool>(null, (IntPtr) <GetInteropMethod>m__2);
+                <>f__am$cache1 = argument => argument.Type.Name == "Type";
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<CustomAttributeArgument, object>(null, (IntPtr) <GetInteropMethod>m__3);
+                <>f__am$cache2 = argument => argument.Value;
             }
             TypeReference reference2 = pInvokeCallbackAttribute.ConstructorArguments.Where<CustomAttributeArgument>(<>f__am$cache1).Select<CustomAttributeArgument, object>(<>f__am$cache2).FirstOrDefault<object>() as TypeReference;
             if (reference2 == null)
@@ -117,7 +117,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<MethodDefinition, bool>(null, (IntPtr) <GetInteropMethod>m__4);
+                <>f__am$cache3 = m => m.Name == "Invoke";
             }
             MethodDefinition definition3 = type.Methods.SingleOrDefault<MethodDefinition>(<>f__am$cache3);
             if (definition3 == null)
@@ -138,7 +138,7 @@
             string callingConvention = this.GetCallingConvention();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MarshaledType, string>(null, (IntPtr) <GetMethodSignature>m__1);
+                <>f__am$cache0 = parameterType => $"{parameterType.DecoratedName} {parameterType.VariableName}";
             }
             string str4 = base._marshaledParameterTypes.Select<MarshaledType, string>(<>f__am$cache0).AggregateWithComma();
             return $"extern "C" {decoratedName} {callingConvention} {str}({str4})";
@@ -148,7 +148,7 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<CustomAttribute, bool>(null, (IntPtr) <GetPInvokeCallbackAttribute>m__5);
+                <>f__am$cache4 = attribute => attribute.AttributeType.FullName.Contains("MonoPInvokeCallback");
             }
             return methodDef.CustomAttributes.FirstOrDefault<CustomAttribute>(<>f__am$cache4);
         }
@@ -195,7 +195,7 @@
 
         public void WriteMethodDefinition(CppCodeWriter writer, IMethodCollector methodCollector)
         {
-            MethodWriter.WriteMethodWithMetadataInitialization(writer, this.GetMethodSignature(), base._managedMethod.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteMethodDefinition>m__0), InteropMethodBodyWriter.Naming.ForReversePInvokeWrapperMethod(base._managedMethod));
+            MethodWriter.WriteMethodWithMetadataInitialization(writer, this.GetMethodSignature(), base._managedMethod.FullName, (bodyWriter, metadataUsage, methodUsage) => base.WriteMethodBody(bodyWriter, MethodWriter.GetDefaultRuntimeMetadataAccess(base._managedMethod, metadataUsage, methodUsage)), InteropMethodBodyWriter.Naming.ForReversePInvokeWrapperMethod(base._managedMethod));
             methodCollector.AddReversePInvokeWrapper(base._managedMethod);
         }
 

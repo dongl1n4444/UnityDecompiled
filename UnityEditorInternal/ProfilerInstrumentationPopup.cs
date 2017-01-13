@@ -238,7 +238,7 @@
                 {
                     return base.m_ListElements;
                 }
-                return Enumerable.Where<PopupList.ListElement>(base.m_ListElements, new Func<PopupList.ListElement, bool>(storey, (IntPtr) this.<>m__0));
+                return Enumerable.Where<PopupList.ListElement>(base.m_ListElements, new Func<PopupList.ListElement, bool>(storey.<>m__0));
             }
 
             [CompilerGenerated]

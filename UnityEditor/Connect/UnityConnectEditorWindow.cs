@@ -30,7 +30,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<UnityConnectEditorWindow, bool>(null, (IntPtr) <Create>m__0);
+                    <>f__am$cache0 = win => win != null;
                 }
                 foreach (UnityConnectEditorWindow window in Enumerable.Where<UnityConnectEditorWindow>(windowArray, <>f__am$cache0))
                 {
@@ -93,7 +93,7 @@
             {
                 return false;
             }
-            return !Enumerable.Where<string>(this.m_ServiceUrls, new Func<string, int, bool>(storey, (IntPtr) this.<>m__0)).Any<string>();
+            return !Enumerable.Where<string>(this.m_ServiceUrls, new Func<string, int, bool>(storey.<>m__0)).Any<string>();
         }
 
         public string currentUrl

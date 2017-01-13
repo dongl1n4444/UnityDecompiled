@@ -292,7 +292,7 @@
             <FindParent>c__AnonStorey8 storey = new <FindParent>c__AnonStorey8 {
                 stateMachine = stateMachine
             };
-            if (Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey.<>m__0)))
             {
                 return this;
             }
@@ -399,7 +399,7 @@
             <HasState>c__AnonStorey4 storey = new <HasState>c__AnonStorey4 {
                 state = state
             };
-            return Enumerable.Any<ChildAnimatorState>(this.statesRecursive, new Func<ChildAnimatorState, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<ChildAnimatorState>(this.statesRecursive, new Func<ChildAnimatorState, bool>(storey.<>m__0));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -409,7 +409,7 @@
             <HasStateMachine>c__AnonStorey6 storey = new <HasStateMachine>c__AnonStorey6 {
                 child = child
             };
-            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachinesRecursive, new Func<ChildAnimatorStateMachine, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachinesRecursive, new Func<ChildAnimatorStateMachine, bool>(storey.<>m__0));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -420,7 +420,7 @@
                 stateB = stateB,
                 stateA = stateA
             };
-            return (Enumerable.Any<AnimatorStateTransition>(storey.stateA.transitions, new Func<AnimatorStateTransition, bool>(storey, (IntPtr) this.<>m__0)) || Enumerable.Any<AnimatorStateTransition>(storey.stateB.transitions, new Func<AnimatorStateTransition, bool>(storey, (IntPtr) this.<>m__1)));
+            return (Enumerable.Any<AnimatorStateTransition>(storey.stateA.transitions, new Func<AnimatorStateTransition, bool>(storey.<>m__0)) || Enumerable.Any<AnimatorStateTransition>(storey.stateB.transitions, new Func<AnimatorStateTransition, bool>(storey.<>m__1)));
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -448,7 +448,7 @@
             <IsDirectParent>c__AnonStorey5 storey = new <IsDirectParent>c__AnonStorey5 {
                 stateMachine = stateMachine
             };
-            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<ChildAnimatorStateMachine>(this.stateMachines, new Func<ChildAnimatorStateMachine, bool>(storey.<>m__0));
         }
 
         /// <summary>
@@ -476,7 +476,7 @@
             <RemoveAnyStateTransition>c__AnonStorey0 storey = new <RemoveAnyStateTransition>c__AnonStorey0 {
                 transition = transition
             };
-            if (Enumerable.Any<AnimatorStateTransition>(new List<AnimatorStateTransition>(this.anyStateTransitions), new Func<AnimatorStateTransition, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<AnimatorStateTransition>(new List<AnimatorStateTransition>(this.anyStateTransitions), new Func<AnimatorStateTransition, bool>(storey.<>m__0)))
             {
                 this.undoHandler.DoUndo(this, "AnyState Transition Removed");
                 AnimatorStateTransition[] anyStateTransitions = this.anyStateTransitions;
@@ -517,7 +517,7 @@
             <RemoveEntryTransition>c__AnonStorey1 storey = new <RemoveEntryTransition>c__AnonStorey1 {
                 transition = transition
             };
-            if (Enumerable.Any<AnimatorTransition>(new List<AnimatorTransition>(this.entryTransitions), new Func<AnimatorTransition, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<AnimatorTransition>(new List<AnimatorTransition>(this.entryTransitions), new Func<AnimatorTransition, bool>(storey.<>m__0)))
             {
                 this.undoHandler.DoUndo(this, "Entry Transition Removed");
                 AnimatorTransition[] entryTransitions = this.entryTransitions;
@@ -784,7 +784,7 @@
                 (childSM.stateMachine == this.stateMachine);
 
             internal bool <>m__1(ChildAnimatorStateMachine sm) => 
-                Enumerable.Any<ChildAnimatorStateMachine>(sm.stateMachine.stateMachines, new Func<ChildAnimatorStateMachine, bool>(this, (IntPtr) this.<>m__2));
+                Enumerable.Any<ChildAnimatorStateMachine>(sm.stateMachine.stateMachines, (Func<ChildAnimatorStateMachine, bool>) (childSM => (childSM.stateMachine == this.stateMachine)));
 
             internal bool <>m__2(ChildAnimatorStateMachine childSM) => 
                 (childSM.stateMachine == this.stateMachine);

@@ -55,17 +55,17 @@
             this._interfacesToImplement = new List<TypeReference>();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TypeDefinition, bool>(null, (IntPtr) <CCWWriter>m__0);
+                <>f__am$cache0 = new Func<TypeDefinition, bool>(CCWWriter.<CCWWriter>m__0);
             }
             this._canForwardMethodsToBaseClass = type.GetTypeHierarchy().Any<TypeDefinition>(<>f__am$cache0);
             IEnumerable<InterfaceImplementationMapping> allImplementedInteropInterfacesInTypeHierarchy = GetAllImplementedInteropInterfacesInTypeHierarchy(this._type);
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<InterfaceImplementationMapping, bool>(null, (IntPtr) CanImplementInCCW);
+                <>f__mg$cache0 = new Func<InterfaceImplementationMapping, bool>(CCWWriter.CanImplementInCCW);
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<InterfaceImplementationMapping, TypeReference>(null, (IntPtr) <CCWWriter>m__1);
+                <>f__am$cache1 = new Func<InterfaceImplementationMapping, TypeReference>(CCWWriter.<CCWWriter>m__1);
             }
             IEnumerable<TypeReference> enumerable2 = allImplementedInteropInterfacesInTypeHierarchy.Where<InterfaceImplementationMapping>(<>f__mg$cache0).Select<InterfaceImplementationMapping, TypeReference>(<>f__am$cache1).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
             VTable table = new VTableBuilder().VTableFor(type, null);
@@ -74,7 +74,7 @@
                 int num = table.InterfaceOffsets[reference];
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<MethodReference, bool>(null, (IntPtr) <CCWWriter>m__2);
+                    <>f__am$cache2 = new Func<MethodReference, bool>(CCWWriter.<CCWWriter>m__2);
                 }
                 IEnumerable<MethodReference> enumerable3 = reference.GetMethods().Where<MethodReference>(<>f__am$cache2);
                 bool flag = false;
@@ -105,7 +105,7 @@
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<InterfaceImplementationMapping, TypeReference>(null, (IntPtr) <CCWWriter>m__3);
+                <>f__am$cache3 = new Func<InterfaceImplementationMapping, TypeReference>(CCWWriter.<CCWWriter>m__3);
             }
             this._allInteropInterfaces = allImplementedInteropInterfacesInTypeHierarchy.Select<InterfaceImplementationMapping, TypeReference>(<>f__am$cache3).ToArray<TypeReference>();
             this._interfacesToForwardToBaseClass = this._allInteropInterfaces.Except<TypeReference>(this._interfacesToImplement, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()).ToArray<TypeReference>();
@@ -135,7 +135,7 @@
             }
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<CustomAttribute, bool>(null, (IntPtr) <CanImplementInCCW>m__6);
+                <>f__am$cache6 = ca => ca.AttributeType.FullName == "Windows.Foundation.Metadata.OverridableAttribute";
             }
             return mapping.InterfaceImplementation.CustomAttributes.Any<CustomAttribute>(<>f__am$cache6);
         }
@@ -144,7 +144,16 @@
         {
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<TypeDefinition, IEnumerable<InterfaceImplementationMapping>>(null, (IntPtr) <GetAllImplementedInteropInterfacesInTypeHierarchy>m__5);
+                <>f__am$cache5 = delegate (TypeDefinition t) {
+                    <GetAllImplementedInteropInterfacesInTypeHierarchy>c__AnonStorey2 storey = new <GetAllImplementedInteropInterfacesInTypeHierarchy>c__AnonStorey2 {
+                        t = t
+                    };
+                    if (<>f__am$cache7 == null)
+                    {
+                        <>f__am$cache7 = i => i.InterfaceType.IsComOrWindowsRuntimeInterface();
+                    }
+                    return storey.t.Interfaces.Where<InterfaceImplementation>(<>f__am$cache7).Select<InterfaceImplementation, InterfaceImplementationMapping>(new Func<InterfaceImplementation, InterfaceImplementationMapping>(storey.<>m__0));
+                };
             }
             return typeDefinition.GetTypeHierarchy().SelectMany<TypeDefinition, InterfaceImplementationMapping>(<>f__am$cache5);
         }
@@ -240,7 +249,7 @@
                     if (storey.mapping.ManagedMethod == null)
                     {
                     }
-                    MethodWriter.WriteMethodWithMetadataInitialization(writer, methodSignature, storey.mapping.InterfaceMethod.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey2, (IntPtr) this.<>m__0), Naming.ForMethod(storey.mapping.InterfaceMethod) + "_CCW_" + ((storey.mapping.ManagedMethod == null) ? this._typeName : Naming.ForMethod(storey.mapping.ManagedMethod)));
+                    MethodWriter.WriteMethodWithMetadataInitialization(writer, methodSignature, storey.mapping.InterfaceMethod.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey2.<>m__0), Naming.ForMethod(storey.mapping.InterfaceMethod) + "_CCW_" + ((storey.mapping.ManagedMethod == null) ? this._typeName : Naming.ForMethod(storey.mapping.ManagedMethod)));
                 }
             }
         }
@@ -252,7 +261,7 @@
             {
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<TypeReference, string>(null, (IntPtr) <WriteQueryInterfaceDefinition>m__4);
+                    <>f__am$cache4 = i => $"!::memcmp(&iid, &{Naming.ForTypeNameOnly(i)}::IID, sizeof(Il2CppGuid))";
                 }
                 string str = this._interfacesToForwardToBaseClass.Select<TypeReference, string>(<>f__am$cache4).AggregateWith(" || ");
                 writer.WriteLine($"if ({str})");

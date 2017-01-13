@@ -354,7 +354,7 @@
             new Vector2(Mathf.InverseLerp(rectangle.x, rectangle.xMax, point.x), Mathf.InverseLerp(rectangle.y, rectangle.yMax, point.y));
 
         public static bool operator !=(Rect lhs, Rect rhs) => 
-            ((((lhs.x != rhs.x) || (lhs.y != rhs.y)) || (lhs.width != rhs.width)) || (lhs.height != rhs.height));
+            ((((lhs.x != rhs.x) || (lhs.y != rhs.y)) || (lhs.width != rhs.width)) || !(lhs.height == rhs.height));
 
         public static bool operator ==(Rect lhs, Rect rhs) => 
             ((((lhs.x == rhs.x) && (lhs.y == rhs.y)) && (lhs.width == rhs.width)) && (lhs.height == rhs.height));

@@ -27,7 +27,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <RefreshReleaseNotes>m__0);
+                    <>f__am$cache0 = x => x.Value.type == PackageFileType.ReleaseNotes;
                 }
                 KeyValuePair<string, PackageFileData> pair = Enumerable.FirstOrDefault<KeyValuePair<string, PackageFileData>>(package.files, <>f__am$cache0);
                 if (pair.Key == null)

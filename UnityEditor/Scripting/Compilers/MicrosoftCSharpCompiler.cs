@@ -167,7 +167,7 @@
                 <GetNETWSAAssemblies>c__AnonStorey0 storey = new <GetNETWSAAssemblies>c__AnonStorey0 {
                     monoAssemblyDirectory = BuildPipeline.GetMonoLibDirectory(BuildTarget.WSAPlayer)
                 };
-                return Enumerable.Select<string, string>(GetReferencesFromMonoDistribution(), new Func<string, string>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
+                return Enumerable.Select<string, string>(GetReferencesFromMonoDistribution(), new Func<string, string>(storey.<>m__0)).ToArray<string>();
             }
             if (wsaSDK != WSASDK.UWP)
             {

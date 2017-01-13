@@ -149,6 +149,10 @@
         /// </summary>
         iPodTouch5Gen = 14,
         /// <summary>
+        /// <para>iPod Touch, sixth generation.</para>
+        /// </summary>
+        iPodTouch6Gen = 0x21,
+        /// <summary>
         /// <para>Yet unknown iPod Touch.</para>
         /// </summary>
         iPodTouchUnknown = 0x2713,

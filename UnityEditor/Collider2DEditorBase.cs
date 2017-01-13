@@ -103,7 +103,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Object, Rigidbody2D>(null, (IntPtr) <ShouldShowDensity>m__0);
+                <>f__am$cache0 = x => (x as Collider2D).attachedRigidbody;
             }
             if (Enumerable.Select<Object, Rigidbody2D>(base.targets, <>f__am$cache0).Distinct<Rigidbody2D>().Count<Rigidbody2D>() > 1)
             {

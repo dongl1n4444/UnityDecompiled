@@ -18,7 +18,7 @@
             base.Visit(instruction, context);
             if (instruction.SequencePoint != null)
             {
-                this._callback.Invoke(instruction, instruction.SequencePoint);
+                this._callback(instruction, instruction.SequencePoint);
             }
         }
     }

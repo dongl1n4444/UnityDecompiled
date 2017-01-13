@@ -9,6 +9,7 @@
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.PlaymodeTestsRunner;
+    using UnityEngine.PlaymodeTestsRunner.TestListBuilder;
 
     internal class EditModeLauncher : UnityEditor.PlaymodeTestsRunner.TestLauncher.TestLauncher
     {
@@ -48,12 +49,14 @@
             TestListUtil util = new TestListUtil(true);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TestListElement, TestExecutorBase>(null, (IntPtr) <Run>m__0);
+                <>f__am$cache0 = t => t.testExecutor;
             }
             this.m_TestsToRun = Enumerable.Select<TestListElement, TestExecutorBase>(util.GetEditmodeTests(this.m_Filter).GetFlattenedHierarchy(), <>f__am$cache0).ToList<TestExecutorBase>();
             if (this.m_Filter != null)
             {
-                this.m_TestsToRun = Enumerable.Where<TestExecutorBase>(this.m_TestsToRun, new Func<TestExecutorBase, bool>(this, (IntPtr) this.<Run>m__1)).ToList<TestExecutorBase>();
+                this.m_TestsToRun = (from e in this.m_TestsToRun
+                    where this.m_Filter.Matches(e.name)
+                    select e).ToList<TestExecutorBase>();
             }
             this.AddEventHandler<EditModeRunnerCallback>();
             EditorApplication.update = (EditorApplication.CallbackFunction) Delegate.Combine(EditorApplication.update, new EditorApplication.CallbackFunction(this.UpdateCallback));

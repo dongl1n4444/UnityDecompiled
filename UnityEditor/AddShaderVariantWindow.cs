@@ -129,7 +129,7 @@
             rect.height = this.CalcVerticalSpaceForKeywords();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <DrawKeywordsList>m__0);
+                <>f__am$cache0 = k => !string.IsNullOrEmpty(k) ? k.ToLowerInvariant() : "<no keyword>";
             }
             List<string> items = Enumerable.Select<string, string>(keywords, <>f__am$cache0).ToList<string>();
             GUI.BeginGroup(rect);

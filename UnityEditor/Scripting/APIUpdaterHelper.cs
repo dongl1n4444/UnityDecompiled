@@ -3,6 +3,7 @@
     using Mono.Cecil;
     using mscorlib;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -54,11 +55,11 @@
             {
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <ConfigurationProviderAssembliesPathArgument>m__2);
+                    <>f__am$cache2 = f => f.Value.type == PackageFileType.Dll;
                 }
                 if (<>f__am$cache3 == null)
                 {
-                    <>f__am$cache3 = new Func<KeyValuePair<string, PackageFileData>, string>(null, (IntPtr) <ConfigurationProviderAssembliesPathArgument>m__3);
+                    <>f__am$cache3 = pi => pi.Key;
                 }
                 foreach (string str in Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(info.files, <>f__am$cache2), <>f__am$cache3))
                 {
@@ -105,11 +106,11 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<Assembly, bool>(null, (IntPtr) <FindTypeInLoadedAssemblies>m__4);
+                <>f__am$cache4 = assembly => !IsIgnoredAssembly(assembly.GetName());
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <FindTypeInLoadedAssemblies>m__5);
+                <>f__am$cache5 = a => a.GetTypes();
             }
             return Enumerable.FirstOrDefault<Type>(Enumerable.SelectMany<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache4), <>f__am$cache5), predicate);
         }
@@ -125,7 +126,7 @@
             <IsIgnoredAssembly>c__AnonStorey2 storey = new <IsIgnoredAssembly>c__AnonStorey2 {
                 name = assemblyName.Name
             };
-            return Enumerable.Any<string>(_ignoredAssemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(_ignoredAssemblies, new Func<string, bool>(storey.<>m__0));
         }
 
         public static bool IsReferenceToMissingObsoleteMember(string namespaceName, string className)
@@ -137,13 +138,13 @@
             };
             try
             {
-                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey, (IntPtr) this.<>m__0)) != null;
+                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey.<>m__0)) != null;
             }
             catch (ReflectionTypeLoadException exception)
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, Exception, string>(null, (IntPtr) <IsReferenceToMissingObsoleteMember>m__0);
+                    <>f__am$cache0 = (acc, curr) => acc + "\r\n\t" + curr.Message;
                 }
                 throw new Exception(exception.Message + Enumerable.Aggregate<Exception, string>(exception.LoaderExceptions, "", <>f__am$cache0));
             }
@@ -163,13 +164,13 @@
                 }
                 storey.typename = match.Groups["typename"].Value;
                 storey.namespaceName = match.Groups["namespace"].Value;
-                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey, (IntPtr) this.<>m__0)) != null;
+                flag = FindTypeInLoadedAssemblies(new Func<Type, bool>(storey.<>m__0)) != null;
             }
             catch (ReflectionTypeLoadException exception)
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, Exception, string>(null, (IntPtr) <IsReferenceToTypeWithChangedNamespace>m__1);
+                    <>f__am$cache1 = (acc, curr) => acc + "\r\n\t" + curr.Message;
                 }
                 throw new Exception(exception.Message + Enumerable.Aggregate<Exception, string>(exception.LoaderExceptions, "", <>f__am$cache1));
             }
@@ -291,7 +292,7 @@
                 return false;
             }
             storey.regex = new Regex(@"\.NETCore|\.NETPortable");
-            return Enumerable.Any<CustomAttributeArgument>(targetFrameworkAttr.ConstructorArguments, new Func<CustomAttributeArgument, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<CustomAttributeArgument>(targetFrameworkAttr.ConstructorArguments, new Func<CustomAttributeArgument, bool>(storey.<>m__0));
         }
 
         private static string TimeStampArgument() => 

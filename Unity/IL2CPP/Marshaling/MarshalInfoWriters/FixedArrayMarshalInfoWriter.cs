@@ -3,6 +3,7 @@
     using Mono.Cecil;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using Unity.IL2CPP;
@@ -29,7 +30,7 @@
 
         public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
         {
-            base.WriteCleanupLoop(writer, variableName, metadataAccess, new Func<CppCodeWriter, string>(this, (IntPtr) this.<WriteMarshalCleanupVariable>m__1));
+            base.WriteCleanupLoop(writer, variableName, metadataAccess, bodyWriter => base._arraySize.ToString(CultureInfo.InvariantCulture));
         }
 
         public override void WriteMarshalOutParameterFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
@@ -39,7 +40,7 @@
                 methodParameters = methodParameters,
                 $this = this
             };
-            base.WriteMarshalFromNativeLoop(writer, storey.variableName, destinationVariable, storey.methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+            base.WriteMarshalFromNativeLoop(writer, storey.variableName, destinationVariable, storey.methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
         }
 
         public override void WriteMarshalVariableFromNative(CppCodeWriter writer, string variableName, ManagedMarshalValue destinationVariable, IList<MarshaledParameter> methodParameters, bool returnValue, bool forNativeWrapperOfManagedMethod, IRuntimeMetadataAccess metadataAccess)
@@ -48,7 +49,7 @@
                 arraySize = base.MarshaledArraySizeFor(variableName, methodParameters)
             };
             base.AllocateAndStoreManagedArray(writer, destinationVariable, metadataAccess, storey.arraySize);
-            base.WriteMarshalFromNativeLoop(writer, variableName, destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey, (IntPtr) this.<>m__0));
+            base.WriteMarshalFromNativeLoop(writer, variableName, destinationVariable, methodParameters, returnValue, forNativeWrapperOfManagedMethod, metadataAccess, new Func<CppCodeWriter, string>(storey.<>m__0));
         }
 
         public override void WriteMarshalVariableToNative(CppCodeWriter writer, ManagedMarshalValue sourceVariable, string destinationVariable, string managedVariableName, IRuntimeMetadataAccess metadataAccess)
@@ -64,7 +65,7 @@
                     writer.WriteStatement(Emit.RaiseManagedException("il2cpp_codegen_get_argument_exception(\"\", \"Type could not be marshaled because the length of an embedded array instance does not match the declared length in the layout.\")"));
                 }
                 writer.WriteLine();
-                base.WriteMarshalToNativeLoop(writer, sourceVariable, destinationVariable, managedVariableName, metadataAccess, new Func<CppCodeWriter, string>(this, (IntPtr) this.<WriteMarshalVariableToNative>m__0));
+                base.WriteMarshalToNativeLoop(writer, sourceVariable, destinationVariable, managedVariableName, metadataAccess, bodyWriter => base._arraySize.ToString(CultureInfo.InvariantCulture));
             }
         }
 

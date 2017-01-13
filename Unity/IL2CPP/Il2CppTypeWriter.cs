@@ -52,7 +52,7 @@
             IDictionary<Il2CppTypeData, int> items = Il2CppTypeCollectorReader.Items;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Il2CppTypeData, TypeReference>(null, (IntPtr) <WriteIl2CppTypeDefinitions>m__0);
+                <>f__am$cache0 = entry => entry.Type.GetNonPinnedAndNonByReferenceType();
             }
             foreach (IGrouping<TypeReference, Il2CppTypeData> grouping in items.Keys.GroupBy<Il2CppTypeData, TypeReference>(<>f__am$cache0, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()))
             {
@@ -91,11 +91,11 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<Il2CppTypeData, int>, int>(null, (IntPtr) <WriteIl2CppTypeDefinitions>m__1);
+                <>f__am$cache1 = kvp => kvp.Value;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<KeyValuePair<Il2CppTypeData, int>, string>(null, (IntPtr) <WriteIl2CppTypeDefinitions>m__2);
+                <>f__am$cache2 = kvp => "&" + MetadataWriter.Naming.ForIl2CppType(kvp.Key.Type, kvp.Key.Attrs);
             }
             return MetadataWriter.WriteTable<KeyValuePair<Il2CppTypeData, int>>(base.Writer, "extern const Il2CppType* const ", "g_Il2CppTypeTable", items.OrderBy<KeyValuePair<Il2CppTypeData, int>, int>(<>f__am$cache1).ToArray<KeyValuePair<Il2CppTypeData, int>>(), <>f__am$cache2);
         }

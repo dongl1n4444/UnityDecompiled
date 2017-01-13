@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(Animation))]
+    [CustomEditor(typeof(Animation)), CanEditMultipleObjects]
     internal class AnimationEditor : Editor
     {
         private BoxEditor m_BoxEditor = new BoxEditor(false, s_BoxHash);

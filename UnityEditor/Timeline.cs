@@ -590,7 +590,7 @@
         }
 
         private bool WasDraggingData() => 
-            (((this.m_DstDragOffset != 0f) || (this.m_LeftThumbOffset != 0f)) || (this.m_RightThumbOffset != 0f));
+            (((this.m_DstDragOffset != 0f) || (this.m_LeftThumbOffset != 0f)) || !(this.m_RightThumbOffset == 0f));
 
         public float DstDuration =>
             (this.DstStopTime - this.DstStartTime);

@@ -30,7 +30,7 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(null, (IntPtr) FlagsToMakeWarningsErrorsFor);
+                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(AndroidToolChain.FlagsToMakeWarningsErrorsFor);
                 }
                 this.AdditionalCompilerOptionsForSourceFile = <>f__mg$cache0;
             }
@@ -94,7 +94,7 @@
                 "-o",
                 outputFile.InQuotes()
             };
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.DefaultLinkerFlags)));
             inputs.AddRange(staticLibraries.InQuotes(SlashMode.Native));
             foreach (NPath path in dynamicLibraries)
             {
@@ -351,7 +351,7 @@
                         this.$locvar2.Dispose();
                     }
                 }
-                this.$locvar3 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlags)).GetEnumerator();
+                this.$locvar3 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                 num = 0xfffffffd;
             Label_023C:
                 try
@@ -678,7 +678,7 @@
                 {
                     goto Label_0484;
                 }
-                this.$locvar1 = this.$this.AdditionalCompilerOptionsForSourceFile.Invoke(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
+                this.$locvar1 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                 num = 0xfffffffd;
             Label_040D:
                 try

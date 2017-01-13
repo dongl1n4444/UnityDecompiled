@@ -25,7 +25,7 @@
             string[] components = new string[] { IL2CPPBuilder.GetCppOutputPath(tempFolder), "Data", "Resources" };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CopyEmbeddedResourceFiles>m__0);
+                <>f__am$cache0 = f => f.EndsWith("-resources.dat");
             }
             foreach (string str in Enumerable.Where<string>(Directory.GetFiles(Paths.Combine(components)), <>f__am$cache0))
             {
@@ -39,7 +39,7 @@
             string[] components = new string[] { IL2CPPBuilder.GetCppOutputPath(tempFolder), "Data", "Metadata" };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <CopyMetadataFiles>m__1);
+                <>f__am$cache1 = f => f.EndsWith("-metadata.dat");
             }
             foreach (string str in Enumerable.Where<string>(Directory.GetFiles(Paths.Combine(components)), <>f__am$cache1))
             {

@@ -51,7 +51,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Action(null, (IntPtr) OnActiveBuildTargetChanged);
+                <>f__mg$cache0 = new Action(ModuleManager.OnActiveBuildTargetChanged);
             }
             EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__mg$cache0);
         }
@@ -476,11 +476,11 @@
         {
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <InitializePackageManager>m__4);
+                <>f__am$cache4 = x => x.Value.type == PackageFileType.Dll;
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<KeyValuePair<string, PackageFileData>, string>(null, (IntPtr) <InitializePackageManager>m__5);
+                <>f__am$cache5 = x => x.Key;
             }
             string str = Enumerable.Select<KeyValuePair<string, PackageFileData>, string>(Enumerable.Where<KeyValuePair<string, PackageFileData>>(package.files, <>f__am$cache4), <>f__am$cache5).FirstOrDefault<string>();
             if ((str == null) || !File.Exists(Path.Combine(package.basePath, str)))
@@ -523,7 +523,7 @@
                     Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <InitializePackageManager>m__6);
+                        <>f__am$cache6 = f => f.Value.type == PackageFileType.Dll;
                     }
                     foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info2.files, <>f__am$cache6))
                     {
@@ -599,7 +599,7 @@
                 Console.WriteLine("Setting {0} v{1} for Unity v{2} to {3}", arg);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<string, PackageFileData>, bool>(null, (IntPtr) <LoadUnityExtensions>m__0);
+                    <>f__am$cache0 = f => f.Value.type == PackageFileType.Dll;
                 }
                 foreach (KeyValuePair<string, PackageFileData> pair in Enumerable.Where<KeyValuePair<string, PackageFileData>>(info.files, <>f__am$cache0))
                 {
@@ -652,7 +652,7 @@
             {
                 throw new ArgumentNullException("processAssembly");
             }
-            return Enumerable.Aggregate<Assembly, List<T>>(AppDomain.CurrentDomain.GetAssemblies(), new List<T>(), new Func<List<T>, Assembly, List<T>>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Aggregate<Assembly, List<T>>(AppDomain.CurrentDomain.GetAssemblies(), new List<T>(), new Func<List<T>, Assembly, List<T>>(storey.<>m__0));
         }
 
         private static void RegisterPackageManager()
@@ -663,7 +663,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Assembly, bool>(null, (IntPtr) <RegisterPackageManager>m__1);
+                    <>f__am$cache1 = a => null != a.GetType("Unity.PackageManager.PackageManager");
                 }
                 Assembly assembly = Enumerable.FirstOrDefault<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache1);
                 if ((assembly != null) && InitializePackageManager(assembly, null))
@@ -677,11 +677,11 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<Assembly, bool>(null, (IntPtr) <RegisterPackageManager>m__2);
+                <>f__am$cache2 = a => a.GetName().Name == "Unity.Locator";
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Assembly, Type>(null, (IntPtr) <RegisterPackageManager>m__3);
+                <>f__am$cache3 = a => a.GetType("Unity.PackageManager.Locator");
             }
             Type type = Enumerable.Select<Assembly, Type>(Enumerable.Where<Assembly>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache2), <>f__am$cache3).FirstOrDefault<Type>();
             try
@@ -738,7 +738,7 @@
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 if (<>f__mg$cache1 == null)
                 {
-                    <>f__mg$cache1 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(null, (IntPtr) RegisterPlatformSupportModulesFromAssembly);
+                    <>f__mg$cache1 = new Func<Assembly, IEnumerable<IPlatformSupportModule>>(ModuleManager.RegisterPlatformSupportModulesFromAssembly);
                 }
                 s_PlatformModules = RegisterModulesFromLoadedAssemblies<IPlatformSupportModule>(<>f__mg$cache1).ToList<IPlatformSupportModule>();
                 stopwatch.Stop();
@@ -827,7 +827,7 @@
             {
                 try
                 {
-                    IEnumerable<T> source = this.processAssembly.Invoke(assembly);
+                    IEnumerable<T> source = this.processAssembly(assembly);
                     if ((source != null) && source.Any<T>())
                     {
                         list.AddRange(source);

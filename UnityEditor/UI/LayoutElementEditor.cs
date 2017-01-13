@@ -37,7 +37,7 @@
             bool flag = EditorGUI.ToggleLeft(position, GUIContent.none, property.floatValue >= 0f);
             if (EditorGUI.EndChangeCheck())
             {
-                property.floatValue = !flag ? -1f : defaultValue.Invoke((base.target as LayoutElement).transform as RectTransform);
+                property.floatValue = !flag ? -1f : defaultValue((base.target as LayoutElement).transform as RectTransform);
             }
             if (!property.hasMultipleDifferentValues && (property.floatValue >= 0f))
             {
@@ -58,7 +58,7 @@
             <LayoutElementField>c__AnonStorey0 storey = new <LayoutElementField>c__AnonStorey0 {
                 defaultValue = defaultValue
             };
-            this.LayoutElementField(property, new Func<RectTransform, float>(storey, (IntPtr) this.<>m__0));
+            this.LayoutElementField(property, new Func<RectTransform, float>(storey.<>m__0));
         }
 
         protected virtual void OnEnable()
@@ -86,12 +86,12 @@
                 this.LayoutElementField(this.m_MinHeight, (float) 0f);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<RectTransform, float>(null, (IntPtr) <OnInspectorGUI>m__0);
+                    <>f__am$cache0 = t => t.rect.width;
                 }
                 this.LayoutElementField(this.m_PreferredWidth, <>f__am$cache0);
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<RectTransform, float>(null, (IntPtr) <OnInspectorGUI>m__1);
+                    <>f__am$cache1 = t => t.rect.height;
                 }
                 this.LayoutElementField(this.m_PreferredHeight, <>f__am$cache1);
                 this.LayoutElementField(this.m_FlexibleWidth, (float) 1f);

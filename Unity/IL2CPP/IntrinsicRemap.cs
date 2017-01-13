@@ -323,22 +323,22 @@
             Dictionary<string, Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>> dictionary2 = new Dictionary<string, Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>>();
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(null, (IntPtr) GetCurrentMethodRemappingCustomArguments);
+                <>f__mg$cache0 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(IntrinsicRemap.GetCurrentMethodRemappingCustomArguments);
             }
             dictionary2.Add("System.Reflection.MethodBase System.Reflection.MethodBase::GetCurrentMethod()", <>f__mg$cache0);
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(null, (IntPtr) GetTypeRemappingCustomArguments);
+                <>f__mg$cache1 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(IntrinsicRemap.GetTypeRemappingCustomArguments);
             }
             dictionary2.Add("System.Type System.Type::GetType(System.String)", <>f__mg$cache1);
             if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache2 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(null, (IntPtr) GetTypeRemappingCustomArguments);
+                <>f__mg$cache2 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(IntrinsicRemap.GetTypeRemappingCustomArguments);
             }
             dictionary2.Add("System.Type System.Type::GetType(System.String,System.Boolean)", <>f__mg$cache2);
             if (<>f__mg$cache3 == null)
             {
-                <>f__mg$cache3 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(null, (IntPtr) GetTypeRemappingCustomArguments);
+                <>f__mg$cache3 = new Func<MethodReference, MethodReference, IRuntimeMetadataAccess, IEnumerable<string>, IEnumerable<string>>(IntrinsicRemap.GetTypeRemappingCustomArguments);
             }
             dictionary2.Add("System.Type System.Type::GetType(System.String,System.Boolean,System.Boolean)", <>f__mg$cache3);
             MethodNameMappingCustomArguments = dictionary2;
@@ -348,7 +348,7 @@
             new string[] { runtimeMetadata.MethodInfo(callingMethod) };
 
         public static IEnumerable<string> GetCustomArguments(MethodReference methodToCall, MethodReference callingMethod, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments) => 
-            MethodNameMappingCustomArguments[methodToCall.FullName].Invoke(callingMethod, methodToCall, runtimeMetadata, arguments);
+            MethodNameMappingCustomArguments[methodToCall.FullName](callingMethod, methodToCall, runtimeMetadata, arguments);
 
         private static IEnumerable<string> GetTypeRemappingCustomArguments(MethodReference callingMethod, MethodReference methodToCall, IRuntimeMetadataAccess runtimeMetadata, IEnumerable<string> arguments)
         {

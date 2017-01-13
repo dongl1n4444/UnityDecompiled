@@ -80,14 +80,14 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<string, string, bool>(null, (IntPtr) CanSkipCopy);
+                <>f__mg$cache0 = new Func<string, string, bool>(FileMirroring.CanSkipCopy);
             }
             MirrorFile(from, to, <>f__mg$cache0);
         }
 
         public static void MirrorFile(string from, string to, Func<string, string, bool> comparer)
         {
-            if (!comparer.Invoke(from, to))
+            if (!comparer(from, to))
             {
                 if (!File.Exists(from))
                 {
@@ -109,7 +109,7 @@
         {
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<string, string, bool>(null, (IntPtr) CanSkipCopy);
+                <>f__mg$cache1 = new Func<string, string, bool>(FileMirroring.CanSkipCopy);
             }
             MirrorFolder(from, to, <>f__mg$cache1);
         }
@@ -135,8 +135,8 @@
                 {
                     Directory.CreateDirectory(storey.to);
                 }
-                IEnumerable<string> first = Enumerable.Select<string, string>(Directory.GetFileSystemEntries(storey.to), new Func<string, string>(storey, (IntPtr) this.<>m__0));
-                IEnumerable<string> second = Enumerable.Select<string, string>(Directory.GetFileSystemEntries(storey.from), new Func<string, string>(storey, (IntPtr) this.<>m__1));
+                IEnumerable<string> first = Enumerable.Select<string, string>(Directory.GetFileSystemEntries(storey.to), new Func<string, string>(storey.<>m__0));
+                IEnumerable<string> second = Enumerable.Select<string, string>(Directory.GetFileSystemEntries(storey.from), new Func<string, string>(storey.<>m__1));
                 IEnumerable<string> enumerable3 = first.Except<string>(second);
                 foreach (string str in enumerable3)
                 {

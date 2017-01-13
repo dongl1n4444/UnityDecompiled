@@ -9,6 +9,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using Unity.IL2CPP.Building;
     using Unity.IL2CPP.Common;
 
     public class SimpleDirectoryProgramBuildDescription : ProgramBuildDescription, IHaveSourceDirectories
@@ -44,7 +45,16 @@
             this._additionalLinkerFlags;
 
         public override IEnumerable<CppCompilationInstruction> CppCompileInstructions =>
-            this._sourceDirectory.Files("*.cpp", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(this, (IntPtr) this.<get_CppCompileInstructions>m__0));
+            this._sourceDirectory.Files("*.cpp", false).Select<NPath, CppCompilationInstruction>(delegate (NPath f) {
+                CppCompilationInstruction instruction = new CppCompilationInstruction {
+                    SourceFile=f,
+                    CompilerFlags=this._additionalCompilerFlags
+                };
+                NPath[] pathArray1 = new NPath[] { this._sourceDirectory };
+                instruction.IncludePaths = pathArray1;
+                instruction.CacheDirectory = this._cacheDirectory;
+                return instruction;
+            });
 
         public override NPath GlobalCacheDirectory =>
             this._cacheDirectory;

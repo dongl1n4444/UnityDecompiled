@@ -106,7 +106,7 @@
             }
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) IsEmptyConstructor);
+                <>f__mg$cache0 = new Func<MethodDefinition, bool>(SerializationWeaver.IsEmptyConstructor);
             }
             if (definition.Methods.SingleOrDefault<MethodDefinition>(<>f__mg$cache0) == null)
             {
@@ -137,7 +137,7 @@
             <MakeImplement>c__AnonStorey0 storey = new <MakeImplement>c__AnonStorey0 {
                 typeDefinition = typeDefinition
             };
-            if (this._typeDef.Interfaces.Any<InterfaceImplementation>(new Func<InterfaceImplementation, bool>(storey, (IntPtr) this.<>m__0)))
+            if (this._typeDef.Interfaces.Any<InterfaceImplementation>(new Func<InterfaceImplementation, bool>(storey.<>m__0)))
             {
                 return false;
             }
@@ -183,7 +183,7 @@
             {
                 return null;
             }
-            if (definition.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this, (IntPtr) this.IsSerializationWeaverInjectedConstructor)) == null)
+            if (definition.Methods.SingleOrDefault<MethodDefinition>(new Func<MethodDefinition, bool>(this.IsSerializationWeaverInjectedConstructor)) == null)
             {
                 return null;
             }

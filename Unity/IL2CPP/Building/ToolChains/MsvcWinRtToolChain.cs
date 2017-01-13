@@ -23,7 +23,7 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(null, (IntPtr) MsvcToolChain.FlagsToMakeWarningsErrorsFor);
+                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(MsvcToolChain.FlagsToMakeWarningsErrorsFor);
                 }
                 base.AdditionalCompilerOptionsForSourceFile = <>f__mg$cache0;
             }

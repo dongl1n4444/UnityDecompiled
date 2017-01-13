@@ -137,11 +137,11 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <GetAllScriptGUIDs>m__0);
+                <>f__am$cache0 = asset => IsScriptOrAssembly(asset);
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <GetAllScriptGUIDs>m__1);
+                <>f__am$cache1 = asset => AssetDatabase.AssetPathToGUID(asset);
             }
             return Enumerable.Select<string, string>(Enumerable.Where<string>(AssetDatabase.GetAllAssetPaths(), <>f__am$cache0), <>f__am$cache1);
         }

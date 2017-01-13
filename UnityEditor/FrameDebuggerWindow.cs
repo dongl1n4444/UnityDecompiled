@@ -67,7 +67,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, GUIContent>(null, (IntPtr) <m_AdditionalInfoGuiContents>m__0);
+                <>f__am$cache0 = new Func<string, GUIContent>(FrameDebuggerWindow.<m_AdditionalInfoGuiContents>m__0);
             }
             this.m_AdditionalInfoGuiContents = Enumerable.Select<string, GUIContent>(Enum.GetNames(typeof(ShowAdditionalInfo)), <>f__am$cache0).ToArray<GUIContent>();
             this.m_AttachProfilerUI = new AttachProfilerUI();

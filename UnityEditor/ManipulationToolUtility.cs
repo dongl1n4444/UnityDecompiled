@@ -7,7 +7,7 @@
 
     internal class ManipulationToolUtility
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Vector3 <minDragDifference>k__BackingField;
         public static HandleDragChange handleDragChange;
 

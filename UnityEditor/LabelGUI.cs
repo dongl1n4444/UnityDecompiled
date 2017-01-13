@@ -51,13 +51,13 @@
             Event current = Event.current;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<PopupList.ListElement, string>(null, (IntPtr) <DrawLabelList>m__0);
+                <>f__am$cache0 = i => i.text.ToLower();
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<PopupList.ListElement, GUIContent>(null, (IntPtr) <DrawLabelList>m__1);
+                <>f__am$cache1 = i => i.m_Content;
             }
-            foreach (GUIContent content in Enumerable.Select<PopupList.ListElement, GUIContent>(Enumerable.OrderBy<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, new Func<PopupList.ListElement, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0), <>f__am$cache1).Take<GUIContent>(s_MaxShownLabels))
+            foreach (GUIContent content in Enumerable.Select<PopupList.ListElement, GUIContent>(Enumerable.OrderBy<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, new Func<PopupList.ListElement, bool>(storey.<>m__0)), <>f__am$cache0), <>f__am$cache1).Take<GUIContent>(s_MaxShownLabels))
             {
                 Rect position = GUILayoutUtility.GetRect(content, style);
                 if ((Event.current.type == EventType.Repaint) && (position.xMax >= xMax))
@@ -122,8 +122,8 @@
                         {
                             element.filterScore = storey.pair.Value;
                         }
-                        element.selected = Enumerable.Any<string>(list, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
-                        element.partiallySelected = Enumerable.Any<string>(list2, new Func<string, bool>(storey, (IntPtr) this.<>m__1));
+                        element.selected = Enumerable.Any<string>(list, new Func<string, bool>(storey.<>m__0));
+                        element.partiallySelected = Enumerable.Any<string>(list2, new Func<string, bool>(storey.<>m__1));
                     }
                 }
             }

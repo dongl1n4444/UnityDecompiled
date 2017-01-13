@@ -26,7 +26,7 @@
             {
                 if (<>f__mg$cache0 == null)
                 {
-                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(null, (IntPtr) FlagsToMakeWarningsErrorsFor);
+                    <>f__mg$cache0 = new Func<string, IEnumerable<string>>(ClangToolChain.FlagsToMakeWarningsErrorsFor);
                 }
                 this.AdditionalCompilerOptionsForSourceFile = <>f__mg$cache0;
             }
@@ -92,9 +92,9 @@
             string[] source = new string[] { "MacOSx10.11.sdk", "MacOSx10.10.sdk", "MacOSx10.9.sdk" };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <MacDevSDKPath>m__0);
+                <>f__am$cache0 = sdk => sdk.DirectoryExists("");
             }
-            return source.Select<string, NPath>(new Func<string, NPath>(storey, (IntPtr) this.<>m__0)).First<NPath>(<>f__am$cache0);
+            return source.Select<string, NPath>(new Func<string, NPath>(storey.<>m__0)).First<NPath>(<>f__am$cache0);
         }
 
         public override CppProgramBuilder.LinkerInvocation MakeLinkerInvocation(IEnumerable<NPath> objectFiles, NPath outputFile, IEnumerable<NPath> staticLibraries, IEnumerable<NPath> dynamicLibraries, IEnumerable<string> specifiedLinkerFlags, CppToolChainContext toolChainContext)
@@ -109,7 +109,7 @@
             {
                 inputs.Add("-dylib");
             }
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.DefaultLinkerFlags)));
             list.AddRange(staticLibraries);
             list.AddRange(dynamicLibraries);
             inputs.AddRange(staticLibraries.InQuotes(SlashMode.Native));
@@ -293,7 +293,7 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlags)).GetEnumerator();
+                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                 num = 0xfffffffd;
             Label_0196:
                 try
@@ -522,7 +522,7 @@
                 {
                     goto Label_02E1;
                 }
-                this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile.Invoke(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
+                this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                 num = 0xfffffffd;
             Label_026A:
                 try

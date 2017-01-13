@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using UnityEditor.WebGL.Emscripten;
     using UnityEditorInternal;
+    using UnityEngine;
 
     public class WebGLIl2CppNativeCodeBuilder : Il2CppNativeCodeBuilder
     {
@@ -56,7 +58,20 @@
                 }
                 foreach (string str3 in this._libs)
                 {
-                    list.Add("--additional-libraries=\"" + str3 + "\"");
+                    switch (Path.GetExtension(str3))
+                    {
+                        case ".c":
+                        case ".cc":
+                        case ".cpp":
+                        case ".a":
+                        case ".bc":
+                            list.Add("--additional-libraries=\"" + str3 + "\"");
+                            break;
+
+                        default:
+                            UnityEngine.Debug.LogWarning("Plugin " + str3 + " not supported on WebGL.");
+                            break;
+                    }
                 }
                 return list;
             }

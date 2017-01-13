@@ -137,7 +137,7 @@
         {
             foreach (NetworkIdentity identity in UnityEngine.Object.FindObjectsOfType<NetworkIdentity>())
             {
-                identity.Reset();
+                identity.MarkForReset();
             }
         }
 

@@ -506,9 +506,9 @@
                 this.m_DopeSheet.OnDisable();
             }
             AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Remove(selection.onSelectionChanged, new Action(this, (IntPtr) this.OnSelectionChanged));
-            this.m_State.onStartLiveEdit = (Action) Delegate.Remove(this.m_State.onStartLiveEdit, new Action(this, (IntPtr) this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Remove(this.m_State.onEndLiveEdit, new Action(this, (IntPtr) this.OnEndLiveEdit));
+            selection.onSelectionChanged = (Action) Delegate.Remove(selection.onSelectionChanged, new Action(this.OnSelectionChanged));
+            this.m_State.onStartLiveEdit = (Action) Delegate.Remove(this.m_State.onStartLiveEdit, new Action(this.OnStartLiveEdit));
+            this.m_State.onEndLiveEdit = (Action) Delegate.Remove(this.m_State.onEndLiveEdit, new Action(this.OnEndLiveEdit));
             this.m_State.OnDisable();
         }
 
@@ -535,9 +535,9 @@
             this.m_Overlay.state = this.m_State;
             this.m_CurveEditor.curvesUpdated = (CurveEditor.CallbackFunction) Delegate.Combine(this.m_CurveEditor.curvesUpdated, new CurveEditor.CallbackFunction(this.SaveChangedCurvesFromCurveEditor));
             AnimationWindowSelection selection = this.m_State.selection;
-            selection.onSelectionChanged = (Action) Delegate.Combine(selection.onSelectionChanged, new Action(this, (IntPtr) this.OnSelectionChanged));
-            this.m_State.onStartLiveEdit = (Action) Delegate.Combine(this.m_State.onStartLiveEdit, new Action(this, (IntPtr) this.OnStartLiveEdit));
-            this.m_State.onEndLiveEdit = (Action) Delegate.Combine(this.m_State.onEndLiveEdit, new Action(this, (IntPtr) this.OnEndLiveEdit));
+            selection.onSelectionChanged = (Action) Delegate.Combine(selection.onSelectionChanged, new Action(this.OnSelectionChanged));
+            this.m_State.onStartLiveEdit = (Action) Delegate.Combine(this.m_State.onStartLiveEdit, new Action(this.OnStartLiveEdit));
+            this.m_State.onEndLiveEdit = (Action) Delegate.Combine(this.m_State.onEndLiveEdit, new Action(this.OnEndLiveEdit));
         }
 
         public void OnEndLiveEdit()

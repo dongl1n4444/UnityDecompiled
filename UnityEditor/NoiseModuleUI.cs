@@ -178,7 +178,7 @@
             public GUIContent octaveMultiplier = EditorGUIUtility.TextContent("Octave Multiplier|When combining each octave, scale the intensity by this amount.");
             public GUIContent octaves = EditorGUIUtility.TextContent("Octaves|Layers of noise that combine to produce final noise (Adding octaves increases the performance cost substantially!)");
             public GUIContent octaveScale = EditorGUIUtility.TextContent("Octave Scale|When combining each octave, zoom in by this amount.");
-            public GUIContent previewTexture = EditorGUIUtility.TextContent("Preview");
+            public GUIContent previewTexture = EditorGUIUtility.TextContent("Preview|Preview the noise as a texture.");
             public GUIContent quality = EditorGUIUtility.TextContent("Quality|Generate 1D, 2D or 3D noise.");
             public string[] qualityDropdown = new string[] { "Low (1D)", "Medium (2D)", "High (3D)" };
             public GUIContent remap = EditorGUIUtility.TextContent("Remap|Remap the final noise values into a new range.");

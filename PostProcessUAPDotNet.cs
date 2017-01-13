@@ -42,7 +42,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
         string str = string.Join(";", textArray1);
         if (<>f__am$cache2 == null)
         {
-            <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <GetAlternativeReferenceRewritterMappings>m__2);
+            <>f__am$cache2 = r => Path.GetFileName(r);
         }
         foreach (string str2 in Enumerable.Select<string, string>(PostProcessUAP.UWPReferences, <>f__am$cache2))
         {
@@ -58,7 +58,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <GetLangAssemblies>m__0);
+            <>f__am$cache0 = a => Utility.CombinePath("UAP", a);
         }
         return Enumerable.Select<string, string>(base.GetLangAssemblies(), <>f__am$cache0);
     }
@@ -85,7 +85,7 @@ internal class PostProcessUAPDotNet : PostProcessUAP
     {
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <GetUnityPluginOverwrites>m__1);
+            <>f__am$cache1 = a => Utility.CombinePath("UAP", a);
         }
         return Enumerable.Select<string, string>(base.GetUnityPluginOverwrites(), <>f__am$cache1);
     }

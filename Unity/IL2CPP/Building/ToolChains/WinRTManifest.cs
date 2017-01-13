@@ -21,14 +21,14 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <AddActivatableClasses>m__0);
+                <>f__am$cache0 = winmd => MakeActivatableExtensionElementForWinmd(winmd);
             }
             string[] source = manifestPath.Parent.Files("*.winmd", false).Select<NPath, string>(<>f__am$cache0).ToArray<string>();
             if (source.Any<string>())
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <AddActivatableClasses>m__1);
+                    <>f__am$cache1 = (x, y) => x + Environment.NewLine + y;
                 }
                 string str = source.Aggregate<string>(<>f__am$cache1);
                 string contents = File.ReadAllText(manifestPath.ToString());

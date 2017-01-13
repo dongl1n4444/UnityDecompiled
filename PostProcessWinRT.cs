@@ -148,7 +148,7 @@ internal abstract class PostProcessWinRT
         {
             string playerFilesSourceDirectory = this.GetPlayerFilesSourceDirectory();
             string playerFilesTargetDirectory = this.GetPlayerFilesTargetDirectory();
-            IEnumerable<string> enumerable = Enumerable.Where<string>(Directory.GetFiles(playerFilesSourceDirectory, "*", SearchOption.AllDirectories), new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            IEnumerable<string> enumerable = Enumerable.Where<string>(Directory.GetFiles(playerFilesSourceDirectory, "*", SearchOption.AllDirectories), new Func<string, bool>(storey.<>m__0));
             foreach (string str3 in enumerable)
             {
                 string path = str3.Substring(playerFilesSourceDirectory.Length + 1);
@@ -182,7 +182,7 @@ internal abstract class PostProcessWinRT
             if (!string.IsNullOrEmpty(fileName))
             {
                 storey.pluginName = Path.GetFileNameWithoutExtension(fileName);
-                if (!Enumerable.Any<string>(this.GetCompatibleBuiltinPlugins(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (!Enumerable.Any<string>(this.GetCompatibleBuiltinPlugins(), new Func<string, bool>(storey.<>m__0)))
                 {
                     DeletePlugin(Path.Combine(this.StagingAreaDataManaged, fileName));
                     incompatiblePlugins.Add(storey.pluginName);
@@ -200,7 +200,7 @@ internal abstract class PostProcessWinRT
                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(importer2.assetPath);
                 string assetPath = importer2.assetPath;
                 string str6 = MetroPluginImporterExtension.CalculateFinalPluginPath(buildTargetName, importer2, this._sdk);
-                if (string.IsNullOrEmpty(str6) || !Enumerable.Any<string>(strArray, new Func<string, bool>(storey2, (IntPtr) this.<>m__0)))
+                if (string.IsNullOrEmpty(str6) || !Enumerable.Any<string>(strArray, new Func<string, bool>(storey2.<>m__0)))
                 {
                     incompatiblePlugins.Add(fileNameWithoutExtension);
                 }
@@ -283,7 +283,7 @@ internal abstract class PostProcessWinRT
                 <CreateManagedRegistryTxtFile>c__AnonStorey8 storey = new <CreateManagedRegistryTxtFile>c__AnonStorey8 {
                     library = enumerator.Current
                 };
-                if ((!storey.library.Native && !storey.library.WinMd) && !Enumerable.Any<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if ((!storey.library.Native && !storey.library.WinMd) && !Enumerable.Any<string>(strArray, new Func<string, bool>(storey.<>m__0)))
                 {
                     if (builder.Length != 0)
                     {
@@ -501,11 +501,11 @@ internal abstract class PostProcessWinRT
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<Library, bool>(null, (IntPtr) <MakeWinmdAssembliesString>m__0);
+            <>f__am$cache0 = l => l.WinMd;
         }
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<Library, string>(null, (IntPtr) <MakeWinmdAssembliesString>m__1);
+            <>f__am$cache1 = l => l.Name;
         }
         return JoinStrings(Enumerable.Select<Library, string>(Enumerable.Where<Library>(this.Libraries, <>f__am$cache0), <>f__am$cache1));
     }
@@ -652,7 +652,7 @@ internal abstract class PostProcessWinRT
                 <RunReferenceRewriter>c__AnonStorey6 storey = new <RunReferenceRewriter>c__AnonStorey6 {
                     library = enumerator.Current
                 };
-                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredByReferenceRewriter, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredByReferenceRewriter, new Func<string, bool>(storey.<>m__0)))
                 {
                     foreach (string str9 in storey.library.Archs)
                     {
@@ -689,7 +689,7 @@ internal abstract class PostProcessWinRT
                         {
                             this.RunAssemblyConverterNoMetadata(archReferencePath);
                         }
-                        else if (!Enumerable.Any<string>(ignoreOutputAssembliesForReferenceRewriter, new Func<string, bool>(storey2, (IntPtr) this.<>m__0)))
+                        else if (!Enumerable.Any<string>(ignoreOutputAssembliesForReferenceRewriter, new Func<string, bool>(storey2.<>m__0)))
                         {
                             char[] separator = new char[] { '\r', '\n' };
                             string[] strArray = storey2.output.Split(separator, StringSplitOptions.RemoveEmptyEntries);
@@ -725,7 +725,7 @@ internal abstract class PostProcessWinRT
                 <RunSerializationWeaver>c__AnonStorey5 storey = new <RunSerializationWeaver>c__AnonStorey5 {
                     library = enumerator.Current
                 };
-                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredBySerializationWeaver, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                if (storey.library.Process && !Enumerable.Any<string>(assembliesIgnoredBySerializationWeaver, new Func<string, bool>(storey.<>m__0)))
                 {
                     foreach (string str5 in storey.library.Archs)
                     {
@@ -827,7 +827,7 @@ internal abstract class PostProcessWinRT
                 <>f__ref$9 = this,
                 f = f
             };
-            return Enumerable.Any<string>(this.extensions, new Func<string, bool>(ya, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(this.extensions, new Func<string, bool>(ya.<>m__0));
         }
 
         private sealed class <CopyPlayerFiles>c__AnonStoreyA

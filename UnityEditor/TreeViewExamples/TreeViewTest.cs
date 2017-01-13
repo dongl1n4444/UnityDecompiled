@@ -77,7 +77,7 @@
                 this.m_ColumnHeader = new TreeViewColumnHeader();
                 this.m_ColumnHeader.columnWidths = treeViewState.columnWidths;
                 this.m_ColumnHeader.minColumnWidth = 30f;
-                this.m_ColumnHeader.columnRenderer = (Action<int, Rect>) Delegate.Combine(this.m_ColumnHeader.columnRenderer, new Action<int, Rect>(this, (IntPtr) this.OnColumnRenderer));
+                this.m_ColumnHeader.columnRenderer = (Action<int, Rect>) Delegate.Combine(this.m_ColumnHeader.columnRenderer, new Action<int, Rect>(this.OnColumnRenderer));
             }
         }
 

@@ -16,7 +16,7 @@
 
         public void RunFinished(List<TestResult> testResults)
         {
-            this.afterRun.Invoke();
+            this.afterRun();
         }
 
         public void RunStarted(string platform, List<string> testsToRun)

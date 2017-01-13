@@ -20,7 +20,7 @@
             if (typeReference.IsGenericInstance)
             {
                 GenericInstanceType type = (GenericInstanceType) typeReference;
-                return (this.HasGenericParameters(type.ElementType) || type.GenericArguments.Any<TypeReference>(new Func<TypeReference, bool>(this, (IntPtr) this.HasGenericParameters)));
+                return (this.HasGenericParameters(type.ElementType) || type.GenericArguments.Any<TypeReference>(new Func<TypeReference, bool>(this.HasGenericParameters)));
             }
             if (typeReference.IsArray)
             {
@@ -39,7 +39,7 @@
             <ResolveByName>c__AnonStorey0 storey = new <ResolveByName>c__AnonStorey0 {
                 genericParameter = genericParameter
             };
-            foreach (Context context in this._resolutionContext.Reverse<Context>().Where<Context>(new Func<Context, bool>(storey, (IntPtr) this.<>m__0)))
+            foreach (Context context in this._resolutionContext.Reverse<Context>().Where<Context>(new Func<Context, bool>(storey.<>m__0)))
             {
                 return context.Resolve(storey.genericParameter);
             }

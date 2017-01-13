@@ -51,7 +51,7 @@ internal class PostProcessUAPIl2Cpp : PostProcessUAP
             <CopyPlugins>c__AnonStorey0 storey = new <CopyPlugins>c__AnonStorey0();
             string assetPath = importer.assetPath;
             storey.pluginExtension = Path.GetExtension(assetPath);
-            if (Enumerable.Any<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+            if (Enumerable.Any<string>(strArray, new Func<string, bool>(storey.<>m__0)))
             {
                 this.CppPlugins.Add(assetPath);
             }

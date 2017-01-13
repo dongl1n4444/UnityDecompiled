@@ -105,7 +105,7 @@ internal abstract class PostProcessUAP : PostProcessWSA
     {
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <GetAdditionalReferenceAssembliesDirectories>m__0);
+            <>f__am$cache0 = m => Path.GetDirectoryName(m);
         }
         List<string> collection = new List<string>(Enumerable.Select<string, string>(UWPReferences, <>f__am$cache0));
         List<string> list2 = new List<string>();

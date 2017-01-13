@@ -75,7 +75,7 @@
         }
 
         public float widthOfAllVisibleColumns =>
-            Enumerable.Sum<int>(this.visibleColumns, new Func<int, float>(this, (IntPtr) this.<get_widthOfAllVisibleColumns>m__0));
+            Enumerable.Sum<int>(this.visibleColumns, (Func<int, float>) (t => this.columns[t].width));
 
         [Serializable]
         public class Column

@@ -98,11 +98,11 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, UnityType>(null, (IntPtr) <CollectNativeClassListFromRoots>m__1);
+                <>f__am$cache1 = name => UnityType.FindTypeByName(name);
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<UnityType, bool>(null, (IntPtr) <CollectNativeClassListFromRoots>m__2);
+                <>f__am$cache2 = klass => (klass != null) && (klass.baseClass != null);
             }
             return new HashSet<UnityType>(Enumerable.Where<UnityType>(Enumerable.Select<string, UnityType>(CollectManagedTypeReferencesFromRoots(directory, rootAssemblies, strippingInfo), <>f__am$cache1), <>f__am$cache2));
         }
@@ -313,7 +313,7 @@
             <GetAssembliesWithSuffix>c__AnonStorey0 storey = new <GetAssembliesWithSuffix>c__AnonStorey0 {
                 suffix = EditorSettings.Internal_UserGeneratedProjectSuffix
             };
-            return Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey, (IntPtr) this.<>m__0)).ToArray<string>();
+            return Enumerable.Select<string, string>(s_UserAssemblies, new Func<string, string>(storey.<>m__0)).ToArray<string>();
         }
 
         public static List<string> GetDependentModules(string moduleXml)
@@ -543,7 +543,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<string, UnityType>(null, (IntPtr) <get_BlackListNativeClasses>m__0);
+                        <>f__am$cache0 = typeName => FindTypeByNameChecked(typeName, "code stripping blacklist native class");
                     }
                     s_blackListNativeClasses = Enumerable.Select<string, UnityType>(s_blackListNativeClassNames, <>f__am$cache0).ToArray<UnityType>();
                 }

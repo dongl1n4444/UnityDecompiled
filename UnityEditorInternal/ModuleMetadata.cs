@@ -22,7 +22,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<int, UnityType>(null, (IntPtr) <GetModuleTypes>m__0);
+                <>f__am$cache0 = id => UnityType.FindTypeByPersistentTypeID(id);
             }
             return Enumerable.Select<int, UnityType>(GetModuleClasses(moduleName), <>f__am$cache0).ToArray<UnityType>();
         }

@@ -343,7 +343,7 @@
 
         private class PackageImportTreeViewGUI : TreeViewGUI
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private int <showPreviewForID>k__BackingField;
             public Action<PackageImportTreeView.PackageImportTreeViewItem> itemWasToggled;
             protected float k_FoldoutWidth;

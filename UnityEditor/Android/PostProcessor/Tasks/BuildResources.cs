@@ -65,7 +65,9 @@
                 this.OnProgress(this, "Updating resources with player settings");
             }
             this.ReplaceIconResources();
-            if (!context.Get<bool>("ExportAndroidProject"))
+            bool flag = context.Get<bool>("ExportAndroidProject");
+            bool flag2 = context.Get<int>("ProjectType") == 1;
+            if (!flag && !flag2)
             {
                 if (this.OnProgress != null)
                 {

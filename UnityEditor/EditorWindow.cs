@@ -13,7 +13,7 @@
     {
         private const double kWarningFadeoutTime = 1.0;
         private const double kWarningFadeoutWait = 4.0;
-        [HideInInspector, SerializeField]
+        [SerializeField, HideInInspector]
         private int m_AntiAlias = 0;
         [SerializeField, HideInInspector]
         private bool m_AutoRepaintOnSceneChange;
@@ -26,7 +26,7 @@
         private Vector2 m_GameViewTargetSize;
         [SerializeField, HideInInspector]
         private Vector2 m_MaxSize = new Vector2(4000f, 4000f);
-        [SerializeField, HideInInspector]
+        [HideInInspector, SerializeField]
         private Vector2 m_MinSize = new Vector2(100f, 100f);
         internal GUIContent m_Notification = null;
         private Vector2 m_NotificationSize;
@@ -34,7 +34,7 @@
         internal HostView m_Parent;
         [HideInInspector, SerializeField]
         internal Rect m_Pos = new Rect(0f, 0f, 320f, 240f);
-        [HideInInspector, SerializeField]
+        [SerializeField, HideInInspector]
         internal GUIContent m_TitleContent;
         private bool m_WantsMouseMove;
 
@@ -324,7 +324,7 @@
                     foreach (View view in window.rootView.allChildren)
                     {
                         DockArea area = view as DockArea;
-                        if ((area != null) && Enumerable.Any<EditorWindow>(area.m_Panes, new Func<EditorWindow, bool>(storey, (IntPtr) this.<>m__0)))
+                        if ((area != null) && Enumerable.Any<EditorWindow>(area.m_Panes, new Func<EditorWindow, bool>(storey.<>m__0)))
                         {
                             area.AddTab(pane);
                             return pane;

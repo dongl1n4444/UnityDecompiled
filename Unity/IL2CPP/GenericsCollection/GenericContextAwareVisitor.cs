@@ -57,7 +57,7 @@
                 TypeReference reference = type.GenericArguments[0];
                 TypeReference[] arguments = new TypeReference[] { reference };
                 storey.genericElementComparisonInterface = genericElementComparisonInterfaceDefinition.MakeGenericInstanceType(arguments);
-                if (reference.GetInterfaces().Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)))
+                if (reference.GetInterfaces().Any<TypeReference>(new Func<TypeReference, bool>(storey.<>m__0)))
                 {
                     TypeReference[] referenceArray2 = new TypeReference[] { reference };
                     ProcessGenericType(genericComparerDefinition.MakeGenericInstanceType(referenceArray2), generics, contextMethod);
@@ -78,7 +78,7 @@
                 TypeReference reference = type2.GenericArguments[0];
                 TypeReference[] arguments = new TypeReference[] { reference };
                 storey.genericElementComparisonInterface = self.MakeGenericInstanceType(arguments);
-                if (reference.GetInterfaces().Any<TypeReference>(new Func<TypeReference, bool>(storey, (IntPtr) this.<>m__0)))
+                if (reference.GetInterfaces().Any<TypeReference>(new Func<TypeReference, bool>(storey.<>m__0)))
                 {
                     TypeReference[] referenceArray2 = new TypeReference[] { reference };
                     ProcessGenericType(definition4.MakeGenericInstanceType(referenceArray2), generics, contextMethod);
@@ -98,7 +98,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <ProcessArray>m__0);
+                    <>f__am$cache0 = m => m.Name == "InternalArray__IEnumerable_GetEnumerator";
                 }
                 MethodDefinition definition2 = TypeProvider.Corlib.MainModule.GetType("System", "Array").Methods.Single<MethodDefinition>(<>f__am$cache0);
                 if (definition2 != null)

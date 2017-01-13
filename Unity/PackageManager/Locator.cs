@@ -52,9 +52,9 @@
             };
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<InternalPackageInfo, PackageVersion>(null, (IntPtr) <GetPackageManager>m__2);
+                <>f__am$cache2 = p => p.package.version;
             }
-            InternalPackageInfo info = Enumerable.OrderByDescending<InternalPackageInfo, PackageVersion>(Enumerable.Where<InternalPackageInfo>(s_Tree, new Func<InternalPackageInfo, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache2).FirstOrDefault<InternalPackageInfo>();
+            InternalPackageInfo info = Enumerable.OrderByDescending<InternalPackageInfo, PackageVersion>(Enumerable.Where<InternalPackageInfo>(s_Tree, new Func<InternalPackageInfo, bool>(storey.<>m__0)), <>f__am$cache2).FirstOrDefault<InternalPackageInfo>();
             if (info != null)
             {
                 return info.package;
@@ -84,7 +84,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<InternalPackageInfo, PackageInfo>(null, (IntPtr) <QueryAll>m__0);
+                <>f__am$cache0 = t => t.package;
             }
             return Enumerable.Select<InternalPackageInfo, PackageInfo>(s_Tree, <>f__am$cache0);
         }
@@ -93,7 +93,7 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<InternalPackageInfo, object>(null, (IntPtr) <QueryAllModules>m__1);
+                <>f__am$cache1 = t => t.module;
             }
             return Enumerable.Select<InternalPackageInfo, object>(s_Tree, <>f__am$cache1);
         }
@@ -145,7 +145,7 @@
             Scan(editorInstallPath, unityVersion);
             if (scanDoneCallback != null)
             {
-                scanDoneCallback.Invoke();
+                scanDoneCallback();
             }
         }
 
@@ -187,7 +187,7 @@
         {
             if (s_ScanningCallback != null)
             {
-                s_Cancelled = !s_ScanningCallback.Invoke();
+                s_Cancelled = !s_ScanningCallback();
                 if (s_Cancelled)
                 {
                     s_ScanningCallback = null;

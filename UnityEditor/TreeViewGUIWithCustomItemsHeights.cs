@@ -11,7 +11,7 @@
 
     internal abstract class TreeViewGUIWithCustomItemsHeights : ITreeViewGUI
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <bottomRowMargin>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private float <topRowMargin>k__BackingField;

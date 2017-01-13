@@ -156,7 +156,7 @@
                 new XmlResultWriter(suiteName, Application.platform.ToString(), this.m_Results.ToArray()).WriteToFile(dataPath, fileName);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<EditorTestResult, bool>(null, (IntPtr) <RunFinished>m__0);
+                    <>f__am$cache0 = result => result.executed;
                 }
                 IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_Results, <>f__am$cache0);
                 if (!source.Any<EditorTestResult>())
@@ -167,7 +167,7 @@
                 {
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<EditorTestResult, bool>(null, (IntPtr) <RunFinished>m__1);
+                        <>f__am$cache1 = result => !result.isSuccess;
                     }
                     EditorApplication.Exit(!Enumerable.Where<EditorTestResult>(source, <>f__am$cache1).Any<EditorTestResult>() ? 0 : 2);
                 }

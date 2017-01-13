@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using UnityEditor;
     using UnityEngine;
     using UnityEngine.Rendering;
 
@@ -17,6 +18,8 @@
         private Material m_OcclusionMaterial;
         [SerializeField]
         private Material m_VisualMaterial;
+        private static Material s_DefaultOcclusionMaterial = null;
+        private static Material s_DefaultVisualRenderMaterial = null;
 
         protected void ApplyPropertiesToCachedSurfaces()
         {
@@ -136,6 +139,27 @@
         protected override void Reset()
         {
             base.Reset();
+            this.SetupDefaultMaterials();
+        }
+
+        private void SetupDefaultMaterials()
+        {
+            if (s_DefaultOcclusionMaterial == null)
+            {
+                s_DefaultOcclusionMaterial = AssetDatabase.GetBuiltinExtraResource<Material>("VR/Materials/SpatialMappingOcclusion.mat");
+            }
+            if (s_DefaultVisualRenderMaterial == null)
+            {
+                s_DefaultVisualRenderMaterial = AssetDatabase.GetBuiltinExtraResource<Material>("VR/Materials/SpatialMappingWireframe.mat");
+            }
+            if (this.occlusionMaterial == null)
+            {
+                this.occlusionMaterial = s_DefaultOcclusionMaterial;
+            }
+            if (this.visualMaterial == null)
+            {
+                this.visualMaterial = s_DefaultVisualRenderMaterial;
+            }
         }
 
         /// <summary>

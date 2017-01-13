@@ -9,7 +9,7 @@
 
     internal class GameObjectTreeViewItem : TreeViewItem
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private bool <isSceneHeader>k__BackingField;
         private int m_ColorCode;
         private Object m_ObjectPPTR;

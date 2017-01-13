@@ -130,7 +130,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <HelpRequested>m__0);
+                <>f__am$cache0 = v => ((v == "--h") || (v == "--help")) || (v == "-help");
             }
             return (commandLine.Count<string>(<>f__am$cache0) > 0);
         }
@@ -151,7 +151,7 @@
                 {
                     if (<>f__mg$cache0 == null)
                     {
-                        <>f__mg$cache0 = new Func<Type, bool>(null, (IntPtr) HasProgramOptionsAttribute);
+                        <>f__mg$cache0 = new Func<Type, bool>(OptionsParser.HasProgramOptionsAttribute);
                     }
                     list.AddRange(assembly2.GetTypesPortable().Where<Type>(<>f__mg$cache0));
                     if (includeReferencedAssemblies)
@@ -183,11 +183,11 @@
         {
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Match, string>(null, (IntPtr) <NormalizeName>m__1);
+                <>f__am$cache1 = m => m.Value.ToLower();
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <NormalizeName>m__2);
+                <>f__am$cache2 = (buff, s) => buff + "-" + s;
             }
             return NameBuilder.Matches(name).Cast<Match>().Select<Match, string>(<>f__am$cache1).Aggregate<string>(<>f__am$cache2);
         }
@@ -264,7 +264,7 @@
             };
             if (storey.type.IsEnumPortable())
             {
-                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey, (IntPtr) this.<>m__0));
+                return Enum.GetValues(storey.type).Cast<object>().First<object>(new Func<object, bool>(storey.<>m__0));
             }
             object obj3 = Convert.ChangeType(storey.value, storey.type, CultureInfo.InvariantCulture);
             if (obj3 == null)

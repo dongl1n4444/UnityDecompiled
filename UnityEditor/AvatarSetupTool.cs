@@ -1270,7 +1270,7 @@
                     <Reset>c__AnonStorey0 storey = new <Reset>c__AnonStorey0 {
                         boneName = serializedProperty.FindPropertyRelative(sBoneName).stringValue
                     };
-                    this.bone = Enumerable.FirstOrDefault<Transform>(bones.Keys, new Func<Transform, bool>(storey, (IntPtr) this.<>m__0));
+                    this.bone = Enumerable.FirstOrDefault<Transform>(bones.Keys, new Func<Transform, bool>(storey.<>m__0));
                 }
                 this.state = BoneState.Valid;
             }

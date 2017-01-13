@@ -36,7 +36,7 @@
             string[] first = new string[] { "obj" };
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<int, int, string>(null, (IntPtr) <CallParametersFor>m__3);
+                <>f__am$cache3 = (m, i) => $"p{i + 1}";
             }
             string[] second = new string[] { "invokeData.method" };
             return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache3)).Concat<string>(second).AggregateWithComma();
@@ -47,7 +47,7 @@
             string[] first = new string[] { "void*" };
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<int, int, string>(null, (IntPtr) <FunctionPointerParametersFor>m__5);
+                <>f__am$cache5 = (m, i) => $"T{i + 1}";
             }
             string[] second = new string[] { "const MethodInfo*" };
             return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache5)).Concat<string>(second).AggregateWithComma();
@@ -58,7 +58,7 @@
             string[] first = !isGeneric ? new string[] { "Il2CppMethodSlot slot", "void* obj" } : new string[] { "const MethodInfo* method", "void* obj" };
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<int, int, string>(null, (IntPtr) <InvokeParametersFor>m__4);
+                <>f__am$cache4 = (m, i) => string.Format("T{0} p{0}", i + 1);
             }
             return first.Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache4)).AggregateWithComma();
         }
@@ -80,11 +80,11 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<int, string>(null, (IntPtr) <TemplateParametersFor>m__1);
+                <>f__am$cache1 = i => "T" + i;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <TemplateParametersFor>m__2);
+                <>f__am$cache2 = t => "typename " + t;
             }
             return (!data.VoidReturn ? ((IEnumerable<string>) new string[] { "R" }) : Enumerable.Empty<string>()).Concat<string>(Enumerable.Range(1, data.ParameterCount).Select<int, string>(<>f__am$cache1)).Select<string, string>(<>f__am$cache2).AggregateWithComma();
         }
@@ -96,7 +96,7 @@
                 writer.WriteLine("#pragma once");
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<InvokerData, int>(null, (IntPtr) <Write>m__0);
+                    <>f__am$cache0 = m => (m.ParameterCount * 10) + (!m.VoidReturn ? 1 : 0);
                 }
                 foreach (InvokerData data in this._invokerData.OrderBy<InvokerData, int>(<>f__am$cache0))
                 {

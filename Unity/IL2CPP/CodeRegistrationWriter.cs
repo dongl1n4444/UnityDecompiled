@@ -57,7 +57,7 @@
                         }
                         if (<>f__am$cache2 == null)
                         {
-                            <>f__am$cache2 = new Func<TypeDefinition, string>(null, (IntPtr) <WriteCCWMarshalingFunctions>m__2);
+                            <>f__am$cache2 = t => Naming.ForCreateComCallableWrapperFunction(t);
                         }
                         writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_CcwMarshalingFunctions", cCWMarshalingFunctions.Select<TypeDefinition, string>(<>f__am$cache2), true);
                         empty = new TableInfo(cCWMarshalingFunctions.Count, "extern const Il2CppMethodPointer", "g_CcwMarshalingFunctions");
@@ -167,7 +167,7 @@
                         }
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<MethodReference, string>(null, (IntPtr) <WriteDelegateWrappersManagedToNative>m__1);
+                            <>f__am$cache1 = wrapper => Naming.ForDelegatePInvokeWrapper(wrapper.DeclaringType);
                         }
                         writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_DelegateWrappersManagedToNative", wrappersForDelegateFromManagedToNative.Select<MethodReference, string>(<>f__am$cache1), false);
                         empty = new TableInfo(wrappersForDelegateFromManagedToNative.Count, "extern const Il2CppMethodPointer", "g_DelegateWrappersManagedToNative");
@@ -222,7 +222,7 @@
                         }
                         if (<>f__mg$cache1 == null)
                         {
-                            <>f__mg$cache1 = new Func<TypeDefinition, string>(null, (IntPtr) FormatIl2CppMarshalingFunction);
+                            <>f__mg$cache1 = new Func<TypeDefinition, string>(CodeRegistrationWriter.FormatIl2CppMarshalingFunction);
                         }
                         writer.WriteArrayInitializer("extern const Il2CppMarshalingFunctions", "g_MarshalingFunctions", typeMarshalingFunctions.Select<TypeDefinition, string>(<>f__mg$cache1), true);
                         empty = new TableInfo(typeMarshalingFunctions.Count, "extern const Il2CppMarshalingFunctions", "g_MarshalingFunctions");
@@ -251,7 +251,7 @@
                         }
                         if (<>f__mg$cache0 == null)
                         {
-                            <>f__mg$cache0 = new Func<MethodReference, string>(null, (IntPtr) MethodTables.MethodPointerNameFor);
+                            <>f__mg$cache0 = new Func<MethodReference, string>(MethodTables.MethodPointerNameFor);
                         }
                         writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_MethodPointers", methods.Select<MethodReference, string>(<>f__mg$cache0), false);
                         empty = new TableInfo(methods.Count, "extern const Il2CppMethodPointer", "g_MethodPointers");
@@ -279,7 +279,7 @@
                         }
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<MethodReference, string>(null, (IntPtr) <WriteReversePInvokeWrappersTable>m__0);
+                            <>f__am$cache0 = m => $"reinterpret_cast<Il2CppMethodPointer>({Naming.ForReversePInvokeWrapperMethod(m)})";
                         }
                         writer.WriteArrayInitializer("extern const Il2CppMethodPointer", "g_ReversePInvokeWrapperPointers", reversePInvokeWrappers.Select<MethodReference, string>(<>f__am$cache0), false);
                         empty = new TableInfo(reversePInvokeWrappers.Count, "extern const Il2CppMethodPointer", "g_ReversePInvokeWrapperPointers");

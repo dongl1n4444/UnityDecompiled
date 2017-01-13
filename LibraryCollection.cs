@@ -48,7 +48,7 @@ internal class LibraryCollection : KeyedCollection<string, Library>
         this.RemovePlaceholders(plugins);
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<PluginData, string>(null, (IntPtr) <RegisterPlugins>m__0);
+            <>f__am$cache0 = p => p.Name;
         }
         foreach (IGrouping<string, PluginData> grouping in Enumerable.GroupBy<PluginData, string>(plugins, <>f__am$cache0, StringComparer.InvariantCultureIgnoreCase))
         {
@@ -61,7 +61,7 @@ internal class LibraryCollection : KeyedCollection<string, Library>
             List<PluginData> list = new List<PluginData>();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<PluginData, string>(null, (IntPtr) <RegisterPlugins>m__1);
+                <>f__am$cache1 = p => !Library.IsAnyCpuTag(p.Cpu) ? p.Cpu : "AnyCPU";
             }
             foreach (IGrouping<string, PluginData> grouping2 in Enumerable.GroupBy<PluginData, string>(grouping, <>f__am$cache1, StringComparer.InvariantCultureIgnoreCase))
             {

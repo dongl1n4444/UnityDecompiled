@@ -17,7 +17,7 @@
 
         public AssetsTreeViewGUI(TreeViewController treeView) : base(treeView)
         {
-            base.iconOverlayGUI = (Action<TreeViewItem, Rect>) Delegate.Combine(base.iconOverlayGUI, new Action<TreeViewItem, Rect>(this, (IntPtr) this.OnIconOverlayGUI));
+            base.iconOverlayGUI = (Action<TreeViewItem, Rect>) Delegate.Combine(base.iconOverlayGUI, new Action<TreeViewItem, Rect>(this.OnIconOverlayGUI));
             base.k_TopRowMargin = 4f;
         }
 

@@ -568,7 +568,7 @@
                                     {
                                         if (current.type == EventType.ExecuteCommand)
                                         {
-                                            this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__0)).ToList<UnityEditor.Graphs.Edge>());
+                                            this.DeleteNodesAndEdges(this.selection, (from i in this.edgeGUI.edgeSelection select this.m_Graph.edges[i]).ToList<UnityEditor.Graphs.Edge>());
                                         }
                                         current.Use();
                                         break;
@@ -577,7 +577,7 @@
 
                                 case 1:
                                     this.CopyNodesToPasteboard();
-                                    this.DeleteNodesAndEdges(this.selection, Enumerable.Select<int, UnityEditor.Graphs.Edge>(this.edgeGUI.edgeSelection, new Func<int, UnityEditor.Graphs.Edge>(this, (IntPtr) this.<HandleMenuEvents>m__1)).ToList<UnityEditor.Graphs.Edge>());
+                                    this.DeleteNodesAndEdges(this.selection, (from i in this.edgeGUI.edgeSelection select this.m_Graph.edges[i]).ToList<UnityEditor.Graphs.Edge>());
                                     current.Use();
                                     break;
 

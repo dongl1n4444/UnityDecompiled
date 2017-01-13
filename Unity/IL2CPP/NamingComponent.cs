@@ -59,7 +59,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<TypeReference, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache0 = new Func<TypeReference, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache3 == null)
             {
@@ -68,7 +68,7 @@
             this._typeHashCache = new HashCodeCache<TypeReference>(<>f__mg$cache0, <>f__am$cache3, new Unity.IL2CPP.Common.TypeReferenceEqualityComparer());
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<MethodReference, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache1 = new Func<MethodReference, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache4 == null)
             {
@@ -77,7 +77,7 @@
             this._methodHashCache = new HashCodeCache<MethodReference>(<>f__mg$cache1, <>f__am$cache4, new Unity.IL2CPP.Common.MethodReferenceComparer());
             if (<>f__mg$cache2 == null)
             {
-                <>f__mg$cache2 = new Func<string, uint>(null, (IntPtr) SemiUniqueStableTokenGenerator.GenerateFor);
+                <>f__mg$cache2 = new Func<string, uint>(SemiUniqueStableTokenGenerator.GenerateFor);
             }
             if (<>f__am$cache5 == null)
             {
@@ -228,7 +228,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<MethodDefinition, bool>(null, (IntPtr) <ForCreateStringMethod>m__2);
+                <>f__am$cache2 = meth => meth.Name == "CreateString";
             }
             foreach (MethodDefinition definition in method.DeclaringType.Resolve().Methods.Where<MethodDefinition>(<>f__am$cache2))
             {
@@ -462,13 +462,13 @@
                 $this = this
             };
             string str = this.Clean(this.EscapeKeywords(storey.property.Name));
-            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey, (IntPtr) this.<>m__0)) > 1)
+            if (declaringType.Resolve().Properties.Count<PropertyDefinition>(new Func<PropertyDefinition, bool>(storey.<>m__0)) > 1)
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <ForPropertyInfo>m__1);
+                    <>f__am$cache1 = (buff, s) => buff + "_" + s;
                 }
-                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey, (IntPtr) this.<>m__1)).Aggregate<string>(<>f__am$cache1);
+                str = str + "_" + storey.property.Parameters.Select<ParameterDefinition, string>(new Func<ParameterDefinition, string>(storey.<>m__1)).Aggregate<string>(<>f__am$cache1);
             }
             return this.TypeMember(declaringType, str + "_PropertyInfo");
         }
@@ -660,7 +660,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<FieldDefinition, bool>(null, (IntPtr) <ForVariable>m__0);
+                    <>f__am$cache0 = f => f.Name == "value__";
                 }
                 FieldDefinition definition2 = definition.Fields.Single<FieldDefinition>(<>f__am$cache0);
                 return this.ForVariable(definition2.FieldType);

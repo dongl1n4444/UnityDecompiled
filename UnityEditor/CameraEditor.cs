@@ -13,7 +13,7 @@
     using UnityEngine.Rendering;
     using UnityEngine.Scripting;
 
-    [CustomEditor(typeof(Camera)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(Camera))]
     internal class CameraEditor : Editor
     {
         [CompilerGenerated]

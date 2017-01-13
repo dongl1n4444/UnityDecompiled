@@ -16,7 +16,7 @@
         static APIUpdaterRuntimeServices()
         {
             System.Type type = typeof(Component);
-            ComponentsFromUnityEngine = Enumerable.Where<System.Type>(type.Assembly.GetTypes(), new Func<System.Type, bool>(type, (IntPtr) type.IsAssignableFrom)).ToList<System.Type>();
+            ComponentsFromUnityEngine = Enumerable.Where<System.Type>(type.Assembly.GetTypes(), new Func<System.Type, bool>(type.IsAssignableFrom)).ToList<System.Type>();
         }
 
         [Obsolete("AddComponent(string) has been deprecated. Use GameObject.AddComponent<T>() / GameObject.AddComponent(Type) instead.\nAPI Updater could not automatically update the original call to AddComponent(string name), because it was unable to resolve the type specified in parameter 'name'.\nInstead, this call has been replaced with a call to APIUpdaterRuntimeServices.AddComponent() so you can try to test your game in the editor.\nIn order to be able to build the game, replace this call (APIUpdaterRuntimeServices.AddComponent()) with a call to GameObject.AddComponent<T>() / GameObject.AddComponent(Type).")]
@@ -36,7 +36,7 @@
             <ResolveType>c__AnonStorey0 storey = new <ResolveType>c__AnonStorey0 {
                 name = name
             };
-            System.Type type = Enumerable.FirstOrDefault<System.Type>(ComponentsFromUnityEngine, new Func<System.Type, bool>(storey, (IntPtr) this.<>m__0));
+            System.Type type = Enumerable.FirstOrDefault<System.Type>(ComponentsFromUnityEngine, new Func<System.Type, bool>(storey.<>m__0));
             if (type != null)
             {
                 object[] objArray1 = new object[] { storey.name, sourceInfo };
@@ -52,9 +52,9 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Assembly, IEnumerable<System.Type>>(null, (IntPtr) <ResolveType>m__0);
+                <>f__am$cache0 = a => a.GetTypes();
             }
-            type3 = Enumerable.SingleOrDefault<System.Type>(Enumerable.SelectMany<Assembly, System.Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0), new Func<System.Type, bool>(storey, (IntPtr) this.<>m__1));
+            type3 = Enumerable.SingleOrDefault<System.Type>(Enumerable.SelectMany<Assembly, System.Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0), new Func<System.Type, bool>(storey.<>m__1));
             if (type3 != null)
             {
                 object[] objArray3 = new object[] { type3.FullName, type3.Assembly.Location, sourceInfo };

@@ -153,7 +153,7 @@
                 {
                     foreach (AnimationWindowCurve curve in node.curves)
                     {
-                        if (Enumerable.Any<AnimationWindowKeyframe>(curve.m_Keyframes, new Func<AnimationWindowKeyframe, bool>(this, (IntPtr) this.<DoCurveColorIndicator>m__1)))
+                        if (Enumerable.Any<AnimationWindowKeyframe>(curve.m_Keyframes, (Func<AnimationWindowKeyframe, bool>) (key => this.state.time.ContainsTime(key.time))))
                         {
                             flag = true;
                         }
@@ -409,7 +409,7 @@
                     EditorGUI.BeginChangeCheck();
                     if (curve.valueType == typeof(bool))
                     {
-                        num = !GUI.Toggle(position, this.m_HierarchyItemValueControlIDs[row], num != 0f, GUIContent.none, EditorStyles.toggle) ? ((float) 0) : ((float) 1);
+                        num = !GUI.Toggle(position, this.m_HierarchyItemValueControlIDs[row], !(num == 0f), GUIContent.none, EditorStyles.toggle) ? ((float) 0) : ((float) 1);
                     }
                     else
                     {

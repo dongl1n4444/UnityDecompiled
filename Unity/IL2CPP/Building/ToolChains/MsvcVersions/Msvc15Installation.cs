@@ -130,7 +130,7 @@
             source.Add(_vcPaths[architecture.GetType()].ToolsPath.Parent.Combine(textArray5));
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <GetPathEnvVariable>m__0);
+                <>f__am$cache0 = p => p.ToString();
             }
             return source.Select<NPath, string>(<>f__am$cache0).AggregateWith(";");
         }
@@ -189,19 +189,19 @@
                             ISetupPackageReference[] packages = storey.instance2.GetPackages();
                             if (<>f__am$cache1 == null)
                             {
-                                <>f__am$cache1 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__1);
+                                <>f__am$cache1 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetX86";
                             }
-                            source.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache1).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__0)));
+                            source.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache1).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__0)));
                             if (<>f__am$cache2 == null)
                             {
-                                <>f__am$cache2 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__2);
+                                <>f__am$cache2 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetX64";
                             }
-                            list2.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache2).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__1)));
+                            list2.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache2).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__1)));
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<ISetupPackageReference, bool>(null, (IntPtr) <GetVCToolsPaths>m__3);
+                                <>f__am$cache3 = p => p.GetId() == $"Microsoft.VisualCpp.Tools.{_hostDirectory}.TargetARM";
                             }
-                            list3.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache3).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey, (IntPtr) this.<>m__2)));
+                            list3.AddRange(packages.Where<ISetupPackageReference>(<>f__am$cache3).Select<ISetupPackageReference, VCComponent>(new Func<ISetupPackageReference, VCComponent>(storey.<>m__2)));
                         }
                         catch (Exception exception)
                         {

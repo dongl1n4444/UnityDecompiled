@@ -30,12 +30,12 @@
             this.m_Products = this.m_ProductSet.ToArray<Product>();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Product, string>(null, (IntPtr) <AddProducts>m__0);
+                <>f__am$cache0 = x => x.definition.id;
             }
             this.m_IdToProduct = Enumerable.ToDictionary<Product, string>(this.m_Products, <>f__am$cache0);
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<Product, string>(null, (IntPtr) <AddProducts>m__1);
+                <>f__am$cache1 = x => x.definition.storeSpecificId;
             }
             this.m_StoreSpecificIdToProduct = Enumerable.ToDictionary<Product, string>(this.m_Products, <>f__am$cache1);
         }

@@ -84,7 +84,7 @@
                                         <ProcessType>c__AnonStorey0 storey3 = new <ProcessType>c__AnonStorey0 {
                                             field = storey.type.GetField(storey2.memberInfo.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                                         };
-                                        attributeMappings.Add(key, new KeyValuePair<Func<object, object>, Action<object, object>>(new Func<object, object>(storey3, (IntPtr) this.<>m__0), new Action<object, object>(storey3, (IntPtr) this.<>m__1)));
+                                        attributeMappings.Add(key, new KeyValuePair<Func<object, object>, Action<object, object>>(new Func<object, object>(storey3.<>m__0), new Action<object, object>(storey3.<>m__1)));
                                     }
                                     else if (storey2.memberInfo.MemberType == MemberTypes.Property)
                                     {
@@ -93,7 +93,7 @@
                                             <>f__ref$2 = storey2,
                                             prop = storey.type.GetProperty(storey2.memberInfo.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                                         };
-                                        attributeMappings.Add(key, new KeyValuePair<Func<object, object>, Action<object, object>>(new Func<object, object>(storey4, (IntPtr) this.<>m__0), new Action<object, object>(storey4, (IntPtr) this.<>m__1)));
+                                        attributeMappings.Add(key, new KeyValuePair<Func<object, object>, Action<object, object>>(new Func<object, object>(storey4.<>m__0), new Action<object, object>(storey4.<>m__1)));
                                     }
                                 }
                             }
@@ -177,7 +177,7 @@
                     }
                     if (attributeMappings.TryGetValue(str + localName, out pair))
                     {
-                        pair.Value.Invoke(this, str3);
+                        pair.Value(this, str3);
                     }
                 }
             }
@@ -204,7 +204,7 @@
                 key = base.GetType().FullName + "." + str4;
                 if (attributeMappings.TryGetValue(key, out pair2))
                 {
-                    pair2.Value.Invoke(this, obj2);
+                    pair2.Value(this, obj2);
                 }
             }
             if (!isEmptyElement)
@@ -279,7 +279,7 @@
                     continue;
                 }
                 KeyValuePair<Func<object, object>, Action<object, object>> pair2 = attributeMappings[pair.Key];
-                object obj3 = pair2.Key.Invoke(this);
+                object obj3 = pair2.Key(this);
                 if (obj3 == null)
                 {
                     continue;
@@ -325,7 +325,7 @@
                 if (attributeMappings.ContainsKey(str4))
                 {
                     KeyValuePair<Func<object, object>, Action<object, object>> pair3 = attributeMappings[str4];
-                    object o = pair3.Key.Invoke(this);
+                    object o = pair3.Key(this);
                     if (o != null)
                     {
                         if (o is List<Unity.PackageManager.IvyInternal.IvyRepository>)

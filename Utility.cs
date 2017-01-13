@@ -402,7 +402,7 @@ internal static class Utility
                     int capacity = 0x400;
                     StringBuilder lpExeName = new StringBuilder(capacity);
                     QueryFullProcessImageName(hProcess, 0, lpExeName, ref capacity);
-                    if (shouldKill.Invoke(lpExeName.ToString()))
+                    if (shouldKill(lpExeName.ToString()))
                     {
                         TerminateProcess(hProcess, 0);
                     }
@@ -423,7 +423,7 @@ internal static class Utility
             string path = Path.Combine(destination, Path.GetFileName(str));
             if (File.Exists(path))
             {
-                if ((shouldOverwriteFile != null) && !shouldOverwriteFile.Invoke(path))
+                if ((shouldOverwriteFile != null) && !shouldOverwriteFile(path))
                 {
                     continue;
                 }

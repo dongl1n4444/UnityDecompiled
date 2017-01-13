@@ -70,8 +70,8 @@
                         this.<start>__1 = DateTime.Now;
                         this.$locvar0.go = new GameObject("Test: " + this.$this.m_Type.Name);
                         this.$locvar0.go.AddComponent(this.$this.m_Type);
-                        this.<timer>__3 = this.controller.StartCoroutine(this.$this.StartTimer(null, this.<attribute>__0.GetTimeout(), new Action(this.$locvar0, (IntPtr) this.<>m__0)));
-                        this.$current = new WaitUntil(new Func<bool>(this.$this, (IntPtr) this.IsMBTestFinished));
+                        this.<timer>__3 = this.controller.StartCoroutine(this.$this.StartTimer(null, this.<attribute>__0.GetTimeout(), new Action(this.$locvar0.<>m__0)));
+                        this.$current = new WaitUntil(new Func<bool>(this.$this.IsMBTestFinished));
                         if (!this.$disposing)
                         {
                             this.$PC = 1;

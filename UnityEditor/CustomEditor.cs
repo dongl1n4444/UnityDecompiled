@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class CustomEditor : Attribute
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool <isFallback>k__BackingField;
         internal bool m_EditorForChildClasses;
         internal Type m_InspectedType;

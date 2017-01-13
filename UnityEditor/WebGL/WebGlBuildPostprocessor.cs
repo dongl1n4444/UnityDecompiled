@@ -110,7 +110,7 @@
                 string path = Paths.Combine(components);
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <CompressFilesInOutputDirectory>m__1);
+                    <>f__am$cache1 = f => ((f.EndsWith(".js") || f.EndsWith(".mem")) || ((f.EndsWith(".data") || f.EndsWith(".wasm.mappedGlobals")) || f.EndsWith(".wasm"))) && !f.EndsWith("UnityLoader.js");
                 }
                 IEnumerable<string> enumerable = Enumerable.Where<string>(Directory.GetFiles(path), <>f__am$cache1);
                 foreach (string str3 in enumerable)
@@ -627,7 +627,7 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, string, string>(null, (IntPtr) <PackageData>m__0);
+                <>f__am$cache0 = (current, file) => current + " \"" + Path.GetFileName(file) + "\"";
             }
             string[] components = new string[] { "Resources", "unity_default_resources" };
             string[] textArray2 = new string[] { "Resources", "unity_builtin_extra" };
@@ -719,7 +719,7 @@
             this.BuildStep(args, "Files", "Packaging files");
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, bool>(null, (IntPtr) <PostProcess>m__3);
+                <>f__am$cache3 = f => !f.Contains("CAB-");
             }
             IEnumerable<string> filesToShip = Enumerable.Where<string>(Directory.GetFiles(args.stagingAreaData), <>f__am$cache3);
             if (!PackageData("build", args, filesToShip))

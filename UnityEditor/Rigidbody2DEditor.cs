@@ -1,6 +1,8 @@
 ﻿namespace UnityEditor
 {
     using System;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
     using UnityEditor.AnimatedValues;
     using UnityEngine;
     using UnityEngine.Events;
@@ -8,6 +10,8 @@
     [CustomEditor(typeof(Rigidbody2D)), CanEditMultipleObjects]
     internal class Rigidbody2DEditor : Editor
     {
+        [CompilerGenerated]
+        private static Func<Object, bool> <>f__am$cache0;
         private const int k_ToggleOffset = 30;
         private SerializedProperty m_AngularDrag;
         private SerializedProperty m_BodyType;
@@ -93,49 +97,68 @@
             if (this.m_BodyType.hasMultipleDifferentValues)
             {
                 EditorGUILayout.HelpBox("Cannot edit properties that are body type specific when the selection contains different body types.", MessageType.Info);
+                goto Label_02A7;
             }
-            else
+            this.m_ShowIsStatic.target = target.bodyType != RigidbodyType2D.Static;
+            if (!EditorGUILayout.BeginFadeGroup(this.m_ShowIsStatic.faded))
             {
-                this.m_ShowIsStatic.target = target.bodyType != RigidbodyType2D.Static;
-                if (EditorGUILayout.BeginFadeGroup(this.m_ShowIsStatic.faded))
+                goto Label_0296;
+            }
+            this.m_ShowIsKinematic.target = target.bodyType != RigidbodyType2D.Kinematic;
+            if (!EditorGUILayout.BeginFadeGroup(this.m_ShowIsKinematic.faded))
+            {
+                goto Label_0199;
+            }
+            EditorGUILayout.PropertyField(this.m_UseAutoMass, new GUILayoutOption[0]);
+            if (!this.m_UseAutoMass.hasMultipleDifferentValues)
+            {
+                if (this.m_UseAutoMass.boolValue)
                 {
-                    this.m_ShowIsKinematic.target = target.bodyType != RigidbodyType2D.Kinematic;
-                    if (EditorGUILayout.BeginFadeGroup(this.m_ShowIsKinematic.faded))
+                    if (<>f__am$cache0 == null)
                     {
-                        EditorGUILayout.PropertyField(this.m_UseAutoMass, new GUILayoutOption[0]);
-                        EditorGUI.BeginDisabledGroup(target.useAutoMass);
-                        EditorGUILayout.PropertyField(this.m_Mass, new GUILayoutOption[0]);
-                        EditorGUI.EndDisabledGroup();
-                        EditorGUILayout.PropertyField(this.m_LinearDrag, new GUILayoutOption[0]);
-                        EditorGUILayout.PropertyField(this.m_AngularDrag, new GUILayoutOption[0]);
-                        EditorGUILayout.PropertyField(this.m_GravityScale, new GUILayoutOption[0]);
+                        <>f__am$cache0 = x => (PrefabUtility.GetPrefabType(x) == PrefabType.Prefab) || !(x as Rigidbody2D).gameObject.activeInHierarchy;
                     }
-                    FixedEndFadeGroup(this.m_ShowIsKinematic.faded);
-                    if (!this.m_ShowIsKinematic.target)
+                    if (Enumerable.Any<Object>(base.targets, <>f__am$cache0))
                     {
-                        EditorGUILayout.PropertyField(this.m_UseFullKinematicContacts, new GUILayoutOption[0]);
-                    }
-                    EditorGUILayout.PropertyField(this.m_CollisionDetection, new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_SleepingMode, new GUILayoutOption[0]);
-                    EditorGUILayout.PropertyField(this.m_Interpolate, new GUILayoutOption[0]);
-                    GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-                    this.m_Constraints.isExpanded = EditorGUILayout.Foldout(this.m_Constraints.isExpanded, "Constraints", true);
-                    GUILayout.EndHorizontal();
-                    RigidbodyConstraints2D intValue = (RigidbodyConstraints2D) this.m_Constraints.intValue;
-                    if (this.m_Constraints.isExpanded)
-                    {
-                        EditorGUI.indentLevel++;
-                        this.ToggleFreezePosition(intValue, m_FreezePositionLabel, 0, 1);
-                        this.ToggleFreezeRotation(intValue, m_FreezeRotationLabel, 2);
-                        EditorGUI.indentLevel--;
-                    }
-                    if (intValue == RigidbodyConstraints2D.FreezeAll)
-                    {
-                        EditorGUILayout.HelpBox("Rather than turning on all constraints, you may want to consider removing the Rigidbody2D component which makes any colliders static.  This gives far better performance overall.", MessageType.Info);
+                        EditorGUILayout.HelpBox("The auto mass value cannot be displayed for a prefab or if the object is not active.  The value will be calculated for a prefab instance and when the object is active.", MessageType.Info);
+                        goto Label_0162;
                     }
                 }
-                FixedEndFadeGroup(this.m_ShowIsStatic.faded);
+                EditorGUI.BeginDisabledGroup(target.useAutoMass);
+                EditorGUILayout.PropertyField(this.m_Mass, new GUILayoutOption[0]);
+                EditorGUI.EndDisabledGroup();
             }
+        Label_0162:
+            EditorGUILayout.PropertyField(this.m_LinearDrag, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_AngularDrag, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_GravityScale, new GUILayoutOption[0]);
+        Label_0199:
+            FixedEndFadeGroup(this.m_ShowIsKinematic.faded);
+            if (!this.m_ShowIsKinematic.target)
+            {
+                EditorGUILayout.PropertyField(this.m_UseFullKinematicContacts, new GUILayoutOption[0]);
+            }
+            EditorGUILayout.PropertyField(this.m_CollisionDetection, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_SleepingMode, new GUILayoutOption[0]);
+            EditorGUILayout.PropertyField(this.m_Interpolate, new GUILayoutOption[0]);
+            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
+            this.m_Constraints.isExpanded = EditorGUILayout.Foldout(this.m_Constraints.isExpanded, "Constraints", true);
+            GUILayout.EndHorizontal();
+            RigidbodyConstraints2D intValue = (RigidbodyConstraints2D) this.m_Constraints.intValue;
+            if (this.m_Constraints.isExpanded)
+            {
+                EditorGUI.indentLevel++;
+                this.ToggleFreezePosition(intValue, m_FreezePositionLabel, 0, 1);
+                this.ToggleFreezeRotation(intValue, m_FreezeRotationLabel, 2);
+                EditorGUI.indentLevel--;
+            }
+            if (intValue == RigidbodyConstraints2D.FreezeAll)
+            {
+                EditorGUILayout.HelpBox("Rather than turning on all constraints, you may want to consider removing the Rigidbody2D component which makes any colliders static.  This gives far better performance overall.", MessageType.Info);
+            }
+        Label_0296:
+            FixedEndFadeGroup(this.m_ShowIsStatic.faded);
+        Label_02A7:
             base.serializedObject.ApplyModifiedProperties();
             this.ShowBodyInfoProperties();
         }

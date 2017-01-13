@@ -304,7 +304,7 @@
         /// <summary>
         /// <para>Optimizes the Mesh for display.</para>
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall), Obsolete("This method is no longer supported (UnityUpgradable)", true), EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.InternalCall), EditorBrowsable(EditorBrowsableState.Never), Obsolete("This method is no longer supported (UnityUpgradable)", true)]
         public extern void Optimize();
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern void PrintErrorBadSubmeshIndexIndices();

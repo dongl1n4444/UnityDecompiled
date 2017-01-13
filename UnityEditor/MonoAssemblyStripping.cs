@@ -23,7 +23,12 @@
                 count = source.Count;
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(null, (IntPtr) <CollectAssembliesRecursive>m__0);
+                    <>f__am$cache0 = delegate (AssemblyDefinition assembly) {
+                        <CollectAssembliesRecursive>c__AnonStorey1 storey = new <CollectAssembliesRecursive>c__AnonStorey1 {
+                            assembly = assembly
+                        };
+                        return Enumerable.Select<AssemblyNameReference, AssemblyDefinition>(storey.assembly.MainModule.AssemblyReferences, new Func<AssemblyNameReference, AssemblyDefinition>(storey.<>m__0));
+                    };
                 }
                 source.UnionWith(Enumerable.SelectMany<AssemblyDefinition, AssemblyDefinition>(source.ToArray<AssemblyDefinition>(), <>f__am$cache0));
             }
@@ -155,7 +160,7 @@
             using (TextWriter writer = new StreamWriter(fullPath))
             {
                 writer.WriteLine("<linker>");
-                foreach (AssemblyDefinition definition in CollectAssembliesRecursive(Enumerable.Select<string, AssemblyDefinition>(Enumerable.Where<string>(storey.usedClasses.GetUserAssemblies(), new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, AssemblyDefinition>(storey, (IntPtr) this.<>m__1))))
+                foreach (AssemblyDefinition definition in CollectAssembliesRecursive(Enumerable.Select<string, AssemblyDefinition>(Enumerable.Where<string>(storey.usedClasses.GetUserAssemblies(), new Func<string, bool>(storey.<>m__0)), new Func<string, AssemblyDefinition>(storey.<>m__1))))
                 {
                     if (definition.Name.Name != "UnityEngine")
                     {

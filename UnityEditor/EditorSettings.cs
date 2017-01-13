@@ -31,7 +31,7 @@
                 char[] separator = new char[] { ';' };
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, string>(null, (IntPtr) <get_projectGenerationUserExtensions>m__0);
+                    <>f__am$cache0 = s => s.TrimStart(new char[] { '.', '*' });
                 }
                 return Enumerable.Select<string, string>(Internal_ProjectGenerationUserExtensions.Split(separator, StringSplitOptions.RemoveEmptyEntries), <>f__am$cache0).ToArray<string>();
             }

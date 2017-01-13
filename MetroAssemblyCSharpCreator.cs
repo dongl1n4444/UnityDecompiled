@@ -88,7 +88,7 @@ internal static class MetroAssemblyCSharpCreator
         }
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<MonoIsland?, bool>(null, (IntPtr) <CreateAssemblyCSharp>m__0);
+            <>f__am$cache0 = x => Path.GetFileName(x.Value._output) == (Utility.AssemblyCSharpName + ".dll");
         }
         MonoIsland? nullable = Enumerable.FirstOrDefault<MonoIsland?>(InternalEditorUtility.GetMonoIslands().Cast<MonoIsland?>(), <>f__am$cache0);
         string preTargets = "  <Import Project=\"$(ProjectDir)..\\..\\..\\UnityCommon.props\" />";

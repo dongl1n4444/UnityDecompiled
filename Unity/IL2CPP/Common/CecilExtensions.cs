@@ -19,7 +19,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ModuleDefinition, IEnumerable<TypeDefinition>>(null, (IntPtr) <AllDefinedTypes>m__0);
+                <>f__am$cache0 = m => m.AllDefinedTypes();
             }
             return assemblyDefinition.Modules.SelectMany<ModuleDefinition, TypeDefinition>(<>f__am$cache0);
         }

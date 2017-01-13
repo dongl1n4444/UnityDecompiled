@@ -31,7 +31,7 @@
                     <Execute>c__AnonStorey0 storey = new <Execute>c__AnonStorey0 {
                         segment = strArray2[i]
                     };
-                    string[] strArray3 = Enumerable.Where<string>(Directory.GetDirectories(path), new Func<string, bool>(storey, (IntPtr) this.<>m__0)).Cast<string>().ToArray<string>();
+                    string[] strArray3 = Enumerable.Where<string>(Directory.GetDirectories(path), new Func<string, bool>(storey.<>m__0)).Cast<string>().ToArray<string>();
                     if (strArray3.Length < 1)
                     {
                         Debug.LogError($"Something went wrong when parsing the generated resources - couldn't find a directory matching {Path.Combine(path, storey.segment)}");

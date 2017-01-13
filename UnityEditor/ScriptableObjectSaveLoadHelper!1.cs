@@ -9,7 +9,7 @@
 
     internal class ScriptableObjectSaveLoadHelper<T> where T: ScriptableObject
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <fileExtensionWithoutDot>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SaveType <saveType>k__BackingField;

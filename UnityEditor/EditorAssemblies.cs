@@ -13,7 +13,7 @@
     {
         [CompilerGenerated]
         private static Func<Assembly, IEnumerable<Type>> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static Assembly[] <loadedAssemblies>k__BackingField;
         internal static List<RuntimeInitializeClassInfo> m_RuntimeInitializeClassInfoList;
         internal static int m_TotalNumRuntimeInitializeMethods;
@@ -147,7 +147,7 @@
             <SubclassesOf>c__AnonStorey0 storey = new <SubclassesOf>c__AnonStorey0 {
                 parent = parent
             };
-            return Enumerable.Where<Type>(loadedTypes, new Func<Type, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Where<Type>(loadedTypes, new Func<Type, bool>(storey.<>m__0));
         }
 
         internal static Assembly[] loadedAssemblies
@@ -168,7 +168,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Assembly, IEnumerable<Type>>(null, (IntPtr) <get_loadedTypes>m__0);
+                    <>f__am$cache0 = assembly => AssemblyHelper.GetTypesFromAssembly(assembly);
                 }
                 return Enumerable.SelectMany<Assembly, Type>(loadedAssemblies, <>f__am$cache0);
             }

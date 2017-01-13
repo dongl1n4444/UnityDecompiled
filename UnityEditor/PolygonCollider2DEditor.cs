@@ -6,7 +6,7 @@
     using UnityEditor.Sprites;
     using UnityEngine;
 
-    [CustomEditor(typeof(PolygonCollider2D)), CanEditMultipleObjects]
+    [CanEditMultipleObjects, CustomEditor(typeof(PolygonCollider2D))]
     internal class PolygonCollider2DEditor : Collider2DEditorBase
     {
         [CompilerGenerated]
@@ -23,7 +23,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Object, bool>(null, (IntPtr) <HandleDragAndDrop>m__0);
+                    <>f__am$cache0 = obj => (obj is Sprite) || (obj is Texture2D);
                 }
                 foreach (Object obj2 in Enumerable.Where<Object>(DragAndDrop.objectReferences, <>f__am$cache0))
                 {
@@ -33,7 +33,7 @@
                         Sprite sprite = !(obj2 is Sprite) ? SpriteUtility.TextureToSprite(obj2 as Texture2D) : (obj2 as Sprite);
                         if (<>f__am$cache1 == null)
                         {
-                            <>f__am$cache1 = new Func<Object, PolygonCollider2D>(null, (IntPtr) <HandleDragAndDrop>m__1);
+                            <>f__am$cache1 = target => target as PolygonCollider2D;
                         }
                         foreach (PolygonCollider2D colliderd in Enumerable.Select<Object, PolygonCollider2D>(base.targets, <>f__am$cache1))
                         {

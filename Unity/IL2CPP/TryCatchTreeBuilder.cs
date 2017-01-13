@@ -57,7 +57,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Finally,
-                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0))
                     };
                     this._contextStack.Push(item);
                 }
@@ -65,7 +65,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Fault,
-                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__1))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__1))
                     };
                     this._contextStack.Push(item);
                 }
@@ -73,7 +73,7 @@
                 {
                     item = new Context {
                         Type = ContextType.Catch,
-                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__2))
+                        Handler = this._methodBody.ExceptionHandlers.Single<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__2))
                     };
                     this._contextStack.Push(item);
                 }

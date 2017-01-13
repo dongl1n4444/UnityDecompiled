@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(SkinnedMeshRenderer))]
+    [CustomEditor(typeof(SkinnedMeshRenderer)), CanEditMultipleObjects]
     internal class SkinnedMeshRendererEditor : RendererEditorBase
     {
         private SerializedProperty m_AABB;

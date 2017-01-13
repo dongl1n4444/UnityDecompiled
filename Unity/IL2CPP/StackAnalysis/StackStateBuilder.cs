@@ -1212,7 +1212,7 @@
             MethodBody body = this._methodDefinition.Body;
             if (body.HasExceptionHandlers)
             {
-                foreach (ExceptionHandler handler in body.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey, (IntPtr) this.<>m__0)))
+                foreach (ExceptionHandler handler in body.ExceptionHandlers.Where<ExceptionHandler>(new Func<ExceptionHandler, bool>(storey.<>m__0)))
                 {
                     if (handler.HandlerType == ExceptionHandlerType.Catch)
                     {

@@ -338,8 +338,8 @@
                 if (Directory.Exists(importer.assetPath))
                 {
                     Action<string> fileCallback = new Action<string>(storey2.<>m__0);
-                    Func<string, bool> directoryCallback = new Func<string, bool>(storey2, (IntPtr) this.<>m__1);
-                    if (directoryCallback.Invoke(importer.assetPath))
+                    Func<string, bool> directoryCallback = new Func<string, bool>(storey2.<>m__1);
+                    if (directoryCallback(importer.assetPath))
                     {
                         FileUtil.WalkFilesystemRecursively(importer.assetPath, fileCallback, directoryCallback);
                     }
@@ -1019,7 +1019,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<string, string, bool>(null, (IntPtr) FileMirroring.CanSkipCopy);
+                <>f__mg$cache0 = new Func<string, string, bool>(FileMirroring.CanSkipCopy);
             }
             return <>f__mg$cache0;
         }

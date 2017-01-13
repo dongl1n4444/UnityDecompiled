@@ -34,7 +34,7 @@
             };
             if (storey.testElement is TestListItem)
             {
-                TestResult result = Enumerable.FirstOrDefault<TestResult>(this.m_OldTestResultList, new Func<TestResult, bool>(storey, (IntPtr) this.<>m__0));
+                TestResult result = Enumerable.FirstOrDefault<TestResult>(this.m_OldTestResultList, new Func<TestResult, bool>(storey.<>m__0));
                 if (result == null)
                 {
                     result = new TestResult(storey.testElement);
@@ -46,7 +46,7 @@
             }
             else
             {
-                TestResult item = Enumerable.FirstOrDefault<TestResult>(this.m_OldTestResultList, new Func<TestResult, bool>(storey, (IntPtr) this.<>m__1));
+                TestResult item = Enumerable.FirstOrDefault<TestResult>(this.m_OldTestResultList, new Func<TestResult, bool>(storey.<>m__1));
                 if (item == null)
                 {
                     item = new TestResult(storey.testElement);

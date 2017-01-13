@@ -68,7 +68,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Type, bool>(null, (IntPtr) <TryFor>m__0);
+                <>f__am$cache0 = t => (typeof(PlatformSupport).IsAssignableFrom(t) && !t.IsAbstractPortable()) && !t.IsGenericTypePortable();
             }
             IEnumerable<Type> enumerable = AllTypes().Where<Type>(<>f__am$cache0);
             foreach (Type type in enumerable)

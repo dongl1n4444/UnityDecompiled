@@ -25,7 +25,7 @@
             }
             else
             {
-                RunEditModeTest(storey.filter, storey.resultFilePath, new Action(storey, (IntPtr) this.<>m__0));
+                RunEditModeTest(storey.filter, storey.resultFilePath, new Action(storey.<>m__0));
             }
         }
 

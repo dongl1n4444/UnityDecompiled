@@ -36,7 +36,7 @@
                 try
                 {
                     Type[] types = assembly.GetTypes();
-                    foreach (Type type in Enumerable.Where<Type>(types, new Func<Type, bool>(storey, (IntPtr) this.<>m__0)))
+                    foreach (Type type in Enumerable.Where<Type>(types, new Func<Type, bool>(storey.<>m__0)))
                     {
                         this.RegisterCustomGUI(Activator.CreateInstance(type) as IAudioEffectPluginGUI);
                     }

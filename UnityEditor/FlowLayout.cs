@@ -73,7 +73,7 @@
 
         public override void CalcWidth()
         {
-            bool flag = base.minWidth != 0f;
+            bool flag = !(base.minWidth == 0f);
             base.CalcWidth();
             if (!base.isVertical && !flag)
             {

@@ -7,10 +7,13 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
     using Unity.IL2CPP;
+    using Unity.IL2CPP.Common;
     using Unity.IL2CPP.ILPreProcessor;
     using Unity.IL2CPP.IoC;
     using Unity.IL2CPP.IoCServices;
     using Unity.IL2CPP.Marshaling;
+    using Unity.IL2CPP.Marshaling.BodyWriters.ManagedToNative;
+    using Unity.IL2CPP.Marshaling.BodyWriters.NativeToManaged;
 
     internal sealed class WindowsRuntimeDelegateMarshalInfoWriter : MarshalableMarshalInfoWriter
     {
@@ -49,7 +52,7 @@
             this._typeResolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(type);
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <WindowsRuntimeDelegateMarshalInfoWriter>m__0);
+                <>f__am$cache0 = new Func<MethodDefinition, bool>(WindowsRuntimeDelegateMarshalInfoWriter.<WindowsRuntimeDelegateMarshalInfoWriter>m__0);
             }
             this._invokeMethod = this._typeResolver.Resolve(definition.Methods.Single<MethodDefinition>(<>f__am$cache0));
             this._comCallableWrapperClassName = DefaultMarshalInfoWriter.Naming.ForWindowsRuntimeDelegateComCallableWrapperClass(type);
@@ -82,7 +85,10 @@
         {
             writer.WriteCommentedLine($"COM Callable invoker for {base._typeRef.FullName}");
             string methodSignature = $"il2cpp_hresult_t STDCALL {this._comCallableWrapperClassName}::Invoke({this._parameterList})";
-            MethodWriter.WriteMethodWithMetadataInitialization(writer, methodSignature, this._invokeMethod.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteManagedInvoker>m__2), DefaultMarshalInfoWriter.Naming.ForMethod(this._invokeMethod) + "_WindowsRuntimeManagedInvoker");
+            MethodWriter.WriteMethodWithMetadataInitialization(writer, methodSignature, this._invokeMethod.FullName, delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._invokeMethod, metadataUsage, methodUsage);
+                new ComCallableWrapperMethodBodyWriter(this._invokeMethod, this._invokeMethod, MarshalType.WindowsRuntime).WriteMethodBody(bodyWriter, metadataAccess);
+            }, DefaultMarshalInfoWriter.Naming.ForMethod(this._invokeMethod) + "_WindowsRuntimeManagedInvoker");
         }
 
         public override void WriteMarshalCleanupVariable(CppCodeWriter writer, string variableName, IRuntimeMetadataAccess metadataAccess, string managedVariableName = null)
@@ -139,19 +145,19 @@
                 {
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableFromNative>m__5);
+                        <>f__am$cache3 = f => f.Name == "method_ptr";
                     }
                     FieldDefinition field = DefaultMarshalInfoWriter.TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache3);
                     string str = DefaultMarshalInfoWriter.Naming.ForFieldSetter(field);
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableFromNative>m__6);
+                        <>f__am$cache4 = f => f.Name == "method";
                     }
                     FieldDefinition definition2 = DefaultMarshalInfoWriter.TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache4);
                     string str2 = DefaultMarshalInfoWriter.Naming.ForFieldSetter(definition2);
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableFromNative>m__7);
+                        <>f__am$cache5 = f => f.Name == "m_target";
                     }
                     FieldDefinition definition3 = DefaultMarshalInfoWriter.TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache5);
                     string str3 = DefaultMarshalInfoWriter.Naming.ForFieldSetter(definition3);
@@ -163,7 +169,7 @@
                     object[] objArray8 = new object[2];
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableFromNative>m__8);
+                        <>f__am$cache6 = f => f.Name == DefaultMarshalInfoWriter.Naming.IntPtrValueField;
                     }
                     objArray8[0] = DefaultMarshalInfoWriter.Naming.ForFieldSetter(DefaultMarshalInfoWriter.TypeProvider.SystemIntPtr.Fields.Single<FieldDefinition>(<>f__am$cache6));
                     objArray8[1] = metadataAccess.MethodInfo(this._invokeMethod);
@@ -191,13 +197,13 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__3);
+                    <>f__am$cache1 = f => f.Name == "m_target";
                 }
                 FieldDefinition field = DefaultMarshalInfoWriter.TypeProvider.SystemDelegate.Fields.Single<FieldDefinition>(<>f__am$cache1);
                 string str = DefaultMarshalInfoWriter.Naming.ForFieldGetter(field);
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteMarshalVariableToNative>m__4);
+                    <>f__am$cache2 = f => f.Name == ((CodeGenOptions.Dotnetprofile != DotNetProfile.Net45) ? "prev" : "delegates");
                 }
                 FieldDefinition definition2 = DefaultMarshalInfoWriter.TypeProvider.SystemMulticastDelegate.Fields.Single<FieldDefinition>(<>f__am$cache2);
                 string str2 = DefaultMarshalInfoWriter.Naming.ForFieldGetter(definition2);
@@ -230,7 +236,10 @@
         private void WriteNativeInvoker(CppCodeWriter writer)
         {
             writer.WriteCommentedLine($"Native invoker for {base._typeRef.FullName}");
-            MethodWriter.WriteMethodWithMetadataInitialization(writer, this._nativeInvokerSignature, this._invokeMethod.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(this, (IntPtr) this.<WriteNativeInvoker>m__1), this._nativeInvokerName);
+            MethodWriter.WriteMethodWithMetadataInitialization(writer, this._nativeInvokerSignature, this._invokeMethod.FullName, delegate (CppCodeWriter bodyWriter, MetadataUsage metadataUsage, MethodUsage methodUsage) {
+                IRuntimeMetadataAccess metadataAccess = MethodWriter.GetDefaultRuntimeMetadataAccess(this._invokeMethod, metadataUsage, methodUsage);
+                new WindowsRuntimeDelegateMethodBodyWriter(this._invokeMethod).WriteMethodBody(bodyWriter, metadataAccess);
+            }, this._nativeInvokerName);
         }
 
         public override void WriteNativeStructDefinition(CppCodeWriter writer)

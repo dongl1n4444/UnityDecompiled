@@ -22,7 +22,7 @@
             TreeViewController treeView = new TreeViewController(data.editorWindow, data.state);
             GroupTreeViewGUI gui = new GroupTreeViewGUI(treeView);
             TreeViewDataSourceForMixers mixers = new TreeViewDataSourceForMixers(treeView, objectFromInstanceID);
-            mixers.onVisibleRowsChanged = (Action) Delegate.Combine(mixers.onVisibleRowsChanged, new Action(gui, (IntPtr) this.CalculateRowRects));
+            mixers.onVisibleRowsChanged = (Action) Delegate.Combine(mixers.onVisibleRowsChanged, new Action(gui.CalculateRowRects));
             treeView.deselectOnUnhandledMouseDown = false;
             treeView.Init(data.treeViewRect, mixers, gui, null);
             data.objectTreeForSelector.SetTreeView(treeView);

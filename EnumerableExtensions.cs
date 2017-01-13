@@ -15,7 +15,7 @@ public static class EnumerableExtensions
         };
         if (elements.Any<string>())
         {
-            return elements.Aggregate<string>(new Func<string, string, string>(storey, (IntPtr) this.<>m__0));
+            return elements.Aggregate<string>(new Func<string, string, string>(storey.<>m__0));
         }
         return string.Empty;
     }

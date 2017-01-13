@@ -233,7 +233,7 @@
                 {
                     case 0:
                         this.$this.m_Running = true;
-                        this.<timer>__0 = this.$this.m_Controller.StartCoroutine(this.$this.StartTimer(this.e, this.timeout, new Action(this, (IntPtr) this.<>m__0)));
+                        this.<timer>__0 = this.$this.m_Controller.StartCoroutine(this.$this.StartTimer(this.e, this.timeout, new Action(this.<>m__0)));
                         this.$current = this.$this.m_Controller.StartCoroutine(this.e);
                         if (!this.$disposing)
                         {

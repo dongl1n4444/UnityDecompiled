@@ -29,7 +29,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<CustomAttribute, bool>(null, (IntPtr) <GetAssemblyResolver>m__0);
+                    <>f__am$cache0 = a => a.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute";
                 }
                 CustomAttribute attribute = Enumerable.FirstOrDefault<CustomAttribute>(AssemblyDefinition.ReadAssembly(assemblyPath).CustomAttributes, <>f__am$cache0);
                 if (attribute != null)
@@ -112,7 +112,7 @@
                 assemblyName = Path.GetFileNameWithoutExtension(assemblyPathName),
                 suffix = EditorSettings.Internal_UserGeneratedProjectSuffix
             };
-            return Enumerable.Any<string>(userScriptAssemblies, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(userScriptAssemblies, new Func<string, bool>(storey.<>m__0));
         }
 
         [CompilerGenerated]

@@ -25,7 +25,7 @@
         protected override void WriteSequenceLength(string fieldName, Action emitSequenceLength)
         {
             base.LoadStateInstance(this.SerializedStateWriterInterface);
-            emitSequenceLength.Invoke();
+            emitSequenceLength();
             base.Callvirt(this.SerializedStateWriterInterface, base.WriteMethodNameFor(base.Import(typeof(int))));
         }
 

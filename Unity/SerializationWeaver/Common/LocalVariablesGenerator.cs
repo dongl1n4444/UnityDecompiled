@@ -35,9 +35,9 @@
             };
             if (storey.index < 4)
             {
-                return new Action(storey, (IntPtr) this.<>m__0);
+                return new Action(storey.<>m__0);
             }
-            return new Action(storey, (IntPtr) this.<>m__1);
+            return new Action(storey.<>m__1);
         }
 
         private static OpCode LoadOpCodeForIndex(int index)
@@ -67,9 +67,9 @@
             };
             if (storey.index < 4)
             {
-                return new Action(storey, (IntPtr) this.<>m__0);
+                return new Action(storey.<>m__0);
             }
-            return new Action(storey, (IntPtr) this.<>m__1);
+            return new Action(storey.<>m__1);
         }
 
         private static OpCode StoreOpCodeForIndex(int index)

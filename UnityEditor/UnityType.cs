@@ -11,15 +11,15 @@
 
     internal sealed class UnityType
     {
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private UnityType <baseClass>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private UnityTypeFlags <flags>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <name>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private string <nativeNamespace>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <persistentTypeID>k__BackingField;
         private uint descendantCount;
         private static Dictionary<int, UnityType> ms_idToTypeInfo;
@@ -69,7 +69,7 @@
             <FindTypeByNameCaseInsensitive>c__AnonStorey0 storey = new <FindTypeByNameCaseInsensitive>c__AnonStorey0 {
                 name = name
             };
-            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.FirstOrDefault<UnityType>(ms_types, new Func<UnityType, bool>(storey.<>m__0));
         }
 
         public static UnityType FindTypeByPersistentTypeID(int id)

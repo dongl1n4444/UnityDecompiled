@@ -90,7 +90,7 @@
                 groups = groups,
                 $this = this
             };
-            return Enumerable.Any<AudioMixerGroupController>(storey.groups, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<AudioMixerGroupController>(storey.groups, new Func<AudioMixerGroupController, bool>(storey.<>m__0));
         }
 
         private static Dictionary<object, ConnectionNode> BuildTemporaryGraph(List<AudioMixerGroupController> allGroups, AudioMixerGroupController groupWhoseEffectIsChanged, AudioMixerEffectController effectWhoseTargetIsChanged, AudioMixerEffectController targetToTest, AudioMixerGroupController modifiedGroup1, List<AudioMixerEffectController> modifiedGroupEffects1, AudioMixerGroupController modifiedGroup2, List<AudioMixerEffectController> modifiedGroupEffects2)
@@ -253,7 +253,7 @@
             <ContainsExposedParameter>c__AnonStorey0 storey = new <ContainsExposedParameter>c__AnonStorey0 {
                 parameter = parameter
             };
-            return (Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExposedAudioParameter>().Length > 0);
+            return (Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey.<>m__0)).ToArray<ExposedAudioParameter>().Length > 0);
         }
 
         public void CopyAllSettingsToAllSnapshots(AudioMixerGroupController group, AudioMixerSnapshotController snapshot)
@@ -620,7 +620,7 @@
             <GetCurrentViewGroupList>c__AnonStorey5 storey = new <GetCurrentViewGroupList>c__AnonStorey5();
             List<AudioMixerGroupController> allAudioGroupsSlow = this.GetAllAudioGroupsSlow();
             storey.view = this.views[this.currentViewIndex];
-            return Enumerable.Where<AudioMixerGroupController>(allAudioGroupsSlow, new Func<AudioMixerGroupController, bool>(storey, (IntPtr) this.<>m__0)).ToArray<AudioMixerGroupController>();
+            return Enumerable.Where<AudioMixerGroupController>(allAudioGroupsSlow, new Func<AudioMixerGroupController, bool>(storey.<>m__0)).ToArray<AudioMixerGroupController>();
         }
 
         private static void GetGroupsRecurse(AudioMixerGroupController group, List<AudioMixerGroupController> groups)
@@ -729,7 +729,7 @@
             Object[] filtered = Selection.GetFiltered(typeof(AudioMixerGroupController), SelectionMode.Deep);
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<Object, AudioMixerGroupController>(null, (IntPtr) <OnUnitySelectionChanged>m__3);
+                <>f__am$cache3 = g => (AudioMixerGroupController) g;
             }
             this.m_CachedSelection = allAudioGroupsSlow.Intersect<AudioMixerGroupController>(Enumerable.Select<Object, AudioMixerGroupController>(filtered, <>f__am$cache3)).ToList<AudioMixerGroupController>();
         }
@@ -759,7 +759,7 @@
             <RemoveExposedParameter>c__AnonStorey1 storey = new <RemoveExposedParameter>c__AnonStorey1 {
                 parameter = parameter
             };
-            this.exposedParameters = Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey, (IntPtr) this.<>m__0)).ToArray<ExposedAudioParameter>();
+            this.exposedParameters = Enumerable.Where<ExposedAudioParameter>(this.exposedParameters, new Func<ExposedAudioParameter, bool>(storey.<>m__0)).ToArray<ExposedAudioParameter>();
             this.OnChangedExposedParameter();
             if (this.exposedParamCache.ContainsKey(storey.parameter))
             {
@@ -826,7 +826,7 @@
         {
             if (insertionIndex >= 0)
             {
-                insertionIndex -= Enumerable.Count<AudioMixerGroupController>(newParent.children.ToList<AudioMixerGroupController>().GetRange(0, insertionIndex), new Func<AudioMixerGroupController, bool>(selection, (IntPtr) this.Contains));
+                insertionIndex -= Enumerable.Count<AudioMixerGroupController>(newParent.children.ToList<AudioMixerGroupController>().GetRange(0, insertionIndex), new Func<AudioMixerGroupController, bool>(selection.Contains));
             }
             Undo.RecordObject(newParent, "Change Audio Mixer Group Parent");
             List<AudioMixerGroupController> allAudioGroupsSlow = this.GetAllAudioGroupsSlow();
@@ -896,17 +896,17 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<GUID, AudioMixerGroupController, <>__AnonType0<GUID, AudioMixerGroupController>>(null, (IntPtr) <SanitizeGroupViews>m__0);
+                    <>f__am$cache0 = (x, y) => new <>__AnonType0<GUID, AudioMixerGroupController>(x, y);
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<<>__AnonType0<GUID, AudioMixerGroupController>, bool>(null, (IntPtr) <SanitizeGroupViews>m__1);
+                    <>f__am$cache1 = <>__TranspIdent0 => <>__TranspIdent0.y.groupID == <>__TranspIdent0.x;
                 }
                 if (<>f__am$cache2 == null)
                 {
-                    <>f__am$cache2 = new Func<<>__AnonType0<GUID, AudioMixerGroupController>, GUID>(null, (IntPtr) <SanitizeGroupViews>m__2);
+                    <>f__am$cache2 = <>__TranspIdent0 => <>__TranspIdent0.x;
                 }
-                views[i].guids = Enumerable.Select<<>__AnonType0<GUID, AudioMixerGroupController>, GUID>(Enumerable.Where<<>__AnonType0<GUID, AudioMixerGroupController>>(Enumerable.SelectMany<GUID, AudioMixerGroupController, <>__AnonType0<GUID, AudioMixerGroupController>>(views[i].guids, new Func<GUID, IEnumerable<AudioMixerGroupController>>(storey, (IntPtr) this.<>m__0), <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<GUID>();
+                views[i].guids = Enumerable.Select<<>__AnonType0<GUID, AudioMixerGroupController>, GUID>(Enumerable.Where<<>__AnonType0<GUID, AudioMixerGroupController>>(Enumerable.SelectMany<GUID, AudioMixerGroupController, <>__AnonType0<GUID, AudioMixerGroupController>>(views[i].guids, new Func<GUID, IEnumerable<AudioMixerGroupController>>(storey.<>m__0), <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<GUID>();
             }
             this.views = views.ToArray<MixerGroupView>();
         }

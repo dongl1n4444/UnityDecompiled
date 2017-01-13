@@ -66,7 +66,7 @@
                         return true;
 
                     case 1:
-                        this.a.Invoke();
+                        this.a();
                         this.$PC = -1;
                         break;
                 }

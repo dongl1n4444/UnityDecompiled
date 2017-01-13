@@ -223,11 +223,11 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<MarshaledType, string>(null, (IntPtr) <get_NativeSize>m__0);
+                    <>f__am$cache0 = t => $"sizeof({t.Name})";
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <get_NativeSize>m__1);
+                    <>f__am$cache1 = (x, y) => x + " + " + y;
                 }
                 return this.MarshaledTypes.Select<MarshaledType, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
             }

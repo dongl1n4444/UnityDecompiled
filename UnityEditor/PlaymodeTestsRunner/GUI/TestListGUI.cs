@@ -190,7 +190,7 @@
             <UpdateResult>c__AnonStorey0 storey = new <UpdateResult>c__AnonStorey0 {
                 result = result
             };
-            TestResult result2 = Enumerable.FirstOrDefault<TestResult>(this.newResultList, new Func<TestResult, bool>(storey, (IntPtr) this.<>m__0));
+            TestResult result2 = Enumerable.FirstOrDefault<TestResult>(this.newResultList, new Func<TestResult, bool>(storey.<>m__0));
             if (result2 != null)
             {
                 result2.Update(storey.result);

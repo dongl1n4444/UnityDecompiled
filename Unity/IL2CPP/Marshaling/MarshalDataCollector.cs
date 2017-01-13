@@ -140,9 +140,9 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<TypeDefinition, IEnumerable<FieldDefinition>>(null, (IntPtr) <CreateMarshalInfoWriter>m__0);
+                    <>f__am$cache0 = t => MarshalingUtils.NonStaticFieldsOf(t);
                 }
-                FieldDefinition faultyField = storey.typeDefinition.GetTypeHierarchy().SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache0).FirstOrDefault<FieldDefinition>(new Func<FieldDefinition, bool>(storey, (IntPtr) this.<>m__0));
+                FieldDefinition faultyField = storey.typeDefinition.GetTypeHierarchy().SelectMany<TypeDefinition, FieldDefinition>(<>f__am$cache0).FirstOrDefault<FieldDefinition>(new Func<FieldDefinition, bool>(storey.<>m__0));
                 if (faultyField != null)
                 {
                     return new TypeDefinitionWithUnsupportedFieldMarshalInfoWriter(storey.typeDefinition, storey.marshalType, faultyField);
@@ -179,7 +179,7 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<TypeDefinition, bool>(null, (IntPtr) <HasCustomMarshalingMethods>m__1);
+                <>f__am$cache1 = t => (t.IsSpecialSystemBaseType() || t.IsSequentialLayout) || t.IsExplicitLayout;
             }
             return definition.GetTypeHierarchy().All<TypeDefinition>(<>f__am$cache1);
         }

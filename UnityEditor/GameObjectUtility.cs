@@ -131,7 +131,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<GameObject, bool>(null, (IntPtr) <HasChildren>m__0);
+                <>f__am$cache0 = go => go.transform.childCount > 0;
             }
             return Enumerable.Any<GameObject>(gameObjects, <>f__am$cache0);
         }

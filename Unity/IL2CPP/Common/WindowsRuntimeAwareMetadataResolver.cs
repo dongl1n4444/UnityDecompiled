@@ -29,13 +29,15 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <FindTypeInUnknownWinmd>m__0);
+                <>f__am$cache0 = d => d.Exists("");
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <FindTypeInUnknownWinmd>m__1);
+                <>f__am$cache1 = d => d.Files("*.winmd", false);
             }
-            IEnumerable<NPath> enumerable = this._assemblyResolver.GetSearchDirectories().Where<NPath>(<>f__am$cache0).SelectMany<NPath, NPath>(<>f__am$cache1).Where<NPath>(new Func<NPath, bool>(this, (IntPtr) this.<FindTypeInUnknownWinmd>m__2));
+            IEnumerable<NPath> enumerable = from winmd in this._assemblyResolver.GetSearchDirectories().Where<NPath>(<>f__am$cache0).SelectMany<NPath, NPath>(<>f__am$cache1)
+                where !this._loadedWinmdPaths.Contains(winmd)
+                select winmd;
             foreach (NPath path in enumerable)
             {
                 AssemblyNameReference name = new AssemblyNameReference(path.FileNameWithoutExtension, new Version()) {

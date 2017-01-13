@@ -233,7 +233,7 @@
         {
             if (this.taskFinishing != null)
             {
-                this.taskFinishing.Invoke(this, success);
+                this.taskFinishing(this, success);
             }
             this.InvokeOnFinish(this, success);
         }
@@ -242,7 +242,7 @@
         {
             if (this.taskRunning != null)
             {
-                return this.taskRunning.Invoke(this);
+                return this.taskRunning(this);
             }
             return true;
         }

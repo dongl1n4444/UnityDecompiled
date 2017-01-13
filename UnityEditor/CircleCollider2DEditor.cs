@@ -3,7 +3,7 @@
     using System;
     using UnityEngine;
 
-    [CanEditMultipleObjects, CustomEditor(typeof(CircleCollider2D))]
+    [CustomEditor(typeof(CircleCollider2D)), CanEditMultipleObjects]
     internal class CircleCollider2DEditor : Collider2DEditorBase
     {
         private int m_HandleControlID;

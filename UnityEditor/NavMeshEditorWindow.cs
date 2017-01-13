@@ -774,7 +774,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<GameObject, bool>(null, (IntPtr) <SelectionHasChildren>m__0);
+                <>f__am$cache0 = obj => obj.transform.childCount > 0;
             }
             return Enumerable.Any<GameObject>(Selection.gameObjects, <>f__am$cache0);
         }

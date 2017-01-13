@@ -117,15 +117,15 @@
                 "-o",
                 path2.InQuotes()
             };
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.DefaultLinkerFlags)));
-            string path = !objectFiles.Any<NPath>() ? null : objectFiles.First<NPath>().Parent.ToString();
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.DefaultLinkerFlags)));
+            string str2 = !objectFiles.Any<NPath>() ? null : objectFiles.First<NPath>().Parent.ToString();
             using (TextWriter writer = new Unity.IL2CPP.Portability.StreamWriter(shortPathName))
             {
                 foreach (NPath path3 in objectFiles)
                 {
-                    if (path != null)
+                    if (str2 != null)
                     {
-                        writer.Write("\"{0}\"\n", path3.RelativeTo(new NPath(path)));
+                        writer.Write("\"{0}\"\n", path3.RelativeTo(new NPath(str2)));
                     }
                     else
                     {
@@ -143,7 +143,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<string, NPath>(null, (IntPtr) <MakeLinkerInvocation>m__0);
+                    <>f__am$cache0 = path => new NPath(path);
                 }
                 list.AddRange(EmscriptenBuildingOptions.JsPre.Select<string, NPath>(<>f__am$cache0));
             }
@@ -155,7 +155,7 @@
                 }
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<string, NPath>(null, (IntPtr) <MakeLinkerInvocation>m__1);
+                    <>f__am$cache1 = path => new NPath(path);
                 }
                 list.AddRange(EmscriptenBuildingOptions.JsLibraries.Select<string, NPath>(<>f__am$cache1));
             }
@@ -171,7 +171,7 @@
                 Executable = str5,
                 Arguments = inputs.Append<string>(("@" + shortPathName.InQuotes())).SeparateWithSpaces(),
                 EnvVars = this.EnvVars(),
-                WorkingDirectory = path
+                WorkingDirectory = str2
             };
             invocation.ExecuteArgs = args;
             invocation.ArgumentsInfluencingOutcome = inputs;
@@ -301,7 +301,7 @@
                     }
                     case 1:
                     case 2:
-                        this.$locvar0 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.DefaultCompilerFlags)).GetEnumerator();
+                        this.$locvar0 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                         num = 0xfffffffd;
                         break;
 

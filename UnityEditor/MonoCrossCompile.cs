@@ -161,7 +161,7 @@
             bool flag = true;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CrossCompileAOTDirectoryParallel>m__0);
+                <>f__am$cache0 = path => Path.GetExtension(path) == ".dll";
             }
             List<string> list3 = new List<string>(Enumerable.Where<string>(Directory.GetFiles(sourceAssembliesFolder), <>f__am$cache0));
             int count = list3.Count;

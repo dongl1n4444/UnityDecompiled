@@ -64,7 +64,7 @@
                     };
                     if (storey.boneName.Length > 0)
                     {
-                        Transform transform = Enumerable.FirstOrDefault<Transform>(base.modelBones.Keys, new Func<Transform, bool>(storey, (IntPtr) this.<>m__0));
+                        Transform transform = Enumerable.FirstOrDefault<Transform>(base.modelBones.Keys, new Func<Transform, bool>(storey.<>m__0));
                         this.m_Bones[i].bone = transform;
                     }
                     else
@@ -321,7 +321,7 @@
                     return BoneState.BoneLenghtIsZero;
                 }
             }
-            if (Enumerable.Where<AvatarSetupTool.BoneWrapper>(this.m_Bones, new Func<AvatarSetupTool.BoneWrapper, bool>(storey, (IntPtr) this.<>m__0)).Count<AvatarSetupTool.BoneWrapper>() > 1)
+            if (Enumerable.Where<AvatarSetupTool.BoneWrapper>(this.m_Bones, new Func<AvatarSetupTool.BoneWrapper, bool>(storey.<>m__0)).Count<AvatarSetupTool.BoneWrapper>() > 1)
             {
                 error = storey.bone.messageName + " is also assigned to ";
                 bool flag = true;

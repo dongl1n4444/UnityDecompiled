@@ -16,31 +16,31 @@
     {
         [CompilerGenerated]
         private static Func<TreeViewItem, int> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int> <contextClickItemCallback>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action <contextClickOutsideItemsCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private ITreeViewDataSource <data>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <deselectOnUnhandledMouseDown>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Action<int[], bool> <dragEndedCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <deselectOnUnhandledMouseDown>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private Action<int[], bool> <dragEndedCallback>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ITreeViewDragging <dragging>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action <expandedStateChanged>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ITreeViewGUI <gui>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private ITreeViewGUI <gui>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int> <itemDoubleClickedCallback>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action <keyboardInputCallback>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Action<int, Rect> <onGUIRowCallback>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
-        private Action<Vector2> <scrollChanged>k__BackingField;
         [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Action<Vector2> <scrollChanged>k__BackingField;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<string> <searchChanged>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private Action<int[]> <selectionChangedCallback>k__BackingField;
@@ -89,7 +89,7 @@
                     <BeginNameEditing>c__AnonStorey0 storey = new <BeginNameEditing>c__AnonStorey0 {
                         id = enumerator.Current
                     };
-                    TreeViewItem item2 = Enumerable.FirstOrDefault<TreeViewItem>(rows, new Func<TreeViewItem, bool>(storey, (IntPtr) this.<>m__0));
+                    TreeViewItem item2 = Enumerable.FirstOrDefault<TreeViewItem>(rows, new Func<TreeViewItem, bool>(storey.<>m__0));
                     if (item == null)
                     {
                         item = item2;
@@ -223,7 +223,7 @@
                 {
                     float contentIndent = this.gui.GetContentIndent(item);
                     Rect rect2 = new Rect(rowRect.x + contentIndent, rowRect.y, rowRect.width - contentIndent, rowRect.height);
-                    this.onGUIRowCallback.Invoke(item.id, rect2);
+                    this.onGUIRowCallback(item.id, rect2);
                 }
                 this.HandleUnusedMouseEventsForItem(rowRect, item, row);
             }
@@ -400,7 +400,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<TreeViewItem, int>(null, (IntPtr) <GetRowIDs>m__0);
+                <>f__am$cache0 = item => item.id;
             }
             return Enumerable.Select<TreeViewItem, int>(this.data.GetRows(), <>f__am$cache0).ToArray<int>();
         }
@@ -429,7 +429,9 @@
                 TreeViewItem item = this.data.GetItem(i);
                 list2.Add(item.id);
             }
-            return Enumerable.Where<int>(list2, new Func<int, bool>(this, (IntPtr) this.<GetVisibleSelectedIds>m__1)).ToList<int>();
+            return (from id in list2
+                where this.state.selectedIDs.Contains(id)
+                select id).ToList<int>();
         }
 
         public void GrabKeyboardFocus()
@@ -511,7 +513,7 @@
             {
                 if (this.m_TotalRect.Contains(Event.current.mousePosition) && (this.contextClickOutsideItemsCallback != null))
                 {
-                    this.contextClickOutsideItemsCallback.Invoke();
+                    this.contextClickOutsideItemsCallback();
                 }
             }
             else if ((type == EventType.MouseDown) && ((this.deselectOnUnhandledMouseDown && (Event.current.button == 0)) && (this.m_TotalRect.Contains(Event.current.mousePosition) && (this.state.selectedIDs.Count > 0))))
@@ -653,7 +655,7 @@
             {
                 dragging.OnInitialize();
             }
-            this.expandedStateChanged = (Action) Delegate.Combine(this.expandedStateChanged, new Action(this, (IntPtr) this.ExpandedStateHasChanged));
+            this.expandedStateChanged = (Action) Delegate.Combine(this.expandedStateChanged, new Action(this.ExpandedStateHasChanged));
             this.m_FramingAnimFloat = new AnimFloat(this.state.scrollPos.y, new UnityAction(this.AnimatedScrollChanged));
         }
 
@@ -719,7 +721,7 @@
             {
                 if (this.keyboardInputCallback != null)
                 {
-                    this.keyboardInputCallback.Invoke();
+                    this.keyboardInputCallback();
                 }
                 if (Event.current.type == EventType.KeyDown)
                 {
@@ -813,7 +815,7 @@
         {
             if (this.dragEndedCallback != null)
             {
-                this.dragEndedCallback.Invoke(draggedIDs, draggedItemsFromOwnTreeView);
+                this.dragEndedCallback(draggedIDs, draggedItemsFromOwnTreeView);
             }
         }
 

@@ -32,7 +32,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<CompilerMessage, string>(null, (IntPtr) <Compile>m__0);
+                    <>f__am$cache0 = cm => cm.message;
                 }
                 return Enumerable.Select<CompilerMessage, string>(compiler.GetCompilerMessages(), <>f__am$cache0).ToArray<string>();
             }

@@ -5,6 +5,7 @@
     using NiceIO;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -207,12 +208,12 @@
             args[1] = !type.HasGenericParameters ? writer.NativeSize : "0";
             if (!type.HasGenericParameters && (<>f__am$cacheB == null))
             {
-                <>f__am$cacheB = new Func<FieldDefinition, bool>(null, (IntPtr) <Sizes>m__B);
+                <>f__am$cacheB = f => f.IsNormalStatic();
             }
             args[2] = (!type.Fields.Any<FieldDefinition>(<>f__am$cacheB) && !type.StoresNonFieldsInStaticFields()) ? "0" : $"sizeof({Naming.ForStaticFieldsStruct(type)})";
             if (!type.HasGenericParameters && (<>f__am$cacheC == null))
             {
-                <>f__am$cacheC = new Func<FieldDefinition, bool>(null, (IntPtr) <Sizes>m__C);
+                <>f__am$cacheC = f => f.IsThreadStatic();
             }
             args[3] = !type.Fields.Any<FieldDefinition>(<>f__am$cacheC) ? "0" : $"sizeof({Naming.ForThreadFieldsStruct(type)})";
             return string.Format("{0}, {1}, {2}, {3}", args);
@@ -225,7 +226,7 @@
         {
             if (<>f__mg$cache1 == null)
             {
-                <>f__mg$cache1 = new Func<TypeReference, bool>(null, (IntPtr) TypeDoesNotExceedMaximumRecursion);
+                <>f__mg$cache1 = new Func<TypeReference, bool>(MetadataCacheWriter.TypeDoesNotExceedMaximumRecursion);
             }
             return types.All<TypeReference>(<>f__mg$cache1);
         }
@@ -234,7 +235,7 @@
         {
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<TableInfo, bool>(null, (IntPtr) <WriteFieldTable>m__7);
+                <>f__am$cache7 = item => item.Count > 0;
             }
             foreach (TableInfo info in fieldTableInfos.Where<TableInfo>(<>f__am$cache7).ToArray<TableInfo>())
             {
@@ -244,7 +245,7 @@
             IncludeWriter.WriteRegistrationIncludes(writer);
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<TableInfo, string>(null, (IntPtr) <WriteFieldTable>m__8);
+                <>f__am$cache8 = table => (table.Count <= 0) ? Naming.Null : table.Name;
             }
             return MetadataWriter.WriteTable<TableInfo>(writer, "extern const int32_t*", "g_FieldOffsetTable", fieldTableInfos, <>f__am$cache8);
         }
@@ -270,11 +271,11 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<FieldReference, uint>, uint>(null, (IntPtr) <WriteMetadata>m__0);
+                <>f__am$cache0 = item => item.Value;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(null, (IntPtr) <WriteMetadata>m__1);
+                <>f__am$cache1 = item => new KeyValuePair<int, int>(Il2CppTypeCollector.GetIndex(item.Key.DeclaringType, 0), Naming.GetFieldIndex(item.Key, false));
             }
             storey.fieldRefs = FieldReferenceCollector.Fields.OrderBy<KeyValuePair<FieldReference, uint>, uint>(<>f__am$cache0).Select<KeyValuePair<FieldReference, uint>, KeyValuePair<int, int>>(<>f__am$cache1).ToArray<KeyValuePair<int, int>>();
             using (TinyProfiler.Section("GenericClasses", ""))
@@ -283,11 +284,11 @@
                 {
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<KeyValuePair<Il2CppTypeData, int>, bool>(null, (IntPtr) <WriteMetadata>m__2);
+                        <>f__am$cache2 = t => t.Key.Type.IsGenericInstance;
                     }
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<KeyValuePair<Il2CppTypeData, int>, TypeReference>(null, (IntPtr) <WriteMetadata>m__3);
+                        <>f__am$cache3 = t => t.Key.Type;
                     }
                     TypeReference[] items = Il2CppTypeCollectorReader.Items.Where<KeyValuePair<Il2CppTypeData, int>>(<>f__am$cache2).Select<KeyValuePair<Il2CppTypeData, int>, TypeReference>(<>f__am$cache3).Distinct<TypeReference>(new Unity.IL2CPP.Common.TypeReferenceEqualityComparer()).ToArray<TypeReference>();
                     foreach (TypeReference reference in items)
@@ -296,7 +297,7 @@
                     }
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<TypeReference, string>(null, (IntPtr) <WriteMetadata>m__4);
+                        <>f__am$cache4 = t => "&" + Naming.ForGenericClass(t);
                     }
                     source.Add(MetadataWriter.WriteTable<TypeReference>(writer3, "extern Il2CppGenericClass* const", "s_Il2CppGenericTypes", items, <>f__am$cache4));
                 }
@@ -315,10 +316,10 @@
                 {
                     if (<>f__am$cache5 == null)
                     {
-                        <>f__am$cache5 = new Func<MethodReference, bool>(null, (IntPtr) <WriteMetadata>m__5);
+                        <>f__am$cache5 = m => (!m.HasGenericParameters && !m.ContainsGenericParameters()) && TypeDoesNotExceedMaximumRecursion(m.DeclaringType);
                     }
                     MethodReference[] referenceArray3 = Il2CppGenericMethodCollector.Items.Keys.Where<MethodReference>(<>f__am$cache5).ToArray<MethodReference>();
-                    source.Add(MetadataWriter.WriteTable<MethodReference>(writer5, "extern const Il2CppGenericMethodFunctionsDefinitions", "s_Il2CppGenericMethodFunctions", referenceArray3, new Func<MethodReference, string>(storey, (IntPtr) this.<>m__0)));
+                    source.Add(MetadataWriter.WriteTable<MethodReference>(writer5, "extern const Il2CppGenericMethodFunctionsDefinitions", "s_Il2CppGenericMethodFunctions", referenceArray3, new Func<MethodReference, string>(storey.<>m__0)));
                 }
             }
             using (TinyProfiler.Section("Il2CppTypes", ""))
@@ -357,7 +358,7 @@
                                 writer9.WriteLine("extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize{0} = {{ {1} }};", args);
                                 if (<>f__mg$cache0 == null)
                                 {
-                                    <>f__mg$cache0 = new Func<FieldDefinition, string>(null, (IntPtr) OffsetOf);
+                                    <>f__mg$cache0 = new Func<FieldDefinition, string>(MetadataCacheWriter.OffsetOf);
                                 }
                                 fieldTableInfos.Add(MetadataWriter.WriteTable<FieldDefinition>(writer9, "extern const int32_t", "g_FieldOffsetTable" + num3, definition.Fields, <>f__mg$cache0));
                                 num3++;
@@ -384,7 +385,7 @@
                     }
                     if (<>f__am$cache6 == null)
                     {
-                        <>f__am$cache6 = new Func<TableInfo, IEnumerable<string>>(null, (IntPtr) <WriteMetadata>m__6);
+                        <>f__am$cache6 = table => new string[] { table.Count.ToString(CultureInfo.InvariantCulture), table.Name };
                     }
                     writer10.WriteStructInitializer("extern const Il2CppMetadataRegistration", "g_MetadataRegistration", source.SelectMany<TableInfo, string>(<>f__am$cache6));
                 }
@@ -468,7 +469,7 @@
         {
             if (<>f__am$cache9 == null)
             {
-                <>f__am$cache9 = new Func<TypeDefinition, int, string>(null, (IntPtr) <WriteTypeDefinitionSizesTable>m__9);
+                <>f__am$cache9 = (type, index) => "g_typeDefinitionSize" + index;
             }
             string[] items = metadataCollector.GetTypeInfos().Select<TypeDefinition, string>(<>f__am$cache9).ToArray<string>();
             foreach (string str in items)
@@ -478,7 +479,7 @@
             }
             if (<>f__am$cacheA == null)
             {
-                <>f__am$cacheA = new Func<string, string>(null, (IntPtr) <WriteTypeDefinitionSizesTable>m__A);
+                <>f__am$cacheA = varName => Naming.AddressOf(varName);
             }
             return MetadataWriter.WriteTable<string>(writer, "extern const Il2CppTypeDefinitionSizes*", "g_Il2CppTypeDefinitionSizesTable", items, <>f__am$cacheA);
         }
@@ -546,7 +547,7 @@
                     {
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <>m__1E);
+                            <>f__am$cache0 = m => !m.IsStripped();
                         }
                         MethodDefinition[] definitionArray = definition.Methods.Where<MethodDefinition>(<>f__am$cache0).ToArray<MethodDefinition>();
                         length = definitionArray.Length;

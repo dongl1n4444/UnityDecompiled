@@ -21,7 +21,7 @@
         {
             if (<>f__mg$cache0 == null)
             {
-                <>f__mg$cache0 = new Func<string, Regex, NormalizedCompilerStatus>(null, (IntPtr) CompilerOutputParserBase.NormalizeSimpleUnknownTypeOfNamespaceError);
+                <>f__mg$cache0 = new Func<string, Regex, NormalizedCompilerStatus>(CompilerOutputParserBase.NormalizeSimpleUnknownTypeOfNamespaceError);
             }
             return CompilerOutputParserBase.TryNormalizeCompilerStatus(match, "0018", sUnknownTypeOrNamespace, <>f__mg$cache0);
         }

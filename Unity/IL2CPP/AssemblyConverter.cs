@@ -80,7 +80,7 @@
             ExtraTypesSupport support = new ExtraTypesSupport(genericsCollectionCollector, this._assembliesOrderedByDependency);
             foreach (string str in BuildExtraTypesList())
             {
-                TypeNameParseInfo typeNameInfo = TypeNameParser.Parse(str);
+                TypeNameParseInfo typeNameInfo = Unity.IL2CPP.Common.TypeNameParser.Parse(str);
                 if (typeNameInfo == null)
                 {
                     Console.WriteLine("WARNING: Cannot parse type name {0} from the extra types list. Skipping.", str);
@@ -177,11 +177,11 @@
                     {
                         if (<>f__am$cache6 == null)
                         {
-                            <>f__am$cache6 = new Func<string, string>(null, (IntPtr) <BuildExtraTypesList>m__7);
+                            <>f__am$cache6 = l => l.Trim();
                         }
                         if (<>f__am$cache7 == null)
                         {
-                            <>f__am$cache7 = new Func<string, bool>(null, (IntPtr) <BuildExtraTypesList>m__8);
+                            <>f__am$cache7 = l => l.Length > 0;
                         }
                         foreach (string str3 in File.ReadAllLines(str2).Select<string, string>(<>f__am$cache6).Where<string>(<>f__am$cache7))
                         {
@@ -207,11 +207,11 @@
             while (source.Count > count)
             {
                 count = source.Count;
-                source.UnionWith(source.ToArray<AssemblyDefinition>().SelectMany<AssemblyDefinition, AssemblyDefinition>(new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(AssemblyDependencies, (IntPtr) AssemblyDependencies.GetReferencedAssembliesFor)));
+                source.UnionWith(source.ToArray<AssemblyDefinition>().SelectMany<AssemblyDefinition, AssemblyDefinition>(new Func<AssemblyDefinition, IEnumerable<AssemblyDefinition>>(AssemblyDependencies.GetReferencedAssembliesFor)));
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <CollectAssembliesRecursive>m__2);
+                <>f__am$cache1 = a => a.Name.Name == "mscorlib";
             }
             if (!source.Any<AssemblyDefinition>(<>f__am$cache1))
             {
@@ -223,7 +223,7 @@
 
         private void CollectAssembliesToConvert()
         {
-            this._assembliesOrderedByDependency = this.CollectAssembliesRecursive(this._assemblies.Select<NPath, AssemblyDefinition>(new Func<NPath, AssemblyDefinition>(this, (IntPtr) this.<CollectAssembliesToConvert>m__1))).ToList<AssemblyDefinition>();
+            this._assembliesOrderedByDependency = this.CollectAssembliesRecursive(from path in this._assemblies select this._assemblyLoader.Load(path.ToString())).ToList<AssemblyDefinition>();
             this._assembliesOrderedByDependency.Sort(new AssemblyDependencyComparer(AssemblyDependencyComparer.MaximumDepthForEachAssembly(this._assembliesOrderedByDependency)));
         }
 
@@ -280,7 +280,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<NPath, bool>(null, (IntPtr) <GetAssembliesInDirectory>m__0);
+                <>f__am$cache0 = f => f.HasExtension(new string[] { "dll", "exe" });
             }
             return assemblyDirectory.Files(false).Where<NPath>(<>f__am$cache0);
         }
@@ -323,7 +323,7 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__3);
+                <>f__am$cache2 = ad => ad.Name.Name == "mscorlib";
             }
             AssemblyDefinition mscorlib = this._assembliesOrderedByDependency.Single<AssemblyDefinition>(<>f__am$cache2);
             TypeProviderInitializer.Initialize(mscorlib);
@@ -331,14 +331,14 @@
             this._outputDir.EnsureDirectoryExists("");
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__4);
+                <>f__am$cache3 = a => (a.MainModule.Kind == ModuleKind.Windows) || (a.MainModule.Kind == ModuleKind.Console);
             }
             AssemblyDefinition[] source = this._assembliesOrderedByDependency.Where<AssemblyDefinition>(<>f__am$cache3).ToArray<AssemblyDefinition>();
             if (source.Length > 0)
             {
                 if (<>f__am$cache4 == null)
                 {
-                    <>f__am$cache4 = new Func<AssemblyDefinition, bool>(null, (IntPtr) <PreProcessStage>m__5);
+                    <>f__am$cache4 = a => a.EntryPoint != null;
                 }
                 AssemblyDefinition local1 = source.FirstOrDefault<AssemblyDefinition>(<>f__am$cache4);
                 if (local1 == null)
@@ -409,7 +409,7 @@
             this.AddExtraTypes(genericsCollectionCollector);
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<AssemblyDefinition, IEnumerable<TypeDefinition>>(null, (IntPtr) <PreProcessStage>m__6);
+                <>f__am$cache5 = a => a.MainModule.Types;
             }
             allTypeDefinitions = GetAllTypes(this._assembliesOrderedByDependency.SelectMany<AssemblyDefinition, TypeDefinition>(<>f__am$cache5)).ToArray<TypeDefinition>();
             using (TinyProfiler.Section("CollectGenericVirtualMethods.Collect", ""))

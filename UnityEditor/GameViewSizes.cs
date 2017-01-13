@@ -317,7 +317,7 @@
             RefreshGameViewSizeGroupType();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Action(null, (IntPtr) <OnEnable>m__0);
+                <>f__am$cache0 = () => RefreshGameViewSizeGroupType();
             }
             EditorUserBuildSettings.activeBuildTargetChanged = (Action) Delegate.Combine(EditorUserBuildSettings.activeBuildTargetChanged, <>f__am$cache0);
         }

@@ -408,7 +408,7 @@
             int num = 0;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<ContainerWindow, bool>(null, (IntPtr) <GetMainWindowPaneCount>m__0);
+                <>f__am$cache0 = e => e.showMode == ShowMode.MainWindow;
             }
             ContainerWindow window = Enumerable.First<ContainerWindow>(ContainerWindow.windows, <>f__am$cache0);
             if (window != null)

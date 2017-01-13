@@ -134,7 +134,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
             }
         }
         storey.ignoredExtensions = new string[] { ".pdb" };
-        return Enumerable.Select<string, string>(Enumerable.Where<string>(list, new Func<string, bool>(storey, (IntPtr) this.<>m__0)), new Func<string, string>(storey, (IntPtr) this.<>m__1));
+        return Enumerable.Select<string, string>(Enumerable.Where<string>(list, new Func<string, bool>(storey.<>m__0)), new Func<string, string>(storey.<>m__1));
     }
 
     private static string MakeFilterItems(IEnumerable<string> files, string UserProjectDirectory, string pathPrefix = "")
@@ -263,7 +263,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
     private void MoveFilesFromStagingArea()
     {
         Utility.MoveDirectory(Path.Combine(this.StagingArea, "Il2CppOutputProject"), this.Il2CppOutputProjectDirectory, null);
-        Utility.MoveDirectory(this.StagingArea, this.UserProjectDirectory, new Func<string, bool>(this, (IntPtr) this.ShouldOverwriteFile));
+        Utility.MoveDirectory(this.StagingArea, this.UserProjectDirectory, new Func<string, bool>(this.ShouldOverwriteFile));
     }
 
     private void ReshapeStagingArea()
@@ -291,33 +291,33 @@ internal class MetroIl2CppVisualStudioSolutionCreator
 
     private void WriteIl2CppOutputProject()
     {
-        string path = Path.Combine(this.Il2CppOutputProjectDirectory, "Il2CppOutputProject.vcxproj");
+        string str = Path.Combine(this.Il2CppOutputProjectDirectory, "Il2CppOutputProject.vcxproj");
         string[] strArray = new string[] { ".c", ".cpp", ".h" };
         if (<>f__am$cache0 == null)
         {
-            <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <WriteIl2CppOutputProject>m__1);
+            <>f__am$cache0 = path => !path.Contains(@"IL2CPP\MapFileParser");
         }
-        IEnumerable<string> files = Enumerable.Where<string>(Enumerable.SelectMany<string, string>(strArray, new Func<string, IEnumerable<string>>(this, (IntPtr) this.<WriteIl2CppOutputProject>m__0)), <>f__am$cache0);
+        IEnumerable<string> files = Enumerable.Where<string>(from extension in strArray select Directory.GetFiles(this.Il2CppOutputProjectDirectory, "*" + extension, SearchOption.AllDirectories), <>f__am$cache0);
         string str2 = MakeProjectItems(files, this.Il2CppOutputProjectDirectory, "");
         string str3 = MakeFilterItems(files, this.Il2CppOutputProjectDirectory, "");
         char[] separator = new char[] { ';' };
         if (<>f__am$cache1 == null)
         {
-            <>f__am$cache1 = new Func<string, string>(null, (IntPtr) <WriteIl2CppOutputProject>m__2);
+            <>f__am$cache1 = d => "--additional-defines=" + d;
         }
         if (<>f__am$cache2 == null)
         {
-            <>f__am$cache2 = new Func<string, string, string>(null, (IntPtr) <WriteIl2CppOutputProject>m__3);
+            <>f__am$cache2 = (x, y) => x + " " + y;
         }
         string str4 = Enumerable.Aggregate<string>(Enumerable.Select<string, string>("WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT".Split(separator), <>f__am$cache1), <>f__am$cache2);
         if (<>f__am$cache3 == null)
         {
-            <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <WriteIl2CppOutputProject>m__4);
+            <>f__am$cache3 = (x, y) => x + ";" + y;
         }
         string contents = string.Format(MetroIl2CppTemplates.GetIl2CppOutputProjectTemplate(MetroVisualStudioSolutionHelper.GetUWPSDKVersion()), str2, Enumerable.Aggregate<string>(BaseDefines, <>f__am$cache3) + ";WINDOWS_UWP;UNITY_UWP;UNITY_WSA_10_0;UNITY_WSA;UNITY_WINRT", str4);
-        File.WriteAllText(path, contents, Encoding.UTF8);
+        File.WriteAllText(str, contents, Encoding.UTF8);
         string str7 = string.Format(MetroIl2CppTemplates.GetFiltersTemplate(), str3);
-        File.WriteAllText(path + ".filters", str7, Encoding.UTF8);
+        File.WriteAllText(str + ".filters", str7, Encoding.UTF8);
     }
 
     private void WriteSolutionFile()
@@ -366,7 +366,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
             string str3 = MakeProjectItems(projectFiles, this.UserProjectDirectory, "");
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, bool>(null, (IntPtr) <WriteUserProject>m__5);
+                <>f__am$cache4 = f => string.Equals(Path.GetExtension(f), ".pfx", StringComparison.InvariantCultureIgnoreCase);
             }
             string filePath = Enumerable.FirstOrDefault<string>(projectFiles, <>f__am$cache4);
             if (filePath == null)
@@ -404,7 +404,7 @@ internal class MetroIl2CppVisualStudioSolutionCreator
                 <>f__ref$0 = this,
                 path = path
             };
-            return !Enumerable.Any<string>(this.ignoredExtensions, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return !Enumerable.Any<string>(this.ignoredExtensions, new Func<string, bool>(storey.<>m__0));
         }
 
         internal string <>m__1(string path) => 

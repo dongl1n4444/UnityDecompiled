@@ -164,11 +164,11 @@
             this.AssertComplete();
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Func<KeyValuePair<TypeDefinition, int>, int>(null, (IntPtr) <GetCCWMarshalingFunctions>m__8);
+                <>f__am$cache8 = new Func<KeyValuePair<TypeDefinition, int>, int>(MethodCollector.<GetCCWMarshalingFunctions>m__8);
             }
             if (<>f__am$cache9 == null)
             {
-                <>f__am$cache9 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetCCWMarshalingFunctions>m__9);
+                <>f__am$cache9 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(MethodCollector.<GetCCWMarshalingFunctions>m__9);
             }
             return this._ccwMarshalingFunctions.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache8).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache9).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
@@ -189,11 +189,11 @@
             this.AssertComplete();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<MethodReference, int>, int>(null, (IntPtr) <GetMethods>m__0);
+                <>f__am$cache0 = new Func<KeyValuePair<MethodReference, int>, int>(MethodCollector.<GetMethods>m__0);
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(null, (IntPtr) <GetMethods>m__1);
+                <>f__am$cache1 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(MethodCollector.<GetMethods>m__1);
             }
             return this._methods.OrderBy<KeyValuePair<MethodReference, int>, int>(<>f__am$cache0).Select<KeyValuePair<MethodReference, int>, MethodReference>(<>f__am$cache1).ToArray<MethodReference>().AsReadOnlyPortable<MethodReference>();
         }
@@ -214,11 +214,11 @@
             this.AssertComplete();
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<KeyValuePair<MethodReference, int>, int>(null, (IntPtr) <GetReversePInvokeWrappers>m__2);
+                <>f__am$cache2 = new Func<KeyValuePair<MethodReference, int>, int>(MethodCollector.<GetReversePInvokeWrappers>m__2);
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(null, (IntPtr) <GetReversePInvokeWrappers>m__3);
+                <>f__am$cache3 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(MethodCollector.<GetReversePInvokeWrappers>m__3);
             }
             return this._reversePInvokeWrappers.OrderBy<KeyValuePair<MethodReference, int>, int>(<>f__am$cache2).Select<KeyValuePair<MethodReference, int>, MethodReference>(<>f__am$cache3).ToArray<MethodReference>().AsReadOnlyPortable<MethodReference>();
         }
@@ -228,11 +228,11 @@
             this.AssertComplete();
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<KeyValuePair<TypeDefinition, int>, int>(null, (IntPtr) <GetTypeMarshalingFunctions>m__6);
+                <>f__am$cache6 = new Func<KeyValuePair<TypeDefinition, int>, int>(MethodCollector.<GetTypeMarshalingFunctions>m__6);
             }
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(null, (IntPtr) <GetTypeMarshalingFunctions>m__7);
+                <>f__am$cache7 = new Func<KeyValuePair<TypeDefinition, int>, TypeDefinition>(MethodCollector.<GetTypeMarshalingFunctions>m__7);
             }
             return this._typeMarshalingFunctions.OrderBy<KeyValuePair<TypeDefinition, int>, int>(<>f__am$cache6).Select<KeyValuePair<TypeDefinition, int>, TypeDefinition>(<>f__am$cache7).ToArray<TypeDefinition>().AsReadOnlyPortable<TypeDefinition>();
         }
@@ -264,11 +264,11 @@
             this.AssertComplete();
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<KeyValuePair<MethodReference, int>, int>(null, (IntPtr) <GetWrappersForDelegateFromManagedToNative>m__4);
+                <>f__am$cache4 = new Func<KeyValuePair<MethodReference, int>, int>(MethodCollector.<GetWrappersForDelegateFromManagedToNative>m__4);
             }
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(null, (IntPtr) <GetWrappersForDelegateFromManagedToNative>m__5);
+                <>f__am$cache5 = new Func<KeyValuePair<MethodReference, int>, MethodReference>(MethodCollector.<GetWrappersForDelegateFromManagedToNative>m__5);
             }
             return this._delegateWrappersManagedToNative.OrderBy<KeyValuePair<MethodReference, int>, int>(<>f__am$cache4).Select<KeyValuePair<MethodReference, int>, MethodReference>(<>f__am$cache5).ToArray<MethodReference>().AsReadOnlyPortable<MethodReference>();
         }

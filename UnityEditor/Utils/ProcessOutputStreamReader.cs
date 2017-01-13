@@ -14,7 +14,7 @@
         private readonly StreamReader stream;
         private Thread thread;
 
-        internal ProcessOutputStreamReader(Process p, StreamReader stream) : this(new Func<bool>(storey, (IntPtr) this.<>m__0), stream)
+        internal ProcessOutputStreamReader(Process p, StreamReader stream) : this(new Func<bool>(storey.<>m__0), stream)
         {
             <ProcessOutputStreamReader>c__AnonStorey0 storey = new <ProcessOutputStreamReader>c__AnonStorey0 {
                 p = p
@@ -32,7 +32,7 @@
 
         internal string[] GetOutput()
         {
-            if (this.hostProcessExited.Invoke())
+            if (this.hostProcessExited())
             {
                 this.thread.Join();
             }
@@ -45,7 +45,7 @@
 
         private void ThreadFunc()
         {
-            if (!this.hostProcessExited.Invoke())
+            if (!this.hostProcessExited())
             {
                 while (true)
                 {

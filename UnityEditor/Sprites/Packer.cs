@@ -97,7 +97,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Type, string>(null, (IntPtr) <RegenerateList>m__0);
+                    <>f__am$cache0 = t => t.Name;
                 }
                 m_policies = Enumerable.Select<Type, string>(list, <>f__am$cache0).ToArray<string>();
                 m_policyTypeCache = new Dictionary<string, Type>();

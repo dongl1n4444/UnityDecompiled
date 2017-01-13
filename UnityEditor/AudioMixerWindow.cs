@@ -327,7 +327,7 @@
                 {
                     this.m_MixersTreeState = new TreeViewState();
                 }
-                this.m_MixersTree = new AudioMixersTreeView(this, this.m_MixersTreeState, new Func<List<AudioMixerController>>(this, (IntPtr) this.GetAllControllers));
+                this.m_MixersTree = new AudioMixersTreeView(this, this.m_MixersTreeState, new Func<List<AudioMixerController>>(this.GetAllControllers));
                 if (this.m_ViewsState == null)
                 {
                     this.m_ViewsState = new ReorderableListWithRenameAndScrollView.State();
@@ -698,21 +698,21 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__0);
+                        <>f__am$cache0 = val => val.EndsWith(".mixer");
                     }
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__1);
+                        <>f__am$cache1 = val => val.EndsWith(".mixer");
                     }
                     bool flag = Enumerable.Any<string>(importedAssets, <>f__am$cache0) | Enumerable.Any<string>(deletedAssets, <>f__am$cache1);
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__2);
+                        <>f__am$cache2 = val => val.EndsWith(".mixer");
                     }
                     flag |= Enumerable.Any<string>(movedAssets, <>f__am$cache2);
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<string, bool>(null, (IntPtr) <OnPostprocessAllAssets>m__3);
+                        <>f__am$cache3 = val => val.EndsWith(".mixer");
                     }
                     if (flag | Enumerable.Any<string>(movedFromPath, <>f__am$cache3))
                     {

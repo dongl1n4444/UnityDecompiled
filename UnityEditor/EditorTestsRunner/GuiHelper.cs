@@ -116,13 +116,13 @@
             };
             AssemblyDefinition definition = AssemblyDefinition.ReadAssembly(storey.test.test.assemblyPath, parameters);
             storey.testName = storey.test.test.fullClassName.Replace("+", "/");
-            TypeDefinition baseType = Enumerable.Single<TypeDefinition>(CollectTypeDefinitions(definition.MainModule.Types), new Func<TypeDefinition, bool>(storey, (IntPtr) this.<>m__0));
+            TypeDefinition baseType = Enumerable.Single<TypeDefinition>(CollectTypeDefinitions(definition.MainModule.Types), new Func<TypeDefinition, bool>(storey.<>m__0));
             MethodDefinition definition3 = null;
             while (baseType.BaseType != null)
             {
-                if (Enumerable.Any<MethodDefinition>(baseType.Methods, new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__1)))
+                if (Enumerable.Any<MethodDefinition>(baseType.Methods, new Func<MethodDefinition, bool>(storey.<>m__1)))
                 {
-                    definition3 = Enumerable.First<MethodDefinition>(baseType.Methods, new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__2));
+                    definition3 = Enumerable.First<MethodDefinition>(baseType.Methods, new Func<MethodDefinition, bool>(storey.<>m__2));
                     break;
                 }
                 baseType = baseType.BaseType as TypeDefinition;
@@ -131,7 +131,7 @@
             {
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Instruction, bool>(null, (IntPtr) <GetSequencePointOfTest>m__0);
+                    <>f__am$cache0 = i => i.SequencePoint != null;
                 }
                 return Enumerable.First<Instruction>(definition3.Body.Instructions, <>f__am$cache0).SequencePoint;
             }

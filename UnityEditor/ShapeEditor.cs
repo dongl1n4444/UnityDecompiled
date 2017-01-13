@@ -80,15 +80,15 @@
         private static Handles.CapFunction <>f__mg$cache9;
         [CompilerGenerated]
         private static Handles.CapFunction <>f__mg$cacheA;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private int <activePoint>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static Color <handleFillColor>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private static Color <handleOutlineColor>k__BackingField;
-        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool <inEditMode>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        private bool <inEditMode>k__BackingField;
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Texture2D <lineTexture>k__BackingField;
         public Func<DistanceToControl> DistanceToCircle;
         public Func<DistanceToControl> DistanceToDiamond;
@@ -147,47 +147,47 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<int, Vector3>(null, (IntPtr) <GetPointPosition>m__0);
+                <>f__am$cache0 = new Func<int, Vector3>(ShapeEditor.<GetPointPosition>m__0);
             }
             this.GetPointPosition = <>f__am$cache0;
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Action<int, Vector3>(null, (IntPtr) <SetPointPosition>m__1);
+                <>f__am$cache1 = new Action<int, Vector3>(ShapeEditor.<SetPointPosition>m__1);
             }
             this.SetPointPosition = <>f__am$cache1;
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<int, Vector3>(null, (IntPtr) <GetPointLTangent>m__2);
+                <>f__am$cache2 = new Func<int, Vector3>(ShapeEditor.<GetPointLTangent>m__2);
             }
             this.GetPointLTangent = <>f__am$cache2;
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Action<int, Vector3>(null, (IntPtr) <SetPointLTangent>m__3);
+                <>f__am$cache3 = new Action<int, Vector3>(ShapeEditor.<SetPointLTangent>m__3);
             }
             this.SetPointLTangent = <>f__am$cache3;
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<int, Vector3>(null, (IntPtr) <GetPointRTangent>m__4);
+                <>f__am$cache4 = new Func<int, Vector3>(ShapeEditor.<GetPointRTangent>m__4);
             }
             this.GetPointRTangent = <>f__am$cache4;
             if (<>f__am$cache5 == null)
             {
-                <>f__am$cache5 = new Action<int, Vector3>(null, (IntPtr) <SetPointRTangent>m__5);
+                <>f__am$cache5 = new Action<int, Vector3>(ShapeEditor.<SetPointRTangent>m__5);
             }
             this.SetPointRTangent = <>f__am$cache5;
             if (<>f__am$cache6 == null)
             {
-                <>f__am$cache6 = new Func<int, TangentMode>(null, (IntPtr) <GetTangentMode>m__6);
+                <>f__am$cache6 = new Func<int, TangentMode>(ShapeEditor.<GetTangentMode>m__6);
             }
             this.GetTangentMode = <>f__am$cache6;
             if (<>f__am$cache7 == null)
             {
-                <>f__am$cache7 = new Action<int, TangentMode>(null, (IntPtr) <SetTangentMode>m__7);
+                <>f__am$cache7 = new Action<int, TangentMode>(ShapeEditor.<SetTangentMode>m__7);
             }
             this.SetTangentMode = <>f__am$cache7;
             if (<>f__am$cache8 == null)
             {
-                <>f__am$cache8 = new Action<int, Vector3>(null, (IntPtr) <InsertPointAt>m__8);
+                <>f__am$cache8 = new Action<int, Vector3>(ShapeEditor.<InsertPointAt>m__8);
             }
             this.InsertPointAt = <>f__am$cache8;
             if (<>f__am$cache9 == null)
@@ -197,52 +197,52 @@
             this.RemovePointAt = <>f__am$cache9;
             if (<>f__am$cacheA == null)
             {
-                <>f__am$cacheA = new Func<int>(null, (IntPtr) <GetPointsCount>m__A);
+                <>f__am$cacheA = new Func<int>(ShapeEditor.<GetPointsCount>m__A);
             }
             this.GetPointsCount = <>f__am$cacheA;
             if (<>f__am$cacheB == null)
             {
-                <>f__am$cacheB = new Func<Vector2, Vector3>(null, (IntPtr) <ScreenToLocal>m__B);
+                <>f__am$cacheB = new Func<Vector2, Vector3>(ShapeEditor.<ScreenToLocal>m__B);
             }
             this.ScreenToLocal = <>f__am$cacheB;
             if (<>f__am$cacheC == null)
             {
-                <>f__am$cacheC = new Func<Vector3, Vector2>(null, (IntPtr) <LocalToScreen>m__C);
+                <>f__am$cacheC = new Func<Vector3, Vector2>(ShapeEditor.<LocalToScreen>m__C);
             }
             this.LocalToScreen = <>f__am$cacheC;
             if (<>f__am$cacheD == null)
             {
-                <>f__am$cacheD = new Func<Matrix4x4>(null, (IntPtr) <LocalToWorldMatrix>m__D);
+                <>f__am$cacheD = new Func<Matrix4x4>(ShapeEditor.<LocalToWorldMatrix>m__D);
             }
             this.LocalToWorldMatrix = <>f__am$cacheD;
             if (<>f__am$cacheE == null)
             {
-                <>f__am$cacheE = new Func<DistanceToControl>(null, (IntPtr) <DistanceToRectangle>m__E);
+                <>f__am$cacheE = new Func<DistanceToControl>(ShapeEditor.<DistanceToRectangle>m__E);
             }
             this.DistanceToRectangle = <>f__am$cacheE;
             if (<>f__am$cacheF == null)
             {
-                <>f__am$cacheF = new Func<DistanceToControl>(null, (IntPtr) <DistanceToDiamond>m__F);
+                <>f__am$cacheF = new Func<DistanceToControl>(ShapeEditor.<DistanceToDiamond>m__F);
             }
             this.DistanceToDiamond = <>f__am$cacheF;
             if (<>f__am$cache10 == null)
             {
-                <>f__am$cache10 = new Func<DistanceToControl>(null, (IntPtr) <DistanceToCircle>m__10);
+                <>f__am$cache10 = new Func<DistanceToControl>(ShapeEditor.<DistanceToCircle>m__10);
             }
             this.DistanceToCircle = <>f__am$cache10;
             if (<>f__am$cache11 == null)
             {
-                <>f__am$cache11 = new Action(null, (IntPtr) <Repaint>m__11);
+                <>f__am$cache11 = new Action(ShapeEditor.<Repaint>m__11);
             }
             this.Repaint = <>f__am$cache11;
             if (<>f__am$cache12 == null)
             {
-                <>f__am$cache12 = new Action(null, (IntPtr) <RecordUndo>m__12);
+                <>f__am$cache12 = new Action(ShapeEditor.<RecordUndo>m__12);
             }
             this.RecordUndo = <>f__am$cache12;
             if (<>f__am$cache13 == null)
             {
-                <>f__am$cache13 = new Func<Vector3, Vector3>(null, (IntPtr) <Snap>m__13);
+                <>f__am$cache13 = new Func<Vector3, Vector3>(ShapeEditor.<Snap>m__13);
             }
             this.Snap = <>f__am$cache13;
             if (<>f__am$cache14 == null)
@@ -257,12 +257,12 @@
             this.OnPointClick = <>f__am$cache15;
             if (<>f__am$cache16 == null)
             {
-                <>f__am$cache16 = new Func<bool>(null, (IntPtr) <OpenEnded>m__16);
+                <>f__am$cache16 = new Func<bool>(ShapeEditor.<OpenEnded>m__16);
             }
             this.OpenEnded = <>f__am$cache16;
             if (<>f__am$cache17 == null)
             {
-                <>f__am$cache17 = new Func<float>(null, (IntPtr) <GetHandleSize>m__17);
+                <>f__am$cache17 = new Func<float>(ShapeEditor.<GetHandleSize>m__17);
             }
             this.GetHandleSize = <>f__am$cache17;
             this.m_ActivePointOnLastMouseDown = -1;
@@ -443,9 +443,9 @@
 
         public void CycleTangentMode()
         {
-            TangentMode current = this.GetTangentMode.Invoke(this.activePoint);
+            TangentMode current = this.GetTangentMode(this.activePoint);
             TangentMode nextTangentMode = GetNextTangentMode(current);
-            this.SetTangentMode.Invoke(this.activePoint, nextTangentMode);
+            this.SetTangentMode(this.activePoint, nextTangentMode);
             this.RefreshTangentsAfterModeChange(this.activePoint, current, nextTangentMode);
         }
 
@@ -531,22 +531,22 @@
 
         public void Edges()
         {
-            int total = this.GetPointsCount.Invoke();
+            int total = this.GetPointsCount();
             int closestEdge = -1;
             float maxValue = float.MaxValue;
             int index = 0;
             int num5 = NextIndex(index, total);
-            int num6 = !this.OpenEnded.Invoke() ? total : (total - 1);
+            int num6 = !this.OpenEnded() ? total : (total - 1);
             for (int i = 0; i < num6; i++)
             {
-                Vector3 startPosition = this.GetPointPosition.Invoke(index);
-                Vector3 endPosition = this.GetPointPosition.Invoke(num5);
-                Vector3 startTangent = startPosition + this.GetPointRTangent.Invoke(index);
-                Vector3 endTangent = endPosition + this.GetPointLTangent.Invoke(num5);
-                Vector2 vector5 = this.LocalToScreen.Invoke(startPosition);
-                Vector2 vector6 = this.LocalToScreen.Invoke(endPosition);
-                Vector2 vector7 = this.LocalToScreen.Invoke(startTangent);
-                Vector2 vector8 = this.LocalToScreen.Invoke(endTangent);
+                Vector3 startPosition = this.GetPointPosition(index);
+                Vector3 endPosition = this.GetPointPosition(num5);
+                Vector3 startTangent = startPosition + this.GetPointRTangent(index);
+                Vector3 endTangent = endPosition + this.GetPointLTangent(num5);
+                Vector2 vector5 = this.LocalToScreen(startPosition);
+                Vector2 vector6 = this.LocalToScreen(endPosition);
+                Vector2 vector7 = this.LocalToScreen(startTangent);
+                Vector2 vector8 = this.LocalToScreen(endTangent);
                 float num8 = HandleUtility.DistancePointBezier((Vector3) Event.current.mousePosition, (Vector3) vector5, (Vector3) vector6, (Vector3) vector7, (Vector3) vector8);
                 Color color = (index != this.m_ActiveEdge) ? Color.white : Color.yellow;
                 float width = ((index != this.m_ActiveEdge) && (!EdgeDragModifiersActive() || (num8 >= 9f))) ? 2f : 6f;
@@ -580,9 +580,9 @@
         {
             float maxValue = float.MaxValue;
             int num2 = -1;
-            for (int i = 0; i < this.GetPointsCount.Invoke(); i++)
+            for (int i = 0; i < this.GetPointsCount(); i++)
             {
-                Vector3 vector2 = this.GetPointPosition.Invoke(i) - position;
+                Vector3 vector2 = this.GetPointPosition(i) - position;
                 float magnitude = vector2.magnitude;
                 if (magnitude < maxValue)
                 {
@@ -614,7 +614,7 @@
 
         private int FindClosestPointToMouse()
         {
-            Vector3 position = this.ScreenToLocal.Invoke(Event.current.mousePosition);
+            Vector3 position = this.ScreenToLocal(Event.current.mousePosition);
             return this.FindClosestPointIndex(position);
         }
 
@@ -632,10 +632,10 @@
                 }
                 else
                 {
-                    Bounds bounds = new Bounds(this.GetPointPosition.Invoke(this.selectedPoints.First<int>()), Vector3.zero);
+                    Bounds bounds = new Bounds(this.GetPointPosition(this.selectedPoints.First<int>()), Vector3.zero);
                     foreach (int num in this.selectedPoints)
                     {
-                        bounds.Encapsulate(this.GetPointPosition.Invoke(num));
+                        bounds.Encapsulate(this.GetPointPosition(num));
                     }
                     this.Frame(bounds);
                 }
@@ -645,23 +645,23 @@
 
         private void FromAllZeroToTangents(int pointIndex)
         {
-            Vector3 vector = this.GetPointPosition.Invoke(pointIndex);
-            int num = (pointIndex <= 0) ? (this.GetPointsCount.Invoke() - 1) : (pointIndex - 1);
-            Vector3 vector2 = (Vector3) ((this.GetPointPosition.Invoke(num) - vector) * 0.33f);
+            Vector3 vector = this.GetPointPosition(pointIndex);
+            int num = (pointIndex <= 0) ? (this.GetPointsCount() - 1) : (pointIndex - 1);
+            Vector3 vector2 = (Vector3) ((this.GetPointPosition(num) - vector) * 0.33f);
             Vector3 vector3 = -vector2;
-            Vector2 vector4 = this.LocalToScreen.Invoke(vector) - this.LocalToScreen.Invoke(vector + vector2);
+            Vector2 vector4 = this.LocalToScreen(vector) - this.LocalToScreen(vector + vector2);
             float magnitude = vector4.magnitude;
-            Vector2 vector5 = this.LocalToScreen.Invoke(vector) - this.LocalToScreen.Invoke(vector + vector3);
+            Vector2 vector5 = this.LocalToScreen(vector) - this.LocalToScreen(vector + vector3);
             float num3 = vector5.magnitude;
             vector2 = (Vector3) (vector2 * Mathf.Min((float) (100f / magnitude), (float) 1f));
             vector3 = (Vector3) (vector3 * Mathf.Min((float) (100f / num3), (float) 1f));
-            this.SetPointLTangent.Invoke(pointIndex, vector2);
-            this.SetPointRTangent.Invoke(pointIndex, vector3);
+            this.SetPointLTangent(pointIndex, vector2);
+            this.SetPointRTangent(pointIndex, vector3);
         }
 
         private Handles.CapFunction GetCapForPoint(int index)
         {
-            TangentMode mode = this.GetTangentMode.Invoke(index);
+            TangentMode mode = this.GetTangentMode(index);
             if (mode != TangentMode.Broken)
             {
                 if (mode == TangentMode.Continuous)
@@ -695,7 +695,7 @@
 
         private Handles.CapFunction GetCapForTangent(int index)
         {
-            if (((TangentMode) this.GetTangentMode.Invoke(index)) == TangentMode.Continuous)
+            if (((TangentMode) this.GetTangentMode(index)) == TangentMode.Continuous)
             {
                 if (<>f__mg$cache4 == null)
                 {
@@ -712,30 +712,30 @@
 
         private DistanceToControl GetDistanceFuncForPoint(int index)
         {
-            TangentMode mode = this.GetTangentMode.Invoke(index);
+            TangentMode mode = this.GetTangentMode(index);
             if (mode != TangentMode.Broken)
             {
                 if (mode == TangentMode.Continuous)
                 {
-                    return this.DistanceToCircle.Invoke();
+                    return this.DistanceToCircle();
                 }
                 if (mode == TangentMode.Linear)
                 {
-                    return this.DistanceToRectangle.Invoke();
+                    return this.DistanceToRectangle();
                 }
             }
             else
             {
-                return this.DistanceToDiamond.Invoke();
+                return this.DistanceToDiamond();
             }
-            return this.DistanceToRectangle.Invoke();
+            return this.DistanceToRectangle();
         }
 
         private DistanceToControl GetDistanceFuncForTangent(int index)
         {
-            if (((TangentMode) this.GetTangentMode.Invoke(index)) == TangentMode.Continuous)
+            if (((TangentMode) this.GetTangentMode(index)) == TangentMode.Continuous)
             {
-                return this.DistanceToCircle.Invoke();
+                return this.DistanceToCircle();
             }
             if (<>f__mg$cache6 == null)
             {
@@ -764,7 +764,7 @@
         }
 
         private float GetHandleSizeForPoint(int index) => 
-            ((Camera.current == null) ? (this.GetHandleSize.Invoke() / Handles.matrix.m00) : (HandleUtility.GetHandleSize(this.GetPointPosition.Invoke(index)) * 0.075f));
+            ((Camera.current == null) ? (this.GetHandleSize() / Handles.matrix.m00) : (HandleUtility.GetHandleSize(this.GetPointPosition(index)) * 0.075f));
 
         public static TangentMode GetNextTangentMode(TangentMode current) => 
             ((current + 1) % Enum.GetValues(typeof(TangentMode)).Length);
@@ -798,9 +798,9 @@
         private Vector3 GetPositionByIndex(float index)
         {
             int num = Mathf.FloorToInt(index);
-            int num2 = NextIndex(num, this.GetPointsCount.Invoke());
+            int num2 = NextIndex(num, this.GetPointsCount());
             float t = index - num;
-            return GetPoint(this.GetPointPosition.Invoke(num), this.GetPointPosition.Invoke(num2), this.GetPointRTangent.Invoke(num), this.GetPointLTangent.Invoke(num2), t);
+            return GetPoint(this.GetPointPosition(num), this.GetPointPosition(num2), this.GetPointRTangent(num), this.GetPointLTangent(num2), t);
         }
 
         private float GetTangentSizeForPoint(int index) => 
@@ -818,31 +818,31 @@
                 {
                     case EventType.MouseDown:
                         this.m_ActiveEdge = closestEdge;
-                        this.m_EdgeDragStartP0 = this.GetPointPosition.Invoke(this.m_ActiveEdge);
-                        this.m_EdgeDragStartP1 = this.GetPointPosition.Invoke(NextIndex(this.m_ActiveEdge, this.GetPointsCount.Invoke()));
+                        this.m_EdgeDragStartP0 = this.GetPointPosition(this.m_ActiveEdge);
+                        this.m_EdgeDragStartP1 = this.GetPointPosition(NextIndex(this.m_ActiveEdge, this.GetPointsCount()));
                         if (Event.current.shift)
                         {
-                            this.RecordUndo.Invoke();
-                            this.InsertPointAt.Invoke(this.m_ActiveEdge + 1, this.m_EdgeDragStartP0);
-                            this.InsertPointAt.Invoke(this.m_ActiveEdge + 2, this.m_EdgeDragStartP1);
+                            this.RecordUndo();
+                            this.InsertPointAt(this.m_ActiveEdge + 1, this.m_EdgeDragStartP0);
+                            this.InsertPointAt(this.m_ActiveEdge + 2, this.m_EdgeDragStartP1);
                             this.m_ActiveEdge++;
                         }
-                        this.m_EdgeDragStartMousePosition = this.ScreenToLocal.Invoke(Event.current.mousePosition);
+                        this.m_EdgeDragStartMousePosition = this.ScreenToLocal(Event.current.mousePosition);
                         GUIUtility.hotControl = this.k_EdgeID;
                         Event.current.Use();
                         break;
 
                     case EventType.MouseDrag:
                     {
-                        this.RecordUndo.Invoke();
-                        Vector3 vector2 = this.ScreenToLocal.Invoke(Event.current.mousePosition) - this.m_EdgeDragStartMousePosition;
-                        Vector3 vector3 = this.GetPointPosition.Invoke(this.m_ActiveEdge);
+                        this.RecordUndo();
+                        Vector3 vector2 = this.ScreenToLocal(Event.current.mousePosition) - this.m_EdgeDragStartMousePosition;
+                        Vector3 vector3 = this.GetPointPosition(this.m_ActiveEdge);
                         Vector3 vector4 = this.m_EdgeDragStartP0 + vector2;
-                        Vector3 vector5 = this.Snap.Invoke(vector4) - vector3;
+                        Vector3 vector5 = this.Snap(vector4) - vector3;
                         int activeEdge = this.m_ActiveEdge;
-                        int num2 = NextIndex(this.m_ActiveEdge, this.GetPointsCount.Invoke());
-                        this.SetPointPosition.Invoke(this.m_ActiveEdge, this.GetPointPosition.Invoke(activeEdge) + vector5);
-                        this.SetPointPosition.Invoke(num2, this.GetPointPosition.Invoke(num2) + vector5);
+                        int num2 = NextIndex(this.m_ActiveEdge, this.GetPointsCount());
+                        this.SetPointPosition(this.m_ActiveEdge, this.GetPointPosition(activeEdge) + vector5);
+                        this.SetPointPosition(num2, this.GetPointPosition(num2) + vector5);
                         Event.current.Use();
                         break;
                     }
@@ -875,7 +875,7 @@
             bool flag4 = flag2 && flag3;
             if (((((closestEdgeDist < 9f) && flag4) && !this.m_Selection.isSelecting) && (Event.current.modifiers == EventModifiers.None)) || flag)
             {
-                Vector3 position = !flag ? this.FindClosestPointOnEdge(closestEdge, this.ScreenToLocal.Invoke(Event.current.mousePosition), 100) : this.GetPointPosition.Invoke(this.m_NewPointIndex);
+                Vector3 position = !flag ? this.FindClosestPointOnEdge(closestEdge, this.ScreenToLocal(Event.current.mousePosition), 100) : this.GetPointPosition(this.m_NewPointIndex);
                 EditorGUI.BeginChangeCheck();
                 handleFillColor = k_SelectedHoveredFill;
                 handleOutlineColor = k_SelectedHoveredOutline;
@@ -892,15 +892,15 @@
                 Vector3 vector2 = DoSlider(this.k_CreatorID, position, Vector3.up, Vector3.right, this.GetHandleSizeForPoint(closestEdge), <>f__mg$cache3);
                 if ((hotControl != this.k_CreatorID) && (GUIUtility.hotControl == this.k_CreatorID))
                 {
-                    this.RecordUndo.Invoke();
-                    this.m_NewPointIndex = NextIndex(closestEdge, this.GetPointsCount.Invoke());
-                    this.InsertPointAt.Invoke(this.m_NewPointIndex, vector2);
+                    this.RecordUndo();
+                    this.m_NewPointIndex = NextIndex(closestEdge, this.GetPointsCount());
+                    this.InsertPointAt(this.m_NewPointIndex, vector2);
                     this.m_Selection.SelectPoint(this.m_NewPointIndex, SelectionType.Normal);
                 }
                 else if (EditorGUI.EndChangeCheck())
                 {
-                    this.RecordUndo.Invoke();
-                    vector2 = this.Snap.Invoke(vector2);
+                    this.RecordUndo();
+                    vector2 = this.Snap(vector2);
                     this.m_Selection.MoveSelection(vector2 - position);
                 }
             }
@@ -918,34 +918,34 @@
             {
                 return float.MaxValue;
             }
-            Vector3 vector = this.GetPointLTangent.Invoke(this.activePoint);
-            Vector3 vector2 = this.GetPointRTangent.Invoke(this.activePoint);
+            Vector3 vector = this.GetPointLTangent(this.activePoint);
+            Vector3 vector2 = this.GetPointRTangent(this.activePoint);
             if ((vector.sqrMagnitude == 0f) && (vector2.sqrMagnitude == 0f))
             {
                 return float.MaxValue;
             }
-            Vector3 vector3 = this.GetPointPosition.Invoke(this.activePoint);
+            Vector3 vector3 = this.GetPointPosition(this.activePoint);
             float tangentSizeForPoint = this.GetTangentSizeForPoint(this.activePoint);
             return Mathf.Min(HandleUtility.DistanceToRectangle(vector3 + vector, Quaternion.identity, tangentSizeForPoint), HandleUtility.DistanceToRectangle(vector3 + vector2, Quaternion.identity, tangentSizeForPoint));
         }
 
         private float MouseDistanceToPoint(int index)
         {
-            TangentMode mode = this.GetTangentMode.Invoke(index);
+            TangentMode mode = this.GetTangentMode(index);
             if (mode != TangentMode.Broken)
             {
                 if (mode == TangentMode.Linear)
                 {
-                    return HandleUtility.DistanceToRectangle(this.GetPointPosition.Invoke(index), Quaternion.identity, this.GetHandleSizeForPoint(index));
+                    return HandleUtility.DistanceToRectangle(this.GetPointPosition(index), Quaternion.identity, this.GetHandleSizeForPoint(index));
                 }
                 if (mode == TangentMode.Continuous)
                 {
-                    return HandleUtility.DistanceToCircle(this.GetPointPosition.Invoke(index), this.GetHandleSizeForPoint(index));
+                    return HandleUtility.DistanceToCircle(this.GetPointPosition(index), this.GetHandleSizeForPoint(index));
                 }
             }
             else
             {
-                return HandleUtility.DistanceToDiamond(this.GetPointPosition.Invoke(index), Quaternion.identity, this.GetHandleSizeForPoint(index));
+                return HandleUtility.DistanceToDiamond(this.GetPointPosition(index), Quaternion.identity, this.GetHandleSizeForPoint(index));
             }
             return float.MaxValue;
         }
@@ -962,7 +962,7 @@
             }
             Color color = Handles.color;
             Matrix4x4 matrix = Handles.matrix;
-            Handles.matrix = this.LocalToWorldMatrix.Invoke();
+            Handles.matrix = this.LocalToWorldMatrix();
             this.Edges();
             if (this.inEditMode)
             {
@@ -978,11 +978,11 @@
         public void Points()
         {
             bool flag = ((Event.current.type == EventType.ExecuteCommand) || (Event.current.type == EventType.ValidateCommand)) && ((Event.current.commandName == "SoftDelete") || (Event.current.commandName == "Delete"));
-            for (int i = 0; i < this.GetPointsCount.Invoke(); i++)
+            for (int i = 0; i < this.GetPointsCount(); i++)
             {
                 if (i != this.m_NewPointIndex)
                 {
-                    Vector3 position = this.GetPointPosition.Invoke(i);
+                    Vector3 position = this.GetPointPosition(i);
                     int controlID = GUIUtility.GetControlID(0x14e9, FocusType.Keyboard);
                     bool flag2 = this.m_Selection.Contains(i);
                     bool flag3 = Event.current.GetTypeForControl(controlID) == EventType.MouseDown;
@@ -1007,14 +1007,14 @@
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
-                        this.RecordUndo.Invoke();
-                        vector2 = this.Snap.Invoke(vector2);
+                        this.RecordUndo();
+                        vector2 = this.Snap(vector2);
                         this.m_Selection.MoveSelection(vector2 - position);
                     }
                     if (((GUIUtility.hotControl == controlID) && !flag2) && flag3)
                     {
                         this.m_Selection.SelectPoint(i, !Event.current.shift ? SelectionType.Normal : SelectionType.Additive);
-                        this.Repaint.Invoke();
+                        this.Repaint();
                     }
                     if ((this.m_NewPointDragFinished && (this.activePoint == i)) && (controlID != -1))
                     {
@@ -1031,7 +1031,7 @@
                 }
                 else if (Event.current.type == EventType.ExecuteCommand)
                 {
-                    this.RecordUndo.Invoke();
+                    this.RecordUndo();
                     this.m_Selection.DeleteSelection();
                     Event.current.Use();
                 }
@@ -1088,9 +1088,9 @@
 
         private void RefreshTangents(int index, bool rightIsActive)
         {
-            TangentMode mode = this.GetTangentMode.Invoke(index);
-            Vector3 vector = this.GetPointLTangent.Invoke(index);
-            Vector3 vector2 = this.GetPointRTangent.Invoke(index);
+            TangentMode mode = this.GetTangentMode(index);
+            Vector3 vector = this.GetPointLTangent(index);
+            Vector3 vector2 = this.GetPointRTangent(index);
             if (mode == TangentMode.Continuous)
             {
                 if (rightIsActive)
@@ -1106,22 +1106,22 @@
                     vector2 = (Vector3) (vector2.normalized * num2);
                 }
             }
-            this.SetPointLTangent.Invoke(this.activePoint, vector);
-            this.SetPointRTangent.Invoke(this.activePoint, vector2);
+            this.SetPointLTangent(this.activePoint, vector);
+            this.SetPointRTangent(this.activePoint, vector2);
         }
 
         public void RefreshTangentsAfterModeChange(int pointIndex, TangentMode oldMode, TangentMode newMode)
         {
             if ((oldMode != TangentMode.Linear) && (newMode == TangentMode.Linear))
             {
-                this.SetPointLTangent.Invoke(pointIndex, Vector3.zero);
-                this.SetPointRTangent.Invoke(pointIndex, Vector3.zero);
+                this.SetPointLTangent(pointIndex, Vector3.zero);
+                this.SetPointRTangent(pointIndex, Vector3.zero);
             }
             if (newMode == TangentMode.Continuous)
             {
                 if (oldMode == TangentMode.Broken)
                 {
-                    this.SetPointRTangent.Invoke(pointIndex, (Vector3) (this.GetPointLTangent.Invoke(pointIndex) * -1f));
+                    this.SetPointRTangent(pointIndex, (Vector3) (this.GetPointLTangent(pointIndex) * -1f));
                 }
                 if (oldMode == TangentMode.Linear)
                 {
@@ -1143,41 +1143,41 @@
 
         public void Tangents()
         {
-            if (((this.activePoint >= 0) && (this.m_Selection.Count <= 1)) && (((TangentMode) this.GetTangentMode.Invoke(this.activePoint)) != TangentMode.Linear))
+            if (((this.activePoint >= 0) && (this.m_Selection.Count <= 1)) && (((TangentMode) this.GetTangentMode(this.activePoint)) != TangentMode.Linear))
             {
                 Event current = Event.current;
-                Vector3 vector = this.GetPointPosition.Invoke(this.activePoint);
-                Vector3 vector2 = this.GetPointLTangent.Invoke(this.activePoint);
-                Vector3 vector3 = this.GetPointRTangent.Invoke(this.activePoint);
+                Vector3 vector = this.GetPointPosition(this.activePoint);
+                Vector3 vector2 = this.GetPointLTangent(this.activePoint);
+                Vector3 vector3 = this.GetPointRTangent(this.activePoint);
                 bool flag = (GUIUtility.hotControl == this.k_RightTangentID) || (GUIUtility.hotControl == this.k_LeftTangentID);
                 bool flag2 = (vector2.sqrMagnitude == 0f) && (vector3.sqrMagnitude == 0f);
                 if (flag || !flag2)
                 {
-                    TangentMode mode = this.GetTangentMode.Invoke(this.activePoint);
+                    TangentMode mode = this.GetTangentMode(this.activePoint);
                     bool flag3 = (current.GetTypeForControl(this.k_RightTangentID) == EventType.MouseDown) || (current.GetTypeForControl(this.k_LeftTangentID) == EventType.MouseDown);
                     bool flag4 = (current.GetTypeForControl(this.k_RightTangentID) == EventType.MouseUp) || (current.GetTypeForControl(this.k_LeftTangentID) == EventType.MouseUp);
                     Vector3 vector4 = this.DoTangent(vector, vector + vector2, this.k_LeftTangentID, this.activePoint, k_TangentColor);
-                    Vector3 vector5 = this.DoTangent(vector, vector + vector3, this.k_RightTangentID, this.activePoint, (((TangentMode) this.GetTangentMode.Invoke(this.activePoint)) != TangentMode.Broken) ? k_TangentColor : k_TangentColorAlternative);
+                    Vector3 vector5 = this.DoTangent(vector, vector + vector3, this.k_RightTangentID, this.activePoint, (((TangentMode) this.GetTangentMode(this.activePoint)) != TangentMode.Broken) ? k_TangentColor : k_TangentColorAlternative);
                     bool flag5 = (vector4 != vector2) || (vector5 != vector3);
                     flag2 = (vector4.sqrMagnitude == 0f) && (vector5.sqrMagnitude == 0f);
                     if (flag && flag3)
                     {
                         int num = (int) ((mode + 1) % (TangentMode.Broken | TangentMode.Continuous));
                         mode = (TangentMode) num;
-                        this.SetTangentMode.Invoke(this.activePoint, mode);
+                        this.SetTangentMode(this.activePoint, mode);
                     }
                     if (flag4 && flag2)
                     {
-                        this.SetTangentMode.Invoke(this.activePoint, TangentMode.Linear);
+                        this.SetTangentMode(this.activePoint, TangentMode.Linear);
                         flag5 = true;
                     }
                     if (flag5)
                     {
-                        this.RecordUndo.Invoke();
-                        this.SetPointLTangent.Invoke(this.activePoint, vector4);
-                        this.SetPointRTangent.Invoke(this.activePoint, vector5);
+                        this.RecordUndo();
+                        this.SetPointLTangent(this.activePoint, vector4);
+                        this.SetPointRTangent(this.activePoint, vector5);
                         this.RefreshTangents(this.activePoint, GUIUtility.hotControl == this.k_RightTangentID);
-                        this.Repaint.Invoke();
+                        this.Repaint();
                     }
                 }
             }

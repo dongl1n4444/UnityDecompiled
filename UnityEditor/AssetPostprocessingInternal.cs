@@ -23,9 +23,9 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodInfo, bool>(null, (IntPtr) <AllPostProcessorMethodsNamed>m__0);
+                <>f__am$cache0 = method => method != null;
             }
-            return Enumerable.Where<MethodInfo>(Enumerable.Select<Type, MethodInfo>(EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)), new Func<Type, MethodInfo>(storey, (IntPtr) this.<>m__0)), <>f__am$cache0);
+            return Enumerable.Where<MethodInfo>(Enumerable.Select<Type, MethodInfo>(EditorAssemblies.SubclassesOf(typeof(AssetPostprocessor)), new Func<Type, MethodInfo>(storey.<>m__0)), <>f__am$cache0);
         }
 
         internal static void CallOnGeneratedCSProjectFiles()

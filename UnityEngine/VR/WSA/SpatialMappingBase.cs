@@ -337,6 +337,11 @@
         /// <param name="outputWritten"></param>
         /// <param name="elapsedBakeTimeSeconds"></param>
         protected abstract void OnSurfaceDataReady(SpatialMappingBase requester, SurfaceData bakedData, bool outputWritten, float elapsedBakeTimeSeconds);
+        protected virtual void OnValidate()
+        {
+            this.OnResetProperties();
+        }
+
         protected void ProcessEvictedObjects()
         {
             if ((this.pendingSurfacesForEviction != null) && (this.pendingSurfacesForEviction.Count != 0))

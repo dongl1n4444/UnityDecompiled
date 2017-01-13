@@ -26,7 +26,7 @@
         public AssemblyReferenceChecker()
         {
             this.HasMouseEvent = false;
-            this._updateProgressAction = new Action(this, (IntPtr) this.DisplayProgress);
+            this._updateProgressAction = new Action(this.DisplayProgress);
         }
 
         public static AssemblyReferenceChecker AssemblyReferenceCheckerWithUpdateProgressAction(Action action) => 
@@ -66,7 +66,7 @@
         {
             if (this._updateProgressAction != null)
             {
-                this._updateProgressAction.Invoke();
+                this._updateProgressAction();
             }
             foreach (TypeDefinition definition in type.NestedTypes)
             {
@@ -197,7 +197,7 @@
             <HasDefinedMethod>c__AnonStorey1 storey = new <HasDefinedMethod>c__AnonStorey1 {
                 methodName = methodName
             };
-            return Enumerable.Any<string>(this._definedMethods, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(this._definedMethods, new Func<string, bool>(storey.<>m__0));
         }
 
         public bool HasReferenceToMethod(string methodName) => 
@@ -208,7 +208,7 @@
             <HasReferenceToMethod>c__AnonStorey0 storey = new <HasReferenceToMethod>c__AnonStorey0 {
                 methodName = methodName
             };
-            return (ignoreSystemDlls ? Enumerable.Any<string>(this._userReferencedMethods, new Func<string, bool>(storey, (IntPtr) this.<>m__1)) : Enumerable.Any<string>(this._referencedMethods, new Func<string, bool>(storey, (IntPtr) this.<>m__0)));
+            return (ignoreSystemDlls ? Enumerable.Any<string>(this._userReferencedMethods, new Func<string, bool>(storey.<>m__1)) : Enumerable.Any<string>(this._referencedMethods, new Func<string, bool>(storey.<>m__0)));
         }
 
         public bool HasReferenceToType(string typeName)
@@ -216,7 +216,7 @@
             <HasReferenceToType>c__AnonStorey2 storey = new <HasReferenceToType>c__AnonStorey2 {
                 typeName = typeName
             };
-            return Enumerable.Any<string>(this._referencedTypes, new Func<string, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<string>(this._referencedTypes, new Func<string, bool>(storey.<>m__0));
         }
 
         private bool InheritsFromMonoBehaviour(TypeReference type)
@@ -259,7 +259,7 @@
                 if (!ignoreSystemDlls || !IsIgnoredSystemDll(definition.Name.Name))
                 {
                     AssemblyDefinition[] assemblies = new AssemblyDefinition[] { definition };
-                    if (Enumerable.Any<string>(MonoAOTRegistration.BuildReferencedTypeList(assemblies), new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                    if (Enumerable.Any<string>(MonoAOTRegistration.BuildReferencedTypeList(assemblies), new Func<string, bool>(storey.<>m__0)))
                     {
                         return definition.Name.Name;
                     }

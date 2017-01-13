@@ -29,7 +29,7 @@
         {
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Action(null, (IntPtr) <AnimationWindowSelection>m__2);
+                <>f__am$cache2 = new Action(AnimationWindowSelection.<AnimationWindowSelection>m__2);
             }
             this.onSelectionChanged = (Action) Delegate.Combine(this.onSelectionChanged, <>f__am$cache2);
         }
@@ -85,7 +85,7 @@
             {
                 if (this.m_SelectionChanged)
                 {
-                    this.onSelectionChanged.Invoke();
+                    this.onSelectionChanged();
                 }
                 this.m_SelectionChanged = false;
                 this.m_BatchOperations = false;
@@ -122,7 +122,7 @@
             }
             else
             {
-                this.onSelectionChanged.Invoke();
+                this.onSelectionChanged();
             }
         }
 
@@ -209,7 +209,7 @@
                 {
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<AnimationWindowSelectionItem, bool>(null, (IntPtr) <get_canAddCurves>m__1);
+                        <>f__am$cache1 = item => !item.canAddCurves;
                     }
                     return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache1);
                 }
@@ -225,7 +225,7 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<AnimationWindowSelectionItem, bool>(null, (IntPtr) <get_canRecord>m__0);
+                        <>f__am$cache0 = item => !item.canRecord;
                     }
                     return !Enumerable.Any<AnimationWindowSelectionItem>(this.m_Selection, <>f__am$cache0);
                 }

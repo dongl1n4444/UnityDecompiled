@@ -259,7 +259,7 @@ internal class MetroCSharpVisualStudioSolutionCreator
         {
             throw new Exception($"Failed to get files from {currentSrcDirectory}, {exception.Message}");
         }
-        unprocessedDllFiles = Enumerable.Where<string>(unprocessedDllFiles, new Func<string, bool>(storey, (IntPtr) this.<>m__0)).ToList<string>();
+        unprocessedDllFiles = Enumerable.Where<string>(unprocessedDllFiles, new Func<string, bool>(storey.<>m__0)).ToList<string>();
         if (str3 == null)
         {
             throw new Exception($"Failed to find *.pfx file in {currentSrcDirectory}");
@@ -293,12 +293,12 @@ internal class MetroCSharpVisualStudioSolutionCreator
             string str18 = this.Name + ".Shared";
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CreateSolutionFileFrom>m__0);
+                <>f__am$cache0 = x => x.Contains(".Shared");
             }
             List<string> list6 = Enumerable.Where<string>(first, <>f__am$cache0).ToList<string>();
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <CreateSolutionFileFrom>m__1);
+                <>f__am$cache1 = x => x.Contains(".WindowsPhone");
             }
             IEnumerable<string> second = Enumerable.Where<string>(first, <>f__am$cache1);
             IEnumerable<string> enumerable2 = first.Except<string>(list6.Union<string>(second));
@@ -311,17 +311,17 @@ internal class MetroCSharpVisualStudioSolutionCreator
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<string, string>(null, (IntPtr) <CreateSolutionFileFrom>m__2);
+                <>f__am$cache2 = x => "$(MSBuildThisFileDirectory)" + x.Substring((x.IndexOf(".Shared") + ".Shared".Length) + 1);
             }
             list6 = Enumerable.Select<string, string>(list6, <>f__am$cache2).ToList<string>();
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<string, string>(null, (IntPtr) <CreateSolutionFileFrom>m__3);
+                <>f__am$cache3 = x => x.Substring((x.IndexOf(".Windows") + ".Windows".Length) + 1);
             }
             enumerable2 = Enumerable.Select<string, string>(enumerable2, <>f__am$cache3);
             if (<>f__am$cache4 == null)
             {
-                <>f__am$cache4 = new Func<string, string>(null, (IntPtr) <CreateSolutionFileFrom>m__4);
+                <>f__am$cache4 = x => x.Substring((x.IndexOf(".WindowsPhone") + ".WindowsPhone".Length) + 1);
             }
             second = Enumerable.Select<string, string>(second, <>f__am$cache4);
             if (this.GenerateReferenceProjects)

@@ -29,7 +29,7 @@
                     if (str != null)
                     {
                         string str2 = code.Substring(startIndex, index - startIndex);
-                        processFunction.Invoke(str, str2);
+                        processFunction(str, str2);
                     }
                     else
                     {
@@ -73,7 +73,7 @@
                 hashFuncs = new Dictionary<string, List<string>>(),
                 functionReplacement = new Dictionary<string, string>()
             };
-            ExtractFunctionsFromJS(codeIn, new Action<string, string>(storey, (IntPtr) this.<>m__0), new Action<string>(storey.<>m__1));
+            ExtractFunctionsFromJS(codeIn, new Action<string, string>(storey.<>m__0), new Action<string>(storey.<>m__1));
             string str = storey.patchedCode.ToString();
             storey.patchedCode = new StringBuilder();
             string key = "";

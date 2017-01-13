@@ -159,7 +159,7 @@
                         }
                         if (this.onTimeout != null)
                         {
-                            this.onTimeout.Invoke();
+                            this.onTimeout();
                         }
                         this.$PC = -1;
                         break;

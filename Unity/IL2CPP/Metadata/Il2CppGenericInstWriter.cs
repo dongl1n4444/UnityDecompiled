@@ -2,6 +2,7 @@
 {
     using Mono.Cecil;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using Unity.IL2CPP;
@@ -33,7 +34,7 @@
             base.Writer.AddCodeGenIncludes();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<KeyValuePair<TypeReference[], uint>, TypeReference[]>(null, <WriteIl2CppGenericInstDefinitions>m__0);
+                <>f__am$cache0 = item => item.Key;
             }
             foreach (TypeReference[] referenceArray in Il2CppGenericInstCollector.Items.Select<KeyValuePair<TypeReference[], uint>, TypeReference[]>(<>f__am$cache0))
             {
@@ -45,7 +46,7 @@
                 args[0] = MetadataWriter.Naming.ForGenericInst(referenceArray) + "_Types";
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<TypeReference, string>(null, (IntPtr) <WriteIl2CppGenericInstDefinitions>m__1);
+                    <>f__am$cache1 = t => MetadataWriter.TypeRepositoryTypeFor(t, 0);
                 }
                 args[1] = referenceArray.Select<TypeReference, string>(<>f__am$cache1).AggregateWithComma();
                 base.WriteLine("static const Il2CppType* {0}[] = {{ {1} }};", args);
@@ -54,11 +55,11 @@
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<KeyValuePair<TypeReference[], uint>, uint>(null, (IntPtr) <WriteIl2CppGenericInstDefinitions>m__2);
+                <>f__am$cache2 = item => item.Value;
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<KeyValuePair<TypeReference[], uint>, string>(null, (IntPtr) <WriteIl2CppGenericInstDefinitions>m__3);
+                <>f__am$cache3 = item => "&" + MetadataWriter.Naming.ForGenericInst(item.Key);
             }
             return MetadataWriter.WriteTable<KeyValuePair<TypeReference[], uint>>(base.Writer, "extern const Il2CppGenericInst* const", "g_Il2CppGenericInstTable", Il2CppGenericInstCollector.Items.OrderBy<KeyValuePair<TypeReference[], uint>, uint>(<>f__am$cache2).ToArray<KeyValuePair<TypeReference[], uint>>(), <>f__am$cache3);
         }

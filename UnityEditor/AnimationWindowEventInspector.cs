@@ -161,7 +161,7 @@
                             {
                                 if (<>f__am$cache0 == null)
                                 {
-                                    <>f__am$cache0 = new Func<ParameterInfo, Type>(null, (IntPtr) <FormatEvent>m__0);
+                                    <>f__am$cache0 = p => p.ParameterType;
                                 }
                                 IEnumerable<Type> paramTypes = Enumerable.Select<ParameterInfo, Type>(method.GetParameters(), <>f__am$cache0);
                                 return (evt.functionName + FormatEventArguments(paramTypes, evt));

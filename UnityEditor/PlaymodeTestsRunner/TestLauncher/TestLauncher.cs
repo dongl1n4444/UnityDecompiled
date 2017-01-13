@@ -44,13 +44,13 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Assembly, IEnumerable<System.Type>>(null, (IntPtr) <GetSceneSetupMethods>m__0);
+                <>f__am$cache0 = m => m.GetTypes();
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<System.Type, MethodInfo>(null, (IntPtr) <GetSceneSetupMethods>m__1);
+                <>f__am$cache1 = t => t.GetMethod("ProvideSetupSceneCode", BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
             }
-            return Enumerable.Select<System.Type, MethodInfo>(Enumerable.Where<System.Type>(Enumerable.SelectMany<Assembly, System.Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0), new Func<System.Type, bool>(storey, (IntPtr) this.<>m__0)), <>f__am$cache1);
+            return Enumerable.Select<System.Type, MethodInfo>(Enumerable.Where<System.Type>(Enumerable.SelectMany<Assembly, System.Type>(AppDomain.CurrentDomain.GetAssemblies(), <>f__am$cache0), new Func<System.Type, bool>(storey.<>m__0)), <>f__am$cache1);
         }
 
         public abstract void Run();

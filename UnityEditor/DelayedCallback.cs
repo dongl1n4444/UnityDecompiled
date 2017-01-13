@@ -27,7 +27,7 @@
             {
                 Action callback = this.m_Callback;
                 this.Clear();
-                callback.Invoke();
+                callback();
             }
         }
     }

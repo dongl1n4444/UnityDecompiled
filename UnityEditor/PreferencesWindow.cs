@@ -109,7 +109,7 @@
                     data.str.str = str;
                     if (data.onChanged != null)
                     {
-                        data.onChanged.Invoke();
+                        data.onChanged();
                     }
                 }
             }
@@ -118,7 +118,7 @@
                 data.str.str = data.paths[selected];
                 if (data.onChanged != null)
                 {
-                    data.onChanged.Invoke();
+                    data.onChanged();
                 }
             }
             this.WritePreferences();
@@ -496,7 +496,7 @@
         private void ShowExternalApplications()
         {
             GUILayout.Space(10f);
-            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this, (IntPtr) this.OnScriptEditorChanged));
+            this.FilePopup("External Script Editor", (string) this.m_ScriptEditorPath, ref this.m_ScriptAppDisplayNames, ref this.m_ScriptApps, this.m_ScriptEditorPath, "internal", new Action(this.OnScriptEditorChanged));
             if (!this.IsSelectedScriptEditorSpecial())
             {
                 string scriptEditorArgs = this.m_ScriptEditorArgs;

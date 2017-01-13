@@ -54,7 +54,7 @@
             <FindScenesWhichContainAsset>c__AnonStorey0 storey = new <FindScenesWhichContainAsset>c__AnonStorey0();
             string assetPathFromFileNameAndExtension = GetAssetPathFromFileNameAndExtension(file);
             storey.cur = AssetDatabase.LoadAssetAtPath(assetPathFromFileNameAndExtension, typeof(UnityEngine.Object));
-            return Enumerable.Where<UnityEngine.Object>(AllScenes, new Func<UnityEngine.Object, bool>(storey, (IntPtr) this.<>m__0)).ToList<UnityEngine.Object>();
+            return Enumerable.Where<UnityEngine.Object>(AllScenes, new Func<UnityEngine.Object, bool>(storey.<>m__0)).ToList<UnityEngine.Object>();
         }
 
         private static string GetAssetPathFromFileNameAndExtension(string assetName)

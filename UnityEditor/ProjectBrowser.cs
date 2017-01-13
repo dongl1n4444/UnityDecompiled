@@ -140,11 +140,11 @@
             element.selected = !element.selected;
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<PopupList.ListElement, bool>(null, (IntPtr) <AssetLabelListCallback>m__2);
+                <>f__am$cache2 = item => item.selected;
             }
             if (<>f__am$cache3 == null)
             {
-                <>f__am$cache3 = new Func<PopupList.ListElement, string>(null, (IntPtr) <AssetLabelListCallback>m__3);
+                <>f__am$cache3 = item => item.text;
             }
             this.m_SearchFilter.assetLabels = Enumerable.Select<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_AssetLabels.m_ListElements, <>f__am$cache2), <>f__am$cache3).ToArray<string>();
             this.m_SearchFieldText = this.m_SearchFilter.FilterToSearchFieldString();
@@ -1209,12 +1209,12 @@
                 this.m_ListArea.allowUserRenderingHook = true;
                 this.m_ListArea.allowFindNextShortcut = true;
                 this.m_ListArea.foldersFirst = this.GetShouldShowFoldersFirst();
-                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this, (IntPtr) this.Repaint));
+                this.m_ListArea.repaintCallback = (Action) Delegate.Combine(this.m_ListArea.repaintCallback, new Action(this.Repaint));
                 this.m_ListArea.itemSelectedCallback = (Action<bool>) Delegate.Combine(this.m_ListArea.itemSelectedCallback, new Action<bool>(this.ListAreaItemSelectedCallback));
-                this.m_ListArea.keyboardCallback = (Action) Delegate.Combine(this.m_ListArea.keyboardCallback, new Action(this, (IntPtr) this.ListAreaKeyboardCallback));
-                this.m_ListArea.gotKeyboardFocus = (Action) Delegate.Combine(this.m_ListArea.gotKeyboardFocus, new Action(this, (IntPtr) this.ListGotKeyboardFocus));
-                this.m_ListArea.drawLocalAssetHeader = (Func<Rect, float>) Delegate.Combine(this.m_ListArea.drawLocalAssetHeader, new Func<Rect, float>(this, (IntPtr) this.DrawLocalAssetHeader));
-                this.m_ListArea.assetStoreSearchEnded = (Action) Delegate.Combine(this.m_ListArea.assetStoreSearchEnded, new Action(this, (IntPtr) this.AssetStoreSearchEndedCallback));
+                this.m_ListArea.keyboardCallback = (Action) Delegate.Combine(this.m_ListArea.keyboardCallback, new Action(this.ListAreaKeyboardCallback));
+                this.m_ListArea.gotKeyboardFocus = (Action) Delegate.Combine(this.m_ListArea.gotKeyboardFocus, new Action(this.ListGotKeyboardFocus));
+                this.m_ListArea.drawLocalAssetHeader = (Func<Rect, float>) Delegate.Combine(this.m_ListArea.drawLocalAssetHeader, new Func<Rect, float>(this.DrawLocalAssetHeader));
+                this.m_ListArea.assetStoreSearchEnded = (Action) Delegate.Combine(this.m_ListArea.assetStoreSearchEnded, new Action(this.AssetStoreSearchEndedCallback));
                 this.m_ListArea.gridSize = this.m_StartGridSize;
                 this.m_StartGridSize = Mathf.Clamp(this.m_StartGridSize, this.m_ListArea.minGridSize, this.m_ListArea.maxGridSize);
                 this.m_LastFoldersGridSize = Mathf.Min(this.m_LastFoldersGridSize, (float) this.m_ListArea.maxGridSize);
@@ -1302,12 +1302,12 @@
                 this.m_AssetTree = new TreeViewController(this, this.m_AssetTreeState);
                 this.m_AssetTree.deselectOnUnhandledMouseDown = true;
                 this.m_AssetTree.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_AssetTree.selectionChangedCallback, new Action<int[]>(this.AssetTreeSelectionCallback));
-                this.m_AssetTree.keyboardInputCallback = (Action) Delegate.Combine(this.m_AssetTree.keyboardInputCallback, new Action(this, (IntPtr) this.AssetTreeKeyboardInputCallback));
+                this.m_AssetTree.keyboardInputCallback = (Action) Delegate.Combine(this.m_AssetTree.keyboardInputCallback, new Action(this.AssetTreeKeyboardInputCallback));
                 this.m_AssetTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_AssetTree.contextClickItemCallback, new Action<int>(this.AssetTreeViewContextClick));
-                this.m_AssetTree.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_AssetTree.contextClickOutsideItemsCallback, new Action(this, (IntPtr) this.AssetTreeViewContextClickOutsideItems));
+                this.m_AssetTree.contextClickOutsideItemsCallback = (Action) Delegate.Combine(this.m_AssetTree.contextClickOutsideItemsCallback, new Action(this.AssetTreeViewContextClickOutsideItems));
                 this.m_AssetTree.itemDoubleClickedCallback = (Action<int>) Delegate.Combine(this.m_AssetTree.itemDoubleClickedCallback, new Action<int>(this.AssetTreeItemDoubleClickedCallback));
-                this.m_AssetTree.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_AssetTree.onGUIRowCallback, new Action<int, Rect>(this, (IntPtr) this.OnGUIAssetCallback));
-                this.m_AssetTree.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_AssetTree.dragEndedCallback, new Action<int[], bool>(this, (IntPtr) this.AssetTreeDragEnded));
+                this.m_AssetTree.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_AssetTree.onGUIRowCallback, new Action<int, Rect>(this.OnGUIAssetCallback));
+                this.m_AssetTree.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_AssetTree.dragEndedCallback, new Action<int[], bool>(this.AssetTreeDragEnded));
                 string guid = AssetDatabase.AssetPathToGUID("Assets");
                 AssetsTreeViewDataSource data = new AssetsTreeViewDataSource(this.m_AssetTree, AssetDatabase.GetInstanceIDFromGUID(guid), false, false) {
                     foldersFirst = this.GetShouldShowFoldersFirst()
@@ -1321,8 +1321,8 @@
                 this.m_FolderTree.deselectOnUnhandledMouseDown = false;
                 this.m_FolderTree.selectionChangedCallback = (Action<int[]>) Delegate.Combine(this.m_FolderTree.selectionChangedCallback, new Action<int[]>(this.FolderTreeSelectionCallback));
                 this.m_FolderTree.contextClickItemCallback = (Action<int>) Delegate.Combine(this.m_FolderTree.contextClickItemCallback, new Action<int>(this.FolderTreeViewContextClick));
-                this.m_FolderTree.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_FolderTree.onGUIRowCallback, new Action<int, Rect>(this, (IntPtr) this.OnGUIAssetCallback));
-                this.m_FolderTree.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_FolderTree.dragEndedCallback, new Action<int[], bool>(this, (IntPtr) this.FolderTreeDragEnded));
+                this.m_FolderTree.onGUIRowCallback = (Action<int, Rect>) Delegate.Combine(this.m_FolderTree.onGUIRowCallback, new Action<int, Rect>(this.OnGUIAssetCallback));
+                this.m_FolderTree.dragEndedCallback = (Action<int[], bool>) Delegate.Combine(this.m_FolderTree.dragEndedCallback, new Action<int[], bool>(this.FolderTreeDragEnded));
                 this.m_FolderTree.Init(this.m_TreeViewRect, new ProjectBrowserColumnOneTreeViewDataSource(this.m_FolderTree), new ProjectBrowserColumnOneTreeViewGUI(this.m_FolderTree), new ProjectBrowserColumnOneTreeViewDragging(this.m_FolderTree));
                 this.m_FolderTree.ReloadData();
             }
@@ -2322,11 +2322,11 @@
             element.selected = !element.selected;
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<PopupList.ListElement, bool>(null, (IntPtr) <TypeListCallback>m__0);
+                <>f__am$cache0 = item => item.selected;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<PopupList.ListElement, string>(null, (IntPtr) <TypeListCallback>m__1);
+                <>f__am$cache1 = item => item.text;
             }
             string[] strArray = Enumerable.Select<PopupList.ListElement, string>(Enumerable.Where<PopupList.ListElement>(this.m_ObjectTypes.m_ListElements, <>f__am$cache0), <>f__am$cache1).ToArray<string>();
             for (int i = 0; i < strArray.Length; i++)

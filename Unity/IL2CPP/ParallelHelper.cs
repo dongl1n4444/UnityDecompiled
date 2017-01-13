@@ -18,11 +18,11 @@
 
         public static void ForEach<TSource>(IEnumerable<TSource> source, Action<TSource> action, bool loadBalance = true, bool betaTag = false)
         {
-            Unity.IL2CPP.Common.ParallelHelper.ForEach<TSource>(source, action, new Func<bool, bool>(null, (IntPtr) <ForEach`1>m__0<TSource>), loadBalance, betaTag);
+            Unity.IL2CPP.Common.ParallelHelper.ForEach<TSource>(source, action, new Func<bool, bool>(Unity.IL2CPP.ParallelHelper.<ForEach`1>m__0<TSource>), loadBalance, betaTag);
         }
 
         public static IEnumerable<TResult> Select<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, TResult> func, bool loadBalance = true, bool betaTag = false) => 
-            Unity.IL2CPP.Common.ParallelHelper.Select<TSource, TResult>(source, func, new Func<bool, bool>(null, (IntPtr) <Select`2>m__1<TSource, TResult>), loadBalance, betaTag);
+            Unity.IL2CPP.Common.ParallelHelper.Select<TSource, TResult>(source, func, new Func<bool, bool>(Unity.IL2CPP.ParallelHelper.<Select`2>m__1<TSource, TResult>), loadBalance, betaTag);
 
         public static bool ForceSerialByDefault =>
             (PlatformUtils.RunningWithMono() || true);

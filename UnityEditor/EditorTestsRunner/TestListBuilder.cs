@@ -36,14 +36,14 @@
             {
                 return null;
             }
-            IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_OldResultList, new Func<EditorTestResult, bool>(storey, (IntPtr) this.<>m__0));
+            IEnumerable<EditorTestResult> source = Enumerable.Where<EditorTestResult>(this.m_OldResultList, new Func<EditorTestResult, bool>(storey.<>m__0));
             if (source.Count<EditorTestResult>() == 0)
             {
                 return null;
             }
             if (source.Count<EditorTestResult>() > 1)
             {
-                source = Enumerable.Where<EditorTestResult>(this.m_OldResultList, new Func<EditorTestResult, bool>(storey, (IntPtr) this.<>m__1));
+                source = Enumerable.Where<EditorTestResult>(this.m_OldResultList, new Func<EditorTestResult, bool>(storey.<>m__1));
                 if (source.Count<EditorTestResult>() == 0)
                 {
                     return null;

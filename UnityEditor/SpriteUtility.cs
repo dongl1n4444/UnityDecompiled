@@ -154,7 +154,7 @@
             {
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Object, bool>(null, (IntPtr) <GenerateDefaultSprite>m__1);
+                    <>f__am$cache1 = t => t is Sprite;
                 }
                 obj2 = Enumerable.First<Object>(AssetDatabase.LoadAllAssetsAtPath(assetPath), <>f__am$cache1);
             }

@@ -104,7 +104,7 @@
         {
             if (selectionChanged != null)
             {
-                selectionChanged.Invoke();
+                selectionChanged();
             }
         }
 

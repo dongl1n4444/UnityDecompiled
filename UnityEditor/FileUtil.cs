@@ -48,7 +48,7 @@
         {
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <CopyDirectory>m__0);
+                <>f__am$cache0 = f => true;
             }
             CopyDirectoryFiltered(source, target, overwrite, <>f__am$cache0, false);
         }
@@ -62,7 +62,7 @@
             }
             foreach (string str in Directory.GetFiles(source))
             {
-                if (includeCallback.Invoke(str))
+                if (includeCallback(str))
                 {
                     string fileName = Path.GetFileName(str);
                     string to = Path.Combine(target, fileName);
@@ -73,7 +73,7 @@
             {
                 foreach (string str4 in Directory.GetDirectories(source))
                 {
-                    if (includeCallback.Invoke(str4))
+                    if (includeCallback(str4))
                     {
                         string str5 = Path.GetFileName(str4);
                         CopyDirectoryFiltered(Path.Combine(source, str5), Path.Combine(target, str5), overwrite, includeCallback, recursive);
@@ -99,7 +99,7 @@
                 Debug.Log("CopyDirectoryRecursive: Pattern '" + regExExcludeFilter + "' is not a correct Regular Expression. Not excluding any files.");
                 return;
             }
-            Func<string, bool> includeCallback = new Func<string, bool>(storey, (IntPtr) this.<>m__0);
+            Func<string, bool> includeCallback = new Func<string, bool>(storey.<>m__0);
             CopyDirectoryFiltered(source, target, overwrite, includeCallback, recursive);
         }
 
@@ -181,7 +181,7 @@
             };
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<string, bool>(null, (IntPtr) <GetAllFilesRecursive>m__1);
+                <>f__am$cache1 = p => true;
             }
             WalkFilesystemRecursively(path, new Action<string>(storey.<>m__0), <>f__am$cache1);
             return storey.files;
@@ -368,7 +368,7 @@
             }
             foreach (string str2 in Directory.GetDirectories(path))
             {
-                if (directoryCallback.Invoke(str2))
+                if (directoryCallback(str2))
                 {
                     WalkFilesystemRecursively(str2, fileCallback, directoryCallback);
                 }

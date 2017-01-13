@@ -282,7 +282,7 @@
                     TypeDefinition type = definition.Module.GetType("System.Int64");
                     if (<>f__am$cache4 == null)
                     {
-                        <>f__am$cache4 = new Func<MethodDefinition, bool>(null, (IntPtr) <ReplaceWithHardcodedAlternativeIfPresent>m__4);
+                        <>f__am$cache4 = m => m.Name == "GetHashCode";
                     }
                     MethodDefinition definition3 = type.Methods.Single<MethodDefinition>(<>f__am$cache4);
                     writer.AddIncludeForMethodDeclarations(type);
@@ -337,7 +337,7 @@
                     object[] objArray2 = new object[3];
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteAdjustorThunk>m__1);
+                        <>f__am$cache1 = f => f.Name == "value";
                     }
                     objArray2[0] = Naming.ForFieldSetter(method.DeclaringType.Resolve().Fields.Single<FieldDefinition>(<>f__am$cache1));
                     objArray2[1] = Naming.ForVariable(((GenericInstanceType) method.DeclaringType).GenericArguments[0]);
@@ -346,7 +346,7 @@
                     object[] objArray3 = new object[1];
                     if (<>f__am$cache2 == null)
                     {
-                        <>f__am$cache2 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteAdjustorThunk>m__2);
+                        <>f__am$cache2 = f => f.Name == "has_value";
                     }
                     objArray3[0] = Naming.ForFieldSetter(method.DeclaringType.Resolve().Fields.Single<FieldDefinition>(<>f__am$cache2));
                     this._writer.WriteLine("_thisAdjusted.{0}(true);", objArray3);
@@ -380,7 +380,7 @@
                     object[] objArray6 = new object[3];
                     if (<>f__am$cache3 == null)
                     {
-                        <>f__am$cache3 = new Func<FieldDefinition, bool>(null, (IntPtr) <WriteAdjustorThunk>m__3);
+                        <>f__am$cache3 = f => f.Name == "value";
                     }
                     objArray6[0] = Naming.ForFieldGetter(method.DeclaringType.Resolve().Fields.Single<FieldDefinition>(<>f__am$cache3));
                     objArray6[1] = Naming.ForVariable(((GenericInstanceType) method.DeclaringType).GenericArguments[0]);
@@ -707,7 +707,7 @@
                         this._writer.AddIncludeForTypeDefinition(resolver.Resolve(resolvedParameterType));
                     }
                 }
-                WriteMethodWithMetadataInitialization(this._writer, sharedMethodSignature, storey.method.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), Naming.ForMethod(storey.method));
+                WriteMethodWithMetadataInitialization(this._writer, sharedMethodSignature, storey.method.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey.<>m__0), Naming.ForMethod(storey.method));
                 this.WriteMethodForDelegatePInvokeIfNeeded(this._writer, storey.method, methodCollector);
                 if (storey.method.HasThis && storey.method.DeclaringType.IsValueType())
                 {
@@ -725,7 +725,7 @@
             TypeDefinition definition = this._type.Resolve();
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, bool>(null, (IntPtr) <WriteMethodDefinitions>m__0);
+                <>f__am$cache0 = m => !m.HasGenericParameters;
             }
             foreach (MethodDefinition definition2 in definition.Methods.Where<MethodDefinition>(<>f__am$cache0))
             {
@@ -764,7 +764,7 @@
                 Unity.IL2CPP.ILPreProcessor.TypeResolver resolver = Unity.IL2CPP.ILPreProcessor.TypeResolver.For(storey.method.DeclaringType, storey.method);
                 string name = Naming.ForDelegatePInvokeWrapper(storey.method.DeclaringType);
                 string methodSignature = MethodSignatureWriter.GetMethodSignature(name, Naming.ForVariable(resolver.Resolve(storey.method.ReturnType)), MethodSignatureWriter.FormatParameters(storey.method, ParameterFormat.WithTypeAndName, false, true), "extern \"C\"", "");
-                WriteMethodWithMetadataInitialization(_writer, methodSignature, storey.method.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey, (IntPtr) this.<>m__0), name);
+                WriteMethodWithMetadataInitialization(_writer, methodSignature, storey.method.FullName, new Action<CppCodeWriter, MetadataUsage, MethodUsage>(storey.<>m__0), name);
                 methodCollector.AddWrapperForDelegateFromManagedToNative(storey.method);
             }
         }
@@ -816,7 +816,7 @@
                 {
                     writer3.Indent(1);
                     writer2.Indent(1);
-                    writeMethodBody.Invoke(writer3, usage, usage2);
+                    writeMethodBody(writer3, usage, usage2);
                     if (usage.UsesMetadata)
                     {
                         WriteMethodMetadataInitialization(writer2, identifier);

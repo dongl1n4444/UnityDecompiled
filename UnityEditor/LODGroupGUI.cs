@@ -39,7 +39,7 @@
             List<LODInfo> list = new List<LODInfo>();
             for (int i = 0; i < numLODs; i++)
             {
-                LODInfo item = new LODInfo(i, nameGen.Invoke(i), heightGen.Invoke(i));
+                LODInfo item = new LODInfo(i, nameGen(i), heightGen(i));
                 item.m_ButtonPosition = CalcLODButton(area, item.ScreenPercent);
                 float startPercent = (i != 0) ? list[i - 1].ScreenPercent : 1f;
                 item.m_RangePosition = CalcLODRange(area, startPercent, item.ScreenPercent);
@@ -154,13 +154,13 @@
                 lod = lod
             };
             float rawScreenPercent = 0f;
-            LODInfo info = Enumerable.FirstOrDefault<LODInfo>(storey.lods, new Func<LODInfo, bool>(storey, (IntPtr) this.<>m__0));
+            LODInfo info = Enumerable.FirstOrDefault<LODInfo>(storey.lods, new Func<LODInfo, bool>(storey.<>m__0));
             if (info != null)
             {
                 rawScreenPercent = info.RawScreenPercent;
             }
             float num2 = 1f;
-            LODInfo info2 = Enumerable.FirstOrDefault<LODInfo>(storey.lods, new Func<LODInfo, bool>(storey, (IntPtr) this.<>m__1));
+            LODInfo info2 = Enumerable.FirstOrDefault<LODInfo>(storey.lods, new Func<LODInfo, bool>(storey.<>m__1));
             if (info2 != null)
             {
                 num2 = info2.RawScreenPercent;
@@ -229,9 +229,9 @@
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
             private int <LODLevel>k__BackingField;
-            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private string <LODName>k__BackingField;
             [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+            private string <LODName>k__BackingField;
+            [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
             private float <RawScreenPercent>k__BackingField;
             public Rect m_ButtonPosition;
             public Rect m_RangePosition;

@@ -46,7 +46,7 @@
                 if (!Directory.Exists(importer.assetPath))
                 {
                     storey.extension = Path.GetExtension(importer.assetPath);
-                    if (!string.IsNullOrEmpty(importer.assetPath) && Enumerable.Any<string>(strArray, new Func<string, bool>(storey, (IntPtr) this.<>m__0)))
+                    if (!string.IsNullOrEmpty(importer.assetPath) && Enumerable.Any<string>(strArray, new Func<string, bool>(storey.<>m__0)))
                     {
                         string platformData = importer.GetPlatformData(BuildTarget.WSAPlayer, Plugin.sdkTag);
                         if ((string.IsNullOrEmpty(platformData) || string.Equals(platformData, 0.ToString(), StringComparison.InvariantCultureIgnoreCase)) || string.Equals(platformData, wsaSDK.ToString(), StringComparison.InvariantCultureIgnoreCase))

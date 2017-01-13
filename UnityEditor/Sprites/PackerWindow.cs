@@ -112,15 +112,15 @@
             }
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<Edge, Edge>(null, (IntPtr) <FindUniqueEdges>m__0);
+                <>f__am$cache0 = x => x;
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<IGrouping<Edge, Edge>, bool>(null, (IntPtr) <FindUniqueEdges>m__1);
+                <>f__am$cache1 = x => x.Count<Edge>() == 1;
             }
             if (<>f__am$cache2 == null)
             {
-                <>f__am$cache2 = new Func<IGrouping<Edge, Edge>, Edge>(null, (IntPtr) <FindUniqueEdges>m__2);
+                <>f__am$cache2 = x => x.First<Edge>();
             }
             return Enumerable.Select<IGrouping<Edge, Edge>, Edge>(Enumerable.Where<IGrouping<Edge, Edge>>(Enumerable.GroupBy<Edge, Edge>(edgeArray, <>f__am$cache0), <>f__am$cache1), <>f__am$cache2).ToArray<Edge>();
         }

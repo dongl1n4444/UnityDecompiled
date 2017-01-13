@@ -104,14 +104,14 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <CompileIDL>m__0);
+                        <>f__am$cache0 = d => d.Files("*.idl", false);
                     }
                     NPath[] data = directories.SourceDirectories.SelectMany<NPath, NPath>(<>f__am$cache0).ToArray<NPath>();
                     if (data.Length != 0)
                     {
                         yb.idlResultDirectory = workingDirectory.EnsureDirectoryExists("idlGenerated");
                         yb.includePaths = this.ToolChainIncludePaths();
-                        IEnumerable<IdlCompilationResult> enumerable = ParallelFor.RunWithResult<NPath, IdlCompilationResult>(data, new Func<NPath, IdlCompilationResult>(yb, (IntPtr) this.<>m__0));
+                        IEnumerable<IdlCompilationResult> enumerable = ParallelFor.RunWithResult<NPath, IdlCompilationResult>(data, new Func<NPath, IdlCompilationResult>(yb.<>m__0));
                         MsvcToolChainContext context = (MsvcToolChainContext) toolChainContext;
                         foreach (IdlCompilationResult result in enumerable)
                         {
@@ -119,7 +119,7 @@
                             {
                                 throw new BuilderFailedException(string.Format(result.StdOut + "{0}{0}Invocation was: " + result.Invocation.Summary(), Environment.NewLine));
                             }
-                            context.AddCompileInstructions(result.OutputDirectory.Files("*_i.c", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(yb, (IntPtr) this.<>m__1)));
+                            context.AddCompileInstructions(result.OutputDirectory.Files("*_i.c", false).Select<NPath, CppCompilationInstruction>(new Func<NPath, CppCompilationInstruction>(yb.<>m__1)));
                             context.AddIncludeDirectory(result.OutputDirectory);
                             foreach (NPath path in result.OutputDirectory.Files("*.tlb", false))
                             {
@@ -181,7 +181,7 @@
                 {
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<NPath, IEnumerable<NPath>>(null, (IntPtr) <FindModuleDefinitionFiles>m__1);
+                        <>f__am$cache1 = d => d.Files("*.def", false);
                     }
                     NPath[] source = directories.SourceDirectories.SelectMany<NPath, NPath>(<>f__am$cache1).ToArray<NPath>();
                     if (source.Length != 0)
@@ -190,11 +190,11 @@
                         {
                             if (<>f__am$cache2 == null)
                             {
-                                <>f__am$cache2 = new Func<NPath, string>(null, (IntPtr) <FindModuleDefinitionFiles>m__2);
+                                <>f__am$cache2 = f => f.ToString();
                             }
                             if (<>f__am$cache3 == null)
                             {
-                                <>f__am$cache3 = new Func<string, string, string>(null, (IntPtr) <FindModuleDefinitionFiles>m__3);
+                                <>f__am$cache3 = (x, y) => x + Environment.NewLine + "\t" + y;
                             }
                             throw new BuilderFailedException($"Found more than one module definition file in source directories:{Environment.NewLine}	{source.Select<NPath, string>(<>f__am$cache2).Aggregate<string>(<>f__am$cache3)}");
                         }
@@ -264,8 +264,8 @@
                 list.Add(context.ModuleDefinitionPath);
             }
             ya.bestWorkingDirectory = PickBestDirectoryToUseAsWorkingDirectoryFromObjectFilePaths(objectFiles);
-            IEnumerable<string> enumerable = objectFiles.Select<NPath, string>(new Func<NPath, string>(ya, (IntPtr) this.<>m__0));
-            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this, (IntPtr) this.GetDefaultLinkerArgs)));
+            IEnumerable<string> enumerable = objectFiles.Select<NPath, string>(new Func<NPath, string>(ya.<>m__0));
+            inputs.AddRange(base.ChooseLinkerFlags(staticLibraries, dynamicLibraries, outputFile, specifiedLinkerFlags, new Func<IEnumerable<NPath>, IEnumerable<NPath>, NPath, IEnumerable<string>>(this.GetDefaultLinkerArgs)));
             string tempFileName = Path.GetTempFileName();
             File.WriteAllText(tempFileName, enumerable.InQuotes().SeparateWithSpaces(), Encoding.UTF8);
             CppProgramBuilder.LinkerInvocation invocation = new CppProgramBuilder.LinkerInvocation();
@@ -574,7 +574,7 @@
                         this.$locvar1.Dispose();
                     }
                 }
-                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this, (IntPtr) this.$this.DefaultCompilerFlags)).GetEnumerator();
+                this.$locvar2 = this.$this.ChooseCompilerFlags(this.cppCompilationInstruction, new Func<CppCompilationInstruction, IEnumerable<string>>(this.$this.DefaultCompilerFlags)).GetEnumerator();
                 num = 0xfffffffd;
             Label_0197:
                 try
@@ -692,7 +692,7 @@
                     case 0:
                         if (<>f__am$cache0 == null)
                         {
-                            <>f__am$cache0 = new Func<string, bool>(null, (IntPtr) <>m__0);
+                            <>f__am$cache0 = new Func<string, bool>(MsvcToolChain.<DefaultCompilerFlags>c__Iterator5.<>m__0);
                         }
                         this.<hasClrFlag>__0 = this.cppCompilationInstruction.CompilerFlags.Any<string>(<>f__am$cache0);
                         this.$current = (this.$this.BuildConfiguration != BuildConfiguration.Debug) ? "/MD" : "/MDd";
@@ -818,7 +818,7 @@
                         {
                             goto Label_0371;
                         }
-                        this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile.Invoke(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
+                        this.$locvar0 = this.$this.AdditionalCompilerOptionsForSourceFile(this.cppCompilationInstruction.SourceFile.ToString()).GetEnumerator();
                         num = 0xfffffffd;
                         goto Label_02FA;
 
@@ -1594,11 +1594,11 @@
                 {
                     if (<>f__am$cache0 == null)
                     {
-                        <>f__am$cache0 = new Func<NPath, string>(null, (IntPtr) <>m__0);
+                        <>f__am$cache0 = new Func<NPath, string>(MsvcToolChain.<IdlCompilerArgumentsFor>c__Iterator6.<>m__0);
                     }
                     if (<>f__am$cache1 == null)
                     {
-                        <>f__am$cache1 = new Func<string, string, string>(null, (IntPtr) <>m__1);
+                        <>f__am$cache1 = new Func<string, string, string>(MsvcToolChain.<IdlCompilerArgumentsFor>c__Iterator6.<>m__1);
                     }
                     this.<aggregatedIncludes>__1 = this.<toolChainIncludes>__0.Select<NPath, string>(<>f__am$cache0).Aggregate<string>(<>f__am$cache1);
                     this.$current = $"/I "{this.<aggregatedIncludes>__1}"";

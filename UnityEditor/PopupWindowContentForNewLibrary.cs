@@ -20,7 +20,7 @@
         private void CreateLibraryAndCloseWindow(EditorWindow editorWindow)
         {
             PresetFileLocation location = s_Texts.fileLocationOrder[this.m_SelectedIndexInPopup];
-            this.m_ErrorString = this.m_CreateLibraryCallback.Invoke(this.m_NewLibraryName, location);
+            this.m_ErrorString = this.m_CreateLibraryCallback(this.m_NewLibraryName, location);
             if (string.IsNullOrEmpty(this.m_ErrorString))
             {
                 editorWindow.Close();

@@ -40,7 +40,7 @@
                 Vector3 vector6 = new Vector3(Mathf.Sin(num3 + num5), Mathf.Cos(num3 + num5), 0f);
                 if (<>f__am$cache1 == null)
                 {
-                    <>f__am$cache1 = new Func<Collider2D, bool>(null, (IntPtr) <DrawSideArc>m__1);
+                    <>f__am$cache1 = collider => collider.enabled && collider.usedByEffector;
                 }
                 foreach (Collider2D colliderd in Enumerable.Where<Collider2D>(effector.gameObject.GetComponents<Collider2D>(), <>f__am$cache1))
                 {
@@ -73,7 +73,7 @@
                 Vector3 vector4 = new Vector3(Mathf.Sin(num2 + num4), Mathf.Cos(num2 + num4), 0f);
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<Collider2D, bool>(null, (IntPtr) <DrawSurfaceArc>m__0);
+                    <>f__am$cache0 = collider => collider.enabled && collider.usedByEffector;
                 }
                 foreach (Collider2D colliderd in Enumerable.Where<Collider2D>(effector.gameObject.GetComponents<Collider2D>(), <>f__am$cache0))
                 {

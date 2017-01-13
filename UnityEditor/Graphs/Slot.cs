@@ -130,7 +130,7 @@
             <HasConnectionTo>c__AnonStorey0 storey = new <HasConnectionTo>c__AnonStorey0 {
                 toSlot = toSlot
             };
-            return Enumerable.Any<UnityEditor.Graphs.Edge>(this.edges, new Func<UnityEditor.Graphs.Edge, bool>(storey, (IntPtr) this.<>m__0));
+            return Enumerable.Any<UnityEditor.Graphs.Edge>(this.edges, new Func<UnityEditor.Graphs.Edge, bool>(storey.<>m__0));
         }
 
         private void Init()

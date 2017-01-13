@@ -14,11 +14,11 @@
     {
         [CompilerGenerated]
         private static Func<KeyValuePair<string, string>, string> <>f__am$cache0;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int <responseCode>k__BackingField;
         [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
         private State <state>k__BackingField;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never), CompilerGenerated]
+        [CompilerGenerated, DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string <tag>k__BackingField;
         public DoneCallback doneCallback;
         public Dictionary<string, string> header;
@@ -76,7 +76,7 @@
                 }
                 if (<>f__am$cache0 == null)
                 {
-                    <>f__am$cache0 = new Func<KeyValuePair<string, string>, string>(null, (IntPtr) <Begin>m__1);
+                    <>f__am$cache0 = kv => $"{kv.Key}: {kv.Value}";
                 }
                 string[] headers = Enumerable.Select<KeyValuePair<string, string>, string>(this.header, <>f__am$cache0).ToArray<string>();
                 this.m_Handle = SubmitClientRequest(this.tag, this.m_ToUrl, headers, this.m_Method, this.m_FromData, new RequestDoneCallback(this.Done), new RequestProgressCallback(this.Progress));
@@ -185,7 +185,7 @@
         {
             set
             {
-                this.postData = string.Join("&", Enumerable.Select<KeyValuePair<string, string>, string>(value, new Func<KeyValuePair<string, string>, string>(this, (IntPtr) this.<set_postDictionary>m__0)).ToArray<string>());
+                this.postData = string.Join("&", (from kv in value select this.EscapeLong(kv.Key) + "=" + this.EscapeLong(kv.Value)).ToArray<string>());
             }
         }
 

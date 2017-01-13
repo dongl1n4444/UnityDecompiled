@@ -31,7 +31,7 @@
             {
                 this.m_CallbackController.Stop();
             }
-            float iconAngle = !animate ? 0f : this.m_AngleCallback.Invoke();
+            float iconAngle = !animate ? 0f : this.m_AngleCallback();
             return EditorGUI.ButtonWithRotatedIcon(rect, guiContent, iconAngle, this.m_MouseDownButton, style);
         }
     }

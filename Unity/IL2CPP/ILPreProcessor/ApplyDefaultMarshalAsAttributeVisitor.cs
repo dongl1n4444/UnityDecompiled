@@ -58,7 +58,7 @@
             };
             if (<>f__am$cache0 == null)
             {
-                <>f__am$cache0 = new Func<MethodDefinition, MethodReturnType>(null, (IntPtr) <ProcessMethods>m__0);
+                <>f__am$cache0 = m => m.MethodReturnType;
             }
             foreach (MethodReturnType type2 in type.Methods.Select<MethodDefinition, MethodReturnType>(<>f__am$cache0))
             {
@@ -70,9 +70,9 @@
             }
             if (<>f__am$cache1 == null)
             {
-                <>f__am$cache1 = new Func<MethodDefinition, IEnumerable<ParameterDefinition>>(null, (IntPtr) <ProcessMethods>m__1);
+                <>f__am$cache1 = m => m.Parameters;
             }
-            IEnumerable<ParameterDefinition> enumerable = type.Methods.Where<MethodDefinition>(new Func<MethodDefinition, bool>(storey, (IntPtr) this.<>m__0)).SelectMany<MethodDefinition, ParameterDefinition>(<>f__am$cache1);
+            IEnumerable<ParameterDefinition> enumerable = type.Methods.Where<MethodDefinition>(new Func<MethodDefinition, bool>(storey.<>m__0)).SelectMany<MethodDefinition, ParameterDefinition>(<>f__am$cache1);
             foreach (ParameterDefinition definition in enumerable)
             {
                 ProcessObject(definition.ParameterType, definition, NativeType.Struct);
